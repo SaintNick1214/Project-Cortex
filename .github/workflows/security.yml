@@ -319,6 +319,85 @@ jobs:
           github-token: ${{ github.token }}
         continue-on-error: true
 
+  # Commit signature verification
+  commit-signature-check:
+    name: Commit Signature Verification
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Need full history to check all commits
+
+      - name: Verify commit signatures
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "════════════════════════════════════════════════════════════"
+          echo "  Commit Signature Verification"
+          echo "════════════════════════════════════════════════════════════"
+          echo ""
+          
+          # Determine commits to check based on event type
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # For PRs, check all commits in the PR
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+            echo "📋 Checking PR commits: $BASE_SHA..$HEAD_SHA"
+            COMMITS=$(git rev-list "$BASE_SHA".."$HEAD_SHA")
+          else
+            # For pushes, check just the pushed commit
+            echo "📋 Checking pushed commit: ${{ github.sha }}"
+            COMMITS="${{ github.sha }}"
+          fi
+          
+          echo ""
+          
+          UNSIGNED_COUNT=0
+          SIGNED_COUNT=0
+          
+          for COMMIT in $COMMITS; do
+            # Get commit verification status from GitHub API
+            VERIFICATION=$(gh api repos/${{ github.repository }}/commits/$COMMIT --jq '.commit.verification')
+            VERIFIED=$(echo "$VERIFICATION" | jq -r '.verified')
+            REASON=$(echo "$VERIFICATION" | jq -r '.reason')
+            
+            SHORT_SHA=$(echo "$COMMIT" | cut -c1-7)
+            AUTHOR=$(git log -1 --format='%an' "$COMMIT")
+            
+            if [ "$VERIFIED" = "true" ]; then
+              echo "✅ $SHORT_SHA ($AUTHOR): Verified - $REASON"
+              SIGNED_COUNT=$((SIGNED_COUNT + 1))
+            else
+              echo "❌ $SHORT_SHA ($AUTHOR): NOT VERIFIED - $REASON"
+              UNSIGNED_COUNT=$((UNSIGNED_COUNT + 1))
+            fi
+          done
+          
+          echo ""
+          echo "════════════════════════════════════════════════════════════"
+          echo "  Summary: $SIGNED_COUNT verified, $UNSIGNED_COUNT unverified"
+          echo "════════════════════════════════════════════════════════════"
+          
+          if [ "$UNSIGNED_COUNT" -gt 0 ]; then
+            echo ""
+            echo "❌ Found $UNSIGNED_COUNT unsigned commit(s)!"
+            echo ""
+            echo "To sign your commits:"
+            echo "  1. Set up GPG: https://docs.github.com/en/authentication/managing-commit-signature-verification"
+            echo "  2. Or use SSH signing: git config gpg.format ssh"
+            echo "  3. Re-sign commits: git rebase --exec 'git commit --amend --no-edit -S' HEAD~N"
+            echo ""
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ All commits have verified signatures!"
+
   # All security checks summary
   security-summary:
     name: Security Checks Summary
@@ -329,6 +408,7 @@ jobs:
         secret-scan,
         python-security,
         api-security,
+        commit-signature-check,
       ]
     # Skip for Dependabot PRs (no security checks run)
     if: always() && github.actor != 'dependabot[bot]'
@@ -340,11 +420,12 @@ jobs:
       - name: Check results
         run: |
           echo "📊 Security Scan Results:"
-          echo "  CodeQL Analysis: ${{ needs.codeql-analysis.result }}"
-          echo "  Dependency Scan: ${{ needs.dependency-scan.result }}"
-          echo "  Secret Scan: ${{ needs.secret-scan.result }}"
-          echo "  Python Security: ${{ needs.python-security.result }}"
-          echo "  API Security (Semgrep): ${{ needs.api-security.result }}"
+          echo "  CodeQL Analysis:      ${{ needs.codeql-analysis.result }}"
+          echo "  Dependency Scan:      ${{ needs.dependency-scan.result }}"
+          echo "  Secret Scan:          ${{ needs.secret-scan.result }}"
+          echo "  Python Security:      ${{ needs.python-security.result }}"
+          echo "  API Security:         ${{ needs.api-security.result }}"
+          echo "  Commit Signatures:    ${{ needs.commit-signature-check.result }}"
           echo ""
           echo "ℹ️  Scorecard (supply chain) and OpenAPI scans run conditionally"
           echo ""
@@ -354,7 +435,8 @@ jobs:
           if [[ "${{ needs.codeql-analysis.result }}" == "failure" ]] || \
              [[ "${{ needs.dependency-scan.result }}" == "failure" ]] || \
              [[ "${{ needs.secret-scan.result }}" == "failure" ]] || \
-             [[ "${{ needs.python-security.result }}" == "failure" ]]; then
+             [[ "${{ needs.python-security.result }}" == "failure" ]] || \
+             [[ "${{ needs.commit-signature-check.result }}" == "failure" ]]; then
             echo "❌ Security checks failed"
             exit 1
           fi
