@@ -2,14 +2,36 @@
  * Test utilities for Vercel AI Provider tests
  */
 
+import crypto from "crypto";
 import type { CortexMemoryConfig } from "../../src/types";
+
+/**
+ * Generate a cryptographically secure random string of specified length
+ * Uses base-36 characters (0-9, a-z) for URL-safe IDs
+ */
+function generateSecureRandomString(length: number): string {
+  const chars = "0123456789abcdefghijklmnopqrstuvwxyz";
+  const charsLength = chars.length;
+  // Calculate max unbiased value to avoid modulo bias
+  const maxUnbiased = Math.floor(256 / charsLength) * charsLength;
+
+  let result = "";
+  while (result.length < length) {
+    const byte = crypto.randomBytes(1)[0];
+    if (byte >= maxUnbiased) {
+      continue;
+    }
+    result += chars[byte % charsLength];
+  }
+  return result;
+}
 
 /**
  * Generate unique memory space ID for test isolation
  */
 export function createTestMemorySpaceId(prefix: string = "test"): string {
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 8);
+  const random = generateSecureRandomString(6);
   return `${prefix}-${timestamp}-${random}`;
 }
 
@@ -18,7 +40,7 @@ export function createTestMemorySpaceId(prefix: string = "test"): string {
  */
 export function createTestConversationId(): string {
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 8);
+  const random = generateSecureRandomString(6);
   return `conv-test-${timestamp}-${random}`;
 }
 
@@ -27,7 +49,7 @@ export function createTestConversationId(): string {
  */
 export function createTestUserId(): string {
   const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 8);
+  const random = generateSecureRandomString(6);
   return `user-test-${timestamp}-${random}`;
 }
 
