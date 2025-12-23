@@ -200,7 +200,7 @@ See the project's GitHub releases for full version history.
 
 All documentation is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-The Cortex code is licensed under [Apache License 2.0](/project/license).
+The Cortex code is licensed under [FSL-1.1-Apache-2.0](/project/license) (becomes Apache 2.0 after 2 years).
 
 ---
 

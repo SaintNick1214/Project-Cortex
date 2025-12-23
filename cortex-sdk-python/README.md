@@ -2,7 +2,7 @@
 
 > **Native Python SDK for AI agent memory, powered by Convex**
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License: FSL-1.1-Apache-2.0](https://img.shields.io/badge/License-FSL--1.1--Apache--2.0-blue.svg)](https://fsl.software/)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
 
@@ -460,11 +460,10 @@ See [CONTRIBUTING.md](../CONTRIBUTING.md) for guidelines.
 
 ## 📄 License
 
-Apache License 2.0 - Same as the TypeScript SDK
+FSL-1.1-Apache-2.0 - Same as the TypeScript SDK
 
-- Free for commercial use
-- Explicit patent grant and protection
-- See [LICENSE.md](../LICENSE.md) for details
+- See [LICENSE.md](../LICENSE.md) for full details
+- Each version becomes Apache 2.0 licensed two years after release
 
 ## 🙏 Acknowledgments
 

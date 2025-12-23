@@ -277,4 +277,4 @@ The demo visualization shows these actions with colored badges on the Facts laye
 
 ## License
 
-Apache 2.0 - See LICENSE in the root of the repository.
+FSL-1.1-Apache-2.0 - See LICENSE.md in the root of the repository.
