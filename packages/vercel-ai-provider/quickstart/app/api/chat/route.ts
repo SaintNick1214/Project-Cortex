@@ -1,15 +1,48 @@
-import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
+import type {
+  LayerObserver,
+  CortexMemoryConfig,
+} from "@cortexmemory/vercel-ai-provider";
 import { openai, createOpenAI } from "@ai-sdk/openai";
-import { streamText, embed, convertToModelMessages } from "ai";
+import {
+  streamText,
+  embed,
+  convertToModelMessages,
+  createUIMessageStream,
+  createUIMessageStreamResponse,
+} from "ai";
 
 // Create OpenAI client for embeddings
 const openaiClient = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Create Cortex Memory provider with SDK v0.24.0 capabilities
-// - recall() for unified multi-layer retrieval (vector + facts + graph)
-// - beliefRevision for intelligent fact updates/supersessions
-function getCortexMemory(memorySpaceId: string, userId: string) {
-  return createCortexMemory({
+// System prompt for the assistant
+const SYSTEM_PROMPT = `You are a helpful AI assistant with long-term memory powered by Cortex.
+
+Your capabilities:
+- You remember everything users tell you across conversations
+- You can recall facts, preferences, and context from past interactions
+- You naturally reference what you've learned about the user
+
+Behavior guidelines:
+- When you remember something from a previous conversation, mention it naturally
+- If asked about something you learned, reference it specifically
+- Be conversational and friendly
+- Help demonstrate the memory system by showing what you remember
+
+Example interactions:
+- User: "My name is Alex" → Remember and use their name
+- User: "I work at Acme Corp" → Remember their employer
+- User: "My favorite color is blue" → Remember their preference
+- User: "What do you know about me?" → List everything you remember`;
+
+// Create Cortex Memory config factory
+// Uses createCortexMemoryAsync for graph support when CORTEX_GRAPH_SYNC=true
+function getCortexMemoryConfig(
+  memorySpaceId: string,
+  userId: string,
+  layerObserver?: LayerObserver,
+): CortexMemoryConfig {
+  return {
     convexUrl: process.env.CONVEX_URL!,
     memorySpaceId,
 
@@ -22,6 +55,7 @@ function getCortexMemory(memorySpaceId: string, userId: string) {
     agentName: "Cortex Demo Assistant",
 
     // Enable graph memory sync (auto-configured via env vars)
+    // When true, uses CypherGraphAdapter to sync to Neo4j/Memgraph
     enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
 
     // Enable fact extraction (auto-configured via env vars)
@@ -58,50 +92,88 @@ function getCortexMemory(memorySpaceId: string, userId: string) {
     // Memory recall configuration (v0.23.0 - unified retrieval across all layers)
     memorySearchLimit: 20, // Results from combined vector + facts + graph search
 
+    // Real-time layer tracking (v0.24.0+)
+    // Events are emitted as each layer processes, enabling live UI updates
+    layerObserver,
+
     // Debug in development
     debug: process.env.NODE_ENV === "development",
-  });
+  };
 }
 
 export async function POST(req: Request) {
   try {
     const { messages, memorySpaceId, userId } = await req.json();
 
-    // Get memory-augmented model
-    const cortexMemory = getCortexMemory(
-      memorySpaceId || "quickstart-demo",
-      userId || "demo-user",
-    );
-
     // Convert UIMessage[] from useChat to ModelMessage[] for streamText
     const modelMessages = convertToModelMessages(messages);
 
-    // Stream response with automatic memory integration
-    const result = await streamText({
-      model: cortexMemory(openai("gpt-4o-mini")),
-      messages: modelMessages,
-      system: `You are a helpful AI assistant with long-term memory powered by Cortex.
+    // Use createUIMessageStream to send both LLM text and layer events
+    return createUIMessageStreamResponse({
+      stream: createUIMessageStream({
+        execute: async ({ writer }) => {
+          // Create observer that writes layer events to the stream
+          // These events are transient (not persisted in message history)
+          const layerObserver: LayerObserver = {
+            onOrchestrationStart: (orchestrationId) => {
+              writer.write({
+                type: "data-orchestration-start",
+                data: { orchestrationId },
+                transient: true,
+              });
+            },
+            onLayerUpdate: (event) => {
+              writer.write({
+                type: "data-layer-update",
+                data: {
+                  layer: event.layer,
+                  status: event.status,
+                  timestamp: event.timestamp,
+                  latencyMs: event.latencyMs,
+                  data: event.data,
+                  error: event.error,
+                  revisionAction: event.revisionAction,
+                  supersededFacts: event.supersededFacts,
+                },
+                transient: true,
+              });
+            },
+            onOrchestrationComplete: (summary) => {
+              writer.write({
+                type: "data-orchestration-complete",
+                data: {
+                  orchestrationId: summary.orchestrationId,
+                  totalLatencyMs: summary.totalLatencyMs,
+                  createdIds: summary.createdIds,
+                },
+                transient: true,
+              });
+            },
+          };
 
-Your capabilities:
-- You remember everything users tell you across conversations
-- You can recall facts, preferences, and context from past interactions
-- You naturally reference what you've learned about the user
+          // Build config with the observer
+          const config = getCortexMemoryConfig(
+            memorySpaceId || "quickstart-demo",
+            userId || "demo-user",
+            layerObserver,
+          );
 
-Behavior guidelines:
-- When you remember something from a previous conversation, mention it naturally
-- If asked about something you learned, reference it specifically
-- Be conversational and friendly
-- Help demonstrate the memory system by showing what you remember
+          // Create memory-augmented model with async initialization (enables graph support)
+          // This connects to Neo4j/Memgraph if CORTEX_GRAPH_SYNC=true
+          const cortexMemory = await createCortexMemoryAsync(config);
 
-Example interactions:
-- User: "My name is Alex" → Remember and use their name
-- User: "I work at Acme Corp" → Remember their employer
-- User: "My favorite color is blue" → Remember their preference
-- User: "What do you know about me?" → List everything you remember`,
+          // Stream response with automatic memory integration
+          const result = streamText({
+            model: cortexMemory(openai("gpt-4o-mini")),
+            messages: modelMessages,
+            system: SYSTEM_PROMPT,
+          });
+
+          // Merge LLM stream into the UI message stream
+          writer.merge(result.toUIMessageStream());
+        },
+      }),
     });
-
-    // AI SDK v5 - use toUIMessageStreamResponse for useChat compatibility
-    return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error("[Chat API Error]", error);
 

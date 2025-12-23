@@ -577,123 +577,26 @@ export function createLogger(debug: boolean = false): Logger {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Layer Observation Types (for visualization)
+// Layer Observation Types (re-exported from core SDK)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-/**
- * Memory orchestration layer types
- */
-export type MemoryLayer =
-  | "memorySpace"
-  | "user"
-  | "agent"
-  | "conversation"
-  | "vector"
-  | "facts"
-  | "graph";
+// Re-export orchestration types from core SDK for backward compatibility
+// The core SDK now provides integration-agnostic observer infrastructure
+export type {
+  MemoryLayer,
+  LayerStatus,
+  RevisionAction,
+  LayerEvent,
+  OrchestrationSummary,
+  OrchestrationObserver,
+} from "@cortexmemory/sdk";
 
 /**
- * Layer status during orchestration
- */
-export type LayerStatus =
-  | "pending"
-  | "in_progress"
-  | "complete"
-  | "error"
-  | "skipped";
-
-/**
- * Revision action taken by the belief revision system (v0.24.0+)
- */
-export type RevisionAction = "CREATE" | "UPDATE" | "SUPERSEDE" | "NONE";
-
-/**
- * Event emitted when a layer's status changes
- */
-export interface LayerEvent {
-  /** Which layer this event is for */
-  layer: MemoryLayer;
-
-  /** Current status of the layer */
-  status: LayerStatus;
-
-  /** Timestamp when this status was set */
-  timestamp: number;
-
-  /** Time elapsed since orchestration started (ms) */
-  latencyMs?: number;
-
-  /** Data stored in this layer (if complete) */
-  data?: {
-    /** ID of the stored record */
-    id?: string;
-    /** Summary or preview of the data */
-    preview?: string;
-    /** Additional metadata */
-    metadata?: Record<string, unknown>;
-  };
-
-  /** Error details (if error status) */
-  error?: {
-    message: string;
-    code?: string;
-  };
-
-  /**
-   * Revision action taken (v0.24.0+)
-   * Only present for facts layer when belief revision is enabled
-   */
-  revisionAction?: RevisionAction;
-
-  /**
-   * Facts that were superseded by this action (v0.24.0+)
-   * Only present when revisionAction is "SUPERSEDE"
-   */
-  supersededFacts?: string[];
-}
-
-/**
- * Summary of the full orchestration flow
- */
-export interface OrchestrationSummary {
-  /** Unique ID for this orchestration run */
-  orchestrationId: string;
-
-  /** Total time for all layers (ms) */
-  totalLatencyMs: number;
-
-  /** Status of each layer */
-  layers: Record<MemoryLayer, LayerEvent>;
-
-  /** IDs of records created */
-  createdIds: {
-    conversationId?: string;
-    memoryIds?: string[];
-    factIds?: string[];
-  };
-}
-
-/**
- * Observer for memory layer orchestration
+ * Observer for memory layer orchestration (Vercel provider alias)
  *
- * Used by the quickstart demo to visualize data flowing
- * through the Cortex memory system in real-time.
+ * This is an alias for OrchestrationObserver from the core SDK.
+ * Maintained for backward compatibility with existing Vercel provider users.
+ *
+ * @deprecated Use OrchestrationObserver from @cortexmemory/sdk instead
  */
-export interface LayerObserver {
-  /**
-   * Called when a layer's status changes
-   */
-  onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
-
-  /**
-   * Called when orchestration starts
-   */
-  onOrchestrationStart?: (orchestrationId: string) => void | Promise<void>;
-
-  /**
-   * Called when orchestration completes (all layers done)
-   */
-  onOrchestrationComplete?: (
-    summary: OrchestrationSummary,
-  ) => void | Promise<void>;
-}
+export type LayerObserver = import("@cortexmemory/sdk").OrchestrationObserver;
