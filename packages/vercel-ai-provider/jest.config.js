@@ -58,7 +58,7 @@ export default {
       ...baseConfig,
       displayName: "e2e",
       testMatch: ["<rootDir>/tests/e2e/**/*.test.ts"],
-      testTimeout: 120000,
+      testTimeout: 180000, // 3 minutes for E2E tests hitting real APIs
       testEnvironmentOptions: {
         JEST_PROJECT: "e2e",
       },
