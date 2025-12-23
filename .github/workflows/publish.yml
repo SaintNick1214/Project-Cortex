@@ -574,6 +574,13 @@ jobs:
           Administrative CLI for managing Cortex Memory deployments.
 
           ### Installation
+
+          **Via Homebrew (macOS/Linux):**
+          \`\`\`bash
+          brew install saintnick1214/project-cortex/cli
+          \`\`\`
+
+          **Via npm:**
           \`\`\`bash
           npm install -g @cortexmemory/cli
           \`\`\`
@@ -623,8 +630,44 @@ jobs:
           echo "📚 npm: https://www.npmjs.com/package/@cortexmemory/cli"
           echo "🐙 GitHub: https://github.com/SaintNick1214/Project-Cortex/releases/tag/cli-v$VERSION"
           echo ""
-          echo "🚀 Install: npm install -g @cortexmemory/cli"
+          echo "🚀 Install via npm:      npm install -g @cortexmemory/cli"
+          echo "🍺 Install via Homebrew: brew install saintnick1214/project-cortex/cli"
           echo ""
+
+      - name: Update Homebrew formula
+        run: |
+          VERSION=${{ needs.check-version.outputs.cli-new-version }}
+          echo "════════════════════════════════════════════════════════════"
+          echo "  Updating Homebrew Formula"
+          echo "════════════════════════════════════════════════════════════"
+          
+          FORMULA_PATH="homebrew/Formula/cli.rb"
+          TARBALL_URL="https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz"
+          
+          echo "📦 Version: ${VERSION}"
+          echo "🔗 Tarball: ${TARBALL_URL}"
+          
+          # Download tarball and compute SHA256
+          SHA256=$(curl -sL "${TARBALL_URL}" | shasum -a 256 | cut -d ' ' -f 1)
+          echo "🔐 SHA256: ${SHA256}"
+          
+          # Update the URL line with new version
+          sed -i "s|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-[0-9.]*\.tgz\"|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz\"|" "${FORMULA_PATH}"
+          
+          # Update the SHA256 line
+          sed -i "s|sha256 \"[a-f0-9]*\"|sha256 \"${SHA256}\"|" "${FORMULA_PATH}"
+          
+          echo "✅ Formula updated"
+          cat "${FORMULA_PATH}"
+
+      - name: Commit Homebrew formula update
+        run: |
+          VERSION=${{ needs.check-version.outputs.cli-new-version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add homebrew/Formula/cli.rb
+          git commit -m "chore(homebrew): update formula to v${VERSION}" || echo "No changes to commit"
+          git push origin main
 
   publish-python:
     needs: check-version
