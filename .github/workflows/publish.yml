@@ -704,7 +704,7 @@ jobs:
           echo "  Updating Homebrew Formula"
           echo "════════════════════════════════════════════════════════════"
           
-          FORMULA_PATH="homebrew/Formula/cli.rb"
+          FORMULA_PATH="Formula/cli.rb"
           TARBALL_URL="https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz"
           TARBALL_FILE=$(mktemp)
           
@@ -781,7 +781,7 @@ jobs:
           VERSION=${{ needs.check-version.outputs.cli-new-version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add homebrew/Formula/cli.rb
+          git add Formula/cli.rb
           git commit -m "chore(homebrew): update formula to v${VERSION}" || echo "No changes to commit"
           git push origin main
 
