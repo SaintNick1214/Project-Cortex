@@ -387,7 +387,7 @@ async function startAllServices(state: DevState): Promise<void> {
   const hasConvex = await commandExists("convex");
 
   // Import schema sync utility
-  const { syncConvexSchema, printSyncResult } = await import(
+  const { syncConvexSchema } = await import(
     "../utils/schema-sync.js"
   );
 
