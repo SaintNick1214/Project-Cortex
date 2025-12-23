@@ -8,8 +8,8 @@
 class Cli < Formula
   desc "CLI for managing Cortex Memory deployments and performing administrative tasks"
   homepage "https://github.com/SaintNick1214/Project-Cortex"
-  url "https://registry.npmjs.org/@cortexmemory/cli/-/cli-0.23.0.tgz"
-  sha256 "f6ceb07d239759d14221c92b90e09b7dabc5b4d64c2543a50cea1091505fe176"
+  url "https://registry.npmjs.org/@cortexmemory/cli/-/cli-0.24.0.tgz"
+  sha256 "c8d8179e9c30d4f6b95f60f8306fc0e1639e780ddbd852f9d7eb60309653370a"
   license "Apache-2.0"
 
   depends_on "node"

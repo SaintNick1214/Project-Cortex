@@ -8,7 +8,7 @@
 set -e
 
 VERSION="${1:?Error: Version argument required}"
-FORMULA_PATH="homebrew/Formula/cli.rb"
+FORMULA_PATH="Formula/cli.rb"
 NPM_PACKAGE="@cortexmemory/cli"
 
 echo "════════════════════════════════════════════════════════════"
