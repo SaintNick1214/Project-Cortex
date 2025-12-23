@@ -972,15 +972,26 @@ export class MemoryAPI {
                 participantId: params.participantId, // Hive Mode: who created this
               };
 
-          await this.conversations.create(
-            {
-              memorySpaceId,
-              conversationId: params.conversationId,
-              type: conversationType,
-              participants,
-            },
-            { syncToGraph: shouldSyncToGraph },
-          );
+          try {
+            await this.conversations.create(
+              {
+                memorySpaceId,
+                conversationId: params.conversationId,
+                type: conversationType,
+                participants,
+              },
+              { syncToGraph: shouldSyncToGraph },
+            );
+          } catch (createError) {
+            // Handle race condition: another parallel call may have created the conversation
+            // Check if it's a duplicate error and the conversation now exists
+            const errorMessage = createError instanceof Error ? createError.message : String(createError);
+            if (errorMessage.includes("CONVERSATION_ALREADY_EXISTS")) {
+              // Race condition handled - conversation was created by parallel call, continue
+            } else {
+              throw createError;
+            }
+          }
         }
 
         // Store user message in ACID
