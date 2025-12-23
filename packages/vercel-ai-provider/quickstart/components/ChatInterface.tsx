@@ -2,14 +2,39 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
-import { useState, useRef, useEffect, useMemo } from "react";
-import type { LayerStatus, MemoryLayer } from "@/lib/layer-tracking";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import type {
+  LayerStatus,
+  MemoryLayer,
+  LayerState,
+  RevisionAction,
+} from "@/lib/layer-tracking";
+
+// Type for layer update data parts from the stream
+interface LayerUpdateData {
+  layer: MemoryLayer;
+  status: LayerStatus;
+  timestamp: number;
+  latencyMs?: number;
+  data?: LayerState["data"];
+  error?: { message: string; code?: string };
+  revisionAction?: RevisionAction;
+  supersededFacts?: string[];
+}
 
 interface ChatInterfaceProps {
   memorySpaceId: string;
   userId: string;
   onOrchestrationStart?: () => void;
-  onLayerUpdate?: (layer: MemoryLayer, status: LayerStatus) => void;
+  onLayerUpdate?: (
+    layer: MemoryLayer,
+    status: LayerStatus,
+    data?: LayerState["data"],
+    revisionInfo?: {
+      action?: RevisionAction;
+      supersededFacts?: string[];
+    },
+  ) => void;
   onReset?: () => void;
 }
 
@@ -22,7 +47,6 @@ export function ChatInterface({
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [suggestedMessages] = useState([
     "Hi! My name is Alex and I work at Acme Corp as a senior engineer.",
     "My favorite color is blue and I love hiking on weekends.",
@@ -40,60 +64,37 @@ export function ChatInterface({
     [memorySpaceId, userId],
   );
 
-  // Use ref instead of state to avoid stale closure in onData callback
-  // Refs are mutable and reflect changes immediately without re-render
-  const hasStartedStreamingRef = useRef(false);
+  // Handle layer data parts from the stream
+  const handleDataPart = useCallback(
+    (dataPart: any) => {
+      if (dataPart.type === "data-orchestration-start") {
+        onOrchestrationStart?.();
+      }
+
+      if (dataPart.type === "data-layer-update") {
+        const event = dataPart.data as LayerUpdateData;
+        onLayerUpdate?.(event.layer, event.status, event.data, {
+          action: event.revisionAction,
+          supersededFacts: event.supersededFacts,
+        });
+      }
+
+      // orchestration-complete is informational - layer diagram already updated
+      // via individual layer events
+    },
+    [onOrchestrationStart, onLayerUpdate],
+  );
 
   const { messages, sendMessage, status } = useChat({
     transport,
-    onData: () => {
-      // Trigger orchestration visualization when we start receiving data
-      // Using ref to prevent multiple invocations during rapid successive onData calls
-      if (!hasStartedStreamingRef.current) {
-        hasStartedStreamingRef.current = true;
-        onOrchestrationStart?.();
-        simulateLayerUpdates();
-      }
-    },
-    onFinish: () => {
-      setIsLoading(false);
-      hasStartedStreamingRef.current = false;
-      // Mark all layers complete
-      onLayerUpdate?.("memorySpace", "complete");
-      onLayerUpdate?.("user", "complete");
-      onLayerUpdate?.("agent", "complete");
-      onLayerUpdate?.("conversation", "complete");
-      onLayerUpdate?.("vector", "complete");
-      onLayerUpdate?.("facts", "complete");
-      onLayerUpdate?.("graph", "complete");
-    },
-    onError: () => {
-      setIsLoading(false);
-      hasStartedStreamingRef.current = false;
+    onData: handleDataPart,
+    onError: (error) => {
+      console.error("Chat error:", error);
     },
   });
 
-  // Simulate layer updates for demo (replace with real Convex subscriptions)
-  const simulateLayerUpdates = () => {
-    const layers: { layer: MemoryLayer; delay: number }[] = [
-      { layer: "memorySpace", delay: 50 },
-      { layer: "user", delay: 80 },
-      { layer: "agent", delay: 100 },
-      { layer: "conversation", delay: 300 },
-      { layer: "vector", delay: 500 },
-      { layer: "facts", delay: 800 },
-      { layer: "graph", delay: 1000 },
-    ];
-
-    layers.forEach(({ layer, delay }) => {
-      setTimeout(() => {
-        onLayerUpdate?.(layer, "in_progress");
-      }, delay);
-      setTimeout(() => {
-        onLayerUpdate?.(layer, "complete");
-      }, delay + 200);
-    });
-  };
+  // Determine if we're actively streaming (only time to show typing indicator)
+  const isStreaming = status === "streaming";
 
   // Auto-scroll to latest message
   useEffect(() => {
@@ -103,17 +104,15 @@ export function ChatInterface({
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isStreaming) return;
 
     const message = input.trim();
     setInput("");
-    setIsLoading(true);
 
     try {
       await sendMessage({ text: message });
     } catch (error) {
       console.error("Failed to send message:", error);
-      setIsLoading(false);
     }
   };
 
@@ -188,7 +187,8 @@ export function ChatInterface({
           </div>
         ))}
 
-        {(isLoading || status === "streaming") && (
+        {/* Typing indicator - only show during active streaming */}
+        {isStreaming && (
           <div className="flex justify-start">
             <div className="bg-white/10 px-4 py-3 rounded-2xl">
               <div className="flex gap-1">
@@ -203,7 +203,7 @@ export function ChatInterface({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
+      {/* Input - only disabled during active streaming, NOT during background orchestration */}
       <div className="border-t border-white/10 p-4">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
@@ -212,11 +212,11 @@ export function ChatInterface({
             onChange={(e) => setInput(e.target.value)}
             placeholder="Tell me about yourself..."
             className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-cortex-500 transition-colors"
-            disabled={isLoading}
+            disabled={isStreaming}
           />
           <button
             type="submit"
-            disabled={isLoading || !input.trim()}
+            disabled={isStreaming || !input.trim()}
             className="px-6 py-3 bg-cortex-600 hover:bg-cortex-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-medium transition-colors"
           >
             Send
