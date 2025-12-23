@@ -892,7 +892,7 @@ export const updateMany = mutation({
     if (args.memorySpaceId) {
       contexts = await ctx.db
         .query("contexts")
-        .withIndex("by_memorySpaceId", (q: any) =>
+        .withIndex("by_memorySpace", (q: any) =>
           q.eq("memorySpaceId", args.memorySpaceId),
         )
         .collect();
@@ -987,7 +987,7 @@ export const deleteMany = mutation({
     if (args.memorySpaceId) {
       contexts = await ctx.db
         .query("contexts")
-        .withIndex("by_memorySpaceId", (q: any) =>
+        .withIndex("by_memorySpace", (q: any) =>
           q.eq("memorySpaceId", args.memorySpaceId),
         )
         .collect();
