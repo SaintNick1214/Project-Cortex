@@ -362,16 +362,22 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
             };
 
             // 1. Clear agents (using SDK batch unregisterMany for speed)
+            // Loop until no more agents remain (list defaults to 100, so we need to paginate)
             spinner.text = `Clearing agents...`;
             try {
-              // Use unregisterMany with empty filters to match all agents
-              // This uses a single backend mutation instead of N individual calls
-              const result = await client.agents.unregisterMany(
-                {},
-                { cascade: false },
-              );
-              deleted.agents = result.deleted;
-              spinner.text = `Clearing agents... (${deleted.agents} deleted)`;
+              let moreAgents = true;
+              while (moreAgents) {
+                // Use unregisterMany with empty filters to match all agents
+                // This uses a single backend mutation instead of N individual calls
+                const result = await client.agents.unregisterMany(
+                  {},
+                  { cascade: false },
+                );
+                deleted.agents += result.deleted;
+                spinner.text = `Clearing agents... (${deleted.agents} deleted)`;
+                // If no agents were deleted this round, we're done
+                moreAgents = result.deleted > 0;
+              }
             } catch {
               // Fall back to direct table clear if SDK fails
               await clearTableDirect("agents", "agents");

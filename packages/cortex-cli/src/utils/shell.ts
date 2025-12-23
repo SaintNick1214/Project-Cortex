@@ -129,10 +129,22 @@ export async function execCommandLive(
 
 /**
  * Get the path to the installed SDK package
+ *
+ * Order of precedence:
+ * 1. CORTEX_SDK_DEV_PATH environment variable (for CLI development)
+ * 2. Project's node_modules/@cortexmemory/sdk
+ * 3. Fallback to require.resolve
+ *
  * @param projectPath - Optional project path to look in (defaults to current directory)
  */
 export function getSDKPath(projectPath?: string): string | null {
   try {
+    // Check for development override first
+    const devPath = process.env.CORTEX_SDK_DEV_PATH;
+    if (devPath && existsSync(devPath)) {
+      return devPath;
+    }
+
     // If projectPath provided, look in that project's node_modules
     if (projectPath) {
       const sdkPath = path.join(
