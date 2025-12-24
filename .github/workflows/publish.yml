@@ -549,7 +549,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: main  # Checkout main branch (not detached HEAD) so we can push formula updates back
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -768,9 +769,18 @@ jobs:
           VERSION=${{ needs.check-version.outputs.cli-new-version }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if there are changes to commit
+          if git diff --quiet Formula/cli.rb; then
+            echo "No changes to Formula/cli.rb, skipping commit"
+            exit 0
+          fi
+          
           git add Formula/cli.rb
-          git commit -m "chore(homebrew): update formula to v${VERSION}" || echo "No changes to commit"
-          git push origin main
+          git commit -m "chore(homebrew): update formula to v${VERSION}"
+          
+          # Push to main (we're on main branch due to checkout ref: main)
+          git push origin HEAD:main
 
   publish-python:
     needs: check-version
