@@ -304,6 +304,7 @@ jobs:
   test-python:
     name: Test Python SDK
     runs-on: ubuntu-latest
+    timeout-minutes: 20  # Job-level timeout as safety net (pytest-timeout handles per-test)
     needs: [detect-changes, setup-and-purge]
     # Run if Python SDK changed OR if PR is targeting main branch
     # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
