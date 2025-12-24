@@ -853,6 +853,11 @@ export const search = query({
 /**
  * Update many contexts matching filters
  */
+/**
+ * Update many contexts matching filters
+ *
+ * IMPORTANT: Uses indexed queries to avoid OCC conflicts with parallel workers.
+ */
 export const updateMany = mutation({
   args: {
     memorySpaceId: v.optional(v.string()),
@@ -880,13 +885,23 @@ export const updateMany = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    // Get all matching contexts
-    let contexts = await ctx.db.query("contexts").collect();
+    let contexts;
 
-    // Apply filters
+    // CRITICAL: Use indexed query when memorySpaceId is provided to avoid
+    // full table scan OCC conflicts.
     if (args.memorySpaceId) {
-      contexts = contexts.filter((c) => c.memorySpaceId === args.memorySpaceId);
+      contexts = await ctx.db
+        .query("contexts")
+        .withIndex("by_memorySpace", (q: any) =>
+          q.eq("memorySpaceId", args.memorySpaceId),
+        )
+        .collect();
+    } else {
+      // Fallback to full scan only when no memorySpaceId filter
+      contexts = await ctx.db.query("contexts").collect();
     }
+
+    // Apply remaining filters in-memory
     if (args.userId) {
       contexts = contexts.filter((c) => c.userId === args.userId);
     }
@@ -944,6 +959,10 @@ export const updateMany = mutation({
 
 /**
  * Delete many contexts matching filters
+ *
+ * IMPORTANT: Uses indexed queries to avoid OCC conflicts with parallel workers.
+ * Full table scans create read dependencies on the entire table, causing infinite
+ * retry loops when other workers are creating/updating contexts simultaneously.
  */
 export const deleteMany = mutation({
   args: {
@@ -961,13 +980,24 @@ export const deleteMany = mutation({
     cascadeChildren: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    // Get all matching contexts
-    let contexts = await ctx.db.query("contexts").collect();
+    let contexts;
 
-    // Apply filters
+    // CRITICAL: Use indexed query when memorySpaceId is provided to avoid
+    // full table scan OCC conflicts. This is the common case for test cleanup.
     if (args.memorySpaceId) {
-      contexts = contexts.filter((c) => c.memorySpaceId === args.memorySpaceId);
+      contexts = await ctx.db
+        .query("contexts")
+        .withIndex("by_memorySpace", (q: any) =>
+          q.eq("memorySpaceId", args.memorySpaceId),
+        )
+        .collect();
+    } else {
+      // Fallback to full scan only when no memorySpaceId filter
+      // This should be rare and caller should be aware of OCC risks
+      contexts = await ctx.db.query("contexts").collect();
     }
+
+    // Apply remaining filters in-memory (these are less common)
     if (args.userId) {
       contexts = contexts.filter((c) => c.userId === args.userId);
     }

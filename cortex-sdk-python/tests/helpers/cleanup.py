@@ -995,15 +995,22 @@ class ScopedCleanup:
         self._log(f"✅ Cleaned up {count} facts")
         return count
 
-    async def cleanup_contexts(self) -> int:
+    async def cleanup_contexts(self, timeout_per_context: float = 30.0) -> int:
         """
         Cleanup contexts created by this test run.
+
+        Args:
+            timeout_per_context: Timeout in seconds for each context deletion (default: 30s)
+                Prevents hanging on stuck context deletions in CI.
 
         Returns:
             Number of contexts deleted
         """
+        import asyncio
+
         self._log(f"🧹 Cleaning up contexts for run {self.run_id}...")
         count = 0
+        skipped = 0
 
         try:
             result = await self.cortex.contexts.list(limit=1000)
@@ -1016,14 +1023,24 @@ class ScopedCleanup:
                 if self._belongs_to_run(space_id) or self._belongs_to_run(ctx_id):
                     try:
                         from cortex.types import DeleteContextOptions
-                        await self.cortex.contexts.delete(ctx_id, DeleteContextOptions(cascade_children=True))
+                        # Add timeout to prevent hanging on stuck deletions
+                        await asyncio.wait_for(
+                            self.cortex.contexts.delete(ctx_id, DeleteContextOptions(cascade_children=True)),
+                            timeout=timeout_per_context
+                        )
                         count += 1
+                    except asyncio.TimeoutError:
+                        self._log(f"⚠️ Timeout deleting context {ctx_id} (>{timeout_per_context}s)")
+                        skipped += 1
                     except Exception:
                         pass
         except Exception:
             pass
 
-        self._log(f"✅ Cleaned up {count} contexts")
+        if skipped > 0:
+            self._log(f"✅ Cleaned up {count} contexts ({skipped} skipped due to timeout)")
+        else:
+            self._log(f"✅ Cleaned up {count} contexts")
         return count
 
     async def cleanup_users(self) -> int:
@@ -1177,7 +1194,7 @@ class ScopedCleanup:
 
         return memory_space_ids
 
-    async def cleanup_all(self) -> ScopedCleanupResult:
+    async def cleanup_all(self, overall_timeout: float = 120.0) -> ScopedCleanupResult:
         """
         Cleanup all entities created by this test run.
         Order matters: delete dependent entities first.
@@ -1186,10 +1203,33 @@ class ScopedCleanup:
         deleteMany (conversations, contexts, memories, facts), then falls back
         to individual cleanup for other entity types.
 
+        Args:
+            overall_timeout: Maximum time for entire cleanup in seconds (default: 120s)
+                Prevents cleanup from blocking the test run indefinitely.
+
         Returns:
             Summary of deleted entities
         """
+        import asyncio
+
         self._log(f"\n🧹 Starting scoped cleanup for run {self.run_id}...\n")
+
+        result = ScopedCleanupResult()
+
+        try:
+            # Wrap the entire cleanup in a timeout to prevent hanging
+            result = await asyncio.wait_for(
+                self._cleanup_all_impl(),
+                timeout=overall_timeout
+            )
+        except asyncio.TimeoutError:
+            self._log(f"⚠️ Cleanup timed out after {overall_timeout}s - some entities may remain")
+
+        return result
+
+    async def _cleanup_all_impl(self) -> ScopedCleanupResult:
+        """Internal implementation of cleanup_all without timeout wrapper."""
+        import asyncio
 
         result = ScopedCleanupResult()
 
@@ -1203,16 +1243,20 @@ class ScopedCleanup:
 
             for space_id in memory_space_ids:
                 try:
-                    totals = await batch_deleter.delete_all_in_space(space_id)
+                    # Add timeout to batch operations (30s per space)
+                    totals = await asyncio.wait_for(
+                        batch_deleter.delete_all_in_space(space_id),
+                        timeout=30.0
+                    )
                     result.conversations += totals.get("conversations", 0)
                     result.contexts += totals.get("contexts", 0)
                     result.memories += totals.get("memories", 0)
                     result.facts += totals.get("facts", 0)
                     self._log(f"  ✓ {space_id}: {sum(totals.values())} entities")
+                except asyncio.TimeoutError:
+                    self._log(f"  ⚠ {space_id}: batch delete timed out")
                 except Exception as e:
-                    self._log(f"  ⚠ {space_id}: batch delete failed ({e}), falling back...")
-                    # Fall back to individual cleanup for this space
-                    pass
+                    self._log(f"  ⚠ {space_id}: batch delete failed ({e})")
 
         # Phase 2: Cleanup any orphaned entities not in memory spaces
         # (e.g., conversations with conversation_id matching run but different space)
