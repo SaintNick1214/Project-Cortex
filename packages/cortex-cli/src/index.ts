@@ -46,7 +46,7 @@ if (envLoaded) {
 }
 
 // Package version - synced with @cortexmemory/sdk
-const VERSION = "0.22.1";
+const VERSION = "0.26.1";
 
 const program = new Command();
 

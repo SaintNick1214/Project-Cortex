@@ -110,14 +110,23 @@ export async function createEnvFile(
 ${existingContent}`;
     }
 
-    // Add OpenAI placeholder if not present
+    // Add OpenAI key (or placeholder) if not present
     if (!existingContent.includes("OPENAI_API_KEY")) {
-      finalContent += `
+      if (config.openaiApiKey) {
+        finalContent += `
+# =============================================================================
+# OpenAI API Key (Optional - for embeddings)
+# =============================================================================
+OPENAI_API_KEY=${config.openaiApiKey}
+`;
+      } else {
+        finalContent += `
 # =============================================================================
 # OpenAI API Key (Optional - for embeddings)
 # =============================================================================
 # OPENAI_API_KEY=sk-...
 `;
+      }
     }
 
     await fs.writeFile(envPath, finalContent);
