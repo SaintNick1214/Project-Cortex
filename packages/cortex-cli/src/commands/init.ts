@@ -926,6 +926,10 @@ async function executeSetup(config: WizardConfig): Promise<void> {
 
     // Read actual Convex URL from .env.local (convex dev may have created/updated it)
     const envLocalPath = path.join(config.projectPath, ".env.local");
+    // #region agent log
+    const preReadContent = fs.existsSync(envLocalPath) ? await fs.readFile(envLocalPath, "utf-8") : "FILE_NOT_FOUND";
+    fetch('http://127.0.0.1:7242/ingest/eda9cb6f-7c20-49f6-b35d-71ab0bedc9df',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'init.ts:932',message:'After createEnvFile - reading final .env.local',data:{envLocalPath,preReadContent},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2,H5'})}).catch(()=>{});
+    // #endregion
     if (fs.existsSync(envLocalPath)) {
       try {
         const envContent = await fs.readFile(envLocalPath, "utf-8");
