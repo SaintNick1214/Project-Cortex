@@ -8,6 +8,9 @@ fail-on-severity: high
 license-check: true
 
 # Allow these licenses (standard SPDX identifiers)
+# Note: allow-licenses and deny-licenses are mutually exclusive.
+# Using allow-licenses is the recommended approach (deny-licenses is deprecated).
+# Any license NOT in this list will be flagged.
 allow-licenses:
   - MIT
   - Apache-2.0
@@ -20,12 +23,6 @@ allow-licenses:
   - Python-2.0
   - BlueOak-1.0.0
   - CC-BY-4.0
-
-# Deny copyleft licenses that could be problematic
-deny-licenses:
-  - GPL-2.0
-  - GPL-3.0
-  - AGPL-3.0
 
 # Allow our internal packages (FSL-1.1-Apache-2.0 is not a standard SPDX identifier)
 # These packages are internal workspace packages with custom licensing
