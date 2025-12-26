@@ -149,10 +149,8 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with:
-          fail-on-severity: high
-          comment-summary-in-pr: true
-          # Allow internal packages - license is Apache-2.0 (in repo root)
-          allow-dependencies-licenses: "pkg:npm/@cortexmemory/sdk, pkg:npm/@cortexmemory/cli, pkg:npm/@cortexmemory/vercel-ai-provider"
+          config-file: .github/dependency-review-config.yml
+          comment-summary-in-pr: always
 
   # License compliance check
   license-check:

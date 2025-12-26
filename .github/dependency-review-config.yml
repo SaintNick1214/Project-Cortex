@@ -1,0 +1,44 @@
+# Dependency Review Configuration
+# https://github.com/actions/dependency-review-action
+
+# Fail on high severity vulnerabilities
+fail-on-severity: high
+
+# Enable license checking
+license-check: true
+
+# Allow these licenses (standard SPDX identifiers)
+allow-licenses:
+  - MIT
+  - Apache-2.0
+  - BSD-2-Clause
+  - BSD-3-Clause
+  - ISC
+  - 0BSD
+  - CC0-1.0
+  - Unlicense
+  - Python-2.0
+  - BlueOak-1.0.0
+  - CC-BY-4.0
+
+# Deny copyleft licenses that could be problematic
+deny-licenses:
+  - GPL-2.0
+  - GPL-3.0
+  - AGPL-3.0
+
+# Allow our internal packages (FSL-1.1-Apache-2.0 is not a standard SPDX identifier)
+# These packages are internal workspace packages with custom licensing
+allow-dependencies-licenses:
+  - "pkg:npm/@cortexmemory/sdk"
+  - "pkg:npm/@cortexmemory/cli"
+  - "pkg:npm/@cortexmemory/vercel-ai-provider"
+  - "pkg:npm/create-cortex-memories"
+  # Private quickstart package (not published)
+  - "pkg:npm/@cortexmemory/vercel-ai-quickstart"
+  # Vercel AI SDK packages - these are MIT licensed but the scanner can't
+  # resolve licenses from the quickstart's isolated package-lock.json.
+  # These packages are only used in the private demo app (not published).
+  - "pkg:npm/@ai-sdk/openai"
+  - "pkg:npm/@ai-sdk/react"
+  - "pkg:npm/ai"
