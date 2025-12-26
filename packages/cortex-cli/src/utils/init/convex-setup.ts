@@ -125,6 +125,8 @@ export function sanitizeProjectName(name: string): string {
   // Truncate to 60 chars (Convex limit is 64, leave room for auto-suffix)
   if (sanitized.length > 60) {
     sanitized = sanitized.substring(0, 60);
+    // Remove trailing dash that may result from truncation
+    sanitized = sanitized.replace(/-$/, "");
   }
 
   return sanitized || "cortex-project";
