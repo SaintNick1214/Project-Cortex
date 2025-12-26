@@ -103,10 +103,16 @@ function getCortexMemoryConfig(
 
 export async function POST(req: Request) {
   try {
-    const { messages, memorySpaceId, userId } = await req.json();
+    const body = await req.json();
+    const { messages, memorySpaceId, userId } = body;
 
     // Convert UIMessage[] from useChat to ModelMessage[] for streamText
-    const modelMessages = convertToModelMessages(messages);
+    // Note: In AI SDK v6+, convertToModelMessages may return a Promise
+    const modelMessagesResult = convertToModelMessages(messages);
+    const modelMessages =
+      modelMessagesResult instanceof Promise
+        ? await modelMessagesResult
+        : modelMessagesResult;
 
     // Use createUIMessageStream to send both LLM text and layer events
     return createUIMessageStreamResponse({

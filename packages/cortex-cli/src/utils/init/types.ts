@@ -12,6 +12,10 @@ export interface WizardConfig {
   convexSetupType: "new" | "existing" | "local";
   convexUrl?: string;
   deployKey?: string;
+  /** Convex team slug (from login status) */
+  teamSlug?: string;
+  /** Sanitized project name for Convex (max 60 chars) */
+  sanitizedProjectName?: string;
   graphEnabled: boolean;
   graphType?: "neo4j" | "memgraph" | "skip";
   graphUri?: string;

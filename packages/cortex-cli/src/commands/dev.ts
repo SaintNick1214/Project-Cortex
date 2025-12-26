@@ -436,15 +436,17 @@ async function startAllServices(state: DevState): Promise<void> {
           ? ["deploy", "--cmd", "echo deployed"]
           : ["convex", "deploy", "--cmd", "echo deployed"];
 
-        const env: Record<string, string | undefined> = { ...process.env };
-        env.CONVEX_URL = dep.url;
-        env.CONVEX_DEPLOY_KEY = dep.key;
+        // Build clean environment, removing inherited CONVEX_* vars
+        const deployEnv = buildConvexEnv({
+          CONVEX_URL: dep.url,
+          CONVEX_DEPLOY_KEY: dep.key,
+        });
 
         await new Promise<void>((resolve, reject) => {
           const child = spawn(deployCmd, deployArgs, {
             cwd: dep.projectPath,
             stdio: "pipe",
-            env,
+            env: deployEnv,
           });
 
           child.on("close", (code) => {
@@ -467,6 +469,38 @@ async function startAllServices(state: DevState): Promise<void> {
 }
 
 /**
+ * Build a clean environment for Convex commands.
+ * Removes inherited CONVEX_* variables so the target project's .env.local is used,
+ * then applies any explicit overrides.
+ */
+function buildConvexEnv(
+  overrides?: Record<string, string>,
+): typeof process.env {
+  const env = { ...process.env };
+
+  // Remove inherited CONVEX_* variables that could conflict with target project
+  // (e.g., from parent directory's .env.local being injected by dotenv)
+  const convexVars = Object.keys(env).filter(
+    (key) =>
+      key.startsWith("CONVEX_") ||
+      key.startsWith("LOCAL_CONVEX_") ||
+      key.startsWith("CLOUD_CONVEX_") ||
+      key.startsWith("ENV_CONVEX_"),
+  );
+
+  for (const key of convexVars) {
+    delete env[key];
+  }
+
+  // Apply explicit overrides
+  if (overrides) {
+    Object.assign(env, overrides);
+  }
+
+  return env;
+}
+
+/**
  * Start Convex dev process for a deployment
  */
 async function startConvexProcess(
@@ -479,9 +513,10 @@ async function startConvexProcess(
   const args = hasConvex ? ["dev"] : ["convex", "dev"];
   if (dep.isLocal) args.push("--local");
 
-  const env: Record<string, string | undefined> = { ...process.env };
-  env.CONVEX_URL = dep.url;
-  if (dep.key) env.CONVEX_DEPLOY_KEY = dep.key;
+  // Build clean environment, removing inherited CONVEX_* vars
+  const overrides: Record<string, string> = { CONVEX_URL: dep.url };
+  if (dep.key) overrides.CONVEX_DEPLOY_KEY = dep.key;
+  const env = buildConvexEnv(overrides);
 
   const child = spawn(command, args, {
     cwd: dep.projectPath,

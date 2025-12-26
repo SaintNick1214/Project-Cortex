@@ -26,6 +26,13 @@ const MemorySpaceSwitcher = dynamic(
     })),
   { ssr: false },
 );
+const HealthStatus = dynamic(
+  () =>
+    import("@/components/HealthStatus").then((m) => ({
+      default: m.HealthStatus,
+    })),
+  { ssr: false },
+);
 
 export default function Home() {
   const [memorySpaceId, setMemorySpaceId] = useState("quickstart-demo");
@@ -55,10 +62,13 @@ export default function Home() {
             </div>
           </div>
 
-          <MemorySpaceSwitcher
-            value={memorySpaceId}
-            onChange={setMemorySpaceId}
-          />
+          <div className="flex items-center gap-4">
+            <HealthStatus />
+            <MemorySpaceSwitcher
+              value={memorySpaceId}
+              onChange={setMemorySpaceId}
+            />
+          </div>
         </div>
       </header>
 

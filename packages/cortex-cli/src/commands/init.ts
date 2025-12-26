@@ -26,6 +26,8 @@ import {
   setupNewConvex,
   setupExistingConvex,
   deployToConvex,
+  ensureConvexAuth,
+  sanitizeProjectName,
 } from "../utils/init/convex-setup.js";
 import {
   getGraphConfig,
@@ -544,8 +546,8 @@ export async function runInitWizard(
   // Step 2: Installation type
   const installationType = await getInstallationType(projectInfo.projectPath);
 
-  // Step 3: Convex setup
-  const convexConfig = await getConvexSetup(options);
+  // Step 3: Convex setup (pass project name for non-interactive setup)
+  const convexConfig = await getConvexSetup(options, projectInfo.projectName);
 
   // Step 4: Graph database (optional)
   let graphConfig: GraphConfig | null = null;
@@ -567,6 +569,8 @@ export async function runInitWizard(
     convexSetupType: convexConfig.type,
     convexUrl: convexConfig.config.convexUrl,
     deployKey: convexConfig.config.deployKey,
+    teamSlug: convexConfig.config.teamSlug,
+    sanitizedProjectName: convexConfig.config.sanitizedProjectName,
     graphEnabled: graphConfig !== null,
     graphType: graphConfig?.type || "skip",
     graphUri: graphConfig?.uri,
@@ -678,48 +682,81 @@ async function getInstallationType(
 
 /**
  * Get Convex setup configuration
+ *
+ * Handles auth, gets team slug, and sanitizes project name for non-interactive setup.
  */
-async function getConvexSetup(options: {
-  local?: boolean;
-  cloud?: boolean;
-}): Promise<{
+async function getConvexSetup(
+  options: {
+    local?: boolean;
+    cloud?: boolean;
+  },
+  projectName: string,
+): Promise<{
   type: "new" | "existing" | "local";
-  config: { convexUrl: string; deployKey?: string };
+  config: {
+    convexUrl: string;
+    deployKey?: string;
+    teamSlug?: string;
+    sanitizedProjectName?: string;
+  };
 }> {
-  // Quick options
+  console.log(pc.cyan("\n   Convex Database Setup"));
+  console.log(pc.dim("   Cortex uses Convex as its backend database\n"));
+
+  // Ensure user is logged in and get team slug
+  const authStatus = await ensureConvexAuth();
+  const teamSlug = authStatus.teamSlug;
+  const sanitizedName = sanitizeProjectName(projectName);
+
+  // Quick options via CLI flags
   if (options.local) {
     return {
       type: "local",
-      config: { convexUrl: "http://127.0.0.1:3210" },
+      config: {
+        convexUrl: "http://127.0.0.1:3210",
+        teamSlug,
+        sanitizedProjectName: sanitizedName,
+      },
     };
   }
 
   if (options.cloud) {
     return {
       type: "new",
-      config: { convexUrl: "" },
+      config: {
+        convexUrl: "",
+        teamSlug,
+        sanitizedProjectName: sanitizedName,
+      },
     };
   }
 
-  console.log(pc.cyan("\n   Convex Database Setup"));
-  console.log(pc.dim("   Cortex uses Convex as its backend database\n"));
+  // Build menu choices with project name context
+  const choices = [
+    {
+      title: "Local development (fast, recommended)",
+      description: `Creates "${sanitizedName}" with local backend`,
+      value: "local",
+    },
+    {
+      title: "Create new cloud project",
+      description: teamSlug
+        ? `Creates "${sanitizedName}" in team "${teamSlug}"`
+        : `Creates "${sanitizedName}" on Convex cloud`,
+      value: "new",
+    },
+    {
+      title: "Use existing Convex project",
+      description: "Connect to your existing deployment",
+      value: "existing",
+    },
+  ];
 
   const response = await prompts({
     type: "select",
     name: "setupType",
     message: "How would you like to set up Convex?",
-    choices: [
-      {
-        title: "Create new Convex project",
-        description: "Full features including vector search",
-        value: "new",
-      },
-      {
-        title: "Use existing Convex deployment",
-        description: "Connect to your existing deployment",
-        value: "existing",
-      },
-    ],
+    choices,
     initial: 0,
   });
 
@@ -727,11 +764,32 @@ async function getConvexSetup(options: {
     throw new Error("Convex setup is required");
   }
 
+  // For existing projects, ask for the project name
+  let existingProjectName = sanitizedName;
+  if (response.setupType === "existing") {
+    const existingResponse = await prompts({
+      type: "text",
+      name: "projectName",
+      message: "Enter the name of your existing Convex project:",
+      initial: sanitizedName,
+      validate: (value) => (value ? true : "Project name is required"),
+    });
+
+    if (!existingResponse.projectName) {
+      throw new Error("Project name is required");
+    }
+
+    existingProjectName = existingResponse.projectName;
+  }
+
   return {
     type: response.setupType,
     config: {
       convexUrl: "",
       deployKey: undefined,
+      teamSlug,
+      sanitizedProjectName:
+        response.setupType === "existing" ? existingProjectName : sanitizedName,
     },
   };
 }
@@ -907,14 +965,55 @@ async function executeSetup(config: WizardConfig): Promise<void> {
     backendSpinner.succeed("Cortex backend files ready");
 
     // Setup and deploy Convex in ONE step
+    // Pass teamSlug and projectName for non-interactive setup
+    // IMPORTANT: Always pass useLocalBackend when local mode is selected,
+    // even if teamSlug/projectName are missing (falls back to interactive)
     let convexConfig;
-    if (config.convexSetupType === "new") {
-      // For new projects: prompt for project creation and deploy everything
-      convexConfig = await setupNewConvex(config.projectPath);
+    const isLocalMode = config.convexSetupType === "local";
+    const convexOptions =
+      config.teamSlug && config.sanitizedProjectName
+        ? {
+            teamSlug: config.teamSlug,
+            projectName: config.sanitizedProjectName,
+            useLocalBackend: isLocalMode,
+          }
+        : isLocalMode
+          ? { useLocalBackend: true }
+          : undefined;
+
+    if (
+      config.convexSetupType === "new" ||
+      config.convexSetupType === "local"
+    ) {
+      // For new projects (cloud or local): create project and deploy
+      convexConfig = await setupNewConvex(config.projectPath, convexOptions);
     } else {
-      // For existing projects: get URL/key, then deploy
-      convexConfig = await setupExistingConvex();
-      await deployToConvex(config.projectPath, convexConfig, false);
+      // For existing projects: connect and deploy
+      try {
+        convexConfig = await setupExistingConvex(
+          config.projectPath,
+          convexOptions
+            ? {
+                teamSlug: convexOptions.teamSlug,
+                projectName: convexOptions.projectName,
+              }
+            : undefined,
+        );
+        // Only deploy if we used interactive mode (no options)
+        if (!convexOptions) {
+          await deployToConvex(config.projectPath, convexConfig, false);
+        }
+      } catch (error) {
+        // The Convex CLI already printed the actual error (e.g., "Project not found",
+        // "Authentication failed", "Network error", etc.) to the console.
+        // Just provide a helpful hint without assuming the cause.
+        console.log(
+          pc.dim(
+            "\n   If the project wasn't found, check for typos or select 'Create new' instead.",
+          ),
+        );
+        throw error;
+      }
     }
 
     // Update config with actual Convex details
