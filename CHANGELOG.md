@@ -19,6 +19,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.26.1] - 2025-12-26
+
+#### 🔧 Vercel AI SDK v6.0 Support
+
+**Added support for Vercel AI SDK version 6.0** in the `@cortexmemory/vercel-ai-provider` package.
+
+**Changes:**
+
+- ✅ **Extended peerDependencies** - Now accepts `ai` versions `^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0`
+- ✅ **Compatibility** - Users on Vercel AI SDK v6.x will no longer see peer dependency warnings
+
+**Breaking Changes:** None - fully backward compatible.
+
+---
+
 ### [0.26.0] - 2025-12-23
 
 #### 🧠 Enhanced Belief Revision - Subject+FactType Matching

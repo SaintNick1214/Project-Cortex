@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/vercel-ai-provider",
-  "version": "0.26.0",
+  "version": "0.26.1",
   "description": "Cortex Memory Provider for Vercel AI SDK - Add persistent memory with enhanced streaming capabilities to any AI application",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -71,7 +71,7 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "ai": "^3.0.0 || ^4.0.0 || ^5.0.0",
+    "ai": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0",
     "convex": "^1.28.2"
   },
   "dependencies": {
