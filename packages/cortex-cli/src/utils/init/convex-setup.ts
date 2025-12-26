@@ -367,9 +367,10 @@ export async function setupExistingConvex(
     });
 
     if (exitCode !== 0) {
-      // Check if it's a "project not found" error
+      // The Convex CLI already printed the actual error to the console.
+      // Throw a generic error - the user has already seen the real reason.
       throw new Error(
-        `PROJECT_NOT_FOUND: Project "${options.projectName}" not found in team "${options.teamSlug}"`,
+        `Convex CLI failed with exit code ${exitCode}. Check the output above for details.`,
       );
     }
 

@@ -999,16 +999,14 @@ async function executeSetup(config: WizardConfig): Promise<void> {
           await deployToConvex(config.projectPath, convexConfig, false);
         }
       } catch (error) {
-        const err = error as Error;
-        if (err.message.includes("PROJECT_NOT_FOUND")) {
-          console.log(pc.red("\n   Project not found!"));
-          console.log(
-            pc.dim(
-              "   Please check for typos in the project name, or select 'Create new' instead.",
-            ),
-          );
-          throw new Error("Setup cancelled - project not found");
-        }
+        // The Convex CLI already printed the actual error (e.g., "Project not found",
+        // "Authentication failed", "Network error", etc.) to the console.
+        // Just provide a helpful hint without assuming the cause.
+        console.log(
+          pc.dim(
+            "\n   If the project wasn't found, check for typos or select 'Create new' instead.",
+          ),
+        );
         throw error;
       }
     }
