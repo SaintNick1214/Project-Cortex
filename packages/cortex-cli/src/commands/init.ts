@@ -966,15 +966,20 @@ async function executeSetup(config: WizardConfig): Promise<void> {
 
     // Setup and deploy Convex in ONE step
     // Pass teamSlug and projectName for non-interactive setup
+    // IMPORTANT: Always pass useLocalBackend when local mode is selected,
+    // even if teamSlug/projectName are missing (falls back to interactive)
     let convexConfig;
+    const isLocalMode = config.convexSetupType === "local";
     const convexOptions =
       config.teamSlug && config.sanitizedProjectName
         ? {
             teamSlug: config.teamSlug,
             projectName: config.sanitizedProjectName,
-            useLocalBackend: config.convexSetupType === "local",
+            useLocalBackend: isLocalMode,
           }
-        : undefined;
+        : isLocalMode
+          ? { useLocalBackend: true }
+          : undefined;
 
     if (
       config.convexSetupType === "new" ||
