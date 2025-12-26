@@ -5,6 +5,7 @@
  * Split from memory.test.ts for parallel execution
  */
 
+import { jest } from "@jest/globals";
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import OpenAI from "openai";
@@ -97,6 +98,9 @@ describe("Memory OpenAI Integration", () => {
     const shouldRun = Boolean(openai);
 
     (shouldRun ? describe : describe.skip)("with OpenAI", () => {
+      // Retry failed tests once - OpenAI API and vector search can have transient issues
+      jest.retryTimes(1, { logErrorsBeforeRetry: true });
+
       let conversationId: string;
       const storedMemories: Array<{ fact: string; memoryId: string }> = [];
 

@@ -1,9 +1,10 @@
 #!/usr/bin/env tsx
 /**
  * Manual cleanup script for test data
- * Purges all test data from a Convex deployment
+ * Purges all test data from a Convex deployment using admin:clearTable
+ * (same method as CLI's `cortex db clear` for consistency)
  *
- * Tables purged (in order for referential integrity):
+ * Tables cleared (in order for referential integrity):
  *   1. conversations - conversation history
  *   2. memories - vector store
  *   3. facts - extracted facts
@@ -18,7 +19,6 @@
  */
 
 import { ConvexClient } from "convex/browser";
-import { api } from "../convex-dev/_generated/api";
 import * as dotenv from "dotenv";
 import { resolve } from "path";
 
@@ -39,11 +39,45 @@ console.log(`\n🧹 Cleaning up test data from: ${convexUrl}\n`);
 
 const client = new ConvexClient(convexUrl);
 
+// Maximum records to delete per mutation (Convex limit)
+const MAX_LIMIT = 1000;
+
+/**
+ * Clear a table using admin:clearTable mutation (same as CLI)
+ * Loops until all records are deleted
+ */
+async function clearTable(
+  tableName: string,
+  displayName: string,
+): Promise<number> {
+  let totalDeleted = 0;
+  let hasMore = true;
+
+  while (hasMore) {
+    try {
+      const result = (await client.mutation(
+        "admin:clearTable" as Parameters<typeof client.mutation>[0],
+        { table: tableName, limit: MAX_LIMIT },
+      )) as { deleted: number; hasMore: boolean };
+      totalDeleted += result.deleted;
+      hasMore = result.hasMore;
+    } catch {
+      // Table might not exist or be empty
+      hasMore = false;
+    }
+  }
+
+  console.log(`   ✅ Deleted ${totalDeleted} ${displayName}`);
+  return totalDeleted;
+}
+
 async function cleanup() {
   try {
-    console.log("🧹 Starting comprehensive cleanup across all 11 tables...\n");
+    console.log(
+      "🧹 Starting comprehensive cleanup using admin:clearTable...\n",
+    );
 
-    let stats = {
+    const stats = {
       conversations: 0,
       memories: 0,
       facts: 0,
@@ -57,146 +91,50 @@ async function cleanup() {
       governanceEnforcement: 0,
     };
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 1: Conversations (use purgeAll for efficiency)
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("📋 Purging conversations...");
-    try {
-      const result = await client.mutation(api.conversations.purgeAll, {});
-      stats.conversations = result.deleted;
-      console.log(`   ✅ Deleted ${stats.conversations} conversations`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Conversations cleanup failed: ${e.message}`);
-    }
+    // Clear tables in order (respecting dependencies)
+    // Using admin:clearTable - same method as CLI's `cortex db clear`
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 2: Memories (use purgeAll for efficiency)
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("📝 Purging memories...");
-    try {
-      const result = await client.mutation(api.memories.purgeAll, {});
-      stats.memories = result.deleted;
-      console.log(`   ✅ Deleted ${stats.memories} memories`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Memories cleanup failed: ${e.message}`);
-    }
+    console.log("📋 Clearing conversations...");
+    stats.conversations = await clearTable("conversations", "conversations");
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 3: Facts
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("📊 Purging facts...");
-    try {
-      const result = await client.mutation(api.facts.purgeAll, {});
-      stats.facts = result.deleted;
-      console.log(`   ✅ Deleted ${stats.facts} facts`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Facts cleanup failed: ${e.message}`);
-    }
+    console.log("📝 Clearing memories...");
+    stats.memories = await clearTable("memories", "memories");
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 4: Contexts
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("🔗 Purging contexts...");
-    try {
-      const result = await client.mutation(api.contexts.purgeAll, {});
-      stats.contexts = result.deleted;
-      console.log(`   ✅ Deleted ${stats.contexts} contexts`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Contexts cleanup failed: ${e.message}`);
-    }
+    console.log("📊 Clearing facts...");
+    stats.facts = await clearTable("facts", "facts");
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 5: Memory Spaces
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("🏢 Purging memory spaces...");
-    try {
-      const result = await client.mutation(api.memorySpaces.purgeAll, {});
-      stats.memorySpaces = result.deleted;
-      console.log(`   ✅ Deleted ${stats.memorySpaces} memory spaces`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Memory spaces cleanup failed: ${e.message}`);
-    }
+    console.log("🔗 Clearing contexts...");
+    stats.contexts = await clearTable("contexts", "contexts");
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 6: Immutable Store
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("💾 Purging immutable store...");
-    try {
-      const result = await client.mutation(api.immutable.purgeAll, {});
-      stats.immutable = result.deleted;
-      console.log(`   ✅ Deleted ${stats.immutable} immutable entries`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Immutable cleanup failed: ${e.message}`);
-    }
+    console.log("🏢 Clearing memory spaces...");
+    stats.memorySpaces = await clearTable("memorySpaces", "memory spaces");
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 7: Mutable Store
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("⚡ Purging mutable store...");
-    try {
-      const result = await client.mutation(api.mutable.purgeAll, {});
-      stats.mutable = result.deleted;
-      console.log(`   ✅ Deleted ${stats.mutable} mutable entries`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Mutable cleanup failed: ${e.message}`);
-    }
+    console.log("💾 Clearing immutable store...");
+    stats.immutable = await clearTable("immutable", "immutable entries");
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 8: Agents Registry
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("👤 Purging agents registry...");
-    try {
-      const result = await client.mutation(api.agents.purgeAll, {});
-      stats.agents = result.deleted;
-      console.log(`   ✅ Deleted ${stats.agents} agents`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Agents cleanup failed: ${e.message}`);
-    }
+    console.log("⚡ Clearing mutable store...");
+    stats.mutable = await clearTable("mutable", "mutable entries");
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 9: Graph Sync Queue
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("🔄 Purging graph sync queue...");
-    try {
-      const result = await client.mutation(api.graphSync.purgeAll, {});
-      stats.graphSyncQueue = result.deleted;
-      console.log(`   ✅ Deleted ${stats.graphSyncQueue} graph sync entries`);
-    } catch (e: any) {
-      console.error(`   ⚠️  Graph sync cleanup failed: ${e.message}`);
-    }
+    console.log("👤 Clearing agents registry...");
+    stats.agents = await clearTable("agents", "agents");
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 10: Governance Policies
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("📜 Purging governance policies...");
-    try {
-      const result = await client.mutation(api.governance.purgeAllPolicies, {});
-      stats.governancePolicies = result.deleted;
-      console.log(
-        `   ✅ Deleted ${stats.governancePolicies} governance policies`,
-      );
-    } catch (e: any) {
-      console.error(`   ⚠️  Governance policies cleanup failed: ${e.message}`);
-    }
+    console.log("🔄 Clearing graph sync queue...");
+    stats.graphSyncQueue = await clearTable(
+      "graphSyncQueue",
+      "graph sync entries",
+    );
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Table 11: Governance Enforcement Logs
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    console.log("📋 Purging governance enforcement logs...");
-    try {
-      const result = await client.mutation(
-        api.governance.purgeAllEnforcement,
-        {},
-      );
-      stats.governanceEnforcement = result.deleted;
-      console.log(
-        `   ✅ Deleted ${stats.governanceEnforcement} enforcement logs`,
-      );
-    } catch (e: any) {
-      console.error(
-        `   ⚠️  Governance enforcement cleanup failed: ${e.message}`,
-      );
-    }
+    console.log("📜 Clearing governance policies...");
+    stats.governancePolicies = await clearTable(
+      "governancePolicies",
+      "governance policies",
+    );
+
+    console.log("📋 Clearing governance enforcement logs...");
+    stats.governanceEnforcement = await clearTable(
+      "governanceEnforcement",
+      "enforcement logs",
+    );
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Summary
@@ -258,7 +196,7 @@ async function cleanup() {
     console.error("❌ Cleanup failed:", error);
     process.exit(1);
   } finally {
-    client.close();
+    await client.close();
   }
 }
 
