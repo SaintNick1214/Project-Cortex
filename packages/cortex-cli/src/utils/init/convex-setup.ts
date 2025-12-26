@@ -140,10 +140,10 @@ export function sanitizeProjectName(name: string): string {
  * Options for non-interactive Convex setup
  */
 export interface ConvexSetupOptions {
-  /** Team slug (from convex login status) */
-  teamSlug: string;
-  /** Sanitized project name */
-  projectName: string;
+  /** Team slug (from convex login status) - optional for interactive fallback */
+  teamSlug?: string;
+  /** Sanitized project name - optional for interactive fallback */
+  projectName?: string;
   /** Use local backend instead of cloud */
   useLocalBackend?: boolean;
 }
@@ -231,9 +231,16 @@ export async function setupNewConvex(
     console.log();
   } else {
     // Fallback to interactive mode (legacy behavior)
+    // Still respect local backend preference even in interactive mode
     args = hasConvex
       ? ["dev", "--once", "--until-success"]
       : ["convex", "dev", "--once", "--until-success"];
+
+    // Add local backend flag if requested (even in interactive mode)
+    if (isLocal) {
+      args.push("--dev-deployment", "local");
+      console.log(pc.dim("   Backend: local"));
+    }
 
     console.log(
       pc.dim("   Running Convex setup (this may prompt for login)..."),
