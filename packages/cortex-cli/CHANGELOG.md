@@ -1,5 +1,27 @@
 # @cortexmemory/cli Changelog
 
+## [0.26.2] - 2025-12-25
+
+### Added
+
+- **Non-interactive Convex setup in `cortex init`** - The init wizard now sets up Convex without interactive prompts for logged-in users
+  - Automatically detects Convex authentication status via `npx convex login status`
+  - Retrieves team slug automatically from login status
+  - Sanitizes project names (lowercase, max 60 chars, valid characters only)
+  - Uses Convex CLI flags (`--configure`, `--team`, `--project`, `--dev-deployment`) for seamless setup
+
+- **Three streamlined setup paths in init wizard**:
+  - **Local development (recommended)** - Creates cloud project with local backend for fastest iteration
+  - **Cloud project** - Creates new cloud deployment with full features
+  - **Existing project** - Connects to an existing Convex deployment
+
+- **Automatic Convex login handling** - First-time users are prompted to login via browser OAuth (`npx convex login`), which only needs to happen once
+
+### Changed
+
+- Init wizard now defaults to "Local development" option (was "Create new cloud project")
+- Setup menu shows project/team context: `Creates "my-project" in team "myteam"`
+
 ## [0.26.1] - 2025-12-25
 
 ### Fixed

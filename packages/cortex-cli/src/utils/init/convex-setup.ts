@@ -2,28 +2,171 @@
  * Convex setup handlers
  *
  * Handles setting up Convex for the init wizard.
+ * Supports non-interactive setup using Convex CLI flags.
  */
 
 import fs from "fs-extra";
 import path from "path";
 import prompts from "prompts";
-import { execCommandLive, commandExists } from "../shell.js";
+import { execCommand, execCommandLive, commandExists } from "../shell.js";
 import type { ConvexConfig } from "./types.js";
 import pc from "picocolors";
 import ora from "ora";
 
-// Note: execCommand is not used in this file anymore but keeping ora for setupNewConvex/setupExistingConvex
+// ============================================================================
+// Auth Status and Login
+// ============================================================================
 
 /**
- * Setup new Convex database (cloud)
+ * Convex auth status result
+ */
+export interface ConvexAuthStatus {
+  isLoggedIn: boolean;
+  teamSlug?: string;
+  teamName?: string;
+}
+
+/**
+ * Check Convex login status and get team information
+ *
+ * Runs `npx convex login status` and parses the output to determine:
+ * - Whether the user is logged in
+ * - The team slug (from output like "- Cortex Memory (nicholasgeil)")
+ *
+ * Note: Convex CLI writes to stderr, so we check both stdout and stderr.
+ */
+export async function getConvexAuthStatus(): Promise<ConvexAuthStatus> {
+  try {
+    const { stdout, stderr } = await execCommand(
+      "npx",
+      ["convex", "login", "status"],
+      {
+        quiet: true,
+      },
+    );
+
+    // Convex CLI writes to stderr, so check both
+    const output = stdout + stderr;
+    const isLoggedIn = output.includes("Status: Logged in");
+
+    // Parse team from output: "- Cortex Memory (nicholasgeil)"
+    const teamMatch = output.match(/-\s+(.+?)\s+\(([a-zA-Z0-9_-]+)\)/);
+
+    return {
+      isLoggedIn,
+      teamSlug: teamMatch?.[2],
+      teamName: teamMatch?.[1],
+    };
+  } catch {
+    return { isLoggedIn: false };
+  }
+}
+
+/**
+ * Ensure user is logged in to Convex
+ *
+ * If not logged in, triggers `npx convex login` which opens browser for OAuth.
+ * Returns the team slug after successful login.
+ */
+export async function ensureConvexAuth(): Promise<ConvexAuthStatus> {
+  let status = await getConvexAuthStatus();
+
+  if (!status.isLoggedIn) {
+    console.log(pc.yellow("\n   First-time Convex setup requires login"));
+    console.log(pc.dim("   A browser window will open for authentication\n"));
+
+    // Trigger login with device name (opens browser automatically)
+    const exitCode = await execCommandLive(
+      "npx",
+      ["convex", "login", "--device-name", "cortex-init"],
+      {},
+    );
+
+    if (exitCode !== 0) {
+      throw new Error("Convex login failed");
+    }
+
+    // Re-fetch status to get team slug
+    status = await getConvexAuthStatus();
+
+    if (!status.isLoggedIn) {
+      throw new Error("Convex login failed - please try again");
+    }
+  }
+
+  if (status.teamSlug) {
+    console.log(
+      pc.dim(`   Logged in to team: ${status.teamName} (${status.teamSlug})`),
+    );
+  }
+
+  return status;
+}
+
+// ============================================================================
+// Project Name Utilities
+// ============================================================================
+
+/**
+ * Sanitize project name for Convex
+ *
+ * - Lowercase
+ * - Replace special chars with dashes
+ * - Collapse multiple dashes
+ * - Truncate to 60 chars (Convex limit is 64, leave room for suffix)
+ */
+export function sanitizeProjectName(name: string): string {
+  let sanitized = name
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-") // Replace invalid chars with dash
+    .replace(/-+/g, "-") // Collapse multiple dashes
+    .replace(/^-|-$/g, ""); // Remove leading/trailing dashes
+
+  // Truncate to 60 chars (Convex limit is 64, leave room for auto-suffix)
+  if (sanitized.length > 60) {
+    sanitized = sanitized.substring(0, 60);
+  }
+
+  return sanitized || "cortex-project";
+}
+
+// ============================================================================
+// Setup Options
+// ============================================================================
+
+/**
+ * Options for non-interactive Convex setup
+ */
+export interface ConvexSetupOptions {
+  /** Team slug (from convex login status) */
+  teamSlug: string;
+  /** Sanitized project name */
+  projectName: string;
+  /** Use local backend instead of cloud */
+  useLocalBackend?: boolean;
+}
+
+// ============================================================================
+// Setup Functions
+// ============================================================================
+
+/**
+ * Setup new Convex database (cloud or local)
+ *
+ * Uses non-interactive flags when options are provided:
+ * - `--configure new --team X --project Y`
+ * - `--dev-deployment local` for local backend
  */
 export async function setupNewConvex(
   projectPath: string,
+  options?: ConvexSetupOptions,
 ): Promise<ConvexConfig> {
-  console.log(pc.cyan("\n   Setting up new Convex database..."));
+  const isLocal = options?.useLocalBackend ?? false;
+  const modeLabel = isLocal ? "local" : "cloud";
+
+  console.log(pc.cyan(`\n   Setting up new Convex database (${modeLabel})...`));
 
   // Clean up any existing Convex state that might interfere
-  // This prevents "DeploymentNotFound" errors from old cached state
   const convexStatePath = path.join(projectPath, ".convex");
   if (await fs.pathExists(convexStatePath)) {
     console.log(pc.dim("   Cleaning up old Convex state..."));
@@ -44,26 +187,174 @@ export async function setupNewConvex(
     console.log(pc.yellow("   Convex CLI not found globally, will use npx"));
   }
 
-  const spinner = ora("Initializing Convex...").start();
+  // Build command and args
+  const command = hasConvex ? "convex" : "npx";
+  let args: string[];
 
-  try {
-    // Run convex dev --once --until-success
-    spinner.stop();
+  if (options?.teamSlug && options?.projectName) {
+    // Non-interactive mode with all flags
+    args = hasConvex
+      ? [
+          "dev",
+          "--once",
+          "--configure",
+          "new",
+          "--team",
+          options.teamSlug,
+          "--project",
+          options.projectName,
+        ]
+      : [
+          "convex",
+          "dev",
+          "--once",
+          "--configure",
+          "new",
+          "--team",
+          options.teamSlug,
+          "--project",
+          options.projectName,
+        ];
+
+    // Add local backend flag if requested
+    if (isLocal) {
+      args.push("--dev-deployment", "local");
+    }
+
+    console.log(pc.dim(`   Project: ${options.projectName}`));
+    console.log(pc.dim(`   Team: ${options.teamSlug}`));
+    if (isLocal) {
+      console.log(pc.dim("   Backend: local"));
+    }
+    console.log();
+  } else {
+    // Fallback to interactive mode (legacy behavior)
+    args = hasConvex
+      ? ["dev", "--once", "--until-success"]
+      : ["convex", "dev", "--once", "--until-success"];
+
     console.log(
       pc.dim("   Running Convex setup (this may prompt for login)..."),
     );
     console.log(
       pc.dim("   Follow the prompts to create your Convex project\n"),
     );
+  }
 
+  // Override any inherited Convex env vars
+  const cleanConvexEnv = {
+    CONVEX_URL: "",
+    CONVEX_DEPLOYMENT: "",
+    CONVEX_DEPLOY_KEY: "",
+  };
+
+  const exitCode = await execCommandLive(command, args, {
+    cwd: projectPath,
+    env: cleanConvexEnv,
+  });
+
+  if (exitCode !== 0) {
+    throw new Error(`Convex setup failed with exit code ${exitCode}`);
+  }
+
+  // Read the generated .env.local to get CONVEX_URL
+  const finalEnvPath = path.join(projectPath, ".env.local");
+  let convexUrl = "";
+  let deployKey = "";
+  let deployment = "";
+
+  try {
+    const envContent = await fs.readFile(finalEnvPath, "utf-8");
+    const urlMatch = envContent.match(/CONVEX_URL=(.+)/);
+    const keyMatch = envContent.match(/CONVEX_DEPLOY_KEY=(.+)/);
+    const depMatch = envContent.match(/CONVEX_DEPLOYMENT=([^\s#]+)/);
+
+    if (urlMatch) {
+      convexUrl = urlMatch[1].trim();
+    }
+    if (keyMatch) {
+      deployKey = keyMatch[1].trim();
+    }
+    if (depMatch) {
+      deployment = depMatch[1].trim();
+    }
+  } catch (error: unknown) {
+    const err = error as { code?: string };
+    if (err.code !== "ENOENT") {
+      throw error;
+    }
+  }
+
+  if (!convexUrl) {
+    // Fallback: prompt user for URL
+    const response = await prompts({
+      type: "text",
+      name: "url",
+      message: "Enter your Convex deployment URL:",
+      validate: (value) =>
+        value.includes("convex.cloud") ||
+        value.includes("convex.site") ||
+        value.includes("localhost")
+          ? true
+          : "Please enter a valid Convex URL",
+    });
+
+    convexUrl = response.url;
+  }
+
+  console.log(pc.green("\n   Convex database configured"));
+  console.log(pc.dim(`   URL: ${convexUrl}`));
+
+  return {
+    convexUrl,
+    deployKey: deployKey || undefined,
+    deployment: deployment || undefined,
+  };
+}
+
+/**
+ * Setup with existing Convex database
+ *
+ * Uses non-interactive flags when options are provided:
+ * - `--configure existing --team X --project Y`
+ */
+export async function setupExistingConvex(
+  projectPath?: string,
+  options?: Omit<ConvexSetupOptions, "useLocalBackend">,
+): Promise<ConvexConfig> {
+  console.log(pc.cyan("\n   Configuring existing Convex database..."));
+
+  // If we have options, use non-interactive mode
+  if (options?.teamSlug && options?.projectName && projectPath) {
+    console.log(pc.dim(`   Project: ${options.projectName}`));
+    console.log(pc.dim(`   Team: ${options.teamSlug}\n`));
+
+    const hasConvex = await commandExists("convex");
     const command = hasConvex ? "convex" : "npx";
     const args = hasConvex
-      ? ["dev", "--once", "--until-success"]
-      : ["convex", "dev", "--once", "--until-success"];
+      ? [
+          "dev",
+          "--once",
+          "--configure",
+          "existing",
+          "--team",
+          options.teamSlug,
+          "--project",
+          options.projectName,
+        ]
+      : [
+          "convex",
+          "dev",
+          "--once",
+          "--configure",
+          "existing",
+          "--team",
+          options.teamSlug,
+          "--project",
+          options.projectName,
+        ];
 
-    // Override any inherited Convex env vars that might interfere with fresh setup
-    // (e.g., from parent directory's .env.local being injected by dotenv)
-    // Setting to empty string effectively clears them for the child process
+    // Clean env vars
     const cleanConvexEnv = {
       CONVEX_URL: "",
       CONVEX_DEPLOYMENT: "",
@@ -76,66 +367,44 @@ export async function setupNewConvex(
     });
 
     if (exitCode !== 0) {
-      throw new Error(`Convex setup failed with exit code ${exitCode}`);
+      // Check if it's a "project not found" error
+      throw new Error(
+        `PROJECT_NOT_FOUND: Project "${options.projectName}" not found in team "${options.teamSlug}"`,
+      );
     }
 
-    // Read the generated .env.local to get CONVEX_URL
+    // Read the generated .env.local
     const envLocalPath = path.join(projectPath, ".env.local");
     let convexUrl = "";
     let deployKey = "";
+    let deployment = "";
 
     try {
       const envContent = await fs.readFile(envLocalPath, "utf-8");
       const urlMatch = envContent.match(/CONVEX_URL=(.+)/);
       const keyMatch = envContent.match(/CONVEX_DEPLOY_KEY=(.+)/);
+      const depMatch = envContent.match(/CONVEX_DEPLOYMENT=([^\s#]+)/);
 
-      if (urlMatch) {
-        convexUrl = urlMatch[1].trim();
-      }
-      if (keyMatch) {
-        deployKey = keyMatch[1].trim();
-      }
-    } catch (error: unknown) {
-      const err = error as { code?: string };
-      if (err.code !== "ENOENT") {
-        throw error;
-      }
-    }
-
-    if (!convexUrl) {
-      // Fallback: prompt user for URL
-      const response = await prompts({
-        type: "text",
-        name: "url",
-        message: "Enter your Convex deployment URL:",
-        validate: (value) =>
-          value.includes("convex.cloud") || value.includes("convex.site")
-            ? true
-            : "Please enter a valid Convex URL",
-      });
-
-      convexUrl = response.url;
+      if (urlMatch) convexUrl = urlMatch[1].trim();
+      if (keyMatch) deployKey = keyMatch[1].trim();
+      if (depMatch) deployment = depMatch[1].trim();
+    } catch {
+      // File may not exist yet
     }
 
     console.log(pc.green("\n   Convex database configured"));
-    console.log(pc.dim(`   URL: ${convexUrl}`));
+    if (convexUrl) {
+      console.log(pc.dim(`   URL: ${convexUrl}`));
+    }
 
     return {
       convexUrl,
       deployKey: deployKey || undefined,
+      deployment: deployment || undefined,
     };
-  } catch (error) {
-    spinner.stop();
-    throw new Error(`Failed to setup Convex: ${error}`);
   }
-}
 
-/**
- * Setup with existing Convex database
- */
-export async function setupExistingConvex(): Promise<ConvexConfig> {
-  console.log(pc.cyan("\n   Configuring existing Convex database..."));
-
+  // Fallback: Interactive mode (legacy behavior)
   const response = await prompts([
     {
       type: "text",
@@ -188,9 +457,8 @@ export async function setupExistingConvex(): Promise<ConvexConfig> {
 /**
  * Setup local Convex for development
  *
- * Note: Convex's --local flag requires a cloud project to be set up first.
- * So we create the cloud project during init, then the user can run
- * `cortex start --local` or `convex dev --local` for local development.
+ * Note: This is now handled by setupNewConvex with useLocalBackend: true
+ * Kept for backwards compatibility.
  */
 export async function setupLocalConvex(): Promise<ConvexConfig> {
   console.log(pc.cyan("\n   Setting up Convex for local development..."));
@@ -239,11 +507,6 @@ export async function deployToConvex(
       command = "npx";
       args = ["convex", "dev", "--once", "--until-success"];
     }
-
-    // Note: We don't add --local here because:
-    // 1. Convex requires a cloud project to exist first
-    // 2. --local on a fresh project causes "DeploymentNotFound" errors
-    // Users can run `cortex start --local` after setup completes
 
     // Set environment for deployment (only if URL is provided)
     const env: Record<string, string | undefined> = {
