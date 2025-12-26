@@ -30,6 +30,11 @@ import {
   sanitizeProjectName,
 } from "../utils/init/convex-setup.js";
 import {
+  installVercelAIQuickstart,
+  startApp,
+  type QuickstartGraphConfig,
+} from "../utils/init/quickstart-setup.js";
+import {
   getGraphConfig,
   setupGraphFiles,
   addGraphDependencies,
@@ -190,17 +195,27 @@ export function registerLifecycleCommands(
         process.exit(1);
       }
 
-      console.log(
-        pc.cyan(
-          `\n   Starting ${deploymentsToStart.length} deployment(s)...\n`,
-        ),
-      );
+      // Collect enabled apps for summary
+      const apps = Object.entries(config.apps || {});
+      const enabledApps = apps.filter(([, app]) => app.enabled);
+
+      // Show summary header
+      console.log();
+      console.log(pc.bold("  ═══════════════════════════════════════════════════════════"));
+      console.log(pc.bold("  Cortex Start"));
+      console.log(pc.bold("  ═══════════════════════════════════════════════════════════"));
+      console.log();
+
+      // Deployments section
+      console.log(pc.bold(pc.cyan(`  Deployments (${deploymentsToStart.length})`)));
+      console.log(pc.dim("  ───────────────────────────────────────────────────────────"));
 
       // Start each deployment
       for (const dep of deploymentsToStart) {
-        console.log(pc.bold(`   ${dep.name}`));
-        console.log(pc.dim(`   Project: ${dep.projectPath}`));
-        console.log(pc.dim(`   URL: ${dep.url}\n`));
+        console.log(`  ${pc.green("●")} ${pc.cyan(dep.name)}`);
+        console.log(pc.dim(`    Project: ${dep.projectPath}`));
+        console.log(pc.dim(`    URL: ${dep.url}`));
+        console.log();
 
         // Start graph database if configured and not convex-only
         if (!options.convexOnly) {
@@ -304,13 +319,33 @@ export function registerLifecycleCommands(
         }
       }
 
+      // Start enabled apps (unless convex-only or graph-only)
+      if (!options.convexOnly && !options.graphOnly && !options.foreground) {
+        if (enabledApps.length > 0) {
+          console.log(pc.bold(pc.cyan(`  Apps (${enabledApps.length})`)));
+          console.log(pc.dim("  ───────────────────────────────────────────────────────────"));
+
+          for (const [name, app] of enabledApps) {
+            console.log(`  ${pc.green("●")} ${pc.cyan(name)}`);
+            console.log(pc.dim(`    Type: ${app.type}`));
+            console.log(pc.dim(`    Path: ${path.join(app.projectPath, app.path)}`));
+            console.log(pc.dim(`    Port: ${app.port || 3000}`));
+            console.log();
+            await startApp(name, app);
+          }
+        }
+      }
+
       // Show summary
       if (!options.foreground) {
-        console.log(pc.green("\n   ✓ All deployments started\n"));
-        console.log(pc.dim("   Use 'cortex stop' to stop all services"));
-        console.log(
-          pc.dim("   Use 'cortex config list' to see deployment status"),
-        );
+        const totalStarted = deploymentsToStart.length + (enabledApps.length || 0);
+        console.log(pc.bold("  ═══════════════════════════════════════════════════════════"));
+        console.log(pc.green(`  ✓ Started ${totalStarted} service(s)`));
+        console.log(pc.bold("  ═══════════════════════════════════════════════════════════"));
+        console.log();
+        console.log(pc.dim("  Use 'cortex stop' to stop all services"));
+        console.log(pc.dim("  Use 'cortex config list' to see deployment status"));
+        console.log();
       }
     });
 
@@ -585,29 +620,82 @@ export async function runInitWizard(
     await showConfirmation(config);
   }
 
-  // Execute setup
-  await executeSetup(config);
+  // Execute setup (returns SDK metadata for post-setup steps)
+  const sdkMetadata = await executeSetup(config);
 
-  // Ask to start Convex if not already specified
+  // Ask about Vercel AI quickstart (optional demo app)
+  let installedQuickstart = false;
+  let quickstartAppConfig = null;
+
+  if (!options.yes) {
+    const { installQuickstart } = await prompts({
+      type: "confirm",
+      name: "installQuickstart",
+      message: "Install Vercel AI quickstart demo?",
+      initial: false,
+    });
+
+    if (installQuickstart) {
+      // Need the actual Convex URL from the config that was just set up
+      const convexUrl = config.convexUrl || "";
+
+      // Pass graph config if it was enabled during init
+      const graphConfig: QuickstartGraphConfig | undefined = config.graphEnabled
+        ? {
+            enabled: true,
+            uri: config.graphUri,
+            username: config.graphUsername,
+            password: config.graphPassword,
+          }
+        : undefined;
+
+      quickstartAppConfig = await installVercelAIQuickstart(
+        config.projectPath,
+        sdkMetadata.sdkVersion,
+        convexUrl,
+        config.openaiApiKey,
+        graphConfig
+      );
+
+      // Save app to CLI config
+      const cliConfig = await loadConfig();
+      cliConfig.apps = cliConfig.apps || {};
+      cliConfig.apps["quickstart"] = quickstartAppConfig;
+      await saveUserConfig(cliConfig);
+
+      installedQuickstart = true;
+    }
+  }
+
+  // Context-aware start prompt
   let shouldStart = options.start;
   if (!shouldStart && !options.yes) {
+    const message = installedQuickstart
+      ? "Start Convex backend and quickstart app now?"
+      : "Start Convex development server now?";
+
     const response = await prompts({
       type: "confirm",
       name: "startNow",
-      message: "Start Convex development server now?",
+      message,
       initial: true,
     });
     shouldStart = response.startNow;
   }
 
-  // Start Convex if requested
+  // Start services if requested
   if (shouldStart) {
     const isLocal = config.convexSetupType === "local";
     await startConvexInBackground(config.projectPath, isLocal);
 
+    // Start quickstart app if installed
+    if (installedQuickstart && quickstartAppConfig) {
+      await startApp("quickstart", quickstartAppConfig);
+    }
+
     // Show running status dashboard
     console.log();
-    await showRunningStatus(config.projectPath, isLocal);
+    await showRunningStatus(config.projectPath, isLocal, installedQuickstart);
   }
 }
 
@@ -895,8 +983,11 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
 
 /**
  * Execute the setup
+ * Returns SDK metadata for use in post-setup steps (like quickstart installation)
  */
-async function executeSetup(config: WizardConfig): Promise<void> {
+async function executeSetup(
+  config: WizardConfig
+): Promise<{ sdkVersion: string; convexVersion: string }> {
   console.log(pc.cyan("\n   Setting up Cortex...\n"));
 
   try {
@@ -1088,6 +1179,12 @@ async function executeSetup(config: WizardConfig): Promise<void> {
 
     // Success!
     showSuccessMessage(config);
+
+    // Return SDK metadata for use in post-setup steps
+    return {
+      sdkVersion: sdkMetadata.sdkVersion,
+      convexVersion: sdkMetadata.convexVersion,
+    };
   } catch (error) {
     console.error(pc.red("\n   Setup failed:"), error);
     throw error;
@@ -1112,11 +1209,12 @@ async function saveDeploymentToConfig(config: WizardConfig): Promise<void> {
       .toLowerCase()
       .replace(/[^a-z0-9-]/g, "-");
 
-    // Add the deployment
+    // Add the deployment (enabled by default when created by init)
     userConfig.deployments[deploymentName] = {
       url: config.convexUrl,
       key: config.deployKey,
       projectPath: config.projectPath,
+      enabled: true,
     };
 
     // Set as default if no default exists
@@ -1295,6 +1393,7 @@ async function startConvexInBackground(
 async function showRunningStatus(
   projectPath: string,
   isLocal: boolean,
+  hasQuickstart: boolean = false,
 ): Promise<void> {
   const width = 56;
   const line = "═".repeat(width);
@@ -1384,6 +1483,16 @@ async function showRunningStatus(
   }
   console.log();
 
+  // Quickstart App Status (if installed)
+  if (hasQuickstart) {
+    console.log(pc.bold(pc.white("  Vercel AI Quickstart")));
+    console.log(pc.dim("  " + thinLine));
+    console.log(`   ${pc.green("●")} Running`);
+    console.log(pc.dim("     URL: http://localhost:3000"));
+    console.log(pc.dim("     Interactive chat demo with memory visualization"));
+    console.log();
+  }
+
   // Quick Actions
   console.log(pc.bold(pc.white("  Quick Actions")));
   console.log(pc.dim("  " + thinLine));
@@ -1398,6 +1507,12 @@ async function showRunningStatus(
     pc.dim("   cortex stop") +
       pc.dim("             # Stop background services"),
   );
+  if (hasQuickstart) {
+    console.log(
+      pc.dim("   npm run quickstart") +
+        pc.dim("      # Start quickstart demo"),
+    );
+  }
   console.log(
     pc.dim("   npm start") + pc.dim("               # Run your AI agent"),
   );

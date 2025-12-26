@@ -577,6 +577,9 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
+      - name: Sync quickstart template
+        run: node packages/cortex-cli/scripts/sync-quickstart-template.js
+
       - name: Build package
         run: npm run build --workspace=@cortexmemory/cli
 

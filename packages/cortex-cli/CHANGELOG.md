@@ -1,5 +1,31 @@
 # @cortexmemory/cli Changelog
 
+## [0.27.0] - 2025-12-26
+
+### Added
+
+- **Vercel AI Quickstart integration** - Optional demo app installation during `cortex init`
+  - Installs the Vercel AI quickstart as a `/quickstart` subfolder
+  - Full Next.js app with chat interface and real-time memory visualization
+  - Automatically configured with Convex URL and OpenAI API key from init wizard
+  - Run with `npm run quickstart` or `cortex start`
+
+- **Template apps management** - Track and manage installed template apps like deployments
+  - New `apps` section in config (`~/.cortexrc`)
+  - Apps shown in `cortex config list` with status and port info
+  - `cortex config enable/disable` works for both deployments and apps
+  - `cortex start` automatically starts enabled apps alongside deployments
+
+- **Default enabled for init-created resources** - Deployments and apps created by `cortex init` are now enabled by default (no manual `cortex config enable` needed)
+
+- **Context-aware start prompt** - After init, if quickstart was installed, prompts "Start Convex backend and quickstart app now?" instead of just backend
+
+### Changed
+
+- `cortex start` now starts enabled apps in addition to deployments
+- Status dashboard shows quickstart app status when installed
+- Template sync via prebuild script keeps quickstart template in sync with source
+
 ## [0.26.2] - 2025-12-25
 
 ### Added
