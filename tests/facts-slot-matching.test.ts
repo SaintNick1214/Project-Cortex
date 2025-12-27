@@ -135,7 +135,9 @@ describe("Slot-Based Fact Matching", () => {
         expect(classifyPredicate("married to")).toBe("relationship_status");
         expect(classifyPredicate("engaged to")).toBe("relationship_status");
         expect(classifyPredicate("dating")).toBe("relationship_status");
-        expect(classifyPredicate("relationship status")).toBe("relationship_status");
+        expect(classifyPredicate("relationship status")).toBe(
+          "relationship_status",
+        );
       });
     });
 
@@ -151,7 +153,9 @@ describe("Slot-Based Fact Matching", () => {
     describe("food_preference slot", () => {
       it("should classify food predicates", () => {
         expect(classifyPredicate("favorite food")).toBe("food_preference");
-        expect(classifyPredicate("dietary restriction")).toBe("food_preference");
+        expect(classifyPredicate("dietary restriction")).toBe(
+          "food_preference",
+        );
         expect(classifyPredicate("vegetarian")).toBe("food_preference");
         expect(classifyPredicate("allergic to")).toBe("food_preference");
       });
@@ -174,8 +178,12 @@ describe("Slot-Based Fact Matching", () => {
         const customClasses = {
           custom_slot: ["my custom predicate", "another pattern"],
         };
-        expect(classifyPredicate("my custom predicate", customClasses)).toBe("custom_slot");
-        expect(classifyPredicate("another pattern", customClasses)).toBe("custom_slot");
+        expect(classifyPredicate("my custom predicate", customClasses)).toBe(
+          "custom_slot",
+        );
+        expect(classifyPredicate("another pattern", customClasses)).toBe(
+          "custom_slot",
+        );
       });
 
       it("should override default classes", () => {
@@ -183,7 +191,9 @@ describe("Slot-Based Fact Matching", () => {
           location: ["custom location pattern"],
         };
         // Custom pattern should work
-        expect(classifyPredicate("custom location pattern", customClasses)).toBe("location");
+        expect(
+          classifyPredicate("custom location pattern", customClasses),
+        ).toBe("location");
         // Default "lives in" should still work (merged)
         expect(classifyPredicate("lives in", customClasses)).toBe("location");
       });
@@ -264,7 +274,9 @@ describe("Slot-Based Fact Matching", () => {
     });
 
     it("should not have empty pattern arrays", () => {
-      for (const [_slot, patterns] of Object.entries(DEFAULT_PREDICATE_CLASSES)) {
+      for (const [_slot, patterns] of Object.entries(
+        DEFAULT_PREDICATE_CLASSES,
+      )) {
         expect(patterns.length).toBeGreaterThan(0);
         for (const pattern of patterns) {
           expect(pattern.trim()).not.toBe("");

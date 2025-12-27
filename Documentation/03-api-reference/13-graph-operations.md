@@ -1,6 +1,6 @@
 # Graph Operations API
 
-> **Last Updated**: 2025-12-10
+> **Last Updated**: 2025-12-26
 > **Version**: v0.21.0
 > **Status**: Production Ready
 
@@ -18,6 +18,7 @@ The Graph Operations API (`@cortexmemory/sdk/graph`) provides advanced graph dat
 - ✅ **Orphan-Safe** - Sophisticated deletion with circular reference protection
 - ✅ **Cross-Layer** - Connects L1a, L2, L3, L4 via relationships
 - ✅ **Backward Compatible** - Existing code works unchanged
+- ✅ **Multi-Tenant** - Full `tenantId` support for SaaS isolation (NEW)
 
 **When to Use Graph:**
 
@@ -925,6 +926,36 @@ console.log("  User:", provenance.records[0].user);
 
 ---
 
+## Multi-Tenancy Support
+
+All graph nodes include `tenantId` for SaaS multi-tenant isolation:
+
+```typescript
+// When syncing with tenant context
+await syncMemoryToGraph(memory, adapter, "tenant-acme");
+
+// Cypher queries respect tenant isolation
+const query = `
+  MATCH (m:Memory)
+  WHERE m.tenantId = $tenantId AND m.userId = $userId
+  RETURN m
+`;
+
+// GDPR cascade includes tenant context
+// User deletion traverses graph nodes with matching tenantId
+```
+
+**All Node Types Include:**
+
+```cypher
+(:AnyNode {
+  tenantId: string | null,  // SaaS isolation
+  // ... other properties
+})
+```
+
+---
+
 ## Node Types
 
 ### MemorySpace
@@ -932,6 +963,7 @@ console.log("  User:", provenance.records[0].user);
 ```cypher
 (:MemorySpace {
   memorySpaceId: string,
+  tenantId: string | null,  // Multi-tenancy
   name: string,
   type: string,  // 'personal', 'team', 'project', 'custom'
   status: string,
@@ -945,6 +977,7 @@ console.log("  User:", provenance.records[0].user);
 (:Context {
   contextId: string,
   memorySpaceId: string,
+  tenantId: string | null,  // Multi-tenancy
   purpose: string,
   status: string,
   depth: number,
@@ -960,6 +993,7 @@ console.log("  User:", provenance.records[0].user);
 (:Memory {
   memoryId: string,
   memorySpaceId: string,
+  tenantId: string | null,  // Multi-tenancy
   content: string,  // Truncated (first 200 chars)
   importance: number,
   sourceType: string,
@@ -974,6 +1008,7 @@ console.log("  User:", provenance.records[0].user);
 (:Fact {
   factId: string,
   memorySpaceId: string,
+  tenantId: string | null,  // Multi-tenancy
   fact: string,
   factType: string,
   subject: string,

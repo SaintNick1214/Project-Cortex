@@ -21,9 +21,7 @@ import { createTestRunContext } from "./helpers/isolation";
 const ctx = createTestRunContext();
 
 // Skip tests if no Convex URL configured
-const describeWithConvex = process.env.CONVEX_URL
-  ? describe
-  : describe.skip;
+const describeWithConvex = process.env.CONVEX_URL ? describe : describe.skip;
 
 describeWithConvex("Memory Belief Revision E2E Workflows", () => {
   let cortex: Cortex;

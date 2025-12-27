@@ -266,12 +266,14 @@ async function runInteractiveDevMode(
   // Collect enabled apps
   const enabledApps = Object.entries(config.apps || {})
     .filter(([, app]) => app.enabled)
-    .map(([name, appConfig]): AppState => ({
-      name,
-      config: appConfig,
-      process: null,
-      running: false,
-    }));
+    .map(
+      ([name, appConfig]): AppState => ({
+        name,
+        config: appConfig,
+        process: null,
+        running: false,
+      }),
+    );
 
   const state: DevState = {
     deployments: new Map(deploymentsList.map((d) => [d.name, d])),
@@ -409,16 +411,18 @@ async function startAllServices(state: DevState): Promise<void> {
   const hasConvex = await commandExists("convex");
 
   // Import schema sync utility
-  const { syncConvexSchema } = await import(
-    "../utils/schema-sync.js"
-  );
+  const { syncConvexSchema } = await import("../utils/schema-sync.js");
 
   for (const [name, dep] of state.deployments) {
     // Sync schema files from SDK before anything else
     addLog(state, name, "Syncing schema from SDK...");
     const syncResult = await syncConvexSchema(dep.projectPath);
     if (syncResult.error) {
-      addLog(state, name, pc.yellow(`Schema sync warning: ${syncResult.error}`));
+      addLog(
+        state,
+        name,
+        pc.yellow(`Schema sync warning: ${syncResult.error}`),
+      );
     } else if (syncResult.synced) {
       const source = syncResult.isDevOverride
         ? pc.magenta("[DEV]") + " local SDK"
@@ -642,7 +646,11 @@ async function startAppProcess(
         !app.running
       ) {
         app.running = true;
-        addLog(state, name, pc.green(`App ready at http://localhost:${app.config.port || 3000}`));
+        addLog(
+          state,
+          name,
+          pc.green(`App ready at http://localhost:${app.config.port || 3000}`),
+        );
         printStatusUpdate(state);
       }
     }
@@ -882,11 +890,7 @@ async function toggleGraph(
 /**
  * Add a log entry with service name prefix
  */
-function addLog(
-  state: DevState,
-  serviceName: string,
-  message: string,
-): void {
+function addLog(state: DevState, serviceName: string, message: string): void {
   const timestamp = new Date().toLocaleTimeString();
   const totalServices = state.deployments.size + state.apps.size;
   const prefix =
@@ -959,13 +963,7 @@ async function refreshStatus(state: DevState): Promise<void> {
   console.log();
   console.log(pc.cyan("╔" + line + "╗"));
   console.log(
-    pc.cyan("║") +
-      pc
-        .bold(
-          `   Cortex Dev Mode`,
-        )
-        .padEnd(width) +
-      pc.cyan("║"),
+    pc.cyan("║") + pc.bold(`   Cortex Dev Mode`).padEnd(width) + pc.cyan("║"),
   );
   console.log(pc.cyan("╚" + line + "╝"));
   console.log();
@@ -1022,13 +1020,13 @@ async function refreshStatus(state: DevState): Promise<void> {
         : pc.yellow("Starting...");
       const appIcon = app.running ? pc.green("●") : pc.yellow("○");
 
-      console.log(
-        `   ${appIcon} ${pc.cyan(name.padEnd(16))} ${appStatus}`,
-      );
+      console.log(`   ${appIcon} ${pc.cyan(name.padEnd(16))} ${appStatus}`);
 
       // Show URL for running apps
       if (app.running) {
-        console.log(pc.dim(`     URL: http://localhost:${app.config.port || 3000}`));
+        console.log(
+          pc.dim(`     URL: http://localhost:${app.config.port || 3000}`),
+        );
       }
     }
   }

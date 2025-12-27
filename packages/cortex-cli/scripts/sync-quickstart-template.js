@@ -18,10 +18,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const SOURCE = path.join(
-  __dirname,
-  "../../vercel-ai-provider/quickstart"
-);
+const SOURCE = path.join(__dirname, "../../vercel-ai-provider/quickstart");
 const DEST = path.join(__dirname, "../templates/vercel-ai-quickstart");
 
 // Files and folders to exclude from copy
@@ -68,7 +65,7 @@ function sync() {
   // Check if source exists
   if (!fs.existsSync(SOURCE)) {
     console.log(
-      "[sync-quickstart] Source not found, skipping (standalone install)"
+      "[sync-quickstart] Source not found, skipping (standalone install)",
     );
     console.log(`  Looked for: ${SOURCE}`);
     return;

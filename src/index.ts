@@ -18,6 +18,8 @@ import { UsersAPI } from "./users";
 import { AgentsAPI } from "./agents";
 import { GovernanceAPI } from "./governance";
 import { A2AAPI } from "./a2a";
+import { SessionsAPI } from "./sessions";
+import type { AuthContext } from "./auth/types";
 import type { GraphAdapter } from "./graph/types";
 import { CypherGraphAdapter } from "./graph";
 import {
@@ -137,6 +139,23 @@ export interface CortexConfig {
   llm?: LLMConfig;
 
   /**
+   * Optional authentication context for multi-tenant applications.
+   *
+   * When provided, all operations are automatically scoped to the
+   * userId and tenantId from the auth context.
+   *
+   * @example
+   * ```typescript
+   * auth: createAuthContext({
+   *   userId: 'user-123',
+   *   tenantId: 'tenant-456',
+   *   sessionId: 'sess-abc',
+   * })
+   * ```
+   */
+  auth?: AuthContext;
+
+  /**
    * Resilience/overload protection configuration
    *
    * Provides rate limiting, concurrency control, circuit breaking,
@@ -168,6 +187,7 @@ export class Cortex {
   private syncWorker?: GraphSyncWorker;
   private readonly resilienceLayer: ResilienceLayer;
   private readonly llmConfig?: LLMConfig;
+  private readonly authContext?: AuthContext;
 
   /**
    * Auto-configure LLM from environment variables.
@@ -350,6 +370,9 @@ export class Cortex {
   // A2A: Agent-to-Agent Communication
   public a2a: A2AAPI;
 
+  // Sessions: Native Session Management
+  public sessions: SessionsAPI;
+
   constructor(config: CortexConfig) {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
@@ -357,6 +380,9 @@ export class Cortex {
     // Store LLM config for fact extraction
     // Use explicit config if provided, otherwise auto-configure from environment
     this.llmConfig = config.llm ?? Cortex.autoConfigureLLM();
+
+    // Store auth context for auto-injection
+    this.authContext = config.auth;
 
     // Initialize resilience layer (default: enabled with balanced settings)
     this.resilienceLayer = new ResilienceLayer(
@@ -410,6 +436,11 @@ export class Cortex {
       this.resilienceLayer,
     );
     this.a2a = new A2AAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.sessions = new SessionsAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+    );
 
     // Initialize MemoryAPI with dependencies for full orchestration
     this.memory = new MemoryAPI(
@@ -544,6 +575,32 @@ export { CypherGraphAdapter } from "./graph";
 export { UserValidationError } from "./users";
 export { GovernanceValidationError } from "./governance";
 export { A2AValidationError } from "./a2a";
+export { SessionValidationError } from "./sessions";
+export { AuthValidationError } from "./auth";
+
+// Re-export auth module
+export { createAuthContext, validateAuthContext } from "./auth";
+export type { AuthContext, AuthContextParams, AuthMethod } from "./auth/types";
+
+// Re-export sessions module
+export { SessionsAPI } from "./sessions";
+export type {
+  Session,
+  SessionStatus,
+  SessionMetadata,
+  CreateSessionParams,
+  SessionFilters,
+  ExpireSessionsOptions,
+  EndSessionsResult,
+} from "./sessions/types";
+
+// Re-export user schemas
+export {
+  validationPresets,
+  validateUserProfile,
+  createUserProfile,
+} from "./users/schemas";
+export type { StandardUserProfile, ValidationPreset } from "./users/schemas";
 
 // Re-export resilience types and presets
 export {

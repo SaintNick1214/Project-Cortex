@@ -30,7 +30,10 @@ import {
   validateConflictDecision,
   getDefaultDecision,
 } from "./conflict-prompts";
-import { FactDeduplicationService, type DeduplicationConfig } from "./deduplication";
+import {
+  FactDeduplicationService,
+  type DeduplicationConfig,
+} from "./deduplication";
 
 /**
  * LLM client interface for belief revision conflict resolution.
@@ -138,8 +141,16 @@ export interface ReviseResult {
   /** Pipeline stages that were executed */
   pipeline: {
     slotMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
-    semanticMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
-    subjectTypeMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
+    semanticMatching?: {
+      executed: boolean;
+      matched: boolean;
+      factIds?: string[];
+    };
+    subjectTypeMatching?: {
+      executed: boolean;
+      matched: boolean;
+      factIds?: string[];
+    };
     llmResolution?: { executed: boolean; decision?: ConflictAction };
   };
 }
@@ -295,7 +306,8 @@ export class BeliefRevisionService {
       confidence = decision.confidence ?? 75;
 
       if (decision.targetFactId) {
-        targetFact = candidates.find((f) => f.factId === decision.targetFactId) || null;
+        targetFact =
+          candidates.find((f) => f.factId === decision.targetFactId) || null;
       }
 
       // Handle UPDATE with merged fact
@@ -437,7 +449,7 @@ export class BeliefRevisionService {
 
   /**
    * Stage 2.5: Find conflicts by subject + factType
-   * 
+   *
    * This stage catches conflicts that slip through slot and semantic matching
    * by querying for facts with the same subject AND factType. For example,
    * "User likes blue" and "User prefers purple" both have subject="user" and
@@ -474,10 +486,7 @@ export class BeliefRevisionService {
     existingFacts: FactRecord[],
   ): Promise<ConflictDecision> {
     // If LLM is disabled or unavailable, use default heuristics
-    if (
-      this.config.llmResolution?.enabled === false ||
-      !this.llmClient
-    ) {
+    if (this.config.llmResolution?.enabled === false || !this.llmClient) {
       return getDefaultDecision(newFact, existingFacts);
     }
 

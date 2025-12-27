@@ -47,6 +47,7 @@ export interface Context {
   _id: string;
   contextId: string;
   memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   purpose: string;
   description?: string;
   userId?: string;

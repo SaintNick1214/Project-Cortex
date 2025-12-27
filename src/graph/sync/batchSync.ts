@@ -173,7 +173,9 @@ async function syncMemorySpaces(
   try {
     // List all memory spaces (API max limit is 1000)
     const effectiveLimit = Math.min(limit, 1000);
-    const memorySpacesResult = await cortex.memorySpaces.list({ limit: effectiveLimit });
+    const memorySpacesResult = await cortex.memorySpaces.list({
+      limit: effectiveLimit,
+    });
     const memorySpaces = memorySpacesResult.spaces;
 
     for (let i = 0; i < memorySpaces.length; i++) {

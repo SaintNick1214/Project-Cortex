@@ -95,6 +95,15 @@ interface GovernancePolicy {
     };
   };
 
+  // Sessions: Lifecycle configuration
+  sessions: {
+    inactiveTimeout: number; // Milliseconds until session goes idle (default: 1800000 = 30min)
+    absoluteTimeout: number; // Milliseconds until session expires (default: 86400000 = 24h)
+    maxSessionsPerUser?: number; // Optional limit on concurrent sessions
+    cleanupOrphanedSessions?: boolean; // Auto-cleanup ended sessions
+    orphanedSessionRetention?: string; // How long to keep ended sessions (default: '30d')
+  };
+
   // Cross-layer rules
   compliance: {
     mode: "GDPR" | "HIPAA" | "SOC2" | "FINRA" | "Custom";
@@ -333,6 +342,71 @@ const soc2Policy = await cortex.governance.getTemplate("SOC2");
 // - Version tracking
 // - Access controls
 // - Purge auditing
+```
+
+---
+
+## Session Policies
+
+Configure session lifecycle timeouts and limits.
+
+### Session Timeouts
+
+```typescript
+await cortex.governance.setPolicy({
+  organizationId: "org-123",
+
+  sessions: {
+    // Inactivity timeout (default: 30 minutes)
+    inactiveTimeout: 1800000, // 30 min in milliseconds
+
+    // Absolute session lifetime (default: 24 hours)
+    absoluteTimeout: 86400000, // 24h in milliseconds
+
+    // Optional: limit concurrent sessions per user
+    maxSessionsPerUser: 5,
+
+    // Cleanup configuration
+    cleanupOrphanedSessions: true,
+    orphanedSessionRetention: "30d",
+  },
+});
+```
+
+### Per-Tenant Session Configuration
+
+```typescript
+// Enterprise tenant: longer sessions
+await cortex.governance.setAgentOverride("enterprise-memory-space", {
+  sessions: {
+    inactiveTimeout: 3600000, // 1 hour
+    absoluteTimeout: 604800000, // 7 days
+    maxSessionsPerUser: 20,
+  },
+});
+
+// Security-sensitive tenant: shorter sessions
+await cortex.governance.setAgentOverride("banking-memory-space", {
+  sessions: {
+    inactiveTimeout: 300000, // 5 minutes
+    absoluteTimeout: 3600000, // 1 hour
+    maxSessionsPerUser: 3,
+  },
+});
+```
+
+### Session Cleanup Jobs
+
+```typescript
+// Expire idle sessions based on policy
+const result = await cortex.sessions.expireIdle({
+  tenantId: "tenant-123",
+});
+
+console.log(`Expired ${result.expired} idle sessions`);
+
+// The inactiveTimeout and absoluteTimeout from policy are used
+// to determine which sessions should be expired
 ```
 
 ---

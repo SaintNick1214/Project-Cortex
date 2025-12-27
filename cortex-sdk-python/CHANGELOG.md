@@ -32,10 +32,10 @@ from cortex import (
 class MyObserver:
     def on_orchestration_start(self, orchestration_id: str) -> None:
         print(f"Starting: {orchestration_id}")
-    
+
     def on_layer_update(self, event: LayerEvent) -> None:
         print(f"Layer {event.layer}: {event.status} ({event.latency_ms}ms)")
-    
+
     def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
         print(f"Done in {summary.total_latency_ms}ms")
 
@@ -79,7 +79,7 @@ assert result.facts[0].user_id == "user-123"  # FAILED!
 
 # After: All parameters properly propagated
 assert result.facts[0].user_id == "user-123"  # ✓ PASSES
-assert result.facts[0].participant_id == "agent-1"  # ✓ PASSES  
+assert result.facts[0].participant_id == "agent-1"  # ✓ PASSES
 assert result.facts[0].source_ref is not None  # ✓ PASSES
 ```
 
@@ -103,6 +103,7 @@ fact2 = "User prefers purple"  # subject=User, factType=preference
 ```
 
 **Pipeline Flow:**
+
 1. Slot Matching (exact predicate classes)
 2. Semantic Matching (embedding similarity)
 3. **Subject+FactType Matching (NEW)** - catches same-category facts
@@ -111,6 +112,7 @@ fact2 = "User prefers purple"  # subject=User, factType=preference
 #### 🔧 Fixed: SUPERSEDE Action Now Uses `facts:supersede`
 
 Previously, SUPERSEDE used `facts:update` which only set `validUntil`, leaving the old fact still appearing as "active" in queries. Now uses the dedicated `facts:supersede` mutation that:
+
 - Sets `supersededBy` to link old → new fact
 - Sets `validUntil` timestamp on old fact
 - Properly excludes superseded facts from `facts.list(includeSuperseded=False)`
@@ -194,12 +196,12 @@ print(f"Reason: {result.reason}")  # "Color preference has changed"
 
 #### 🎯 Available Actions
 
-| Action | When Used | Example |
-|--------|-----------|---------|
-| **ADD** | Genuinely new information | First fact about a topic |
-| **UPDATE** | Refines existing fact | "User has a dog" → "User has a dog named Rex" |
-| **SUPERSEDE** | Replaces contradictory fact | "Lives in NYC" → "Lives in SF" |
-| **NONE** | Already captured | Less specific duplicate |
+| Action        | When Used                   | Example                                       |
+| ------------- | --------------------------- | --------------------------------------------- |
+| **ADD**       | Genuinely new information   | First fact about a topic                      |
+| **UPDATE**    | Refines existing fact       | "User has a dog" → "User has a dog named Rex" |
+| **SUPERSEDE** | Replaces contradictory fact | "Lives in NYC" → "Lives in SF"                |
+| **NONE**      | Already captured            | Less specific duplicate                       |
 
 #### 📦 New Modules
 

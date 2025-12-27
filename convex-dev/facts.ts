@@ -376,8 +376,10 @@ export const updateInPlace = mutation({
     if (args.validUntil !== undefined) updates.validUntil = args.validUntil;
     if (args.metadata !== undefined) updates.metadata = args.metadata;
     if (args.category !== undefined) updates.category = args.category;
-    if (args.searchAliases !== undefined) updates.searchAliases = args.searchAliases;
-    if (args.semanticContext !== undefined) updates.semanticContext = args.semanticContext;
+    if (args.searchAliases !== undefined)
+      updates.searchAliases = args.searchAliases;
+    if (args.semanticContext !== undefined)
+      updates.semanticContext = args.semanticContext;
     if (args.entities !== undefined) updates.entities = args.entities;
     if (args.relations !== undefined) updates.relations = args.relations;
 

@@ -537,48 +537,54 @@ describe("Memory API Deduplication Integration", () => {
     it("defaults to semantic deduplication (falling back to structural)", async () => {
       // Note: Since belief revision is now "batteries included" (always enabled by default),
       // we must explicitly disable it to test the deduplication fallback path.
-      
+
       // First remember call - extracts facts
-      await cortex.memory.remember({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        conversationId: ctx.conversationId("conv1"),
-        userMessage: "My name is Alice",
-        agentResponse: "Nice to meet you, Alice!",
-        userId: TEST_USER_ID,
-        agentId: TEST_AGENT_ID,
-        userName: "Alice",
-        extractFacts: async (_userMsg, _agentMsg) => [
-          {
-            fact: "User's name is Alice",
-            factType: "identity",
-            subject: TEST_USER_ID,
-            predicate: "name",
-            object: "Alice",
-            confidence: 95,
-          },
-        ],
-      }, { beliefRevision: false }); // Disable to test deduplication path
+      await cortex.memory.remember(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          conversationId: ctx.conversationId("conv1"),
+          userMessage: "My name is Alice",
+          agentResponse: "Nice to meet you, Alice!",
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          userName: "Alice",
+          extractFacts: async (_userMsg, _agentMsg) => [
+            {
+              fact: "User's name is Alice",
+              factType: "identity",
+              subject: TEST_USER_ID,
+              predicate: "name",
+              object: "Alice",
+              confidence: 95,
+            },
+          ],
+        },
+        { beliefRevision: false },
+      ); // Disable to test deduplication path
 
       // Second remember call - same fact should be deduplicated
-      await cortex.memory.remember({
-        memorySpaceId: TEST_MEMSPACE_ID,
-        conversationId: ctx.conversationId("conv2"),
-        userMessage: "Remember, I'm Alice",
-        agentResponse: "Of course, Alice!",
-        userId: TEST_USER_ID,
-        agentId: TEST_AGENT_ID,
-        userName: "Alice",
-        extractFacts: async (_userMsg, _agentMsg) => [
-          {
-            fact: "User is Alice",
-            factType: "identity",
-            subject: TEST_USER_ID,
-            predicate: "name",
-            object: "Alice",
-            confidence: 90,
-          },
-        ],
-      }, { beliefRevision: false }); // Disable to test deduplication path
+      await cortex.memory.remember(
+        {
+          memorySpaceId: TEST_MEMSPACE_ID,
+          conversationId: ctx.conversationId("conv2"),
+          userMessage: "Remember, I'm Alice",
+          agentResponse: "Of course, Alice!",
+          userId: TEST_USER_ID,
+          agentId: TEST_AGENT_ID,
+          userName: "Alice",
+          extractFacts: async (_userMsg, _agentMsg) => [
+            {
+              fact: "User is Alice",
+              factType: "identity",
+              subject: TEST_USER_ID,
+              predicate: "name",
+              object: "Alice",
+              confidence: 90,
+            },
+          ],
+        },
+        { beliefRevision: false },
+      ); // Disable to test deduplication path
 
       // Count facts for this user - should be 1 due to structural dedup
       const facts = await cortex.facts.list({

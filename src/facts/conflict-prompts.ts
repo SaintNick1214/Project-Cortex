@@ -301,7 +301,8 @@ export function parseConflictDecision(response: string): ConflictDecision {
       targetFactId: parsed.targetFactId || null,
       reason: parsed.reason || "No reason provided",
       mergedFact: parsed.mergedFact || null,
-      confidence: typeof parsed.confidence === "number" ? parsed.confidence : 75,
+      confidence:
+        typeof parsed.confidence === "number" ? parsed.confidence : 75,
     };
   } catch (error) {
     if (error instanceof SyntaxError) {
@@ -417,7 +418,8 @@ export function getDefaultDecision(
       return {
         action: "UPDATE",
         targetFactId: bestMatch.fact.factId,
-        reason: "High similarity with existing fact - updating with higher confidence",
+        reason:
+          "High similarity with existing fact - updating with higher confidence",
         mergedFact: newFact.fact,
         confidence: 70,
       };
@@ -443,7 +445,8 @@ export function getDefaultDecision(
       return {
         action: "SUPERSEDE",
         targetFactId: bestMatch.fact.factId,
-        reason: "Same subject with different content - possible update to existing knowledge",
+        reason:
+          "Same subject with different content - possible update to existing knowledge",
         mergedFact: null,
         confidence: 60,
       };

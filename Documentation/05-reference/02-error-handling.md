@@ -1313,7 +1313,7 @@ const cortex = new Cortex({
 
 ## Next Steps
 
-- **[Memory Operations API](./02-memory-operations.md)** - Using Cortex APIs
+- **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Using Cortex APIs
 
 ---
 

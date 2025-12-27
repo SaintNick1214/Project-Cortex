@@ -85,7 +85,7 @@ describe("Streaming Flow Integration", () => {
       });
 
       // Consume stream to trigger flush
-      const chunks = await consumeStream(result.stream) as StreamChunk[];
+      const chunks = (await consumeStream(result.stream)) as StreamChunk[];
 
       expect(chunks.length).toBe(3);
       expect(chunks.map((c) => c.textDelta).join("")).toBe("Hello World!");
@@ -108,9 +108,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -131,13 +129,11 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream) as StreamChunk[];
+      const chunks = (await consumeStream(result.stream)) as StreamChunk[];
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       expect(chunks[0].delta).toBe("V5 ");
@@ -155,13 +151,11 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream) as StreamChunk[];
+      const chunks = (await consumeStream(result.stream)) as StreamChunk[];
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       expect(chunks[0].text).toBe("Text ");
@@ -228,9 +222,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 
@@ -250,9 +242,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -273,9 +263,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "system", content: "System prompt only" },
-        ],
+        prompt: [{ role: "system", content: "System prompt only" }],
         mode: { type: "regular" },
       });
 
@@ -299,9 +287,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -323,9 +309,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -351,9 +335,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -383,9 +365,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -406,9 +386,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -441,9 +419,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -476,9 +452,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -500,9 +474,7 @@ describe("Streaming Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       const result = await provider.doStream({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 

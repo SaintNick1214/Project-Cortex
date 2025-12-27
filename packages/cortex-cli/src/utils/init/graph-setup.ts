@@ -406,11 +406,19 @@ function showGraphConnectionInfo(graphType: "neo4j" | "memgraph"): void {
   if (graphType === "neo4j") {
     console.log(pc.dim("     Browser: http://localhost:7474"));
     console.log(pc.dim("     Bolt: bolt://localhost:7687"));
-    console.log(pc.dim("     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)"));
+    console.log(
+      pc.dim(
+        "     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)",
+      ),
+    );
   } else {
     console.log(pc.dim("     Memgraph Lab: http://localhost:3000"));
     console.log(pc.dim("     Bolt: bolt://localhost:7687"));
-    console.log(pc.dim("     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)"));
+    console.log(
+      pc.dim(
+        "     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)",
+      ),
+    );
   }
 }
 

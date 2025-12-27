@@ -20,8 +20,9 @@ export interface Message {
 export interface Conversation {
   _id: string;
   conversationId: string;
-  memorySpaceId: string; // NEW: Memory space isolation
-  participantId?: string; // NEW: Hive Mode tracking
+  memorySpaceId: string; // Memory space isolation
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode tracking
   type: ConversationType;
   participants: {
     userId?: string; // The human user in the conversation
@@ -38,8 +39,9 @@ export interface Conversation {
 
 export interface CreateConversationInput {
   conversationId?: string; // Auto-generated if not provided
-  memorySpaceId: string; // NEW: Required
-  participantId?: string; // NEW: Hive Mode
+  memorySpaceId: string; // Required
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode
   type: ConversationType;
   participants: {
     userId?: string; // The human user in the conversation
@@ -64,7 +66,8 @@ export interface AddMessageInput {
 export interface ListConversationsFilter {
   type?: ConversationType;
   userId?: string;
-  memorySpaceId?: string; // Updated
+  tenantId?: string; // Multi-tenancy filter
+  memorySpaceId?: string;
   participantId?: string; // Hive Mode tracking
   createdBefore?: number;
   createdAfter?: number;
@@ -92,7 +95,8 @@ export interface ListConversationsResult {
 export interface CountConversationsFilter {
   type?: ConversationType;
   userId?: string;
-  memorySpaceId?: string; // Updated
+  tenantId?: string; // Multi-tenancy filter
+  memorySpaceId?: string;
 }
 
 export interface GetHistoryOptions {
@@ -203,6 +207,7 @@ export interface ImmutableRecord {
   type: string;
   id: string;
   data: Record<string, unknown>;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   userId?: string;
   version: number;
   previousVersions: ImmutableVersion[];
@@ -237,6 +242,7 @@ export interface ImmutableVersionExpanded {
 export interface ListImmutableFilter {
   type?: string;
   userId?: string;
+  tenantId?: string; // Multi-tenancy filter
   limit?: number;
 }
 
@@ -256,6 +262,7 @@ export interface ImmutableSearchResult {
 export interface CountImmutableFilter {
   type?: string;
   userId?: string;
+  tenantId?: string; // Multi-tenancy filter
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -267,6 +274,7 @@ export interface MutableRecord {
   namespace: string;
   key: string;
   value: unknown;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   userId?: string;
   metadata?: Record<string, unknown>;
   createdAt: number;
@@ -277,6 +285,7 @@ export interface SetMutableInput {
   namespace: string;
   key: string;
   value: unknown;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   userId?: string;
   metadata?: Record<string, unknown>;
 }
@@ -290,6 +299,7 @@ export interface UpdateMutableInput {
 export interface ListMutableFilter {
   namespace: string;
   keyPrefix?: string;
+  tenantId?: string; // Multi-tenancy filter
   userId?: string;
   limit?: number;
   offset?: number;
@@ -301,6 +311,7 @@ export interface ListMutableFilter {
 
 export interface CountMutableFilter {
   namespace: string;
+  tenantId?: string; // Multi-tenancy filter
   userId?: string;
   keyPrefix?: string;
   updatedAfter?: number;
@@ -371,8 +382,9 @@ export interface MemoryVersion {
 export interface MemoryEntry {
   _id: string;
   memoryId: string;
-  memorySpaceId: string; // Updated
-  participantId?: string; // NEW: Hive Mode
+  memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode
   userId?: string; // For user-owned memories
   agentId?: string; // For agent-owned memories
   content: string;
@@ -382,7 +394,7 @@ export interface MemoryEntry {
   sourceUserId?: string;
   sourceUserName?: string;
   sourceTimestamp: number;
-  messageRole?: "user" | "agent" | "system"; // NEW: For semantic search weighting
+  messageRole?: "user" | "agent" | "system"; // For semantic search weighting
   conversationRef?: ConversationRef;
   immutableRef?: ImmutableRef;
   mutableRef?: MutableRef;
@@ -405,11 +417,12 @@ export interface MemoryEntry {
 export interface StoreMemoryInput {
   content: string;
   contentType: ContentType;
-  participantId?: string; // NEW: Hive Mode tracking
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode tracking
   embedding?: number[];
   userId?: string; // For user-owned memories
   agentId?: string; // For agent-owned memories
-  messageRole?: "user" | "agent" | "system"; // NEW: For semantic search weighting
+  messageRole?: "user" | "agent" | "system"; // For semantic search weighting
 
   // Enrichment fields (for bullet-proof retrieval)
   enrichedContent?: string; // Concatenated searchable content for embedding
@@ -457,18 +470,20 @@ export interface SearchMemoriesOptions {
 }
 
 export interface ListMemoriesFilter {
-  memorySpaceId: string; // Updated
+  memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy filter
   userId?: string;
-  participantId?: string; // NEW: Filter by participant (Hive Mode)
+  participantId?: string; // Filter by participant (Hive Mode)
   sourceType?: SourceType;
   limit?: number;
-  enrichFacts?: boolean; // NEW: Include facts in results
+  enrichFacts?: boolean; // Include facts in results
 }
 
 export interface CountMemoriesFilter {
-  memorySpaceId: string; // Updated
+  memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy filter
   userId?: string;
-  participantId?: string; // NEW: Filter by participant (Hive Mode)
+  participantId?: string; // Filter by participant (Hive Mode)
   sourceType?: SourceType;
 }
 
@@ -918,6 +933,7 @@ export interface FactRecord {
   _id: string;
   factId: string;
   memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   participantId?: string; // Hive Mode tracking
   userId?: string; // GDPR compliance - links to user
   fact: string; // The fact statement
@@ -960,6 +976,7 @@ export interface FactRecord {
 
 export interface StoreFactParams {
   memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   participantId?: string; // Hive Mode tracking
   userId?: string; // GDPR compliance - links to user
   fact: string;
@@ -998,6 +1015,9 @@ export interface StoreFactParams {
 export interface ListFactsFilter {
   // Required
   memorySpaceId: string;
+
+  // Multi-tenancy filter
+  tenantId?: string;
 
   // Fact-specific filters
   factType?:
@@ -1047,6 +1067,9 @@ export interface ListFactsFilter {
 export interface CountFactsFilter {
   // Required
   memorySpaceId: string;
+
+  // Multi-tenancy filter
+  tenantId?: string;
 
   // Fact-specific filters
   factType?:
@@ -1254,6 +1277,7 @@ export interface DeleteManyFactsResult {
 export interface MemorySpace {
   _id: string;
   memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   name?: string;
   type: "personal" | "team" | "project" | "custom";
   participants: Array<{
@@ -1269,6 +1293,7 @@ export interface MemorySpace {
 
 export interface RegisterMemorySpaceParams {
   memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   name?: string;
   type: "personal" | "team" | "project" | "custom";
   participants?: Array<{
@@ -1317,6 +1342,7 @@ export interface MemorySpaceStats {
 export interface ListMemorySpacesFilter {
   type?: "personal" | "team" | "project" | "custom";
   status?: "active" | "archived";
+  tenantId?: string; // Multi-tenancy filter
   participant?: string; // Filter by participant ID
   limit?: number;
   offset?: number;
@@ -1366,6 +1392,7 @@ export interface UpdateMemorySpaceOptions {
 
 export interface AgentRegistration {
   id: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   name: string;
   description?: string;
   metadata?: Record<string, unknown>;
@@ -1374,6 +1401,7 @@ export interface AgentRegistration {
 
 export interface RegisteredAgent {
   id: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   name: string;
   description?: string;
   metadata: Record<string, unknown>;
@@ -1411,6 +1439,8 @@ export interface AgentStats {
  * 2. Fetch all results without `offset` and paginate client-side
  */
 export interface AgentFilters {
+  /** Filter by tenant ID (database-level filter - safe to use with offset/limit) */
+  tenantId?: string;
   /** Filter by metadata key-value pairs (client-side filter - see pagination limitation) */
   metadata?: Record<string, unknown>;
   /** Filter by agent name, case-insensitive partial match (client-side filter - see pagination limitation) */
@@ -1724,6 +1754,7 @@ export class A2ATimeoutError extends Error {
 
 export interface UserProfile {
   id: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   data: Record<string, unknown>;
   version: number;
   createdAt: number;
@@ -1794,6 +1825,8 @@ export interface VerificationResult {
 }
 
 export interface ListUsersFilter {
+  /** Filter by tenant ID for multi-tenant isolation */
+  tenantId?: string;
   /** Maximum results to return (default: 50, max: 1000) */
   limit?: number;
   /** Skip first N results for pagination (default: 0) */
@@ -1843,11 +1876,114 @@ export interface ExportUsersOptions {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Sessions API
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Re-export Session types from sessions module
+export type {
+  Session,
+  SessionStatus,
+  SessionMetadata,
+  CreateSessionParams,
+  SessionFilters,
+  ExpireSessionsOptions,
+  EndSessionsResult,
+} from "../sessions/types";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Auth Context API
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// Re-export Auth types from auth module
+export type { AuthContext, AuthContextParams, AuthMethod } from "../auth/types";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Governance Policies API
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export type ComplianceMode = "GDPR" | "HIPAA" | "SOC2" | "FINRA" | "Custom";
 export type ComplianceTemplate = "GDPR" | "HIPAA" | "SOC2" | "FINRA";
+
+/**
+ * Session lifecycle policy configuration.
+ *
+ * Controls session timeout, auto-extension, and cleanup behavior.
+ * Configurable per-tenant or per-organization via GovernancePolicy.
+ */
+export interface SessionLifecyclePolicy {
+  /**
+   * Idle timeout before session becomes idle/expires.
+   * Format: duration string ('30m', '1h', '24h')
+   * @default '30m'
+   */
+  idleTimeout: string;
+
+  /**
+   * Maximum session duration regardless of activity.
+   * Format: duration string ('12h', '24h', '7d')
+   * @default '24h'
+   */
+  maxDuration: string;
+
+  /**
+   * Automatically extend session on activity.
+   * @default true
+   */
+  autoExtend: boolean;
+
+  /**
+   * Warn user before session expires.
+   * Format: duration string ('5m', '15m')
+   */
+  warnBeforeExpiry?: string;
+}
+
+/**
+ * Session cleanup policy configuration.
+ */
+export interface SessionCleanupPolicy {
+  /**
+   * Automatically expire idle sessions.
+   * @default true
+   */
+  autoExpireIdle: boolean;
+
+  /**
+   * Delete ended sessions after this duration.
+   * Format: duration string ('7d', '30d', '90d')
+   */
+  deleteEndedAfter?: string;
+
+  /**
+   * Archive sessions before deletion.
+   * Format: duration string
+   */
+  archiveAfter?: string;
+}
+
+/**
+ * Session limits policy configuration.
+ */
+export interface SessionLimitsPolicy {
+  /**
+   * Maximum concurrent active sessions per user.
+   */
+  maxActiveSessions?: number;
+
+  /**
+   * Maximum sessions per device type.
+   */
+  maxSessionsPerDevice?: number;
+}
+
+/**
+ * Complete session policy configuration for GovernancePolicy.
+ */
+export interface SessionPolicy {
+  lifecycle: SessionLifecyclePolicy;
+  cleanup: SessionCleanupPolicy;
+  limits?: SessionLimitsPolicy;
+}
 
 export interface GovernancePolicy {
   organizationId?: string;
@@ -1911,6 +2047,9 @@ export interface GovernancePolicy {
       deleteOrphaned: boolean;
     };
   };
+
+  // Sessions (NEW): Session lifecycle policies
+  sessions?: SessionPolicy;
 
   // Cross-layer compliance
   compliance: {

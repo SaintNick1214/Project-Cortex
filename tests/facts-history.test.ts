@@ -135,7 +135,10 @@ describe("Fact History Service", () => {
 
   describe("Activity Summary", () => {
     it("should return activity summary for memory space", async () => {
-      const summary = await cortex.facts.getActivitySummary(TEST_MEMSPACE_ID, 24);
+      const summary = await cortex.facts.getActivitySummary(
+        TEST_MEMSPACE_ID,
+        24,
+      );
 
       expect(summary).toBeDefined();
       expect(summary).toHaveProperty("timeRange");
@@ -148,8 +151,14 @@ describe("Fact History Service", () => {
     });
 
     it("should allow different time ranges", async () => {
-      const summary1h = await cortex.facts.getActivitySummary(TEST_MEMSPACE_ID, 1);
-      const summary24h = await cortex.facts.getActivitySummary(TEST_MEMSPACE_ID, 24);
+      const summary1h = await cortex.facts.getActivitySummary(
+        TEST_MEMSPACE_ID,
+        1,
+      );
+      const summary24h = await cortex.facts.getActivitySummary(
+        TEST_MEMSPACE_ID,
+        24,
+      );
 
       expect(summary1h.timeRange.hours).toBe(1);
       expect(summary24h.timeRange.hours).toBe(24);
@@ -213,7 +222,10 @@ describe("Fact History Service", () => {
       expect(result.newFactId).toBe(newFact.factId);
 
       // Verify old fact is marked as superseded
-      const retrievedOldFact = await cortex.facts.get(TEST_MEMSPACE_ID, oldFact.factId);
+      const retrievedOldFact = await cortex.facts.get(
+        TEST_MEMSPACE_ID,
+        oldFact.factId,
+      );
       expect(retrievedOldFact?.validUntil).toBeDefined();
     });
 
@@ -233,7 +245,7 @@ describe("Fact History Service", () => {
           oldFactId: "non-existent-old",
           newFactId: newFact.factId,
           reason: "Test",
-        })
+        }),
       ).rejects.toThrow();
     });
   });
@@ -244,9 +256,7 @@ describe("Fact History Service", () => {
     });
 
     it("should handle empty memory space ID", async () => {
-      await expect(
-        cortex.facts.getActivitySummary("", 24)
-      ).rejects.toThrow();
+      await expect(cortex.facts.getActivitySummary("", 24)).rejects.toThrow();
     });
   });
 });

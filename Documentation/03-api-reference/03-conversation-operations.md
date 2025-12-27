@@ -1214,7 +1214,7 @@ const memories = await cortex.memory.search('agent-1', '*', {
 
 - **[Memory Operations API](./02-memory-operations.md)** - Layer 2 (Vector) and Layer 3 (Memory) APIs
 - **[A2A Communication API](./06-a2a-communication.md)** - Agent-to-agent messaging
-- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

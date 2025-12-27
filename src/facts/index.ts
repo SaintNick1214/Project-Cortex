@@ -1276,7 +1276,8 @@ export class FactsAPI {
       action: historyAction,
       oldValue: result.superseded[0]?.fact,
       newValue: result.fact.fact,
-      supersededBy: result.action === "SUPERSEDE" ? result.fact.factId : undefined,
+      supersededBy:
+        result.action === "SUPERSEDE" ? result.fact.factId : undefined,
       supersedes: result.superseded[0]?.factId,
       reason: result.reason,
       confidence: result.confidence,
@@ -1372,11 +1373,9 @@ export class FactsAPI {
     }
 
     // Mark old fact as superseded
-    await this.update(
-      params.memorySpaceId,
-      params.oldFactId,
-      { validUntil: Date.now() },
-    );
+    await this.update(params.memorySpaceId, params.oldFactId, {
+      validUntil: Date.now(),
+    });
 
     // Log to history
     await this.historyService.log({
@@ -1449,7 +1448,9 @@ export class FactsAPI {
    * // Returns: [oldest] -> [older] -> [old] -> [current]
    * ```
    */
-  async getSupersessionChain(factId: string): Promise<SupersessionChainEntry[]> {
+  async getSupersessionChain(
+    factId: string,
+  ): Promise<SupersessionChainEntry[]> {
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
 

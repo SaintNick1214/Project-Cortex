@@ -140,6 +140,7 @@ This project was inspired by and built upon concepts from:
 Cortex uses the Functional Source License (FSL-1.1-Apache-2.0). This means:
 
 **Permitted Uses:**
+
 - Internal use and access within your organization
 - Non-commercial education and research
 - Professional services you provide to licensees using the Software
@@ -147,20 +148,21 @@ Cortex uses the Functional Source License (FSL-1.1-Apache-2.0). This means:
 
 **Competing Use Restrictions:**
 You may NOT use Cortex to create a commercial product or service that:
+
 - Substitutes for Cortex
 - Offers the same or substantially similar functionality as Cortex
 - Competes with any product or service we offer using Cortex
 
 **Future Apache 2.0 License:**
-Each version of Cortex automatically becomes available under the Apache License 2.0 
+Each version of Cortex automatically becomes available under the Apache License 2.0
 two years after its release date, at which point all restrictions are lifted.
 
 ---
 
 ## Trademark
 
-"Cortex" is not a registered trademark. You are free to use the name "Cortex" 
-when referring to this software in accordance with the Trademarks section above 
+"Cortex" is not a registered trademark. You are free to use the name "Cortex"
+when referring to this software in accordance with the Trademarks section above
 (reasonable and customary use in identifying the origin of the Software).
 
 ---

@@ -144,10 +144,10 @@ describe("Memory API with Belief Revision", () => {
 
   describe("FactsAPI hasBeliefRevision()", () => {
     test("hasBeliefRevision() returns consistent value based on LLM config", async () => {
-      // Note: hasBeliefRevision() may return true if CORTEX_FACT_EXTRACTION=true 
+      // Note: hasBeliefRevision() may return true if CORTEX_FACT_EXTRACTION=true
       // and OPENAI_API_KEY is set in the environment (auto-configuration)
       const hasRevision = (cortex as any).memory.facts.hasBeliefRevision();
-      
+
       // Value should be boolean
       expect(typeof hasRevision).toBe("boolean");
     });
@@ -163,7 +163,9 @@ describe("Memory API with Belief Revision", () => {
       });
 
       // Access internal facts API
-      const factsHasRevision = (cortexWithLLM as any).memory.facts.hasBeliefRevision();
+      const factsHasRevision = (
+        cortexWithLLM as any
+      ).memory.facts.hasBeliefRevision();
       expect(factsHasRevision).toBe(true);
     });
   });
@@ -212,13 +214,15 @@ describe("Memory API with Belief Revision", () => {
       // Type check: factRevisions should be optional array or undefined
       expect(
         result.factRevisions === undefined ||
-        Array.isArray(result.factRevisions)
+          Array.isArray(result.factRevisions),
       ).toBe(true);
 
       // If present, each revision should have required fields
       if (result.factRevisions) {
         for (const revision of result.factRevisions) {
-          expect(["ADD", "UPDATE", "SUPERSEDE", "NONE"]).toContain(revision.action);
+          expect(["ADD", "UPDATE", "SUPERSEDE", "NONE"]).toContain(
+            revision.action,
+          );
           expect(revision.fact).toBeDefined();
           expect(revision.fact.factId).toBeDefined();
         }
@@ -278,7 +282,8 @@ describe("Memory API with Belief Revision", () => {
           memorySpaceId: testMemorySpaceId,
           conversationId: convId,
           userMessage: "Hi, I'm John. I work as an engineer and I love coffee.",
-          agentResponse: "Nice to meet you, John! I'll remember you're an engineer who loves coffee.",
+          agentResponse:
+            "Nice to meet you, John! I'll remember you're an engineer who loves coffee.",
           userId: testUserId,
           userName: testUserName,
           agentId: testAgentId,

@@ -1402,7 +1402,7 @@ const partners = collaborations.map(m => m.metadata.toAgent);
 
 - **[User Operations API](./04-user-operations.md)** - User profile management
 - **[Memory Operations API](./02-memory-operations.md)** - Memory CRUD
-- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

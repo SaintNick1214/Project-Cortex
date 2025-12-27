@@ -43,9 +43,7 @@ describe("Chatbot Belief System E2E", () => {
 
   beforeAll(async () => {
     if (skipIfNoLLM) {
-      console.log(
-        "Skipping chatbot E2E tests: OPENAI_API_KEY not set"
-      );
+      console.log("Skipping chatbot E2E tests: OPENAI_API_KEY not set");
       return;
     }
 
@@ -97,7 +95,7 @@ describe("Chatbot Belief System E2E", () => {
    */
   async function simulateChatbotResponse(
     userMessage: string,
-    systemInstructions?: string
+    systemInstructions?: string,
   ): Promise<{ response: string; context: RecallResult }> {
     // Step 1: Get context from Cortex (this is what a real chatbot would do)
     const recallResult = await cortex.memory.recall({
@@ -145,7 +143,7 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       // Simulate chatbot response
       const { response: agentResponse } = await simulateChatbotResponse(
         userMessage,
-        "You are a friendly assistant meeting a new user."
+        "You are a friendly assistant meeting a new user.",
       );
 
       console.log("[Turn 1] User:", userMessage);
@@ -180,7 +178,7 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       if (result.factRevisions) {
         console.log(
           "[Turn 1] Belief revision actions:",
-          result.factRevisions.map((r) => r.action)
+          result.factRevisions.map((r) => r.action),
         );
       }
     }, 60000);
@@ -229,7 +227,10 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       });
 
       console.log("[Turn 2] Recall results:", turn2Context.items.length);
-      console.log("[Turn 2] Context preview:", turn2Context.context?.substring(0, 300));
+      console.log(
+        "[Turn 2] Context preview:",
+        turn2Context.context?.substring(0, 300),
+      );
 
       // Should have retrieved context
       expect(turn2Context.items.length).toBeGreaterThan(0);
@@ -314,7 +315,7 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       // Simulate chatbot response
       const { response: agentResponse } = await simulateChatbotResponse(
         userMessage,
-        "You are a helpful assistant. Acknowledge preference changes politely."
+        "You are a helpful assistant. Acknowledge preference changes politely.",
       );
 
       console.log("[Turn 3] User:", userMessage);
@@ -365,7 +366,7 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       const hasPurpleFact = factsAfterTurn3.some(
         (f) =>
           f.fact.toLowerCase().includes("purple") ||
-          f.object?.toLowerCase() === "purple"
+          f.object?.toLowerCase() === "purple",
       );
       expect(hasPurpleFact).toBe(true);
 
@@ -386,7 +387,7 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       const blueFact = allFacts.find(
         (f) =>
           f.fact.toLowerCase().includes("blue") ||
-          f.object?.toLowerCase() === "blue"
+          f.object?.toLowerCase() === "blue",
       );
 
       if (blueFact) {
@@ -428,7 +429,10 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       const { response, context } = await simulateChatbotResponse(userMessage);
 
       console.log("[Final] User:", userMessage);
-      console.log("[Final] Context preview:", context.context?.substring(0, 300));
+      console.log(
+        "[Final] Context preview:",
+        context.context?.substring(0, 300),
+      );
       console.log("[Final] Agent response:", response);
 
       // The response should mention purple (the updated preference)
@@ -450,10 +454,10 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
 
       // Belief system verification: purple is active, blue is superseded
       const hasPurpleActive = activeFacts.some((f) =>
-        f.fact.toLowerCase().includes("purple")
+        f.fact.toLowerCase().includes("purple"),
       );
       const hasBlueActive = activeFacts.some((f) =>
-        f.fact.toLowerCase().includes("blue")
+        f.fact.toLowerCase().includes("blue"),
       );
 
       console.log("[Final] Purple fact active:", hasPurpleActive);
@@ -468,7 +472,7 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       if (!mentionsPurple && mentionsBlue) {
         console.log(
           "[Final] Note: LLM mentioned blue from conversation history. " +
-          "This is expected without semantic search embeddings."
+            "This is expected without semantic search embeddings.",
         );
       }
     }, 30000);
@@ -498,7 +502,9 @@ Use this context to personalize your response. Answer naturally and helpfully.`;
       activeFacts.forEach((f) => {
         console.log(`  ✓ ${f.fact}`);
       });
-      const supersededFacts = allFacts.filter((f) => f.validUntil !== undefined);
+      const supersededFacts = allFacts.filter(
+        (f) => f.validUntil !== undefined,
+      );
       if (supersededFacts.length > 0) {
         console.log("\nSuperseded facts:");
         supersededFacts.forEach((f) => {

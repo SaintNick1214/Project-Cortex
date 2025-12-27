@@ -29,7 +29,10 @@ const mockCortex = {
   memory: {
     search: jest.fn().mockResolvedValue([]),
     remember: jest.fn().mockResolvedValue({
-      conversation: { messageIds: ["msg-1", "msg-2"], conversationId: "conv-1" },
+      conversation: {
+        messageIds: ["msg-1", "msg-2"],
+        conversationId: "conv-1",
+      },
       memories: [],
       facts: [],
     }),
@@ -100,7 +103,11 @@ describe("CortexMemoryProvider", () => {
 
     it("should accept pre-initialized Cortex instance", () => {
       const customCortex = { ...mockCortex };
-      const provider = new CortexMemoryProvider(mockLLM, mockConfig, customCortex as any);
+      const provider = new CortexMemoryProvider(
+        mockLLM,
+        mockConfig,
+        customCortex as any,
+      );
 
       // Should use the provided instance (no new Cortex created)
       expect(provider).toBeDefined();
@@ -277,7 +284,9 @@ describe("CortexMemoryProvider", () => {
     });
 
     it("should handle recall failure gracefully", async () => {
-      mockCortex.memory.recall.mockRejectedValueOnce(new Error("Recall failed"));
+      mockCortex.memory.recall.mockRejectedValueOnce(
+        new Error("Recall failed"),
+      );
 
       const config = createTestConfig({ enableMemorySearch: true });
       const provider = new CortexMemoryProvider(mockLLM, config);
@@ -341,7 +350,7 @@ describe("CortexMemoryProvider", () => {
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream) as StreamChunk[];
+      const chunks = (await consumeStream(result.stream)) as StreamChunk[];
       expect(chunks.length).toBe(2);
       expect(chunks[0].type).toBe("text-delta");
     });
@@ -359,7 +368,7 @@ describe("CortexMemoryProvider", () => {
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream) as StreamChunk[];
+      const chunks = (await consumeStream(result.stream)) as StreamChunk[];
       expect(chunks[0].textDelta).toBe("Hello ");
       expect(chunks[1].textDelta).toBe("World");
     });
@@ -377,7 +386,7 @@ describe("CortexMemoryProvider", () => {
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream) as StreamChunk[];
+      const chunks = (await consumeStream(result.stream)) as StreamChunk[];
       expect(chunks[0].delta).toBe("Hello ");
     });
 
@@ -394,7 +403,7 @@ describe("CortexMemoryProvider", () => {
         mode: { type: "regular" },
       });
 
-      const chunks = await consumeStream(result.stream) as StreamChunk[];
+      const chunks = (await consumeStream(result.stream)) as StreamChunk[];
       expect(chunks[0].text).toBe("Hello ");
     });
 

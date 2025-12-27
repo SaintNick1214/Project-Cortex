@@ -50,7 +50,7 @@ function findTemplatePath(): string | null {
       "@cortexmemory",
       "cli",
       "templates",
-      "vercel-ai-quickstart"
+      "vercel-ai-quickstart",
     ),
   ];
 
@@ -93,7 +93,7 @@ async function copyDir(src: string, dest: string): Promise<void> {
  */
 async function updatePackageJson(
   quickstartPath: string,
-  sdkVersion: string
+  sdkVersion: string,
 ): Promise<void> {
   const packageJsonPath = path.join(quickstartPath, "package.json");
 
@@ -114,7 +114,9 @@ async function updatePackageJson(
       pkg.dependencies["@cortexmemory/sdk"] = `^${sdkVersion}`;
     }
 
-    if (pkg.dependencies["@cortexmemory/vercel-ai-provider"]?.startsWith("file:")) {
+    if (
+      pkg.dependencies["@cortexmemory/vercel-ai-provider"]?.startsWith("file:")
+    ) {
       // Use same version as SDK (they're released together)
       pkg.dependencies["@cortexmemory/vercel-ai-provider"] = `^${sdkVersion}`;
     }
@@ -143,7 +145,7 @@ async function createQuickstartEnv(
   quickstartPath: string,
   convexUrl: string,
   openaiApiKey?: string,
-  graphConfig?: QuickstartGraphConfig
+  graphConfig?: QuickstartGraphConfig,
 ): Promise<void> {
   const envPath = path.join(quickstartPath, ".env.local");
 
@@ -204,7 +206,7 @@ NEO4J_PASSWORD=${graphConfig.password || ""}
  */
 async function copyConvexQueryFiles(
   quickstartPath: string,
-  projectPath: string
+  projectPath: string,
 ): Promise<void> {
   const quickstartConvexPath = path.join(quickstartPath, "convex");
   const projectConvexPath = path.join(projectPath, "convex");
@@ -269,7 +271,7 @@ export async function installVercelAIQuickstart(
   sdkVersion: string,
   convexUrl: string,
   openaiApiKey?: string,
-  graphConfig?: QuickstartGraphConfig
+  graphConfig?: QuickstartGraphConfig,
 ): Promise<AppConfig> {
   // Ensure we have an absolute path
   const absoluteProjectPath = path.resolve(projectPath);
@@ -281,7 +283,7 @@ export async function installVercelAIQuickstart(
   if (!templatePath) {
     throw new Error(
       "Vercel AI quickstart template not found. " +
-        "Please ensure @cortexmemory/cli is properly installed."
+        "Please ensure @cortexmemory/cli is properly installed.",
     );
   }
 
@@ -298,7 +300,12 @@ export async function installVercelAIQuickstart(
   updateSpinner.succeed("Package.json configured");
 
   // Create .env.local (including graph config if enabled)
-  await createQuickstartEnv(quickstartPath, convexUrl, openaiApiKey, graphConfig);
+  await createQuickstartEnv(
+    quickstartPath,
+    convexUrl,
+    openaiApiKey,
+    graphConfig,
+  );
   console.log(pc.dim("   Created quickstart/.env.local"));
 
   // Copy Convex query files to main convex folder
@@ -351,10 +358,7 @@ export async function installVercelAIQuickstart(
  * @param appName - Display name for the app
  * @param app - App configuration (includes projectPath)
  */
-export async function startApp(
-  appName: string,
-  app: AppConfig
-): Promise<void> {
+export async function startApp(appName: string, app: AppConfig): Promise<void> {
   // Use app.projectPath (absolute) combined with app.path (relative)
   const appPath = path.join(app.projectPath, app.path);
 
@@ -384,6 +388,6 @@ export async function startApp(
   child.unref();
 
   console.log(
-    pc.green(`   ✓ ${appName} started at http://localhost:${app.port || 3000}`)
+    pc.green(`   ✓ ${appName} started at http://localhost:${app.port || 3000}`),
   );
 }
