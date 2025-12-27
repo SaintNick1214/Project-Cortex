@@ -100,6 +100,10 @@ function mergeConfig(target: CLIConfig, source: Partial<CLIConfig>): CLIConfig {
       ...target.deployments,
       ...source.deployments,
     },
+    apps: {
+      ...target.apps,
+      ...source.apps,
+    },
     default: source.default ?? target.default,
     format: source.format ?? target.format,
     confirmDangerous: source.confirmDangerous ?? target.confirmDangerous,
