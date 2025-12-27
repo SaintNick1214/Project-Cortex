@@ -168,46 +168,51 @@ export const list = query({
   handler: async (ctx, args) => {
     let q = ctx.db.query("sessions");
 
+    // Track which fields are covered by the selected index
+    const indexedFields = new Set<string>();
+
     // Apply filters based on what's provided
     if (args.tenantId && args.userId) {
       q = q.withIndex("by_tenant_user", (q) =>
         q.eq("tenantId", args.tenantId!).eq("userId", args.userId!),
       );
+      indexedFields.add("tenantId");
+      indexedFields.add("userId");
     } else if (args.tenantId && args.status) {
       q = q.withIndex("by_tenant_status", (q) =>
         q.eq("tenantId", args.tenantId!).eq("status", args.status!),
       );
+      indexedFields.add("tenantId");
+      indexedFields.add("status");
     } else if (args.tenantId) {
       q = q.withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!));
+      indexedFields.add("tenantId");
     } else if (args.userId) {
       q = q.withIndex("by_userId", (q) => q.eq("userId", args.userId!));
+      indexedFields.add("userId");
     } else if (args.memorySpaceId) {
       q = q.withIndex("by_memorySpace", (q) =>
         q.eq("memorySpaceId", args.memorySpaceId!),
       );
+      indexedFields.add("memorySpaceId");
     } else if (args.status) {
       q = q.withIndex("by_status", (q) => q.eq("status", args.status!));
+      indexedFields.add("status");
     }
 
     // Collect with remaining filters applied
     let sessions = await q.collect();
 
     // Apply any remaining filters not covered by indexes
-    if (args.userId && args.tenantId === undefined) {
-      // Already filtered by index
-    } else if (args.userId) {
+    if (args.userId && !indexedFields.has("userId")) {
       sessions = sessions.filter((s) => s.userId === args.userId);
     }
 
-    if (args.memorySpaceId && args.tenantId === undefined) {
-      // Already filtered by index
-    } else if (args.memorySpaceId) {
+    if (args.memorySpaceId && !indexedFields.has("memorySpaceId")) {
       sessions = sessions.filter((s) => s.memorySpaceId === args.memorySpaceId);
     }
 
-    if (args.status && args.tenantId === undefined) {
-      // Already filtered by index
-    } else if (args.status) {
+    if (args.status && !indexedFields.has("status")) {
       sessions = sessions.filter((s) => s.status === args.status);
     }
 
@@ -235,38 +240,43 @@ export const count = query({
   handler: async (ctx, args) => {
     let q = ctx.db.query("sessions");
 
+    // Track which fields are covered by the selected index
+    const indexedFields = new Set<string>();
+
     // Apply filters based on what's provided
     if (args.tenantId && args.status) {
       q = q.withIndex("by_tenant_status", (q) =>
         q.eq("tenantId", args.tenantId!).eq("status", args.status!),
       );
+      indexedFields.add("tenantId");
+      indexedFields.add("status");
     } else if (args.tenantId) {
       q = q.withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!));
+      indexedFields.add("tenantId");
     } else if (args.userId) {
       q = q.withIndex("by_userId", (q) => q.eq("userId", args.userId!));
+      indexedFields.add("userId");
     } else if (args.memorySpaceId) {
       q = q.withIndex("by_memorySpace", (q) =>
         q.eq("memorySpaceId", args.memorySpaceId!),
       );
+      indexedFields.add("memorySpaceId");
     } else if (args.status) {
       q = q.withIndex("by_status", (q) => q.eq("status", args.status!));
+      indexedFields.add("status");
     }
 
     // Collect and count with remaining filters
     let sessions = await q.collect();
 
-    // Apply any remaining filters
-    if (args.userId && args.tenantId !== undefined) {
+    // Apply any remaining filters not covered by indexes
+    if (args.userId && !indexedFields.has("userId")) {
       sessions = sessions.filter((s) => s.userId === args.userId);
     }
-    if (args.memorySpaceId && args.tenantId !== undefined) {
+    if (args.memorySpaceId && !indexedFields.has("memorySpaceId")) {
       sessions = sessions.filter((s) => s.memorySpaceId === args.memorySpaceId);
     }
-    if (
-      args.status &&
-      args.tenantId !== undefined &&
-      args.status !== args.status
-    ) {
+    if (args.status && !indexedFields.has("status")) {
       sessions = sessions.filter((s) => s.status === args.status);
     }
 
