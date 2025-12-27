@@ -198,7 +198,11 @@ describe("Belief Revision E2E", () => {
           embeddingProvider: { generate: generateEmbedding },
           enableFactExtraction: true,
           enableMemoryStorage: true,
-          beliefRevision: { enabled: true, slotMatching: true, llmResolution: true },
+          beliefRevision: {
+            enabled: true,
+            slotMatching: true,
+            llmResolution: true,
+          },
         });
 
         const llm = createSimpleLLM();
@@ -210,13 +214,12 @@ describe("Belief Revision E2E", () => {
           prompt: [
             {
               role: "system",
-              content: "You are a helpful assistant. Acknowledge what the user tells you.",
+              content:
+                "You are a helpful assistant. Acknowledge what the user tells you.",
             },
             {
               role: "user",
-              content: [
-                { type: "text", text: "My favorite color is blue" },
-              ],
+              content: [{ type: "text", text: "My favorite color is blue" }],
             },
           ],
           mode: { type: "regular" },
@@ -245,12 +248,16 @@ describe("Belief Revision E2E", () => {
           prompt: [
             {
               role: "system",
-              content: "You are a helpful assistant. Acknowledge what the user tells you.",
+              content:
+                "You are a helpful assistant. Acknowledge what the user tells you.",
             },
             {
               role: "user",
               content: [
-                { type: "text", text: "Actually, my favorite color is purple now" },
+                {
+                  type: "text",
+                  text: "Actually, my favorite color is purple now",
+                },
               ],
             },
           ],
@@ -344,9 +351,7 @@ describe("Belief Revision E2E", () => {
           prompt: [
             {
               role: "user",
-              content: [
-                { type: "text", text: "I work as a data scientist" },
-              ],
+              content: [{ type: "text", text: "I work as a data scientist" }],
             },
           ],
           mode: { type: "regular" },
@@ -407,9 +412,7 @@ describe("Belief Revision E2E", () => {
           prompt: [
             {
               role: "user",
-              content: [
-                { type: "text", text: "My favorite color is blue" },
-              ],
+              content: [{ type: "text", text: "My favorite color is blue" }],
             },
           ],
           mode: { type: "regular" },
@@ -463,7 +466,9 @@ describe("Belief Revision E2E", () => {
         const revisionActions = factsEvents
           .filter((e) => e.status === "complete" && e.revisionAction)
           .map((e) => e.revisionAction);
-        console.log(`Revision actions: ${revisionActions.join(", ") || "none"}`);
+        console.log(
+          `Revision actions: ${revisionActions.join(", ") || "none"}`,
+        );
 
         // Ideal behavior: Should have exactly 1 active "blue" fact
         // The second statement should be NONE (skipped as duplicate)
@@ -472,13 +477,15 @@ describe("Belief Revision E2E", () => {
             f.fact.toLowerCase().includes("blue") ||
             f.object?.toLowerCase().includes("blue"),
         );
-        
+
         console.log(`Active blue facts: ${blueFacts.length}`);
 
         // If we have 2+ blue facts or the second action was SUPERSEDE,
         // the belief revision system isn't handling duplicates correctly
         if (blueFacts.length > 1) {
-          console.warn("⚠️  Duplicate facts created - system should skip identical facts");
+          console.warn(
+            "⚠️  Duplicate facts created - system should skip identical facts",
+          );
         }
 
         // Check if SUPERSEDE was incorrectly used for same value

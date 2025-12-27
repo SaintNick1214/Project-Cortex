@@ -292,6 +292,7 @@ console.log(semanticResult.deduplication?.similarityScore); // ~0.92
 > **New in v0.24.0**: Intelligent fact management that prevents duplicates and maintains knowledge consistency.
 
 The Belief Revision System determines whether a new fact should:
+
 - **ADD**: Add as new fact (no conflicts)
 - **UPDATE**: Merge with existing fact (refinement)
 - **SUPERSEDE**: Replace existing fact (contradiction)
@@ -420,7 +421,11 @@ interface ReviseResult {
   confidence: number;
   pipeline: {
     slotMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
-    semanticMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
+    semanticMatching?: {
+      executed: boolean;
+      matched: boolean;
+      factIds?: string[];
+    };
     llmResolution?: { executed: boolean; decision?: string };
   };
 }
@@ -709,12 +714,12 @@ cortex.facts.configureBeliefRevision(llmClient, {
 
 When slot or semantic matching finds potential conflicts, the LLM makes nuanced decisions:
 
-| Decision  | Meaning                                       | Example                                      |
-| --------- | --------------------------------------------- | -------------------------------------------- |
-| UPDATE    | Merge/refine existing fact                    | "User likes pizza" → "User's favorite pizza is pepperoni" |
-| SUPERSEDE | Replace contradictory fact                    | "Lives in NYC" → "Moved to SF"               |
-| NONE      | Skip - already captured                       | Duplicate or less specific                   |
-| ADD       | Genuinely new information                     | Different aspect of same topic               |
+| Decision  | Meaning                    | Example                                                   |
+| --------- | -------------------------- | --------------------------------------------------------- |
+| UPDATE    | Merge/refine existing fact | "User likes pizza" → "User's favorite pizza is pepperoni" |
+| SUPERSEDE | Replace contradictory fact | "Lives in NYC" → "Moved to SF"                            |
+| NONE      | Skip - already captured    | Duplicate or less specific                                |
+| ADD       | Genuinely new information  | Different aspect of same topic                            |
 
 ### `facts.get()`
 
@@ -1654,18 +1659,20 @@ const result = await cortex.memory.remember({
   agentResponse: "I'll update that preference!",
   userId: "user-123",
   userName: "Alex",
-  extractFacts: async (user, agent) => [{
-    fact: "User prefers purple",
-    factType: "preference",
-    subject: "user-123",
-    predicate: "favorite color",
-    object: "purple",
-    confidence: 95,
-  }],
+  extractFacts: async (user, agent) => [
+    {
+      fact: "User prefers purple",
+      factType: "preference",
+      subject: "user-123",
+      predicate: "favorite color",
+      object: "purple",
+      confidence: 95,
+    },
+  ],
 });
 
 // Revision details included in result
-result.factRevisions?.forEach(rev => {
+result.factRevisions?.forEach((rev) => {
   console.log(`Action: ${rev.action}`); // "ADD", "UPDATE", "SUPERSEDE", or "NONE"
   console.log(`Fact: ${rev.fact.fact}`);
   console.log(`Reason: ${rev.reason}`);
@@ -1676,8 +1683,10 @@ result.factRevisions?.forEach(rev => {
 
 // Disable belief revision for a specific call
 const result2 = await cortex.memory.remember(
-  { /* ... */ },
-  { beliefRevision: false } // Force deduplication-only mode
+  {
+    /* ... */
+  },
+  { beliefRevision: false }, // Force deduplication-only mode
 );
 ```
 

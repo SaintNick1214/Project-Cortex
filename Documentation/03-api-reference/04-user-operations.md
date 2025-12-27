@@ -1,12 +1,22 @@
 # User Operations API
 
-> **Last Updated**: 2025-12-10
+> **Last Updated**: 2025-12-26
 
-Complete API reference for user profile management.
+Complete API reference for user profile management, including multi-tenancy and auth context integration.
 
 ## Overview
 
-The User Operations API (`cortex.users.*`) exists for **ONE primary reason**: **GDPR-compliant cascade deletion** across all Cortex layers and stores.
+The User Operations API (`cortex.users.*`) provides user profile management with **GDPR-compliant cascade deletion** across all Cortex layers and stores.
+
+**Key Features:**
+
+- **GDPR Cascade Deletion** - One call deletes across all layers with userId
+- **Multi-Tenancy** - Full tenant isolation via `tenantId`
+- **Extensible Profiles** - Flexible data field for any developer needs
+- **Validation Presets** - Strict, minimal, or custom validation
+- **Version History** - Time-travel queries for user data
+
+### Primary Feature: GDPR Cascade Deletion
 
 ### Primary Feature: GDPR Cascade Deletion
 
@@ -188,6 +198,83 @@ Convenience APIs:
 - `cortex.users.*` is a wrapper over `cortex.immutable.*` with `type='user'`
 - All stores (conversations, immutable, mutable, vector) support **optional** `userId` field
 - `userId` links enable GDPR cascade deletion
+
+---
+
+## Multi-Tenancy Support
+
+User profiles support full multi-tenant isolation via `tenantId`:
+
+```typescript
+// Create tenant-scoped user
+await cortex.users.update("user-123", {
+  tenantId: "customer-acme", // SaaS platform isolation
+  data: {
+    displayName: "Alex",
+    email: "alex@acme.com",
+    preferences: { theme: "dark" },
+  },
+});
+
+// Query users within tenant
+const users = await cortex.users.list({
+  tenantId: "customer-acme", // Only returns this tenant's users
+  limit: 100,
+});
+
+// GDPR cascade respects tenant isolation
+await cortex.users.delete("user-123", {
+  cascade: true,
+  // Deletes all user data across ALL stores with userId
+  // Graph nodes also include tenantId for proper isolation
+});
+```
+
+### Tenant Isolation in GDPR Cascade
+
+When cascade deleting a user with `tenantId`, all associated data across all stores includes tenant context:
+
+```typescript
+// Cascade deletion covers:
+// ✅ User profile (with tenantId)
+// ✅ Conversations (all with userId, filtered by tenantId)
+// ✅ Immutable records (all with userId, filtered by tenantId)
+// ✅ Mutable keys (all with userId, filtered by tenantId)
+// ✅ Vector memories (all with userId, filtered by tenantId)
+// ✅ Facts (all with userId, filtered by tenantId)
+// ✅ Sessions (all with userId, filtered by tenantId)
+// ✅ Graph nodes (with userId AND tenantId properties)
+```
+
+---
+
+## Auth Context Integration
+
+User operations integrate with the Auth Context system:
+
+```typescript
+import { Cortex, createAuthContext } from "@cortex-platform/sdk";
+
+// Create auth context from your auth provider
+const auth = createAuthContext({
+  userId: "user-123",
+  tenantId: "customer-acme",
+  sessionId: "session-xyz",
+  claims: { email: "alex@acme.com" },
+});
+
+// Initialize Cortex with auth
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth,
+});
+
+// User operations use auth context
+const profile = await cortex.users.get("user-123");
+// tenantId is automatically validated from auth context
+```
+
+See [Auth Integration](../08-integrations/auth-providers.md) for complete details.
 
 ---
 
@@ -2096,7 +2183,7 @@ All user operation errors:
 
 **See Also:**
 
-- [Error Handling Guide](./12-error-handling.md)
+- [Error Handling Guide](../05-reference/02-error-handling.md)
 
 ---
 
@@ -2105,7 +2192,7 @@ All user operation errors:
 - **[Context Operations API](./05-context-operations.md)** - Context chain management
 - **[A2A Communication API](./06-a2a-communication.md)** - Agent-to-agent messaging
 - **[Conversation Operations API](./03-conversation-operations.md)** - ACID conversation management
-- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

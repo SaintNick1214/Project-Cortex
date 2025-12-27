@@ -80,9 +80,7 @@ function findSdkPath(projectPath: string): string | null {
     }
     // Dev path was set but doesn't exist - warn but continue with normal lookup
     console.warn(
-      pc.yellow(
-        `   ⚠ CORTEX_SDK_DEV_PATH set but path not found: ${devPath}`,
-      ),
+      pc.yellow(`   ⚠ CORTEX_SDK_DEV_PATH set but path not found: ${devPath}`),
     );
   }
 

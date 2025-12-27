@@ -727,8 +727,9 @@ Socket.dev may flag "network access" in this package. This is **expected and saf
 Cortex uses the same license as Convex - the Functional Source License with Apache 2.0 future license.
 
 **Permitted Uses:**
+
 - Internal use and access within your organization
-- Non-commercial education and research  
+- Non-commercial education and research
 - Professional services provided to licensees
 - Building applications that use Cortex as a dependency
 

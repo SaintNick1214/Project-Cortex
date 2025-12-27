@@ -253,7 +253,9 @@ describe("Conversation Memory E2E", () => {
           prompt: [
             {
               role: "user",
-              content: [{ type: "text", text: "I work as a software engineer" }],
+              content: [
+                { type: "text", text: "I work as a software engineer" },
+              ],
             },
           ],
           mode: { type: "regular" },
@@ -421,7 +423,10 @@ describe("Conversation Memory E2E", () => {
             {
               role: "user",
               content: [
-                { type: "text", text: "My favorite programming language is TypeScript" },
+                {
+                  type: "text",
+                  text: "My favorite programming language is TypeScript",
+                },
               ],
             },
           ],
@@ -436,7 +441,10 @@ describe("Conversation Memory E2E", () => {
             {
               role: "user",
               content: [
-                { type: "text", text: "I also enjoy using React for frontend development" },
+                {
+                  type: "text",
+                  text: "I also enjoy using React for frontend development",
+                },
               ],
             },
           ],

@@ -102,7 +102,10 @@ describe("Memory Flow Integration", () => {
       // Execute doGenerate
       const result = await provider.doGenerate({
         prompt: [
-          { role: "user", content: [{ type: "text", text: "What do you know?" }] },
+          {
+            role: "user",
+            content: [{ type: "text", text: "What do you know?" }],
+          },
         ],
         mode: { type: "regular" },
       });
@@ -113,7 +116,7 @@ describe("Memory Flow Integration", () => {
       // Verify LLM was called with augmented prompt
       expect(mockLLM.doGenerate).toHaveBeenCalled();
       const llmCall = mockLLM.doGenerate.mock.calls[0][0];
-      
+
       // Context should be injected (system message created)
       expect(llmCall.prompt[0].role).toBe("system");
       expect(llmCall.prompt[0].content).toContain("Test memory 1");
@@ -137,9 +140,7 @@ describe("Memory Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 
@@ -155,9 +156,7 @@ describe("Memory Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 
@@ -179,9 +178,7 @@ describe("Memory Flow Integration", () => {
 
       // Should not throw
       const result = await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 
@@ -204,9 +201,7 @@ describe("Memory Flow Integration", () => {
 
       // Should not throw
       const result = await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 
@@ -272,9 +267,7 @@ describe("Memory Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 
@@ -324,9 +317,7 @@ describe("Memory Flow Integration", () => {
 
       // Should not throw
       await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Test" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Test" }] }],
         mode: { type: "regular" },
       });
 
@@ -354,9 +345,7 @@ describe("Memory Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 
@@ -381,9 +370,7 @@ describe("Memory Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 
@@ -402,9 +389,7 @@ describe("Memory Flow Integration", () => {
       const provider = new CortexMemoryProvider(mockLLM, config);
 
       await provider.doGenerate({
-        prompt: [
-          { role: "user", content: [{ type: "text", text: "Hello" }] },
-        ],
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
         mode: { type: "regular" },
       });
 

@@ -17,10 +17,7 @@ import {
 } from "../../src/memory-middleware";
 import { createLogger } from "../../src/types";
 import type { CortexMemoryConfig } from "../../src/types";
-import {
-  createTestConfig,
-  createMockMemories,
-} from "../helpers/test-utils";
+import { createTestConfig, createMockMemories } from "../helpers/test-utils";
 
 describe("Middleware Functions", () => {
   const logger = createLogger(false);
@@ -236,7 +233,10 @@ describe("Middleware Functions", () => {
     it("should handle memories with missing content", () => {
       const config = createTestConfig();
       const memories = [
-        { ...createMockMemories(1)[0], content: undefined as unknown as string },
+        {
+          ...createMockMemories(1)[0],
+          content: undefined as unknown as string,
+        },
       ];
 
       const context = buildMemoryContext(memories, config, logger);
@@ -246,7 +246,10 @@ describe("Middleware Functions", () => {
     it("should handle memories with missing importance", () => {
       const config = createTestConfig();
       const memories = [
-        { ...createMockMemories(1)[0], importance: undefined as unknown as number },
+        {
+          ...createMockMemories(1)[0],
+          importance: undefined as unknown as number,
+        },
       ];
 
       const context = buildMemoryContext(memories, config, logger);

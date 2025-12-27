@@ -143,7 +143,11 @@ export function HealthStatus() {
                         : "text-red-400"
                   }`}
                 >
-                  {check.status === "ok" ? "✓" : check.status === "warning" ? "⚠" : "✗"}
+                  {check.status === "ok"
+                    ? "✓"
+                    : check.status === "warning"
+                      ? "⚠"
+                      : "✗"}
                   {check.latencyMs !== undefined && (
                     <span className="text-gray-500 text-xs ml-1">
                       {check.latencyMs}ms

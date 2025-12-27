@@ -2954,7 +2954,7 @@ All memory operation errors:
 
 **See Also:**
 
-- [Error Handling Guide](./12-error-handling.md)
+- [Error Handling Guide](../05-reference/02-error-handling.md)
 
 ---
 
@@ -2964,7 +2964,7 @@ All memory operation errors:
 - **[User Operations API](./04-user-operations.md)** - User profile API
 - **[Context Operations API](./05-context-operations.md)** - Context chain API
 - **[Graph Operations API](./15-graph-operations.md)** - Graph database integration
-- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

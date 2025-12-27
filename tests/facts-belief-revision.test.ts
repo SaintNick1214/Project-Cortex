@@ -38,7 +38,12 @@ const createMockLLMClient = () => {
   };
 
   return {
-    complete: async (options: { system: string; prompt: string; model?: string; responseFormat?: "json" | "text" }) => {
+    complete: async (options: {
+      system: string;
+      prompt: string;
+      model?: string;
+      responseFormat?: "json" | "text";
+    }) => {
       return mockImpl(options);
     },
   };
@@ -102,7 +107,7 @@ describe("Belief Revision Pipeline", () => {
 
     it("should detect slot conflicts for same slot", async () => {
       const userId = ctx.userId("slot-conflict");
-      
+
       // Create existing fact
       const existingFact = await cortex.facts.store({
         memorySpaceId: TEST_MEMSPACE_ID,
@@ -132,7 +137,7 @@ describe("Belief Revision Pipeline", () => {
       expect(result).toBeDefined();
       expect(result).toHaveProperty("hasConflicts");
       expect(result).toHaveProperty("recommendedAction");
-      
+
       // Cleanup reference
       void existingFact;
     });
@@ -147,13 +152,16 @@ describe("Belief Revision Pipeline", () => {
       // Create a new FactsAPI instance without LLM client
       // The SDK now supports heuristic-based belief revision without LLM
       const { FactsAPI } = await import("../src/facts");
-      const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || process.env.CONVEX_URL;
+      const convexUrl =
+        process.env.NEXT_PUBLIC_CONVEX_URL || process.env.CONVEX_URL;
       if (!convexUrl) {
         // Skip if no Convex URL
         return;
       }
-      
-      const { ConvexClient: LocalConvexClient } = await import("convex/browser");
+
+      const { ConvexClient: LocalConvexClient } = await import(
+        "convex/browser"
+      );
       const localClient = new LocalConvexClient(convexUrl);
       const factsApi = new FactsAPI(localClient);
 
@@ -227,7 +235,10 @@ describe("Belief Revision Pipeline", () => {
       expect(result.superseded).toBe(true);
 
       // Verify old fact is invalidated
-      const retrievedOldFact = await cortex.facts.get(TEST_MEMSPACE_ID, oldFact.factId);
+      const retrievedOldFact = await cortex.facts.get(
+        TEST_MEMSPACE_ID,
+        oldFact.factId,
+      );
       expect(retrievedOldFact).toBeDefined();
       expect(retrievedOldFact?.validUntil).toBeDefined();
     });
@@ -260,7 +271,7 @@ describe("Belief Revision Pipeline", () => {
       // Check history
       const history = await cortex.facts.history(oldFact.factId);
       expect(Array.isArray(history)).toBe(true);
-      
+
       // History should include SUPERSEDE event
       const supersessionEvent = history.find((e) => e.action === "SUPERSEDE");
       if (supersessionEvent) {
@@ -285,7 +296,7 @@ describe("Belief Revision Pipeline", () => {
             fact: "Test",
             confidence: 80,
           },
-        })
+        }),
       ).rejects.toThrow();
     });
 
@@ -297,7 +308,7 @@ describe("Belief Revision Pipeline", () => {
             fact: "",
             confidence: 80,
           },
-        })
+        }),
       ).rejects.toThrow();
     });
 
@@ -309,7 +320,7 @@ describe("Belief Revision Pipeline", () => {
             fact: "Test",
             confidence: 150, // Invalid
           },
-        })
+        }),
       ).rejects.toThrow();
     });
 
@@ -319,7 +330,7 @@ describe("Belief Revision Pipeline", () => {
           memorySpaceId: TEST_MEMSPACE_ID,
           oldFactId: ctx.factPrefix("non-existent"),
           newFactId: ctx.factPrefix("also-non-existent"),
-        })
+        }),
       ).rejects.toThrow();
     });
   });
@@ -331,7 +342,7 @@ describe("Belief Revision Pipeline", () => {
   describe("Real-World Scenarios", () => {
     it("Scenario: Color preference change", async () => {
       const userId = ctx.userId("color-scenario");
-      
+
       // Day 1: User says they like blue
       const day1Fact = await cortex.facts.store({
         memorySpaceId: TEST_MEMSPACE_ID,
@@ -374,7 +385,7 @@ describe("Belief Revision Pipeline", () => {
 
     it("Scenario: Employment change", async () => {
       const userId = ctx.userId("employment-scenario");
-      
+
       // Original: User works at Company A
       const jobOld = await cortex.facts.store({
         memorySpaceId: TEST_MEMSPACE_ID,

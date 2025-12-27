@@ -1,6 +1,6 @@
 # Types & Interfaces
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-26
 
 Complete TypeScript type definitions for all Cortex APIs.
 
@@ -25,11 +25,16 @@ import type {
   Context,
   AgentRegistration,
 
+  // Sessions & Auth (NEW)
+  Session,
+  AuthContext,
+
   // Filters
   UniversalFilters,
   ConversationFilters,
   ContextFilters,
   UserFilters,
+  SessionFilters,
 
   // Results
   RememberResult,
@@ -338,6 +343,71 @@ interface UserVersion {
 
 interface UserProfileUpdate {
   data: Record<string, any>;
+}
+```
+
+### Session (NEW)
+
+```typescript
+interface Session {
+  // Identity
+  sessionId: string;
+  userId: string;
+  tenantId?: string;
+  memorySpaceId?: string;
+
+  // Session state
+  status: "active" | "idle" | "ended";
+  startedAt: number;
+  lastActiveAt: number;
+  endedAt?: number;
+  expiresAt?: number;
+
+  // Fully extensible metadata
+  metadata?: Record<string, unknown>;
+
+  // Stats
+  messageCount: number;
+  memoryCount: number;
+}
+
+interface CreateSessionParams {
+  userId: string;
+  tenantId?: string;
+  memorySpaceId?: string;
+  metadata?: Record<string, unknown>;
+  expiresAt?: number;
+}
+
+interface SessionFilters {
+  userId?: string;
+  tenantId?: string;
+  status?: "active" | "idle" | "ended";
+  startedAfter?: number;
+  startedBefore?: number;
+  limit?: number;
+  offset?: number;
+}
+```
+
+### Auth Context (NEW)
+
+```typescript
+interface AuthContext {
+  // Required
+  userId: string;
+
+  // Standard optional fields
+  tenantId?: string;
+  organizationId?: string;
+  sessionId?: string;
+  authProvider?: string;
+  authMethod?: "oauth" | "api_key" | "jwt" | "session";
+  authenticatedAt?: number;
+
+  // Fully extensible
+  claims?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
 }
 ```
 
@@ -1445,8 +1515,8 @@ const filters: CortexTypes.UniversalFilters = { ... };
 
 ## Next Steps
 
-- **[Error Handling](./12-error-handling.md)** - Error codes and debugging
-- **[Memory Operations API](./02-memory-operations.md)** - Using these types in practice
+- **[Error Handling](./02-error-handling.md)** - Error codes and debugging
+- **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Using these types in practice
 
 ---
 

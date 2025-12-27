@@ -47,13 +47,13 @@ The seven layers in the orchestration pipeline:
 
 ```typescript
 type MemoryLayer =
-  | "memorySpace"   // Ensures memory space exists
-  | "user"          // Registers/validates user
-  | "agent"         // Registers/validates agent  
-  | "conversation"  // Stores conversation messages
-  | "vector"        // Creates vector embeddings
-  | "facts"         // Extracts and stores facts (with belief revision)
-  | "graph";        // Syncs to graph database (if configured)
+  | "memorySpace" // Ensures memory space exists
+  | "user" // Registers/validates user
+  | "agent" // Registers/validates agent
+  | "conversation" // Stores conversation messages
+  | "vector" // Creates vector embeddings
+  | "facts" // Extracts and stores facts (with belief revision)
+  | "graph"; // Syncs to graph database (if configured)
 ```
 
 ### LayerStatus
@@ -62,11 +62,11 @@ Status of each layer during orchestration:
 
 ```typescript
 type LayerStatus =
-  | "pending"      // Layer queued but not started
-  | "in_progress"  // Layer actively processing
-  | "complete"     // Layer finished successfully
-  | "error"        // Layer failed
-  | "skipped";     // Layer not applicable (e.g., no graph configured)
+  | "pending" // Layer queued but not started
+  | "in_progress" // Layer actively processing
+  | "complete" // Layer finished successfully
+  | "error" // Layer failed
+  | "skipped"; // Layer not applicable (e.g., no graph configured)
 ```
 
 ### LayerEvent
@@ -145,7 +145,9 @@ interface OrchestrationObserver {
   onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
 
   /** Called when orchestration completes (all layers done) */
-  onOrchestrationComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
+  onOrchestrationComplete?: (
+    summary: OrchestrationSummary,
+  ) => void | Promise<void>;
 }
 ```
 
@@ -172,9 +174,9 @@ onLayerUpdate({ layer: "vector", status: "in_progress" })
 onLayerUpdate({ layer: "vector", status: "complete", latencyMs: 120 })
 
 onLayerUpdate({ layer: "facts", status: "in_progress" })
-onLayerUpdate({ 
-  layer: "facts", 
-  status: "complete", 
+onLayerUpdate({
+  layer: "facts",
+  status: "complete",
   latencyMs: 200,
   revisionAction: "SUPERSEDE",
   supersededFacts: ["fact-old-123"]
@@ -211,7 +213,7 @@ const result = await cortex.memory.rememberStream(
   {
     llmStream: myLLMStream,
     onChunk: (chunk) => console.log("Token:", chunk),
-  }
+  },
 );
 ```
 

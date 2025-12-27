@@ -19,7 +19,8 @@ import type { FactRecord } from "../src/types";
 
 // Mock fact records for testing
 const createMockFact = (override: Partial<FactRecord> = {}): FactRecord => {
-  const factId = override.factId || `fact-${Math.random().toString(36).substring(7)}`;
+  const factId =
+    override.factId || `fact-${Math.random().toString(36).substring(7)}`;
   return {
     _id: `mock-id-${factId}`,
     factId,
@@ -250,12 +251,16 @@ describe("Conflict Resolution", () => {
 
     it("should throw on missing JSON", () => {
       const response = "No JSON here";
-      expect(() => parseConflictDecision(response)).toThrow("No JSON object found");
+      expect(() => parseConflictDecision(response)).toThrow(
+        "No JSON object found",
+      );
     });
 
     it("should throw on malformed JSON", () => {
       const response = `{"action": "UPDATE", targetFactId: null}`;
-      expect(() => parseConflictDecision(response)).toThrow("Failed to parse JSON");
+      expect(() => parseConflictDecision(response)).toThrow(
+        "Failed to parse JSON",
+      );
     });
 
     it("should default confidence to 75 if not provided", () => {

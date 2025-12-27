@@ -266,12 +266,12 @@ const cortexMemory = createCortexMemory({
 
 **Revision actions explained:**
 
-| Action     | Description                                        | Example                                    |
-| ---------- | -------------------------------------------------- | ------------------------------------------ |
-| `CREATE`   | New fact with no conflicts                         | First time mentioning favorite color       |
-| `UPDATE`   | Existing fact refined with new details             | "I like blue" → "I love dark blue"         |
-| `SUPERSEDE`| Old fact replaced by contradicting new information | "I like blue" → "I prefer purple now"      |
-| `NONE`     | Duplicate or irrelevant, no storage needed         | Saying "I like blue" twice                 |
+| Action      | Description                                        | Example                               |
+| ----------- | -------------------------------------------------- | ------------------------------------- |
+| `CREATE`    | New fact with no conflicts                         | First time mentioning favorite color  |
+| `UPDATE`    | Existing fact refined with new details             | "I like blue" → "I love dark blue"    |
+| `SUPERSEDE` | Old fact replaced by contradicting new information | "I like blue" → "I prefer purple now" |
+| `NONE`      | Duplicate or irrelevant, no storage needed         | Saying "I like blue" twice            |
 
 The demo visualization shows these actions with colored badges on the Facts layer.
 

@@ -4,37 +4,40 @@ import { Cortex } from "@cortexmemory/sdk";
  * Health check endpoint to verify all backend services
  */
 export async function GET() {
-  const checks: Record<string, { status: string; latencyMs?: number; error?: string }> = {};
-  
+  const checks: Record<
+    string,
+    { status: string; latencyMs?: number; error?: string }
+  > = {};
+
   // Check 1: Environment variables
   const hasConvexUrl = !!process.env.CONVEX_URL;
   const hasPublicConvexUrl = !!process.env.NEXT_PUBLIC_CONVEX_URL;
   const hasOpenAIKey = !!process.env.OPENAI_API_KEY;
   const hasNeo4jUri = !!process.env.NEO4J_URI;
   const hasMemgraphUri = !!process.env.MEMGRAPH_URI;
-  
+
   checks.environment = {
     status: hasConvexUrl && hasOpenAIKey ? "ok" : "warning",
-    error: !hasConvexUrl 
-      ? "CONVEX_URL not set" 
-      : !hasOpenAIKey 
-        ? "OPENAI_API_KEY not set" 
+    error: !hasConvexUrl
+      ? "CONVEX_URL not set"
+      : !hasOpenAIKey
+        ? "OPENAI_API_KEY not set"
         : undefined,
   };
 
   // Check 2: Cortex SDK initialization
   try {
     const startTime = Date.now();
-    const cortex = new Cortex({ 
-      convexUrl: process.env.CONVEX_URL! 
+    const cortex = new Cortex({
+      convexUrl: process.env.CONVEX_URL!,
     });
-    
+
     // Quick test - just initialize, don't actually query
     checks.cortexSdk = {
       status: "ok",
       latencyMs: Date.now() - startTime,
     };
-    
+
     cortex.close();
   } catch (error) {
     checks.cortexSdk = {
@@ -54,7 +57,7 @@ export async function GET() {
         method: "GET",
         signal: AbortSignal.timeout(5000),
       });
-      
+
       checks.convexBackend = {
         status: response.ok ? "ok" : "error",
         latencyMs: Date.now() - startTime,
@@ -86,7 +89,11 @@ export async function GET() {
       publicConvexUrl: hasPublicConvexUrl ? "configured" : "missing",
       openaiKey: hasOpenAIKey ? "configured" : "missing",
       graphSync: hasNeo4jUri || hasMemgraphUri ? "enabled" : "disabled",
-      graphBackend: hasNeo4jUri ? "neo4j" : hasMemgraphUri ? "memgraph" : "none",
+      graphBackend: hasNeo4jUri
+        ? "neo4j"
+        : hasMemgraphUri
+          ? "memgraph"
+          : "none",
     },
   });
 }

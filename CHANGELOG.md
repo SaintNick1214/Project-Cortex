@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **The Problem Solved:**
 
 The 0.24.0 belief revision pipeline had gaps where conflicts slipped through:
+
 - Slot matching only caught exact predicate pattern matches (e.g., "favorite color")
 - Semantic matching required embeddings to be configured
 - Facts like "User likes blue" and "User prefers purple" weren't recognized as conflicting
@@ -103,6 +104,7 @@ console.log(result.pipeline);
 **Breaking Changes:** None - fully backward compatible.
 
 **Dependencies:**
+
 - Updated `@cortexmemory/vercel-ai-provider` to use local SDK reference for development
 
 ---
@@ -116,6 +118,7 @@ console.log(result.pipeline);
 **The Problem Solved:**
 
 Previously, fact storage was append-only with basic deduplication:
+
 - Conflicting facts accumulated ("User likes blue" → later "User prefers purple")
 - No semantic understanding of when facts should update vs. add
 - No history of how knowledge evolved over time
@@ -178,14 +181,14 @@ NEW FACT → [Slot Match] → [Semantic Match] → [LLM Decision] → Execute
 
 **New API Methods:**
 
-| Method | Purpose |
-|--------|---------|
-| `facts.revise()` | Full belief revision pipeline |
-| `facts.checkConflicts()` | Preview conflicts without executing |
-| `facts.supersede()` | Manually supersede one fact with another |
-| `facts.history()` | Get change history for a fact |
-| `facts.getSupersessionChain()` | Get lineage of fact versions |
-| `facts.getActivitySummary()` | Analytics on fact changes |
+| Method                         | Purpose                                  |
+| ------------------------------ | ---------------------------------------- |
+| `facts.revise()`               | Full belief revision pipeline            |
+| `facts.checkConflicts()`       | Preview conflicts without executing      |
+| `facts.supersede()`            | Manually supersede one fact with another |
+| `facts.history()`              | Get change history for a fact            |
+| `facts.getSupersessionChain()` | Get lineage of fact versions             |
+| `facts.getActivitySummary()`   | Analytics on fact changes                |
 
 **Configuration:**
 
@@ -194,7 +197,9 @@ NEW FACT → [Slot Match] → [Semantic Match] → [LLM Decision] → Execute
 cortex.facts.configureBeliefRevision(llmClient, {
   slotMatching: {
     enabled: true,
-    predicateClasses: { /* custom patterns */ },
+    predicateClasses: {
+      /* custom patterns */
+    },
   },
   semanticMatching: {
     enabled: true,

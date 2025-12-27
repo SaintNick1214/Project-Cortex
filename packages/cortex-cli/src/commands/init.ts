@@ -201,14 +201,26 @@ export function registerLifecycleCommands(
 
       // Show summary header
       console.log();
-      console.log(pc.bold("  ═══════════════════════════════════════════════════════════"));
+      console.log(
+        pc.bold(
+          "  ═══════════════════════════════════════════════════════════",
+        ),
+      );
       console.log(pc.bold("  Cortex Start"));
-      console.log(pc.bold("  ═══════════════════════════════════════════════════════════"));
+      console.log(
+        pc.bold(
+          "  ═══════════════════════════════════════════════════════════",
+        ),
+      );
       console.log();
 
       // Deployments section
-      console.log(pc.bold(pc.cyan(`  Deployments (${deploymentsToStart.length})`)));
-      console.log(pc.dim("  ───────────────────────────────────────────────────────────"));
+      console.log(
+        pc.bold(pc.cyan(`  Deployments (${deploymentsToStart.length})`)),
+      );
+      console.log(
+        pc.dim("  ───────────────────────────────────────────────────────────"),
+      );
 
       // Start each deployment
       for (const dep of deploymentsToStart) {
@@ -323,12 +335,18 @@ export function registerLifecycleCommands(
       if (!options.convexOnly && !options.graphOnly && !options.foreground) {
         if (enabledApps.length > 0) {
           console.log(pc.bold(pc.cyan(`  Apps (${enabledApps.length})`)));
-          console.log(pc.dim("  ───────────────────────────────────────────────────────────"));
+          console.log(
+            pc.dim(
+              "  ───────────────────────────────────────────────────────────",
+            ),
+          );
 
           for (const [name, app] of enabledApps) {
             console.log(`  ${pc.green("●")} ${pc.cyan(name)}`);
             console.log(pc.dim(`    Type: ${app.type}`));
-            console.log(pc.dim(`    Path: ${path.join(app.projectPath, app.path)}`));
+            console.log(
+              pc.dim(`    Path: ${path.join(app.projectPath, app.path)}`),
+            );
             console.log(pc.dim(`    Port: ${app.port || 3000}`));
             console.log();
             await startApp(name, app);
@@ -338,13 +356,24 @@ export function registerLifecycleCommands(
 
       // Show summary
       if (!options.foreground) {
-        const totalStarted = deploymentsToStart.length + (enabledApps.length || 0);
-        console.log(pc.bold("  ═══════════════════════════════════════════════════════════"));
+        const totalStarted =
+          deploymentsToStart.length + (enabledApps.length || 0);
+        console.log(
+          pc.bold(
+            "  ═══════════════════════════════════════════════════════════",
+          ),
+        );
         console.log(pc.green(`  ✓ Started ${totalStarted} service(s)`));
-        console.log(pc.bold("  ═══════════════════════════════════════════════════════════"));
+        console.log(
+          pc.bold(
+            "  ═══════════════════════════════════════════════════════════",
+          ),
+        );
         console.log();
         console.log(pc.dim("  Use 'cortex stop' to stop all services"));
-        console.log(pc.dim("  Use 'cortex config list' to see deployment status"));
+        console.log(
+          pc.dim("  Use 'cortex config list' to see deployment status"),
+        );
         console.log();
       }
     });
@@ -654,7 +683,7 @@ export async function runInitWizard(
         sdkMetadata.sdkVersion,
         convexUrl,
         config.openaiApiKey,
-        graphConfig
+        graphConfig,
       );
 
       // Save app to CLI config
@@ -887,8 +916,12 @@ async function getConvexSetup(
  */
 async function getOpenAIApiKey(): Promise<string | undefined> {
   console.log(pc.cyan("\n   OpenAI API Key (Optional)"));
-  console.log(pc.dim("   Required for AI-powered embeddings and fact extraction"));
-  console.log(pc.dim("   Get your key at: https://platform.openai.com/api-keys\n"));
+  console.log(
+    pc.dim("   Required for AI-powered embeddings and fact extraction"),
+  );
+  console.log(
+    pc.dim("   Get your key at: https://platform.openai.com/api-keys\n"),
+  );
 
   const { setupOpenAI } = await prompts({
     type: "confirm",
@@ -986,7 +1019,7 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
  * Returns SDK metadata for use in post-setup steps (like quickstart installation)
  */
 async function executeSetup(
-  config: WizardConfig
+  config: WizardConfig,
 ): Promise<{ sdkVersion: string; convexVersion: string }> {
   console.log(pc.cyan("\n   Setting up Cortex...\n"));
 
@@ -1509,8 +1542,7 @@ async function showRunningStatus(
   );
   if (hasQuickstart) {
     console.log(
-      pc.dim("   npm run quickstart") +
-        pc.dim("      # Start quickstart demo"),
+      pc.dim("   npm run quickstart") + pc.dim("      # Start quickstart demo"),
     );
   }
   console.log(

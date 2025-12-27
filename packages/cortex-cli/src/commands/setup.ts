@@ -179,7 +179,9 @@ export function registerConfigCommands(
         if (apps.length > 0) {
           console.log();
           console.log(pc.bold("  Apps"));
-          console.log(pc.dim("  " + "─".repeat(nameWidth + statusWidth + urlWidth)));
+          console.log(
+            pc.dim("  " + "─".repeat(nameWidth + statusWidth + urlWidth)),
+          );
 
           for (const [name, app] of apps) {
             const statusText = app.enabled ? "enabled" : "disabled";
@@ -199,9 +201,7 @@ export function registerConfigCommands(
           }
 
           console.log();
-          console.log(
-            pc.dim("  Enabled apps started with 'cortex start'"),
-          );
+          console.log(pc.dim("  Enabled apps started with 'cortex start'"));
         }
 
         console.log();
@@ -298,7 +298,9 @@ export function registerConfigCommands(
   // config enable - Enable a deployment or app for `cortex start`
   configCmd
     .command("enable <name>")
-    .description("Enable a deployment or app (will be started with 'cortex start')")
+    .description(
+      "Enable a deployment or app (will be started with 'cortex start')",
+    )
     .action(async (name) => {
       try {
         const config = await loadConfig();
@@ -339,11 +341,7 @@ export function registerConfigCommands(
         }
         process.exit(1);
       } catch (error) {
-        printError(
-          error instanceof Error
-            ? error.message
-            : "Failed to enable",
-        );
+        printError(error instanceof Error ? error.message : "Failed to enable");
         process.exit(1);
       }
     });
@@ -395,9 +393,7 @@ export function registerConfigCommands(
         process.exit(1);
       } catch (error) {
         printError(
-          error instanceof Error
-            ? error.message
-            : "Failed to disable",
+          error instanceof Error ? error.message : "Failed to disable",
         );
         process.exit(1);
       }
