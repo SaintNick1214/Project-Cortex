@@ -13,7 +13,7 @@
  * of the installed @cortexmemory/sdk package.
  */
 
-import { existsSync, readFileSync } from "fs";
+import { existsSync, readFileSync, readdirSync } from "fs";
 import { copyFile, mkdir } from "fs/promises";
 import { createHash } from "crypto";
 import { join, dirname } from "path";
@@ -42,26 +42,24 @@ export interface SchemaSyncResult {
 }
 
 /**
- * Files to sync from SDK to project
- * These are the Convex backend files that define the schema and mutations
+ * Discover all syncable files from the SDK's convex-dev folder
+ * Includes all .ts files and tsconfig.json, excludes _generated/ directory
  */
-const SCHEMA_FILES = [
-  "schema.ts",
-  "a2a.ts",
-  "admin.ts",
-  "agents.ts",
-  "contexts.ts",
-  "conversations.ts",
-  "facts.ts",
-  "governance.ts",
-  "graphSync.ts",
-  "immutable.ts",
-  "memories.ts",
-  "memorySpaces.ts",
-  "mutable.ts",
-  "users.ts",
-  "tsconfig.json",
-];
+function discoverSchemaFiles(sdkConvexPath: string): string[] {
+  try {
+    const entries = readdirSync(sdkConvexPath, { withFileTypes: true });
+    return entries
+      .filter((entry) => {
+        // Skip directories (like _generated/)
+        if (entry.isDirectory()) return false;
+        // Include .ts files and tsconfig.json
+        return entry.name.endsWith(".ts") || entry.name === "tsconfig.json";
+      })
+      .map((entry) => entry.name);
+  } catch {
+    return [];
+  }
+}
 
 /**
  * Find the @cortexmemory/sdk package
@@ -183,6 +181,13 @@ export async function syncConvexSchema(
   result.sdkConvexPath = sdkConvexPath;
   result.sdkVersion = getSdkVersion(sdkPath);
 
+  // Discover all syncable files from SDK
+  const schemaFiles = discoverSchemaFiles(sdkConvexPath);
+  if (schemaFiles.length === 0) {
+    result.error = `No schema files found in ${sdkConvexPath}`;
+    return result;
+  }
+
   // Ensure project's convex folder exists
   if (!existsSync(result.projectConvexPath)) {
     if (!options?.dryRun) {
@@ -191,7 +196,7 @@ export async function syncConvexSchema(
   }
 
   // Compare and sync each file
-  for (const fileName of SCHEMA_FILES) {
+  for (const fileName of schemaFiles) {
     const sdkFilePath = join(sdkConvexPath, fileName);
     const projectFilePath = join(result.projectConvexPath, fileName);
 
