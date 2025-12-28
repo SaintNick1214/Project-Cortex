@@ -259,8 +259,16 @@ export function validateUserProfile(
   // Validate email format
   if (preset.validateEmail && "email" in data && data.email) {
     const email = data.email as string;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Use a simple, non-backtracking email validation to prevent ReDoS
+    // This validates: local@domain.tld format without catastrophic backtracking
+    const isValidEmail =
+      email.length <= 254 && // RFC 5321 max length
+      email.includes("@") &&
+      !email.startsWith("@") &&
+      !email.endsWith("@") &&
+      email.split("@").length === 2 &&
+      email.split("@")[1]!.includes(".");
+    if (!isValidEmail) {
       errors.push(`Invalid email format: ${email}`);
     }
   }

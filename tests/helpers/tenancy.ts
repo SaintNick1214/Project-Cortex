@@ -7,6 +7,7 @@
  * - TenantId propagation across APIs
  */
 
+import { randomBytes } from "crypto";
 import { Cortex } from "../../src";
 import type { AuthContext } from "../../src/auth/types";
 
@@ -34,9 +35,10 @@ export interface MultiTenantTestSetup {
 
 /**
  * Generate unique tenant ID for testing
+ * Uses cryptographically secure random bytes for uniqueness
  */
 export function generateTenantId(prefix = "tenant"): string {
-  return `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  return `${prefix}_${Date.now()}_${randomBytes(4).toString("hex")}`;
 }
 
 /**
@@ -50,16 +52,18 @@ export function generateTenantIds(count: number, prefix = "tenant"): string[] {
 
 /**
  * Generate a test user ID scoped to a tenant
+ * Uses cryptographically secure random bytes for uniqueness
  */
 export function generateTenantUserId(tenantId: string): string {
-  return `user_${tenantId}_${Math.random().toString(36).substring(2, 8)}`;
+  return `user_${tenantId}_${randomBytes(4).toString("hex")}`;
 }
 
 /**
  * Generate a memory space ID scoped to a tenant
+ * Uses cryptographically secure random bytes for uniqueness
  */
 export function generateTenantMemorySpaceId(tenantId: string): string {
-  return `space_${tenantId}_${Math.random().toString(36).substring(2, 8)}`;
+  return `space_${tenantId}_${randomBytes(4).toString("hex")}`;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
