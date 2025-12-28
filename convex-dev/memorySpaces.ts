@@ -374,9 +374,15 @@ export const list = query({
       ),
     ),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
     let spaces = await ctx.db.query("memorySpaces").collect();
+
+    // Tenant isolation filter (apply first for efficiency)
+    if (args.tenantId) {
+      spaces = spaces.filter((s) => s.tenantId === args.tenantId);
+    }
 
     // Apply filters
     if (args.type) {

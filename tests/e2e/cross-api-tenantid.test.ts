@@ -121,6 +121,8 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
         userMessage: "Cross-API test: What is the meaning of life?",
         agentResponse: "The meaning of life is to learn and grow.",
         userId: testUserId,
+        userName: "Test User",
+        agentId: "test-agent",
       });
 
       _memoryId = result.memories[0]._id;
@@ -174,7 +176,8 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
           timestamp: Date.now(),
         },
         metadata: {
-          source: "cross-api-test",
+          tags: ["cross-api-test"],
+          importance: 50,
         },
       });
 
@@ -350,7 +353,7 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: testMemorySpaceId,
         type: "user-agent",
-        participants: { userId: testUserId },
+        participants: { userId: testUserId, agentId: "test-agent" },
       });
 
       // Add message to conversation
@@ -384,6 +387,8 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
         userMessage: "What is the capital of France?",
         agentResponse: "The capital of France is Paris.",
         userId: testUserId,
+        userName: "Test User",
+        agentId: "test-agent",
       });
 
       // Memory should have tenantId

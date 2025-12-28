@@ -432,7 +432,7 @@ describeWithConvex("Auth Integration E2E", () => {
       const conv = await cortex1.conversations.create({
         memorySpaceId: testMemorySpaceId,
         type: "user-agent",
-        participants: { userId },
+        participants: { userId, agentId: "test-agent" },
       });
 
       // Simulate token refresh - new auth context

@@ -261,13 +261,19 @@ export function validateUserProfile(
     const email = data.email as string;
     // Use a simple, non-backtracking email validation to prevent ReDoS
     // This validates: local@domain.tld format without catastrophic backtracking
+    const parts = email.split("@");
     const isValidEmail =
       email.length <= 254 && // RFC 5321 max length
       email.includes("@") &&
+      !email.includes(" ") && // No spaces allowed
       !email.startsWith("@") &&
       !email.endsWith("@") &&
-      email.split("@").length === 2 &&
-      email.split("@")[1]!.includes(".");
+      parts.length === 2 &&
+      parts[0]!.length > 0 && // Local part must have content
+      parts[1]!.length > 0 && // Domain part must have content
+      parts[1]!.includes(".") &&
+      !parts[1]!.startsWith(".") && // Domain can't start with dot
+      !parts[1]!.endsWith("."); // Domain can't end with dot
     if (!isValidEmail) {
       errors.push(`Invalid email format: ${email}`);
     }

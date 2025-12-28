@@ -2397,6 +2397,9 @@ export interface RecallParams {
   /** Filter by user ID (common in H2A chatbots) */
   userId?: string;
 
+  /** Filter by tenant ID for multi-tenancy (SaaS platform isolation) */
+  tenantId?: string;
+
   /**
    * Source selection - ALL ENABLED BY DEFAULT.
    * Only specify to DISABLE sources.
