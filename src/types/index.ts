@@ -517,6 +517,13 @@ export interface RememberParams {
   memorySpaceId?: string;
 
   /**
+   * Multi-tenancy: SaaS platform isolation.
+   * When provided, all data is scoped to this tenant.
+   * Note: If using authContext, tenantId is auto-injected unless explicitly provided here.
+   */
+  tenantId?: string;
+
+  /**
    * Conversation ID. Required.
    */
   conversationId: string;
@@ -2471,6 +2478,12 @@ export interface RecallItem {
 
   /** Source of this item */
   source: "vector" | "facts" | "graph-expanded";
+
+  /** Multi-tenancy: Tenant this item belongs to */
+  tenantId?: string;
+
+  /** User who owns this item */
+  userId?: string;
 
   /** Original memory data (if type === 'memory') */
   memory?: MemoryEntry;

@@ -97,19 +97,24 @@ export interface BeliefRevisionOptions extends StoreFactOptions {
   beliefRevision?: BeliefRevisionConfig | false;
 }
 
+import type { AuthContext } from "../auth/types";
+
 export class FactsAPI {
   private deduplicationService: FactDeduplicationService;
   private beliefRevisionService?: BeliefRevisionService;
   private historyService: FactHistoryService;
   private llmClient?: BeliefRevisionLLMClient;
+  private authContext?: AuthContext;
 
   constructor(
     private client: ConvexClient,
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
+    authContext?: AuthContext,
     llmClient?: BeliefRevisionLLMClient,
     beliefRevisionConfig?: BeliefRevisionConfig,
   ) {
+    this.authContext = authContext;
     this.llmClient = llmClient;
     this.deduplicationService = new FactDeduplicationService(client);
     this.historyService = new FactHistoryService(client, resilience);
@@ -240,6 +245,7 @@ export class FactsAPI {
           memorySpaceId: params.memorySpaceId,
           participantId: params.participantId,
           userId: params.userId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
           fact: params.fact,
           factType: params.factType,
           subject: params.subject,

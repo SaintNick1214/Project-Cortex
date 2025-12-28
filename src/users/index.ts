@@ -73,6 +73,7 @@ export class CascadeDeletionError extends Error {
 export { UserValidationError } from "./validators";
 
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
 
 /**
  * Users API
@@ -89,6 +90,7 @@ export class UsersAPI {
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**
@@ -138,6 +140,7 @@ export class UsersAPI {
 
     return {
       id: result.id,
+      tenantId: result.tenantId, // Include tenantId in response
       data: (result.data as Record<string, unknown> | undefined) ?? {},
       version: result.version,
       createdAt: result.createdAt,
@@ -190,6 +193,7 @@ export class UsersAPI {
           type: "user",
           id: userId,
           data: finalData,
+          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
         }),
       "users:update",
     );
@@ -200,6 +204,7 @@ export class UsersAPI {
 
     return {
       id: result.id,
+      tenantId: result.tenantId, // Include tenantId in response
       data: (result.data as Record<string, unknown> | undefined) ?? {},
       version: result.version,
       createdAt: result.createdAt,

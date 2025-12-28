@@ -50,12 +50,14 @@ import {
   validateNoDuplicates,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
 
 export class ConversationsAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**
@@ -139,6 +141,7 @@ export class ConversationsAPI {
           conversationId,
           memorySpaceId: input.memorySpaceId,
           participantId: input.participantId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
           type: input.type,
           participants: input.participants,
           metadata: input.metadata,
@@ -194,6 +197,7 @@ export class ConversationsAPI {
       () =>
         this.client.query(api.conversations.get, {
           conversationId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for isolation
           includeMessages: options?.includeMessages,
           messageLimit: options?.messageLimit,
         }),
@@ -335,6 +339,7 @@ export class ConversationsAPI {
           type: filter?.type,
           userId: filter?.userId,
           memorySpaceId: filter?.memorySpaceId,
+          tenantId: filter?.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
           participantId: filter?.participantId,
           createdBefore: filter?.createdBefore,
           createdAfter: filter?.createdAfter,

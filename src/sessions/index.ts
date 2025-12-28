@@ -38,6 +38,8 @@ export type {
 // Re-export error
 export { SessionValidationError } from "./validators";
 
+import type { AuthContext } from "../auth/types";
+
 /**
  * Sessions API
  *
@@ -49,6 +51,7 @@ export class SessionsAPI {
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**
@@ -100,7 +103,7 @@ export class SessionsAPI {
         this.client.mutation(api.sessions.create, {
           sessionId,
           userId: params.userId,
-          tenantId: params.tenantId,
+          tenantId: params.tenantId ?? this.authContext?.tenantId, // Fall back to auth context
           memorySpaceId: params.memorySpaceId,
           metadata: params.metadata,
           startedAt: now,

@@ -30,12 +30,14 @@ import {
   validateKeepLatest,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
 
 export class ImmutableAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**
@@ -100,6 +102,7 @@ export class ImmutableAPI {
           id: entry.id,
           data: entry.data,
           userId: entry.userId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
           metadata: entry.metadata,
         }),
       "immutable:store",

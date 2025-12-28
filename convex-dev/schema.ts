@@ -137,6 +137,7 @@ export default defineSchema({
     .index("by_type_id", ["type", "id"]) // Unique lookup
     .index("by_type", ["type"]) // List by type
     .index("by_tenantId", ["tenantId"]) // Tenant's records
+    .index("by_tenant_type_id", ["tenantId", "type", "id"]) // Tenant-scoped lookup
     .index("by_userId", ["userId"]) // GDPR cascade
     .index("by_created", ["createdAt"]), // Chronological
 
@@ -167,6 +168,8 @@ export default defineSchema({
     .index("by_namespace_key", ["namespace", "key"]) // Unique lookup
     .index("by_namespace", ["namespace"]) // List by namespace
     .index("by_tenantId", ["tenantId"]) // Tenant's records
+    .index("by_tenant_namespace", ["tenantId", "namespace"]) // Tenant-scoped namespace listing
+    .index("by_tenant_namespace_key", ["tenantId", "namespace", "key"]) // Tenant-scoped lookup
     .index("by_userId", ["userId"]) // GDPR cascade
     .index("by_updated", ["updatedAt"]), // Recent changes
 

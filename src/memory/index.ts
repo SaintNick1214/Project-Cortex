@@ -199,10 +199,14 @@ export class MemoryAPI {
       }
     }
 
+    // Note: MemoryAPI does not directly receive authContext; it's used for convenience
+    // orchestration. The authContext for tenant isolation is propagated through the
+    // parent Cortex class to individual API instances that need it.
     this.facts = new FactsAPI(
       client,
       graphAdapter,
       resilience,
+      undefined, // authContext - MemoryAPI orchestrates but doesn't inject auth directly
       beliefRevisionLLMClient,
     );
   }
@@ -1189,6 +1193,7 @@ export class MemoryAPI {
           {
             content: userContent,
             contentType,
+            tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
             participantId: params.participantId,
             embedding: userEmbedding,
             userId: params.userId,
@@ -1242,6 +1247,7 @@ export class MemoryAPI {
             {
               content: agentContent,
               contentType: "raw",
+              tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
               participantId: params.participantId,
               embedding: agentEmbedding,
               userId: params.userId,

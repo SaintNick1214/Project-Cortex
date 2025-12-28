@@ -35,6 +35,7 @@ import {
   validateTransactionOperations,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
 
 // Export validation error for users who want to catch it specifically
 export { MutableValidationError } from "./validators";
@@ -44,6 +45,7 @@ export class MutableAPI {
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**

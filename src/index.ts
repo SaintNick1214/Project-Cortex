@@ -392,28 +392,36 @@ export class Cortex {
     // Get graph adapter if configured
     const graphAdapter = config.graph?.adapter;
 
-    // Initialize API modules with graph adapter and resilience layer
+    // Initialize API modules with graph adapter, resilience layer, and auth context
     this.conversations = new ConversationsAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext,
     );
     this.immutable = new ImmutableAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext,
     );
     this.mutable = new MutableAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext,
     );
     this.vector = new VectorAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
     );
-    this.facts = new FactsAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.facts = new FactsAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+      this.authContext,
+    );
     this.contexts = new ContextsAPI(
       this.client,
       graphAdapter,
@@ -423,8 +431,14 @@ export class Cortex {
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext,
     );
-    this.users = new UsersAPI(this.client, graphAdapter, this.resilienceLayer);
+    this.users = new UsersAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+      this.authContext,
+    );
     this.agents = new AgentsAPI(
       this.client,
       graphAdapter,
@@ -440,6 +454,7 @@ export class Cortex {
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext,
     );
 
     // Initialize MemoryAPI with dependencies for full orchestration
@@ -468,6 +483,27 @@ export class Cortex {
         console.error("Failed to start graph sync worker:", error);
       });
     }
+  }
+
+  /**
+   * Get the authentication context (if configured)
+   *
+   * Returns the AuthContext that was passed during initialization.
+   * Useful for checking the current user/tenant context.
+   *
+   * @example
+   * ```typescript
+   * const cortex = new Cortex({
+   *   convexUrl: process.env.CONVEX_URL!,
+   *   auth: createAuthContext({ userId: 'user-123', tenantId: 'tenant-456' })
+   * });
+   *
+   * console.log(cortex.auth?.userId); // 'user-123'
+   * console.log(cortex.auth?.tenantId); // 'tenant-456'
+   * ```
+   */
+  get auth(): AuthContext | undefined {
+    return this.authContext;
   }
 
   /**
