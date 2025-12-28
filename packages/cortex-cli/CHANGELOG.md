@@ -1,5 +1,36 @@
 # @cortexmemory/cli Changelog
 
+## [0.27.1] - 2025-12-27
+
+### Added
+
+- **App lifecycle management in `cortex stop`** - Stop command now detects and stops running template apps
+  - New `-a, --app <name>` option to stop a specific app
+  - New `--apps-only` flag to stop only apps (skip Convex/graph)
+  - Apps are tracked via PID files (`.cortex-app-{name}.pid`)
+
+- **Port-based process detection** - Fallback detection when PID files don't exist
+  - Detects Convex on port 3210 for local deployments
+  - Detects apps by their configured port (default 3000)
+  - Useful for services started before PID tracking was added
+
+- **Enhanced `cortex status` dashboard** - Now shows app status with detection details
+  - Displays running apps with PID and port information
+  - Shows detection method (via PID file or via port)
+  - Summary includes app counts (e.g., "2 enabled, 1 running, 1/2 apps running")
+
+### Fixed
+
+- **Stop command using stale config** - Now loads fresh config to see latest deployments and apps
+- **Graph stop reporting false positives** - `stopGraphContainers` now checks if containers are actually running before reporting success
+- **Accurate stop summary** - Only counts services that were actually stopped, not just checked
+
+### Changed
+
+- `startApp()` now saves PID to `.cortex-app-{name}.pid` for tracking
+- `startApp()` now creates log file at `.cortex-app-{name}.log`
+- Stop command shows detection method when stopping services without PID files
+
 ## [0.27.0] - 2025-12-26
 
 ### Added

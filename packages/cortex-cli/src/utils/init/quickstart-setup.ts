@@ -353,6 +353,19 @@ export async function installVercelAIQuickstart(
 }
 
 /**
+ * Get the PID file path for an app
+ *
+ * @param appName - App name (used as identifier)
+ * @param projectPath - Project root path
+ * @returns Path to the PID file
+ */
+export function getAppPidFilePath(appName: string, projectPath: string): string {
+  // Sanitize app name for use in filename
+  const safeName = appName.replace(/[^a-zA-Z0-9-_]/g, "-");
+  return path.join(projectPath, `.cortex-app-${safeName}.pid`);
+}
+
+/**
  * Start a template app in the background
  *
  * @param appName - Display name for the app
@@ -372,6 +385,10 @@ export async function startApp(appName: string, app: AppConfig): Promise<void> {
 
   console.log(pc.dim(`   Starting ${appName} on port ${app.port || 3000}...`));
 
+  // Create log file for the background process
+  const logFile = path.join(app.projectPath, `.cortex-app-${appName}.log`);
+  const logFd = fs.openSync(logFile, "a");
+
   // Use spawn to start in background
   const { spawn } = await import("child_process");
 
@@ -382,12 +399,174 @@ export async function startApp(appName: string, app: AppConfig): Promise<void> {
       PORT: String(app.port || 3000),
     },
     detached: true,
-    stdio: "ignore",
+    stdio: ["ignore", logFd, logFd],
   });
 
+  // Close the file descriptor in parent process (child keeps it open)
+  fs.closeSync(logFd);
+
   child.unref();
+
+  // Save PID for later management (stop command)
+  const pidFile = getAppPidFilePath(appName, app.projectPath);
+  await fs.writeFile(pidFile, String(child.pid));
 
   console.log(
     pc.green(`   ✓ ${appName} started at http://localhost:${app.port || 3000}`),
   );
+  console.log(pc.dim(`     PID: ${child.pid}`));
+  console.log(pc.dim(`     Log: ${path.basename(logFile)}`));
+}
+
+/**
+ * Stop a running app by its PID file
+ *
+ * @param appName - App name (used to find PID file)
+ * @param projectPath - Project root path
+ * @returns True if the app was stopped, false if it wasn't running
+ */
+export async function stopApp(
+  appName: string,
+  projectPath: string,
+): Promise<boolean> {
+  const pidFile = getAppPidFilePath(appName, projectPath);
+
+  try {
+    const pid = await fs.readFile(pidFile, "utf-8");
+    const pidNum = parseInt(pid.trim());
+
+    if (isNaN(pidNum)) {
+      await fs.remove(pidFile);
+      return false;
+    }
+
+    try {
+      process.kill(pidNum, "SIGTERM");
+      // Clean up PID file
+      await fs.remove(pidFile);
+      return true;
+    } catch (e) {
+      const err = e as { code?: string };
+      if (err.code === "ESRCH") {
+        // Process already dead, clean up PID file
+        await fs.remove(pidFile);
+        return false;
+      }
+      throw e;
+    }
+  } catch (e) {
+    const err = e as { code?: string };
+    if (err.code === "ENOENT") {
+      // No PID file exists
+      return false;
+    }
+    throw e;
+  }
+}
+
+/**
+ * Check if an app is running
+ *
+ * @param appName - App name (used to find PID file)
+ * @param projectPath - Project root path
+ * @returns Object with running status and PID if running
+ */
+export async function isAppRunning(
+  appName: string,
+  projectPath: string,
+): Promise<{ running: boolean; pid?: number }> {
+  const pidFile = getAppPidFilePath(appName, projectPath);
+
+  try {
+    const pid = await fs.readFile(pidFile, "utf-8");
+    const pidNum = parseInt(pid.trim());
+
+    if (isNaN(pidNum)) {
+      await fs.remove(pidFile);
+      return { running: false };
+    }
+
+    try {
+      // Signal 0 checks if process exists without killing it
+      process.kill(pidNum, 0);
+      return { running: true, pid: pidNum };
+    } catch {
+      // Process not running, clean up stale PID file
+      await fs.remove(pidFile);
+      return { running: false };
+    }
+  } catch {
+    return { running: false };
+  }
+}
+
+/**
+ * Find all app PID files in a project directory
+ *
+ * @param projectPath - Project root path
+ * @returns Array of app names that have PID files
+ */
+export async function findAppPidFiles(
+  projectPath: string,
+): Promise<Array<{ name: string; pidFile: string }>> {
+  const files = await fs.readdir(projectPath);
+  const pidFiles = files.filter(
+    (f) => f.startsWith(".cortex-app-") && f.endsWith(".pid"),
+  );
+
+  return pidFiles.map((pidFile) => {
+    // Extract app name from ".cortex-app-{name}.pid"
+    const name = pidFile.replace(/^\.cortex-app-/, "").replace(/\.pid$/, "");
+    return { name, pidFile: path.join(projectPath, pidFile) };
+  });
+}
+
+/**
+ * Find process listening on a specific port
+ *
+ * @param port - Port number to check
+ * @returns PID of the process or null if none found
+ */
+export async function findProcessByPort(port: number): Promise<number | null> {
+  try {
+    const { execSync } = await import("child_process");
+
+    // Use lsof on macOS/Linux to find process by port
+    const result = execSync(`lsof -i :${port} -t 2>/dev/null`, {
+      encoding: "utf-8",
+    }).trim();
+
+    if (result) {
+      const pid = parseInt(result.split("\n")[0], 10);
+      return isNaN(pid) ? null : pid;
+    }
+    return null;
+  } catch {
+    // lsof returns non-zero if no process found
+    return null;
+  }
+}
+
+/**
+ * Stop a process by port number
+ *
+ * @param port - Port number
+ * @param signal - Signal to send (default: SIGTERM)
+ * @returns True if process was stopped, false otherwise
+ */
+export async function stopProcessByPort(
+  port: number,
+  signal: NodeJS.Signals = "SIGTERM",
+): Promise<boolean> {
+  const pid = await findProcessByPort(port);
+  if (!pid) {
+    return false;
+  }
+
+  try {
+    process.kill(pid, signal);
+    return true;
+  } catch {
+    return false;
+  }
 }
