@@ -19,6 +19,122 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.27.0] - 2025-12-27
+
+#### 🏢 Multi-Tenancy & Authentication Context
+
+**Complete multi-tenancy support** with automatic `tenantId` propagation across all API layers. Build SaaS platforms with guaranteed tenant data isolation.
+
+**The Problem Solved:**
+
+Previously, multi-tenant applications required manual `tenantId` management:
+
+- Developers had to pass `tenantId` to every API call
+- Risk of data leakage between tenants if forgotten
+- No standard pattern for auth integration
+- Session management was ad-hoc
+
+**Now with AuthContext:**
+
+```typescript
+// Initialize Cortex with auth context - tenantId auto-propagates everywhere
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  auth: {
+    userId: "user-123",
+    tenantId: "tenant-acme",     // Auto-injected to ALL operations
+    sessionId: "sess-abc",
+    authMethod: "clerk",
+    authenticatedAt: Date.now(),
+    claims: { role: "admin" },   // Extensible metadata
+  },
+});
+
+// All operations automatically scoped to tenant
+await cortex.memory.remember({...});           // tenantId: 'tenant-acme'
+await cortex.conversations.create({...});      // tenantId: 'tenant-acme'  
+await cortex.facts.store({...});               // tenantId: 'tenant-acme'
+await cortex.immutable.store({...});           // tenantId: 'tenant-acme'
+await cortex.mutable.set(...);                 // tenantId: 'tenant-acme'
+
+// Queries automatically filtered by tenant
+const memories = await cortex.memory.search("user-space", "query");
+// Only returns data from 'tenant-acme' - zero data bleed
+```
+
+**New Sessions API:**
+
+```typescript
+// Built-in session management with configurable lifecycle
+const session = await cortex.sessions.create({
+  userId: "user-123",
+  metadata: { device: "mobile", ip: "..." },
+});
+
+// Touch to keep alive
+await cortex.sessions.touch(session.sessionId);
+
+// Get active sessions for a user
+const activeSessions = await cortex.sessions.getActive("user-123");
+
+// End session or expire idle ones
+await cortex.sessions.end(session.sessionId);
+await cortex.sessions.expireIdle({ maxIdleMs: 30 * 60 * 1000 }); // 30 min
+```
+
+**Key Features:**
+
+- ✅ **Automatic TenantId Propagation** - Set once in AuthContext, flows to all APIs
+- ✅ **Sessions API** - `cortex.sessions.*` for multi-session management
+- ✅ **Auth Validators** - Built-in validation for userId, tenantId, sessionId formats
+- ✅ **Framework-Agnostic** - Works with Auth0, Clerk, NextAuth, Firebase, custom JWT
+- ✅ **Extensible Claims** - Store custom auth metadata (roles, permissions, org data)
+- ✅ **Graph Integration** - TenantId included in all graph node properties
+- ✅ **GDPR Compatible** - Cascade deletion respects tenant boundaries
+
+**APIs Updated with TenantId Support:**
+
+| API | TenantId Support |
+|-----|------------------|
+| `cortex.memory.*` | ✅ Auto-injected |
+| `cortex.conversations.*` | ✅ Auto-injected |
+| `cortex.facts.*` | ✅ Auto-injected |
+| `cortex.immutable.*` | ✅ Auto-injected |
+| `cortex.mutable.*` | ✅ Auto-injected |
+| `cortex.users.*` | ✅ Auto-injected |
+| `cortex.sessions.*` | ✅ Auto-injected |
+| `cortex.memorySpaces.*` | ✅ Auto-injected |
+| `cortex.contexts.*` | ✅ Auto-injected |
+| `cortex.graph.*` | ✅ In node properties |
+
+**Governance Integration:**
+
+```typescript
+// Configure session policies via governance
+await cortex.governance.create({
+  name: "session-policy",
+  sessions: {
+    idleTimeoutMs: 30 * 60 * 1000,    // 30 minutes
+    absoluteTimeoutMs: 24 * 60 * 60 * 1000, // 24 hours
+    maxConcurrentSessions: 5,
+  },
+});
+```
+
+**Schema Updates:**
+
+New `sessions` table and `tenantId` column added to all existing tables with appropriate indexes for efficient tenant-scoped queries.
+
+**Breaking Changes:** None - fully backward compatible. TenantId is optional.
+
+**Documentation:**
+
+- New: [Auth Integration Guide](Documentation/08-integrations/auth-providers.md)
+- New: [Sessions API Reference](Documentation/03-api-reference/14-sessions-operations.md)
+- Updated: All API reference docs with tenantId support
+
+---
+
 ### [0.26.1] - 2025-12-26
 
 #### 🔧 Vercel AI SDK v6.0 Support

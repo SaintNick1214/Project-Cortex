@@ -69,9 +69,9 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
 
   describe("Full Workflow - All APIs in Sequence", () => {
     let conversationId: string;
-    let memoryId: string;
+    let _memoryId: string;
     let factId: string;
-    let immutableRecordId: string;
+    let _immutableRecordId: string;
     let sessionId: string;
     const mutableKey = `cross_api_key_${ctx.runId}`;
 
@@ -123,7 +123,7 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
         userId: testUserId,
       });
 
-      memoryId = result.memories[0]._id;
+      _memoryId = result.memories[0]._id;
 
       expect(result.memories[0].tenantId).toBe(testTenantId);
       expect(result.memories[0].userId).toBe(testUserId);
@@ -178,7 +178,7 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
         },
       });
 
-      immutableRecordId = result.id;
+      _immutableRecordId = result.id;
 
       expect(result.tenantId).toBe(testTenantId);
     });

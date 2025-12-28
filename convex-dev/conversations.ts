@@ -669,6 +669,15 @@ export const list = query({
       conversations = await ctx.db.query("conversations").collect();
     }
 
+    // Post-filter by userId when tenant indexes are used (security-critical!)
+    // The by_tenant_space and by_tenantId indexes don't include userId,
+    // so we must filter to prevent cross-user data leakage within a tenant.
+    if (args.userId && args.tenantId) {
+      conversations = conversations.filter(
+        (c) => c.participants.userId === args.userId,
+      );
+    }
+
     // Post-filter by type if needed (when using other indexes)
     if (args.type && (args.memorySpaceId || args.userId)) {
       conversations = conversations.filter((c) => c.type === args.type);

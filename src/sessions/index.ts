@@ -17,7 +17,6 @@ import type {
 import type { ResilienceLayer } from "../resilience";
 import type { GraphAdapter } from "../graph/types";
 import {
-  SessionValidationError,
   validateSessionId,
   validateUserId,
   validateSessionFilters,

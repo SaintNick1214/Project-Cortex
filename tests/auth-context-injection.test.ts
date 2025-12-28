@@ -313,7 +313,7 @@ describeWithConvex("Auth Context Injection", () => {
 
   describe("Auth Context in Immutable/Mutable API", () => {
     let cortex: Cortex;
-    let immutableRecordId: string;
+    let _immutableRecordId: string;
     const mutableKey = `mut_${ctx.runId}`;
 
     beforeAll(async () => {
@@ -347,7 +347,7 @@ describeWithConvex("Auth Context Injection", () => {
         metadata: { tags: ["auth-context-test"], importance: 50 },
       });
 
-      immutableRecordId = result.id;
+      _immutableRecordId = result.id;
 
       expect(result).toBeDefined();
       expect(result.tenantId).toBe(testTenantId);

@@ -356,7 +356,7 @@ describeWithConvex("Sessions Workflow E2E", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   describe("Scenario 6: Session Listing and Filtering", () => {
-    let testSessions: Array<{ sessionId: string; status: string }> = [];
+    const testSessions: Array<{ sessionId: string; status: string }> = [];
     const scenarioUserId = generateTenantUserId(testTenantId);
 
     beforeAll(async () => {

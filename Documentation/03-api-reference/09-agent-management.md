@@ -1,6 +1,6 @@
 # Agent Management API
 
-> **Last Updated**: 2025-12-10
+> **Last Updated**: 2025-12-27
 
 > ⚠️ **IMPORTANT:** The Agent Management API is being superseded by [Memory Space Operations](./13-memory-space-operations.md). While agent-based terminology remains supported for backwards compatibility, new applications should use memory spaces.
 >

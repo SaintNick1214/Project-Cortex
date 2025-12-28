@@ -19,7 +19,7 @@ import {
 } from "../helpers/tenancy";
 
 // Test context for isolation
-const ctx = createTestRunContext();
+const _ctx = createTestRunContext();
 
 // Skip tests if no Convex URL configured
 const describeWithConvex = process.env.CONVEX_URL ? describe : describe.skip;
@@ -252,7 +252,7 @@ describeWithConvex("Multi-Tenancy E2E", () => {
     it("should support multiple users within same tenant", async () => {
       // Create additional users in Acme Corp
       const acmeUser2Id = generateTenantUserId(tenants.acmeCorp.tenantId);
-      const acmeUser3Id = generateTenantUserId(tenants.acmeCorp.tenantId);
+      const _acmeUser3Id = generateTenantUserId(tenants.acmeCorp.tenantId);
 
       // User 1 creates a memory
       const conv = await tenants.acmeCorp.cortex.conversations.create({

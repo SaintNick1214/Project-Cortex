@@ -14,9 +14,7 @@ import { createTestRunContext } from "../helpers/isolation";
 import {
   generateTenantId,
   generateTenantUserId,
-  createTenantAuthContext,
 } from "../helpers/tenancy";
-import type { AuthContext } from "../../src/auth/types";
 
 // Test context for isolation
 const ctx = createTestRunContext();

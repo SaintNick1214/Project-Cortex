@@ -1,6 +1,6 @@
 # Memory Space Operations API
 
-> **Last Updated**: 2025-12-10
+> **Last Updated**: 2025-12-27
 
 This document covers the `cortex.memorySpaces.*` namespace for managing memory spaces, participants, and access control.
 
@@ -15,6 +15,7 @@ This document covers the `cortex.memorySpaces.*` namespace for managing memory s
 - ✅ Hive Mode with participant tracking
 - ✅ Memory space lifecycle management
 - ✅ Access control and permissions
+- ✅ Multi-tenant SaaS (automatic `tenantId` isolation via AuthContext)
 
 **When you don't need it:**
 
@@ -80,6 +81,7 @@ interface MemorySpace {
   memorySpaceId: string;
   name?: string;
   type: "personal" | "team" | "project" | "custom";
+  tenantId?: string; // Auto-injected from AuthContext for multi-tenancy
   participants: Array<{
     id: string;
     type: string;

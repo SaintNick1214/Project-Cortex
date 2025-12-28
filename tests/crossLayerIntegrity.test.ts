@@ -13,7 +13,6 @@ import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
 import {
   generateTenantId,
-  generateTenantUserId,
   createTenantAuthContext,
 } from "./helpers/tenancy";
 
