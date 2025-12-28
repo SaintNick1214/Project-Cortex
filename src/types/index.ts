@@ -320,6 +320,8 @@ export interface CountMutableFilter {
 
 export interface PurgeNamespaceOptions {
   dryRun?: boolean;
+  /** Tenant ID for multi-tenancy isolation (auto-injected from AuthContext) */
+  tenantId?: string;
 }
 
 /**
@@ -334,6 +336,8 @@ export interface PurgeManyFilter {
   userId?: string;
   /** Delete keys updated before this timestamp (ms since epoch) */
   updatedBefore?: number;
+  /** Tenant ID for multi-tenancy isolation (auto-injected from AuthContext) */
+  tenantId?: string;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
