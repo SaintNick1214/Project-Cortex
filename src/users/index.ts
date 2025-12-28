@@ -367,6 +367,7 @@ export class UsersAPI {
           updatedBefore: filters?.updatedBefore,
           sortBy: filters?.sortBy,
           sortOrder: filters?.sortOrder,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "users:list",
     );
@@ -381,6 +382,7 @@ export class UsersAPI {
     // Map to UserProfile
     let users = entries.map((r: ImmutableRecord) => ({
       id: r.id,
+      tenantId: r.tenantId, // Include tenantId for multi-tenancy
       data: r.data,
       version: r.version,
       createdAt: r.createdAt,

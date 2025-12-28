@@ -447,6 +447,7 @@ export const get = query({
   args: {
     memorySpaceId: v.string(),
     factId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
     const fact = await ctx.db
@@ -461,6 +462,11 @@ export const get = query({
     // Verify memorySpace owns this fact
     if (fact.memorySpaceId !== args.memorySpaceId) {
       return null; // Permission denied (silent)
+    }
+
+    // Verify tenant isolation if tenantId provided
+    if (args.tenantId && fact.tenantId !== args.tenantId) {
+      return null; // Cross-tenant access denied (silent)
     }
 
     return fact;

@@ -94,6 +94,8 @@ describeWithConvex("Sessions Workflow E2E", () => {
         userMessage: "What's the weather like?",
         agentResponse: "I can help you check the weather!",
         userId: testUserId,
+        userName: "Test User",
+        agentId: "test-agent",
       });
 
       // Step 4: Verify session was updated
@@ -281,6 +283,8 @@ describeWithConvex("Sessions Workflow E2E", () => {
           userMessage: interaction.user,
           agentResponse: interaction.assistant,
           userId: testUserId,
+          userName: "Test User",
+          agentId: "test-agent",
         });
 
         // Touch session after each interaction

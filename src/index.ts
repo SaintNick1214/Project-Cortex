@@ -467,6 +467,7 @@ export class Cortex {
         users: this.users,
         agents: this.agents,
         llm: this.llmConfig,
+        authContext: this.authContext, // Pass authContext for tenant isolation
       },
     );
 

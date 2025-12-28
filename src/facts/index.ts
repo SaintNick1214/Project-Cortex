@@ -437,6 +437,7 @@ export class FactsAPI {
         this.client.query(api.facts.get, {
           memorySpaceId,
           factId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "facts:get",
     );

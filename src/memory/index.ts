@@ -59,6 +59,7 @@ interface FactRevisionAction {
 import type { MemorySpacesAPI } from "../memorySpaces";
 import type { UsersAPI } from "../users";
 import type { AgentsAPI } from "../agents";
+import type { AuthContext } from "../auth/types";
 import {
   type ArchiveResult,
   type Conversation,
@@ -151,6 +152,8 @@ export interface MemoryAPIDependencies {
   agents: AgentsAPI;
   /** LLM config for auto fact extraction */
   llm?: LLMConfig;
+  /** Auth context for tenant isolation */
+  authContext?: AuthContext;
 }
 
 export class MemoryAPI {
@@ -166,6 +169,7 @@ export class MemoryAPI {
   private readonly usersAPI?: UsersAPI;
   private readonly agentsAPI?: AgentsAPI;
   private readonly llmConfig?: LLMConfig;
+  private readonly authContext?: AuthContext;
   private llmClient?: LLMClient | null;
 
   constructor(
@@ -183,9 +187,15 @@ export class MemoryAPI {
     this.usersAPI = dependencies?.users;
     this.agentsAPI = dependencies?.agents;
     this.llmConfig = dependencies?.llm;
+    this.authContext = dependencies?.authContext;
 
-    // Pass resilience layer to sub-APIs
-    this.conversations = new ConversationsAPI(client, graphAdapter, resilience);
+    // Pass resilience layer to sub-APIs (with authContext for tenant isolation)
+    this.conversations = new ConversationsAPI(
+      client,
+      graphAdapter,
+      resilience,
+      this.authContext,
+    );
     this.vector = new VectorAPI(client, graphAdapter, resilience);
 
     // Create belief revision LLM client adapter if LLM is configured
@@ -199,14 +209,12 @@ export class MemoryAPI {
       }
     }
 
-    // Note: MemoryAPI does not directly receive authContext; it's used for convenience
-    // orchestration. The authContext for tenant isolation is propagated through the
-    // parent Cortex class to individual API instances that need it.
+    // Pass authContext to FactsAPI for tenant isolation
     this.facts = new FactsAPI(
       client,
       graphAdapter,
       resilience,
-      undefined, // authContext - MemoryAPI orchestrates but doesn't inject auth directly
+      this.authContext,
       beliefRevisionLLMClient,
     );
   }
@@ -1193,7 +1201,7 @@ export class MemoryAPI {
           {
             content: userContent,
             contentType,
-            tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
+            tenantId: params.tenantId ?? this.authContext?.tenantId, // Multi-tenancy: SaaS platform isolation
             participantId: params.participantId,
             embedding: userEmbedding,
             userId: params.userId,
@@ -1247,7 +1255,7 @@ export class MemoryAPI {
             {
               content: agentContent,
               contentType: "raw",
-              tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
+              tenantId: params.tenantId ?? this.authContext?.tenantId, // Multi-tenancy: SaaS platform isolation
               participantId: params.participantId,
               embedding: agentEmbedding,
               userId: params.userId,
@@ -2593,7 +2601,9 @@ export class MemoryAPI {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 2: PARALLEL SEARCH - Vector + Facts
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    const [vectorMemories, directFacts] = await Promise.all([
+    const effectiveTenantId = params.tenantId ?? this.authContext?.tenantId;
+
+    const [rawVectorMemories, rawDirectFacts] = await Promise.all([
       // Vector search
       sources.vector
         ? this.vector.search(params.memorySpaceId, params.query, {
@@ -2601,7 +2611,7 @@ export class MemoryAPI {
             userId: params.userId,
             tags: params.tags,
             minImportance: params.minImportance,
-            limit: limit * 2, // Fetch extra for dedup
+            limit: limit * 4, // Fetch extra for tenant filtering and dedup
             minScore: 0.3, // Reasonable threshold
           })
         : Promise.resolve([]),
@@ -2614,10 +2624,19 @@ export class MemoryAPI {
             tags: params.tags,
             createdAfter: params.createdAfter,
             createdBefore: params.createdBefore,
-            limit: limit * 2, // Fetch extra for dedup
+            limit: limit * 4, // Fetch extra for tenant filtering and dedup
           })
         : Promise.resolve([]),
     ]);
+
+    // Apply tenant isolation filter if tenantId is configured
+    const vectorMemories = effectiveTenantId
+      ? rawVectorMemories.filter((m) => m.tenantId === effectiveTenantId)
+      : rawVectorMemories;
+
+    const directFacts = effectiveTenantId
+      ? rawDirectFacts.filter((f) => f.tenantId === effectiveTenantId)
+      : rawDirectFacts;
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 3: GRAPH EXPANSION (if enabled)

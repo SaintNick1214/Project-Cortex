@@ -72,6 +72,8 @@ export const store = mutation({
         previousVersions: updatedPreviousVersions,
         metadata: args.metadata || existing.metadata,
         updatedAt: now,
+        // Propagate tenantId if provided (allows existing records to be tenant-isolated)
+        ...(args.tenantId && { tenantId: args.tenantId }),
       });
 
       return await ctx.db.get(existing._id);
@@ -305,6 +307,7 @@ export const list = query({
   args: {
     type: v.optional(v.string()),
     userId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
     createdAfter: v.optional(v.number()),
@@ -330,6 +333,11 @@ export const list = query({
         .collect();
     } else {
       entries = await ctx.db.query("immutable").collect();
+    }
+
+    // Tenant isolation filter (apply early for efficiency)
+    if (args.tenantId) {
+      entries = entries.filter((e) => e.tenantId === args.tenantId);
     }
 
     // Post-filter by userId if both type and userId specified

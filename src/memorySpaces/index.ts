@@ -236,6 +236,7 @@ export class MemorySpacesAPI {
           offset: filter?.offset,
           sortBy: filter?.sortBy,
           sortOrder: filter?.sortOrder,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "memorySpaces:list",
     );
