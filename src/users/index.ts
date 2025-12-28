@@ -130,12 +130,18 @@ export class UsersAPI {
         this.client.query(api.immutable.get, {
           type: "user",
           id: userId,
+          tenantId: this.authContext?.tenantId, // Tenant isolation
         }),
       "users:get",
     );
 
     if (!result) {
       return null;
+    }
+
+    // Enforce tenant isolation: verify the user belongs to this tenant
+    if (this.authContext?.tenantId && result.tenantId !== this.authContext.tenantId) {
+      return null; // User belongs to a different tenant
     }
 
     return {

@@ -306,6 +306,7 @@ export async function seedTenantTestData(
   // Create memories
   if (memories > 0) {
     data.memoryIds = [];
+    const agentId = `agent_${context.tenantId}`;
     for (let i = 0; i < memories; i++) {
       const result = await context.cortex.memory.remember({
         memorySpaceId: context.memorySpaceId,
@@ -313,6 +314,7 @@ export async function seedTenantTestData(
         userMessage: `Test memory ${i} for tenant ${context.tenantId}`,
         agentResponse: `Response ${i}`,
         userId: context.userId,
+        agentId, // Required when userId is provided
       });
       if (result.memories[0]) {
         data.memoryIds.push(result.memories[0]._id);

@@ -514,6 +514,7 @@ export class FactsAPI {
       () =>
         this.client.query(api.facts.list, {
           memorySpaceId: filter.memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Tenant isolation
           factType: filter.factType,
           subject: filter.subject,
           predicate: filter.predicate,
@@ -600,6 +601,7 @@ export class FactsAPI {
       () =>
         this.client.query(api.facts.count, {
           memorySpaceId: filter.memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Tenant isolation
           factType: filter.factType,
           subject: filter.subject,
           predicate: filter.predicate,
@@ -701,6 +703,7 @@ export class FactsAPI {
       () =>
         this.client.query(api.facts.search, {
           memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Tenant isolation
           query,
           factType: options?.factType,
           subject: options?.subject,

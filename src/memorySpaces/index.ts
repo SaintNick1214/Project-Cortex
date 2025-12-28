@@ -175,7 +175,16 @@ export class MemorySpacesAPI {
       "memorySpaces:get",
     );
 
-    return result as MemorySpace | null;
+    const space = result as MemorySpace | null;
+
+    // Enforce tenant isolation: verify the memory space belongs to this tenant
+    if (space && this.authContext?.tenantId) {
+      if (space.tenantId !== this.authContext.tenantId) {
+        return null; // Memory space belongs to a different tenant
+      }
+    }
+
+    return space;
   }
 
   /**
@@ -488,6 +497,17 @@ export class MemorySpacesAPI {
   ): Promise<DeleteMemorySpaceResult> {
     validateMemorySpaceId(memorySpaceId);
     validateDeleteOptions(memorySpaceId, options);
+
+    // Enforce tenant isolation: verify the memory space belongs to this tenant before deleting
+    if (this.authContext?.tenantId) {
+      const space = await this.get(memorySpaceId);
+      if (!space) {
+        throw new Error(`Memory space not found: ${memorySpaceId}`);
+      }
+      if (space.tenantId !== this.authContext.tenantId) {
+        throw new Error(`Cannot delete memory space from another tenant`);
+      }
+    }
 
     const result = await this.executeWithResilience(
       () =>

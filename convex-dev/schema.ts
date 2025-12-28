@@ -121,14 +121,8 @@ export default defineSchema({
       }),
     ),
 
-    // Metadata (flexible)
-    metadata: v.optional(
-      v.object({
-        publishedBy: v.optional(v.string()),
-        tags: v.optional(v.array(v.string())),
-        importance: v.optional(v.number()),
-      }),
-    ),
+    // Metadata (flexible - any JSON-serializable object)
+    metadata: v.optional(v.any()),
 
     // Timestamps
     createdAt: v.number(),

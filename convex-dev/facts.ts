@@ -480,6 +480,7 @@ export const get = query({
 export const list = query({
   args: {
     memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     // Fact-specific filters
     factType: v.optional(
       v.union(
@@ -535,6 +536,11 @@ export const list = query({
     // Filter out superseded by default
     if (!args.includeSuperseded) {
       facts = facts.filter((f) => f.supersededBy === undefined);
+    }
+
+    // Tenant isolation filter (apply early for security)
+    if (args.tenantId) {
+      facts = facts.filter((f) => f.tenantId === args.tenantId);
     }
 
     // Apply universal filters
@@ -650,6 +656,7 @@ export const list = query({
 export const count = query({
   args: {
     memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     // Fact-specific filters
     factType: v.optional(
       v.union(
@@ -701,6 +708,11 @@ export const count = query({
     // Filter out superseded by default
     if (!args.includeSuperseded) {
       facts = facts.filter((f) => f.supersededBy === undefined);
+    }
+
+    // Tenant isolation filter (apply early for security)
+    if (args.tenantId) {
+      facts = facts.filter((f) => f.tenantId === args.tenantId);
     }
 
     // Apply universal filters (same as list)
@@ -784,6 +796,7 @@ export const count = query({
 export const search = query({
   args: {
     memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     query: v.string(),
     // Fact-specific filters
     factType: v.optional(
@@ -842,6 +855,11 @@ export const search = query({
     let filtered = args.includeSuperseded
       ? results
       : results.filter((f) => f.supersededBy === undefined);
+
+    // Tenant isolation filter (apply early for security)
+    if (args.tenantId) {
+      filtered = filtered.filter((f) => f.tenantId === args.tenantId);
+    }
 
     // Apply universal filters (same as list/count)
     if (args.factType) {
