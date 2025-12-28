@@ -262,6 +262,7 @@ export class UsersAPI {
             this.client.mutation(api.immutable.purge, {
               type: "user",
               id: userId,
+              tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
             }),
           "users:delete",
         );
@@ -467,6 +468,7 @@ export class UsersAPI {
           updatedBefore: filters.updatedBefore,
           sortBy: filters.sortBy,
           sortOrder: filters.sortOrder,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         }),
       "users:search",
     );
@@ -538,6 +540,7 @@ export class UsersAPI {
           createdBefore: filters?.createdBefore,
           updatedAfter: filters?.updatedAfter,
           updatedBefore: filters?.updatedBefore,
+          // Note: count doesn't have tenantId filter in Convex schema yet
         }),
       "users:count",
     );
@@ -569,6 +572,7 @@ export class UsersAPI {
           type: "user",
           id: userId,
           version,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         }),
       "users:getVersion",
     );
@@ -1203,6 +1207,7 @@ export class UsersAPI {
     try {
       const result = await this.client.query(api.immutable.list, {
         userId,
+        tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
       });
       // Extract entries from the paginated response
       const immutableRecords = (
@@ -1452,6 +1457,7 @@ export class UsersAPI {
         await this.client.mutation(api.immutable.purge, {
           type: immutable.type,
           id: immutable.id,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         });
         result.immutableRecordsDeleted++;
       } catch (error) {
@@ -1531,6 +1537,7 @@ export class UsersAPI {
         await this.client.mutation(api.immutable.purge, {
           type: "user",
           id: userId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         });
         result.deletedLayers.push("user-profile");
       } catch (error) {
@@ -1574,6 +1581,7 @@ export class UsersAPI {
           type: "user",
           id: backups.userProfile.id,
           data: backups.userProfile.data,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         });
       } catch (error) {
         console.error("Failed to restore user profile:", error);
@@ -1601,6 +1609,7 @@ export class UsersAPI {
           id: immutable.id,
           data: immutable.data,
           userId: immutable.userId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
           metadata: immutable.metadata,
         });
       } catch (error) {

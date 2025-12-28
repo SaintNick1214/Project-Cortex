@@ -919,7 +919,7 @@ describe("Memory Spaces Registry API", () => {
           cascade: true,
           reason: "test cleanup",
         }),
-      ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
+      ).rejects.toThrow("Memory space not found");
     });
 
     it("throws when cascade is false", async () => {
