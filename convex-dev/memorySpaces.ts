@@ -50,12 +50,15 @@ export const register = mutation({
         .first();
     } else {
       // For non-tenant: check globally (backwards compatibility)
-      existing = await ctx.db
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant conflicts
+      const candidate = await ctx.db
         .query("memorySpaces")
         .withIndex("by_memorySpaceId", (q) =>
           q.eq("memorySpaceId", args.memorySpaceId),
         )
         .first();
+      // Only match if the record is truly global (no tenantId)
+      existing = candidate && !candidate.tenantId ? candidate : null;
     }
 
     if (existing) {
