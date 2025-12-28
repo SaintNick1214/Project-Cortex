@@ -41,13 +41,16 @@ export const store = mutation({
         )
         .first();
     } else {
-      // Global lookup for non-tenant records
-      existing = await ctx.db
+      // Global lookup for non-tenant records only
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant access
+      const candidate = await ctx.db
         .query("immutable")
         .withIndex("by_type_id", (q) =>
           q.eq("type", args.type).eq("id", args.id),
         )
         .first();
+      // Only match if the record is truly global (no tenantId)
+      existing = candidate && !candidate.tenantId ? candidate : null;
     }
 
     if (existing) {
@@ -118,12 +121,16 @@ export const purge = mutation({
         )
         .first();
     } else {
-      entry = await ctx.db
+      // Global lookup for non-tenant records only
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant deletion
+      const candidate = await ctx.db
         .query("immutable")
         .withIndex("by_type_id", (q) =>
           q.eq("type", args.type).eq("id", args.id),
         )
         .first();
+      // Only match if the record is truly global (no tenantId)
+      entry = candidate && !candidate.tenantId ? candidate : null;
     }
 
     if (!entry) {
@@ -169,12 +176,16 @@ export const get = query({
         )
         .first();
     } else {
-      entry = await ctx.db
+      // Global lookup for non-tenant records only
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant reads
+      const candidate = await ctx.db
         .query("immutable")
         .withIndex("by_type_id", (q) =>
           q.eq("type", args.type).eq("id", args.id),
         )
         .first();
+      // Only match if the record is truly global (no tenantId)
+      entry = candidate && !candidate.tenantId ? candidate : null;
     }
 
     return entry || null;
@@ -204,12 +215,16 @@ export const getVersion = query({
         )
         .first();
     } else {
-      entry = await ctx.db
+      // Global lookup for non-tenant records only
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant reads
+      const candidate = await ctx.db
         .query("immutable")
         .withIndex("by_type_id", (q) =>
           q.eq("type", args.type).eq("id", args.id),
         )
         .first();
+      // Only match if the record is truly global (no tenantId)
+      entry = candidate && !candidate.tenantId ? candidate : null;
     }
 
     if (!entry) {

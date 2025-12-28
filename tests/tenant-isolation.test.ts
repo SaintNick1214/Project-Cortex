@@ -187,7 +187,8 @@ describeWithConvex("Tenant Isolation", () => {
         userMessage: "Secret information for Tenant A only",
         agentResponse: "I understand this is confidential",
         userId: tenantA.userId,
-        agentId: tenantAAgentId, // Required when userId is provided
+        userName: "Tenant A User",
+        agentId: tenantAAgentId,
       });
 
       tenantAMemoryId = result.memories[0]._id;
