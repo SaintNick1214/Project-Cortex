@@ -97,11 +97,19 @@ async function updatePackageJson(
 ): Promise<void> {
   const packageJsonPath = path.join(quickstartPath, "package.json");
 
-  if (!fs.existsSync(packageJsonPath)) {
-    return;
+  // Read and write atomically to avoid race conditions
+  // If the file doesn't exist, readFile will throw and we'll catch it
+  let content: string;
+  try {
+    content = await fs.readFile(packageJsonPath, "utf-8");
+  } catch (err) {
+    const error = err as { code?: string };
+    if (error.code === "ENOENT") {
+      return; // File doesn't exist, nothing to update
+    }
+    throw err;
   }
 
-  const content = await fs.readFile(packageJsonPath, "utf-8");
   const pkg = JSON.parse(content);
 
   // Update dependencies to use npm packages
@@ -239,11 +247,19 @@ async function copyConvexQueryFiles(
 async function addQuickstartScript(projectPath: string): Promise<void> {
   const packageJsonPath = path.join(projectPath, "package.json");
 
-  if (!fs.existsSync(packageJsonPath)) {
-    return;
+  // Read and write atomically to avoid race conditions
+  // If the file doesn't exist, readFile will throw and we'll catch it
+  let content: string;
+  try {
+    content = await fs.readFile(packageJsonPath, "utf-8");
+  } catch (err) {
+    const error = err as { code?: string };
+    if (error.code === "ENOENT") {
+      return; // File doesn't exist, nothing to update
+    }
+    throw err;
   }
 
-  const content = await fs.readFile(packageJsonPath, "utf-8");
   const pkg = JSON.parse(content);
 
   pkg.scripts = pkg.scripts || {};

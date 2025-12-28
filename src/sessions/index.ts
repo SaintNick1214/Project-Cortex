@@ -5,6 +5,7 @@
  * Sessions are stored in Convex for real-time reactivity.
  */
 
+import { randomBytes } from "crypto";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
@@ -389,11 +390,11 @@ export class SessionsAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /**
-   * Generate a unique session ID
+   * Generate a cryptographically secure unique session ID
    */
   private generateSessionId(): string {
     const timestamp = Date.now().toString(36);
-    const randomPart = Math.random().toString(36).substring(2, 10);
+    const randomPart = randomBytes(8).toString("hex");
     return `sess-${timestamp}-${randomPart}`;
   }
 }
