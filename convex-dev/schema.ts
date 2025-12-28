@@ -589,6 +589,7 @@ export default defineSchema({
     .index("by_contextId", ["contextId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Space's contexts
     .index("by_tenantId", ["tenantId"]) // Tenant's contexts
+    .index("by_tenant_contextId", ["tenantId", "contextId"]) // Tenant + context ID
     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
     .index("by_parentId", ["parentId"]) // Child lookup
     .index("by_rootId", ["rootId"]) // All contexts in tree

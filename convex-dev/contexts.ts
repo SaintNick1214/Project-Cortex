@@ -37,6 +37,7 @@ export const create = mutation({
   args: {
     purpose: v.string(),
     memorySpaceId: v.string(), // Memory space creating this context
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     description: v.optional(v.string()),
     userId: v.optional(v.string()),
     parentId: v.optional(v.string()),
@@ -89,6 +90,7 @@ export const create = mutation({
     const _id = await ctx.db.insert("contexts", {
       contextId,
       memorySpaceId: args.memorySpaceId,
+      tenantId: args.tenantId, // Store tenantId for multi-tenancy
       purpose: args.purpose,
       description: args.description,
       userId: args.userId,
@@ -126,6 +128,7 @@ export const create = mutation({
 export const update = mutation({
   args: {
     contextId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: scope lookup to tenant
     status: v.optional(
       v.union(
         v.literal("active"),
@@ -139,10 +142,25 @@ export const update = mutation({
     completedAt: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
+    // Tenant-aware lookup
+    let context;
+    if (args.tenantId) {
+      // For multi-tenant: check within tenant's namespace
+      context = await ctx.db
+        .query("contexts")
+        .withIndex("by_tenant_contextId", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("contextId", args.contextId),
+        )
+        .first();
+    } else {
+      // For non-tenant: check globally but only match records without tenantId
+      const candidate = await ctx.db
+        .query("contexts")
+        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .first();
+      // SECURITY: Only match truly global records (no tenantId)
+      context = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     if (!context) {
       throw new ConvexError("CONTEXT_NOT_FOUND");
@@ -196,14 +214,28 @@ export const update = mutation({
 export const deleteContext = mutation({
   args: {
     contextId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: scope lookup to tenant
     cascadeChildren: v.optional(v.boolean()),
     orphanChildren: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
+    // Tenant-aware lookup
+    let context;
+    if (args.tenantId) {
+      context = await ctx.db
+        .query("contexts")
+        .withIndex("by_tenant_contextId", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("contextId", args.contextId),
+        )
+        .first();
+    } else {
+      const candidate = await ctx.db
+        .query("contexts")
+        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .first();
+      // SECURITY: Only match truly global records (no tenantId)
+      context = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     if (!context) {
       throw new ConvexError("CONTEXT_NOT_FOUND");
@@ -415,14 +447,28 @@ export const grantAccess = mutation({
 export const get = query({
   args: {
     contextId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: scope lookup to tenant
     includeChain: v.optional(v.boolean()),
     includeConversation: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    const context = await ctx.db
-      .query("contexts")
-      .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
-      .first();
+    // Tenant-aware lookup
+    let context;
+    if (args.tenantId) {
+      context = await ctx.db
+        .query("contexts")
+        .withIndex("by_tenant_contextId", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("contextId", args.contextId),
+        )
+        .first();
+    } else {
+      const candidate = await ctx.db
+        .query("contexts")
+        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .first();
+      // SECURITY: Only match truly global records (no tenantId)
+      context = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     if (!context) {
       return null;
@@ -561,6 +607,7 @@ async function buildContextChain(ctx: any, context: any) {
 export const list = query({
   args: {
     memorySpaceId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy: scope to tenant
     userId: v.optional(v.string()),
     status: v.optional(
       v.union(
@@ -578,8 +625,22 @@ export const list = query({
   handler: async (ctx, args) => {
     let contexts;
 
-    // Use best index
-    if (args.memorySpaceId && args.status) {
+    // Use best index based on available filters
+    if (args.tenantId && args.memorySpaceId) {
+      // Tenant + space - use composite index
+      contexts = await ctx.db
+        .query("contexts")
+        .withIndex("by_tenant_space", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .take(args.limit || 100);
+    } else if (args.tenantId) {
+      // Tenant only
+      contexts = await ctx.db
+        .query("contexts")
+        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
+        .take(args.limit || 100);
+    } else if (args.memorySpaceId && args.status) {
       contexts = await ctx.db
         .query("contexts")
         .withIndex("by_memorySpace_status", (q) =>
@@ -615,6 +676,11 @@ export const list = query({
         .take(args.limit || 100);
     }
 
+    // SECURITY: For non-tenant queries, filter out tenant-owned records
+    if (!args.tenantId) {
+      contexts = contexts.filter((c) => !c.tenantId);
+    }
+
     // Apply remaining filters
     if (args.userId) {
       contexts = contexts.filter((c) => c.userId === args.userId);
@@ -622,6 +688,11 @@ export const list = query({
 
     if (args.depth !== undefined) {
       contexts = contexts.filter((c) => c.depth === args.depth);
+    }
+
+    // Apply status filter if not already indexed
+    if (args.status && !(args.memorySpaceId && args.status)) {
+      contexts = contexts.filter((c) => c.status === args.status);
     }
 
     return contexts;
