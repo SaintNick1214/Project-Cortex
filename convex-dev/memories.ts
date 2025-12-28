@@ -19,6 +19,7 @@ export const store = mutation({
   args: {
     memorySpaceId: v.string(), // Updated
     participantId: v.optional(v.string()), // NEW: Hive Mode
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     content: v.string(),
     contentType: v.union(
       v.literal("raw"),
@@ -81,6 +82,7 @@ export const store = mutation({
       memoryId,
       memorySpaceId: args.memorySpaceId, // Updated
       participantId: args.participantId, // NEW
+      tenantId: args.tenantId, // Store tenantId
       content: args.content,
       contentType: args.contentType,
       embedding: args.embedding,

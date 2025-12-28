@@ -1,6 +1,6 @@
 # Memory Operations API
 
-> **Last Updated**: 2025-12-19
+> **Last Updated**: 2025-12-27
 
 Complete API reference for memory operations across memory spaces.
 
@@ -135,6 +135,36 @@ await cortex.vector.store('user-123-personal', { userId: 'user-123', ... });
 // One call deletes from ALL stores
 await cortex.users.delete('user-123', { cascade: true });
 ```
+
+**Multi-Tenancy Support:**
+
+All stores support **optional `tenantId` field** for SaaS multi-tenancy isolation:
+
+```typescript
+// When initializing Cortex with auth context, tenantId is auto-injected
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  auth: {
+    userId: 'user-123',
+    tenantId: 'tenant-acme',     // All operations scoped to this tenant
+    authMethod: 'clerk',
+    authenticatedAt: Date.now(),
+  }
+});
+
+// TenantId automatically propagates to all operations:
+await cortex.memory.remember({...});           // tenantId: 'tenant-acme'
+await cortex.conversations.create({...});      // tenantId: 'tenant-acme'
+await cortex.facts.store({...});               // tenantId: 'tenant-acme'
+await cortex.immutable.store({...});           // tenantId: 'tenant-acme'
+await cortex.mutable.set(...);                 // tenantId: 'tenant-acme'
+
+// Queries are automatically filtered by tenant
+const memories = await cortex.memory.search('user-space', 'query');
+// Only returns data from 'tenant-acme'
+```
+
+See [Auth Integration](../08-integrations/auth-providers.md) for complete multi-tenancy documentation.
 
 ## Three-Namespace Architecture
 
@@ -2954,7 +2984,7 @@ All memory operation errors:
 
 **See Also:**
 
-- [Error Handling Guide](./12-error-handling.md)
+- [Error Handling Guide](../05-reference/02-error-handling.md)
 
 ---
 
@@ -2964,7 +2994,7 @@ All memory operation errors:
 - **[User Operations API](./04-user-operations.md)** - User profile API
 - **[Context Operations API](./05-context-operations.md)** - Context chain API
 - **[Graph Operations API](./15-graph-operations.md)** - Graph database integration
-- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

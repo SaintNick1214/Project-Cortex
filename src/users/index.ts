@@ -73,6 +73,7 @@ export class CascadeDeletionError extends Error {
 export { UserValidationError } from "./validators";
 
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
 
 /**
  * Users API
@@ -89,6 +90,7 @@ export class UsersAPI {
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**
@@ -128,6 +130,7 @@ export class UsersAPI {
         this.client.query(api.immutable.get, {
           type: "user",
           id: userId,
+          tenantId: this.authContext?.tenantId, // Tenant isolation
         }),
       "users:get",
     );
@@ -136,8 +139,17 @@ export class UsersAPI {
       return null;
     }
 
+    // Enforce tenant isolation: only deny if both have tenantId and they don't match
+    // Users without tenantId (legacy) are accessible to all (backwards compatibility)
+    if (result.tenantId && this.authContext?.tenantId) {
+      if (result.tenantId !== this.authContext.tenantId) {
+        return null; // User belongs to a different tenant
+      }
+    }
+
     return {
       id: result.id,
+      tenantId: result.tenantId, // Include tenantId in response
       data: (result.data as Record<string, unknown> | undefined) ?? {},
       version: result.version,
       createdAt: result.createdAt,
@@ -190,6 +202,7 @@ export class UsersAPI {
           type: "user",
           id: userId,
           data: finalData,
+          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
         }),
       "users:update",
     );
@@ -200,6 +213,7 @@ export class UsersAPI {
 
     return {
       id: result.id,
+      tenantId: result.tenantId, // Include tenantId in response
       data: (result.data as Record<string, unknown> | undefined) ?? {},
       version: result.version,
       createdAt: result.createdAt,
@@ -248,6 +262,7 @@ export class UsersAPI {
             this.client.mutation(api.immutable.purge, {
               type: "user",
               id: userId,
+              tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
             }),
           "users:delete",
         );
@@ -362,6 +377,7 @@ export class UsersAPI {
           updatedBefore: filters?.updatedBefore,
           sortBy: filters?.sortBy,
           sortOrder: filters?.sortOrder,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "users:list",
     );
@@ -376,6 +392,7 @@ export class UsersAPI {
     // Map to UserProfile
     let users = entries.map((r: ImmutableRecord) => ({
       id: r.id,
+      tenantId: r.tenantId, // Include tenantId for multi-tenancy
       data: r.data,
       version: r.version,
       createdAt: r.createdAt,
@@ -451,6 +468,7 @@ export class UsersAPI {
           updatedBefore: filters.updatedBefore,
           sortBy: filters.sortBy,
           sortOrder: filters.sortOrder,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         }),
       "users:search",
     );
@@ -522,6 +540,7 @@ export class UsersAPI {
           createdBefore: filters?.createdBefore,
           updatedAfter: filters?.updatedAfter,
           updatedBefore: filters?.updatedBefore,
+          // Note: count doesn't have tenantId filter in Convex schema yet
         }),
       "users:count",
     );
@@ -553,6 +572,7 @@ export class UsersAPI {
           type: "user",
           id: userId,
           version,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         }),
       "users:getVersion",
     );
@@ -1187,6 +1207,7 @@ export class UsersAPI {
     try {
       const result = await this.client.query(api.immutable.list, {
         userId,
+        tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
       });
       // Extract entries from the paginated response
       const immutableRecords = (
@@ -1436,6 +1457,7 @@ export class UsersAPI {
         await this.client.mutation(api.immutable.purge, {
           type: immutable.type,
           id: immutable.id,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         });
         result.immutableRecordsDeleted++;
       } catch (error) {
@@ -1515,6 +1537,7 @@ export class UsersAPI {
         await this.client.mutation(api.immutable.purge, {
           type: "user",
           id: userId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         });
         result.deletedLayers.push("user-profile");
       } catch (error) {
@@ -1558,6 +1581,7 @@ export class UsersAPI {
           type: "user",
           id: backups.userProfile.id,
           data: backups.userProfile.data,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
         });
       } catch (error) {
         console.error("Failed to restore user profile:", error);
@@ -1585,6 +1609,7 @@ export class UsersAPI {
           id: immutable.id,
           data: immutable.data,
           userId: immutable.userId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
           metadata: immutable.metadata,
         });
       } catch (error) {

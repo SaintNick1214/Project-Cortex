@@ -20,6 +20,7 @@ export const store = mutation({
     memorySpaceId: v.string(),
     participantId: v.optional(v.string()), // Hive Mode: who extracted this fact
     userId: v.optional(v.string()), // GDPR compliance - links to user
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     fact: v.string(), // The fact statement
     factType: v.union(
       v.literal("preference"),
@@ -84,6 +85,7 @@ export const store = mutation({
       memorySpaceId: args.memorySpaceId,
       participantId: args.participantId,
       userId: args.userId,
+      tenantId: args.tenantId, // Store tenantId
       fact: args.fact,
       factType: args.factType,
       subject: args.subject,
@@ -172,6 +174,7 @@ export const update = mutation({
       memorySpaceId: existing.memorySpaceId,
       participantId: existing.participantId,
       userId: existing.userId, // GDPR compliance - preserve user link across versions
+      tenantId: existing.tenantId, // Multi-tenancy: preserve tenant isolation across versions
       fact: args.fact || existing.fact,
       factType: existing.factType,
       subject: existing.subject,
@@ -376,8 +379,10 @@ export const updateInPlace = mutation({
     if (args.validUntil !== undefined) updates.validUntil = args.validUntil;
     if (args.metadata !== undefined) updates.metadata = args.metadata;
     if (args.category !== undefined) updates.category = args.category;
-    if (args.searchAliases !== undefined) updates.searchAliases = args.searchAliases;
-    if (args.semanticContext !== undefined) updates.semanticContext = args.semanticContext;
+    if (args.searchAliases !== undefined)
+      updates.searchAliases = args.searchAliases;
+    if (args.semanticContext !== undefined)
+      updates.semanticContext = args.semanticContext;
     if (args.entities !== undefined) updates.entities = args.entities;
     if (args.relations !== undefined) updates.relations = args.relations;
 
@@ -443,6 +448,7 @@ export const get = query({
   args: {
     memorySpaceId: v.string(),
     factId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
     const fact = await ctx.db
@@ -459,6 +465,11 @@ export const get = query({
       return null; // Permission denied (silent)
     }
 
+    // Verify tenant isolation if tenantId provided
+    if (args.tenantId && fact.tenantId !== args.tenantId) {
+      return null; // Cross-tenant access denied (silent)
+    }
+
     return fact;
   },
 });
@@ -469,6 +480,7 @@ export const get = query({
 export const list = query({
   args: {
     memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     // Fact-specific filters
     factType: v.optional(
       v.union(
@@ -524,6 +536,11 @@ export const list = query({
     // Filter out superseded by default
     if (!args.includeSuperseded) {
       facts = facts.filter((f) => f.supersededBy === undefined);
+    }
+
+    // Tenant isolation filter (apply early for security)
+    if (args.tenantId) {
+      facts = facts.filter((f) => f.tenantId === args.tenantId);
     }
 
     // Apply universal filters
@@ -639,6 +656,7 @@ export const list = query({
 export const count = query({
   args: {
     memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     // Fact-specific filters
     factType: v.optional(
       v.union(
@@ -690,6 +708,11 @@ export const count = query({
     // Filter out superseded by default
     if (!args.includeSuperseded) {
       facts = facts.filter((f) => f.supersededBy === undefined);
+    }
+
+    // Tenant isolation filter (apply early for security)
+    if (args.tenantId) {
+      facts = facts.filter((f) => f.tenantId === args.tenantId);
     }
 
     // Apply universal filters (same as list)
@@ -773,6 +796,7 @@ export const count = query({
 export const search = query({
   args: {
     memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     query: v.string(),
     // Fact-specific filters
     factType: v.optional(
@@ -831,6 +855,11 @@ export const search = query({
     let filtered = args.includeSuperseded
       ? results
       : results.filter((f) => f.supersededBy === undefined);
+
+    // Tenant isolation filter (apply early for security)
+    if (args.tenantId) {
+      filtered = filtered.filter((f) => f.tenantId === args.tenantId);
+    }
 
     // Apply universal filters (same as list/count)
     if (args.factType) {

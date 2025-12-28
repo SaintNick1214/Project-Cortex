@@ -1,6 +1,6 @@
 # Immutable Store API
 
-> **Last Updated**: 2025-12-10
+> **Last Updated**: 2025-12-27
 
 Complete API reference for shared immutable data storage with automatic versioning.
 
@@ -23,6 +23,7 @@ The Immutable Store API (Layer 1b) provides methods for storing **TRULY SHARED**
 - ✅ **Append-only** - New versions append, old preserved
 - ✅ **Purgeable** - Can delete by policy or manually
 - ✅ **ACID** - All guarantees of Layer 1
+- ✅ **Multi-Tenant** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
 
 **Comparison to Other Stores:**
 
@@ -60,11 +61,11 @@ interface ImmutableEntry {
   id: string; // Logical ID (versioned)
   data: Record<string, any>; // The actual data
   userId?: string; // OPTIONAL: Links to user (enables GDPR cascade)
+  // tenantId is auto-injected from AuthContext - no need to specify manually
   metadata?: {
     publishedBy?: string;
     tags?: string[];
     importance?: number; // 0-100
-    [key: string]: any;
   };
 }
 

@@ -3,12 +3,19 @@
  *
  * Tests to ensure proper cascade deletion and data cleanup
  * for compliance and data management.
+ *
+ * Updated: Added tenantId support for multi-tenancy testing.
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
+import {
+  generateTenantId,
+  generateTenantUserId,
+  createTenantAuthContext,
+} from "./helpers/tenancy";
 
 // Create test run context for parallel execution isolation
 const ctx = createTestRunContext();
@@ -20,9 +27,14 @@ describe("GDPR: Cascade Deletion", () => {
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
   // Use ctx-scoped IDs for parallel execution isolation
   const TEST_MEMSPACE_ID = ctx.memorySpaceId("gdpr-cascade");
+  // Multi-tenancy: Generate tenant-specific IDs
+  const TEST_TENANT_ID = generateTenantId("gdpr-cascade");
+  const TEST_USER_ID = generateTenantUserId(TEST_TENANT_ID);
 
   beforeAll(async () => {
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    // Initialize Cortex with auth context for multi-tenancy
+    const authContext = createTenantAuthContext(TEST_TENANT_ID, TEST_USER_ID);
+    cortex = new Cortex({ convexUrl: CONVEX_URL, auth: authContext });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
     // NOTE: Removed purgeAll() for parallel execution compatibility.
@@ -42,6 +54,7 @@ describe("GDPR: Cascade Deletion", () => {
         memorySpaceId: SPACE,
         name: "Cascade Test Space",
         type: "personal",
+        // Note: tenantId is automatically set from auth context
       });
 
       // Create data in ALL layers
@@ -95,9 +108,10 @@ describe("GDPR: Cascade Deletion", () => {
       // Note: Contexts may not be cascade-deleted (design decision for audit trail)
       // The test validates that conversations and memories are deleted
 
-      // Validate: Counts reflect deletion
+      // Validate: Counts reflect deletion (scoped by tenantId)
       const convCount = await cortex.conversations.count({
         memorySpaceId: SPACE,
+        // Note: tenantId filter is automatically applied from auth context
       });
       const memCount = await cortex.vector.count({ memorySpaceId: SPACE });
 
@@ -765,6 +779,157 @@ describe("GDPR: Cascade Deletion", () => {
       // Get final stats
       const statsFinal = await cortex.memorySpaces.getStats(SPACE);
       expect(statsFinal.totalMemories).toBe(0);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Multi-Tenancy GDPR Operations
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("Multi-Tenancy GDPR Operations", () => {
+    it("GDPR deletion respects tenant boundaries", async () => {
+      const tenantA = generateTenantId("gdpr-tenant-a");
+      const tenantB = generateTenantId("gdpr-tenant-b");
+      const userA = generateTenantUserId(tenantA);
+      const userB = generateTenantUserId(tenantB);
+      const spaceA = ctx.memorySpaceId("gdpr-space-a");
+      const spaceB = ctx.memorySpaceId("gdpr-space-b");
+
+      // Create Cortex instances for each tenant
+      const cortexA = new Cortex({
+        convexUrl: CONVEX_URL,
+        auth: createTenantAuthContext(tenantA, userA),
+      });
+      const cortexB = new Cortex({
+        convexUrl: CONVEX_URL,
+        auth: createTenantAuthContext(tenantB, userB),
+      });
+
+      // Register spaces for each tenant
+      await cortexA.memorySpaces.register({
+        memorySpaceId: spaceA,
+        name: "Tenant A Space",
+        type: "personal",
+      });
+      await cortexB.memorySpaces.register({
+        memorySpaceId: spaceB,
+        name: "Tenant B Space",
+        type: "personal",
+      });
+
+      // Create data for each tenant
+      await cortexA.facts.store({
+        memorySpaceId: spaceA,
+        userId: userA,
+        fact: "Tenant A secret data",
+        factType: "preference",
+        subject: userA,
+        confidence: 90,
+        sourceType: "system",
+      });
+
+      await cortexB.facts.store({
+        memorySpaceId: spaceB,
+        userId: userB,
+        fact: "Tenant B secret data",
+        factType: "preference",
+        subject: userB,
+        confidence: 90,
+        sourceType: "system",
+      });
+
+      // GDPR delete for Tenant A
+      const deleteResult = await cortexA.facts.deleteMany({
+        memorySpaceId: spaceA,
+        userId: userA,
+      });
+
+      expect(deleteResult.deleted).toBeGreaterThanOrEqual(1);
+
+      // Verify Tenant A data is deleted
+      const tenantAFacts = await cortexA.facts.list({
+        memorySpaceId: spaceA,
+        userId: userA,
+      });
+      expect(tenantAFacts.length).toBe(0);
+
+      // Verify Tenant B data is NOT affected
+      const tenantBFacts = await cortexB.facts.list({
+        memorySpaceId: spaceB,
+        userId: userB,
+      });
+      expect(tenantBFacts.length).toBe(1);
+      expect(tenantBFacts[0].fact).toBe("Tenant B secret data");
+
+      // Cleanup
+      await cortexA.memorySpaces.delete(spaceA, { cascade: true, reason: "test cleanup" });
+      await cortexB.memorySpaces.delete(spaceB, { cascade: true, reason: "test cleanup" });
+    });
+
+    it("cascade deletion only affects tenant's own data", async () => {
+      const tenantA = generateTenantId("cascade-tenant-a");
+      const tenantB = generateTenantId("cascade-tenant-b");
+      const userA = generateTenantUserId(tenantA);
+      const userB = generateTenantUserId(tenantB);
+      const spaceA = ctx.memorySpaceId("cascade-a");
+      const spaceB = ctx.memorySpaceId("cascade-b");
+
+      // Create Cortex instances
+      const cortexA = new Cortex({
+        convexUrl: CONVEX_URL,
+        auth: createTenantAuthContext(tenantA, userA),
+      });
+      const cortexB = new Cortex({
+        convexUrl: CONVEX_URL,
+        auth: createTenantAuthContext(tenantB, userB),
+      });
+
+      // Setup: Create spaces and data
+      await cortexA.memorySpaces.register({
+        memorySpaceId: spaceA,
+        name: "Cascade Tenant A",
+        type: "personal",
+      });
+      await cortexB.memorySpaces.register({
+        memorySpaceId: spaceB,
+        name: "Cascade Tenant B",
+        type: "personal",
+      });
+
+      await cortexA.vector.store(spaceA, {
+        content: "Tenant A memory",
+        contentType: "raw",
+        userId: userA,
+        source: { type: "system", userId: userA },
+        metadata: { importance: 50, tags: [] },
+      });
+
+      await cortexB.vector.store(spaceB, {
+        content: "Tenant B memory",
+        contentType: "raw",
+        userId: userB,
+        source: { type: "system", userId: userB },
+        metadata: { importance: 50, tags: [] },
+      });
+
+      // Cascade delete Tenant A's space
+      await cortexA.memorySpaces.delete(spaceA, { cascade: true, reason: "test cleanup" });
+
+      // Verify Tenant A space is gone
+      const spaceACheck = await cortexA.memorySpaces.get(spaceA);
+      expect(spaceACheck).toBeNull();
+
+      // Verify Tenant B space and data still exists
+      const spaceBCheck = await cortexB.memorySpaces.get(spaceB);
+      expect(spaceBCheck).not.toBeNull();
+
+      const tenantBMemories = await cortexB.vector.list({
+        memorySpaceId: spaceB,
+      });
+      expect(tenantBMemories.length).toBe(1);
+
+      // Cleanup
+      await cortexB.memorySpaces.delete(spaceB, { cascade: true, reason: "test cleanup" });
     });
   });
 

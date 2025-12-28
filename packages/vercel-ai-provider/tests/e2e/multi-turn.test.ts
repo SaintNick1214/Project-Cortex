@@ -204,7 +204,7 @@ describe("Multi-Turn Conversations E2E", () => {
         const profileStatements = [
           "My name is Alexander and I'm a software engineer",
           "I've been working with TypeScript for 3 years",
-          "Actually, just call me Alex instead of Alexander",  // Name preference update
+          "Actually, just call me Alex instead of Alexander", // Name preference update
           "I also enjoy hiking on weekends",
         ];
 
@@ -401,7 +401,10 @@ describe("Multi-Turn Conversations E2E", () => {
             {
               role: "user",
               content: [
-                { type: "text", text: "I'm planning a trip to Japan next month" },
+                {
+                  type: "text",
+                  text: "I'm planning a trip to Japan next month",
+                },
               ],
             },
           ],
@@ -562,9 +565,7 @@ describe("Multi-Turn Conversations E2E", () => {
           prompt: [
             {
               role: "user",
-              content: [
-                { type: "text", text: "My birthday is on March 15th" },
-              ],
+              content: [{ type: "text", text: "My birthday is on March 15th" }],
             },
           ],
           mode: { type: "regular" },

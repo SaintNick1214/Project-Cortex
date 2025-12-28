@@ -1624,7 +1624,7 @@ All A2A operation errors:
 
 **See Also:**
 
-- [Error Handling Guide](./12-error-handling.md)
+- [Error Handling Guide](../05-reference/02-error-handling.md)
 
 ---
 
@@ -1633,7 +1633,7 @@ All A2A operation errors:
 - **[Conversation Operations API](./03-conversation-operations.md)** - ACID conversation management
 - **[Memory Operations API](./02-memory-operations.md)** - Underlying memory system
 - **[Context Operations API](./05-context-operations.md)** - Workflow coordination
-- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

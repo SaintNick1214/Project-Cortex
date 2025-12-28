@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/cli",
-  "version": "0.26.2",
+  "version": "0.27.1",
   "description": "CLI tool for managing Cortex Memory deployments, performing administrative tasks, and streamlining development workflows",
   "type": "module",
   "bin": {
@@ -14,7 +14,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc && chmod +x dist/index.js",
+    "prebuild": "node scripts/sync-quickstart-template.js",
+    "build": "npm run prebuild && tsc && chmod +x dist/index.js",
     "dev": "tsc --watch",
     "lint": "eslint . --report-unused-disable-directives",
     "test": "node --experimental-vm-modules $(npm root)/.bin/jest",

@@ -1,6 +1,6 @@
 # Mutable Store API
 
-> **Last Updated**: 2025-12-14
+> **Last Updated**: 2025-12-27
 
 Complete API reference for shared mutable data with ACID transaction guarantees.
 
@@ -23,6 +23,7 @@ The Mutable Store API (Layer 1c) provides methods for storing **TRULY SHARED** m
 - ✅ **Current-value** - No version history (by design)
 - ✅ **Fast** - Optimized for frequent updates
 - ✅ **Purgeable** - Can delete keys
+- ✅ **Multi-Tenant** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
 
 **Comparison to Other Stores:**
 
@@ -74,6 +75,7 @@ interface MutableRecord {
   key: string;
   value: any;
   userId?: string; // OPTIONAL: User link (GDPR-enabled)
+  tenantId?: string; // Auto-injected from AuthContext for multi-tenancy
   metadata?: Record<string, unknown>;
   createdAt: number; // Unix timestamp
   updatedAt: number; // Unix timestamp

@@ -8,10 +8,35 @@
 export type OutputFormat = "table" | "json" | "csv";
 
 /**
+ * Template app types
+ */
+export type AppType = "vercel-ai-quickstart";
+
+/**
+ * Configuration for an installed template app
+ */
+export interface AppConfig {
+  /** Type of template app */
+  type: AppType;
+  /** Relative path from project root (e.g., "quickstart") */
+  path: string;
+  /** Absolute path to the project root where this app was installed */
+  projectPath: string;
+  /** Whether this app should be started with `cortex start` */
+  enabled: boolean;
+  /** Port for the dev server (default varies by app type) */
+  port?: number;
+  /** Start command (default: "npm run dev") */
+  startCommand?: string;
+}
+
+/**
  * CLI configuration stored in ~/.cortexrc or ./cortex.config.json
  */
 export interface CLIConfig {
   deployments: Record<string, DeploymentConfig>;
+  /** Installed template apps (e.g., vercel-ai-quickstart) */
+  apps?: Record<string, AppConfig>;
   default: string;
   format: OutputFormat;
   confirmDangerous: boolean;

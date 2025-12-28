@@ -91,7 +91,12 @@ export class CortexMemoryProvider {
     });
 
     // Create provider with pre-initialized Cortex
-    return new CortexMemoryProvider(underlyingModel, config, cortex, graphAdapter);
+    return new CortexMemoryProvider(
+      underlyingModel,
+      config,
+      cortex,
+      graphAdapter,
+    );
   }
 
   constructor(

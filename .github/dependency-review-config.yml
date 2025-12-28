@@ -1,0 +1,49 @@
+# Dependency Review Configuration
+# https://github.com/actions/dependency-review-action
+
+# Fail on high severity vulnerabilities
+fail-on-severity: high
+
+# Enable license checking
+license-check: true
+
+# Allow these licenses (standard SPDX identifiers)
+# Note: allow-licenses and deny-licenses are mutually exclusive.
+# Using allow-licenses is the recommended approach (deny-licenses is deprecated).
+# Any license NOT in this list will be flagged.
+allow-licenses:
+  - MIT
+  - Apache-2.0
+  - BSD-2-Clause
+  - BSD-3-Clause
+  - ISC
+  - 0BSD
+  - CC0-1.0
+  - Unlicense
+  - Python-2.0
+  - BlueOak-1.0.0
+  - CC-BY-4.0
+
+# Allow our internal packages (FSL-1.1-Apache-2.0 is not a standard SPDX identifier)
+# These packages are internal workspace packages with custom licensing.
+# Note: Workspace packages may be identified by lockfile path OR npm name depending
+# on how the scanner resolves them, so we include both formats.
+allow-dependencies-licenses:
+  # Internal packages by npm name
+  - "pkg:npm/@cortexmemory/sdk"
+  - "pkg:npm/@cortexmemory/cli"
+  - "pkg:npm/@cortexmemory/vercel-ai-provider"
+  - "pkg:npm/create-cortex-memories"
+  - "pkg:npm/@cortexmemory/vercel-ai-quickstart"
+  # Internal packages by workspace path (scanner sometimes uses lockfile paths)
+  - "pkg:npm/packages/cortex-cli"
+  - "pkg:npm/packages/vercel-ai-provider"
+  - "pkg:npm/packages/create-cortex-memories"
+  # Vercel AI SDK packages - Apache-2.0 licensed but scanner can't always
+  # resolve licenses from nested lockfiles or transitive dependencies.
+  - "pkg:npm/@ai-sdk/openai"
+  - "pkg:npm/@ai-sdk/react"
+  - "pkg:npm/@ai-sdk/gateway"
+  - "pkg:npm/@ai-sdk/provider"
+  - "pkg:npm/@ai-sdk/provider-utils"
+  - "pkg:npm/ai"

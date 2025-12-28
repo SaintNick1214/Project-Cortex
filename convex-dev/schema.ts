@@ -35,6 +35,9 @@ export default defineSchema({
     memorySpaceId: v.string(), // Which memory space owns this conversation
     participantId: v.optional(v.string()), // Hive Mode: which participant created this
 
+    // Multi-tenancy (NEW - critical for SaaS isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for isolation
+
     // Type: user-agent (user ↔ participant) or agent-agent (space ↔ space)
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
 
@@ -81,6 +84,8 @@ export default defineSchema({
   })
     .index("by_conversationId", ["conversationId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's conversations
+    .index("by_tenantId", ["tenantId"]) // Tenant's conversations
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
     .index("by_type", ["type"]) // List by type
     .index("by_user", ["participants.userId"]) // User's conversations
     .index("by_agent", ["participants.agentId"]) // Agent's conversations
@@ -102,6 +107,9 @@ export default defineSchema({
     // GDPR support (optional)
     userId: v.optional(v.string()), // Links to user for cascade deletion
 
+    // Multi-tenancy (NEW - for non-critical path isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for isolation
+
     // Versioning
     version: v.number(), // Current version number (starts at 1)
     previousVersions: v.array(
@@ -113,14 +121,8 @@ export default defineSchema({
       }),
     ),
 
-    // Metadata (flexible)
-    metadata: v.optional(
-      v.object({
-        publishedBy: v.optional(v.string()),
-        tags: v.optional(v.array(v.string())),
-        importance: v.optional(v.number()),
-      }),
-    ),
+    // Metadata (flexible - any JSON-serializable object)
+    metadata: v.optional(v.any()),
 
     // Timestamps
     createdAt: v.number(),
@@ -128,6 +130,8 @@ export default defineSchema({
   })
     .index("by_type_id", ["type", "id"]) // Unique lookup
     .index("by_type", ["type"]) // List by type
+    .index("by_tenantId", ["tenantId"]) // Tenant's records
+    .index("by_tenant_type_id", ["tenantId", "type", "id"]) // Tenant-scoped lookup
     .index("by_userId", ["userId"]) // GDPR cascade
     .index("by_created", ["createdAt"]), // Chronological
 
@@ -145,6 +149,9 @@ export default defineSchema({
     // GDPR support (optional)
     userId: v.optional(v.string()), // Links to user for cascade deletion
 
+    // Multi-tenancy (NEW - for non-critical path isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for isolation
+
     // Metadata (optional)
     metadata: v.optional(v.any()),
 
@@ -154,6 +161,9 @@ export default defineSchema({
   })
     .index("by_namespace_key", ["namespace", "key"]) // Unique lookup
     .index("by_namespace", ["namespace"]) // List by namespace
+    .index("by_tenantId", ["tenantId"]) // Tenant's records
+    .index("by_tenant_namespace", ["tenantId", "namespace"]) // Tenant-scoped namespace listing
+    .index("by_tenant_namespace_key", ["tenantId", "namespace", "key"]) // Tenant-scoped lookup
     .index("by_userId", ["userId"]) // GDPR cascade
     .index("by_updated", ["updatedAt"]), // Recent changes
 
@@ -165,6 +175,9 @@ export default defineSchema({
     memoryId: v.string(), // Unique ID for this memory
     memorySpaceId: v.string(), // NEW: Memory space isolation (was agentId)
     participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking
+
+    // Multi-tenancy (NEW - critical for SaaS isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for isolation
 
     // Content
     content: v.string(),
@@ -265,6 +278,8 @@ export default defineSchema({
   })
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's memories
     .index("by_memoryId", ["memoryId"]) // Unique lookup
+    .index("by_tenantId", ["tenantId"]) // Tenant's memories
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
     .index("by_userId", ["userId"]) // GDPR cascade
     .index("by_agentId", ["agentId"]) // Agent deletion cascade
     .index("by_memorySpace_created", ["memorySpaceId", "createdAt"]) // NEW: Chronological
@@ -275,6 +290,7 @@ export default defineSchema({
       searchField: "content",
       filterFields: [
         "memorySpaceId",
+        "tenantId",
         "sourceType",
         "userId",
         "agentId",
@@ -284,7 +300,13 @@ export default defineSchema({
     .vectorIndex("by_embedding", {
       vectorField: "embedding",
       dimensions: 1536, // Default: OpenAI text-embedding-3-small
-      filterFields: ["memorySpaceId", "userId", "agentId", "participantId"], // Updated: memorySpace isolation + agent support
+      filterFields: [
+        "memorySpaceId",
+        "tenantId",
+        "userId",
+        "agentId",
+        "participantId",
+      ], // Updated: tenantId for isolation
     }),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -296,6 +318,9 @@ export default defineSchema({
     memorySpaceId: v.string(), // Memory space isolation
     participantId: v.optional(v.string()), // Hive Mode: which participant extracted this
     userId: v.optional(v.string()), // GDPR compliance - links to user
+
+    // Multi-tenancy (NEW - critical for SaaS isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for isolation
 
     // Fact content
     fact: v.string(), // The fact statement
@@ -375,12 +400,14 @@ export default defineSchema({
   })
     .index("by_factId", ["factId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
+    .index("by_tenantId", ["tenantId"]) // Tenant's facts
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
     .index("by_memorySpace_subject", ["memorySpaceId", "subject"]) // Entity-centric queries
     .index("by_participantId", ["participantId"]) // Hive Mode tracking
     .index("by_userId", ["userId"]) // GDPR cascade
     .searchIndex("by_content", {
       searchField: "fact",
-      filterFields: ["memorySpaceId", "factType"],
+      filterFields: ["memorySpaceId", "tenantId", "factType"],
     }),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -444,6 +471,10 @@ export default defineSchema({
     // Identity
     memorySpaceId: v.string(), // Unique memory space ID
     name: v.optional(v.string()), // Human-readable name
+
+    // Multi-tenancy (NEW - critical for SaaS isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for isolation
+
     type: v.union(
       v.literal("personal"),
       v.literal("team"),
@@ -471,6 +502,9 @@ export default defineSchema({
     updatedAt: v.number(),
   })
     .index("by_memorySpaceId", ["memorySpaceId"]) // Unique lookup
+    .index("by_tenantId", ["tenantId"]) // Tenant's memory spaces
+    .index("by_tenant_memorySpaceId", ["tenantId", "memorySpaceId"]) // Tenant-scoped lookup
+    .index("by_tenant_status", ["tenantId", "status"]) // Tenant + status
     .index("by_status", ["status"]) // Filter active/archived
     .index("by_type", ["type"]) // Filter by type
     .index("by_created", ["createdAt"]), // Chronological
@@ -482,6 +516,9 @@ export default defineSchema({
     // Identity
     contextId: v.string(), // Unique ID
     memorySpaceId: v.string(), // NEW: Which memory space owns this context
+
+    // Multi-tenancy (NEW - critical for SaaS isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for isolation
 
     // Purpose
     purpose: v.string(), // What this context is for
@@ -551,6 +588,9 @@ export default defineSchema({
   })
     .index("by_contextId", ["contextId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Space's contexts
+    .index("by_tenantId", ["tenantId"]) // Tenant's contexts
+    .index("by_tenant_contextId", ["tenantId", "contextId"]) // Tenant + context ID
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
     .index("by_parentId", ["parentId"]) // Child lookup
     .index("by_rootId", ["rootId"]) // All contexts in tree
     .index("by_status", ["status"]) // Filter by status
@@ -564,6 +604,9 @@ export default defineSchema({
   agents: defineTable({
     // Identity
     agentId: v.string(), // Unique agent identifier
+
+    // Multi-tenancy (NEW - critical for SaaS isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for isolation
 
     // Metadata
     name: v.string(), // Display name
@@ -586,8 +629,47 @@ export default defineSchema({
     lastActive: v.optional(v.number()), // Last time agent created data
   })
     .index("by_agentId", ["agentId"]) // Unique lookup
+    .index("by_tenantId", ["tenantId"]) // Tenant's agents
+    .index("by_tenant_status", ["tenantId", "status"]) // Tenant + status
     .index("by_status", ["status"]) // Filter by status
     .index("by_registered", ["registeredAt"]), // Chronological ordering
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Sessions (Native Session Management)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  sessions: defineTable({
+    // Identity
+    sessionId: v.string(), // Unique session ID
+    userId: v.string(), // User this session belongs to
+
+    // Multi-tenancy (NEW - critical for isolation)
+    tenantId: v.optional(v.string()), // Tenant ID for SaaS isolation
+
+    // Memory space association
+    memorySpaceId: v.optional(v.string()), // Memory space for this session
+
+    // Session state
+    status: v.union(v.literal("active"), v.literal("idle"), v.literal("ended")),
+    startedAt: v.number(), // When session started
+    lastActiveAt: v.number(), // Last activity timestamp
+    endedAt: v.optional(v.number()), // When session ended
+    expiresAt: v.optional(v.number()), // When session expires (from governance policy)
+
+    // Fully extensible metadata (v.any() allows any shape)
+    metadata: v.optional(v.any()),
+
+    // Statistics
+    messageCount: v.number(), // Messages in this session
+    memoryCount: v.number(), // Memories created in this session
+  })
+    .index("by_sessionId", ["sessionId"]) // Unique lookup
+    .index("by_userId", ["userId"]) // User's sessions
+    .index("by_tenantId", ["tenantId"]) // Tenant's sessions
+    .index("by_tenant_user", ["tenantId", "userId"]) // Tenant + user sessions
+    .index("by_status", ["status"]) // Active/idle/ended
+    .index("by_memorySpace", ["memorySpaceId"]) // Sessions in memory space
+    .index("by_lastActive", ["lastActiveAt"]) // For expiration cleanup
+    .index("by_tenant_status", ["tenantId", "status"]), // Tenant + status
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Governance Policies (Data Retention, Purging, and Compliance)

@@ -25,6 +25,7 @@ export const register = mutation({
       v.literal("project"),
       v.literal("custom"),
     ),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     participants: v.optional(
       v.array(
         v.object({
@@ -37,13 +38,28 @@ export const register = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    // Check if already exists
-    const existing = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    // Check if already exists - tenant-aware lookup if tenantId provided
+    let existing;
+    if (args.tenantId) {
+      // For multi-tenant: check within tenant's namespace only using composite index
+      existing = await ctx.db
+        .query("memorySpaces")
+        .withIndex("by_tenant_memorySpaceId", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId),
+        )
+        .first();
+    } else {
+      // For non-tenant: check globally (backwards compatibility)
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant conflicts
+      const candidate = await ctx.db
+        .query("memorySpaces")
+        .withIndex("by_memorySpaceId", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId),
+        )
+        .first();
+      // Only match if the record is truly global (no tenantId)
+      existing = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     if (existing) {
       // Throw error for explicit duplicate registration attempts
@@ -57,6 +73,7 @@ export const register = mutation({
       memorySpaceId: args.memorySpaceId,
       name: args.name,
       type: args.type,
+      tenantId: args.tenantId, // Store tenantId for multi-tenancy
       participants: args.participants || [],
       metadata: args.metadata || {},
       status: "active",
@@ -242,6 +259,7 @@ export const reactivate = mutation({
 export const deleteSpace = mutation({
   args: {
     memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
     cascade: v.boolean(), // Must be true to proceed
     reason: v.string(), // Required: Why deleting (audit trail)
     confirmId: v.optional(v.string()), // Optional: Safety check
@@ -252,12 +270,25 @@ export const deleteSpace = mutation({
       throw new ConvexError("CONFIRM_ID_MISMATCH");
     }
 
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    // Tenant-aware lookup using composite index
+    let space;
+    if (args.tenantId) {
+      space = await ctx.db
+        .query("memorySpaces")
+        .withIndex("by_tenant_memorySpaceId", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId),
+        )
+        .first();
+    } else {
+      // For non-tenant: only delete if record has no tenantId
+      const candidate = await ctx.db
+        .query("memorySpaces")
+        .withIndex("by_memorySpaceId", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId),
+        )
+        .first();
+      space = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     if (!space) {
       throw new ConvexError("MEMORYSPACE_NOT_FOUND");
@@ -336,14 +367,29 @@ export const deleteSpace = mutation({
 export const get = query({
   args: {
     memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
+    let space;
+    if (args.tenantId) {
+      // For multi-tenant: find space within tenant's namespace using composite index
+      space = await ctx.db
+        .query("memorySpaces")
+        .withIndex("by_tenant_memorySpaceId", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId),
+        )
+        .first();
+    } else {
+      // For non-tenant: find globally but only return if record has no tenantId
+      const candidate = await ctx.db
+        .query("memorySpaces")
+        .withIndex("by_memorySpaceId", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId),
+        )
+        .first();
+      // Only match if the record is truly global (no tenantId)
+      space = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     return space || null;
   },
@@ -374,9 +420,15 @@ export const list = query({
       ),
     ),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
     let spaces = await ctx.db.query("memorySpaces").collect();
+
+    // Tenant isolation filter (apply first for efficiency)
+    if (args.tenantId) {
+      spaces = spaces.filter((s) => s.tenantId === args.tenantId);
+    }
 
     // Apply filters
     if (args.type) {

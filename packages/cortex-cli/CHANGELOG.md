@@ -1,5 +1,62 @@
 # @cortexmemory/cli Changelog
 
+## [0.27.1] - 2025-12-27
+
+### Added
+
+- **App lifecycle management in `cortex stop`** - Stop command now detects and stops running template apps
+  - New `-a, --app <name>` option to stop a specific app
+  - New `--apps-only` flag to stop only apps (skip Convex/graph)
+  - Apps are tracked via PID files (`.cortex-app-{name}.pid`)
+
+- **Port-based process detection** - Fallback detection when PID files don't exist
+  - Detects Convex on port 3210 for local deployments
+  - Detects apps by their configured port (default 3000)
+  - Useful for services started before PID tracking was added
+
+- **Enhanced `cortex status` dashboard** - Now shows app status with detection details
+  - Displays running apps with PID and port information
+  - Shows detection method (via PID file or via port)
+  - Summary includes app counts (e.g., "2 enabled, 1 running, 1/2 apps running")
+
+### Fixed
+
+- **Stop command using stale config** - Now loads fresh config to see latest deployments and apps
+- **Graph stop reporting false positives** - `stopGraphContainers` now checks if containers are actually running before reporting success
+- **Accurate stop summary** - Only counts services that were actually stopped, not just checked
+
+### Changed
+
+- `startApp()` now saves PID to `.cortex-app-{name}.pid` for tracking
+- `startApp()` now creates log file at `.cortex-app-{name}.log`
+- Stop command shows detection method when stopping services without PID files
+
+## [0.27.0] - 2025-12-26
+
+### Added
+
+- **Vercel AI Quickstart integration** - Optional demo app installation during `cortex init`
+  - Installs the Vercel AI quickstart as a `/quickstart` subfolder
+  - Full Next.js app with chat interface and real-time memory visualization
+  - Automatically configured with Convex URL and OpenAI API key from init wizard
+  - Run with `npm run quickstart` or `cortex start`
+
+- **Template apps management** - Track and manage installed template apps like deployments
+  - New `apps` section in config (`~/.cortexrc`)
+  - Apps shown in `cortex config list` with status and port info
+  - `cortex config enable/disable` works for both deployments and apps
+  - `cortex start` automatically starts enabled apps alongside deployments
+
+- **Default enabled for init-created resources** - Deployments and apps created by `cortex init` are now enabled by default (no manual `cortex config enable` needed)
+
+- **Context-aware start prompt** - After init, if quickstart was installed, prompts "Start Convex backend and quickstart app now?" instead of just backend
+
+### Changed
+
+- `cortex start` now starts enabled apps in addition to deployments
+- Status dashboard shows quickstart app status when installed
+- Template sync via prebuild script keeps quickstart template in sync with source
+
 ## [0.26.2] - 2025-12-25
 
 ### Added

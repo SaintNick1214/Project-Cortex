@@ -432,10 +432,10 @@ export class GraphConnectionError extends GraphDatabaseError {
 
 /**
  * Error thrown when graph database authentication fails
- * 
+ *
  * This is a specific subclass of GraphConnectionError for auth failures,
  * allowing consumers to catch and handle authentication issues specifically.
- * 
+ *
  * @example
  * ```typescript
  * try {

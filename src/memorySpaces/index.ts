@@ -35,12 +35,14 @@ import {
   validateTimeWindow,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
 
 export class MemorySpacesAPI {
   constructor(
     private client: ConvexClient,
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
+    private authContext?: AuthContext,
   ) {}
 
   /**
@@ -133,6 +135,7 @@ export class MemorySpacesAPI {
             memorySpaceId: params.memorySpaceId,
             name: params.name,
             type: params.type,
+            tenantId: this.authContext?.tenantId, // Multi-tenancy: associate space with tenant
             participants,
             metadata: params.metadata,
           }),
@@ -169,6 +172,7 @@ export class MemorySpacesAPI {
       () =>
         this.client.query(api.memorySpaces.get, {
           memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: find space within tenant
         }),
       "memorySpaces:get",
     );
@@ -234,6 +238,7 @@ export class MemorySpacesAPI {
           offset: filter?.offset,
           sortBy: filter?.sortBy,
           sortOrder: filter?.sortOrder,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "memorySpaces:list",
     );
@@ -486,10 +491,17 @@ export class MemorySpacesAPI {
     validateMemorySpaceId(memorySpaceId);
     validateDeleteOptions(memorySpaceId, options);
 
+    // Verify space exists for this tenant before deleting
+    const space = await this.get(memorySpaceId);
+    if (!space) {
+      throw new Error(`Memory space not found: ${memorySpaceId}`);
+    }
+
     const result = await this.executeWithResilience(
       () =>
         this.client.mutation(api.memorySpaces.deleteSpace, {
           memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy: ensure delete is tenant-scoped
           cascade: options.cascade,
           reason: options.reason,
           confirmId: options.confirmId,

@@ -406,11 +406,19 @@ function showGraphConnectionInfo(graphType: "neo4j" | "memgraph"): void {
   if (graphType === "neo4j") {
     console.log(pc.dim("     Browser: http://localhost:7474"));
     console.log(pc.dim("     Bolt: bolt://localhost:7687"));
-    console.log(pc.dim("     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)"));
+    console.log(
+      pc.dim(
+        "     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)",
+      ),
+    );
   } else {
     console.log(pc.dim("     Memgraph Lab: http://localhost:3000"));
     console.log(pc.dim("     Bolt: bolt://localhost:7687"));
-    console.log(pc.dim("     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)"));
+    console.log(
+      pc.dim(
+        "     Credentials: See .env.local (NEO4J_USERNAME, NEO4J_PASSWORD)",
+      ),
+    );
   }
 }
 
@@ -423,6 +431,23 @@ export async function stopGraphContainers(
   const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
 
   if (!fs.existsSync(dockerComposePath)) {
+    return false;
+  }
+
+  // First check if any containers are actually running
+  try {
+    const psResult = await execCommand(
+      "docker",
+      ["compose", "-f", "docker-compose.graph.yml", "ps", "-q"],
+      { cwd: projectPath, quiet: true },
+    );
+
+    // If no output, no containers are running
+    if (!psResult.stdout?.trim()) {
+      return false;
+    }
+  } catch {
+    // Docker not available or compose file issue
     return false;
   }
 

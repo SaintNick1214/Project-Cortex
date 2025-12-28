@@ -7,12 +7,18 @@
  * - Storage validation
  *
  * PARALLEL-SAFE: Uses TestRunContext for isolated test data
+ *
+ * Updated: Added tenantId support for multi-tenancy testing.
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { api } from "../convex-dev/_generated/api";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
+import {
+  generateTenantId,
+  createTenantAuthContext,
+} from "./helpers/tenancy";
 
 describe("Conversations API (Layer 1a)", () => {
   // Create unique test run context for parallel-safe execution
@@ -22,12 +28,17 @@ describe("Conversations API (Layer 1a)", () => {
   let client: ConvexClient;
   let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
+  // Multi-tenancy: Generate tenant-specific IDs
+  const TEST_TENANT_ID = generateTenantId("conversations");
+  const TEST_USER_ID = `user_${ctx.runId}`;
 
   beforeAll(async () => {
     console.log(`\n🧪 Conversations API Tests - Run ID: ${ctx.runId}\n`);
+    console.log(`   TenantId: ${TEST_TENANT_ID}\n`);
 
-    // Initialize SDK
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    // Initialize SDK with auth context for multi-tenancy
+    const authContext = createTenantAuthContext(TEST_TENANT_ID, TEST_USER_ID);
+    cortex = new Cortex({ convexUrl: CONVEX_URL, auth: authContext });
     // Direct client for storage validation
     client = new ConvexClient(CONVEX_URL);
     // Scoped cleanup (only cleans data from this test run)

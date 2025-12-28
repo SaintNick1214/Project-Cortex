@@ -30,12 +30,14 @@ import {
   validateKeepLatest,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
 
 export class ImmutableAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**
@@ -100,6 +102,7 @@ export class ImmutableAPI {
           id: entry.id,
           data: entry.data,
           userId: entry.userId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
           metadata: entry.metadata,
         }),
       "immutable:store",
@@ -142,6 +145,7 @@ export class ImmutableAPI {
         this.client.query(api.immutable.get, {
           type,
           id,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy filter
         }),
       "immutable:get",
     );
@@ -173,6 +177,7 @@ export class ImmutableAPI {
           type,
           id,
           version,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy filter
         }),
       "immutable:getVersion",
     );
@@ -231,6 +236,7 @@ export class ImmutableAPI {
         this.client.query(api.immutable.list, {
           type: filter?.type,
           userId: filter?.userId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy filter
           limit: filter?.limit,
         }),
       "immutable:list",
