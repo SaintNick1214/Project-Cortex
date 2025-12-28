@@ -426,6 +426,7 @@ export class Cortex {
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext, // Pass authContext for multi-tenancy
     );
     this.memorySpaces = new MemorySpacesAPI(
       this.client,

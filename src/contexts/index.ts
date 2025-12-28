@@ -17,6 +17,7 @@ import type {
   UpdateContextOptions,
   DeleteContextOptions,
 } from "../types";
+import type { AuthContext } from "../auth/types";
 import {
   validateRequiredString,
   validatePurpose,
@@ -150,6 +151,7 @@ export class ContextsAPI {
     private client: ConvexClient,
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
+    private authContext?: AuthContext,
   ) {}
 
   /**
@@ -236,6 +238,7 @@ export class ContextsAPI {
           this.client.mutation(api.contexts.create, {
             purpose: params.purpose,
             memorySpaceId: params.memorySpaceId,
+            tenantId: this.authContext?.tenantId, // Multi-tenancy
             description: params.description,
             userId: params.userId,
             parentId: params.parentId,
@@ -298,6 +301,7 @@ export class ContextsAPI {
       () =>
         this.client.query(api.contexts.get, {
           contextId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy
           includeChain: options?.includeChain,
           includeConversation: options?.includeConversation,
         }),
@@ -343,6 +347,7 @@ export class ContextsAPI {
       () =>
         this.client.mutation(api.contexts.update, {
           contextId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy
           status: updates.status,
           description: updates.description,
           data: updates.data,
@@ -410,6 +415,7 @@ export class ContextsAPI {
         () =>
           this.client.mutation(api.contexts.deleteContext, {
             contextId,
+            tenantId: this.authContext?.tenantId, // Multi-tenancy
             cascadeChildren: options?.cascadeChildren,
             orphanChildren: options?.orphanChildren,
           }),
@@ -477,6 +483,7 @@ export class ContextsAPI {
       () =>
         this.client.query(api.contexts.list, {
           memorySpaceId: filter?.memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy
           userId: filter?.userId,
           status: filter?.status,
           parentId: filter?.parentId,
