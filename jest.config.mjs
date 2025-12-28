@@ -29,15 +29,16 @@ export default {
   // entity IDs, enabling safe parallel execution without data conflicts.
   //
   // maxWorkers: Controls parallel test file execution
-  //   - "50%" = half of available CPU cores (good balance for I/O-bound tests)
-  //   - CI environments: set via --maxWorkers flag for optimal resource usage
+  //   - Local: "50%" = half of CPU cores (leaves resources for other tasks)
+  //   - CI: "75%" = more aggressive since tests are I/O-bound (network waits)
+  //   - CI also uses --shard for distributing tests across multiple runners
   //   - Use --runInBand for debugging to run tests serially
   //
   // maxConcurrency: Controls test.concurrent() parallelism WITHIN files
   //   - Default is 5, we increase to 10 for faster I/O-bound tests
   //   - Only affects tests marked with it.concurrent() or test.concurrent()
   // ══════════════════════════════════════════════════════════════════════════
-  maxWorkers: process.env.CI ? "50%" : "50%",
+  maxWorkers: process.env.CI ? "75%" : "50%",
   maxConcurrency: 10,
 
   extensionsToTreatAsEsm: [".ts"],
