@@ -626,11 +626,29 @@ async function startAppProcess(
 
   app.process = child;
 
+  // Helper to detect app ready state
+  const checkAppReady = (line: string) => {
+    // Detect ready state (Next.js outputs "Ready" to stdout with Turbopack)
+    if (
+      (line.includes("Ready") || line.includes("started server")) &&
+      !app.running
+    ) {
+      app.running = true;
+      addLog(
+        state,
+        name,
+        pc.green(`App ready at http://localhost:${app.config.port || 3000}`),
+      );
+      printStatusUpdate(state);
+    }
+  };
+
   // Handle stdout
   child.stdout?.on("data", (data: Buffer) => {
     const lines = data.toString().split("\n").filter(Boolean);
     for (const line of lines) {
       addLog(state, name, line);
+      checkAppReady(line);
     }
   });
 
@@ -639,20 +657,7 @@ async function startAppProcess(
     const lines = data.toString().split("\n").filter(Boolean);
     for (const line of lines) {
       addLog(state, name, line);
-
-      // Detect ready state (Next.js)
-      if (
-        (line.includes("Ready") || line.includes("started server")) &&
-        !app.running
-      ) {
-        app.running = true;
-        addLog(
-          state,
-          name,
-          pc.green(`App ready at http://localhost:${app.config.port || 3000}`),
-        );
-        printStatusUpdate(state);
-      }
+      checkAppReady(line);
     }
   });
 

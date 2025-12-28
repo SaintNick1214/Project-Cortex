@@ -434,6 +434,23 @@ export async function stopGraphContainers(
     return false;
   }
 
+  // First check if any containers are actually running
+  try {
+    const psResult = await execCommand(
+      "docker",
+      ["compose", "-f", "docker-compose.graph.yml", "ps", "-q"],
+      { cwd: projectPath, quiet: true },
+    );
+
+    // If no output, no containers are running
+    if (!psResult.stdout?.trim()) {
+      return false;
+    }
+  } catch {
+    // Docker not available or compose file issue
+    return false;
+  }
+
   const spinner = ora("Stopping graph database containers...").start();
 
   try {
