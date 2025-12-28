@@ -1,6 +1,6 @@
 # Facts Operations API
 
-> **Last Updated**: 2025-12-19
+> **Last Updated**: 2025-12-27
 > **Version**: v0.7.0+ (Belief Revision: v0.24.0+)
 
 Complete API reference for the Facts layer (Layer 3) - structured knowledge extraction and storage.
@@ -24,6 +24,7 @@ The Facts API (`cortex.facts.*`) provides structured knowledge storage with vers
 - ✅ **Enriched fact extraction (v0.15.0+)** - Search aliases, semantic context, entities, relations
 - ✅ **Belief Revision System (v0.24.0+)** - Intelligent fact management with `revise()`, conflict detection, and history tracking
 - ✅ **Integration with `remember()` (v0.24.0+)** - Automatic fact revision when storing conversations
+- ✅ **Multi-Tenancy** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
 
 **Relationship to Layers:**
 

@@ -10,7 +10,7 @@ import {
   validationPresets,
   createUserProfile,
 } from "../../../src/users/schemas";
-import type { StandardUserProfile, ValidationPreset } from "../../../src/users/schemas";
+import type { StandardUserProfile } from "../../../src/users/schemas";
 
 describe("User Schemas", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

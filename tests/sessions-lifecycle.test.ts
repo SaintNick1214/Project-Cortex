@@ -435,7 +435,7 @@ describeWithConvex("Sessions Lifecycle", () => {
       await cortex.sessions.touch(session.sessionId);
 
       // Try to expire with very long threshold - should not expire
-      const result = await cortex.sessions.expireIdle({
+      await cortex.sessions.expireIdle({
         idleTimeout: 24 * 60 * 60 * 1000, // 24 hours
       });
 

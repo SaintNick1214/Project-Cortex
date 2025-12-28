@@ -5,7 +5,7 @@
  */
 
 import type { AuthContext, AuthContextParams } from "./types";
-import { validateAuthContextParams, AuthValidationError } from "./validators";
+import { validateAuthContextParams } from "./validators";
 
 /**
  * Create a validated AuthContext from parameters.

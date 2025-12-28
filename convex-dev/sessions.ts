@@ -210,15 +210,22 @@ export const list = query({
     }
 
     // Apply any remaining filters not covered by the selected index
-    if (args.userId && !(args.tenantId && args.userId)) {
-      sessions = sessions.filter((s) => s.userId === args.userId);
-    }
+    // Note: userId is always covered when provided (by by_tenant_user or by_userId)
+    // so no userId post-filter is needed in list
 
-    if (args.memorySpaceId && !args.memorySpaceId) {
+    // memorySpaceId needs filter when provided but by_memorySpace wasn't used
+    // by_memorySpace is used only when !tenantId && !userId && memorySpaceId
+    if (args.memorySpaceId && (args.tenantId || args.userId)) {
       sessions = sessions.filter((s) => s.memorySpaceId === args.memorySpaceId);
     }
 
-    if (args.status && !(args.tenantId && args.status) && !args.status) {
+    // status needs filter when provided but neither by_tenant_status nor by_status was used
+    // by_tenant_status: tenantId && status && !userId
+    // by_status: !tenantId && !userId && !memorySpaceId && status
+    if (
+      args.status &&
+      (args.userId || (args.memorySpaceId && !args.tenantId))
+    ) {
       sessions = sessions.filter((s) => s.status === args.status);
     }
 
@@ -281,13 +288,22 @@ export const count = query({
     }
 
     // Apply any remaining filters not covered by the selected index
-    if (args.userId && !args.userId) {
+    // In count, there's no by_tenant_user index branch, so userId is only covered by by_userId
+    // by_userId is used when !tenantId && userId
+    if (args.userId && args.tenantId) {
       sessions = sessions.filter((s) => s.userId === args.userId);
     }
-    if (args.memorySpaceId && !args.memorySpaceId) {
+
+    // memorySpaceId needs filter when provided but by_memorySpace wasn't used
+    // by_memorySpace is used only when !tenantId && !userId && memorySpaceId
+    if (args.memorySpaceId && (args.tenantId || args.userId)) {
       sessions = sessions.filter((s) => s.memorySpaceId === args.memorySpaceId);
     }
-    if (args.status && !(args.tenantId && args.status) && !args.status) {
+
+    // status needs filter when provided but neither by_tenant_status nor by_status was used
+    // by_tenant_status: tenantId && status
+    // by_status: !tenantId && !userId && !memorySpaceId && status
+    if (args.status && !args.tenantId && (args.userId || args.memorySpaceId)) {
       sessions = sessions.filter((s) => s.status === args.status);
     }
 

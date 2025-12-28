@@ -1,6 +1,6 @@
 # API Reference Overview
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-27
 
 Welcome to the Cortex API Reference! This guide explains how to navigate the documentation and use Cortex effectively.
 
@@ -10,6 +10,7 @@ Cortex is a **persistent memory system for AI agents** built on Convex. It provi
 
 - **Four-layer architecture** - ACID stores + Vector index + Facts store + Convenience API
 - **Memory Space isolation** - Flexible boundaries (per user, team, or project)
+- **Multi-Tenancy** - Built-in `tenantId` for SaaS platform isolation (auto-injected from AuthContext)
 - **Hive Mode** - Multiple tools share one memory space (zero duplication)
 - **Infinite Context** - Never run out of context via retrieval
 - **Automatic versioning** - Track how information changes over time
