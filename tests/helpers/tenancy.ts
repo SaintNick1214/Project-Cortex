@@ -314,6 +314,7 @@ export async function seedTenantTestData(
         userMessage: `Test memory ${i} for tenant ${context.tenantId}`,
         agentResponse: `Response ${i}`,
         userId: context.userId,
+        userName: `Test User ${context.tenantId}`, // Required when userId is provided
         agentId, // Required when userId is provided
       });
       if (result.memories[0]) {

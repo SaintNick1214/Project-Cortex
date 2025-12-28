@@ -139,9 +139,12 @@ export class UsersAPI {
       return null;
     }
 
-    // Enforce tenant isolation: verify the user belongs to this tenant
-    if (this.authContext?.tenantId && result.tenantId !== this.authContext.tenantId) {
-      return null; // User belongs to a different tenant
+    // Enforce tenant isolation: only deny if both have tenantId and they don't match
+    // Users without tenantId (legacy) are accessible to all (backwards compatibility)
+    if (result.tenantId && this.authContext?.tenantId) {
+      if (result.tenantId !== this.authContext.tenantId) {
+        return null; // User belongs to a different tenant
+      }
     }
 
     return {

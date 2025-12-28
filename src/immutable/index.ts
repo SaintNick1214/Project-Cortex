@@ -145,6 +145,7 @@ export class ImmutableAPI {
         this.client.query(api.immutable.get, {
           type,
           id,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy filter
         }),
       "immutable:get",
     );
@@ -176,6 +177,7 @@ export class ImmutableAPI {
           type,
           id,
           version,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy filter
         }),
       "immutable:getVersion",
     );
@@ -234,6 +236,7 @@ export class ImmutableAPI {
         this.client.query(api.immutable.list, {
           type: filter?.type,
           userId: filter?.userId,
+          tenantId: this.authContext?.tenantId, // Multi-tenancy filter
           limit: filter?.limit,
         }),
       "immutable:list",

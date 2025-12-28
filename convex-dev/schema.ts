@@ -503,6 +503,7 @@ export default defineSchema({
   })
     .index("by_memorySpaceId", ["memorySpaceId"]) // Unique lookup
     .index("by_tenantId", ["tenantId"]) // Tenant's memory spaces
+    .index("by_tenant_memorySpaceId", ["tenantId", "memorySpaceId"]) // Tenant-scoped lookup
     .index("by_tenant_status", ["tenantId", "status"]) // Tenant + status
     .index("by_status", ["status"]) // Filter active/archived
     .index("by_type", ["type"]) // Filter by type

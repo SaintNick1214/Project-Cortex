@@ -144,8 +144,9 @@ export class SessionsAPI {
 
     const session = result as Session | null;
 
-    // Enforce tenant isolation: if authContext has tenantId, verify the session belongs to this tenant
-    if (session && this.authContext?.tenantId) {
+    // Enforce tenant isolation: only deny if both have tenantId and they don't match
+    // Sessions without tenantId (legacy) are accessible to all (backwards compatibility)
+    if (session && session.tenantId && this.authContext?.tenantId) {
       if (session.tenantId !== this.authContext.tenantId) {
         // Session belongs to a different tenant - return null to prevent cross-tenant access
         return null;
