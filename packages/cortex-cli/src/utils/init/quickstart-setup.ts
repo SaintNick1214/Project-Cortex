@@ -572,7 +572,7 @@ export async function findProcessByPort(port: number): Promise<number | null> {
  */
 export async function stopProcessByPort(
   port: number,
-  signal: NodeJS.Signals = "SIGTERM",
+  signal: Parameters<typeof process.kill>[1] = "SIGTERM",
 ): Promise<boolean> {
   const pid = await findProcessByPort(port);
   if (!pid) {
