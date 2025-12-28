@@ -25,17 +25,25 @@ allow-licenses:
   - CC-BY-4.0
 
 # Allow our internal packages (FSL-1.1-Apache-2.0 is not a standard SPDX identifier)
-# These packages are internal workspace packages with custom licensing
+# These packages are internal workspace packages with custom licensing.
+# Note: Workspace packages may be identified by lockfile path OR npm name depending
+# on how the scanner resolves them, so we include both formats.
 allow-dependencies-licenses:
+  # Internal packages by npm name
   - "pkg:npm/@cortexmemory/sdk"
   - "pkg:npm/@cortexmemory/cli"
   - "pkg:npm/@cortexmemory/vercel-ai-provider"
   - "pkg:npm/create-cortex-memories"
-  # Private quickstart package (not published)
   - "pkg:npm/@cortexmemory/vercel-ai-quickstart"
-  # Vercel AI SDK packages - these are MIT licensed but the scanner can't
-  # resolve licenses from the quickstart's isolated package-lock.json.
-  # These packages are only used in the private demo app (not published).
+  # Internal packages by workspace path (scanner sometimes uses lockfile paths)
+  - "pkg:npm/packages/cortex-cli"
+  - "pkg:npm/packages/vercel-ai-provider"
+  - "pkg:npm/packages/create-cortex-memories"
+  # Vercel AI SDK packages - Apache-2.0 licensed but scanner can't always
+  # resolve licenses from nested lockfiles or transitive dependencies.
   - "pkg:npm/@ai-sdk/openai"
   - "pkg:npm/@ai-sdk/react"
+  - "pkg:npm/@ai-sdk/gateway"
+  - "pkg:npm/@ai-sdk/provider"
+  - "pkg:npm/@ai-sdk/provider-utils"
   - "pkg:npm/ai"
