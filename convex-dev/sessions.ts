@@ -117,17 +117,35 @@ export const end = mutation({
 
 /**
  * End all sessions for a user
+ *
+ * @param userId - The user ID to end sessions for
+ * @param tenantId - Optional tenant ID for multi-tenant isolation.
+ *                   When provided, only ends sessions for the user within that tenant.
+ *                   Without this, ALL sessions for the userId across ALL tenants are ended.
  */
 export const endAll = mutation({
   args: {
     userId: v.string(),
+    tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const sessions = await ctx.db
-      .query("sessions")
-      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-      .filter((q) => q.neq(q.field("status"), "ended"))
-      .collect();
+    // Use tenant-scoped index when tenantId provided for proper isolation
+    let sessions;
+    if (args.tenantId) {
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_tenant_user", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("userId", args.userId),
+        )
+        .filter((q) => q.neq(q.field("status"), "ended"))
+        .collect();
+    } else {
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+        .filter((q) => q.neq(q.field("status"), "ended"))
+        .collect();
+    }
 
     const now = Date.now();
     const sessionIds: string[] = [];

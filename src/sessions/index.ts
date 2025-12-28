@@ -14,6 +14,7 @@ import type {
   SessionFilters,
   ExpireSessionsOptions,
   EndSessionsResult,
+  EndAllOptions,
 } from "./types";
 import type { ResilienceLayer } from "../resilience";
 import type { GraphAdapter } from "../graph/types";
@@ -33,6 +34,7 @@ export type {
   SessionFilters,
   ExpireSessionsOptions,
   EndSessionsResult,
+  EndAllOptions,
 } from "./types";
 
 // Re-export error
@@ -140,7 +142,17 @@ export class SessionsAPI {
       "sessions:get",
     );
 
-    return result as Session | null;
+    const session = result as Session | null;
+
+    // Enforce tenant isolation: if authContext has tenantId, verify the session belongs to this tenant
+    if (session && this.authContext?.tenantId) {
+      if (session.tenantId !== this.authContext.tenantId) {
+        // Session belongs to a different tenant - return null to prevent cross-tenant access
+        return null;
+      }
+    }
+
+    return session;
   }
 
   /**
@@ -217,6 +229,16 @@ export class SessionsAPI {
   async end(sessionId: string): Promise<void> {
     validateSessionId(sessionId);
 
+    // Enforce tenant isolation: verify the session belongs to this tenant before ending
+    if (this.authContext?.tenantId) {
+      const session = await this.get(sessionId);
+      if (!session) {
+        // Session doesn't exist or belongs to another tenant
+        throw new Error(`Session not found: ${sessionId}`);
+      }
+      // Note: get() already filters by tenantId, so if we reach here, the session is ours
+    }
+
     await this.executeWithResilience(
       () =>
         this.client.mutation(api.sessions.end, {
@@ -230,6 +252,7 @@ export class SessionsAPI {
    * End all sessions for a user.
    *
    * @param userId - User ID
+   * @param options - Optional parameters including tenantId for multi-tenant isolation
    * @returns Result with count of ended sessions
    *
    * @example
@@ -237,15 +260,27 @@ export class SessionsAPI {
    * // End all sessions on password change
    * const result = await cortex.sessions.endAll('user-123');
    * console.log(`Ended ${result.ended} sessions`);
+   *
+   * // End sessions only for a specific tenant (multi-tenant safe)
+   * const tenantResult = await cortex.sessions.endAll('admin', {
+   *   tenantId: 'tenant-456',
+   * });
    * ```
    */
-  async endAll(userId: string): Promise<EndSessionsResult> {
+  async endAll(
+    userId: string,
+    options?: EndAllOptions,
+  ): Promise<EndSessionsResult> {
     validateUserId(userId);
+
+    // Use explicit tenantId, fall back to auth context for tenant isolation
+    const tenantId = options?.tenantId ?? this.authContext?.tenantId;
 
     const result = await this.executeWithResilience(
       () =>
         this.client.mutation(api.sessions.endAll, {
           userId,
+          tenantId,
         }),
       "sessions:endAll",
     );
@@ -275,11 +310,15 @@ export class SessionsAPI {
   async list(filters: SessionFilters): Promise<Session[]> {
     validateSessionFilters(filters);
 
+    // Enforce tenant isolation: if authContext has tenantId, only allow listing own tenant's sessions
+    // If caller provides a different tenantId, override it with authContext.tenantId
+    const effectiveTenantId = this.authContext?.tenantId ?? filters.tenantId;
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.sessions.list, {
           userId: filters.userId,
-          tenantId: filters.tenantId,
+          tenantId: effectiveTenantId,
           memorySpaceId: filters.memorySpaceId,
           status: filters.status,
           limit: filters.limit,
@@ -308,11 +347,14 @@ export class SessionsAPI {
   async count(filters: SessionFilters): Promise<number> {
     validateSessionFilters(filters);
 
+    // Enforce tenant isolation: if authContext has tenantId, only allow counting own tenant's sessions
+    const effectiveTenantId = this.authContext?.tenantId ?? filters.tenantId;
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.sessions.count, {
           userId: filters.userId,
-          tenantId: filters.tenantId,
+          tenantId: effectiveTenantId,
           memorySpaceId: filters.memorySpaceId,
           status: filters.status,
         }),

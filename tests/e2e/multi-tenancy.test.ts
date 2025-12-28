@@ -430,6 +430,66 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       await tenants.acmeCorp.cortex.sessions.end(acmeSession.sessionId);
       await tenants.globexInc.cortex.sessions.end(globexSession.sessionId);
     });
+
+    it("should isolate endAll by tenant when same userId exists in multiple tenants", async () => {
+      // Critical test: In multi-tenant SaaS, userIds like "admin" might exist in multiple tenants
+      const sharedUserId = `admin-${Date.now()}`;
+
+      // Create sessions with same userId in both tenants
+      const acmeSession1 = await tenants.acmeCorp.cortex.sessions.create({
+        userId: sharedUserId,
+        tenantId: tenants.acmeCorp.tenantId,
+      });
+      const acmeSession2 = await tenants.acmeCorp.cortex.sessions.create({
+        userId: sharedUserId,
+        tenantId: tenants.acmeCorp.tenantId,
+      });
+
+      const globexSession1 = await tenants.globexInc.cortex.sessions.create({
+        userId: sharedUserId,
+        tenantId: tenants.globexInc.tenantId,
+      });
+      const globexSession2 = await tenants.globexInc.cortex.sessions.create({
+        userId: sharedUserId,
+        tenantId: tenants.globexInc.tenantId,
+      });
+
+      // End all sessions for this user ONLY in Acme tenant
+      const result = await tenants.acmeCorp.cortex.sessions.endAll(
+        sharedUserId,
+        { tenantId: tenants.acmeCorp.tenantId },
+      );
+
+      // Should have ended exactly 2 sessions (Acme's)
+      expect(result.ended).toBe(2);
+      expect(result.sessionIds).toContain(acmeSession1.sessionId);
+      expect(result.sessionIds).toContain(acmeSession2.sessionId);
+
+      // Verify Acme sessions are ended
+      const acmeSession1After = await tenants.acmeCorp.cortex.sessions.get(
+        acmeSession1.sessionId,
+      );
+      const acmeSession2After = await tenants.acmeCorp.cortex.sessions.get(
+        acmeSession2.sessionId,
+      );
+      expect(acmeSession1After?.status).toBe("ended");
+      expect(acmeSession2After?.status).toBe("ended");
+
+      // Verify Globex sessions are STILL ACTIVE (tenant isolation working!)
+      const globexSession1After = await tenants.globexInc.cortex.sessions.get(
+        globexSession1.sessionId,
+      );
+      const globexSession2After = await tenants.globexInc.cortex.sessions.get(
+        globexSession2.sessionId,
+      );
+      expect(globexSession1After?.status).toBe("active");
+      expect(globexSession2After?.status).toBe("active");
+
+      // Cleanup Globex sessions
+      await tenants.globexInc.cortex.sessions.endAll(sharedUserId, {
+        tenantId: tenants.globexInc.tenantId,
+      });
+    });
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

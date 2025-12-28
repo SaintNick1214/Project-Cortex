@@ -168,13 +168,17 @@ describeWithConvex("Tenant Isolation", () => {
 
   describe("Memory Isolation", () => {
     let tenantAMemoryId: string;
+    let tenantAAgentId: string;
 
     beforeAll(async () => {
+      // Create agent ID for tenant A
+      tenantAAgentId = `agent_${tenantA.tenantId}`;
+
       // Create memory in Tenant A
       const conv = await tenantA.cortex.conversations.create({
         memorySpaceId: tenantA.memorySpaceId,
         type: "user-agent",
-        participants: { userId: tenantA.userId, agentId: `agent_${tenantA.tenantId}` },
+        participants: { userId: tenantA.userId, agentId: tenantAAgentId },
       });
 
       const result = await tenantA.cortex.memory.remember({
@@ -183,6 +187,7 @@ describeWithConvex("Tenant Isolation", () => {
         userMessage: "Secret information for Tenant A only",
         agentResponse: "I understand this is confidential",
         userId: tenantA.userId,
+        agentId: tenantAAgentId, // Required when userId is provided
       });
 
       tenantAMemoryId = result.memories[0]._id;

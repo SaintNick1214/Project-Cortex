@@ -163,6 +163,18 @@ export interface ExpireSessionsOptions {
 }
 
 /**
+ * Options for ending all sessions for a user
+ */
+export interface EndAllOptions {
+  /**
+   * Tenant ID for multi-tenant isolation.
+   * When provided, only ends sessions for the user within that tenant.
+   * Without this (and no AuthContext), ALL sessions for the userId across ALL tenants are ended.
+   */
+  tenantId?: string;
+}
+
+/**
  * Result from ending sessions
  */
 export interface EndSessionsResult {
