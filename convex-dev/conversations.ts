@@ -679,7 +679,9 @@ export const list = query({
     }
 
     // Post-filter by type if needed (when using other indexes)
-    if (args.type && (args.memorySpaceId || args.userId)) {
+    // The by_type index is only used when tenantId, memorySpaceId, and userId are all absent.
+    // If any of those are provided, a different index is used and type must be post-filtered.
+    if (args.type && (args.tenantId || args.memorySpaceId || args.userId)) {
       conversations = conversations.filter((c) => c.type === args.type);
     }
 
