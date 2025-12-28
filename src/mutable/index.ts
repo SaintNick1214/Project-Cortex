@@ -116,6 +116,7 @@ export class MutableAPI {
           key,
           value,
           userId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
           metadata,
         }),
       "mutable:set",
@@ -156,6 +157,7 @@ export class MutableAPI {
         this.client.query(api.mutable.get, {
           namespace,
           key,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "mutable:get",
     );
@@ -187,6 +189,7 @@ export class MutableAPI {
         this.client.query(api.mutable.get, {
           namespace,
           key,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "mutable:getRecord",
     );
@@ -229,6 +232,7 @@ export class MutableAPI {
             key,
             operation: "custom",
             operand: newValue,
+            tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
           }),
         "mutable:update",
       );
@@ -266,6 +270,7 @@ export class MutableAPI {
           key,
           operation: "increment",
           operand: amount,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "mutable:increment",
     );
@@ -300,6 +305,7 @@ export class MutableAPI {
           key,
           operation: "decrement",
           operand: amount,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "mutable:decrement",
     );
@@ -327,6 +333,7 @@ export class MutableAPI {
         this.client.query(api.mutable.exists, {
           namespace,
           key,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "mutable:exists",
     );
@@ -370,6 +377,7 @@ export class MutableAPI {
           namespace: filter.namespace,
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,
+          tenantId: filter.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
           limit: filter.limit,
           offset: filter.offset,
           updatedAfter: filter.updatedAfter,
@@ -411,6 +419,7 @@ export class MutableAPI {
         this.client.query(api.mutable.count, {
           namespace: filter.namespace,
           userId: filter.userId,
+          tenantId: filter.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
           keyPrefix: filter.keyPrefix,
           updatedAfter: filter.updatedAfter,
           updatedBefore: filter.updatedBefore,
@@ -447,6 +456,7 @@ export class MutableAPI {
           this.client.mutation(api.mutable.deleteKey, {
             namespace,
             key,
+            tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
           }),
         "mutable:delete",
       );
@@ -493,6 +503,7 @@ export class MutableAPI {
    * @param namespace - Namespace to purge
    * @param options - Optional settings
    * @param options.dryRun - If true, returns what would be deleted without deleting
+   * @param options.tenantId - Override tenant ID (defaults to authContext.tenantId)
    * @returns Result with deleted count, namespace, and optionally keys (in dryRun mode)
    *
    * @example
@@ -525,6 +536,7 @@ export class MutableAPI {
         this.client.mutation(api.mutable.purgeNamespace, {
           namespace,
           dryRun: options?.dryRun,
+          tenantId: options?.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
         }),
       "mutable:purgeNamespace",
     );
@@ -571,6 +583,7 @@ export class MutableAPI {
         () =>
           this.client.mutation(api.mutable.transaction, {
             operations,
+            tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
           }),
         "mutable:transaction",
       );
@@ -593,6 +606,7 @@ export class MutableAPI {
    * @param filter.keyPrefix - Filter by key prefix
    * @param filter.userId - Filter by user
    * @param filter.updatedBefore - Delete keys updated before this timestamp
+   * @param filter.tenantId - Override tenant ID (defaults to authContext.tenantId)
    * @returns Result with deleted count, namespace, and deleted keys
    *
    * @example
@@ -631,6 +645,7 @@ export class MutableAPI {
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,
           updatedBefore: filter.updatedBefore,
+          tenantId: filter.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
         }),
       "mutable:purgeMany",
     );

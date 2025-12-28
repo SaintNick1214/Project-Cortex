@@ -174,6 +174,7 @@ export const update = mutation({
       memorySpaceId: existing.memorySpaceId,
       participantId: existing.participantId,
       userId: existing.userId, // GDPR compliance - preserve user link across versions
+      tenantId: existing.tenantId, // Multi-tenancy: preserve tenant isolation across versions
       fact: args.fact || existing.fact,
       factType: existing.factType,
       subject: existing.subject,
