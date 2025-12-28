@@ -1,6 +1,6 @@
 # Conversation Operations API
 
-> **Last Updated**: 2025-12-08
+> **Last Updated**: 2025-12-27
 
 Complete API reference for ACID conversation management (Layer 1a).
 
@@ -16,6 +16,7 @@ The Conversation Operations API (`cortex.conversations.*`) manages **immutable c
 - ✅ **No Retention Limits** - Kept forever (unlike Vector with retention)
 - ✅ **Audit Trail** - Complete message history for compliance
 - ✅ **Referenced** - Vector memories link back via `conversationRef`
+- ✅ **Multi-Tenant** - Automatic `tenantId` isolation for SaaS platforms
 
 **Relationship to Other Layers:**
 
@@ -98,6 +99,8 @@ interface Conversation {
   messageCount: number; // Initially 0
 
   metadata: Record<string, any>;
+  
+  tenantId?: string; // Auto-injected from AuthContext for multi-tenancy
 
   createdAt: Date;
   updatedAt: Date;
@@ -1214,7 +1217,7 @@ const memories = await cortex.memory.search('agent-1', '*', {
 
 - **[Memory Operations API](./02-memory-operations.md)** - Layer 2 (Vector) and Layer 3 (Memory) APIs
 - **[A2A Communication API](./06-a2a-communication.md)** - Agent-to-agent messaging
-- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

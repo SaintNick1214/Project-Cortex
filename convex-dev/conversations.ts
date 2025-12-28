@@ -21,6 +21,7 @@ export const create = mutation({
     conversationId: v.string(),
     memorySpaceId: v.string(), // NEW: Required - which memory space owns this
     participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     participants: v.object({
       userId: v.optional(v.string()), // The human user in the conversation
@@ -69,11 +70,12 @@ export const create = mutation({
 
     const now = Date.now();
 
-    // Create conversation
+    // Create conversation with tenantId
     const id = await ctx.db.insert("conversations", {
       conversationId: args.conversationId,
       memorySpaceId: args.memorySpaceId,
       participantId: args.participantId,
+      tenantId: args.tenantId, // Store tenantId
       type: args.type,
       participants: args.participants,
       messages: [],
@@ -535,6 +537,7 @@ export const findConversation = query({
 export const get = query({
   args: {
     conversationId: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant
     includeMessages: v.optional(v.boolean()), // Default: true
     messageLimit: v.optional(v.number()), // Limit messages returned
   },
@@ -548,6 +551,11 @@ export const get = query({
 
     if (!conversation) {
       return null;
+    }
+
+    // Tenant isolation: if tenantId provided, verify it matches
+    if (args.tenantId && conversation.tenantId !== args.tenantId) {
+      return null; // Return null if tenant doesn't match (access denied)
     }
 
     // Handle includeMessages option
@@ -583,6 +591,7 @@ export const list = query({
     ),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()), // Filter by memory space
+    tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant
     participantId: v.optional(v.string()), // Hive Mode tracking
     createdBefore: v.optional(v.number()),
     createdAfter: v.optional(v.number()),
@@ -612,8 +621,24 @@ export const list = query({
     // Apply filters using indexes
     let conversations;
 
-    // Prioritize memorySpace + user (most common query pattern)
-    if (args.memorySpaceId && args.userId) {
+    // Prioritize tenant + space (best for multi-tenancy)
+    if (args.tenantId && args.memorySpaceId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_tenant_space", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .collect();
+    } else if (args.tenantId) {
+      // Tenant only - get all tenant's conversations
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
+        .collect();
+    } else if (args.memorySpaceId && args.userId) {
+      // memorySpace + user (common query pattern)
       conversations = await ctx.db
         .query("conversations")
         .withIndex("by_memorySpace_user", (q) =>
@@ -644,8 +669,19 @@ export const list = query({
       conversations = await ctx.db.query("conversations").collect();
     }
 
+    // Post-filter by userId when tenant indexes are used (security-critical!)
+    // The by_tenant_space and by_tenantId indexes don't include userId,
+    // so we must filter to prevent cross-user data leakage within a tenant.
+    if (args.userId && args.tenantId) {
+      conversations = conversations.filter(
+        (c) => c.participants.userId === args.userId,
+      );
+    }
+
     // Post-filter by type if needed (when using other indexes)
-    if (args.type && (args.memorySpaceId || args.userId)) {
+    // The by_type index is only used when tenantId, memorySpaceId, and userId are all absent.
+    // If any of those are provided, a different index is used and type must be post-filtered.
+    if (args.type && (args.tenantId || args.memorySpaceId || args.userId)) {
       conversations = conversations.filter((c) => c.type === args.type);
     }
 

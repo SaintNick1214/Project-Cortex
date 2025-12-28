@@ -30,7 +30,10 @@ import {
   validateConflictDecision,
   getDefaultDecision,
 } from "./conflict-prompts";
-import { FactDeduplicationService, type DeduplicationConfig } from "./deduplication";
+import {
+  FactDeduplicationService,
+  type DeduplicationConfig,
+} from "./deduplication";
 
 /**
  * LLM client interface for belief revision conflict resolution.
@@ -111,6 +114,8 @@ export interface ReviseParams {
   userId?: string;
   /** Optional participant ID */
   participantId?: string;
+  /** Multi-tenancy: SaaS platform isolation */
+  tenantId?: string;
   /** Source type for provenance tracking */
   sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
   /** Source reference for provenance tracking */
@@ -138,8 +143,16 @@ export interface ReviseResult {
   /** Pipeline stages that were executed */
   pipeline: {
     slotMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
-    semanticMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
-    subjectTypeMatching?: { executed: boolean; matched: boolean; factIds?: string[] };
+    semanticMatching?: {
+      executed: boolean;
+      matched: boolean;
+      factIds?: string[];
+    };
+    subjectTypeMatching?: {
+      executed: boolean;
+      matched: boolean;
+      factIds?: string[];
+    };
     llmResolution?: { executed: boolean; decision?: ConflictAction };
   };
 }
@@ -295,7 +308,8 @@ export class BeliefRevisionService {
       confidence = decision.confidence ?? 75;
 
       if (decision.targetFactId) {
-        targetFact = candidates.find((f) => f.factId === decision.targetFactId) || null;
+        targetFact =
+          candidates.find((f) => f.factId === decision.targetFactId) || null;
       }
 
       // Handle UPDATE with merged fact
@@ -437,7 +451,7 @@ export class BeliefRevisionService {
 
   /**
    * Stage 2.5: Find conflicts by subject + factType
-   * 
+   *
    * This stage catches conflicts that slip through slot and semantic matching
    * by querying for facts with the same subject AND factType. For example,
    * "User likes blue" and "User prefers purple" both have subject="user" and
@@ -474,10 +488,7 @@ export class BeliefRevisionService {
     existingFacts: FactRecord[],
   ): Promise<ConflictDecision> {
     // If LLM is disabled or unavailable, use default heuristics
-    if (
-      this.config.llmResolution?.enabled === false ||
-      !this.llmClient
-    ) {
+    if (this.config.llmResolution?.enabled === false || !this.llmClient) {
       return getDefaultDecision(newFact, existingFacts);
     }
 
@@ -562,6 +573,7 @@ export class BeliefRevisionService {
             memorySpaceId: params.memorySpaceId,
             participantId: params.participantId,
             userId: params.userId,
+            tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
             fact: params.fact.fact,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
             factType: (params.fact.factType as any) || "custom",
@@ -598,6 +610,7 @@ export class BeliefRevisionService {
           memorySpaceId: params.memorySpaceId,
           participantId: params.participantId,
           userId: params.userId,
+          tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
           fact: params.fact.fact,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           factType: (params.fact.factType as any) || "custom",
@@ -618,6 +631,7 @@ export class BeliefRevisionService {
       memorySpaceId: params.memorySpaceId,
       participantId: params.participantId,
       userId: params.userId,
+      tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
       fact: params.fact.fact,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       factType: (params.fact.factType as any) || "custom",

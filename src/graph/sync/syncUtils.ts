@@ -19,10 +19,15 @@ import type {
  *
  * Creates or updates a Context node with properties.
  * Uses MERGE for idempotent operations.
+ *
+ * @param context - The context to sync
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function syncContextToGraph(
   context: Context,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   const nodeId = await adapter.mergeNode(
     {
@@ -30,6 +35,10 @@ export async function syncContextToGraph(
       properties: {
         contextId: context.contextId,
         memorySpaceId: context.memorySpaceId,
+        tenantId:
+          tenantId ||
+          (context as Context & { tenantId?: string }).tenantId ||
+          null,
         purpose: context.purpose,
         status: context.status,
         depth: context.depth,
@@ -53,10 +62,15 @@ export async function syncContextToGraph(
  *
  * Creates or updates a Conversation node with properties.
  * Uses MERGE for idempotent operations.
+ *
+ * @param conversation - The conversation to sync
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function syncConversationToGraph(
   conversation: Conversation,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   const nodeId = await adapter.mergeNode(
     {
@@ -64,6 +78,10 @@ export async function syncConversationToGraph(
       properties: {
         conversationId: conversation.conversationId,
         memorySpaceId: conversation.memorySpaceId,
+        tenantId:
+          tenantId ||
+          (conversation as Conversation & { tenantId?: string }).tenantId ||
+          null,
         participantId: conversation.participantId || null,
         type: conversation.type,
         userId: conversation.participants.userId || null,
@@ -84,10 +102,15 @@ export async function syncConversationToGraph(
  *
  * Creates or updates a Memory node with truncated content.
  * Uses MERGE for idempotent operations.
+ *
+ * @param memory - The memory to sync
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function syncMemoryToGraph(
   memory: MemoryEntry,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   const nodeId = await adapter.mergeNode(
     {
@@ -95,6 +118,10 @@ export async function syncMemoryToGraph(
       properties: {
         memoryId: memory.memoryId,
         memorySpaceId: memory.memorySpaceId,
+        tenantId:
+          tenantId ||
+          (memory as MemoryEntry & { tenantId?: string }).tenantId ||
+          null,
         participantId: memory.participantId || null,
         userId: memory.userId || null,
         agentId: memory.agentId || null,
@@ -120,10 +147,15 @@ export async function syncMemoryToGraph(
  *
  * Creates or updates a Fact node.
  * Uses MERGE for idempotent operations.
+ *
+ * @param fact - The fact to sync
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function syncFactToGraph(
   fact: FactRecord,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   const nodeId = await adapter.mergeNode(
     {
@@ -131,6 +163,10 @@ export async function syncFactToGraph(
       properties: {
         factId: fact.factId,
         memorySpaceId: fact.memorySpaceId,
+        tenantId:
+          tenantId ||
+          (fact as FactRecord & { tenantId?: string }).tenantId ||
+          null,
         participantId: fact.participantId || null,
         fact: fact.fact,
         factType: fact.factType,
@@ -158,16 +194,25 @@ export async function syncFactToGraph(
  *
  * Creates or updates a MemorySpace node.
  * Uses MERGE for idempotent operations.
+ *
+ * @param memorySpace - The memory space to sync
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function syncMemorySpaceToGraph(
   memorySpace: MemorySpace,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   const nodeId = await adapter.mergeNode(
     {
       label: "MemorySpace",
       properties: {
         memorySpaceId: memorySpace.memorySpaceId,
+        tenantId:
+          tenantId ||
+          (memorySpace as MemorySpace & { tenantId?: string }).tenantId ||
+          null,
         name: memorySpace.name || null,
         type: memorySpace.type,
         status: memorySpace.status,
@@ -233,16 +278,22 @@ export async function findGraphNodeId(
  * Ensure a User node exists in the graph
  *
  * Uses MERGE for idempotent creation.
+ *
+ * @param userId - The user ID
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function ensureUserNode(
   userId: string,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   return await adapter.mergeNode(
     {
       label: "User",
       properties: {
         userId,
+        tenantId: tenantId || null,
         createdAt: Date.now(),
       },
     },
@@ -254,16 +305,22 @@ export async function ensureUserNode(
  * Ensure an Agent node exists in the graph
  *
  * Uses MERGE for idempotent creation.
+ *
+ * @param agentId - The agent ID
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function ensureAgentNode(
   agentId: string,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   return await adapter.mergeNode(
     {
       label: "Agent",
       properties: {
         agentId,
+        tenantId: tenantId || null,
         createdAt: Date.now(),
       },
     },
@@ -275,16 +332,22 @@ export async function ensureAgentNode(
  * Ensure a Participant node exists in the graph (Hive Mode)
  *
  * Uses MERGE for idempotent creation.
+ *
+ * @param participantId - The participant ID
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function ensureParticipantNode(
   participantId: string,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   return await adapter.mergeNode(
     {
       label: "Participant",
       properties: {
         participantId,
+        tenantId: tenantId || null,
         createdAt: Date.now(),
       },
     },
@@ -297,11 +360,17 @@ export async function ensureParticipantNode(
  *
  * Helper for fact entity relationships.
  * Uses MERGE for idempotent creation.
+ *
+ * @param entityName - The entity name
+ * @param entityType - The entity type
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function ensureEntityNode(
   entityName: string,
   entityType: string,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   return await adapter.mergeNode(
     {
@@ -309,6 +378,7 @@ export async function ensureEntityNode(
       properties: {
         name: entityName,
         type: entityType,
+        tenantId: tenantId || null,
         createdAt: Date.now(),
       },
     },
@@ -324,12 +394,19 @@ export async function ensureEntityNode(
  * - fullValue: Full value if available (e.g., "Alexander Johnson" for "Alex")
  *
  * Uses MERGE for idempotent creation with property updates.
+ *
+ * @param entityName - The entity name
+ * @param entityType - The entity type
+ * @param fullValue - The full value if available
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
  */
 export async function ensureEnrichedEntityNode(
   entityName: string,
   entityType: string,
   fullValue: string | undefined,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   return await adapter.mergeNode(
     {
@@ -337,6 +414,7 @@ export async function ensureEnrichedEntityNode(
       properties: {
         name: entityName,
         type: entityType,
+        tenantId: tenantId || null,
         entityType, // Specific entity type (e.g., "preferred_name")
         fullValue: fullValue || null, // Full value if available
         createdAt: Date.now(),
@@ -361,21 +439,25 @@ export async function ensureEnrichedEntityNode(
  * @param newFact - The fact that supersedes
  * @param adapter - Graph adapter
  * @param reason - Optional reason for supersession
+ * @param tenantId - Optional tenant ID for multi-tenancy
  */
 export async function syncFactSupersession(
   oldFact: FactRecord,
   newFact: FactRecord,
   adapter: GraphAdapter,
   reason?: string,
+  tenantId?: string,
 ): Promise<{ oldNodeId: string; newNodeId: string; relationshipId: string }> {
   // Ensure both facts exist in graph
   const oldNodeId = await syncFactToGraph(
     { ...oldFact, supersededBy: newFact.factId },
     adapter,
+    tenantId,
   );
   const newNodeId = await syncFactToGraph(
     { ...newFact, supersedes: oldFact.factId },
     adapter,
+    tenantId,
   );
 
   // Create SUPERSEDES relationship
@@ -430,10 +512,15 @@ export async function updateFactGraphStatus(
  *
  * Updates an existing Fact node with new content.
  * Used for UPDATE action in belief revision.
+ *
+ * @param fact - The fact to sync
+ * @param adapter - The graph adapter
+ * @param tenantId - Optional tenant ID for multi-tenancy
  */
 export async function syncFactUpdateInPlace(
   fact: FactRecord,
   adapter: GraphAdapter,
+  tenantId?: string,
 ): Promise<string> {
   return await adapter.mergeNode(
     {
@@ -441,6 +528,10 @@ export async function syncFactUpdateInPlace(
       properties: {
         factId: fact.factId,
         memorySpaceId: fact.memorySpaceId,
+        tenantId:
+          tenantId ||
+          (fact as FactRecord & { tenantId?: string }).tenantId ||
+          null,
         participantId: fact.participantId || null,
         fact: fact.fact,
         factType: fact.factType,
@@ -466,16 +557,27 @@ export async function syncFactUpdateInPlace(
  *
  * Used when a fact is updated (refined) rather than superseded.
  * The relationship shows evolution without invalidation.
+ *
+ * @param originalFact - The original fact
+ * @param revisedFact - The revised fact
+ * @param adapter - The graph adapter
+ * @param reason - Optional reason for revision
+ * @param tenantId - Optional tenant ID for multi-tenancy
  */
 export async function syncFactRevision(
   originalFact: FactRecord,
   revisedFact: FactRecord,
   adapter: GraphAdapter,
   reason?: string,
-): Promise<{ originalNodeId: string; revisedNodeId: string; relationshipId: string }> {
+  tenantId?: string,
+): Promise<{
+  originalNodeId: string;
+  revisedNodeId: string;
+  relationshipId: string;
+}> {
   // Ensure both facts exist in graph
-  const originalNodeId = await syncFactToGraph(originalFact, adapter);
-  const revisedNodeId = await syncFactToGraph(revisedFact, adapter);
+  const originalNodeId = await syncFactToGraph(originalFact, adapter, tenantId);
+  const revisedNodeId = await syncFactToGraph(revisedFact, adapter, tenantId);
 
   // Create REVISED_FROM relationship
   const relationshipId = await adapter.createEdge({
@@ -512,7 +614,11 @@ export async function getFactSupersessionChainFromGraph(
 
   try {
     const result = await adapter.query(cypherQuery, { factId });
-    return result.records as Array<{ factId: string; fact: string; supersededAt?: number }>;
+    return result.records as Array<{
+      factId: string;
+      fact: string;
+      supersededAt?: number;
+    }>;
   } catch {
     // Fallback if query fails - return just the current fact
     const node = await findGraphNodeId("Fact", factId, adapter);

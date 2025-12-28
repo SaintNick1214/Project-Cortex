@@ -195,12 +195,12 @@ When a user says "I like blue" and later says "I prefer purple now", without bel
 
 ### Revision Actions
 
-| Action     | Description                                        | Example                                    |
-| ---------- | -------------------------------------------------- | ------------------------------------------ |
-| `CREATE`   | New fact with no conflicts                         | First time mentioning favorite color       |
-| `UPDATE`   | Existing fact refined with new details             | "I like blue" → "I love dark blue"         |
-| `SUPERSEDE`| Old fact replaced by contradicting new information | "I like blue" → "I prefer purple now"      |
-| `NONE`     | Duplicate or irrelevant, no storage needed         | Saying "I like blue" twice                 |
+| Action      | Description                                        | Example                               |
+| ----------- | -------------------------------------------------- | ------------------------------------- |
+| `CREATE`    | New fact with no conflicts                         | First time mentioning favorite color  |
+| `UPDATE`    | Existing fact refined with new details             | "I like blue" → "I love dark blue"    |
+| `SUPERSEDE` | Old fact replaced by contradicting new information | "I like blue" → "I prefer purple now" |
+| `NONE`      | Duplicate or irrelevant, no storage needed         | Saying "I like blue" twice            |
 
 ### Basic Configuration
 
@@ -216,8 +216,8 @@ const cortexMemory = createCortexMemory({
   // Enable belief revision
   beliefRevision: {
     enabled: true,
-    slotMatching: true,   // Fast detection via subject-predicate matching
-    llmResolution: true,  // LLM resolves nuanced conflicts
+    slotMatching: true, // Fast detection via subject-predicate matching
+    llmResolution: true, // LLM resolves nuanced conflicts
   },
 
   // Required for semantic matching

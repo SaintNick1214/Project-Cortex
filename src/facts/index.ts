@@ -97,19 +97,24 @@ export interface BeliefRevisionOptions extends StoreFactOptions {
   beliefRevision?: BeliefRevisionConfig | false;
 }
 
+import type { AuthContext } from "../auth/types";
+
 export class FactsAPI {
   private deduplicationService: FactDeduplicationService;
   private beliefRevisionService?: BeliefRevisionService;
   private historyService: FactHistoryService;
   private llmClient?: BeliefRevisionLLMClient;
+  private authContext?: AuthContext;
 
   constructor(
     private client: ConvexClient,
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
+    authContext?: AuthContext,
     llmClient?: BeliefRevisionLLMClient,
     beliefRevisionConfig?: BeliefRevisionConfig,
   ) {
+    this.authContext = authContext;
     this.llmClient = llmClient;
     this.deduplicationService = new FactDeduplicationService(client);
     this.historyService = new FactHistoryService(client, resilience);
@@ -240,6 +245,7 @@ export class FactsAPI {
           memorySpaceId: params.memorySpaceId,
           participantId: params.participantId,
           userId: params.userId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
           fact: params.fact,
           factType: params.factType,
           subject: params.subject,
@@ -431,6 +437,7 @@ export class FactsAPI {
         this.client.query(api.facts.get, {
           memorySpaceId,
           factId,
+          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
         }),
       "facts:get",
     );
@@ -507,6 +514,7 @@ export class FactsAPI {
       () =>
         this.client.query(api.facts.list, {
           memorySpaceId: filter.memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Tenant isolation
           factType: filter.factType,
           subject: filter.subject,
           predicate: filter.predicate,
@@ -593,6 +601,7 @@ export class FactsAPI {
       () =>
         this.client.query(api.facts.count, {
           memorySpaceId: filter.memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Tenant isolation
           factType: filter.factType,
           subject: filter.subject,
           predicate: filter.predicate,
@@ -694,6 +703,7 @@ export class FactsAPI {
       () =>
         this.client.query(api.facts.search, {
           memorySpaceId,
+          tenantId: this.authContext?.tenantId, // Tenant isolation
           query,
           factType: options?.factType,
           subject: options?.subject,
@@ -1276,7 +1286,8 @@ export class FactsAPI {
       action: historyAction,
       oldValue: result.superseded[0]?.fact,
       newValue: result.fact.fact,
-      supersededBy: result.action === "SUPERSEDE" ? result.fact.factId : undefined,
+      supersededBy:
+        result.action === "SUPERSEDE" ? result.fact.factId : undefined,
       supersedes: result.superseded[0]?.factId,
       reason: result.reason,
       confidence: result.confidence,
@@ -1372,11 +1383,9 @@ export class FactsAPI {
     }
 
     // Mark old fact as superseded
-    await this.update(
-      params.memorySpaceId,
-      params.oldFactId,
-      { validUntil: Date.now() },
-    );
+    await this.update(params.memorySpaceId, params.oldFactId, {
+      validUntil: Date.now(),
+    });
 
     // Log to history
     await this.historyService.log({
@@ -1449,7 +1458,9 @@ export class FactsAPI {
    * // Returns: [oldest] -> [older] -> [old] -> [current]
    * ```
    */
-  async getSupersessionChain(factId: string): Promise<SupersessionChainEntry[]> {
+  async getSupersessionChain(
+    factId: string,
+  ): Promise<SupersessionChainEntry[]> {
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
 

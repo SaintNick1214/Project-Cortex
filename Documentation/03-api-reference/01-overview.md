@@ -1,6 +1,6 @@
 # API Reference Overview
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2025-12-27
 
 Welcome to the Cortex API Reference! This guide explains how to navigate the documentation and use Cortex effectively.
 
@@ -10,6 +10,7 @@ Cortex is a **persistent memory system for AI agents** built on Convex. It provi
 
 - **Four-layer architecture** - ACID stores + Vector index + Facts store + Convenience API
 - **Memory Space isolation** - Flexible boundaries (per user, team, or project)
+- **Multi-Tenancy** - Built-in `tenantId` for SaaS platform isolation (auto-injected from AuthContext)
 - **Hive Mode** - Multiple tools share one memory space (zero duplication)
 - **Infinite Context** - Never run out of context via retrieval
 - **Automatic versioning** - Track how information changes over time
@@ -28,7 +29,7 @@ The API Reference is organized by architectural layers:
   - Layer 4 convenience (`cortex.memory.*`)
   - Overview of all layers
   - `remember()`, `rememberStream()`, `search()`, `get()`, `update()`, `delete()`
-- **[Memory Space Operations](./13-memory-space-operations.md)** - Memory space management
+- **[Memory Space Operations](./11-memory-space-operations.md)** - Memory space management
   - Create and manage memory spaces
   - Hive Mode participant tracking
   - Cross-space access control
@@ -44,6 +45,14 @@ The API Reference is organized by architectural layers:
   - Shared user data across all memory spaces
   - GDPR cascade deletion by userId (SDK + Cloud Mode)
   - Version history and time-travel queries
+- **[Sessions Operations](./14-sessions-operations.md)** - Session lifecycle management ✅ NEW
+  - Multi-session support (web, mobile, API)
+  - Activity tracking and idle detection
+  - Configurable timeouts via Governance
+- **[Auth Integration](../08-integrations/auth-providers.md)** - Authentication context ✅ NEW
+  - Framework-agnostic auth integration
+  - Multi-tenancy support (tenantId)
+  - Works with Auth0, Clerk, NextAuth, Firebase, custom JWT
 - **[Agent Management](./09-agent-management.md)** - Agent registry + cleanup ✅
   - Optional metadata registration for discovery
   - Cascade deletion by participantId across all spaces
@@ -71,12 +80,12 @@ The API Reference is organized by architectural layers:
 ### **Supporting APIs**
 
 - **[Governance Policies](./10-governance-policies-api.md)** - Retention rules
-- **[Graph Operations](./15-graph-operations.md)** - Graph database integration
+- **[Graph Operations](./13-graph-operations.md)** - Graph database integration
 
 ### **Reference**
 
-- **[Types & Interfaces](./11-types-interfaces.md)** - TypeScript definitions
-- **[Error Handling](./12-error-handling.md)** - Error codes and debugging
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - TypeScript definitions
+- **[Error Handling](../05-reference/02-error-handling.md)** - Error codes and debugging
 
 ---
 
@@ -295,7 +304,7 @@ const history = await cortex.facts.history("fact-123");
 // Shows CREATE → UPDATE → SUPERSEDE chain
 ```
 
-**See**: [Facts Operations API - Belief Revision](./14-facts-operations.md#belief-revision-system-v0230)
+**See**: [Facts Operations API - Belief Revision](./12-facts-operations.md#belief-revision-system-v0230)
 
 ---
 
@@ -651,10 +660,10 @@ await cortex.users.delete('user-123', { cascade: true });
 → [Governance Policies](./10-governance-policies-api.md) - `cortex.governance.*`
 
 **See all TypeScript types:**
-→ [Types & Interfaces](./11-types-interfaces.md)
+→ [Types & Interfaces](../05-reference/01-types-interfaces.md)
 
 **Debug an error:**
-→ [Error Handling](./12-error-handling.md)
+→ [Error Handling](../05-reference/02-error-handling.md)
 
 ### By Layer
 
@@ -1104,8 +1113,8 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 ### Documentation
 
 - **[Memory Operations](./02-memory-operations.md)** - Most comprehensive guide
-- **[Types & Interfaces](./11-types-interfaces.md)** - TypeScript reference
-- **[Error Handling](./12-error-handling.md)** - Debugging guide
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - TypeScript reference
+- **[Error Handling](../05-reference/02-error-handling.md)** - Debugging guide
 
 ### Community
 
@@ -1113,7 +1122,7 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 
 ### Found a Bug?
 
-1. Check [Error Handling](./12-error-handling.md) for known issues
+1. Check [Error Handling](../05-reference/02-error-handling.md) for known issues
 2. Search GitHub Issues for existing reports
 3. Open new issue with minimal reproduction
 
@@ -1134,7 +1143,7 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 → Explore [Immutable Store](./07-immutable-store-api.md) and [Mutable Store](./08-mutable-store-api.md)
 
 **TypeScript user?**
-→ Review [Types & Interfaces](./11-types-interfaces.md) for complete definitions
+→ Review [Types & Interfaces](../05-reference/01-types-interfaces.md) for complete definitions
 
 ---
 

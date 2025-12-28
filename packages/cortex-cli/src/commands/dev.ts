@@ -13,7 +13,7 @@ import { spawn, ChildProcess } from "child_process";
 import pc from "picocolors";
 import fs from "fs-extra";
 import path from "path";
-import type { CLIConfig } from "../types.js";
+import type { CLIConfig, AppConfig } from "../types.js";
 import { loadConfig } from "../utils/config.js";
 import { commandExists, execCommand } from "../utils/shell.js";
 import { runInitWizard } from "./init.js";
@@ -34,10 +34,21 @@ interface DeploymentState {
 }
 
 /**
+ * State for a template app
+ */
+interface AppState {
+  name: string;
+  config: AppConfig;
+  process: ChildProcess | null;
+  running: boolean;
+}
+
+/**
  * Global dev mode state
  */
 interface DevState {
   deployments: Map<string, DeploymentState>;
+  apps: Map<string, AppState>;
   logs: string[];
   maxLogs: number;
   lastStatus: Date;
@@ -252,8 +263,21 @@ async function runInteractiveDevMode(
     }
   }
 
+  // Collect enabled apps
+  const enabledApps = Object.entries(config.apps || {})
+    .filter(([, app]) => app.enabled)
+    .map(
+      ([name, appConfig]): AppState => ({
+        name,
+        config: appConfig,
+        process: null,
+        running: false,
+      }),
+    );
+
   const state: DevState = {
     deployments: new Map(deploymentsList.map((d) => [d.name, d])),
+    apps: new Map(enabledApps.map((a) => [a.name, a])),
     logs: [],
     maxLogs: 100,
     lastStatus: new Date(),
@@ -387,16 +411,18 @@ async function startAllServices(state: DevState): Promise<void> {
   const hasConvex = await commandExists("convex");
 
   // Import schema sync utility
-  const { syncConvexSchema } = await import(
-    "../utils/schema-sync.js"
-  );
+  const { syncConvexSchema } = await import("../utils/schema-sync.js");
 
   for (const [name, dep] of state.deployments) {
     // Sync schema files from SDK before anything else
     addLog(state, name, "Syncing schema from SDK...");
     const syncResult = await syncConvexSchema(dep.projectPath);
     if (syncResult.error) {
-      addLog(state, name, pc.yellow(`Schema sync warning: ${syncResult.error}`));
+      addLog(
+        state,
+        name,
+        pc.yellow(`Schema sync warning: ${syncResult.error}`),
+      );
     } else if (syncResult.synced) {
       const source = syncResult.isDevOverride
         ? pc.magenta("[DEV]") + " local SDK"
@@ -465,6 +491,11 @@ async function startAllServices(state: DevState): Promise<void> {
     // Start Convex dev
     addLog(state, name, "Starting Convex...");
     await startConvexProcess(state, name, dep, hasConvex);
+  }
+
+  // Start enabled apps
+  for (const [name, app] of state.apps) {
+    await startAppProcess(state, name, app);
   }
 }
 
@@ -565,11 +596,94 @@ async function startConvexProcess(
 }
 
 /**
+ * Start an app process
+ */
+async function startAppProcess(
+  state: DevState,
+  name: string,
+  app: AppState,
+): Promise<void> {
+  const appPath = path.join(app.config.projectPath, app.config.path);
+
+  if (!fs.existsSync(appPath)) {
+    addLog(state, name, pc.yellow(`App not found at ${appPath}`));
+    return;
+  }
+
+  addLog(state, name, `Starting ${app.config.type}...`);
+
+  const command = app.config.startCommand || "npm run dev";
+  const [cmd, ...args] = command.split(" ");
+
+  const child = spawn(cmd, args, {
+    cwd: appPath,
+    env: {
+      ...process.env,
+      PORT: String(app.config.port || 3000),
+    },
+    detached: true,
+  });
+
+  app.process = child;
+
+  // Helper to detect app ready state
+  const checkAppReady = (line: string) => {
+    // Detect ready state (Next.js outputs "Ready" to stdout with Turbopack)
+    if (
+      (line.includes("Ready") || line.includes("started server")) &&
+      !app.running
+    ) {
+      app.running = true;
+      addLog(
+        state,
+        name,
+        pc.green(`App ready at http://localhost:${app.config.port || 3000}`),
+      );
+      printStatusUpdate(state);
+    }
+  };
+
+  // Handle stdout
+  child.stdout?.on("data", (data: Buffer) => {
+    const lines = data.toString().split("\n").filter(Boolean);
+    for (const line of lines) {
+      addLog(state, name, line);
+      checkAppReady(line);
+    }
+  });
+
+  // Handle stderr
+  child.stderr?.on("data", (data: Buffer) => {
+    const lines = data.toString().split("\n").filter(Boolean);
+    for (const line of lines) {
+      addLog(state, name, line);
+      checkAppReady(line);
+    }
+  });
+
+  child.on("exit", (code) => {
+    const wasRunning = app.running;
+    app.running = false;
+    app.process = null;
+    if (code !== 0 && code !== null) {
+      addLog(state, name, pc.red(`App exited with code ${code}`));
+    }
+    if (wasRunning) {
+      printStatusUpdate(state);
+    }
+  });
+
+  // Wait a moment for startup
+  await new Promise((resolve) => setTimeout(resolve, 500));
+}
+
+/**
  * Stop all services
  */
 async function stopAllServices(state: DevState, force: boolean): Promise<void> {
   const signal = force ? "SIGKILL" : "SIGTERM";
 
+  // Stop deployments
   for (const dep of state.deployments.values()) {
     // Stop Convex
     if (dep.process && dep.process.pid) {
@@ -586,6 +700,19 @@ async function stopAllServices(state: DevState, force: boolean): Promise<void> {
     if (dep.graphRunning && dep.graphType) {
       await toggleGraph(dep.projectPath, dep.graphType, false);
       dep.graphRunning = false;
+    }
+  }
+
+  // Stop apps
+  for (const app of state.apps.values()) {
+    if (app.process && app.process.pid) {
+      try {
+        process.kill(-app.process.pid, signal);
+      } catch {
+        // Already dead
+      }
+      app.process = null;
+      app.running = false;
     }
   }
 
@@ -766,16 +893,13 @@ async function toggleGraph(
 }
 
 /**
- * Add a log entry with deployment prefix
+ * Add a log entry with service name prefix
  */
-function addLog(
-  state: DevState,
-  deploymentName: string,
-  message: string,
-): void {
+function addLog(state: DevState, serviceName: string, message: string): void {
   const timestamp = new Date().toLocaleTimeString();
+  const totalServices = state.deployments.size + state.apps.size;
   const prefix =
-    state.deployments.size > 1 ? pc.cyan(`[${deploymentName}]`.padEnd(18)) : "";
+    totalServices > 1 ? pc.cyan(`[${serviceName}]`.padEnd(18)) : "";
   const logLine = `${pc.dim(timestamp)} ${prefix}${message}`;
 
   state.logs.push(logLine);
@@ -801,6 +925,7 @@ function printLog(message: string): void {
 function printStatusUpdate(state: DevState): void {
   const statuses: string[] = [];
 
+  // Deployment statuses
   for (const [name, dep] of state.deployments) {
     const convexIcon = dep.convexRunning ? pc.green("●") : pc.yellow("○");
     let status = `${convexIcon} ${name}`;
@@ -811,6 +936,12 @@ function printStatusUpdate(state: DevState): void {
     }
 
     statuses.push(status);
+  }
+
+  // App statuses
+  for (const [name, app] of state.apps) {
+    const appIcon = app.running ? pc.green("●") : pc.yellow("○");
+    statuses.push(`${appIcon} ${name}`);
   }
 
   console.log();
@@ -831,23 +962,19 @@ async function refreshStatus(state: DevState): Promise<void> {
   const width = 66;
   const line = "═".repeat(width);
   const thinLine = "─".repeat(width);
-  const count = state.deployments.size;
+  const deployCount = state.deployments.size;
+  const appCount = state.apps.size;
 
   console.log();
   console.log(pc.cyan("╔" + line + "╗"));
   console.log(
-    pc.cyan("║") +
-      pc
-        .bold(
-          `   Cortex Dev Mode (${count} deployment${count !== 1 ? "s" : ""})`,
-        )
-        .padEnd(width) +
-      pc.cyan("║"),
+    pc.cyan("║") + pc.bold(`   Cortex Dev Mode`).padEnd(width) + pc.cyan("║"),
   );
   console.log(pc.cyan("╚" + line + "╝"));
   console.log();
 
-  console.log(pc.bold(pc.white("  Services")));
+  // Deployments section
+  console.log(pc.bold(pc.white(`  Deployments (${deployCount})`)));
   console.log(pc.dim("  " + thinLine));
 
   for (const [name, dep] of state.deployments) {
@@ -883,6 +1010,29 @@ async function refreshStatus(state: DevState): Promise<void> {
           ? "http://localhost:7474"
           : "http://localhost:3000";
       console.log(pc.dim(`     ${dep.graphType}: ${url}`));
+    }
+  }
+
+  // Apps section (if any)
+  if (appCount > 0) {
+    console.log();
+    console.log(pc.bold(pc.white(`  Apps (${appCount})`)));
+    console.log(pc.dim("  " + thinLine));
+
+    for (const [name, app] of state.apps) {
+      const appStatus = app.running
+        ? pc.green("Running")
+        : pc.yellow("Starting...");
+      const appIcon = app.running ? pc.green("●") : pc.yellow("○");
+
+      console.log(`   ${appIcon} ${pc.cyan(name.padEnd(16))} ${appStatus}`);
+
+      // Show URL for running apps
+      if (app.running) {
+        console.log(
+          pc.dim(`     URL: http://localhost:${app.config.port || 3000}`),
+        );
+      }
     }
   }
 

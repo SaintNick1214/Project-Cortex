@@ -234,12 +234,7 @@ export const DEFAULT_PREDICATE_CLASSES: Record<string, string[]> = {
   ],
 
   // Time zone
-  timezone: [
-    "timezone is",
-    "time zone is",
-    "in timezone",
-    "local time",
-  ],
+  timezone: ["timezone is", "time zone is", "in timezone", "local time"],
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -470,8 +465,16 @@ export class SlotMatchingService {
     fact1: { subject?: string; predicate?: string },
     fact2: { subject?: string; predicate?: string },
   ): boolean {
-    const slot1 = extractSlot(fact1.subject, fact1.predicate, this.customClasses);
-    const slot2 = extractSlot(fact2.subject, fact2.predicate, this.customClasses);
+    const slot1 = extractSlot(
+      fact1.subject,
+      fact1.predicate,
+      this.customClasses,
+    );
+    const slot2 = extractSlot(
+      fact2.subject,
+      fact2.predicate,
+      this.customClasses,
+    );
 
     if (!slot1 || !slot2) {
       return false;

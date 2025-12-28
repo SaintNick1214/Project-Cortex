@@ -644,4 +644,4 @@ A: Not currently. Priorities are assigned automatically based on operation type.
 - [Performance Guide](../04-architecture/08-performance.md) - Optimization strategies
 - [Hive Mode](./10-hive-mode.md) - Multi-agent coordination
 - [Convex Limits](https://docs.convex.dev/production/state/limits) - Official Convex documentation
-- [Error Handling](../03-api-reference/12-error-handling.md) - Complete error reference
+- [Error Handling](../05-reference/02-error-handling.md) - Complete error reference

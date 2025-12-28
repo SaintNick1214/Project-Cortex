@@ -100,6 +100,10 @@ function mergeConfig(target: CLIConfig, source: Partial<CLIConfig>): CLIConfig {
       ...target.deployments,
       ...source.deployments,
     },
+    apps: {
+      ...target.apps,
+      ...source.apps,
+    },
     default: source.default ?? target.default,
     format: source.format ?? target.format,
     confirmDangerous: source.confirmDangerous ?? target.confirmDangerous,
@@ -284,11 +288,36 @@ export function listDeployments(config: CLIConfig): Array<{
   url: string;
   isDefault: boolean;
   hasKey: boolean;
+  enabled: boolean;
 }> {
   return Object.entries(config.deployments).map(([name, deployment]) => ({
     name,
     url: deployment.url,
     isDefault: name === config.default,
     hasKey: Boolean(deployment.key),
+    enabled: deployment.enabled ?? name === config.default,
+  }));
+}
+
+/**
+ * List all installed apps
+ */
+export function listApps(config: CLIConfig): Array<{
+  name: string;
+  type: string;
+  path: string;
+  enabled: boolean;
+  port?: number;
+}> {
+  if (!config.apps) {
+    return [];
+  }
+
+  return Object.entries(config.apps).map(([name, app]) => ({
+    name,
+    type: app.type,
+    path: app.path,
+    enabled: app.enabled,
+    port: app.port,
   }));
 }

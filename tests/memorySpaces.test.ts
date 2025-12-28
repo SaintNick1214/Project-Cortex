@@ -667,12 +667,22 @@ describe("Memory Spaces Registry API", () => {
       const allResult = await cortex.memorySpaces.list();
       const total = allResult.total;
 
+      // Cap at max limit of 1000 - if total > 1000, we can't fetch all in one page
+      // In that case, we test that fetching up to the max works correctly
+      const effectiveLimit = Math.min(total, 1000);
+
       const lastPageResult = await cortex.memorySpaces.list({
-        limit: total,
+        limit: effectiveLimit,
         offset: 0,
       });
 
-      expect(lastPageResult.hasMore).toBe(false);
+      // hasMore is false only if we fetched everything (total <= 1000)
+      if (total <= 1000) {
+        expect(lastPageResult.hasMore).toBe(false);
+      } else {
+        // When total > max limit, there will always be more
+        expect(lastPageResult.hasMore).toBe(true);
+      }
     });
   });
 
@@ -919,7 +929,7 @@ describe("Memory Spaces Registry API", () => {
           cascade: true,
           reason: "test cleanup",
         }),
-      ).rejects.toThrow("MEMORYSPACE_NOT_FOUND");
+      ).rejects.toThrow("Memory space not found");
     });
 
     it("throws when cascade is false", async () => {

@@ -21,18 +21,37 @@ export const set = mutation({
     key: v.string(),
     value: v.any(),
     userId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
     const now = Date.now();
 
-    // Check if entry exists
-    const existing = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key),
-      )
-      .first();
+    // Check if entry exists - must match both namespace/key AND tenantId for proper isolation
+    let existing;
+    if (args.tenantId) {
+      // With tenant isolation: look for tenant-specific entry
+      existing = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace_key", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("namespace", args.namespace)
+            .eq("key", args.key),
+        )
+        .first();
+    } else {
+      // Without tenant: fallback to global namespace/key lookup
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant access
+      const candidate = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", args.namespace).eq("key", args.key),
+        )
+        .first();
+      // Only match if the record is truly global (no tenantId)
+      existing = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     if (existing) {
       // Update existing
@@ -52,6 +71,7 @@ export const set = mutation({
       key: args.key,
       value: args.value,
       userId: args.userId,
+      tenantId: args.tenantId, // Store tenantId
       metadata: args.metadata,
       createdAt: now,
       updatedAt: now,
@@ -77,14 +97,33 @@ export const update = mutation({
       v.literal("custom"),
     ),
     operand: v.optional(v.any()),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key),
-      )
-      .first();
+    let existing;
+    if (args.tenantId) {
+      // Tenant-isolated lookup
+      existing = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace_key", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("namespace", args.namespace)
+            .eq("key", args.key),
+        )
+        .first();
+    } else {
+      // Global namespace/key lookup for non-tenant records only
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant updates
+      const candidate = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", args.namespace).eq("key", args.key),
+        )
+        .first();
+      // Only match if the record is truly global (no tenantId)
+      existing = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     if (!existing) {
       throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
@@ -128,14 +167,33 @@ export const deleteKey = mutation({
   args: {
     namespace: v.string(),
     key: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key),
-      )
-      .first();
+    let entry;
+    if (args.tenantId) {
+      // Tenant-isolated delete
+      entry = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace_key", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("namespace", args.namespace)
+            .eq("key", args.key),
+        )
+        .first();
+    } else {
+      // Global namespace/key delete for non-tenant records only
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant deletion
+      const candidate = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", args.namespace).eq("key", args.key),
+        )
+        .first();
+      // Only match if the record is truly global (no tenantId)
+      entry = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     if (!entry) {
       throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
@@ -153,17 +211,33 @@ export const deleteKey = mutation({
 
 /**
  * Purge all keys in a namespace
+ *
+ * SECURITY: When tenantId is provided, only entries belonging to that tenant
+ * within the namespace are purged. This prevents cross-tenant data deletion.
  */
 export const purgeNamespace = mutation({
   args: {
     namespace: v.string(),
     dryRun: v.optional(v.boolean()),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
-    const entries = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-      .collect();
+    let entries;
+    if (args.tenantId) {
+      // Tenant-isolated purge: only delete entries for this tenant
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
+        )
+        .collect();
+    } else {
+      // Global namespace purge (use with caution)
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
+        .collect();
+    }
 
     // If dryRun, return what would be deleted without actually deleting
     if (args.dryRun) {
@@ -192,6 +266,9 @@ export const purgeNamespace = mutation({
 
 /**
  * Execute multiple operations atomically
+ *
+ * SECURITY: When tenantId is provided, all operations are scoped to that tenant.
+ * This prevents cross-tenant data modification in atomic transactions.
  */
 export const transaction = mutation({
   args: {
@@ -210,17 +287,36 @@ export const transaction = mutation({
         amount: v.optional(v.number()),
       }),
     ),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
     const results = [];
 
     for (const operation of args.operations) {
-      const existing = await ctx.db
-        .query("mutable")
-        .withIndex("by_namespace_key", (q) =>
-          q.eq("namespace", operation.namespace).eq("key", operation.key),
-        )
-        .first();
+      let existing;
+      if (args.tenantId) {
+        // Tenant-isolated lookup
+        existing = await ctx.db
+          .query("mutable")
+          .withIndex("by_tenant_namespace_key", (q) =>
+            q
+              .eq("tenantId", args.tenantId!)
+              .eq("namespace", operation.namespace)
+              .eq("key", operation.key),
+          )
+          .first();
+      } else {
+        // Global namespace/key lookup for non-tenant records only
+        // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant access
+        const candidate = await ctx.db
+          .query("mutable")
+          .withIndex("by_namespace_key", (q) =>
+            q.eq("namespace", operation.namespace).eq("key", operation.key),
+          )
+          .first();
+        // Only match if the record is truly global (no tenantId)
+        existing = candidate && !candidate.tenantId ? candidate : null;
+      }
 
       if (operation.op === "set") {
         if (existing) {
@@ -235,6 +331,7 @@ export const transaction = mutation({
             namespace: operation.namespace,
             key: operation.key,
             value: operation.value,
+            tenantId: args.tenantId, // Store tenantId for new entries
             createdAt: now,
             updatedAt: now,
           });
@@ -293,6 +390,9 @@ export const transaction = mutation({
 
 /**
  * Bulk delete keys matching filters
+ *
+ * SECURITY: When tenantId is provided, only entries belonging to that tenant
+ * are deleted. This prevents cross-tenant data deletion.
  */
 export const purgeMany = mutation({
   args: {
@@ -300,12 +400,24 @@ export const purgeMany = mutation({
     keyPrefix: v.optional(v.string()),
     userId: v.optional(v.string()),
     updatedBefore: v.optional(v.number()),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
   },
   handler: async (ctx, args) => {
-    let entries = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-      .collect();
+    let entries;
+    if (args.tenantId) {
+      // Tenant-isolated purge
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
+        )
+        .collect();
+    } else {
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
+        .collect();
+    }
 
     // Apply filters
     if (args.keyPrefix) {
@@ -347,14 +459,33 @@ export const get = query({
   args: {
     namespace: v.string(),
     key: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key),
-      )
-      .first();
+    let entry;
+    if (args.tenantId) {
+      // Tenant-isolated lookup
+      entry = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace_key", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("namespace", args.namespace)
+            .eq("key", args.key),
+        )
+        .first();
+    } else {
+      // Global namespace/key lookup for non-tenant records only
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant reads
+      const candidate = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", args.namespace).eq("key", args.key),
+        )
+        .first();
+      // Only match if the record is truly global (no tenantId)
+      entry = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     return entry || null;
   },
@@ -367,14 +498,32 @@ export const exists = query({
   args: {
     namespace: v.string(),
     key: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key),
-      )
-      .first();
+    let entry;
+    if (args.tenantId) {
+      entry = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace_key", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("namespace", args.namespace)
+            .eq("key", args.key),
+        )
+        .first();
+    } else {
+      // Global namespace/key lookup for non-tenant records only
+      // SECURITY: Must verify the matched record has no tenantId to prevent cross-tenant checks
+      const candidate = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", args.namespace).eq("key", args.key),
+        )
+        .first();
+      // Only match if the record is truly global (no tenantId)
+      entry = candidate && !candidate.tenantId ? candidate : null;
+    }
 
     return entry !== null;
   },
@@ -388,6 +537,7 @@ export const list = query({
     namespace: v.string(),
     keyPrefix: v.optional(v.string()),
     userId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
     updatedAfter: v.optional(v.number()),
@@ -397,10 +547,21 @@ export const list = query({
   },
   handler: async (ctx, args) => {
     // Collect all matching entries first for filtering and sorting
-    let entries = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-      .collect();
+    let entries;
+    if (args.tenantId) {
+      // Tenant-isolated query
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
+        )
+        .collect();
+    } else {
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
+        .collect();
+    }
 
     // Filter by key prefix if provided
     if (args.keyPrefix) {
@@ -456,15 +617,26 @@ export const count = query({
   args: {
     namespace: v.string(),
     userId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
     keyPrefix: v.optional(v.string()),
     updatedAfter: v.optional(v.number()),
     updatedBefore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let entries = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-      .collect();
+    let entries;
+    if (args.tenantId) {
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
+        )
+        .collect();
+    } else {
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
+        .collect();
+    }
 
     // Filter by userId if provided
     if (args.userId) {
@@ -493,12 +665,17 @@ export const count = query({
 /**
  * Purge all mutable entries (TEST/DEV ONLY)
  *
- * WARNING: This permanently deletes ALL mutable entries!
+ * WARNING: This permanently deletes mutable entries!
  * Only available in test/dev environments.
+ *
+ * SECURITY: When tenantId is provided, only entries belonging to that tenant
+ * are deleted. Without tenantId, ALL entries are deleted (dangerous!).
  */
 export const purgeAll = mutation({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
+  },
+  handler: async (ctx, args) => {
     // Safety check: Only allow in test/dev environments
     const siteUrl = process.env.CONVEX_SITE_URL || "";
     const isLocal =
@@ -517,7 +694,17 @@ export const purgeAll = mutation({
       );
     }
 
-    const allEntries = await ctx.db.query("mutable").collect();
+    let allEntries;
+    if (args.tenantId) {
+      // Tenant-isolated purge: only delete entries for this tenant
+      allEntries = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
+        .collect();
+    } else {
+      // Global purge (use with extreme caution)
+      allEntries = await ctx.db.query("mutable").collect();
+    }
 
     for (const entry of allEntries) {
       await ctx.db.delete(entry._id);

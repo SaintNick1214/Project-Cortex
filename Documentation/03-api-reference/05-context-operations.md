@@ -1,6 +1,6 @@
 # Context Operations API
 
-> **Last Updated**: 2025-10-30
+> **Last Updated**: 2025-12-27
 
 Complete API reference for context chain management and multi-agent workflow coordination.
 
@@ -15,6 +15,7 @@ The Context Operations API (`cortex.contexts.*`) provides methods for managing h
 - ✅ **Versioned** - Automatic status/data change tracking
 - ✅ **Conversation-linked** - Optional links to originating ACID conversations
 - ✅ **GDPR-enabled** - Optional `userId` for cascade deletion
+- ✅ **Multi-Tenant** - Automatic `tenantId` isolation for SaaS platforms (auto-injected from AuthContext)
 
 **Relationship to Layers:**
 
@@ -1574,7 +1575,7 @@ All context operation errors:
 
 **See Also:**
 
-- [Error Handling Guide](./12-error-handling.md)
+- [Error Handling Guide](../05-reference/02-error-handling.md)
 
 ---
 
@@ -1612,7 +1613,7 @@ See **[Graph Operations API](./15-graph-operations.md)** for complete graph inte
 - **[Facts Operations API](./14-facts-operations.md)** - Structured knowledge extraction
 - **[Memory Space Operations API](./13-memory-space-operations.md)** - Hive/Collaboration Mode
 - **[A2A Communication API](./06-a2a-communication.md)** - Agent-to-agent messaging
-- **[Types & Interfaces](./11-types-interfaces.md)** - Complete TypeScript definitions
+- **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - Complete TypeScript definitions
 
 ---
 

@@ -30,6 +30,16 @@ import {
   sanitizeProjectName,
 } from "../utils/init/convex-setup.js";
 import {
+  installVercelAIQuickstart,
+  startApp,
+  stopApp,
+  findAppPidFiles,
+  isAppRunning,
+  findProcessByPort,
+  stopProcessByPort,
+  type QuickstartGraphConfig,
+} from "../utils/init/quickstart-setup.js";
+import {
   getGraphConfig,
   setupGraphFiles,
   addGraphDependencies,
@@ -190,17 +200,39 @@ export function registerLifecycleCommands(
         process.exit(1);
       }
 
+      // Collect enabled apps for summary
+      const apps = Object.entries(config.apps || {});
+      const enabledApps = apps.filter(([, app]) => app.enabled);
+
+      // Show summary header
+      console.log();
       console.log(
-        pc.cyan(
-          `\n   Starting ${deploymentsToStart.length} deployment(s)...\n`,
+        pc.bold(
+          "  ═══════════════════════════════════════════════════════════",
         ),
+      );
+      console.log(pc.bold("  Cortex Start"));
+      console.log(
+        pc.bold(
+          "  ═══════════════════════════════════════════════════════════",
+        ),
+      );
+      console.log();
+
+      // Deployments section
+      console.log(
+        pc.bold(pc.cyan(`  Deployments (${deploymentsToStart.length})`)),
+      );
+      console.log(
+        pc.dim("  ───────────────────────────────────────────────────────────"),
       );
 
       // Start each deployment
       for (const dep of deploymentsToStart) {
-        console.log(pc.bold(`   ${dep.name}`));
-        console.log(pc.dim(`   Project: ${dep.projectPath}`));
-        console.log(pc.dim(`   URL: ${dep.url}\n`));
+        console.log(`  ${pc.green("●")} ${pc.cyan(dep.name)}`);
+        console.log(pc.dim(`    Project: ${dep.projectPath}`));
+        console.log(pc.dim(`    URL: ${dep.url}`));
+        console.log();
 
         // Start graph database if configured and not convex-only
         if (!options.convexOnly) {
@@ -304,34 +336,123 @@ export function registerLifecycleCommands(
         }
       }
 
+      // Start enabled apps (unless convex-only or graph-only)
+      if (!options.convexOnly && !options.graphOnly && !options.foreground) {
+        if (enabledApps.length > 0) {
+          console.log(pc.bold(pc.cyan(`  Apps (${enabledApps.length})`)));
+          console.log(
+            pc.dim(
+              "  ───────────────────────────────────────────────────────────",
+            ),
+          );
+
+          for (const [name, app] of enabledApps) {
+            console.log(`  ${pc.green("●")} ${pc.cyan(name)}`);
+            console.log(pc.dim(`    Type: ${app.type}`));
+            console.log(
+              pc.dim(`    Path: ${path.join(app.projectPath, app.path)}`),
+            );
+            console.log(pc.dim(`    Port: ${app.port || 3000}`));
+            console.log();
+            await startApp(name, app);
+          }
+        }
+      }
+
       // Show summary
       if (!options.foreground) {
-        console.log(pc.green("\n   ✓ All deployments started\n"));
-        console.log(pc.dim("   Use 'cortex stop' to stop all services"));
+        const totalStarted =
+          deploymentsToStart.length + (enabledApps.length || 0);
         console.log(
-          pc.dim("   Use 'cortex config list' to see deployment status"),
+          pc.bold(
+            "  ═══════════════════════════════════════════════════════════",
+          ),
         );
+        console.log(pc.green(`  ✓ Started ${totalStarted} service(s)`));
+        console.log(
+          pc.bold(
+            "  ═══════════════════════════════════════════════════════════",
+          ),
+        );
+        console.log();
+        console.log(pc.dim("  Use 'cortex stop' to stop all services"));
+        console.log(
+          pc.dim("  Use 'cortex config list' to see deployment status"),
+        );
+        console.log();
       }
     });
 
   // Stop command
   program
     .command("stop")
-    .description("Stop background services (Convex and graph database)")
+    .description("Stop background services (Convex, graph database, and apps)")
     .option("-d, --deployment <name>", "Stop specific deployment only")
+    .option("-a, --app <name>", "Stop specific app only")
     .option("--convex-only", "Only stop Convex server", false)
     .option("--graph-only", "Only stop graph database", false)
+    .option("--apps-only", "Only stop template apps", false)
     .action(async (options) => {
+      // Load fresh config to get current state
+      const config = await loadConfig();
+
       let stoppedSomething = false;
       let stoppedCount = 0;
+      let stoppedAppsCount = 0;
 
-      // Determine which deployments to stop
+      // If stopping specific app only
+      if (options.app) {
+        const appConfig = config.apps?.[options.app];
+
+        if (!appConfig) {
+          // Try to find app in current directory
+          const cwd = process.cwd();
+          const appPidFiles = await findAppPidFiles(cwd);
+          const matchingApp = appPidFiles.find((a) => a.name === options.app);
+
+          if (!matchingApp) {
+            console.error(
+              pc.red(`\n   Error: App "${options.app}" not found`),
+            );
+            console.log(
+              pc.dim("   Run 'cortex config list' to see available apps\n"),
+            );
+            process.exit(1);
+          }
+
+          // Stop from current directory
+          const stopped = await stopApp(options.app, cwd);
+          if (stopped) {
+            console.log(
+              pc.green(`\n   ✓ App "${options.app}" stopped\n`),
+            );
+          } else {
+            console.log(
+              pc.yellow(`\n   App "${options.app}" was not running\n`),
+            );
+          }
+          return;
+        }
+
+        // Stop specific configured app
+        const stopped = await stopApp(options.app, appConfig.projectPath);
+        if (stopped) {
+          console.log(pc.green(`\n   ✓ App "${options.app}" stopped\n`));
+        } else {
+          console.log(
+            pc.yellow(`\n   App "${options.app}" was not running\n`),
+          );
+        }
+        return;
+      }
+
+      // Determine which deployments/project paths to stop
       const deploymentsToStop: Array<{ name: string; projectPath: string }> =
         [];
 
       if (options.deployment) {
         // Stop specific deployment
-        const deployment = _config.deployments?.[options.deployment];
+        const deployment = config.deployments?.[options.deployment];
         if (!deployment) {
           console.error(
             pc.red(`\n   Error: Deployment "${options.deployment}" not found`),
@@ -359,49 +480,66 @@ export function registerLifecycleCommands(
       } else {
         // Stop all deployments that have running processes
         const deploymentEntries = Object.entries(
-          _config.deployments || {},
+          config.deployments || {},
         ) as Array<[string, DeploymentConfig]>;
 
-        if (deploymentEntries.length === 0) {
+        // Collect project paths from both deployments and apps
+        const projectPaths = new Map<string, string>(); // path -> name
+
+        if (deploymentEntries.length === 0 && !config.apps) {
           // Fallback to current directory
           const cwd = process.cwd();
-          deploymentsToStop.push({
-            name: "current directory",
-            projectPath: cwd,
-          });
+          projectPaths.set(cwd, "current directory");
         } else {
+          // Add deployment project paths
           for (const [name, deployment] of deploymentEntries) {
             if (
               deployment.projectPath &&
               fs.existsSync(deployment.projectPath)
             ) {
-              // Check if anything is running for this deployment
-              const pidFile = path.join(
-                deployment.projectPath,
-                ".convex-dev.pid",
-              );
-              const dockerCompose = path.join(
-                deployment.projectPath,
-                "docker-compose.graph.yml",
-              );
+              projectPaths.set(deployment.projectPath, name);
+            }
+          }
 
-              const hasPidFile = fs.existsSync(pidFile);
-              const hasDockerCompose = fs.existsSync(dockerCompose);
-
-              if (hasPidFile || hasDockerCompose) {
-                deploymentsToStop.push({
-                  name,
-                  projectPath: deployment.projectPath,
-                });
+          // Add app project paths (may overlap with deployments)
+          if (config.apps) {
+            for (const [appName, app] of Object.entries(config.apps)) {
+              if (app.projectPath && fs.existsSync(app.projectPath)) {
+                // Use app name if no deployment for this path
+                if (!projectPaths.has(app.projectPath)) {
+                  projectPaths.set(app.projectPath, `app:${appName}`);
+                }
               }
             }
+          }
+        }
+
+        // Check each project path for running services
+        for (const [projectPath, name] of projectPaths) {
+          // Check if anything is running for this deployment
+          const pidFile = path.join(projectPath, ".convex-dev.pid");
+          const dockerCompose = path.join(projectPath, "docker-compose.graph.yml");
+          const appPidFiles = await findAppPidFiles(projectPath);
+
+          const hasPidFile = fs.existsSync(pidFile);
+          const hasDockerCompose = fs.existsSync(dockerCompose);
+          const hasApps = appPidFiles.length > 0;
+
+          if (hasPidFile || hasDockerCompose || hasApps) {
+            deploymentsToStop.push({ name, projectPath });
           }
         }
       }
 
       if (deploymentsToStop.length === 0) {
         console.log(
-          pc.yellow("\n   No deployments with running services found\n"),
+          pc.yellow("\n   No deployments with running services found"),
+        );
+        console.log(
+          pc.dim(
+            "   Note: Services started without PID files cannot be auto-detected.\n" +
+              "   Use 'ps aux | grep convex' or 'ps aux | grep next' to find running processes.\n",
+          ),
         );
         return;
       }
@@ -415,9 +553,10 @@ export function registerLifecycleCommands(
         console.log(pc.dim(`   ${projectPath}`));
 
         let deploymentStopped = false;
+        let convexStopped = false;
 
-        // Stop Convex if not graph-only
-        if (!options.graphOnly) {
+        // Stop Convex if not graph-only and not apps-only
+        if (!options.graphOnly && !options.appsOnly) {
           const pidFile = path.join(projectPath, ".convex-dev.pid");
 
           try {
@@ -429,10 +568,12 @@ export function registerLifecycleCommands(
               console.log(pc.green(`   ✓ Convex stopped (PID: ${pidNum})`));
               stoppedSomething = true;
               deploymentStopped = true;
+              convexStopped = true;
             } catch (e) {
               const err = e as { code?: string };
               if (err.code === "ESRCH") {
                 console.log(pc.yellow("   Convex was already stopped"));
+                convexStopped = true; // Consider it handled
               } else {
                 throw e;
               }
@@ -444,14 +585,46 @@ export function registerLifecycleCommands(
             const err = e as { code?: string };
             if (err.code !== "ENOENT") {
               console.error(pc.red("   Error stopping Convex:"), e);
-            } else if (!options.graphOnly) {
-              console.log(pc.dim("   No Convex process running"));
+            }
+            // No PID file - will try port-based detection below
+          }
+
+          // Fallback: try to stop by port if no PID file and deployment is local
+          if (!convexStopped) {
+            // Check if this is a local deployment (port 3210)
+            const deploymentConfig = Object.values(config.deployments || {}).find(
+              (d) => d.projectPath === projectPath,
+            );
+            const isLocal =
+              deploymentConfig?.url?.includes("127.0.0.1:3210") ||
+              deploymentConfig?.url?.includes("localhost:3210");
+
+            if (isLocal) {
+              const convexPid = await findProcessByPort(3210);
+              if (convexPid) {
+                console.log(
+                  pc.yellow(`   Found Convex on port 3210 (no PID file)`),
+                );
+                const stopped = await stopProcessByPort(3210);
+                if (stopped) {
+                  console.log(
+                    pc.green(`   ✓ Convex stopped (port 3210, PID: ${convexPid})`),
+                  );
+                  stoppedSomething = true;
+                  deploymentStopped = true;
+                  convexStopped = true;
+                }
+              } else {
+                console.log(pc.dim("   No Convex process running"));
+              }
+            } else if (!options.graphOnly && !options.appsOnly) {
+              console.log(pc.dim("   No Convex process running (PID file not found)"));
             }
           }
         }
 
-        // Stop graph containers if not convex-only
-        if (!options.convexOnly) {
+        // Stop graph containers if not convex-only and not apps-only
+        if (!options.convexOnly && !options.appsOnly) {
           const dockerComposePath = path.join(
             projectPath,
             "docker-compose.graph.yml",
@@ -466,8 +639,70 @@ export function registerLifecycleCommands(
             } else {
               console.log(pc.dim("   No graph container running"));
             }
-          } else if (!options.convexOnly) {
+          } else if (!options.convexOnly && !options.appsOnly) {
             console.log(pc.dim("   No graph database configured"));
+          }
+        }
+
+        // Stop apps if not convex-only and not graph-only
+        if (!options.convexOnly && !options.graphOnly) {
+          const appPidFiles = await findAppPidFiles(projectPath);
+          const stoppedAppNames = new Set<string>();
+
+          // First, try to stop apps with PID files
+          if (appPidFiles.length > 0) {
+            for (const { name: appName } of appPidFiles) {
+              const appStatus = await isAppRunning(appName, projectPath);
+              if (appStatus.running) {
+                const stopped = await stopApp(appName, projectPath);
+                if (stopped) {
+                  console.log(
+                    pc.green(`   ✓ App "${appName}" stopped (PID: ${appStatus.pid})`),
+                  );
+                  stoppedSomething = true;
+                  stoppedAppsCount++;
+                  deploymentStopped = true;
+                  stoppedAppNames.add(appName);
+                }
+              } else {
+                // Clean up stale PID file (already handled by isAppRunning)
+                console.log(pc.dim(`   App "${appName}" was not running`));
+              }
+            }
+          }
+
+          // Also check configured apps that might not have PID files
+          // (started before PID tracking was added)
+          if (config.apps) {
+            for (const [appName, appConfig] of Object.entries(config.apps)) {
+              // Skip if already stopped via PID file or not matching this project
+              if (stoppedAppNames.has(appName)) continue;
+              if (appConfig.projectPath !== projectPath) continue;
+
+              const port = appConfig.port || 3000;
+              const pid = await findProcessByPort(port);
+
+              if (pid) {
+                console.log(
+                  pc.yellow(
+                    `   Found app "${appName}" on port ${port} (no PID file)`,
+                  ),
+                );
+                const stopped = await stopProcessByPort(port);
+                if (stopped) {
+                  console.log(
+                    pc.green(`   ✓ App "${appName}" stopped (port ${port}, PID: ${pid})`),
+                  );
+                  stoppedSomething = true;
+                  stoppedAppsCount++;
+                  deploymentStopped = true;
+                }
+              }
+            }
+          }
+
+          if (appPidFiles.length === 0 && !config.apps && options.appsOnly) {
+            console.log(pc.dim("   No apps configured"));
           }
         }
 
@@ -477,8 +712,16 @@ export function registerLifecycleCommands(
         console.log();
       }
 
+      // Summary
       if (stoppedSomething) {
-        console.log(pc.green(`   ✓ Stopped ${stoppedCount} deployment(s)\n`));
+        const parts: string[] = [];
+        if (stoppedCount > 0 && !options.appsOnly) {
+          parts.push(`${stoppedCount} deployment(s)`);
+        }
+        if (stoppedAppsCount > 0) {
+          parts.push(`${stoppedAppsCount} app(s)`);
+        }
+        console.log(pc.green(`   ✓ Stopped ${parts.join(" and ")}\n`));
       } else {
         console.log(pc.yellow("   No services were running\n"));
       }
@@ -585,29 +828,82 @@ export async function runInitWizard(
     await showConfirmation(config);
   }
 
-  // Execute setup
-  await executeSetup(config);
+  // Execute setup (returns SDK metadata for post-setup steps)
+  const sdkMetadata = await executeSetup(config);
 
-  // Ask to start Convex if not already specified
+  // Ask about Vercel AI quickstart (optional demo app)
+  let installedQuickstart = false;
+  let quickstartAppConfig = null;
+
+  if (!options.yes) {
+    const { installQuickstart } = await prompts({
+      type: "confirm",
+      name: "installQuickstart",
+      message: "Install Vercel AI quickstart demo?",
+      initial: false,
+    });
+
+    if (installQuickstart) {
+      // Need the actual Convex URL from the config that was just set up
+      const convexUrl = config.convexUrl || "";
+
+      // Pass graph config if it was enabled during init
+      const graphConfig: QuickstartGraphConfig | undefined = config.graphEnabled
+        ? {
+            enabled: true,
+            uri: config.graphUri,
+            username: config.graphUsername,
+            password: config.graphPassword,
+          }
+        : undefined;
+
+      quickstartAppConfig = await installVercelAIQuickstart(
+        config.projectPath,
+        sdkMetadata.sdkVersion,
+        convexUrl,
+        config.openaiApiKey,
+        graphConfig,
+      );
+
+      // Save app to CLI config
+      const cliConfig = await loadConfig();
+      cliConfig.apps = cliConfig.apps || {};
+      cliConfig.apps["quickstart"] = quickstartAppConfig;
+      await saveUserConfig(cliConfig);
+
+      installedQuickstart = true;
+    }
+  }
+
+  // Context-aware start prompt
   let shouldStart = options.start;
   if (!shouldStart && !options.yes) {
+    const message = installedQuickstart
+      ? "Start Convex backend and quickstart app now?"
+      : "Start Convex development server now?";
+
     const response = await prompts({
       type: "confirm",
       name: "startNow",
-      message: "Start Convex development server now?",
+      message,
       initial: true,
     });
     shouldStart = response.startNow;
   }
 
-  // Start Convex if requested
+  // Start services if requested
   if (shouldStart) {
     const isLocal = config.convexSetupType === "local";
     await startConvexInBackground(config.projectPath, isLocal);
 
+    // Start quickstart app if installed
+    if (installedQuickstart && quickstartAppConfig) {
+      await startApp("quickstart", quickstartAppConfig);
+    }
+
     // Show running status dashboard
     console.log();
-    await showRunningStatus(config.projectPath, isLocal);
+    await showRunningStatus(config.projectPath, isLocal, installedQuickstart);
   }
 }
 
@@ -799,8 +1095,12 @@ async function getConvexSetup(
  */
 async function getOpenAIApiKey(): Promise<string | undefined> {
   console.log(pc.cyan("\n   OpenAI API Key (Optional)"));
-  console.log(pc.dim("   Required for AI-powered embeddings and fact extraction"));
-  console.log(pc.dim("   Get your key at: https://platform.openai.com/api-keys\n"));
+  console.log(
+    pc.dim("   Required for AI-powered embeddings and fact extraction"),
+  );
+  console.log(
+    pc.dim("   Get your key at: https://platform.openai.com/api-keys\n"),
+  );
 
   const { setupOpenAI } = await prompts({
     type: "confirm",
@@ -895,8 +1195,11 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
 
 /**
  * Execute the setup
+ * Returns SDK metadata for use in post-setup steps (like quickstart installation)
  */
-async function executeSetup(config: WizardConfig): Promise<void> {
+async function executeSetup(
+  config: WizardConfig,
+): Promise<{ sdkVersion: string; convexVersion: string }> {
   console.log(pc.cyan("\n   Setting up Cortex...\n"));
 
   try {
@@ -1088,6 +1391,12 @@ async function executeSetup(config: WizardConfig): Promise<void> {
 
     // Success!
     showSuccessMessage(config);
+
+    // Return SDK metadata for use in post-setup steps
+    return {
+      sdkVersion: sdkMetadata.sdkVersion,
+      convexVersion: sdkMetadata.convexVersion,
+    };
   } catch (error) {
     console.error(pc.red("\n   Setup failed:"), error);
     throw error;
@@ -1112,11 +1421,12 @@ async function saveDeploymentToConfig(config: WizardConfig): Promise<void> {
       .toLowerCase()
       .replace(/[^a-z0-9-]/g, "-");
 
-    // Add the deployment
+    // Add the deployment (enabled by default when created by init)
     userConfig.deployments[deploymentName] = {
       url: config.convexUrl,
       key: config.deployKey,
       projectPath: config.projectPath,
+      enabled: true,
     };
 
     // Set as default if no default exists
@@ -1295,6 +1605,7 @@ async function startConvexInBackground(
 async function showRunningStatus(
   projectPath: string,
   isLocal: boolean,
+  hasQuickstart: boolean = false,
 ): Promise<void> {
   const width = 56;
   const line = "═".repeat(width);
@@ -1384,6 +1695,16 @@ async function showRunningStatus(
   }
   console.log();
 
+  // Quickstart App Status (if installed)
+  if (hasQuickstart) {
+    console.log(pc.bold(pc.white("  Vercel AI Quickstart")));
+    console.log(pc.dim("  " + thinLine));
+    console.log(`   ${pc.green("●")} Running`);
+    console.log(pc.dim("     URL: http://localhost:3000"));
+    console.log(pc.dim("     Interactive chat demo with memory visualization"));
+    console.log();
+  }
+
   // Quick Actions
   console.log(pc.bold(pc.white("  Quick Actions")));
   console.log(pc.dim("  " + thinLine));
@@ -1398,6 +1719,11 @@ async function showRunningStatus(
     pc.dim("   cortex stop") +
       pc.dim("             # Stop background services"),
   );
+  if (hasQuickstart) {
+    console.log(
+      pc.dim("   npm run quickstart") + pc.dim("      # Start quickstart demo"),
+    );
+  }
   console.log(
     pc.dim("   npm start") + pc.dim("               # Run your AI agent"),
   );

@@ -149,10 +149,8 @@ jobs:
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
         with:
-          fail-on-severity: high
-          comment-summary-in-pr: true
-          # Allow internal packages - license is Apache-2.0 (in repo root)
-          allow-dependencies-licenses: "pkg:npm/@cortexmemory/sdk, pkg:npm/@cortexmemory/cli, pkg:npm/@cortexmemory/vercel-ai-provider"
+          config-file: .github/dependency-review-config.yml
+          comment-summary-in-pr: always
 
   # License compliance check
   license-check:
@@ -341,7 +339,7 @@ jobs:
           echo "  Commit Signature Verification"
           echo "════════════════════════════════════════════════════════════"
           echo ""
-          
+
           # Determine commits to check based on event type
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             # For PRs, check all commits in the PR
@@ -354,12 +352,12 @@ jobs:
             echo "📋 Checking pushed commit: ${{ github.sha }}"
             COMMITS="${{ github.sha }}"
           fi
-          
+
           echo ""
-          
+
           UNSIGNED_COUNT=0
           SIGNED_COUNT=0
-          
+
           for COMMIT in $COMMITS; do
             # Get commit verification status from GitHub API
             VERIFICATION=$(gh api repos/${{ github.repository }}/commits/$COMMIT --jq '.commit.verification')
@@ -377,12 +375,12 @@ jobs:
               UNSIGNED_COUNT=$((UNSIGNED_COUNT + 1))
             fi
           done
-          
+
           echo ""
           echo "════════════════════════════════════════════════════════════"
           echo "  Summary: $SIGNED_COUNT verified, $UNSIGNED_COUNT unverified"
           echo "════════════════════════════════════════════════════════════"
-          
+
           if [ "$UNSIGNED_COUNT" -gt 0 ]; then
             echo ""
             echo "❌ Found $UNSIGNED_COUNT unsigned commit(s)!"
@@ -394,7 +392,7 @@ jobs:
             echo ""
             exit 1
           fi
-          
+
           echo ""
           echo "✅ All commits have verified signatures!"
 

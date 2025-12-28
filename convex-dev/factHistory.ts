@@ -148,7 +148,9 @@ export const purgeOldEvents = mutation({
       ? await ctx.db
           .query("factHistory")
           .withIndex("by_memorySpace_timestamp", (q) =>
-            q.eq("memorySpaceId", args.memorySpaceId!).lt("timestamp", args.olderThan),
+            q
+              .eq("memorySpaceId", args.memorySpaceId!)
+              .lt("timestamp", args.olderThan),
           )
           .collect()
       : await ctx.db

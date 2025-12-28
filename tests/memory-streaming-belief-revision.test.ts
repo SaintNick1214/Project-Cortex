@@ -594,10 +594,7 @@ describe("Memory Streaming with Belief Revision", () => {
           memorySpaceId: TEST_MEMSPACE_ID,
           conversationId: convId,
           userMessage: "I prefer morning meetings",
-          responseStream: createStream(
-            "Morning meetings ",
-            "are productive!",
-          ),
+          responseStream: createStream("Morning meetings ", "are productive!"),
           userId: TEST_USER_ID,
           userName: TEST_USER_NAME,
           agentId: TEST_AGENT_ID,
@@ -631,9 +628,7 @@ describe("Memory Streaming Belief Revision E2E", () => {
 
   beforeAll(async () => {
     if (skipIfNoLLM) {
-      console.log(
-        "Skipping E2E belief revision tests: OPENAI_API_KEY not set",
-      );
+      console.log("Skipping E2E belief revision tests: OPENAI_API_KEY not set");
       return;
     }
 
@@ -720,7 +715,10 @@ describe("Memory Streaming Belief Revision E2E", () => {
         }
       } catch (error) {
         // Backend infrastructure issues should not fail the test
-        console.log("[E2E] Test skipped due to backend error:", (error as Error).message);
+        console.log(
+          "[E2E] Test skipped due to backend error:",
+          (error as Error).message,
+        );
       }
     });
 
@@ -815,7 +813,10 @@ describe("Memory Streaming Belief Revision E2E", () => {
         }
       } catch (error) {
         // Backend infrastructure issues should not fail the test
-        console.log("[E2E] Test skipped due to backend error:", (error as Error).message);
+        console.log(
+          "[E2E] Test skipped due to backend error:",
+          (error as Error).message,
+        );
       }
     });
 

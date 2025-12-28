@@ -14,10 +14,29 @@ import ora from "ora";
 import pc from "picocolors";
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
-import type { CLIConfig, DeploymentConfig } from "../types.js";
+import type { CLIConfig, DeploymentConfig, AppConfig } from "../types.js";
 import type { SetupStatus } from "../utils/init/types.js";
 import { execCommand } from "../utils/shell.js";
 import { formatOutput } from "../utils/formatting.js";
+import { loadConfig } from "../utils/config.js";
+import {
+  findAppPidFiles,
+  isAppRunning,
+  findProcessByPort,
+} from "../utils/init/quickstart-setup.js";
+
+/**
+ * Status for a single app
+ */
+interface AppStatus {
+  name: string;
+  type: string;
+  path: string;
+  port: number;
+  running: boolean;
+  pid?: number;
+  detectionMethod: "pid" | "port" | "none";
+}
 
 /**
  * Status for a single deployment
@@ -35,6 +54,9 @@ interface DeploymentStatus {
   graphRunning: boolean;
   graphType?: string;
   convexRunning: boolean;
+  convexPid?: number;
+  convexDetectionMethod: "pid" | "port" | "none";
+  apps: AppStatus[];
 }
 
 /**
@@ -126,10 +148,12 @@ export function registerStatusCommands(
  * Gather status for all configured deployments
  */
 async function gatherMultiDeploymentStatus(
-  config: CLIConfig,
+  _config: CLIConfig,
   specificDeployment: string | undefined,
   _runChecks: boolean,
 ): Promise<MultiDeploymentDashboard> {
+  // Load fresh config to get current state
+  const config = await loadConfig();
   const deploymentStatuses: DeploymentStatus[] = [];
 
   // Get deployments to check
@@ -161,6 +185,7 @@ async function gatherMultiDeploymentStatus(
       name,
       deployment,
       config.default || "",
+      config.apps || {},
     );
     deploymentStatuses.push(status);
   }
@@ -181,6 +206,7 @@ async function gatherDeploymentStatus(
   name: string,
   deployment: DeploymentConfig,
   defaultDeployment: string,
+  apps: Record<string, AppConfig>,
 ): Promise<DeploymentStatus> {
   const isDefault = name === defaultDeployment;
   const isEnabled =
@@ -199,6 +225,8 @@ async function gatherDeploymentStatus(
     graphConfigured: false,
     graphRunning: false,
     convexRunning: false,
+    convexDetectionMethod: "none",
+    apps: [],
   };
 
   // Check if project path exists
@@ -249,16 +277,73 @@ async function gatherDeploymentStatus(
         }
       }
 
-      // Check if Convex dev server is running (check PID file)
+      // Check if Convex dev server is running
+      // First: check PID file
       const pidFile = join(deployment.projectPath, ".convex-dev.pid");
       if (existsSync(pidFile)) {
         try {
           const pid = readFileSync(pidFile, "utf-8").trim();
-          process.kill(parseInt(pid), 0);
+          const pidNum = parseInt(pid);
+          process.kill(pidNum, 0);
           status.convexRunning = true;
+          status.convexPid = pidNum;
+          status.convexDetectionMethod = "pid";
         } catch {
+          // PID file exists but process not running
           status.convexRunning = false;
         }
+      }
+
+      // Second: if no PID file, try port-based detection for local deployments
+      if (!status.convexRunning) {
+        const isLocal =
+          deployment.url?.includes("127.0.0.1:3210") ||
+          deployment.url?.includes("localhost:3210");
+
+        if (isLocal) {
+          const convexPid = await findProcessByPort(3210);
+          if (convexPid) {
+            status.convexRunning = true;
+            status.convexPid = convexPid;
+            status.convexDetectionMethod = "port";
+          }
+        }
+      }
+
+      // Check for apps associated with this deployment
+      // First: check for PID files
+      const appPidFiles = await findAppPidFiles(deployment.projectPath);
+      for (const { name: appName } of appPidFiles) {
+        const appStatus = await isAppRunning(appName, deployment.projectPath);
+        status.apps.push({
+          name: appName,
+          type: "unknown",
+          path: "",
+          port: 0,
+          running: appStatus.running,
+          pid: appStatus.pid,
+          detectionMethod: appStatus.running ? "pid" : "none",
+        });
+      }
+
+      // Second: check configured apps for this project
+      const trackedAppNames = new Set(status.apps.map((a) => a.name));
+      for (const [appName, appConfig] of Object.entries(apps)) {
+        if (appConfig.projectPath !== deployment.projectPath) continue;
+        if (trackedAppNames.has(appName)) continue;
+
+        const port = appConfig.port || 3000;
+        const pid = await findProcessByPort(port);
+
+        status.apps.push({
+          name: appName,
+          type: appConfig.type,
+          path: appConfig.path,
+          port,
+          running: pid !== null,
+          pid: pid ?? undefined,
+          detectionMethod: pid ? "port" : "none",
+        });
       }
     }
   }
@@ -349,14 +434,21 @@ function displayMultiDeploymentDashboard(
     const runningCount = status.deployments.filter(
       (d) => d.convexRunning,
     ).length;
-
-    console.log(
-      pc.bold(
-        pc.white(
-          `  Deployments (${enabledCount} enabled, ${runningCount} running)`,
-        ),
-      ),
+    const appsRunning = status.deployments.reduce(
+      (sum, d) => sum + d.apps.filter((a) => a.running).length,
+      0,
     );
+    const totalApps = status.deployments.reduce(
+      (sum, d) => sum + d.apps.length,
+      0,
+    );
+
+    let summary = `${enabledCount} enabled, ${runningCount} running`;
+    if (totalApps > 0) {
+      summary += `, ${appsRunning}/${totalApps} apps running`;
+    }
+
+    console.log(pc.bold(pc.white(`  Deployments (${summary})`)));
     console.log(pc.dim("  " + thinLine));
     console.log();
 
@@ -441,11 +533,21 @@ function displayDeploymentStatus(deployment: DeploymentStatus): void {
           ? "warning"
           : "not_configured",
     );
-    const convexStatus = deployment.convexRunning
+    let convexStatus = deployment.convexRunning
       ? "Running"
       : deployment.convexFolder
         ? "Configured (not running)"
         : "No convex/ folder";
+
+    // Add detection method and PID info
+    if (deployment.convexRunning && deployment.convexPid) {
+      const method =
+        deployment.convexDetectionMethod === "port"
+          ? "via port"
+          : "via PID file";
+      convexStatus += ` (PID: ${deployment.convexPid}, ${method})`;
+    }
+
     console.log(`   ${pc.dim("Convex:")} ${convexIndicator} ${convexStatus}`);
   }
 
@@ -464,6 +566,27 @@ function displayDeploymentStatus(deployment: DeploymentStatus): void {
         ? `Configured (${deployment.graphType}, not running)`
         : "Not configured";
     console.log(`   ${pc.dim("Graph:")} ${graphIndicator} ${graphStatus}`);
+  }
+
+  // Apps status
+  if (deployment.apps.length > 0) {
+    for (const app of deployment.apps) {
+      const appIndicator = getStatusIndicator(app.running ? "ok" : "warning");
+      let appStatus = app.running ? "Running" : "Not running";
+
+      if (app.running && app.pid) {
+        const method =
+          app.detectionMethod === "port" ? "via port" : "via PID file";
+        appStatus += ` (PID: ${app.pid}, port ${app.port}, ${method})`;
+      } else if (app.port) {
+        appStatus += ` (port ${app.port})`;
+      }
+
+      const typeInfo = app.type !== "unknown" ? ` [${app.type}]` : "";
+      console.log(
+        `   ${pc.dim("App:")} ${appIndicator} ${app.name}${typeInfo} - ${appStatus}`,
+      );
+    }
   }
 
   console.log();

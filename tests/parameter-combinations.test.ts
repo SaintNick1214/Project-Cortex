@@ -725,25 +725,28 @@ describe("Parameter Combination Testing", () => {
     });
 
     it("all callbacks combined", async () => {
-      const result = await cortex.memory.remember({
-        memorySpaceId: BASE_ID,
-        conversationId: `remember-all-cb-${BASE_ID}`,
-        userMessage: "Full callback test",
-        agentResponse: "Full response",
-        userId: TEST_USER_ID,
-        userName: "Test User",
-        agentId: TEST_AGENT_ID,
-        extractContent: async (_user, _agent) => `${_user} / ${_agent}`,
-        extractFacts: async (_user, _agent) => [
-          {
-            fact: `Callback extracted fact for ${BASE_ID}`, // Unique fact using BASE_ID to avoid deduplication
-            factType: "knowledge",
-            confidence: 85,
-          },
-        ],
-        importance: 80,
-        tags: ["callbacks"],
-      }, { beliefRevision: false }); // Disable belief revision for deterministic test
+      const result = await cortex.memory.remember(
+        {
+          memorySpaceId: BASE_ID,
+          conversationId: `remember-all-cb-${BASE_ID}`,
+          userMessage: "Full callback test",
+          agentResponse: "Full response",
+          userId: TEST_USER_ID,
+          userName: "Test User",
+          agentId: TEST_AGENT_ID,
+          extractContent: async (_user, _agent) => `${_user} / ${_agent}`,
+          extractFacts: async (_user, _agent) => [
+            {
+              fact: `Callback extracted fact for ${BASE_ID}`, // Unique fact using BASE_ID to avoid deduplication
+              factType: "knowledge",
+              confidence: 85,
+            },
+          ],
+          importance: 80,
+          tags: ["callbacks"],
+        },
+        { beliefRevision: false },
+      ); // Disable belief revision for deterministic test
 
       expect(result.memories[0].content).toContain("/");
       expect(result.memories[0].importance).toBe(80);

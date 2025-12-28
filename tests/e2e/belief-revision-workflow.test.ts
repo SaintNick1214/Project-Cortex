@@ -121,7 +121,10 @@ describe("Belief Revision Workflow E2E", () => {
       });
 
       // Verify old fact is superseded
-      const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, pref1Fact.factId);
+      const oldFact = await cortex.facts.get(
+        TEST_MEMSPACE_ID,
+        pref1Fact.factId,
+      );
       expect(oldFact?.validUntil).toBeDefined();
 
       // New fact should be valid
@@ -138,7 +141,7 @@ describe("Belief Revision Workflow E2E", () => {
 
       // Should not include the superseded dark mode preference
       const supersededFact = validFacts.find(
-        (f: FactRecord) => f.factId === pref1Fact.factId
+        (f: FactRecord) => f.factId === pref1Fact.factId,
       );
       expect(supersededFact).toBeUndefined();
     });
@@ -148,7 +151,10 @@ describe("Belief Revision Workflow E2E", () => {
       expect(Array.isArray(history)).toBe(true);
 
       // Check activity summary
-      const summary = await cortex.facts.getActivitySummary(TEST_MEMSPACE_ID, 24);
+      const summary = await cortex.facts.getActivitySummary(
+        TEST_MEMSPACE_ID,
+        24,
+      );
       expect(summary.totalEvents).toBeGreaterThan(0);
     });
   });
@@ -205,7 +211,10 @@ describe("Belief Revision Workflow E2E", () => {
       expect(chain.length).toBeGreaterThanOrEqual(1);
 
       // Verify the old fact is now superseded (has validUntil set)
-      const oldFact = await cortex.facts.get(TEST_MEMSPACE_ID, location1.factId);
+      const oldFact = await cortex.facts.get(
+        TEST_MEMSPACE_ID,
+        location1.factId,
+      );
       expect(oldFact?.validUntil).toBeDefined();
 
       // Query current location - should only get SF (the non-superseded one)
@@ -218,11 +227,11 @@ describe("Belief Revision Workflow E2E", () => {
 
       // Filter to only valid (non-superseded) location facts
       const validLocations = currentFacts.filter(
-        (f: FactRecord) => 
-          f.predicate === "lives in" && 
-          (f.validUntil === undefined || f.validUntil === null)
+        (f: FactRecord) =>
+          f.predicate === "lives in" &&
+          (f.validUntil === undefined || f.validUntil === null),
       );
-      
+
       // Should have exactly one valid location fact
       expect(validLocations.length).toBe(1);
       expect(validLocations[0].object).toBe("San Francisco");
@@ -305,7 +314,7 @@ describe("Belief Revision Workflow E2E", () => {
 
       // Should have one current valid fact about the pet
       const validPetFacts = petFacts.filter(
-        (f: FactRecord) => f.validUntil === undefined || f.validUntil === null
+        (f: FactRecord) => f.validUntil === undefined || f.validUntil === null,
       );
       expect(validPetFacts.length).toBe(1);
       expect(validPetFacts[0].fact).toContain("Max");
@@ -369,8 +378,12 @@ describe("Belief Revision Workflow E2E", () => {
         participantId: participant2,
       });
 
-      expect(p1Facts.some((f: FactRecord) => f.factId === p1Career.factId)).toBe(true);
-      expect(p2Facts.some((f: FactRecord) => f.factId === p2Career.factId)).toBe(true);
+      expect(
+        p1Facts.some((f: FactRecord) => f.factId === p1Career.factId),
+      ).toBe(true);
+      expect(
+        p2Facts.some((f: FactRecord) => f.factId === p2Career.factId),
+      ).toBe(true);
     });
   });
 
@@ -380,7 +393,10 @@ describe("Belief Revision Workflow E2E", () => {
 
   describe("Activity Summary", () => {
     it("should accurately count activities", async () => {
-      const summary = await cortex.facts.getActivitySummary(TEST_MEMSPACE_ID, 24);
+      const summary = await cortex.facts.getActivitySummary(
+        TEST_MEMSPACE_ID,
+        24,
+      );
 
       expect(summary).toHaveProperty("timeRange");
       expect(summary.timeRange.hours).toBe(24);

@@ -20,13 +20,13 @@ concurrency:
 
 jobs:
   # Gate: Verify security workflow passed before publishing
-  # 
+  #
   # This workflow only runs AFTER "Security Scans" completes.
   # We verify it completed successfully before proceeding.
   #
   # Security Scans includes:
   #   - CodeQL Analysis
-  #   - Dependency Vulnerability Scan  
+  #   - Dependency Vulnerability Scan
   #   - Secret Scanning
   #   - Python Security Scan
   #   - API Security Scan
@@ -577,6 +577,9 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
+      - name: Sync quickstart template
+        run: node packages/cortex-cli/scripts/sync-quickstart-template.js
+
       - name: Build package
         run: npm run build --workspace=@cortexmemory/cli
 
@@ -690,17 +693,17 @@ jobs:
           echo "════════════════════════════════════════════════════════════"
           echo "  Updating Homebrew Tap Formula"
           echo "════════════════════════════════════════════════════════════"
-          
+
           TARBALL_URL="https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz"
           TARBALL_FILE=$(mktemp)
-          
+
           echo "📦 Version: ${VERSION}"
           echo "🔗 Tarball: ${TARBALL_URL}"
-          
+
           # Download tarball with retry logic for CDN propagation delay
           MAX_RETRIES=6
           RETRY_DELAY=10
-          
+
           for i in $(seq 1 $MAX_RETRIES); do
             echo "⬇️  Downloading tarball (attempt $i/$MAX_RETRIES)..."
             
@@ -725,14 +728,14 @@ jobs:
               sleep $RETRY_DELAY
             fi
           done
-          
+
           # Final validation
           if [ ! -f "$TARBALL_FILE" ] || [ ! -s "$TARBALL_FILE" ]; then
             echo "❌ Error: Failed to download tarball after $MAX_RETRIES attempts"
             rm -f "$TARBALL_FILE"
             exit 1
           fi
-          
+
           MAGIC=$(xxd -l 2 -p "$TARBALL_FILE" 2>/dev/null || echo "")
           if [ "$MAGIC" != "1f8b" ]; then
             echo "❌ Error: Downloaded file is not a valid gzip tarball"
@@ -741,34 +744,34 @@ jobs:
             rm -f "$TARBALL_FILE"
             exit 1
           fi
-          
+
           # Compute SHA256 from validated tarball
           SHA256=$(shasum -a 256 "$TARBALL_FILE" | cut -d ' ' -f 1)
           rm -f "$TARBALL_FILE"
-          
+
           if [ -z "$SHA256" ] || [ ${#SHA256} -ne 64 ]; then
             echo "❌ Error: Invalid SHA256 hash computed"
             exit 1
           fi
-          
+
           echo "🔐 SHA256: ${SHA256}"
-          
+
           # Clone homebrew-tap repo and update formula
           git clone https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/Cortex-Memory/homebrew-tap.git /tmp/homebrew-tap
           cd /tmp/homebrew-tap
-          
+
           # Update formula
           FORMULA_PATH="Formula/cli.rb"
           sed -i "s|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-[0-9.]*\.tgz\"|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz\"|" "${FORMULA_PATH}"
           sed -i "s|sha256 \"[a-f0-9]*\"|sha256 \"${SHA256}\"|" "${FORMULA_PATH}"
-          
+
           echo "✅ Formula updated"
           cat "${FORMULA_PATH}"
-          
+
           # Commit and push
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           if git diff --quiet "${FORMULA_PATH}"; then
             echo "No changes to formula, skipping commit"
           else
@@ -777,7 +780,7 @@ jobs:
             git push origin main
             echo "✅ Pushed formula update to homebrew-tap"
           fi
-          
+
           # Cleanup
           rm -rf /tmp/homebrew-tap
 

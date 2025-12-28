@@ -96,29 +96,31 @@ export function registerConfigCommands(
 
         console.log();
 
-        // Table header
+        // Table dimensions
         const nameWidth = 20;
         const statusWidth = 10;
         const urlWidth = 40;
         const keyWidth = 6;
         const pathWidth = 35;
 
-        console.log(
-          pc.bold(
-            "  " +
-              "NAME".padEnd(nameWidth) +
-              "STATUS".padEnd(statusWidth) +
-              "URL".padEnd(urlWidth) +
-              "KEY".padEnd(keyWidth) +
-              "PROJECT PATH",
-          ),
-        );
+        // Deployments section header
+        console.log(pc.bold("  Deployments"));
         console.log(
           pc.dim(
             "  " +
               "─".repeat(
                 nameWidth + statusWidth + urlWidth + keyWidth + pathWidth,
               ),
+          ),
+        );
+        console.log(
+          pc.dim(
+            "  " +
+              "NAME".padEnd(nameWidth) +
+              "STATUS".padEnd(statusWidth) +
+              "URL".padEnd(urlWidth) +
+              "KEY".padEnd(keyWidth) +
+              "PROJECT PATH",
           ),
         );
 
@@ -171,6 +173,37 @@ export function registerConfigCommands(
             ),
           );
         }
+
+        // Apps section
+        const apps = Object.entries(config.apps || {});
+        if (apps.length > 0) {
+          console.log();
+          console.log(pc.bold("  Apps"));
+          console.log(
+            pc.dim("  " + "─".repeat(nameWidth + statusWidth + urlWidth)),
+          );
+
+          for (const [name, app] of apps) {
+            const statusText = app.enabled ? "enabled" : "disabled";
+            const statusPadded = statusText.padEnd(statusWidth);
+            const statusDisplay = app.enabled
+              ? pc.green(statusPadded)
+              : pc.dim(statusPadded);
+            const portInfo = app.port ? `port:${app.port}` : "";
+            const typeDisplay = `${app.type} ${portInfo}`.padEnd(urlWidth);
+
+            console.log(
+              "  " +
+                name.padEnd(nameWidth) +
+                statusDisplay +
+                pc.dim(typeDisplay),
+            );
+          }
+
+          console.log();
+          console.log(pc.dim("  Enabled apps started with 'cortex start'"));
+        }
+
         console.log();
       } catch (error) {
         printError(
@@ -262,73 +295,105 @@ export function registerConfigCommands(
       }
     });
 
-  // config enable - Enable a deployment for `cortex start`
+  // config enable - Enable a deployment or app for `cortex start`
   configCmd
-    .command("enable <deployment>")
-    .description("Enable a deployment (will be started with 'cortex start')")
-    .action(async (deploymentName) => {
+    .command("enable <name>")
+    .description(
+      "Enable a deployment or app (will be started with 'cortex start')",
+    )
+    .action(async (name) => {
       try {
         const config = await loadConfig();
 
-        if (!config.deployments[deploymentName]) {
-          printError(`Deployment "${deploymentName}" not found`);
-          const names = Object.keys(config.deployments);
-          if (names.length > 0) {
-            printInfo(`Available deployments: ${names.join(", ")}`);
-          }
-          process.exit(1);
+        // Check if it's a deployment
+        if (config.deployments[name]) {
+          config.deployments[name] = {
+            ...config.deployments[name],
+            enabled: true,
+          };
+          await saveUserConfig(config);
+          printSuccess(`Enabled deployment "${name}"`);
+          console.log(pc.dim("   Will be started with 'cortex start'"));
+          return;
         }
 
-        config.deployments[deploymentName] = {
-          ...config.deployments[deploymentName],
-          enabled: true,
-        };
+        // Check if it's an app
+        if (config.apps?.[name]) {
+          config.apps[name] = {
+            ...config.apps[name],
+            enabled: true,
+          };
+          await saveUserConfig(config);
+          printSuccess(`Enabled app "${name}"`);
+          console.log(pc.dim("   Will be started with 'cortex start'"));
+          return;
+        }
 
-        await saveUserConfig(config);
-        printSuccess(`Enabled deployment "${deploymentName}"`);
-        console.log(pc.dim("   Will be started with 'cortex start'"));
+        // Not found
+        printError(`"${name}" not found`);
+        const deploymentNames = Object.keys(config.deployments);
+        const appNames = Object.keys(config.apps || {});
+        if (deploymentNames.length > 0) {
+          printInfo(`Available deployments: ${deploymentNames.join(", ")}`);
+        }
+        if (appNames.length > 0) {
+          printInfo(`Available apps: ${appNames.join(", ")}`);
+        }
+        process.exit(1);
       } catch (error) {
-        printError(
-          error instanceof Error
-            ? error.message
-            : "Failed to enable deployment",
-        );
+        printError(error instanceof Error ? error.message : "Failed to enable");
         process.exit(1);
       }
     });
 
-  // config disable - Disable a deployment
+  // config disable - Disable a deployment or app
   configCmd
-    .command("disable <deployment>")
+    .command("disable <name>")
     .description(
-      "Disable a deployment (will not be started with 'cortex start')",
+      "Disable a deployment or app (will not be started with 'cortex start')",
     )
-    .action(async (deploymentName) => {
+    .action(async (name) => {
       try {
         const config = await loadConfig();
 
-        if (!config.deployments[deploymentName]) {
-          printError(`Deployment "${deploymentName}" not found`);
-          const names = Object.keys(config.deployments);
-          if (names.length > 0) {
-            printInfo(`Available deployments: ${names.join(", ")}`);
-          }
-          process.exit(1);
+        // Check if it's a deployment
+        if (config.deployments[name]) {
+          config.deployments[name] = {
+            ...config.deployments[name],
+            enabled: false,
+          };
+          await saveUserConfig(config);
+          printSuccess(`Disabled deployment "${name}"`);
+          console.log(pc.dim("   Will NOT be started with 'cortex start'"));
+          return;
         }
 
-        config.deployments[deploymentName] = {
-          ...config.deployments[deploymentName],
-          enabled: false,
-        };
+        // Check if it's an app
+        if (config.apps?.[name]) {
+          config.apps[name] = {
+            ...config.apps[name],
+            enabled: false,
+          };
+          await saveUserConfig(config);
+          printSuccess(`Disabled app "${name}"`);
+          console.log(pc.dim("   Will NOT be started with 'cortex start'"));
+          return;
+        }
 
-        await saveUserConfig(config);
-        printSuccess(`Disabled deployment "${deploymentName}"`);
-        console.log(pc.dim("   Will NOT be started with 'cortex start'"));
+        // Not found
+        printError(`"${name}" not found`);
+        const deploymentNames = Object.keys(config.deployments);
+        const appNames = Object.keys(config.apps || {});
+        if (deploymentNames.length > 0) {
+          printInfo(`Available deployments: ${deploymentNames.join(", ")}`);
+        }
+        if (appNames.length > 0) {
+          printInfo(`Available apps: ${appNames.join(", ")}`);
+        }
+        process.exit(1);
       } catch (error) {
         printError(
-          error instanceof Error
-            ? error.message
-            : "Failed to disable deployment",
+          error instanceof Error ? error.message : "Failed to disable",
         );
         process.exit(1);
       }

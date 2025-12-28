@@ -3,12 +3,18 @@
  *
  * Tests to ensure references between layers are valid and bidirectional
  * relationships are maintained correctly.
+ *
+ * Updated: Added tenantId support for multi-tenancy testing.
  */
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
+import {
+  generateTenantId,
+  createTenantAuthContext,
+} from "./helpers/tenancy";
 
 // Create test run context for parallel execution isolation
 const ctx = createTestRunContext();
@@ -22,9 +28,13 @@ describe("Cross-Layer Reference Integrity", () => {
   const TEST_MEMSPACE_ID = ctx.memorySpaceId("cross-layer");
   const TEST_USER_ID = ctx.userId("cross-layer");
   const TEST_AGENT_ID = ctx.agentId("cross-layer");
+  // Multi-tenancy: Generate tenant-specific IDs
+  const TEST_TENANT_ID = generateTenantId("cross-layer");
 
   beforeAll(async () => {
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    // Initialize Cortex with auth context for multi-tenancy
+    const authContext = createTenantAuthContext(TEST_TENANT_ID, TEST_USER_ID);
+    cortex = new Cortex({ convexUrl: CONVEX_URL, auth: authContext });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
     // NOTE: Removed purgeAll() to enable parallel test execution.

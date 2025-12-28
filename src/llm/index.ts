@@ -473,7 +473,8 @@ class AnthropicClient implements LLMClient {
           role: "user",
           content:
             options.responseFormat === "json"
-              ? options.prompt + "\n\nRespond with ONLY a JSON object, no other text."
+              ? options.prompt +
+                "\n\nRespond with ONLY a JSON object, no other text."
               : options.prompt,
         },
       ],

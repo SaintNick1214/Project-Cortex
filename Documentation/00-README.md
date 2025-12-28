@@ -68,8 +68,8 @@ Complete API documentation (organized by architectural layers):
 
 **Reference:**
 
-- **[Types & Interfaces](./03-api-reference/11-types-interfaces.md)** - TypeScript definitions
-- **[Error Handling](./03-api-reference/12-error-handling.md)** - Error codes and debugging
+- **[Types & Interfaces](./05-reference/01-types-interfaces.md)** - TypeScript definitions
+- **[Error Handling](./05-reference/02-error-handling.md)** - Error codes and debugging
 
 ### 🏗️ Architecture
 
