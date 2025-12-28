@@ -21,16 +21,34 @@ export const store = mutation({
     id: v.string(),
     data: v.any(),
     userId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
     const now = Date.now();
 
-    // Check if entry already exists
-    const existing = await ctx.db
-      .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", args.type).eq("id", args.id))
-      .first();
+    // Check if entry already exists - use tenant-aware lookup when tenantId provided
+    let existing;
+    if (args.tenantId) {
+      // Tenant-isolated lookup
+      existing = await ctx.db
+        .query("immutable")
+        .withIndex("by_tenant_type_id", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("type", args.type)
+            .eq("id", args.id),
+        )
+        .first();
+    } else {
+      // Global lookup for non-tenant records
+      existing = await ctx.db
+        .query("immutable")
+        .withIndex("by_type_id", (q) =>
+          q.eq("type", args.type).eq("id", args.id),
+        )
+        .first();
+    }
 
     if (existing) {
       // Update: Create new version
@@ -64,6 +82,7 @@ export const store = mutation({
       id: args.id,
       data: args.data,
       userId: args.userId,
+      tenantId: args.tenantId, // Store tenantId
       version: 1,
       previousVersions: [],
       metadata: args.metadata,
@@ -82,12 +101,28 @@ export const purge = mutation({
   args: {
     type: v.string(),
     id: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", args.type).eq("id", args.id))
-      .first();
+    let entry;
+    if (args.tenantId) {
+      entry = await ctx.db
+        .query("immutable")
+        .withIndex("by_tenant_type_id", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("type", args.type)
+            .eq("id", args.id),
+        )
+        .first();
+    } else {
+      entry = await ctx.db
+        .query("immutable")
+        .withIndex("by_type_id", (q) =>
+          q.eq("type", args.type).eq("id", args.id),
+        )
+        .first();
+    }
 
     if (!entry) {
       throw new ConvexError("IMMUTABLE_ENTRY_NOT_FOUND");
@@ -117,12 +152,28 @@ export const get = query({
   args: {
     type: v.string(),
     id: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", args.type).eq("id", args.id))
-      .first();
+    let entry;
+    if (args.tenantId) {
+      entry = await ctx.db
+        .query("immutable")
+        .withIndex("by_tenant_type_id", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("type", args.type)
+            .eq("id", args.id),
+        )
+        .first();
+    } else {
+      entry = await ctx.db
+        .query("immutable")
+        .withIndex("by_type_id", (q) =>
+          q.eq("type", args.type).eq("id", args.id),
+        )
+        .first();
+    }
 
     return entry || null;
   },
@@ -136,12 +187,28 @@ export const getVersion = query({
     type: v.string(),
     id: v.string(),
     version: v.number(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("immutable")
-      .withIndex("by_type_id", (q) => q.eq("type", args.type).eq("id", args.id))
-      .first();
+    let entry;
+    if (args.tenantId) {
+      entry = await ctx.db
+        .query("immutable")
+        .withIndex("by_tenant_type_id", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("type", args.type)
+            .eq("id", args.id),
+        )
+        .first();
+    } else {
+      entry = await ctx.db
+        .query("immutable")
+        .withIndex("by_type_id", (q) =>
+          q.eq("type", args.type).eq("id", args.id),
+        )
+        .first();
+    }
 
     if (!entry) {
       return null;

@@ -21,18 +21,34 @@ export const set = mutation({
     key: v.string(),
     value: v.any(),
     userId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
     const now = Date.now();
 
-    // Check if entry exists
-    const existing = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key),
-      )
-      .first();
+    // Check if entry exists - must match both namespace/key AND tenantId for proper isolation
+    let existing;
+    if (args.tenantId) {
+      // With tenant isolation: look for tenant-specific entry
+      existing = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace_key", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("namespace", args.namespace)
+            .eq("key", args.key),
+        )
+        .first();
+    } else {
+      // Without tenant: fallback to global namespace/key lookup
+      existing = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", args.namespace).eq("key", args.key),
+        )
+        .first();
+    }
 
     if (existing) {
       // Update existing
@@ -52,6 +68,7 @@ export const set = mutation({
       key: args.key,
       value: args.value,
       userId: args.userId,
+      tenantId: args.tenantId, // Store tenantId
       metadata: args.metadata,
       createdAt: now,
       updatedAt: now,
@@ -347,14 +364,30 @@ export const get = query({
   args: {
     namespace: v.string(),
     key: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key),
-      )
-      .first();
+    let entry;
+    if (args.tenantId) {
+      // Tenant-isolated lookup
+      entry = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace_key", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("namespace", args.namespace)
+            .eq("key", args.key),
+        )
+        .first();
+    } else {
+      // Global namespace/key lookup
+      entry = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", args.namespace).eq("key", args.key),
+        )
+        .first();
+    }
 
     return entry || null;
   },
@@ -367,14 +400,28 @@ export const exists = query({
   args: {
     namespace: v.string(),
     key: v.string(),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
   },
   handler: async (ctx, args) => {
-    const entry = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace_key", (q) =>
-        q.eq("namespace", args.namespace).eq("key", args.key),
-      )
-      .first();
+    let entry;
+    if (args.tenantId) {
+      entry = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace_key", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("namespace", args.namespace)
+            .eq("key", args.key),
+        )
+        .first();
+    } else {
+      entry = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace_key", (q) =>
+          q.eq("namespace", args.namespace).eq("key", args.key),
+        )
+        .first();
+    }
 
     return entry !== null;
   },
@@ -388,6 +435,7 @@ export const list = query({
     namespace: v.string(),
     keyPrefix: v.optional(v.string()),
     userId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
     updatedAfter: v.optional(v.number()),
@@ -397,10 +445,21 @@ export const list = query({
   },
   handler: async (ctx, args) => {
     // Collect all matching entries first for filtering and sorting
-    let entries = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-      .collect();
+    let entries;
+    if (args.tenantId) {
+      // Tenant-isolated query
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
+        )
+        .collect();
+    } else {
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
+        .collect();
+    }
 
     // Filter by key prefix if provided
     if (args.keyPrefix) {
@@ -456,15 +515,26 @@ export const count = query({
   args: {
     namespace: v.string(),
     userId: v.optional(v.string()),
+    tenantId: v.optional(v.string()), // Multi-tenancy filter
     keyPrefix: v.optional(v.string()),
     updatedAfter: v.optional(v.number()),
     updatedBefore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let entries = await ctx.db
-      .query("mutable")
-      .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
-      .collect();
+    let entries;
+    if (args.tenantId) {
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_tenant_namespace", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("namespace", args.namespace),
+        )
+        .collect();
+    } else {
+      entries = await ctx.db
+        .query("mutable")
+        .withIndex("by_namespace", (q) => q.eq("namespace", args.namespace))
+        .collect();
+    }
 
     // Filter by userId if provided
     if (args.userId) {

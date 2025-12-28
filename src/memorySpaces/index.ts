@@ -35,12 +35,14 @@ import {
   validateTimeWindow,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
 
 export class MemorySpacesAPI {
   constructor(
     private client: ConvexClient,
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
+    private authContext?: AuthContext,
   ) {}
 
   /**

@@ -114,6 +114,8 @@ export interface ReviseParams {
   userId?: string;
   /** Optional participant ID */
   participantId?: string;
+  /** Multi-tenancy: SaaS platform isolation */
+  tenantId?: string;
   /** Source type for provenance tracking */
   sourceType?: "conversation" | "system" | "tool" | "manual" | "a2a";
   /** Source reference for provenance tracking */
@@ -571,6 +573,7 @@ export class BeliefRevisionService {
             memorySpaceId: params.memorySpaceId,
             participantId: params.participantId,
             userId: params.userId,
+            tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
             fact: params.fact.fact,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
             factType: (params.fact.factType as any) || "custom",
@@ -607,6 +610,7 @@ export class BeliefRevisionService {
           memorySpaceId: params.memorySpaceId,
           participantId: params.participantId,
           userId: params.userId,
+          tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
           fact: params.fact.fact,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
           factType: (params.fact.factType as any) || "custom",
@@ -627,6 +631,7 @@ export class BeliefRevisionService {
       memorySpaceId: params.memorySpaceId,
       participantId: params.participantId,
       userId: params.userId,
+      tenantId: params.tenantId, // Multi-tenancy: SaaS platform isolation
       fact: params.fact.fact,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
       factType: (params.fact.factType as any) || "custom",

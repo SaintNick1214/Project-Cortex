@@ -20,6 +20,7 @@ export const store = mutation({
     memorySpaceId: v.string(),
     participantId: v.optional(v.string()), // Hive Mode: who extracted this fact
     userId: v.optional(v.string()), // GDPR compliance - links to user
+    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
     fact: v.string(), // The fact statement
     factType: v.union(
       v.literal("preference"),
@@ -84,6 +85,7 @@ export const store = mutation({
       memorySpaceId: args.memorySpaceId,
       participantId: args.participantId,
       userId: args.userId,
+      tenantId: args.tenantId, // Store tenantId
       fact: args.fact,
       factType: args.factType,
       subject: args.subject,

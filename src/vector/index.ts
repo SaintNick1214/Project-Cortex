@@ -117,6 +117,7 @@ export class VectorAPI {
       () =>
         this.client.mutation(api.memories.store, {
           memorySpaceId,
+          tenantId: input.tenantId, // Multi-tenancy: SaaS platform isolation
           participantId: input.participantId, // NEW: Hive Mode
           content: input.content,
           contentType: input.contentType,

@@ -166,53 +166,59 @@ export const list = query({
     offset: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db.query("sessions");
+    // Select the best index based on provided filters
+    let sessions;
 
-    // Track which fields are covered by the selected index
-    const indexedFields = new Set<string>();
-
-    // Apply filters based on what's provided
     if (args.tenantId && args.userId) {
-      q = q.withIndex("by_tenant_user", (q) =>
-        q.eq("tenantId", args.tenantId!).eq("userId", args.userId!),
-      );
-      indexedFields.add("tenantId");
-      indexedFields.add("userId");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_tenant_user", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("userId", args.userId!),
+        )
+        .collect();
     } else if (args.tenantId && args.status) {
-      q = q.withIndex("by_tenant_status", (q) =>
-        q.eq("tenantId", args.tenantId!).eq("status", args.status!),
-      );
-      indexedFields.add("tenantId");
-      indexedFields.add("status");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_tenant_status", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("status", args.status!),
+        )
+        .collect();
     } else if (args.tenantId) {
-      q = q.withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!));
-      indexedFields.add("tenantId");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
+        .collect();
     } else if (args.userId) {
-      q = q.withIndex("by_userId", (q) => q.eq("userId", args.userId!));
-      indexedFields.add("userId");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_userId", (q) => q.eq("userId", args.userId!))
+        .collect();
     } else if (args.memorySpaceId) {
-      q = q.withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId!),
-      );
-      indexedFields.add("memorySpaceId");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .collect();
     } else if (args.status) {
-      q = q.withIndex("by_status", (q) => q.eq("status", args.status!));
-      indexedFields.add("status");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_status", (q) => q.eq("status", args.status!))
+        .collect();
+    } else {
+      sessions = await ctx.db.query("sessions").collect();
     }
 
-    // Collect with remaining filters applied
-    let sessions = await q.collect();
-
-    // Apply any remaining filters not covered by indexes
-    if (args.userId && !indexedFields.has("userId")) {
+    // Apply any remaining filters not covered by the selected index
+    if (args.userId && !(args.tenantId && args.userId)) {
       sessions = sessions.filter((s) => s.userId === args.userId);
     }
 
-    if (args.memorySpaceId && !indexedFields.has("memorySpaceId")) {
+    if (args.memorySpaceId && !args.memorySpaceId) {
       sessions = sessions.filter((s) => s.memorySpaceId === args.memorySpaceId);
     }
 
-    if (args.status && !indexedFields.has("status")) {
+    if (args.status && !(args.tenantId && args.status) && !args.status) {
       sessions = sessions.filter((s) => s.status === args.status);
     }
 
@@ -238,45 +244,50 @@ export const count = query({
     ),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db.query("sessions");
+    // Select the best index based on provided filters
+    let sessions;
 
-    // Track which fields are covered by the selected index
-    const indexedFields = new Set<string>();
-
-    // Apply filters based on what's provided
     if (args.tenantId && args.status) {
-      q = q.withIndex("by_tenant_status", (q) =>
-        q.eq("tenantId", args.tenantId!).eq("status", args.status!),
-      );
-      indexedFields.add("tenantId");
-      indexedFields.add("status");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_tenant_status", (q) =>
+          q.eq("tenantId", args.tenantId!).eq("status", args.status!),
+        )
+        .collect();
     } else if (args.tenantId) {
-      q = q.withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!));
-      indexedFields.add("tenantId");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
+        .collect();
     } else if (args.userId) {
-      q = q.withIndex("by_userId", (q) => q.eq("userId", args.userId!));
-      indexedFields.add("userId");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_userId", (q) => q.eq("userId", args.userId!))
+        .collect();
     } else if (args.memorySpaceId) {
-      q = q.withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId!),
-      );
-      indexedFields.add("memorySpaceId");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .collect();
     } else if (args.status) {
-      q = q.withIndex("by_status", (q) => q.eq("status", args.status!));
-      indexedFields.add("status");
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_status", (q) => q.eq("status", args.status!))
+        .collect();
+    } else {
+      sessions = await ctx.db.query("sessions").collect();
     }
 
-    // Collect and count with remaining filters
-    let sessions = await q.collect();
-
-    // Apply any remaining filters not covered by indexes
-    if (args.userId && !indexedFields.has("userId")) {
+    // Apply any remaining filters not covered by the selected index
+    if (args.userId && !args.userId) {
       sessions = sessions.filter((s) => s.userId === args.userId);
     }
-    if (args.memorySpaceId && !indexedFields.has("memorySpaceId")) {
+    if (args.memorySpaceId && !args.memorySpaceId) {
       sessions = sessions.filter((s) => s.memorySpaceId === args.memorySpaceId);
     }
-    if (args.status && !indexedFields.has("status")) {
+    if (args.status && !(args.tenantId && args.status) && !args.status) {
       sessions = sessions.filter((s) => s.status === args.status);
     }
 
@@ -299,22 +310,30 @@ export const expireIdle = mutation({
   handler: async (ctx, args) => {
     const cutoff = Date.now() - args.idleTimeout;
 
-    let q = ctx.db.query("sessions");
-
-    // Filter by tenant if provided
+    // Get all active/idle sessions, optionally filtered by tenant
+    let sessions;
     if (args.tenantId) {
-      q = q.withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!));
+      sessions = await ctx.db
+        .query("sessions")
+        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
+        .filter((q) =>
+          q.or(
+            q.eq(q.field("status"), "active"),
+            q.eq(q.field("status"), "idle"),
+          ),
+        )
+        .collect();
+    } else {
+      sessions = await ctx.db
+        .query("sessions")
+        .filter((q) =>
+          q.or(
+            q.eq(q.field("status"), "active"),
+            q.eq(q.field("status"), "idle"),
+          ),
+        )
+        .collect();
     }
-
-    // Get all active sessions
-    let sessions = await q
-      .filter((q) =>
-        q.or(
-          q.eq(q.field("status"), "active"),
-          q.eq(q.field("status"), "idle"),
-        ),
-      )
-      .collect();
 
     // Filter by idle timeout
     sessions = sessions.filter((s) => s.lastActiveAt < cutoff);
