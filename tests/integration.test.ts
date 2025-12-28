@@ -768,8 +768,11 @@ describe("Complex Integration Tests", () => {
       // SEARCH: Find across all layers
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-      // Conversations
-      const convResults = await cortex.conversations.search({ query: keyword });
+      // Conversations - filter by memorySpaceId for efficiency and reliability
+      const convResults = await cortex.conversations.search({
+        query: keyword,
+        filters: { memorySpaceId: SEARCH_SPACE },
+      });
 
       expect(
         convResults.some(

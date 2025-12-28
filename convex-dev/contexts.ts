@@ -86,11 +86,10 @@ export const create = mutation({
       depth = 0;
     }
 
-    // Create context
-    const _id = await ctx.db.insert("contexts", {
+    // Create context - only include tenantId if it has a value
+    const contextData: any = {
       contextId,
       memorySpaceId: args.memorySpaceId,
-      tenantId: args.tenantId, // Store tenantId for multi-tenancy
       purpose: args.purpose,
       description: args.description,
       userId: args.userId,
@@ -108,8 +107,14 @@ export const create = mutation({
       previousVersions: [],
       createdAt: now,
       updatedAt: now,
-      completedAt: undefined,
-    });
+    };
+
+    // Only add tenantId if it has a value (don't store undefined)
+    if (args.tenantId) {
+      contextData.tenantId = args.tenantId;
+    }
+
+    const _id = await ctx.db.insert("contexts", contextData);
 
     // Update parent's childIds
     if (parentContext) {
@@ -158,8 +163,14 @@ export const update = mutation({
         .query("contexts")
         .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
         .first();
-      // SECURITY: Only match truly global records (no tenantId)
-      context = candidate && !candidate.tenantId ? candidate : null;
+      // SECURITY: Only match truly global records (no tenantId set)
+      // Check for undefined, null, or empty string to handle all falsy cases
+      const candidateTenantId = candidate?.tenantId;
+      const hasNoTenant =
+        candidateTenantId === undefined ||
+        candidateTenantId === null ||
+        candidateTenantId === "";
+      context = candidate && hasNoTenant ? candidate : null;
     }
 
     if (!context) {
@@ -233,8 +244,14 @@ export const deleteContext = mutation({
         .query("contexts")
         .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
         .first();
-      // SECURITY: Only match truly global records (no tenantId)
-      context = candidate && !candidate.tenantId ? candidate : null;
+      // SECURITY: Only match truly global records (no tenantId set)
+      // Check for undefined, null, or empty string to handle all falsy cases
+      const candidateTenantId = candidate?.tenantId;
+      const hasNoTenant =
+        candidateTenantId === undefined ||
+        candidateTenantId === null ||
+        candidateTenantId === "";
+      context = candidate && hasNoTenant ? candidate : null;
     }
 
     if (!context) {
@@ -466,8 +483,14 @@ export const get = query({
         .query("contexts")
         .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
         .first();
-      // SECURITY: Only match truly global records (no tenantId)
-      context = candidate && !candidate.tenantId ? candidate : null;
+      // SECURITY: Only match truly global records (no tenantId set)
+      // Check for undefined, null, or empty string to handle all falsy cases
+      const candidateTenantId = candidate?.tenantId;
+      const hasNoTenant =
+        candidateTenantId === undefined ||
+        candidateTenantId === null ||
+        candidateTenantId === "";
+      context = candidate && hasNoTenant ? candidate : null;
     }
 
     if (!context) {
