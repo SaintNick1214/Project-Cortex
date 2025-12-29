@@ -422,7 +422,7 @@ export function registerConvexCommands(
   convex
     .command("update")
     .description("Update packages (use 'cortex update' instead)")
-    .option("-d, --deployment <name>", "Target deployment")
+    .option("-d, --deployment <name>", "Target a specific deployment only")
     .option("--sdk-version <version>", "Specific Cortex SDK version to install")
     .option("--convex-version <version>", "Specific Convex version to install")
     .option("-y, --yes", "Auto-accept all updates", false)
