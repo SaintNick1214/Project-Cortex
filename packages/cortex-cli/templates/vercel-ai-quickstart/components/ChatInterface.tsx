@@ -25,6 +25,7 @@ interface LayerUpdateData {
 interface ChatInterfaceProps {
   memorySpaceId: string;
   userId: string;
+  conversationId: string | null;
   onOrchestrationStart?: () => void;
   onLayerUpdate?: (
     layer: MemoryLayer,
@@ -36,14 +37,17 @@ interface ChatInterfaceProps {
     },
   ) => void;
   onReset?: () => void;
+  onConversationUpdate?: (conversationId: string, title: string) => void;
 }
 
 export function ChatInterface({
   memorySpaceId,
   userId,
+  conversationId,
   onOrchestrationStart,
   onLayerUpdate,
   onReset,
+  onConversationUpdate,
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState("");
@@ -59,39 +63,48 @@ export function ChatInterface({
     () =>
       new DefaultChatTransport({
         api: "/api/chat",
-        body: { memorySpaceId, userId },
+        body: { memorySpaceId, userId, conversationId },
       }),
-    [memorySpaceId, userId],
+    [memorySpaceId, userId, conversationId],
   );
 
   // Handle layer data parts from the stream
   const handleDataPart = useCallback(
-    (dataPart: any) => {
-      if (dataPart.type === "data-orchestration-start") {
+    (dataPart: unknown) => {
+      const part = dataPart as { type: string; data?: unknown };
+      if (part.type === "data-orchestration-start") {
         onOrchestrationStart?.();
       }
 
-      if (dataPart.type === "data-layer-update") {
-        const event = dataPart.data as LayerUpdateData;
+      if (part.type === "data-layer-update") {
+        const event = part.data as LayerUpdateData;
         onLayerUpdate?.(event.layer, event.status, event.data, {
           action: event.revisionAction,
           supersededFacts: event.supersededFacts,
         });
       }
 
-      // orchestration-complete is informational - layer diagram already updated
-      // via individual layer events
+      // Handle conversation title update
+      if (part.type === "data-conversation-update") {
+        const update = part.data as { conversationId: string; title: string };
+        onConversationUpdate?.(update.conversationId, update.title);
+      }
     },
-    [onOrchestrationStart, onLayerUpdate],
+    [onOrchestrationStart, onLayerUpdate, onConversationUpdate],
   );
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, setMessages } = useChat({
     transport,
     onData: handleDataPart,
     onError: (error) => {
       console.error("Chat error:", error);
     },
   });
+
+  // Clear messages when conversation changes
+  useEffect(() => {
+    setMessages([]);
+  }, [conversationId, setMessages]);
 
   // Determine if we're actively streaming (only time to show typing indicator)
   const isStreaming = status === "streaming";
@@ -121,14 +134,14 @@ export function ChatInterface({
   };
 
   // Extract text content from message parts (AI SDK v5 format)
-  const getMessageContent = (message: any): string => {
+  const getMessageContent = (message: { content?: string; parts?: Array<{ type: string; text?: string }> }): string => {
     if (typeof message.content === "string") {
       return message.content;
     }
     if (message.parts) {
       return message.parts
-        .filter((part: any) => part.type === "text")
-        .map((part: any) => part.text)
+        .filter((part) => part.type === "text")
+        .map((part) => part.text)
         .join("");
     }
     return "";
@@ -144,7 +157,7 @@ export function ChatInterface({
               <span className="text-3xl">🧠</span>
             </div>
             <h2 className="text-xl font-semibold mb-2">
-              Welcome to Cortex Memory Demo
+              {conversationId ? "Continue your conversation" : "Start a new conversation"}
             </h2>
             <p className="text-gray-400 max-w-md mx-auto mb-6">
               This demo shows how Cortex orchestrates memory across multiple
