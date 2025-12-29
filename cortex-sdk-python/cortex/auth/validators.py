@@ -177,6 +177,41 @@ def validate_session_id(session_id: Any) -> None:
         )
 
 
+def validate_auth_provider(auth_provider: Any) -> None:
+    """
+    Validate auth provider name (optional field).
+
+    Args:
+        auth_provider: Auth provider name to validate (e.g., 'auth0', 'firebase')
+
+    Raises:
+        AuthValidationError: If auth_provider is invalid
+    """
+    if auth_provider is None:
+        return  # Optional field
+
+    if not isinstance(auth_provider, str):
+        raise AuthValidationError(
+            f"authProvider must be a string, got {type(auth_provider).__name__}",
+            "INVALID_AUTH_PROVIDER_TYPE",
+            "authProvider",
+        )
+
+    if len(auth_provider.strip()) == 0:
+        raise AuthValidationError(
+            "authProvider cannot be empty string (use None instead)",
+            "EMPTY_AUTH_PROVIDER",
+            "authProvider",
+        )
+
+    if len(auth_provider) > 256:
+        raise AuthValidationError(
+            f"authProvider too long: {len(auth_provider)} > 256 characters",
+            "AUTH_PROVIDER_TOO_LONG",
+            "authProvider",
+        )
+
+
 def validate_auth_method(auth_method: Any) -> None:
     """
     Validate auth method (optional field).
@@ -292,6 +327,7 @@ def validate_auth_context_params(params: Dict[str, Any]) -> None:
     validate_tenant_id(params.get("tenant_id"))
     validate_organization_id(params.get("organization_id"))
     validate_session_id(params.get("session_id"))
+    validate_auth_provider(params.get("auth_provider"))
     validate_auth_method(params.get("auth_method"))
     validate_timestamp(params.get("authenticated_at"), "authenticatedAt")
     validate_claims(params.get("claims"))

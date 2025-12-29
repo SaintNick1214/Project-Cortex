@@ -1215,13 +1215,13 @@ async function updateApp(
             if (totalNewDeps > 0) {
               console.log();
               printInfo(`Installing ${totalNewDeps} new dependencies...`);
+              console.log(pc.dim(`   Running in: ${templateResult.appPath}`));
               console.log();
 
-              const appPath = path.join(app.projectPath, app.path);
               const exitCode = await execCommandLive(
                 "npm",
                 ["install", "--legacy-peer-deps"],
-                { cwd: appPath },
+                { cwd: templateResult.appPath },
               );
 
               if (exitCode === 0) {
