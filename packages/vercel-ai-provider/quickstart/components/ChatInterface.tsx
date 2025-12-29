@@ -58,14 +58,28 @@ export function ChatInterface({
     "What do you remember about me?",
   ]);
 
-  // Create transport with body parameters - memoized to prevent recreation
+  // Track conversation ID in a ref for immediate access in callbacks
+  // This ensures the latest conversationId is always used when sending messages,
+  // even before React re-renders and recreates the transport
+  const conversationIdRef = useRef<string | null>(conversationId);
+  useEffect(() => {
+    conversationIdRef.current = conversationId;
+  }, [conversationId]);
+
+  // Create transport with a function that reads from ref for conversationId
+  // This ensures we always send the latest conversationId
   const transport = useMemo(
     () =>
       new DefaultChatTransport({
         api: "/api/chat",
-        body: { memorySpaceId, userId, conversationId },
+        // Use a function to get body so it reads latest conversationId from ref
+        body: () => ({
+          memorySpaceId,
+          userId,
+          conversationId: conversationIdRef.current,
+        }),
       }),
-    [memorySpaceId, userId, conversationId],
+    [memorySpaceId, userId], // Note: conversationId removed - ref handles updates
   );
 
   // Handle layer data parts from the stream
