@@ -11,6 +11,7 @@ import {
   createUIMessageStream,
   createUIMessageStreamResponse,
 } from "ai";
+import { getCortex } from "@/lib/cortex";
 
 // Create OpenAI client for embeddings
 const openaiClient = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -40,6 +41,7 @@ Example interactions:
 function getCortexMemoryConfig(
   memorySpaceId: string,
   userId: string,
+  conversationId: string,
   layerObserver?: LayerObserver,
 ): CortexMemoryConfig {
   return {
@@ -53,6 +55,9 @@ function getCortexMemoryConfig(
     // Agent identification (required for user-agent conversations in SDK v0.17.0+)
     agentId: "quickstart-assistant",
     agentName: "Cortex Demo Assistant",
+
+    // Conversation ID for chat history isolation
+    conversationId,
 
     // Enable graph memory sync (auto-configured via env vars)
     // When true, uses CypherGraphAdapter to sync to Neo4j/Memgraph
@@ -101,10 +106,31 @@ function getCortexMemoryConfig(
   };
 }
 
+/**
+ * Generate a title from the first user message
+ */
+function generateTitle(message: string): string {
+  // Take first 50 chars, cut at word boundary
+  let title = message.slice(0, 50);
+  if (message.length > 50) {
+    const lastSpace = title.lastIndexOf(" ");
+    if (lastSpace > 20) {
+      title = title.slice(0, lastSpace);
+    }
+    title += "...";
+  }
+  return title;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages, memorySpaceId, userId } = body;
+    const { messages, memorySpaceId, userId, conversationId: providedConversationId } = body;
+
+    // Generate conversation ID if not provided (new chat)
+    const conversationId = providedConversationId || 
+      `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const isNewConversation = !providedConversationId;
 
     // Convert UIMessage[] from useChat to ModelMessage[] for streamText
     // Note: In AI SDK v6+, convertToModelMessages may return a Promise
@@ -113,6 +139,12 @@ export async function POST(req: Request) {
       modelMessagesResult instanceof Promise
         ? await modelMessagesResult
         : modelMessagesResult;
+
+    // Get the first user message for title generation
+    const firstUserMessage = messages.find((m: { role: string; content?: string }) => m.role === "user");
+    const messageText = typeof firstUserMessage?.content === "string" 
+      ? firstUserMessage.content 
+      : "";
 
     // Use createUIMessageStream to send both LLM text and layer events
     return createUIMessageStreamResponse({
@@ -157,10 +189,11 @@ export async function POST(req: Request) {
             },
           };
 
-          // Build config with the observer
+          // Build config with the observer and conversation ID
           const config = getCortexMemoryConfig(
             memorySpaceId || "quickstart-demo",
             userId || "demo-user",
+            conversationId,
             layerObserver,
           );
 
@@ -177,6 +210,38 @@ export async function POST(req: Request) {
 
           // Merge LLM stream into the UI message stream
           writer.merge(result.toUIMessageStream());
+
+          // If this is a new conversation, create it in the SDK and update the title
+          if (isNewConversation && messageText) {
+            try {
+              const cortex = getCortex();
+              const title = generateTitle(messageText);
+
+              // Create the conversation with the SDK
+              await cortex.conversations.create({
+                memorySpaceId: memorySpaceId || "quickstart-demo",
+                conversationId,
+                type: "user-agent",
+                participants: {
+                  userId: userId || "demo-user",
+                  agentId: "quickstart-assistant",
+                },
+                metadata: { title },
+              });
+
+              // Send conversation update to the client
+              writer.write({
+                type: "data-conversation-update",
+                data: {
+                  conversationId,
+                  title,
+                },
+                transient: true,
+              });
+            } catch (error) {
+              console.error("Failed to create conversation:", error);
+            }
+          }
         },
       }),
     });
