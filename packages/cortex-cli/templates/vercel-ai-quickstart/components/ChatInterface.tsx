@@ -101,9 +101,51 @@ export function ChatInterface({
     },
   });
 
-  // Clear messages when conversation changes
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+  // Load messages when conversation changes
   useEffect(() => {
+    // Clear messages first
     setMessages([]);
+
+    // If no conversation selected, nothing more to do
+    if (!conversationId) {
+      return;
+    }
+
+    // Fetch conversation history
+    const loadConversationHistory = async () => {
+      setIsLoadingHistory(true);
+      try {
+        const response = await fetch(
+          `/api/conversations?conversationId=${encodeURIComponent(conversationId)}`
+        );
+
+        if (!response.ok) {
+          console.error("Failed to load conversation history");
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.messages && data.messages.length > 0) {
+          // Transform to the format expected by useChat
+          const loadedMessages = data.messages.map((msg: { id: string; role: string; content: string; createdAt: string }) => ({
+            id: msg.id,
+            role: msg.role,
+            content: msg.content,
+            createdAt: new Date(msg.createdAt),
+          }));
+          setMessages(loadedMessages);
+        }
+      } catch (error) {
+        console.error("Error loading conversation history:", error);
+      } finally {
+        setIsLoadingHistory(false);
+      }
+    };
+
+    loadConversationHistory();
   }, [conversationId, setMessages]);
 
   // Determine if we're actively streaming (only time to show typing indicator)
@@ -151,7 +193,35 @@ export function ChatInterface({
     <div className="flex flex-col h-full">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && (
+        {isLoadingHistory && (
+          <div className="flex items-center justify-center py-12">
+            <div className="flex flex-col items-center gap-3">
+              <svg
+                className="animate-spin h-8 w-8 text-cortex-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+              <span className="text-gray-400 text-sm">Loading conversation...</span>
+            </div>
+          </div>
+        )}
+
+        {!isLoadingHistory && messages.length === 0 && (
           <div className="text-center py-12">
             <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cortex-500/20 to-cortex-700/20 flex items-center justify-center">
               <span className="text-3xl">🧠</span>
