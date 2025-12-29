@@ -121,11 +121,16 @@ export function ChatHistorySidebar({
     setDeletingId(conversationId);
 
     try {
-      await fetch(`/api/conversations?conversationId=${encodeURIComponent(conversationId)}`, {
+      const response = await fetch(`/api/conversations?conversationId=${encodeURIComponent(conversationId)}`, {
         method: "DELETE",
       });
 
-      // Remove from local state
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || `Delete failed with status ${response.status}`);
+      }
+
+      // Remove from local state only after successful deletion
       setConversations((prev) => prev.filter((c) => c.id !== conversationId));
 
       // If deleted conversation was selected, trigger new chat

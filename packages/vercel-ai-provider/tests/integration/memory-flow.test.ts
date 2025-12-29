@@ -399,4 +399,136 @@ describe("Memory Flow Integration", () => {
       expect(rememberOptions.beliefRevision).toBeUndefined();
     });
   });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Conversation ID Handling
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("conversation ID handling", () => {
+    it("should pass explicit conversationId to remember", async () => {
+      const config = createTestConfig({
+        enableMemoryStorage: true,
+        conversationId: "explicit-conv-123",
+      });
+      const mockLLM = createMockLLM();
+      const provider = new CortexMemoryProvider(mockLLM, config);
+
+      await provider.doGenerate({
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
+        mode: { type: "regular" },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify remember was called with the explicit conversationId
+      expect(mockCortex.memory.remember).toHaveBeenCalled();
+      const rememberParams = mockCortex.memory.remember.mock.calls[0][0];
+      expect(rememberParams.conversationId).toBe("explicit-conv-123");
+    });
+
+    it("should auto-generate conversationId when not provided", async () => {
+      const config = createTestConfig({
+        enableMemoryStorage: true,
+      });
+      // Ensure conversationId is not set
+      delete (config as any).conversationId;
+
+      const mockLLM = createMockLLM();
+      const provider = new CortexMemoryProvider(mockLLM, config);
+
+      await provider.doGenerate({
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
+        mode: { type: "regular" },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify remember was called with an auto-generated conversationId
+      expect(mockCortex.memory.remember).toHaveBeenCalled();
+      const rememberParams = mockCortex.memory.remember.mock.calls[0][0];
+      expect(rememberParams.conversationId).toBeDefined();
+      expect(rememberParams.conversationId).toMatch(/^conv-\d+-[a-z0-9]+$/);
+    });
+
+    it("should use conversationId consistently when both recall and store are enabled", async () => {
+      storedMemories = createMockMemories(1);
+
+      const config = createTestConfig({
+        enableMemorySearch: true,
+        enableMemoryStorage: true,
+        conversationId: "persistent-conv-456",
+      });
+      const mockLLM = createMockLLM();
+      const provider = new CortexMemoryProvider(mockLLM, config);
+
+      await provider.doGenerate({
+        prompt: [
+          { role: "user", content: [{ type: "text", text: "What do you know?" }] },
+        ],
+        mode: { type: "regular" },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify recall was called (conversationId is not passed to recall API)
+      expect(mockCortex.memory.recall).toHaveBeenCalled();
+      const recallParams = mockCortex.memory.recall.mock.calls[0][0];
+      // recall() doesn't filter by conversationId - it retrieves user's full context
+      expect(recallParams.userId).toBeDefined();
+      expect(recallParams.memorySpaceId).toBeDefined();
+
+      // Verify remember was called with the conversationId for storage
+      expect(mockCortex.memory.remember).toHaveBeenCalled();
+      const rememberParams = mockCortex.memory.remember.mock.calls[0][0];
+      expect(rememberParams.conversationId).toBe("persistent-conv-456");
+    });
+
+    it("should support dynamic conversationId from function", async () => {
+      let callCount = 0;
+      const config = createTestConfig({
+        enableMemoryStorage: true,
+        conversationId: () => {
+          callCount++;
+          return `dynamic-conv-${callCount}`;
+        },
+      });
+      const mockLLM = createMockLLM();
+      const provider = new CortexMemoryProvider(mockLLM, config);
+
+      await provider.doGenerate({
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
+        mode: { type: "regular" },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify remember was called with dynamically generated conversationId
+      expect(mockCortex.memory.remember).toHaveBeenCalled();
+      const rememberParams = mockCortex.memory.remember.mock.calls[0][0];
+      expect(rememberParams.conversationId).toMatch(/^dynamic-conv-\d+$/);
+    });
+
+    it("should track conversation in stored conversations array", async () => {
+      const config = createTestConfig({
+        enableMemoryStorage: true,
+        conversationId: "tracked-conv-789",
+      });
+      const mockLLM = createMockLLM();
+      const provider = new CortexMemoryProvider(mockLLM, config);
+
+      await provider.doGenerate({
+        prompt: [{ role: "user", content: [{ type: "text", text: "Hello" }] }],
+        mode: { type: "regular" },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Verify the conversation was tracked
+      expect(storedConversations.length).toBeGreaterThan(0);
+      const lastConv = storedConversations[storedConversations.length - 1];
+      expect(lastConv.conversationId).toBe("tracked-conv-789");
+      expect(lastConv.messageIds).toBeDefined();
+      expect(lastConv.messageIds.length).toBe(2); // user + assistant messages
+    });
+  });
 });
