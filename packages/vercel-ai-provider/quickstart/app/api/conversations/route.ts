@@ -11,17 +11,53 @@ import { getCortex } from "@/lib/cortex";
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
+    const conversationId = searchParams.get("conversationId");
     const userId = searchParams.get("userId");
     const memorySpaceId = searchParams.get("memorySpaceId") || "quickstart-demo";
 
+    const cortex = getCortex();
+
+    // If conversationId is provided, fetch single conversation with messages
+    if (conversationId) {
+      const conversation = await cortex.conversations.get(conversationId, {
+        includeMessages: true,
+        messageLimit: 100,
+      });
+
+      if (!conversation) {
+        return Response.json(
+          { error: "Conversation not found" },
+          { status: 404 }
+        );
+      }
+
+      // Transform messages to the format expected by AI SDK useChat
+      const messages = (conversation.messages || []).map((msg) => ({
+        id: msg.id,
+        role: msg.role as "user" | "assistant",
+        content: msg.content,
+        createdAt: new Date(msg.timestamp),
+      }));
+
+      return Response.json({
+        conversation: {
+          id: conversation.conversationId,
+          title: (conversation.metadata?.title as string) || getDefaultTitle(conversation),
+          createdAt: conversation.createdAt,
+          updatedAt: conversation.updatedAt,
+          messageCount: conversation.messageCount || 0,
+        },
+        messages,
+      });
+    }
+
+    // List conversations for user (requires userId)
     if (!userId) {
       return Response.json(
         { error: "userId is required" },
         { status: 400 }
       );
     }
-
-    const cortex = getCortex();
 
     // Get conversations for the user
     const result = await cortex.conversations.list({
