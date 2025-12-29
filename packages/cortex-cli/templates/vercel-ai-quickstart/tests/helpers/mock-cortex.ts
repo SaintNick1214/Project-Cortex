@@ -9,19 +9,24 @@
 let mutableStore: Map<string, Map<string, unknown>> = new Map();
 let usersStore: Map<string, { userId: string; data: Record<string, unknown> }> =
   new Map();
-let conversationsStore: Map<
-  string,
-  {
-    conversationId: string;
-    memorySpaceId: string;
-    type: string;
-    participants: { userId?: string; agentId?: string };
-    metadata: Record<string, unknown>;
-    createdAt: number;
-    updatedAt: number;
-    messageCount: number;
-  }
-> = new Map();
+interface StoredConversation {
+  conversationId: string;
+  memorySpaceId: string;
+  type: string;
+  participants: { userId?: string; agentId?: string };
+  metadata: Record<string, unknown>;
+  createdAt: number;
+  updatedAt: number;
+  messageCount: number;
+  messages?: Array<{
+    id: string;
+    role: string;
+    content: string;
+    timestamp: number;
+  }>;
+}
+
+let conversationsStore: Map<string, StoredConversation> = new Map();
 
 /**
  * Reset all mock stores (call in beforeEach)
@@ -145,8 +150,21 @@ export function createMockCortex() {
           return conversation;
         }
       ),
-      get: jest.fn(async (conversationId: string) => {
-        return conversationsStore.get(conversationId) ?? null;
+      get: jest.fn(async (conversationId: string, options?: { includeMessages?: boolean; messageLimit?: number }) => {
+        const conv = conversationsStore.get(conversationId);
+        if (!conv) return null;
+        
+        // If includeMessages is requested, return with messages
+        if (options?.includeMessages) {
+          return {
+            ...conv,
+            messages: conv.messages || [],
+          };
+        }
+        
+        // Otherwise return without messages
+        const { messages: _messages, ...convWithoutMessages } = conv;
+        return convWithoutMessages;
       }),
       delete: jest.fn(async (conversationId: string): Promise<void> => {
         conversationsStore.delete(conversationId);
@@ -215,10 +233,17 @@ export const seedTestData = {
       memorySpaceId?: string;
       userId?: string;
       title?: string;
+      messages?: Array<{ role: string; content: string }>;
     } = {}
   ) => {
     const now = Date.now();
-    const conversation = {
+    const messages = params.messages?.map((msg, i) => ({
+      id: `msg-${i}`,
+      role: msg.role,
+      content: msg.content,
+      timestamp: now + i,
+    }));
+    const conversation: StoredConversation = {
       conversationId,
       memorySpaceId: params.memorySpaceId || "quickstart-demo",
       type: "user-agent",
@@ -229,7 +254,8 @@ export const seedTestData = {
       metadata: { title: params.title || "Test Chat" },
       createdAt: now,
       updatedAt: now,
-      messageCount: 0,
+      messageCount: messages?.length || 0,
+      messages,
     };
     conversationsStore.set(conversationId, conversation);
     return conversation;

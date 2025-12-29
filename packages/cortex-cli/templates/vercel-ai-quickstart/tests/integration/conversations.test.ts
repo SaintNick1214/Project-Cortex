@@ -74,13 +74,49 @@ describe("Conversations API Routes", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   describe("GET /api/conversations", () => {
-    it("should return 400 if userId is missing", async () => {
+    it("should return 400 if userId is missing and no conversationId", async () => {
       const request = createRequest("GET");
       const response = await conversationsGet(request);
       const { status, data } = await parseResponse(response);
 
       expect(status).toBe(400);
       expect(data.error).toBe("userId is required");
+    });
+
+    it("should return single conversation with messages when conversationId is provided", async () => {
+      // Seed conversation with messages
+      seedTestData.conversation("conv-with-messages", {
+        userId: "testuser",
+        title: "Test Conversation",
+        messages: [
+          { role: "user", content: "Hello" },
+          { role: "assistant", content: "Hi there!" },
+        ],
+      });
+
+      const request = createRequest("GET", {
+        searchParams: { conversationId: "conv-with-messages" },
+      });
+      const response = await conversationsGet(request);
+      const { status, data } = await parseResponse(response);
+
+      expect(status).toBe(200);
+      expect(data.conversation).toBeDefined();
+      expect((data.conversation as { id: string }).id).toBe("conv-with-messages");
+      expect((data.conversation as { title: string }).title).toBe("Test Conversation");
+      expect(data.messages).toBeDefined();
+      expect((data.messages as unknown[]).length).toBe(2);
+    });
+
+    it("should return 404 when conversationId is not found", async () => {
+      const request = createRequest("GET", {
+        searchParams: { conversationId: "nonexistent-conv" },
+      });
+      const response = await conversationsGet(request);
+      const { status, data } = await parseResponse(response);
+
+      expect(status).toBe(404);
+      expect(data.error).toBe("Conversation not found");
     });
 
     it("should return empty array for user with no conversations", async () => {
