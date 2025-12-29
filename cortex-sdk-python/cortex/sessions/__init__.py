@@ -176,10 +176,16 @@ class SessionsAPI:
         """
         validate_session_id(session_id)
 
+        # Pass tenant_id to backend for proper isolation
+        tenant_id = self._auth_context.tenant_id if self._auth_context else None
+
         result = await self._execute_with_resilience(
             lambda: self._client.query(
                 "sessions:get",
-                {"sessionId": session_id},
+                filter_none_values({
+                    "sessionId": session_id,
+                    "tenantId": tenant_id,
+                }),
             ),
             "sessions:get",
         )
@@ -187,14 +193,7 @@ class SessionsAPI:
         if not result:
             return None
 
-        session = Session.from_dict(result)
-
-        # Enforce tenant isolation
-        if session.tenant_id and self._auth_context and self._auth_context.tenant_id:
-            if session.tenant_id != self._auth_context.tenant_id:
-                return None  # Tenant mismatch - treat as not found
-
-        return session
+        return Session.from_dict(result)
 
     async def get_or_create(
         self,
@@ -249,10 +248,16 @@ class SessionsAPI:
         """
         validate_session_id(session_id)
 
+        # Pass tenant_id to backend for proper isolation
+        tenant_id = self._auth_context.tenant_id if self._auth_context else None
+
         await self._execute_with_resilience(
             lambda: self._client.mutation(
                 "sessions:touch",
-                {"sessionId": session_id},
+                filter_none_values({
+                    "sessionId": session_id,
+                    "tenantId": tenant_id,
+                }),
             ),
             "sessions:touch",
         )
@@ -269,10 +274,16 @@ class SessionsAPI:
         """
         validate_session_id(session_id)
 
+        # Pass tenant_id to backend for proper isolation
+        tenant_id = self._auth_context.tenant_id if self._auth_context else None
+
         await self._execute_with_resilience(
             lambda: self._client.mutation(
                 "sessions:end",
-                {"sessionId": session_id},
+                filter_none_values({
+                    "sessionId": session_id,
+                    "tenantId": tenant_id,
+                }),
             ),
             "sessions:end",
         )
