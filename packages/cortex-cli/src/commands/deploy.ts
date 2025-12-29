@@ -1208,6 +1208,29 @@ async function updateApp(
           printWarning(`Template sync skipped: ${templateResult.error}`);
         } else if (templateResult.synced) {
           printTemplateSyncResult(templateResult);
+
+          // Run npm install if package.json was updated with new dependencies
+          if (templateResult.packageJsonUpdated) {
+            const totalNewDeps = templateResult.depsAdded.length + templateResult.devDepsAdded.length;
+            if (totalNewDeps > 0) {
+              console.log();
+              printInfo(`Installing ${totalNewDeps} new dependencies...`);
+              console.log();
+
+              const appPath = path.join(app.projectPath, app.path);
+              const exitCode = await execCommandLive(
+                "npm",
+                ["install", "--legacy-peer-deps"],
+                { cwd: appPath },
+              );
+
+              if (exitCode === 0) {
+                printSuccess("Dependencies installed");
+              } else {
+                printWarning("npm install failed - you may need to run it manually");
+              }
+            }
+          }
         } else {
           console.log(pc.dim("   Template files are up to date"));
         }
