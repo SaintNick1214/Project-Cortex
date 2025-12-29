@@ -25,6 +25,7 @@ interface LayerUpdateData {
 interface ChatInterfaceProps {
   memorySpaceId: string;
   userId: string;
+  conversationId: string | null;
   onOrchestrationStart?: () => void;
   onLayerUpdate?: (
     layer: MemoryLayer,
@@ -36,14 +37,17 @@ interface ChatInterfaceProps {
     },
   ) => void;
   onReset?: () => void;
+  onConversationUpdate?: (conversationId: string, title: string) => void;
 }
 
 export function ChatInterface({
   memorySpaceId,
   userId,
+  conversationId,
   onOrchestrationStart,
   onLayerUpdate,
   onReset,
+  onConversationUpdate,
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState("");
@@ -59,39 +63,90 @@ export function ChatInterface({
     () =>
       new DefaultChatTransport({
         api: "/api/chat",
-        body: { memorySpaceId, userId },
+        body: { memorySpaceId, userId, conversationId },
       }),
-    [memorySpaceId, userId],
+    [memorySpaceId, userId, conversationId],
   );
 
   // Handle layer data parts from the stream
   const handleDataPart = useCallback(
-    (dataPart: any) => {
-      if (dataPart.type === "data-orchestration-start") {
+    (dataPart: unknown) => {
+      const part = dataPart as { type: string; data?: unknown };
+      if (part.type === "data-orchestration-start") {
         onOrchestrationStart?.();
       }
 
-      if (dataPart.type === "data-layer-update") {
-        const event = dataPart.data as LayerUpdateData;
+      if (part.type === "data-layer-update") {
+        const event = part.data as LayerUpdateData;
         onLayerUpdate?.(event.layer, event.status, event.data, {
           action: event.revisionAction,
           supersededFacts: event.supersededFacts,
         });
       }
 
-      // orchestration-complete is informational - layer diagram already updated
-      // via individual layer events
+      // Handle conversation title update
+      if (part.type === "data-conversation-update") {
+        const update = part.data as { conversationId: string; title: string };
+        onConversationUpdate?.(update.conversationId, update.title);
+      }
     },
-    [onOrchestrationStart, onLayerUpdate],
+    [onOrchestrationStart, onLayerUpdate, onConversationUpdate],
   );
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, setMessages } = useChat({
     transport,
     onData: handleDataPart,
     onError: (error) => {
       console.error("Chat error:", error);
     },
   });
+
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+  // Load messages when conversation changes
+  useEffect(() => {
+    // Clear messages first
+    setMessages([]);
+
+    // If no conversation selected, nothing more to do
+    if (!conversationId) {
+      return;
+    }
+
+    // Fetch conversation history
+    const loadConversationHistory = async () => {
+      setIsLoadingHistory(true);
+      try {
+        const response = await fetch(
+          `/api/conversations?conversationId=${encodeURIComponent(conversationId)}`
+        );
+
+        if (!response.ok) {
+          console.error("Failed to load conversation history");
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.messages && data.messages.length > 0) {
+          // Transform to the format expected by useChat
+          const loadedMessages = data.messages.map((msg: { id: string; role: string; content: string; createdAt: string }) => ({
+            id: msg.id,
+            role: msg.role,
+            content: msg.content,
+            createdAt: new Date(msg.createdAt),
+          }));
+          setMessages(loadedMessages);
+        }
+      } catch (error) {
+        console.error("Error loading conversation history:", error);
+      } finally {
+        setIsLoadingHistory(false);
+      }
+    };
+
+    loadConversationHistory();
+  }, [conversationId, setMessages]);
 
   // Determine if we're actively streaming (only time to show typing indicator)
   const isStreaming = status === "streaming";
@@ -121,14 +176,14 @@ export function ChatInterface({
   };
 
   // Extract text content from message parts (AI SDK v5 format)
-  const getMessageContent = (message: any): string => {
+  const getMessageContent = (message: { content?: string; parts?: Array<{ type: string; text?: string }> }): string => {
     if (typeof message.content === "string") {
       return message.content;
     }
     if (message.parts) {
       return message.parts
-        .filter((part: any) => part.type === "text")
-        .map((part: any) => part.text)
+        .filter((part) => part.type === "text")
+        .map((part) => part.text)
         .join("");
     }
     return "";
@@ -138,13 +193,41 @@ export function ChatInterface({
     <div className="flex flex-col h-full">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && (
+        {isLoadingHistory && (
+          <div className="flex items-center justify-center py-12">
+            <div className="flex flex-col items-center gap-3">
+              <svg
+                className="animate-spin h-8 w-8 text-cortex-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                />
+              </svg>
+              <span className="text-gray-400 text-sm">Loading conversation...</span>
+            </div>
+          </div>
+        )}
+
+        {!isLoadingHistory && messages.length === 0 && (
           <div className="text-center py-12">
             <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cortex-500/20 to-cortex-700/20 flex items-center justify-center">
               <span className="text-3xl">🧠</span>
             </div>
             <h2 className="text-xl font-semibold mb-2">
-              Welcome to Cortex Memory Demo
+              {conversationId ? "Continue your conversation" : "Start a new conversation"}
             </h2>
             <p className="text-gray-400 max-w-md mx-auto mb-6">
               This demo shows how Cortex orchestrates memory across multiple

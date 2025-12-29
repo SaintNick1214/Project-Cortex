@@ -1,8 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useLayerTracking } from "@/lib/layer-tracking";
+import { AuthProvider, useAuth } from "@/components/AuthProvider";
+import { AdminSetup } from "@/components/AdminSetup";
+import { LoginScreen } from "@/components/LoginScreen";
 
 // Dynamic imports to avoid SSR issues with framer-motion
 const ChatInterface = dynamic(
@@ -33,10 +36,22 @@ const HealthStatus = dynamic(
     })),
   { ssr: false },
 );
+const ChatHistorySidebar = dynamic(
+  () =>
+    import("@/components/ChatHistorySidebar").then((m) => ({
+      default: m.ChatHistorySidebar,
+    })),
+  { ssr: false },
+);
 
-export default function Home() {
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Main App Content (with auth)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function MainContent() {
+  const { isLoading, isAdminSetup, isAuthenticated, user } = useAuth();
   const [memorySpaceId, setMemorySpaceId] = useState("quickstart-demo");
-  const [userId] = useState("demo-user");
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const {
     layers,
     isOrchestrating,
@@ -45,11 +60,59 @@ export default function Home() {
     resetLayers,
   } = useLayerTracking();
 
+  // Handle new chat
+  const handleNewChat = useCallback(() => {
+    setCurrentConversationId(null);
+    resetLayers();
+  }, [resetLayers]);
+
+  // Handle conversation selection
+  const handleSelectConversation = useCallback((conversationId: string) => {
+    setCurrentConversationId(conversationId);
+    resetLayers();
+  }, [resetLayers]);
+
+  // Handle conversation update (e.g., title change after first message)
+  const handleConversationUpdate = useCallback((conversationId: string) => {
+    // Update current conversation ID if it was null (new chat created)
+    if (!currentConversationId) {
+      setCurrentConversationId(conversationId);
+    }
+  }, [currentConversationId]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cortex-500 to-cortex-700 flex items-center justify-center animate-pulse">
+            <span className="text-3xl">🧠</span>
+          </div>
+          <p className="text-gray-400">Loading Cortex...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // First-run: Admin setup
+  if (isAdminSetup === false) {
+    return <AdminSetup />;
+  }
+
+  // Not authenticated: Login/Register
+  if (!isAuthenticated) {
+    return <LoginScreen />;
+  }
+
+  // Get userId from authenticated user
+  const userId = user?.id || "demo-user";
+
+  // Main authenticated interface
   return (
     <main className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="border-b border-white/10 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cortex-500 to-cortex-700 flex items-center justify-center">
               <span className="text-xl">🧠</span>
@@ -72,20 +135,30 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Main Content - Three Column Layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Chat Section */}
+        {/* Left: Chat History Sidebar */}
+        <ChatHistorySidebar
+          memorySpaceId={memorySpaceId}
+          currentConversationId={currentConversationId}
+          onSelectConversation={handleSelectConversation}
+          onNewChat={handleNewChat}
+        />
+
+        {/* Center: Chat Section */}
         <div className="flex-1 flex flex-col border-r border-white/10">
           <ChatInterface
             memorySpaceId={memorySpaceId}
             userId={userId}
+            conversationId={currentConversationId}
             onOrchestrationStart={startOrchestration}
             onLayerUpdate={updateLayer}
             onReset={resetLayers}
+            onConversationUpdate={handleConversationUpdate}
           />
         </div>
 
-        {/* Layer Flow Visualization */}
+        {/* Right: Layer Flow Visualization */}
         <div className="w-[480px] flex flex-col bg-black/20">
           <div className="p-4 border-b border-white/10">
             <h2 className="font-semibold flex items-center gap-2">
@@ -110,7 +183,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-white/10 px-6 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-sm text-gray-500">
+        <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-4">
             <span>Cortex SDK v0.24.0</span>
             <span>•</span>
@@ -127,5 +200,17 @@ export default function Home() {
         </div>
       </footer>
     </main>
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Page Component (wraps with AuthProvider)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export default function Home() {
+  return (
+    <AuthProvider>
+      <MainContent />
+    </AuthProvider>
   );
 }
