@@ -12,6 +12,7 @@ __all__ = ["UsersAPI", "UserValidationError"]
 from .._utils import convert_convex_response, filter_none_values  # noqa: F401
 from ..errors import CascadeDeletionError, CortexError, ErrorCode
 from ..types import (
+    AuthContext,
     DeleteUserOptions,
     ExportUsersOptions,
     ListUsersFilter,
@@ -102,6 +103,7 @@ class UsersAPI:
         client: Any,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        auth_context: Optional[AuthContext] = None,
     ) -> None:
         """
         Initialize Users API.
@@ -110,10 +112,12 @@ class UsersAPI:
             client: Convex client instance
             graph_adapter: Optional graph database adapter for cascade deletion
             resilience: Optional resilience layer for overload protection
+            auth_context: Optional auth context for multi-tenancy
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
+        self._auth_context = auth_context
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str
@@ -122,6 +126,11 @@ class UsersAPI:
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
+
+    @property
+    def _tenant_id(self) -> Optional[str]:
+        """Get tenant_id from auth context (for multi-tenancy)."""
+        return self._auth_context.tenant_id if self._auth_context else None
 
     async def get(self, user_id: str) -> Optional[UserProfile]:
         """
