@@ -141,10 +141,26 @@ export async function POST(req: Request) {
         : modelMessagesResult;
 
     // Get the first user message for title generation
-    const firstUserMessage = messages.find((m: { role: string; content?: string }) => m.role === "user");
-    const messageText = typeof firstUserMessage?.content === "string" 
-      ? firstUserMessage.content 
-      : "";
+    // AI SDK v5+ uses `parts` array instead of `content` string
+    const firstUserMessage = messages.find((m: { role: string }) => m.role === "user") as {
+      role: string;
+      content?: string;
+      parts?: Array<{ type: string; text?: string }>;
+    } | undefined;
+    
+    let messageText = "";
+    if (firstUserMessage) {
+      if (typeof firstUserMessage.content === "string") {
+        // Legacy format: content is a string
+        messageText = firstUserMessage.content;
+      } else if (firstUserMessage.parts && Array.isArray(firstUserMessage.parts)) {
+        // AI SDK v5+ format: extract text from parts array
+        messageText = firstUserMessage.parts
+          .filter((part) => part.type === "text" && part.text)
+          .map((part) => part.text)
+          .join("");
+      }
+    }
 
     // Use createUIMessageStream to send both LLM text and layer events
     return createUIMessageStreamResponse({
