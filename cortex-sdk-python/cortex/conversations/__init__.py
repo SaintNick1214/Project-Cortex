@@ -14,6 +14,7 @@ from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
     AddMessageInput,
     AddMessageOptions,
+    AuthContext,
     Conversation,
     ConversationDeletionResult,
     ConversationSearchResult,
@@ -66,6 +67,7 @@ class ConversationsAPI:
         client: Any,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        auth_context: Optional[AuthContext] = None,
     ) -> None:
         """
         Initialize Conversations API.
@@ -74,10 +76,12 @@ class ConversationsAPI:
             client: Convex client instance
             graph_adapter: Optional graph database adapter for sync
             resilience: Optional resilience layer for overload protection
+            auth_context: Optional auth context for multi-tenancy
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
+        self._auth_context = auth_context
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str
@@ -86,6 +90,11 @@ class ConversationsAPI:
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
+
+    @property
+    def _tenant_id(self) -> Optional[str]:
+        """Get tenant_id from auth context (for multi-tenancy)."""
+        return self._auth_context.tenant_id if self._auth_context else None
 
     async def create(
         self,
@@ -152,6 +161,7 @@ class ConversationsAPI:
                 filter_none_values({
                     "conversationId": conversation_id,
                     "memorySpaceId": input.memory_space_id,
+                    "tenantId": self._tenant_id,  # Multi-tenancy support
                     "participantId": input.participant_id,
                     "type": input.type,
                     "participants": filter_none_values({
@@ -216,6 +226,7 @@ class ConversationsAPI:
                 "conversations:get",
                 filter_none_values({
                     "conversationId": conversation_id,
+                    "tenantId": self._tenant_id,  # Multi-tenancy support
                     "includeMessages": options.include_messages if options else None,
                     "messageLimit": options.message_limit if options else None,
                 }),
@@ -377,6 +388,7 @@ class ConversationsAPI:
             lambda: self.client.query(
                 "conversations:list",
                 filter_none_values({
+                    "tenantId": self._tenant_id,  # Multi-tenancy support
                     "type": filter.type if filter else None,
                     "userId": filter.user_id if filter else None,
                     "memorySpaceId": filter.memory_space_id if filter else None,
