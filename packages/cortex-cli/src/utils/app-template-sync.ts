@@ -75,6 +75,14 @@ export interface TemplateSyncResult {
   error?: string;
   /** Whether using development override path */
   isDevOverride?: boolean;
+  /** Whether package.json was updated (new deps/scripts added) */
+  packageJsonUpdated: boolean;
+  /** Dependencies that were added to package.json */
+  depsAdded: string[];
+  /** DevDependencies that were added to package.json */
+  devDepsAdded: string[];
+  /** Scripts that were added to package.json */
+  scriptsAdded: string[];
 }
 
 /**
@@ -262,6 +270,90 @@ function getTemplateDir(appType: string): string {
 }
 
 /**
+ * Result of merging package.json
+ */
+interface PackageJsonMergeResult {
+  updated: boolean;
+  depsAdded: string[];
+  devDepsAdded: string[];
+  scriptsAdded: string[];
+}
+
+/**
+ * Merge template package.json into app package.json
+ * Only adds missing dependencies and scripts, never overwrites existing ones
+ */
+async function mergePackageJson(
+  templatePath: string,
+  appPath: string,
+  dryRun: boolean = false,
+): Promise<PackageJsonMergeResult> {
+  const result: PackageJsonMergeResult = {
+    updated: false,
+    depsAdded: [],
+    devDepsAdded: [],
+    scriptsAdded: [],
+  };
+
+  const templatePkgPath = join(templatePath, "package.json");
+  const appPkgPath = join(appPath, "package.json");
+
+  if (!existsSync(templatePkgPath) || !existsSync(appPkgPath)) {
+    return result;
+  }
+
+  try {
+    const templatePkg = JSON.parse(readFileSync(templatePkgPath, "utf-8"));
+    const appPkg = JSON.parse(readFileSync(appPkgPath, "utf-8"));
+
+    // Merge dependencies (add missing only)
+    if (templatePkg.dependencies) {
+      appPkg.dependencies = appPkg.dependencies || {};
+      for (const [dep, version] of Object.entries(templatePkg.dependencies)) {
+        if (!(dep in appPkg.dependencies)) {
+          appPkg.dependencies[dep] = version;
+          result.depsAdded.push(dep);
+          result.updated = true;
+        }
+      }
+    }
+
+    // Merge devDependencies (add missing only)
+    if (templatePkg.devDependencies) {
+      appPkg.devDependencies = appPkg.devDependencies || {};
+      for (const [dep, version] of Object.entries(templatePkg.devDependencies)) {
+        if (!(dep in appPkg.devDependencies)) {
+          appPkg.devDependencies[dep] = version;
+          result.devDepsAdded.push(dep);
+          result.updated = true;
+        }
+      }
+    }
+
+    // Merge scripts (add missing only)
+    if (templatePkg.scripts) {
+      appPkg.scripts = appPkg.scripts || {};
+      for (const [script, command] of Object.entries(templatePkg.scripts)) {
+        if (!(script in appPkg.scripts)) {
+          appPkg.scripts[script] = command;
+          result.scriptsAdded.push(script);
+          result.updated = true;
+        }
+      }
+    }
+
+    // Write updated package.json if not dry run
+    if (result.updated && !dryRun) {
+      await writeFile(appPkgPath, JSON.stringify(appPkg, null, 2) + "\n");
+    }
+  } catch {
+    // Ignore errors reading/parsing package.json
+  }
+
+  return result;
+}
+
+/**
  * Sync template files to an installed app
  *
  * @param app - App configuration
@@ -291,6 +383,10 @@ export async function syncAppTemplate(
     templatePath: "",
     appPath,
     isDevOverride: false,
+    packageJsonUpdated: false,
+    depsAdded: [],
+    devDepsAdded: [],
+    scriptsAdded: [],
   };
 
   // Check if using development override
@@ -325,11 +421,7 @@ export async function syncAppTemplate(
   // Filter to files that need updating
   const filesToSync = comparisons.filter((c) => options?.force || c.needsUpdate);
 
-  if (filesToSync.length === 0) {
-    return result;
-  }
-
-  // Perform sync
+  // Perform sync (if any files need updating)
   for (const comparison of filesToSync) {
     const templateFilePath = join(templatePath, comparison.relativePath);
     const appFilePath = join(appPath, comparison.relativePath);
@@ -353,6 +445,21 @@ export async function syncAppTemplate(
     result.synced = true;
   }
 
+  // Merge package.json (add missing deps/scripts)
+  const pkgMergeResult = await mergePackageJson(
+    templatePath,
+    appPath,
+    options?.dryRun ?? false,
+  );
+
+  if (pkgMergeResult.updated) {
+    result.packageJsonUpdated = true;
+    result.depsAdded = pkgMergeResult.depsAdded;
+    result.devDepsAdded = pkgMergeResult.devDepsAdded;
+    result.scriptsAdded = pkgMergeResult.scriptsAdded;
+    result.synced = true;
+  }
+
   return result;
 }
 
@@ -365,6 +472,8 @@ export async function checkTemplateSync(app: AppConfig): Promise<{
   filesMissing: string[];
   cliVersion: string;
   totalTemplateFiles: number;
+  packageJsonUpdated: boolean;
+  depsToAdd: number;
 }> {
   const result = await syncAppTemplate(app, { dryRun: true });
 
@@ -374,6 +483,8 @@ export async function checkTemplateSync(app: AppConfig): Promise<{
     filesMissing: result.filesAdded,
     cliVersion: result.cliVersion,
     totalTemplateFiles: result.filesUpdated.length + result.filesAdded.length,
+    packageJsonUpdated: result.packageJsonUpdated,
+    depsToAdd: result.depsAdded.length + result.devDepsAdded.length,
   };
 }
 
@@ -423,6 +534,17 @@ export function printTemplateSyncResult(
     }
   } else {
     console.log(pc.dim(`     Updated ${result.filesUpdated.length} files, added ${result.filesAdded.length} files`));
+  }
+
+  // Show package.json changes
+  if (result.packageJsonUpdated) {
+    const allDeps = [...result.depsAdded, ...result.devDepsAdded];
+    if (allDeps.length > 0) {
+      console.log(pc.dim(`     Dependencies added: ${allDeps.join(", ")}`));
+    }
+    if (result.scriptsAdded.length > 0) {
+      console.log(pc.dim(`     Scripts added: ${result.scriptsAdded.join(", ")}`));
+    }
   }
 }
 
