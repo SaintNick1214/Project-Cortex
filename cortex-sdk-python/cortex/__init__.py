@@ -324,7 +324,7 @@ except ImportError:
     GraphSyncWorker = None  # type: ignore
 
 
-__version__ = "0.26.0"
+__version__ = "0.27.0"
 
 __all__ = [
     # Main

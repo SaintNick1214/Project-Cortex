@@ -10,7 +10,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="cortex-memory",
-    version="0.15.0",
+    version="0.27.0",
     author="Saint Nick LLC",
     author_email="support@cortexmemory.dev",
     description="AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",

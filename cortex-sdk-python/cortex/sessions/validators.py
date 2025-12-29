@@ -320,6 +320,12 @@ def validate_session_filters(filters: Dict[str, Any]) -> None:
                 "INVALID_USER_ID_TYPE",
                 "userId",
             )
+        if len(user_id.strip()) == 0:
+            raise SessionValidationError(
+                "userId cannot be empty",
+                "EMPTY_USER_ID",
+                "userId",
+            )
 
     validate_tenant_id(filters.get("tenant_id"))
     validate_status(filters.get("status"))
