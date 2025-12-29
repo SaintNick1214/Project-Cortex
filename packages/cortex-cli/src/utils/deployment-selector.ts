@@ -159,3 +159,54 @@ export async function selectDeployment(
 export function getCurrentDeploymentPath(): string {
   return CURRENT_DEPLOYMENT_PATH;
 }
+
+/**
+ * Result of getting all enabled deployments
+ */
+export interface EnabledDeploymentsResult {
+  deployments: Array<{
+    name: string;
+    deployment: DeploymentConfig;
+    projectPath: string;
+  }>;
+}
+
+/**
+ * Get all enabled deployments that have valid project paths.
+ *
+ * A deployment is considered enabled if:
+ * 1. enabled === true explicitly
+ * 2. enabled === undefined AND it's the default deployment
+ *
+ * @param config - CLI configuration
+ * @returns Array of enabled deployments with their project paths
+ */
+export function getEnabledDeployments(
+  config: CLIConfig,
+): EnabledDeploymentsResult {
+  const deployments = Object.entries(config.deployments);
+  const enabled: EnabledDeploymentsResult["deployments"] = [];
+
+  for (const [name, deployment] of deployments) {
+    const isDefault = name === config.default;
+    const isEnabled =
+      deployment.enabled === true ||
+      (deployment.enabled === undefined && isDefault);
+
+    if (!isEnabled) continue;
+
+    // Require a project path for update operations
+    const projectPath = deployment.projectPath || process.cwd();
+
+    // Only include if project path exists
+    if (existsSync(projectPath)) {
+      enabled.push({
+        name,
+        deployment,
+        projectPath,
+      });
+    }
+  }
+
+  return { deployments: enabled };
+}

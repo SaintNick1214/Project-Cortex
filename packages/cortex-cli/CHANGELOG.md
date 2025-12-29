@@ -1,5 +1,21 @@
 # @cortexmemory/cli Changelog
 
+## [0.27.2] - 2025-12-28
+
+### Added
+
+- **Multi-deployment update command** - `cortex update` now checks all enabled deployments by default
+  - Displays a status table with latest SDK/Convex versions and each deployment's current versions
+  - Color-coded version display (green = up to date, yellow = needs update)
+  - Prompts to confirm updating all deployments that need updates
+  - Updates deployments sequentially with a summary at the end
+  - New `-d, --deployment <name>` flag for single-deployment mode (previous behavior)
+
+### Changed
+
+- `cortex update` default behavior: updates all enabled deployments instead of prompting to select one
+- Added `getEnabledDeployments()` utility for consistent enabled deployment filtering across commands
+
 ## [0.27.1] - 2025-12-27
 
 ### Added
