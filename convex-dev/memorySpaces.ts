@@ -45,7 +45,9 @@ export const register = mutation({
       existing = await ctx.db
         .query("memorySpaces")
         .withIndex("by_tenant_memorySpaceId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId),
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("memorySpaceId", args.memorySpaceId),
         )
         .first();
     } else {
@@ -276,7 +278,9 @@ export const deleteSpace = mutation({
       space = await ctx.db
         .query("memorySpaces")
         .withIndex("by_tenant_memorySpaceId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId),
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("memorySpaceId", args.memorySpaceId),
         )
         .first();
     } else {
@@ -376,7 +380,9 @@ export const get = query({
       space = await ctx.db
         .query("memorySpaces")
         .withIndex("by_tenant_memorySpaceId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId),
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("memorySpaceId", args.memorySpaceId),
         )
         .first();
     } else {

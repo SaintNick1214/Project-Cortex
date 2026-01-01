@@ -115,7 +115,10 @@ describeWithConvex("Tenant Isolation", () => {
       const conv = await tenantA.cortex.conversations.create({
         memorySpaceId: tenantA.memorySpaceId,
         type: "user-agent",
-        participants: { userId: tenantA.userId, agentId: `agent_${tenantA.tenantId}` },
+        participants: {
+          userId: tenantA.userId,
+          agentId: `agent_${tenantA.tenantId}`,
+        },
       });
       conversationAId = conv.conversationId;
     });
@@ -144,7 +147,7 @@ describeWithConvex("Tenant Isolation", () => {
 
       // Should either be empty or only contain Tenant B's conversations
       const tenantAConvs = convBResult.conversations.filter(
-        (c: { conversationId: string }) => c.conversationId === conversationAId
+        (c: { conversationId: string }) => c.conversationId === conversationAId,
       );
       expect(tenantAConvs.length).toBe(0);
     });
@@ -156,7 +159,7 @@ describeWithConvex("Tenant Isolation", () => {
       });
 
       const tenantAConvs = convAResult.conversations.filter(
-        (c: { conversationId: string }) => c.conversationId === conversationAId
+        (c: { conversationId: string }) => c.conversationId === conversationAId,
       );
       expect(tenantAConvs.length).toBe(1);
     });
@@ -204,7 +207,7 @@ describeWithConvex("Tenant Isolation", () => {
 
       // Should not find Tenant A's memory
       const leakedItems = result.items.filter(
-        (item) => item.id === tenantAMemoryId
+        (item) => item.id === tenantAMemoryId,
       );
       expect(leakedItems.length).toBe(0);
     });
@@ -228,7 +231,7 @@ describeWithConvex("Tenant Isolation", () => {
 
       // Should not contain Tenant A's memory
       const leaked = (memories as { memoryId: string }[]).filter(
-        (m) => m.memoryId === tenantAMemoryId
+        (m) => m.memoryId === tenantAMemoryId,
       );
       expect(leaked.length).toBe(0);
     });
@@ -266,7 +269,7 @@ describeWithConvex("Tenant Isolation", () => {
       try {
         const fact = await tenantB.cortex.facts.get(
           tenantA.memorySpaceId,
-          tenantAFactId
+          tenantAFactId,
         );
         // If it returns, it should be null
         expect(fact).toBeNull();
@@ -284,7 +287,7 @@ describeWithConvex("Tenant Isolation", () => {
 
       // Should not contain Tenant A's fact
       const leaked = facts.filter(
-        (f: { factId: string }) => f.factId === tenantAFactId
+        (f: { factId: string }) => f.factId === tenantAFactId,
       );
       expect(leaked.length).toBe(0);
     });
@@ -293,12 +296,12 @@ describeWithConvex("Tenant Isolation", () => {
       const results = await tenantB.cortex.facts.search(
         tenantA.memorySpaceId,
         "API key",
-        { limit: 100 }
+        { limit: 100 },
       );
 
       // Should not find Tenant A's secret fact
       const leaked = results.filter(
-        (f: { factId: string }) => f.factId === tenantAFactId
+        (f: { factId: string }) => f.factId === tenantAFactId,
       );
       expect(leaked.length).toBe(0);
     });
@@ -306,7 +309,7 @@ describeWithConvex("Tenant Isolation", () => {
     it("should allow Tenant A to access own facts", async () => {
       const fact = await tenantA.cortex.facts.get(
         tenantA.memorySpaceId,
-        tenantAFactId
+        tenantAFactId,
       );
       expect(fact).not.toBeNull();
       expect(fact?.factId).toBe(tenantAFactId);
@@ -334,7 +337,10 @@ describeWithConvex("Tenant Isolation", () => {
     });
 
     it("should not allow Tenant B to get Tenant A immutable record", async () => {
-      const record = await tenantB.cortex.immutable.get(immutableType, secretId);
+      const record = await tenantB.cortex.immutable.get(
+        immutableType,
+        secretId,
+      );
 
       expect(record).toBeNull();
     });
@@ -346,13 +352,16 @@ describeWithConvex("Tenant Isolation", () => {
       });
 
       const leaked = records.filter(
-        (r: { id: string }) => r.id === tenantARecordId
+        (r: { id: string }) => r.id === tenantARecordId,
       );
       expect(leaked.length).toBe(0);
     });
 
     it("should allow Tenant A to access own immutable records", async () => {
-      const record = await tenantA.cortex.immutable.get(immutableType, secretId);
+      const record = await tenantA.cortex.immutable.get(
+        immutableType,
+        secretId,
+      );
 
       expect(record).not.toBeNull();
       expect(record?.id).toBe(tenantARecordId);
@@ -368,11 +377,9 @@ describeWithConvex("Tenant Isolation", () => {
 
     beforeAll(async () => {
       // Store mutable data in Tenant A
-      await tenantA.cortex.mutable.set(
-        tenantA.memorySpaceId,
-        mutableKey,
-        { settings: { theme: "dark", secretToken: "abc123" } }
-      );
+      await tenantA.cortex.mutable.set(tenantA.memorySpaceId, mutableKey, {
+        settings: { theme: "dark", secretToken: "abc123" },
+      });
     });
 
     afterAll(async () => {
@@ -386,7 +393,7 @@ describeWithConvex("Tenant Isolation", () => {
     it("should not allow Tenant B to get Tenant A mutable record", async () => {
       const record = await tenantB.cortex.mutable.get(
         tenantA.memorySpaceId,
-        mutableKey
+        mutableKey,
       );
 
       expect(record).toBeNull();
@@ -399,37 +406,40 @@ describeWithConvex("Tenant Isolation", () => {
       });
 
       const leaked = records.filter(
-        (r: { key: string }) => r.key === mutableKey
+        (r: { key: string }) => r.key === mutableKey,
       );
       expect(leaked.length).toBe(0);
     });
 
     it("should not allow Tenant B to overwrite Tenant A mutable record", async () => {
       // Tenant B attempts to overwrite Tenant A's data
-      await tenantB.cortex.mutable.set(
-        tenantA.memorySpaceId,
-        mutableKey,
-        { malicious: "data" }
-      );
+      await tenantB.cortex.mutable.set(tenantA.memorySpaceId, mutableKey, {
+        malicious: "data",
+      });
 
       // Verify Tenant A's data is unchanged
       const record = await tenantA.cortex.mutable.get(
         tenantA.memorySpaceId,
-        mutableKey
+        mutableKey,
       );
 
       // Mutable.get returns the value directly, not an object with .value
-      expect((record as { settings?: { theme?: string } })?.settings?.theme).toBe("dark");
+      expect(
+        (record as { settings?: { theme?: string } })?.settings?.theme,
+      ).toBe("dark");
     });
 
     it("should allow Tenant A to access own mutable records", async () => {
       const record = await tenantA.cortex.mutable.get(
         tenantA.memorySpaceId,
-        mutableKey
+        mutableKey,
       );
 
       expect(record).not.toBeNull();
-      expect((record as { settings?: { secretToken?: string } })?.settings?.secretToken).toBe("abc123");
+      expect(
+        (record as { settings?: { secretToken?: string } })?.settings
+          ?.secretToken,
+      ).toBe("abc123");
     });
   });
 
@@ -478,7 +488,7 @@ describeWithConvex("Tenant Isolation", () => {
 
       // Should not contain Tenant A's user
       const leaked = result.users.filter(
-        (u: { id: string }) => u.id === tenantA.userId
+        (u: { id: string }) => u.id === tenantA.userId,
       );
       expect(leaked.length).toBe(0);
     });
@@ -559,7 +569,9 @@ describeWithConvex("Tenant Isolation", () => {
 
   describe("Memory Space Isolation", () => {
     it("should not allow Tenant B to access Tenant A memory space", async () => {
-      const space = await tenantB.cortex.memorySpaces.get(tenantA.memorySpaceId);
+      const space = await tenantB.cortex.memorySpaces.get(
+        tenantA.memorySpaceId,
+      );
 
       // Should be null or throw
       if (space) {
@@ -573,7 +585,7 @@ describeWithConvex("Tenant Isolation", () => {
 
       const leaked = result.spaces.filter(
         (s: { memorySpaceId: string }) =>
-          s.memorySpaceId === tenantA.memorySpaceId
+          s.memorySpaceId === tenantA.memorySpaceId,
       );
       expect(leaked.length).toBe(0);
     });
@@ -589,7 +601,9 @@ describeWithConvex("Tenant Isolation", () => {
       }
 
       // Verify space still exists
-      const space = await tenantA.cortex.memorySpaces.get(tenantA.memorySpaceId);
+      const space = await tenantA.cortex.memorySpaces.get(
+        tenantA.memorySpaceId,
+      );
       expect(space).not.toBeNull();
     });
   });
@@ -665,12 +679,12 @@ describeWithConvex("Tenant Isolation", () => {
       const results = await tenantB.cortex.facts.search(
         tenantB.memorySpaceId,
         uniqueSearchTerm,
-        { limit: 100 }
+        { limit: 100 },
       );
 
       // Should not find Tenant A's fact
       const leaked = results.filter((f: { fact?: string }) =>
-        f.fact?.includes(uniqueSearchTerm)
+        f.fact?.includes(uniqueSearchTerm),
       );
       expect(leaked.length).toBe(0);
     });
@@ -686,7 +700,10 @@ describeWithConvex("Tenant Isolation", () => {
       const conv = await tenantA.cortex.conversations.create({
         memorySpaceId: tenantA.memorySpaceId,
         type: "user-agent",
-        participants: { userId: tenantA.userId, agentId: `agent_${tenantA.tenantId}` },
+        participants: {
+          userId: tenantA.userId,
+          agentId: `agent_${tenantA.tenantId}`,
+        },
       });
 
       const result = await verifyTenantIsolation(tenantA, tenantB, {

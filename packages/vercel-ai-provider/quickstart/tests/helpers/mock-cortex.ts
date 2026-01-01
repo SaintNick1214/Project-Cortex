@@ -48,42 +48,40 @@ export function createMockCortex() {
           const ns = mutableStore.get(namespace);
           if (!ns) return null;
           return ns.get(key) ?? null;
-        }
+        },
       ),
       set: jest.fn(
         async (
           namespace: string,
           key: string,
-          value: unknown
+          value: unknown,
         ): Promise<void> => {
           if (!mutableStore.has(namespace)) {
             mutableStore.set(namespace, new Map());
           }
           mutableStore.get(namespace)!.set(key, value);
-        }
+        },
       ),
-      delete: jest.fn(
-        async (namespace: string, key: string): Promise<void> => {
-          const ns = mutableStore.get(namespace);
-          if (ns) ns.delete(key);
-        }
-      ),
+      delete: jest.fn(async (namespace: string, key: string): Promise<void> => {
+        const ns = mutableStore.get(namespace);
+        if (ns) ns.delete(key);
+      }),
     },
     users: {
       get: jest.fn(
         async (
-          userId: string
+          userId: string,
         ): Promise<{
           userId: string;
           data: Record<string, unknown>;
         } | null> => {
           return usersStore.get(userId) ?? null;
-        }
+        },
       ),
       update: jest.fn(
         async (
           userId: string,
-          data: Record<string, unknown>
+          data: Record<string, unknown>,
         ): Promise<{ userId: string; data: Record<string, unknown> }> => {
           const existing = usersStore.get(userId);
           const user = {
@@ -92,7 +90,7 @@ export function createMockCortex() {
           };
           usersStore.set(userId, user);
           return user;
-        }
+        },
       ),
       delete: jest.fn(async (userId: string): Promise<void> => {
         usersStore.delete(userId);
@@ -115,17 +113,14 @@ export function createMockCortex() {
               ) {
                 return false;
               }
-              if (
-                params.userId &&
-                conv.participants.userId !== params.userId
-              ) {
+              if (params.userId && conv.participants.userId !== params.userId) {
                 return false;
               }
               return true;
-            }
+            },
           );
           return { conversations, hasMore: false };
-        }
+        },
       ),
       create: jest.fn(
         async (params: {
@@ -148,31 +143,36 @@ export function createMockCortex() {
           };
           conversationsStore.set(params.conversationId, conversation);
           return conversation;
-        }
+        },
       ),
-      get: jest.fn(async (conversationId: string, options?: { includeMessages?: boolean; messageLimit?: number }) => {
-        const conv = conversationsStore.get(conversationId);
-        if (!conv) return null;
-        
-        // If includeMessages is requested, return with messages
-        if (options?.includeMessages) {
-          return {
-            ...conv,
-            messages: conv.messages || [],
-          };
-        }
-        
-        // Otherwise return without messages
-        const { messages: _messages, ...convWithoutMessages } = conv;
-        return convWithoutMessages;
-      }),
+      get: jest.fn(
+        async (
+          conversationId: string,
+          options?: { includeMessages?: boolean; messageLimit?: number },
+        ) => {
+          const conv = conversationsStore.get(conversationId);
+          if (!conv) return null;
+
+          // If includeMessages is requested, return with messages
+          if (options?.includeMessages) {
+            return {
+              ...conv,
+              messages: conv.messages || [],
+            };
+          }
+
+          // Otherwise return without messages
+          const { messages: _messages, ...convWithoutMessages } = conv;
+          return convWithoutMessages;
+        },
+      ),
       delete: jest.fn(async (conversationId: string): Promise<void> => {
         conversationsStore.delete(conversationId);
       }),
       update: jest.fn(
         async (
           conversationId: string,
-          updates: { metadata?: Record<string, unknown> }
+          updates: { metadata?: Record<string, unknown> },
         ) => {
           const conv = conversationsStore.get(conversationId);
           if (!conv) throw new Error("Conversation not found");
@@ -183,7 +183,7 @@ export function createMockCortex() {
           };
           conversationsStore.set(conversationId, updated);
           return updated;
-        }
+        },
       ),
     },
     memory: {
@@ -215,7 +215,7 @@ export type MockCortex = ReturnType<typeof createMockCortex>;
 export const seedTestData = {
   user: (
     userId: string,
-    data: Record<string, unknown> = {}
+    data: Record<string, unknown> = {},
   ): { userId: string; data: Record<string, unknown> } => {
     const user = { userId, data };
     usersStore.set(userId, user);
@@ -234,7 +234,7 @@ export const seedTestData = {
       userId?: string;
       title?: string;
       messages?: Array<{ role: string; content: string }>;
-    } = {}
+    } = {},
   ) => {
     const now = Date.now();
     const messages = params.messages?.map((msg, i) => ({

@@ -161,7 +161,9 @@ export const update = mutation({
       // For non-tenant: check globally but only match records without tenantId
       const candidate = await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", args.contextId),
+        )
         .first();
       // SECURITY: Only match truly global records (no tenantId set)
       // Check for undefined, null, or empty string to handle all falsy cases
@@ -242,7 +244,9 @@ export const deleteContext = mutation({
     } else {
       const candidate = await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", args.contextId),
+        )
         .first();
       // SECURITY: Only match truly global records (no tenantId set)
       // Check for undefined, null, or empty string to handle all falsy cases
@@ -481,7 +485,9 @@ export const get = query({
     } else {
       const candidate = await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", args.contextId),
+        )
         .first();
       // SECURITY: Only match truly global records (no tenantId set)
       // Check for undefined, null, or empty string to handle all falsy cases
@@ -654,7 +660,9 @@ export const list = query({
       contexts = await ctx.db
         .query("contexts")
         .withIndex("by_tenant_space", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!),
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("memorySpaceId", args.memorySpaceId!),
         )
         .take(args.limit || 100);
     } else if (args.tenantId) {

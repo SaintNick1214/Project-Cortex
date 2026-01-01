@@ -124,7 +124,10 @@ describeWithConvex("Auth Context Injection", () => {
 
     afterAll(async () => {
       try {
-        await cortex.memorySpaces.delete(testMemorySpaceId, { cascade: true, reason: "Test cleanup" });
+        await cortex.memorySpaces.delete(testMemorySpaceId, {
+          cascade: true,
+          reason: "Test cleanup",
+        });
       } catch {
         // Ignore cleanup errors
       }
@@ -338,7 +341,7 @@ describeWithConvex("Auth Context Injection", () => {
     it("should propagate tenantId to immutable store", async () => {
       // Use unique ID per test run to avoid conflicts
       const uniqueId = `auth_test_${ctx.runId}`;
-      
+
       const result = await cortex.immutable.store({
         type: "auth_test",
         id: uniqueId,
@@ -351,7 +354,7 @@ describeWithConvex("Auth Context Injection", () => {
 
       expect(result).toBeDefined();
       expect(result.tenantId).toBe(testTenantId);
-      
+
       // Clean up after test
       try {
         await cortex.immutable.purge("auth_test", uniqueId);

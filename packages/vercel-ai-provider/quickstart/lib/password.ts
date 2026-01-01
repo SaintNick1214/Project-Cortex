@@ -28,7 +28,7 @@ export async function hashPassword(password: string): Promise<string> {
     passwordBuffer,
     "PBKDF2",
     false,
-    ["deriveBits"]
+    ["deriveBits"],
   );
 
   // Derive key using PBKDF2
@@ -40,7 +40,7 @@ export async function hashPassword(password: string): Promise<string> {
       hash: "SHA-256",
     },
     keyMaterial,
-    KEY_LENGTH
+    KEY_LENGTH,
   );
 
   // Convert to base64 strings
@@ -60,7 +60,7 @@ export async function hashPassword(password: string): Promise<string> {
  */
 export async function verifyPassword(
   password: string,
-  storedHash: string
+  storedHash: string,
 ): Promise<boolean> {
   try {
     const [saltB64, expectedHashB64] = storedHash.split(":");
@@ -84,7 +84,7 @@ export async function verifyPassword(
       passwordBuffer,
       "PBKDF2",
       false,
-      ["deriveBits"]
+      ["deriveBits"],
     );
 
     // Derive key using same parameters
@@ -96,7 +96,7 @@ export async function verifyPassword(
         hash: "SHA-256",
       },
       keyMaterial,
-      KEY_LENGTH
+      KEY_LENGTH,
     );
 
     // Compare hashes

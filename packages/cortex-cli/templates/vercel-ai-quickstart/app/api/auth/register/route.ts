@@ -14,39 +14,38 @@ export async function POST(req: Request) {
 
     // Validate input
     if (!username || typeof username !== "string") {
-      return Response.json(
-        { error: "Username is required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "Username is required" }, { status: 400 });
     }
 
     if (!password || typeof password !== "string") {
-      return Response.json(
-        { error: "Password is required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "Password is required" }, { status: 400 });
     }
 
     if (username.length < 2) {
       return Response.json(
         { error: "Username must be at least 2 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (password.length < 4) {
       return Response.json(
         { error: "Password must be at least 4 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Sanitize username (alphanumeric, underscore, hyphen only)
-    const sanitizedUsername = username.toLowerCase().replace(/[^a-z0-9_-]/g, "");
+    const sanitizedUsername = username
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]/g, "");
     if (sanitizedUsername !== username.toLowerCase()) {
       return Response.json(
-        { error: "Username can only contain letters, numbers, underscores, and hyphens" },
-        { status: 400 }
+        {
+          error:
+            "Username can only contain letters, numbers, underscores, and hyphens",
+        },
+        { status: 400 },
       );
     }
 
@@ -57,7 +56,7 @@ export async function POST(req: Request) {
     if (existingUser) {
       return Response.json(
         { error: "Username already taken" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -86,9 +85,6 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("[Register Error]", error);
 
-    return Response.json(
-      { error: "Failed to register user" },
-      { status: 500 }
-    );
+    return Response.json({ error: "Failed to register user" }, { status: 500 });
   }
 }

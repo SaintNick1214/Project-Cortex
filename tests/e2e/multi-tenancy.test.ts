@@ -139,21 +139,30 @@ describeWithConvex("Multi-Tenancy E2E", () => {
         tenants.acmeCorp.cortex.conversations.create({
           memorySpaceId: tenants.acmeCorp.memorySpaceId,
           type: "user-agent",
-          participants: { userId: tenants.acmeCorp.userId, agentId: `agent_${tenants.acmeCorp.tenantId}` },
+          participants: {
+            userId: tenants.acmeCorp.userId,
+            agentId: `agent_${tenants.acmeCorp.tenantId}`,
+          },
         }),
 
         // Globex creates a conversation
         tenants.globexInc.cortex.conversations.create({
           memorySpaceId: tenants.globexInc.memorySpaceId,
           type: "user-agent",
-          participants: { userId: tenants.globexInc.userId, agentId: `agent_${tenants.globexInc.tenantId}` },
+          participants: {
+            userId: tenants.globexInc.userId,
+            agentId: `agent_${tenants.globexInc.tenantId}`,
+          },
         }),
 
         // Initech creates a conversation
         tenants.initech.cortex.conversations.create({
           memorySpaceId: tenants.initech.memorySpaceId,
           type: "user-agent",
-          participants: { userId: tenants.initech.userId, agentId: `agent_${tenants.initech.tenantId}` },
+          participants: {
+            userId: tenants.initech.userId,
+            agentId: `agent_${tenants.initech.tenantId}`,
+          },
         }),
       ]);
 
@@ -163,9 +172,15 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       expect(results[2].tenantId).toBe(tenants.initech.tenantId);
 
       // Cleanup
-      await tenants.acmeCorp.cortex.conversations.delete(results[0].conversationId);
-      await tenants.globexInc.cortex.conversations.delete(results[1].conversationId);
-      await tenants.initech.cortex.conversations.delete(results[2].conversationId);
+      await tenants.acmeCorp.cortex.conversations.delete(
+        results[0].conversationId,
+      );
+      await tenants.globexInc.cortex.conversations.delete(
+        results[1].conversationId,
+      );
+      await tenants.initech.cortex.conversations.delete(
+        results[2].conversationId,
+      );
     });
   });
 
@@ -210,36 +225,38 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       const acmeSearch = await tenants.acmeCorp.cortex.facts.search(
         tenants.acmeCorp.memorySpaceId,
         "revenue product hiring",
-        { limit: 100 }
+        { limit: 100 },
       );
 
       // Acme should only find their own fact
       expect(
-        acmeSearch.some((f: { factId: string }) => f.factId === acmeFact.factId)
+        acmeSearch.some(
+          (f: { factId: string }) => f.factId === acmeFact.factId,
+        ),
       ).toBe(true);
       expect(
         acmeSearch.some(
-          (f: { factId: string }) => f.factId === globexFact.factId
-        )
+          (f: { factId: string }) => f.factId === globexFact.factId,
+        ),
       ).toBe(false);
       expect(
         acmeSearch.some(
-          (f: { factId: string }) => f.factId === initechFact.factId
-        )
+          (f: { factId: string }) => f.factId === initechFact.factId,
+        ),
       ).toBe(false);
 
       // Cleanup
       await tenants.acmeCorp.cortex.facts.delete(
         tenants.acmeCorp.memorySpaceId,
-        acmeFact.factId
+        acmeFact.factId,
       );
       await tenants.globexInc.cortex.facts.delete(
         tenants.globexInc.memorySpaceId,
-        globexFact.factId
+        globexFact.factId,
       );
       await tenants.initech.cortex.facts.delete(
         tenants.initech.memorySpaceId,
-        initechFact.factId
+        initechFact.factId,
       );
     });
   });
@@ -258,7 +275,10 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       const conv = await tenants.acmeCorp.cortex.conversations.create({
         memorySpaceId: tenants.acmeCorp.memorySpaceId,
         type: "user-agent",
-        participants: { userId: tenants.acmeCorp.userId, agentId: `agent_${tenants.acmeCorp.tenantId}` },
+        participants: {
+          userId: tenants.acmeCorp.userId,
+          agentId: `agent_${tenants.acmeCorp.tenantId}`,
+        },
       });
 
       await tenants.acmeCorp.cortex.memory.remember({
@@ -275,7 +295,10 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       const conv2 = await tenants.acmeCorp.cortex.conversations.create({
         memorySpaceId: tenants.acmeCorp.memorySpaceId,
         type: "user-agent",
-        participants: { userId: acmeUser2Id, agentId: `agent_${tenants.acmeCorp.tenantId}` },
+        participants: {
+          userId: acmeUser2Id,
+          agentId: `agent_${tenants.acmeCorp.tenantId}`,
+        },
       });
 
       await tenants.acmeCorp.cortex.memory.remember({
@@ -325,7 +348,10 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       const conv = await tenants.acmeCorp.cortex.conversations.create({
         memorySpaceId: tenants.acmeCorp.memorySpaceId,
         type: "user-agent",
-        participants: { userId: tenants.acmeCorp.userId, agentId: `agent_${tenants.acmeCorp.tenantId}` },
+        participants: {
+          userId: tenants.acmeCorp.userId,
+          agentId: `agent_${tenants.acmeCorp.tenantId}`,
+        },
       });
       acmeConversationId = conv.conversationId;
 
@@ -344,14 +370,13 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       await tenants.acmeCorp.cortex.conversations.delete(acmeConversationId);
       await tenants.acmeCorp.cortex.facts.delete(
         tenants.acmeCorp.memorySpaceId,
-        acmeFactId
+        acmeFactId,
       );
     });
 
     it("should prevent Globex from accessing Acme conversation", async () => {
-      const result = await tenants.globexInc.cortex.conversations.get(
-        acmeConversationId
-      );
+      const result =
+        await tenants.globexInc.cortex.conversations.get(acmeConversationId);
 
       expect(result).toBeNull();
     });
@@ -359,7 +384,7 @@ describeWithConvex("Multi-Tenancy E2E", () => {
     it("should prevent Initech from accessing Acme facts", async () => {
       const result = await tenants.initech.cortex.facts.get(
         tenants.acmeCorp.memorySpaceId,
-        acmeFactId
+        acmeFactId,
       );
 
       expect(result).toBeNull();
@@ -370,7 +395,7 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       try {
         await tenants.globexInc.cortex.facts.delete(
           tenants.acmeCorp.memorySpaceId,
-          acmeFactId
+          acmeFactId,
         );
       } catch {
         // Expected to fail
@@ -379,7 +404,7 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       // Verify fact still exists for Acme
       const fact = await tenants.acmeCorp.cortex.facts.get(
         tenants.acmeCorp.memorySpaceId,
-        acmeFactId
+        acmeFactId,
       );
       expect(fact).not.toBeNull();
     });
@@ -413,17 +438,17 @@ describeWithConvex("Multi-Tenancy E2E", () => {
 
       // Verify isolation
       expect(
-        acmeSessions.some((s) => s.sessionId === acmeSession.sessionId)
+        acmeSessions.some((s) => s.sessionId === acmeSession.sessionId),
       ).toBe(true);
       expect(
-        acmeSessions.some((s) => s.sessionId === globexSession.sessionId)
+        acmeSessions.some((s) => s.sessionId === globexSession.sessionId),
       ).toBe(false);
 
       expect(
-        globexSessions.some((s) => s.sessionId === globexSession.sessionId)
+        globexSessions.some((s) => s.sessionId === globexSession.sessionId),
       ).toBe(true);
       expect(
-        globexSessions.some((s) => s.sessionId === acmeSession.sessionId)
+        globexSessions.some((s) => s.sessionId === acmeSession.sessionId),
       ).toBe(false);
 
       // Cleanup
@@ -517,27 +542,28 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       // Tenant filtering should work - all returned users should have Acme's tenantId
       // (users without tenantId from before tenant isolation feature are filtered out)
       const usersWithTenant = acmeResult.users.filter(
-        (u: { tenantId?: string }) => u.tenantId !== undefined
+        (u: { tenantId?: string }) => u.tenantId !== undefined,
       );
       expect(usersWithTenant.length).toBeGreaterThan(0);
       expect(
         usersWithTenant.every(
-          (u: { tenantId?: string }) => u.tenantId === tenants.acmeCorp.tenantId
-        )
+          (u: { tenantId?: string }) =>
+            u.tenantId === tenants.acmeCorp.tenantId,
+        ),
       ).toBe(true);
 
       // Should include the Acme user we created
       expect(
         acmeResult.users.some(
-          (u: { id: string }) => u.id === tenants.acmeCorp.userId
-        )
+          (u: { id: string }) => u.id === tenants.acmeCorp.userId,
+        ),
       ).toBe(true);
 
       // Should not include Globex users
       expect(
         acmeResult.users.some(
-          (u: { id: string }) => u.id === tenants.globexInc.userId
-        )
+          (u: { id: string }) => u.id === tenants.globexInc.userId,
+        ),
       ).toBe(false);
 
       // Cleanup
@@ -595,14 +621,17 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       });
       expect(
         acmeList.spaces.some(
-          (s: { memorySpaceId: string }) => s.memorySpaceId === newSpaceId
-        )
+          (s: { memorySpaceId: string }) => s.memorySpaceId === newSpaceId,
+        ),
       ).toBe(false);
 
       // Cleanup (simulating offboarding)
       await newTenantCortex.sessions.end(session.sessionId);
       await newTenantCortex.users.delete(newUserId, { cascade: false });
-      await newTenantCortex.memorySpaces.delete(newSpaceId, { cascade: true, reason: "Test cleanup" });
+      await newTenantCortex.memorySpaces.delete(newSpaceId, {
+        cascade: true,
+        reason: "Test cleanup",
+      });
     });
   });
 });

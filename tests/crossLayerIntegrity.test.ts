@@ -11,10 +11,7 @@ import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
-import {
-  generateTenantId,
-  createTenantAuthContext,
-} from "./helpers/tenancy";
+import { generateTenantId, createTenantAuthContext } from "./helpers/tenancy";
 
 // Create test run context for parallel execution isolation
 const ctx = createTestRunContext();

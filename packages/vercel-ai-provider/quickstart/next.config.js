@@ -16,8 +16,11 @@ const nextConfig = {
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@anthropic-ai/sdk": path.resolve(__dirname, "node_modules/@anthropic-ai/sdk"),
-      "openai": path.resolve(__dirname, "node_modules/openai"),
+      "@anthropic-ai/sdk": path.resolve(
+        __dirname,
+        "node_modules/@anthropic-ai/sdk",
+      ),
+      openai: path.resolve(__dirname, "node_modules/openai"),
       "neo4j-driver": path.resolve(__dirname, "node_modules/neo4j-driver"),
     };
     return config;

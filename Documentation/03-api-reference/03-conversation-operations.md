@@ -99,7 +99,7 @@ interface Conversation {
   messageCount: number; // Initially 0
 
   metadata: Record<string, any>;
-  
+
   tenantId?: string; // Auto-injected from AuthContext for multi-tenancy
 
   createdAt: Date;
