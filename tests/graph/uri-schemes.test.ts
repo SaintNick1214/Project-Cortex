@@ -14,7 +14,11 @@
 
 import { CypherGraphAdapter } from "../../src/graph/adapters/CypherGraphAdapter";
 
-describe("Neo4j URI Schemes", () => {
+// Skip tests when graph testing is not enabled (e.g., in CI pipeline)
+const GRAPH_TESTING_ENABLED = process.env.GRAPH_TESTING_ENABLED === "true";
+const describeIfEnabled = GRAPH_TESTING_ENABLED ? describe : describe.skip;
+
+describeIfEnabled("Neo4j URI Schemes", () => {
   describe("bolt:// scheme (local Docker)", () => {
     let adapter: CypherGraphAdapter;
 
@@ -174,3 +178,13 @@ describe("Neo4j URI Schemes", () => {
     });
   });
 });
+
+// Log skip message when graph testing is disabled
+if (!GRAPH_TESTING_ENABLED) {
+  describe("Neo4j URI Schemes", () => {
+    it("SKIPPED: Graph testing not enabled", () => {
+      console.log("\n   ⚠️  Neo4j URI Scheme tests are SKIPPED.");
+      console.log("   To enable, set GRAPH_TESTING_ENABLED=true\n");
+    });
+  });
+}
