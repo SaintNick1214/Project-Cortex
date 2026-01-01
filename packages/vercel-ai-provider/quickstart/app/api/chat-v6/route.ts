@@ -1,3 +1,18 @@
+/**
+ * Chat API Route (AI SDK v6 Style)
+ *
+ * This route uses AI SDK v6's patterns while maintaining full Cortex Memory
+ * capabilities including:
+ * - Memory recall (reading past memories)
+ * - Memory storage (saving new conversations)
+ * - Fact extraction (extracting knowledge from conversations)
+ * - Belief revision (superseding outdated facts)
+ * - Layer observer (real-time UI updates)
+ *
+ * The key difference from v5 is using v6's cleaner APIs, but the memory
+ * infrastructure is identical to ensure feature parity.
+ */
+
 import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
 import type {
   LayerObserver,
@@ -28,21 +43,16 @@ Behavior guidelines:
 - When you remember something from a previous conversation, mention it naturally
 - If asked about something you learned, reference it specifically
 - Be conversational and friendly
-- Help demonstrate the memory system by showing what you remember
+- Help demonstrate the memory system by showing what you remember`;
 
-Example interactions:
-- User: "My name is Alex" → Remember and use their name
-- User: "I work at Acme Corp" → Remember their employer
-- User: "My favorite color is blue" → Remember their preference
-- User: "What do you know about me?" → List everything you remember`;
-
-// Create Cortex Memory config factory
-// Uses createCortexMemoryAsync for graph support when CORTEX_GRAPH_SYNC=true
+/**
+ * Create Cortex Memory config - IDENTICAL to v5 route for feature parity
+ */
 function getCortexMemoryConfig(
   memorySpaceId: string,
   userId: string,
   conversationId: string,
-  layerObserver?: LayerObserver,
+  layerObserver?: LayerObserver
 ): CortexMemoryConfig {
   return {
     convexUrl: process.env.CONVEX_URL!,
@@ -52,31 +62,27 @@ function getCortexMemoryConfig(
     userId,
     userName: "Demo User",
 
-    // Agent identification (required for user-agent conversations in SDK v0.17.0+)
-    agentId: "quickstart-assistant",
-    agentName: "Cortex Demo Assistant",
+    // Agent identification
+    agentId: "cortex-memory-agent",
+    agentName: "Cortex v6 Assistant",
 
     // Conversation ID for chat history isolation
     conversationId,
 
-    // Enable graph memory sync (auto-configured via env vars)
-    // When true, uses CypherGraphAdapter to sync to Neo4j/Memgraph
+    // Enable graph memory sync
     enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
 
-    // Enable fact extraction (auto-configured via env vars)
+    // Enable fact extraction - CRITICAL for memory to work!
     enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
 
-    // Belief Revision (v0.24.0+)
-    // Automatically handles fact updates, supersessions, and deduplication
-    // When a user changes their preference (e.g., "I now prefer purple"),
-    // the system intelligently updates or supersedes the old fact.
+    // Belief Revision - handles fact updates and supersessions
     beliefRevision: {
-      enabled: true, // Enable the belief revision pipeline
-      slotMatching: true, // Fast slot-based conflict detection (subject-predicate matching)
-      llmResolution: true, // LLM-based resolution for nuanced conflicts
+      enabled: true,
+      slotMatching: true,
+      llmResolution: true,
     },
 
-    // Embedding provider for semantic matching (required for semantic dedup & belief revision)
+    // Embedding provider for semantic matching
     embeddingProvider: {
       generate: async (text: string) => {
         const result = await embed({
@@ -94,11 +100,10 @@ function getCortexMemoryConfig(
       enableAdaptiveProcessing: true,
     },
 
-    // Memory recall configuration (v0.23.0 - unified retrieval across all layers)
-    memorySearchLimit: 20, // Results from combined vector + facts + graph search
+    // Memory recall configuration
+    memorySearchLimit: 20,
 
-    // Real-time layer tracking (v0.24.0+)
-    // Events are emitted as each layer processes, enabling live UI updates
+    // Real-time layer tracking
     layerObserver,
 
     // Debug in development
@@ -107,29 +112,7 @@ function getCortexMemoryConfig(
 }
 
 /**
- * Generate a title from the first user message
- */
-function generateTitle(message: string): string {
-  // Take first 50 chars, cut at word boundary
-  let title = message.slice(0, 50);
-  if (message.length > 50) {
-    const lastSpace = title.lastIndexOf(" ");
-    if (lastSpace > 20) {
-      title = title.slice(0, lastSpace);
-    }
-    title += "...";
-  }
-  return title;
-}
-
-/**
- * Normalize messages to ensure they have the `parts` array format
- * expected by AI SDK v6's convertToModelMessages.
- *
- * Handles:
- * - Messages with `content` string (legacy format) -> converts to `parts` array
- * - Messages with `role: "agent"` -> converts to `role: "assistant"`
- * - Messages already in v6 format -> passes through unchanged
+ * Normalize messages to AI SDK v6 UIMessage format
  */
 function normalizeMessages(messages: unknown[]): unknown[] {
   return messages.map((msg: unknown) => {
@@ -144,7 +127,6 @@ function normalizeMessages(messages: unknown[]): unknown[] {
     // Ensure parts array exists
     let parts = m.parts as Array<{ type: string; text?: string }> | undefined;
     if (!parts) {
-      // Convert content string to parts array
       const content = m.content as string | undefined;
       if (content) {
         parts = [{ type: "text", text: content }];
@@ -162,9 +144,12 @@ function normalizeMessages(messages: unknown[]): unknown[] {
 }
 
 /**
- * Extract text from a message (handles both content string and parts array)
+ * Extract text from a message
  */
-function getMessageText(message: { content?: string; parts?: Array<{ type: string; text?: string }> }): string {
+function getMessageText(message: {
+  content?: string;
+  parts?: Array<{ type: string; text?: string }>;
+}): string {
   if (typeof message.content === "string") {
     return message.content;
   }
@@ -177,30 +162,49 @@ function getMessageText(message: { content?: string; parts?: Array<{ type: strin
   return "";
 }
 
+/**
+ * Generate a title from the first user message
+ */
+function generateTitle(message: string): string {
+  let title = message.slice(0, 50);
+  if (message.length > 50) {
+    const lastSpace = title.lastIndexOf(" ");
+    if (lastSpace > 20) {
+      title = title.slice(0, lastSpace);
+    }
+    title += "...";
+  }
+  return title;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages, memorySpaceId, userId, conversationId: providedConversationId } = body;
+    const {
+      messages,
+      memorySpaceId = "quickstart-demo",
+      userId = "demo-user",
+      conversationId: providedConversationId,
+    } = body;
 
     // Validate messages array exists
     if (!messages || !Array.isArray(messages)) {
       return new Response(
         JSON.stringify({ error: "messages array is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
+        { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    // Generate conversation ID if not provided (new chat)
-    const conversationId = providedConversationId || 
+    // Generate conversation ID if not provided
+    const conversationId =
+      providedConversationId ||
       `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const isNewConversation = !providedConversationId;
 
-    // Normalize messages to ensure they have the `parts` array format
-    // expected by AI SDK v6's convertToModelMessages
+    // Normalize messages for convertToModelMessages
     const normalizedMessages = normalizeMessages(messages);
 
-    // Convert UIMessage[] from useChat to ModelMessage[] for streamText
-    // Note: In AI SDK v6+, convertToModelMessages may return a Promise
+    // Convert to model messages
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const modelMessagesResult = convertToModelMessages(normalizedMessages as any);
     const modelMessages =
@@ -208,21 +212,22 @@ export async function POST(req: Request) {
         ? await modelMessagesResult
         : modelMessagesResult;
 
-    // Get the first user message for title generation
-    const firstUserMessage = messages.find((m: { role: string }) => m.role === "user") as {
+    // Get first user message for title
+    const firstUserMessage = messages.find(
+      (m: { role: string }) => m.role === "user"
+    ) as {
       role: string;
       content?: string;
       parts?: Array<{ type: string; text?: string }>;
     } | undefined;
-    
+
     const messageText = firstUserMessage ? getMessageText(firstUserMessage) : "";
 
-    // Use createUIMessageStream to send both LLM text and layer events
+    // Use createUIMessageStreamResponse - same as v5 for full memory support
     return createUIMessageStreamResponse({
       stream: createUIMessageStream({
         execute: async ({ writer }) => {
-          // Create observer that writes layer events to the stream
-          // These events are transient (not persisted in message history)
+          // Create layer observer for real-time UI updates
           const layerObserver: LayerObserver = {
             onOrchestrationStart: (orchestrationId) => {
               writer.write({
@@ -260,16 +265,15 @@ export async function POST(req: Request) {
             },
           };
 
-          // Build config with the observer and conversation ID
+          // Build config with observer
           const config = getCortexMemoryConfig(
-            memorySpaceId || "quickstart-demo",
-            userId || "demo-user",
+            memorySpaceId,
+            userId,
             conversationId,
-            layerObserver,
+            layerObserver
           );
 
-          // Create memory-augmented model with async initialization (enables graph support)
-          // This connects to Neo4j/Memgraph if CORTEX_GRAPH_SYNC=true
+          // Create memory-augmented model - THIS handles both recall AND storage!
           const cortexMemory = await createCortexMemoryAsync(config);
 
           // Stream response with automatic memory integration
@@ -279,33 +283,30 @@ export async function POST(req: Request) {
             system: SYSTEM_PROMPT,
           });
 
-          // Merge LLM stream into the UI message stream
+          // Merge LLM stream into UI message stream
           writer.merge(result.toUIMessageStream());
 
-          // If this is a new conversation, create it in the SDK and update the title
+          // Create conversation if new
           if (isNewConversation && messageText) {
             try {
               const cortex = getCortex();
-              const title = generateTitle(messageText);
-
-              // Create the conversation with the SDK
               await cortex.conversations.create({
-                memorySpaceId: memorySpaceId || "quickstart-demo",
+                memorySpaceId,
                 conversationId,
                 type: "user-agent",
                 participants: {
-                  userId: userId || "demo-user",
-                  agentId: "quickstart-assistant",
+                  userId,
+                  agentId: "cortex-memory-agent",
                 },
-                metadata: { title },
+                metadata: { title: generateTitle(messageText) },
               });
 
-              // Send conversation update to the client
+              // Send conversation update to client
               writer.write({
                 type: "data-conversation-update",
                 data: {
                   conversationId,
-                  title,
+                  title: generateTitle(messageText),
                 },
                 transient: true,
               });
@@ -317,7 +318,7 @@ export async function POST(req: Request) {
       }),
     });
   } catch (error) {
-    console.error("[Chat API Error]", error);
+    console.error("[Chat v6 API Error]", error);
 
     return new Response(
       JSON.stringify({
@@ -326,7 +327,7 @@ export async function POST(req: Request) {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   }
 }

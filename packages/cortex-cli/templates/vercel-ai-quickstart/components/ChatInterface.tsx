@@ -26,6 +26,8 @@ interface ChatInterfaceProps {
   memorySpaceId: string;
   userId: string;
   conversationId: string | null;
+  /** API endpoint for chat - defaults to /api/chat, use /api/chat-v6 for AI SDK v6 */
+  apiEndpoint?: string;
   onOrchestrationStart?: () => void;
   onLayerUpdate?: (
     layer: MemoryLayer,
@@ -44,6 +46,7 @@ export function ChatInterface({
   memorySpaceId,
   userId,
   conversationId,
+  apiEndpoint = "/api/chat",
   onOrchestrationStart,
   onLayerUpdate,
   onReset,
@@ -71,7 +74,7 @@ export function ChatInterface({
   const transport = useMemo(
     () =>
       new DefaultChatTransport({
-        api: "/api/chat",
+        api: apiEndpoint,
         // Use a function to get body so it reads latest conversationId from ref
         body: () => ({
           memorySpaceId,
@@ -79,7 +82,7 @@ export function ChatInterface({
           conversationId: conversationIdRef.current,
         }),
       }),
-    [memorySpaceId, userId], // Note: conversationId removed - ref handles updates
+    [apiEndpoint, memorySpaceId, userId], // Note: conversationId removed - ref handles updates
   );
 
   // Handle layer data parts from the stream

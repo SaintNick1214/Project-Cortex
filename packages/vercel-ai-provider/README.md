@@ -48,6 +48,45 @@ The quickstart demonstrates:
 npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
 ```
 
+### AI SDK v6 Compatibility
+
+This provider fully supports AI SDK v6's new Agent architecture while remaining backward compatible with v5:
+
+```typescript
+// AI SDK v6: Using ToolLoopAgent with Cortex
+import { ToolLoopAgent } from "ai";
+import { openai } from "@ai-sdk/openai";
+import {
+  createCortexCallOptionsSchema,
+  createMemoryPrepareCall,
+} from "@cortexmemory/vercel-ai-provider";
+
+const memoryAgent = new ToolLoopAgent({
+  model: openai("gpt-4o-mini"),  // Use actual provider, not gateway string
+  instructions: "You are a helpful assistant with long-term memory.",
+  callOptionsSchema: createCortexCallOptionsSchema(),
+  prepareCall: createMemoryPrepareCall({
+    convexUrl: process.env.CONVEX_URL!,
+    maxMemories: 10,
+  }),
+});
+
+// API route with createAgentUIStreamResponse
+import { createAgentUIStreamResponse } from "ai";
+
+export async function POST(req: Request) {
+  const { messages, userId, memorySpaceId } = await req.json();
+
+  return createAgentUIStreamResponse({
+    agent: memoryAgent,
+    messages,
+    options: { userId, memorySpaceId },
+  });
+}
+```
+
+See [`lib/agents/memory-agent.ts`](./quickstart/lib/agents/memory-agent.ts) for a complete example.
+
 ### What's New in SDK v0.21.0
 
 This provider now supports all SDK v0.21.0 capabilities:

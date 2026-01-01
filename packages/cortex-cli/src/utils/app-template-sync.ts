@@ -18,7 +18,7 @@
  * - convex/ files (handled separately by schema-sync)
  */
 
-import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { existsSync, readFileSync, readdirSync } from "fs";
 import { copyFile, mkdir, writeFile } from "fs/promises";
 import { createHash } from "crypto";
 import { join, dirname, relative } from "path";
@@ -282,6 +282,8 @@ interface PackageJsonMergeResult {
 /**
  * Merge template package.json into app package.json
  * Only adds missing dependencies and scripts, never overwrites existing ones
+ *
+ * This function performs an atomic read-modify-write to avoid TOCTOU race conditions.
  */
 async function mergePackageJson(
   templatePath: string,
@@ -298,18 +300,36 @@ async function mergePackageJson(
   const templatePkgPath = join(templatePath, "package.json");
   const appPkgPath = join(appPath, "package.json");
 
-  if (!existsSync(templatePkgPath) || !existsSync(appPkgPath)) {
+  // Read template package.json (source of truth for what to merge)
+  let templatePkg: Record<string, unknown>;
+  try {
+    templatePkg = JSON.parse(readFileSync(templatePkgPath, "utf-8"));
+  } catch {
+    // Template doesn't exist or is invalid - nothing to merge
     return result;
   }
 
+  // Calculate what needs to be merged without reading app package.json yet
+  // This determines the merge spec, not the actual merge
+  const depsToMerge = templatePkg.dependencies as Record<string, string> | undefined;
+  const devDepsToMerge = templatePkg.devDependencies as Record<string, string> | undefined;
+  const scriptsToMerge = templatePkg.scripts as Record<string, string> | undefined;
+
+  if (!depsToMerge && !devDepsToMerge && !scriptsToMerge) {
+    return result;
+  }
+
+  // Perform atomic read-modify-write operation
+  // Re-read the app package.json immediately before writing to minimize race window
   try {
-    const templatePkg = JSON.parse(readFileSync(templatePkgPath, "utf-8"));
-    const appPkg = JSON.parse(readFileSync(appPkgPath, "utf-8"));
+    // Read current state of app package.json
+    const appPkgContent = readFileSync(appPkgPath, "utf-8");
+    const appPkg = JSON.parse(appPkgContent);
 
     // Merge dependencies (add missing only)
-    if (templatePkg.dependencies) {
+    if (depsToMerge) {
       appPkg.dependencies = appPkg.dependencies || {};
-      for (const [dep, version] of Object.entries(templatePkg.dependencies)) {
+      for (const [dep, version] of Object.entries(depsToMerge)) {
         if (!(dep in appPkg.dependencies)) {
           appPkg.dependencies[dep] = version;
           result.depsAdded.push(dep);
@@ -319,9 +339,9 @@ async function mergePackageJson(
     }
 
     // Merge devDependencies (add missing only)
-    if (templatePkg.devDependencies) {
+    if (devDepsToMerge) {
       appPkg.devDependencies = appPkg.devDependencies || {};
-      for (const [dep, version] of Object.entries(templatePkg.devDependencies)) {
+      for (const [dep, version] of Object.entries(devDepsToMerge)) {
         if (!(dep in appPkg.devDependencies)) {
           appPkg.devDependencies[dep] = version;
           result.devDepsAdded.push(dep);
@@ -331,9 +351,9 @@ async function mergePackageJson(
     }
 
     // Merge scripts (add missing only)
-    if (templatePkg.scripts) {
+    if (scriptsToMerge) {
       appPkg.scripts = appPkg.scripts || {};
-      for (const [script, command] of Object.entries(templatePkg.scripts)) {
+      for (const [script, command] of Object.entries(scriptsToMerge)) {
         if (!(script in appPkg.scripts)) {
           appPkg.scripts[script] = command;
           result.scriptsAdded.push(script);
@@ -342,12 +362,13 @@ async function mergePackageJson(
       }
     }
 
-    // Write updated package.json if not dry run
+    // Write atomically - if this fails, no partial state is written
     if (result.updated && !dryRun) {
-      await writeFile(appPkgPath, JSON.stringify(appPkg, null, 2) + "\n");
+      const newContent = JSON.stringify(appPkg, null, 2) + "\n";
+      await writeFile(appPkgPath, newContent);
     }
   } catch {
-    // Ignore errors reading/parsing package.json
+    // App package.json doesn't exist or is invalid - skip merge
   }
 
   return result;

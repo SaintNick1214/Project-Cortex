@@ -9,7 +9,11 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
+    "test": "jest --selectProjects unit integration",
+    "test:unit": "jest --selectProjects unit",
+    "test:integration": "jest --selectProjects integration",
+    "test:e2e": "jest --selectProjects e2e",
+    "test:all": "jest",
     "test:watch": "jest --watch",
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy"
