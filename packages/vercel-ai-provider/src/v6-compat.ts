@@ -290,11 +290,11 @@ export function createMemoryPrepareCall(config: MemoryInjectionConfig) {
       return settings;
     }
 
-    try {
-      // Dynamic import to avoid bundling issues
-      const { Cortex } = await import("@cortexmemory/sdk");
-      const cortex = new Cortex({ convexUrl });
+    // Dynamic import to avoid bundling issues
+    const { Cortex } = await import("@cortexmemory/sdk");
+    const cortex = new Cortex({ convexUrl });
 
+    try {
       // Use the recall() orchestration API - searches all layers in parallel
       // and returns unified, ranked, LLM-ready context
       const recallResult = await cortex.memory.recall({
@@ -327,6 +327,11 @@ export function createMemoryPrepareCall(config: MemoryInjectionConfig) {
       // If memory recall fails, continue without augmentation
       console.warn("[Cortex] Memory recall failed:", error);
       return settings;
+    } finally {
+      // Always close the client to prevent connection/memory leaks
+      await cortex.close().catch(() => {
+        // Ignore close errors - best effort cleanup
+      });
     }
   };
 }
