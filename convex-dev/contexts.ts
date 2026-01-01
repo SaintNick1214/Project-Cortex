@@ -741,24 +741,34 @@ export const count = query({
   handler: async (ctx, args) => {
     let contexts;
 
-    if (args.memorySpaceId) {
+    // Use best index based on available filters (matching list function behavior)
+    if (args.memorySpaceId && args.status) {
+      // Use composite index for memorySpace + status
+      contexts = await ctx.db
+        .query("contexts")
+        .withIndex("by_memorySpace_status", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!).eq("status", args.status!),
+        )
+        .collect();
+    } else if (args.memorySpaceId) {
       contexts = await ctx.db
         .query("contexts")
         .withIndex("by_memorySpace", (q) =>
           q.eq("memorySpaceId", args.memorySpaceId!),
         )
         .collect();
+    } else if (args.status) {
+      contexts = await ctx.db
+        .query("contexts")
+        .withIndex("by_status", (q) => q.eq("status", args.status!))
+        .collect();
     } else {
       contexts = await ctx.db.query("contexts").collect();
     }
 
-    // Apply filters
+    // Apply remaining filters (userId is not indexed)
     if (args.userId) {
       contexts = contexts.filter((c) => c.userId === args.userId);
-    }
-
-    if (args.status) {
-      contexts = contexts.filter((c) => c.status === args.status);
     }
 
     return contexts.length;

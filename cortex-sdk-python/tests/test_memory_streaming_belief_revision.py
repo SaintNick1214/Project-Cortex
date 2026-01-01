@@ -14,6 +14,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+from tests.helpers import TestRunContext
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Test Helpers
@@ -30,7 +31,7 @@ async def create_async_stream(*chunks: str) -> AsyncIterator[str]:
 class MockConvexClient:
     """Mock Convex client for unit tests."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.mutations: Dict[str, Any] = {}
         self.queries: Dict[str, Any] = {}
 
@@ -123,7 +124,7 @@ class MockConvexClient:
             return []
         return None
 
-    async def close(self):
+    async def close(self) -> None:
         """Mock close."""
         pass
 
@@ -136,28 +137,28 @@ class MockConvexClient:
 class TestStreamingOptionsBeliefRevision:
     """Tests for StreamingOptions belief_revision field."""
 
-    def test_streaming_options_has_belief_revision_field(self):
+    def test_streaming_options_has_belief_revision_field(self) -> None:
         """StreamingOptions should have belief_revision field."""
         from cortex.memory.streaming_types import StreamingOptions
 
         opts = StreamingOptions()
         assert hasattr(opts, "belief_revision")
 
-    def test_streaming_options_belief_revision_default_none(self):
+    def test_streaming_options_belief_revision_default_none(self) -> None:
         """belief_revision should default to None."""
         from cortex.memory.streaming_types import StreamingOptions
 
         opts = StreamingOptions()
         assert opts.belief_revision is None
 
-    def test_streaming_options_belief_revision_can_be_true(self):
+    def test_streaming_options_belief_revision_can_be_true(self) -> None:
         """belief_revision can be set to True."""
         from cortex.memory.streaming_types import StreamingOptions
 
         opts = StreamingOptions(belief_revision=True)
         assert opts.belief_revision is True
 
-    def test_streaming_options_belief_revision_can_be_false(self):
+    def test_streaming_options_belief_revision_can_be_false(self) -> None:
         """belief_revision can be set to False."""
         from cortex.memory.streaming_types import StreamingOptions
 
@@ -173,7 +174,7 @@ class TestStreamingOptionsBeliefRevision:
 class TestEnhancedRememberStreamResultFactRevisions:
     """Tests for fact_revisions in EnhancedRememberStreamResult."""
 
-    def test_result_has_fact_revisions_field(self):
+    def test_result_has_fact_revisions_field(self) -> None:
         """EnhancedRememberStreamResult should have fact_revisions field."""
         from cortex.memory.streaming_types import (
             EnhancedRememberStreamResult,
@@ -215,7 +216,7 @@ class TestEnhancedRememberStreamResultFactRevisions:
 
         assert hasattr(result, "fact_revisions")
 
-    def test_result_fact_revisions_can_be_list(self):
+    def test_result_fact_revisions_can_be_list(self) -> None:
         """fact_revisions can be a list of FactRevisionAction."""
         from cortex.memory.streaming_types import (
             EnhancedRememberStreamResult,
@@ -289,7 +290,7 @@ class TestEnhancedRememberStreamResultFactRevisions:
 class TestFactRevisionActionInStreaming:
     """Tests for FactRevisionAction structure in streaming context."""
 
-    def test_fact_revision_action_add(self):
+    def test_fact_revision_action_add(self) -> None:
         """FactRevisionAction should support ADD action."""
         from cortex.types import FactRecord, FactRevisionAction
 
@@ -318,7 +319,7 @@ class TestFactRevisionActionInStreaming:
         assert revision.fact.fact == "User prefers dark mode"
         assert revision.superseded is None
 
-    def test_fact_revision_action_supersede(self):
+    def test_fact_revision_action_supersede(self) -> None:
         """FactRevisionAction should support SUPERSEDE action."""
         from cortex.types import FactRecord, FactRevisionAction
 
@@ -363,7 +364,7 @@ class TestFactRevisionActionInStreaming:
         assert len(revision.superseded) == 1
         assert revision.superseded[0].fact == "User prefers blue"
 
-    def test_fact_revision_action_none(self):
+    def test_fact_revision_action_none(self) -> None:
         """FactRevisionAction should support NONE action (skip)."""
         from cortex.types import FactRecord, FactRevisionAction
 
@@ -401,7 +402,9 @@ class TestRememberStreamBeliefRevisionIntegration:
     """Integration tests for remember_stream with belief revision."""
 
     @pytest.mark.asyncio
-    async def test_remember_stream_passes_belief_revision_false(self):
+    async def test_remember_stream_passes_belief_revision_false(
+        self, ctx: TestRunContext
+    ) -> None:
         """remember_stream should pass belief_revision=False to remember()."""
         from cortex import Cortex
         from cortex.memory.streaming_types import StreamingOptions
@@ -414,17 +417,25 @@ class TestRememberStreamBeliefRevisionIntegration:
 
         cortex = Cortex(CortexConfig(convex_url=convex_url))
 
+        # Use ctx for unique IDs to ensure parallel test isolation
+        memory_space_id = ctx.memory_space_id("stream-br")
+        conversation_id = ctx.conversation_id("stream-br")
+        user_id = ctx.user_id("stream-br")
+        agent_id = ctx.agent_id("stream-br")
+
         try:
             # Create async stream
-            async def stream():
+            async def stream() -> AsyncIterator[str]:
                 yield "Test "
                 yield "response."
 
             # Extract facts callback
-            async def extract_facts(user_msg: str, agent_resp: str):
+            async def extract_facts(
+                user_msg: str, agent_resp: str
+            ) -> List[Dict[str, Any]]:
                 return [
                     {
-                        "fact": "Test fact from streaming",
+                        "fact": f"Test fact from streaming {ctx.run_id}",
                         "factType": "observation",
                         "confidence": 80,
                         "tags": ["test"],
@@ -433,13 +444,13 @@ class TestRememberStreamBeliefRevisionIntegration:
 
             result = await cortex.memory.remember_stream(
                 {
-                    "memorySpaceId": f"test-stream-br-{os.getpid()}",
-                    "conversationId": f"test-conv-{os.getpid()}",
+                    "memorySpaceId": memory_space_id,
+                    "conversationId": conversation_id,
                     "userMessage": "Test message",
                     "responseStream": stream(),
-                    "userId": "test-user",
+                    "userId": user_id,
                     "userName": "Test User",
-                    "agentId": "test-agent",
+                    "agentId": agent_id,
                     "extractFacts": extract_facts,
                 },
                 StreamingOptions(belief_revision=False),
@@ -452,7 +463,9 @@ class TestRememberStreamBeliefRevisionIntegration:
             await cortex.close()
 
     @pytest.mark.asyncio
-    async def test_remember_stream_with_llm_has_fact_revisions(self):
+    async def test_remember_stream_with_llm_has_fact_revisions(
+        self, ctx: TestRunContext
+    ) -> None:
         """remember_stream with LLM should include factRevisions."""
         from cortex import Cortex
         from cortex.memory.streaming_types import StreamingOptions
@@ -471,19 +484,27 @@ class TestRememberStreamBeliefRevisionIntegration:
             )
         )
 
+        # Use ctx for unique IDs to ensure parallel test isolation
+        memory_space_id = ctx.memory_space_id("stream-llm")
+        conversation_id = ctx.conversation_id("stream-llm")
+        user_id = ctx.user_id("stream-llm")
+        agent_id = ctx.agent_id("stream-llm")
+
         try:
             # Create async stream
-            async def stream():
+            async def stream() -> AsyncIterator[str]:
                 yield "I'll remember "
                 yield "that!"
 
             # Extract facts callback
-            async def extract_facts(user_msg: str, agent_resp: str):
+            async def extract_facts(
+                user_msg: str, agent_resp: str
+            ) -> List[Dict[str, Any]]:
                 return [
                     {
-                        "fact": "User likes pizza",
+                        "fact": f"User {ctx.run_id} likes pizza",
                         "factType": "preference",
-                        "subject": "user",
+                        "subject": user_id,
                         "predicate": "food preference",
                         "object": "pizza",
                         "confidence": 90,
@@ -493,13 +514,13 @@ class TestRememberStreamBeliefRevisionIntegration:
 
             result = await cortex.memory.remember_stream(
                 {
-                    "memorySpaceId": f"test-stream-llm-{os.getpid()}",
-                    "conversationId": f"test-conv-llm-{os.getpid()}",
+                    "memorySpaceId": memory_space_id,
+                    "conversationId": conversation_id,
                     "userMessage": "I like pizza",
                     "responseStream": stream(),
-                    "userId": "test-user-llm",
+                    "userId": user_id,
                     "userName": "Test User",
-                    "agentId": "test-agent-llm",
+                    "agentId": agent_id,
                     "extractFacts": extract_facts,
                 },
                 StreamingOptions(belief_revision=True),
@@ -525,7 +546,7 @@ class TestStreamingBeliefRevisionE2E:
     """End-to-end tests for streaming with belief revision."""
 
     @pytest.mark.asyncio
-    async def test_e2e_add_fact_via_streaming(self):
+    async def test_e2e_add_fact_via_streaming(self, ctx: TestRunContext) -> None:
         """E2E: New fact should be ADDed through streaming."""
         from cortex import Cortex
         from cortex.memory.streaming_types import StreamingOptions
@@ -543,19 +564,27 @@ class TestStreamingBeliefRevisionE2E:
             )
         )
 
-        test_id = f"e2e-add-{os.getpid()}"
+        # Use ctx for unique IDs to ensure parallel test isolation
+        test_id = ctx.run_id
+        memory_space_id = ctx.memory_space_id("e2e-add")
+        conversation_id = ctx.conversation_id("e2e-add")
+        user_id = ctx.user_id("e2e-add")
+        agent_id = ctx.agent_id("e2e-add")
 
         try:
-            async def stream():
+
+            async def stream() -> AsyncIterator[str]:
                 yield "Great choice! "
                 yield "Sushi is delicious."
 
-            async def extract_facts(user_msg: str, agent_resp: str):
+            async def extract_facts(
+                user_msg: str, agent_resp: str
+            ) -> List[Dict[str, Any]]:
                 return [
                     {
                         "fact": f"User {test_id} favorite food is sushi",
                         "factType": "preference",
-                        "subject": f"user-{test_id}",
+                        "subject": user_id,
                         "predicate": "favorite food",
                         "object": "sushi",
                         "confidence": 90,
@@ -565,13 +594,13 @@ class TestStreamingBeliefRevisionE2E:
 
             result = await cortex.memory.remember_stream(
                 {
-                    "memorySpaceId": f"test-e2e-{test_id}",
-                    "conversationId": f"conv-e2e-{test_id}",
+                    "memorySpaceId": memory_space_id,
+                    "conversationId": conversation_id,
                     "userMessage": "My favorite food is sushi",
                     "responseStream": stream(),
-                    "userId": f"user-{test_id}",
+                    "userId": user_id,
                     "userName": "E2E User",
-                    "agentId": f"agent-{test_id}",
+                    "agentId": agent_id,
                     "extractFacts": extract_facts,
                 },
                 StreamingOptions(belief_revision=True),
@@ -589,7 +618,9 @@ class TestStreamingBeliefRevisionE2E:
             await cortex.close()
 
     @pytest.mark.asyncio
-    async def test_e2e_supersede_fact_via_streaming(self):
+    async def test_e2e_supersede_fact_via_streaming(
+        self, ctx: TestRunContext
+    ) -> None:
         """E2E: Conflicting fact should be SUPERSEDEd through streaming."""
         from cortex import Cortex
         from cortex.memory.streaming_types import StreamingOptions
@@ -607,19 +638,27 @@ class TestStreamingBeliefRevisionE2E:
             )
         )
 
-        test_id = f"e2e-supersede-{os.getpid()}"
+        # Use ctx for unique IDs to ensure parallel test isolation
+        test_id = ctx.run_id
+        memory_space_id = ctx.memory_space_id("e2e-supersede")
+        conversation_id_1 = ctx.conversation_id("e2e-supersede-1")
+        conversation_id_2 = ctx.conversation_id("e2e-supersede-2")
+        user_id = ctx.user_id("e2e-supersede")
+        agent_id = ctx.agent_id("e2e-supersede")
 
         try:
             # First, store initial fact
-            async def stream1():
+            async def stream1() -> AsyncIterator[str]:
                 yield "Blue is nice!"
 
-            async def extract_facts1(user_msg: str, agent_resp: str):
+            async def extract_facts1(
+                user_msg: str, agent_resp: str
+            ) -> List[Dict[str, Any]]:
                 return [
                     {
                         "fact": f"User {test_id} favorite color is blue",
                         "factType": "preference",
-                        "subject": f"user-{test_id}",
+                        "subject": user_id,
                         "predicate": "favorite color",
                         "object": "blue",
                         "confidence": 90,
@@ -629,28 +668,30 @@ class TestStreamingBeliefRevisionE2E:
 
             await cortex.memory.remember_stream(
                 {
-                    "memorySpaceId": f"test-e2e-{test_id}",
-                    "conversationId": f"conv-e2e-1-{test_id}",
+                    "memorySpaceId": memory_space_id,
+                    "conversationId": conversation_id_1,
                     "userMessage": "My favorite color is blue",
                     "responseStream": stream1(),
-                    "userId": f"user-{test_id}",
+                    "userId": user_id,
                     "userName": "E2E User",
-                    "agentId": f"agent-{test_id}",
+                    "agentId": agent_id,
                     "extractFacts": extract_facts1,
                 },
                 StreamingOptions(belief_revision=True),
             )
 
             # Now change the color (should supersede)
-            async def stream2():
+            async def stream2() -> AsyncIterator[str]:
                 yield "Updated to green!"
 
-            async def extract_facts2(user_msg: str, agent_resp: str):
+            async def extract_facts2(
+                user_msg: str, agent_resp: str
+            ) -> List[Dict[str, Any]]:
                 return [
                     {
                         "fact": f"User {test_id} favorite color is green",
                         "factType": "preference",
-                        "subject": f"user-{test_id}",
+                        "subject": user_id,
                         "predicate": "favorite color",
                         "object": "green",
                         "confidence": 95,
@@ -660,13 +701,13 @@ class TestStreamingBeliefRevisionE2E:
 
             result2 = await cortex.memory.remember_stream(
                 {
-                    "memorySpaceId": f"test-e2e-{test_id}",
-                    "conversationId": f"conv-e2e-2-{test_id}",
+                    "memorySpaceId": memory_space_id,
+                    "conversationId": conversation_id_2,
                     "userMessage": "Actually, my favorite color is now green",
                     "responseStream": stream2(),
-                    "userId": f"user-{test_id}",
+                    "userId": user_id,
                     "userName": "E2E User",
-                    "agentId": f"agent-{test_id}",
+                    "agentId": agent_id,
                     "extractFacts": extract_facts2,
                 },
                 StreamingOptions(belief_revision=True),
@@ -682,7 +723,9 @@ class TestStreamingBeliefRevisionE2E:
             await cortex.close()
 
     @pytest.mark.asyncio
-    async def test_e2e_skip_duplicate_fact_via_streaming(self):
+    async def test_e2e_skip_duplicate_fact_via_streaming(
+        self, ctx: TestRunContext
+    ) -> None:
         """E2E: Duplicate fact should be skipped (NONE) through streaming."""
         from cortex import Cortex
         from cortex.memory.streaming_types import StreamingOptions
@@ -700,19 +743,27 @@ class TestStreamingBeliefRevisionE2E:
             )
         )
 
-        test_id = f"e2e-none-{os.getpid()}"
+        # Use ctx for unique IDs to ensure parallel test isolation
+        test_id = ctx.run_id
+        memory_space_id = ctx.memory_space_id("e2e-none")
+        conversation_id_1 = ctx.conversation_id("e2e-none-1")
+        conversation_id_2 = ctx.conversation_id("e2e-none-2")
+        user_id = ctx.user_id("e2e-none")
+        agent_id = ctx.agent_id("e2e-none")
 
         try:
             # Store fact
-            async def stream1():
+            async def stream1() -> AsyncIterator[str]:
                 yield "Got it!"
 
-            async def extract_facts(user_msg: str, agent_resp: str):
+            async def extract_facts(
+                user_msg: str, agent_resp: str
+            ) -> List[Dict[str, Any]]:
                 return [
                     {
                         "fact": f"User {test_id} works remotely",
                         "factType": "identity",
-                        "subject": f"user-{test_id}",
+                        "subject": user_id,
                         "predicate": "work style",
                         "object": "remote",
                         "confidence": 90,
@@ -722,31 +773,31 @@ class TestStreamingBeliefRevisionE2E:
 
             await cortex.memory.remember_stream(
                 {
-                    "memorySpaceId": f"test-e2e-{test_id}",
-                    "conversationId": f"conv-e2e-1-{test_id}",
+                    "memorySpaceId": memory_space_id,
+                    "conversationId": conversation_id_1,
                     "userMessage": "I work remotely",
                     "responseStream": stream1(),
-                    "userId": f"user-{test_id}",
+                    "userId": user_id,
                     "userName": "E2E User",
-                    "agentId": f"agent-{test_id}",
+                    "agentId": agent_id,
                     "extractFacts": extract_facts,
                 },
                 StreamingOptions(belief_revision=True),
             )
 
             # Try to store same fact again
-            async def stream2():
+            async def stream2() -> AsyncIterator[str]:
                 yield "Yes, remote work!"
 
             result2 = await cortex.memory.remember_stream(
                 {
-                    "memorySpaceId": f"test-e2e-{test_id}",
-                    "conversationId": f"conv-e2e-2-{test_id}",
+                    "memorySpaceId": memory_space_id,
+                    "conversationId": conversation_id_2,
                     "userMessage": "As I said, I work remotely",
                     "responseStream": stream2(),
-                    "userId": f"user-{test_id}",
+                    "userId": user_id,
                     "userName": "E2E User",
-                    "agentId": f"agent-{test_id}",
+                    "agentId": agent_id,
                     "extractFacts": extract_facts,
                 },
                 StreamingOptions(belief_revision=True),
