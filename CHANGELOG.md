@@ -135,6 +135,98 @@ New `sessions` table and `tenantId` column added to all existing tables with app
 
 ---
 
+### [0.27.1] - 2026-01-01
+
+#### 🤖 AI SDK v6 Agent Architecture Support
+
+**Full integration with AI SDK v6's new Agent architecture** in `@cortexmemory/vercel-ai-provider`. When AI SDK v6 is detected, the quickstart automatically uses the new `ToolLoopAgent` pattern.
+
+**New Exports:**
+
+```typescript
+import {
+  // Type-safe call options for ToolLoopAgent
+  createCortexCallOptionsSchema,
+  CortexCallOptions,
+  
+  // Memory injection via prepareCall hook
+  createMemoryPrepareCall,
+  MemoryInjectionConfig,
+  
+  // v6 feature detection
+  isV6Available,
+  
+  // Type inference for UI messages
+  InferAgentUIMessage,
+} from "@cortexmemory/vercel-ai-provider";
+```
+
+**`callOptionsSchema` - Type-Safe Runtime Configuration:**
+
+Define what options must be passed when calling an agent:
+
+```typescript
+import { ToolLoopAgent } from "ai";
+import { createCortexCallOptionsSchema, createMemoryPrepareCall } from "@cortexmemory/vercel-ai-provider";
+
+const memoryAgent = new ToolLoopAgent({
+  model: "openai/gpt-4o-mini",
+  instructions: "You are a helpful assistant with long-term memory.",
+  
+  // Zod schema validates options at runtime
+  callOptionsSchema: createCortexCallOptionsSchema(),
+  
+  // Inject memories before each call
+  prepareCall: createMemoryPrepareCall({
+    convexUrl: process.env.CONVEX_URL!,
+    maxMemories: 20,
+  }),
+});
+
+// TypeScript enforces these options
+await memoryAgent.generate({
+  prompt: "Hello!",
+  options: { userId: "u1", memorySpaceId: "app1" }, // Type-safe!
+});
+```
+
+**`createMemoryPrepareCall` - Automatic Memory Injection:**
+
+Uses Cortex's `memory.recall()` orchestration API to inject context from all memory layers:
+
+- Vector memories (semantic search)
+- Facts (extracted knowledge)
+- Graph relationships (if configured)
+
+```typescript
+prepareCall: createMemoryPrepareCall({
+  convexUrl: process.env.CONVEX_URL!,
+  maxMemories: 20,     // Max items to inject
+  includeFacts: true,  // Include Layer 3 facts
+  includeVector: true, // Include Layer 2 vector memories
+  includeGraph: true,  // Expand through graph relationships
+}),
+```
+
+**Auto-Detection in Quickstart:**
+
+The quickstart now automatically detects AI SDK version and routes to the appropriate endpoint:
+
+- **AI SDK v6**: Uses `/api/chat-v6` with `ToolLoopAgent`
+- **AI SDK v5**: Uses `/api/chat` with `streamText`
+
+Footer shows "Using ToolLoopAgent" when v6 is active.
+
+**New Files in Quickstart:**
+
+- `lib/agents/memory-agent.ts` - Example v6 agent definition
+- `app/api/chat-v6/route.ts` - v6-style API route
+- `lib/versions.ts` - Runtime SDK version detection
+
+**Breaking Changes:** None - fully backward compatible with v5.
+
+---
+
 ### [0.26.1] - 2025-12-26
 
 #### 🔧 Vercel AI SDK v6.0 Support
