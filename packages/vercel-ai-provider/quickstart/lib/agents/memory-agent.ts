@@ -22,6 +22,7 @@
  */
 
 import { ToolLoopAgent, tool, stepCountIs } from "ai";
+import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import {
   createCortexCallOptionsSchema,
@@ -66,7 +67,7 @@ Behavior guidelines:
  */
 export const memoryAgent = new ToolLoopAgent({
   id: "cortex-memory-agent",
-  model: "openai/gpt-4o-mini",
+  model: openai("gpt-4o-mini"),
   instructions: SYSTEM_PROMPT,
 
   // ┌─────────────────────────────────────────────────────────────────┐

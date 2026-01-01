@@ -391,19 +391,21 @@ export async function createCortexAgentStreamResponse(
   const ai = await import("ai");
 
   if ("createAgentUIStreamResponse" in ai) {
-    // v6 path
-    const createAgentUIStreamResponse = ai.createAgentUIStreamResponse as (
-      opts: {
-        agent: unknown;
-        messages: unknown[];
-        options?: CortexCallOptions;
-        headers?: Record<string, string>;
-      }
-    ) => Promise<Response>;
+    // v6 path - use unknown cast to handle dynamic API differences
+    const createAgentUIStreamResponse = (
+      ai.createAgentUIStreamResponse as unknown as (
+        opts: {
+          agent: unknown;
+          uiMessages: unknown[];
+          options?: CortexCallOptions;
+          headers?: Record<string, string>;
+        }
+      ) => Promise<Response>
+    );
 
     return createAgentUIStreamResponse({
       agent,
-      messages,
+      uiMessages: messages,
       options: cortexOptions,
       headers,
     });
