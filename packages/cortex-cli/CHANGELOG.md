@@ -1,5 +1,20 @@
 # @cortexmemory/cli Changelog
 
+## [0.27.3] - 2026-01-01
+
+### Added
+
+- **Neo4j encrypted URI scheme support** - Graph database setup now accepts all neo4j-driver URI schemes:
+  - `bolt://`, `bolt+s://`, `bolt+ssc://` (direct connections)
+  - `neo4j://`, `neo4j+s://`, `neo4j+ssc://` (routing/cluster connections)
+  - `+s` suffix for TLS with system CA validation
+  - `+ssc` suffix for TLS with self-signed certificate acceptance
+
+### Changed
+
+- Updated Docker Compose graph configuration to support optional TLS for bolt connections
+- Added SSL policy configuration for Neo4j bolt connector
+
 ## [0.27.2] - 2025-12-28
 
 ### Added
