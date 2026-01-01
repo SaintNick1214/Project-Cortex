@@ -329,9 +329,11 @@ export function createMemoryPrepareCall(config: MemoryInjectionConfig) {
       return settings;
     } finally {
       // Always close the client to prevent connection/memory leaks
-      await cortex.close().catch(() => {
+      try {
+        cortex.close();
+      } catch {
         // Ignore close errors - best effort cleanup
-      });
+      }
     }
   };
 }
