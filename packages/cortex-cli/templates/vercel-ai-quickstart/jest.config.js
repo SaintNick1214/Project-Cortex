@@ -1,9 +1,10 @@
 /**
  * Jest Configuration for Vercel AI Quickstart
  *
- * Two test projects:
+ * Three test projects:
  * - unit: Fast unit tests with mocked dependencies
  * - integration: Integration tests for API routes with mocked SDK
+ * - e2e: End-to-end tests with real Cortex backend (requires CONVEX_URL, OPENAI_API_KEY)
  */
 
 const baseConfig = {
@@ -40,6 +41,12 @@ module.exports = {
       displayName: "integration",
       testMatch: ["<rootDir>/tests/integration/**/*.test.ts"],
       testTimeout: 30000,
+    },
+    {
+      ...baseConfig,
+      displayName: "e2e",
+      testMatch: ["<rootDir>/tests/e2e/**/*.test.ts"],
+      testTimeout: 120000, // 2 minutes for real network calls
     },
   ],
 };

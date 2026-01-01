@@ -1,8 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useLayerTracking } from "@/lib/layer-tracking";
+import { detectVersions, type VersionInfo } from "@/lib/versions";
 import { AuthProvider, useAuth } from "@/components/AuthProvider";
 import { AdminSetup } from "@/components/AdminSetup";
 import { LoginScreen } from "@/components/LoginScreen";
@@ -52,6 +53,7 @@ function MainContent() {
   const { isLoading, isAdminSetup, isAuthenticated, user } = useAuth();
   const [memorySpaceId, setMemorySpaceId] = useState("quickstart-demo");
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+  const [versions, setVersions] = useState<VersionInfo | null>(null);
   const {
     layers,
     isOrchestrating,
@@ -59,6 +61,11 @@ function MainContent() {
     updateLayer,
     resetLayers,
   } = useLayerTracking();
+
+  // Detect SDK versions on mount
+  useEffect(() => {
+    detectVersions().then(setVersions);
+  }, []);
 
   // Handle new chat
   const handleNewChat = useCallback(() => {
@@ -109,7 +116,7 @@ function MainContent() {
 
   // Main authenticated interface
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="h-screen flex flex-col overflow-hidden">
       {/* Header */}
       <header className="border-b border-white/10 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -151,6 +158,7 @@ function MainContent() {
             memorySpaceId={memorySpaceId}
             userId={userId}
             conversationId={currentConversationId}
+            apiEndpoint={versions?.aiSdkMajor === 6 ? "/api/chat-v6" : "/api/chat"}
             onOrchestrationStart={startOrchestration}
             onLayerUpdate={updateLayer}
             onReset={resetLayers}
@@ -185,9 +193,15 @@ function MainContent() {
       <footer className="border-t border-white/10 px-6 py-3">
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-4">
-            <span>Cortex SDK v0.24.0</span>
+            <span>Cortex SDK {versions ? `v${versions.cortexSdk}` : "..."}</span>
             <span>•</span>
-            <span>Vercel AI SDK v5</span>
+            <span>Vercel AI SDK {versions?.aiSdk ?? "..."}</span>
+            {versions?.aiSdkMajor === 6 && (
+              <>
+                <span>•</span>
+                <span className="text-cortex-400">Using ToolLoopAgent</span>
+              </>
+            )}
           </div>
           <a
             href="https://cortexmemory.dev/docs"

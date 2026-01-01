@@ -122,45 +122,100 @@ function generateTitle(message: string): string {
   return title;
 }
 
+/**
+ * Normalize messages to ensure they have the `parts` array format
+ * expected by AI SDK v6's convertToModelMessages.
+ *
+ * Handles:
+ * - Messages with `content` string (legacy format) -> converts to `parts` array
+ * - Messages with `role: "agent"` -> converts to `role: "assistant"`
+ * - Messages already in v6 format -> passes through unchanged
+ */
+function normalizeMessages(messages: unknown[]): unknown[] {
+  return messages.map((msg: unknown) => {
+    const m = msg as Record<string, unknown>;
+
+    // Normalize role: "agent" -> "assistant"
+    let role = m.role as string;
+    if (role === "agent") {
+      role = "assistant";
+    }
+
+    // Ensure parts array exists
+    let parts = m.parts as Array<{ type: string; text?: string }> | undefined;
+    if (!parts) {
+      // Convert content string to parts array
+      const content = m.content as string | undefined;
+      if (content) {
+        parts = [{ type: "text", text: content }];
+      } else {
+        parts = [];
+      }
+    }
+
+    return {
+      ...m,
+      role,
+      parts,
+    };
+  });
+}
+
+/**
+ * Extract text from a message (handles both content string and parts array)
+ */
+function getMessageText(message: { content?: string; parts?: Array<{ type: string; text?: string }> }): string {
+  if (typeof message.content === "string") {
+    return message.content;
+  }
+  if (message.parts && Array.isArray(message.parts)) {
+    return message.parts
+      .filter((part) => part.type === "text" && part.text)
+      .map((part) => part.text)
+      .join("");
+  }
+  return "";
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { messages, memorySpaceId, userId, conversationId: providedConversationId } = body;
+
+    // Validate messages array exists
+    if (!messages || !Array.isArray(messages)) {
+      return new Response(
+        JSON.stringify({ error: "messages array is required" }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
     // Generate conversation ID if not provided (new chat)
     const conversationId = providedConversationId || 
       `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const isNewConversation = !providedConversationId;
 
+    // Normalize messages to ensure they have the `parts` array format
+    // expected by AI SDK v6's convertToModelMessages
+    const normalizedMessages = normalizeMessages(messages);
+
     // Convert UIMessage[] from useChat to ModelMessage[] for streamText
     // Note: In AI SDK v6+, convertToModelMessages may return a Promise
-    const modelMessagesResult = convertToModelMessages(messages);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const modelMessagesResult = convertToModelMessages(normalizedMessages as any);
     const modelMessages =
       modelMessagesResult instanceof Promise
         ? await modelMessagesResult
         : modelMessagesResult;
 
     // Get the first user message for title generation
-    // AI SDK v5+ uses `parts` array instead of `content` string
     const firstUserMessage = messages.find((m: { role: string }) => m.role === "user") as {
       role: string;
       content?: string;
       parts?: Array<{ type: string; text?: string }>;
     } | undefined;
     
-    let messageText = "";
-    if (firstUserMessage) {
-      if (typeof firstUserMessage.content === "string") {
-        // Legacy format: content is a string
-        messageText = firstUserMessage.content;
-      } else if (firstUserMessage.parts && Array.isArray(firstUserMessage.parts)) {
-        // AI SDK v5+ format: extract text from parts array
-        messageText = firstUserMessage.parts
-          .filter((part) => part.type === "text" && part.text)
-          .map((part) => part.text)
-          .join("");
-      }
-    }
+    const messageText = firstUserMessage ? getMessageText(firstUserMessage) : "";
 
     // Use createUIMessageStream to send both LLM text and layer events
     return createUIMessageStreamResponse({
