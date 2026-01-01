@@ -52,7 +52,7 @@ const cortex = new Cortex({
 
 // All operations automatically scoped to tenant
 await cortex.memory.remember({...});           // tenantId: 'tenant-acme'
-await cortex.conversations.create({...});      // tenantId: 'tenant-acme'  
+await cortex.conversations.create({...});      // tenantId: 'tenant-acme'
 await cortex.facts.store({...});               // tenantId: 'tenant-acme'
 await cortex.immutable.store({...});           // tenantId: 'tenant-acme'
 await cortex.mutable.set(...);                 // tenantId: 'tenant-acme'
@@ -94,18 +94,18 @@ await cortex.sessions.expireIdle({ maxIdleMs: 30 * 60 * 1000 }); // 30 min
 
 **APIs Updated with TenantId Support:**
 
-| API | TenantId Support |
-|-----|------------------|
-| `cortex.memory.*` | ✅ Auto-injected |
-| `cortex.conversations.*` | ✅ Auto-injected |
-| `cortex.facts.*` | ✅ Auto-injected |
-| `cortex.immutable.*` | ✅ Auto-injected |
-| `cortex.mutable.*` | ✅ Auto-injected |
-| `cortex.users.*` | ✅ Auto-injected |
-| `cortex.sessions.*` | ✅ Auto-injected |
-| `cortex.memorySpaces.*` | ✅ Auto-injected |
-| `cortex.contexts.*` | ✅ Auto-injected |
-| `cortex.graph.*` | ✅ In node properties |
+| API                      | TenantId Support      |
+| ------------------------ | --------------------- |
+| `cortex.memory.*`        | ✅ Auto-injected      |
+| `cortex.conversations.*` | ✅ Auto-injected      |
+| `cortex.facts.*`         | ✅ Auto-injected      |
+| `cortex.immutable.*`     | ✅ Auto-injected      |
+| `cortex.mutable.*`       | ✅ Auto-injected      |
+| `cortex.users.*`         | ✅ Auto-injected      |
+| `cortex.sessions.*`      | ✅ Auto-injected      |
+| `cortex.memorySpaces.*`  | ✅ Auto-injected      |
+| `cortex.contexts.*`      | ✅ Auto-injected      |
+| `cortex.graph.*`         | ✅ In node properties |
 
 **Governance Integration:**
 
@@ -114,7 +114,7 @@ await cortex.sessions.expireIdle({ maxIdleMs: 30 * 60 * 1000 }); // 30 min
 await cortex.governance.create({
   name: "session-policy",
   sessions: {
-    idleTimeoutMs: 30 * 60 * 1000,    // 30 minutes
+    idleTimeoutMs: 30 * 60 * 1000, // 30 minutes
     absoluteTimeoutMs: 24 * 60 * 60 * 1000, // 24 hours
     maxConcurrentSessions: 5,
   },
@@ -149,6 +149,7 @@ New `sessions` table and `tenantId` column added to all existing tables with app
 - ✅ Layer observer for real-time UI updates
 
 **Added comprehensive E2E tests** for the quickstart covering:
+
 - Fact storage verification
 - Belief revision (updating preferences through conversation)
 - Memory recall across conversations
@@ -170,14 +171,14 @@ import {
   // Type-safe call options for ToolLoopAgent
   createCortexCallOptionsSchema,
   CortexCallOptions,
-  
+
   // Memory injection via prepareCall hook
   createMemoryPrepareCall,
   MemoryInjectionConfig,
-  
+
   // v6 feature detection
   isV6Available,
-  
+
   // Type inference for UI messages
   InferAgentUIMessage,
 } from "@cortexmemory/vercel-ai-provider";
@@ -189,15 +190,18 @@ Define what options must be passed when calling an agent:
 
 ```typescript
 import { ToolLoopAgent } from "ai";
-import { createCortexCallOptionsSchema, createMemoryPrepareCall } from "@cortexmemory/vercel-ai-provider";
+import {
+  createCortexCallOptionsSchema,
+  createMemoryPrepareCall,
+} from "@cortexmemory/vercel-ai-provider";
 
 const memoryAgent = new ToolLoopAgent({
   model: "openai/gpt-4o-mini",
   instructions: "You are a helpful assistant with long-term memory.",
-  
+
   // Zod schema validates options at runtime
   callOptionsSchema: createCortexCallOptionsSchema(),
-  
+
   // Inject memories before each call
   prepareCall: createMemoryPrepareCall({
     convexUrl: process.env.CONVEX_URL!,

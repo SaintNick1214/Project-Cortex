@@ -99,10 +99,10 @@ export const memoryAgent = new ToolLoopAgent({
   // └─────────────────────────────────────────────────────────────────┘
   prepareCall: createMemoryPrepareCall({
     convexUrl: process.env.CONVEX_URL!,
-    maxMemories: 20,     // Max items to inject from recall
-    includeFacts: true,  // Include Layer 3 facts
+    maxMemories: 20, // Max items to inject from recall
+    includeFacts: true, // Include Layer 3 facts
     includeVector: true, // Include Layer 2 vector memories
-    includeGraph: true,  // Expand through graph relationships
+    includeGraph: true, // Expand through graph relationships
   }),
 
   // Default to 5 steps (sufficient for most chat interactions)

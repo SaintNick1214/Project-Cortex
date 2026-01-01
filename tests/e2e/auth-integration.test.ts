@@ -11,10 +11,7 @@
 import { Cortex } from "../../src";
 import { createAuthContext } from "../../src/auth/context";
 import { createTestRunContext } from "../helpers/isolation";
-import {
-  generateTenantId,
-  generateTenantUserId,
-} from "../helpers/tenancy";
+import { generateTenantId, generateTenantUserId } from "../helpers/tenancy";
 
 // Test context for isolation
 const ctx = createTestRunContext();
@@ -45,7 +42,10 @@ describeWithConvex("Auth Integration E2E", () => {
       const tempCortex = new Cortex({
         convexUrl: process.env.CONVEX_URL!,
       });
-      await tempCortex.memorySpaces.delete(testMemorySpaceId, { cascade: true, reason: "Test cleanup" });
+      await tempCortex.memorySpaces.delete(testMemorySpaceId, {
+        cascade: true,
+        reason: "Test cleanup",
+      });
     } catch {
       // Ignore cleanup errors
     }
@@ -99,7 +99,10 @@ describeWithConvex("Auth Integration E2E", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: testMemorySpaceId,
         type: "user-agent",
-        participants: { userId: clerkAuthContext.userId, agentId: "test-agent" },
+        participants: {
+          userId: clerkAuthContext.userId,
+          agentId: "test-agent",
+        },
       });
 
       expect(conv.tenantId).toBe("tenant_clerk_demo");
@@ -333,7 +336,10 @@ describeWithConvex("Auth Integration E2E", () => {
       const conv = await cortex.conversations.create({
         memorySpaceId: testMemorySpaceId,
         type: "user-agent",
-        participants: { userId: apiKeyAuthContext.userId, agentId: "test-agent" },
+        participants: {
+          userId: apiKeyAuthContext.userId,
+          agentId: "test-agent",
+        },
       });
 
       expect(conv.tenantId).toBe("enterprise_tenant");
@@ -561,7 +567,7 @@ describeWithConvex("Auth Integration E2E", () => {
       expect(cortex.auth?.authMethod).toBe("oauth");
       expect((cortex.auth?.claims?.roles as string[])?.length).toBe(3);
       expect((cortex.auth?.metadata?.device as { type: string })?.type).toBe(
-        "desktop"
+        "desktop",
       );
 
       // Create data with full context

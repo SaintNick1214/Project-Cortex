@@ -12,7 +12,7 @@ import { verifyPassword, generateSessionToken } from "@/lib/password";
  * Returns validated credentials or null if invalid.
  */
 function validateLoginBody(
-  body: unknown
+  body: unknown,
 ): { username: string; password: string } | null {
   if (typeof body !== "object" || body === null) {
     return null;
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     if (!credentials) {
       return Response.json(
         { error: "Username and password are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
     if (!user) {
       return Response.json(
         { error: "Invalid username or password" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
     if (!storedHash) {
       return Response.json(
         { error: "Invalid username or password" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
     if (!isValid) {
       return Response.json(
         { error: "Invalid username or password" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -120,9 +120,6 @@ export async function POST(req: Request) {
     // Log sanitized error to prevent log injection
     console.error("[Login Error]", getSafeErrorMessage(error));
 
-    return Response.json(
-      { error: "Failed to authenticate" },
-      { status: 500 }
-    );
+    return Response.json({ error: "Failed to authenticate" }, { status: 500 });
   }
 }

@@ -107,7 +107,9 @@ describeIfEnabled("Neo4j URI Schemes", () => {
     });
 
     it("should execute queries over encrypted connection", async () => {
-      const result = await adapter.query("RETURN 'encrypted-bolt+ssc' as scheme");
+      const result = await adapter.query(
+        "RETURN 'encrypted-bolt+ssc' as scheme",
+      );
       expect(result.records).toHaveLength(1);
       expect(result.records[0].scheme).toBe("encrypted-bolt+ssc");
     });
@@ -137,7 +139,9 @@ describeIfEnabled("Neo4j URI Schemes", () => {
     });
 
     it("should execute queries over encrypted routing connection", async () => {
-      const result = await adapter.query("RETURN 'encrypted-neo4j+ssc' as scheme");
+      const result = await adapter.query(
+        "RETURN 'encrypted-neo4j+ssc' as scheme",
+      );
       expect(result.records).toHaveLength(1);
       expect(result.records[0].scheme).toBe("encrypted-neo4j+ssc");
     });
@@ -156,7 +160,7 @@ describeIfEnabled("Neo4j URI Schemes", () => {
           uri: "neo4j+s://fake-cloud-host.neo4j.io:7687",
           username: "neo4j",
           password: "password",
-        })
+        }),
       ).rejects.toThrow(); // Connection error expected, not URI validation error
 
       await adapter.disconnect();
@@ -171,7 +175,7 @@ describeIfEnabled("Neo4j URI Schemes", () => {
           uri: "bolt+s://fake-cloud-host.neo4j.io:7687",
           username: "neo4j",
           password: "password",
-        })
+        }),
       ).rejects.toThrow(); // Connection error expected, not URI validation error
 
       await adapter.disconnect();

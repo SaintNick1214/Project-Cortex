@@ -50,7 +50,10 @@ describeWithConvex("Sessions Workflow E2E", () => {
 
   afterAll(async () => {
     try {
-      await cortex.memorySpaces.delete(testMemorySpaceId, { cascade: true, reason: "Test cleanup" });
+      await cortex.memorySpaces.delete(testMemorySpaceId, {
+        cascade: true,
+        reason: "Test cleanup",
+      });
     } catch {
       // Ignore cleanup errors
     }
@@ -100,7 +103,9 @@ describeWithConvex("Sessions Workflow E2E", () => {
 
       // Step 4: Verify session was updated
       const updatedSession = await cortex.sessions.get(session.sessionId);
-      expect(updatedSession?.lastActiveAt).toBeGreaterThan(session.lastActiveAt);
+      expect(updatedSession?.lastActiveAt).toBeGreaterThan(
+        session.lastActiveAt,
+      );
 
       // Step 5: User logs out
       await cortex.sessions.end(session.sessionId);
@@ -240,9 +245,13 @@ describeWithConvex("Sessions Workflow E2E", () => {
 
       expect(retrieved?.metadata?.device).toEqual(customMetadata.device);
       expect(retrieved?.metadata?.location).toEqual(customMetadata.location);
-      expect(retrieved?.metadata?.authProvider).toEqual(customMetadata.authProvider);
+      expect(retrieved?.metadata?.authProvider).toEqual(
+        customMetadata.authProvider,
+      );
       expect(retrieved?.metadata?.theme).toEqual(customMetadata.theme);
-      expect(retrieved?.metadata?.permissions).toEqual(customMetadata.permissions);
+      expect(retrieved?.metadata?.permissions).toEqual(
+        customMetadata.permissions,
+      );
 
       // Cleanup
       await cortex.sessions.end(session.sessionId);
@@ -451,7 +460,7 @@ describeWithConvex("Sessions Workflow E2E", () => {
           cortex.sessions.create({
             userId: concurrentUserId,
             tenantId: testTenantId,
-          })
+          }),
         );
 
       const sessions = await Promise.all(createPromises);

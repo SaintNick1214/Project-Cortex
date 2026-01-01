@@ -46,7 +46,7 @@ export function generateTenantId(prefix = "tenant"): string {
  */
 export function generateTenantIds(count: number, prefix = "tenant"): string[] {
   return Array.from({ length: count }, (_, i) =>
-    generateTenantId(`${prefix}_${i}`)
+    generateTenantId(`${prefix}_${i}`),
   );
 }
 
@@ -82,7 +82,7 @@ export function createTenantAuthContext(
     authProvider?: string;
     claims?: Record<string, unknown>;
     metadata?: Record<string, unknown>;
-  } = {}
+  } = {},
 ): AuthContext {
   return {
     userId,
@@ -101,7 +101,7 @@ export function createTenantAuthContext(
  * Create auth contexts for multiple tenants
  */
 export function createMultiTenantAuthContexts(
-  count: number
+  count: number,
 ): Array<AuthContext & { tenantId: string }> {
   const tenantIds = generateTenantIds(count);
   return tenantIds.map((tenantId) => ({
@@ -119,7 +119,7 @@ export function createMultiTenantAuthContexts(
  */
 export async function createTenantTestContext(
   convexUrl: string,
-  tenantId?: string
+  tenantId?: string,
 ): Promise<TenantTestContext> {
   const effectiveTenantId = tenantId || generateTenantId();
   const userId = generateTenantUserId(effectiveTenantId);
@@ -145,7 +145,7 @@ export async function createTenantTestContext(
  * Create a multi-tenant test setup with two isolated tenants
  */
 export async function createMultiTenantTestSetup(
-  convexUrl: string
+  convexUrl: string,
 ): Promise<MultiTenantTestSetup> {
   const tenantA = await createTenantTestContext(convexUrl);
   const tenantB = await createTenantTestContext(convexUrl);
@@ -167,9 +167,15 @@ export async function verifyTenantIsolation(
   tenantA: TenantTestContext,
   tenantB: TenantTestContext,
   options: {
-    dataType: "conversations" | "memories" | "facts" | "users" | "immutable" | "mutable";
+    dataType:
+      | "conversations"
+      | "memories"
+      | "facts"
+      | "users"
+      | "immutable"
+      | "mutable";
     recordId: string;
-  }
+  },
 ): Promise<{
   isolated: boolean;
   details: string;
@@ -189,7 +195,9 @@ export async function verifyTenantIsolation(
           memorySpaceId: tenantA.memorySpaceId,
           limit: 100,
         });
-        result = (memories as { memoryId: string }[]).find((m) => m.memoryId === recordId);
+        result = (memories as { memoryId: string }[]).find(
+          (m) => m.memoryId === recordId,
+        );
         break;
 
       case "facts":
@@ -207,14 +215,14 @@ export async function verifyTenantIsolation(
       case "immutable":
         result = await tenantB.cortex.immutable.get(
           tenantA.memorySpaceId,
-          recordId
+          recordId,
         );
         break;
 
       case "mutable":
         result = await tenantB.cortex.mutable.get(
           tenantA.memorySpaceId,
-          recordId
+          recordId,
         );
         break;
 
@@ -282,7 +290,7 @@ export async function seedTenantTestData(
     facts?: number;
     immutableRecords?: number;
     mutableRecords?: number;
-  } = {}
+  } = {},
 ): Promise<TenantTestData> {
   const data: TenantTestData = {};
   const {
@@ -298,7 +306,10 @@ export async function seedTenantTestData(
     const conv = await context.cortex.conversations.create({
       memorySpaceId: context.memorySpaceId,
       type: "user-agent",
-      participants: { userId: context.userId, agentId: `agent_${context.tenantId}` },
+      participants: {
+        userId: context.userId,
+        agentId: `agent_${context.tenantId}`,
+      },
     });
     data.conversationId = conv.conversationId;
   }
@@ -358,11 +369,10 @@ export async function seedTenantTestData(
     data.mutableKeys = [];
     for (let i = 0; i < mutableRecords; i++) {
       const key = `mutable_${i}`;
-      await context.cortex.mutable.set(
-        context.memorySpaceId,
-        key,
-        { data: `Mutable data ${i}`, tenant: context.tenantId }
-      );
+      await context.cortex.mutable.set(context.memorySpaceId, key, {
+        data: `Mutable data ${i}`,
+        tenant: context.tenantId,
+      });
       data.mutableKeys.push(key);
     }
   }
@@ -379,7 +389,7 @@ export async function seedTenantTestData(
  */
 export async function cleanupTenantTestData(
   context: TenantTestContext,
-  data: TenantTestData
+  data: TenantTestData,
 ): Promise<void> {
   // Clean up in reverse order of dependencies
 
@@ -441,11 +451,11 @@ export async function cleanupTenantTestData(
  */
 export function assertTenantId(
   record: { tenantId?: string },
-  expectedTenantId: string
+  expectedTenantId: string,
 ): void {
   if (record.tenantId !== expectedTenantId) {
     throw new Error(
-      `TenantId mismatch: expected ${expectedTenantId}, got ${record.tenantId}`
+      `TenantId mismatch: expected ${expectedTenantId}, got ${record.tenantId}`,
     );
   }
 }
@@ -455,12 +465,12 @@ export function assertTenantId(
  */
 export function assertAllRecordsHaveTenantId(
   records: Array<{ tenantId?: string }>,
-  expectedTenantId: string
+  expectedTenantId: string,
 ): void {
   const mismatched = records.filter((r) => r.tenantId !== expectedTenantId);
   if (mismatched.length > 0) {
     throw new Error(
-      `${mismatched.length} records have incorrect tenantId. Expected: ${expectedTenantId}`
+      `${mismatched.length} records have incorrect tenantId. Expected: ${expectedTenantId}`,
     );
   }
 }
@@ -470,12 +480,12 @@ export function assertAllRecordsHaveTenantId(
  */
 export function assertNoTenantLeakage(
   records: Array<{ tenantId?: string }>,
-  forbiddenTenantId: string
+  forbiddenTenantId: string,
 ): void {
   const leaked = records.filter((r) => r.tenantId === forbiddenTenantId);
   if (leaked.length > 0) {
     throw new Error(
-      `Tenant isolation breach: ${leaked.length} records from tenant ${forbiddenTenantId} leaked`
+      `Tenant isolation breach: ${leaked.length} records from tenant ${forbiddenTenantId} leaked`,
     );
   }
 }

@@ -57,7 +57,10 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
 
   afterAll(async () => {
     try {
-      await cortex.memorySpaces.delete(testMemorySpaceId, { cascade: true, reason: "Test cleanup" });
+      await cortex.memorySpaces.delete(testMemorySpaceId, {
+        cascade: true,
+        reason: "Test cleanup",
+      });
     } catch {
       // Ignore cleanup errors
     }
@@ -436,11 +439,9 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
     });
 
     it("should return only tenant-specific results in searches", async () => {
-      const results = await cortex.facts.search(
-        testMemorySpaceId,
-        ctx.runId,
-        { limit: 100 }
-      );
+      const results = await cortex.facts.search(testMemorySpaceId, ctx.runId, {
+        limit: 100,
+      });
 
       // All results should have correct tenantId
       results.forEach((result: { tenantId?: string }) => {
@@ -451,7 +452,7 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
 
       // Should find our specific fact
       const found = results.find(
-        (r: { factId: string }) => r.factId === searchFactId
+        (r: { factId: string }) => r.factId === searchFactId,
       );
       expect(found).toBeDefined();
     });

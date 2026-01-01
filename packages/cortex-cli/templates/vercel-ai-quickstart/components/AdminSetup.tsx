@@ -41,7 +41,9 @@ export function AdminSetup() {
             <span className="text-4xl">🧠</span>
           </div>
           <h1 className="text-3xl font-bold mb-2">Welcome to Cortex</h1>
-          <p className="text-gray-400">Set up your admin password to get started</p>
+          <p className="text-gray-400">
+            Set up your admin password to get started
+          </p>
         </div>
 
         {/* Setup Form */}

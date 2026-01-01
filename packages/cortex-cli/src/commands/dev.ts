@@ -84,7 +84,7 @@ const NETWORK_ERROR_PATTERNS = [
  */
 function isNoisyNetworkError(line: string): boolean {
   const trimmed = line.trim();
-  return NETWORK_ERROR_PATTERNS.some(pattern => pattern.test(trimmed));
+  return NETWORK_ERROR_PATTERNS.some((pattern) => pattern.test(trimmed));
 }
 
 /**
@@ -528,14 +528,22 @@ async function startAllServices(state: DevState): Promise<void> {
         } catch (error) {
           lastError = error instanceof Error ? error : new Error(String(error));
           if (attempt < maxRetries) {
-            addLog(state, name, pc.yellow(`Deploy attempt ${attempt} failed, retrying in 2s...`));
+            addLog(
+              state,
+              name,
+              pc.yellow(`Deploy attempt ${attempt} failed, retrying in 2s...`),
+            );
             await new Promise((resolve) => setTimeout(resolve, 2000));
           }
         }
       }
 
       if (lastError) {
-        addLog(state, name, pc.yellow("Deploy failed after retries, continuing..."));
+        addLog(
+          state,
+          name,
+          pc.yellow("Deploy failed after retries, continuing..."),
+        );
       }
     }
 
@@ -955,10 +963,15 @@ function addLog(state: DevState, serviceName: string, message: string): void {
   // Check for noisy network error patterns and collapse them
   if (isNoisyNetworkError(message)) {
     // If this is the start of an HTML dump, show a clean message
-    if (message.includes("GitHub API returned") || message.includes("<!DOCTYPE")) {
+    if (
+      message.includes("GitHub API returned") ||
+      message.includes("<!DOCTYPE")
+    ) {
       if (!state.suppressingHtmlError.has(serviceName)) {
         state.suppressingHtmlError.add(serviceName);
-        const cleanMessage = pc.yellow("Network error (transient, will retry automatically)");
+        const cleanMessage = pc.yellow(
+          "Network error (transient, will retry automatically)",
+        );
         const logLine = `${pc.dim(timestamp)} ${prefix}${cleanMessage}`;
         state.logs.push(logLine);
         console.log(`  ${logLine}`);

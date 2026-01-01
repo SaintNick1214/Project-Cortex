@@ -130,12 +130,12 @@ profile = create_user_profile(
 
 #### Validation Presets
 
-| Preset | Required Fields | Email Validation | Max Size |
-|--------|-----------------|------------------|----------|
-| `strict` | displayName, email | ✓ | 64KB |
-| `standard` | displayName | ✓ | 256KB |
-| `minimal` | displayName | ✗ | None |
-| `none` | None | ✗ | None |
+| Preset     | Required Fields    | Email Validation | Max Size |
+| ---------- | ------------------ | ---------------- | -------- |
+| `strict`   | displayName, email | ✓                | 64KB     |
+| `standard` | displayName        | ✓                | 256KB    |
+| `minimal`  | displayName        | ✗                | None     |
+| `none`     | None               | ✗                | None     |
 
 ---
 

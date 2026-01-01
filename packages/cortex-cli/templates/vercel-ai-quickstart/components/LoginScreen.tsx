@@ -57,7 +57,9 @@ export function LoginScreen() {
             <span className="text-4xl">🧠</span>
           </div>
           <h1 className="text-3xl font-bold mb-2">Cortex Memory Demo</h1>
-          <p className="text-gray-400">Sign in to explore AI with long-term memory</p>
+          <p className="text-gray-400">
+            Sign in to explore AI with long-term memory
+          </p>
         </div>
 
         {/* Login/Register Card */}
@@ -114,8 +116,7 @@ export function LoginScreen() {
                   htmlFor="displayName"
                   className="block text-sm font-medium text-gray-300 mb-2"
                 >
-                  Display Name{" "}
-                  <span className="text-gray-500">(optional)</span>
+                  Display Name <span className="text-gray-500">(optional)</span>
                 </label>
                 <input
                   id="displayName"
@@ -144,7 +145,9 @@ export function LoginScreen() {
                 placeholder="Enter your password"
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-cortex-500 transition-colors"
                 disabled={isLoading}
-                autoComplete={activeTab === "login" ? "current-password" : "new-password"}
+                autoComplete={
+                  activeTab === "login" ? "current-password" : "new-password"
+                }
               />
             </div>
 
@@ -181,7 +184,9 @@ export function LoginScreen() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     />
                   </svg>
-                  {activeTab === "login" ? "Signing in..." : "Creating account..."}
+                  {activeTab === "login"
+                    ? "Signing in..."
+                    : "Creating account..."}
                 </>
               ) : activeTab === "login" ? (
                 "Sign In"

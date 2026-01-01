@@ -263,15 +263,23 @@ export function createMemoryPrepareCall(config: MemoryInjectionConfig) {
     formatContext = defaultMemoryContextFormatter,
   } = config;
 
-  return async <T extends { options: CortexCallOptions; instructions?: string; messages?: unknown[] }>(
-    settings: T
+  return async <
+    T extends {
+      options: CortexCallOptions;
+      instructions?: string;
+      messages?: unknown[];
+    },
+  >(
+    settings: T,
   ): Promise<T> => {
     const { options, instructions = "", messages = [], ...rest } = settings;
 
     // Extract query from the last user message
-    const lastUserMessage = [...messages].reverse().find(
-      (m: unknown) => (m as { role: string }).role === "user"
-    ) as { content?: string; parts?: Array<{ type: string; text?: string }> } | undefined;
+    const lastUserMessage = [...messages]
+      .reverse()
+      .find((m: unknown) => (m as { role: string }).role === "user") as
+      | { content?: string; parts?: Array<{ type: string; text?: string }> }
+      | undefined;
 
     let query = "";
     if (lastUserMessage) {
@@ -390,7 +398,7 @@ export interface CortexAgentStreamOptions {
  * ```
  */
 export async function createCortexAgentStreamResponse(
-  options: CortexAgentStreamOptions
+  options: CortexAgentStreamOptions,
 ): Promise<Response> {
   const { agent, messages, cortexOptions, additionalBody, headers } = options;
 
@@ -399,17 +407,14 @@ export async function createCortexAgentStreamResponse(
 
   if ("createAgentUIStreamResponse" in ai) {
     // v6 path - use unknown cast to handle dynamic API differences
-    const createAgentUIStreamResponse = (
-      ai.createAgentUIStreamResponse as unknown as (
-        opts: {
-          agent: unknown;
-          uiMessages: unknown[];
-          options?: CortexCallOptions;
-          headers?: Record<string, string>;
-          [key: string]: unknown;
-        }
-      ) => Promise<Response>
-    );
+    const createAgentUIStreamResponse =
+      ai.createAgentUIStreamResponse as unknown as (opts: {
+        agent: unknown;
+        uiMessages: unknown[];
+        options?: CortexCallOptions;
+        headers?: Record<string, string>;
+        [key: string]: unknown;
+      }) => Promise<Response>;
 
     return createAgentUIStreamResponse({
       agent,
@@ -423,6 +428,6 @@ export async function createCortexAgentStreamResponse(
   // Fallback error for v5
   throw new Error(
     "createCortexAgentStreamResponse requires AI SDK v6. " +
-      "For v5, use createUIMessageStreamResponse with streamText instead."
+      "For v5, use createUIMessageStreamResponse with streamText instead.",
   );
 }

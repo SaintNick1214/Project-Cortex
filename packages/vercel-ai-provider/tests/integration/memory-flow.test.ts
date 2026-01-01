@@ -463,7 +463,10 @@ describe("Memory Flow Integration", () => {
 
       await provider.doGenerate({
         prompt: [
-          { role: "user", content: [{ type: "text", text: "What do you know?" }] },
+          {
+            role: "user",
+            content: [{ type: "text", text: "What do you know?" }],
+          },
         ],
         mode: { type: "regular" },
       });

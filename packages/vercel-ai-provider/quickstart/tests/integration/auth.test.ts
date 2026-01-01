@@ -31,7 +31,7 @@ import { POST as loginPost } from "../../app/api/auth/login/route";
 function createRequest(
   method: string,
   body?: Record<string, unknown>,
-  url: string = "http://localhost:3000"
+  url: string = "http://localhost:3000",
 ): Request {
   const init: RequestInit = { method };
   if (body) {
@@ -76,7 +76,7 @@ describe("Auth API Routes", () => {
       seedTestData.mutable(
         "quickstart-config",
         "admin_password_hash",
-        "somehash:value"
+        "somehash:value",
       );
 
       const response = await checkGet();
@@ -91,7 +91,7 @@ describe("Auth API Routes", () => {
 
       expect(mockCortex.mutable.get).toHaveBeenCalledWith(
         "quickstart-config",
-        "admin_password_hash"
+        "admin_password_hash",
       );
     });
   });
@@ -133,7 +133,7 @@ describe("Auth API Routes", () => {
       seedTestData.mutable(
         "quickstart-config",
         "admin_password_hash",
-        "existing:hash"
+        "existing:hash",
       );
 
       const request = createRequest("POST", { password: "newpassword" });
@@ -157,7 +157,7 @@ describe("Auth API Routes", () => {
       expect(mockCortex.mutable.set).toHaveBeenCalledWith(
         "quickstart-config",
         "admin_password_hash",
-        expect.stringContaining(":") // salt:hash format
+        expect.stringContaining(":"), // salt:hash format
       );
     });
   });
@@ -262,7 +262,7 @@ describe("Auth API Routes", () => {
           passwordHash: expect.stringContaining(":"),
           createdAt: expect.any(Number),
           lastLoginAt: expect.any(Number),
-        })
+        }),
       );
     });
 
@@ -288,7 +288,7 @@ describe("Auth API Routes", () => {
 
       expect(status).toBe(200);
       expect((data.user as { displayName: string }).displayName).toBe(
-        "testuser"
+        "testuser",
       );
     });
 
@@ -448,7 +448,7 @@ describe("Auth API Routes", () => {
 
       expect(status).toBe(200);
       expect((data.user as { displayName: string }).displayName).toBe(
-        "testuser"
+        "testuser",
       );
     });
   });
