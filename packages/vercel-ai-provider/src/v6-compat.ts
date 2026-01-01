@@ -397,6 +397,7 @@ export async function createCortexAgentStreamResponse(
         agent: unknown;
         messages: unknown[];
         options?: CortexCallOptions;
+        headers?: Record<string, string>;
       }
     ) => Promise<Response>;
 
@@ -404,6 +405,7 @@ export async function createCortexAgentStreamResponse(
       agent,
       messages,
       options: cortexOptions,
+      headers,
     });
   }
 
