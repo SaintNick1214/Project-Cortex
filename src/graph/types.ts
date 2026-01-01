@@ -68,7 +68,7 @@ export interface GraphPath {
  * Graph database connection configuration
  */
 export interface GraphConnectionConfig {
-  /** Bolt URI (e.g., 'bolt://localhost:7687') */
+  /** Bolt URI (e.g., 'bolt://localhost:7687', 'neo4j+s://cloud.neo4j.io') */
   uri: string;
 
   /** Username for authentication */
