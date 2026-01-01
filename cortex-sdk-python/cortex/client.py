@@ -27,7 +27,14 @@ from .resilience import (
     ResilienceMetrics,
     ResiliencePresets,
 )
-from .types import CortexConfig, GraphConfig, GraphConnectionConfig, LLMConfig
+from .sessions import SessionsAPI
+from .types import (
+    AuthContext,
+    CortexConfig,
+    GraphConfig,
+    GraphConnectionConfig,
+    LLMConfig,
+)
 from .users import UsersAPI
 from .vector import VectorAPI
 
@@ -217,6 +224,7 @@ class Cortex:
             graph=graph_config,
             resilience=config.resilience,
             llm=llm_config,
+            auth=config.auth,  # Pass through auth context
         )
 
         return cls(updated_config)
@@ -236,6 +244,9 @@ class Cortex:
         # Get graph adapter if configured
         self.graph_adapter = config.graph.adapter if config.graph else None
 
+        # Store auth context for auto-injection into all operations
+        self._auth_context: Optional[AuthContext] = config.auth
+
         # Store LLM config for fact extraction
         # Use explicit config if provided, otherwise auto-configure from environment
         self._llm_config: Optional[LLMConfig] = config.llm or Cortex._auto_configure_llm()
@@ -246,29 +257,47 @@ class Cortex:
         )
         self._resilience = ResilienceLayer(resilience_config)
 
-        # Initialize API modules with graph adapter and resilience layer
+        # Initialize API modules with graph adapter, resilience layer, and auth context
         self.conversations = ConversationsAPI(
-            self.client, self.graph_adapter, self._resilience
+            self.client, self.graph_adapter, self._resilience, self._auth_context
         )
         self.immutable = ImmutableAPI(
-            self.client, self.graph_adapter, self._resilience
+            self.client, self.graph_adapter, self._resilience, self._auth_context
         )
-        self.mutable = MutableAPI(self.client, self.graph_adapter, self._resilience)
-        self.vector = VectorAPI(self.client, self.graph_adapter, self._resilience)
-        self.facts = FactsAPI(self.client, self.graph_adapter, self._resilience)
+        self.mutable = MutableAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
+        self.vector = VectorAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
+        self.facts = FactsAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
         self.memory = MemoryAPI(
-            self.client, self.graph_adapter, self._resilience, self._llm_config
+            self.client, self.graph_adapter, self._resilience, self._llm_config,
+            self._auth_context
         )
-        self.contexts = ContextsAPI(self.client, self.graph_adapter, self._resilience)
-        self.users = UsersAPI(self.client, self.graph_adapter, self._resilience)
-        self.agents = AgentsAPI(self.client, self.graph_adapter, self._resilience)
+        self.contexts = ContextsAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
+        self.users = UsersAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
+        self.agents = AgentsAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
         self.memory_spaces = MemorySpacesAPI(
-            self.client, self.graph_adapter, self._resilience
+            self.client, self.graph_adapter, self._resilience, self._auth_context
         )
         self.governance = GovernanceAPI(
-            self.client, self.graph_adapter, self._resilience
+            self.client, self.graph_adapter, self._resilience, self._auth_context
         )
-        self.a2a = A2AAPI(self.client, self.graph_adapter, self._resilience)
+        self.a2a = A2AAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
+        self.sessions = SessionsAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
 
         # Start graph sync worker if enabled
         self.sync_worker = None
