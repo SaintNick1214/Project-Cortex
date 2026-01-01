@@ -55,13 +55,14 @@ This provider fully supports AI SDK v6's new Agent architecture while remaining 
 ```typescript
 // AI SDK v6: Using ToolLoopAgent with Cortex
 import { ToolLoopAgent } from "ai";
+import { openai } from "@ai-sdk/openai";
 import {
   createCortexCallOptionsSchema,
   createMemoryPrepareCall,
 } from "@cortexmemory/vercel-ai-provider";
 
 const memoryAgent = new ToolLoopAgent({
-  model: "openai/gpt-4o-mini",
+  model: openai("gpt-4o-mini"),  // Use actual provider, not gateway string
   instructions: "You are a helpful assistant with long-term memory.",
   callOptionsSchema: createCortexCallOptionsSchema(),
   prepareCall: createMemoryPrepareCall({

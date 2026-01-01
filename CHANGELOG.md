@@ -135,6 +135,28 @@ New `sessions` table and `tenantId` column added to all existing tables with app
 
 ---
 
+### [0.27.2] - 2026-01-01
+
+#### 🔧 V6 Route Feature Parity Fix
+
+**Fixed the `/api/chat-v6` route** to have full feature parity with the v5 route. The v6 route now uses `createCortexMemoryAsync` for complete memory orchestration including:
+
+- ✅ Memory recall (pre-call context injection)
+- ✅ Memory storage (post-call conversation saving)
+- ✅ Fact extraction (`enableFactExtraction`)
+- ✅ Belief revision (superseding outdated facts)
+- ✅ Embedding generation for semantic search
+- ✅ Layer observer for real-time UI updates
+
+**Added comprehensive E2E tests** for the quickstart covering:
+- Fact storage verification
+- Belief revision (updating preferences through conversation)
+- Memory recall across conversations
+- V5/V6 parity validation
+- Conversation lifecycle (create, list, delete)
+
+---
+
 ### [0.27.1] - 2026-01-01
 
 #### 🤖 AI SDK v6 Agent Architecture Support
