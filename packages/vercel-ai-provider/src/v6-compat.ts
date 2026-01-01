@@ -385,7 +385,7 @@ export interface CortexAgentStreamOptions {
 export async function createCortexAgentStreamResponse(
   options: CortexAgentStreamOptions
 ): Promise<Response> {
-  const { agent, messages, cortexOptions, headers } = options;
+  const { agent, messages, cortexOptions, additionalBody, headers } = options;
 
   // Dynamic import to support both v5 and v6
   const ai = await import("ai");
@@ -399,6 +399,7 @@ export async function createCortexAgentStreamResponse(
           uiMessages: unknown[];
           options?: CortexCallOptions;
           headers?: Record<string, string>;
+          [key: string]: unknown;
         }
       ) => Promise<Response>
     );
@@ -408,6 +409,7 @@ export async function createCortexAgentStreamResponse(
       uiMessages: messages,
       options: cortexOptions,
       headers,
+      ...additionalBody,
     });
   }
 
