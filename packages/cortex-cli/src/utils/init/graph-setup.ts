@@ -507,8 +507,19 @@ async function getCloudGraphConfig(
       initial: "bolt://localhost:7687",
       validate: (value) => {
         if (!value) return "URI is required";
-        if (!value.startsWith("bolt://") && !value.startsWith("neo4j://")) {
-          return "URI must start with bolt:// or neo4j://";
+        // Supported schemes per neo4j-driver:
+        // bolt://, bolt+s://, bolt+ssc:// (direct connection)
+        // neo4j://, neo4j+s://, neo4j+ssc:// (routing/cluster)
+        const validSchemes = [
+          "bolt://",
+          "bolt+s://",
+          "bolt+ssc://",
+          "neo4j://",
+          "neo4j+s://",
+          "neo4j+ssc://",
+        ];
+        if (!validSchemes.some((scheme) => value.startsWith(scheme))) {
+          return "URI must start with bolt://, bolt+s://, neo4j://, or neo4j+s:// (use +ssc for self-signed certs)";
         }
         return true;
       },

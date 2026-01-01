@@ -52,6 +52,39 @@ interface DevState {
   logs: string[];
   maxLogs: number;
   lastStatus: Date;
+  /** Track services currently dumping HTML error content */
+  suppressingHtmlError: Set<string>;
+}
+
+/**
+ * Patterns that indicate a noisy network error we should collapse
+ */
+const NETWORK_ERROR_PATTERNS = [
+  /GitHub API returned \d+:/,
+  /<!DOCTYPE html>/i,
+  /^<!--/,
+  /^Hello future GitHubber/,
+  /Please, don't\./,
+  /styleguide\/templates/,
+  /^<html/i,
+  /^<head/i,
+  /^<body/i,
+  /^<\/html>/i,
+  /^<\/body>/i,
+  /^<title>/i,
+  /^<meta/i,
+  /^<link/i,
+  /502 Bad Gateway/i,
+  /503 Service Unavailable/i,
+  /504 Gateway Time-out/i,
+];
+
+/**
+ * Check if a log line is noisy network error content
+ */
+function isNoisyNetworkError(line: string): boolean {
+  const trimmed = line.trim();
+  return NETWORK_ERROR_PATTERNS.some(pattern => pattern.test(trimmed));
 }
 
 /**
@@ -281,6 +314,7 @@ async function runInteractiveDevMode(
     logs: [],
     maxLogs: 100,
     lastStatus: new Date(),
+    suppressingHtmlError: new Set(),
   };
 
   // Setup stdin for raw mode
@@ -456,35 +490,52 @@ async function startAllServices(state: DevState): Promise<void> {
     // Deploy to production first for cloud deployments with key
     if (dep.key && !dep.isLocal) {
       addLog(state, name, "Deploying functions to production...");
-      try {
-        const deployCmd = hasConvex ? "convex" : "npx";
-        const deployArgs = hasConvex
-          ? ["deploy", "--cmd", "echo deployed"]
-          : ["convex", "deploy", "--cmd", "echo deployed"];
 
-        // Build clean environment, removing inherited CONVEX_* vars
-        const deployEnv = buildConvexEnv({
-          CONVEX_URL: dep.url,
-          CONVEX_DEPLOY_KEY: dep.key,
-        });
+      const deployCmd = hasConvex ? "convex" : "npx";
+      const deployArgs = hasConvex
+        ? ["deploy", "--cmd", "echo deployed"]
+        : ["convex", "deploy", "--cmd", "echo deployed"];
 
-        await new Promise<void>((resolve, reject) => {
-          const child = spawn(deployCmd, deployArgs, {
-            cwd: dep.projectPath,
-            stdio: "pipe",
-            env: deployEnv,
+      // Build clean environment, removing inherited CONVEX_* vars
+      const deployEnv = buildConvexEnv({
+        CONVEX_URL: dep.url,
+        CONVEX_DEPLOY_KEY: dep.key,
+      });
+
+      // Retry logic for transient network errors
+      const maxRetries = 3;
+      let lastError: Error | null = null;
+
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          await new Promise<void>((resolve, reject) => {
+            const child = spawn(deployCmd, deployArgs, {
+              cwd: dep.projectPath,
+              stdio: "pipe",
+              env: deployEnv,
+            });
+
+            child.on("close", (code) => {
+              if (code === 0) resolve();
+              else reject(new Error(`Deploy failed with code ${code}`));
+            });
+            child.on("error", reject);
           });
 
-          child.on("close", (code) => {
-            if (code === 0) resolve();
-            else reject(new Error(`Deploy failed with code ${code}`));
-          });
-          child.on("error", reject);
-        });
+          addLog(state, name, pc.green("Functions deployed"));
+          lastError = null;
+          break;
+        } catch (error) {
+          lastError = error instanceof Error ? error : new Error(String(error));
+          if (attempt < maxRetries) {
+            addLog(state, name, pc.yellow(`Deploy attempt ${attempt} failed, retrying in 2s...`));
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+          }
+        }
+      }
 
-        addLog(state, name, pc.green("Functions deployed"));
-      } catch {
-        addLog(state, name, pc.yellow("Deploy failed, continuing..."));
+      if (lastError) {
+        addLog(state, name, pc.yellow("Deploy failed after retries, continuing..."));
       }
     }
 
@@ -900,6 +951,28 @@ function addLog(state: DevState, serviceName: string, message: string): void {
   const totalServices = state.deployments.size + state.apps.size;
   const prefix =
     totalServices > 1 ? pc.cyan(`[${serviceName}]`.padEnd(18)) : "";
+
+  // Check for noisy network error patterns and collapse them
+  if (isNoisyNetworkError(message)) {
+    // If this is the start of an HTML dump, show a clean message
+    if (message.includes("GitHub API returned") || message.includes("<!DOCTYPE")) {
+      if (!state.suppressingHtmlError.has(serviceName)) {
+        state.suppressingHtmlError.add(serviceName);
+        const cleanMessage = pc.yellow("Network error (transient, will retry automatically)");
+        const logLine = `${pc.dim(timestamp)} ${prefix}${cleanMessage}`;
+        state.logs.push(logLine);
+        console.log(`  ${logLine}`);
+      }
+    }
+    // Skip the rest of the HTML dump
+    return;
+  }
+
+  // Clear suppression state when we get a non-error line
+  if (state.suppressingHtmlError.has(serviceName)) {
+    state.suppressingHtmlError.delete(serviceName);
+  }
+
   const logLine = `${pc.dim(timestamp)} ${prefix}${message}`;
 
   state.logs.push(logLine);

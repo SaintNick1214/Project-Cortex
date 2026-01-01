@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional, Union, cast
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
+    AuthContext,
     Context,
     ContextInput,
     ContextStatus,
@@ -48,6 +49,7 @@ class ContextsAPI:
         client: Any,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        auth_context: Optional[AuthContext] = None,
     ) -> None:
         """
         Initialize Contexts API.
@@ -56,10 +58,12 @@ class ContextsAPI:
             client: Convex client instance
             graph_adapter: Optional graph database adapter for sync
             resilience: Optional resilience layer for overload protection
+            auth_context: Optional auth context for multi-tenancy
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
+        self._auth_context = auth_context
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str
@@ -68,6 +72,11 @@ class ContextsAPI:
         if self._resilience:
             return await self._resilience.execute(operation, operation_name)
         return await operation()
+
+    @property
+    def _tenant_id(self) -> Optional[str]:
+        """Get tenant_id from auth context (for multi-tenancy)."""
+        return self._auth_context.tenant_id if self._auth_context else None
 
     async def create(
         self, params: ContextInput, options: Optional[CreateContextOptions] = None

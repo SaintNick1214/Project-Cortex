@@ -23,6 +23,13 @@ Example:
 """
 
 # Main client
+# Auth module
+from .auth import (
+    AuthValidationError,
+    create_auth_context,
+    validate_auth_context,
+)
+
 # Validation Errors
 from .a2a.validators import A2AValidationError
 from .agents.validators import AgentValidationError
@@ -57,6 +64,9 @@ from .memory.validators import MemoryValidationError
 from .memory_spaces.validators import MemorySpaceValidationError
 from .mutable.validators import MutableValidationError
 
+# Sessions module
+from .sessions import SessionsAPI, SessionValidationError
+
 # Configuration
 # Core Types - Layer 1
 # Core Types - Layer 2
@@ -83,6 +93,10 @@ from .types import (
     AgentStats,
     # Memory API Result Types
     ArchiveResult,
+    # Auth Types
+    AuthContext,
+    AuthContextParams,
+    AuthMethod,
     BatchSyncError,
     BatchSyncLimits,
     BatchSyncOptions,
@@ -248,6 +262,17 @@ from .types import (
     SearchFactsOptions,
     SearchImmutableInput,
     SearchOptions,
+    # Session Types
+    Session,
+    SessionMetadata,
+    SessionStatus,
+    SessionFilters,
+    CreateSessionParams,
+    ExpireSessionsOptions,
+    EndAllOptions,
+    EndSessionsResult,
+    SessionLifecyclePolicy,
+    SessionPolicy,
     SetMutableOptions,
     ShortestPathConfig,
     SimulationOptions,
@@ -299,11 +324,31 @@ except ImportError:
     GraphSyncWorker = None  # type: ignore
 
 
-__version__ = "0.26.0"
+__version__ = "0.27.0"
 
 __all__ = [
     # Main
     "Cortex",
+    # Auth
+    "AuthContext",
+    "AuthContextParams",
+    "AuthMethod",
+    "create_auth_context",
+    "validate_auth_context",
+    "AuthValidationError",
+    # Sessions
+    "SessionsAPI",
+    "Session",
+    "SessionMetadata",
+    "SessionStatus",
+    "SessionFilters",
+    "CreateSessionParams",
+    "ExpireSessionsOptions",
+    "EndAllOptions",
+    "EndSessionsResult",
+    "SessionLifecyclePolicy",
+    "SessionPolicy",
+    "SessionValidationError",
     # Config
     "CortexConfig",
     "GraphConfig",

@@ -1,5 +1,36 @@
 # @cortexmemory/cli Changelog
 
+## [0.27.3] - 2026-01-01
+
+### Added
+
+- **Neo4j encrypted URI scheme support** - Graph database setup now accepts all neo4j-driver URI schemes:
+  - `bolt://`, `bolt+s://`, `bolt+ssc://` (direct connections)
+  - `neo4j://`, `neo4j+s://`, `neo4j+ssc://` (routing/cluster connections)
+  - `+s` suffix for TLS with system CA validation
+  - `+ssc` suffix for TLS with self-signed certificate acceptance
+
+### Changed
+
+- Updated Docker Compose graph configuration to support optional TLS for bolt connections
+- Added SSL policy configuration for Neo4j bolt connector
+
+## [0.27.2] - 2025-12-28
+
+### Added
+
+- **Multi-deployment update command** - `cortex update` now checks all enabled deployments by default
+  - Displays a status table with latest SDK/Convex versions and each deployment's current versions
+  - Color-coded version display (green = up to date, yellow = needs update)
+  - Prompts to confirm updating all deployments that need updates
+  - Updates deployments sequentially with a summary at the end
+  - New `-d, --deployment <name>` flag for single-deployment mode (previous behavior)
+
+### Changed
+
+- `cortex update` default behavior: updates all enabled deployments instead of prompting to select one
+- Added `getEnabledDeployments()` utility for consistent enabled deployment filtering across commands
+
 ## [0.27.1] - 2025-12-27
 
 ### Added

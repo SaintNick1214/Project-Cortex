@@ -9,6 +9,7 @@ from typing import Any, Optional
 
 from .._convex_async import AsyncConvexClient
 from ..types import (
+    AuthContext,
     ComplianceReport,
     ComplianceReportOptions,
     ComplianceTemplate,
@@ -71,6 +72,7 @@ class GovernanceAPI:
         client: AsyncConvexClient,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        auth_context: Optional[AuthContext] = None,
     ) -> None:
         """
         Initialize Governance API.
@@ -79,11 +81,18 @@ class GovernanceAPI:
             client: Async Convex client
             graph_adapter: Optional graph database adapter
             resilience: Optional resilience layer for overload protection
+            auth_context: Optional auth context for multi-tenancy
 
         """
         self._client = client
         self._graph_adapter = graph_adapter
         self._resilience = resilience
+        self._auth_context = auth_context
+
+    @property
+    def _tenant_id(self) -> Optional[str]:
+        """Get tenant_id from auth context (for multi-tenancy)."""
+        return self._auth_context.tenant_id if self._auth_context else None
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str

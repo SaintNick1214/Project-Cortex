@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Union, cast
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
+    AuthContext,
     CountFactsFilter,
     DeleteFactOptions,
     DeleteFactResult,
@@ -113,6 +114,7 @@ class FactsAPI:
         client: Any,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        auth_context: Optional[AuthContext] = None,
         llm_client: Optional[BeliefRevisionLLMClient] = None,
         belief_revision_config: Optional[BeliefRevisionConfig] = None,
     ) -> None:
@@ -123,12 +125,14 @@ class FactsAPI:
             client: Convex client instance
             graph_adapter: Optional graph database adapter for sync
             resilience: Optional resilience layer for overload protection
+            auth_context: Optional auth context for multi-tenancy
             llm_client: Optional LLM client for belief revision
             belief_revision_config: Optional belief revision configuration
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
+        self._auth_context = auth_context
         self._dedup_service = FactDeduplicationService(client)
         self._llm_client = llm_client
         self._history_service = FactHistoryService(client, resilience)
@@ -142,6 +146,11 @@ class FactsAPI:
             graph_adapter,
             belief_revision_config,
         )
+
+    @property
+    def _tenant_id(self) -> Optional[str]:
+        """Get tenant_id from auth context (for multi-tenancy)."""
+        return self._auth_context.tenant_id if self._auth_context else None
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str

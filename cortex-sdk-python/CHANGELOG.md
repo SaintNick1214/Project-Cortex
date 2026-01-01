@@ -5,6 +5,181 @@ All notable changes to the Python SDK will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.27.0] - 2025-12-28
+
+### 🔐 Multi-Tenancy & Auth Context System
+
+Added comprehensive multi-tenancy support with authentication context that automatically propagates `tenantId` across all API operations. This enables SaaS platforms to securely isolate data between tenants.
+
+#### New Auth Module (`cortex.auth`)
+
+```python
+from cortex.auth import create_auth_context, validate_auth_context, AuthValidationError
+from cortex import AuthContext, AuthContextParams, AuthMethod
+
+# Create validated auth context
+auth = create_auth_context(
+    user_id='user-123',
+    tenant_id='tenant-acme',           # Multi-tenancy isolation
+    organization_id='org-engineering', # Hierarchical tenancy
+    session_id='sess-abc',
+    auth_provider='auth0',
+    auth_method='oauth',
+    claims={'roles': ['admin', 'editor']},
+    metadata={'custom_field': 'any-value'},
+)
+
+# Use with Cortex client - all operations auto-scoped
+cortex = Cortex(CortexConfig(
+    convex_url=os.getenv("CONVEX_URL"),
+    auth=auth,  # NEW: Pass auth context
+))
+
+# All operations now automatically include tenantId
+await cortex.memory.remember(...)      # tenantId auto-injected
+await cortex.conversations.create(...) # tenantId auto-injected
+await cortex.facts.store(...)          # tenantId auto-injected
+```
+
+---
+
+### 📱 Sessions API - Native Multi-Session Management
+
+New `SessionsAPI` for managing user sessions with full lifecycle control. Perfect for chatbot platforms with concurrent users.
+
+#### Usage
+
+```python
+from cortex import (
+    Session, SessionMetadata, SessionFilters,
+    CreateSessionParams, SessionValidationError,
+)
+
+# Create session
+session = await cortex.sessions.create(CreateSessionParams(
+    user_id='user-123',
+    tenant_id='tenant-456',  # Optional - uses auth context if not provided
+    metadata={
+        'device': 'Chrome on macOS',
+        'browser': 'Chrome 120',
+        'ip': '192.168.1.1',
+        'location': 'San Francisco, CA',
+    },
+))
+
+# Get or create (idempotent)
+session = await cortex.sessions.get_or_create('user-123')
+
+# Update activity (heartbeat)
+await cortex.sessions.touch(session.session_id)
+
+# List active sessions
+active = await cortex.sessions.get_active('user-123')
+
+# End session
+await cortex.sessions.end(session.session_id)
+
+# End all user sessions (logout everywhere)
+result = await cortex.sessions.end_all('user-123')
+print(f'Ended {result.ended} sessions')
+
+# Expire idle sessions (for cleanup jobs)
+result = await cortex.sessions.expire_idle(ExpireSessionsOptions(
+    idle_timeout=30 * 60 * 1000,  # 30 minutes
+))
+```
+
+---
+
+### 👤 User Profile Schemas - Extensible Profile Management
+
+New standardized user profile schema with validation presets.
+
+#### Usage
+
+```python
+from cortex.users.schemas import (
+    StandardUserProfile,
+    ValidationPreset,
+    validate_user_profile,
+    create_user_profile,
+    validation_presets,  # strict, standard, minimal, none
+)
+
+# Create profile with type hints
+profile = StandardUserProfile(
+    display_name='Alice Johnson',
+    email='alice@example.com',
+    first_name='Alice',
+    last_name='Johnson',
+    preferences={'theme': 'dark', 'language': 'en'},
+    platform_metadata={'tier': 'enterprise'},
+)
+
+# Validate with preset
+result = validate_user_profile(profile.to_dict(), validation_presets['strict'])
+if not result.valid:
+    print(f'Errors: {result.errors}')
+
+# Create with defaults
+profile = create_user_profile(
+    {'displayName': 'Bob'},
+    defaults={'status': 'active', 'accountType': 'free'},
+)
+```
+
+#### Validation Presets
+
+| Preset | Required Fields | Email Validation | Max Size |
+|--------|-----------------|------------------|----------|
+| `strict` | displayName, email | ✓ | 64KB |
+| `standard` | displayName | ✓ | 256KB |
+| `minimal` | displayName | ✗ | None |
+| `none` | None | ✗ | None |
+
+---
+
+### 🏛️ Session Governance Policies
+
+`GovernancePolicy` now includes session lifecycle configuration:
+
+```python
+from cortex import GovernancePolicy, SessionPolicy, SessionLifecyclePolicy
+
+policy = GovernancePolicy(
+    # ... existing policies ...
+    sessions=SessionPolicy(
+        lifecycle=SessionLifecyclePolicy(
+            idle_timeout='30m',           # End after 30min inactivity
+            absolute_timeout='24h',       # Force end after 24 hours
+            max_sessions_per_user=5,      # Limit concurrent sessions
+            auto_extend_on_activity=True, # Reset idle timer on activity
+        ),
+    ),
+)
+```
+
+---
+
+### 🔄 API Module Updates
+
+All API modules now accept `auth_context` and automatically propagate `tenantId`:
+
+- `ConversationsAPI`
+- `ImmutableAPI`
+- `MutableAPI`
+- `VectorAPI`
+- `FactsAPI`
+- `MemoryAPI`
+- `ContextsAPI`
+- `UsersAPI`
+- `AgentsAPI`
+- `MemorySpacesAPI`
+- `GovernanceAPI`
+- `A2AAPI`
+
+---
+
 ## [0.26.0] - 2025-12-23
 
 ### 🎯 OrchestrationObserver API - Real-time Memory Pipeline Monitoring

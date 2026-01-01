@@ -2154,6 +2154,7 @@ class CortexConfig:
     graph: Optional[GraphConfig] = None
     resilience: Optional[Any] = None  # ResilienceConfig from resilience module
     llm: Optional[LLMConfig] = None  # LLM config for auto fact extraction
+    auth: Optional["AuthContext"] = None  # Auth context for multi-tenancy
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2670,10 +2671,11 @@ class GovernancePolicy:
     compliance: ComplianceSettings
     organization_id: Optional[str] = None
     memory_space_id: Optional[str] = None
+    sessions: Optional["SessionPolicy"] = None  # Session lifecycle policies
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for Convex."""
-        return {
+        result = {
             "organizationId": self.organization_id,
             "memorySpaceId": self.memory_space_id,
             "conversations": {
@@ -2734,6 +2736,10 @@ class GovernancePolicy:
                 "auditLogging": self.compliance.audit_logging,
             },
         }
+        # Add sessions if configured
+        if self.sessions:
+            result["sessions"] = self.sessions.to_dict()
+        return result
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "GovernancePolicy":
@@ -2798,6 +2804,7 @@ class GovernancePolicy:
                 require_justification=data["compliance"]["requireJustification"],
                 audit_logging=data["compliance"]["auditLogging"],
             ),
+            sessions=SessionPolicy.from_dict(data["sessions"]) if data.get("sessions") else None,
         )
 
 
@@ -3026,4 +3033,381 @@ class EnforcementStats:
             mutable=data["mutable"],
             storage_freed=data["storageFreed"],
             cost_savings=data["costSavings"],
+        )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Authentication Context
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AuthMethod = Literal["oauth", "api_key", "jwt", "session", "custom"]
+
+
+@dataclass
+class AuthContext:
+    """
+    Authentication context for Cortex operations.
+
+    This is the fully-resolved auth context that gets auto-injected
+    into all Cortex operations when provided to the Cortex constructor.
+
+    Example:
+        >>> from cortex import Cortex, CortexConfig
+        >>> from cortex.auth import create_auth_context
+        >>>
+        >>> cortex = Cortex(CortexConfig(
+        ...     convex_url=os.getenv("CONVEX_URL"),
+        ...     auth=create_auth_context(
+        ...         user_id='user-123',
+        ...         tenant_id='tenant-456',
+        ...         metadata={'custom_field': 'any-value'},
+        ...     ),
+        ... ))
+        >>>
+        >>> # All operations auto-scoped to auth context
+        >>> await cortex.memory.remember(...)  # user_id, tenant_id auto-injected
+    """
+    # Required
+    user_id: str
+    """Unique user identifier (required)"""
+
+    # Multi-tenancy (critical for SaaS platforms)
+    tenant_id: Optional[str] = None
+    """
+    Tenant identifier for multi-tenant applications.
+    When provided, all queries are automatically scoped to this tenant.
+    """
+
+    organization_id: Optional[str] = None
+    """
+    Organization identifier within a tenant.
+    For hierarchical multi-tenancy (tenant → organization → user).
+    """
+
+    # Session tracking
+    session_id: Optional[str] = None
+    """
+    Current session identifier.
+    If provided, operations are associated with this session.
+    """
+
+    # Auth provider metadata
+    auth_provider: Optional[str] = None
+    """Authentication provider name (e.g., 'auth0', 'firebase', 'clerk')"""
+
+    auth_method: Optional[AuthMethod] = None
+    """Authentication method used"""
+
+    authenticated_at: Optional[int] = None
+    """Timestamp when authentication occurred (ms since epoch)"""
+
+    # Fully extensible fields
+    claims: Optional[Dict[str, Any]] = None
+    """Raw JWT/provider claims (filtered for safety)"""
+
+    metadata: Optional[Dict[str, Any]] = None
+    """Arbitrary developer-defined metadata"""
+
+
+@dataclass
+class AuthContextParams:
+    """
+    Parameters for creating an AuthContext.
+
+    Same as AuthContext but with explicit optional typing for creation.
+    """
+    user_id: str
+    tenant_id: Optional[str] = None
+    organization_id: Optional[str] = None
+    session_id: Optional[str] = None
+    auth_provider: Optional[str] = None
+    auth_method: Optional[AuthMethod] = None
+    authenticated_at: Optional[int] = None
+    claims: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Sessions API Types
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SessionStatus = Literal["active", "idle", "ended"]
+
+
+@dataclass
+class SessionMetadata:
+    """
+    Session metadata - fully extensible.
+
+    Suggested fields (all optional, add any custom fields):
+    - device: Device description (e.g., "Chrome on macOS")
+    - browser: Browser name
+    - browser_version: Browser version
+    - os: Operating system
+    - device_type: "desktop", "mobile", "tablet"
+    - ip: Client IP address
+    - location: Geographic location
+    - timezone: Timezone identifier
+    - language: Language preference
+    - user_agent: Full user agent string
+    """
+    device: Optional[str] = None
+    browser: Optional[str] = None
+    browser_version: Optional[str] = None
+    os: Optional[str] = None
+    device_type: Optional[str] = None  # "desktop", "mobile", "tablet"
+    ip: Optional[str] = None
+    location: Optional[str] = None
+    timezone: Optional[str] = None
+    language: Optional[str] = None
+    user_agent: Optional[str] = None
+    # Additional custom fields stored in extra
+    extra: Dict[str, Any] = field(default_factory=dict)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {}
+        if self.device:
+            result["device"] = self.device
+        if self.browser:
+            result["browser"] = self.browser
+        if self.browser_version:
+            result["browserVersion"] = self.browser_version
+        if self.os:
+            result["os"] = self.os
+        if self.device_type:
+            result["deviceType"] = self.device_type
+        if self.ip:
+            result["ip"] = self.ip
+        if self.location:
+            result["location"] = self.location
+        if self.timezone:
+            result["timezone"] = self.timezone
+        if self.language:
+            result["language"] = self.language
+        if self.user_agent:
+            result["userAgent"] = self.user_agent
+        # Merge extra fields
+        result.update(self.extra)
+        return result
+
+    @classmethod
+    def from_dict(cls, data: Optional[Dict[str, Any]]) -> Optional["SessionMetadata"]:
+        """Create from dictionary (Convex response)."""
+        if not data:
+            return None
+        known_keys = {
+            "device", "browser", "browserVersion", "os", "deviceType",
+            "ip", "location", "timezone", "language", "userAgent"
+        }
+        extra = {k: v for k, v in data.items() if k not in known_keys}
+        return cls(
+            device=data.get("device"),
+            browser=data.get("browser"),
+            browser_version=data.get("browserVersion"),
+            os=data.get("os"),
+            device_type=data.get("deviceType"),
+            ip=data.get("ip"),
+            location=data.get("location"),
+            timezone=data.get("timezone"),
+            language=data.get("language"),
+            user_agent=data.get("userAgent"),
+            extra=extra,
+        )
+
+
+@dataclass
+class Session:
+    """Session record stored in Convex."""
+    _id: str
+    """Convex document ID"""
+
+    session_id: str
+    """Unique session identifier"""
+
+    user_id: str
+    """User this session belongs to"""
+
+    status: SessionStatus
+    """Current session status"""
+
+    started_at: int
+    """When the session started (ms since epoch)"""
+
+    last_active_at: int
+    """When the session was last active (ms since epoch)"""
+
+    message_count: int
+    """Number of messages in this session"""
+
+    memory_count: int
+    """Number of memories created in this session"""
+
+    tenant_id: Optional[str] = None
+    """Tenant ID for multi-tenant applications"""
+
+    memory_space_id: Optional[str] = None
+    """Memory space associated with this session"""
+
+    ended_at: Optional[int] = None
+    """When the session ended (ms since epoch)"""
+
+    expires_at: Optional[int] = None
+    """When the session expires (ms since epoch)"""
+
+    metadata: Optional[SessionMetadata] = None
+    """Fully extensible metadata"""
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "Session":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            _id=data["_id"],
+            session_id=data["sessionId"],
+            user_id=data["userId"],
+            status=data["status"],
+            started_at=data["startedAt"],
+            last_active_at=data["lastActiveAt"],
+            message_count=data.get("messageCount", 0),
+            memory_count=data.get("memoryCount", 0),
+            tenant_id=data.get("tenantId"),
+            memory_space_id=data.get("memorySpaceId"),
+            ended_at=data.get("endedAt"),
+            expires_at=data.get("expiresAt"),
+            metadata=SessionMetadata.from_dict(data.get("metadata")),
+        )
+
+
+@dataclass
+class CreateSessionParams:
+    """Parameters for creating a session."""
+    user_id: str
+    """User ID (required)"""
+
+    session_id: Optional[str] = None
+    """Optional session ID (auto-generated if not provided)"""
+
+    tenant_id: Optional[str] = None
+    """Tenant ID for multi-tenant applications"""
+
+    memory_space_id: Optional[str] = None
+    """Memory space to associate with this session"""
+
+    expires_at: Optional[int] = None
+    """Session expiration time (ms since epoch)"""
+
+    metadata: Optional[Dict[str, Any]] = None
+    """Fully extensible metadata"""
+
+
+@dataclass
+class SessionFilters:
+    """Filters for listing sessions."""
+    user_id: Optional[str] = None
+    """Filter by user ID"""
+
+    tenant_id: Optional[str] = None
+    """Filter by tenant ID"""
+
+    memory_space_id: Optional[str] = None
+    """Filter by memory space ID"""
+
+    status: Optional[SessionStatus] = None
+    """Filter by session status"""
+
+    limit: Optional[int] = None
+    """Maximum results to return"""
+
+    offset: Optional[int] = None
+    """Offset for pagination"""
+
+
+@dataclass
+class ExpireSessionsOptions:
+    """Options for expiring idle sessions."""
+    tenant_id: Optional[str] = None
+    """Only expire sessions for this tenant"""
+
+    idle_timeout: Optional[int] = None
+    """Idle timeout in milliseconds (default: 30 minutes)"""
+
+
+@dataclass
+class EndAllOptions:
+    """Options for ending all sessions for a user."""
+    tenant_id: Optional[str] = None
+    """
+    Tenant ID for multi-tenant isolation.
+    When provided, only ends sessions for the user within that tenant.
+    """
+
+
+@dataclass
+class EndSessionsResult:
+    """Result from ending sessions."""
+    ended: int
+    """Number of sessions ended"""
+
+    session_ids: List[str] = field(default_factory=list)
+    """Session IDs that were ended"""
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Session Governance Policies
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+@dataclass
+class SessionLifecyclePolicy:
+    """Session lifecycle policy settings."""
+    idle_timeout: str = "30m"
+    """Idle timeout (e.g., "30m", "1h")"""
+
+    absolute_timeout: str = "24h"
+    """Absolute timeout regardless of activity"""
+
+    max_sessions_per_user: Optional[int] = None
+    """Maximum concurrent sessions per user"""
+
+    auto_extend_on_activity: bool = True
+    """Auto-extend session on user activity"""
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {
+            "idleTimeout": self.idle_timeout,
+            "absoluteTimeout": self.absolute_timeout,
+            "autoExtendOnActivity": self.auto_extend_on_activity,
+        }
+        if self.max_sessions_per_user is not None:
+            result["maxSessionsPerUser"] = self.max_sessions_per_user
+        return result
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "SessionLifecyclePolicy":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            idle_timeout=data.get("idleTimeout", "30m"),
+            absolute_timeout=data.get("absoluteTimeout", "24h"),
+            max_sessions_per_user=data.get("maxSessionsPerUser"),
+            auto_extend_on_activity=data.get("autoExtendOnActivity", True),
+        )
+
+
+@dataclass
+class SessionPolicy:
+    """Session governance policy."""
+    lifecycle: SessionLifecyclePolicy = field(default_factory=SessionLifecyclePolicy)
+    """Session lifecycle settings"""
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        return {
+            "lifecycle": self.lifecycle.to_dict(),
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "SessionPolicy":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            lifecycle=SessionLifecyclePolicy.from_dict(data.get("lifecycle", {})),
         )

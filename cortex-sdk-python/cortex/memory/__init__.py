@@ -19,6 +19,7 @@ from ..facts.deduplication import (
 from ..llm import ExtractedFact, LLMClient, create_llm_client
 from ..types import (
     ArchiveResult,
+    AuthContext,
     ConversationType,
     DeleteManyResult,
     DeleteMemoryOptions,
@@ -97,6 +98,7 @@ class MemoryAPI:
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
         llm_config: Optional[LLMConfig] = None,
+        auth_context: Optional[AuthContext] = None,
     ) -> None:
         """
         Initialize Memory API.
@@ -106,15 +108,17 @@ class MemoryAPI:
             graph_adapter: Optional graph database adapter
             resilience: Optional resilience layer for overload protection
             llm_config: Optional LLM configuration for automatic fact extraction
+            auth_context: Optional auth context for multi-tenancy
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
         self._llm_config = llm_config
+        self._auth_context = auth_context
         self._llm_client: Optional[LLMClient] = None
-        # Pass resilience layer to sub-APIs
-        self.conversations = ConversationsAPI(client, graph_adapter, resilience)
-        self.vector = VectorAPI(client, graph_adapter, resilience)
+        # Pass resilience layer and auth context to sub-APIs
+        self.conversations = ConversationsAPI(client, graph_adapter, resilience, auth_context)
+        self.vector = VectorAPI(client, graph_adapter, resilience, auth_context)
 
         # Create belief revision LLM client adapter if LLM is configured
         # The LLM client needs a complete() method for belief revision
@@ -124,7 +128,12 @@ class MemoryAPI:
             if llm_client and hasattr(llm_client, "complete"):
                 belief_revision_llm_client = llm_client
 
-        self.facts = FactsAPI(client, graph_adapter, resilience, belief_revision_llm_client)
+        self.facts = FactsAPI(client, graph_adapter, resilience, auth_context, belief_revision_llm_client)
+
+    @property
+    def _tenant_id(self) -> Optional[str]:
+        """Get tenant_id from auth context (for multi-tenancy)."""
+        return self._auth_context.tenant_id if self._auth_context else None
 
     async def _execute_with_resilience(
         self,

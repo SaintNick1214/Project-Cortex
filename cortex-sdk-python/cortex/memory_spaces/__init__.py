@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional
 from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
+    AuthContext,
     DeleteMemorySpaceCascade,
     DeleteMemorySpaceOptions,
     DeleteMemorySpaceResult,
@@ -53,6 +54,7 @@ class MemorySpacesAPI:
         client: Any,
         graph_adapter: Optional[Any] = None,
         resilience: Optional[Any] = None,
+        auth_context: Optional[AuthContext] = None,
     ) -> None:
         """
         Initialize Memory Spaces API.
@@ -61,10 +63,17 @@ class MemorySpacesAPI:
             client: Convex client instance
             graph_adapter: Optional graph database adapter
             resilience: Optional resilience layer for overload protection
+            auth_context: Optional auth context for multi-tenancy
         """
         self.client = client
         self.graph_adapter = graph_adapter
         self._resilience = resilience
+        self._auth_context = auth_context
+
+    @property
+    def _tenant_id(self) -> Optional[str]:
+        """Get tenant_id from auth context (for multi-tenancy)."""
+        return self._auth_context.tenant_id if self._auth_context else None
 
     async def _execute_with_resilience(
         self, operation: Any, operation_name: str
