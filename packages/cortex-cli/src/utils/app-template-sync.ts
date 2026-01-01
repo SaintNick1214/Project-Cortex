@@ -18,7 +18,7 @@
  * - convex/ files (handled separately by schema-sync)
  */
 
-import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { existsSync, readFileSync, readdirSync } from "fs";
 import { copyFile, mkdir, writeFile } from "fs/promises";
 import { createHash } from "crypto";
 import { join, dirname, relative } from "path";

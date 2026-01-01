@@ -310,46 +310,82 @@ export function registerDeployCommands(
 
       const spinner = ora("Checking package versions...").start();
 
-      // Get latest versions once (shared across all targets)
+      // Get latest versions - from local source in dev mode, from npm otherwise
       let latestSdkVersion = "unknown";
       let latestConvexVersion = "unknown";
       let latestProviderVersion = "unknown";
       let latestAiVersion = "unknown";
       let sdkConvexPeerDep = "unknown";
 
-      try {
-        const [sdkResult, convexResult, providerResult, aiResult, peerDepResult] = await Promise.all([
-          execCommand("npm", ["view", "@cortexmemory/sdk", "version"], {
-            quiet: true,
-          }).catch(() => ({ stdout: "unknown" })),
-          execCommand("npm", ["view", "convex", "version"], {
-            quiet: true,
-          }).catch(() => ({ stdout: "unknown" })),
-          execCommand("npm", ["view", "@cortexmemory/vercel-ai-provider", "version"], {
-            quiet: true,
-          }).catch(() => ({ stdout: "unknown" })),
-          execCommand("npm", ["view", "ai", "version"], {
-            quiet: true,
-          }).catch(() => ({ stdout: "unknown" })),
-          execCommand(
-            "npm",
-            ["view", "@cortexmemory/sdk", "peerDependencies", "--json"],
-            { quiet: true },
-          ).catch(() => ({ stdout: "{}" })),
-        ]);
-
-        latestSdkVersion = sdkResult.stdout.trim() || "unknown";
-        latestConvexVersion = convexResult.stdout.trim() || "unknown";
-        latestProviderVersion = providerResult.stdout.trim() || "unknown";
-        latestAiVersion = aiResult.stdout.trim() || "unknown";
+      if (isDevMode && devPath) {
+        // In dev mode, read versions from local source package.json files
         try {
-          const peerDeps = JSON.parse(peerDepResult.stdout);
-          sdkConvexPeerDep = peerDeps?.convex ?? "unknown";
+          const sdkPkgPath = path.join(devPath, "package.json");
+          const providerPkgPath = path.join(devPath, "packages", "vercel-ai-provider", "package.json");
+
+          if (await fs.pathExists(sdkPkgPath)) {
+            const sdkPkg = await fs.readJson(sdkPkgPath);
+            latestSdkVersion = sdkPkg.version || "unknown";
+            // Also get peerDependencies from local source
+            sdkConvexPeerDep = sdkPkg.peerDependencies?.convex ?? "unknown";
+          }
+
+          if (await fs.pathExists(providerPkgPath)) {
+            const providerPkg = await fs.readJson(providerPkgPath);
+            latestProviderVersion = providerPkg.version || "unknown";
+          }
+
+          // Still fetch convex and ai versions from npm (external dependencies)
+          const [convexResult, aiResult] = await Promise.all([
+            execCommand("npm", ["view", "convex", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+            execCommand("npm", ["view", "ai", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+          ]);
+
+          latestConvexVersion = convexResult.stdout.trim() || "unknown";
+          latestAiVersion = aiResult.stdout.trim() || "unknown";
         } catch {
-          // Ignore parse errors
+          // Ignore errors, versions will remain "unknown"
         }
-      } catch {
-        // Ignore errors
+      } else {
+        // Normal mode: fetch all versions from npm
+        try {
+          const [sdkResult, convexResult, providerResult, aiResult, peerDepResult] = await Promise.all([
+            execCommand("npm", ["view", "@cortexmemory/sdk", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+            execCommand("npm", ["view", "convex", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+            execCommand("npm", ["view", "@cortexmemory/vercel-ai-provider", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+            execCommand("npm", ["view", "ai", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+            execCommand(
+              "npm",
+              ["view", "@cortexmemory/sdk", "peerDependencies", "--json"],
+              { quiet: true },
+            ).catch(() => ({ stdout: "{}" })),
+          ]);
+
+          latestSdkVersion = sdkResult.stdout.trim() || "unknown";
+          latestConvexVersion = convexResult.stdout.trim() || "unknown";
+          latestProviderVersion = providerResult.stdout.trim() || "unknown";
+          latestAiVersion = aiResult.stdout.trim() || "unknown";
+          try {
+            const peerDeps = JSON.parse(peerDepResult.stdout);
+            sdkConvexPeerDep = peerDeps?.convex ?? "unknown";
+          } catch {
+            // Ignore parse errors
+          }
+        } catch {
+          // Ignore errors
+        }
       }
 
       // Gather status for each deployment
@@ -358,6 +394,8 @@ export function registerDeployCommands(
         deployment: DeploymentConfig;
         projectPath: string;
         currentSdkVersion: string;
+        currentProviderVersion: string;
+        currentAiVersion: string;
         currentConvexVersion: string;
         needsUpdate: boolean;
       }
@@ -384,28 +422,24 @@ export function registerDeployCommands(
       if (updateDeployments && hasDeployments) {
         for (const { name, deployment, projectPath } of enabledDeployments) {
           let currentSdkVersion = "not installed";
+          let currentProviderVersion = "not installed";
+          let currentAiVersion = "not installed";
           let currentConvexVersion = "not installed";
 
+          // Check all packages in one npm list call for efficiency
           try {
             const result = await execCommand(
               "npm",
-              ["list", "@cortexmemory/sdk", "--json"],
+              ["list", "@cortexmemory/sdk", "@cortexmemory/vercel-ai-provider", "convex", "ai", "--json"],
               { quiet: true, cwd: projectPath },
             );
             const data = JSON.parse(result.stdout);
             currentSdkVersion =
-              data.dependencies?.["@cortexmemory/sdk"]?.version ??
-              "not installed";
-          } catch {
-            // Ignore errors
-          }
-
-          try {
-            const result = await execCommand("npm", ["list", "convex", "--json"], {
-              quiet: true,
-              cwd: projectPath,
-            });
-            const data = JSON.parse(result.stdout);
+              data.dependencies?.["@cortexmemory/sdk"]?.version ?? "not installed";
+            currentProviderVersion =
+              data.dependencies?.["@cortexmemory/vercel-ai-provider"]?.version ?? "not installed";
+            currentAiVersion =
+              data.dependencies?.ai?.version ?? "not installed";
             currentConvexVersion =
               data.dependencies?.convex?.version ?? "not installed";
           } catch {
@@ -422,6 +456,8 @@ export function registerDeployCommands(
             deployment,
             projectPath,
             currentSdkVersion,
+            currentProviderVersion,
+            currentAiVersion,
             currentConvexVersion,
             needsUpdate,
           });
@@ -518,7 +554,9 @@ export function registerDeployCommands(
         console.log();
       }
 
-      console.log(pc.bold("  Latest versions:"));
+      // Use "Source versions" in dev mode to indicate local package.json versions
+      const versionsLabel = isDevMode ? "Source versions" : "Latest versions";
+      console.log(pc.bold(`  ${versionsLabel}:`));
       console.log(`    @cortexmemory/sdk: ${pc.cyan(latestSdkVersion)}`);
       console.log(`    @cortexmemory/vercel-ai-provider: ${pc.cyan(latestProviderVersion)}`);
       console.log(`    convex: ${pc.cyan(latestConvexVersion)}`);
@@ -545,6 +583,17 @@ export function registerDeployCommands(
           console.log(
             `      SDK: ${info.currentSdkVersion === latestSdkVersion ? pc.green(info.currentSdkVersion) : pc.yellow(info.currentSdkVersion)}`,
           );
+          // Only show provider and AI if they're installed (frontend packages)
+          if (info.currentProviderVersion !== "not installed") {
+            console.log(
+              `      Provider: ${info.currentProviderVersion === latestProviderVersion ? pc.green(info.currentProviderVersion) : pc.yellow(info.currentProviderVersion)}`,
+            );
+          }
+          if (info.currentAiVersion !== "not installed") {
+            console.log(
+              `      AI: ${info.currentAiVersion === latestAiVersion ? pc.green(info.currentAiVersion) : pc.yellow(info.currentAiVersion)}`,
+            );
+          }
           console.log(
             `      Convex: ${info.currentConvexVersion === latestConvexVersion ? pc.green(info.currentConvexVersion) : pc.yellow(info.currentConvexVersion)}`,
           );
@@ -1021,26 +1070,56 @@ async function updateApp(
       // Ignore errors
     }
 
-    // Get latest versions from npm
+    // Get latest versions - from local source in dev mode, from npm otherwise
     let latestSdkVersion = "unknown";
     let latestProviderVersion = "unknown";
     let latestConvexVersion = "unknown";
     let latestAiVersion = "unknown";
 
-    try {
-      const [sdkResult, providerResult, convexResult, aiResult] = await Promise.all([
-        execCommand("npm", ["view", "@cortexmemory/sdk", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-        execCommand("npm", ["view", "@cortexmemory/vercel-ai-provider", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-        execCommand("npm", ["view", "convex", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-        execCommand("npm", ["view", "ai", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-      ]);
+    if (isDevMode && options.devPath) {
+      // In dev mode, read versions from local source package.json files
+      try {
+        const sdkPkgPath = path.join(options.devPath, "package.json");
+        const providerPkgPath = path.join(options.devPath, "packages", "vercel-ai-provider", "package.json");
 
-      latestSdkVersion = sdkResult.stdout.trim() || "unknown";
-      latestProviderVersion = providerResult.stdout.trim() || "unknown";
-      latestConvexVersion = convexResult.stdout.trim() || "unknown";
-      latestAiVersion = aiResult.stdout.trim() || "unknown";
-    } catch {
-      // Ignore errors
+        if (await fs.pathExists(sdkPkgPath)) {
+          const sdkPkg = await fs.readJson(sdkPkgPath);
+          latestSdkVersion = sdkPkg.version || "unknown";
+        }
+
+        if (await fs.pathExists(providerPkgPath)) {
+          const providerPkg = await fs.readJson(providerPkgPath);
+          latestProviderVersion = providerPkg.version || "unknown";
+        }
+
+        // Still fetch convex and ai versions from npm (external dependencies)
+        const [convexResult, aiResult] = await Promise.all([
+          execCommand("npm", ["view", "convex", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
+          execCommand("npm", ["view", "ai", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
+        ]);
+
+        latestConvexVersion = convexResult.stdout.trim() || "unknown";
+        latestAiVersion = aiResult.stdout.trim() || "unknown";
+      } catch {
+        // Ignore errors, versions will remain "unknown"
+      }
+    } else {
+      // Normal mode: fetch all versions from npm
+      try {
+        const [sdkResult, providerResult, convexResult, aiResult] = await Promise.all([
+          execCommand("npm", ["view", "@cortexmemory/sdk", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
+          execCommand("npm", ["view", "@cortexmemory/vercel-ai-provider", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
+          execCommand("npm", ["view", "convex", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
+          execCommand("npm", ["view", "ai", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
+        ]);
+
+        latestSdkVersion = sdkResult.stdout.trim() || "unknown";
+        latestProviderVersion = providerResult.stdout.trim() || "unknown";
+        latestConvexVersion = convexResult.stdout.trim() || "unknown";
+        latestAiVersion = aiResult.stdout.trim() || "unknown";
+      } catch {
+        // Ignore errors
+      }
     }
 
     spinner.stop();
@@ -1059,6 +1138,9 @@ async function updateApp(
       console.log(pc.dim(`  Will link to: ${options.devPath}`));
     }
 
+    // Use "Source" label in dev mode to indicate local package.json version
+    const cortexVersionLabel = isDevMode ? "Source" : "Latest";
+
     console.log();
     console.log(pc.bold("  @cortexmemory/sdk"));
     if (isDevLinked) {
@@ -1068,7 +1150,7 @@ async function updateApp(
         `    Current: ${currentSdkVersion === latestSdkVersion ? pc.green(currentSdkVersion) : pc.yellow(currentSdkVersion)}`,
       );
     }
-    console.log(`    Latest:  ${latestSdkVersion}`);
+    console.log(`    ${cortexVersionLabel}:  ${latestSdkVersion}`);
 
     console.log();
     console.log(pc.bold("  @cortexmemory/vercel-ai-provider"));
@@ -1079,7 +1161,7 @@ async function updateApp(
         `    Current: ${currentProviderVersion === latestProviderVersion ? pc.green(currentProviderVersion) : pc.yellow(currentProviderVersion)}`,
       );
     }
-    console.log(`    Latest:  ${latestProviderVersion}`);
+    console.log(`    ${cortexVersionLabel}:  ${latestProviderVersion}`);
 
     console.log();
     console.log(pc.bold("  convex"));
