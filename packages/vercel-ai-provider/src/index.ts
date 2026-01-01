@@ -458,3 +458,28 @@ export type {
 } from "./types";
 
 export { CortexMemoryProvider } from "./provider";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// AI SDK v6 Compatibility
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export {
+  // v6 feature detection
+  isV6Available,
+  // Call options for ToolLoopAgent
+  createCortexCallOptionsSchema,
+  // Memory injection helpers
+  createMemoryPrepareCall,
+  defaultMemoryContextFormatter,
+  // API route helpers
+  createCortexAgentStreamResponse,
+} from "./v6-compat";
+
+export type {
+  // Types for v6 integration
+  CortexCallOptions,
+  CortexMessageMetadata,
+  InferAgentUIMessage,
+  MemoryInjectionConfig,
+  CortexAgentStreamOptions,
+} from "./v6-compat";

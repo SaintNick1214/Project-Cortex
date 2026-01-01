@@ -7,25 +7,69 @@
 import { getCortex } from "@/lib/cortex";
 import { verifyPassword, generateSessionToken } from "@/lib/password";
 
+/**
+ * Validates login request body structure.
+ * Returns validated credentials or null if invalid.
+ */
+function validateLoginBody(
+  body: unknown
+): { username: string; password: string } | null {
+  if (typeof body !== "object" || body === null) {
+    return null;
+  }
+
+  const record = body as Record<string, unknown>;
+
+  // Validate username field exists and is a non-empty string
+  const hasValidUsername =
+    "username" in record &&
+    typeof record.username === "string" &&
+    record.username.length > 0 &&
+    record.username.length <= 256;
+
+  // Validate password field exists and is a non-empty string
+  const hasValidPassword =
+    "password" in record &&
+    typeof record.password === "string" &&
+    record.password.length > 0 &&
+    record.password.length <= 1024;
+
+  if (!hasValidUsername || !hasValidPassword) {
+    return null;
+  }
+
+  return {
+    username: record.username as string,
+    password: record.password as string,
+  };
+}
+
+/**
+ * Safely extracts an error message for logging without exposing user data.
+ */
+function getSafeErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    // Only include error name and a sanitized message
+    // Avoid logging full stack traces which may contain user data
+    return `${error.name}: ${error.message.slice(0, 200)}`;
+  }
+  return "Unknown error";
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { username, password } = body;
 
-    // Validate input
-    if (!username || typeof username !== "string") {
+    // Validate input structure before extracting values
+    const credentials = validateLoginBody(body);
+    if (!credentials) {
       return Response.json(
-        { error: "Username is required" },
+        { error: "Username and password are required" },
         { status: 400 }
       );
     }
 
-    if (!password || typeof password !== "string") {
-      return Response.json(
-        { error: "Password is required" },
-        { status: 400 }
-      );
-    }
+    const { username, password } = credentials;
 
     const cortex = getCortex();
     const sanitizedUsername = username.toLowerCase();
@@ -73,7 +117,8 @@ export async function POST(req: Request) {
       sessionToken,
     });
   } catch (error) {
-    console.error("[Login Error]", error);
+    // Log sanitized error to prevent log injection
+    console.error("[Login Error]", getSafeErrorMessage(error));
 
     return Response.json(
       { error: "Failed to authenticate" },
