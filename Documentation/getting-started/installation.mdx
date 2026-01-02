@@ -5,15 +5,9 @@ sidebar_position: 2
 description: Install Cortex CLI and SDK for your project
 ---
 
-import { Callout, Steps, Step, Terminal, QuickNav, QuickNavItem, Accordion, AccordionItem, CodeBlock } from '@site/src/components';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # Installation
 
 Get Cortex up and running in minutes.
-
----
 
 ## Quick Start
 
@@ -40,8 +34,6 @@ The fastest way to get started with Cortex:
     The interactive wizard will guide you through setup in under 5 minutes.
   </Step>
 </Steps>
-
----
 
 ## Prerequisites
 
@@ -78,8 +70,6 @@ Expected output: Node.js `v20.0.0+` and npm `9.0.0+`
   </AccordionItem>
 </Accordion>
 
----
-
 ## Installation Methods
 
 ### Method 1: Global Installation (Recommended)
@@ -104,7 +94,9 @@ Install the CLI globally to use it from anywhere:
 
 **Now create projects anywhere:**
 
-<Terminal>cortex init my-agent && cd my-agent && cortex start</Terminal>
+<Terminal>cortex init my-agent && cortex start</Terminal>
+
+The CLI uses persistent config with absolute paths, so `cd` is not required.
 
 ### Method 2: Using npx (No Installation)
 
@@ -153,8 +145,6 @@ Install as a dev dependency in your project:
 
 <Terminal>npm run cortex init && npm run dev</Terminal>
 
----
-
 ## Verification
 
 After installation, verify everything works:
@@ -170,17 +160,15 @@ After installation, verify everything works:
     Should display available commands
   </Step>
   <Step title="Test CLI Connection">
-    <Terminal>cortex init test-project && cd test-project</Terminal>
+    <Terminal>cortex init test-project</Terminal>
     
-    Start services:
+    Start services (from any directory):
     
     <Terminal>cortex start</Terminal>
     
     Check status:
     
     <Terminal>cortex status</Terminal>
-    
-    Should show: Convex running, deployment info
   </Step>
   <Step title="Verify Convex Dashboard">
     **For local development:** Open http://127.0.0.1:3210
@@ -192,8 +180,6 @@ After installation, verify everything works:
     Opens your deployment in browser
   </Step>
 </Steps>
-
----
 
 ## Troubleshooting
 
@@ -271,8 +257,6 @@ cortex <command> --help
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 </Callout>
 
----
-
 ## Upgrading
 
 To upgrade to the latest version:
@@ -307,8 +291,6 @@ The `cortex update` command will:
 **Note:** The CLI stores project paths in its config, so you can run `cortex update` from any directory.
 </Callout>
 
----
-
 ## Uninstalling
 
 If you need to uninstall:
@@ -332,8 +314,6 @@ Remove from a project:
 Clean up configuration (optional):
 
 <Terminal>rm ~/.cortexrc</Terminal>
-
----
 
 ## Next Steps
 
