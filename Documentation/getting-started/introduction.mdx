@@ -1,0 +1,401 @@
+---
+id: introduction
+title: Introduction to Cortex
+sidebar_position: 1
+description: Learn what Cortex is and how it provides persistent memory for AI agents
+---
+
+## Welcome to Cortex
+
+Cortex is a plug'n'play persistent memory system for AI agents, powered by Convex. It brings enterprise-grade memory capabilities to any AI application, allowing your agents to remember, learn, and build context over time.
+
+## The Problem
+
+Building AI agents with persistent memory is **hard**:
+
+<Callout type="info" title="Why Traditional Approaches Fall Short" collapsible defaultOpen={false}>
+
+**Vector Databases (Pinecone, Weaviate, Qdrant)**
+- ❌ Only handle embeddings, not complete memory systems
+- ❌ Require separate infrastructure for user data, conversations, metadata
+- ❌ Complex to set up and manage
+- ❌ No built-in agent coordination or context chains
+- ❌ Expensive at scale
+
+**Simple Storage (Redis, PostgreSQL)**
+- ❌ No semantic search capabilities
+- ❌ Manual implementation of memory retrieval logic
+- ❌ No agent-specific memory isolation
+- ❌ Limited to keyword search
+- ❌ Requires custom indexing and optimization
+
+**LLM Framework Memory (LangChain, LlamaIndex)**
+- ❌ Tightly coupled to specific frameworks
+- ❌ Limited persistence options
+- ❌ Basic memory strategies only
+- ❌ No multi-agent coordination
+- ❌ Difficult to migrate between frameworks
+
+**Custom Solutions**
+- ❌ Weeks or months of development time
+- ❌ Ongoing maintenance burden
+- ❌ Hard to scale and optimize
+- ❌ Difficult to get right (edge cases, performance, security)
+- ❌ Reinventing the wheel for every project
+
+</Callout>
+
+### What Developers Really Need
+
+AI agents need memory that is:
+
+1. **Flexible** - Remember anything without predefined schemas
+2. **Persistent** - Never forget, survive restarts and deployments
+3. **Isolated** - Each agent has private, secure storage
+4. **Searchable** - Find relevant memories using semantic search
+5. **Fast** - Sub-second retrieval even with millions of memories
+6. **Scalable** - Grow from prototype to millions of users
+7. **Simple** - Plug in and start using in minutes, not weeks
+8. **Framework-agnostic** - Work with any LLM or AI framework
+
+## The Cortex Solution
+
+Cortex solves all these problems with a single, unified system. Get started in 2 commands:
+
+<Steps>
+  <Step title="Initialize your project">
+    <Terminal>cortex init my-agent</Terminal>
+  </Step>
+  <Step title="Start development">
+    <Terminal>cortex dev</Terminal>
+    The CLI uses persistent config with absolute paths, so you can run commands from any directory.
+  </Step>
+</Steps>
+
+The CLI handles everything:
+
+- **Zero configuration** - Works out of the box
+- **Project scaffolding** - Templates and examples included
+- **Multi-deployment** - Local, staging, production
+- **Database operations** - Backup, restore, statistics
+- **Interactive development** - Live dashboard like Expo
+
+**For programmatic access, the SDK is just as simple:**
+
+```typescript title="example.ts"
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+
+// Works with ANY auth system (Auth0, Clerk, Okta, WorkOS, custom JWT, etc.)
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  auth: createAuthContext({
+    userId: yourUser.id, // From your existing auth
+    tenantId: yourUser.tenantId, // Optional (for multi-tenant SaaS)
+  }),
+});
+
+// Store a conversation
+await cortex.memory.remember({
+  memorySpaceId: "user-1-personal",
+  conversationId: "conv-123",
+  userMessage: "I prefer dark mode",
+  agentResponse: "I'll remember that!",
+  userName: "User",
+  // userId auto-injected from auth
+});
+
+// Search works immediately
+const memories = await cortex.memory.search(
+  "user-1-personal",
+  "what are the user preferences?",
+);
+```
+
+<Callout type="tip" title="Auth Integration">
+  Cortex is **framework-agnostic** - it works with whatever auth system you already use. Just extract `userId` and optionally `tenantId`, no complex integration needed. See [Authentication](/core-features/authentication).
+</Callout>
+
+### Key Capabilities
+
+<FeatureGrid>
+  <FeatureCard 
+    icon="brain"
+    title="Flexible Memory" 
+    description="Remember ANY information without hardcoded topics or schemas. No predefined categories - agents learn naturally."
+    href="/core-features/memory-spaces"
+    size="large"
+  />
+  <FeatureCard 
+    icon="semantic"
+    title="Semantic Search" 
+    description="AI-powered understanding, not just keyword matching. Multi-strategy retrieval with intelligent fallbacks."
+    href="/core-features/semantic-search"
+    size="large"
+  />
+  <FeatureCard 
+    icon="lock"
+    title="Memory Space Isolation" 
+    description="Complete isolation per memory space with Hive and Collaboration modes."
+    href="/core-features/isolation-boundaries"
+  />
+  <FeatureCard 
+    icon="infinite"
+    title="Infinite Context" 
+    description="Recall from millions of past messages with up to 99% token reduction."
+    href="/architecture/infinite-context"
+  />
+  <FeatureCard 
+    icon="chain"
+    title="Context Chains" 
+    description="Hierarchical context sharing for multi-agent systems."
+    href="/core-features/context-chains"
+  />
+  <FeatureCard 
+    icon="graph"
+    title="Graph Architecture" 
+    description="Built-in graph traversals and optional graph DB integration."
+    href="/advanced-topics/graph-capabilities"
+  />
+  <FeatureCard 
+    icon="hive"
+    title="Hive Mode" 
+    description="Multiple AI tools share one memory space for MCP integration."
+    href="/core-features/hive-mode"
+  />
+  <FeatureCard 
+    icon="mcp"
+    title="MCP Server" 
+    description="Cross-application memory for Cursor, Claude Desktop, and custom tools."
+    href="/core-features/mcp-server"
+  />
+</FeatureGrid>
+
+<Callout type="tip" title="Explore More Features">
+  See also: [User Profiles](/core-features/user-profiles), [Fact Extraction](/core-features/fact-extraction), [Analytics](/core-features/access-analytics), [Streaming](/core-features/streaming-support), and [Resilience Layer](/core-features/resilience-layer).
+</Callout>
+
+## Why Cortex?
+
+### Built on Convex
+
+Cortex leverages [Convex](https://convex.dev), a reactive backend platform that provides:
+
+- **ACID Transactions** - Your data is always consistent
+- **Real-time Updates** - Changes propagate instantly
+- **Vector Search** - Built-in support for embeddings
+- **Serverless** - Scales automatically, pay per use
+- **Type-safe** - Full TypeScript support
+- **Developer Experience** - Hot reload, time travel debugging
+
+**Flexible Deployment**: Cortex works with Convex however you run it:
+
+- **Convex Cloud** (recommended) - Fully managed, no ops required
+- **Local Development** - `npx convex dev` for fast iteration
+- **Self-Hosted** - Deploy Convex to your own infrastructure
+
+### Embedding-Agnostic
+
+Unlike vector databases that lock you into their ecosystem, Cortex is **embedding-agnostic**:
+
+<Tabs groupId="embedding-provider">
+  <TabItem value="openai" label="OpenAI">
+
+```typescript
+const embedding = await openai.embeddings.create({
+  model: "text-embedding-3-large",
+  input: text,
+});
+```
+
+  </TabItem>
+  <TabItem value="cohere" label="Cohere">
+
+```typescript
+const embedding = await cohere.embed({
+  texts: [text],
+  model: "embed-english-v3.0",
+});
+```
+
+  </TabItem>
+  <TabItem value="local" label="Local Models">
+
+```typescript
+const embedding = await localModel.encode(text);
+```
+
+  </TabItem>
+</Tabs>
+
+Store embeddings from any provider:
+
+```typescript
+// Cortex doesn't care - just store it (Layer 2 for system memories)
+await cortex.vector.store(memorySpaceId, {
+  content: text,
+  contentType: "raw",
+  embedding: embedding.data[0].embedding,
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 50 },
+});
+```
+
+### Framework-Agnostic
+
+Works with any AI framework:
+
+- **LangChain** - Drop-in memory replacement
+- **Vercel AI SDK** - Middleware for automatic memory
+- **LlamaIndex** - Compatible storage backend
+- **OpenAI Assistants** - Vector store integration
+- **Custom** - Use the core API directly
+
+### Open Source
+
+Cortex is licensed under FSL-1.1-Apache-2.0 (Functional Source License):
+
+- Free for internal use and applications that use Cortex
+- Modify and distribute freely (non-competing uses)
+- Explicit patent grant protection
+- No vendor lock-in
+- Community-driven development
+- Each version becomes Apache 2.0 after 2 years
+
+## Design Principles
+
+Cortex is built on these core principles:
+
+- **Developer Experience First** - Intuitive APIs, full TypeScript support, clear docs, helpful errors
+- **Progressive Enhancement** - Start simple, add complexity when needed
+- **Embedding-Agnostic** - You choose your embedding model; Cortex just stores and retrieves
+- **Data Ownership** - Your data stays in your Convex account, no external processing
+- **Production-Ready** - ACID transactions, automatic scaling, security best practices
+
+## Architecture Overview
+
+### Direct Mode (Open Source)
+
+<FlowDiagram 
+  title="Direct Mode Architecture" 
+  caption="Your app connects directly to your Convex instance via the Cortex SDK"
+>
+  <FlowNode 
+    title="Your Application" 
+    icon="app" 
+    variant="primary"
+  >
+    Your code integrates with the Cortex SDK
+  </FlowNode>
+  <FlowNode 
+    title="Cortex SDK (Open Source)" 
+    icon="package" 
+    variant="warning"
+  >
+    Memory Operations • Context Chains • Agent Management • User Profiles
+  </FlowNode>
+  <FlowNode 
+    title="Your Convex Instance" 
+    icon="database" 
+    variant="success"
+  >
+    Vector Store • Document Store • Real-time Sync — You manage, you pay Convex directly
+  </FlowNode>
+</FlowDiagram>
+
+### Cloud Mode (Managed Service)
+
+<FlowDiagram 
+  title="Cloud Mode Architecture" 
+  caption="Cortex Cloud adds management tools while your data stays in your Convex instance"
+>
+  <FlowNode 
+    title="Your Application" 
+    icon="app" 
+    variant="primary"
+  >
+    Your code uses the same Cortex SDK API
+  </FlowNode>
+  <FlowNode 
+    title="Cortex SDK (Same API!)" 
+    icon="package" 
+    variant="warning"
+  >
+    Identical interface — switch modes with config only
+  </FlowNode>
+  <FlowNode 
+    title="Cortex Cloud Platform" 
+    icon="cloud" 
+    variant="default"
+  >
+    Analytics Dashboard • Cost Optimization • Team Collaboration • Migration Tools • Priority Support
+  </FlowNode>
+  <FlowNode 
+    title="Your Convex Instance" 
+    icon="database" 
+    variant="success"
+  >
+    Your data stays in your account (using your credentials)
+  </FlowNode>
+</FlowDiagram>
+
+<Callout type="note">
+  In both modes, your data lives in your Convex instance. Cortex Cloud adds management tools without moving your data.
+</Callout>
+
+## Use Cases
+
+Cortex powers a wide range of AI applications:
+
+<FeatureGrid>
+  <FeatureCard 
+    icon="chat"
+    title="Chatbots & Assistants" 
+    description="Remember user preferences, conversation history, and context across sessions."
+    size="large"
+  />
+  <FeatureCard 
+    icon="bot"
+    title="Multi-Agent Systems" 
+    description="Coordinate between specialized agents with hierarchical context sharing."
+    size="large"
+  />
+  <FeatureCard 
+    icon="code"
+    title="Code Assistants" 
+    description="Remember project structure, coding preferences, and past solutions."
+  />
+  <FeatureCard 
+    icon="search"
+    title="RAG Pipelines" 
+    description="Store and retrieve relevant context for LLM prompts."
+  />
+  <FeatureCard 
+    icon="book"
+    title="Knowledge Management" 
+    description="Organizational memory that grows over time."
+  />
+</FeatureGrid>
+
+<Callout type="info" title="What Cortex Is Not">
+  Cortex is **not** an LLM, vector database, or Convex replacement. It's a complete memory system built on top of Convex that works with any AI framework. Your data stays in your Convex instance.
+</Callout>
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Installation"
+    description="Install the CLI and SDK"
+    href="/getting-started/installation"
+  />
+  <QuickNavItem 
+    title="Five-Minute Quickstart"
+    description="Build your first agent with memory"
+    href="/getting-started/five-minute-quickstart"
+  />
+  <QuickNavItem 
+    title="Core Concepts"
+    description="Understand memory spaces and architecture"
+    href="/getting-started/core-concepts"
+  />
+</QuickNav>

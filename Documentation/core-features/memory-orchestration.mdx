@@ -1,0 +1,488 @@
+# Memory Orchestration
+
+> **Last Updated**: 2026-01-01
+
+The heart of Cortex: automatic orchestration across all memory layers with batteries-included defaults.
+
+## Overview
+
+Cortex is an **AI memory orchestration platform** that manages the complete lifecycle of agent memory. Instead of manually coordinating conversations, vector stores, facts, and graphs, you call a single method and Cortex handles everything.
+
+**The Problem:**
+
+Building AI agents with persistent memory typically requires:
+
+```typescript
+// ❌ Without Cortex: Manual coordination
+await storeConversation(conversationId, userMessage, agentResponse);
+await generateEmbedding(userMessage + agentResponse);
+await storeInVectorDB(embedding, content, metadata);
+await extractFacts(userMessage, agentResponse);
+await storeFacts(facts, conversationId);
+await syncToGraph(entities, relationships);
+await linkEverythingTogether(ids);
+// ...and handle failures, retries, consistency
+```
+
+**The Solution:**
+
+```typescript
+// ✅ With Cortex: One call, full orchestration
+await cortex.memory.remember({
+  memorySpaceId: "user-123-personal",
+  conversationId: "conv-456",
+  userMessage: "I prefer TypeScript for backend work",
+  agentResponse: "I'll remember that preference!",
+  userId: "user-123",
+  userName: "Alex",
+});
+// ✨ Conversations, vectors, facts, and graph all updated automatically
+```
+
+## Core Concept: The 4-Layer Architecture
+
+Cortex organizes memory into four layers, each serving a specific purpose:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Layer 1: ACID Stores                     │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│   │Conversations │  │  Immutable   │  │   Mutable    │     │
+│   │ (user↔agent) │  │ (KB, audit)  │  │  (live data) │     │
+│   └──────────────┘  └──────────────┘  └──────────────┘     │
+└───────────────────────────┬─────────────────────────────────┘
+                            │ References
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│       Layer 2: Vector Index (Semantic Search)               │
+│   Embedded memories for fast retrieval                      │
+└───────────────────────────┬─────────────────────────────────┘
+                            │ Extracts
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│       Layer 3: Facts Store (Structured Knowledge)           │
+│   LLM-extracted facts (60-90% token savings)                │
+└───────────────────────────┬─────────────────────────────────┘
+                            │ Syncs
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│       Layer 4: Convenience API (Orchestration)              │
+│   cortex.memory.remember() → All layers coordinated         │
+│   cortex.memory.recall() → Unified retrieval + ranking      │
+└─────────────────────────────────────────────────────────────┘
+                            │ Optional
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│       Graph Database (Neo4j/Memgraph)                       │
+│   Multi-hop traversal and entity relationships              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Layer Purposes:**
+
+| Layer    | API                      | Purpose              | Key Feature                  |
+| -------- | ------------------------ | -------------------- | ---------------------------- |
+| Layer 1a | `cortex.conversations.*` | Raw message storage  | ACID guarantees, audit trail |
+| Layer 1b | `cortex.immutable.*`     | Shared knowledge     | Versioned, cross-agent       |
+| Layer 1c | `cortex.mutable.*`       | Live data            | Counters, configs, state     |
+| Layer 2  | `cortex.vector.*`        | Semantic search      | Embeddings, fast retrieval   |
+| Layer 3  | `cortex.facts.*`         | Structured knowledge | 60-90% token savings         |
+| Layer 4  | `cortex.memory.*`        | **Orchestration**    | **Start here**               |
+
+## The Two Core Methods
+
+### remember() - Store with Full Orchestration
+
+`remember()` is the primary method for storing conversations. It orchestrates all layers automatically:
+
+```typescript
+const result = await cortex.memory.remember({
+  // Required
+  memorySpaceId: "user-123-personal",
+  conversationId: "conv-456",
+  userMessage: "My favorite color is blue and I work at Acme Corp",
+  agentResponse: "Nice! I'll remember your preference and workplace.",
+  userId: "user-123",
+  userName: "Alex",
+
+  // Optional: Custom fact extraction
+  extractFacts: async (userMsg, agentResp) => [
+    {
+      fact: "User's favorite color is blue",
+      factType: "preference",
+      subject: "user-123",
+      predicate: "favoriteColor",
+      object: "blue",
+      confidence: 95,
+    },
+    {
+      fact: "User works at Acme Corp",
+      factType: "relationship",
+      subject: "user-123",
+      predicate: "worksAt",
+      object: "Acme Corp",
+      confidence: 98,
+    },
+  ],
+});
+```
+
+**What `remember()` does automatically:**
+
+```
+remember() call
+      │
+      ├─ 1. Validates inputs
+      │
+      ├─ 2. Auto-registers memory space (if new)
+      │
+      ├─ 3. Auto-creates user profile (if new)
+      │
+      ├─ 4. Stores in ACID conversation (Layer 1)
+      │     └─ User message + Agent response
+      │
+      ├─ 5. Creates vector memories (Layer 2)
+      │     └─ With optional embeddings
+      │
+      ├─ 6. Extracts & stores facts (Layer 3)
+      │     └─ With deduplication and belief revision
+      │
+      └─ 7. Syncs to graph (if configured)
+            └─ Entities and relationships
+```
+
+### recall() - Retrieve with Full Orchestration
+
+> **New in v0.24.0**: `recall()` is the retrieval counterpart to `remember()`.
+
+`recall()` searches across all layers, merges results, and returns ready-to-use context:
+
+```typescript
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-personal",
+  query: "What are user's preferences?",
+
+  // Optional: Pre-computed embedding for better semantic search
+  embedding: await embed("What are user's preferences?"),
+
+  // Optional: Filter options
+  userId: "user-123",
+  limit: 10,
+});
+
+// Result includes unified context from all layers
+console.log(result.items); // Merged, deduped, ranked results
+console.log(result.sources.vector); // Vector memories breakdown
+console.log(result.sources.facts); // Structured facts breakdown
+console.log(result.sources.graph); // Graph-expanded entities
+console.log(result.context); // Ready-to-inject LLM context string
+```
+
+**What `recall()` does automatically:**
+
+```
+recall() call
+      │
+      ├─ 1. Searches vector memories (Layer 2)
+      │     └─ Semantic search with optional embedding
+      │
+      ├─ 2. Searches facts directly (Layer 3)
+      │     └─ Facts as primary source, not just enrichment
+      │
+      ├─ 3. Queries graph relationships (if configured)
+      │     └─ Discovers related context via entity connections
+      │
+      ├─ 4. Merges, deduplicates, and ranks results
+      │     └─ Multi-signal scoring algorithm
+      │
+      └─ 5. Formats for LLM injection
+            └─ Ready-to-use context string
+```
+
+## Batteries-Included Defaults
+
+Both `remember()` and `recall()` are designed to work out-of-the-box with sensible defaults:
+
+### remember() Defaults
+
+| Feature         | Default                              | What It Does                            |
+| --------------- | ------------------------------------ | --------------------------------------- |
+| Memory Space    | Auto-register                        | Creates space if it doesn't exist       |
+| User Profile    | Auto-create                          | Creates user profile for new users      |
+| Conversation    | Always stored                        | Messages saved to ACID layer            |
+| Vector Memory   | Always created                       | Searchable memory entry                 |
+| Facts           | Extracted if configured              | LLM extracts structured facts           |
+| Graph Sync      | Enabled if configured                | Syncs entities and relationships        |
+| Belief Revision | Enabled if LLM configured (v0.24.0+) | Intelligently handles conflicting facts |
+
+### recall() Defaults
+
+| Feature                 | Default               | What It Does              |
+| ----------------------- | --------------------- | ------------------------- |
+| Vector Search           | Enabled               | Searches Layer 2          |
+| Facts Search            | Enabled               | Searches Layer 3 directly |
+| Graph Expansion         | Enabled if configured | Discovers related context |
+| LLM Context             | Generated             | Ready-to-inject string    |
+| Conversation Enrichment | Enabled               | Includes ACID data        |
+| Deduplication           | Enabled               | Removes duplicates        |
+| Ranking                 | Enabled               | Multi-signal scoring      |
+
+## Quick Start
+
+### Basic Usage
+
+```typescript
+import { Cortex } from "@cortexmemory/sdk";
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+});
+
+// Store a conversation
+await cortex.memory.remember({
+  memorySpaceId: "my-agent",
+  conversationId: "conv-123",
+  userMessage: "Hello! I'm building a Next.js app",
+  agentResponse: "Great! I can help with Next.js development.",
+  userId: "user-1",
+  userName: "Developer",
+});
+
+// Retrieve relevant context
+const result = await cortex.memory.recall({
+  memorySpaceId: "my-agent",
+  query: "What is the user working on?",
+});
+
+console.log(result.context);
+// "User is building a Next.js app..."
+```
+
+### With Embeddings
+
+```typescript
+import { embed } from "@ai-sdk/openai";
+
+await cortex.memory.remember({
+  memorySpaceId: "my-agent",
+  conversationId: "conv-123",
+  userMessage: "I prefer TypeScript over JavaScript",
+  agentResponse: "TypeScript is great for type safety!",
+  userId: "user-1",
+  userName: "Developer",
+
+  // Add embedding for semantic search
+  generateEmbedding: async (content) => {
+    const { embedding } = await embed({
+      model: openai.embedding("text-embedding-3-small"),
+      value: content,
+    });
+    return embedding;
+  },
+});
+```
+
+### With Fact Extraction
+
+```typescript
+await cortex.memory.remember({
+  memorySpaceId: "my-agent",
+  conversationId: "conv-123",
+  userMessage: "I work at Microsoft on the Azure team",
+  agentResponse: "That's exciting! Azure is a great platform.",
+  userId: "user-1",
+  userName: "Developer",
+
+  // Extract structured facts
+  extractFacts: async (userMsg, agentResp) => [
+    {
+      fact: "User works at Microsoft",
+      factType: "relationship",
+      subject: "user-1",
+      predicate: "worksAt",
+      object: "Microsoft",
+      confidence: 98,
+    },
+    {
+      fact: "User is on the Azure team",
+      factType: "relationship",
+      subject: "user-1",
+      predicate: "teamMember",
+      object: "Azure",
+      confidence: 95,
+    },
+  ],
+});
+```
+
+### Streaming Support
+
+For real-time AI responses, use `rememberStream()`:
+
+```typescript
+import { streamText } from "ai";
+import { openai } from "@ai-sdk/openai";
+
+const response = await streamText({
+  model: openai("gpt-4"),
+  messages: [{ role: "user", content: "Tell me about AI" }],
+});
+
+// Store streaming response automatically
+const result = await cortex.memory.rememberStream({
+  memorySpaceId: "my-agent",
+  conversationId: "conv-123",
+  userMessage: "Tell me about AI",
+  responseStream: response.textStream,
+  userId: "user-1",
+  userName: "User",
+});
+
+console.log(result.fullResponse); // Complete response text
+```
+
+## The Power of Orchestration
+
+### Automatic Cross-Layer Linking
+
+When you call `remember()`, all layers are automatically linked:
+
+```typescript
+// One call creates linked data across all layers
+const result = await cortex.memory.remember({
+  memorySpaceId: "my-agent",
+  conversationId: "conv-123",
+  userMessage: "I like Python",
+  agentResponse: "Python is great!",
+  userId: "user-1",
+  userName: "Dev",
+});
+
+// Result contains IDs from all layers
+console.log(result.conversation); // ACID message IDs
+console.log(result.memories); // Vector memory entries
+console.log(result.facts); // Extracted facts
+
+// Each vector memory links back to its ACID source
+// Each fact links to its source conversation
+// Graph nodes link to their Convex counterparts
+```
+
+### GDPR Cascade Deletion
+
+One call deletes from all layers:
+
+```typescript
+// Delete user and all their data across ALL layers
+await cortex.users.delete("user-123", { cascade: true });
+
+// Automatically deletes from:
+// ✅ User profile
+// ✅ All conversations
+// ✅ All vector memories
+// ✅ All facts
+// ✅ All graph nodes
+```
+
+### Multi-Tenancy
+
+All operations are automatically scoped to the tenant:
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: {
+    userId: "user-123",
+    tenantId: "tenant-acme",  // All operations scoped to this tenant
+  },
+});
+
+// Everything is automatically filtered by tenant
+await cortex.memory.remember({...});  // Stored in tenant-acme
+await cortex.memory.recall({...});    // Only searches tenant-acme
+```
+
+## When to Use Each API
+
+### Start with Layer 4 (Recommended)
+
+```typescript
+// ✅ For most use cases, use cortex.memory.*
+await cortex.memory.remember({...});  // Full orchestration
+await cortex.memory.recall({...});    // Unified retrieval
+await cortex.memory.search({...});    // Vector search with enrichment
+await cortex.memory.forget({...});    // Dual-layer deletion
+```
+
+### Drop to Lower Layers When Needed
+
+```typescript
+// 💬 Direct conversation access (Layer 1a)
+await cortex.conversations.getHistory(conversationId);
+
+// 🔢 Direct vector control (Layer 2)
+await cortex.vector.store(memorySpaceId, vectorInput);
+
+// 🧠 Direct fact operations (Layer 3)
+await cortex.facts.revise(factParams);
+
+// 📚 Shared knowledge (Layer 1b)
+await cortex.immutable.store(immutableInput);
+
+// 📊 Live state (Layer 1c)
+await cortex.mutable.set(key, value);
+```
+
+## Advanced: Skipping Layers
+
+For specific use cases, you can skip certain layers:
+
+```typescript
+await cortex.memory.remember({
+  memorySpaceId: "my-agent",
+  conversationId: "conv-123",
+  userMessage: "Quick note",
+  agentResponse: "Got it!",
+  userId: "user-1",
+  userName: "User",
+
+  // Skip specific layers
+  skipLayers: [
+    "facts", // Don't extract facts
+    "graph", // Don't sync to graph
+  ],
+});
+```
+
+**Available skip options:**
+
+| Skip            | Effect                         |
+| --------------- | ------------------------------ |
+| `users`         | Don't auto-create user profile |
+| `agents`        | Don't auto-register agent      |
+| `conversations` | Don't store in ACID layer      |
+| `vector`        | Don't create vector memory     |
+| `facts`         | Don't extract facts            |
+| `graph`         | Don't sync to graph            |
+
+## Summary
+
+**Memory Orchestration is the core value of Cortex:**
+
+- ✅ **One method to store** (`remember()`) - Handles all layers automatically
+- ✅ **One method to retrieve** (`recall()`) - Unified search across all sources
+- ✅ **Batteries included** - Sensible defaults, minimal configuration
+- ✅ **Full control when needed** - Drop to lower layers for specific use cases
+- ✅ **Enterprise ready** - GDPR, multi-tenancy, resilience built-in
+
+## Next Steps
+
+- **[Memory Spaces](./memory-spaces)** - Isolation boundaries for multi-tenant/multi-agent
+- **[Semantic Search](./semantic-search)** - Deep dive into retrieval strategies
+- **[Fact Extraction](./fact-extraction)** - Structured knowledge extraction
+- **[Streaming Support](./streaming-support)** - Real-time AI integrations
+- **[Memory Operations API](../03-api-reference/02-memory-operations)** - Complete API reference
+
+---
+
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

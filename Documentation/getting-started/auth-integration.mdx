@@ -1,0 +1,462 @@
+---
+id: auth-integration
+title: Auth Integration
+sidebar_position: 6
+description: Integrate Cortex with your existing authentication system
+---
+
+import { Callout, Steps, Step, Terminal, QuickNav, QuickNavItem, APITable, FeatureGrid, FeatureCard, Accordion, AccordionItem, CodeBlock } from '@site/src/components';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Auth Integration (2 Minutes)
+
+Quick guide: Integrate Cortex with your existing authentication system.
+
+---
+
+## The Simple Truth
+
+**Cortex works with whatever auth system you already use.** No special integration, no proprietary protocol, no heavy lifting.
+
+**Your auth system** → Extract `userId` → **Pass to Cortex** → Done! ✅
+
+---
+
+## 3-Line Integration
+
+<CodeBlock filename="auth-setup.ts" language="typescript" showLineNumbers highlightLines={[4, 5, 6, 11]}>
+{`import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+
+// 1. Extract from YOUR existing auth (any system)
+const auth = createAuthContext({
+  userId: yourUser.id,     // Required
+  tenantId: yourUser.tenantId, // Optional (for SaaS)
+});
+
+// 2. Pass to Cortex
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth,
+});
+
+// 3. Use normally - userId auto-injected!
+await cortex.memory.remember({
+  memorySpaceId: "user-space",
+  userMessage: "Hello",
+  agentResponse: "Hi!",
+  userName: yourUser.name,
+  // userId automatically set from auth ✓
+});`}
+</CodeBlock>
+
+<Callout type="tip" title="That's it!">
+  No SDKs to install, no webhooks to configure, no middleware to debug.
+</Callout>
+
+---
+
+## Supported Auth Providers
+
+<Callout type="info">
+  Cortex is **framework-agnostic** — it works with any auth system that provides a user ID.
+</Callout>
+
+<FeatureGrid columns={4}>
+  <FeatureCard title="Clerk" icon="🔐" />
+  <FeatureCard title="Auth0" icon="🔐" />
+  <FeatureCard title="NextAuth" icon="🔐" />
+  <FeatureCard title="Supabase Auth" icon="🔐" />
+  <FeatureCard title="Firebase Auth" icon="🔐" />
+  <FeatureCard title="Okta" icon="🔐" />
+  <FeatureCard title="WorkOS" icon="🔐" />
+  <FeatureCard title="Custom JWT" icon="🔐" />
+</FeatureGrid>
+
+---
+
+## Provider Setup
+
+<Tabs>
+  <TabItem value="clerk" label="Clerk">
+    <Steps>
+      <Step title="Install Clerk SDK">
+        <Terminal>npm install @clerk/nextjs</Terminal>
+      </Step>
+      <Step title="Configure Cortex with Clerk">
+        ```typescript
+        import { Cortex, createAuthContext } from '@cortexmemory/sdk';
+        import { auth } from '@clerk/nextjs';
+        
+        export async function getCortexClient() {
+          const { userId, orgId } = auth();
+          
+          if (!userId) {
+            throw new Error('Not authenticated');
+          }
+          
+          return new Cortex({
+            convexUrl: process.env.CONVEX_URL!,
+            auth: createAuthContext({
+              userId,
+              tenantId: orgId, // For multi-tenant apps
+              authMethod: 'clerk',
+              authenticatedAt: Date.now(),
+            }),
+          });
+        }
+        ```
+      </Step>
+    </Steps>
+  </TabItem>
+  
+  <TabItem value="auth0" label="Auth0">
+    <Steps>
+      <Step title="Get user from Auth0">
+        ```typescript
+        import { getSession } from '@auth0/nextjs-auth0';
+        
+        const session = await getSession();
+        const userId = session?.user?.sub;
+        ```
+      </Step>
+      <Step title="Configure Cortex">
+        ```typescript
+        const cortex = new Cortex({
+          convexUrl: process.env.CONVEX_URL!,
+          auth: createAuthContext({
+            userId: session.user.sub,
+            tenantId: session.user.org_id,
+            authMethod: 'auth0',
+          }),
+        });
+        ```
+      </Step>
+    </Steps>
+  </TabItem>
+  
+  <TabItem value="nextauth" label="NextAuth">
+    <Steps>
+      <Step title="Get session">
+        ```typescript
+        import { getServerSession } from 'next-auth';
+        
+        const session = await getServerSession();
+        ```
+      </Step>
+      <Step title="Configure Cortex">
+        ```typescript
+        const cortex = new Cortex({
+          convexUrl: process.env.CONVEX_URL!,
+          auth: createAuthContext({
+            userId: session.user.id,
+            authMethod: 'next-auth',
+          }),
+        });
+        ```
+      </Step>
+    </Steps>
+  </TabItem>
+  
+  <TabItem value="supabase" label="Supabase">
+    <Steps>
+      <Step title="Get user from Supabase">
+        ```typescript
+        import { createClient } from '@supabase/supabase-js';
+        
+        const supabase = createClient(url, key);
+        const { data: { user } } = await supabase.auth.getUser();
+        ```
+      </Step>
+      <Step title="Configure Cortex">
+        ```typescript
+        const cortex = new Cortex({
+          convexUrl: process.env.CONVEX_URL!,
+          auth: createAuthContext({
+            userId: user.id,
+            authMethod: 'supabase',
+          }),
+        });
+        ```
+      </Step>
+    </Steps>
+  </TabItem>
+  
+  <TabItem value="custom" label="Custom JWT">
+    ```typescript
+    import jwt from 'jsonwebtoken';
+    
+    // Verify your JWT
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    
+    const cortex = new Cortex({
+      convexUrl: process.env.CONVEX_URL!,
+      auth: createAuthContext({
+        userId: decoded.sub,
+        tenantId: decoded.org_id,
+        authMethod: 'custom-jwt',
+        sessionId: decoded.sid,
+      }),
+    });
+    ```
+  </TabItem>
+</Tabs>
+
+**The pattern is always the same** — just map your auth data to Cortex's simple structure.
+
+---
+
+## AuthContext Reference
+
+<APITable parameters={[
+  { name: "userId", type: "string", required: true, description: "Unique user identifier from your auth system" },
+  { name: "tenantId", type: "string", required: false, description: "Organization/tenant ID for multi-tenant apps" },
+  { name: "sessionId", type: "string", required: false, description: "Current session identifier" },
+  { name: "authMethod", type: "string", required: false, description: "Name of auth provider (for analytics)" },
+  { name: "authenticatedAt", type: "number", required: false, description: "Timestamp of authentication (Unix ms)" },
+]} />
+
+---
+
+## Multi-Tenancy Support
+
+<Callout type="tip" title="SaaS Applications">
+  For multi-tenant SaaS apps, always include `tenantId` in your auth context. This ensures complete data isolation between customers.
+</Callout>
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    userId: 'user-123',
+    tenantId: 'customer-acme', // Critical for SaaS!
+    authMethod: 'clerk',
+  }),
+});
+
+// All operations are now scoped to customer-acme
+await cortex.memory.remember({...}); // tenantId auto-injected
+```
+
+See [Isolation Boundaries](/core-features/isolation-boundaries) for the complete multi-tenancy guide.
+
+---
+
+## What Happens Behind the Scenes
+
+<Steps>
+  <Step title="Auto-Injection">
+    `userId` and `tenantId` are automatically added to all operations:
+
+    ```typescript
+    // You write:
+    await cortex.memory.remember({ memorySpaceId: "space-1", ... });
+
+    // SDK automatically does:
+    await cortex.memory.remember({
+      memorySpaceId: "space-1",
+      userId: "user-123",      // ← From auth
+      tenantId: "tenant-abc",  // ← From auth
+      ...
+    });
+    ```
+  </Step>
+  <Step title="Auto-Filtering">
+    All queries are automatically filtered by `tenantId`:
+
+    ```typescript
+    // You write:
+    const memories = await cortex.memory.search("space-1", "query");
+
+    // SDK automatically filters:
+    // WHERE memorySpaceId = "space-1" AND tenantId = "tenant-abc"
+    ```
+  </Step>
+  <Step title="Enables Features">
+    Auth context enables powerful features:
+
+    - ✅ GDPR cascade deletion by userId
+    - ✅ Multi-tenant data isolation
+    - ✅ Session tracking
+    - ✅ Audit trails
+  </Step>
+</Steps>
+
+---
+
+## Security Best Practices
+
+<Callout type="warning" title="Server-Side Only">
+  Always create the Cortex client on the **server side**. Never expose your Convex URL or auth context to the client.
+</Callout>
+
+<Callout type="danger" title="Never Trust Client Data">
+  Always get the user ID from your auth system's server-side session, never from client-submitted data.
+</Callout>
+
+---
+
+## Common Patterns
+
+<Tabs>
+  <TabItem value="nextjs-app" label="Next.js App Router">
+    ```typescript
+    // app/api/cortex/route.ts
+    import { Cortex, createAuthContext } from '@cortexmemory/sdk';
+    import { auth } from '@clerk/nextjs';
+    
+    export async function POST(req: Request) {
+      const { userId, orgId } = auth();
+      
+      const cortex = new Cortex({
+        convexUrl: process.env.CONVEX_URL!,
+        auth: createAuthContext({ userId, tenantId: orgId }),
+      });
+      
+      // Use cortex...
+    }
+    ```
+  </TabItem>
+  <TabItem value="nextjs-pages" label="Next.js Pages Router">
+    ```typescript
+    // pages/api/cortex.ts
+    import { Cortex, createAuthContext } from '@cortexmemory/sdk';
+    import { getAuth } from '@clerk/nextjs/server';
+    
+    export default async function handler(req, res) {
+      const { userId, orgId } = getAuth(req);
+      
+      const cortex = new Cortex({
+        convexUrl: process.env.CONVEX_URL!,
+        auth: createAuthContext({ userId, tenantId: orgId }),
+      });
+      
+      // Use cortex...
+    }
+    ```
+  </TabItem>
+  <TabItem value="express" label="Express.js">
+    ```typescript
+    // middleware/cortex.ts
+    import { Cortex, createAuthContext } from '@cortexmemory/sdk';
+    
+    export function cortexMiddleware(req, res, next) {
+      req.cortex = new Cortex({
+        convexUrl: process.env.CONVEX_URL!,
+        auth: createAuthContext({
+          userId: req.user.id,
+          tenantId: req.user.organizationId,
+        }),
+      });
+      next();
+    }
+    
+    // Use in routes
+    app.post("/chat", async (req, res) => {
+      await req.cortex.memory.remember({...});
+    });
+    ```
+  </TabItem>
+  <TabItem value="generic" label="Any Framework">
+    ```typescript
+    // Extract auth data (your code)
+    const userId = extractUserId(req);
+    const tenantId = extractTenantId(req);
+
+    // Create auth context
+    const auth = createAuthContext({ userId, tenantId });
+
+    // Use with Cortex
+    const cortex = new Cortex({ convexUrl, auth });
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Without Auth (For Testing)
+
+Cortex works without auth context for development and testing:
+
+```typescript
+// No auth - for prototypes/testing
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  // No auth
+});
+
+// Works, but you must set userId manually
+await cortex.memory.remember({
+  memorySpaceId: "test-space",
+  userId: "test-user", // Manual
+  userMessage: "Hello",
+  agentResponse: "Hi!",
+  userName: "Test User",
+});
+```
+
+<Callout type="info" title="When No Auth is OK">
+  - ✅ Quick prototypes
+  - ✅ Development/testing
+  - ✅ Single-user apps
+  - ✅ CLI tools
+</Callout>
+
+<Callout type="warning" title="When You Need Auth">
+  - ❌ Production APIs
+  - ❌ Multi-tenant SaaS
+  - ❌ User-facing applications
+</Callout>
+
+---
+
+## Common Questions
+
+<Accordion>
+  <AccordionItem title="Do I need to install provider-specific packages?" defaultOpen={true}>
+    **No!** Cortex doesn't require any auth provider SDKs. Use whatever you already have.
+  </AccordionItem>
+  <AccordionItem title="What if I change auth providers?">
+    Just update your extraction code. Cortex doesn't care where `userId` comes from.
+  </AccordionItem>
+  <AccordionItem title="Do I need webhooks or callbacks?">
+    **No!** Auth context is request-scoped. No async integrations needed.
+  </AccordionItem>
+  <AccordionItem title="What about RBAC/permissions?">
+    Store in `metadata` field. Cortex provides data isolation, you handle authorization logic.
+  </AccordionItem>
+  <AccordionItem title="Can I test without real auth?">
+    **Yes!** Use test values: `createAuthContext({ userId: "test-user" })`
+  </AccordionItem>
+</Accordion>
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Five-Minute Quickstart" 
+    description="Get Cortex running in minutes"
+    href="/getting-started/five-minute-quickstart"
+  />
+  <QuickNavItem 
+    title="Memory Spaces" 
+    description="Learn about data isolation and organization"
+    href="/core-features/memory-spaces"
+  />
+  <QuickNavItem 
+    title="Auth Providers Reference" 
+    description="Detailed provider documentation"
+    href="/integrations/auth-providers"
+  />
+  <QuickNavItem 
+    title="Isolation Boundaries" 
+    description="Multi-tenancy and data isolation guide"
+    href="/core-features/isolation-boundaries"
+  />
+</QuickNav>
+
+---
+
+**Bottom Line:** Auth integration is **3 lines of code** that work with **any auth system**. No complex setup, no provider-specific code, no lock-in.
