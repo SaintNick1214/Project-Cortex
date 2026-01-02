@@ -1,6 +1,6 @@
 # Installation
 
-> **Last Updated**: 2025-12-18
+> **Last Updated**: January 1, 2026
 
 ## Quick Start
 
@@ -10,147 +10,31 @@ The fastest way to get started with Cortex:
 # Install the CLI globally
 npm install -g @cortexmemory/cli
 
-# Create a new project
+# Verify installation
+cortex --version
+# Should output: 0.27.4 or higher
+
+# Create your first project
 cortex init my-cortex-agent
 ```
 
-The interactive wizard will:
-
-- Set up a complete Cortex project
-- Configure Convex (local or cloud)
-- Install all dependencies
-- Deploy backend functions
-- Create working example code
-- Optionally set up graph database (Neo4j/Memgraph)
-
-**Time to working agent:** < 5 minutes
-
----
-
-## Installation Methods
-
-### Method 1: Cortex CLI (Recommended)
-
-Best for: New projects, first-time users, production deployments
-
-```bash
-# Install CLI globally
-npm install -g @cortexmemory/cli
-
-# Create new project
-cortex init my-ai-agent
-cd my-ai-agent
-
-# Start all services (Convex + graph DB if configured)
-cortex start
-
-# Or use interactive dev mode with live dashboard
-cortex dev
-```
-
-**What you get:**
-
-- ✅ Cortex SDK installed
-- ✅ Convex backend deployed
-- ✅ Environment configured (.env.local)
-- ✅ Working example code
-- ✅ Optional graph database setup (Docker)
-- ✅ Multi-deployment management via CLI
-- ✅ Deployment saved to `~/.cortexrc`
-
-### Method 2: Add to Existing Project
-
-Best for: Integrating Cortex into existing applications
-
-```bash
-cd your-existing-project
-cortex init .
-```
-
-The wizard will add Cortex to your project without disrupting existing code.
-
-### Method 3: Legacy Wizard
-
-Best for: Users who prefer npx without global install
-
-```bash
-npm create cortex-memories@latest my-ai-agent
-cd my-ai-agent
-npm run dev  # Start Convex
-npm start    # Run your agent
-```
-
-> **Note:** The `cortex init` method is recommended as it provides additional features like multi-deployment management, interactive dev mode, and integrated graph database setup.
-
-### Method 4: Manual Installation
-
-Best for: Advanced users who want full control
-
-```bash
-# 1. Install packages
-npm install @cortexmemory/sdk convex
-
-# 2. Copy backend functions
-# The SDK package includes convex-dev/ folder
-# Copy it to your project:
-cp -r node_modules/@cortexmemory/sdk/convex-dev ./convex
-
-# 3. Create convex.json
-echo '{"functions": "convex/"}' > convex.json
-
-# 4. Configure environment
-# Create .env.local:
-echo 'CONVEX_URL=http://127.0.0.1:3210' > .env.local
-
-# 5. Deploy Convex
-npx convex dev
-```
-
----
-
-## CLI Commands Reference
-
-Once the CLI is installed, you have access to powerful management commands:
-
-```bash
-# Project Setup
-cortex init [dir]              # Create new project or add to existing
-
-# Lifecycle Management
-cortex start                   # Start all enabled deployments
-cortex stop                    # Stop all running services
-cortex status                  # View status dashboard
-cortex dev                     # Interactive dev mode with live logs
-
-# Configuration
-cortex config list             # View all deployments
-cortex config add-deployment   # Add a new deployment
-cortex use <name>              # Switch between deployments
-cortex config enable <name>    # Enable a deployment for auto-start
-cortex config disable <name>   # Disable a deployment
-
-# Database Operations
-cortex db stats                # View database statistics
-cortex db clear                # Clear database (with confirmation)
-
-# Convex Management
-cortex convex status           # Check Convex deployment status
-cortex convex update           # Update SDK and Convex packages
-```
+The interactive wizard will guide you through setup in under 5 minutes.
 
 ---
 
 ## Prerequisites
 
+Before installing Cortex, ensure you have:
+
 ### Required
 
-- **Node.js 18+** - Download from [nodejs.org](https://nodejs.org)
-- **npm 9+** - Comes with Node.js
+- **Node.js >= 20** - Download from [nodejs.org](https://nodejs.org)
+- **npm or pnpm** - Comes with Node.js
 
 Check your versions:
 
 ```bash
-node --version  # Should be v18.0.0 or higher
+node --version  # Should be v20.0.0 or higher
 npm --version   # Should be 9.0.0 or higher
 ```
 
@@ -161,88 +45,90 @@ npm --version   # Should be 9.0.0 or higher
   - Required for vector search features
   - Not needed for local development
 
-- **Docker Desktop** - For local graph database
+- **Docker Desktop** - For graph database features (optional)
   - Download from [docker.com](https://www.docker.com/products/docker-desktop)
-  - Only needed if using graph database features
+  - Only needed for advanced graph queries
   - Not required for basic Cortex usage
 
-- **OpenAI API Key** - For embeddings
+- **OpenAI API Key** - For embeddings (optional)
   - Get from [platform.openai.com](https://platform.openai.com)
   - Or use any other embedding provider
-  - Optional - Cortex works without embeddings
+  - Cortex works without embeddings (keyword search)
 
 ---
 
-## Convex Setup Options
+## Installation Methods
 
-Cortex works with Convex in three modes:
+### Method 1: Global Installation (Recommended)
 
-### 1. Local Development (Default)
-
-**Best for:** Rapid iteration, learning, prototyping
-
-**Pros:**
-
-- ✅ No account needed
-- ✅ Instant start
-- ✅ Fully private
-- ✅ Free forever
-
-**Cons:**
-
-- ❌ No vector search
-- ❌ Not production-ready
-- ❌ Data stored locally only
-
-**Setup:**
+Install the CLI globally to use it from anywhere:
 
 ```bash
-cortex init my-agent --local
-# Or select "Local development" when prompted
+npm install -g @cortexmemory/cli
 ```
 
-### 2. Convex Cloud (Recommended for Production)
-
-**Best for:** Production apps, full features, collaboration
-
-**Pros:**
-
-- ✅ Full vector search support
-- ✅ Automatic scaling
-- ✅ Real-time sync
-- ✅ Production-ready
-- ✅ Free tier available
-
-**Cons:**
-
-- ❌ Requires Convex account
-- ❌ Internet required
-- ❌ Costs scale with usage
-
-**Setup:**
+**Verify installation:**
 
 ```bash
-cortex init my-agent --cloud
-# Or select "Create new Convex project" when prompted
-# Follow prompts to login/create account
+cortex --version
+# Output: 0.27.4 or higher
 ```
 
-### 3. Existing Convex Deployment
-
-**Best for:** Adding Cortex to existing Convex projects
-
-**Pros:**
-
-- ✅ Reuse existing deployment
-- ✅ Centralized data
-- ✅ Existing auth setup
-
-**Setup:**
+**Now create projects anywhere:**
 
 ```bash
 cortex init my-agent
-# Select: "Use existing Convex deployment"
-# Enter your CONVEX_URL and deploy key
+cd my-agent
+cortex start
+```
+
+### Method 2: Using npx (No Installation)
+
+Use the CLI without installing it globally:
+
+```bash
+npx @cortexmemory/cli init my-agent
+cd my-agent
+npx @cortexmemory/cli start
+```
+
+**When to use:**
+- One-time project creation
+- Testing before global install
+- CI/CD environments
+
+**Trade-off:** Slightly slower (downloads each time)
+
+### Method 3: Project-Specific Installation
+
+Install as a dev dependency in your project:
+
+```bash
+cd my-existing-project
+npm install --save-dev @cortexmemory/cli
+
+# Use with npm scripts
+npm pkg set scripts.cortex="cortex"
+```
+
+**Add to package.json:**
+
+```json
+{
+  "scripts": {
+    "cortex": "cortex",
+    "dev": "cortex dev",
+    "start": "cortex start",
+    "stop": "cortex stop"
+  }
+}
+```
+
+**Then run:**
+
+```bash
+npm run cortex init
+npm run dev
 ```
 
 ---
@@ -251,51 +137,55 @@ cortex init my-agent
 
 After installation, verify everything works:
 
-### 1. Check Installation
+### 1. Check CLI Installation
 
 ```bash
 # Verify CLI is installed
 cortex --version
-# Should show: 0.21.0 or higher
+# Should show: 0.27.4 or higher
 
-# Verify SDK is installed in your project
-npm list @cortexmemory/sdk
-# Should show: @cortexmemory/sdk@0.21.0 or higher
-
-# Check backend files exist
-ls convex/
-# Should list: schema.ts, conversations.ts, memories.ts, etc.
+# Check CLI help
+cortex --help
+# Should display available commands
 ```
 
-### 2. Check Status
+### 2. Test CLI Connection
 
 ```bash
-# View status of all deployments
-cortex status
-# Shows: Convex running status, graph DB status, SDK version
-```
+# Initialize a test project
+cortex init test-project
+cd test-project
 
-### 3. Test Connection
-
-```bash
-# Start all services
+# Start services
 cortex start
 
-# Or use interactive mode to see live logs
-cortex dev
+# Check status
+cortex status
+# Should show: Convex running, deployment info
 ```
 
-### 4. View Dashboard
+### 3. Verify Convex Dashboard
 
-**Local:**
-
+**For local development:**
 - Open: http://127.0.0.1:3210
-- You should see your deployed functions
+- You should see deployed Cortex functions
 
-**Cloud:**
+**For cloud deployment:**
+```bash
+cortex convex dashboard
+# Opens your deployment in browser
+```
 
-- Run `cortex convex dashboard` to open in browser
-- View your data and functions online
+---
+
+## Next Steps
+
+After successful installation:
+
+1. **[Five-Minute Quickstart](./03-five-minute-quickstart.md)** - Build your first agent
+2. **[Core Concepts](./04-core-concepts.md)** - Understand how Cortex works
+3. **[Configuration](./05-configuration.md)** - Multi-deployment setup
+4. **[CLI Reference](../06-tools/01-cli-reference.md)** - All CLI commands
 
 ---
 
@@ -303,29 +193,31 @@ cortex dev
 
 ### "cortex: command not found"
 
-**Cause:** CLI not installed globally
+**Cause:** CLI not installed or not in PATH
 
 **Fix:**
 
 ```bash
+# Reinstall globally
 npm install -g @cortexmemory/cli
+
+# Or check npm global bin path
+npm config get prefix
+# Make sure this directory is in your PATH
 ```
 
 ### "cortex init" fails
 
-**Check:**
-
-- Node.js version >= 18
-- Internet connection (to download packages)
+**Possible causes:**
+- Node.js version < 20
+- No internet connection
 - npm permissions
 
 **Fix:**
 
 ```bash
-# Update npm
-npm install -g npm@latest
-
-# Clear cache
+# Update Node.js to v20+
+# Then clear npm cache
 npm cache clean --force
 
 # Reinstall CLI
@@ -334,7 +226,7 @@ npm install -g @cortexmemory/cli
 
 ### "Cannot find module @cortexmemory/sdk"
 
-**Cause:** Dependencies not installed
+**Cause:** Dependencies not installed in project
 
 **Fix:**
 
@@ -343,77 +235,97 @@ cd your-project
 npm install
 ```
 
-### "Convex functions not found"
-
-**Cause:** Backend not deployed or Convex not running
-
-**Fix:**
-
-```bash
-# Start services with CLI
-cortex start
-
-# Or manually for cloud mode
-npx convex deploy
-```
-
-### "WebSocket closed with code 1006"
+### "Convex connection failed"
 
 **Cause:** Convex server not running
 
 **Fix:**
 
 ```bash
-# Start Convex via CLI
+# Start Convex
 cortex start
 
 # Or check status
 cortex status
+
+# If issues persist, restart
+cortex stop
+cortex start
 ```
 
 ### Port Conflicts
 
-**Cause:** Another Convex instance running on same port
+**Cause:** Another Convex instance on same port
 
 **Fix:**
 
 ```bash
-# Use interactive mode to kill conflicting processes
+# Use interactive dev mode
 cortex dev
-# Press 'k' to open kill menu
+# Press 'k' to kill conflicting processes
 ```
 
----
+### Getting More Help
 
-## Next Steps
+```bash
+# General help
+cortex --help
 
-After installation:
+# Command-specific help
+cortex <command> --help
 
-1. **[Five-Minute Quickstart](./03-five-minute-quickstart.md)** - Build your first memory-enabled agent
-2. **[Core Concepts](./04-core-concepts.md)** - Understand how Cortex works
-3. **[Configuration](./05-configuration.md)** - Configure for your needs
+# Example
+cortex init --help
+cortex start --help
+```
+
+**Still stuck?**
+- [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
+- [CLI Reference](../06-tools/01-cli-reference.md)
+- [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 
 ---
 
 ## Upgrading
 
-To upgrade to a new version:
+To upgrade to the latest version:
 
 ```bash
 # Update CLI globally
 npm install -g @cortexmemory/cli@latest
 
-# Update SDK and Convex in your project (via CLI)
-cortex convex update
+# Verify new version
+cortex --version
 
-# Or manually:
-npm install @cortexmemory/sdk@latest
-npm install convex@latest
-npx convex deploy
+# Update SDK and Convex in your projects
+cd your-project
+cortex update
 ```
 
-Check GitHub releases for breaking changes.
+The `cortex update` command will:
+- Check for newer versions of `@cortexmemory/sdk`
+- Check for newer versions of `convex`
+- Offer to update all projects
+- Redeploy backend if needed
 
 ---
 
-**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
+## Uninstalling
+
+If you need to uninstall:
+
+```bash
+# Remove CLI globally
+npm uninstall -g @cortexmemory/cli
+
+# Remove from project
+cd your-project
+npm uninstall @cortexmemory/sdk convex
+
+# Clean up configuration (optional)
+rm ~/.cortexrc
+```
+
+---
+
+**Ready to build?** Continue to [Five-Minute Quickstart](./03-five-minute-quickstart.md) →
