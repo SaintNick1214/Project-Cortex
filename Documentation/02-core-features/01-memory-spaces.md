@@ -177,7 +177,8 @@ interface Conversation {
   conversationId: string;
   memorySpaceId: string; // Isolation
   messages: Message[];
-  createdAt: Date;
+  createdAt: number; // Unix timestamp (milliseconds)
+  updatedAt: number; // Unix timestamp (milliseconds)
 }
 ```
 
@@ -190,7 +191,9 @@ interface VectorMemory {
   memorySpaceId: string; // Isolation
   content: string;
   embedding: number[];
-  metadata: { importance, tags, ... };
+  metadata: { importance: number; tags: string[]; };
+  createdAt: number; // Unix timestamp (milliseconds)
+  updatedAt: number; // Unix timestamp (milliseconds)
 }
 ```
 
@@ -202,11 +205,12 @@ interface Fact {
   id: string;
   memorySpaceId: string; // Isolation
   participantId?: string; // Hive Mode tracking
-  data: {
-    fact: string;
-    category: string;
-    confidence: number;
-  };
+  userId?: string; // GDPR compliance
+  fact: string;
+  factType: string;
+  confidence: number;
+  createdAt: number; // Unix timestamp (milliseconds)
+  updatedAt: number; // Unix timestamp (milliseconds)
 }
 ```
 
@@ -218,6 +222,40 @@ await cortex.memory.remember({ memorySpaceId, ... }); // Stores in L1a + L2 + L3
 await cortex.memory.recall({ memorySpaceId, query }); // Searches L2 + L3 + graph
 await cortex.memory.search(memorySpaceId, query); // Searches L2 (vector) only
 ```
+
+## Multi-Tenancy Support
+
+> **New Feature**: Memory spaces support full multi-tenant isolation via `tenantId` (auto-injected from AuthContext).
+
+All memory space operations automatically include tenant isolation when using auth context:
+
+```typescript
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+
+// Initialize with tenant context
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    userId: "user-123",
+    tenantId: "customer-acme", // Tenant isolation
+    sessionId: "session-xyz",
+  }),
+});
+
+// All operations are now scoped to tenant-acme
+await cortex.memorySpaces.register({
+  memorySpaceId: "user-123-personal",
+  // tenantId automatically injected from auth context
+  name: "User Memory",
+  type: "personal",
+});
+
+// Queries automatically filtered by tenant
+const spaces = await cortex.memorySpaces.list();
+// Only returns spaces for tenant-acme
+```
+
+See [Auth Integration](../08-integrations/auth-providers.md) for complete multi-tenancy documentation.
 
 ## Creating Memory Spaces
 
@@ -261,7 +299,7 @@ await cortex.memorySpaces.register({
   metadata: {
     owner: "user-123",
     environment: "production",
-    created: new Date(),
+    created: Date.now(), // Unix timestamp (milliseconds)
   },
 });
 
@@ -384,8 +422,8 @@ const fullContext = await cortex.contexts.get(context.id, {
 ```typescript
 interface Participant {
   id: string; // e.g., "cursor", "claude", "my-bot"
-  type: "ai-tool" | "human" | "system";
-  joinedAt: Date;
+  type: string; // e.g., "ai-tool", "agent", "user", "tool"
+  joinedAt: number; // Unix timestamp (milliseconds)
 }
 ```
 
@@ -460,7 +498,7 @@ await cortex.memorySpaces.archive("old-project-space", {
   reason: "Project completed",
   metadata: {
     archivedBy: "admin-123",
-    archivedAt: new Date(),
+    archivedAt: Date.now(), // Unix timestamp (milliseconds)
   },
 });
 
@@ -482,23 +520,42 @@ const stats = await cortex.memorySpaces.getStats("user-123-personal");
 
 console.log(stats);
 // {
+//   memorySpaceId: "user-123-personal",
 //   totalMemories: 1543,
-//   memoriesThisWeek: 234,
-//   avgSearchTime: '12ms',
-//   participants: ['cursor', 'claude', 'notion-ai'],
-//   participantActivity: {
-//     cursor: { memoriesStored: 456, lastActive: "2025-10-28" },
-//     claude: { memoriesStored: 892, lastActive: "2025-10-28" },
-//     'notion-ai': { memoriesStored: 195, lastActive: "2025-10-27" }
-//   },
-//   topTags: ['preferences', 'code', 'project'],
-//   importanceBreakdown: { high: 123, medium: 987, low: 433 },
+//   totalConversations: 45,
+//   totalFacts: 234,
+//   totalMessages: 890,
+//   memoriesThisWindow: 234, // Based on timeWindow option
+//   conversationsThisWindow: 12,
 //   storage: {
 //     conversationsBytes: 45600,
-//     vectorMemoriesBytes: 234000,
+//     memoriesBytes: 234000,
 //     factsBytes: 12300,
 //     totalBytes: 291900
-//   }
+//   },
+//   avgSearchTime: '12ms',
+//   topTags: ['preferences', 'code', 'project'],
+//   importanceBreakdown: {
+//     critical: 23,  // 90-100
+//     high: 100,     // 70-89
+//     medium: 987,   // 40-69
+//     low: 400,      // 10-39
+//     trivial: 33    // 0-9
+//   },
+//   // With includeParticipants: true
+//   participants: [
+//     {
+//       participantId: "cursor",
+//       memoriesStored: 456,
+//       conversationsStored: 15,
+//       factsExtracted: 67,
+//       firstActive: 1704067200000,
+//       lastActive: 1735689600000,
+//       avgImportance: 72,
+//       topTags: ["code", "preferences"]
+//     },
+//     // ... more participants
+//   ]
 // }
 ```
 
@@ -845,6 +902,32 @@ await cortex.memory.remember({
 });
 ```
 
+## GDPR Cascade Deletion
+
+Memory spaces participate in cascade deletion when users are deleted:
+
+```typescript
+// Delete all data for a user across all memory spaces
+await cortex.users.delete("user-123", { cascade: true });
+
+// Cascade automatically deletes from:
+// ✅ User profile
+// ✅ All conversations with userId in ALL memory spaces
+// ✅ All vector memories with userId in ALL memory spaces
+// ✅ All facts with userId in ALL memory spaces
+// ✅ All sessions with userId
+// ✅ Graph nodes (if configured)
+
+// Memory space deletion
+await cortex.memorySpaces.delete("user-123-personal", {
+  cascade: true,
+  reason: "User requested data deletion (GDPR)",
+});
+// Deletes the space and ALL data within it
+```
+
+See [User Operations API](../03-api-reference/04-user-operations.md) for complete GDPR deletion documentation.
+
 ## Conclusion
 
 **Memory spaces** are the foundation of Cortex's architecture. They provide:
@@ -854,6 +937,7 @@ await cortex.memory.remember({
 - ✅ **Collaboration Mode** - Separate spaces with secure cross-space access
 - ✅ **Infinite Context** - Recall from unlimited history via retrieval
 - ✅ **Clean architecture** - Clear boundaries, no memory poisoning
+- ✅ **Multi-tenancy** - Full SaaS isolation via `tenantId`
 
 **Key Takeaway:** `memorySpaceId` replaces `agentId` as the fundamental parameter. Everything else builds on this foundation.
 
@@ -861,10 +945,12 @@ await cortex.memory.remember({
 
 **Next Steps:**
 
-- [Memory Orchestration](./00-memory-orchestration.md) - Understand how all layers work together
-- [Hive Mode Guide](./10-hive-mode.md) - Learn multi-tool memory sharing
-- [A2A Communication](./05-a2a-communication.md) - Learn Collaboration Mode
-- [Context Chains](./04-context-chains.md) - Learn cross-space delegation
-- [Infinite Context](../04-architecture/10-infinite-context.md) - Never run out of context
+- **[Memory Space Operations API](../03-api-reference/11-memory-space-operations.md)** - Complete API reference
+- **[Memory Orchestration](./00-memory-orchestration.md)** - Understand how all layers work together
+- **[Hive Mode Guide](./10-hive-mode.md)** - Learn multi-tool memory sharing
+- **[A2A Communication](./05-a2a-communication.md)** - Learn Collaboration Mode
+- **[Context Chains](./04-context-chains.md)** - Learn cross-space delegation
+- **[Sessions Management](./14-sessions-management.md)** - Session lifecycle within spaces
+- **[Governance Policies](../03-api-reference/10-governance-policies-api.md)** - Configure retention rules
 
-**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
