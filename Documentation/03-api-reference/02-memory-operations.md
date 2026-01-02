@@ -1,12 +1,43 @@
 # Memory Operations API
 
-> **Last Updated**: 2025-12-27
+> **Last Updated**: 2026-01-01
 
 Complete API reference for memory operations across memory spaces.
 
 > **Enhanced in v0.15.0**: `memory.rememberStream()` with progressive storage, streaming hooks, and comprehensive metrics
 >
 > **New in v0.15.0**: Enriched fact extraction with `enrichedContent` and `factCategory` for bullet-proof semantic search
+
+## Important: Timestamp Convention
+
+All timestamps in the Cortex SDK are **Unix timestamps in milliseconds** (not JavaScript `Date` objects):
+
+```typescript
+// SDK returns timestamps as numbers (Unix ms)
+const memory = await cortex.vector.get(memorySpaceId, memoryId);
+console.log(memory.createdAt);      // 1735689600000 (number, not Date)
+console.log(memory.updatedAt);      // 1735689600000 (number, not Date)
+console.log(memory.sourceTimestamp);// 1735689600000 (number, not Date)
+
+// Convert to Date for display
+const createdDate = new Date(memory.createdAt);
+
+// When providing timestamps in filters/queries
+await cortex.vector.getAtTimestamp(
+  memorySpaceId,
+  memoryId,
+  Date.now() - 24 * 60 * 60 * 1000  // 24 hours ago (number)
+);
+
+// Date objects are also accepted and auto-converted
+await cortex.vector.getAtTimestamp(
+  memorySpaceId,
+  memoryId,
+  new Date("2025-08-01")           // Converted to Unix ms internally
+);
+```
+
+> **Why Unix milliseconds?** Convex (the backend) stores timestamps as `number`. Using consistent types avoids serialization issues and timezone bugs.
 
 ## Overview
 
@@ -353,36 +384,39 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 ### Layer 2: cortex.vector.\* Operations
 
-| Operation                                       | Purpose                         | Returns                                                        |
-| ----------------------------------------------- | ------------------------------- | -------------------------------------------------------------- |
-| `store(memorySpaceId, input, options?)`         | Store vector memory             | MemoryEntry                                                    |
-| `get(memorySpaceId, memoryId)`                  | Get vector memory               | MemoryEntry \| null                                            |
-| `search(memorySpaceId, query, options?)`        | Search vector index             | MemoryEntry[]                                                  |
-| `update(memorySpaceId, memoryId, updates)`      | Update memory (creates version) | MemoryEntry                                                    |
-| `delete(memorySpaceId, memoryId, options?)`     | Delete from vector              | \{ deleted: boolean; memoryId: string \}                       |
-| `updateMany(filter, updates)`                   | Bulk update                     | \{ updated: number; memoryIds: string[] \}                     |
-| `deleteMany(filter)`                            | Bulk delete                     | \{ deleted: number; memoryIds: string[] \}                     |
-| `count(filter)`                                 | Count memories                  | number                                                         |
-| `list(filter)`                                  | List memories                   | MemoryEntry[]                                                  |
-| `export(options)`                               | Export vector memories          | \{ format: string; data: string; count: number; ... \}         |
-| `archive(memorySpaceId, memoryId)`              | Soft delete (single memory)     | \{ archived: boolean; memoryId: string; restorable: boolean \} |
-| `restoreFromArchive(memorySpaceId, memoryId)`   | Restore from archive            | \{ restored: boolean; memoryId: string; memory: MemoryEntry \} |
-| `getVersion(memorySpaceId, memoryId, version)`  | Get specific version            | MemoryVersion \| null                                          |
-| `getHistory(memorySpaceId, memoryId)`           | Get version history             | MemoryVersion[]                                                |
-| `getAtTimestamp(memorySpaceId, memoryId, date)` | Temporal query                  | MemoryVersion \| null                                          |
+| Operation                                            | Purpose                         | Returns                                                        |
+| ---------------------------------------------------- | ------------------------------- | -------------------------------------------------------------- |
+| `store(memorySpaceId, input, options?)`              | Store vector memory             | MemoryEntry                                                    |
+| `get(memorySpaceId, memoryId)`                       | Get vector memory               | MemoryEntry \| null                                            |
+| `search(memorySpaceId, query, options?)`             | Search vector index             | MemoryEntry[]                                                  |
+| `update(memorySpaceId, memoryId, updates)`           | Update memory (creates version) | MemoryEntry                                                    |
+| `delete(memorySpaceId, memoryId, options?)`          | Delete from vector              | \{ deleted: boolean; memoryId: string \}                       |
+| `updateMany(filter, updates)`                        | Bulk update                     | \{ updated: number; memoryIds: string[] \}                     |
+| `deleteMany(filter)`                                 | Bulk delete                     | \{ deleted: number; memoryIds: string[] \}                     |
+| `count(filter)`                                      | Count memories                  | number                                                         |
+| `list(filter)`                                       | List memories                   | MemoryEntry[]                                                  |
+| `export(options)`                                    | Export vector memories          | \{ format: string; data: string; count: number; exportedAt: number \} |
+| `archive(memorySpaceId, memoryId)`                   | Soft delete (single memory)     | \{ archived: boolean; memoryId: string; restorable: boolean \} |
+| `restoreFromArchive(memorySpaceId, memoryId)`        | Restore from archive            | \{ restored: boolean; memoryId: string; memory: MemoryEntry \} |
+| `getVersion(memorySpaceId, memoryId, version)`       | Get specific version            | MemoryVersion \| null                                          |
+| `getHistory(memorySpaceId, memoryId)`                | Get version history             | MemoryVersion[]                                                |
+| `getAtTimestamp(memorySpaceId, memoryId, timestamp)` | Temporal query                  | MemoryVersion \| null                                          |
+
+> **Note:** All methods use the resilience layer (if configured) for automatic retries and circuit breaking.
 
 ### Layer 4: cortex.memory.\* Operations (Convenience API)
 
-| Operation                                  | Purpose                   | Returns          | Does                         |
-| ------------------------------------------ | ------------------------- | ---------------- | ---------------------------- |
-| `remember(params)`                         | Store conversation        | RememberResult   | ACID + Vector                |
-| `get(memorySpaceId, memoryId, options)`    | Get memory + conversation | EnrichedMemory   | Vector + optional ACID       |
-| `search(memorySpaceId, query, options)`    | Search + enrich           | EnrichedMemory[] | Vector + optional ACID       |
-| `store(memorySpaceId, input)`              | Smart store               | MemoryEntry      | Detects layer automatically  |
-| `update(memorySpaceId, memoryId, updates)` | Update memory             | MemoryEntry      | Vector (creates version)     |
-| `delete(memorySpaceId, memoryId, options)` | Delete memory             | DeletionResult   | Vector only (preserves ACID) |
-| `forget(memorySpaceId, memoryId, options)` | Delete both layers        | DeletionResult   | Vector + optionally ACID     |
-| _All vector operations_                    | Same as Layer 2           | Same             | Convenience wrappers         |
+| Operation                                  | Purpose                   | Returns              | Does                         |
+| ------------------------------------------ | ------------------------- | -------------------- | ---------------------------- |
+| `remember(params)`                         | Store conversation        | RememberResult       | ACID + Vector                |
+| `get(memorySpaceId, memoryId, options)`    | Get memory + conversation | EnrichedMemory       | Vector + optional ACID       |
+| `search(memorySpaceId, query, options)`    | Search + enrich           | EnrichedMemory[]     | Vector + optional ACID       |
+| `store(memorySpaceId, input)`              | Smart store               | StoreMemoryResult    | Detects layer automatically  |
+| `update(memorySpaceId, memoryId, updates)` | Update memory             | UpdateMemoryResult   | Vector (creates version)     |
+| `delete(memorySpaceId, memoryId, options)` | Delete memory             | DeleteMemoryResult   | Vector only (preserves ACID) |
+| `forget(memorySpaceId, memoryId, options)` | Delete both layers        | ForgetResult         | Vector + optionally ACID     |
+| `list(filter)`                             | List memories             | MemoryEntry[]        | Filter-based listing         |
+| _All vector operations_                    | Same as Layer 2           | Same                 | Convenience wrappers         |
 
 **Key Differences:**
 
@@ -1809,15 +1843,14 @@ Store a new memory for an agent. Use this for non-conversation memories (system,
 ```typescript
 cortex.memory.store(
   memorySpaceId: string,
-  entry: MemoryInput,
-  options?: { syncToGraph?: boolean }
+  input: StoreMemoryInput
 ): Promise<StoreMemoryResult>
 ```
 
 **Parameters:**
 
 ```typescript
-interface MemoryInput {
+interface StoreMemoryInput {
   // Content (required)
   content: string; // The information to remember
   contentType: "raw" | "summarized"; // Type of content
@@ -1872,28 +1905,47 @@ interface MemoryInput {
 **Returns:**
 
 ```typescript
+interface StoreMemoryResult {
+  memory: MemoryEntry;            // The stored memory entry
+  facts: FactRecord[];            // Extracted facts (if fact extraction is configured)
+}
+
 interface MemoryEntry {
-  id: string; // Auto-generated ID
+  _id: string;                    // Convex internal ID
+  memoryId: string;               // Cortex memory ID (use this for API calls)
   memorySpaceId: string;
-  userId?: string;
+  tenantId?: string;              // Multi-tenancy: SaaS platform isolation
+  participantId?: string;         // Hive Mode: who stored this memory
+  userId?: string;                // For user-owned memories
+  agentId?: string;               // For agent-owned memories
   content: string;
-  contentType: "raw" | "summarized";
+  contentType: "raw" | "summarized" | "fact";
   embedding?: number[];
-  source: MemorySource;
+  sourceType: "conversation" | "system" | "tool" | "a2a" | "fact-extraction";
+  sourceUserId?: string;          // User who triggered the source event
+  sourceUserName?: string;        // Display name of source user
+  sourceTimestamp: number;        // When the source event occurred (Unix ms)
+  messageRole?: "user" | "agent" | "system";  // For semantic search weighting
   conversationRef?: ConversationRef;
-  metadata: MemoryMetadata;
-  version: number; // Always 1 for new
-  previousVersions: []; // Empty for new
-  createdAt: Date;
-  updatedAt: Date;
-  lastAccessed?: Date;
-  accessCount: number; // Always 0 for new
+  immutableRef?: ImmutableRef;    // Link to Layer 1b immutable store
+  mutableRef?: MutableRef;        // Link to Layer 1c mutable store
+  factsRef?: FactsRef;            // Link to Layer 3 fact
+  importance: number;             // 0-100 (direct field, not nested)
+  tags: string[];                 // (direct field, not nested)
+  version: number;                // Always 1 for new
+  previousVersions: MemoryVersion[]; // Empty for new
+  createdAt: number;              // Unix timestamp in milliseconds
+  updatedAt: number;              // Unix timestamp in milliseconds
+  lastAccessed?: number;          // Unix timestamp in milliseconds
+  accessCount: number;            // Always 0 for new
 
   // Enrichment fields (v0.15.0+) - for bullet-proof retrieval
-  enrichedContent?: string; // Concatenated searchable content for embedding
-  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
+  enrichedContent?: string;       // Concatenated searchable content for embedding
+  factCategory?: string;          // Category for filtering (e.g., "addressing_preference")
 }
 ```
+
+> **Note:** All timestamps (`createdAt`, `updatedAt`, `lastAccessed`, `sourceTimestamp`) are Unix timestamps in **milliseconds** (not JavaScript `Date` objects).
 
 **Example 1: Conversation Memory (conversationRef required)**
 
@@ -1906,21 +1958,20 @@ const msg = await cortex.conversations.addMessage("conv-456", {
 });
 
 // THEN: Store in Vector (with conversationRef linking to ACID)
-const memory = await cortex.memory.store("user-123-personal", {
+const memory = await cortex.vector.store("user-123-personal", {
   content: "The password is Blue",
   contentType: "raw",
   embedding: await embed("The password is Blue"),
   userId: "user-123",
   source: {
-    type: "conversation", // ← Conversation type
+    type: "conversation",     // ← Conversation type
     userId: "user-123",
     userName: "Alex Johnson",
-    timestamp: new Date(),
+    // timestamp is optional - auto-set by backend
   },
-  conversationRef: {
-    // ← REQUIRED for conversations
+  conversationRef: {          // ← REQUIRED for conversations
     conversationId: "conv-456",
-    messageIds: [msg.id], // From ACID message
+    messageIds: [msg.id],     // From ACID message
   },
   metadata: {
     importance: 100,
@@ -1928,15 +1979,20 @@ const memory = await cortex.memory.store("user-123-personal", {
   },
 });
 
-console.log(memory.id); // "mem_abc123xyz"
+// Return uses memoryId (not id) and flattened fields
+console.log(memory.memoryId);                       // "mem-1735689600000-abc123xyz"
 console.log(memory.conversationRef.conversationId); // "conv-456"
+console.log(memory.importance);                     // 100 (flattened from input)
+console.log(memory.tags);                           // ["password", "security"]
 ```
+
+> **Note:** When storing, you provide `metadata.importance` and `metadata.tags` in the input. The returned `MemoryEntry` has these as top-level fields: `importance` and `tags`.
 
 **Example 2: System Memory (no conversationRef)**
 
 ```typescript
 // No ACID storage needed - this isn't from a conversation
-const memory = await cortex.memory.store("user-123-personal", {
+const result = await cortex.memory.store("user-123-personal", {
   content: "Agent started successfully at 10:00 AM",
   contentType: "raw",
   source: {
@@ -1949,6 +2005,11 @@ const memory = await cortex.memory.store("user-123-personal", {
     tags: ["system", "status"],
   },
 });
+
+// Access the stored memory and any extracted facts
+console.log(result.memory.memoryId);  // "mem-1735689600000-xyz789"
+console.log(result.memory.content);   // "Agent started successfully at 10:00 AM"
+console.log(result.facts);            // [] (no facts extracted for system memories)
 ```
 
 **Example 3: Use remember() - recommended for conversations**
@@ -1994,8 +2055,8 @@ cortex.memory.update(
   memorySpaceId: string,
   memoryId: string,
   updates: MemoryUpdate,
-  options?: { syncToGraph?: boolean }
-): Promise<MemoryEntry>
+  options?: UpdateMemoryOptions
+): Promise<UpdateMemoryResult>
 ```
 
 **Parameters:**
@@ -2003,16 +2064,26 @@ cortex.memory.update(
 ```typescript
 interface MemoryUpdate {
   content?: string;
-  contentType?: "raw" | "summarized";
   embedding?: number[];
-  conversationRef?: ConversationRef; // Update ACID link
-  metadata?: Partial<MemoryMetadata>; // Merges with existing
+  importance?: number;    // Direct field (0-100)
+  tags?: string[];        // Direct field (replaces existing tags)
+}
+
+interface UpdateMemoryOptions {
+  syncToGraph?: boolean;  // Sync to graph database (default: true if configured)
 }
 ```
 
+> **Note:** Unlike the nested `metadata` structure shown in `store()` input, updates use **flattened** fields for `importance` and `tags`.
+
 **Returns:**
 
-- `MemoryEntry` - Updated memory with incremented version
+```typescript
+interface UpdateMemoryResult {
+  memory: MemoryEntry;              // Updated memory with incremented version
+  factsReextracted?: FactRecord[];  // Facts re-extracted from updated content (if configured)
+}
+```
 
 **Side Effects:**
 
@@ -2024,22 +2095,30 @@ interface MemoryUpdate {
 
 ```typescript
 // Update password memory (creates version 2)
-const updated = await cortex.memory.update("user-123-personal", "mem_abc123", {
-  content: "The password is Green now",
-  embedding: await embed("The password is Green now"),
-  conversationRef: {
-    conversationId: "conv-456",
-    messageIds: ["msg-999"], // New message that updated this
-  },
-  metadata: {
-    importance: 100, // Can update importance
-  },
-});
+const result = await cortex.memory.update(
+  "user-123-personal",
+  "mem-1735689600000-abc123",
+  {
+    content: "The password is Green now",
+    embedding: await embed("The password is Green now"),
+    importance: 100,                    // Direct field (not nested in metadata)
+    tags: ["password", "security", "updated"],  // Replaces existing tags
+  }
+);
 
-console.log(updated.version); // 2
-console.log(updated.content); // "The password is Green now"
-console.log(updated.previousVersions[0].content); // "The password is Blue"
+// Access the updated memory
+console.log(result.memory.version); // 2
+console.log(result.memory.content); // "The password is Green now"
+console.log(result.memory.importance); // 100
+console.log(result.memory.previousVersions[0].content); // "The password is Blue"
+
+// Check if facts were re-extracted
+if (result.factsReextracted?.length) {
+  console.log("Re-extracted facts:", result.factsReextracted);
+}
 ```
+
+> **Note:** The `update()` method does NOT support updating `conversationRef`. To link to a new ACID conversation, use `store()` to create a new memory.
 
 **Errors:**
 
@@ -2137,8 +2216,8 @@ await cortex.memory.updateMany(
 cortex.memory.delete(
   memorySpaceId: string,
   memoryId: string,
-  options?: { syncToGraph?: boolean }
-): Promise<DeletionResult>
+  options?: DeleteMemoryOptions
+): Promise<DeleteMemoryResult>
 ```
 
 **Parameters:**
@@ -2146,36 +2225,42 @@ cortex.memory.delete(
 - `memorySpaceId` (string) - Memory space that contains the memory
 - `memoryId` (string) - Memory to delete
 
+```typescript
+interface DeleteMemoryOptions {
+  syncToGraph?: boolean;  // Sync deletion to graph database (default: true if configured)
+}
+```
+
 **Returns:**
 
 ```typescript
-interface DeletionResult {
-  deleted: number; // Always 1 if successful
-  memoryId: string;
-  deletedFrom: "vector" | "both"; // What was deleted
-  restorable: boolean; // True if ACID preserved
+interface DeleteMemoryResult {
+  deleted: boolean;       // True if successfully deleted
+  memoryId: string;       // ID of deleted memory
+  factsDeleted: number;   // Number of associated facts cascade deleted
+  factIds: string[];      // IDs of deleted facts
 }
 ```
 
 **Side Effects:**
 
 - Deletes memory from **Vector layer only**
+- Cascade deletes associated **facts** from Layer 3
 - **Preserves** ACID conversation (if conversationRef exists)
-- Restorable from ACID if needed
+- Use `forget()` if you need to delete from both layers
 
 **Example:**
 
 ```typescript
 const result = await cortex.memory.delete("user-123-personal", "mem_abc123");
 
-console.log(`Deleted from: ${result.deletedFrom}`); // 'vector'
-console.log(`Restorable: ${result.restorable}`); // true (if had conversationRef)
+console.log(`Deleted: ${result.deleted}`); // true
+console.log(`Memory ID: ${result.memoryId}`); // 'mem_abc123'
+console.log(`Facts deleted: ${result.factsDeleted}`); // e.g., 3
+console.log(`Fact IDs: ${result.factIds}`); // e.g., ['fact-1', 'fact-2', 'fact-3']
 
-// ACID conversation still accessible
-if (result.restorable) {
-  // Can retrieve original message from ACID
-  const conversation = await cortex.conversations.get(conversationId);
-}
+// ACID conversation still accessible if needed
+// Use cortex.conversations.get(conversationId) to retrieve original
 ```
 
 **Comparison:**
@@ -2286,25 +2371,28 @@ cortex.memory.deleteMany(
 **Parameters:**
 
 ```typescript
-interface DeleteOptions {
-  dryRun?: boolean; // Preview without deleting
-  requireConfirmation?: boolean; // Prompt if > threshold
-  confirmationThreshold?: number; // Default: 10
+interface DeleteManyFilter {
+  memorySpaceId: string;
+  userId?: string;                                           // Filter by user
+  sourceType?: "conversation" | "system" | "tool" | "a2a";   // Filter by source
 }
 ```
+
+> **Planned Features (Not Yet Implemented):**
+> - `dryRun` - Preview what would be deleted without actually deleting
+> - `requireConfirmation` - Prompt when deletion count exceeds threshold
+> - `confirmationThreshold` - Threshold for auto-confirmation (default: 10)
 
 **Returns:**
 
 ```typescript
-interface DeletionResult {
-  deleted: number; // Count deleted
-  memoryIds: string[]; // IDs deleted
-  restorable: boolean; // False
-  affectedUsers?: string[]; // User IDs affected
-  wouldDelete?: number; // For dryRun
-  memories?: MemoryEntry[]; // For dryRun preview
+interface DeleteManyResult {
+  deleted: number;       // Count of deleted memories
+  memoryIds: string[];   // IDs of deleted memories
 }
 ```
+
+> **Note:** The Layer 4 `memory.deleteMany()` API includes additional return fields (`restorable`, `affectedUsers`, `wouldDelete`, `memories`) that are not present in the Layer 2 `vector.deleteMany()` API.
 
 **Example:**
 
@@ -2354,16 +2442,24 @@ Count memories matching filters without retrieving them.
 **Signature:**
 
 ```typescript
-cortex.memory.count(
-  memorySpaceId: string,
-  filters?: UniversalFilters
+cortex.vector.count(
+  filter: CountMemoriesFilter
 ): Promise<number>
 ```
 
 **Parameters:**
 
-- `memorySpaceId` (string) - Memory space to count memories for
-- `filters` (UniversalFilters, optional) - Same filters as search()
+```typescript
+interface CountMemoriesFilter {
+  memorySpaceId: string;                                     // Required
+  userId?: string;                                           // Filter by user
+  sourceType?: "conversation" | "system" | "tool" | "a2a";   // Filter by source
+}
+```
+
+> **Planned Features (Not Yet Functional):**
+> - `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
+> - `participantId` - Hive Mode filter (defined in type but not passed to backend)
 
 **Returns:**
 
@@ -2407,60 +2503,75 @@ console.log(`Found ${oldUnused} old, unused, low-importance memories`);
 
 ### list()
 
-List memories with pagination and filtering.
+List memories with filtering.
 
 **Signature:**
 
 ```typescript
 cortex.memory.list(
-  memorySpaceId: string,
-  options?: ListOptions
-): Promise<ListResult>
+  filter: ListMemoriesFilter
+): Promise<MemoryEntry[] | EnrichedMemory[]>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ListOptions extends UniversalFilters {
-  limit?: number; // Default: 50
-  offset?: number; // Default: 0
-  sortBy?: "createdAt" | "updatedAt" | "accessCount" | "importance";
-  sortOrder?: "asc" | "desc"; // Default: 'desc'
+interface ListMemoriesFilter {
+  memorySpaceId: string;                                     // Required
+  userId?: string;                                           // Filter by user
+  sourceType?: "conversation" | "system" | "tool" | "a2a";   // Filter by source
+  limit?: number;                                            // Default: 100
+  enrichFacts?: boolean;                                     // Include related facts (returns EnrichedMemory[])
 }
 ```
+
+> **Planned Features (Not Yet Functional):**
+> - `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
+> - `participantId` - Hive Mode filter (defined in type but not passed to backend)
 
 **Returns:**
 
 ```typescript
-interface ListResult {
-  memories: MemoryEntry[];
-  total: number; // Total count (for pagination)
-  limit: number;
-  offset: number;
-  hasMore: boolean; // More results available
-}
+MemoryEntry[] | EnrichedMemory[]  // Array of memory entries
 ```
+
+> **Note:** Returns `EnrichedMemory[]` when `enrichFacts: true` is specified, otherwise returns `MemoryEntry[]`.
 
 **Example:**
 
 ```typescript
-// Paginated listing
-const page1 = await cortex.memory.list("user-123-personal", {
+// Basic listing
+const memories = await cortex.memory.list({
+  memorySpaceId: "user-123-personal",
   limit: 50,
-  offset: 0,
-  sortBy: "createdAt",
-  sortOrder: "desc",
 });
 
-console.log(`Showing ${page1.memories.length} of ${page1.total} memories`);
-console.log(`Has more: ${page1.hasMore}`);
+console.log(`Retrieved ${memories.length} memories`);
 
-// Filtered listing
-const userMemories = await cortex.memory.list("user-123-personal", {
+// Filtered listing by user
+const userMemories = await cortex.memory.list({
+  memorySpaceId: "user-123-personal",
   userId: "user-123",
-  importance: { $gte: 50 },
-  tags: ["important"],
   limit: 100,
+});
+
+// Filtered listing by source type
+const conversationMemories = await cortex.memory.list({
+  memorySpaceId: "user-123-personal",
+  sourceType: "conversation",
+  limit: 50,
+});
+
+// With enriched facts
+const enrichedMemories = await cortex.memory.list({
+  memorySpaceId: "user-123-personal",
+  enrichFacts: true,
+  limit: 25,
+});
+
+enrichedMemories.forEach((m) => {
+  console.log(`Memory: ${m.memory.content}`);
+  console.log(`Facts: ${m.facts?.length ?? 0}`);
 });
 ```
 
@@ -2491,18 +2602,29 @@ cortex.memory.export(
 **Parameters:**
 
 ```typescript
-interface ExportOptions extends UniversalFilters {
+interface ExportOptions {
+  memorySpaceId: string;
+  userId?: string;                     // Filter by user
   format: "json" | "csv";
-  outputPath?: string; // File path (returns string if provided)
-  includeVersionHistory?: boolean; // Include previousVersions
-  includeConversationContext?: boolean; // Fetch ACID conversations
+  includeEmbeddings?: boolean;         // Include embedding vectors in export
 }
 ```
 
+> **Planned Features (Not Yet Implemented):**
+> - `outputPath` - Write directly to file path
+> - `includeVersionHistory` - Include previousVersions array
+> - `includeConversationContext` - Fetch and include ACID conversations
+
 **Returns:**
 
-- `string` - File path if `outputPath` provided
-- `ExportData` - Structured data if no `outputPath`
+```typescript
+interface ExportResult {
+  format: string;      // "json" or "csv"
+  data: string;        // The exported data as string
+  count: number;       // Number of memories exported
+  exportedAt: number;  // Unix timestamp in milliseconds
+}
+```
 
 **Example:**
 
@@ -2557,14 +2679,21 @@ cortex.memory.archive(
 **Returns:**
 
 ```typescript
-interface ArchiveResult {
-  archived: boolean; // True if successfully archived
-  memoryId: string; // ID of archived memory
-  restorable: boolean; // True (can be restored)
-  factsArchived: number; // Number of associated facts archived
-  factIds: string[]; // IDs of archived facts
+// Layer 2 (vector.archive) return type:
+interface VectorArchiveResult {
+  archived: boolean;     // True if successfully archived
+  memoryId: string;      // ID of archived memory
+  restorable: boolean;   // True (can be restored)
+}
+
+// Layer 4 (memory.archive) return type includes additional fields:
+interface MemoryArchiveResult extends VectorArchiveResult {
+  factsArchived: number; // Number of associated facts archived (Layer 4 only)
+  factIds: string[];     // IDs of archived facts (Layer 4 only)
 }
 ```
+
+> **Note:** The `factsArchived` and `factIds` fields are only returned by the Layer 4 `memory.archive()` API, not the Layer 2 `vector.archive()` API.
 
 **Example:**
 
@@ -2766,10 +2895,10 @@ Get memory state at a specific point in time (temporal query).
 **Signature:**
 
 ```typescript
-cortex.memory.getAtTimestamp(
+cortex.vector.getAtTimestamp(
   memorySpaceId: string,
   memoryId: string,
-  timestamp: Date
+  timestamp: number | Date
 ): Promise<MemoryVersion | null>
 ```
 
@@ -2777,7 +2906,7 @@ cortex.memory.getAtTimestamp(
 
 - `memorySpaceId` (string) - Memory space that contains the memory
 - `memoryId` (string) - Memory ID
-- `timestamp` (Date) - Point in time to query
+- `timestamp` (number | Date) - Point in time to query (Unix ms or Date object)
 
 **Returns:**
 
@@ -2972,15 +3101,53 @@ All memory operation errors:
 | Error Code                    | Description                  | Cause                                  |
 | ----------------------------- | ---------------------------- | -------------------------------------- |
 | `INVALID_MEMORYSPACE_ID`      | Memory space ID is invalid   | Empty or malformed memorySpaceId       |
+| `INVALID_MEMORY_SPACE_ID`     | Memory space ID is invalid   | Empty or malformed memorySpaceId       |
+| `INVALID_MEMORY_ID`           | Memory ID is invalid         | Empty or malformed memoryId            |
 | `INVALID_CONTENT`             | Content is invalid           | Empty content or > 100KB               |
+| `INVALID_CONTENT_TYPE`        | Content type is invalid      | Not "raw", "summarized", or "fact"     |
+| `INVALID_SOURCE_TYPE`         | Source type is invalid       | Not valid source type                  |
 | `INVALID_IMPORTANCE`          | Importance out of range      | Not in 0-100                           |
+| `INVALID_IMPORTANCE_RANGE`    | Importance out of range      | Not in 0-100                           |
+| `INVALID_MIN_SCORE_RANGE`     | Min score out of range       | Not in 0-1                             |
+| `INVALID_LIMIT`               | Limit is invalid             | Not a positive integer                 |
+| `INVALID_VERSION`             | Version is invalid           | Not a positive integer >= 1            |
+| `INVALID_TIMESTAMP`           | Timestamp is invalid         | Not a valid number or Date             |
+| `INVALID_TAGS`                | Tags are invalid             | Not an array of strings                |
+| `INVALID_EMBEDDING`           | Embedding is invalid         | Not an array of numbers                |
+| `INVALID_EXPORT_FORMAT`       | Export format is invalid     | Not "json" or "csv"                    |
+| `INVALID_QUERY_CATEGORY`      | Query category is invalid    | Not a string                           |
+| `MISSING_REQUIRED_FIELD`      | Required field missing       | Required field not provided            |
 | `INVALID_EMBEDDING_DIMENSION` | Embedding dimension mismatch | Wrong vector size                      |
 | `MEMORY_NOT_FOUND`            | Memory doesn't exist         | Invalid memoryId                       |
+| `MEMORY_NOT_ARCHIVED`         | Memory is not archived       | Cannot restore non-archived memory     |
 | `VERSION_NOT_FOUND`           | Version doesn't exist        | Cleaned up by retention                |
 | `PERMISSION_DENIED`           | Access denied                | Agent doesn't own memory               |
 | `INVALID_FILTERS`             | Filters malformed            | Bad filter syntax                      |
 | `CONVEX_ERROR`                | Database error               | Convex operation failed                |
 | `CLOUD_MODE_REQUIRED`         | Feature requires Cloud       | autoEmbed/autoSummarize in Direct mode |
+
+### VectorValidationError
+
+The Vector API exports a custom error class for validation failures:
+
+```typescript
+import { VectorValidationError } from "@cortex-ai/sdk/vector";
+
+try {
+  await cortex.vector.store(memorySpaceId, input);
+} catch (error) {
+  if (error instanceof VectorValidationError) {
+    console.log(`Validation failed: ${error.message}`);
+    console.log(`Error code: ${error.code}`);     // e.g., "INVALID_IMPORTANCE_RANGE"
+    console.log(`Field: ${error.field}`);         // e.g., "metadata.importance"
+  }
+}
+```
+
+**VectorValidationError Properties:**
+- `message` (string) - Human-readable error message
+- `code` (string) - Machine-readable error code
+- `field` (string, optional) - Name of the field that caused the error
 
 **See Also:**
 

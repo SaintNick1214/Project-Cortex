@@ -1,6 +1,6 @@
 # Facts Operations API
 
-> **Last Updated**: 2025-12-27
+> **Last Updated**: 2026-01-01
 > **Version**: v0.7.0+ (Belief Revision: v0.24.0+)
 
 Complete API reference for the Facts layer (Layer 3) - structured knowledge extraction and storage.
@@ -336,6 +336,74 @@ if (cortex.facts.hasBeliefRevision()) {
 #     print("Belief revision is available")
 ```
 
+### `facts.configureBeliefRevision()`
+
+> **New in v0.24.0**: Configure or reconfigure the belief revision service at runtime.
+
+Use this method to change the LLM client or belief revision configuration after the Cortex instance has been created.
+
+**Signature:**
+
+```typescript
+cortex.facts.configureBeliefRevision(
+  llmClient?: BeliefRevisionLLMClient,
+  config?: BeliefRevisionConfig
+): void
+```
+
+**Parameters:**
+
+```typescript
+interface BeliefRevisionLLMClient {
+  // LLM client that can generate completions for conflict resolution
+  generateText: (prompt: string) => Promise<string>;
+}
+
+interface BeliefRevisionConfig {
+  // Enable slot-based matching for fast conflict detection (default: true)
+  slotMatching?: {
+    enabled?: boolean;
+    predicateClasses?: Record<string, string[]>; // Custom predicate classifications
+  };
+  // Similarity threshold for semantic matching (default: 0.85)
+  semanticThreshold?: number;
+  // Enable LLM-based conflict resolution (default: true)
+  llmResolution?: boolean;
+}
+```
+
+**Example:**
+
+```typescript
+// Reconfigure with a different LLM client
+cortex.facts.configureBeliefRevision(newLLMClient);
+
+// Update configuration only
+cortex.facts.configureBeliefRevision(undefined, {
+  semanticThreshold: 0.9,
+  slotMatching: {
+    enabled: true,
+    predicateClasses: {
+      // Add custom predicate classes for your domain
+      programming_language: ["codes in", "writes in", "develops with"],
+    },
+  },
+});
+
+// Reconfigure both client and config
+cortex.facts.configureBeliefRevision(openaiClient, {
+  llmResolution: true,
+  semanticThreshold: 0.85,
+});
+```
+
+**Use cases:**
+
+- Switching LLM providers at runtime
+- Adjusting conflict detection sensitivity
+- Adding domain-specific predicate classifications
+- Enabling/disabling LLM resolution for cost control
+
 ### `facts.hasBeliefRevision()`
 
 > **New in v0.24.0**: Check if belief revision is configured and available.
@@ -600,6 +668,100 @@ history.forEach((event) => {
   }
 });
 ```
+
+### `facts.getChanges()`
+
+> **New in v0.24.0**: Get change events for a memory space with filtering.
+
+Query the change history across a memory space, with optional filtering by action type, user, participant, time range, or specific fact.
+
+**Signature:**
+
+```typescript
+cortex.facts.getChanges(filter: ChangeFilter): Promise<FactChangeEvent[]>
+```
+
+**Parameters:**
+
+```typescript
+interface ChangeFilter {
+  // Required
+  memorySpaceId: string;
+
+  // Optional filters
+  action?: "CREATE" | "UPDATE" | "SUPERSEDE" | "DELETE"; // Filter by action type
+  factId?: string; // Filter by specific fact
+  userId?: string; // Filter by user
+  participantId?: string; // Filter by participant (Hive Mode)
+  after?: Date; // Events after this time
+  before?: Date; // Events before this time
+  limit?: number; // Max results (default: 100)
+}
+```
+
+**Return Type:**
+
+```typescript
+interface FactChangeEvent {
+  eventId: string;
+  factId: string;
+  memorySpaceId: string;
+  action: "CREATE" | "UPDATE" | "SUPERSEDE" | "DELETE";
+  oldValue?: string;
+  newValue?: string;
+  supersededBy?: string;
+  supersedes?: string;
+  reason?: string;
+  confidence?: number;
+  pipeline?: {
+    slotMatching?: boolean;
+    semanticMatching?: boolean;
+    llmResolution?: boolean;
+  };
+  userId?: string;
+  participantId?: string;
+  conversationId?: string;
+  timestamp: number;
+}
+```
+
+**Example:**
+
+```typescript
+// Get all supersession events in last 24 hours
+const changes = await cortex.facts.getChanges({
+  memorySpaceId: "agent-1",
+  action: "SUPERSEDE",
+  after: new Date(Date.now() - 24 * 60 * 60 * 1000),
+});
+
+changes.forEach((event) => {
+  console.log(`${event.factId} superseded at ${new Date(event.timestamp)}`);
+  console.log(`  Reason: ${event.reason}`);
+  console.log(`  Superseded by: ${event.supersededBy}`);
+});
+
+// Get all changes for a specific user (audit log)
+const userChanges = await cortex.facts.getChanges({
+  memorySpaceId: "agent-1",
+  userId: "user-123",
+  limit: 50,
+});
+
+// Get changes in a date range
+const rangeChanges = await cortex.facts.getChanges({
+  memorySpaceId: "agent-1",
+  after: new Date("2025-01-01"),
+  before: new Date("2025-01-31"),
+});
+```
+
+**Use cases:**
+
+- Audit logging for compliance
+- Debugging belief revision behavior
+- Monitoring fact changes per user or participant
+- Building change notification systems
 
 ### `facts.getSupersessionChain()`
 
@@ -1094,7 +1256,7 @@ interface CountFactsFilter {
   predicate?: string;
   object?: string;
   minConfidence?: number;
-  confidence?: number | { $gte?: number; $lte?: number; $eq?: number };
+  confidence?: number; // Exact match
 
   // Universal filters (Cortex standard)
   userId?: string;
@@ -1203,9 +1365,7 @@ interface UniversalFactFilters {
   includeSuperseded?: boolean; // Include old versions
 
   // Temporal validity
-  validAt?: Date; // Facts valid at specific time
-  validFrom?: Date;
-  validUntil?: Date;
+  validAt?: Date; // Facts valid at specific time (only filter supported)
 
   // Metadata filters
   metadata?: Record<string, any>; // Custom metadata
@@ -1314,9 +1474,9 @@ const exactFacts = await cortex.facts.list({
   memorySpaceId: "agent-1",
   confidence: 90, // Exactly 90
 });
-
-// Note: maxConfidence (upper bound) will be added in v0.9.2
 ```
+
+> **Planned Feature:** Range queries for confidence (`maxConfidence`, `$gte`, `$lte` syntax) are planned for a future release. Currently only `minConfidence` (lower bound) and `confidence` (exact match) are supported.
 
 ### Operations Supporting Universal Filters
 
@@ -1374,7 +1534,7 @@ interface QueryBySubjectFilter {
   predicate?: string;
   object?: string;
   minConfidence?: number;
-  confidence?: number | RangeQuery;
+  confidence?: number; // Exact match
 
   // Universal filters (all supported)
   userId?: string;
@@ -1455,7 +1615,7 @@ interface QueryByRelationshipFilter {
   object?: string; // Target entity (optional)
   factType?: FactType;
   minConfidence?: number;
-  confidence?: number | RangeQuery;
+  confidence?: number; // Exact match
 
   // Universal filters (all supported)
   userId?: string;

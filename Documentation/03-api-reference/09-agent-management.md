@@ -1,6 +1,6 @@
 # Agent Management API
 
-> **Last Updated**: 2025-12-27
+> **Last Updated**: 2026-01-01
 
 > ⚠️ **IMPORTANT:** The Agent Management API is being superseded by [Memory Space Operations](./13-memory-space-operations.md). While agent-based terminology remains supported for backwards compatibility, new applications should use memory spaces.
 >
@@ -99,9 +99,9 @@ await cortex.agents.register({
   },
 });
 
-// Now get enhanced analytics
-const stats = await cortex.analytics.getAgentStats("my-agent");
-// Includes: name, team, capabilities, etc.
+// Now get agent with enhanced stats
+const agent = await cortex.agents.get("my-agent");
+console.log(agent?.stats?.totalMemories);  // Stats included in response
 
 // Agent discovery
 const supportAgents = await cortex.agents.search({
@@ -136,19 +136,20 @@ cortex.agents.register(
 
 ```typescript
 interface AgentRegistration {
-  id: string; // Agent ID (must match ID used in memory ops)
-  name: string; // Display name
-  description?: string; // What this agent does
+  id: string;                         // Agent ID (must match ID used in memory ops)
+  tenantId?: string;                  // Multi-tenancy: SaaS platform isolation
+  name: string;                       // Display name
+  description?: string;               // What this agent does
   metadata?: {
     team?: string;
     capabilities?: string[];
     version?: string;
     owner?: string;
-    [key: string]: any; // Custom fields
+    [key: string]: unknown;           // Custom fields
   };
   config?: {
-    memoryVersionRetention?: number; // Version retention override
-    [key: string]: any; // Custom config
+    memoryVersionRetention?: number;  // Version retention override
+    [key: string]: unknown;           // Custom config
   };
 }
 ```
@@ -158,17 +159,24 @@ interface AgentRegistration {
 ```typescript
 interface RegisteredAgent {
   id: string;
+  tenantId?: string;                              // Multi-tenancy isolation
   name: string;
   description?: string;
-  metadata: any;
-  config: any;
-  registeredAt: Date;
-  updatedAt: Date;
-  stats?: {
-    totalMemories: number;
-    totalConversations: number;
-    lastActive: Date;
-  };
+  metadata: Record<string, unknown>;
+  config: Record<string, unknown>;
+  status: "active" | "inactive" | "archived";     // Agent status
+  registeredAt: number;                           // Unix timestamp (ms)
+  updatedAt: number;                              // Unix timestamp (ms)
+  lastActive?: number;                            // Unix timestamp (ms)
+  stats?: AgentStats;
+}
+
+interface AgentStats {
+  totalMemories: number;
+  totalConversations: number;
+  totalFacts: number;                             // Facts extracted by this agent
+  memorySpacesActive: number;                     // Memory spaces with agent data
+  lastActive?: number;                            // Unix timestamp (ms)
 }
 ```
 
@@ -197,9 +205,13 @@ console.log(`Total memories: ${agent.stats?.totalMemories}`);
 
 **Errors:**
 
-- `CortexError('AGENT_ALREADY_REGISTERED')` - Agent ID already exists
-- `CortexError('INVALID_AGENT_ID')` - ID is empty or malformed
-- `CortexError('INVALID_METADATA')` - Metadata is invalid
+- `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
+- `AgentValidationError('EMPTY_AGENT_ID')` - Agent ID is empty string
+- `AgentValidationError('AGENT_ID_TOO_LONG')` - Agent ID exceeds 256 characters
+- `AgentValidationError('MISSING_AGENT_NAME')` - Agent name not provided
+- `AgentValidationError('EMPTY_AGENT_NAME')` - Agent name is empty string
+- `AgentValidationError('INVALID_METADATA_FORMAT')` - Metadata is not a plain object
+- `ConvexError('AGENT_ALREADY_REGISTERED')` - Agent ID already exists in registry
 
 **See Also:**
 
@@ -245,7 +257,8 @@ if (agent) {
 
 **Errors:**
 
-- `CortexError('INVALID_AGENT_ID')` - Agent ID is invalid
+- `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
+- `AgentValidationError('EMPTY_AGENT_ID')` - Agent ID is empty string
 
 **Note:** Agents don't need to be registered to function. This just retrieves registry info if it exists.
 
@@ -267,17 +280,18 @@ cortex.agents.search(
 
 ```typescript
 interface AgentFilters {
-  metadata?: Record<string, any>; // Filter by metadata fields
-  name?: string; // Search by name (partial match)
-  capabilities?: string[]; // Has these capabilities
-  capabilitiesMatch?: "any" | "all"; // Match mode (default: "any")
+  tenantId?: string;                              // Multi-tenancy filter
+  metadata?: Record<string, unknown>;             // Filter by metadata fields (exact match)
+  name?: string;                                  // Search by name (partial match)
+  capabilities?: string[];                        // Has these capabilities
+  capabilitiesMatch?: "any" | "all";              // Match mode (default: "any")
   status?: "active" | "inactive" | "archived";
-  registeredAfter?: number; // Timestamp filter
-  registeredBefore?: number; // Timestamp filter
-  lastActiveAfter?: number; // Activity filter
-  lastActiveBefore?: number; // Activity filter
-  limit?: number;
-  offset?: number;
+  registeredAfter?: number;                       // Unix timestamp (ms)
+  registeredBefore?: number;                      // Unix timestamp (ms)
+  lastActiveAfter?: number;                       // Unix timestamp (ms)
+  lastActiveBefore?: number;                      // Unix timestamp (ms)
+  limit?: number;                                 // Max results (1-1000)
+  offset?: number;                                // Skip first N results
   sortBy?: "name" | "registeredAt" | "lastActive";
   sortOrder?: "asc" | "desc";
 }
@@ -300,9 +314,9 @@ const troubleshooters = await cortex.agents.search({
   capabilities: ["troubleshooting"],
 });
 
-// Find recently registered agents
+// Find recently registered agents (last 30 days)
 const newAgents = await cortex.agents.search({
-  registeredAfter: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+  registeredAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,  // Unix timestamp (ms)
   sortBy: "registeredAt",
   sortOrder: "desc",
 });
@@ -315,7 +329,10 @@ const found = await cortex.agents.search({
 
 **Errors:**
 
-- `CortexError('INVALID_FILTERS')` - Filters are malformed
+- `AgentValidationError('INVALID_LIMIT_VALUE')` - Invalid limit value
+- `AgentValidationError('INVALID_OFFSET_VALUE')` - Invalid offset value
+- `AgentValidationError('INVALID_STATUS')` - Invalid status value
+- `AgentValidationError('INVALID_TIMESTAMP_RANGE')` - registeredAfter >= registeredBefore
 
 **Note:** Only returns **registered** agents. Unregistered agents (simple ID mode) won't appear.
 
@@ -337,21 +354,37 @@ cortex.agents.list(
 
 ```typescript
 interface AgentFilters {
-  metadata?: Record<string, any>; // Filter by metadata fields
-  name?: string; // Search by name (partial match)
-  capabilities?: string[]; // Has these capabilities
-  capabilitiesMatch?: "any" | "all"; // Match mode (default: "any")
-  status?: "active" | "inactive" | "archived";
-  registeredAfter?: number; // Timestamp filter
-  registeredBefore?: number; // Timestamp filter
-  lastActiveAfter?: number; // Activity filter
-  lastActiveBefore?: number; // Activity filter
-  limit?: number; // Default: 100
-  offset?: number; // Default: 0
+  tenantId?: string;                              // Multi-tenancy filter (backend-applied)
+  metadata?: Record<string, unknown>;             // Filter by metadata (client-side)
+  name?: string;                                  // Search by name (client-side, partial match)
+  capabilities?: string[];                        // Has these capabilities (client-side)
+  capabilitiesMatch?: "any" | "all";              // Match mode (default: "any")
+  status?: "active" | "inactive" | "archived";    // Status filter (backend-applied)
+  registeredAfter?: number;                       // Unix timestamp (ms)
+  registeredBefore?: number;                      // Unix timestamp (ms)
+  lastActiveAfter?: number;                       // Unix timestamp (ms) (client-side)
+  lastActiveBefore?: number;                      // Unix timestamp (ms) (client-side)
+  limit?: number;                                 // Max results (default: 100, max: 1000)
+  offset?: number;                                // Skip first N results (default: 0)
   sortBy?: "name" | "registeredAt" | "lastActive";
   sortOrder?: "asc" | "desc";
 }
 ```
+
+> ⚠️ **Pagination Limitation:** The `offset` and `limit` parameters are applied at the database level BEFORE the following client-side filters:
+>
+> - `metadata`
+> - `name`
+> - `capabilities`
+> - `lastActiveAfter` / `lastActiveBefore`
+>
+> This means combining `offset` with any of these filters may produce unexpected results. For example, requesting `{ metadata: { team: "alpha" }, offset: 10 }` skips the first 10 agents regardless of team, then filters the remaining results.
+>
+> **Safe pagination patterns:**
+>
+> - Use `offset`/`limit` with `status` filter only (backend-applied)
+> - Use `offset`/`limit` without any client-side filters
+> - For paginating with metadata/name/capabilities, fetch all results and paginate client-side
 
 **Returns:**
 
@@ -360,7 +393,7 @@ interface AgentFilters {
 **Example:**
 
 ```typescript
-// List all registered agents
+// List all registered agents (safe: status is backend-applied)
 const agents = await cortex.agents.list({
   limit: 50,
   status: "active",
@@ -373,12 +406,23 @@ agents.forEach((agent) => {
   console.log(`  Team: ${agent.metadata.team}`);
   console.log(`  Memories: ${agent.stats?.totalMemories}`);
 });
+
+// Safe: client-side filter without offset
+const teamAgents = await cortex.agents.list({
+  metadata: { team: "support" },
+});
+
+// WARNING: offset + metadata may produce unexpected results
+// const paginated = await cortex.agents.list({
+//   metadata: { team: "alpha" },
+//   offset: 10,  // ⚠️ Applied before metadata filter
+// });
 ```
 
 **Errors:**
 
-- `AgentValidationError('INVALID_LIMIT_VALUE')` - Invalid limit value
-- `AgentValidationError('INVALID_OFFSET_VALUE')` - Invalid offset value
+- `AgentValidationError('INVALID_LIMIT_VALUE')` - Invalid limit value (must be 1-1000)
+- `AgentValidationError('INVALID_OFFSET_VALUE')` - Invalid offset value (must be >= 0)
 
 ---
 
@@ -460,7 +504,7 @@ if (!(await cortex.agents.exists("support-agent"))) {
 **Errors:**
 
 - `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
-- `AgentValidationError('EMPTY_AGENT_ID')` - Agent ID is empty
+- `AgentValidationError('EMPTY_AGENT_ID')` - Agent ID is empty string
 
 **Note:** An agent doesn't need to be registered to function. This just checks the registry.
 
@@ -509,8 +553,12 @@ await cortex.agents.update("audit-agent", {
 
 **Errors:**
 
-- `CortexError('AGENT_NOT_REGISTERED')` - Agent not in registry
-- `CortexError('INVALID_UPDATE')` - Update data is invalid
+- `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
+- `AgentValidationError('MISSING_UPDATES')` - No update fields provided
+- `AgentValidationError('EMPTY_AGENT_NAME')` - Name is empty string (if provided)
+- `AgentValidationError('INVALID_METADATA_FORMAT')` - Metadata is not a plain object
+- `AgentValidationError('INVALID_STATUS')` - Invalid status value
+- `ConvexError('AGENT_NOT_REGISTERED')` - Agent not found in registry
 
 ---
 
@@ -562,7 +610,9 @@ await cortex.agents.configure("support-agent", {
 
 **Errors:**
 
-- `CortexError('INVALID_CONFIG')` - Configuration is invalid
+- `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
+- `AgentValidationError('INVALID_CONFIG_FORMAT')` - Config is not a plain object
+- `AgentValidationError('EMPTY_CONFIG_OBJECT')` - Config object is empty
 
 **Note:** Configuration works even if agent isn't registered. It's stored separately.
 
@@ -745,8 +795,13 @@ console.log(
 
 **Errors:**
 
-- `AgentCascadeDeletionError` - Cascade deletion failed (after rollback)
-- `CortexError('AGENT_NOT_REGISTERED')` - Agent not in registry (simple mode only)
+- `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
+- `AgentValidationError('EMPTY_AGENT_ID')` - Agent ID is empty string
+- `AgentValidationError('CONFLICTING_OPTIONS')` - dryRun=true with verify=false
+- `AgentCascadeDeletionError` - Cascade deletion failed (all changes rolled back)
+- `ConvexError('AGENT_NOT_REGISTERED')` - Agent not in registry (when cascade=false)
+
+> **Note on AgentCascadeDeletionError:** This error is thrown when cascade deletion fails partway through. The SDK automatically rolls back all changes made before the failure. The error includes a `cause` property with the original error for debugging.
 
 **Warning:** This doesn't prevent using the agent ID again. It just removes registry entry and optionally deletes data.
 
@@ -832,25 +887,33 @@ active.forEach((agent) => {
 
 ## Agent Statistics
 
-### Get Agent Stats
+Agent statistics are automatically included in the `RegisteredAgent.stats` property when you call `get()`, `register()`, or `update()`.
+
+### Accessing Agent Stats
 
 ```typescript
-// Get statistics for any agent (registered or not)
-const stats = await cortex.analytics.getAgentStats("support-agent");
+// Get agent with stats
+const agent = await cortex.agents.get("support-agent");
 
-console.log({
-  totalMemories: stats.totalMemories,
-  totalConversations: stats.conversationStats.totalConversations,
-  lastActive: stats.lastActivity,
+if (agent) {
+  console.log({
+    totalMemories: agent.stats?.totalMemories,
+    totalConversations: agent.stats?.totalConversations,
+    totalFacts: agent.stats?.totalFacts,
+    memorySpacesActive: agent.stats?.memorySpacesActive,
+    lastActive: agent.stats?.lastActive,  // Unix timestamp (ms)
 
-  // If registered, also includes:
-  name: stats.agentInfo?.name,
-  team: stats.agentInfo?.metadata.team,
-  capabilities: stats.agentInfo?.metadata.capabilities,
-});
+    // Agent metadata (from registration)
+    name: agent.name,
+    team: agent.metadata.team,
+    capabilities: agent.metadata.capabilities,
+  });
+}
 ```
 
-**Note:** Stats work for all agents, but registered agents have richer metadata.
+> 🚧 **PLANNED FEATURE:** A dedicated `cortex.analytics.getAgentStats()` API for retrieving statistics for unregistered agents is planned for a future release. Currently, stats are only computed for registered agents via the agents API.
+
+**Note:** Stats are computed on-demand and included in `RegisteredAgent` responses. For unregistered agents, use memory space queries to gather statistics.
 
 ---
 
@@ -912,9 +975,10 @@ await cortex.agents.register({
   metadata: { team: "experimental" },
 });
 
-// Now analytics include metadata
-const stats = await cortex.analytics.getAgentStats("my-agent");
-console.log(stats.agentInfo.name); // "My Agent"
+// Now agent includes stats and metadata
+const agent = await cortex.agents.get("my-agent");
+console.log(agent?.name); // "My Agent"
+console.log(agent?.stats?.totalMemories); // Stats computed on-demand
 ```
 
 ### 4. Keep Registration Up to Date
@@ -964,9 +1028,9 @@ await cortex.agents.register({
 });
 
 // All existing memories/conversations now associated with registered agent
-const stats = await cortex.analytics.getAgentStats("agent-1");
-console.log(`${stats.totalMemories} memories (created before registration)`);
-console.log(`${stats.conversationStats.totalConversations} conversations`);
+const agent = await cortex.agents.get("agent-1");
+console.log(`${agent?.stats?.totalMemories} memories (created before registration)`);
+console.log(`${agent?.stats?.totalConversations} conversations`);
 ```
 
 **No data migration needed** - registration is just metadata!
@@ -976,14 +1040,14 @@ console.log(`${stats.conversationStats.totalConversations} conversations`);
 ## Universal Filters for Agents
 
 ```typescript
-// Same filter patterns as memory operations
+// Filter patterns for agent operations
 const filters = {
   metadata: {
     team: "support",
-    version: { $gte: "2.0.0" },
+    version: "2.0.0",           // Exact match only (no operators like $gte)
   },
   capabilities: ["troubleshooting"],
-  registeredAfter: new Date("2025-01-01"),
+  registeredAfter: Date.parse("2025-01-01"),  // Unix timestamp (ms)
 };
 
 // Search
@@ -1007,32 +1071,69 @@ await cortex.agents.export({ filters, format: "json" });
 
 **Supported Filters:**
 
-- `metadata.*` - Any metadata field
-- `capabilities` - Array of capabilities
-- `capabilitiesMatch` - 'any' or 'all'
-- `name` - Name search (partial match)
-- `registeredBefore/After` - Date ranges
-- `lastActiveBefore/After` - Activity dates
+- `tenantId` - Multi-tenancy isolation (backend-applied)
+- `metadata.*` - Any metadata field (exact match only, client-side)
+- `capabilities` - Array of capabilities (client-side)
+- `capabilitiesMatch` - 'any' or 'all' (default: 'any')
+- `name` - Name search (partial match, case-insensitive, client-side)
+- `status` - Agent status (backend-applied)
+- `registeredBefore/After` - Unix timestamps in milliseconds
+- `lastActiveBefore/After` - Unix timestamps in milliseconds (client-side)
+
+> **Note:** Metadata filters use exact equality matching. Advanced query operators (like `$gte`, `$in`, etc.) are not supported. For complex queries, fetch all results and filter client-side.
 
 ---
 
 ## Bulk Operations
 
-### Update Many Agents
+### updateMany()
+
+Update multiple agents matching filters.
+
+**Signature:**
+
+```typescript
+cortex.agents.updateMany(
+  filters: AgentFilters,
+  updates: Partial<AgentRegistration>
+): Promise<{ updated: number; agentIds: string[] }>
+```
+
+**Parameters:**
+
+- `filters` (AgentFilters) - Filter criteria to select agents (see `list()` for filter options)
+- `updates` (Partial<AgentRegistration>) - Fields to update on matching agents:
+  - `name?: string` - New display name
+  - `description?: string` - New description
+  - `metadata?: Record<string, unknown>` - New metadata (replaces existing)
+  - `config?: Record<string, unknown>` - New config (replaces existing)
+
+**Returns:**
+
+```typescript
+{
+  updated: number;      // Number of agents successfully updated
+  agentIds: string[];   // IDs of updated agents
+}
+```
+
+**Example:**
 
 ```typescript
 // Update all agents in a team
-await cortex.agents.updateMany(
+const result = await cortex.agents.updateMany(
   {
     metadata: { team: "support" },
   },
   {
     metadata: {
       trainingCompleted: true,
-      trainingDate: new Date(),
+      trainingDate: Date.now(),  // Unix timestamp (ms)
     },
   },
 );
+
+console.log(`Updated ${result.updated} agents: ${result.agentIds.join(", ")}`);
 
 // Upgrade all agents to new version
 await cortex.agents.updateMany(
@@ -1044,6 +1145,12 @@ await cortex.agents.updateMany(
   },
 );
 ```
+
+**Errors:**
+
+- `AgentValidationError('MISSING_UPDATES')` - No update fields provided
+- `AgentValidationError('INVALID_METADATA_FORMAT')` - Metadata is not a plain object
+- `AgentValidationError('INVALID_CONFIG_FORMAT')` - Config is not a plain object
 
 ### unregisterMany()
 
@@ -1306,19 +1413,29 @@ console.log(`Routing to: ${selectedAgent.name}`);
 ### Example 2: Agent Fleet Management
 
 ```typescript
-// Get overview of all agents
+// Get overview of all agents (list() returns RegisteredAgent[])
 const allAgents = await cortex.agents.list({
-  sortBy: "totalMemories",
+  sortBy: "registeredAt",  // Valid: "name" | "registeredAt" | "lastActive"
   sortOrder: "desc",
 });
 
+// Helper function for grouping
+const groupBy = <T>(arr: T[], fn: (item: T) => string) =>
+  arr.reduce((acc, item) => {
+    const key = fn(item);
+    acc[key] = acc[key] || [];
+    acc[key].push(item);
+    return acc;
+  }, {} as Record<string, T[]>);
+
 // Analyze fleet
+const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
 const analysis = {
-  total: allAgents.total,
-  byTeam: groupBy(allAgents.agents, (a) => a.metadata.team),
-  heavyUsers: allAgents.agents.filter((a) => a.stats.totalMemories > 10000),
-  inactive: allAgents.agents.filter(
-    (a) => a.stats.lastActive < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+  total: allAgents.length,  // Array length, not .total property
+  byTeam: groupBy(allAgents, (a) => String(a.metadata.team || "unassigned")),
+  heavyUsers: allAgents.filter((a) => (a.stats?.totalMemories ?? 0) > 10000),
+  inactive: allAgents.filter(
+    (a) => (a.stats?.lastActive ?? 0) < thirtyDaysAgo,  // Unix timestamp comparison
   ),
 };
 

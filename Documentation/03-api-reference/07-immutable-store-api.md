@@ -1,6 +1,6 @@
 # Immutable Store API
 
-> **Last Updated**: 2025-12-27
+> **Last Updated**: 2026-01-01
 
 Complete API reference for shared immutable data storage with automatic versioning.
 
@@ -130,6 +130,7 @@ interface ImmutableRecord {
   id: string; // Logical ID
   version: number; // Version number
   data: Record<string, unknown>;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation (auto-injected)
   userId?: string; // OPTIONAL: User link (GDPR-enabled)
   metadata?: {
     publishedBy?: string;
@@ -199,11 +200,13 @@ console.log(v2.previousVersions.length); // 1 (contains v1)
 
 **Errors:**
 
-- `CortexError('INVALID_TYPE')` - Type is empty or invalid
-- `CortexError('INVALID_ID')` - ID is empty or invalid
-- `CortexError('DATA_TOO_LARGE')` - Data exceeds size limit
-- `CortexError('USER_NOT_FOUND')` - userId doesn't reference existing user
-- `CortexError('CONVEX_ERROR')` - Database error
+- `ImmutableValidationError('INVALID_TYPE')` - Type is empty or invalid
+- `ImmutableValidationError('INVALID_ID')` - ID is empty or invalid
+- `ImmutableValidationError('INVALID_DATA')` - Data is not a valid object
+- `ImmutableValidationError('INVALID_METADATA')` - Metadata is not a valid object
+- `ImmutableValidationError('MISSING_REQUIRED_FIELD')` - Required field missing
+
+> **Note:** Validation errors throw `ImmutableValidationError` (exported from `@cortexso/sdk/immutable`). Backend errors are wrapped in standard `Error` objects.
 
 ---
 
@@ -249,8 +252,8 @@ if (article) {
 
 **Errors:**
 
-- `CortexError('INVALID_TYPE')` - Type is invalid
-- `CortexError('NOT_FOUND')` - Record doesn't exist
+- `ImmutableValidationError('INVALID_TYPE')` - Type is empty or invalid
+- `ImmutableValidationError('INVALID_ID')` - ID is empty or invalid
 
 ---
 
@@ -405,7 +408,8 @@ cortex.immutable.list(
 interface ListImmutableFilter {
   type?: string; // Filter by entity type
   userId?: string; // Filter by user ID
-  limit?: number; // Max records to return (default: 100)
+  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext if not provided)
+  limit?: number; // Max records to return (default: 50)
 }
 ```
 
@@ -508,6 +512,7 @@ cortex.immutable.count(
 interface CountImmutableFilter {
   type?: string; // Filter by entity type
   userId?: string; // Filter by user ID
+  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext if not provided)
 }
 ```
 
@@ -565,7 +570,9 @@ if (result.deleted) {
 
 **Errors:**
 
-- Throws if the entry doesn't exist (`IMMUTABLE_ENTRY_NOT_FOUND`)
+- `ImmutableValidationError('INVALID_TYPE')` - Type is empty or invalid
+- `ImmutableValidationError('INVALID_ID')` - ID is empty or invalid
+- `Error('IMMUTABLE_ENTRY_NOT_FOUND')` - Entry doesn't exist (from Convex backend)
 
 **Warning:** This deletes ALL versions. Vector memories with `immutableRef` will have broken references.
 
@@ -674,7 +681,10 @@ await cortex.immutable.purgeVersions("policy", "refund-policy", 5);
 
 **Errors:**
 
-- Throws if entry doesn't exist (`IMMUTABLE_ENTRY_NOT_FOUND`)
+- `ImmutableValidationError('INVALID_TYPE')` - Type is empty or invalid
+- `ImmutableValidationError('INVALID_ID')` - ID is empty or invalid
+- `ImmutableValidationError('INVALID_KEEP_LATEST')` - keepLatest must be a positive integer >= 1
+- `Error('IMMUTABLE_ENTRY_NOT_FOUND')` - Entry doesn't exist (from Convex backend)
 
 ---
 

@@ -1,6 +1,6 @@
 # Sessions Operations API
 
-> **Last Updated**: 2025-12-26
+> **Last Updated**: 2026-01-01
 
 Complete API reference for session lifecycle management and multi-session support.
 
@@ -47,7 +47,8 @@ The Sessions API (`cortex.sessions.*`) provides native session management for us
 
 ```typescript
 interface Session {
-  sessionId: string;
+  _id: string;              // Convex document ID
+  sessionId: string;        // Unique session identifier
   userId: string;
   tenantId?: string;
   memorySpaceId?: string;
@@ -60,11 +61,25 @@ interface Session {
   expiresAt?: number;
 
   // Fully extensible metadata - any shape you need
-  metadata?: Record<string, unknown>;
+  metadata?: SessionMetadata;
 
   // Stats
   messageCount: number;
   memoryCount: number;
+}
+
+interface SessionMetadata {
+  device?: string;
+  browser?: string;
+  browserVersion?: string;
+  os?: string;
+  deviceType?: "desktop" | "mobile" | "tablet" | string;
+  ip?: string;
+  location?: string;
+  timezone?: string;
+  language?: string;
+  userAgent?: string;
+  [key: string]: unknown;  // Any additional custom fields
 }
 ```
 
@@ -123,11 +138,12 @@ Create a new session for a user.
 cortex.sessions.create(params: CreateSessionParams): Promise<Session>
 
 interface CreateSessionParams {
-  userId: string;
-  tenantId?: string;
-  memorySpaceId?: string;
-  metadata?: Record<string, unknown>;
-  expiresAt?: number;  // Optional: override default expiry
+  sessionId?: string;                  // Optional: custom ID (auto-generated if not provided)
+  userId: string;                      // Required: user this session belongs to
+  tenantId?: string;                   // Multi-tenant isolation
+  memorySpaceId?: string;              // Associate with memory space
+  metadata?: SessionMetadata;          // Fully extensible metadata
+  expiresAt?: number;                  // Optional: override default expiry (ms since epoch)
 }
 ```
 
@@ -249,7 +265,24 @@ End all active sessions for a user.
 **Signature:**
 
 ```typescript
-cortex.sessions.endAll(userId: string): Promise<{ ended: number }>
+cortex.sessions.endAll(
+  userId: string,
+  options?: EndAllOptions
+): Promise<EndSessionsResult>
+
+interface EndAllOptions {
+  /**
+   * Tenant ID for multi-tenant isolation.
+   * When provided, only ends sessions for the user within that tenant.
+   * Without this (and no AuthContext), ALL sessions for the userId across ALL tenants are ended.
+   */
+  tenantId?: string;
+}
+
+interface EndSessionsResult {
+  ended: number;           // Number of sessions ended
+  sessionIds: string[];    // IDs of sessions that were ended
+}
 ```
 
 **Example:**
@@ -258,6 +291,13 @@ cortex.sessions.endAll(userId: string): Promise<{ ended: number }>
 // End all sessions on password change
 const result = await cortex.sessions.endAll("user-123");
 console.log(`Ended ${result.ended} sessions`);
+console.log(`Session IDs: ${result.sessionIds.join(", ")}`);
+
+// End sessions only for a specific tenant (multi-tenant safe)
+const tenantResult = await cortex.sessions.endAll("user-123", {
+  tenantId: "tenant-abc",
+});
+console.log(`Ended ${tenantResult.ended} sessions in tenant`);
 ```
 
 ---
@@ -272,13 +312,16 @@ List sessions with filters.
 cortex.sessions.list(filters: SessionFilters): Promise<Session[]>
 
 interface SessionFilters {
-  userId?: string;
-  tenantId?: string;
-  status?: 'active' | 'idle' | 'ended';
-  startedAfter?: number;
-  startedBefore?: number;
-  limit?: number;
-  offset?: number;
+  userId?: string;                         // Filter by user ID
+  tenantId?: string;                       // Filter by tenant ID
+  memorySpaceId?: string;                  // Filter by memory space
+  status?: 'active' | 'idle' | 'ended';    // Filter by status
+  limit?: number;                          // Max results (1-1000, default: 50)
+  offset?: number;                         // Pagination offset
+
+  // 🔮 PLANNED: Date range filters (not yet implemented)
+  // startedAfter?: number;
+  // startedBefore?: number;
 }
 ```
 
@@ -296,6 +339,12 @@ const tenantSessions = await cortex.sessions.list({
   tenantId: "tenant-abc",
   status: "active",
   limit: 100,
+});
+
+// Get sessions by memory space
+const spaceSessions = await cortex.sessions.list({
+  memorySpaceId: "project-workspace",
+  status: "active",
 });
 ```
 
@@ -355,12 +404,14 @@ Expire idle sessions (typically run as background job).
 **Signature:**
 
 ```typescript
-cortex.sessions.expireIdle(options?: ExpireOptions): Promise<{ expired: number }>
+cortex.sessions.expireIdle(options?: ExpireSessionsOptions): Promise<{ expired: number }>
 
-interface ExpireOptions {
+interface ExpireSessionsOptions {
   tenantId?: string;       // Limit to specific tenant
-  maxAge?: number;         // Override default idle timeout (ms)
-  dryRun?: boolean;        // Preview without expiring
+  idleTimeout?: number;    // Idle timeout in milliseconds (default: 30 minutes)
+
+  // 🔮 PLANNED: Dry run mode (not yet implemented)
+  // dryRun?: boolean;     // Preview without expiring
 }
 ```
 
@@ -371,8 +422,13 @@ interface ExpireOptions {
 const result = await cortex.sessions.expireIdle({
   tenantId: "tenant-abc",
 });
-
 console.log(`Expired ${result.expired} idle sessions`);
+
+// Custom idle timeout (15 minutes)
+const customResult = await cortex.sessions.expireIdle({
+  tenantId: "tenant-abc",
+  idleTimeout: 15 * 60 * 1000,  // 15 minutes in ms
+});
 ```
 
 ---
@@ -387,9 +443,21 @@ await cortex.governance.setPolicy({
 
   // Session lifecycle configuration
   sessions: {
-    inactiveTimeout: 1800000, // 30 minutes (ms)
-    absoluteTimeout: 86400000, // 24 hours (ms)
-    maxSessionsPerUser: 10, // Optional limit
+    lifecycle: {
+      idleTimeout: "30m",       // Duration before session becomes idle
+      maxDuration: "24h",       // Maximum session duration regardless of activity
+      autoExtend: true,         // Automatically extend on activity
+      warnBeforeExpiry: "5m",   // Optional: warn user before expiry
+    },
+    cleanup: {
+      autoExpireIdle: true,     // Automatically expire idle sessions
+      deleteEndedAfter: "30d",  // Delete ended sessions after 30 days
+      archiveAfter: "7d",       // Optional: archive before deletion
+    },
+    limits: {
+      maxActiveSessions: 10,    // Optional: max concurrent sessions per user
+      maxSessionsPerDevice: 3,  // Optional: max sessions per device type
+    },
   },
 });
 ```
@@ -421,12 +489,12 @@ const tenantSessions = await cortex.sessions.list({
 
 ## Integration with Auth Context
 
-Sessions integrate with the Auth Context system for seamless authentication:
+Sessions integrate with the Auth Context system for tenant isolation:
 
 ```typescript
 import { createAuthContext } from "@cortex-platform/sdk";
 
-// Create auth context with session
+// Create auth context with session info
 const auth = createAuthContext({
   userId: "user-123",
   sessionId: "session-xyz",
@@ -444,12 +512,24 @@ const cortex = new Cortex({
   auth,
 });
 
-// Session ID is automatically tracked
-await cortex.memory.remember({
-  content: "User prefers dark mode",
-  // ... sessionId is implicitly associated
+// tenantId is automatically injected from auth context
+// This provides tenant isolation without passing tenantId to every call
+const session = await cortex.sessions.create({
+  userId: "user-123",
+  // tenantId is auto-injected from auth context
+  metadata: { deviceType: "web" },
+});
+
+// Queries are automatically scoped to the tenant
+const sessions = await cortex.sessions.list({
+  userId: "user-123",
+  // tenantId is auto-injected, only returns sessions for this tenant
 });
 ```
+
+> **Note:** The `sessionId` in AuthContext is for reference/tracking purposes. 
+> Session activity tracking (incrementing message/memory counts) should be done 
+> explicitly by calling `touch()` on user interactions.
 
 ---
 
@@ -546,27 +626,68 @@ async function getSessionStats(tenantId: string) {
 
 ## Error Handling
 
+### SessionValidationError
+
+The Sessions API throws `SessionValidationError` for client-side validation failures:
+
 ```typescript
-import { CortexError, CortexErrorCode } from "@cortex-platform/sdk";
+import { SessionValidationError } from "@cortex-platform/sdk";
 
 try {
-  await cortex.sessions.touch("invalid-session-id");
+  await cortex.sessions.create({
+    userId: "",  // Invalid: empty userId
+  });
 } catch (error) {
-  if (error instanceof CortexError) {
-    switch (error.code) {
-      case CortexErrorCode.SESSION_NOT_FOUND:
-        // Session doesn't exist or was already ended
-        break;
-      case CortexErrorCode.SESSION_EXPIRED:
-        // Session has expired
-        break;
-      case CortexErrorCode.SESSION_ALREADY_ENDED:
-        // Session was already ended
-        break;
-    }
+  if (error instanceof SessionValidationError) {
+    console.log(`Validation error: ${error.message}`);
+    console.log(`Code: ${error.code}`);    // e.g., "EMPTY_USER_ID"
+    console.log(`Field: ${error.field}`);  // e.g., "userId"
   }
 }
 ```
+
+**Validation Error Codes:**
+
+| Code | Description |
+|------|-------------|
+| `INVALID_SESSION_ID` | sessionId must be a string |
+| `EMPTY_SESSION_ID` | sessionId cannot be empty |
+| `SESSION_ID_TOO_LONG` | sessionId cannot exceed 256 characters |
+| `INVALID_USER_ID` | userId must be a string |
+| `EMPTY_USER_ID` | userId cannot be empty |
+| `USER_ID_TOO_LONG` | userId cannot exceed 256 characters |
+| `INVALID_TENANT_ID` | tenantId must be a string |
+| `EMPTY_TENANT_ID` | tenantId cannot be empty |
+| `TENANT_ID_TOO_LONG` | tenantId cannot exceed 256 characters |
+| `INVALID_STATUS` | status must be a string |
+| `INVALID_STATUS_VALUE` | status must be: active, idle, or ended |
+| `INVALID_PARAMS` | Session params must be an object |
+| `MISSING_USER_ID` | userId is required |
+| `INVALID_MEMORY_SPACE_ID` | memorySpaceId must be a string |
+| `INVALID_EXPIRES_AT` | expiresAt must be a positive number |
+| `INVALID_METADATA` | metadata must be a plain object |
+| `INVALID_FILTERS` | Session filters must be an object |
+| `INVALID_LIMIT` | limit must be a number between 1 and 1000 |
+| `INVALID_OFFSET` | offset must be a non-negative number |
+
+### Runtime Errors
+
+Backend operations throw standard `Error` for runtime failures:
+
+```typescript
+try {
+  await cortex.sessions.touch("non-existent-session");
+} catch (error) {
+  if (error instanceof Error) {
+    // Error message: "Session not found: non-existent-session"
+    console.log(error.message);
+  }
+}
+```
+
+> **🔮 PLANNED:** Session-specific error codes (`CortexErrorCode.SESSION_NOT_FOUND`, 
+> `CortexErrorCode.SESSION_EXPIRED`, `CortexErrorCode.SESSION_ALREADY_ENDED`) are 
+> planned for a future release to provide more structured error handling.
 
 ---
 
