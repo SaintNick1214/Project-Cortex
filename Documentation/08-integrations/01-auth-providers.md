@@ -1,28 +1,88 @@
 # Authentication Integration Guide
 
-> **Last Updated**: 2026-01-01
+> **Last Updated**: 2026-01-01  
+> **Status**: 🔧 DIY Integration Guide (No Provider Packages)
 
-Generic patterns for integrating authentication systems with Cortex.
+⚠️ **IMPORTANT: This is NOT a Drop-In Auth Integration**
 
-> ⚠️ **Note:** Cortex provides the **Auth Context API** but does not include specific auth provider integrations (Auth0, Clerk, etc.). This guide shows generic patterns for integrating with any auth system.
+**Cortex does NOT include pre-built authentication provider integrations.** There is no `npm install @cortexmemory/auth-clerk` or automatic Auth0 setup. This guide provides **generic patterns** for integrating Cortex with your existing authentication system.
 
-## Overview
+## What This Guide Is
 
-Cortex's Auth Context API is **framework-agnostic** - it works with any authentication system by accepting a simple data structure. Your responsibility is to extract user/tenant information from your auth system and pass it to Cortex.
+✅ **Generic integration patterns** that work with any auth provider  
+✅ **AuthContext API documentation** - framework-agnostic interface  
+✅ **Example adapters** showing how to extract auth data (as templates)  
+✅ **DIY implementation guidance** for common scenarios
 
-**What Cortex Provides:**
+## What This Guide Is NOT
 
-- ✅ `createAuthContext()` function - Validates and creates auth context
-- ✅ Auto-injection of auth fields into all operations
-- ✅ Automatic tenant filtering on all queries
-- ✅ Session tracking integration
-- ✅ GDPR cascade deletion support
+❌ **Not a packaged auth integration** - No npm packages for specific providers  
+❌ **Not automatic setup** - You write the adapter code  
+❌ **Not provider-specific** - Examples are templates, not official integrations  
+❌ **Not plug-and-play** - Requires custom implementation
 
-**What You Provide:**
+## What Cortex Provides
 
-- Your authentication system (Auth0, Clerk, custom JWT, etc.)
-- Code to extract userId/tenantId from your auth tokens
-- User validation and authorization logic
+Cortex provides the **AuthContext API** - a simple, framework-agnostic interface:
+
+```typescript
+interface AuthContext {
+  userId: string;           // Required
+  tenantId?: string;        // Optional for multi-tenant
+  sessionId?: string;       // Optional for session tracking
+  // ... fully extensible
+}
+```
+
+**You write the code** to extract this data from your auth provider.
+
+## What You Need to Provide
+
+- ✅ Your auth system (Auth0, Clerk, NextAuth, custom JWT, etc.)
+- ✅ Code to extract userId/tenantId from your auth tokens/sessions
+- ✅ User validation and authorization logic
+- ✅ Integration with your middleware/routes
+
+---
+
+## Core Concept
+
+Cortex accepts a simple AuthContext object. You extract user info from your auth system:
+
+```typescript
+// YOUR auth system (any provider)
+const session = await yourAuthSystem.getCurrentUser();
+
+// Create Cortex auth context
+const auth = createAuthContext({
+  userId: session.user.id,
+  tenantId: session.organization.id,
+  sessionId: session.id,
+});
+
+// Use with Cortex
+const cortex = new Cortex({ convexUrl, auth });
+await cortex.memory.remember({...});
+```
+
+---
+
+## What Cortex Provides
+
+**`createAuthContext()` Function:**
+- Validates required fields (userId)
+- Returns typed AuthContext object
+- See [Auth Context API](../03-api-reference/15-auth-context-api.md)
+
+**Auto-Injection:**
+- userId → All operations automatically include it
+- tenantId → Automatic multi-tenant isolation
+- sessionId → Session tracking integration
+
+**Framework Agnostic:**
+- Works with any auth provider
+- No vendor lock-in
+- Full extensibility
 
 ---
 

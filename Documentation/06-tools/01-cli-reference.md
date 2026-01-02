@@ -2960,7 +2960,7 @@ cortex db stats --format json > db-stats.json
 
 ### Related
 
-- [Changelog](../../CHANGELOG.md)
+- [Changelog](https://github.com/SaintNick1214/Project-Cortex/blob/main/CHANGELOG.md)
 - [GitHub Releases](https://github.com/SaintNick1214/Project-Cortex/releases)
 
 ---
@@ -3001,4 +3001,4 @@ cortex db stats --format json > db-stats.json
 
 Cortex CLI is licensed under the FSL-1.1-Apache-2.0 license.
 
-See [LICENSE.md](../../LICENSE.md) for details.
+See [LICENSE.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/LICENSE.md) for details.

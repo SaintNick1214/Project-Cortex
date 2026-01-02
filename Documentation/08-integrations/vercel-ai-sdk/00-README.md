@@ -1,40 +1,47 @@
 # Vercel AI SDK Integration
 
 > **Package**: `@cortexmemory/vercel-ai-provider`  
-> **Version**: 1.0.0  
+> **Version**: 0.27.2  
 > **SDK Compatibility**: Cortex SDK v0.21.0+  
-> **Status**: Production Ready ✅
+> **Status**: ✅ Production Ready
 
 Complete integration with Vercel AI SDK for Next.js applications with full memory orchestration capabilities.
 
-## Quick Links
+## 🚀 Quickstart Demo (Recommended)
 
-- [Getting Started](./getting-started.md) - Step-by-step setup tutorial
-- [API Reference](./api-reference.md) - Complete API documentation
-- [Advanced Usage](./advanced-usage.md) - Graph memory, fact extraction, and custom configurations
-- [Memory Spaces](./memory-spaces.md) - Multi-tenancy guide
-- [Hive Mode](./hive-mode.md) - Cross-application memory sharing
-- [Migration from mem0](./migration-from-mem0.md) - Switch from mem0
-- [Troubleshooting](./troubleshooting.md) - Common issues and solutions
-
-## 🚀 Quickstart Demo
-
-The best way to get started is with our **interactive quickstart demo**:
+**The fastest way to get started** is with our interactive quickstart demo:
 
 ```bash
+# Option 1: Run the demo from the monorepo
 cd packages/vercel-ai-provider/quickstart
-npm install
-npm run dev
+npm install && npm run dev
+
+# Option 2: Use Cortex CLI to scaffold a new project
+cortex init my-app --template vercel-ai-quickstart
+cd my-app && cortex start
 ```
 
-The quickstart demonstrates:
+Open http://localhost:3000 to see:
 
-- 🔄 **Real-time Memory Orchestration** - Watch data flow through all Cortex layers
-- 📊 **Layer Flow Visualization** - See Memory Space → User → Agent → Conversation → Vector → Facts → Graph
-- 🔀 **Memory Space Switching** - Demonstrate multi-tenant isolation
-- ⚡ **Streaming with Progressive Storage** - See how streaming works with memory
+- 🔄 **Real-time Memory Orchestration** - Watch data flow through all 7 Cortex layers
+- 📊 **Layer Flow Visualization** - Memory Space → User → Agent → Conversation → Vector → Facts → Graph
+- 🔀 **Memory Space Switching** - Live demonstration of multi-tenant isolation
+- ⚡ **Streaming with Progressive Storage** - Real-time fact extraction during streaming
+- 🧹 **Belief Revision** - See facts update when user changes their mind (SDK v0.24.0)
 
-See [`quickstart/README.md`](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart) for full setup instructions.
+[📖 View Quickstart Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
+
+---
+
+## Documentation
+
+- [Getting Started](./01-getting-started.md) - Step-by-step setup tutorial
+- [API Reference](./02-api-reference.md) - Complete API documentation
+- [Advanced Usage](./03-advanced-usage.md) - Graph memory, fact extraction, and custom configurations
+- [Memory Spaces](./04-memory-spaces.md) - Multi-tenancy guide
+- [Hive Mode](./05-hive-mode.md) - Cross-application memory sharing
+- [Migration from mem0](./06-migration-from-mem0.md) - Switch from mem0
+- [Troubleshooting](./07-troubleshooting.md) - Common issues and solutions
 
 ## Overview
 
@@ -42,44 +49,30 @@ The Cortex Memory Provider for Vercel AI SDK enables automatic persistent memory
 
 ### Key Features
 
-- 🧠 **Automatic Memory** - Search and store without manual steps
-- 🤖 **agentId Support** - Required for user-agent conversations (SDK v0.17.0+)
-- 🕸️ **Graph Memory** - Optional Neo4j/Memgraph integration (SDK v0.19.0+)
-- 🧬 **Fact Extraction** - Automatic LLM-powered extraction (SDK v0.18.0+)
-- 🚀 **Edge Compatible** - Works in Vercel Edge Functions
+- 🧠 **Automatic Memory** - Retrieves context before responses, stores conversations after
+- 🚀 **Zero Configuration** - Works out of the box with sensible defaults
 - 📦 **TypeScript Native** - Built for TypeScript from the ground up
-- 🔒 **Self-Hosted** - Deploy Convex anywhere, no vendor lock-in
-- 🎯 **Memory Spaces** - Multi-tenant isolation built-in
-- 🐝 **Hive Mode** - Share memory across applications
+- 🔒 **Self-Hosted** - Deploy Convex anywhere, no API keys or vendor lock-in
+- ⚡ **Edge Compatible** - Works in Vercel Edge Functions, Cloudflare Workers
+- 🎯 **Memory Spaces** - Isolate memory by user, team, or project
+- 🐝 **Hive Mode** - Share memory across multiple agents/applications
+- 📊 **ACID Guarantees** - Never lose data with Convex transactions
+- 🔍 **Semantic Search** - Find relevant memories with embeddings
+- 🧬 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings (SDK v0.18.0+)
+- 🕸️ **Graph Memory** - Optional Neo4j/Memgraph integration for relationship queries (SDK v0.19.0+)
 - ⚡ **Enhanced Streaming** - Progressive storage, real-time hooks, and metrics
 - 📊 **Layer Observation** - Real-time visualization of memory orchestration
-
-## ⚠️ Breaking Change: agentId Required
-
-Since SDK v0.17.0, all user-agent conversations **require an `agentId`**:
-
-```typescript
-// ❌ Old way (will throw error)
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "my-chatbot",
-  userId: "user-123",
-});
-
-// ✅ New way (v0.17.0+)
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: "my-chatbot",
-  userId: "user-123",
-  agentId: "my-assistant", // Required!
-});
-```
+- 🧹 **Belief Revision** - Intelligent fact updates when information changes (SDK v0.24.0+)
 
 ## Quick Start
+
+### Installation
 
 ```bash
 npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
 ```
+
+### Basic Example
 
 ```typescript
 import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
@@ -118,7 +111,9 @@ const result = await streamText({
 
 **That's it!** Memory is automatically orchestrated across all layers.
 
-## What Gets Built
+> ⚠️ **Important:** Since SDK v0.17.0, `agentId` is required for all user-agent conversations. See [Breaking Changes](#breaking-changes) below.
+
+## Key Capabilities
 
 This integration provides:
 
@@ -133,7 +128,32 @@ This integration provides:
 5. **Edge Runtime Support** - Works in serverless/edge environments
 6. **Real-time Visualization** - Layer observer for UI integration
 
-## SDK v0.21.0 Features
+## Breaking Changes
+
+### agentId Required (v0.17.0+)
+
+Since SDK v0.17.0, all user-agent conversations **require an `agentId`**:
+
+```typescript
+// ❌ Old way (will throw error)
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-chatbot",
+  userId: "user-123",
+});
+
+// ✅ New way (v0.17.0+)
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-chatbot",
+  userId: "user-123",
+  agentId: "my-assistant", // Required!
+});
+```
+
+**Why?** Cortex properly tracks conversation participants for features like agent-to-agent memory sharing and proper attribution.
+
+## Advanced Features
 
 ### Graph Memory (v0.19.0+)
 
@@ -229,17 +249,43 @@ NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=your-password
 ```
 
+## Environment Variables
+
+Configure features via environment variables:
+
+```bash
+# Required
+CONVEX_URL=https://your-project.convex.cloud
+OPENAI_API_KEY=sk-...
+
+# Fact Extraction (SDK v0.18.0+)
+CORTEX_FACT_EXTRACTION=true
+CORTEX_FACT_EXTRACTION_MODEL=gpt-4o-mini
+
+# Graph Memory (SDK v0.19.0+)
+CORTEX_GRAPH_SYNC=true
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your-password
+```
+
 ## Package Source
 
-Package source code: [`packages/vercel-ai-provider/`](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider)
-
-Quickstart demo: [`packages/vercel-ai-provider/quickstart/`](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
+- Package: [`packages/vercel-ai-provider/`](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider)
+- Quickstart Demo: [`packages/vercel-ai-provider/quickstart/`](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
+- NPM: [@cortexmemory/vercel-ai-provider](https://www.npmjs.com/package/@cortexmemory/vercel-ai-provider)
 
 ## See Also
 
-- [Cortex SDK Documentation](/) - Main Cortex documentation
+### Integration Guides
+- [Getting Started](./01-getting-started.md) - Step-by-step tutorial
+- [API Reference](./02-api-reference.md) - Complete API
+- [Advanced Usage](./03-advanced-usage.md) - Graph, facts, custom configs
+- [Troubleshooting](./07-troubleshooting.md) - Common issues
+
+### Core Cortex Documentation
 - [Memory Operations](../../03-api-reference/02-memory-operations.md) - remember() and rememberStream() API
-- [Graph Operations](../../03-api-reference/15-graph-operations.md) - Graph database integration
-- [Facts Operations](../../03-api-reference/14-facts-operations.md) - Fact extraction API
-- [Memory Spaces](../../02-core-features/01-memory-spaces.md) - Core memory space features
-- [Hive Mode](../../02-core-features/10-hive-mode.md) - Core hive mode features
+- [Facts Operations](../../03-api-reference/12-facts-operations.md) - Fact extraction API
+- [Graph Operations](../../03-api-reference/13-graph-operations.md) - Graph database integration
+- [Memory Spaces](../../02-core-features/01-memory-spaces.md) - Multi-tenancy
+- [Hive Mode](../../02-core-features/10-hive-mode.md) - Cross-application memory

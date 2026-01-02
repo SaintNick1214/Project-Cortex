@@ -9,34 +9,39 @@ Complete guide to adding persistent memory to your Next.js application using Cor
 - Convex account (free tier available)
 - OpenAI API key (or other LLM provider)
 
-## Option 1: Run the Quickstart Demo (Recommended)
+## Option 1: Run the Quickstart Demo ⭐ RECOMMENDED
 
-The fastest way to understand Cortex Memory is with our interactive quickstart demo:
+The **fastest way** to understand Cortex Memory is with our interactive quickstart demo. This is a complete Next.js app with:
+
+- ✅ Real-time layer flow visualization
+- ✅ Live memory orchestration
+- ✅ Multi-tenant memory space switching
+- ✅ Streaming with progressive fact extraction
+- ✅ Authentication system
+- ✅ Data preview panels
 
 ```bash
+# From within the Project-Cortex monorepo
 cd packages/vercel-ai-provider/quickstart
 npm install
-```
 
-Configure environment:
-
-```bash
+# Configure environment
 cp .env.local.example .env.local
 # Edit .env.local with your Convex URL and OpenAI key
-```
 
-Start the demo:
-
-```bash
+# Start the demo
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) and:
 
 1. **Send a message** like "Hi, I'm Alex and I work at Acme Corp as an engineer"
-2. **Watch the Layer Flow Diagram** show data flowing through all Cortex layers
+2. **Watch the Layer Flow Diagram** show data flowing through all 7 Cortex layers in real-time
 3. **Ask a question** like "What do you remember about me?"
 4. **Refresh the page** and see memory persists across sessions
+5. **Try fact updates** - say "I actually prefer purple" after mentioning "I like blue" to see belief revision
+
+[📖 View Quickstart Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
 
 ## Option 2: Add to Existing Project
 
@@ -301,14 +306,14 @@ const cortexMemory = createCortexMemory({
 2. If using semantic search, set up `embeddingProvider`
 3. Check that `memorySpaceId` matches between requests
 
-See [Troubleshooting Guide](./troubleshooting.md) for more solutions.
+See [Troubleshooting Guide](./07-troubleshooting.md) for more solutions.
 
 ## Next Steps
 
-- [Advanced Usage](./advanced-usage.md) - Graph memory, fact extraction, custom configurations
-- [Memory Spaces](./memory-spaces.md) - Multi-tenancy guide
-- [Hive Mode](./hive-mode.md) - Cross-application memory
-- [API Reference](./api-reference.md) - Complete API documentation
+- [Advanced Usage](./03-advanced-usage.md) - Graph memory, fact extraction, custom configurations
+- [Memory Spaces](./04-memory-spaces.md) - Multi-tenancy guide
+- [Hive Mode](./05-hive-mode.md) - Cross-application memory
+- [API Reference](./02-api-reference.md) - Complete API documentation
 
 ## Support
 
