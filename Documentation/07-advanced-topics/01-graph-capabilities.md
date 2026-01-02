@@ -1,8 +1,10 @@
-# Graph-Lite: Built-In Graph Traversal
+# Graph Capabilities: Built-In Graph Traversal
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Navigate relationships and traverse knowledge graphs using Cortex's document-oriented architecture.
+
+> **Note:** This document covers advanced graph patterns and performance analysis. For basic context chain operations (creating, updating, querying), see **[Context Chains](../02-core-features/04-context-chains.md)**.
 
 ## Overview
 
@@ -84,13 +86,13 @@ Context chains provide hierarchical graph traversal:
 
 ```typescript
 // Get complete context chain (multi-hop graph walk)
-const chain = await cortex.contexts.get("ctx_child", {
+const chain = await cortex.contexts.get("ctx-child", {
   includeChain: true, // ← Graph traversal!
 });
 
 console.log("Graph nodes accessed:");
 console.log("- Current:", chain.current.purpose);
-console.log("- Parent:", chain.parent.purpose); // 1-hop up
+console.log("- Parent:", chain.parent?.purpose); // 1-hop up
 console.log("- Root:", chain.root.purpose); // N-hops to root
 console.log("- Siblings:", chain.siblings.length); // Lateral traversal
 console.log("- Children:", chain.children.length); // 1-hop down
@@ -122,16 +124,20 @@ Trace memories back to their source conversations:
 
 ```typescript
 // Memory → Conversation link via conversationRef
-const memory = await cortex.memory.get("agent-1", "mem_abc123", {
+const memory = await cortex.vector.get("agent-1", "mem-abc123", {
   includeConversation: true, // ← Graph traversal!
 });
 
-console.log("Memory content:", memory.memory.content);
-console.log("Source conversation:", memory.conversation.conversationId);
-console.log(
-  "Source messages:",
-  memory.sourceMessages.map((m) => m.text),
-);
+console.log("Memory content:", memory.content);
+console.log("Source conversation:", memory.conversationRef?.conversationId);
+
+// Get full conversation from ACID layer
+if (memory.conversationRef) {
+  const conversation = await cortex.conversations.get(
+    memory.conversationRef.conversationId
+  );
+  console.log("Source messages:", conversation.messages.map((m) => m.content));
+}
 
 // Full audit trail preserved in ACID layer
 ```
@@ -190,30 +196,33 @@ Agent: finance-agent
 **Multi-Hop Example:**
 
 ```typescript
-// Find all agents finance-agent has communicated with (1-hop)
-const directConnections = await cortex.memory.search("finance-agent", "*", {
-  source: { type: "a2a" },
-  metadata: { direction: "outbound" },
+// Find all memory spaces finance-agent has communicated with (1-hop)
+const directConnections = await cortex.vector.search("finance-agent", "*", {
+  sourceType: "a2a",
+  limit: 100,
 });
 
-const connectedAgents = new Set(
-  directConnections.map((m) => m.metadata.toAgent),
+const connectedSpaces = new Set(
+  directConnections
+    .filter(m => m.metadata?.toMemorySpace)
+    .map((m) => m.metadata.toMemorySpace as string),
 );
 
-console.log("Direct collaborators:", Array.from(connectedAgents));
+console.log("Direct collaborators:", Array.from(connectedSpaces));
 
 // Find second-degree connections (2-hop)
 const secondDegree = new Set();
 
-for (const agent of connectedAgents) {
-  const theirConnections = await cortex.memory.search(agent, "*", {
-    source: { type: "a2a" },
-    metadata: { direction: "outbound" },
+for (const space of connectedSpaces) {
+  const theirConnections = await cortex.vector.search(space, "*", {
+    sourceType: "a2a",
+    limit: 100,
   });
 
   theirConnections.forEach((m) => {
-    if (m.metadata.toAgent !== "finance-agent") {
-      secondDegree.add(m.metadata.toAgent);
+    const toSpace = m.metadata?.toMemorySpace as string;
+    if (toSpace && toSpace !== "finance-agent") {
+      secondDegree.add(toSpace);
     }
   });
 }
@@ -234,39 +243,39 @@ async function getUserDataGraph(userId: string) {
     user: await cortex.users.get(userId),
     conversations: await cortex.conversations.list({ userId }),
     contexts: await cortex.contexts.list({ userId }),
-    memories: [],
-    facts: []
+    memories: [] as any[],
+    facts: [] as any[]
   };
 
-  // Get memories from all agents
-  const agents = await cortex.agents.list();
+  // Get memories from all memory spaces
+  const spaces = await cortex.memorySpaces.list();
 
-  for (const agent of agents) {
-    const agentMemories = await cortex.memory.search(agent.id, '*', {
+  for (const space of spaces.spaces) {
+    const spaceMemories = await cortex.vector.search(space.memorySpaceId, '*', {
       userId,
       limit: 100
     });
 
-    graph.memories.push(...agentMemories);
+    graph.memories.push(...spaceMemories);
   }
 
   // Get facts about user
-  const userFacts = await cortex.immutable.list({
-    type: 'fact',
+  const userFacts = await cortex.facts.list({
+    memorySpaceId: "*", // Search all spaces
     userId
   });
 
-  graph.facts.push(...userFacts.records);
+  graph.facts.push(...userFacts);
 
   return graph;
 }
 
 // Result: Complete graph of user's data
 {
-  user: { id: 'user-123', displayName: 'Alex', ... },
+  user: { id: 'user-123', data: { displayName: 'Alex' }, ... },
   conversations: [5 conversations],
   contexts: [12 workflows],
-  memories: [234 memories across 8 agents],
+  memories: [234 memories across 8 memory spaces],
   facts: [45 extracted facts]
 }
 ```
@@ -446,42 +455,44 @@ deps.forEach(({ context, depth }) => {
 Build a graph of agent capabilities and collaborations:
 
 ```typescript
-async function buildAgentNetwork() {
-  const agents = await cortex.agents.list();
+async function buildMemorySpaceNetwork() {
+  const spaces = await cortex.memorySpaces.list();
   const network = {
-    nodes: [],
-    edges: []
+    nodes: [] as any[],
+    edges: [] as any[]
   };
 
-  // Add agent nodes
-  for (const agent of agents.agents) {
+  // Add memory space nodes
+  for (const space of spaces.spaces) {
     network.nodes.push({
-      id: agent.id,
-      name: agent.name,
-      capabilities: agent.metadata.capabilities || [],
-      team: agent.metadata.team
+      id: space.memorySpaceId,
+      name: space.name || space.memorySpaceId,
+      type: space.type,
+      metadata: space.metadata
     });
   }
 
   // Find collaboration edges (via A2A)
-  for (const agent of agents.agents) {
-    const collaborations = await cortex.memory.search(agent.id, '*', {
-      source: { type: 'a2a' },
-      metadata: { direction: 'outbound' }
+  for (const space of spaces.spaces) {
+    const collaborations = await cortex.vector.search(space.memorySpaceId, '*', {
+      sourceType: 'a2a',
+      limit: 1000
     });
 
     // Count messages per collaborator
-    const counts = new Map();
+    const counts = new Map<string, number>();
 
     collaborations.forEach(m => {
-      const partner = m.metadata.toAgent;
-      counts.set(partner, (counts.get(partner) || 0) + 1);
+      const partner = m.metadata?.toMemorySpace as string;
+      if (partner) {
+        counts.set(partner, (counts.get(partner) || 0) + 1);
+      }
     });
 
     // Add edges
     for (const [partner, count] of counts.entries()) {
       network.edges.push({
-        from: agent.id,
+        from: space.memorySpaceId,
         to: partner,
         weight: count,
         type: 'COLLABORATED_WITH'
@@ -492,17 +503,17 @@ async function buildAgentNetwork() {
   return network;
 }
 
-// Result: Agent collaboration graph
+// Result: Memory space collaboration graph
 {
   nodes: [
-    { id: 'finance-agent', capabilities: ['finance', 'approval'] },
-    { id: 'hr-agent', capabilities: ['hr', 'recruiting'] },
-    { id: 'legal-agent', capabilities: ['legal', 'compliance'] }
+    { id: 'finance-space', name: 'Finance Agent', type: 'custom' },
+    { id: 'hr-space', name: 'HR Agent', type: 'custom' },
+    { id: 'legal-space', name: 'Legal Agent', type: 'custom' }
   ],
   edges: [
-    { from: 'finance-agent', to: 'hr-agent', weight: 45 },
-    { from: 'finance-agent', to: 'legal-agent', weight: 23 },
-    { from: 'hr-agent', to: 'legal-agent', weight: 12 }
+    { from: 'finance-space', to: 'hr-space', weight: 45 },
+    { from: 'finance-space', to: 'legal-space', weight: 23 },
+    { from: 'hr-space', to: 'legal-space', weight: 12 }
   ]
 }
 ```
@@ -665,7 +676,7 @@ async function monitoredTraversal(startId: string, depth: number) {
 
 ### Step 2: Evaluate Options
 
-See: [Graph Database Integration Guide](./02-graph-database-integration.md)
+See: **[Graph Database Integration Guide](./02-graph-database-integration.md)** for complete setup and integration instructions.
 
 **Quick comparison:**
 
@@ -673,8 +684,6 @@ See: [Graph Database Integration Guide](./02-graph-database-integration.md)
 | --------------------- | ---------------- | ----------- | ------------------ | ------------------- |
 | Neo4j Community       | Medium (Docker)  | Excellent   | Free (self-hosted) | Production ready    |
 | Memgraph              | Easy (Docker)    | Excellent   | Free (self-hosted) | High performance    |
-| Kùzu                  | Easy (embedded)  | Good        | Free               | Lightweight, local  |
-| Graph-Premium (Cloud) | Easiest (zero)   | Excellent   | $500/mo            | Enterprise, managed |
 
 ### Step 3: Migration Path
 
@@ -757,20 +766,22 @@ async function getHistoricalGraph(timestamp: Date) {
 ```typescript
 // Build graph with weighted edges (importance, frequency, recency)
 async function getWeightedCollaborationGraph() {
-  const agents = await cortex.agents.list();
+  const spaces = await cortex.memorySpaces.list();
   const edges = [];
 
-  for (const agent of agents.agents) {
-    const a2a = await cortex.memory.search(agent.id, "*", {
-      source: { type: "a2a" },
-      metadata: { direction: "outbound" },
+  for (const space of spaces.spaces) {
+    const a2a = await cortex.vector.search(space.memorySpaceId, "*", {
+      sourceType: "a2a",
+      limit: 1000,
     });
 
     // Calculate edge weights
     const weights = new Map();
 
     a2a.forEach((m) => {
-      const partner = m.metadata.toAgent;
+      const partner = m.metadata?.toMemorySpace as string;
+      if (!partner) return;
+      
       const current = weights.get(partner) || {
         count: 0,
         totalImportance: 0,
@@ -779,8 +790,8 @@ async function getWeightedCollaborationGraph() {
 
       weights.set(partner, {
         count: current.count + 1,
-        totalImportance: current.totalImportance + m.metadata.importance,
-        lastContact: Math.max(current.lastContact, m.createdAt.getTime()),
+        totalImportance: current.totalImportance + (m.importance || 0),
+        lastContact: Math.max(current.lastContact, m.createdAt),
       });
     });
 
@@ -794,7 +805,7 @@ async function getWeightedCollaborationGraph() {
       const frequencyWeight = Math.min(stats.count / 100, 1);
 
       edges.push({
-        from: agent.id,
+        from: space.memorySpaceId,
         to: partner,
         weight: (recencyWeight + importanceWeight + frequencyWeight) / 3,
         count: stats.count,
@@ -946,10 +957,10 @@ const chain = await cortex.contexts.get(contextId, { includeChain: true });
 
 ## Next Steps
 
-- **[Graph Database Integration](./02-graph-database-integration.md)** - DIY setup guide
-- **[Graph Database Selection](./04-graph-database-selection.md)** - Choose the right graph DB
-- **[Context Chains](../02-core-features/04-context-chains.md)** - Hierarchical graph traversal
-- **[A2A Communication](../02-core-features/05-a2a-communication.md)** - Agent communication graph
+- **[Graph Database Integration](./02-graph-database-integration.md)** - Complete guide to external graph databases
+- **[Context Chains](../02-core-features/04-context-chains.md)** - Basic hierarchical operations
+- **[A2A Communication](../02-core-features/05-a2a-communication.md)** - Agent communication patterns
+- **[Graph Operations API](../03-api-reference/13-graph-operations.md)** - Complete API reference
 
 ---
 

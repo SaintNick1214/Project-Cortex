@@ -968,10 +968,145 @@ for (const memory of memories.memories) {
 
 ---
 
+## Advanced Dimension Strategies
+
+### Strategy 1: Importance-Based Dimensions
+
+Match dimension to importance level for optimal cost/accuracy balance:
+
+```typescript
+async function embedByImportance(
+  text: string,
+  importance: number, // 0-100
+): Promise<number[]> {
+  if (importance >= 80) {
+    return await embedLarge(text); // 3072 dimensions for high importance
+  } else if (importance >= 40) {
+    return await embedStandard(text); // 1536 dimensions for medium
+  } else {
+    return await embedSmall(text); // 384 dimensions for low importance
+  }
+}
+
+// Use when storing
+await cortex.vector.store(memorySpaceId, {
+  content: text,
+  contentType: "raw",
+  embedding: await embedByImportance(text, importance),
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance, dimension: getDimension(importance) },
+});
+```
+
+**Pros:** Optimizes cost/accuracy tradeoff  
+**Cons:** More complex, different models to manage
+
+### Strategy 2: Progressive Enhancement
+
+Start small, upgrade important memories based on usage:
+
+```typescript
+// Initially store with small embeddings
+const memory = await cortex.vector.store(memorySpaceId, {
+  content: text,
+  contentType: "raw",
+  embedding: await embedSmall(text), // 384
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 50, dimension: 384 },
+});
+
+// If memory gets accessed frequently, upgrade
+if (memory.accessCount > 10) {
+  await cortex.vector.update(memorySpaceId, memory.memoryId, {
+    embedding: await embedLarge(text), // 3072
+    metadata: {
+      dimension: 3072,
+      importance: Math.min(memory.metadata.importance + 10, 100),
+      upgraded: true,
+    },
+  });
+}
+```
+
+**Pros:** Optimize for actual usage  
+**Cons:** Requires monitoring and maintenance
+
+### Strategy 3: Hybrid Approach
+
+Use different dimensions for different memory types:
+
+```typescript
+// Critical information: High accuracy
+await cortex.vector.store(memorySpaceId, {
+  content: "Security protocol XYZ requires 2FA",
+  contentType: "raw",
+  embedding: await embedLarge(content), // 3072 dimensions
+  source: { type: "system", timestamp: new Date() },
+  metadata: {
+    importance: 95,
+    dimension: 3072,
+  },
+});
+
+// General information: Balanced
+await cortex.vector.store(memorySpaceId, {
+  content: "User prefers dark mode",
+  contentType: "raw",
+  embedding: await embedStandard(content), // 1536 dimensions
+  source: { type: "system", timestamp: new Date() },
+  metadata: {
+    importance: 50,
+    dimension: 1536,
+  },
+});
+
+// High-volume logs: Fast
+await cortex.vector.store(memorySpaceId, {
+  content: "User visited pricing page",
+  contentType: "raw",
+  embedding: await embedSmall(content), // 384 dimensions
+  source: { type: "system", timestamp: new Date() },
+  metadata: {
+    importance: 15,
+    dimension: 384,
+  },
+});
+```
+
+### Migrating Between Dimensions
+
+```typescript
+// Upgrade dimensions for existing memories
+async function upgradeDimensions(memorySpaceId: string) {
+  const memories = await cortex.vector.search(memorySpaceId, "*", {
+    metadata: { dimension: 384 },
+    limit: 1000,
+  });
+
+  console.log(`Upgrading ${memories.length} memories to 3072 dimensions...`);
+
+  for (const memory of memories) {
+    const newEmbedding = await embedLarge(memory.content);
+
+    await cortex.vector.update(memorySpaceId, memory.memoryId, {
+      embedding: newEmbedding,
+      metadata: {
+        ...memory.metadata,
+        dimension: 3072,
+        upgradedAt: new Date(),
+      },
+    });
+  }
+
+  console.log("Upgrade complete!");
+}
+```
+
+---
+
 ## Next Steps
 
 - **[Search Strategy](./05-search-strategy.md)** - Multi-strategy search implementation
-- **[Dimension Strategies](../07-advanced-topics/02-dimension-strategies.md)** - Detailed dimension guide
 - **[Performance](./08-performance.md)** - Optimization techniques
 
 ---

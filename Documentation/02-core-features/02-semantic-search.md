@@ -1262,6 +1262,7 @@ See **[Fact Extraction](./08-fact-extraction.md)** for the Belief Revision Syste
 - **[User Profiles](./03-user-profiles.md)** - Manage user context across agents
 - **[Context Chains](./04-context-chains.md)** - Hierarchical agent coordination
 - **[Fact Integration](./11-fact-integration.md)** - Extract structured knowledge from conversations
+- **[Vector Embeddings](../04-architecture/04-vector-embeddings.md)** - Embedding models and dimension strategies
 - **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Complete API reference
 
 ---

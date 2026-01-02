@@ -82,7 +82,7 @@ Root Context (Node: ctx-001, depth=0)
 
 **Performance:** Context hierarchies typically 1-5 levels deep, queries complete in 50-200ms using Cortex's Graph-Lite capabilities.
 
-**When to add graph DB:** If context hierarchies exceed 10 levels or need complex pattern matching, consider [Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md).
+**When to add graph DB:** If context hierarchies exceed 10 levels or need complex pattern matching, consider [Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md). For advanced built-in patterns, see [Graph Capabilities](../07-advanced-topics/01-graph-capabilities.md).
 
 ## Core Concepts
 
