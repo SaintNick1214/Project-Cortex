@@ -1,88 +1,126 @@
 # Agent Registry
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01  
+> **Status**: DEPRECATED - Use `memorySpaces` table instead
 
-Optional agent registry architecture for enhanced features and analytics.
+## ⚠️ Deprecation Notice
 
-## Overview
+**The `agents` table is deprecated as of v0.21.0.** Use the `memorySpaces` table for production isolation.
 
-The agent registry is **completely optional** - Cortex works with simple string IDs. Registration enables enhanced features like:
+**Why deprecated:**
+- Memory spaces are the primary isolation boundary (not agents)
+- Hive Mode requires participant tracking within spaces
+- Collaboration Mode requires cross-space delegation
+- memorySpaces table provides superior flexibility
 
-- Analytics and usage tracking
-- Agent discovery and capabilities
-- Per-agent configuration
-- Usage-based billing (Cloud Mode)
-- Agent-specific retention policies
+**Migration path:** Replace `agentId` with `memorySpaceId` + optional `participantId`
+
+## Overview (Legacy)
+
+The agent registry was originally designed for agent-centric isolation. It has been superseded by the **memory space** paradigm, which enables:
+
+- **Hive Mode:** Multiple participants (Cursor, Claude, etc.) share one memory space
+- **Collaboration Mode:** Memory spaces delegate via context chains
+- **Flexible boundaries:** Per-user, per-team, per-project isolation
+
+**Current recommendation:** Use `cortex.memorySpaces.*` for registration and `participantId` for tracking.
 
 ```
-┌────────────────────────────────────────────────┐
-│         Simple Mode (String IDs)               │
-├────────────────────────────────────────────────┤
-│ await cortex.memory.store('my-agent', { ... }) │
-│ No registration needed ✅                      │
-│ Just works with any string                     │
-└────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│         Simple Mode (String IDs)                           │
+├────────────────────────────────────────────────────────────┤
+│ await cortex.memory.store('user-123-personal', { ... })    │
+│ No registration needed ✅                                  │
+│ Just works with any memorySpaceId string                   │
+└────────────────────────────────────────────────────────────┘
 
-┌────────────────────────────────────────────────┐
-│         Registry Mode (Enhanced)               │
-├────────────────────────────────────────────────┤
-│ await cortex.agents.register({                 │
-│   id: 'my-agent',                              │
-│   name: 'Support Agent',                       │
-│   capabilities: ['support', 'billing'],        │
-│ });                                            │
-│                                                │
-│ Enables: Analytics, discovery, config ✅       │
-└────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────┐
+│         Memory Space Mode (Recommended)                    │
+├────────────────────────────────────────────────────────────┤
+│ await cortex.memorySpaces.register({                       │
+│   memorySpaceId: 'user-123-personal',                      │
+│   name: 'User 123 Personal Space',                         │
+│   type: 'personal',                                        │
+│   participants: [                                          │
+│     { id: 'cursor', type: 'ai-tool', joinedAt: ... },      │
+│     { id: 'claude', type: 'ai-tool', joinedAt: ... },      │
+│   ],                                                       │
+│ });                                                        │
+│                                                            │
+│ Enables: Hive Mode, analytics, participant tracking ✅     │
+└────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│         Legacy Agent Registry (Deprecated)                 │
+├────────────────────────────────────────────────────────────┤
+│ await cortex.agents.register({ id: 'my-agent', ... })      │
+│ ⚠️ DEPRECATED - Use memorySpaces instead                   │
+└────────────────────────────────────────────────────────────┘
 ```
 
-**Key Principle:** Start simple (string IDs), add registry when you need enhanced features.
+**Current Principle:** Use memory spaces as primary isolation boundary, track participants within spaces via `participantId`.
 
 ---
 
-## Registry Schema
+## New Approach: Memory Spaces
 
-### Agent Document
+### Memory Space Document
+
+```typescript
+{
+  _id: Id<"memorySpaces">,
+  
+  // Identity
+  memorySpaceId: string,       // Unique identifier
+  name?: string,               // Human-readable name
+  tenantId?: string,           // Multi-tenancy support
+  
+  // Type
+  type: "personal" | "team" | "project" | "custom",
+  
+  // Participants (Hive Mode)
+  participants: Array<{
+    id: string,                // 'cursor', 'claude', 'my-bot', etc.
+    type: string,              // 'ai-tool', 'human', 'ai-agent', 'system'
+    joinedAt: number,
+  }>,
+  
+  // Metadata
+  metadata: any,
+  status: "active" | "archived",
+  
+  // Timestamps
+  createdAt: number,
+  updatedAt: number,
+}
+```
+
+**Indexes:**
+
+- `by_memorySpaceId` - Unique lookup
+- `by_tenantId` - Tenant's memory spaces
+- `by_tenant_memorySpaceId` - Tenant-scoped lookup
+- `by_status` - Filter active/archived
+- `by_type` - Filter by type
+
+### Legacy Agent Document (Deprecated)
 
 ```typescript
 {
   _id: Id<"agents">,
-  memorySpaceId: string,  // Unique identifier (can be anything)
-
-  // Metadata
+  agentId: string,             // ⚠️ DEPRECATED concept
+  tenantId?: string,
+  
   name: string,
   description?: string,
-  capabilities?: string[],  // What this agent can do
-
-  // Custom metadata
-  metadata: {
-    owner?: string,
-    team?: string,
-    version?: string,
-    model?: string,  // LLM model used
-    [key: string]: any,
-  },
-
-  // Configuration
-  config: {
-    memoryVersionRetention?: number,  // Override default
-    embeddingDimensions?: number,
-    maxMemories?: number,
-    [key: string]: any,
-  },
-
-  // Usage statistics
-  stats: {
-    totalMemories: number,
-    totalConversations: number,
-    totalContexts: number,
-    lastActive?: number,
-    memoryStorageBytes?: number,
-  },
-
-  // Timestamps
+  metadata?: any,
+  config?: any,
+  
+  status: "active" | "inactive" | "archived",
+  
   registeredAt: number,
   updatedAt: number,
+  lastActive?: number,
 }
 ```
 

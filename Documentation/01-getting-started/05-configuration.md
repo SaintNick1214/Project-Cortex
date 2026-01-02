@@ -8,6 +8,35 @@ Cortex uses a hierarchical configuration system managed by the CLI. Configuratio
 
 ---
 
+## Quick: Auth Integration
+
+> **Common Question:** "How do I integrate my auth system (Auth0, Clerk, Okta, WorkOS, etc.)?"
+
+**Answer:** Cortex works with **ANY auth system** - just extract `userId` and optionally `tenantId`:
+
+```typescript
+import { createAuthContext } from "@cortexmemory/sdk";
+
+// Extract from YOUR auth (3 lines of code)
+const auth = createAuthContext({
+  userId: yourAuthData.id,         // Required
+  tenantId: yourAuthData.tenantId, // Optional (multi-tenant SaaS)
+});
+
+// Pass to Cortex
+const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL!, auth });
+
+// Done! All operations now authenticated
+```
+
+**Works with:** Auth0, Clerk, NextAuth, Supabase, Firebase, Okta, WorkOS, OIDC, OAuth, custom JWT, sessions, API keys, or any auth system you already use.
+
+**See:** [Authentication Guide](../02-core-features/18-authentication.md) for complete setup.
+
+---
+
+---
+
 ## Configuration Hierarchy
 
 The CLI uses a hierarchical configuration system (highest priority first):

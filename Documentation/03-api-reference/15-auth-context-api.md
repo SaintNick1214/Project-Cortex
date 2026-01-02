@@ -1,0 +1,959 @@
+# Auth Context API
+
+> **Last Updated**: 2026-01-01
+
+Complete API reference for authentication context and multi-tenancy integration.
+
+## Overview
+
+The Auth Context API provides a framework-agnostic authentication layer that enables:
+
+- **User tracking** - Link all operations to authenticated users
+- **Multi-tenancy** - Complete SaaS tenant isolation via `tenantId`
+- **Session management** - Track user sessions across devices
+- **GDPR compliance** - Enable cascade deletion by userId
+- **Audit trails** - Log who did what and when
+
+**Key Characteristics:**
+
+- ✅ **Framework Agnostic** - Works with any auth system
+- ✅ **Auto-Injection** - Auth context propagates through all operations
+- ✅ **Flexible** - Standard fields + fully extensible
+- ✅ **Zero Lock-in** - Just data, no proprietary protocol
+- ✅ **Multi-Tenant** - Built-in `tenantId` for SaaS isolation
+
+**Architecture:**
+
+```typescript
+// Auth context flows through Cortex SDK
+Your Auth Provider → AuthContext → Cortex SDK → All Operations
+                                         ↓
+                    (tenantId, userId auto-injected to all entities)
+```
+
+---
+
+## Core Functions
+
+### createAuthContext()
+
+Create an authentication context for use with Cortex SDK.
+
+**Signature:**
+
+```typescript
+function createAuthContext(params: AuthContextParams): AuthContext
+```
+
+**Parameters:**
+
+```typescript
+interface AuthContextParams {
+  // Required
+  userId: string; // Unique user identifier (REQUIRED)
+
+  // Multi-tenancy (optional but recommended for SaaS)
+  tenantId?: string; // Tenant identifier for multi-tenant isolation
+  organizationId?: string; // Organization within tenant (optional sub-grouping)
+
+  // Session tracking (optional)
+  sessionId?: string; // Current session identifier
+
+  // Auth provider metadata (optional)
+  authProvider?: string; // e.g., 'auth0', 'clerk', 'nextauth', 'custom'
+  authMethod?: "oauth" | "api_key" | "jwt" | "session" | "custom";
+  authenticatedAt?: number; // Unix timestamp (ms) when authenticated
+
+  // Extensible (optional)
+  claims?: Record<string, unknown>; // Raw claims from auth provider (JWT, token)
+  metadata?: Record<string, unknown>; // Application-specific metadata
+}
+```
+
+**Returns:**
+
+```typescript
+interface AuthContext {
+  userId: string;
+  tenantId?: string;
+  organizationId?: string;
+  sessionId?: string;
+  authProvider?: string;
+  authMethod?: "oauth" | "api_key" | "jwt" | "session" | "custom";
+  authenticatedAt?: number;
+  claims?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+}
+```
+
+**Validation:**
+
+- `userId` is **required** (throws error if missing or empty)
+- All other fields are optional
+- `userId` must be non-empty string
+- `tenantId`, `organizationId`, `sessionId` must be non-empty strings if provided
+- `authenticatedAt` must be positive number if provided
+
+**Example:**
+
+```typescript
+import { createAuthContext } from "@cortexmemory/sdk";
+
+// Minimal (single-tenant app)
+const auth = createAuthContext({
+  userId: "user-123",
+});
+
+// With multi-tenancy
+const auth = createAuthContext({
+  userId: "user-123",
+  tenantId: "customer-acme",
+  sessionId: "session-xyz",
+});
+
+// Complete (all fields)
+const auth = createAuthContext({
+  userId: "user-123",
+  tenantId: "customer-acme",
+  organizationId: "team-alpha",
+  sessionId: "session-xyz",
+  authProvider: "custom",
+  authMethod: "jwt",
+  authenticatedAt: Date.now(),
+  claims: {
+    email: "user@acme.com",
+    iss: "https://auth.myapp.com",
+    aud: "my-api",
+  },
+  metadata: {
+    role: "admin",
+    plan: "enterprise",
+    features: ["ai", "export", "api"],
+  },
+});
+```
+
+**Errors:**
+
+```typescript
+// Missing userId
+createAuthContext({ tenantId: "tenant-1" });
+// Throws: AuthContextError('MISSING_USER_ID', 'userId is required')
+
+// Empty userId
+createAuthContext({ userId: "" });
+// Throws: AuthContextError('EMPTY_USER_ID', 'userId cannot be empty')
+
+// Invalid authenticatedAt
+createAuthContext({ userId: "user-1", authenticatedAt: -1 });
+// Throws: AuthContextError('INVALID_TIMESTAMP', 'authenticatedAt must be positive')
+```
+
+---
+
+## Integration with Cortex SDK
+
+### Initialization
+
+Pass auth context when creating Cortex instance:
+
+```typescript
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    userId: "user-123",
+    tenantId: "tenant-abc",
+  }),
+});
+```
+
+### Automatic Field Injection
+
+When auth context is provided, the SDK automatically:
+
+1. **Injects userId** into all operations where applicable
+2. **Injects tenantId** into all operations for tenant isolation
+3. **Injects sessionId** for session tracking
+4. **Validates** auth context on cross-entity operations
+
+**Affected Operations:**
+
+```typescript
+// Memory operations
+await cortex.memory.remember({
+  memorySpaceId: "user-space",
+  // userId: "user-123" ← Auto-injected
+  // tenantId: "tenant-abc" ← Auto-injected
+  userMessage: "Hello",
+  agentResponse: "Hi!",
+  userName: "User",
+});
+
+// User operations
+await cortex.users.update("user-123", {
+  displayName: "Alice",
+  // Validates userId matches auth context
+  // tenantId auto-injected
+});
+
+// Session operations
+await cortex.sessions.create({
+  userId: "user-123",
+  // tenantId: "tenant-abc" ← Auto-injected
+  metadata: { device: "web" },
+});
+
+// Fact operations
+await cortex.facts.store({
+  memorySpaceId: "space-1",
+  // userId: "user-123" ← Auto-injected
+  // tenantId: "tenant-abc" ← Auto-injected
+  fact: "User prefers dark mode",
+  factType: "preference",
+  confidence: 95,
+  sourceType: "system",
+});
+
+// Context operations
+await cortex.contexts.create({
+  purpose: "Handle request",
+  memorySpaceId: "agent-space",
+  // userId: "user-123" ← Auto-injected
+  // tenantId: "tenant-abc" ← Auto-injected
+});
+```
+
+### Query Filtering
+
+Auth context automatically filters queries:
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    userId: "user-123",
+    tenantId: "tenant-acme",
+  }),
+});
+
+// All queries automatically filtered by tenantId
+const spaces = await cortex.memorySpaces.list();
+// Only returns spaces for tenant-acme
+
+const users = await cortex.users.list({ limit: 100 });
+// Only returns users for tenant-acme
+
+const sessions = await cortex.sessions.list({ status: "active" });
+// Only returns sessions for tenant-acme
+
+// This provides complete tenant isolation
+```
+
+---
+
+## Multi-Tenancy Support
+
+### Tenant Isolation
+
+The `tenantId` field enables complete data separation for SaaS platforms:
+
+```typescript
+// Tenant A
+const cortexA = new Cortex({
+  auth: createAuthContext({
+    userId: "admin-a",
+    tenantId: "tenant-a",
+  }),
+});
+
+// Tenant B
+const cortexB = new Cortex({
+  auth: createAuthContext({
+    userId: "admin-b",
+    tenantId: "tenant-b",
+  }),
+});
+
+// Complete isolation - Tenant A cannot see Tenant B's data
+await cortexA.memory.remember({ memorySpaceId: "shared", ... });
+await cortexB.memory.search("shared", "anything");
+// Returns: [] (different tenant)
+```
+
+### Which Layers Support tenantId?
+
+**ALL Cortex layers automatically support tenant isolation:**
+
+| Layer | API | Tenant Isolation |
+|-------|-----|------------------|
+| **Layer 1a** | `cortex.conversations.*` | ✅ Auto-filtered by tenantId |
+| **Layer 1b** | `cortex.immutable.*` | ✅ Auto-filtered by tenantId |
+| **Layer 1c** | `cortex.mutable.*` | ✅ Auto-filtered by tenantId |
+| **Layer 2** | `cortex.vector.*` | ✅ Auto-filtered by tenantId |
+| **Layer 3** | `cortex.facts.*` | ✅ Auto-filtered by tenantId |
+| **Spaces** | `cortex.memorySpaces.*` | ✅ Auto-filtered by tenantId |
+| **Users** | `cortex.users.*` | ✅ Auto-filtered by tenantId |
+| **Contexts** | `cortex.contexts.*` | ✅ Auto-filtered by tenantId |
+| **Sessions** | `cortex.sessions.*` | ✅ Auto-filtered by tenantId |
+| **Graph** | Graph nodes | ✅ tenantId property on all nodes |
+
+### Tenant-Aware GDPR
+
+When deleting users, tenantId is respected:
+
+```typescript
+const cortex = new Cortex({
+  auth: createAuthContext({
+    userId: "admin",
+    tenantId: "tenant-acme",
+  }),
+});
+
+// Delete user within tenant
+await cortex.users.delete("user-123", { cascade: true });
+
+// Deletes:
+// ✅ All data with userId="user-123" AND tenantId="tenant-acme"
+// ❌ Does NOT affect user-123 in other tenants
+```
+
+---
+
+## Session Integration
+
+Auth context integrates with the Sessions API:
+
+### Creating Sessions
+
+```typescript
+const auth = createAuthContext({
+  userId: "user-123",
+  tenantId: "tenant-abc",
+  sessionId: "session-xyz", // Current session
+});
+
+const cortex = new Cortex({ convexUrl, auth });
+
+// Create or get session
+const session = await cortex.sessions.getOrCreate("user-123", {
+  deviceType: "web",
+  browser: "Chrome",
+});
+
+// Session automatically includes tenantId from auth context
+console.log(session.tenantId); // "tenant-abc"
+```
+
+### Session Activity Tracking
+
+```typescript
+// Auth context tracks which session is active
+const auth = createAuthContext({
+  userId: "user-123",
+  sessionId: "current-session",
+});
+
+// Touch session on user activity
+await cortex.sessions.touch("current-session");
+
+// Update last active timestamp
+```
+
+---
+
+## Security Considerations
+
+### 1. Always Extract tenantId from Secure Source
+
+```typescript
+// ✅ GOOD: Extract from signed JWT
+const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+const auth = createAuthContext({
+  userId: decoded.sub,
+  tenantId: decoded.tenant_id, // From secure token
+});
+
+// ❌ BAD: Trust client-provided value
+const auth = createAuthContext({
+  userId: decoded.sub,
+  tenantId: req.body.tenantId, // User could lie!
+});
+```
+
+### 2. Don't Store Sensitive Tokens
+
+```typescript
+// ❌ BAD: Storing secrets
+const auth = createAuthContext({
+  userId: "user-123",
+  claims: {
+    access_token: "secret-token", // Never!
+    refresh_token: "secret", // Never!
+    api_key: "secret-key", // Never!
+  },
+});
+
+// ✅ GOOD: Only public claims
+const auth = createAuthContext({
+  userId: decoded.sub,
+  claims: {
+    email: decoded.email,
+    iss: decoded.iss,
+    aud: decoded.aud,
+    // Only non-sensitive data
+  },
+});
+```
+
+### 3. Validate User Exists
+
+```typescript
+// Ensure user profile exists
+const auth = createAuthContext({ userId: "user-123" });
+const cortex = new Cortex({ convexUrl, auth });
+
+// Create user profile if needed
+const user = await cortex.users.getOrCreate("user-123", {
+  displayName: "New User",
+  preferences: {},
+});
+```
+
+---
+
+## Use Cases
+
+### Use Case 1: Single-Tenant Application
+
+No tenantId needed:
+
+```typescript
+const auth = createAuthContext({
+  userId: "user-123",
+  sessionId: "session-xyz",
+});
+
+const cortex = new Cortex({ convexUrl, auth });
+// All operations scoped to user, no tenant isolation
+```
+
+### Use Case 2: Multi-Tenant SaaS
+
+Complete tenant isolation:
+
+```typescript
+// Per-request auth context
+app.post("/api/chat", async (req, res) => {
+  const auth = createAuthContext({
+    userId: req.user.id,
+    tenantId: req.tenant.id, // From auth middleware
+    sessionId: req.session.id,
+  });
+
+  const cortex = new Cortex({ convexUrl, auth });
+
+  // All operations tenant-scoped
+  await cortex.memory.remember({...});
+
+  res.json({ success: true });
+});
+```
+
+### Use Case 3: Organization Hierarchies
+
+Tenant + org structure:
+
+```typescript
+const auth = createAuthContext({
+  userId: "user-123",
+  tenantId: "enterprise-corp", // Top-level tenant
+  organizationId: "engineering-team", // Sub-org
+  metadata: {
+    department: "backend",
+    role: "senior-engineer",
+  },
+});
+```
+
+### Use Case 4: Service Accounts
+
+Background jobs and automation:
+
+```typescript
+const serviceAuth = createAuthContext({
+  userId: "service-cleanup-bot",
+  metadata: {
+    type: "service_account",
+    purpose: "session_cleanup",
+    scheduledBy: "cron",
+  },
+});
+
+const cortex = new Cortex({ convexUrl, auth: serviceAuth });
+
+// Run maintenance operations
+await cortex.sessions.expireIdle();
+```
+
+---
+
+## Field Reference
+
+### Required Fields
+
+**userId** (string)
+- Unique user identifier
+- Required for all auth contexts
+- Used for user operations and GDPR cascade
+- Auto-injected into all entities with userId support
+
+### Optional Standard Fields
+
+**tenantId** (string, optional)
+- Tenant identifier for multi-tenant SaaS
+- Auto-injected into ALL operations for complete isolation
+- Filters all queries by tenant
+- Required for proper multi-tenant SaaS
+- See [Isolation Boundaries](../02-core-features/17-isolation-boundaries.md)
+
+**organizationId** (string, optional)
+- Organization within tenant (optional sub-grouping)
+- Use for hierarchical tenant structures
+- Not auto-filtered (application-level filtering)
+
+**sessionId** (string, optional)
+- Current session identifier
+- Used for session activity tracking
+- References session in Sessions API
+- Enables multi-device session management
+
+**authProvider** (string, optional)
+- Name of auth provider (e.g., 'auth0', 'clerk', 'custom')
+- Informational only (for logging/debugging)
+- Not used for filtering or logic
+
+**authMethod** (string, optional)
+- Authentication method used
+- Options: 'oauth', 'api_key', 'jwt', 'session', 'custom'
+- Informational only
+
+**authenticatedAt** (number, optional)
+- Unix timestamp (ms) when user authenticated
+- Used for session timeout calculations
+- Informational for audit logs
+
+### Extensible Fields
+
+**claims** (Record<string, unknown>, optional)
+- Raw claims from auth provider
+- JWT payload, OAuth token data, etc.
+- Store non-sensitive data only
+- Use for audit trails and debugging
+
+**metadata** (Record<string, unknown>, optional)
+- Application-specific metadata
+- Fully flexible structure
+- Store roles, permissions, preferences
+- Not auto-injected (read from auth context as needed)
+
+---
+
+## Usage Patterns
+
+### Pattern 1: Per-Request Context (APIs)
+
+Create new Cortex instance per request:
+
+```typescript
+// Express/Next.js API route
+async function handler(req, res) {
+  // Extract auth from request
+  const auth = createAuthContext({
+    userId: req.user.id,
+    tenantId: req.tenant.id,
+    sessionId: req.session.id,
+  });
+
+  // New instance per request
+  const cortex = new Cortex({ convexUrl, auth });
+
+  // Use for this request only
+  await cortex.memory.remember({...});
+
+  res.json({ success: true });
+}
+```
+
+**Benefits:**
+- Proper tenant isolation
+- No cross-request pollution
+- Clean auth context per request
+- Garbage collected after response
+
+### Pattern 2: Singleton Context (Single-User Apps)
+
+Reuse Cortex instance for entire app:
+
+```typescript
+// CLI or desktop app
+const auth = createAuthContext({
+  userId: "local-user",
+  // No tenantId (single user)
+});
+
+// Global instance
+export const cortex = new Cortex({ convexUrl, auth });
+
+// Use throughout app
+await cortex.memory.remember({...});
+await cortex.memory.search(...);
+```
+
+**Benefits:**
+- Simpler code
+- Better performance (connection reuse)
+- Suitable for CLI, desktop, single-user apps
+
+### Pattern 3: Context Switching (Multi-Org Users)
+
+Switch between organizations dynamically:
+
+```typescript
+// User switches organizations
+async function switchOrg(userId: string, newOrgId: string) {
+  const auth = createAuthContext({
+    userId,
+    organizationId: newOrgId,
+    metadata: { switchedAt: Date.now() },
+  });
+
+  return new Cortex({ convexUrl, auth });
+}
+
+// Usage
+const cortexOrgA = await switchOrg("user-123", "org-a");
+const cortexOrgB = await switchOrg("user-123", "org-b");
+// Different contexts for different orgs
+```
+
+---
+
+## Auto-Injection Details
+
+### What Gets Auto-Injected?
+
+When auth context is set, these fields are automatically added to entities:
+
+**Always Injected:**
+- `userId` → All entities with userId support (memories, conversations, facts, etc.)
+- `tenantId` → ALL entities in ALL layers (complete isolation)
+
+**Conditionally Injected:**
+- `sessionId` → Session operations only
+- `organizationId` → Metadata only (not used for filtering)
+
+**Never Injected:**
+- `claims` → Read from auth context as needed
+- `metadata` → Read from auth context as needed
+- `authProvider`, `authMethod`, `authenticatedAt` → Informational only
+
+### Validation on Operations
+
+The SDK validates auth context on operations:
+
+```typescript
+const auth = createAuthContext({
+  userId: "user-123",
+  tenantId: "tenant-a",
+});
+
+const cortex = new Cortex({ convexUrl, auth });
+
+// ✅ Valid: userId matches auth
+await cortex.users.update("user-123", { displayName: "Alice" });
+
+// ❌ Invalid: userId doesn't match auth (validation error in some contexts)
+// Note: You CAN update other users, but some operations validate
+await cortex.users.update("user-456", { displayName: "Bob" });
+// This works but may be restricted based on your application logic
+```
+
+---
+
+## Error Handling
+
+### AuthContextError
+
+Custom error class for auth context validation failures:
+
+```typescript
+import { AuthContextError } from "@cortexmemory/sdk";
+
+try {
+  const auth = createAuthContext({ tenantId: "tenant-1" }); // Missing userId
+} catch (error) {
+  if (error instanceof AuthContextError) {
+    console.error(error.code); // "MISSING_USER_ID"
+    console.error(error.field); // "userId"
+    console.error(error.message); // "userId is required"
+  }
+}
+```
+
+### Error Codes
+
+| Code | Description | Field |
+|------|-------------|-------|
+| `MISSING_USER_ID` | userId is required | `userId` |
+| `EMPTY_USER_ID` | userId cannot be empty string | `userId` |
+| `INVALID_USER_ID_TYPE` | userId must be a string | `userId` |
+| `EMPTY_TENANT_ID` | tenantId cannot be empty if provided | `tenantId` |
+| `EMPTY_SESSION_ID` | sessionId cannot be empty if provided | `sessionId` |
+| `INVALID_TIMESTAMP` | authenticatedAt must be positive number | `authenticatedAt` |
+| `INVALID_AUTH_METHOD` | authMethod must be valid enum value | `authMethod` |
+| `INVALID_CLAIMS_TYPE` | claims must be an object | `claims` |
+| `INVALID_METADATA_TYPE` | metadata must be an object | `metadata` |
+
+---
+
+## Best Practices
+
+### 1. Extract Auth Context Once Per Request
+
+```typescript
+// ✅ GOOD: Extract once, reuse
+const auth = extractAuthContext(req);
+const cortex = new Cortex({ convexUrl, auth });
+await cortex.memory.remember({...});
+await cortex.memory.search(...);
+
+// ❌ BAD: Extract multiple times
+const cortex1 = new Cortex({ convexUrl, auth: extractAuthContext(req) });
+const cortex2 = new Cortex({ convexUrl, auth: extractAuthContext(req) });
+```
+
+### 2. Use tenantId for All SaaS Apps
+
+```typescript
+// ✅ GOOD: Tenant isolation
+const auth = createAuthContext({
+  userId: "user-123",
+  tenantId: "customer-acme", // Required for SaaS
+});
+
+// ❌ BAD: No tenant isolation in multi-tenant app
+const auth = createAuthContext({
+  userId: "user-123",
+  // Missing tenantId - data leakage risk!
+});
+```
+
+### 3. Track Sessions for Analytics
+
+```typescript
+// ✅ GOOD: Session tracking
+const auth = createAuthContext({
+  userId: "user-123",
+  sessionId: req.session.id,
+});
+
+// Enables:
+// - Multi-device session management
+// - Activity tracking
+// - Session analytics
+// - Idle timeout detection
+```
+
+### 4. Store Minimal Claims
+
+```typescript
+// ✅ GOOD: Only what you need
+const auth = createAuthContext({
+  userId: decoded.sub,
+  claims: {
+    email: decoded.email,
+    iss: decoded.iss,
+  },
+});
+
+// ❌ BAD: Entire JWT payload
+const auth = createAuthContext({
+  userId: decoded.sub,
+  claims: decoded, // Could include sensitive data
+});
+```
+
+---
+
+## Advanced Usage
+
+### Dynamic Auth Context Updates
+
+**Note:** Auth context is immutable once set. To change context, create new Cortex instance:
+
+```typescript
+// Initial auth
+let cortex = new Cortex({
+  convexUrl,
+  auth: createAuthContext({ userId: "user-123", tenantId: "tenant-a" }),
+});
+
+// User switches tenant
+cortex = new Cortex({
+  convexUrl,
+  auth: createAuthContext({ userId: "user-123", tenantId: "tenant-b" }),
+});
+// New instance with new auth context
+```
+
+### Auth Context Without Cortex
+
+Auth context is just data - can be used independently:
+
+```typescript
+const auth = createAuthContext({
+  userId: "user-123",
+  tenantId: "tenant-abc",
+});
+
+// Pass to logging
+logger.info("User action", {
+  userId: auth.userId,
+  tenantId: auth.tenantId,
+});
+
+// Pass to analytics
+analytics.track("page_view", {
+  userId: auth.userId,
+  tenant: auth.tenantId,
+});
+
+// Use in your own logic
+if (auth.metadata?.role === "admin") {
+  // Allow admin action
+}
+```
+
+---
+
+## TypeScript Types
+
+### AuthContext Interface
+
+```typescript
+interface AuthContext {
+  // Required
+  userId: string;
+
+  // Optional standard fields
+  tenantId?: string;
+  organizationId?: string;
+  sessionId?: string;
+  authProvider?: string;
+  authMethod?: "oauth" | "api_key" | "jwt" | "session" | "custom";
+  authenticatedAt?: number;
+
+  // Extensible
+  claims?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+}
+```
+
+### AuthContextParams Interface
+
+```typescript
+interface AuthContextParams {
+  userId: string;
+  tenantId?: string;
+  organizationId?: string;
+  sessionId?: string;
+  authProvider?: string;
+  authMethod?: "oauth" | "api_key" | "jwt" | "session" | "custom";
+  authenticatedAt?: number;
+  claims?: Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+}
+```
+
+### AuthContextError Class
+
+```typescript
+class AuthContextError extends Error {
+  name: "AuthContextError";
+  code: string;
+  field?: string;
+
+  constructor(code: string, message: string, field?: string);
+}
+```
+
+---
+
+## Implementation Details
+
+### How Auto-Injection Works
+
+```typescript
+// When you create Cortex with auth
+const cortex = new Cortex({
+  convexUrl,
+  auth: createAuthContext({
+    userId: "user-123",
+    tenantId: "tenant-abc",
+  }),
+});
+
+// Internally, the SDK wraps all operations:
+class CortexSDK {
+  constructor(config) {
+    this.auth = config.auth;
+  }
+
+  async remember(params) {
+    // Auto-inject auth fields
+    const enrichedParams = {
+      ...params,
+      userId: params.userId || this.auth.userId,
+      tenantId: params.tenantId || this.auth.tenantId,
+    };
+
+    // Call Convex with enriched params
+    return await this.client.mutation(api.memories.remember, enrichedParams);
+  }
+}
+```
+
+### Query Filtering
+
+```typescript
+// Queries automatically filter by tenantId
+class CortexSDK {
+  async list(memorySpaceId, filters) {
+    // Auto-add tenantId filter
+    const enrichedFilters = {
+      ...filters,
+      tenantId: this.auth.tenantId,
+    };
+
+    return await this.client.query(api.memories.list, {
+      memorySpaceId,
+      filters: enrichedFilters,
+    });
+  }
+}
+```
+
+---
+
+## Next Steps
+
+- **[Isolation Boundaries](../02-core-features/17-isolation-boundaries.md)** - Complete isolation model
+- **[Sessions Operations](./14-sessions-operations.md)** - Session lifecycle API
+- **[User Operations](./04-user-operations.md)** - User profile management
+- **[Memory Space Operations](./11-memory-space-operations.md)** - Space management
+
+---
+
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

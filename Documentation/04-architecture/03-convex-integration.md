@@ -1,6 +1,6 @@
 # Convex Integration
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 How Cortex leverages Convex features for persistent memory, vector search, and real-time updates.
 
@@ -34,8 +34,8 @@ export const get = query({
   handler: async (ctx, args) => {
     const memory = await ctx.db.get(args.memoryId);
 
-    // Verify agent owns this memory
-    if (!memory || memory.agentId !== args.agentId) {
+    // Verify memory space owns this memory
+    if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return null;
     }
 
@@ -65,7 +65,7 @@ export const search = query({
         .withIndex("by_embedding", (q) =>
           q
             .similar("embedding", args.embedding, args.filters.limit || 20)
-            .eq("agentId", args.agentId),
+            .eq("memorySpaceId", args.memorySpaceId)
         )
         .collect();
     } else {
@@ -73,12 +73,12 @@ export const search = query({
       results = await ctx.db
         .query("memories")
         .withSearchIndex("by_content", (q) =>
-          q.search("content", args.query).eq("agentId", args.agentId),
+          q.search("content", args.query).eq("memorySpaceId", args.memorySpaceId)
         )
         .collect();
     }
 
-    // Apply filters (importance, tags, dates, etc.)
+    // Apply filters (importance, tags, dates, participantId, etc.)
     return applyFilters(results, args.filters);
   },
 });
@@ -369,14 +369,17 @@ export const storeWithAutoEmbed = action({
 ```typescript
 // convex/schema.ts
 memories: defineTable({
+  memoryId: v.string(),
   memorySpaceId: v.string(),
+  participantId: v.optional(v.string()),
+  tenantId: v.optional(v.string()),
   content: v.string(),
   embedding: v.optional(v.array(v.float64())),
   // ...
 }).vectorIndex("by_embedding", {
   vectorField: "embedding",
-  dimensions: 3072, // Configurable per deployment
-  filterFields: ["agentId", "userId"], // Fast pre-filtering
+  dimensions: 1536, // Default: text-embedding-3-small
+  filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
 });
 ```
 
@@ -388,7 +391,9 @@ export const semanticSearch = query({
   args: {
     memorySpaceId: v.string(),
     embedding: v.array(v.float64()),
+    tenantId: v.optional(v.string()),
     userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
     limit: v.number(),
   },
   handler: async (ctx, args) => {
@@ -397,12 +402,20 @@ export const semanticSearch = query({
       .withIndex("by_embedding", (q) =>
         q
           .similar("embedding", args.embedding, args.limit)
-          .eq("agentId", args.agentId),
+          .eq("memorySpaceId", args.memorySpaceId)
       );
 
-    // Optional user filtering (pre-filtered before similarity)
+    // Optional filters (pre-filtered before similarity via filterFields)
+    if (args.tenantId) {
+      q = q.filter((q) => q.eq(q.field("tenantId"), args.tenantId));
+    }
+
     if (args.userId) {
       q = q.filter((q) => q.eq(q.field("userId"), args.userId));
+    }
+
+    if (args.participantId) {
+      q = q.filter((q) => q.eq(q.field("participantId"), args.participantId));
     }
 
     return await q.collect();
@@ -426,13 +439,17 @@ export const semanticSearch = query({
 ```typescript
 // convex/schema.ts
 memories: defineTable({
-  content: v.string(),
   memorySpaceId: v.string(),
+  tenantId: v.optional(v.string()),
+  content: v.string(),
+  sourceType: v.union(...),
   userId: v.optional(v.string()),
+  agentId: v.optional(v.string()),
+  participantId: v.optional(v.string()),
   // ...
 }).searchIndex("by_content", {
   searchField: "content",
-  filterFields: ["agentId", "userId"],
+  filterFields: ["memorySpaceId", "tenantId", "sourceType", "userId", "agentId", "participantId"],
 });
 ```
 
@@ -444,20 +461,34 @@ export const keywordSearch = query({
   args: {
     memorySpaceId: v.string(),
     keywords: v.string(),
+    tenantId: v.optional(v.string()),
     userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
     limit: v.number(),
   },
   handler: async (ctx, args) => {
     let results = await ctx.db
       .query("memories")
-      .withSearchIndex("by_content", (q) =>
-        q.search("content", args.keywords).eq("agentId", args.agentId),
-      )
+      .withSearchIndex("by_content", (q) => {
+        let search = q
+          .search("content", args.keywords)
+          .eq("memorySpaceId", args.memorySpaceId);
+        
+        if (args.tenantId) {
+          search = search.eq("tenantId", args.tenantId);
+        }
+        
+        return search;
+      })
       .take(args.limit);
 
     // Additional filtering
     if (args.userId) {
       results = results.filter((m) => m.userId === args.userId);
+    }
+
+    if (args.participantId) {
+      results = results.filter((m) => m.participantId === args.participantId);
     }
 
     return results;
@@ -621,17 +652,19 @@ client.onUpdate(api.memories.list, { memorySpaceId: "agent-1" }, (memories) => {
 
 ### remember() - Multi-Layer Mutation
 
-The `remember()` helper coordinates multiple mutations:
+The `remember()` helper coordinates multiple mutations across all layers:
 
 ```typescript
 // SDK call
 await cortex.memory.remember({
-  memorySpaceId: 'agent-1',
+  memorySpaceId: 'user-123-personal',
+  participantId: 'my-assistant',  // NEW: Hive Mode tracking
   conversationId: 'conv-123',
   userMessage: 'Hello',
   agentResponse: 'Hi!',
   userId: 'user-123',
   userName: 'Alex',
+  extractFacts: true,  // NEW: Auto-extract facts
 });
 
 // Becomes coordinated mutations
@@ -646,6 +679,7 @@ export const remember = mutation({
         role: "user",
         content: args.userMessage,
         userId: args.userId,
+        participantId: args.participantId,
         timestamp: Date.now(),
       },
     });
@@ -657,28 +691,31 @@ export const remember = mutation({
         id: generateId(),
         role: "agent",
         content: args.agentResponse,
-        memorySpaceId: args.agentId,
+        participantId: args.participantId,
         timestamp: Date.now(),
       },
     });
 
     // 3. Create vector memory (Layer 2)
     const memoryId = await ctx.db.insert("memories", {
-      memorySpaceId: args.agentId,
+      memoryId: generateId(),
+      memorySpaceId: args.memorySpaceId,
+      participantId: args.participantId,
+      tenantId: args.tenantId,
       userId: args.userId,
       content: `${args.userName}: ${args.userMessage}\nAgent: ${args.agentResponse}`,
       contentType: "summarized",
-      source: {
-        type: "conversation",
-        userId: args.userId,
-        userName: args.userName,
-        timestamp: Date.now(),
-      },
+      sourceType: "conversation",
+      sourceUserId: args.userId,
+      sourceUserName: args.userName,
+      sourceTimestamp: Date.now(),
+      messageRole: "user",
       conversationRef: {
         conversationId: args.conversationId,
-        messageIds: [userMsgId, agentMsgId],  // ← Links to Layer 1
+        messageIds: [userMsgId, agentMsgId],  // ← Links to Layer 1a
       },
-      metadata: args.metadata,
+      importance: args.importance || 50,
+      tags: args.tags || [],
       version: 1,
       previousVersions: [],
       accessCount: 0,
@@ -686,35 +723,76 @@ export const remember = mutation({
       updatedAt: Date.now(),
     });
 
-    // All 3 steps are atomic (Convex transaction)
+    // 4. Extract and store facts (Layer 3) if configured
+    let factIds = [];
+    if (args.extractFacts && ctx.llm) {
+      const facts = await extractFactsFromExchange(
+        args.userMessage,
+        args.agentResponse
+      );
+      
+      for (const fact of facts) {
+        const factId = await ctx.runMutation("facts:store", {
+          ...fact,
+          memorySpaceId: args.memorySpaceId,
+          participantId: args.participantId,
+          userId: args.userId,
+          sourceRef: {
+            conversationId: args.conversationId,
+            messageIds: [userMsgId, agentMsgId],
+          },
+        });
+        
+        factIds.push(factId);
+      }
+    }
+
+    // All steps are atomic (Convex transaction)
     return {
       conversation: { messageIds: [userMsgId, agentMsgId] },
       memories: [memoryId],
+      facts: factIds,  // NEW: Facts extracted
     };
   },
 });
 ```
 
-**Transaction guarantee:** All 3 inserts succeed or all fail (no partial state).
+**Transaction guarantee:** All inserts succeed or all fail (no partial state).  
+**Orchestration:** Handles L1a + L2 + L3 in one call.
 
 ---
 
 ## Index Usage Patterns
 
-### Agent Isolation
+### Memory Space Isolation
 
 ```typescript
-// Compound index for agent+user queries
-.index("by_agent_userId", ["agentId", "userId"])
+// Compound index for space+user queries
+.index("by_memorySpace_userId", ["memorySpaceId", "userId"])
 
 // Efficient query
 const memories = await ctx.db
   .query("memories")
-  .withIndex("by_agent_userId", (q) =>
-    q.eq("agentId", agentId).eq("userId", userId)
+  .withIndex("by_memorySpace_userId", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("userId", userId)
   )
   .collect();
 // Uses compound index ✅ O(log n)
+```
+
+### Multi-Tenancy
+
+```typescript
+// Tenant+space compound index
+.index("by_tenant_space", ["tenantId", "memorySpaceId"])
+
+// Tenant-isolated query
+const memories = await ctx.db
+  .query("memories")
+  .withIndex("by_tenant_space", (q) =>
+    q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId)
+  )
+  .collect();
 ```
 
 ### GDPR Cascade
@@ -723,27 +801,33 @@ const memories = await ctx.db
 // userId index across all tables
 .index("by_userId", ["userId"])
 
-// Fast cascade query
+// Fast cascade query (across ALL memory spaces)
 const allMemories = await ctx.db
   .query("memories")
   .withIndex("by_userId", (q) => q.eq("userId", "user-123"))
   .collect();
 
+const allFacts = await ctx.db
+  .query("facts")
+  .withIndex("by_userId", (q) => q.eq("userId", "user-123"))
+  .collect();
+
 // Delete all (in transaction)
-for (const memory of allMemories) {
-  await ctx.db.delete(memory._id);
+for (const record of [...allMemories, ...allFacts]) {
+  await ctx.db.delete(record._id);
 }
 ```
 
-### Hierarchical Contexts
+### Hierarchical Contexts (Cross-Space Support)
 
 ```typescript
 // Multiple indexes for hierarchy navigation
 .index("by_parentId", ["parentId"])
 .index("by_rootId", ["rootId"])
-.index("by_depth", ["depth"])
+.index("by_memorySpace", ["memorySpaceId"])
+.index("by_memorySpace_status", ["memorySpaceId", "status"])
 
-// Get all children
+// Get all children (can be cross-space)
 await ctx.db
   .query("contexts")
   .withIndex("by_parentId", (q) => q.eq("parentId", parentId))
@@ -753,6 +837,14 @@ await ctx.db
 await ctx.db
   .query("contexts")
   .withIndex("by_rootId", (q) => q.eq("rootId", rootId))
+  .collect();
+
+// Get active contexts in memory space
+await ctx.db
+  .query("contexts")
+  .withIndex("by_memorySpace_status", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("status", "active")
+  )
   .collect();
 ```
 

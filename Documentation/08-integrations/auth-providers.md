@@ -1,19 +1,28 @@
-# Authentication Integration
+# Authentication Integration Guide
 
-> **Last Updated**: 2025-12-26
+> **Last Updated**: 2026-01-01
 
-Guide for integrating authentication with Cortex for user-facing agentic platforms.
+Generic patterns for integrating authentication systems with Cortex.
+
+> ⚠️ **Note:** Cortex provides the **Auth Context API** but does not include specific auth provider integrations (Auth0, Clerk, etc.). This guide shows generic patterns for integrating with any auth system.
 
 ## Overview
 
-Cortex provides a flexible authentication context system that integrates with any auth provider while maintaining framework agnosticism. The auth context flows through all API operations, enabling consistent user tracking, multi-tenancy, and session management.
+Cortex's Auth Context API is **framework-agnostic** - it works with any authentication system by accepting a simple data structure. Your responsibility is to extract user/tenant information from your auth system and pass it to Cortex.
 
-**Key Principles:**
+**What Cortex Provides:**
 
-- **Framework Agnostic**: Works with Auth0, Clerk, NextAuth, Firebase, custom JWT, or any auth system
-- **Batteries Included**: Standard fields for common use cases, fully extensible for custom needs
-- **Zero Lock-in**: Auth context is just data - no proprietary protocol or SDK required
-- **Implicit Tracking**: Once set, auth context propagates automatically through all operations
+- ✅ `createAuthContext()` function - Validates and creates auth context
+- ✅ Auto-injection of auth fields into all operations
+- ✅ Automatic tenant filtering on all queries
+- ✅ Session tracking integration
+- ✅ GDPR cascade deletion support
+
+**What You Provide:**
+
+- Your authentication system (Auth0, Clerk, custom JWT, etc.)
+- Code to extract userId/tenantId from your auth tokens
+- User validation and authorization logic
 
 ---
 
@@ -106,163 +115,193 @@ await cortex.memory.remember({
 
 ---
 
-## Provider Integration Examples
+## Generic Integration Pattern
 
-### Auth0
+> **This is a template** - adapt it to your auth system.
 
-```typescript
-import { useAuth0 } from "@auth0/auth0-react";
+### Step 1: Extract Auth Data
 
-function useAuthContext(): AuthContext {
-  const { user, getAccessTokenSilently } = useAuth0();
-
-  return {
-    userId: user.sub,
-    authProvider: "auth0",
-    authMethod: "oauth",
-    authenticatedAt: Date.now(),
-    claims: {
-      email: user.email,
-      name: user.name,
-      picture: user.picture,
-      email_verified: user.email_verified,
-    },
-    metadata: {
-      // Your custom claims from Auth0 Rules/Actions
-      roles: user["https://myapp.com/roles"],
-      permissions: user["https://myapp.com/permissions"],
-    },
-  };
-}
-```
-
-### Clerk
+Extract user/tenant info from your auth system:
 
 ```typescript
-import { useUser, useAuth } from "@clerk/nextjs";
+// Your auth system (any provider)
+const yourAuthData = await yourAuthSystem.getCurrentUser();
 
-function useAuthContext(): AuthContext {
-  const { user } = useUser();
-  const { sessionId, orgId } = useAuth();
-
-  return {
-    userId: user.id,
-    sessionId,
-    organizationId: orgId,
-    authProvider: "clerk",
-    authMethod: "session",
-    authenticatedAt: Date.now(),
-    claims: {
-      email: user.primaryEmailAddress?.emailAddress,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    },
-    metadata: {
-      publicMetadata: user.publicMetadata,
-      // Access private metadata server-side only
-    },
-  };
-}
+// Extract relevant fields
+const extracted = {
+  userId: yourAuthData.id || yourAuthData.sub || yourAuthData.userId,
+  tenantId: yourAuthData.tenantId || yourAuthData.organizationId,
+  sessionId: yourAuthData.sessionId || yourAuthData.sid,
+  // ... map your auth data to Cortex fields
+};
 ```
 
-### NextAuth
+### Step 2: Create Auth Context
 
 ```typescript
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./auth";
+import { createAuthContext } from "@cortexmemory/sdk";
 
-async function getAuthContext(): Promise<AuthContext> {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user) {
-    throw new Error("Not authenticated");
-  }
-
-  return {
-    userId: session.user.id,
-    sessionId: session.sessionToken,
-    authProvider: "nextauth",
-    authMethod: "oauth",
-    authenticatedAt: Date.now(),
-    claims: {
-      email: session.user.email,
-      name: session.user.name,
-      image: session.user.image,
-    },
-    metadata: {
-      role: session.user.role,
-      // Custom fields from your adapter
-    },
-  };
-}
+const auth = createAuthContext({
+  userId: extracted.userId,
+  tenantId: extracted.tenantId, // For multi-tenant apps
+  sessionId: extracted.sessionId, // For session tracking
+  authProvider: "your-provider-name", // e.g., "auth0", "custom"
+  authMethod: "jwt", // or "oauth", "session", etc.
+  authenticatedAt: Date.now(),
+  claims: {
+    // Store non-sensitive claims for audit
+    email: extracted.email,
+    // ... other safe claims
+  },
+  metadata: {
+    // Application-specific data
+    role: extracted.role,
+    // ... your custom fields
+  },
+});
 ```
 
-### Firebase Auth
+### Step 3: Initialize Cortex
 
 ```typescript
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Cortex } from "@cortexmemory/sdk";
 
-function useAuthContext(): AuthContext | null {
-  const [auth, setAuth] = useState<AuthContext | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), async (user) => {
-      if (user) {
-        const token = await user.getIdTokenResult();
-        setAuth({
-          userId: user.uid,
-          authProvider: "firebase",
-          authMethod: "oauth",
-          authenticatedAt: new Date(token.authTime).getTime(),
-          claims: {
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-            emailVerified: user.emailVerified,
-          },
-          metadata: {
-            // Custom claims from Firebase
-            ...token.claims,
-          },
-        });
-      } else {
-        setAuth(null);
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
-  return auth;
-}
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth, // Pass auth context
+});
 ```
 
-### Custom JWT
+### Step 4: Use Cortex
+
+```typescript
+// All operations automatically include auth context
+await cortex.memory.remember({
+  memorySpaceId: "user-space",
+  userMessage: "Hello",
+  agentResponse: "Hi!",
+  userName: "User",
+  // userId, tenantId auto-injected from auth
+});
+```
+
+---
+
+## Example: JWT-Based Auth
+
+Complete example with JWT tokens:
 
 ```typescript
 import jwt from "jsonwebtoken";
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
-function parseAuthContext(token: string): AuthContext {
-  const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-    sub: string;
-    tenant_id?: string;
-    org_id?: string;
-    session_id?: string;
-    iat: number;
-    [key: string]: unknown;
-  };
+// Middleware to extract and validate auth
+function authMiddleware(req, res, next) {
+  const token = req.headers.authorization?.replace("Bearer ", "");
 
-  return {
-    userId: decoded.sub,
-    tenantId: decoded.tenant_id,
-    organizationId: decoded.org_id,
-    sessionId: decoded.session_id,
-    authProvider: "custom",
-    authMethod: "jwt",
-    authenticatedAt: decoded.iat * 1000,
-    claims: decoded,
-  };
+  if (!token) {
+    return res.status(401).json({ error: "No token" });
+  }
+
+  try {
+    // Verify and decode JWT
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      sub: string;
+      tenant_id?: string;
+      session_id?: string;
+      email?: string;
+      role?: string;
+      [key: string]: unknown;
+    };
+
+    // Create auth context
+    req.authContext = createAuthContext({
+      userId: decoded.sub,
+      tenantId: decoded.tenant_id,
+      sessionId: decoded.session_id,
+      authProvider: "custom-jwt",
+      authMethod: "jwt",
+      authenticatedAt: Date.now(),
+      claims: {
+        email: decoded.email,
+        // Only non-sensitive claims
+      },
+      metadata: {
+        role: decoded.role,
+        // Your app data
+      },
+    });
+
+    next();
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token" });
+  }
 }
+
+// Use in routes
+app.post("/api/chat", authMiddleware, async (req, res) => {
+  const cortex = new Cortex({
+    convexUrl: process.env.CONVEX_URL!,
+    auth: req.authContext,
+  });
+
+  // Use cortex with auth context
+  await cortex.memory.remember({
+    memorySpaceId: `user-${req.authContext.userId}-personal`,
+    userMessage: req.body.message,
+    agentResponse: await generateResponse(req.body.message),
+    userName: req.authContext.claims?.email || "User",
+  });
+
+  res.json({ success: true });
+});
+```
+
+---
+
+## Example: Session-Based Auth
+
+Using traditional session cookies:
+
+```typescript
+import session from "express-session";
+
+// Session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// Auth middleware
+function requireAuth(req, res, next) {
+  if (!req.session.userId) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  // Create auth context from session
+  req.authContext = createAuthContext({
+    userId: req.session.userId,
+    tenantId: req.session.tenantId,
+    sessionId: req.session.id,
+    authMethod: "session",
+  });
+
+  next();
+}
+
+// Use in routes
+app.post("/api/chat", requireAuth, async (req, res) => {
+  const cortex = new Cortex({
+    convexUrl: process.env.CONVEX_URL!,
+    auth: req.authContext,
+  });
+
+  // Use cortex...
+  res.json({ success: true });
+});
 ```
 
 ---
@@ -549,8 +588,538 @@ const auth = createAuthContext({
 
 ---
 
-## Related APIs
+---
 
-- [Sessions Operations](../03-api-reference/16-sessions-operations.md) - Session lifecycle management
-- [User Operations](../03-api-reference/04-user-operations.md) - User profiles and GDPR deletion
-- [Governance Policies](../03-api-reference/10-governance-policies-api.md) - Session lifecycle policies
+## Framework Examples
+
+> **Generic patterns** - adapt to your specific auth provider.
+
+### Next.js API Route
+
+```typescript
+// app/api/chat/route.ts
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+
+export async function POST(req: Request) {
+  // Extract auth from YOUR auth system (Auth0, Clerk, custom, etc.)
+  const yourAuthData = await getYourAuthData(req);
+
+  if (!yourAuthData.userId) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  // Create auth context from your data
+  const cortex = new Cortex({
+    convexUrl: process.env.CONVEX_URL!,
+    auth: createAuthContext({
+      userId: yourAuthData.userId,
+      tenantId: yourAuthData.tenantId, // For multi-tenant
+      sessionId: yourAuthData.sessionId,
+    }),
+  });
+
+  const { message } = await req.json();
+
+  await cortex.memory.remember({
+    memorySpaceId: `user-${yourAuthData.userId}-personal`,
+    userMessage: message,
+    agentResponse: "Processing...",
+    userName: yourAuthData.name || "User",
+  });
+
+  return new Response("OK");
+}
+```
+
+### Express.js with Middleware
+
+```typescript
+// middleware/auth.ts
+import { Request, Response, NextFunction } from "express";
+import { createAuthContext } from "@cortexmemory/sdk";
+
+export async function authMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  // Extract from YOUR auth system
+  const authData = await extractYourAuthData(req);
+
+  if (!authData.userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  // Create auth context
+  req.authContext = createAuthContext({
+    userId: authData.userId,
+    tenantId: authData.tenantId,
+    sessionId: authData.sessionId,
+  });
+
+  next();
+}
+
+// routes/chat.ts
+app.post("/chat", authMiddleware, async (req, res) => {
+  const cortex = new Cortex({
+    convexUrl: process.env.CONVEX_URL!,
+    auth: req.authContext,
+  });
+
+  // Use cortex...
+  res.json({ success: true });
+});
+```
+
+### JWT Token Validation
+
+```typescript
+import jwt from "jsonwebtoken";
+import { createAuthContext } from "@cortexmemory/sdk";
+
+function extractAuthFromJWT(token: string) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      sub: string;
+      tenant_id?: string;
+      session_id?: string;
+      [key: string]: unknown;
+    };
+
+    return createAuthContext({
+      userId: decoded.sub,
+      tenantId: decoded.tenant_id,
+      sessionId: decoded.session_id,
+      authMethod: "jwt",
+      authenticatedAt: Date.now(),
+      claims: {
+        // Only non-sensitive claims
+        email: decoded.email,
+      },
+    });
+  } catch (error) {
+    throw new Error("Invalid JWT token");
+  }
+}
+
+// Usage
+const token = req.headers.authorization?.replace("Bearer ", "");
+const auth = extractAuthFromJWT(token);
+const cortex = new Cortex({ convexUrl, auth });
+```
+
+## Example: API Key Auth
+
+Using API keys for service accounts:
+
+```typescript
+// API key validation
+function validateApiKey(apiKey: string) {
+  // Your validation logic
+  const key = db.apiKeys.findOne({ key: apiKey });
+
+  if (!key) {
+    throw new Error("Invalid API key");
+  }
+
+  return createAuthContext({
+    userId: key.userId,
+    tenantId: key.tenantId,
+    authMethod: "api_key",
+    authenticatedAt: Date.now(),
+    metadata: {
+      apiKeyId: key.id,
+      permissions: key.permissions,
+    },
+  });
+}
+
+// Use in API
+app.post("/api/memory", async (req, res) => {
+  const apiKey = req.headers["x-api-key"];
+
+  if (!apiKey) {
+    return res.status(401).json({ error: "Missing API key" });
+  }
+
+  try {
+    const auth = validateApiKey(apiKey);
+    const cortex = new Cortex({ convexUrl, auth });
+
+    // Use cortex...
+    res.json({ success: true });
+  } catch (error) {
+    res.status(401).json({ error: "Invalid API key" });
+  }
+});
+```
+
+---
+
+## Security Considerations
+
+### 1. Never Store Sensitive Tokens
+
+```typescript
+// ❌ BAD: Storing sensitive tokens
+const auth = createAuthContext({
+  userId: "user-123",
+  claims: {
+    access_token: "secret-token", // Never store!
+    refresh_token: "secret-refresh", // Never store!
+  },
+});
+
+// ✅ GOOD: Store only public claims
+const auth = createAuthContext({
+  userId: decoded.sub,
+  claims: {
+    email: decoded.email,
+    iss: decoded.iss,
+    aud: decoded.aud,
+    // Only non-sensitive claims
+  },
+});
+```
+
+### 2. Validate tenantId from Token
+
+```typescript
+// ✅ GOOD: Extract tenantId from secure token
+const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+const auth = createAuthContext({
+  userId: decoded.sub,
+  tenantId: decoded.tenant_id, // From signed token
+});
+
+// ❌ BAD: Trust client-provided tenantId
+const auth = createAuthContext({
+  userId: decoded.sub,
+  tenantId: req.body.tenantId, // User could lie!
+});
+```
+
+### 3. Rotate Sessions Regularly
+
+```typescript
+// Expire old sessions periodically
+await cortex.sessions.expireIdle({
+  idleTimeout: 30 * 60 * 1000, // 30 minutes
+});
+
+// End all sessions on password change
+await cortex.sessions.endAll(userId);
+```
+
+### 4. Audit Auth Context Usage
+
+```typescript
+// Log auth context for security audit
+await auditLog.record({
+  action: "cortex_operation",
+  userId: auth.userId,
+  tenantId: auth.tenantId,
+  operation: "memory.remember",
+  timestamp: Date.now(),
+});
+```
+
+---
+
+## Per-Request vs Singleton Pattern
+
+### Per-Request (Recommended for APIs)
+
+Create new Cortex instance per request for tenant isolation:
+
+```typescript
+// API route handler
+app.post("/api/chat", async (req, res) => {
+  // Extract auth from request
+  const authContext = extractAuthContext(req);
+
+  // New Cortex instance per request
+  const cortex = new Cortex({
+    convexUrl: process.env.CONVEX_URL!,
+    auth: authContext, // Request-specific auth
+  });
+
+  // Operations use this request's auth
+  await cortex.memory.remember({...});
+
+  res.json({ success: true });
+});
+
+// ✅ Benefits:
+// - Proper tenant isolation
+// - No cross-request pollution
+// - Clean auth context per request
+```
+
+### Singleton (For Single-User Apps)
+
+Reuse Cortex instance for single-user applications:
+
+```typescript
+// Single-user app (desktop, CLI)
+const auth = createAuthContext({
+  userId: "local-user",
+  // No tenantId needed
+});
+
+// Global Cortex instance
+const cortex = new Cortex({ convexUrl, auth });
+
+// Use throughout app
+await cortex.memory.remember({...});
+await cortex.memory.search(...);
+
+// ✅ Benefits:
+// - Simpler code
+// - Better performance (connection reuse)
+// - Suitable for CLI, desktop apps
+```
+
+---
+
+## Troubleshooting
+
+### Issue 1: "User not found"
+
+**Symptom:** Operations fail with user not found errors
+
+**Cause:** userId in auth context doesn't match user profile
+
+**Solution:**
+```typescript
+// Ensure user profile exists
+const auth = createAuthContext({ userId: "user-123" });
+const cortex = new Cortex({ convexUrl, auth });
+
+// Create user profile if needed
+await cortex.users.getOrCreate("user-123", {
+  displayName: "New User",
+  preferences: {},
+});
+```
+
+### Issue 2: Cross-Tenant Data Leakage
+
+**Symptom:** Users see data from other tenants
+
+**Cause:** tenantId not set in auth context
+
+**Solution:**
+```typescript
+// ✅ Always extract tenantId from secure source
+const decoded = jwt.verify(token, secret);
+const auth = createAuthContext({
+  userId: decoded.sub,
+  tenantId: decoded.tenant_id, // From signed token
+});
+```
+
+### Issue 3: Session Not Tracking Activity
+
+**Symptom:** Sessions expire even when user is active
+
+**Cause:** Not calling `touch()` on user interactions
+
+**Solution:**
+```typescript
+// Update session activity on each interaction
+await cortex.sessions.touch(sessionId);
+
+// Or use getOrCreate which auto-touches
+const session = await cortex.sessions.getOrCreate(userId, metadata);
+```
+
+---
+
+## GDPR Integration
+
+Auth context enables cascade deletion:
+
+```typescript
+// User requests data deletion
+const auth = createAuthContext({
+  userId: "user-to-delete",
+  tenantId: "customer-acme",
+});
+
+const cortex = new Cortex({ convexUrl, auth });
+
+// Cascade delete respects auth context
+await cortex.users.delete("user-to-delete", {
+  cascade: true, // Delete across ALL layers
+});
+
+// Deletes:
+// ✅ All data with userId="user-to-delete"
+// ✅ Only within tenantId="customer-acme" (if set)
+// ✅ Conversations, memories, facts, sessions, graph nodes
+```
+
+See [User Operations - GDPR Cascade](../03-api-reference/04-user-operations.md#delete) for complete details.
+
+---
+
+## Advanced Patterns
+
+### Pattern 1: Impersonation (Admin)
+
+```typescript
+// Admin impersonating user for support
+const adminAuth = createAuthContext({
+  userId: "customer-user-123", // Impersonated user
+  tenantId: "customer-acme",
+  metadata: {
+    impersonatedBy: "admin-456",
+    impersonationReason: "Customer support",
+    impersonatedAt: Date.now(),
+  },
+});
+
+const cortex = new Cortex({ convexUrl, auth: adminAuth });
+
+// Operations run as customer-user-123
+// But tracked as admin impersonation in metadata
+```
+
+### Pattern 2: Service Account
+
+```typescript
+// Background job with service account
+const serviceAuth = createAuthContext({
+  userId: "service-account-cleanup",
+  metadata: {
+    type: "service_account",
+    purpose: "cleanup_old_sessions",
+  },
+});
+
+const cortex = new Cortex({ convexUrl, auth: serviceAuth });
+
+// Run cleanup operations
+await cortex.sessions.expireIdle();
+```
+
+### Pattern 3: Dynamic Tenant Selection
+
+```typescript
+// User switches between organizations
+async function switchOrganization(userId: string, newOrgId: string) {
+  // Create new auth context with different tenant
+  const auth = createAuthContext({
+    userId,
+    tenantId: newOrgId, // Changed tenant
+    organizationId: newOrgId,
+    metadata: {
+      switchedAt: Date.now(),
+    },
+  });
+
+  // New Cortex instance for new tenant context
+  return new Cortex({ convexUrl, auth });
+}
+```
+
+---
+
+## Testing
+
+### Mock Auth Context
+
+```typescript
+// test/helpers.ts
+export function createMockAuthContext(overrides?: Partial<AuthContext>) {
+  return createAuthContext({
+    userId: "test-user-123",
+    tenantId: "test-tenant",
+    sessionId: "test-session",
+    authProvider: "test",
+    authenticatedAt: Date.now(),
+    ...overrides,
+  });
+}
+
+// test/memory.test.ts
+it("should store memory with auth context", async () => {
+  const auth = createMockAuthContext({ userId: "test-user" });
+  const cortex = new Cortex({ convexUrl: testUrl, auth });
+
+  await cortex.memory.remember({...});
+  // Assertions...
+});
+```
+
+---
+
+## Migration Guide
+
+### From No Auth → With Auth
+
+```typescript
+// Before: No auth context
+const cortex = new Cortex({ convexUrl });
+await cortex.memory.remember({
+  userId: "user-123", // Manual
+  // ...
+});
+
+// After: With auth context
+const auth = createAuthContext({ userId: "user-123" });
+const cortex = new Cortex({ convexUrl, auth });
+await cortex.memory.remember({
+  // userId automatically set from auth
+  // ...
+});
+```
+
+### From Single-Tenant → Multi-Tenant
+
+```typescript
+// Before: No tenant isolation
+const auth = createAuthContext({
+  userId: req.user.id,
+  // No tenantId
+});
+
+// After: With tenant isolation
+const auth = createAuthContext({
+  userId: req.user.id,
+  tenantId: req.tenant.id, // Added tenant
+});
+
+// All operations now tenant-scoped
+```
+
+---
+
+---
+
+## Next Steps
+
+### Understanding Auth Context
+
+- **[Auth Context API](../03-api-reference/15-auth-context-api.md)** - Complete API reference
+- **[Authentication](../02-core-features/18-authentication.md)** - Core concepts guide
+
+### Related Features
+
+- **[Isolation Boundaries](../02-core-features/17-isolation-boundaries.md)** - Multi-layer isolation model
+- **[Sessions Management](../02-core-features/14-sessions-management.md)** - Session lifecycle
+- **[User Profiles](../02-core-features/03-user-profiles.md)** - User management + GDPR
+- **[Memory Spaces](../02-core-features/01-memory-spaces.md)** - Space isolation
+
+### API Reference
+
+- **[Sessions Operations API](../03-api-reference/14-sessions-operations.md)** - Session API
+- **[User Operations API](../03-api-reference/04-user-operations.md)** - User API
+- **[Memory Space Operations API](../03-api-reference/11-memory-space-operations.md)** - Space API
+
+---
+
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+

@@ -80,21 +80,25 @@ The CLI handles everything:
 **For programmatic access, the SDK is just as simple:**
 
 ```typescript
-import { Cortex } from "@cortexmemory/sdk";
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
+// Works with ANY auth system (Auth0, Clerk, Okta, WorkOS, custom JWT, etc.)
 const cortex = new Cortex({ 
-  convexUrl: process.env.CONVEX_URL // Set by CLI
+  convexUrl: process.env.CONVEX_URL,
+  auth: createAuthContext({
+    userId: yourUser.id,           // From your existing auth
+    tenantId: yourUser.tenantId,   // Optional (for multi-tenant SaaS)
+  }),
 });
 
 // Store a conversation
 await cortex.memory.remember({
   memorySpaceId: "user-1-personal",
-  participantId: "my-agent",
   conversationId: "conv-123",
   userMessage: "I prefer dark mode",
   agentResponse: "I'll remember that!",
-  userId: "user-1",
   userName: "User",
+  // userId auto-injected from auth
 });
 
 // Search works immediately
@@ -103,6 +107,8 @@ const memories = await cortex.memory.search(
   "what are the user preferences?",
 );
 ```
+
+> **Auth Integration:** Cortex is **framework-agnostic** - it works with whatever auth system you already use. Just extract `userId` and optionally `tenantId`, no complex integration needed. See [Authentication](../02-core-features/18-authentication.md).
 
 ### Key Capabilities
 
