@@ -274,7 +274,9 @@ console.log(`Current status: ${ctx.status} (v${ctx.version})`);
 console.log(`Previous status: ${ctx.previousVersions?.[0]?.status} (v1)`);
 
 // Parent can check children status
-const chain = await cortex.contexts.get(context.contextId, { includeChain: true });
+const chain = await cortex.contexts.get(context.contextId, {
+  includeChain: true,
+});
 const allComplete = chain.children.every((c) => c.status === "completed");
 
 if (allComplete) {
@@ -888,16 +890,19 @@ await cortex.contexts.create(
     memorySpaceId: "supervisor-space",
     userId: "user-123",
   },
-  { syncToGraph: true } // Sync to graph!
+  { syncToGraph: true }, // Sync to graph!
 );
 
 // Query hierarchy via graph (much faster for deep chains)
-const hierarchy = await graphAdapter.query(`
+const hierarchy = await graphAdapter.query(
+  `
   MATCH (root:Context {contextId: $contextId})
   MATCH path = (root)<-[:CHILD_OF*0..10]-(descendants:Context)
   RETURN descendants
   ORDER BY descendants.depth
-`, { contextId: root.contextId });
+`,
+  { contextId: root.contextId },
+);
 // Result: Entire hierarchy in <10ms!
 ```
 

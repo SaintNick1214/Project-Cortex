@@ -29,17 +29,17 @@ Some A2A operations require **real-time pub/sub infrastructure**:
 
 **Validation Constraints:**
 
-| Field | Constraint | Details |
-|-------|------------|---------|
-| Agent IDs (`from`, `to`) | Pattern: `/^[a-zA-Z0-9_-]+$/` | Only alphanumeric, hyphens, underscores |
-| Agent IDs (`from`, `to`) | Max length: 100 characters | |
-| `message` | Max size: 100KB | Measured in UTF-8 bytes |
-| `importance` | Integer 0-100 | Default: 60 for send/broadcast, 70 for request |
-| `timeout` | Integer 1000-300000ms | Default: 30000ms (30 seconds) |
-| `retries` | Integer 0-10 | Default: 1 |
-| `to[]` (broadcast) | Max 100 recipients | No duplicates, sender not allowed |
-| `limit` | Integer 1-1000 | Default: 100 |
-| `offset` | Integer ≥ 0 | Default: 0 |
+| Field                    | Constraint                    | Details                                        |
+| ------------------------ | ----------------------------- | ---------------------------------------------- |
+| Agent IDs (`from`, `to`) | Pattern: `/^[a-zA-Z0-9_-]+$/` | Only alphanumeric, hyphens, underscores        |
+| Agent IDs (`from`, `to`) | Max length: 100 characters    |                                                |
+| `message`                | Max size: 100KB               | Measured in UTF-8 bytes                        |
+| `importance`             | Integer 0-100                 | Default: 60 for send/broadcast, 70 for request |
+| `timeout`                | Integer 1000-300000ms         | Default: 30000ms (30 seconds)                  |
+| `retries`                | Integer 0-10                  | Default: 1                                     |
+| `to[]` (broadcast)       | Max 100 recipients            | No duplicates, sender not allowed              |
+| `limit`                  | Integer 1-1000                | Default: 100                                   |
+| `offset`                 | Integer ≥ 0                   | Default: 0                                     |
 
 ```typescript
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -691,13 +691,19 @@ async function handleIncomingRequests(memorySpaceId: string, agentId: string) {
 
     // Mark as responded
     await cortex.vector.update(memorySpaceId, request.memoryId, {
-      metadata: { ...request.metadata, responded: true, respondedAt: Date.now() },
+      metadata: {
+        ...request.metadata,
+        responded: true,
+        respondedAt: Date.now(),
+      },
     });
   }
 }
 
 // Run on schedule
-cron.schedule("*/5 * * * *", () => handleIncomingRequests("hr-agent", "hr-agent"));
+cron.schedule("*/5 * * * *", () =>
+  handleIncomingRequests("hr-agent", "hr-agent"),
+);
 ```
 
 **Errors:**
@@ -1262,8 +1268,12 @@ async function analyzeA2ACommunication(
   };
 
   // Sent vs received
-  const sent = allA2A.filter((m) => (m.metadata as A2AMeta).direction === "outbound");
-  const received = allA2A.filter((m) => (m.metadata as A2AMeta).direction === "inbound");
+  const sent = allA2A.filter(
+    (m) => (m.metadata as A2AMeta).direction === "outbound",
+  );
+  const received = allA2A.filter(
+    (m) => (m.metadata as A2AMeta).direction === "inbound",
+  );
 
   // By partner agent
   const partners: Record<string, number> = {};
@@ -1321,9 +1331,7 @@ for (const memory of oldLowImportance) {
 // Delete trivial old A2A one by one
 const trivialOld = a2aMemories.filter((m) => {
   const sixMonthsAgo = Date.now() - 180 * 24 * 60 * 60 * 1000;
-  return (
-    m.createdAt < sixMonthsAgo && m.importance <= 30 && m.accessCount <= 1
-  );
+  return m.createdAt < sixMonthsAgo && m.importance <= 30 && m.accessCount <= 1;
 });
 
 for (const memory of trivialOld) {
@@ -1645,9 +1653,11 @@ const allA2A = await cortex.vector.list({
   limit: 1000,
 });
 
-const sent = allA2A.filter((m) => (m.metadata as A2AMeta).direction === "outbound");
+const sent = allA2A.filter(
+  (m) => (m.metadata as A2AMeta).direction === "outbound",
+);
 const directCollaborators = new Set(
-  sent.map((m) => (m.metadata as A2AMeta).toAgent).filter(Boolean)
+  sent.map((m) => (m.metadata as A2AMeta).toAgent).filter(Boolean),
 );
 
 // 2-hop: Collaborator's collaborators
@@ -1660,7 +1670,7 @@ for (const agent of directCollaborators) {
   });
 
   const theirSent = theirA2A.filter(
-    (m) => (m.metadata as A2AMeta).direction === "outbound"
+    (m) => (m.metadata as A2AMeta).direction === "outbound",
   );
 
   theirSent.forEach((m) => {
@@ -1681,7 +1691,8 @@ sent.forEach((m) => {
   edges.set(partner, {
     count: current.count + 1,
     avgImportance:
-      (current.avgImportance * current.count + m.importance) / (current.count + 1),
+      (current.avgImportance * current.count + m.importance) /
+      (current.count + 1),
   });
 });
 ```
@@ -1745,36 +1756,42 @@ interface A2ATimeoutError extends Error {
 }
 
 try {
-  await cortex.a2a.request({ from: "agent-1", to: "agent-2", message: "Hello" });
+  await cortex.a2a.request({
+    from: "agent-1",
+    to: "agent-2",
+    message: "Hello",
+  });
 } catch (error) {
   if (error instanceof A2ATimeoutError) {
-    console.log(`Request ${error.messageId} timed out after ${error.timeout}ms`);
+    console.log(
+      `Request ${error.messageId} timed out after ${error.timeout}ms`,
+    );
   }
 }
 ```
 
 ### All Error Codes
 
-| Error Code                 | Description              | Cause                                         |
-| -------------------------- | ------------------------ | --------------------------------------------- |
-| `INVALID_AGENT_ID`         | Agent ID is invalid      | Empty, malformed, or exceeds 100 chars        |
-| `EMPTY_MESSAGE`            | Message is empty         | Message is empty or whitespace-only           |
-| `MESSAGE_TOO_LARGE`        | Message exceeds limit    | Message exceeds 100KB (UTF-8 bytes)           |
-| `EMPTY_RECIPIENTS`         | No recipients            | to[] array is empty                           |
-| `TOO_MANY_RECIPIENTS`      | Too many recipients      | More than 100 recipients in broadcast         |
-| `DUPLICATE_RECIPIENTS`     | Duplicate recipients     | Same agent ID appears multiple times in to[]  |
-| `INVALID_RECIPIENT`        | Invalid recipient        | Sender included in recipients list            |
-| `SAME_AGENT_COMMUNICATION` | Self-communication       | from and to are the same agent                |
-| `INVALID_IMPORTANCE`       | Invalid importance       | Importance not integer 0-100                  |
-| `INVALID_TIMEOUT`          | Invalid timeout          | Timeout not between 1000ms and 300000ms       |
-| `INVALID_RETRIES`          | Invalid retries          | Retries not integer 0-10                      |
-| `INVALID_DATE_RANGE`       | Invalid date range       | 'since' is after 'until'                      |
-| `INVALID_LIMIT`            | Invalid limit            | Limit not integer 1-1000                      |
-| `INVALID_OFFSET`           | Invalid offset           | Offset is negative                            |
-| `PUBSUB_NOT_CONFIGURED`    | Pub/sub required         | request() needs pub/sub adapter               |
-| `A2ATimeoutError`          | Request timeout          | No response within timeout                    |
-| `A2AValidationError`       | Validation failed        | Client-side validation error (see code/field)|
-| `CONVEX_ERROR`             | Database error           | Convex operation failed                       |
+| Error Code                 | Description           | Cause                                         |
+| -------------------------- | --------------------- | --------------------------------------------- |
+| `INVALID_AGENT_ID`         | Agent ID is invalid   | Empty, malformed, or exceeds 100 chars        |
+| `EMPTY_MESSAGE`            | Message is empty      | Message is empty or whitespace-only           |
+| `MESSAGE_TOO_LARGE`        | Message exceeds limit | Message exceeds 100KB (UTF-8 bytes)           |
+| `EMPTY_RECIPIENTS`         | No recipients         | to[] array is empty                           |
+| `TOO_MANY_RECIPIENTS`      | Too many recipients   | More than 100 recipients in broadcast         |
+| `DUPLICATE_RECIPIENTS`     | Duplicate recipients  | Same agent ID appears multiple times in to[]  |
+| `INVALID_RECIPIENT`        | Invalid recipient     | Sender included in recipients list            |
+| `SAME_AGENT_COMMUNICATION` | Self-communication    | from and to are the same agent                |
+| `INVALID_IMPORTANCE`       | Invalid importance    | Importance not integer 0-100                  |
+| `INVALID_TIMEOUT`          | Invalid timeout       | Timeout not between 1000ms and 300000ms       |
+| `INVALID_RETRIES`          | Invalid retries       | Retries not integer 0-10                      |
+| `INVALID_DATE_RANGE`       | Invalid date range    | 'since' is after 'until'                      |
+| `INVALID_LIMIT`            | Invalid limit         | Limit not integer 1-1000                      |
+| `INVALID_OFFSET`           | Invalid offset        | Offset is negative                            |
+| `PUBSUB_NOT_CONFIGURED`    | Pub/sub required      | request() needs pub/sub adapter               |
+| `A2ATimeoutError`          | Request timeout       | No response within timeout                    |
+| `A2AValidationError`       | Validation failed     | Client-side validation error (see code/field) |
+| `CONVEX_ERROR`             | Database error        | Convex operation failed                       |
 
 **See Also:**
 

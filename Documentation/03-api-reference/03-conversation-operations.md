@@ -1047,15 +1047,15 @@ console.log(`${preserved.total} conversations preserved for audit`);
 ```typescript
 // ✅ Create at start of session
 const conversation = await cortex.conversations.getOrCreate({
-  memorySpaceId: 'user-123-personal',
-  type: 'user-agent',
-  participants: { userId: 'user-123', agentId: 'support-agent' },
+  memorySpaceId: "user-123-personal",
+  type: "user-agent",
+  participants: { userId: "user-123", agentId: "support-agent" },
 });
 
 // Then use throughout session
 await cortex.conversations.addMessage({
   conversationId: conversation.conversationId,
-  message: { role: 'user', content: 'Hello!' },
+  message: { role: "user", content: "Hello!" },
 });
 ```
 
@@ -1272,29 +1272,29 @@ const memories = await cortex.memory.search('agent-1', '*', {
 
 ### SDK Validation Errors (ConversationValidationError)
 
-| Error Code              | Description                  | Cause                                  |
-| ----------------------- | ---------------------------- | -------------------------------------- |
-| `MISSING_REQUIRED_FIELD`| Required field missing       | Field like conversationId is empty     |
-| `INVALID_TYPE`          | Type is invalid              | Not 'user-agent' or 'agent-agent'      |
-| `INVALID_ROLE`          | Message role invalid         | Not 'user', 'agent', or 'system'       |
-| `INVALID_ID_FORMAT`     | ID format invalid            | Contains invalid chars or too long     |
-| `INVALID_FORMAT`        | Export format invalid        | Not 'json' or 'csv'                    |
-| `INVALID_SORT_ORDER`    | Sort order invalid           | Not 'asc' or 'desc'                    |
-| `EMPTY_STRING`          | String is empty              | Search query is empty                  |
-| `INVALID_RANGE`         | Numeric value out of range   | limit < 1 or > 1000, offset < 0        |
-| `EMPTY_ARRAY`           | Array is empty               | Required array has no elements         |
-| `INVALID_ARRAY_LENGTH`  | Array length wrong           | memorySpaceIds has < 2 elements        |
-| `INVALID_DATE_RANGE`    | Date range invalid           | Start date >= end date                 |
-| `INVALID_PARTICIPANTS`  | Participants malformed       | Missing required participant fields    |
-| `DUPLICATE_VALUES`      | Array has duplicates         | memorySpaceIds contains duplicates     |
+| Error Code               | Description                | Cause                               |
+| ------------------------ | -------------------------- | ----------------------------------- |
+| `MISSING_REQUIRED_FIELD` | Required field missing     | Field like conversationId is empty  |
+| `INVALID_TYPE`           | Type is invalid            | Not 'user-agent' or 'agent-agent'   |
+| `INVALID_ROLE`           | Message role invalid       | Not 'user', 'agent', or 'system'    |
+| `INVALID_ID_FORMAT`      | ID format invalid          | Contains invalid chars or too long  |
+| `INVALID_FORMAT`         | Export format invalid      | Not 'json' or 'csv'                 |
+| `INVALID_SORT_ORDER`     | Sort order invalid         | Not 'asc' or 'desc'                 |
+| `EMPTY_STRING`           | String is empty            | Search query is empty               |
+| `INVALID_RANGE`          | Numeric value out of range | limit < 1 or > 1000, offset < 0     |
+| `EMPTY_ARRAY`            | Array is empty             | Required array has no elements      |
+| `INVALID_ARRAY_LENGTH`   | Array length wrong         | memorySpaceIds has < 2 elements     |
+| `INVALID_DATE_RANGE`     | Date range invalid         | Start date >= end date              |
+| `INVALID_PARTICIPANTS`   | Participants malformed     | Missing required participant fields |
+| `DUPLICATE_VALUES`       | Array has duplicates       | memorySpaceIds contains duplicates  |
 
 ### Backend Errors (Convex)
 
-| Error Code                        | Description                    | Cause                          |
-| --------------------------------- | ------------------------------ | ------------------------------ |
-| `CONVERSATION_NOT_FOUND`          | Conversation doesn't exist     | Invalid conversationId         |
-| `CONVERSATION_ALREADY_EXISTS`     | Conversation already exists    | Duplicate conversationId       |
-| `DELETE_MANY_THRESHOLD_EXCEEDED`  | Too many to delete             | Use dryRun or increase threshold|
+| Error Code                       | Description                 | Cause                            |
+| -------------------------------- | --------------------------- | -------------------------------- |
+| `CONVERSATION_NOT_FOUND`         | Conversation doesn't exist  | Invalid conversationId           |
+| `CONVERSATION_ALREADY_EXISTS`    | Conversation already exists | Duplicate conversationId         |
+| `DELETE_MANY_THRESHOLD_EXCEEDED` | Too many to delete          | Use dryRun or increase threshold |
 
 ---
 

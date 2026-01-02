@@ -8,6 +8,7 @@
 **The `agents` table is deprecated as of v0.21.0.** Use the `memorySpaces` table for production isolation.
 
 **Why deprecated:**
+
 - Memory spaces are the primary isolation boundary (not agents)
 - Hive Mode requires participant tracking within spaces
 - Collaboration Mode requires cross-space delegation
@@ -69,26 +70,26 @@ The agent registry was originally designed for agent-centric isolation. It has b
 ```typescript
 {
   _id: Id<"memorySpaces">,
-  
+
   // Identity
   memorySpaceId: string,       // Unique identifier
   name?: string,               // Human-readable name
   tenantId?: string,           // Multi-tenancy support
-  
+
   // Type
   type: "personal" | "team" | "project" | "custom",
-  
+
   // Participants (Hive Mode)
   participants: Array<{
     id: string,                // 'cursor', 'claude', 'my-bot', etc.
     type: string,              // 'ai-tool', 'human', 'ai-agent', 'system'
     joinedAt: number,
   }>,
-  
+
   // Metadata
   metadata: any,
   status: "active" | "archived",
-  
+
   // Timestamps
   createdAt: number,
   updatedAt: number,
@@ -110,14 +111,14 @@ The agent registry was originally designed for agent-centric isolation. It has b
   _id: Id<"agents">,
   agentId: string,             // ⚠️ DEPRECATED concept
   tenantId?: string,
-  
+
   name: string,
   description?: string,
   metadata?: any,
   config?: any,
-  
+
   status: "active" | "inactive" | "archived",
-  
+
   registeredAt: number,
   updatedAt: number,
   lastActive?: number,

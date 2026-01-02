@@ -59,8 +59,9 @@ const queryEmbedding = await embed(query);
 const results = await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
-    q.similar("embedding", queryEmbedding, 20)
-     .eq("memorySpaceId", memorySpaceId)
+    q
+      .similar("embedding", queryEmbedding, 20)
+      .eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 
@@ -101,20 +102,18 @@ export const semanticSearch = query({
     filters: v.any(),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db
-      .query("memories")
-      .withIndex("by_embedding", (q) => {
-        let search = q
-          .similar("embedding", args.embedding, args.filters.limit || 20)
-          .eq("memorySpaceId", args.memorySpaceId);
-        
-        // Apply tenantId filter (pre-filtered via filterFields)
-        if (args.filters.tenantId) {
-          search = search.eq("tenantId", args.filters.tenantId);
-        }
-        
-        return search;
-      });
+    let q = ctx.db.query("memories").withIndex("by_embedding", (q) => {
+      let search = q
+        .similar("embedding", args.embedding, args.filters.limit || 20)
+        .eq("memorySpaceId", args.memorySpaceId);
+
+      // Apply tenantId filter (pre-filtered via filterFields)
+      if (args.filters.tenantId) {
+        search = search.eq("tenantId", args.filters.tenantId);
+      }
+
+      return search;
+    });
 
     // Apply additional filters
     if (args.filters.userId) {
@@ -122,7 +121,9 @@ export const semanticSearch = query({
     }
 
     if (args.filters.participantId) {
-      q = q.filter((q) => q.eq(q.field("participantId"), args.filters.participantId));
+      q = q.filter((q) =>
+        q.eq(q.field("participantId"), args.filters.participantId),
+      );
     }
 
     const results = await q.collect();
@@ -153,7 +154,7 @@ const query = "What is the user's communication preference?";
 const results = await ctx.db
   .query("facts")
   .withSearchIndex("by_content", (q) =>
-    q.search("fact", query).eq("memorySpaceId", memorySpaceId)
+    q.search("fact", query).eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 
@@ -198,8 +199,7 @@ export const factsSearch = query({
     let results = await ctx.db
       .query("facts")
       .withSearchIndex("by_content", (q) =>
-        q.search("fact", args.query)
-         .eq("memorySpaceId", args.memorySpaceId)
+        q.search("fact", args.query).eq("memorySpaceId", args.memorySpaceId),
       )
       .take(args.filters.limit || 20);
 
@@ -214,12 +214,14 @@ export const factsSearch = query({
 
     // Filter by confidence
     if (args.filters.minConfidence) {
-      results = results.filter((f) => f.confidence >= args.filters.minConfidence);
+      results = results.filter(
+        (f) => f.confidence >= args.filters.minConfidence,
+      );
     }
 
     return results.map((fact) => ({
       ...fact,
-      score: fact.confidence / 100,  // Confidence as score
+      score: fact.confidence / 100, // Confidence as score
       strategy: "facts",
     }));
   },
@@ -239,7 +241,7 @@ export const factsAboutSubject = query({
     return await ctx.db
       .query("facts")
       .withIndex("by_memorySpace_subject", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId).eq("subject", args.subject)
+        q.eq("memorySpaceId", args.memorySpaceId).eq("subject", args.subject),
       )
       .collect();
   },
@@ -266,7 +268,7 @@ const query = "password Blue";
 const results = await ctx.db
   .query("memories")
   .withSearchIndex("by_content", (q) =>
-    q.search("content", query).eq("memorySpaceId", memorySpaceId)
+    q.search("content", query).eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 
@@ -310,7 +312,9 @@ export const keywordSearch = query({
     let results = await ctx.db
       .query("memories")
       .withSearchIndex("by_content", (q) =>
-        q.search("content", args.keywords).eq("memorySpaceId", args.memorySpaceId)
+        q
+          .search("content", args.keywords)
+          .eq("memorySpaceId", args.memorySpaceId),
       )
       .take(args.filters.limit || 20);
 
@@ -337,7 +341,7 @@ Prioritizes recent or time-relevant memories:
 const results = await ctx.db
   .query("memories")
   .withIndex("by_memorySpace_created", (q) =>
-    q.eq("memorySpaceId", memorySpaceId)
+    q.eq("memorySpaceId", memorySpaceId),
   )
   .order("desc") // Most recent first
   .take(20)
@@ -377,14 +381,14 @@ export const recentSearch = query({
     let q = ctx.db
       .query("memories")
       .withIndex("by_memorySpace_created", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId)
+        q.eq("memorySpaceId", args.memorySpaceId),
       )
       .order("desc");
 
     // Filter by importance (flattened field)
     if (args.filters.minImportance) {
       q = q.filter((q) =>
-        q.gte(q.field("importance"), args.filters.minImportance)
+        q.gte(q.field("importance"), args.filters.minImportance),
       );
     }
 
@@ -395,7 +399,9 @@ export const recentSearch = query({
 
     // Filter by participant (Hive Mode)
     if (args.filters.participantId) {
-      q = q.filter((q) => q.eq(q.field("participantId"), args.filters.participantId));
+      q = q.filter((q) =>
+        q.eq(q.field("participantId"), args.filters.participantId),
+      );
     }
 
     const results = await q.take(args.filters.limit || 20);

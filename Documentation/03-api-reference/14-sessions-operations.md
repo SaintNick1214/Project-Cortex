@@ -47,8 +47,8 @@ The Sessions API (`cortex.sessions.*`) provides native session management for us
 
 ```typescript
 interface Session {
-  _id: string;              // Convex document ID
-  sessionId: string;        // Unique session identifier
+  _id: string; // Convex document ID
+  sessionId: string; // Unique session identifier
   userId: string;
   tenantId?: string;
   memorySpaceId?: string;
@@ -79,7 +79,7 @@ interface SessionMetadata {
   timezone?: string;
   language?: string;
   userAgent?: string;
-  [key: string]: unknown;  // Any additional custom fields
+  [key: string]: unknown; // Any additional custom fields
 }
 ```
 
@@ -427,7 +427,7 @@ console.log(`Expired ${result.expired} idle sessions`);
 // Custom idle timeout (15 minutes)
 const customResult = await cortex.sessions.expireIdle({
   tenantId: "tenant-abc",
-  idleTimeout: 15 * 60 * 1000,  // 15 minutes in ms
+  idleTimeout: 15 * 60 * 1000, // 15 minutes in ms
 });
 ```
 
@@ -444,19 +444,19 @@ await cortex.governance.setPolicy({
   // Session lifecycle configuration
   sessions: {
     lifecycle: {
-      idleTimeout: "30m",       // Duration before session becomes idle
-      maxDuration: "24h",       // Maximum session duration regardless of activity
-      autoExtend: true,         // Automatically extend on activity
-      warnBeforeExpiry: "5m",   // Optional: warn user before expiry
+      idleTimeout: "30m", // Duration before session becomes idle
+      maxDuration: "24h", // Maximum session duration regardless of activity
+      autoExtend: true, // Automatically extend on activity
+      warnBeforeExpiry: "5m", // Optional: warn user before expiry
     },
     cleanup: {
-      autoExpireIdle: true,     // Automatically expire idle sessions
-      deleteEndedAfter: "30d",  // Delete ended sessions after 30 days
-      archiveAfter: "7d",       // Optional: archive before deletion
+      autoExpireIdle: true, // Automatically expire idle sessions
+      deleteEndedAfter: "30d", // Delete ended sessions after 30 days
+      archiveAfter: "7d", // Optional: archive before deletion
     },
     limits: {
-      maxActiveSessions: 10,    // Optional: max concurrent sessions per user
-      maxSessionsPerDevice: 3,  // Optional: max sessions per device type
+      maxActiveSessions: 10, // Optional: max concurrent sessions per user
+      maxSessionsPerDevice: 3, // Optional: max sessions per device type
     },
   },
 });
@@ -527,8 +527,8 @@ const sessions = await cortex.sessions.list({
 });
 ```
 
-> **Note:** The `sessionId` in AuthContext is for reference/tracking purposes. 
-> Session activity tracking (incrementing message/memory counts) should be done 
+> **Note:** The `sessionId` in AuthContext is for reference/tracking purposes.
+> Session activity tracking (incrementing message/memory counts) should be done
 > explicitly by calling `touch()` on user interactions.
 
 ---
@@ -635,40 +635,40 @@ import { SessionValidationError } from "@cortex-platform/sdk";
 
 try {
   await cortex.sessions.create({
-    userId: "",  // Invalid: empty userId
+    userId: "", // Invalid: empty userId
   });
 } catch (error) {
   if (error instanceof SessionValidationError) {
     console.log(`Validation error: ${error.message}`);
-    console.log(`Code: ${error.code}`);    // e.g., "EMPTY_USER_ID"
-    console.log(`Field: ${error.field}`);  // e.g., "userId"
+    console.log(`Code: ${error.code}`); // e.g., "EMPTY_USER_ID"
+    console.log(`Field: ${error.field}`); // e.g., "userId"
   }
 }
 ```
 
 **Validation Error Codes:**
 
-| Code | Description |
-|------|-------------|
-| `INVALID_SESSION_ID` | sessionId must be a string |
-| `EMPTY_SESSION_ID` | sessionId cannot be empty |
-| `SESSION_ID_TOO_LONG` | sessionId cannot exceed 256 characters |
-| `INVALID_USER_ID` | userId must be a string |
-| `EMPTY_USER_ID` | userId cannot be empty |
-| `USER_ID_TOO_LONG` | userId cannot exceed 256 characters |
-| `INVALID_TENANT_ID` | tenantId must be a string |
-| `EMPTY_TENANT_ID` | tenantId cannot be empty |
-| `TENANT_ID_TOO_LONG` | tenantId cannot exceed 256 characters |
-| `INVALID_STATUS` | status must be a string |
-| `INVALID_STATUS_VALUE` | status must be: active, idle, or ended |
-| `INVALID_PARAMS` | Session params must be an object |
-| `MISSING_USER_ID` | userId is required |
-| `INVALID_MEMORY_SPACE_ID` | memorySpaceId must be a string |
-| `INVALID_EXPIRES_AT` | expiresAt must be a positive number |
-| `INVALID_METADATA` | metadata must be a plain object |
-| `INVALID_FILTERS` | Session filters must be an object |
-| `INVALID_LIMIT` | limit must be a number between 1 and 1000 |
-| `INVALID_OFFSET` | offset must be a non-negative number |
+| Code                      | Description                               |
+| ------------------------- | ----------------------------------------- |
+| `INVALID_SESSION_ID`      | sessionId must be a string                |
+| `EMPTY_SESSION_ID`        | sessionId cannot be empty                 |
+| `SESSION_ID_TOO_LONG`     | sessionId cannot exceed 256 characters    |
+| `INVALID_USER_ID`         | userId must be a string                   |
+| `EMPTY_USER_ID`           | userId cannot be empty                    |
+| `USER_ID_TOO_LONG`        | userId cannot exceed 256 characters       |
+| `INVALID_TENANT_ID`       | tenantId must be a string                 |
+| `EMPTY_TENANT_ID`         | tenantId cannot be empty                  |
+| `TENANT_ID_TOO_LONG`      | tenantId cannot exceed 256 characters     |
+| `INVALID_STATUS`          | status must be a string                   |
+| `INVALID_STATUS_VALUE`    | status must be: active, idle, or ended    |
+| `INVALID_PARAMS`          | Session params must be an object          |
+| `MISSING_USER_ID`         | userId is required                        |
+| `INVALID_MEMORY_SPACE_ID` | memorySpaceId must be a string            |
+| `INVALID_EXPIRES_AT`      | expiresAt must be a positive number       |
+| `INVALID_METADATA`        | metadata must be a plain object           |
+| `INVALID_FILTERS`         | Session filters must be an object         |
+| `INVALID_LIMIT`           | limit must be a number between 1 and 1000 |
+| `INVALID_OFFSET`          | offset must be a non-negative number      |
 
 ### Runtime Errors
 
@@ -685,8 +685,8 @@ try {
 }
 ```
 
-> **🔮 PLANNED:** Session-specific error codes (`CortexErrorCode.SESSION_NOT_FOUND`, 
-> `CortexErrorCode.SESSION_EXPIRED`, `CortexErrorCode.SESSION_ALREADY_ENDED`) are 
+> **🔮 PLANNED:** Session-specific error codes (`CortexErrorCode.SESSION_NOT_FOUND`,
+> `CortexErrorCode.SESSION_EXPIRED`, `CortexErrorCode.SESSION_ALREADY_ENDED`) are
 > planned for a future release to provide more structured error handling.
 
 ---

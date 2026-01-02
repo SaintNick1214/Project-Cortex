@@ -98,7 +98,13 @@ export default defineSchema({
   }).vectorIndex("by_embedding", {
     vectorField: "embedding",
     dimensions: 1536, // ← Default: text-embedding-3-small
-    filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
+    filterFields: [
+      "memorySpaceId",
+      "tenantId",
+      "userId",
+      "agentId",
+      "participantId",
+    ],
   }),
 });
 ```
@@ -154,10 +160,14 @@ await cortex.memory.store("user-123-personal", {
 });
 
 // Search with embedding
-const results = await cortex.memory.search("user-123-personal", "user preferences", {
-  embedding: await embed("user preferences"), // ← Your embedding
-  limit: 10,
-});
+const results = await cortex.memory.search(
+  "user-123-personal",
+  "user preferences",
+  {
+    embedding: await embed("user preferences"), // ← Your embedding
+    limit: 10,
+  },
+);
 ```
 
 ### Example: Cohere Embeddings

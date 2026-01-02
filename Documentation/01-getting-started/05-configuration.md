@@ -19,7 +19,7 @@ import { createAuthContext } from "@cortexmemory/sdk";
 
 // Extract from YOUR auth (3 lines of code)
 const auth = createAuthContext({
-  userId: yourAuthData.id,         // Required
+  userId: yourAuthData.id, // Required
   tenantId: yourAuthData.tenantId, // Optional (multi-tenant SaaS)
 });
 
@@ -120,24 +120,24 @@ The `~/.cortexrc` file is JSON:
 
 **Fields:**
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `deployments` | object | Named deployment configurations |
-| `deployments[name].url` | string | Convex deployment URL |
-| `deployments[name].key` | string | Deploy key (optional for local) |
-| `deployments[name].deployment` | string | Convex deployment name |
-| `deployments[name].projectPath` | string | Path to project directory |
-| `deployments[name].enabled` | boolean | Auto-start with `cortex start` |
-| `apps` | object | Named app configurations |
-| `apps[name].type` | string | App type (e.g., "nextjs") |
-| `apps[name].projectPath` | string | Path to project root |
-| `apps[name].path` | string | Relative path to app |
-| `apps[name].port` | number | Port number |
-| `apps[name].startCommand` | string | Command to start app |
-| `apps[name].enabled` | boolean | Auto-start with `cortex start` |
-| `default` | string | Default deployment name |
-| `format` | string | Default output format |
-| `confirmDangerous` | boolean | Require confirmation for dangerous operations |
+| Field                           | Type    | Description                                   |
+| ------------------------------- | ------- | --------------------------------------------- |
+| `deployments`                   | object  | Named deployment configurations               |
+| `deployments[name].url`         | string  | Convex deployment URL                         |
+| `deployments[name].key`         | string  | Deploy key (optional for local)               |
+| `deployments[name].deployment`  | string  | Convex deployment name                        |
+| `deployments[name].projectPath` | string  | Path to project directory                     |
+| `deployments[name].enabled`     | boolean | Auto-start with `cortex start`                |
+| `apps`                          | object  | Named app configurations                      |
+| `apps[name].type`               | string  | App type (e.g., "nextjs")                     |
+| `apps[name].projectPath`        | string  | Path to project root                          |
+| `apps[name].path`               | string  | Relative path to app                          |
+| `apps[name].port`               | number  | Port number                                   |
+| `apps[name].startCommand`       | string  | Command to start app                          |
+| `apps[name].enabled`            | boolean | Auto-start with `cortex start`                |
+| `default`                       | string  | Default deployment name                       |
+| `format`                        | string  | Default output format                         |
+| `confirmDangerous`              | boolean | Require confirmation for dangerous operations |
 
 ---
 
@@ -236,34 +236,34 @@ The CLI recognizes these environment variables:
 
 ### Convex Configuration
 
-| Variable | Description |
-|----------|-------------|
-| `CONVEX_URL` | Convex deployment URL |
-| `CONVEX_DEPLOY_KEY` | Convex deploy key |
-| `CONVEX_DEPLOYMENT` | Convex deployment name |
-| `LOCAL_CONVEX_URL` | Local Convex URL (default: http://127.0.0.1:3210) |
-| `CLOUD_CONVEX_URL` | Cloud Convex URL |
-| `CLOUD_CONVEX_DEPLOY_KEY` | Cloud deploy key |
+| Variable                  | Description                                       |
+| ------------------------- | ------------------------------------------------- |
+| `CONVEX_URL`              | Convex deployment URL                             |
+| `CONVEX_DEPLOY_KEY`       | Convex deploy key                                 |
+| `CONVEX_DEPLOYMENT`       | Convex deployment name                            |
+| `LOCAL_CONVEX_URL`        | Local Convex URL (default: http://127.0.0.1:3210) |
+| `CLOUD_CONVEX_URL`        | Cloud Convex URL                                  |
+| `CLOUD_CONVEX_DEPLOY_KEY` | Cloud deploy key                                  |
 
 ### Graph Database Configuration
 
-| Variable | Description |
-|----------|-------------|
-| `NEO4J_URI` | Neo4j connection URI |
-| `NEO4J_USERNAME` | Neo4j username |
-| `NEO4J_PASSWORD` | Neo4j password |
-| `MEMGRAPH_URI` | Memgraph connection URI |
-| `MEMGRAPH_USERNAME` | Memgraph username |
-| `MEMGRAPH_PASSWORD` | Memgraph password |
+| Variable            | Description                        |
+| ------------------- | ---------------------------------- |
+| `NEO4J_URI`         | Neo4j connection URI               |
+| `NEO4J_USERNAME`    | Neo4j username                     |
+| `NEO4J_PASSWORD`    | Neo4j password                     |
+| `MEMGRAPH_URI`      | Memgraph connection URI            |
+| `MEMGRAPH_USERNAME` | Memgraph username                  |
+| `MEMGRAPH_PASSWORD` | Memgraph password                  |
 | `CORTEX_GRAPH_SYNC` | Enable graph sync ("true"/"false") |
 
 ### Other Configuration
 
-| Variable | Description |
-|----------|-------------|
-| `OPENAI_API_KEY` | OpenAI API key for embeddings |
+| Variable              | Description                    |
+| --------------------- | ------------------------------ |
+| `OPENAI_API_KEY`      | OpenAI API key for embeddings  |
 | `CORTEX_SDK_DEV_PATH` | Path to local SDK for dev mode |
-| `DEBUG` | Enable debug output |
+| `DEBUG`               | Enable debug output            |
 
 ### Example .env.local
 
@@ -376,7 +376,10 @@ const cortex = new Cortex({
 });
 
 // Or with graph database
-import { CypherGraphAdapter, initializeGraphSchema } from "@cortexmemory/sdk/graph";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
 
 const graphAdapter = new CypherGraphAdapter();
 await graphAdapter.connect({
@@ -397,6 +400,7 @@ const cortex = new Cortex({
 ```
 
 **See:**
+
 - [API Reference - Configuration](../03-api-reference/02-memory-operations.md#configuration)
 - [Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md)
 
@@ -469,7 +473,7 @@ import { auth } from "@clerk/nextjs";
 
 export async function chatAction(message: string) {
   const { userId } = auth();
-  
+
   if (!userId) {
     throw new Error("Unauthorized");
   }

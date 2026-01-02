@@ -30,22 +30,27 @@ cortex init my-first-agent
 The interactive wizard will guide you through:
 
 **1. Project name**
+
 - Default: `my-first-agent`
 - Press Enter to accept
 
 **2. Convex setup**
+
 - Choose: **"Create new Convex project"** (full features, free tier)
 - Or: **"Use local"** (fastest, no account needed)
 
 **3. Template selection** (optional)
+
 - Choose: **"vercel-ai-quickstart"** for a full working example
 - Or: **"basic"** for minimal setup
 
 **4. Graph database** (optional)
+
 - Choose: **"Skip"** for now (not needed for quickstart)
 - You can add this later with `cortex convex init --graph`
 
 **What the wizard does:**
+
 - ✅ Creates project structure
 - ✅ Installs dependencies (`@cortexmemory/sdk`, `convex`)
 - ✅ Configures environment (`.env.local`)
@@ -63,6 +68,7 @@ cortex start
 ```
 
 **What's running:**
+
 - ✅ Convex backend (database + functions)
 - ✅ Next.js dev server (if using vercel-ai-quickstart template)
 - ✅ Your app at http://localhost:3000
@@ -96,14 +102,14 @@ import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
 // Extract from YOUR existing auth system (any provider)
 const auth = createAuthContext({
-  userId: yourUser.id,           // Required
-  tenantId: yourUser.tenantId,   // Optional (for multi-tenant SaaS)
+  userId: yourUser.id, // Required
+  tenantId: yourUser.tenantId, // Optional (for multi-tenant SaaS)
 });
 
 // Pass to Cortex - done!
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
-  auth,  // That's it!
+  auth, // That's it!
 });
 
 // All operations now authenticated
@@ -152,6 +158,7 @@ cortex status
 ```
 
 **Output shows:**
+
 - Active deployments
 - Running services (Convex, apps)
 - Database statistics
@@ -169,12 +176,14 @@ cortex dev
 ```
 
 **You get an Expo-style dashboard with:**
+
 - 📊 Live service status
 - 📜 Streaming logs from all services
 - 🔄 Auto-reload on code changes
 - ⌨️ Keyboard shortcuts
 
 **Keyboard shortcuts:**
+
 - `c` - Clear screen
 - `s` - Show status
 - `r` - Restart all services
@@ -241,6 +250,7 @@ The CLI saved to `~/.cortexrc`:
 If you selected the `vercel-ai-quickstart` template:
 
 1. **Open the app:**
+
    ```bash
    open http://localhost:3000
    ```
@@ -303,7 +313,7 @@ await cortex.memory.remember({
 // 2. Search memories
 const results = await cortex.memory.search(
   "my-first-agent",
-  "what are the user preferences?"
+  "what are the user preferences?",
 );
 
 console.log("Found:", results.length, "memories");
@@ -328,6 +338,7 @@ cortex convex dashboard
 **What you'll see:**
 
 **Tables:**
+
 - `conversations` - All conversation threads
 - `memories` - Searchable memory index (vector store)
 - `immutable` - Versioned message history
@@ -335,6 +346,7 @@ cortex convex dashboard
 - `memorySpaces` - Memory space registry (if registered)
 
 **Click into a table:**
+
 - View all records
 - See document structure
 - Inspect timestamps and IDs
@@ -381,7 +393,7 @@ await cortex.memory.remember({
 // Search with different queries
 const results = await cortex.memory.search(
   "my-first-agent",
-  "what is the user's name?"
+  "what is the user's name?",
 );
 ```
 
@@ -444,25 +456,23 @@ async function chat(userId: string, message: string) {
   const conversationId = `conv-${Date.now()}`;
 
   // 1. Search relevant memories
-  const context = await cortex.memory.search(
-    memorySpaceId,
-    message,
-    { limit: 5 }
-  );
+  const context = await cortex.memory.search(memorySpaceId, message, {
+    limit: 5,
+  });
 
   // 2. Build prompt with context
   const systemPrompt = `You are a helpful assistant.
   
 Here's what you remember about this user:
-${context.map(m => m.content).join("\n")}`;
+${context.map((m) => m.content).join("\n")}`;
 
   // 3. Generate response
   const response = await openai.chat.completions.create({
     model: "gpt-4",
     messages: [
       { role: "system", content: systemPrompt },
-      { role: "user", content: message }
-    ]
+      { role: "user", content: message },
+    ],
   });
 
   const agentMessage = response.choices[0].message.content;
@@ -608,11 +618,13 @@ You now have a working Cortex project! Here's what to explore:
 ## Getting Help
 
 **Stuck?**
+
 - [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
 - [CLI Reference](../06-tools/01-cli-reference.md)
 - Run `cortex --help` for command help
 
 **Found a bug?**
+
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
 
 ---

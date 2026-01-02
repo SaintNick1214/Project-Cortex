@@ -76,18 +76,21 @@ Cortex provides a framework-agnostic AuthContext API. This guide shows patterns 
 **⚠️ Important:** Cortex does NOT include specific auth provider packages. You integrate your existing auth system using the AuthContext API.
 
 **What you get:**
+
 - ✅ Generic integration patterns
-- ✅ AuthContext API documentation  
+- ✅ AuthContext API documentation
 - ✅ Example adapters for common providers
 - ✅ DIY implementation guidance
 
 **What Cortex provides:**
+
 - `createAuthContext()` function
 - Automatic user/tenant field injection
 - Multi-tenant isolation support
 - Session tracking integration
 
 **What you provide:**
+
 - Your auth system (Auth0, Clerk, etc.)
 - Code to extract userId/tenantId from tokens
 - User validation logic
@@ -101,14 +104,17 @@ Cortex provides a framework-agnostic AuthContext API. This guide shows patterns 
 These integrations are planned but not yet implemented:
 
 ### LangChain.js
+
 **Status**: 🔄 Planned  
 **Target**: Q2 2026
 
 ### LlamaIndex.TS
+
 **Status**: 🔄 Planned  
 **Target**: Q2 2026
 
 ### MCP Servers
+
 **Status**: 🔄 Planned  
 **Target**: Q1 2026
 

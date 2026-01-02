@@ -112,7 +112,7 @@ Framework and tool integrations:
 
 **Production Ready:**
 
-- **[Vercel AI SDK](./08-integrations/vercel-ai-sdk/00-README.md)** - Complete Next.js integration with quickstart demo
+- **[Vercel AI SDK](integrations/vercel-ai-sdk)** - Complete Next.js integration with quickstart demo
   - [Getting Started](./08-integrations/vercel-ai-sdk/01-getting-started.md) - Installation and quickstart
   - [API Reference](./08-integrations/vercel-ai-sdk/02-api-reference.md) - Complete API documentation
   - [Advanced Usage](./08-integrations/vercel-ai-sdk/03-advanced-usage.md) - Advanced patterns and techniques

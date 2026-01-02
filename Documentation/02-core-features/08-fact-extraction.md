@@ -707,24 +707,28 @@ const result = await cortex.memory.remember({
   agentResponse: "I'll update your preference!",
   userId: "user-123",
   userName: "Alex",
-  
-  extractFacts: async (userMsg, agentMsg) => [{
-    fact: "User's favorite color is green",
-    factType: "preference",
-    subject: "user-123",
-    predicate: "favoriteColor",
-    object: "green",
-    confidence: 98,
-  }],
-  
+
+  extractFacts: async (userMsg, agentMsg) => [
+    {
+      fact: "User's favorite color is green",
+      factType: "preference",
+      subject: "user-123",
+      predicate: "favoriteColor",
+      object: "green",
+      confidence: 98,
+    },
+  ],
+
   // Belief revision enabled by default
   // beliefRevision: true,  // Default
 });
 
 // result.facts includes supersession info
-result.facts.forEach(fact => {
+result.facts.forEach((fact) => {
   if (fact.supersededFacts?.length > 0) {
-    console.log(`Updated belief: superseded ${fact.supersededFacts.length} old facts`);
+    console.log(
+      `Updated belief: superseded ${fact.supersededFacts.length} old facts`,
+    );
   }
 });
 ```
@@ -738,13 +742,13 @@ Filter out superseded facts in queries:
 const currentPreferences = await cortex.facts.list({
   memorySpaceId: "user-123-space",
   factType: "preference",
-  isSuperseded: false,  // Only current beliefs
+  isSuperseded: false, // Only current beliefs
 });
 
 // Or in search results
 const memories = await cortex.memory.recall("user-123-space", "preferences", {
   factsFilter: {
-    isSuperseded: false,  // Current beliefs only
+    isSuperseded: false, // Current beliefs only
   },
 });
 ```
@@ -753,12 +757,12 @@ const memories = await cortex.memory.recall("user-123-space", "preferences", {
 
 The Belief Revision System uses configurable strategies:
 
-| Strategy | Behavior | Use Case |
-|----------|----------|----------|
+| Strategy            | Behavior                              | Use Case                 |
+| ------------------- | ------------------------------------- | ------------------------ |
 | `higher-confidence` | New fact wins if confidence is higher | Default, objective facts |
-| `newer-wins` | Most recent fact always supersedes | Preferences, settings |
-| `ask-user` | Flag for manual resolution | Critical decisions |
-| `merge` | Combine compatible facts | Additive knowledge |
+| `newer-wins`        | Most recent fact always supersedes    | Preferences, settings    |
+| `ask-user`          | Flag for manual resolution            | Critical decisions       |
+| `merge`             | Combine compatible facts              | Additive knowledge       |
 
 ```typescript
 // Configure strategy per fact type
@@ -766,7 +770,7 @@ await cortex.facts.revise({
   memorySpaceId: "user-123-space",
   fact: "User works at Acme Corp",
   factType: "relationship",
-  conflictStrategy: "newer-wins",  // Employment changes, new wins
+  conflictStrategy: "newer-wins", // Employment changes, new wins
   // ...
 });
 ```

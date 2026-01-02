@@ -80,14 +80,14 @@ Cortex organizes memory into four layers, each serving a specific purpose:
 
 **Layer Purposes:**
 
-| Layer | API | Purpose | Key Feature |
-|-------|-----|---------|-------------|
-| Layer 1a | `cortex.conversations.*` | Raw message storage | ACID guarantees, audit trail |
-| Layer 1b | `cortex.immutable.*` | Shared knowledge | Versioned, cross-agent |
-| Layer 1c | `cortex.mutable.*` | Live data | Counters, configs, state |
-| Layer 2 | `cortex.vector.*` | Semantic search | Embeddings, fast retrieval |
-| Layer 3 | `cortex.facts.*` | Structured knowledge | 60-90% token savings |
-| Layer 4 | `cortex.memory.*` | **Orchestration** | **Start here** |
+| Layer    | API                      | Purpose              | Key Feature                  |
+| -------- | ------------------------ | -------------------- | ---------------------------- |
+| Layer 1a | `cortex.conversations.*` | Raw message storage  | ACID guarantees, audit trail |
+| Layer 1b | `cortex.immutable.*`     | Shared knowledge     | Versioned, cross-agent       |
+| Layer 1c | `cortex.mutable.*`       | Live data            | Counters, configs, state     |
+| Layer 2  | `cortex.vector.*`        | Semantic search      | Embeddings, fast retrieval   |
+| Layer 3  | `cortex.facts.*`         | Structured knowledge | 60-90% token savings         |
+| Layer 4  | `cortex.memory.*`        | **Orchestration**    | **Start here**               |
 
 ## The Two Core Methods
 
@@ -104,7 +104,7 @@ const result = await cortex.memory.remember({
   agentResponse: "Nice! I'll remember your preference and workplace.",
   userId: "user-123",
   userName: "Alex",
-  
+
   // Optional: Custom fact extraction
   extractFacts: async (userMsg, agentResp) => [
     {
@@ -161,21 +161,21 @@ remember() call
 const result = await cortex.memory.recall({
   memorySpaceId: "user-123-personal",
   query: "What are user's preferences?",
-  
+
   // Optional: Pre-computed embedding for better semantic search
   embedding: await embed("What are user's preferences?"),
-  
+
   // Optional: Filter options
   userId: "user-123",
   limit: 10,
 });
 
 // Result includes unified context from all layers
-console.log(result.items);          // Merged, deduped, ranked results
+console.log(result.items); // Merged, deduped, ranked results
 console.log(result.sources.vector); // Vector memories breakdown
-console.log(result.sources.facts);  // Structured facts breakdown
-console.log(result.sources.graph);  // Graph-expanded entities
-console.log(result.context);        // Ready-to-inject LLM context string
+console.log(result.sources.facts); // Structured facts breakdown
+console.log(result.sources.graph); // Graph-expanded entities
+console.log(result.context); // Ready-to-inject LLM context string
 ```
 
 **What `recall()` does automatically:**
@@ -205,27 +205,27 @@ Both `remember()` and `recall()` are designed to work out-of-the-box with sensib
 
 ### remember() Defaults
 
-| Feature | Default | What It Does |
-|---------|---------|--------------|
-| Memory Space | Auto-register | Creates space if it doesn't exist |
-| User Profile | Auto-create | Creates user profile for new users |
-| Conversation | Always stored | Messages saved to ACID layer |
-| Vector Memory | Always created | Searchable memory entry |
-| Facts | Extracted if configured | LLM extracts structured facts |
-| Graph Sync | Enabled if configured | Syncs entities and relationships |
+| Feature         | Default                              | What It Does                            |
+| --------------- | ------------------------------------ | --------------------------------------- |
+| Memory Space    | Auto-register                        | Creates space if it doesn't exist       |
+| User Profile    | Auto-create                          | Creates user profile for new users      |
+| Conversation    | Always stored                        | Messages saved to ACID layer            |
+| Vector Memory   | Always created                       | Searchable memory entry                 |
+| Facts           | Extracted if configured              | LLM extracts structured facts           |
+| Graph Sync      | Enabled if configured                | Syncs entities and relationships        |
 | Belief Revision | Enabled if LLM configured (v0.24.0+) | Intelligently handles conflicting facts |
 
 ### recall() Defaults
 
-| Feature | Default | What It Does |
-|---------|---------|--------------|
-| Vector Search | Enabled | Searches Layer 2 |
-| Facts Search | Enabled | Searches Layer 3 directly |
-| Graph Expansion | Enabled if configured | Discovers related context |
-| LLM Context | Generated | Ready-to-inject string |
-| Conversation Enrichment | Enabled | Includes ACID data |
-| Deduplication | Enabled | Removes duplicates |
-| Ranking | Enabled | Multi-signal scoring |
+| Feature                 | Default               | What It Does              |
+| ----------------------- | --------------------- | ------------------------- |
+| Vector Search           | Enabled               | Searches Layer 2          |
+| Facts Search            | Enabled               | Searches Layer 3 directly |
+| Graph Expansion         | Enabled if configured | Discovers related context |
+| LLM Context             | Generated             | Ready-to-inject string    |
+| Conversation Enrichment | Enabled               | Includes ACID data        |
+| Deduplication           | Enabled               | Removes duplicates        |
+| Ranking                 | Enabled               | Multi-signal scoring      |
 
 ## Quick Start
 
@@ -270,7 +270,7 @@ await cortex.memory.remember({
   agentResponse: "TypeScript is great for type safety!",
   userId: "user-1",
   userName: "Developer",
-  
+
   // Add embedding for semantic search
   generateEmbedding: async (content) => {
     const { embedding } = await embed({
@@ -292,7 +292,7 @@ await cortex.memory.remember({
   agentResponse: "That's exciting! Azure is a great platform.",
   userId: "user-1",
   userName: "Developer",
-  
+
   // Extract structured facts
   extractFacts: async (userMsg, agentResp) => [
     {
@@ -359,9 +359,9 @@ const result = await cortex.memory.remember({
 });
 
 // Result contains IDs from all layers
-console.log(result.conversation);  // ACID message IDs
-console.log(result.memories);      // Vector memory entries
-console.log(result.facts);         // Extracted facts
+console.log(result.conversation); // ACID message IDs
+console.log(result.memories); // Vector memory entries
+console.log(result.facts); // Extracted facts
 
 // Each vector memory links back to its ACID source
 // Each fact links to its source conversation
@@ -445,25 +445,25 @@ await cortex.memory.remember({
   agentResponse: "Got it!",
   userId: "user-1",
   userName: "User",
-  
+
   // Skip specific layers
   skipLayers: [
-    "facts",  // Don't extract facts
-    "graph",  // Don't sync to graph
+    "facts", // Don't extract facts
+    "graph", // Don't sync to graph
   ],
 });
 ```
 
 **Available skip options:**
 
-| Skip | Effect |
-|------|--------|
-| `users` | Don't auto-create user profile |
-| `agents` | Don't auto-register agent |
-| `conversations` | Don't store in ACID layer |
-| `vector` | Don't create vector memory |
-| `facts` | Don't extract facts |
-| `graph` | Don't sync to graph |
+| Skip            | Effect                         |
+| --------------- | ------------------------------ |
+| `users`         | Don't auto-create user profile |
+| `agents`        | Don't auto-register agent      |
+| `conversations` | Don't store in ACID layer      |
+| `vector`        | Don't create vector memory     |
+| `facts`         | Don't extract facts            |
+| `graph`         | Don't sync to graph            |
 
 ## Summary
 

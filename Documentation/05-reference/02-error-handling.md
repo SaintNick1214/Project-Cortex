@@ -24,22 +24,22 @@ import {
   FactsValidationError,
   UserValidationError,
   AgentValidationError,
-  
+
   // Resilience errors
   CircuitOpenError,
   RateLimitExceededError,
   QueueFullError,
   AcquireTimeoutError,
-  
+
   // Graph errors
   GraphDatabaseError,
   GraphConnectionError,
   GraphQueryError,
-  
+
   // Other errors
   A2ATimeoutError,
   CascadeDeletionError,
-} from '@cortexmemory/sdk';
+} from "@cortexmemory/sdk";
 ```
 
 ---
@@ -98,17 +98,17 @@ Error (native JavaScript)
 ### Basic Error Handling
 
 ```typescript
-import { MemoryValidationError, CircuitOpenError } from '@cortexmemory/sdk';
+import { MemoryValidationError, CircuitOpenError } from "@cortexmemory/sdk";
 
 try {
   await cortex.memory.remember({
-    memorySpaceId: 'user-123-space',
-    conversationId: 'conv-123',
-    userMessage: 'My name is Alex',
+    memorySpaceId: "user-123-space",
+    conversationId: "conv-123",
+    userMessage: "My name is Alex",
     agentResponse: "Nice to meet you, Alex!",
-    userId: 'user-123',
-    userName: 'Alex',
-    agentId: 'assistant',
+    userId: "user-123",
+    userName: "Alex",
+    agentId: "assistant",
   });
 } catch (error) {
   if (error instanceof MemoryValidationError) {
@@ -118,7 +118,7 @@ try {
     console.error(`Message: ${error.message}`);
   } else if (error instanceof CircuitOpenError) {
     // Backend is unhealthy
-    console.error('Service temporarily unavailable');
+    console.error("Service temporarily unavailable");
     console.error(`Retry after: ${error.retryAfterMs}ms`);
   } else {
     // Unexpected error
@@ -157,10 +157,10 @@ try {
 ### Resilience Error Handling
 
 ```typescript
-import { 
-  CircuitOpenError, 
-  QueueFullError, 
-  RateLimitExceededError 
+import {
+  CircuitOpenError,
+  QueueFullError,
+  RateLimitExceededError
 } from '@cortexmemory/sdk';
 
 try {
@@ -187,11 +187,11 @@ try {
 ### Graph Error Handling
 
 ```typescript
-import { 
-  GraphConnectionError, 
-  GraphAuthenticationError, 
-  GraphQueryError 
-} from '@cortexmemory/sdk';
+import {
+  GraphConnectionError,
+  GraphAuthenticationError,
+  GraphQueryError,
+} from "@cortexmemory/sdk";
 
 try {
   await cortex.memory.remember({
@@ -200,15 +200,15 @@ try {
   });
 } catch (error) {
   if (error instanceof GraphAuthenticationError) {
-    console.error('Graph authentication failed');
+    console.error("Graph authentication failed");
     console.error(`URI: ${error.uri}`);
     console.error(`Username: ${error.username}`);
-    console.error('Check NEO4J_PASSWORD in .env');
+    console.error("Check NEO4J_PASSWORD in .env");
   } else if (error instanceof GraphConnectionError) {
-    console.error('Cannot connect to graph database');
+    console.error("Cannot connect to graph database");
     // Fallback to non-graph mode
   } else if (error instanceof GraphQueryError) {
-    console.error('Graph query failed');
+    console.error("Graph query failed");
     console.error(`Query: ${error.query}`);
   }
 }
@@ -238,40 +238,40 @@ class MemoryValidationError extends Error {
 
 **Error Codes:**
 
-| Code | Field | Description | Fix |
-|------|-------|-------------|-----|
-| `MISSING_REQUIRED_FIELD` | `memorySpaceId` | Missing or empty memorySpaceId | Provide valid memorySpaceId |
-| `MISSING_REQUIRED_FIELD` | `conversationId` | Missing or empty conversationId | Provide valid conversationId |
-| `MISSING_REQUIRED_FIELD` | `userMessage` | Missing or empty userMessage | Provide message content |
-| `MISSING_REQUIRED_FIELD` | `agentResponse` | Missing or empty agentResponse | Provide response content |
-| `MISSING_REQUIRED_FIELD` | `userName` | Required when userId provided | Provide userName with userId |
-| `OWNER_REQUIRED` | `userId/agentId` | Neither userId nor agentId provided | Provide at least one owner ID |
-| `INVALID_IMPORTANCE` | `importance` | Not between 0-100 | Use number 0-100 |
-| `INVALID_ID_FORMAT` | (any ID field) | Invalid characters in ID | Use alphanumeric, hyphens, underscores |
-| `INVALID_FORMAT` | `contentType` | Invalid contentType | Use "raw" or "summarized" |
-| `INVALID_SOURCE_TYPE` | `sourceType` | Invalid sourceType | Use "conversation", "system", "tool", or "a2a" |
-| `INVALID_EMBEDDING` | `embedding` | Invalid embedding array | Provide array of finite numbers |
-| `INVALID_TIMESTAMP` | (timestamp fields) | Invalid timestamp | Use valid number or Date |
-| `EMPTY_ARRAY` | `messageIds` | Empty array | Provide at least one element |
-| `MISSING_CONVERSATION_REF` | `conversationRef` | Required for conversation source | Provide conversationRef |
-| `INVALID_STREAM` | `responseStream` | Invalid stream object | Use ReadableStream or AsyncIterable |
-| `INVALID_FILTER` | (filter) | Insufficient filter criteria | Add userId or sourceType filter |
-| `INVALID_CONFIDENCE` | `minConfidence` | Not between 0-100 | Use number 0-100 |
-| `INVALID_DATE_RANGE` | `createdAfter/createdBefore` | Invalid date range | Ensure after < before |
-| `INVALID_GRAPH_DEPTH` | `graphExpansion.maxDepth` | Not between 1-5 | Use depth 1-5 |
-| `NEGATIVE_NUMBER` | `limit`, `version` | Negative or invalid number | Use positive integer |
+| Code                       | Field                        | Description                         | Fix                                            |
+| -------------------------- | ---------------------------- | ----------------------------------- | ---------------------------------------------- |
+| `MISSING_REQUIRED_FIELD`   | `memorySpaceId`              | Missing or empty memorySpaceId      | Provide valid memorySpaceId                    |
+| `MISSING_REQUIRED_FIELD`   | `conversationId`             | Missing or empty conversationId     | Provide valid conversationId                   |
+| `MISSING_REQUIRED_FIELD`   | `userMessage`                | Missing or empty userMessage        | Provide message content                        |
+| `MISSING_REQUIRED_FIELD`   | `agentResponse`              | Missing or empty agentResponse      | Provide response content                       |
+| `MISSING_REQUIRED_FIELD`   | `userName`                   | Required when userId provided       | Provide userName with userId                   |
+| `OWNER_REQUIRED`           | `userId/agentId`             | Neither userId nor agentId provided | Provide at least one owner ID                  |
+| `INVALID_IMPORTANCE`       | `importance`                 | Not between 0-100                   | Use number 0-100                               |
+| `INVALID_ID_FORMAT`        | (any ID field)               | Invalid characters in ID            | Use alphanumeric, hyphens, underscores         |
+| `INVALID_FORMAT`           | `contentType`                | Invalid contentType                 | Use "raw" or "summarized"                      |
+| `INVALID_SOURCE_TYPE`      | `sourceType`                 | Invalid sourceType                  | Use "conversation", "system", "tool", or "a2a" |
+| `INVALID_EMBEDDING`        | `embedding`                  | Invalid embedding array             | Provide array of finite numbers                |
+| `INVALID_TIMESTAMP`        | (timestamp fields)           | Invalid timestamp                   | Use valid number or Date                       |
+| `EMPTY_ARRAY`              | `messageIds`                 | Empty array                         | Provide at least one element                   |
+| `MISSING_CONVERSATION_REF` | `conversationRef`            | Required for conversation source    | Provide conversationRef                        |
+| `INVALID_STREAM`           | `responseStream`             | Invalid stream object               | Use ReadableStream or AsyncIterable            |
+| `INVALID_FILTER`           | (filter)                     | Insufficient filter criteria        | Add userId or sourceType filter                |
+| `INVALID_CONFIDENCE`       | `minConfidence`              | Not between 0-100                   | Use number 0-100                               |
+| `INVALID_DATE_RANGE`       | `createdAfter/createdBefore` | Invalid date range                  | Ensure after < before                          |
+| `INVALID_GRAPH_DEPTH`      | `graphExpansion.maxDepth`    | Not between 1-5                     | Use depth 1-5                                  |
+| `NEGATIVE_NUMBER`          | `limit`, `version`           | Negative or invalid number          | Use positive integer                           |
 
 **Example:**
 
 ```typescript
-import { MemoryValidationError } from '@cortexmemory/sdk';
+import { MemoryValidationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.memory.remember({
-    conversationId: 'conv-123',
-    userMessage: 'Hello',
-    agentResponse: 'Hi!',
-    userId: 'user-123',
+    conversationId: "conv-123",
+    userMessage: "Hello",
+    agentResponse: "Hi!",
+    userId: "user-123",
     // Missing userName - will throw validation error
   });
 } catch (error) {
@@ -293,21 +293,21 @@ try {
 
 **Error Codes:**
 
-| Code | Field | Description | Fix |
-|------|-------|-------------|-----|
-| `MISSING_REQUIRED_FIELD` | (various) | Required field missing | Provide required field |
-| `INVALID_TYPE` | `type` | Invalid conversation type | Use "user-agent" or "agent-agent" |
-| `INVALID_ROLE` | `role` | Invalid message role | Use "user", "agent", or "system" |
-| `INVALID_ID_FORMAT` | `conversationId`, `messageId` | Invalid ID format | Remove invalid characters |
-| `INVALID_FORMAT` | `format` | Invalid export format | Use "json" or "csv" |
-| `INVALID_SORT_ORDER` | `sortOrder` | Invalid sort order | Use "asc" or "desc" |
-| `EMPTY_STRING` | `query` | Empty search query | Provide non-empty query |
-| `INVALID_RANGE` | `limit`, `offset` | Invalid range | Use valid positive integers |
-| `EMPTY_ARRAY` | (array fields) | Empty array | Provide at least one element |
-| `INVALID_ARRAY_LENGTH` | (array fields) | Array length constraint violated | Check min/max requirements |
-| `INVALID_DATE_RANGE` | (date fields) | Start >= End | Ensure start < end |
-| `INVALID_PARTICIPANTS` | `participants` | Invalid participants structure | Match type requirements |
-| `DUPLICATE_VALUES` | (array fields) | Duplicate values in array | Remove duplicates |
+| Code                     | Field                         | Description                      | Fix                               |
+| ------------------------ | ----------------------------- | -------------------------------- | --------------------------------- |
+| `MISSING_REQUIRED_FIELD` | (various)                     | Required field missing           | Provide required field            |
+| `INVALID_TYPE`           | `type`                        | Invalid conversation type        | Use "user-agent" or "agent-agent" |
+| `INVALID_ROLE`           | `role`                        | Invalid message role             | Use "user", "agent", or "system"  |
+| `INVALID_ID_FORMAT`      | `conversationId`, `messageId` | Invalid ID format                | Remove invalid characters         |
+| `INVALID_FORMAT`         | `format`                      | Invalid export format            | Use "json" or "csv"               |
+| `INVALID_SORT_ORDER`     | `sortOrder`                   | Invalid sort order               | Use "asc" or "desc"               |
+| `EMPTY_STRING`           | `query`                       | Empty search query               | Provide non-empty query           |
+| `INVALID_RANGE`          | `limit`, `offset`             | Invalid range                    | Use valid positive integers       |
+| `EMPTY_ARRAY`            | (array fields)                | Empty array                      | Provide at least one element      |
+| `INVALID_ARRAY_LENGTH`   | (array fields)                | Array length constraint violated | Check min/max requirements        |
+| `INVALID_DATE_RANGE`     | (date fields)                 | Start >= End                     | Ensure start < end                |
+| `INVALID_PARTICIPANTS`   | `participants`                | Invalid participants structure   | Match type requirements           |
+| `DUPLICATE_VALUES`       | (array fields)                | Duplicate values in array        | Remove duplicates                 |
 
 ---
 
@@ -319,26 +319,27 @@ try {
 
 **Error Codes:**
 
-| Code | Field | Description | Fix |
-|------|-------|-------------|-----|
-| `MISSING_REQUIRED_FIELD` | (various) | Required field missing | Provide required field |
-| `INVALID_FACT_ID_FORMAT` | `factId` | Doesn't start with "fact-" | Use "fact-" prefix |
-| `INVALID_ARRAY` | (array fields) | Invalid array or element | Provide valid array |
-| `EMPTY_ARRAY` | (array fields) | Empty array | Provide at least one element |
-| `INVALID_CONFIDENCE` | `confidence` | Not between 0-100 | Use number 0-100 |
-| `INVALID_FACT_TYPE` | `factType` | Invalid fact type | Use valid fact type |
-| `INVALID_SOURCE_TYPE` | `sourceType` | Invalid source type | Use valid source type |
-| `INVALID_EXPORT_FORMAT` | `format` | Invalid export format | Use "json", "jsonld", or "csv" |
-| `INVALID_SORT_BY` | `sortBy` | Invalid sort field | Use valid sort field |
-| `INVALID_TAG_MATCH` | `tagMatch` | Invalid tag match mode | Use "any" or "all" |
-| `INVALID_SORT_ORDER` | `sortOrder` | Invalid sort order | Use "asc" or "desc" |
-| `INVALID_DATE_RANGE` | (date fields) | Invalid date range | Ensure start < end |
-| `INVALID_VALIDITY_PERIOD` | `validFrom`/`validUntil` | Invalid validity period | Ensure validFrom < validUntil |
-| `INVALID_UPDATE` | (update fields) | No fields to update | Provide at least one update field |
-| `INVALID_CONSOLIDATION` | `factIds` | Invalid consolidation params | Check requirements |
-| `INVALID_METADATA` | `metadata`, `sourceRef` | Invalid metadata structure | Provide valid object |
+| Code                      | Field                    | Description                  | Fix                               |
+| ------------------------- | ------------------------ | ---------------------------- | --------------------------------- |
+| `MISSING_REQUIRED_FIELD`  | (various)                | Required field missing       | Provide required field            |
+| `INVALID_FACT_ID_FORMAT`  | `factId`                 | Doesn't start with "fact-"   | Use "fact-" prefix                |
+| `INVALID_ARRAY`           | (array fields)           | Invalid array or element     | Provide valid array               |
+| `EMPTY_ARRAY`             | (array fields)           | Empty array                  | Provide at least one element      |
+| `INVALID_CONFIDENCE`      | `confidence`             | Not between 0-100            | Use number 0-100                  |
+| `INVALID_FACT_TYPE`       | `factType`               | Invalid fact type            | Use valid fact type               |
+| `INVALID_SOURCE_TYPE`     | `sourceType`             | Invalid source type          | Use valid source type             |
+| `INVALID_EXPORT_FORMAT`   | `format`                 | Invalid export format        | Use "json", "jsonld", or "csv"    |
+| `INVALID_SORT_BY`         | `sortBy`                 | Invalid sort field           | Use valid sort field              |
+| `INVALID_TAG_MATCH`       | `tagMatch`               | Invalid tag match mode       | Use "any" or "all"                |
+| `INVALID_SORT_ORDER`      | `sortOrder`              | Invalid sort order           | Use "asc" or "desc"               |
+| `INVALID_DATE_RANGE`      | (date fields)            | Invalid date range           | Ensure start < end                |
+| `INVALID_VALIDITY_PERIOD` | `validFrom`/`validUntil` | Invalid validity period      | Ensure validFrom < validUntil     |
+| `INVALID_UPDATE`          | (update fields)          | No fields to update          | Provide at least one update field |
+| `INVALID_CONSOLIDATION`   | `factIds`                | Invalid consolidation params | Check requirements                |
+| `INVALID_METADATA`        | `metadata`, `sourceRef`  | Invalid metadata structure   | Provide valid object              |
 
 **Valid Fact Types:**
+
 - `preference`
 - `identity`
 - `knowledge`
@@ -353,33 +354,33 @@ try {
 
 **User Validation Error** (`src/users/validators.ts`)
 
-| Code | Description |
-|------|-------------|
+| Code                     | Description            |
+| ------------------------ | ---------------------- |
 | `MISSING_REQUIRED_FIELD` | Required field missing |
-| `INVALID_FORMAT` | Invalid field format |
+| `INVALID_FORMAT`         | Invalid field format   |
 
 **Agent Validation Error** (`src/agents/validators.ts`)
 
-| Code | Description |
-|------|-------------|
+| Code                     | Description            |
+| ------------------------ | ---------------------- |
 | `MISSING_REQUIRED_FIELD` | Required field missing |
-| `INVALID_FORMAT` | Invalid field format |
+| `INVALID_FORMAT`         | Invalid field format   |
 
 **Session Validation Error** (`src/sessions/validators.ts`)
 
-| Code | Description |
-|------|-------------|
-| `MISSING_SESSION_ID` | sessionId required |
-| `INVALID_SESSION_ID` | Invalid sessionId format |
-| `INVALID_STATUS` | Invalid session status |
-| `INVALID_FILTERS` | Invalid filter combination |
+| Code                 | Description                |
+| -------------------- | -------------------------- |
+| `MISSING_SESSION_ID` | sessionId required         |
+| `INVALID_SESSION_ID` | Invalid sessionId format   |
+| `INVALID_STATUS`     | Invalid session status     |
+| `INVALID_FILTERS`    | Invalid filter combination |
 
 **Auth Validation Error** (`src/auth/validators.ts`)
 
-| Code | Description |
-|------|-------------|
+| Code                    | Description            |
+| ----------------------- | ---------------------- |
 | `MISSING_AUTH_PROVIDER` | Auth provider required |
-| `MISSING_TENANT_ID` | tenantId required |
+| `MISSING_TENANT_ID`     | tenantId required      |
 
 ---
 
@@ -401,6 +402,7 @@ class CircuitOpenError extends Error {
 ```
 
 **Recovery:**
+
 - Wait for `retryAfterMs` milliseconds
 - Retry the request
 - Backend will eventually recover
@@ -438,6 +440,7 @@ class RateLimitExceededError extends Error {
 ```
 
 **Recovery:**
+
 - Wait for `refillInMs` milliseconds
 - Token bucket will refill
 - Retry the request
@@ -475,6 +478,7 @@ class QueueFullError extends Error {
 ```
 
 **Recovery:**
+
 - Reduce request volume
 - Return 503 Service Unavailable
 - Implement exponential backoff
@@ -511,6 +515,7 @@ class AcquireTimeoutError extends Error {
 ```
 
 **Recovery:**
+
 - Increase timeout in resilience config
 - Reduce concurrent requests
 - Scale backend capacity
@@ -548,6 +553,7 @@ class GraphConnectionError extends GraphDatabaseError {
 ```
 
 **Recovery:**
+
 - Check graph database is running
 - Verify connection URI
 - Check network connectivity
@@ -555,7 +561,7 @@ class GraphConnectionError extends GraphDatabaseError {
 **Example:**
 
 ```typescript
-import { GraphConnectionError } from '@cortexmemory/sdk';
+import { GraphConnectionError } from "@cortexmemory/sdk";
 
 try {
   await cortex.memory.remember({
@@ -564,7 +570,7 @@ try {
   });
 } catch (error) {
   if (error instanceof GraphConnectionError) {
-    console.error('Graph database unavailable');
+    console.error("Graph database unavailable");
     // Fallback: disable graph sync
     await cortex.memory.remember({
       // ... params
@@ -592,6 +598,7 @@ class GraphAuthenticationError extends GraphConnectionError {
 ```
 
 **Recovery:**
+
 - Check NEO4J_PASSWORD in .env
 - Verify username
 - Check database access permissions
@@ -599,16 +606,16 @@ class GraphAuthenticationError extends GraphConnectionError {
 **Example:**
 
 ```typescript
-import { GraphAuthenticationError } from '@cortexmemory/sdk';
+import { GraphAuthenticationError } from "@cortexmemory/sdk";
 
 try {
   await graphAdapter.connect(config);
 } catch (error) {
   if (error instanceof GraphAuthenticationError) {
-    console.error('Authentication failed:');
+    console.error("Authentication failed:");
     console.error(`  URI: ${error.uri}`);
     console.error(`  Username: ${error.username}`);
-    console.error('Check NEO4J_PASSWORD in .env');
+    console.error("Check NEO4J_PASSWORD in .env");
   }
 }
 ```
@@ -630,6 +637,7 @@ class GraphQueryError extends GraphDatabaseError {
 ```
 
 **Recovery:**
+
 - Check query syntax
 - Verify node/relationship exists
 - Check database constraints
@@ -642,10 +650,7 @@ class GraphQueryError extends GraphDatabaseError {
 
 ```typescript
 class GraphNotFoundError extends GraphDatabaseError {
-  constructor(
-    resourceType: "node" | "edge" | "path", 
-    identifier: string
-  );
+  constructor(resourceType: "node" | "edge" | "path", identifier: string);
 }
 ```
 
@@ -672,6 +677,7 @@ class A2ATimeoutError extends Error {
 ```
 
 **Recovery:**
+
 - Increase timeout in A2ARequestParams
 - Check receiving agent is responding
 - Retry with exponential backoff
@@ -696,6 +702,7 @@ class CascadeDeletionError extends Error {
 ```
 
 **Recovery:**
+
 - Review failed layers
 - Retry deletion for failed layers
 - Check permissions
@@ -737,6 +744,7 @@ class ResumableStreamError extends Error {
 ```
 
 **Recovery:**
+
 - Use resumeContext to resume from failure point
 - Retry with stored progress
 
@@ -755,19 +763,19 @@ class ResumableStreamError extends Error {
 ```typescript
 // ❌ Wrong - no owner
 await cortex.memory.remember({
-  conversationId: 'conv-123',
-  userMessage: 'Hello',
-  agentResponse: 'Hi',
+  conversationId: "conv-123",
+  userMessage: "Hello",
+  agentResponse: "Hi",
 });
 
 // ✅ Correct - userId provided
 await cortex.memory.remember({
-  conversationId: 'conv-123',
-  userMessage: 'Hello',
-  agentResponse: 'Hi',
-  userId: 'user-123',
-  userName: 'Alex',
-  agentId: 'assistant',
+  conversationId: "conv-123",
+  userMessage: "Hello",
+  agentResponse: "Hi",
+  userId: "user-123",
+  userName: "Alex",
+  agentId: "assistant",
 });
 ```
 
@@ -782,21 +790,21 @@ await cortex.memory.remember({
 ```typescript
 // ❌ Wrong - missing userName
 await cortex.memory.remember({
-  conversationId: 'conv-123',
-  userMessage: 'Hello',
-  agentResponse: 'Hi',
-  userId: 'user-123', // userName required!
-  agentId: 'assistant',
+  conversationId: "conv-123",
+  userMessage: "Hello",
+  agentResponse: "Hi",
+  userId: "user-123", // userName required!
+  agentId: "assistant",
 });
 
 // ✅ Correct
 await cortex.memory.remember({
-  conversationId: 'conv-123',
-  userMessage: 'Hello',
-  agentResponse: 'Hi',
-  userId: 'user-123',
-  userName: 'Alex', // Added userName
-  agentId: 'assistant',
+  conversationId: "conv-123",
+  userMessage: "Hello",
+  agentResponse: "Hi",
+  userId: "user-123",
+  userName: "Alex", // Added userName
+  agentId: "assistant",
 });
 ```
 
@@ -831,7 +839,7 @@ await cortex.memory.remember({
 **Recovery Strategy:**
 
 ```typescript
-import { CircuitOpenError } from '@cortexmemory/sdk';
+import { CircuitOpenError } from "@cortexmemory/sdk";
 
 async function rememberWithRetry(params, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
@@ -841,13 +849,13 @@ async function rememberWithRetry(params, maxRetries = 3) {
       if (error instanceof CircuitOpenError) {
         const delay = error.retryAfterMs || 30000 * (i + 1);
         console.log(`Circuit open, retry ${i + 1}/${maxRetries} in ${delay}ms`);
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
         continue;
       }
       throw error;
     }
   }
-  throw new Error('Max retries exceeded');
+  throw new Error("Max retries exceeded");
 }
 ```
 
@@ -864,7 +872,7 @@ async function rememberWithRetry(params, maxRetries = 3) {
 ```typescript
 // Use exponential backoff
 const backoff = Math.min(1000 * Math.pow(2, attempt), 30000);
-await new Promise(resolve => setTimeout(resolve, backoff));
+await new Promise((resolve) => setTimeout(resolve, backoff));
 ```
 
 2. **Use higher priority for critical operations:**
@@ -916,7 +924,7 @@ NEO4J_PASSWORD=your-password-here  # Check this!
 2. Fallback without graph:
 
 ```typescript
-import { GraphAuthenticationError } from '@cortexmemory/sdk';
+import { GraphAuthenticationError } from "@cortexmemory/sdk";
 
 try {
   await cortex.memory.remember({
@@ -925,7 +933,7 @@ try {
   });
 } catch (error) {
   if (error instanceof GraphAuthenticationError) {
-    console.error('Graph auth failed, falling back to non-graph mode');
+    console.error("Graph auth failed, falling back to non-graph mode");
     await cortex.memory.remember({
       // ... params
       syncToGraph: false,
@@ -946,13 +954,13 @@ try {
 // ❌ Wrong
 await cortex.facts.store({
   // ... params
-  factType: 'unknown', // Invalid!
+  factType: "unknown", // Invalid!
 });
 
 // ✅ Correct - use valid fact type
 await cortex.facts.store({
   // ... params
-  factType: 'preference', // Valid
+  factType: "preference", // Valid
 });
 
 // Valid fact types:
@@ -984,7 +992,7 @@ async function withRetry<T>(
       if (attempt === maxRetries - 1) {
         throw error;
       }
-      
+
       // Exponential backoff with jitter
       const delay = baseDelay * Math.pow(2, attempt) + Math.random() * 1000;
       console.log(`Retry ${attempt + 1}/${maxRetries} after ${delay}ms`);
@@ -1047,10 +1055,7 @@ await breaker.execute(() => cortex.memory.remember({...}));
 ### Graceful Degradation
 
 ```typescript
-import { 
-  GraphConnectionError, 
-  CircuitOpenError 
-} from '@cortexmemory/sdk';
+import { GraphConnectionError, CircuitOpenError } from "@cortexmemory/sdk";
 
 async function rememberWithFallback(params: RememberParams) {
   try {
@@ -1063,23 +1068,23 @@ async function rememberWithFallback(params: RememberParams) {
   } catch (error) {
     if (error instanceof GraphConnectionError) {
       // Fallback: no graph sync
-      console.warn('Graph unavailable, continuing without graph sync');
+      console.warn("Graph unavailable, continuing without graph sync");
       return await cortex.memory.remember({
         ...params,
         syncToGraph: false,
         extractFacts: true,
       });
     }
-    
+
     if (error instanceof CircuitOpenError) {
       // Fallback: minimal storage
-      console.warn('Backend stressed, using minimal storage');
+      console.warn("Backend stressed, using minimal storage");
       return await cortex.memory.remember({
         ...params,
-        skipLayers: ['facts', 'graph'],
+        skipLayers: ["facts", "graph"],
       });
     }
-    
+
     throw error;
   }
 }

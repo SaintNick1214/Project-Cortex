@@ -69,7 +69,7 @@ import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   auth: createAuthContext({
-    tenantId: "customer-acme",    // All operations scoped to this tenant
+    tenantId: "customer-acme", // All operations scoped to this tenant
     userId: "user-123",
     sessionId: "session-xyz",
   }),
@@ -98,19 +98,19 @@ const spaces = await cortex.memorySpaces.list();
 
 **ALL Cortex layers automatically support `tenantId`:**
 
-| Layer | API | Tenant Support | How |
-|-------|-----|----------------|-----|
-| **Layer 1a** | `cortex.conversations.*` | ✅ Full | Auto-injected from AuthContext |
-| **Layer 1b** | `cortex.immutable.*` | ✅ Full | Auto-injected from AuthContext |
-| **Layer 1c** | `cortex.mutable.*` | ✅ Full | Auto-injected from AuthContext |
-| **Layer 2** | `cortex.vector.*` | ✅ Full | Auto-injected from AuthContext |
-| **Layer 3** | `cortex.facts.*` | ✅ Full | Auto-injected from AuthContext |
-| **Layer 4** | `cortex.memory.*` | ✅ Full | Auto-injected from AuthContext |
-| **Spaces** | `cortex.memorySpaces.*` | ✅ Full | Auto-injected from AuthContext |
-| **Users** | `cortex.users.*` | ✅ Full | Auto-injected from AuthContext |
-| **Contexts** | `cortex.contexts.*` | ✅ Full | Auto-injected from AuthContext |
-| **Sessions** | `cortex.sessions.*` | ✅ Full | Auto-injected from AuthContext |
-| **Graph** | Graph nodes | ✅ Full | `tenantId` property on all nodes |
+| Layer        | API                      | Tenant Support | How                              |
+| ------------ | ------------------------ | -------------- | -------------------------------- |
+| **Layer 1a** | `cortex.conversations.*` | ✅ Full        | Auto-injected from AuthContext   |
+| **Layer 1b** | `cortex.immutable.*`     | ✅ Full        | Auto-injected from AuthContext   |
+| **Layer 1c** | `cortex.mutable.*`       | ✅ Full        | Auto-injected from AuthContext   |
+| **Layer 2**  | `cortex.vector.*`        | ✅ Full        | Auto-injected from AuthContext   |
+| **Layer 3**  | `cortex.facts.*`         | ✅ Full        | Auto-injected from AuthContext   |
+| **Layer 4**  | `cortex.memory.*`        | ✅ Full        | Auto-injected from AuthContext   |
+| **Spaces**   | `cortex.memorySpaces.*`  | ✅ Full        | Auto-injected from AuthContext   |
+| **Users**    | `cortex.users.*`         | ✅ Full        | Auto-injected from AuthContext   |
+| **Contexts** | `cortex.contexts.*`      | ✅ Full        | Auto-injected from AuthContext   |
+| **Sessions** | `cortex.sessions.*`      | ✅ Full        | Auto-injected from AuthContext   |
+| **Graph**    | Graph nodes              | ✅ Full        | `tenantId` property on all nodes |
 
 ### Complete Tenant Separation Example
 
@@ -144,7 +144,10 @@ await cortexTenantA.memory.remember({
 });
 
 // Tenant B CANNOT access Tenant A's data (even with same memorySpaceId!)
-const memories = await cortexTenantB.memory.search("team-workspace", "strategy");
+const memories = await cortexTenantB.memory.search(
+  "team-workspace",
+  "strategy",
+);
 // Returns: [] (empty - different tenant)
 
 // Each tenant has complete isolation:
@@ -206,13 +209,13 @@ await cortex.governance.setPolicy({
   organizationId: "tenant-acme",
   sessions: {
     lifecycle: {
-      idleTimeout: "1h",      // Enterprise customer - longer sessions
+      idleTimeout: "1h", // Enterprise customer - longer sessions
       maxDuration: "7d",
     },
   },
   vector: {
     retention: {
-      defaultVersions: 20,    // More history
+      defaultVersions: 20, // More history
     },
   },
 });
@@ -221,13 +224,13 @@ await cortex.governance.setPolicy({
   organizationId: "tenant-startup",
   sessions: {
     lifecycle: {
-      idleTimeout: "30m",     // Standard timeout
+      idleTimeout: "30m", // Standard timeout
       maxDuration: "24h",
     },
   },
   vector: {
     retention: {
-      defaultVersions: 10,    // Standard history
+      defaultVersions: 10, // Standard history
     },
   },
 });
@@ -238,7 +241,7 @@ await cortex.governance.setPolicy({
 ```typescript
 // Get stats for a tenant
 const tenantSpaces = await cortex.memorySpaces.list({
-  tenantId: "tenant-acme",  // Optional explicit filter
+  tenantId: "tenant-acme", // Optional explicit filter
   status: "active",
 });
 
@@ -247,7 +250,9 @@ const tenantUsers = await cortex.users.list({
   limit: 1000,
 });
 
-console.log(`Tenant has ${tenantSpaces.total} spaces, ${tenantUsers.total} users`);
+console.log(
+  `Tenant has ${tenantSpaces.total} spaces, ${tenantUsers.total} users`,
+);
 ```
 
 ---
@@ -263,7 +268,7 @@ console.log(`Tenant has ${tenantSpaces.total} spaces, ${tenantUsers.total} users
 ```typescript
 // Space A
 await cortex.memory.remember({
-  memorySpaceId: "user-alice-personal",  // Space A
+  memorySpaceId: "user-alice-personal", // Space A
   userMessage: "My secret is Blue",
   agentResponse: "I'll keep it safe",
   userId: "alice",
@@ -303,7 +308,7 @@ const memorySpaceId = "user-123-personal"; // One space for all tools
 // Cursor stores
 await cortex.memory.remember({
   memorySpaceId,
-  participantId: "cursor",  // Track who stored it
+  participantId: "cursor", // Track who stored it
   userMessage: "I prefer TypeScript",
   agentResponse: "Noted!",
   userId: "user-123",
@@ -322,7 +327,7 @@ Each participant has their OWN memory space (full isolation):
 ```typescript
 // Finance agent has separate space
 await cortex.memory.remember({
-  memorySpaceId: "finance-agent-space",  // Separate
+  memorySpaceId: "finance-agent-space", // Separate
   userMessage: "Approve $50k budget",
   agentResponse: "Approved",
   userId: "user-123",
@@ -331,7 +336,7 @@ await cortex.memory.remember({
 
 // HR agent has separate space
 await cortex.memory.remember({
-  memorySpaceId: "hr-agent-space",  // Separate
+  memorySpaceId: "hr-agent-space", // Separate
   userMessage: "Hire 5 engineers",
   agentResponse: "Posted job listings",
   userId: "user-123",
@@ -363,7 +368,7 @@ const context = await cortex.contexts.create({
 await cortex.contexts.grantAccess(
   context.contextId,
   "specialist-space",
-  "read-only"
+  "read-only",
 );
 
 // Specialist can read THIS context (not entire supervisor space)
@@ -403,7 +408,7 @@ await cortex.conversations.create({
   memorySpaceId: "support-bot-space",
   type: "user-agent",
   participants: {
-    userId: "user-123",  // ← GDPR link
+    userId: "user-123", // ← GDPR link
     agentId: "support-agent",
   },
 });
@@ -411,7 +416,7 @@ await cortex.conversations.create({
 // Link memory to user
 await cortex.vector.store("support-bot-space", {
   content: "User prefers email support",
-  userId: "user-123",  // ← GDPR link
+  userId: "user-123", // ← GDPR link
   source: { type: "conversation" },
   metadata: { importance: 70 },
 });
@@ -419,7 +424,7 @@ await cortex.vector.store("support-bot-space", {
 // Link fact to user
 await cortex.facts.store({
   memorySpaceId: "support-bot-space",
-  userId: "user-123",  // ← GDPR link
+  userId: "user-123", // ← GDPR link
   fact: "User is enterprise tier",
   factType: "relationship",
   confidence: 100,
@@ -430,7 +435,7 @@ await cortex.facts.store({
 await cortex.immutable.store({
   type: "feedback",
   id: "feedback-456",
-  userId: "user-123",  // ← GDPR link
+  userId: "user-123", // ← GDPR link
   data: {
     rating: 5,
     comment: "Great service!",
@@ -442,7 +447,7 @@ await cortex.mutable.set(
   "user-sessions",
   "session-abc",
   { active: true, startedAt: Date.now() },
-  "user-123"  // ← GDPR link (4th parameter)
+  "user-123", // ← GDPR link (4th parameter)
 );
 ```
 
@@ -453,8 +458,8 @@ await cortex.mutable.set(
 ```typescript
 // SDK (Free) & Cloud Mode: Cascade deletion implemented
 const result = await cortex.users.delete("user-123", {
-  cascade: true,    // Delete from ALL layers
-  verify: true,     // Verify completeness
+  cascade: true, // Delete from ALL layers
+  verify: true, // Verify completeness
 });
 
 // Deleted from:
@@ -479,7 +484,7 @@ if (result.verification.complete) {
   console.log("✅ Deletion verified - no orphaned records");
 } else {
   console.warn("⚠️ Issues found:");
-  result.verification.issues.forEach(issue => console.warn(`  - ${issue}`));
+  result.verification.issues.forEach((issue) => console.warn(`  - ${issue}`));
 }
 ```
 
@@ -530,8 +535,8 @@ In **Hive Mode** (multiple tools share one space), `participantId` tracks which 
 ```typescript
 // Cursor stores with participant ID
 await cortex.memory.remember({
-  memorySpaceId: "user-123-personal",  // Shared space
-  participantId: "cursor",             // Attribution
+  memorySpaceId: "user-123-personal", // Shared space
+  participantId: "cursor", // Attribution
   userMessage: "I like Python",
   agentResponse: "Noted!",
   userId: "user-123",
@@ -540,8 +545,8 @@ await cortex.memory.remember({
 
 // Claude stores to same space with different participant ID
 await cortex.memory.remember({
-  memorySpaceId: "user-123-personal",  // Same shared space
-  participantId: "claude",             // Different attribution
+  memorySpaceId: "user-123-personal", // Same shared space
+  participantId: "claude", // Different attribution
   userMessage: "I prefer TypeScript",
   agentResponse: "Got it!",
   userId: "user-123",
@@ -549,7 +554,10 @@ await cortex.memory.remember({
 });
 
 // Both are visible to all participants in the space
-const allMemories = await cortex.memory.search("user-123-personal", "programming");
+const allMemories = await cortex.memory.search(
+  "user-123-personal",
+  "programming",
+);
 // Returns BOTH memories (no isolation, just tracking)
 
 // Filter by participant for debugging
@@ -563,14 +571,14 @@ console.log(`Cursor stored ${cursorMemories.length} memories`);
 
 **participantId is NOT isolation** - it's tracking:
 
-| Aspect | Memory Space Isolation | Participant Tracking |
-|--------|------------------------|----------------------|
-| **Purpose** | Data privacy | Data attribution |
-| **Field** | `memorySpaceId` (required) | `participantId` (optional) |
-| **Effect** | Complete isolation | Shared visibility |
-| **Query** | Must match to access | Can filter optionally |
-| **Use Case** | Privacy boundaries | Debugging, analytics |
-| **Example** | User A vs User B spaces | Cursor vs Claude in shared space |
+| Aspect       | Memory Space Isolation     | Participant Tracking             |
+| ------------ | -------------------------- | -------------------------------- |
+| **Purpose**  | Data privacy               | Data attribution                 |
+| **Field**    | `memorySpaceId` (required) | `participantId` (optional)       |
+| **Effect**   | Complete isolation         | Shared visibility                |
+| **Query**    | Must match to access       | Can filter optionally            |
+| **Use Case** | Privacy boundaries         | Debugging, analytics             |
+| **Example**  | User A vs User B spaces    | Cursor vs Claude in shared space |
 
 ### Participant Analytics
 
@@ -616,7 +624,7 @@ for (const memory of cursorData) {
 
 const cortex = new Cortex({
   auth: createAuthContext({
-    tenantId: "customer-acme",     // Tenant isolation
+    tenantId: "customer-acme", // Tenant isolation
     userId: "alice",
     sessionId: "session-1",
   }),
@@ -624,11 +632,11 @@ const cortex = new Cortex({
 
 // Cursor stores
 await cortex.memory.remember({
-  memorySpaceId: "alice-workspace",  // Memory space isolation
-  participantId: "cursor",            // Participant attribution
+  memorySpaceId: "alice-workspace", // Memory space isolation
+  participantId: "cursor", // Participant attribution
   userMessage: "Acme Corp project details",
   agentResponse: "Noted securely",
-  userId: "alice",                    // User isolation (GDPR)
+  userId: "alice", // User isolation (GDPR)
   userName: "Alice",
 });
 
@@ -653,7 +661,7 @@ const cortex = new Cortex({
 
 // Finance agent has dedicated space
 await cortex.memory.remember({
-  memorySpaceId: "finance-agent-space",  // Isolated
+  memorySpaceId: "finance-agent-space", // Isolated
   userMessage: "Confidential budget data",
   agentResponse: "Stored securely",
   userId: "cfo-user",
@@ -662,7 +670,7 @@ await cortex.memory.remember({
 
 // HR agent has dedicated space
 await cortex.memory.remember({
-  memorySpaceId: "hr-agent-space",       // Isolated
+  memorySpaceId: "hr-agent-space", // Isolated
   userMessage: "Employee salary info",
   agentResponse: "Stored securely",
   userId: "hr-manager",
@@ -724,19 +732,20 @@ await cortex.users.delete("user-123", { cascade: true });
 
 Complete reference of what's isolated by which field:
 
-| Data Type | tenantId | memorySpaceId | userId | participantId | Truly Shared |
-|-----------|----------|---------------|--------|---------------|--------------|
-| **Conversations (L1a)** | ✅ | ✅ | Optional | Optional | ❌ |
-| **Immutable (L1b)** | ✅ | ❌ | Optional | ❌ | ✅ |
-| **Mutable (L1c)** | ✅ | ❌ | Optional | ❌ | ✅ |
-| **Vector Memories (L2)** | ✅ | ✅ | Optional | Optional | ❌ |
-| **Facts (L3)** | ✅ | ✅ | Optional | Optional | ❌ |
-| **User Profiles** | ✅ | ❌ | N/A (is user) | ❌ | ✅ |
-| **Memory Spaces** | ✅ | N/A (is space) | ❌ | Via list | Registry |
-| **Contexts** | ✅ | ✅ | Optional | ❌ | ❌ |
-| **Sessions** | ✅ | Optional | ✅ | ❌ | ❌ |
+| Data Type                | tenantId | memorySpaceId  | userId        | participantId | Truly Shared |
+| ------------------------ | -------- | -------------- | ------------- | ------------- | ------------ |
+| **Conversations (L1a)**  | ✅       | ✅             | Optional      | Optional      | ❌           |
+| **Immutable (L1b)**      | ✅       | ❌             | Optional      | ❌            | ✅           |
+| **Mutable (L1c)**        | ✅       | ❌             | Optional      | ❌            | ✅           |
+| **Vector Memories (L2)** | ✅       | ✅             | Optional      | Optional      | ❌           |
+| **Facts (L3)**           | ✅       | ✅             | Optional      | Optional      | ❌           |
+| **User Profiles**        | ✅       | ❌             | N/A (is user) | ❌            | ✅           |
+| **Memory Spaces**        | ✅       | N/A (is space) | ❌            | Via list      | Registry     |
+| **Contexts**             | ✅       | ✅             | Optional      | ❌            | ❌           |
+| **Sessions**             | ✅       | Optional       | ✅            | ❌            | ❌           |
 
 **Legend:**
+
 - ✅ = Scoping field (data is isolated by this field)
 - Optional = Can be set for cascade deletion/filtering
 - ❌ = Not applicable
@@ -749,12 +758,14 @@ Complete reference of what's isolated by which field:
 ### 1. Choose the Right Isolation Pattern
 
 **Use Hive Mode when:**
+
 - ✅ Personal AI assistants (Cursor + Claude share memory)
 - ✅ MCP integration (all tools share user memory)
 - ✅ Team collaboration bots
 - ✅ Want zero data duplication
 
 **Use Collaboration Mode when:**
+
 - ✅ Autonomous agent swarms (each agent isolated)
 - ✅ Enterprise workflows (compliance isolation)
 - ✅ Financial/healthcare apps (strict boundaries)
@@ -774,7 +785,7 @@ const cortex = new Cortex({
 
 // ❌ BAD: Manual tenantId management
 await cortex.memory.remember({
-  memorySpaceId: `${tenantId}-user-space`,  // Brittle!
+  memorySpaceId: `${tenantId}-user-space`, // Brittle!
   // ...
 });
 ```
@@ -785,7 +796,7 @@ await cortex.memory.remember({
 // ✅ GOOD: Always set userId for user-related data
 await cortex.memory.remember({
   memorySpaceId: "support-bot",
-  userId: "user-123",  // Enables cascade deletion
+  userId: "user-123", // Enables cascade deletion
   userMessage: "My account issue",
   agentResponse: "Let me help",
   userName: "Alice",
@@ -807,7 +818,7 @@ await cortex.memory.remember({
 // ✅ GOOD: Track attribution in shared spaces
 await cortex.memory.remember({
   memorySpaceId: "team-workspace",
-  participantId: "code-review-bot",  // Clear attribution
+  participantId: "code-review-bot", // Clear attribution
   // ...
 });
 
@@ -823,15 +834,15 @@ const badData = await cortex.memory.list("team-workspace", {
 
 ```typescript
 // ✅ GOOD: Clear, scoped naming
-"user-{userId}-personal"
-"team-{teamId}-workspace"
-"project-{projectId}-memory"
-"tenant-{tenantId}-customer-{customerId}-space"
+"user-{userId}-personal";
+"team-{teamId}-workspace";
+"project-{projectId}-memory";
+"tenant-{tenantId}-customer-{customerId}-space";
 
 // ❌ BAD: Generic naming
-"space1"
-"memory"
-"default"
+"space1";
+"memory";
+"default";
 ```
 
 ---
@@ -921,7 +932,7 @@ app.post("/api/chat", async (req, res) => {
   const cortex = new Cortex({
     convexUrl: process.env.CONVEX_URL!,
     auth: createAuthContext({
-      tenantId: req.tenant.id,        // From auth middleware
+      tenantId: req.tenant.id, // From auth middleware
       userId: req.user.id,
       sessionId: req.session.id,
     }),
@@ -943,7 +954,7 @@ app.post("/api/chat", async (req, res) => {
 
 const cortex = new Cortex({
   auth: createAuthContext({
-    tenantId: "bank-customer-1",          // Tenant isolation
+    tenantId: "bank-customer-1", // Tenant isolation
     userId: "compliance-officer",
     sessionId: "session-xyz",
   }),
@@ -951,8 +962,8 @@ const cortex = new Cortex({
 
 // Separate space per department (Collaboration Mode)
 await cortex.memory.remember({
-  memorySpaceId: "department-trading",    // Space isolation
-  userId: "trader-123",                    // User isolation (GDPR)
+  memorySpaceId: "department-trading", // Space isolation
+  userId: "trader-123", // User isolation (GDPR)
   userName: "Trader",
   userMessage: "Execute trade",
   agentResponse: "Trade executed",
@@ -1053,7 +1064,7 @@ await cortex.memory.remember({
 // ✅ Always use AuthContext for multi-tenant apps
 const cortex = new Cortex({
   auth: createAuthContext({
-    tenantId: req.tenant.id,  // REQUIRED
+    tenantId: req.tenant.id, // REQUIRED
     userId: req.user.id,
   }),
 });
@@ -1069,11 +1080,11 @@ const cortex = new Cortex({
 
 ```typescript
 // ✅ Always use distinct memorySpaceIds
-const memorySpaceId = `user-${userId}-personal`;  // Per-user
+const memorySpaceId = `user-${userId}-personal`; // Per-user
 await cortex.memory.search(memorySpaceId, query);
 
 // ❌ Don't share memorySpaceIds across users
-const memorySpaceId = "shared";  // Everyone sees everything!
+const memorySpaceId = "shared"; // Everyone sees everything!
 ```
 
 ### Issue 3: Cannot Delete User Data
@@ -1088,7 +1099,7 @@ const memorySpaceId = "shared";  // Everyone sees everything!
 // ✅ Always set userId when storing user data
 await cortex.memory.remember({
   memorySpaceId: "bot-space",
-  userId: "user-123",  // Required for cascade
+  userId: "user-123", // Required for cascade
   userMessage: "User's data",
   agentResponse: "Stored",
   userName: "User",
@@ -1110,7 +1121,7 @@ await cortex.users.delete("user-123", { cascade: true });
 // ✅ Always use participantId in Hive Mode
 await cortex.memory.remember({
   memorySpaceId: "shared-space",
-  participantId: "new-bot",  // Attribution
+  participantId: "new-bot", // Attribution
   // ...
 });
 
@@ -1141,6 +1152,7 @@ Cortex provides **four complementary isolation layers**:
 - ✅ Combine all four for maximum security and compliance
 
 **When in doubt:**
+
 - Multi-tenant SaaS → Use ALL four layers
 - Single-tenant app → Use memory spaces + userId + participantId
 - Simple prototype → Use memory spaces only

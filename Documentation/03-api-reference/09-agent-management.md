@@ -101,7 +101,7 @@ await cortex.agents.register({
 
 // Now get agent with enhanced stats
 const agent = await cortex.agents.get("my-agent");
-console.log(agent?.stats?.totalMemories);  // Stats included in response
+console.log(agent?.stats?.totalMemories); // Stats included in response
 
 // Agent discovery
 const supportAgents = await cortex.agents.search({
@@ -136,20 +136,20 @@ cortex.agents.register(
 
 ```typescript
 interface AgentRegistration {
-  id: string;                         // Agent ID (must match ID used in memory ops)
-  tenantId?: string;                  // Multi-tenancy: SaaS platform isolation
-  name: string;                       // Display name
-  description?: string;               // What this agent does
+  id: string; // Agent ID (must match ID used in memory ops)
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  name: string; // Display name
+  description?: string; // What this agent does
   metadata?: {
     team?: string;
     capabilities?: string[];
     version?: string;
     owner?: string;
-    [key: string]: unknown;           // Custom fields
+    [key: string]: unknown; // Custom fields
   };
   config?: {
-    memoryVersionRetention?: number;  // Version retention override
-    [key: string]: unknown;           // Custom config
+    memoryVersionRetention?: number; // Version retention override
+    [key: string]: unknown; // Custom config
   };
 }
 ```
@@ -159,24 +159,24 @@ interface AgentRegistration {
 ```typescript
 interface RegisteredAgent {
   id: string;
-  tenantId?: string;                              // Multi-tenancy isolation
+  tenantId?: string; // Multi-tenancy isolation
   name: string;
   description?: string;
   metadata: Record<string, unknown>;
   config: Record<string, unknown>;
-  status: "active" | "inactive" | "archived";     // Agent status
-  registeredAt: number;                           // Unix timestamp (ms)
-  updatedAt: number;                              // Unix timestamp (ms)
-  lastActive?: number;                            // Unix timestamp (ms)
+  status: "active" | "inactive" | "archived"; // Agent status
+  registeredAt: number; // Unix timestamp (ms)
+  updatedAt: number; // Unix timestamp (ms)
+  lastActive?: number; // Unix timestamp (ms)
   stats?: AgentStats;
 }
 
 interface AgentStats {
   totalMemories: number;
   totalConversations: number;
-  totalFacts: number;                             // Facts extracted by this agent
-  memorySpacesActive: number;                     // Memory spaces with agent data
-  lastActive?: number;                            // Unix timestamp (ms)
+  totalFacts: number; // Facts extracted by this agent
+  memorySpacesActive: number; // Memory spaces with agent data
+  lastActive?: number; // Unix timestamp (ms)
 }
 ```
 
@@ -280,18 +280,18 @@ cortex.agents.search(
 
 ```typescript
 interface AgentFilters {
-  tenantId?: string;                              // Multi-tenancy filter
-  metadata?: Record<string, unknown>;             // Filter by metadata fields (exact match)
-  name?: string;                                  // Search by name (partial match)
-  capabilities?: string[];                        // Has these capabilities
-  capabilitiesMatch?: "any" | "all";              // Match mode (default: "any")
+  tenantId?: string; // Multi-tenancy filter
+  metadata?: Record<string, unknown>; // Filter by metadata fields (exact match)
+  name?: string; // Search by name (partial match)
+  capabilities?: string[]; // Has these capabilities
+  capabilitiesMatch?: "any" | "all"; // Match mode (default: "any")
   status?: "active" | "inactive" | "archived";
-  registeredAfter?: number;                       // Unix timestamp (ms)
-  registeredBefore?: number;                      // Unix timestamp (ms)
-  lastActiveAfter?: number;                       // Unix timestamp (ms)
-  lastActiveBefore?: number;                      // Unix timestamp (ms)
-  limit?: number;                                 // Max results (1-1000)
-  offset?: number;                                // Skip first N results
+  registeredAfter?: number; // Unix timestamp (ms)
+  registeredBefore?: number; // Unix timestamp (ms)
+  lastActiveAfter?: number; // Unix timestamp (ms)
+  lastActiveBefore?: number; // Unix timestamp (ms)
+  limit?: number; // Max results (1-1000)
+  offset?: number; // Skip first N results
   sortBy?: "name" | "registeredAt" | "lastActive";
   sortOrder?: "asc" | "desc";
 }
@@ -316,7 +316,7 @@ const troubleshooters = await cortex.agents.search({
 
 // Find recently registered agents (last 30 days)
 const newAgents = await cortex.agents.search({
-  registeredAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,  // Unix timestamp (ms)
+  registeredAfter: Date.now() - 30 * 24 * 60 * 60 * 1000, // Unix timestamp (ms)
   sortBy: "registeredAt",
   sortOrder: "desc",
 });
@@ -354,18 +354,18 @@ cortex.agents.list(
 
 ```typescript
 interface AgentFilters {
-  tenantId?: string;                              // Multi-tenancy filter (backend-applied)
-  metadata?: Record<string, unknown>;             // Filter by metadata (client-side)
-  name?: string;                                  // Search by name (client-side, partial match)
-  capabilities?: string[];                        // Has these capabilities (client-side)
-  capabilitiesMatch?: "any" | "all";              // Match mode (default: "any")
-  status?: "active" | "inactive" | "archived";    // Status filter (backend-applied)
-  registeredAfter?: number;                       // Unix timestamp (ms)
-  registeredBefore?: number;                      // Unix timestamp (ms)
-  lastActiveAfter?: number;                       // Unix timestamp (ms) (client-side)
-  lastActiveBefore?: number;                      // Unix timestamp (ms) (client-side)
-  limit?: number;                                 // Max results (default: 100, max: 1000)
-  offset?: number;                                // Skip first N results (default: 0)
+  tenantId?: string; // Multi-tenancy filter (backend-applied)
+  metadata?: Record<string, unknown>; // Filter by metadata (client-side)
+  name?: string; // Search by name (client-side, partial match)
+  capabilities?: string[]; // Has these capabilities (client-side)
+  capabilitiesMatch?: "any" | "all"; // Match mode (default: "any")
+  status?: "active" | "inactive" | "archived"; // Status filter (backend-applied)
+  registeredAfter?: number; // Unix timestamp (ms)
+  registeredBefore?: number; // Unix timestamp (ms)
+  lastActiveAfter?: number; // Unix timestamp (ms) (client-side)
+  lastActiveBefore?: number; // Unix timestamp (ms) (client-side)
+  limit?: number; // Max results (default: 100, max: 1000)
+  offset?: number; // Skip first N results (default: 0)
   sortBy?: "name" | "registeredAt" | "lastActive";
   sortOrder?: "asc" | "desc";
 }
@@ -901,7 +901,7 @@ if (agent) {
     totalConversations: agent.stats?.totalConversations,
     totalFacts: agent.stats?.totalFacts,
     memorySpacesActive: agent.stats?.memorySpacesActive,
-    lastActive: agent.stats?.lastActive,  // Unix timestamp (ms)
+    lastActive: agent.stats?.lastActive, // Unix timestamp (ms)
 
     // Agent metadata (from registration)
     name: agent.name,
@@ -1029,7 +1029,9 @@ await cortex.agents.register({
 
 // All existing memories/conversations now associated with registered agent
 const agent = await cortex.agents.get("agent-1");
-console.log(`${agent?.stats?.totalMemories} memories (created before registration)`);
+console.log(
+  `${agent?.stats?.totalMemories} memories (created before registration)`,
+);
 console.log(`${agent?.stats?.totalConversations} conversations`);
 ```
 
@@ -1044,10 +1046,10 @@ console.log(`${agent?.stats?.totalConversations} conversations`);
 const filters = {
   metadata: {
     team: "support",
-    version: "2.0.0",           // Exact match only (no operators like $gte)
+    version: "2.0.0", // Exact match only (no operators like $gte)
   },
   capabilities: ["troubleshooting"],
-  registeredAfter: Date.parse("2025-01-01"),  // Unix timestamp (ms)
+  registeredAfter: Date.parse("2025-01-01"), // Unix timestamp (ms)
 };
 
 // Search
@@ -1128,7 +1130,7 @@ const result = await cortex.agents.updateMany(
   {
     metadata: {
       trainingCompleted: true,
-      trainingDate: Date.now(),  // Unix timestamp (ms)
+      trainingDate: Date.now(), // Unix timestamp (ms)
     },
   },
 );
@@ -1415,27 +1417,30 @@ console.log(`Routing to: ${selectedAgent.name}`);
 ```typescript
 // Get overview of all agents (list() returns RegisteredAgent[])
 const allAgents = await cortex.agents.list({
-  sortBy: "registeredAt",  // Valid: "name" | "registeredAt" | "lastActive"
+  sortBy: "registeredAt", // Valid: "name" | "registeredAt" | "lastActive"
   sortOrder: "desc",
 });
 
 // Helper function for grouping
 const groupBy = <T>(arr: T[], fn: (item: T) => string) =>
-  arr.reduce((acc, item) => {
-    const key = fn(item);
-    acc[key] = acc[key] || [];
-    acc[key].push(item);
-    return acc;
-  }, {} as Record<string, T[]>);
+  arr.reduce(
+    (acc, item) => {
+      const key = fn(item);
+      acc[key] = acc[key] || [];
+      acc[key].push(item);
+      return acc;
+    },
+    {} as Record<string, T[]>,
+  );
 
 // Analyze fleet
 const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
 const analysis = {
-  total: allAgents.length,  // Array length, not .total property
+  total: allAgents.length, // Array length, not .total property
   byTeam: groupBy(allAgents, (a) => String(a.metadata.team || "unassigned")),
   heavyUsers: allAgents.filter((a) => (a.stats?.totalMemories ?? 0) > 10000),
   inactive: allAgents.filter(
-    (a) => (a.stats?.lastActive ?? 0) < thirtyDaysAgo,  // Unix timestamp comparison
+    (a) => (a.stats?.lastActive ?? 0) < thirtyDaysAgo, // Unix timestamp comparison
   ),
 };
 

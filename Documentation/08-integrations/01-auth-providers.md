@@ -27,9 +27,9 @@ Cortex provides the **AuthContext API** - a simple, framework-agnostic interface
 
 ```typescript
 interface AuthContext {
-  userId: string;           // Required
-  tenantId?: string;        // Optional for multi-tenant
-  sessionId?: string;       // Optional for session tracking
+  userId: string; // Required
+  tenantId?: string; // Optional for multi-tenant
+  sessionId?: string; // Optional for session tracking
   // ... fully extensible
 }
 ```
@@ -70,16 +70,19 @@ await cortex.memory.remember({...});
 ## What Cortex Provides
 
 **`createAuthContext()` Function:**
+
 - Validates required fields (userId)
 - Returns typed AuthContext object
 - See [Auth Context API](../03-api-reference/15-auth-context-api.md)
 
 **Auto-Injection:**
+
 - userId → All operations automatically include it
 - tenantId → Automatic multi-tenant isolation
 - sessionId → Session tracking integration
 
 **Framework Agnostic:**
+
 - Works with any auth provider
 - No vendor lock-in
 - Full extensibility
@@ -332,7 +335,7 @@ app.use(
     secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
-  })
+  }),
 );
 
 // Auth middleware
@@ -701,7 +704,7 @@ import { createAuthContext } from "@cortexmemory/sdk";
 export async function authMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   // Extract from YOUR auth system
   const authData = await extractYourAuthData(req);
@@ -952,6 +955,7 @@ await cortex.memory.search(...);
 **Cause:** userId in auth context doesn't match user profile
 
 **Solution:**
+
 ```typescript
 // Ensure user profile exists
 const auth = createAuthContext({ userId: "user-123" });
@@ -971,6 +975,7 @@ await cortex.users.getOrCreate("user-123", {
 **Cause:** tenantId not set in auth context
 
 **Solution:**
+
 ```typescript
 // ✅ Always extract tenantId from secure source
 const decoded = jwt.verify(token, secret);
@@ -987,6 +992,7 @@ const auth = createAuthContext({
 **Cause:** Not calling `touch()` on user interactions
 
 **Solution:**
+
 ```typescript
 // Update session activity on each interaction
 await cortex.sessions.touch(sessionId);
@@ -1182,4 +1188,3 @@ const auth = createAuthContext({
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
-

@@ -8,21 +8,21 @@ Detailed Convex schema definitions, indexes, and data structures for all Cortex 
 
 Cortex uses **12+ Convex tables** to implement the 4-layer architecture plus coordination and governance:
 
-| Table                   | Layer | Purpose                         | Scoped By       | Versioned   | Retention                  |
-| ----------------------- | ----- | ------------------------------- | --------------- | ----------- | -------------------------- |
-| `conversations`         | 1a    | ACID message threads            | memorySpaceId   | Append-only | Forever                    |
-| `immutable`             | 1b    | Shared versioned data           | NOT scoped      | Auto        | Configurable (20 versions) |
-| `mutable`               | 1c    | Shared live data                | NOT scoped      | No          | N/A (overwrites)           |
-| `memories`              | 2     | Vector index                    | memorySpaceId   | Auto        | Configurable (10 versions) |
-| `facts`                 | 3     | Structured knowledge            | memorySpaceId   | Auto        | Configurable (10 versions) |
-| `factHistory`           | 3     | Belief Revision audit           | memorySpaceId   | No          | Configurable               |
-| `memorySpaces`          | Coord | Memory space registry           | memorySpaceId   | No          | Until archived             |
-| `contexts`              | Coord | Workflow coordination           | memorySpaceId   | Auto        | Configurable               |
-| `sessions`              | Coord | Session lifecycle (v0.27.0+)    | userId          | No          | Timeout-based              |
-| `agents`                | Coord | Agent registry (DEPRECATED)     | agentId         | No          | Until unregistered         |
-| `governancePolicies`    | Gov   | Retention rules                 | org/space       | No          | Until removed              |
-| `governanceEnforcement` | Gov   | Enforcement audit               | org/space       | No          | Configurable               |
-| `graphSyncQueue`        | Graph | Real-time sync queue            | NOT scoped      | No          | Cleared after sync         |
+| Table                   | Layer | Purpose                      | Scoped By     | Versioned   | Retention                  |
+| ----------------------- | ----- | ---------------------------- | ------------- | ----------- | -------------------------- |
+| `conversations`         | 1a    | ACID message threads         | memorySpaceId | Append-only | Forever                    |
+| `immutable`             | 1b    | Shared versioned data        | NOT scoped    | Auto        | Configurable (20 versions) |
+| `mutable`               | 1c    | Shared live data             | NOT scoped    | No          | N/A (overwrites)           |
+| `memories`              | 2     | Vector index                 | memorySpaceId | Auto        | Configurable (10 versions) |
+| `facts`                 | 3     | Structured knowledge         | memorySpaceId | Auto        | Configurable (10 versions) |
+| `factHistory`           | 3     | Belief Revision audit        | memorySpaceId | No          | Configurable               |
+| `memorySpaces`          | Coord | Memory space registry        | memorySpaceId | No          | Until archived             |
+| `contexts`              | Coord | Workflow coordination        | memorySpaceId | Auto        | Configurable               |
+| `sessions`              | Coord | Session lifecycle (v0.27.0+) | userId        | No          | Timeout-based              |
+| `agents`                | Coord | Agent registry (DEPRECATED)  | agentId       | No          | Until unregistered         |
+| `governancePolicies`    | Gov   | Retention rules              | org/space     | No          | Until removed              |
+| `governanceEnforcement` | Gov   | Enforcement audit            | org/space     | No          | Configurable               |
+| `graphSyncQueue`        | Graph | Real-time sync queue         | NOT scoped    | No          | Cleared after sync         |
 
 **Note:** All tables support optional `tenantId` for multi-tenancy (v0.26.0+)
 
@@ -46,17 +46,17 @@ export default defineSchema({
   conversations: defineTable({
     // Identity
     conversationId: v.string(),
-    
+
     // Memory Space (fundamental isolation boundary)
     memorySpaceId: v.string(),
-    participantId: v.optional(v.string()),  // Hive Mode tracking
-    
+    participantId: v.optional(v.string()), // Hive Mode tracking
+
     // Multi-tenancy
     tenantId: v.optional(v.string()),
-    
+
     // Type
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
-    
+
     // Participants
     participants: v.object({
       userId: v.optional(v.string()),
@@ -64,20 +64,26 @@ export default defineSchema({
       participantId: v.optional(v.string()),
       memorySpaceIds: v.optional(v.array(v.string())),
     }),
-    
+
     // Messages (append-only, immutable)
-    messages: v.array(v.object({
-      id: v.string(),
-      role: v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
-      content: v.string(),
-      timestamp: v.number(),
-      participantId: v.optional(v.string()),
-      metadata: v.optional(v.any()),
-    })),
-    
+    messages: v.array(
+      v.object({
+        id: v.string(),
+        role: v.union(
+          v.literal("user"),
+          v.literal("agent"),
+          v.literal("system"),
+        ),
+        content: v.string(),
+        timestamp: v.number(),
+        participantId: v.optional(v.string()),
+        metadata: v.optional(v.any()),
+      }),
+    ),
+
     messageCount: v.number(),
     metadata: v.optional(v.any()),
-    
+
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -97,30 +103,32 @@ export default defineSchema({
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   immutable: defineTable({
     // Identity (composite key: type + id)
-    type: v.string(),  // 'kb-article', 'policy', 'audit-log', 'feedback', 'user'
-    id: v.string(),    // Type-specific logical ID
-    
+    type: v.string(), // 'kb-article', 'policy', 'audit-log', 'feedback', 'user'
+    id: v.string(), // Type-specific logical ID
+
     // Data (flexible, immutable once stored)
     data: v.any(),
-    
+
     // GDPR support
     userId: v.optional(v.string()),
-    
+
     // Multi-tenancy
     tenantId: v.optional(v.string()),
-    
+
     // Versioning
     version: v.number(),
-    previousVersions: v.array(v.object({
-      version: v.number(),
-      data: v.any(),
-      timestamp: v.number(),
-      metadata: v.optional(v.any()),
-    })),
-    
+    previousVersions: v.array(
+      v.object({
+        version: v.number(),
+        data: v.any(),
+        timestamp: v.number(),
+        metadata: v.optional(v.any()),
+      }),
+    ),
+
     // Metadata
     metadata: v.optional(v.any()),
-    
+
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -136,21 +144,21 @@ export default defineSchema({
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   mutable: defineTable({
     // Composite key
-    namespace: v.string(),  // 'inventory', 'config', 'counters', etc.
-    key: v.string(),        // Unique within namespace
-    
+    namespace: v.string(), // 'inventory', 'config', 'counters', etc.
+    key: v.string(), // Unique within namespace
+
     // Value (flexible, mutable)
     value: v.any(),
-    
+
     // GDPR support
     userId: v.optional(v.string()),
-    
+
     // Multi-tenancy
     tenantId: v.optional(v.string()),
-    
+
     // Metadata
     metadata: v.optional(v.any()),
-    
+
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -168,91 +176,101 @@ export default defineSchema({
   memories: defineTable({
     // Identity
     memoryId: v.string(),
-    memorySpaceId: v.string(),         // PRIMARY: Memory space isolation
-    participantId: v.optional(v.string()),  // Hive Mode participant tracking
-    
+    memorySpaceId: v.string(), // PRIMARY: Memory space isolation
+    participantId: v.optional(v.string()), // Hive Mode participant tracking
+
     // Multi-tenancy
     tenantId: v.optional(v.string()),
-    
+
     // Content
     content: v.string(),
     contentType: v.union(
       v.literal("raw"),
       v.literal("summarized"),
-      v.literal("fact"),               // NEW: For facts indexed in vector layer
+      v.literal("fact"), // NEW: For facts indexed in vector layer
     ),
     embedding: v.optional(v.array(v.float64())),
-    
+
     // Source (flattened for indexing performance)
     sourceType: v.union(
       v.literal("conversation"),
       v.literal("system"),
       v.literal("tool"),
       v.literal("a2a"),
-      v.literal("fact-extraction"),    // NEW: For facts
+      v.literal("fact-extraction"), // NEW: For facts
     ),
     sourceUserId: v.optional(v.string()),
     sourceUserName: v.optional(v.string()),
     sourceTimestamp: v.number(),
-    
+
     // Message role (for conversation memories)
     messageRole: v.optional(
-      v.union(v.literal("user"), v.literal("agent"), v.literal("system"))
+      v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
     ),
-    
+
     // Owner Attribution
-    userId: v.optional(v.string()),    // For user-owned memories (GDPR)
-    agentId: v.optional(v.string()),   // For agent-owned memories (deletion)
-    
+    userId: v.optional(v.string()), // For user-owned memories (GDPR)
+    agentId: v.optional(v.string()), // For agent-owned memories (deletion)
+
     // References to Layer 1
-    conversationRef: v.optional(v.object({
-      conversationId: v.string(),
-      messageIds: v.array(v.string()),
-    })),
-    immutableRef: v.optional(v.object({
-      type: v.string(),
-      id: v.string(),
-      version: v.optional(v.number()),
-    })),
-    mutableRef: v.optional(v.object({
-      namespace: v.string(),
-      key: v.string(),
-      snapshotValue: v.any(),
-      snapshotAt: v.number(),
-    })),
-    
+    conversationRef: v.optional(
+      v.object({
+        conversationId: v.string(),
+        messageIds: v.array(v.string()),
+      }),
+    ),
+    immutableRef: v.optional(
+      v.object({
+        type: v.string(),
+        id: v.string(),
+        version: v.optional(v.number()),
+      }),
+    ),
+    mutableRef: v.optional(
+      v.object({
+        namespace: v.string(),
+        key: v.string(),
+        snapshotValue: v.any(),
+        snapshotAt: v.number(),
+      }),
+    ),
+
     // NEW: Reference to Layer 3 fact
-    factsRef: v.optional(v.object({
-      factId: v.string(),
-      version: v.optional(v.number()),
-    })),
-    
+    factsRef: v.optional(
+      v.object({
+        factId: v.string(),
+        version: v.optional(v.number()),
+      }),
+    ),
+
     // Metadata (flattened for indexing/filtering)
-    importance: v.number(),            // 0-100 (flattened for filtering)
-    tags: v.array(v.string()),         // Flattened for filtering
-    
+    importance: v.number(), // 0-100 (flattened for filtering)
+    tags: v.array(v.string()), // Flattened for filtering
+
     // Enrichment Fields (for bullet-proof retrieval)
     enrichedContent: v.optional(v.string()),
     factCategory: v.optional(v.string()),
-    
+
     // Flexible metadata
     metadata: v.optional(v.any()),
-    
+
     // Versioning
     version: v.number(),
-    previousVersions: v.array(v.object({
-      version: v.number(),
-      content: v.string(),
-      embedding: v.optional(v.array(v.float64())),
-      timestamp: v.number(),
-    })),
-    
+    previousVersions: v.array(
+      v.object({
+        version: v.number(),
+        content: v.string(),
+        embedding: v.optional(v.array(v.float64())),
+        timestamp: v.number(),
+      }),
+    ),
+
     // Timestamps & Access
     createdAt: v.number(),
     updatedAt: v.number(),
     lastAccessed: v.optional(v.number()),
     accessCount: v.number(),
-    
+
     // Streaming support (NEW - v0.23.0+)
     isPartial: v.optional(v.boolean()),
     partialMetadata: v.optional(v.any()),
@@ -269,12 +287,25 @@ export default defineSchema({
     .index("by_participantId", ["participantId"])
     .searchIndex("by_content", {
       searchField: "content",
-      filterFields: ["memorySpaceId", "tenantId", "sourceType", "userId", "agentId", "participantId"],
+      filterFields: [
+        "memorySpaceId",
+        "tenantId",
+        "sourceType",
+        "userId",
+        "agentId",
+        "participantId",
+      ],
     })
     .vectorIndex("by_embedding", {
       vectorField: "embedding",
-      dimensions: 1536,  // Default: OpenAI text-embedding-3-small
-      filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
+      dimensions: 1536, // Default: OpenAI text-embedding-3-small
+      filterFields: [
+        "memorySpaceId",
+        "tenantId",
+        "userId",
+        "agentId",
+        "participantId",
+      ],
     }),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -286,10 +317,10 @@ export default defineSchema({
     memorySpaceId: v.string(),
     participantId: v.optional(v.string()),
     userId: v.optional(v.string()),
-    
+
     // Multi-tenancy
     tenantId: v.optional(v.string()),
-    
+
     // Fact content
     fact: v.string(),
     factType: v.union(
@@ -301,12 +332,12 @@ export default defineSchema({
       v.literal("observation"),
       v.literal("custom"),
     ),
-    
+
     // Triple structure
     subject: v.optional(v.string()),
     predicate: v.optional(v.string()),
     object: v.optional(v.string()),
-    
+
     // Quality & Source
     confidence: v.number(),
     sourceType: v.union(
@@ -316,40 +347,50 @@ export default defineSchema({
       v.literal("manual"),
       v.literal("a2a"),
     ),
-    sourceRef: v.optional(v.object({
-      conversationId: v.optional(v.string()),
-      messageIds: v.optional(v.array(v.string())),
-      memoryId: v.optional(v.string()),
-    })),
-    
+    sourceRef: v.optional(
+      v.object({
+        conversationId: v.optional(v.string()),
+        messageIds: v.optional(v.array(v.string())),
+        memoryId: v.optional(v.string()),
+      }),
+    ),
+
     // Metadata & Tags
     metadata: v.optional(v.any()),
     tags: v.array(v.string()),
-    
+
     // Enrichment Fields (v0.15.0+)
     category: v.optional(v.string()),
     searchAliases: v.optional(v.array(v.string())),
     semanticContext: v.optional(v.string()),
-    entities: v.optional(v.array(v.object({
-      name: v.string(),
-      type: v.string(),
-      fullValue: v.optional(v.string()),
-    }))),
-    relations: v.optional(v.array(v.object({
-      subject: v.string(),
-      predicate: v.string(),
-      object: v.string(),
-    }))),
-    
+    entities: v.optional(
+      v.array(
+        v.object({
+          name: v.string(),
+          type: v.string(),
+          fullValue: v.optional(v.string()),
+        }),
+      ),
+    ),
+    relations: v.optional(
+      v.array(
+        v.object({
+          subject: v.string(),
+          predicate: v.string(),
+          object: v.string(),
+        }),
+      ),
+    ),
+
     // Temporal validity
     validFrom: v.optional(v.number()),
     validUntil: v.optional(v.number()),
-    
+
     // Versioning (belief revision)
     version: v.number(),
     supersededBy: v.optional(v.string()),
     supersedes: v.optional(v.string()),
-    
+
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -372,33 +413,35 @@ export default defineSchema({
     eventId: v.string(),
     factId: v.string(),
     memorySpaceId: v.string(),
-    
+
     action: v.union(
       v.literal("CREATE"),
       v.literal("UPDATE"),
       v.literal("SUPERSEDE"),
       v.literal("DELETE"),
     ),
-    
+
     oldValue: v.optional(v.string()),
     newValue: v.optional(v.string()),
-    
+
     supersededBy: v.optional(v.string()),
     supersedes: v.optional(v.string()),
-    
+
     reason: v.optional(v.string()),
     confidence: v.optional(v.number()),
-    
-    pipeline: v.optional(v.object({
-      slotMatching: v.optional(v.boolean()),
-      semanticMatching: v.optional(v.boolean()),
-      llmResolution: v.optional(v.boolean()),
-    })),
-    
+
+    pipeline: v.optional(
+      v.object({
+        slotMatching: v.optional(v.boolean()),
+        semanticMatching: v.optional(v.boolean()),
+        llmResolution: v.optional(v.boolean()),
+      }),
+    ),
+
     userId: v.optional(v.string()),
     participantId: v.optional(v.string()),
     conversationId: v.optional(v.string()),
-    
+
     timestamp: v.number(),
   })
     .index("by_eventId", ["eventId"])
@@ -416,23 +459,25 @@ export default defineSchema({
     memorySpaceId: v.string(),
     name: v.optional(v.string()),
     tenantId: v.optional(v.string()),
-    
+
     type: v.union(
       v.literal("personal"),
       v.literal("team"),
       v.literal("project"),
       v.literal("custom"),
     ),
-    
-    participants: v.array(v.object({
-      id: v.string(),
-      type: v.string(),
-      joinedAt: v.number(),
-    })),
-    
+
+    participants: v.array(
+      v.object({
+        id: v.string(),
+        type: v.string(),
+        joinedAt: v.number(),
+      }),
+    ),
+
     metadata: v.any(),
     status: v.union(v.literal("active"), v.literal("archived")),
-    
+
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -452,17 +497,17 @@ export default defineSchema({
     contextId: v.string(),
     memorySpaceId: v.string(),
     tenantId: v.optional(v.string()),
-    
+
     // Purpose
     purpose: v.string(),
     description: v.optional(v.string()),
-    
+
     // Hierarchy
-    parentId: v.optional(v.string()),  // Can be cross-space
+    parentId: v.optional(v.string()), // Can be cross-space
     rootId: v.optional(v.string()),
     depth: v.number(),
     childIds: v.array(v.string()),
-    
+
     // Status
     status: v.union(
       v.literal("active"),
@@ -470,40 +515,48 @@ export default defineSchema({
       v.literal("cancelled"),
       v.literal("blocked"),
     ),
-    
+
     // Source conversation
-    conversationRef: v.optional(v.object({
-      conversationId: v.string(),
-      messageIds: v.optional(v.array(v.string())),
-    })),
-    
+    conversationRef: v.optional(
+      v.object({
+        conversationId: v.string(),
+        messageIds: v.optional(v.array(v.string())),
+      }),
+    ),
+
     // User association
     userId: v.optional(v.string()),
-    
+
     // Participants
     participants: v.array(v.string()),
-    
+
     // Cross-space access control
-    grantedAccess: v.optional(v.array(v.object({
-      memorySpaceId: v.string(),
-      scope: v.string(),
-      grantedAt: v.number(),
-    }))),
-    
+    grantedAccess: v.optional(
+      v.array(
+        v.object({
+          memorySpaceId: v.string(),
+          scope: v.string(),
+          grantedAt: v.number(),
+        }),
+      ),
+    ),
+
     // Data
     data: v.optional(v.any()),
     metadata: v.optional(v.any()),
-    
+
     // Versioning
     version: v.number(),
-    previousVersions: v.array(v.object({
-      version: v.number(),
-      status: v.string(),
-      data: v.optional(v.any()),
-      timestamp: v.number(),
-      updatedBy: v.optional(v.string()),
-    })),
-    
+    previousVersions: v.array(
+      v.object({
+        version: v.number(),
+        status: v.string(),
+        data: v.optional(v.any()),
+        timestamp: v.number(),
+        updatedBy: v.optional(v.string()),
+      }),
+    ),
+
     createdAt: v.number(),
     updatedAt: v.number(),
     completedAt: v.optional(v.number()),
@@ -526,18 +579,18 @@ export default defineSchema({
   agents: defineTable({
     agentId: v.string(),
     tenantId: v.optional(v.string()),
-    
+
     name: v.string(),
     description: v.optional(v.string()),
     metadata: v.optional(v.any()),
     config: v.optional(v.any()),
-    
+
     status: v.union(
       v.literal("active"),
       v.literal("inactive"),
       v.literal("archived"),
     ),
-    
+
     registeredAt: v.number(),
     updatedAt: v.number(),
     lastActive: v.optional(v.number()),
@@ -556,15 +609,15 @@ export default defineSchema({
     userId: v.string(),
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
-    
+
     status: v.union(v.literal("active"), v.literal("idle"), v.literal("ended")),
     startedAt: v.number(),
     lastActiveAt: v.number(),
     endedAt: v.optional(v.number()),
     expiresAt: v.optional(v.number()),
-    
+
     metadata: v.optional(v.any()),
-    
+
     messageCount: v.number(),
     memoryCount: v.number(),
   })
@@ -583,12 +636,12 @@ export default defineSchema({
   governancePolicies: defineTable({
     organizationId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
-    
+
     policy: v.any(),
-    
+
     isActive: v.boolean(),
     appliedBy: v.optional(v.string()),
-    
+
     createdAt: v.number(),
     updatedAt: v.number(),
   })
@@ -600,17 +653,17 @@ export default defineSchema({
   governanceEnforcement: defineTable({
     organizationId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
-    
+
     enforcementType: v.union(v.literal("automatic"), v.literal("manual")),
     layers: v.array(v.string()),
     rules: v.array(v.string()),
-    
+
     versionsDeleted: v.number(),
     recordsPurged: v.number(),
     storageFreed: v.number(),
-    
+
     triggeredBy: v.optional(v.string()),
-    
+
     executedAt: v.number(),
   })
     .index("by_organization", ["organizationId", "executedAt"])
@@ -623,22 +676,22 @@ export default defineSchema({
   graphSyncQueue: defineTable({
     table: v.string(),
     entityId: v.string(),
-    
+
     operation: v.union(
       v.literal("insert"),
       v.literal("update"),
       v.literal("delete"),
     ),
-    
+
     entity: v.optional(v.any()),
-    
+
     synced: v.boolean(),
     syncedAt: v.optional(v.number()),
-    
+
     failedAttempts: v.optional(v.number()),
     lastError: v.optional(v.string()),
     priority: v.optional(v.string()),
-    
+
     createdAt: v.number(),
   })
     .index("by_synced", ["synced"])
@@ -662,16 +715,16 @@ export default defineSchema({
 ```typescript
 {
   _id: Id<"conversations">,
-  
+
   // Identity & Isolation
   conversationId: string,
   memorySpaceId: string,         // PRIMARY: Isolation boundary
   participantId?: string,        // NEW: Hive Mode tracking
   tenantId?: string,             // NEW: Multi-tenancy
-  
+
   // Type
   type: "user-agent" | "agent-agent",
-  
+
   // Participants
   participants: {
     userId?: string,
@@ -679,7 +732,7 @@ export default defineSchema({
     participantId?: string,      // NEW: Hive Mode
     memorySpaceIds?: string[],   // For agent-agent
   },
-  
+
   // Messages (append-only)
   messages: Array<{
     id: string,
@@ -689,10 +742,10 @@ export default defineSchema({
     participantId?: string,      // NEW: Who sent this
     metadata?: any,
   }>,
-  
+
   messageCount: number,
   metadata?: any,
-  
+
   createdAt: number,
   updatedAt: number,
 }
@@ -724,7 +777,7 @@ await ctx.db
 await ctx.db
   .query("conversations")
   .withIndex("by_memorySpace_user", (q) =>
-    q.eq("memorySpaceId", memorySpaceId).eq("participants.userId", userId)
+    q.eq("memorySpaceId", memorySpaceId).eq("participants.userId", userId),
   )
   .collect();
 
@@ -746,23 +799,23 @@ await ctx.db
 ```typescript
 {
   _id: Id<"immutable">,
-  
+
   // Composite key
   type: string,  // 'kb-article', 'policy', 'user', 'feedback', etc.
   id: string,    // Type-specific logical ID
-  
+
   // Data (flexible, immutable once stored)
   data: any,
-  
+
   // GDPR support
   userId?: string,
-  
+
   // Multi-tenancy (NEW)
   tenantId?: string,
-  
+
   // Metadata
   metadata?: any,
-  
+
   // Versioning
   version: number,
   previousVersions: Array<{
@@ -771,7 +824,7 @@ await ctx.db
     timestamp: number,
     metadata?: any,
   }>,
-  
+
   createdAt: number,
   updatedAt: number,
 }
@@ -850,7 +903,7 @@ Every other type is just an example - you define whatever types you need:
 await ctx.db
   .query("immutable")
   .withIndex("by_type_id", (q) =>
-    q.eq("type", "kb-article").eq("id", "refund-policy")
+    q.eq("type", "kb-article").eq("id", "refund-policy"),
   )
   .first();
 
@@ -858,7 +911,10 @@ await ctx.db
 await ctx.db
   .query("immutable")
   .withIndex("by_tenant_type_id", (q) =>
-    q.eq("tenantId", tenantId).eq("type", "kb-article").eq("id", "refund-policy")
+    q
+      .eq("tenantId", tenantId)
+      .eq("type", "kb-article")
+      .eq("id", "refund-policy"),
   )
   .first();
 
@@ -886,23 +942,23 @@ await ctx.db
 ```typescript
 {
   _id: Id<"mutable">,
-  
+
   // Composite key
   namespace: string,  // 'inventory', 'config', 'counters', etc.
   key: string,        // Unique within namespace
-  
+
   // Value (flexible, mutable)
   value: any,
-  
+
   // GDPR support
   userId?: string,
-  
+
   // Multi-tenancy (NEW)
   tenantId?: string,
-  
+
   // Metadata
   metadata?: any,
-  
+
   createdAt: number,
   updatedAt: number,
 }
@@ -954,7 +1010,7 @@ await ctx.db
 await ctx.db
   .query("mutable")
   .withIndex("by_namespace_key", (q) =>
-    q.eq("namespace", "inventory").eq("key", "widget-qty")
+    q.eq("namespace", "inventory").eq("key", "widget-qty"),
   )
   .unique();
 
@@ -962,7 +1018,10 @@ await ctx.db
 await ctx.db
   .query("mutable")
   .withIndex("by_tenant_namespace_key", (q) =>
-    q.eq("tenantId", tenantId).eq("namespace", "inventory").eq("key", "widget-qty")
+    q
+      .eq("tenantId", tenantId)
+      .eq("namespace", "inventory")
+      .eq("key", "widget-qty"),
   )
   .unique();
 
@@ -976,7 +1035,7 @@ await ctx.db
 await ctx.db
   .query("mutable")
   .withIndex("by_tenant_namespace", (q) =>
-    q.eq("tenantId", tenantId).eq("namespace", "inventory")
+    q.eq("tenantId", tenantId).eq("namespace", "inventory"),
   )
   .collect();
 ```
@@ -992,31 +1051,31 @@ await ctx.db
 ```typescript
 {
   _id: Id<"memories">,
-  
+
   // Identity & Isolation
   memoryId: string,
   memorySpaceId: string,         // PRIMARY: Isolation boundary
   participantId?: string,        // NEW: Hive Mode tracking
   tenantId?: string,             // NEW: Multi-tenancy
-  
+
   // Content
   content: string,
   contentType: "raw" | "summarized" | "fact",  // NEW: "fact" option
   embedding?: number[],          // 1536-dim default
-  
+
   // Source (flattened for indexing)
   sourceType: "conversation" | "system" | "tool" | "a2a" | "fact-extraction",
   sourceUserId?: string,
   sourceUserName?: string,
   sourceTimestamp: number,
-  
+
   // Message role (for conversation memories)
   messageRole?: "user" | "agent" | "system",
-  
+
   // Owner Attribution
   userId?: string,               // For GDPR cascade
   agentId?: string,              // For agent deletion cascade
-  
+
   // Layer 1 References
   conversationRef?: {
     conversationId: string,
@@ -1033,22 +1092,22 @@ await ctx.db
     snapshotValue: any,
     snapshotAt: number,
   },
-  
+
   // NEW: Layer 3 Reference
   factsRef?: {
     factId: string,
     version?: number,
   },
-  
+
   // Metadata (flattened for indexing)
   importance: number,            // 0-100 (flattened)
   tags: string[],                // Flattened
-  
+
   // Enrichment Fields
   enrichedContent?: string,
   factCategory?: string,
   metadata?: any,
-  
+
   // Versioning
   version: number,
   previousVersions: Array<{
@@ -1057,13 +1116,13 @@ await ctx.db
     embedding?: number[],
     timestamp: number,
   }>,
-  
+
   // Timestamps & Access
   createdAt: number,
   updatedAt: number,
   lastAccessed?: number,
   accessCount: number,
-  
+
   // Streaming support (NEW)
   isPartial?: boolean,
   partialMetadata?: any,
@@ -1092,9 +1151,10 @@ await ctx.db
 await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
-    q.similar("embedding", queryVector, 10)
-     .eq("memorySpaceId", memorySpaceId)
-     .eq("tenantId", tenantId)
+    q
+      .similar("embedding", queryVector, 10)
+      .eq("memorySpaceId", memorySpaceId)
+      .eq("tenantId", tenantId),
   )
   .collect();
 
@@ -1102,9 +1162,10 @@ await ctx.db
 await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
-    q.similar("embedding", queryVector, 10)
-     .eq("memorySpaceId", memorySpaceId)
-     .eq("userId", userId)
+    q
+      .similar("embedding", queryVector, 10)
+      .eq("memorySpaceId", memorySpaceId)
+      .eq("userId", userId),
   )
   .collect();
 
@@ -1112,8 +1173,7 @@ await ctx.db
 await ctx.db
   .query("memories")
   .withSearchIndex("by_content", (q) =>
-    q.search("content", "password")
-     .eq("memorySpaceId", memorySpaceId)
+    q.search("content", "password").eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 
@@ -1141,23 +1201,23 @@ await ctx.db
 ```typescript
 {
   _id: Id<"facts">,
-  
+
   // Identity & Isolation
   factId: string,
   memorySpaceId: string,
   participantId?: string,
   userId?: string,
   tenantId?: string,
-  
+
   // Fact content
   fact: string,
   factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "observation" | "custom",
-  
+
   // Triple structure (subject-predicate-object)
   subject?: string,
   predicate?: string,
   object?: string,
-  
+
   // Quality & Source
   confidence: number,            // 0-100
   sourceType: "conversation" | "system" | "tool" | "manual" | "a2a",
@@ -1166,11 +1226,11 @@ await ctx.db
     messageIds?: string[],
     memoryId?: string,
   },
-  
+
   // Metadata & Tags
   metadata?: any,
   tags: string[],
-  
+
   // Enrichment Fields (v0.15.0+)
   category?: string,
   searchAliases?: string[],
@@ -1185,16 +1245,16 @@ await ctx.db
     predicate: string,
     object: string,
   }>,
-  
+
   // Temporal validity
   validFrom?: number,
   validUntil?: number,
-  
+
   // Versioning (belief revision)
   version: number,
   supersededBy?: string,         // factId of newer version
   supersedes?: string,           // factId this replaces
-  
+
   createdAt: number,
   updatedAt: number,
 }
@@ -1230,7 +1290,7 @@ await ctx.db
 await ctx.db
   .query("facts")
   .withIndex("by_memorySpace_subject", (q) =>
-    q.eq("memorySpaceId", memorySpaceId).eq("subject", "user-123")
+    q.eq("memorySpaceId", memorySpaceId).eq("subject", "user-123"),
   )
   .collect();
 
@@ -1238,8 +1298,7 @@ await ctx.db
 await ctx.db
   .query("facts")
   .withSearchIndex("by_content", (q) =>
-    q.search("fact", "favorite color")
-     .eq("memorySpaceId", memorySpaceId)
+    q.search("fact", "favorite color").eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 ```
@@ -1255,39 +1314,39 @@ await ctx.db
 ```typescript
 {
   _id: Id<"factHistory">,
-  
+
   // Identity
   eventId: string,
   factId: string,
   memorySpaceId: string,
-  
+
   // Action
   action: "CREATE" | "UPDATE" | "SUPERSEDE" | "DELETE",
-  
+
   // Values
   oldValue?: string,
   newValue?: string,
-  
+
   // Relationships
   supersededBy?: string,
   supersedes?: string,
-  
+
   // Decision context
   reason?: string,
   confidence?: number,
-  
+
   // Pipeline info
   pipeline?: {
     slotMatching?: boolean,
     semanticMatching?: boolean,
     llmResolution?: boolean,
   },
-  
+
   // Source context
   userId?: string,
   participantId?: string,
   conversationId?: string,
-  
+
   timestamp: number,
 }
 ```
@@ -1313,25 +1372,25 @@ await ctx.db
 ```typescript
 {
   _id: Id<"memorySpaces">,
-  
+
   // Identity
   memorySpaceId: string,
   name?: string,
   tenantId?: string,
-  
+
   type: "personal" | "team" | "project" | "custom",
-  
+
   // Participants (for Hive Mode)
   participants: Array<{
     id: string,                  // Participant ID
     type: string,                // 'ai-tool', 'human', 'ai-agent', 'system'
     joinedAt: number,
   }>,
-  
+
   // Metadata
   metadata: any,
   status: "active" | "archived",
-  
+
   createdAt: number,
   updatedAt: number,
 }
@@ -1358,23 +1417,23 @@ await ctx.db
 ```typescript
 {
   _id: Id<"sessions">,
-  
+
   // Identity
   sessionId: string,
   userId: string,
   tenantId?: string,
   memorySpaceId?: string,
-  
+
   // Session state
   status: "active" | "idle" | "ended",
   startedAt: number,
   lastActiveAt: number,
   endedAt?: number,
   expiresAt?: number,
-  
+
   // Extensible metadata
   metadata?: any,
-  
+
   // Statistics
   messageCount: number,
   memoryCount: number,
@@ -1505,7 +1564,7 @@ await ctx.db
 await ctx.db
   .query("facts")
   .withIndex("by_memorySpace_subject", (q) =>
-    q.eq("memorySpaceId", memorySpaceId).eq("subject", "user-123")
+    q.eq("memorySpaceId", memorySpaceId).eq("subject", "user-123"),
   )
   .collect();
 
@@ -1513,7 +1572,7 @@ await ctx.db
 await ctx.db
   .query("facts")
   .withSearchIndex("by_content", (q) =>
-    q.search("fact", query).eq("memorySpaceId", memorySpaceId)
+    q.search("fact", query).eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 ```
@@ -1540,8 +1599,7 @@ await ctx.db
 await ctx.db
   .query("factHistory")
   .withIndex("by_memorySpace_timestamp", (q) =>
-    q.eq("memorySpaceId", memorySpaceId)
-     .gte("timestamp", startTime)
+    q.eq("memorySpaceId", memorySpaceId).gte("timestamp", startTime),
   )
   .collect();
 ```
@@ -1567,7 +1625,7 @@ await ctx.db
 await ctx.db
   .query("memorySpaces")
   .withIndex("by_tenant_status", (q) =>
-    q.eq("tenantId", tenantId).eq("status", "active")
+    q.eq("tenantId", tenantId).eq("status", "active"),
   )
   .collect();
 ```
@@ -1593,7 +1651,7 @@ await ctx.db
 await ctx.db
   .query("sessions")
   .withIndex("by_tenant_user", (q) =>
-    q.eq("tenantId", tenantId).eq("userId", userId)
+    q.eq("tenantId", tenantId).eq("userId", userId),
   )
   .filter((q) => q.eq(q.field("status"), "active"))
   .collect();
@@ -1641,7 +1699,7 @@ await ctx.db
 await ctx.db
   .query("governancePolicies")
   .withIndex("by_active", (q) =>
-    q.eq("isActive", true).eq("organizationId", orgId)
+    q.eq("isActive", true).eq("organizationId", orgId),
   )
   .collect();
 
@@ -1667,8 +1725,7 @@ await ctx.db
 await ctx.db
   .query("governanceEnforcement")
   .withIndex("by_organization", (q) =>
-    q.eq("organizationId", orgId)
-     .gte("executedAt", startTime)
+    q.eq("organizationId", orgId).gte("executedAt", startTime),
   )
   .collect();
 ```
@@ -1696,7 +1753,7 @@ await ctx.db
 await ctx.db
   .query("graphSyncQueue")
   .withIndex("by_table_entity", (q) =>
-    q.eq("table", "memories").eq("entityId", memoryId)
+    q.eq("table", "memories").eq("entityId", memoryId),
   )
   .first();
 ```
@@ -2165,8 +2222,14 @@ const factHistory = await ctx.db
 
 // 9. Delete all (in transaction)
 for (const record of [
-  ...convos, ...immutable, ...mutable, ...memories,
-  ...facts, ...sessions, ...contexts, ...factHistory
+  ...convos,
+  ...immutable,
+  ...mutable,
+  ...memories,
+  ...facts,
+  ...sessions,
+  ...contexts,
+  ...factHistory,
 ]) {
   await ctx.db.delete(record._id);
 }
@@ -2249,7 +2312,7 @@ await ctx.db
 await ctx.db
   .query("memories")
   .withIndex("by_memorySpace_userId", (q) =>
-    q.eq("memorySpaceId", memorySpaceId).eq("userId", userId)
+    q.eq("memorySpaceId", memorySpaceId).eq("userId", userId),
   )
   .collect();
 
@@ -2257,7 +2320,7 @@ await ctx.db
 await ctx.db
   .query("memories")
   .withIndex("by_tenant_space", (q) =>
-    q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId)
+    q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 ```

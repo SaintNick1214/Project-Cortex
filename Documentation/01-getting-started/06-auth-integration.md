@@ -21,8 +21,8 @@ import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
 // 1. Extract from YOUR existing auth (any system)
 const auth = createAuthContext({
-  userId: yourUser.id,           // Required
-  tenantId: yourUser.tenantId,   // Optional (for SaaS)
+  userId: yourUser.id, // Required
+  tenantId: yourUser.tenantId, // Optional (for SaaS)
 });
 
 // 2. Pass to Cortex
@@ -52,8 +52,8 @@ await cortex.memory.remember({
 ```typescript
 // Extract from your provider's SDK
 const auth = createAuthContext({
-  userId: user.id,    // or user.sub
-  tenantId: org.id,   // if multi-tenant
+  userId: user.id, // or user.sub
+  tenantId: org.id, // if multi-tenant
 });
 ```
 
@@ -97,9 +97,9 @@ const auth = createAuthContext({
 ```typescript
 // This is all it is:
 interface AuthContext {
-  userId: string;        // Required
-  tenantId?: string;     // Optional
-  sessionId?: string;    // Optional
+  userId: string; // Required
+  tenantId?: string; // Optional
+  sessionId?: string; // Optional
   // ... other optional fields
 }
 ```
@@ -107,6 +107,7 @@ interface AuthContext {
 **No magic, no lock-in, no complexity.**
 
 You already have auth. Cortex just needs to know:
+
 - Who is the user? (`userId`)
 - What tenant? (`tenantId` - if multi-tenant)
 
@@ -119,7 +120,7 @@ If you're building SaaS, add `tenantId` for complete isolation:
 ```typescript
 const auth = createAuthContext({
   userId: req.user.id,
-  tenantId: req.tenant.id,  // Critical for SaaS!
+  tenantId: req.tenant.id, // Critical for SaaS!
 });
 
 // Now all operations are tenant-scoped
@@ -160,6 +161,7 @@ const memories = await cortex.memory.search("space-1", "query");
 ```
 
 **3. Enables Features:**
+
 - ✅ GDPR cascade deletion by userId
 - ✅ Multi-tenant data isolation
 - ✅ Session tracking
@@ -237,7 +239,7 @@ const cortex = new Cortex({
 // Works, but you must set userId manually
 await cortex.memory.remember({
   memorySpaceId: "test-space",
-  userId: "test-user",  // Manual
+  userId: "test-user", // Manual
   userMessage: "Hello",
   agentResponse: "Hi!",
   userName: "Test User",
@@ -245,12 +247,14 @@ await cortex.memory.remember({
 ```
 
 **Acceptable for:**
+
 - ✅ Quick prototypes
 - ✅ Development/testing
 - ✅ Single-user apps
 - ✅ CLI tools
 
 **Not recommended for:**
+
 - ❌ Production APIs
 - ❌ Multi-tenant SaaS
 - ❌ User-facing applications
@@ -284,13 +288,16 @@ await cortex.memory.remember({
 ## Next Steps
 
 **Start here:**
+
 - [Five-Minute Quickstart](./03-five-minute-quickstart.md) - Get running fast
 
 **Learn more:**
+
 - [Authentication Guide](../02-core-features/18-authentication.md) - Complete concepts
 - [Auth Context API](../03-api-reference/15-auth-context-api.md) - API specification
 
 **For multi-tenant SaaS:**
+
 - [Isolation Boundaries](../02-core-features/17-isolation-boundaries.md) - Multi-tenancy guide
 
 ---

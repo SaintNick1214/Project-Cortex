@@ -114,28 +114,28 @@ const finraPolicy = await cortex.governance.getTemplate("FINRA");
 ```typescript
 await cortex.governance.setPolicy({
   organizationId: "org-123",
-  
+
   // Conversation retention
   conversations: {
     retention: {
-      deleteAfter: "7y",         // Keep for 7 years
-      archiveAfter: "1y",        // Move to cold storage after 1 year
-      purgeOnUserRequest: true,  // GDPR right to deletion
+      deleteAfter: "7y", // Keep for 7 years
+      archiveAfter: "1y", // Move to cold storage after 1 year
+      purgeOnUserRequest: true, // GDPR right to deletion
     },
     purging: {
       autoDelete: true,
       deleteInactiveAfter: "2y",
     },
   },
-  
+
   // Immutable store versions
   immutable: {
     retention: {
       defaultVersions: 20,
       byType: {
-        "audit-log": { versionsToKeep: -1 },     // Unlimited
+        "audit-log": { versionsToKeep: -1 }, // Unlimited
         "kb-article": { versionsToKeep: 50 },
-        "policy": { versionsToKeep: -1 },        // Unlimited
+        policy: { versionsToKeep: -1 }, // Unlimited
         "agent-reasoning": { versionsToKeep: 10 },
       },
     },
@@ -143,27 +143,27 @@ await cortex.governance.setPolicy({
       autoCleanupVersions: true,
     },
   },
-  
+
   // Mutable store lifecycle
   mutable: {
     retention: {
-      defaultTTL: null,            // No expiration by default
+      defaultTTL: null, // No expiration by default
       purgeInactiveAfter: "2y",
     },
     purging: {
       autoDelete: false,
     },
   },
-  
+
   // Vector memory versioning
   vector: {
     retention: {
       defaultVersions: 10,
       byImportance: [
-        { range: [0, 20], versions: 1 },    // Trivial: current only
-        { range: [21, 40], versions: 3 },   // Low: 3 versions
-        { range: [41, 70], versions: 10 },  // Medium: 10 versions
-        { range: [71, 89], versions: 20 },  // High: 20 versions
+        { range: [0, 20], versions: 1 }, // Trivial: current only
+        { range: [21, 40], versions: 3 }, // Low: 3 versions
+        { range: [41, 70], versions: 10 }, // Medium: 10 versions
+        { range: [71, 89], versions: 20 }, // High: 20 versions
         { range: [90, 100], versions: 30 }, // Critical: 30 versions
       ],
       bySourceType: {
@@ -175,15 +175,15 @@ await cortex.governance.setPolicy({
     },
     purging: {
       autoCleanupVersions: true,
-      deleteOrphaned: false,  // Keep even if references broken
+      deleteOrphaned: false, // Keep even if references broken
     },
   },
-  
+
   // Compliance settings
   compliance: {
     mode: "GDPR",
     dataRetentionYears: 7,
-    requireJustification: [90, 100],  // Critical data needs reason
+    requireJustification: [90, 100], // Critical data needs reason
     auditLogging: true,
   },
 });
@@ -198,15 +198,15 @@ Override organization policy for specific memory spaces:
 await cortex.governance.setAgentOverride("audit-agent-space", {
   vector: {
     retention: {
-      defaultVersions: -1,  // Unlimited
+      defaultVersions: -1, // Unlimited
       byImportance: [
-        { range: [0, 100], versions: -1 },  // All forever
+        { range: [0, 100], versions: -1 }, // All forever
       ],
     },
   },
   immutable: {
     retention: {
-      defaultVersions: -1,  // Unlimited
+      defaultVersions: -1, // Unlimited
     },
   },
 });
@@ -215,12 +215,12 @@ await cortex.governance.setAgentOverride("audit-agent-space", {
 await cortex.governance.setAgentOverride("temp-agent-space", {
   vector: {
     retention: {
-      defaultVersions: 1,  // Current only
+      defaultVersions: 1, // Current only
     },
   },
   conversations: {
     retention: {
-      deleteAfter: "7d",  // Delete after 7 days
+      deleteAfter: "7d", // Delete after 7 days
     },
   },
 });
@@ -234,22 +234,22 @@ Configure session lifecycle and limits:
 await cortex.governance.setPolicy({
   organizationId: "org-123",
   // ... other policy fields ...
-  
+
   sessions: {
     lifecycle: {
-      idleTimeout: "30m",       // Inactivity timeout
-      maxDuration: "24h",       // Maximum session lifetime
-      autoExtend: true,         // Extend on activity
-      warnBeforeExpiry: "5m",   // Warning before expiry
+      idleTimeout: "30m", // Inactivity timeout
+      maxDuration: "24h", // Maximum session lifetime
+      autoExtend: true, // Extend on activity
+      warnBeforeExpiry: "5m", // Warning before expiry
     },
     cleanup: {
-      autoExpireIdle: true,     // Auto-expire idle sessions
-      deleteEndedAfter: "30d",  // Delete ended sessions after 30 days
-      archiveAfter: "7d",       // Archive before deletion
+      autoExpireIdle: true, // Auto-expire idle sessions
+      deleteEndedAfter: "30d", // Delete ended sessions after 30 days
+      archiveAfter: "7d", // Archive before deletion
     },
     limits: {
-      maxActiveSessions: 5,     // Max concurrent sessions per user
-      maxSessionsPerDevice: 3,  // Max per device type
+      maxActiveSessions: 5, // Max concurrent sessions per user
+      maxSessionsPerDevice: 3, // Max per device type
     },
   },
 });
@@ -388,7 +388,7 @@ await cortex.governance.setPolicy({
     ...basePolicy.vector,
     retention: {
       ...basePolicy.vector.retention,
-      defaultVersions: 15,  // Override default
+      defaultVersions: 15, // Override default
     },
   },
 });
@@ -404,7 +404,7 @@ async function dailyGovernanceEnforcement() {
     layers: ["vector", "conversations", "immutable"],
     rules: ["retention", "purging"],
   });
-  
+
   // Log for audit trail
   console.log(`[${new Date().toISOString()}] Governance enforcement completed`);
   console.log(`  Versions deleted: ${result.versionsDeleted}`);
@@ -418,14 +418,14 @@ async function dailyGovernanceEnforcement() {
 // Tier 1: Organization defaults (GDPR)
 await cortex.governance.setPolicy({
   organizationId: "org-123",
-  ...await cortex.governance.getTemplate("GDPR"),
+  ...(await cortex.governance.getTemplate("GDPR")),
 });
 
 // Tier 2: Department overrides
 await cortex.governance.setAgentOverride("legal-dept-space", {
   conversations: {
     retention: {
-      deleteAfter: "10y",  // Legal needs longer retention
+      deleteAfter: "10y", // Legal needs longer retention
     },
   },
 });
@@ -433,10 +433,10 @@ await cortex.governance.setAgentOverride("legal-dept-space", {
 // Tier 3: Temporary projects
 await cortex.governance.setAgentOverride("poc-project-space", {
   vector: {
-    retention: { defaultVersions: 1 },  // Minimal
+    retention: { defaultVersions: 1 }, // Minimal
   },
   conversations: {
-    retention: { deleteAfter: "30d" },  // Short-lived
+    retention: { deleteAfter: "30d" }, // Short-lived
   },
 });
 ```
@@ -461,7 +461,7 @@ try {
   await cortex.governance.setPolicy({
     organizationId: "org-123",
     conversations: {
-      retention: { deleteAfter: "invalid" },  // Bad format
+      retention: { deleteAfter: "invalid" }, // Bad format
       purging: { autoDelete: true },
     },
   });
@@ -470,7 +470,7 @@ try {
     console.error(`Validation failed: ${error.message}`);
     console.error(`Error code: ${error.code}`);
     console.error(`Field: ${error.field}`);
-    
+
     switch (error.code) {
       case "INVALID_PERIOD_FORMAT":
         console.error('Period must be like "7d", "30d", "1y"');
@@ -485,13 +485,13 @@ try {
 
 **Common Error Codes:**
 
-| Code | Description |
-|------|-------------|
-| `MISSING_SCOPE` | organizationId or memorySpaceId required |
-| `INVALID_PERIOD_FORMAT` | Period must be "7d", "30d", "1y", etc. |
-| `INVALID_IMPORTANCE_RANGE` | Range must be 0-100, min < max |
-| `OVERLAPPING_IMPORTANCE_RANGES` | Ranges cannot overlap |
-| `INVALID_VERSIONS` | Version count must be >= -1 |
+| Code                            | Description                              |
+| ------------------------------- | ---------------------------------------- |
+| `MISSING_SCOPE`                 | organizationId or memorySpaceId required |
+| `INVALID_PERIOD_FORMAT`         | Period must be "7d", "30d", "1y", etc.   |
+| `INVALID_IMPORTANCE_RANGE`      | Range must be 0-100, min < max           |
+| `OVERLAPPING_IMPORTANCE_RANGES` | Ranges cannot overlap                    |
+| `INVALID_VERSIONS`              | Version count must be >= -1              |
 
 ## Summary
 
@@ -503,7 +503,7 @@ try {
 - ✅ Policy simulation before applying
 - ✅ Compliance reporting and audit trails
 - ✅ Memory space-specific overrides
-- ⏳ Automatic enforcement *(planned)*
+- ⏳ Automatic enforcement _(planned)_
 
 ## Related Features
 
