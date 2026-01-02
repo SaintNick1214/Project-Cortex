@@ -1664,7 +1664,7 @@ const workflowsFromConvo = await cortex.contexts.search({
 - Entire workflow tree: 100-300ms for <50 contexts
 - Deep hierarchies (>10 levels): Consider graph database for <100ms queries
 
-**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities.md)
 
 ---
 

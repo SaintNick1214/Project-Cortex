@@ -1371,7 +1371,7 @@ console.log("Active participants:", participants);
 - **DIY:** Integrate Neo4j, Memgraph, or Kùzu yourself (documented patterns)
 - **Cloud Mode:** Graph-Premium (fully managed, zero DevOps)
 
-**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities.md)
 
 ---
 
@@ -1468,7 +1468,7 @@ Now that you understand the core concepts:
 
 1. **[API Reference](../03-api-reference/02-memory-operations.md)** - Complete API documentation
 2. **[Architecture](../04-architecture/01-system-overview.md)** - Deep dive into how it works
-3. **[Advanced Topics](../07-advanced-topics/01-graph-lite-traversal.md)** - Graph queries, fact extraction, and optimization
+3. **[Advanced Topics](../07-advanced-topics/01-graph-capabilities.md)** - Graph queries, fact extraction, and optimization
 4. **[Hive Mode Guide](../02-core-features/10-hive-mode.md)** - Master multi-tool memory sharing
 5. **[Infinite Context](../04-architecture/10-infinite-context.md)** - Never run out of context again
 

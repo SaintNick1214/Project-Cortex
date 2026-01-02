@@ -398,7 +398,7 @@ const cortex = new Cortex({
 
 **See:**
 - [API Reference - Configuration](../03-api-reference/02-memory-operations.md#configuration)
-- [Graph Database Setup](../07-advanced-topics/05-graph-database-setup.md)
+- [Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md)
 
 ---
 

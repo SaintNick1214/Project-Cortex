@@ -641,7 +641,7 @@ console.log(
 
 - **[Agent Memory](./01-memory-spaces.md)** - Vector layer fundamentals
 - **[Conversation History](./06-conversation-history.md)** - ACID layer details
-- **[Dimension Strategies](../07-advanced-topics/02-dimension-strategies.md)** - Choosing embedding dimensions
+- **[Vector Embeddings](../04-architecture/04-vector-embeddings.md)** - Choosing embedding dimensions
 - **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Complete API reference
 
 ---

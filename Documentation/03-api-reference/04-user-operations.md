@@ -2141,7 +2141,7 @@ const result = await cortex.users.delete("user-123", { cascade: true });
 // }
 ```
 
-**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities.md)
 
 ---
 

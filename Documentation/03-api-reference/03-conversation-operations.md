@@ -1264,7 +1264,7 @@ const memories = await cortex.memory.search('agent-1', '*', {
 
 **Performance:** Conversations are efficiently indexed by userId and memorySpaceId. Finding related entities within a memory space typically takes 20-80ms.
 
-**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities.md)
 
 ---
 
