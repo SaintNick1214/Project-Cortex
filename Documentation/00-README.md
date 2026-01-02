@@ -112,14 +112,13 @@ Framework and tool integrations:
 
 **Production Ready:**
 
-- **[Vercel AI SDK](integrations/vercel-ai-sdk)** - Complete Next.js integration with quickstart demo
-  - [Getting Started](./08-integrations/vercel-ai-sdk/01-getting-started.md) - Installation and quickstart
-  - [API Reference](./08-integrations/vercel-ai-sdk/02-api-reference.md) - Complete API documentation
-  - [Advanced Usage](./08-integrations/vercel-ai-sdk/03-advanced-usage.md) - Advanced patterns and techniques
-  - [Memory Spaces](./08-integrations/vercel-ai-sdk/04-memory-spaces.md) - Isolation and collaboration modes
-  - [Hive Mode](./08-integrations/vercel-ai-sdk/05-hive-mode.md) - Multi-agent coordination
-  - [Migration from mem0](./08-integrations/vercel-ai-sdk/06-migration-from-mem0.md) - Migration guide
-  - [Troubleshooting](./08-integrations/vercel-ai-sdk/07-troubleshooting.md) - Common issues and solutions
+- [Getting Started](./08-integrations/vercel-ai-sdk/01-getting-started.md) - Installation and quickstart
+- [API Reference](./08-integrations/vercel-ai-sdk/02-api-reference.md) - Complete API documentation
+- [Advanced Usage](./08-integrations/vercel-ai-sdk/03-advanced-usage.md) - Advanced patterns and techniques
+- [Memory Spaces](./08-integrations/vercel-ai-sdk/04-memory-spaces.md) - Isolation and collaboration modes
+- [Hive Mode](./08-integrations/vercel-ai-sdk/05-hive-mode.md) - Multi-agent coordination
+- [Migration from mem0](./08-integrations/vercel-ai-sdk/06-migration-from-mem0.md) - Migration guide
+- [Troubleshooting](./08-integrations/vercel-ai-sdk/07-troubleshooting.md) - Common issues and solutions
 
 **Integration Guides:**
 
