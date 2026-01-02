@@ -1,306 +1,92 @@
-# Five-Minute Quickstart
+---
+id: five-minute-quickstart
+title: Five-Minute Quickstart
+sidebar_position: 3
+description: Build your first AI agent with persistent memory in 5 minutes
+---
 
-> **Last Updated**: January 1, 2026
+# Five-Minute Quickstart
 
 Get your first AI agent with persistent memory running in 5 minutes.
 
----
-
-## Step 1: Install the CLI (30 seconds)
-
-```bash
-npm install -g @cortexmemory/cli
-```
-
-Verify installation:
-
-```bash
-cortex --version
-# Should show: 0.27.4 or higher
-```
-
----
-
-## Step 2: Initialize Your Project (1 minute)
-
-```bash
-cortex init my-first-agent
-```
-
-The interactive wizard will guide you through:
-
-**1. Project name**
-
-- Default: `my-first-agent`
-- Press Enter to accept
-
-**2. Convex setup**
-
-- Choose: **"Create new Convex project"** (full features, free tier)
-- Or: **"Use local"** (fastest, no account needed)
-
-**3. Template selection** (optional)
-
-- Choose: **"vercel-ai-quickstart"** for a full working example
-- Or: **"basic"** for minimal setup
-
-**4. Graph database** (optional)
-
-- Choose: **"Skip"** for now (not needed for quickstart)
-- You can add this later with `cortex convex init --graph`
-
-**What the wizard does:**
-
-- ✅ Creates project structure
-- ✅ Installs dependencies (`@cortexmemory/sdk`, `convex`)
-- ✅ Configures environment (`.env.local`)
-- ✅ Sets up Convex backend
-- ✅ Deploys Cortex functions
-- ✅ Saves configuration to `~/.cortexrc`
-
----
-
-## Step 3: Start Development Services (30 seconds)
-
-```bash
-cd my-first-agent
-cortex start
-```
-
-**What's running:**
-
-- ✅ Convex backend (database + functions)
-- ✅ Next.js dev server (if using vercel-ai-quickstart template)
-- ✅ Your app at http://localhost:3000
-
-You should see:
-
-```
-Starting 1 deployment(s)...
-
-my-first-agent
-Project: /path/to/my-first-agent
-URL: http://127.0.0.1:3210
-
-✓ Convex development server started
-✓ All deployments started
-
-Use 'cortex stop' to stop services
-Use 'cortex dev' for interactive dashboard
-```
-
----
-
-## Step 4: Integrate Your Auth (2 minutes)
-
-> **Works with ANY auth system** - Auth0, Clerk, NextAuth, Okta, WorkOS, custom JWT, OIDC, OAuth, or any auth you already use.
-
-Cortex auth integration is **just 3 lines of code**:
-
-```typescript
-import { Cortex, createAuthContext } from "@cortexmemory/sdk";
-
-// Extract from YOUR existing auth system (any provider)
-const auth = createAuthContext({
-  userId: yourUser.id, // Required
-  tenantId: yourUser.tenantId, // Optional (for multi-tenant SaaS)
-});
-
-// Pass to Cortex - done!
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  auth, // That's it!
-});
-
-// All operations now authenticated
-await cortex.memory.remember({
-  memorySpaceId: "user-space",
-  userMessage: "Hello",
-  agentResponse: "Hi!",
-  userName: "User",
-  // userId auto-injected from auth
-});
-```
-
-**That's it!** Cortex doesn't care what auth system you use - just extract `userId` (and optionally `tenantId` for SaaS) and pass it in.
-
-**Examples for common systems:**
-
-```typescript
-// Auth0
-const auth = createAuthContext({ userId: user.sub });
-
-// Clerk
-const auth = createAuthContext({ userId: user.id, tenantId: orgId });
-
-// NextAuth
-const auth = createAuthContext({ userId: session.user.id });
-
-// Supabase
-const auth = createAuthContext({ userId: user.id });
-
-// Custom JWT
-const decoded = jwt.verify(token, secret);
-const auth = createAuthContext({ userId: decoded.sub });
-
-// Okta/WorkOS/OIDC - same pattern!
-const auth = createAuthContext({ userId: claims.sub, tenantId: claims.org });
-```
-
-**See:** [Authentication Guide](../02-core-features/18-authentication) for complete details.
-
----
-
-## Step 5: Check Status (Optional)
-
-```bash
-cortex status
-```
-
-**Output shows:**
-
-- Active deployments
-- Running services (Convex, apps)
-- Database statistics
-- Configuration details
-- Dashboard URLs
-
----
-
-## Step 5: Interactive Development (Recommended)
-
-For the best development experience:
-
-```bash
-cortex dev
-```
-
-**You get an Expo-style dashboard with:**
-
-- 📊 Live service status
-- 📜 Streaming logs from all services
-- 🔄 Auto-reload on code changes
-- ⌨️ Keyboard shortcuts
-
-**Keyboard shortcuts:**
-
-- `c` - Clear screen
-- `s` - Show status
-- `r` - Restart all services
-- `g` - Toggle graph database
-- `k` - Kill stuck processes (port conflicts)
-- `h` or `?` - Help
-- `q` - Quit (or Ctrl+C)
-
----
-
-## What Just Happened?
-
-Your project is now set up with:
-
-### 1. Project Structure
-
-```
-my-first-agent/
-├── src/
-│   └── index.ts              # Your agent code
-├── convex/                   # Cortex backend (auto-deployed)
-│   ├── schema.ts             # Database schema
-│   ├── memories.ts           # Memory operations
-│   ├── conversations.ts      # Conversation storage
-│   ├── users.ts              # User profiles
-│   └── ...                   # More Cortex functions
-├── .env.local                # Environment config (git-ignored)
-├── package.json              # Dependencies
-└── README.md                 # Project docs
-```
-
-### 2. Environment Configuration
-
-The CLI created `.env.local`:
-
-```env
-CONVEX_URL=http://127.0.0.1:3210
-# Or: https://your-deployment.convex.cloud
-```
-
-### 3. Deployment Configuration
-
-The CLI saved to `~/.cortexrc`:
-
-```json
-{
-  "deployments": {
-    "my-first-agent": {
-      "url": "http://127.0.0.1:3210",
-      "projectPath": "/path/to/my-first-agent",
-      "enabled": true
-    }
-  },
-  "default": "my-first-agent"
-}
-```
-
----
-
-## Try Your Agent
-
-### Option A: Using the Vercel AI Quickstart Template
-
-If you selected the `vercel-ai-quickstart` template:
-
-1. **Open the app:**
-
-   ```bash
-   open http://localhost:3000
-   ```
-
-2. **Chat with your agent:**
-   - Type: "I prefer dark mode"
-   - Agent: "I'll remember that!"
-   - Type: "What are my preferences?"
-   - Agent: "You prefer dark mode"
-
-3. **Memory persists across sessions:**
-   - Refresh the page
-   - Start a new conversation
-   - Agent still remembers your preferences ✅
-
-### Option B: Using the Basic Template
-
-If you selected the `basic` template, run the example:
-
-```bash
-npm start
-```
-
-**Output:**
-
-```
-🧠 Cortex Memory SDK - Example
-================================
-
-💾 Storing a memory...
-✓ Memory stored!
-
-🔍 Searching memories...
-✓ Found 1 relevant memories
-
-Memory: I prefer dark mode
-```
-
-**What happened:**
-
-The example code (`src/index.ts`) did:
+<Callout type="info" title="Before You Begin">
+  **Time**: ~5 minutes | **Prerequisites**: Node.js 20+, npm or yarn
+</Callout>
+
+<Steps>
+  <Step title="Install the CLI (30 seconds)">
+    Install the Cortex CLI globally:
+    
+    <Terminal>npm install -g @cortexmemory/cli</Terminal>
+    
+    Verify installation:
+    
+    <Terminal>cortex --version</Terminal>
+    
+    <Callout type="tip" title="Expected Output">
+      You should see version `0.27.4` or higher.
+    </Callout>
+  </Step>
+  
+  <Step title="Initialize Your Project (1 minute)">
+    Create a new Cortex project:
+    
+    <Terminal>cortex init my-first-agent</Terminal>
+    
+    The interactive wizard guides you through:
+    
+    1. **Project name** - Press Enter to accept default
+    2. **Convex setup** - Choose "Create new Convex project" (full features, free tier) or "Use local" (fastest, no account needed)
+    3. **Template selection** - Choose "vercel-ai-quickstart" for a full working example
+    4. **Graph database** - Recommended! Enables relationship queries and knowledge graphs (Docker for local setup, or any Neo4j-compatible DB)
+    
+    <Callout 
+      type="tip" 
+      title="What the wizard creates" 
+      collapsible
+      defaultOpen={false}
+    >
+      Project structure, dependencies (`@cortexmemory/sdk`, `convex`), environment config (`.env.local`), Convex backend with Cortex functions deployed, and persistent configuration saved to `~/.cortexrc`.
+    </Callout>
+  </Step>
+  
+  <Step title="Start Development Services (30 seconds)">
+    Start all services:
+    
+    <Terminal>cortex start</Terminal>
+    
+    The CLI uses persistent config with absolute paths, so you can run this from any directory.
+    
+    <Callout type="tip" title="Expected Output" collapsible>
+      ```
+      Starting 1 deployment(s)...
+      
+      my-first-agent
+      Project: /path/to/my-first-agent
+      URL: http://127.0.0.1:3210 (local) or https://your-app.convex.cloud (cloud)
+      
+      Convex development server started
+      All deployments started
+      ```
+    </Callout>
+    
+    **What's running:** Convex backend (database + functions), Next.js dev server (if using vercel-ai-quickstart), your app at http://localhost:3000
+  </Step>
+  
+  <Step title="Store Your First Memory">
+    Now let's store and search memories:
+    
+    <Tabs groupId="method">
+      <TabItem value="sdk" label="SDK (TypeScript)">
 
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
 
 const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!, // From .env.local
+  convexUrl: process.env.CONVEX_URL!,
 });
 
-// 1. Store a memory
+// Store a memory
 await cortex.memory.remember({
   memorySpaceId: "my-first-agent",
   conversationId: "conversation-1",
@@ -310,47 +96,96 @@ await cortex.memory.remember({
   userName: "User",
 });
 
-// 2. Search memories
+// Search memories
 const results = await cortex.memory.search(
   "my-first-agent",
-  "what are the user preferences?",
+  "what are the user preferences?"
 );
 
 console.log("Found:", results.length, "memories");
+// → Found: 1 memories
 ```
 
----
+      </TabItem>
+      <TabItem value="cli" label="CLI">
+
+<Terminal>cortex memory store --space my-first-agent --content "I prefer dark mode"</Terminal>
+
+Search memories:
+
+<Terminal>cortex memory search "preferences" --space my-first-agent</Terminal>
+
+      </TabItem>
+    </Tabs>
+  </Step>
+  
+  <Step title="Try Your Agent">
+    <Tabs groupId="template">
+      <TabItem value="vercel" label="Vercel AI Template">
+
+If you selected the `vercel-ai-quickstart` template:
+
+**1. Open your app** at http://localhost:3000
+
+**2. Chat with your agent:**
+
+- Type: "I prefer dark mode" → Agent: "I'll remember that!"
+- Type: "What are my preferences?" → Agent: "You prefer dark mode"
+
+**3. Memory persists across sessions** - Refresh the page, start a new conversation, and the agent still remembers.
+
+      </TabItem>
+      <TabItem value="basic" label="Basic Template">
+
+If you selected the `basic` template:
+
+<Terminal>npm start</Terminal>
+
+<Callout type="tip" title="Expected Output">
+  ```
+  🧠 Cortex Memory SDK - Example
+  ================================
+  
+  💾 Storing a memory...
+  ✓ Memory stored!
+  
+  🔍 Searching memories...
+  ✓ Found 1 relevant memories
+  
+  Memory: I prefer dark mode
+  ```
+</Callout>
+
+      </TabItem>
+    </Tabs>
+  </Step>
+</Steps>
+
+<Callout type="tip" title="Congratulations!">
+  You've built an AI agent with persistent memory! Your agent can remember user preferences, search past conversations, and persist data across restarts.
+</Callout>
+
+<Callout type="info" title="About Authentication">
+  The quickstart template includes basic auth for development. For production, integrate your own auth system (Auth0, Clerk, NextAuth, etc.) - see the [Auth Integration Guide](/getting-started/auth-integration).
+</Callout>
 
 ## Explore Your Data
 
 ### Using the Convex Dashboard
 
-Open your Convex dashboard:
+<Terminal>cortex convex dashboard</Terminal>
 
-```bash
-# For local development
-open http://127.0.0.1:3210
-
-# Or use CLI command
-cortex convex dashboard
-```
+This opens the correct dashboard for your deployment (local or cloud).
 
 **What you'll see:**
 
-**Tables:**
-
-- `conversations` - All conversation threads
-- `memories` - Searchable memory index (vector store)
-- `immutable` - Versioned message history
-- `users` - User profiles
-- `memorySpaces` - Memory space registry (if registered)
-
-**Click into a table:**
-
-- View all records
-- See document structure
-- Inspect timestamps and IDs
-- Watch real-time updates
+| Table | Description |
+|-------|-------------|
+| `conversations` | All conversation threads |
+| `memories` | Searchable memory index (vector store) |
+| `immutable` | Versioned message history |
+| `users` | User profiles |
+| `memorySpaces` | Memory space registry |
 
 ### Using CLI Commands
 
@@ -361,9 +196,6 @@ cortex db stats
 # List memory spaces
 cortex spaces list
 
-# List users
-cortex users list
-
 # List memories in a space
 cortex memory list --space my-first-agent
 
@@ -371,208 +203,35 @@ cortex memory list --space my-first-agent
 cortex memory search "preferences" --space my-first-agent
 ```
 
----
+## Interactive Development
 
-## Next Steps
+For the best experience, use the interactive dashboard:
 
-### 1. Modify the Agent
+<Terminal>cortex dev</Terminal>
 
-Edit `src/index.ts` to experiment:
+This provides live service status, streaming logs, auto-reload on changes, and keyboard shortcuts (`c` clear, `s` status, `r` restart, `k` kill ports, `q` quit).
 
-```typescript
-// Try storing different information
-await cortex.memory.remember({
-  memorySpaceId: "my-first-agent",
-  conversationId: "conversation-2",
-  userMessage: "My name is Alice and I love TypeScript",
-  agentResponse: "Nice to meet you, Alice!",
-  userId: "alice",
-  userName: "Alice",
-});
+## Common Workflows
 
-// Search with different queries
-const results = await cortex.memory.search(
-  "my-first-agent",
-  "what is the user's name?",
-);
-```
-
-**Then re-run:**
-
-```bash
-npm start
-```
-
-### 2. Add Vector Embeddings (Optional)
-
-For semantic search, add an embedding provider:
-
-```bash
-npm install openai
-```
-
-**Update your code:**
-
-```typescript
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-await cortex.memory.remember({
-  memorySpaceId: "my-first-agent",
-  conversationId: "conv-1",
-  userMessage: "I love machine learning",
-  agentResponse: "That's awesome!",
-  userId: "user-1",
-  userName: "User",
-  // Add embedding generation
-  generateEmbedding: async (text) => {
-    const result = await openai.embeddings.create({
-      model: "text-embedding-3-small",
-      input: text,
-    });
-    return result.data[0].embedding;
-  },
-});
-```
-
-**Note:** Vector search requires cloud Convex (not local). Switch with:
-
-```bash
-cortex config add-deployment cloud
-cortex use cloud
-cortex start
-```
-
-### 3. Build a Real Chatbot
-
-Combine search and generation:
-
-```typescript
-async function chat(userId: string, message: string) {
-  const memorySpaceId = `user-${userId}`;
-  const conversationId = `conv-${Date.now()}`;
-
-  // 1. Search relevant memories
-  const context = await cortex.memory.search(memorySpaceId, message, {
-    limit: 5,
-  });
-
-  // 2. Build prompt with context
-  const systemPrompt = `You are a helpful assistant.
-  
-Here's what you remember about this user:
-${context.map((m) => m.content).join("\n")}`;
-
-  // 3. Generate response
-  const response = await openai.chat.completions.create({
-    model: "gpt-4",
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: message },
-    ],
-  });
-
-  const agentMessage = response.choices[0].message.content;
-
-  // 4. Store this interaction
-  await cortex.memory.remember({
-    memorySpaceId,
-    conversationId,
-    userMessage: message,
-    agentResponse: agentMessage,
-    userId,
-    userName: "User",
-  });
-
-  return agentMessage;
-}
-
-// Use it
-const reply = await chat("alice", "What did I tell you about my preferences?");
-console.log(reply);
-```
-
-### 4. Explore CLI Commands
-
-```bash
-# Project lifecycle
-cortex start                  # Start all services
-cortex stop                   # Stop all services
-cortex dev                    # Interactive development
-cortex status                 # View status
-
-# Database operations
-cortex db stats               # View statistics
-cortex db backup              # Backup database
-cortex db restore             # Restore from backup
-
-# Memory management
-cortex memory list --space <id>
-cortex memory search "query" --space <id>
-cortex memory export --space <id>
-
-# Configuration
-cortex config list            # View deployments
-cortex use <deployment>       # Switch deployment
-cortex convex dashboard       # Open dashboard
-
-# Full reference
-cortex --help
-```
-
-**See:** [CLI Reference](../06-tools/01-cli-reference) for all commands
-
----
-
-## Managing Multiple Deployments
-
-The CLI makes it easy to work with multiple environments:
-
-```bash
-# Add cloud deployment
-cortex config add-deployment cloud \
-  --url https://my-app.convex.cloud \
-  --key "prod|..."
-
-# Switch between them
-cortex use local     # For development
-cortex use cloud     # For production
-
-# View all deployments
-cortex config list
-
-# Target specific deployment
-cortex db stats -d cloud
-cortex memory list -d local --space my-agent
-```
-
----
-
-## Common CLI Workflows
-
-### Development Workflow
+<Tabs groupId="workflow">
+  <TabItem value="dev" label="Development">
 
 ```bash
 # 1. Start interactive dev mode
 cortex dev
 
-# 2. Make code changes
-# (Convex auto-reloads)
+# 2. Make code changes (Convex auto-reloads)
 
 # 3. View live logs in dashboard
-# (Streaming in real-time)
 
 # 4. Test with CLI commands
 cortex memory list --space my-agent
 
-# 5. Quit when done
-# Press 'q'
+# 5. Quit when done (press 'q')
 ```
 
-### Production Deployment
+  </TabItem>
+<TabItem value="prod" label="Production">
 
 ```bash
 # 1. Add production deployment
@@ -580,53 +239,66 @@ cortex config add-deployment production \
   --url https://prod.convex.cloud \
   --key "prod|..."
 
-# 2. Switch to production
-cortex use production
+# 2. Deploy backend to production
+cortex deploy -d production
 
-# 3. Deploy backend
-cortex deploy
-
-# 4. Verify deployment
-cortex status
-cortex db stats
+# 3. Verify deployment
+cortex status -d production
+cortex db stats -d production
 ```
 
-### Backup and Restore
+</TabItem>
+<TabItem value="multi" label="Multiple Environments">
 
 ```bash
-# Backup database
-cortex db backup --output backup-$(date +%Y%m%d).json
+# Add cloud deployment
+cortex config add-deployment cloud \
+  --url https://my-app.convex.cloud \
+  --key "prod|..."
 
-# Restore database
-cortex db restore --input backup-20260101.json
+# View all deployments
+cortex config list
+
+# Target specific deployment with -d flag
+cortex db stats -d cloud
+cortex deploy -d cloud
+cortex status -d local
 ```
+
+</TabItem>
+</Tabs>
+
+<Callout type="warning" title="Troubleshooting" collapsible>
+  **Connection errors?** Ensure Convex is running (`npx convex dev`) and `CONVEX_URL` is set in `.env.local`.
+  
+  **Port conflicts?** Run `cortex dev` then press `k` to kill stuck processes.
+  
+  **Vector search not working?** Vector search requires cloud Convex. Add a cloud deployment with `cortex config add-deployment cloud`, then use `-d cloud` flag.
+</Callout>
 
 ---
 
 ## What's Next?
 
-You now have a working Cortex project! Here's what to explore:
-
-1. **[Core Concepts](./core-concepts)** - Understand memory spaces, isolation, and architecture
-2. **[Configuration](./configuration)** - Multi-deployment setup and environment config
-3. **[Memory Operations API](../03-api-reference/02-memory-operations)** - Full SDK API reference
-4. **[CLI Reference](../06-tools/01-cli-reference)** - All CLI commands and options
-5. **[Memory Spaces Guide](../02-core-features/01-memory-spaces)** - Isolation boundaries and Hive Mode
-
----
-
-## Getting Help
-
-**Stuck?**
-
-- [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
-- [CLI Reference](../06-tools/01-cli-reference)
-- Run `cortex --help` for command help
-
-**Found a bug?**
-
-- [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
-
----
-
-**Ready to dive deeper?** Continue to [Core Concepts](./core-concepts) →
+<QuickNav>
+  <QuickNavItem 
+    title="Core Concepts"
+    description="Understand memory spaces, isolation, and architecture"
+    href="/getting-started/core-concepts"
+  />
+  <QuickNavItem 
+    title="Configuration"
+    description="Multi-deployment setup and environment config"
+    href="/getting-started/configuration"
+  />
+  <QuickNavItem 
+    title="Memory Spaces"
+    description="Learn about isolation boundaries and Hive Mode"
+    href="/core-features/memory-spaces"
+  />
+  <QuickNavItem 
+    title="Vercel AI SDK Integration"
+    description="Add memory to your Next.js app"
+    href="/integrations/vercel-ai-sdk"
+  />
+</QuickNav>

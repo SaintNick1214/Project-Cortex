@@ -1,8 +1,11 @@
+---
+id: configuration
+title: Configuration
+sidebar_position: 5
+description: Configure Cortex for development, staging, and production environments
+---
+
 # Configuration
-
-> **Last Updated**: January 1, 2026
-
-## Overview
 
 Cortex uses a hierarchical configuration system managed by the CLI. Configuration is minimal by default but offers extensive customization when needed.
 
@@ -10,7 +13,9 @@ Cortex uses a hierarchical configuration system managed by the CLI. Configuratio
 
 ## Quick: Auth Integration
 
-> **Common Question:** "How do I integrate my auth system (Auth0, Clerk, Okta, WorkOS, etc.)?"
+<Callout type="info" title="Common Question">
+  "How do I integrate my auth system (Auth0, Clerk, Okta, WorkOS, etc.)?"
+</Callout>
 
 **Answer:** Cortex works with **ANY auth system** - just extract `userId` and optionally `tenantId`:
 
@@ -31,9 +36,7 @@ const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL!, auth });
 
 **Works with:** Auth0, Clerk, NextAuth, Supabase, Firebase, Okta, WorkOS, OIDC, OAuth, custom JWT, sessions, API keys, or any auth system you already use.
 
-**See:** [Authentication Guide](../02-core-features/18-authentication) for complete setup.
-
----
+**See:** [Authentication Guide](/core-features/authentication) for complete setup.
 
 ---
 
@@ -65,10 +68,9 @@ The CLI automatically manages `~/.cortexrc` for deployment settings.
 
 ### Viewing Configuration
 
-```bash
-# Show all configuration
-cortex config show
+<Terminal>cortex config show</Terminal>
 
+```bash
 # List all deployments
 cortex config list
 
@@ -118,26 +120,23 @@ The `~/.cortexrc` file is JSON:
 }
 ```
 
-**Fields:**
+### Configuration Fields
 
-| Field                           | Type    | Description                                   |
-| ------------------------------- | ------- | --------------------------------------------- |
-| `deployments`                   | object  | Named deployment configurations               |
-| `deployments[name].url`         | string  | Convex deployment URL                         |
-| `deployments[name].key`         | string  | Deploy key (optional for local)               |
-| `deployments[name].deployment`  | string  | Convex deployment name                        |
-| `deployments[name].projectPath` | string  | Path to project directory                     |
-| `deployments[name].enabled`     | boolean | Auto-start with `cortex start`                |
-| `apps`                          | object  | Named app configurations                      |
-| `apps[name].type`               | string  | App type (e.g., "nextjs")                     |
-| `apps[name].projectPath`        | string  | Path to project root                          |
-| `apps[name].path`               | string  | Relative path to app                          |
-| `apps[name].port`               | number  | Port number                                   |
-| `apps[name].startCommand`       | string  | Command to start app                          |
-| `apps[name].enabled`            | boolean | Auto-start with `cortex start`                |
-| `default`                       | string  | Default deployment name                       |
-| `format`                        | string  | Default output format                         |
-| `confirmDangerous`              | boolean | Require confirmation for dangerous operations |
+<APITable parameters={[
+  { name: "deployments", type: "object", required: true, description: "Named deployment configurations" },
+  { name: "deployments[name].url", type: "string", required: true, description: "Convex deployment URL" },
+  { name: "deployments[name].key", type: "string", required: false, description: "Deploy key (optional for local)" },
+  { name: "deployments[name].deployment", type: "string", required: false, description: "Convex deployment name" },
+  { name: "deployments[name].projectPath", type: "string", required: false, description: "Path to project directory" },
+  { name: "deployments[name].enabled", type: "boolean", required: false, default: "false", description: "Auto-start with cortex start" },
+  { name: "apps", type: "object", required: false, description: "Named app configurations" },
+  { name: "apps[name].type", type: "string", required: false, description: "App type (e.g., 'nextjs')" },
+  { name: "apps[name].port", type: "number", required: false, description: "Port number" },
+  { name: "apps[name].startCommand", type: "string", required: false, description: "Command to start app" },
+  { name: "default", type: "string", required: false, description: "Default deployment name" },
+  { name: "format", type: "string", required: false, default: "table", description: "Default output format" },
+  { name: "confirmDangerous", type: "boolean", required: false, default: "true", description: "Require confirmation for dangerous operations" },
+]} />
 
 ---
 
@@ -145,20 +144,31 @@ The `~/.cortexrc` file is JSON:
 
 ### Adding Deployments
 
-```bash
-# Interactive mode (recommended)
-cortex config add-deployment
+<Steps>
+  <Step title="Interactive mode (recommended)">
 
-# With options
+<Terminal>cortex config add-deployment</Terminal>
+
+  </Step>
+  <Step title="With options">
+
+```bash
 cortex config add-deployment cloud \
   --url https://your-app.convex.cloud \
   --key "prod|..."
+```
 
-# Set as default
+  </Step>
+  <Step title="Set as default">
+
+```bash
 cortex config add-deployment production \
   --url https://prod.convex.cloud \
   --default
 ```
+
+  </Step>
+</Steps>
 
 ### Removing Deployments
 
@@ -170,7 +180,9 @@ cortex config remove-deployment
 cortex config remove-deployment staging
 ```
 
-**Note:** Cannot remove the default deployment. Set a different default first.
+<Callout type="note">
+  Cannot remove the default deployment. Set a different default first.
+</Callout>
 
 ### Updating Deployment Settings
 
@@ -220,10 +232,9 @@ cortex db stats  # Uses production (from 'cortex use production')
 
 ### Testing Configuration
 
-```bash
-# Test connection to deployment
-cortex config test
+<Terminal>cortex config test</Terminal>
 
+```bash
 # Test specific deployment
 cortex config test --deployment production
 ```
@@ -232,48 +243,45 @@ cortex config test --deployment production
 
 ## Environment Variables
 
-The CLI recognizes these environment variables:
-
 ### Convex Configuration
 
-| Variable                  | Description                                       |
-| ------------------------- | ------------------------------------------------- |
-| `CONVEX_URL`              | Convex deployment URL                             |
-| `CONVEX_DEPLOY_KEY`       | Convex deploy key                                 |
-| `CONVEX_DEPLOYMENT`       | Convex deployment name                            |
-| `LOCAL_CONVEX_URL`        | Local Convex URL (default: http://127.0.0.1:3210) |
-| `CLOUD_CONVEX_URL`        | Cloud Convex URL                                  |
-| `CLOUD_CONVEX_DEPLOY_KEY` | Cloud deploy key                                  |
+<APITable parameters={[
+  { name: "CONVEX_URL", type: "string", required: true, description: "Convex deployment URL" },
+  { name: "CONVEX_DEPLOY_KEY", type: "string", required: false, description: "Convex deploy key" },
+  { name: "CONVEX_DEPLOYMENT", type: "string", required: false, description: "Convex deployment name" },
+  { name: "LOCAL_CONVEX_URL", type: "string", required: false, default: "http://127.0.0.1:3210", description: "Local Convex URL" },
+  { name: "CLOUD_CONVEX_URL", type: "string", required: false, description: "Cloud Convex URL" },
+  { name: "CLOUD_CONVEX_DEPLOY_KEY", type: "string", required: false, description: "Cloud deploy key" },
+]} />
 
 ### Graph Database Configuration
 
-| Variable            | Description                        |
-| ------------------- | ---------------------------------- |
-| `NEO4J_URI`         | Neo4j connection URI               |
-| `NEO4J_USERNAME`    | Neo4j username                     |
-| `NEO4J_PASSWORD`    | Neo4j password                     |
-| `MEMGRAPH_URI`      | Memgraph connection URI            |
-| `MEMGRAPH_USERNAME` | Memgraph username                  |
-| `MEMGRAPH_PASSWORD` | Memgraph password                  |
-| `CORTEX_GRAPH_SYNC` | Enable graph sync ("true"/"false") |
+<APITable parameters={[
+  { name: "NEO4J_URI", type: "string", required: false, description: "Neo4j connection URI" },
+  { name: "NEO4J_USERNAME", type: "string", required: false, description: "Neo4j username" },
+  { name: "NEO4J_PASSWORD", type: "string", required: false, description: "Neo4j password" },
+  { name: "MEMGRAPH_URI", type: "string", required: false, description: "Memgraph connection URI" },
+  { name: "MEMGRAPH_USERNAME", type: "string", required: false, description: "Memgraph username" },
+  { name: "MEMGRAPH_PASSWORD", type: "string", required: false, description: "Memgraph password" },
+  { name: "CORTEX_GRAPH_SYNC", type: "string", required: false, description: "Enable graph sync ('true'/'false')" },
+]} />
 
 ### Other Configuration
 
-| Variable              | Description                    |
-| --------------------- | ------------------------------ |
-| `OPENAI_API_KEY`      | OpenAI API key for embeddings  |
-| `CORTEX_SDK_DEV_PATH` | Path to local SDK for dev mode |
-| `DEBUG`               | Enable debug output            |
+<APITable parameters={[
+  { name: "OPENAI_API_KEY", type: "string", required: false, description: "OpenAI API key for embeddings" },
+  { name: "CORTEX_SDK_DEV_PATH", type: "string", required: false, description: "Path to local SDK for dev mode" },
+  { name: "DEBUG", type: "string", required: false, description: "Enable debug output" },
+]} />
 
 ### Example .env.local
+
+<Tabs>
+  <TabItem value="development" label="Development">
 
 ```env
 # Convex Configuration
 CONVEX_URL=http://127.0.0.1:3210
-
-# For cloud deployment:
-# CONVEX_URL=https://your-app.convex.cloud
-# CONVEX_DEPLOY_KEY=dev:your-app|key
 
 # Optional: Graph Database
 NEO4J_URI=bolt://localhost:7687
@@ -284,32 +292,91 @@ NEO4J_PASSWORD=password
 OPENAI_API_KEY=sk-your-key-here
 ```
 
+<Callout type="tip">
+  Use `cortex dev` for hot-reload development.
+</Callout>
+
+  </TabItem>
+  <TabItem value="staging" label="Staging">
+
+```env
+# Convex Configuration
+CONVEX_URL=https://your-staging-app.convex.cloud
+CONVEX_DEPLOY_KEY=dev:your-staging-app|key
+
+# Optional: Graph Database
+NEO4J_URI=bolt://staging-neo4j:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=staging-password
+
+# Optional: Embeddings
+OPENAI_API_KEY=sk-your-key-here
+```
+
+  </TabItem>
+  <TabItem value="production" label="Production">
+
+```env
+# Convex Configuration
+CONVEX_URL=https://your-prod-app.convex.cloud
+CONVEX_DEPLOY_KEY=prod:your-prod-app|key
+
+# Optional: Graph Database
+NEO4J_URI=bolt://prod-neo4j:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=secure-production-password
+
+# Optional: Embeddings
+OPENAI_API_KEY=sk-your-key-here
+```
+
+<Callout type="warning">
+  Never commit production credentials to version control!
+</Callout>
+
+  </TabItem>
+</Tabs>
+
 ---
 
 ## Multi-Environment Setup
 
 ### Example: Local + Staging + Production
 
+<Steps>
+  <Step title="Add local development">
+
 ```bash
-# 1. Add local development
 cortex config add-deployment local \
   --url http://127.0.0.1:3210
 
 cortex config set-path local ~/projects/my-agent
+```
 
-# 2. Add staging
+  </Step>
+  <Step title="Add staging">
+
+```bash
 cortex config add-deployment staging \
   --url https://staging.convex.cloud
 
 cortex config set-key staging  # Prompts for key
+```
 
-# 3. Add production
+  </Step>
+  <Step title="Add production">
+
+```bash
 cortex config add-deployment production \
   --url https://prod.convex.cloud
 
 cortex config set-key production  # Prompts for key
+```
 
-# 4. Enable only local for auto-start
+  </Step>
+  <Step title="Enable only local for auto-start">
+
+```bash
 cortex config enable local
 cortex config disable staging
 cortex config disable production
@@ -318,6 +385,9 @@ cortex config disable production
 # Use 'cortex start -d staging' for staging
 # Use 'cortex start -d production' for production
 ```
+
+  </Step>
+</Steps>
 
 ### Switching Between Environments
 
@@ -359,7 +429,9 @@ You can optionally create a `cortex.config.json` in your project root:
 }
 ```
 
-**Note:** This is optional. Most configuration is managed via CLI in `~/.cortexrc`.
+<Callout type="note">
+  This is optional. Most configuration is managed via CLI in `~/.cortexrc`.
+</Callout>
 
 ---
 
@@ -374,8 +446,11 @@ import { Cortex } from "@cortexmemory/sdk";
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!, // Set by CLI or .env.local
 });
+```
 
-// Or with graph database
+### With Graph Database
+
+```typescript
 import {
   CypherGraphAdapter,
   initializeGraphSchema,
@@ -401,8 +476,80 @@ const cortex = new Cortex({
 
 **See:**
 
-- [API Reference - Configuration](../03-api-reference/02-memory-operations.md#configuration)
-- [Graph Database Integration](../07-advanced-topics/02-graph-database-integration)
+- [API Reference - Memory Operations](/api-reference/memory-operations)
+- [Graph Database Integration](/advanced-topics/graph-database-integration)
+
+---
+
+## Authentication Configuration
+
+<Tabs>
+  <TabItem value="clerk" label="Clerk">
+
+```typescript
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+import { auth } from "@clerk/nextjs";
+
+const { userId } = auth();
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    userId,
+    authMethod: "clerk",
+  }),
+});
+```
+
+  </TabItem>
+  <TabItem value="auth0" label="Auth0">
+
+```typescript
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    userId: session.user.sub,
+    authMethod: "auth0",
+  }),
+});
+```
+
+  </TabItem>
+  <TabItem value="nextauth" label="NextAuth">
+
+```typescript
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+import { getServerSession } from "next-auth";
+
+const session = await getServerSession();
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    userId: session?.user?.id,
+    authMethod: "nextauth",
+  }),
+});
+```
+
+  </TabItem>
+  <TabItem value="custom" label="Custom JWT">
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    userId: decodedToken.sub,
+    tenantId: decodedToken.org_id,
+    authMethod: "custom-jwt",
+  }),
+});
+```
+
+  </TabItem>
+</Tabs>
 
 ---
 
@@ -463,33 +610,6 @@ cortex users delete user-123 --cascade --verify
 
 ## Security Configuration
 
-### Authentication
-
-The CLI doesn't handle application auth. Integrate with your existing auth system:
-
-```typescript
-// Example with Clerk
-import { auth } from "@clerk/nextjs";
-
-export async function chatAction(message: string) {
-  const { userId } = auth();
-
-  if (!userId) {
-    throw new Error("Unauthorized");
-  }
-
-  // Use authenticated userId
-  await cortex.memory.remember({
-    memorySpaceId: `user-${userId}`,
-    conversationId,
-    userMessage: message,
-    agentResponse: response,
-    userId,
-    userName: user.name,
-  });
-}
-```
-
 ### Data Isolation
 
 Ensure proper memory space boundaries:
@@ -505,7 +625,9 @@ cortex memory list --space global
 
 ### Sensitive Data
 
-Be careful with PII:
+<Callout type="warning" title="PII Handling">
+  Be careful with personally identifiable information (PII).
+</Callout>
 
 ```bash
 # Search for potential PII
@@ -589,20 +711,11 @@ cortex memory list --space user-123 --format csv
 
 ### Configuration Reset
 
-If you need to start fresh:
+<Callout type="danger" title="Destructive Action">
+  This removes all deployments and apps but keeps project .env.local files and deployed Convex data.
+</Callout>
 
-```bash
-# Reset all configuration
-cortex config reset
-
-# This removes:
-# - All deployments
-# - All apps
-# - Default settings
-# But keeps:
-# - Project .env.local files
-# - Deployed Convex data
-```
+<Terminal>cortex config reset</Terminal>
 
 ---
 
@@ -645,7 +758,6 @@ cortex config set-key production  # Prompts for key
 
 # Never commit keys to git
 echo ".env.local" >> .gitignore
-echo "~/.cortexrc" >> .gitignore  # If you check in config
 ```
 
 ### 4. Test Before Production
@@ -733,13 +845,25 @@ cortex config show --debug
 
 ## Next Steps
 
-**Configuration is done! Now:**
-
-1. **[Memory Operations API](../03-api-reference/02-memory-operations)** - Start using the SDK
-2. **[CLI Reference](../06-tools/01-cli-reference)** - All CLI commands
-3. **[Architecture](../04-architecture/01-system-overview)** - Understand the system design
-4. **[Core Features](../02-core-features/01-memory-spaces)** - Deep dive into features
-
----
-
-**Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
+<QuickNav>
+  <QuickNavItem 
+    title="Auth Integration" 
+    description="Set up authentication providers" 
+    href="/getting-started/auth-integration" 
+  />
+  <QuickNavItem 
+    title="Memory Operations" 
+    description="Start using the SDK API" 
+    href="/api-reference/memory-operations" 
+  />
+  <QuickNavItem 
+    title="CLI Reference" 
+    description="All CLI commands documented" 
+    href="/tools/cli-reference" 
+  />
+  <QuickNavItem 
+    title="System Architecture" 
+    description="Understand how Cortex works" 
+    href="/architecture/system-overview" 
+  />
+</QuickNav>

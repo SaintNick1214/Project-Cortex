@@ -5,23 +5,15 @@ sidebar_position: 6
 description: Integrate Cortex with your existing authentication system
 ---
 
-import { Callout, Steps, Step, Terminal, QuickNav, QuickNavItem, APITable, FeatureGrid, FeatureCard, Accordion, AccordionItem, CodeBlock } from '@site/src/components';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # Auth Integration (2 Minutes)
 
 Quick guide: Integrate Cortex with your existing authentication system.
-
----
 
 ## The Simple Truth
 
 **Cortex works with whatever auth system you already use.** No special integration, no proprietary protocol, no heavy lifting.
 
-**Your auth system** → Extract `userId` → **Pass to Cortex** → Done! ✅
-
----
+**Your auth system** → Extract `userId` → **Pass to Cortex** → Done.
 
 ## 3-Line Integration
 
@@ -40,13 +32,13 @@ const cortex = new Cortex({
   auth,
 });
 
-// 3. Use normally - userId auto-injected!
+// 3. Use normally - userId auto-injected
 await cortex.memory.remember({
   memorySpaceId: "user-space",
   userMessage: "Hello",
   agentResponse: "Hi!",
   userName: yourUser.name,
-  // userId automatically set from auth ✓
+  // userId automatically set from auth
 });`}
 </CodeBlock>
 
@@ -54,26 +46,13 @@ await cortex.memory.remember({
   No SDKs to install, no webhooks to configure, no middleware to debug.
 </Callout>
 
----
-
 ## Supported Auth Providers
 
 <Callout type="info">
   Cortex is **framework-agnostic** — it works with any auth system that provides a user ID.
 </Callout>
 
-<FeatureGrid columns={4}>
-  <FeatureCard title="Clerk" icon="🔐" />
-  <FeatureCard title="Auth0" icon="🔐" />
-  <FeatureCard title="NextAuth" icon="🔐" />
-  <FeatureCard title="Supabase Auth" icon="🔐" />
-  <FeatureCard title="Firebase Auth" icon="🔐" />
-  <FeatureCard title="Okta" icon="🔐" />
-  <FeatureCard title="WorkOS" icon="🔐" />
-  <FeatureCard title="Custom JWT" icon="🔐" />
-</FeatureGrid>
-
----
+Clerk, Auth0, NextAuth, Supabase Auth, Firebase Auth, Okta, WorkOS, Custom JWT — **any system that provides a user ID**.
 
 ## Provider Setup
 
@@ -204,8 +183,6 @@ await cortex.memory.remember({
 
 **The pattern is always the same** — just map your auth data to Cortex's simple structure.
 
----
-
 ## AuthContext Reference
 
 <APITable parameters={[
@@ -215,8 +192,6 @@ await cortex.memory.remember({
   { name: "authMethod", type: "string", required: false, description: "Name of auth provider (for analytics)" },
   { name: "authenticatedAt", type: "number", required: false, description: "Timestamp of authentication (Unix ms)" },
 ]} />
-
----
 
 ## Multi-Tenancy Support
 
@@ -239,8 +214,6 @@ await cortex.memory.remember({...}); // tenantId auto-injected
 ```
 
 See [Isolation Boundaries](/core-features/isolation-boundaries) for the complete multi-tenancy guide.
-
----
 
 ## What Happens Behind the Scenes
 
@@ -273,16 +246,9 @@ See [Isolation Boundaries](/core-features/isolation-boundaries) for the complete
     ```
   </Step>
   <Step title="Enables Features">
-    Auth context enables powerful features:
-
-    - ✅ GDPR cascade deletion by userId
-    - ✅ Multi-tenant data isolation
-    - ✅ Session tracking
-    - ✅ Audit trails
+    Auth context enables: GDPR cascade deletion by userId, multi-tenant data isolation, session tracking, and audit trails.
   </Step>
 </Steps>
-
----
 
 ## Security Best Practices
 
@@ -293,8 +259,6 @@ See [Isolation Boundaries](/core-features/isolation-boundaries) for the complete
 <Callout type="danger" title="Never Trust Client Data">
   Always get the user ID from your auth system's server-side session, never from client-submitted data.
 </Callout>
-
----
 
 ## Common Patterns
 
@@ -372,8 +336,6 @@ See [Isolation Boundaries](/core-features/isolation-boundaries) for the complete
   </TabItem>
 </Tabs>
 
----
-
 ## Without Auth (For Testing)
 
 Cortex works without auth context for development and testing:
@@ -396,19 +358,12 @@ await cortex.memory.remember({
 ```
 
 <Callout type="info" title="When No Auth is OK">
-  - ✅ Quick prototypes
-  - ✅ Development/testing
-  - ✅ Single-user apps
-  - ✅ CLI tools
+  Quick prototypes, development/testing, single-user apps, CLI tools.
 </Callout>
 
 <Callout type="warning" title="When You Need Auth">
-  - ❌ Production APIs
-  - ❌ Multi-tenant SaaS
-  - ❌ User-facing applications
+  Production APIs, multi-tenant SaaS, user-facing applications.
 </Callout>
-
----
 
 ## Common Questions
 
@@ -429,8 +384,6 @@ await cortex.memory.remember({
     **Yes!** Use test values: `createAuthContext({ userId: "test-user" })`
   </AccordionItem>
 </Accordion>
-
----
 
 ## Next Steps
 
@@ -456,7 +409,3 @@ await cortex.memory.remember({
     href="/core-features/isolation-boundaries"
   />
 </QuickNav>
-
----
-
-**Bottom Line:** Auth integration is **3 lines of code** that work with **any auth system**. No complex setup, no provider-specific code, no lock-in.
