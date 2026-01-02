@@ -1,6 +1,6 @@
 # API Reference Overview
 
-> **Last Updated**: 2025-12-27
+> **Last Updated**: 2026-01-01
 
 Welcome to the Cortex API Reference! This guide explains how to navigate the documentation and use Cortex effectively.
 
@@ -27,17 +27,18 @@ The API Reference is organized by architectural layers:
 
 - **[Memory Operations](./02-memory-operations.md)** - The main API you'll use
   - Layer 4 convenience (`cortex.memory.*`)
-  - Overview of all layers
-  - `remember()`, `rememberStream()`, `search()`, `get()`, `update()`, `delete()`
+  - Full orchestration: `remember()`, `rememberStream()`, `recall()`
+  - Search, get, update, delete operations
+  - Orchestration Observer for real-time monitoring
 - **[Memory Space Operations](./11-memory-space-operations.md)** - Memory space management
-  - Create and manage memory spaces
+  - Fundamental isolation boundary in Cortex
+  - Explicit registration for production deployments
   - Hive Mode participant tracking
-  - Cross-space access control
-  - `register()`, `list()`, `archive()`, `delete()`
+  - `register()`, `get()`, `list()`, `archive()`, `delete()`, `getStats()`
 - **[Conversation Operations](./03-conversation-operations.md)** - Layer 1a (ACID)
   - Immutable conversation threads (memorySpace-scoped)
   - Source of truth for all messages
-  - `create()`, `addMessage()`, `getHistory()`
+  - `create()`, `get()`, `addMessage()`, `getHistory()`, `list()`, `search()`, `delete()`
 
 ### **User & Coordination**
 
@@ -45,42 +46,58 @@ The API Reference is organized by architectural layers:
   - Shared user data across all memory spaces
   - GDPR cascade deletion by userId (SDK + Cloud Mode)
   - Version history and time-travel queries
-- **[Sessions Operations](./14-sessions-operations.md)** - Session lifecycle management ✅ NEW
+  - `get()`, `update()`, `delete()`, `search()`, `list()`, `export()`
+- **[Sessions Operations](./14-sessions-operations.md)** - Session lifecycle management ✅
   - Multi-session support (web, mobile, API)
   - Activity tracking and idle detection
-  - Configurable timeouts via Governance
-- **[Auth Integration](../08-integrations/auth-providers.md)** - Authentication context ✅ NEW
+  - Configurable timeouts via Governance API
+  - `create()`, `get()`, `getOrCreate()`, `touch()`, `end()`, `getActive()`, `expireIdle()`
+- **[Auth Integration](../08-integrations/auth-providers.md)** - Authentication context
   - Framework-agnostic auth integration
-  - Multi-tenancy support (tenantId)
+  - Multi-tenancy support (tenantId auto-injection)
   - Works with Auth0, Clerk, NextAuth, Firebase, custom JWT
-- **[Agent Management](./09-agent-management.md)** - Agent registry + cleanup ✅
-  - Optional metadata registration for discovery
+- **[Agent Management](./09-agent-management.md)** - Agent registry ⚠️ (superseded by Memory Spaces)
+  - Optional metadata registration for discovery/analytics
   - Cascade deletion by participantId across all spaces
-  - Statistics and analytics
+  - Use `cortex.memorySpaces.*` for production isolation
 - **[Context Operations](./05-context-operations.md)** - Workflow coordination ✅
-  - Hierarchical task tracking
+  - Hierarchical task tracking (parent/child chains)
   - Multi-agent collaboration
   - Cross-memorySpace delegation
-- **[A2A Communication](./06-a2a-communication.md)** - Inter-space messaging
-  - Collaboration Mode (dual-write to separate spaces)
-  - Hive Mode (single write within shared space)
-  - Requires pub/sub (BYO or Cloud-managed)
+  - `create()`, `get()`, `update()`, `delete()`, `getChain()`, `getChildren()`
+- **[A2A Communication](./06-a2a-communication.md)** - Inter-agent messaging
+  - Helper API built on memory system (`source.type='a2a'`)
+  - Bidirectional storage (sender + receiver)
+  - `send()`, `request()` (requires pub/sub), `broadcast()`, `getConversation()`
 
 ### **Advanced Storage**
 
 - **[Immutable Store](./07-immutable-store-api.md)** - Layer 1b
-  - TRULY shared (no memorySpace), versioned, immutable data
+  - TRULY shared (no memorySpace scoping), versioned, immutable data
   - KB articles, policies, audit logs
-  - Shared across ALL memory spaces
+  - `store()`, `get()`, `getVersion()`, `getHistory()`, `purge()`
 - **[Mutable Store](./08-mutable-store-api.md)** - Layer 1c
-  - TRULY shared (no memorySpace), mutable, current-value data
-  - Inventory, config, counters
-  - Shared across ALL memory spaces
+  - TRULY shared (no memorySpace scoping), mutable, current-value data
+  - ACID transactions, atomic operations
+  - `set()`, `get()`, `update()`, `increment()`, `transaction()`, `delete()`
+- **[Facts Operations](./12-facts-operations.md)** - Layer 3 Facts Store
+  - Structured knowledge with versioning and confidence
+  - Belief Revision System (v0.24.0+): `revise()`, `checkConflicts()`, `supersede()`
+  - Enriched extraction (v0.15.0+): `searchAliases`, `semanticContext`, `entities`, `relations`
+  - `store()`, `get()`, `update()`, `delete()`, `search()`, `queryBySubject()`, `history()`
 
-### **Supporting APIs**
+### **Platform & Governance**
 
-- **[Governance Policies](./10-governance-policies-api.md)** - Retention rules
-- **[Graph Operations](./13-graph-operations.md)** - Graph database integration
+- **[Governance Policies](./10-governance-policies-api.md)** - Retention rules & compliance
+  - Per-layer, per-type, importance-based retention rules
+  - Compliance templates: GDPR, HIPAA, SOC2, FINRA
+  - Session lifecycle policies
+  - `setPolicy()`, `getPolicy()`, `enforce()`, `simulate()`
+- **[Graph Operations](./13-graph-operations.md)** - Graph database integration (v0.7.0+)
+  - Optional integration with Neo4j, Memgraph
+  - Real-time sync via GraphSyncWorker
+  - Multi-hop traversal and orphan cleanup
+  - `syncToGraph` option across all APIs
 
 ### **Reference**
 
@@ -94,7 +111,7 @@ The API Reference is organized by architectural layers:
 ### 5-Minute Example
 
 ```typescript
-import { Cortex } from "@cortex-platform/sdk";
+import { Cortex } from "@cortexmemory/sdk";
 
 // 1. Initialize Cortex with optional LLM for auto fact extraction
 const cortex = new Cortex({
@@ -110,18 +127,16 @@ const cortex = new Cortex({
 // remember() now auto-registers: memory space, user profile, conversation
 const result = await cortex.memory.remember({
   memorySpaceId: "support-bot-space", // Auto-registered if not exists
-  userId: "user-123", // Auto-creates user profile
-  userName: "Alex", // Required with userId
   conversationId: "conv-001", // Auto-created if not exists
   userMessage: "My password is Blue123",
   agentResponse: "I'll remember that securely!",
-  userId: "user-123",
-  userName: "Alex Johnson",
+  userId: "user-123", // Auto-creates user profile
+  userName: "Alex Johnson", // Required with userId
   importance: 100,
   tags: ["password", "security"],
 });
 
-// 4. Search memories (semantic)
+// 3. Search memories (semantic)
 const memories = await cortex.memory.search(
   "support-bot-space",
   "user password",
@@ -134,7 +149,7 @@ const memories = await cortex.memory.search(
 
 console.log("Found:", memories[0].content); // "My password is Blue123"
 
-// 5. User profile (shared across all memory spaces)
+// 4. User profile (shared across all memory spaces)
 await cortex.users.update("user-123", {
   data: {
     displayName: "Alex Johnson",
@@ -304,7 +319,7 @@ const history = await cortex.facts.history("fact-123");
 // Shows CREATE → UPDATE → SUPERSEDE chain
 ```
 
-**See**: [Facts Operations API - Belief Revision](./12-facts-operations.md#belief-revision-system-v0230)
+**See**: [Facts Operations API - Belief Revision](./12-facts-operations.md#belief-revision-system-v0240)
 
 ---
 
@@ -659,6 +674,15 @@ await cortex.users.delete('user-123', { cascade: true });
 **Set retention policies:**
 → [Governance Policies](./10-governance-policies-api.md) - `cortex.governance.*`
 
+**Manage user sessions:**
+→ [Sessions Operations](./14-sessions-operations.md) - `cortex.sessions.*`
+
+**Store and query facts:**
+→ [Facts Operations](./12-facts-operations.md) - `cortex.facts.*`
+
+**Integrate graph database:**
+→ [Graph Operations](./13-graph-operations.md) - GraphAdapter and GraphSyncWorker
+
 **See all TypeScript types:**
 → [Types & Interfaces](../05-reference/01-types-interfaces.md)
 
@@ -677,10 +701,16 @@ await cortex.users.delete('user-123', { cascade: true });
 → [Mutable Store](./08-mutable-store-api.md)
 
 **Layer 2 (Vector Index):**
-→ [Memory Operations](./02-memory-operations.md#layer-2-cortexvector-operations)
+→ [Memory Operations](./02-memory-operations.md) - `cortex.vector.*`
 
-**Layer 3 (Convenience):**
-→ [Memory Operations](./02-memory-operations.md#layer-3-cortexmemory-operations-dual-layer)
+**Layer 3 (Facts Store):**
+→ [Facts Operations](./12-facts-operations.md) - `cortex.facts.*`
+
+**Layer 4 (Convenience API):**
+→ [Memory Operations](./02-memory-operations.md) - `cortex.memory.*`
+
+**Sessions:**
+→ [Sessions Operations](./14-sessions-operations.md) - `cortex.sessions.*`
 
 ---
 
@@ -692,11 +722,13 @@ Cortex separates **storage** (immutable source) from **search** (optimized index
 
 - **Layer 1**: ACID stores (conversations, immutable, mutable) - Never lose data
 - **Layer 2**: Vector index - Fast searchable, versioned, retention rules
-- **Layer 3**: Memory API - Convenience wrapper over Layers 1+2
+- **Layer 3**: Facts store - Structured knowledge with versioning and belief revision
+- **Layer 4**: Memory API - Convenience wrapper over Layers 1-3
 
 **Benefits:**
 
 - Retention on Vector doesn't lose ACID source
+- Facts provide 60-90% token savings for infinite context
 - Can always retrieve full context
 - Fast search + complete audit trail
 
@@ -1042,8 +1074,8 @@ await cortex.immutable.store({
 ### Import
 
 ```typescript
-import { Cortex } from "@cortex-platform/sdk";
-import type { MemoryEntry, UserProfile, Context } from "@cortex-platform/sdk";
+import { Cortex } from "@cortexmemory/sdk";
+import type { MemoryEntry, UserProfile, Context } from "@cortexmemory/sdk";
 ```
 
 ### Initialize
@@ -1073,10 +1105,14 @@ cortex.vector.*          // Layer 2: Vector index (memorySpace-scoped)
 cortex.facts.*           // Layer 3: Facts store (memorySpace-scoped, LLM extraction)
 cortex.users.*           // User profiles + GDPR (shared across all spaces)
 cortex.contexts.*        // Workflow coordination (cross-space support)
-cortex.a2a.*             // Inter-space messaging (Collaboration Mode)
-cortex.governance.*      // Retention policies
-cortex.mcp.*             // MCP server utilities (Hive Mode default)
-cortex.graph.*           // Graph queries (Graph-Premium or DIY)
+cortex.a2a.*             // Inter-agent messaging
+cortex.governance.*      // Retention policies & compliance
+cortex.sessions.*        // Session lifecycle management
+cortex.agents.*          // Agent registry (optional, superseded by memorySpaces)
+
+// External imports (not on cortex object)
+import { CypherGraphAdapter, GraphSyncWorker } from "@cortexmemory/sdk";
+// Graph adapter configured via Cortex constructor: graph: { adapter: ... }
 ```
 
 ### Most Used Operations
@@ -1113,6 +1149,8 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 ### Documentation
 
 - **[Memory Operations](./02-memory-operations.md)** - Most comprehensive guide
+- **[Facts Operations](./12-facts-operations.md)** - Structured knowledge and Belief Revision
+- **[Sessions Operations](./14-sessions-operations.md)** - Session lifecycle management
 - **[Types & Interfaces](../05-reference/01-types-interfaces.md)** - TypeScript reference
 - **[Error Handling](../05-reference/02-error-handling.md)** - Debugging guide
 
@@ -1139,8 +1177,17 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 **Need GDPR compliance?**
 → Check [User Operations](./04-user-operations.md#delete) for cascade deletion
 
+**Working with facts and knowledge?**
+→ Explore [Facts Operations](./12-facts-operations.md) and the Belief Revision System
+
+**Managing user sessions?**
+→ Check [Sessions Operations](./14-sessions-operations.md) for activity tracking
+
 **Working with shared data?**
 → Explore [Immutable Store](./07-immutable-store-api.md) and [Mutable Store](./08-mutable-store-api.md)
+
+**Integrating graph databases?**
+→ Review [Graph Operations](./13-graph-operations.md) for Neo4j/Memgraph integration
 
 **TypeScript user?**
 → Review [Types & Interfaces](../05-reference/01-types-interfaces.md) for complete definitions
