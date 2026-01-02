@@ -1,0 +1,108 @@
+---
+id: index
+title: Cortex Documentation
+sidebar_position: 0
+---
+
+<Hero 
+  title="Cortex Memory"
+  description="Give your AI agents perfect memory. Built on Convex for real-time sync, semantic search, and infinite context."
+  primaryAction={{ label: "Get Started in 5 Minutes", href: "/getting-started/five-minute-quickstart" }}
+  secondaryAction={{ label: "View on GitHub", href: "https://github.com/SaintNick1214/Project-Cortex" }}
+/>
+
+## Quick Start
+
+<QuickStart 
+  title="Get up and running in seconds"
+  description="Three commands to give your AI agents persistent memory"
+  commands={[
+    { label: "1. Install the CLI", command: "npm install -g @cortexmemory/cli" },
+    { label: "2. Initialize your project", command: "cortex init my-project" },
+    { label: "3. Start development", command: "cortex dev" }
+  ]}
+/>
+
+## Why Cortex?
+
+<FeatureGrid>
+  <FeatureCard 
+    icon="semantic"
+    title="Semantic Memory" 
+    description="Store and retrieve memories using natural language. AI-powered embeddings find relevant context automatically."
+    href="/core-features/semantic-search"
+    size="large"
+  />
+  <FeatureCard 
+    icon="sync"
+    title="Real-Time Sync" 
+    description="Built on Convex for instant updates across all clients. No polling, no stale data."
+    href="/architecture/convex-integration"
+    size="large"
+  />
+  <FeatureCard 
+    icon="lock"
+    title="Isolated by Default" 
+    description="Strict user/agent boundaries with optional collaboration."
+    href="/core-features/memory-spaces"
+  />
+  <FeatureCard 
+    icon="chain"
+    title="Context Chains" 
+    description="Hierarchical context propagation for multi-agent systems."
+    href="/core-features/context-chains"
+  />
+  <FeatureCard 
+    icon="graph"
+    title="Graph Integration" 
+    description="Optional Neo4j/Memgraph for relationship-rich context."
+    href="/advanced-topics/graph-capabilities"
+  />
+</FeatureGrid>
+
+## Explore the Docs
+
+<QuickNav>
+  <QuickNavItem 
+    title="🚀 Getting Started"
+    description="Installation, quickstart, and core concepts"
+    href="/getting-started"
+  />
+  <QuickNavItem 
+    title="✨ Core Features"
+    description="Deep dives into Memory Spaces, Search, Sessions, and more"
+    href="/core-features"
+  />
+  <QuickNavItem 
+    title="📖 API Reference"
+    description="Complete API documentation for all operations"
+    href="/api-reference"
+  />
+  <QuickNavItem 
+    title="🔧 CLI Reference"
+    description="Command-line tools for development and management"
+    href="/tools/cli-reference"
+  />
+  <QuickNavItem 
+    title="🏗️ Architecture"
+    description="System design, data models, and performance"
+    href="/architecture/system-overview"
+  />
+  <QuickNavItem 
+    title="🔗 Integrations"
+    description="Vercel AI SDK, authentication providers, and more"
+    href="/integrations"
+  />
+</QuickNav>
+
+## What's New
+
+<Callout type="tip" title="Latest: v0.21.0 - CLI-First Installation">
+  New `cortex init` command for instant project setup, interactive dev mode with live dashboard,
+  and multi-deployment management. [See the changelog →](/project/changelog)
+</Callout>
+
+---
+
+**Need help?** Check out our [troubleshooting guide](/integrations/vercel-ai-sdk/troubleshooting) 
+or [open an issue](https://github.com/SaintNick1214/Project-Cortex/issues).

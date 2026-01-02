@@ -1,0 +1,361 @@
+---
+id: installation
+title: Installation
+sidebar_position: 2
+description: Install Cortex CLI and SDK for your project
+---
+
+import { Callout, Steps, Step, Terminal, QuickNav, QuickNavItem, Accordion, AccordionItem, CodeBlock } from '@site/src/components';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Installation
+
+Get Cortex up and running in minutes.
+
+---
+
+## Quick Start
+
+The fastest way to get started with Cortex:
+
+<Steps>
+  <Step title="Install the CLI">
+    Install Cortex globally:
+    
+    <Terminal>npm install -g @cortexmemory/cli</Terminal>
+  </Step>
+  <Step title="Verify installation">
+    Check that the CLI is installed correctly:
+    
+    <Terminal>cortex --version</Terminal>
+    
+    Should output: `0.27.4` or higher
+  </Step>
+  <Step title="Create your first project">
+    Initialize a new Cortex project:
+    
+    <Terminal>cortex init my-cortex-agent</Terminal>
+    
+    The interactive wizard will guide you through setup in under 5 minutes.
+  </Step>
+</Steps>
+
+---
+
+## Prerequisites
+
+<Callout type="warning" title="Requirements">
+Before installing Cortex, ensure you have:
+
+**Required:**
+- **Node.js >= 20** — Download from [nodejs.org](https://nodejs.org)
+- **npm or pnpm** — Comes with Node.js
+</Callout>
+
+Check your versions:
+
+<Terminal>node --version && npm --version</Terminal>
+
+Expected output: Node.js `v20.0.0+` and npm `9.0.0+`
+
+<Accordion>
+  <AccordionItem title="Optional Dependencies">
+    **Convex Account** — For cloud deployments (free tier available)
+    - Sign up at [convex.dev](https://convex.dev)
+    - Required for vector search features
+    - Not needed for local development
+
+    **Docker Desktop** — For graph database features
+    - Download from [docker.com](https://www.docker.com/products/docker-desktop)
+    - Only needed for advanced graph queries
+    - Not required for basic Cortex usage
+
+    **OpenAI API Key** — For embeddings
+    - Get from [platform.openai.com](https://platform.openai.com)
+    - Or use any other embedding provider
+    - Cortex works without embeddings (keyword search)
+  </AccordionItem>
+</Accordion>
+
+---
+
+## Installation Methods
+
+### Method 1: Global Installation (Recommended)
+
+Install the CLI globally to use it from anywhere:
+
+<Tabs groupId="package-manager">
+  <TabItem value="npm" label="npm">
+    <Terminal>npm install -g @cortexmemory/cli</Terminal>
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    <Terminal>yarn global add @cortexmemory/cli</Terminal>
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+    <Terminal>pnpm add -g @cortexmemory/cli</Terminal>
+  </TabItem>
+</Tabs>
+
+**Verify installation:**
+
+<Terminal>cortex --version</Terminal>
+
+**Now create projects anywhere:**
+
+<Terminal>cortex init my-agent && cd my-agent && cortex start</Terminal>
+
+### Method 2: Using npx (No Installation)
+
+Use the CLI without installing it globally:
+
+<Terminal>npx @cortexmemory/cli init my-agent</Terminal>
+
+<Callout type="info" title="When to use npx">
+- One-time project creation
+- Testing before global install
+- CI/CD environments
+
+**Trade-off:** Slightly slower (downloads each time)
+</Callout>
+
+### Method 3: Project-Specific Installation
+
+Install as a dev dependency in your project:
+
+<Tabs groupId="package-manager">
+  <TabItem value="npm" label="npm">
+    <Terminal>npm install --save-dev @cortexmemory/cli</Terminal>
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    <Terminal>yarn add --dev @cortexmemory/cli</Terminal>
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+    <Terminal>pnpm add -D @cortexmemory/cli</Terminal>
+  </TabItem>
+</Tabs>
+
+**Add to package.json:**
+
+<CodeBlock filename="package.json" language="json">
+{`{
+  "scripts": {
+    "cortex": "cortex",
+    "dev": "cortex dev",
+    "start": "cortex start",
+    "stop": "cortex stop"
+  }
+}`}
+</CodeBlock>
+
+**Then run:**
+
+<Terminal>npm run cortex init && npm run dev</Terminal>
+
+---
+
+## Verification
+
+After installation, verify everything works:
+
+<Steps>
+  <Step title="Check CLI Installation">
+    <Terminal>cortex --version</Terminal>
+    
+    Should show: `0.27.4` or higher
+    
+    <Terminal>cortex --help</Terminal>
+    
+    Should display available commands
+  </Step>
+  <Step title="Test CLI Connection">
+    <Terminal>cortex init test-project && cd test-project</Terminal>
+    
+    Start services:
+    
+    <Terminal>cortex start</Terminal>
+    
+    Check status:
+    
+    <Terminal>cortex status</Terminal>
+    
+    Should show: Convex running, deployment info
+  </Step>
+  <Step title="Verify Convex Dashboard">
+    **For local development:** Open http://127.0.0.1:3210
+    
+    **For cloud deployment:**
+    
+    <Terminal>cortex convex dashboard</Terminal>
+    
+    Opens your deployment in browser
+  </Step>
+</Steps>
+
+---
+
+## Troubleshooting
+
+<Accordion>
+  <AccordionItem title="cortex: command not found" defaultOpen={true}>
+    **Cause:** CLI not installed or not in PATH
+
+    **Fix:**
+
+    <Terminal>npm install -g @cortexmemory/cli</Terminal>
+
+    Or check npm global bin path:
+
+    <Terminal>npm config get prefix</Terminal>
+
+    Make sure this directory is in your PATH.
+  </AccordionItem>
+
+  <AccordionItem title="cortex init fails">
+    **Possible causes:**
+    - Node.js version &lt; 20
+    - No internet connection
+    - npm permissions
+
+    **Fix:**
+
+    Update Node.js to v20+, then clear npm cache:
+
+    <Terminal>npm cache clean --force && npm install -g @cortexmemory/cli</Terminal>
+  </AccordionItem>
+
+  <AccordionItem title="Cannot find module @cortexmemory/sdk">
+    **Cause:** Dependencies not installed in project
+
+    **Fix:**
+
+    <Terminal>cd your-project && npm install</Terminal>
+  </AccordionItem>
+
+  <AccordionItem title="Convex connection failed">
+    **Cause:** Convex server not running
+
+    **Fix:**
+
+    <Terminal>cortex start</Terminal>
+
+    If issues persist, restart:
+
+    <Terminal>cortex stop && cortex start</Terminal>
+  </AccordionItem>
+
+  <AccordionItem title="Port Conflicts">
+    **Cause:** Another Convex instance on same port
+
+    **Fix:** Use interactive dev mode:
+
+    <Terminal>cortex dev</Terminal>
+
+    Press `k` to kill conflicting processes.
+  </AccordionItem>
+</Accordion>
+
+<Callout type="tip" title="Getting More Help">
+```bash
+# General help
+cortex --help
+
+# Command-specific help
+cortex <command> --help
+```
+
+**Still stuck?**
+- [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
+- [CLI Reference](/tools/cli-reference)
+- [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
+</Callout>
+
+---
+
+## Upgrading
+
+To upgrade to the latest version:
+
+<Tabs groupId="package-manager">
+  <TabItem value="npm" label="npm">
+    <Terminal>npm install -g @cortexmemory/cli@latest</Terminal>
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    <Terminal>yarn global upgrade @cortexmemory/cli</Terminal>
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+    <Terminal>pnpm add -g @cortexmemory/cli@latest</Terminal>
+  </TabItem>
+</Tabs>
+
+Verify new version:
+
+<Terminal>cortex --version</Terminal>
+
+Update SDK and Convex in your projects:
+
+<Terminal>cortex update</Terminal>
+
+<Callout type="info">
+The `cortex update` command will:
+- Check for newer versions of `@cortexmemory/sdk`
+- Check for newer versions of `convex`
+- Offer to update all projects
+- Redeploy backend if needed
+
+**Note:** The CLI stores project paths in its config, so you can run `cortex update` from any directory.
+</Callout>
+
+---
+
+## Uninstalling
+
+If you need to uninstall:
+
+<Tabs groupId="package-manager">
+  <TabItem value="npm" label="npm">
+    <Terminal>npm uninstall -g @cortexmemory/cli</Terminal>
+  </TabItem>
+  <TabItem value="yarn" label="yarn">
+    <Terminal>yarn global remove @cortexmemory/cli</Terminal>
+  </TabItem>
+  <TabItem value="pnpm" label="pnpm">
+    <Terminal>pnpm remove -g @cortexmemory/cli</Terminal>
+  </TabItem>
+</Tabs>
+
+Remove from a project:
+
+<Terminal>cd your-project && npm uninstall @cortexmemory/sdk convex</Terminal>
+
+Clean up configuration (optional):
+
+<Terminal>rm ~/.cortexrc</Terminal>
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Five-Minute Quickstart"
+    description="Build your first agent with persistent memory"
+    href="/getting-started/five-minute-quickstart"
+  />
+  <QuickNavItem 
+    title="Core Concepts"
+    description="Understand how Cortex works"
+    href="/getting-started/core-concepts"
+  />
+  <QuickNavItem 
+    title="Configuration"
+    description="Multi-deployment setup and environment configuration"
+    href="/getting-started/configuration"
+  />
+  <QuickNavItem 
+    title="CLI Reference"
+    description="All CLI commands and options"
+    href="/tools/cli-reference"
+  />
+</QuickNav>

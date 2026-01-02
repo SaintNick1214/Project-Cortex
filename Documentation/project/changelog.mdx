@@ -1,0 +1,86 @@
+---
+title: Changelog
+description: All notable changes to Cortex Memory
+sidebar_position: 1
+---
+
+# Changelog
+
+All notable changes to Cortex Memory are documented here.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+:::tip View Full Changelog
+For the complete changelog with all historical releases, see the [CHANGELOG.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/CHANGELOG.md) in the repository.
+:::
+
+## Latest Release Highlights
+
+### v0.27.0 - Multi-Tenancy & Authentication Context
+
+Complete multi-tenancy support with automatic `tenantId` propagation across all API layers. Build SaaS platforms with guaranteed tenant data isolation.
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  auth: {
+    userId: "user-123",
+    tenantId: "tenant-acme",
+    sessionId: "sess-abc",
+    authMethod: "clerk",
+    authenticatedAt: Date.now(),
+    claims: { role: "admin" },
+  },
+});
+
+// All operations automatically scoped to tenant
+await cortex.memory.remember({...});
+await cortex.conversations.create({...});
+await cortex.facts.store({...});
+```
+
+**Key Features:**
+
+- ✅ Automatic TenantId Propagation
+- ✅ Sessions API for multi-session management
+- ✅ Auth Validators for format validation
+- ✅ Framework-Agnostic (Auth0, Clerk, NextAuth, Firebase)
+- ✅ Graph Integration with tenant boundaries
+- ✅ GDPR Compatible cascade deletion
+
+### v0.26.0 - Governance Policies
+
+Declarative governance system for controlling memory behaviors across memory spaces.
+
+### v0.25.0 - Graph-Lite Traversal
+
+Pure-Convex graph traversal without external dependencies.
+
+### v0.24.0 - Sessions Management
+
+Comprehensive session lifecycle management with automatic expiration.
+
+---
+
+## Release Types
+
+| Type | Description |
+|------|-------------|
+| **SDK Releases** | Core Cortex Memory SDK updates |
+| **Provider Releases** | Vercel AI SDK provider updates |
+| **Convex Backend** | Backend schema and function updates |
+
+## Versioning Policy
+
+Cortex Memory follows semantic versioning:
+
+- **Major (X.0.0)**: Breaking API changes
+- **Minor (0.X.0)**: New features, backwards compatible
+- **Patch (0.0.X)**: Bug fixes, backwards compatible
+
+## Deprecation Policy
+
+- Features are marked deprecated for at least one minor version before removal
+- Deprecated features include migration guides
+- Breaking changes are documented with upgrade paths

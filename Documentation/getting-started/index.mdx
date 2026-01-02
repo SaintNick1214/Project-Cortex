@@ -1,0 +1,102 @@
+---
+id: getting-started
+title: Getting Started
+sidebar_position: 0
+---
+
+# Getting Started with Cortex
+
+Welcome! This guide will help you go from zero to a working AI agent with persistent memory in under 5 minutes.
+
+<Callout type="info" title="Prerequisites">
+  **Node.js 18+**, npm/yarn/pnpm, and a free [Convex account](https://convex.dev).
+</Callout>
+
+## Choose Your Path
+
+<FeatureGrid columns={2}>
+  <FeatureCard 
+    icon="⚡"
+    title="Quick Start"
+    description="Jump right in with our 5-minute tutorial. Perfect for hands-on learners."
+    href="/getting-started/five-minute-quickstart"
+  />
+  <FeatureCard 
+    icon="📚"
+    title="Learn the Concepts"
+    description="Understand how Cortex works before diving into code."
+    href="/getting-started/core-concepts"
+  />
+</FeatureGrid>
+
+## Installation Overview
+
+<Steps>
+  <Step title="Install the Cortex CLI">
+    Our CLI handles project setup, development, and deployment.
+
+    ```bash
+    npm install -g @cortexmemory/cli
+    ```
+
+    [Installation Guide →](/getting-started/installation)
+  </Step>
+  <Step title="Initialize Your Project">
+    Run `cortex init` to scaffold a new project with Convex backend configured.
+
+    ```bash
+    cortex init my-project
+    cd my-project
+    ```
+
+    [5-Minute Quickstart →](/getting-started/five-minute-quickstart)
+  </Step>
+  <Step title="Configure for Your Stack">
+    Set up authentication, customize settings, and connect your AI provider.
+
+    ```bash
+    cortex dev
+    ```
+
+    [Configuration Guide →](/getting-started/configuration)
+  </Step>
+</Steps>
+
+## In This Section
+
+<QuickNav>
+  <QuickNavItem 
+    title="Introduction" 
+    description="What is Cortex and why use it?" 
+    href="/getting-started/introduction" 
+  />
+  <QuickNavItem 
+    title="Installation" 
+    description="Install CLI and dependencies" 
+    href="/getting-started/installation" 
+  />
+  <QuickNavItem 
+    title="5-Minute Quickstart" 
+    description="Build your first memory-enabled agent" 
+    href="/getting-started/five-minute-quickstart" 
+  />
+  <QuickNavItem 
+    title="Core Concepts" 
+    description="Understand the fundamentals" 
+    href="/getting-started/core-concepts" 
+  />
+  <QuickNavItem 
+    title="Configuration" 
+    description="Customize Cortex for your needs" 
+    href="/getting-started/configuration" 
+  />
+  <QuickNavItem 
+    title="Auth Integration" 
+    description="Set up authentication" 
+    href="/getting-started/auth-integration" 
+  />
+</QuickNav>
+
+---
+
+**Coming from another memory solution?** Check out our [migration guide from mem0](/integrations/vercel-ai-sdk/migration-from-mem0).
