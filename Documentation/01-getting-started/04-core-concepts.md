@@ -1,6 +1,6 @@
 # Core Concepts
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: January 1, 2026
 
 Understanding these core concepts will help you make the most of Cortex. This guide covers the fundamental building blocks of the system.
 
@@ -120,6 +120,28 @@ await cortex.memorySpaces.register({
 const stats = await cortex.analytics.getMemorySpaceStats("user-123-personal");
 // { memoriesStored: 543, participants: 3, avgAccessTime: '12ms', ... }
 ```
+
+**Using the CLI:**
+
+```bash
+# List all memory spaces
+cortex spaces list
+
+# Create a memory space
+cortex spaces create user-123-personal \
+  --type personal \
+  --name "Alice's Personal Space"
+
+# View space statistics
+cortex spaces stats user-123-personal
+
+# List participants (Hive Mode)
+cortex spaces participants user-123-personal
+```
+
+**Learn more:**
+- [Memory Spaces Guide](../02-core-features/01-memory-spaces.md)
+- [CLI: spaces commands](../06-tools/01-cli-reference.md#cortex-spaces)
 
 ---
 
@@ -511,6 +533,22 @@ console.log(memory.previousVersions[0]);
 // { version: 1, content: "The password is Blue", timestamp: ... }
 ```
 
+**Using the CLI:**
+
+```bash
+# Get memory with version history
+cortex memory get <memoryId> --space user-123-personal
+
+# List all memories in a space
+cortex memory list --space user-123-personal
+
+# Search memories
+cortex memory search "password" --space user-123-personal
+
+# Export memories (includes version history)
+cortex memory export --space user-123-personal --output backup.json
+```
+
 **Why this is revolutionary:**
 
 - ✅ No data loss when information changes
@@ -848,6 +886,28 @@ await cortex.memory.search("user-123-personal", query, {
 });
 ```
 
+**Using the CLI:**
+
+```bash
+# Search with filters
+cortex memory search "preferences" \
+  --space user-123-personal \
+  --limit 20
+
+# List and filter memories
+cortex memory list \
+  --space user-123-personal \
+  --user alice \
+  --limit 50
+
+# Get memory statistics
+cortex memory stats --space user-123-personal
+```
+
+**Learn more:**
+- [Semantic Search Guide](../02-core-features/02-semantic-search.md)
+- [CLI: memory commands](../06-tools/01-cli-reference.md#cortex-memory)
+
 ---
 
 ## User Profiles
@@ -915,6 +975,29 @@ const user = await cortex.users.get("user-123");
 // Use in agent interactions
 const greeting = `Hello ${user.displayName}! I see you prefer ${user.preferences.theme} mode.`;
 ```
+
+**Using the CLI:**
+
+```bash
+# List all users
+cortex users list
+
+# Get user details
+cortex users get user-123
+
+# Show user statistics
+cortex users stats user-123
+
+# Export user data (GDPR compliance)
+cortex users export user-123 --output user-data.json
+
+# Delete user (with GDPR cascade)
+cortex users delete user-123 --cascade
+```
+
+**Learn more:**
+- [User Profiles Guide](../02-core-features/03-user-profiles.md)
+- [CLI: users commands](../06-tools/01-cli-reference.md#cortex-users)
 
 ### Cross-MemorySpace User Context
 
@@ -1085,6 +1168,22 @@ console.log({
 });
 ```
 
+**Using the CLI:**
+
+```bash
+# View database-wide statistics
+cortex db stats
+
+# View space-specific statistics
+cortex spaces stats user-123-personal
+
+# View memory statistics
+cortex memory stats --space user-123-personal
+
+# View user statistics
+cortex users stats user-123
+```
+
 ### Usage Insights
 
 ```typescript
@@ -1100,6 +1199,10 @@ const hot = await cortex.analytics.findHotMemories("user-123-personal", {
   timeWindow: "7d",
 });
 ```
+
+**Learn more:**
+- [Access Analytics Guide](../02-core-features/07-access-analytics.md)
+- [CLI: db commands](../06-tools/01-cli-reference.md#cortex-db-stats)
 
 ---
 

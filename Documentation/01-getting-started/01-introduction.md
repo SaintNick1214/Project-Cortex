@@ -1,6 +1,6 @@
 # Introduction to Cortex
 
-> **Last Updated**: 2025-12-18
+> **Last Updated**: January 1, 2026
 
 ## Welcome to Cortex
 
@@ -59,16 +59,37 @@ AI agents need memory that is:
 
 ## The Cortex Solution
 
-Cortex solves all these problems with a single, unified system:
+Cortex solves all these problems with a single, unified system. Get started in 3 commands:
+
+```bash
+# From zero to working AI agent in 3 commands
+cortex init my-agent
+cd my-agent
+cortex start
+
+# Your agent is running with persistent memory!
+```
+
+The CLI handles everything:
+- ✅ **Zero configuration** - Works out of the box
+- ✅ **Project scaffolding** - Templates and examples included
+- ✅ **Multi-deployment** - Local, staging, production
+- ✅ **Database operations** - Backup, restore, statistics
+- ✅ **Interactive development** - Live dashboard like Expo
+
+**For programmatic access, the SDK is just as simple:**
 
 ```typescript
-// That's it - full persistent memory in one call
-const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL });
+import { Cortex } from "@cortexmemory/sdk";
 
-// Store a conversation (ACID + Vector automatic)
+const cortex = new Cortex({ 
+  convexUrl: process.env.CONVEX_URL // Set by CLI
+});
+
+// Store a conversation
 await cortex.memory.remember({
-  memorySpaceId: "user-1-personal", // Memory space (isolation boundary)
-  participantId: "my-agent", // Which tool/agent (optional, for Hive Mode)
+  memorySpaceId: "user-1-personal",
+  participantId: "my-agent",
   conversationId: "conv-123",
   userMessage: "I prefer dark mode",
   agentResponse: "I'll remember that!",
@@ -466,20 +487,49 @@ To set clear expectations:
 
 Ready to add persistent memory to your AI agents?
 
-**Quick start:**
+### CLI-First Approach (Recommended)
+
+The Cortex CLI makes it easy to get started:
 
 ```bash
+# Step 1: Install the CLI
 npm install -g @cortexmemory/cli
+
+# Step 2: Initialize your project
 cortex init my-agent
-cd my-agent && cortex start
+
+# Step 3: Start development
+cd my-agent
+cortex start
 ```
 
-**Learn more:**
+**What you get:**
+- 🚀 Complete project scaffolding
+- ⚙️ Convex backend deployed
+- 💾 Working example code
+- 📊 Multi-deployment management
+- 🔄 Interactive development dashboard
 
-1. **[Install Cortex](./02-installation.md)** - CLI installation and setup options
-2. **[Quick Start](./03-five-minute-quickstart.md)** - Build your first memory-enabled agent
-3. **[Core Concepts](./04-core-concepts.md)** - Understand how Cortex works
-4. **[Configuration](./05-configuration.md)** - Multi-deployment and CLI configuration
+### SDK-Only Approach (Advanced)
+
+For direct programmatic access without the CLI:
+
+```bash
+npm install @cortexmemory/sdk convex
+# Then manually configure Convex backend
+```
+
+See [Installation](./02-installation.md) for full details.
+
+---
+
+**Continue Learning:**
+
+1. **[Installation](./02-installation.md)** - Install the CLI and verify setup
+2. **[Five-Minute Quickstart](./03-five-minute-quickstart.md)** - Create your first agent
+3. **[Core Concepts](./04-core-concepts.md)** - Understand memory spaces and architecture
+4. **[Configuration](./05-configuration.md)** - Multi-deployment and environment setup
+5. **[CLI Reference](../06-tools/01-cli-reference.md)** - Complete command documentation
 
 > **Note**: Cortex is in early development. The open source SDK (direct mode) is being built first, with cloud mode features coming later based on community feedback.
 
