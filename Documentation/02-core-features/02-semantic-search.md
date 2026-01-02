@@ -110,8 +110,8 @@ const query = "what are the user's dietary preferences?";
 // Generate embedding for the query (optional but preferred)
 const queryEmbedding = await embed(query);
 
-// Search agent's memories (Layer 3 - searches Vector, can enrich with ACID)
-const memories = await cortex.memory.search("my-agent", query, {
+// Search memories within the memory space (Layer 4 - searches Vector, can enrich with ACID)
+const memories = await cortex.memory.search(memorySpaceId, query, {
   embedding: queryEmbedding, // Optional: enables semantic search
   userId: "user-123", // Only search this user's context
   limit: 5,
@@ -133,8 +133,8 @@ memories.forEach((memory, i) => {
   }
 });
 
-// Or get with ACID enrichment automatically (Layer 3 option)
-const enriched = await cortex.memory.search("my-agent", query, {
+// Or get with ACID enrichment automatically (Layer 4 option)
+const enriched = await cortex.memory.search(memorySpaceId, query, {
   embedding: queryEmbedding,
   userId: "user-123",
   enrichConversation: true, // Fetches ACID conversations too
@@ -248,10 +248,10 @@ const memories = await cortex.memory.search(memorySpaceId, query, {
 });
 
 // Without embedding - tries keyword → recent
-const memories = await cortex.memory.search(agentId, query);
+const memories = await cortex.memory.search(memorySpaceId, query);
 // No embedding - uses text search on Vector index
 
-// Layer 3 (cortex.memory) internally does:
+// Layer 4 (cortex.memory) internally does:
 // 1. Try semantic search on Vector (if embedding provided)
 // 2. If empty, try keyword search on Vector (always available)
 // 3. If still empty, return recent memories from Vector
@@ -570,7 +570,7 @@ for (const query of queries) {
 // ✅ Fast - batch embeddings
 const embeddings = await embedBatch(queries);
 for (let i = 0; i < queries.length; i++) {
-  await cortex.memory.search(agentId, queries[i], {
+  await cortex.memory.search(memorySpaceId, queries[i], {
     embedding: embeddings[i],
   });
 }
@@ -662,7 +662,7 @@ async function evaluateSearch(memorySpaceId: string, testCases: TestCase[]) {
   const results = [];
 
   for (const test of testCases) {
-    const memories = await cortex.memory.search(agentId, test.query, {
+    const memories = await cortex.memory.search(memorySpaceId, test.query, {
       embedding: await embed(test.query),
       limit: 5,
     });
@@ -739,16 +739,16 @@ memories.forEach((m) => {
 
 ```typescript
 // ❌ No embedding, no user scope (fallback to keyword search, all users)
-await cortex.memory.search(agentId, query);
+await cortex.memory.search(memorySpaceId, query);
 
-// ⚠️ Text search only, no user scope
+// ⚠️ Text search only
 await cortex.memory.search(memorySpaceId, query, {
   userId: userId, // Good - scoped, but uses text search
 });
 
-// ⚠️ Semantic search but not scoped
+// ⚠️ Semantic search but not user-scoped
 await cortex.memory.search(memorySpaceId, query, {
-  embedding: await embed(query), // Good - semantic, but searches all users
+  embedding: await embed(query), // Good - semantic, but searches all users in space
 });
 
 // ✅ Full semantic search with user context
@@ -769,11 +769,11 @@ await cortex.memory.search(memorySpaceId, query, {
 
 ```typescript
 // ❌ Vague
-const memories = await cortex.memory.search(agentId, "user");
+const memories = await cortex.memory.search(memorySpaceId, "user");
 
 // ✅ Specific
 const memories = await cortex.memory.search(
-  agentId,
+  memorySpaceId,
   "what are the user's dietary restrictions and food preferences?",
 );
 ```
@@ -827,7 +827,7 @@ if (memories.length === 0) {
 
   // Still nothing? Get recent context for this user
   if (broader.length === 0) {
-    broader = await cortex.memory.search(agentId, "*", {
+    broader = await cortex.memory.search(memorySpaceId, "*", {
       userId,
       sortBy: "createdAt",
       sortOrder: "desc",
@@ -855,7 +855,7 @@ async function buildPromptContext(
 ) {
   // Search vector memories for relevant knowledge
   const embedding = await embed(userMessage);
-  const memories = await cortex.memory.search(agentId, userMessage, {
+  const memories = await cortex.memory.search(memorySpaceId, userMessage, {
     embedding,
     userId, // Only this user's context
     minScore: 0.7,
@@ -921,7 +921,7 @@ async function retrieveFact(
   userId: string,
   question: string,
 ) {
-  const memories = await cortex.memory.search(agentId, question, {
+  const memories = await cortex.memory.search(memorySpaceId, question, {
     embedding: await embed(question),
     userId, // User-specific facts
     limit: 1,
@@ -950,10 +950,10 @@ Find all related memories:
 ```typescript
 async function findRelatedMemories(memorySpaceId: string, memoryId: string) {
   // Get the source memory
-  const source = await cortex.memory.get(agentId, memoryId);
+  const source = await cortex.memory.get(memorySpaceId, memoryId);
 
   // Search for similar memories
-  const related = await cortex.memory.search(agentId, source.content, {
+  const related = await cortex.memory.search(memorySpaceId, source.content, {
     embedding: source.embedding,
     minScore: 0.7,
     excludeIds: [memoryId], // Don't include source
@@ -974,7 +974,7 @@ async function exploreTopicArea(
   topic: string,
 ) {
   // Broad search
-  const memories = await cortex.memory.search(agentId, topic, {
+  const memories = await cortex.memory.search(memorySpaceId, topic, {
     embedding: await embed(topic),
     ...(userId && { userId }), // Filter to user if provided
     limit: 50,
@@ -1076,7 +1076,7 @@ const memories = await cortex.memory.search(memorySpaceId, query, {
 const smallEmbedding = await embed(query, { dimensions: 768 });
 
 // 3. Implement caching
-const cacheKey = `search:${agentId}:${query}`;
+const cacheKey = `search:${memorySpaceId}:${query}`;
 const cached = cache.get(cacheKey);
 if (cached) return cached;
 
@@ -1100,7 +1100,7 @@ cache.set(cacheKey, memories, { ttl: 60 }); // Cache for 60 seconds
 if (memories.length === 0) {
   // Extract main concept
   const broader = simplifyQuery(query); // "user food preferences" → "food"
-  memories = await cortex.memory.search(agentId, broader, {
+  memories = await cortex.memory.search(memorySpaceId, broader, {
     embedding: await embed(broader),
   });
 }
@@ -1112,9 +1112,9 @@ const memories = await cortex.memory.search(memorySpaceId, query, {
 });
 
 // 3. Check if any memories exist
-const total = await cortex.memory.count(agentId);
+const total = await cortex.memory.count(memorySpaceId);
 if (total === 0) {
-  console.log("Agent has no memories yet");
+  console.log("Memory space has no memories yet");
 }
 ```
 
@@ -1139,7 +1139,7 @@ const searchTests = [
 
 // Run tests
 for (const test of searchTests) {
-  const memories = await cortex.memory.search(agentId, test.query, {
+  const memories = await cortex.memory.search(memorySpaceId, test.query, {
     embedding: await embed(test.query),
     limit: 5,
   });
@@ -1254,6 +1254,7 @@ See **[Fact Extraction](./08-fact-extraction.md)** for the Belief Revision Syste
 
 ## Next Steps
 
+- **[Memory Orchestration](./00-memory-orchestration.md)** - The heart of Cortex: understand how all layers work together
 - **[User Profiles](./03-user-profiles.md)** - Manage user context across agents
 - **[Context Chains](./04-context-chains.md)** - Hierarchical agent coordination
 - **[Fact Integration](./11-fact-integration.md)** - Extract structured knowledge from conversations

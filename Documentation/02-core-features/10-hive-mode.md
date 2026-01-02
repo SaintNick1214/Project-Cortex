@@ -132,10 +132,14 @@ Register the memory space with participants:
 ```typescript
 // Register space once
 await cortex.memorySpaces.register({
-  id: "user-123-personal",
+  memorySpaceId: "user-123-personal",
   name: "Alice's Personal AI Memory",
   type: "personal",
-  participants: ["cursor", "claude", "notion-ai"],
+  participants: [
+    { id: "cursor", type: "ai-tool" },
+    { id: "claude", type: "ai-tool" },
+    { id: "notion-ai", type: "ai-tool" },
+  ],
   metadata: {
     owner: "user-123",
     created: new Date(),
@@ -616,10 +620,13 @@ await cortex.memory.remember({
 
 // Production: Explicit registration
 await cortex.memorySpaces.register({
-  id: "user-123-personal",
+  memorySpaceId: "user-123-personal",
   name: "Alice's Personal Space",
   type: "personal",
-  participants: ["cursor", "claude"],
+  participants: [
+    { id: "cursor", type: "ai-tool" },
+    { id: "claude", type: "ai-tool" },
+  ],
   metadata: {
     environment: "production",
     created: new Date(),
@@ -672,14 +679,16 @@ memories.forEach((m) => {
 
 ```typescript
 // Get participant stats
-const stats = await cortex.analytics.getMemorySpaceStats("team-workspace");
+const stats = await cortex.memorySpaces.getStats("team-workspace", {
+  includeParticipants: true,
+});
 
-console.log(stats.participantActivity);
-// {
-//   "code-review-bot": { memoriesStored: 234, lastActive: "2025-10-28" },
-//   "deployment-bot": { memoriesStored: 156, lastActive: "2025-10-28" },
-//   "ticket-bot": { memoriesStored: 89, lastActive: "2025-10-27" }
-// }
+console.log(stats.participants);
+// [
+//   { participantId: "code-review-bot", memoriesStored: 234, lastActive: 1730073600000 },
+//   { participantId: "deployment-bot", memoriesStored: 156, lastActive: 1730073600000 },
+//   { participantId: "ticket-bot", memoriesStored: 89, lastActive: 1729987200000 }
+// ]
 ```
 
 ### Identify and Remove Bad Data

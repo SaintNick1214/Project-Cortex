@@ -2,6 +2,8 @@
 
 > **Last Updated**: 2026-01-01
 
+> 🚧 **PLANNED FEATURE**: The `cortex.analytics.*` API described in this document is planned for a future release. Currently, memory space statistics are available via `cortex.memorySpaces.getStats()`. See the [Memory Space Operations API](../03-api-reference/11-memory-space-operations.md) for available methods.
+
 Track and analyze how agents use memory to optimize performance and understand patterns.
 
 ## Overview
@@ -226,7 +228,7 @@ hot.forEach((m) => {
 ```typescript
 // Find similar memories (potential duplicates)
 async function findDuplicateCandidates(memorySpaceId: string) {
-  const all = await cortex.memory.search(agentId, "*", { limit: 1000 });
+  const all = await cortex.memory.search(memorySpaceId, "*", { limit: 1000 });
 
   const duplicates = [];
 
@@ -427,7 +429,7 @@ Automated alerts:
 ```typescript
 // Track custom business metrics
 async function getCustomMetrics(memorySpaceId: string) {
-  const memories = await cortex.memory.search(agentId, "*", { limit: 10000 });
+  const memories = await cortex.memory.search(memorySpaceId, "*", { limit: 10000 });
 
   return {
     // Customer satisfaction related
@@ -471,7 +473,7 @@ await fs.writeFile("agent-analytics.csv", data);
 
 ```typescript
 async function optimizeAgent(memorySpaceId: string) {
-  const stats = await cortex.analytics.getAgentStats(agentId);
+  const stats = await cortex.memorySpaces.getStats(memorySpaceId);
 
   // Too many memories?
   if (stats.totalMemories > 10000) {
@@ -497,7 +499,7 @@ async function optimizeAgent(memorySpaceId: string) {
 ```typescript
 // Track return on investment for memory system (hybrid architecture)
 async function calculateMemoryROI(memorySpaceId: string) {
-  const stats = await cortex.analytics.getAgentStats(agentId);
+  const stats = await cortex.memorySpaces.getStats(memorySpaceId);
 
   // Calculate costs (hybrid architecture)
   const vectorCost = {

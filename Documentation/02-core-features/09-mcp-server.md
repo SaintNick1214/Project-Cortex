@@ -1034,9 +1034,9 @@ POST /search_memory
 
 ```typescript
 // Clean up old session-specific memories
-async function cleanupOldSessions() {
+async function cleanupOldSessions(memorySpaceId: string) {
   // Get sessions older than 30 days
-  const oldSessions = await cortex.memory.list("mcp-agent", {
+  const oldSessions = await cortex.memory.list(memorySpaceId, {
     metadata: {
       temporary: true,
       expiresAt: { $lt: Date.now() },
@@ -1045,12 +1045,12 @@ async function cleanupOldSessions() {
 
   // Delete them
   for (const memory of oldSessions.memories) {
-    await cortex.memory.delete("mcp-agent", memory.id);
+    await cortex.memory.forget(memorySpaceId, memory.id);
   }
 }
 
 // Run daily
-setInterval(cleanupOldSessions, 24 * 60 * 60 * 1000);
+setInterval(() => cleanupOldSessions("mcp-agent-space"), 24 * 60 * 60 * 1000);
 ```
 
 ### 4. Monitor Usage
