@@ -27,49 +27,54 @@ The `cortex.memory.recall()` API provides **orchestrated retrieval** across all 
 
 ```typescript
 // Unified retrieval across Vector, Facts, and Graph
-const memories = await cortex.memory.recall(memorySpaceId, query, {
-  embedding: await embed(query),  // Optional: enables semantic search
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
+  embedding: await embed("user preferences"),  // Optional: enables semantic search
   userId: "user-123",
   limit: 10,
   
-  // Control which layers to query
-  layers: {
+  // Control which sources to query (all enabled by default)
+  sources: {
     vector: true,    // Search vector memories (default: true)
     facts: true,     // Search structured facts (default: true)
-    graph: false,    // Query graph relationships (default: false)
+    graph: true,     // Query graph relationships (default: true if configured)
   },
   
-  // Optional: enrichment
-  enrichWithFacts: true,        // Include related facts
-  enrichWithConversation: true, // Include ACID source
+  // Optional: enrichment options
+  includeConversation: true, // Include ACID source (default: true)
+  formatForLLM: true,        // Generate ready-to-inject context (default: true)
 });
 
-// Results include intelligent relevance scoring
-memories.forEach(memory => {
-  console.log(`Content: ${memory.content}`);
-  console.log(`Relevance: ${memory.relevanceScore}`);  // Combined score
-  console.log(`Source: ${memory.source.type}`);        // 'vector', 'fact', or 'graph'
+// Results include unified items and source breakdown
+result.items.forEach(item => {
+  console.log(`Content: ${item.content}`);
+  console.log(`Score: ${item.score}`);              // Combined ranking score (0-1)
+  console.log(`Source: ${item.source}`);            // 'vector', 'facts', or 'graph-expanded'
   
   // Enriched data available
-  if (memory.facts) {
-    console.log(`Related facts: ${memory.facts.length}`);
+  if (item.fact) {
+    console.log(`Fact: ${item.fact.fact}`);
   }
-  if (memory.conversation) {
-    console.log(`From conversation: ${memory.conversation.id}`);
+  if (item.conversation) {
+    console.log(`From conversation: ${item.conversation.conversationId}`);
   }
 });
+
+// Use the LLM-ready context string
+console.log(result.context);  // Formatted for LLM injection
 ```
 
 ### recall() vs search()
 
 | Feature | `recall()` | `search()` |
 |---------|-----------|-----------|
-| **Primary Use** | Unified retrieval | Vector-focused search |
-| **Layers Queried** | Vector + Facts + Graph | Vector only |
-| **Relevance Scoring** | Combined multi-layer | Vector similarity only |
-| **Fact Enrichment** | Built-in | Optional |
-| **Graph Traversal** | Supported | Not supported |
-| **Best For** | Context building, RAG | Simple searches |
+| **Primary Use** | Unified orchestrated retrieval | Vector-focused search |
+| **Sources Queried** | Vector + Facts + Graph | Vector only |
+| **Ranking** | Multi-signal scoring algorithm | Vector similarity only |
+| **LLM Context** | Built-in formatting (`result.context`) | Manual formatting needed |
+| **Graph Expansion** | Supported via relationships | Not supported |
+| **Best For** | Context building, RAG, LLM prompts | Simple searches, performance-critical |
 
 **When to use `recall()`:**
 - Building LLM context with comprehensive knowledge
@@ -1208,27 +1213,26 @@ Facts are automatically managed with **intelligent conflict resolution**:
 
 ```typescript
 // Search returns memories with fact supersession info
-const memories = await cortex.memory.recall("agent-1", "user preferences", {
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
   embedding: await embed("user preferences"),
-  enrichWithFacts: true,
 });
 
-memories.forEach((memory) => {
-  console.log(`Memory: ${memory.content}`);
+result.items.forEach((item) => {
+  console.log(`Content: ${item.content}`);
 
   // Access facts with belief revision metadata
-  if (memory.facts) {
-    memory.facts.forEach((fact) => {
-      console.log(`  Fact: ${fact.fact} (${fact.confidence}% confidence)`);
-      
-      // Belief revision status (v0.24.0+)
-      if (fact.supersededBy) {
-        console.log(`  ⚠️ Superseded by: ${fact.supersededBy}`);
-      }
-      if (fact.isCurrentBelief) {
-        console.log(`  ✅ Current belief`);
-      }
-    });
+  if (item.fact) {
+    console.log(`  Fact: ${item.fact.fact} (${item.fact.confidence}% confidence)`);
+    
+    // Belief revision status (v0.24.0+)
+    if (item.fact.supersededBy) {
+      console.log(`  ⚠️ Superseded by: ${item.fact.supersededBy}`);
+    }
+    if (item.fact.isCurrentBelief) {
+      console.log(`  ✅ Current belief`);
+    }
   }
 });
 

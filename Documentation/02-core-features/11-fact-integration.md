@@ -602,9 +602,13 @@ const currentPreferences = await cortex.facts.list({
 });
 
 // Or via recall API
-const memories = await cortex.memory.recall("user-123-space", "user preferences", {
-  factsFilter: {
-    isSuperseded: false,
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
+  sources: {
+    facts: {
+      isSuperseded: false,  // Current beliefs only
+    },
   },
 });
 ```
