@@ -214,8 +214,9 @@ interface Fact {
 
 ```typescript
 // Wraps L1-3 with simple interface
-await cortex.memory.remember({ memorySpaceId, ... }); // Stores in L1a + L2
-await cortex.memory.search(memorySpaceId, query); // Searches L2 + L3
+await cortex.memory.remember({ memorySpaceId, ... }); // Stores in L1a + L2 + L3
+await cortex.memory.recall({ memorySpaceId, query }); // Searches L2 + L3 + graph
+await cortex.memory.search(memorySpaceId, query); // Searches L2 (vector) only
 ```
 
 ## Creating Memory Spaces

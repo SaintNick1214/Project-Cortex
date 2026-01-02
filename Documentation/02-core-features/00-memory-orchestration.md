@@ -153,15 +153,17 @@ remember() call
 
 ### recall() - Retrieve with Full Orchestration
 
-`recall()` is the counterpart for retrieval. It searches across all layers, merges results, and returns ready-to-use context:
+> **New in v0.24.0**: `recall()` is the retrieval counterpart to `remember()`.
+
+`recall()` searches across all layers, merges results, and returns ready-to-use context:
 
 ```typescript
-const context = await cortex.memory.recall({
+const result = await cortex.memory.recall({
   memorySpaceId: "user-123-personal",
   query: "What are user's preferences?",
   
-  // Optional: Provide embedding for semantic search
-  generateEmbedding: async (query) => embed(query),
+  // Optional: Pre-computed embedding for better semantic search
+  embedding: await embed("What are user's preferences?"),
   
   // Optional: Filter options
   userId: "user-123",
@@ -169,9 +171,11 @@ const context = await cortex.memory.recall({
 });
 
 // Result includes unified context from all layers
-console.log(context.memories);  // Vector memories
-console.log(context.facts);     // Structured facts
-console.log(context.llmContext); // Ready-to-inject string for LLM
+console.log(result.items);          // Merged, deduped, ranked results
+console.log(result.sources.vector); // Vector memories breakdown
+console.log(result.sources.facts);  // Structured facts breakdown
+console.log(result.sources.graph);  // Graph-expanded entities
+console.log(result.context);        // Ready-to-inject LLM context string
 ```
 
 **What `recall()` does automatically:**
@@ -209,7 +213,7 @@ Both `remember()` and `recall()` are designed to work out-of-the-box with sensib
 | Vector Memory | Always created | Searchable memory entry |
 | Facts | Extracted if configured | LLM extracts structured facts |
 | Graph Sync | Enabled if configured | Syncs entities and relationships |
-| Belief Revision | Enabled if configured | Handles conflicting facts |
+| Belief Revision | Enabled if LLM configured (v0.24.0+) | Intelligently handles conflicting facts |
 
 ### recall() Defaults
 
@@ -245,12 +249,12 @@ await cortex.memory.remember({
 });
 
 // Retrieve relevant context
-const context = await cortex.memory.recall({
+const result = await cortex.memory.recall({
   memorySpaceId: "my-agent",
   query: "What is the user working on?",
 });
 
-console.log(context.llmContext);
+console.log(result.context);
 // "User is building a Next.js app..."
 ```
 
