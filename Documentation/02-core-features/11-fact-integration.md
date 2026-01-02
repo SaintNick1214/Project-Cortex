@@ -390,19 +390,21 @@ Access facts through the Facts API or via memory enrichment:
 ```typescript
 // Direct fact query
 const userFacts = await cortex.facts.list({
-  memorySpaceId: "agent-1",
+  memorySpaceId: "user-123-space",
   subject: "user-123",
   factType: "preference",
 });
 
 // Search facts
-const foodFacts = await cortex.facts.search("agent-1", "food preferences", {
+const foodFacts = await cortex.facts.search({
+  memorySpaceId: "user-123-space",
+  query: "food preferences",
   factType: "preference",
   minConfidence: 70,
 });
 
 // Via memory enrichment (recommended)
-const memories = await cortex.memory.search("agent-1", "user preferences", {
+const memories = await cortex.memory.search("user-123-space", "user preferences", {
   enrichConversation: true, // Facts automatically included
 });
 ```

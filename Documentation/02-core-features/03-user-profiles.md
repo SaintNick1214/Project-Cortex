@@ -193,11 +193,14 @@ await cortex.users.update("user-123", {
   },
 });
 
-// Get current with history
+// Get current profile
 const user = await cortex.users.get("user-123");
 console.log(user.version); // 2
 console.log(user.data.preferences.theme); // 'light'
-console.log(user.previousVersions[0].data.preferences.theme); // 'dark'
+
+// Access version history via getHistory()
+const history = await cortex.users.getHistory("user-123");
+console.log(history[0].data.preferences.theme); // 'dark' (previous version)
 
 // Update last seen (skip versioning for routine stats)
 await cortex.users.update(
@@ -582,38 +585,39 @@ async function manualGDPRDeletion(userId: string) {
 
 ### Search Users
 
-Find users with filters (same pattern as memory operations):
+Find users with supported filters:
 
 ```typescript
-// Find all pro users
-const proUsers = await cortex.users.search({
-  metadata: { tier: "pro" },
+// Search by displayName (client-side contains match)
+const alexUsers = await cortex.users.search({
+  displayName: "alex",
+  limit: 50,
 });
 
-// Find users by company
-const companyUsers = await cortex.users.search({
-  metadata: { company: "Acme Corp" },
+// Search by email
+const acmeUsers = await cortex.users.search({
+  email: "acme.com",
 });
 
-// Find inactive users
+// Search users created in the last 30 days
+const recentUsers = await cortex.users.search({
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
+  sortBy: "createdAt",
+  sortOrder: "desc",
+});
+
+// Search users not updated in 90 days
 const inactive = await cortex.users.search({
-  metadata: {
-    lastSeen: {
-      $lte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-    },
-  },
-});
-
-// Find users with specific preferences
-const darkModeUsers = await cortex.users.search({
-  preferences: { theme: "dark" },
+  updatedBefore: Date.now() - 90 * 24 * 60 * 60 * 1000,
 });
 ```
+
+> **Note:** The `displayName` and `email` filters are applied client-side. For filtering by custom fields like `metadata.tier`, retrieve users and filter in your application code.
 
 ### List Users (Paginated)
 
 ```typescript
-// List all users
+// List all users with pagination
 const page1 = await cortex.users.list({
   limit: 50,
   offset: 0,
@@ -621,13 +625,12 @@ const page1 = await cortex.users.list({
   sortOrder: "desc",
 });
 
-// List with filters
+console.log(`Retrieved ${page1.users.length} of ${page1.total} users`);
+console.log(`Has more: ${page1.hasMore}`);
+
+// List users created since October 2025
 const recentUsers = await cortex.users.list({
-  metadata: {
-    signupDate: {
-      $gte: new Date("2025-10-01"),
-    },
-  },
+  createdAfter: new Date("2025-10-01").getTime(),
   limit: 100,
 });
 ```
@@ -638,45 +641,41 @@ const recentUsers = await cortex.users.list({
 // Total user count
 const total = await cortex.users.count();
 
-// Count by tier
-const proCount = await cortex.users.count({
-  metadata: { tier: "pro" },
+// Count users created in the last 30 days
+const recentSignups = await cortex.users.count({
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
 });
 
-// Count active users (last 30 days)
-const activeCount = await cortex.users.count({
-  metadata: {
-    lastSeen: {
-      $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-    },
-  },
+// Count users active this week (based on updatedAt)
+const activeThisWeek = await cortex.users.count({
+  updatedAfter: Date.now() - 7 * 24 * 60 * 60 * 1000,
 });
+
+console.log(`New signups (30 days): ${recentSignups}`);
+console.log(`Active users (7 days): ${activeThisWeek}`);
 ```
 
 ### Bulk Operations
 
 ```typescript
-// Update multiple users
+// Update multiple users by explicit IDs
+const result = await cortex.users.updateMany(
+  ["user-1", "user-2", "user-3"],
+  { data: { welcomeEmailSent: true } },
+);
+console.log(`Updated ${result.updated} users`);
+
+// Update users by date filter (users created in last 7 days)
 await cortex.users.updateMany(
-  {
-    metadata: { tier: "free" },
-  },
-  {
-    preferences: {
-      newFeatureEnabled: true,
-    },
-  },
+  { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
+  { data: { welcomeEmailSent: true } },
 );
 
-// Delete inactive free users
-await cortex.users.deleteMany({
-  metadata: {
-    tier: "free",
-    lastSeen: {
-      $lte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000),
-    },
-  },
-});
+// Delete users not updated in 1 year (use with caution!)
+await cortex.users.deleteMany(
+  { updatedBefore: Date.now() - 365 * 24 * 60 * 60 * 1000 },
+  { cascade: true }, // Delete all associated data
+);
 ```
 
 ## Multi-Tenant Considerations
@@ -733,14 +732,17 @@ const tenantData = await cortex.users.export({
 const user = await cortex.users.get("user-123");
 
 console.log(`Current version: ${user.version}`);
-console.log(`Display name: ${user.displayName}`);
-console.log(`Theme: ${user.preferences.theme}`);
+console.log(`Display name: ${user.data.displayName}`);
+console.log(`Theme: ${user.data.preferences?.theme}`);
 
-// View all versions
-user.previousVersions?.forEach((v) => {
-  console.log(`v${v.version} (${v.timestamp}):`);
-  console.log(`  Display name: ${v.displayName}`);
-  console.log(`  Theme: ${v.preferences?.theme}`);
+// View all versions using getHistory()
+const history = await cortex.users.getHistory("user-123");
+
+console.log(`User has ${history.length} profile versions:`);
+history.forEach((v) => {
+  console.log(`v${v.version} (${new Date(v.timestamp).toISOString()}):`);
+  console.log(`  Display name: ${v.data.displayName}`);
+  console.log(`  Theme: ${v.data.preferences?.theme}`);
 });
 ```
 
@@ -761,24 +763,23 @@ console.log("Theme in August:", historicalProfile.preferences.theme);
 ```typescript
 // Analyze how preferences evolved
 async function analyzePreferenceChanges(userId: string) {
-  const user = await cortex.users.get(userId);
+  const history = await cortex.users.getHistory(userId);
 
   const changes = [];
-  let previous = user.previousVersions?.[user.previousVersions.length - 1];
 
-  for (const version of [...(user.previousVersions || []), user]) {
-    if (previous) {
-      // Detect changes
-      if (version.preferences?.theme !== previous.preferences?.theme) {
-        changes.push({
-          field: "theme",
-          from: previous.preferences?.theme,
-          to: version.preferences?.theme,
-          when: version.timestamp || version.updatedAt,
-        });
-      }
+  for (let i = 1; i < history.length; i++) {
+    const current = history[i];
+    const previous = history[i - 1];
+
+    // Detect theme changes
+    if (current.data.preferences?.theme !== previous.data.preferences?.theme) {
+      changes.push({
+        field: "theme",
+        from: previous.data.preferences?.theme,
+        to: current.data.preferences?.theme,
+        when: new Date(current.timestamp),
+      });
     }
-    previous = version;
   }
 
   return changes;
@@ -862,49 +863,54 @@ Sync with external systems:
 - CRM systems (Salesforce, HubSpot)
 - Identity providers (Okta, Azure AD)
 
-## Universal Filters for Users
+## Supported Filters
 
-> **Core Principle**: User operations support the same filter patterns as memory operations
+User operations support the following filter parameters:
 
 ```typescript
-// The same filters work for:
-const filters = {
-  metadata: {
-    tier: "pro",
-    signupDate: { $gte: new Date("2025-01-01") },
-  },
-  preferences: {
-    language: "en",
-  },
-};
+interface UserFilters {
+  // Pagination
+  limit?: number; // Max results (default: 50, max: 1000)
+  offset?: number; // Skip first N results
 
-// Search
-await cortex.users.search(filters);
+  // Date filters (Unix timestamps in milliseconds)
+  createdAfter?: number; // Users created after this time
+  createdBefore?: number; // Users created before this time
+  updatedAfter?: number; // Users updated after this time
+  updatedBefore?: number; // Users updated before this time
 
-// Count
-await cortex.users.count(filters);
+  // Sorting
+  sortBy?: "createdAt" | "updatedAt";
+  sortOrder?: "asc" | "desc";
 
-// List
-await cortex.users.list(filters);
-
-// Update many
-await cortex.users.updateMany(filters, { metadata: { reviewed: true } });
-
-// Delete many
-await cortex.users.deleteMany(filters);
-
-// Export
-await cortex.users.export(filters);
+  // Client-side filters (applied after fetching)
+  displayName?: string; // Contains match on data.displayName
+  email?: string; // Contains match on data.email
+}
 ```
 
-**Supported Filters:**
+**Example:**
 
-- `metadata.*` - Any metadata field with operators ($gte, $lte, $eq, etc.)
-- `preferences.*` - Any preference field
-- `createdBefore/After` - Date range for creation
-- `updatedBefore/After` - Date range for updates
-- `email` - Email address (exact or pattern match)
-- `displayName` - Name (exact or pattern match)
+```typescript
+// Search with supported filters
+const users = await cortex.users.search({
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,
+  displayName: "alex",
+  sortBy: "createdAt",
+  sortOrder: "desc",
+  limit: 50,
+});
+
+// Export with filters
+const exportData = await cortex.users.export({
+  format: "json",
+  filters: {
+    createdAfter: Date.now() - 90 * 24 * 60 * 60 * 1000,
+  },
+});
+```
+
+> **Note:** For filtering by custom data fields (like `metadata.tier`), retrieve users with date filters and apply additional filtering in your application code.
 
 ## Best Practices
 

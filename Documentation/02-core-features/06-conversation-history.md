@@ -508,6 +508,8 @@ async function summarizeConversation(conversationId: string) {
 
 Track conversation topics:
 
+> **Note**: Direct conversation metadata updates are not currently supported in the API. Store conversation-level metadata through custom mutable store entries or use conversation tags during creation.
+
 ```typescript
 async function extractConversationTopics(conversationId: string) {
   const history = await cortex.conversations.getHistory(conversationId);
@@ -516,12 +518,10 @@ async function extractConversationTopics(conversationId: string) {
   const allText = history.map((m) => m.content).join(" ");
   const topics = await extractTopics(allText); // Your topic extraction
 
-  // Store as metadata
-  await cortex.conversations.update(conversationId, {
-    metadata: {
-      topics,
-      topicsExtractedAt: new Date(),
-    },
+  // Store topics in mutable store for this conversation
+  await cortex.mutable.set(`conversation-topics:${conversationId}`, {
+    topics,
+    topicsExtractedAt: new Date().toISOString(),
   });
 
   return topics;
@@ -530,10 +530,10 @@ async function extractConversationTopics(conversationId: string) {
 
 ### Message Threading
 
-Link related messages:
+Link related messages using message metadata:
 
 ```typescript
-// Store message with thread reference
+// Store message with thread reference in metadata
 await cortex.conversations.addMessage("conv-123", {
   role: "user",
   content: "Actually, about what I said earlier...",
@@ -544,8 +544,12 @@ await cortex.conversations.addMessage("conv-123", {
   },
 });
 
-// Retrieve thread
-const thread = await cortex.conversations.getThread("conv-123", "thread-456");
+// Retrieve messages with thread filter
+const threadMessages = await cortex.conversations.getHistory("conv-123", {
+  filter: {
+    "metadata.threadId": "thread-456",
+  },
+});
 ```
 
 ## Real-World Patterns
@@ -1077,8 +1081,8 @@ await cortex.conversations.addMessage(a2aConversationId, {
 ### 2. Handle Long Conversations
 
 ```typescript
-// Summarize and trim long conversations
-async function maintainConversation(conversationId: string) {
+// For long conversations, summarize and store as separate knowledge
+async function maintainConversation(conversationId: string, memorySpaceId: string) {
   const conversation = await cortex.conversations.get(conversationId);
 
   if (conversation.messageCount > 100) {
@@ -1090,17 +1094,22 @@ async function maintainConversation(conversationId: string) {
 
     const summary = await summarizeMessages(older);
 
-    // Store summary as first message
-    await cortex.conversations.prependMessage(conversationId, {
-      role: "system",
-      content: `[Summary of previous discussion: ${summary}]`,
-      metadata: { type: "summary" },
+    // Store summary as a vector memory for future retrieval
+    await cortex.vector.store(memorySpaceId, {
+      content: `Conversation summary: ${summary}`,
+      contentType: "summarized",
+      embedding: await embed(summary),
+      source: { type: "system", timestamp: new Date() },
+      conversationRef: { conversationId, messageIds: [] },
+      metadata: {
+        importance: 70,
+        tags: ["summary", "conversation"],
+      },
     });
 
-    // Archive old messages
-    await cortex.conversations.archiveMessages(conversationId, {
-      olderThan: older[older.length - 1].timestamp,
-    });
+    // Note: ACID conversations are immutable and append-only.
+    // Old messages remain in the conversation for audit/compliance.
+    // Use vector memory search to retrieve summaries for context.
   }
 }
 ```

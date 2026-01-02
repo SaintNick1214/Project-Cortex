@@ -335,7 +335,6 @@ await cortex.memory.remember({
   userMessage: "My name is Alice",
   agentResponse: "Nice to meet you, Alice!",
   userId: "user-123",
-  agentId: "agent-1",
   userName: "Alice",
   extractFacts: async (user, agent) => [
     {
@@ -356,7 +355,6 @@ await cortex.memory.remember({
   userMessage: "Remember, I'm Alice",
   agentResponse: "Of course, Alice!",
   userId: "user-123",
-  agentId: "agent-1",
   userName: "Alice",
   extractFacts: async (user, agent) => [
     {
@@ -539,13 +537,13 @@ async function updateFact(
   const embedding = await embed(newFactText);
 
   // Find vector entry for this fact
-  const vectorEntries = await cortex.memory.search("agent-1", "*", {
+  const vectorEntries = await cortex.memory.search(memorySpaceId, "*", {
     immutableRef: { type: "fact", id: existingFactId },
     limit: 1,
   });
 
   if (vectorEntries.length > 0) {
-    await cortex.memory.update("agent-1", vectorEntries[0].id, {
+    await cortex.vector.update(memorySpaceId, vectorEntries[0].id, {
       content: newFactText,
       embedding,
       conversationRef: source,
@@ -885,7 +883,7 @@ Output JSON:
 
 ```typescript
 // Search facts semantically
-const facts = await cortex.memory.search("agent-1", "user employment", {
+const facts = await cortex.memory.search(memorySpaceId, "user employment", {
   embedding: await embed("user employment"),
   userId: "user-123",
   contentType: "fact", // Only search facts
@@ -903,7 +901,7 @@ console.log(
 
 ```typescript
 // Get only preference facts
-const preferences = await cortex.memory.search("agent-1", "*", {
+const preferences = await cortex.memory.search(memorySpaceId, "*", {
   userId: "user-123",
   contentType: "fact",
   metadata: { category: "preference" },
@@ -912,7 +910,7 @@ const preferences = await cortex.memory.search("agent-1", "*", {
 });
 
 // Get only events
-const events = await cortex.memory.search("agent-1", "*", {
+const events = await cortex.memory.search(memorySpaceId, "*", {
   userId: "user-123",
   contentType: "fact",
   metadata: { category: "event" },

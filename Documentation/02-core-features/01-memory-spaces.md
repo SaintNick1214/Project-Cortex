@@ -249,10 +249,14 @@ Register the space with metadata for analytics and tracking:
 ```typescript
 // Register once
 await cortex.memorySpaces.register({
-  id: "user-123-personal",
+  memorySpaceId: "user-123-personal",
   name: "Alice's Personal AI Memory",
   type: "personal",
-  participants: ["cursor", "claude", "notion-ai"], // For Hive Mode
+  participants: [
+    { id: "cursor", type: "ai-tool" },
+    { id: "claude", type: "ai-tool" },
+    { id: "notion-ai", type: "ai-tool" },
+  ], // For Hive Mode
   metadata: {
     owner: "user-123",
     environment: "production",
@@ -426,7 +430,7 @@ memories.forEach((m) => {
 ```typescript
 // 1. Create (implicit or explicit)
 await cortex.memorySpaces.register({
-  id: "project-apollo",
+  memorySpaceId: "project-apollo",
   name: "Apollo Project Memory",
   type: "project",
 });
@@ -473,7 +477,7 @@ await cortex.memorySpaces.reactivate("old-project-space");
 ### Memory Space Stats
 
 ```typescript
-const stats = await cortex.analytics.getMemorySpaceStats("user-123-personal");
+const stats = await cortex.memorySpaces.getStats("user-123-personal");
 
 console.log(stats);
 // {
@@ -514,9 +518,7 @@ const prodSpaces = await cortex.memorySpaces.list({
 });
 
 // Search by name
-const apolloSpaces = await cortex.memorySpaces.search({
-  query: "apollo",
-});
+const apolloSpaces = await cortex.memorySpaces.search("apollo");
 ```
 
 ## Use Cases
@@ -686,7 +688,7 @@ await cortex.memory.remember({ memorySpaceId: "test-space", ... });
 
 // Production: Explicit registration
 await cortex.memorySpaces.register({
-  id: "user-123-personal",
+  memorySpaceId: "user-123-personal",
   name: "Alice's Personal Space",
   type: "personal",
   metadata: { environment: "production" },
@@ -858,6 +860,7 @@ await cortex.memory.remember({
 
 **Next Steps:**
 
+- [Memory Orchestration](./00-memory-orchestration.md) - Understand how all layers work together
 - [Hive Mode Guide](./10-hive-mode.md) - Learn multi-tool memory sharing
 - [A2A Communication](./05-a2a-communication.md) - Learn Collaboration Mode
 - [Context Chains](./04-context-chains.md) - Learn cross-space delegation
