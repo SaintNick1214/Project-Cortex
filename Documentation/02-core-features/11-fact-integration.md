@@ -1,6 +1,6 @@
 # Fact Integration in Memory API
 
-> **Last Updated**: 2025-10-31
+> **Last Updated**: 2026-01-01
 
 Automatic extraction and storage of structured facts from conversations, integrated into Cortex's 4-layer architecture.
 
@@ -537,13 +537,86 @@ for (const conversation of conversations) {
 await Promise.all(pendingExtractions);
 ```
 
+## Belief Revision Integration (v0.24.0+)
+
+> **New in v0.24.0**: Facts now support intelligent conflict resolution via the Belief Revision System.
+
+When using `memory.remember()` with fact extraction, Cortex automatically handles conflicting facts:
+
+```typescript
+// First conversation
+await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  conversationId: "conv-1",
+  userMessage: "My favorite color is blue",
+  agentResponse: "I'll remember that!",
+  userId: "user-123",
+  userName: "Alex",
+  extractFacts: async () => [{
+    fact: "User's favorite color is blue",
+    factType: "preference",
+    subject: "user-123",
+    predicate: "favoriteColor",
+    object: "blue",
+    confidence: 90,
+  }],
+});
+
+// Later conversation - color changed!
+await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  conversationId: "conv-2",
+  userMessage: "Actually, red is my favorite now",
+  agentResponse: "Got it!",
+  userId: "user-123",
+  userName: "Alex",
+  extractFacts: async () => [{
+    fact: "User's favorite color is red",
+    factType: "preference",
+    subject: "user-123",
+    predicate: "favoriteColor",
+    object: "red",
+    confidence: 95,  // Higher confidence
+  }],
+});
+
+// The Belief Revision System:
+// 1. Detects conflict (same subject + predicate)
+// 2. Compares confidence scores
+// 3. Supersedes the "blue" fact with the "red" fact
+// 4. Maintains history for audit trail
+```
+
+### Query Only Current Beliefs
+
+Exclude superseded facts in queries:
+
+```typescript
+// Get only current beliefs (exclude superseded)
+const currentPreferences = await cortex.facts.list({
+  memorySpaceId: "user-123-space",
+  factType: "preference",
+  isSuperseded: false,  // Current beliefs only
+});
+
+// Or via recall API
+const memories = await cortex.memory.recall("user-123-space", "user preferences", {
+  factsFilter: {
+    isSuperseded: false,
+  },
+});
+```
+
+For complete Belief Revision documentation, see **[Fact Extraction](./08-fact-extraction.md)**.
+
 ## Next Steps
 
 - **[Semantic Search](./02-semantic-search.md)** - Query facts via memory search
 - **[Context Chains](./04-context-chains.md)** - Propagate facts across agents
-- **[Facts API Reference](../03-api-reference/14-facts-operations.md)** - Complete facts API documentation
-- **[Memory API Reference](../03-api-reference/02-memory-operations.md)** - Memory operations with fact integration
-- **[Fact Extraction (Storage Trade-offs)](./08-fact-extraction.md)** - Detailed analysis of facts vs raw storage
+- **[Fact Extraction](./08-fact-extraction.md)** - Detailed analysis including Belief Revision System
+- **[Graph Integration](./16-graph-integration.md)** - Entity relationships and knowledge graphs
+- **[Governance Policies](./15-governance-policies.md)** - Configure fact retention rules
+- **[Facts API Reference](../03-api-reference/12-facts-operations.md)** - Complete facts API documentation
 
 ---
 

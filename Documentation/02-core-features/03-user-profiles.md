@@ -1,6 +1,6 @@
 # User Profiles
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Rich user context and preferences that persist across all agents and conversations.
 

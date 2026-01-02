@@ -1,6 +1,6 @@
 # Agent-to-Agent (A2A) Communication
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Convenience helpers for inter-agent communication built on top of Agent Memory.
 

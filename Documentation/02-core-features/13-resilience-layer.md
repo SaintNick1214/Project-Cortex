@@ -1,6 +1,6 @@
 # Resilience Layer
 
-> **Last Updated**: 2025-12-01
+> **Last Updated**: 2026-01-01
 > **Version**: v0.16.0+
 
 Built-in protection against server overload with automatic rate limiting, concurrency control, and circuit breakers.
