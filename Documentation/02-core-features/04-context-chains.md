@@ -125,9 +125,9 @@ interface Context {
   status: "active" | "completed" | "cancelled" | "blocked";
 
   // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
-  completedAt?: Date;
+  createdAt: number; // Unix timestamp (milliseconds)
+  updatedAt: number; // Unix timestamp (milliseconds)
+  completedAt?: number; // Unix timestamp (milliseconds)
 
   // Version History (AUTOMATIC)
   version: number; // Current version
@@ -137,9 +137,9 @@ interface Context {
 interface ContextVersion {
   version: number;
   status: string;
-  data: any;
-  timestamp: Date;
-  updatedBy: string; // Which agent made the change
+  data: Record<string, unknown>;
+  timestamp: number; // Unix timestamp (milliseconds)
+  updatedBy?: string; // Which memory space made the change
 }
 ```
 
@@ -175,19 +175,19 @@ const context = await cortex.contexts.create({
   },
 });
 
-console.log(context.id); // "ctx_abc123"
+console.log(context.contextId); // "ctx-1234567890-abc123"
 console.log(context.depth); // 0 (root level)
-console.log(context.data.importance); // 85
+console.log(context.data?.importance); // 85
 
 // Can trace back to original user conversation
 if (context.conversationRef) {
   const conversation = await cortex.conversations.get(
     context.conversationRef.conversationId,
   );
-  const triggerMessage = conversation.messages.find((m) =>
-    context.conversationRef.messageIds.includes(m.id),
+  const triggerMessage = conversation?.messages.find((m) =>
+    context.conversationRef?.messageIds?.includes(m.id),
   );
-  console.log("Original request:", triggerMessage.text);
+  console.log("Original request:", triggerMessage?.content);
 }
 ```
 
@@ -199,7 +199,7 @@ const financeContext = await cortex.contexts.create({
   purpose: "Approve and process $500 refund",
   memorySpaceId: "finance-agent-space",
   userId: "user-123", // Same user as parent
-  parentId: context.id, // Link to parent
+  parentId: context.contextId, // Link to parent
 
   // Child inherits conversationRef from parent (optional)
   conversationRef: context.conversationRef,
@@ -218,7 +218,7 @@ const customerContext = await cortex.contexts.create({
   purpose: "Send apology email and offer discount",
   memorySpaceId: "customer-relations-agent-space",
   userId: "user-123",
-  parentId: context.id,
+  parentId: context.contextId,
   conversationRef: context.conversationRef, // Same source conversation
   data: {
     importance: 75, // Slightly lower than refund processing
@@ -237,7 +237,7 @@ Any agent can access the complete chain:
 
 ```typescript
 // Finance agent looks up full context
-const fullContext = await cortex.contexts.get(financeContext.id, {
+const fullContext = await cortex.contexts.get(financeContext.contextId, {
   includeChain: true,
 });
 
@@ -258,29 +258,29 @@ Updates automatically create versions:
 
 ```typescript
 // Update status (creates version 2)
-await cortex.contexts.update(financeContext.id, {
+await cortex.contexts.update(financeContext.contextId, {
   status: "completed",
   data: {
     approved: true,
     approvedBy: "finance-agent",
-    approvedAt: new Date(),
+    approvedAt: Date.now(),
     confirmationNumber: "REF-789",
   },
 });
 
 // View version history
-const ctx = await cortex.contexts.get(financeContext.id);
+const ctx = await cortex.contexts.get(financeContext.contextId);
 console.log(`Current status: ${ctx.status} (v${ctx.version})`);
-console.log(`Previous status: ${ctx.previousVersions[0].status} (v1)`);
+console.log(`Previous status: ${ctx.previousVersions?.[0]?.status} (v1)`);
 
 // Parent can check children status
-const chain = await cortex.contexts.get(context.id, { includeChain: true });
+const chain = await cortex.contexts.get(context.contextId, { includeChain: true });
 const allComplete = chain.children.every((c) => c.status === "completed");
 
 if (allComplete) {
-  await cortex.contexts.update(context.id, {
+  await cortex.contexts.update(context.contextId, {
     status: "completed",
-    completedAt: new Date(),
+    completedAt: Date.now(),
   });
 }
 ```
@@ -876,10 +876,44 @@ await cortex.contexts.deleteMany({
 });
 ```
 
+## Graph Integration (v0.7.0+)
+
+Context chains can be synced to graph databases for advanced queries:
+
+```typescript
+// Create context with graph sync
+await cortex.contexts.create(
+  {
+    purpose: "Process refund request",
+    memorySpaceId: "supervisor-space",
+    userId: "user-123",
+  },
+  { syncToGraph: true } // Sync to graph!
+);
+
+// Query hierarchy via graph (much faster for deep chains)
+const hierarchy = await graphAdapter.query(`
+  MATCH (root:Context {contextId: $contextId})
+  MATCH path = (root)<-[:CHILD_OF*0..10]-(descendants:Context)
+  RETURN descendants
+  ORDER BY descendants.depth
+`, { contextId: root.contextId });
+// Result: Entire hierarchy in <10ms!
+```
+
+**Performance:** 3.8x faster for deep hierarchies (7+ levels)
+
+See [Graph Operations API](../03-api-reference/13-graph-operations.md) for complete graph integration.
+
+---
+
 ## Next Steps
 
+- **[Context Operations API](../03-api-reference/05-context-operations.md)** - Complete API reference
 - **[A2A Communication](./05-a2a-communication.md)** - Agent-to-agent messaging
-- **[API Reference](../03-api-reference/05-context-operations.md)** - Context API docs
+- **[Graph Integration](./16-graph-integration.md)** - Advanced graph capabilities
+- **[Memory Spaces](./01-memory-spaces.md)** - Understanding isolation
+- **[Governance Policies](../03-api-reference/10-governance-policies-api.md)** - Retention rules for contexts
 
 ---
 

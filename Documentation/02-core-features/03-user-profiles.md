@@ -20,33 +20,40 @@ User profiles exist for **ONE critical reason**: **GDPR-compliant cascade deleti
 
 ## Core Concept: GDPR Cascade Deletion
 
-> **Cortex Cloud Only**: Automatic cascade deletion requires Cortex Cloud connection.
+> **Fully Implemented in SDK**: Cascade deletion with verification and rollback is available in the free SDK. Cloud Mode adds legal certificates and guarantees.
 
-**Cortex Cloud** enables **one-click deletion** of all user data across the entire system:
+The SDK enables **one-click deletion** of all user data across the entire system:
 
 ```typescript
-// Cortex Cloud: GDPR "right to be forgotten" - ONE call
+// SDK (Free) & Cloud Mode: GDPR "right to be forgotten" - ONE call
 const result = await cortex.users.delete("user-123", { cascade: true });
 
 // Automatically deletes from:
 // ✅ User profile (immutable type='user')
-// ✅ Layer 1a: All conversations with userId='user-123'
+// ✅ Layer 1a: All conversations with userId='user-123' (across ALL memory spaces)
 // ✅ Layer 1b: All immutable records with userId='user-123'
 // ✅ Layer 1c: All mutable keys with userId='user-123'
-// ✅ Layer 2: All vector memories with userId='user-123' (across ALL agents)
+// ✅ Layer 2: All vector memories with userId='user-123' (across ALL memory spaces)
+// ✅ Layer 3: All facts with userId='user-123' (across ALL memory spaces)
+// ✅ Sessions: All sessions with userId='user-123'
+// ✅ Graph: All nodes with userId property (if graph adapter configured)
 
-console.log(`Total records deleted: ${result.totalRecordsDeleted}`);
+console.log(`Total records deleted: ${result.totalDeleted}`);
+console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
 // Could be hundreds or thousands of records across all stores
 ```
 
-**Why Cortex Cloud cascade matters:**
+**SDK vs Cloud Mode:**
 
-- ✅ **1 line of code** vs ~40 lines manual (saves development time)
-- ✅ **Atomic deletion** (all or nothing transaction)
-- ✅ **Complete audit trail** automatically generated
-- ✅ **Granular control** (preserve specific layers if needed)
-- ✅ **No missed stores** (automatic discovery)
-- ✅ **Enterprise-ready** compliance documentation
+| Feature              | SDK (Free)             | Cloud Mode (Planned)    |
+| -------------------- | ---------------------- | ----------------------- |
+| **Cascade Deletion** | ✅ Full implementation | ✅ Same implementation  |
+| **Verification**     | ✅ Automatic           | ✅ + Cryptographic proof |
+| **Rollback**         | ✅ Automatic           | ✅ + Audit trail        |
+| **Graph Support**    | ✅ DIY adapter         | ✅ Managed, zero-config |
+| **Legal Certificate**| ❌ Not included        | ✅ Compliance document  |
+
+The SDK provides the **technical capability**, Cloud Mode provides the **legal guarantees**.
 
 **Architecture:**
 
@@ -81,21 +88,21 @@ User profiles have a **flexible structure** - only `id` is required:
 interface UserProfile {
   // Identity (REQUIRED)
   id: string; // User ID
+  tenantId?: string; // Multi-tenancy isolation (auto-injected from AuthContext)
 
   // User Data (FLEXIBLE - any structure you want!)
-  data: Record<string, any>; // Completely customizable
+  data: Record<string, unknown>; // Completely customizable
 
   // System fields (automatic)
   version: number;
-  createdAt: Date;
-  updatedAt: Date;
-  previousVersions?: UserVersion[];
+  createdAt: number; // Unix timestamp (milliseconds)
+  updatedAt: number; // Unix timestamp (milliseconds)
 }
 
 interface UserVersion {
   version: number;
-  data: Record<string, any>;
-  timestamp: Date;
+  data: Record<string, unknown>;
+  timestamp: number; // Unix timestamp (milliseconds)
 }
 ```
 
@@ -103,29 +110,28 @@ interface UserVersion {
 
 ```typescript
 // Common pattern for user data structure
+// NOTE: users.update() accepts data fields DIRECTLY (not wrapped in 'data' object)
 await cortex.users.update("user-123", {
-  data: {
-    displayName: "Alex Johnson", // Display name
-    email: "alex@example.com", // Contact
+  displayName: "Alex Johnson", // Display name
+  email: "alex@example.com", // Contact
 
-    // Preferences (your structure)
-    preferences: {
-      theme: "dark",
-      language: "en",
-      timezone: "America/New_York",
-      communicationStyle: "friendly",
-    },
-
-    // Metadata (your structure)
-    metadata: {
-      tier: "pro",
-      signupDate: new Date(),
-      company: "Acme Corp",
-    },
-
-    // Add ANY custom fields
-    customField: "anything you want!",
+  // Preferences (your structure)
+  preferences: {
+    theme: "dark",
+    language: "en",
+    timezone: "America/New_York",
+    communicationStyle: "friendly",
   },
+
+  // Metadata (your structure)
+  metadata: {
+    tier: "pro",
+    signupDate: Date.now(), // Unix timestamp (milliseconds)
+    company: "Acme Corp",
+  },
+
+  // Add ANY custom fields
+  customField: "anything you want!",
 });
 ```
 
@@ -139,20 +145,21 @@ await cortex.users.update("user-123", {
 
 ```typescript
 // Create or update user profile
+// NOTE: users.update() accepts data fields directly
 await cortex.users.update("user-123", {
-  data: {
-    displayName: "Alex Johnson",
-    email: "alex@example.com",
-    preferences: {
-      theme: "dark",
-      language: "en",
-      timezone: "America/Los_Angeles",
-      communicationStyle: "friendly",
-    },
-    tier: "pro",
-    signupDate: new Date(),
-    company: "Acme Corp",
+  displayName: "Alex Johnson",
+  email: "alex@example.com",
+  preferences: {
+    theme: "dark",
+    language: "en",
+    timezone: "America/Los_Angeles",
+    communicationStyle: "friendly",
   },
+  metadata: {
+    tier: "pro",
+    signupDate: Date.now(), // Unix timestamp (milliseconds)
+  },
+  company: "Acme Corp",
 });
 ```
 
@@ -175,21 +182,17 @@ Updates automatically preserve previous versions:
 ```typescript
 // Original profile
 await cortex.users.update("user-123", {
-  data: {
-    displayName: "Alex",
-    preferences: {
-      theme: "dark",
-      language: "en",
-    },
+  displayName: "Alex",
+  preferences: {
+    theme: "dark",
+    language: "en",
   },
 });
 
-// Update theme (creates v2, preserves v1)
+// Update theme (creates v2, preserves v1 - automatic deep merge)
 await cortex.users.update("user-123", {
-  data: {
-    preferences: {
-      theme: "light", // Only updates theme, merges with existing
-    },
+  preferences: {
+    theme: "light", // Only updates theme, merges with existing
   },
 });
 
@@ -202,18 +205,14 @@ console.log(user.data.preferences.theme); // 'light'
 const history = await cortex.users.getHistory("user-123");
 console.log(history[0].data.preferences.theme); // 'dark' (previous version)
 
-// Update last seen (skip versioning for routine stats)
-await cortex.users.update(
-  "user-123",
-  {
-    data: {
-      lastSeen: new Date(),
-    },
+// Update last seen (creates version - skipVersioning not yet implemented)
+await cortex.users.update("user-123", {
+  metadata: {
+    lastSeen: Date.now(), // Unix timestamp (milliseconds)
   },
-  {
-    skipVersioning: true, // Don't create version for stats
-  },
-);
+});
+
+// Note: Skip versioning option is planned for a future release
 ```
 
 ### Deleting Profiles
@@ -222,17 +221,35 @@ await cortex.users.update(
 // Delete user profile only
 await cortex.users.delete("user-123");
 
-// Delete with cascade (also delete user's data in all agent memories)
+// Delete with cascade (SDK implements full cascade)
 const result = await cortex.users.delete("user-123", {
-  cascade: true, // Delete from all agents
+  cascade: true, // Delete from all layers
+  verify: true,  // Verify deletion completeness (default)
 });
 
 console.log(result);
 // {
-//   profileDeleted: true,
-//   memoriesDeleted: 145,
-//   agentsAffected: ['agent-1', 'agent-2', 'agent-3'],
-//   deletedAt: Date
+//   userId: "user-123",
+//   deletedAt: 1735689600000, // Unix timestamp
+//   
+//   // Per-layer deletion counts
+//   conversationsDeleted: 15,
+//   conversationMessagesDeleted: 234,
+//   immutableRecordsDeleted: 5,
+//   mutableKeysDeleted: 12,
+//   vectorMemoriesDeleted: 145,
+//   factsDeleted: 89,
+//   graphNodesDeleted: 47,  // undefined if no graph adapter
+//   
+//   // Verification
+//   verification: {
+//     complete: true,
+//     issues: []
+//   },
+//   
+//   // Summary
+//   totalDeleted: 547,
+//   deletedLayers: ['conversations', 'immutable', 'mutable', 'vector', 'facts', 'graph', 'user-profile']
 // }
 
 // GDPR-compliant deletion with audit trail
@@ -242,20 +259,23 @@ async function handleGDPRDeletion(userId: string, requestedBy: string) {
     action: "gdpr-deletion-request",
     userId,
     requestedBy,
-    timestamp: new Date(),
+    timestamp: Date.now(),
   });
 
-  // Delete everything
+  // Delete everything with verification
   const result = await cortex.users.delete(userId, {
     cascade: true,
-    auditReason: "GDPR right to be forgotten request",
+    verify: true, // Verify nothing was missed
   });
 
   // Log completion
   await auditLog.record({
     action: "gdpr-deletion-complete",
     userId,
-    ...result,
+    totalDeleted: result.totalDeleted,
+    layers: result.deletedLayers,
+    verificationComplete: result.verification.complete,
+    timestamp: Date.now(),
   });
 
   return result;
@@ -285,7 +305,7 @@ async function respondToUser(
       },
       metadata: {
         tier: "free",
-        signupDate: new Date(),
+        signupDate: Date.now(), // Unix timestamp (milliseconds)
         firstMessage: message,
       },
     });
@@ -307,13 +327,12 @@ async function respondToUser(
   }
 
   // Update last seen
-  await cortex.users.update(
-    userId,
-    {
-      metadata: { lastSeen: new Date() },
+  await cortex.users.update(userId, {
+    metadata: { 
+      lastSeen: Date.now(), // Unix timestamp (milliseconds)
     },
-    { skipVersioning: true },
-  );
+  });
+  // Note: Every update creates a version. skipVersioning is planned for future release.
 
   return response;
 }
@@ -482,21 +501,23 @@ Build user profiles over time:
 ```typescript
 async function learnFromConversation(userId: string, conversation: string) {
   const user = await cortex.users.get(userId);
+  const existingData = user?.data || {};
 
   // Extract information from conversation
   const insights = await extractUserInsights(conversation);
 
-  // Update profile incrementally
+  // Update profile incrementally (automatically deep merges)
   await cortex.users.update(userId, {
-    displayName: insights.name || user.displayName,
+    displayName: insights.name || existingData.displayName,
+    email: insights.email || existingData.email,
     preferences: {
-      ...user.preferences,
-      ...insights.preferences,
+      ...(existingData.preferences || {}),
+      ...insights.preferences,  // Add new preferences
     },
     metadata: {
-      ...user.metadata,
-      lastSeen: new Date(),
-      conversationCount: (user.metadata.conversationCount || 0) + 1,
+      ...(existingData.metadata || {}),
+      lastSeen: Date.now(),
+      conversationCount: ((existingData.metadata?.conversationCount as number) || 0) + 1,
     },
   });
 }
@@ -508,76 +529,72 @@ Sync with user-facing preferences:
 
 ```typescript
 // User updates preferences in your UI
-async function handlePreferenceChange(userId: string, changes: any) {
+async function handlePreferenceChange(userId: string, section: string, value: unknown) {
+  // Update just that preference section (deep merges automatically)
   await cortex.users.update(userId, {
-    preferences: changes,
+    preferences: {
+      [section]: value,
+    },
   });
 
   // All agents immediately see the change
-  const user = await cortex.users.get(userId);
-  applyPreferences(user.preferences);
+  console.log("Preference updated across all agents");
 }
 ```
 
 ### Pattern 4: GDPR Compliance
 
-**Cortex Cloud (Automatic):**
+**SDK Implementation (Automatic Cascade):**
 
 ```typescript
 async function handleDataDeletionRequest(userId: string) {
-  // Cortex Cloud: One-click cascade deletion
+  // Export data first (GDPR requirement)
+  const exportData = await cortex.users.export({
+    format: "json",
+    filters: { displayName: userId }, // or use other filter criteria
+    includeVersionHistory: true,
+    includeConversations: true,
+    includeMemories: true,
+  });
+  
+  // Save export
+  await saveToFile(`gdpr-export-${userId}.json`, exportData);
+
+  // SDK: One-click cascade deletion with verification
   const result = await cortex.users.delete(userId, {
     cascade: true,
-    auditReason: "GDPR right to be forgotten request",
+    verify: true, // Verify nothing was missed
   });
 
   console.log(`GDPR deletion complete for user ${userId}`);
-  console.log(`- Profile deleted: ${result.profileDeleted}`);
-  console.log(`- Total records: ${result.totalRecordsDeleted}`);
-  console.log(`- Agents affected: ${result.agentsAffected.join(", ")}`);
+  console.log(`- Conversations deleted: ${result.conversationsDeleted}`);
+  console.log(`- Vector memories deleted: ${result.vectorMemoriesDeleted}`);
+  console.log(`- Facts deleted: ${result.factsDeleted}`);
+  console.log(`- Graph nodes deleted: ${result.graphNodesDeleted || "N/A"}`);
+  console.log(`- Total records: ${result.totalDeleted}`);
+  console.log(`- Verification: ${result.verification.complete ? "Complete" : "Issues found"}`);
 
   return result;
-  // Done in 1 line! ✅
+  // Done with SDK cascade! ✅
 }
 ```
 
-**Direct Mode (Manual):**
+**With Dry Run (Preview Before Deletion):**
 
 ```typescript
-async function manualGDPRDeletion(userId: string) {
-  const deletionLog = [];
+// Preview what would be deleted
+const preview = await cortex.users.delete(userId, {
+  cascade: true,
+  dryRun: true, // Just preview, don't delete
+});
 
-  // 1. Export user data first (GDPR requirement)
-  const agents = await cortex.agents.list();
-  for (const agent of agents) {
-    const userData = await cortex.memory.export(agent.id, {
-      userId: userId,
-      format: "json",
-    });
-    if (userData.length > 0) {
-      await saveToFile(`gdpr-export-${userId}-${agent.id}.json`, userData);
-    }
-  }
+console.log(`Would delete ${preview.totalDeleted} records`);
+console.log(`Conversations: ${preview.conversationsDeleted}`);
+console.log(`Memories: ${preview.vectorMemoriesDeleted}`);
 
-  // 2. Delete from all agents using deleteMany
-  for (const agent of agents) {
-    const result = await cortex.memory.deleteMany(agent.id, {
-      userId: userId, // Universal filter!
-    });
-
-    if (result.deleted > 0) {
-      deletionLog.push({
-        memorySpaceId: agent.id,
-        deleted: result.deleted,
-      });
-    }
-  }
-
-  // 3. Delete user profile
-  await cortex.users.delete(userId);
-
-  console.log(`Deleted all data for user ${userId}`);
-  return deletionLog;
+// If acceptable, execute actual deletion
+if (preview.totalDeleted < 10000) {
+  await cortex.users.delete(userId, { cascade: true });
 }
 ```
 
@@ -678,50 +695,75 @@ await cortex.users.deleteMany(
 );
 ```
 
-## Multi-Tenant Considerations
+## Multi-Tenancy Support
 
-### Tenant Isolation
+> **Recommended:** Use AuthContext for automatic tenant isolation in multi-tenant apps.
 
-If building multi-tenant apps, include tenant ID:
+### Automatic Tenant Injection
 
 ```typescript
-// User ID includes tenant
-const userId = `${tenantId}:${userLocalId}`;
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
-// Or use metadata
-await cortex.users.update(userId, {
-  displayName: "Alex",
-  metadata: {
-    tenantId: "tenant-abc",
-    role: "admin",
-  },
+// Initialize with tenant context
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    tenantId: "customer-acme",  // Tenant isolation
+    userId: "admin-user",
+    sessionId: "session-xyz",
+  }),
 });
 
-// Query by tenant (universal filters work here too!)
-const tenantUsers = await cortex.users.search({
-  metadata: { tenantId: "tenant-abc" },
+// All user operations automatically scoped to tenant
+await cortex.users.update("user-123", {
+  // tenantId: "customer-acme" ← Auto-injected
+  displayName: "Alex Johnson",
+  email: "alex@acme.com",
+  role: "admin",
 });
 
-// Count users per tenant
-const count = await cortex.users.count({
-  metadata: { tenantId: "tenant-abc" },
-});
+// Queries automatically filtered by tenant
+const users = await cortex.users.list({ limit: 100 });
+// Only returns users for tenant "customer-acme"
 
-// Export tenant data (includes user profiles, can link to memories)
-const tenantData = await cortex.users.export({
-  metadata: { tenantId: "tenant-abc" },
-  format: "json",
-  includeMemories: true, // Optional: export user's memories too
-});
+// Count users in tenant
+const count = await cortex.users.count();
+// Only counts users for tenant "customer-acme"
 
-// Export will include:
-// - User profiles
-// - Associated vector memories (if includeMemories=true)
-// - conversationRef links to ACID conversations
-// - Can optionally export full conversations from ACID
+// GDPR cascade respects tenant boundaries
+await cortex.users.delete("user-123", { cascade: true });
+// Only deletes user-123 data within "customer-acme" tenant
 ```
 
-> **Note**: User profiles are NOT stored in ACID conversations or vector memories. They're a separate entity type in Convex, but memories can reference users via `userId` field.
+### Per-Tenant User Management
+
+```typescript
+// List users for a tenant
+const result = await cortex.users.list({
+  tenantId: "customer-acme",  // Optional explicit filter
+  limit: 100,
+});
+
+console.log(`Tenant has ${result.total} users`);
+
+// Export tenant users
+const exportData = await cortex.users.export({
+  format: "json",
+  includeVersionHistory: true,
+  includeConversations: true,
+  includeMemories: true,
+});
+// Automatically filtered by tenant from auth context
+
+// Bulk update for tenant users
+await cortex.users.updateMany(
+  { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
+  { data: { welcomeEmailSent: true } }
+);
+// Automatically scoped to current tenant
+```
+
+See [Isolation Boundaries](./17-isolation-boundaries.md) for complete multi-tenancy documentation.
 
 ## Profile Version History
 
@@ -980,45 +1022,40 @@ await cortex.users.update(userId, {
 });
 ```
 
-### 5. Version Control for Important Changes
+### 5. Automatic Version Tracking
 
-Use versioning for preference tracking:
+> **Note:** Currently, every `update()` call creates a new version automatically. Skip versioning option is planned for a future release.
 
 ```typescript
-// Enable versioning for preference changes
-await cortex.users.update(
-  userId,
-  {
-    preferences: {
-      emailNotifications: false, // User opts out
-    },
+// Important preference changes - creates version (automatic)
+await cortex.users.update(userId, {
+  preferences: {
+    emailNotifications: false, // User opts out
   },
-  {
-    skipVersioning: false, // Create version (default)
-    versionReason: "user-requested",
-  },
-);
+});
 
-// Skip versioning for routine updates
-await cortex.users.update(
-  userId,
-  {
-    metadata: {
-      lastSeen: new Date(),
-      sessionCount: user.metadata.sessionCount + 1,
-    },
+// Routine updates - also creates versions (automatic)
+const user = await cortex.users.get(userId);
+await cortex.users.update(userId, {
+  metadata: {
+    lastSeen: Date.now(), // Unix timestamp (milliseconds)
+    sessionCount: ((user?.data.metadata?.sessionCount as number) || 0) + 1,
   },
-  {
-    skipVersioning: true, // Don't create version for stats
-  },
-);
+});
+
+// Use getHistory() to review version history
+const history = await cortex.users.getHistory(userId);
+console.log(`User has ${history.length} profile versions`);
 ```
 
 ## Next Steps
 
+- **[User Operations API](../03-api-reference/04-user-operations.md)** - Complete API reference
+- **[Isolation Boundaries](./17-isolation-boundaries.md)** - Multi-tenancy and isolation model
+- **[Auth Integration](../08-integrations/auth-providers.md)** - AuthContext setup
 - **[Context Chains](./04-context-chains.md)** - Multi-agent coordination
 - **[Conversation History](./06-conversation-history.md)** - Message persistence
-- **[API Reference](../03-api-reference/04-user-operations.md)** - User API docs
+- **[Memory Spaces](./01-memory-spaces.md)** - Space isolation concepts
 
 ---
 
