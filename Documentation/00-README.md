@@ -112,7 +112,7 @@ Framework and tool integrations:
 
 **Production Ready:**
 
-- **[Vercel AI SDK](./08-integrations/vercel-ai-sdk/)** - Complete Next.js integration with quickstart demo
+- **[Vercel AI SDK](./08-integrations/vercel-ai-sdk/00-README.md)** - Complete Next.js integration with quickstart demo
   - [Getting Started](./08-integrations/vercel-ai-sdk/01-getting-started.md) - Installation and quickstart
   - [API Reference](./08-integrations/vercel-ai-sdk/02-api-reference.md) - Complete API documentation
   - [Advanced Usage](./08-integrations/vercel-ai-sdk/03-advanced-usage.md) - Advanced patterns and techniques
@@ -223,13 +223,13 @@ Recent releases:
   - Multi-layer context enrichment (2-5x more context!)
   - Sophisticated orphan detection
 
-See the project's [CHANGELOG.md](/CHANGELOG.md) for full version history.
+See the project's [CHANGELOG.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/CHANGELOG.md) for full version history.
 
 ## 📄 License
 
 All documentation is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-The Cortex code is licensed under [FSL-1.1-Apache-2.0](/LICENSE.md) (becomes Apache 2.0 after 2 years).
+The Cortex code is licensed under [FSL-1.1-Apache-2.0](https://github.com/SaintNick1214/Project-Cortex/blob/main/LICENSE.md) (becomes Apache 2.0 after 2 years).
 
 ---
 
