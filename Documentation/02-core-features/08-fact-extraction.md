@@ -1,8 +1,10 @@
 # Fact Extraction
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Automatic extraction of salient facts from conversations using LLM intelligence for efficient, focused memory storage.
+
+> **New in v0.24.0**: The **Belief Revision System** provides intelligent fact management with automatic conflict detection, resolution, and supersession tracking.
 
 ## Overview
 
@@ -552,6 +554,223 @@ async function updateFact(
 
   console.log(`Fact updated: ${existingFactId} (now v${updated.version})`);
 }
+```
+
+## Belief Revision System (v0.24.0+)
+
+> **New in v0.24.0**: Intelligent fact management that handles conflicting information automatically.
+
+The Belief Revision System goes beyond simple deduplication to provide **intelligent conflict resolution** when new facts contradict existing knowledge.
+
+### The Problem
+
+Without belief revision, conflicting facts accumulate:
+
+```
+Session 1: "User's favorite color is blue"
+Session 2: "User's favorite color is red"
+Result: Both facts stored! Which is correct? ❌
+```
+
+### The Solution: revise()
+
+The `revise()` API intelligently handles fact updates:
+
+```typescript
+// Use revise() for intelligent fact storage
+const result = await cortex.facts.revise({
+  memorySpaceId: "user-123-space",
+  fact: "User's favorite color is red",
+  factType: "preference",
+  subject: "user-123",
+  predicate: "favoriteColor",
+  object: "red",
+  confidence: 95,
+  sourceType: "conversation",
+});
+
+// Result shows what happened
+console.log(result);
+// {
+//   action: 'superseded',  // 'created', 'superseded', 'merged', or 'ignored'
+//   fact: { factId: 'fact-new-123', ... },
+//   supersededFacts: ['fact-old-456'],  // Old "blue" fact
+//   explanation: 'New fact supersedes previous belief about favorite color'
+// }
+```
+
+### Preview Conflicts Before Storing
+
+Use `checkConflicts()` to see what would happen:
+
+```typescript
+// Check for conflicts before committing
+const conflicts = await cortex.facts.checkConflicts({
+  memorySpaceId: "user-123-space",
+  fact: "User's favorite color is red",
+  factType: "preference",
+  subject: "user-123",
+  predicate: "favoriteColor",
+  object: "red",
+});
+
+console.log(conflicts);
+// {
+//   hasConflicts: true,
+//   conflictingFacts: [
+//     { factId: 'fact-456', fact: "User's favorite color is blue", confidence: 90 }
+//   ],
+//   suggestedAction: 'supersede',
+//   reasoning: 'New fact has higher confidence (95 vs 90)'
+// }
+
+// Now decide: store anyway, or ask user to confirm
+if (conflicts.hasConflicts) {
+  const userConfirmed = await askUser("Override previous preference?");
+  if (userConfirmed) {
+    await cortex.facts.revise({ ...newFact });
+  }
+}
+```
+
+### Manual Supersession
+
+For explicit control over fact relationships:
+
+```typescript
+// Manually mark a fact as superseded
+await cortex.facts.supersede({
+  memorySpaceId: "user-123-space",
+  factId: "fact-old-456",
+  supersededBy: "fact-new-123",
+  reason: "User explicitly stated preference change",
+});
+```
+
+### Fact History Tracking
+
+Track the complete evolution of beliefs:
+
+```typescript
+// Get full history of a fact (including superseded versions)
+const history = await cortex.facts.history({
+  memorySpaceId: "user-123-space",
+  subject: "user-123",
+  predicate: "favoriteColor",
+});
+
+console.log(history);
+// {
+//   currentFact: { factId: 'fact-123', fact: "User's favorite color is red", ... },
+//   previousBeliefs: [
+//     { factId: 'fact-456', fact: "User's favorite color is blue", supersededAt: ... }
+//   ],
+//   timeline: [
+//     { timestamp: T1, action: 'created', factId: 'fact-456' },
+//     { timestamp: T2, action: 'superseded', factId: 'fact-456', by: 'fact-123' }
+//   ]
+// }
+
+// Get changes over time
+const changes = await cortex.facts.getChanges({
+  memorySpaceId: "user-123-space",
+  subject: "user-123",
+  since: new Date("2025-01-01"),
+});
+
+// Get the supersession chain for a specific fact
+const chain = await cortex.facts.getSupersessionChain("fact-123");
+// Returns: [fact-original] → [fact-v2] → [fact-123 (current)]
+
+// Get activity summary
+const summary = await cortex.facts.getActivitySummary({
+  memorySpaceId: "user-123-space",
+  period: "30d",
+});
+// {
+//   factsCreated: 45,
+//   factsSuperseded: 12,
+//   factsConsolidated: 5,
+//   mostActiveSubjects: ["user-123", "project-abc"],
+//   conflictRate: 0.15  // 15% of new facts had conflicts
+// }
+```
+
+### Integration with remember()
+
+Belief revision is automatically applied when using `memory.remember()`:
+
+```typescript
+// Automatic belief revision during remember()
+const result = await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  conversationId: "conv-456",
+  userMessage: "Actually, my favorite color is now green",
+  agentResponse: "I'll update your preference!",
+  userId: "user-123",
+  userName: "Alex",
+  
+  extractFacts: async (userMsg, agentMsg) => [{
+    fact: "User's favorite color is green",
+    factType: "preference",
+    subject: "user-123",
+    predicate: "favoriteColor",
+    object: "green",
+    confidence: 98,
+  }],
+  
+  // Belief revision enabled by default
+  // beliefRevision: true,  // Default
+});
+
+// result.facts includes supersession info
+result.facts.forEach(fact => {
+  if (fact.supersededFacts?.length > 0) {
+    console.log(`Updated belief: superseded ${fact.supersededFacts.length} old facts`);
+  }
+});
+```
+
+### Query Only Current Beliefs
+
+Filter out superseded facts in queries:
+
+```typescript
+// Get only current beliefs (exclude superseded)
+const currentPreferences = await cortex.facts.list({
+  memorySpaceId: "user-123-space",
+  factType: "preference",
+  isSuperseded: false,  // Only current beliefs
+});
+
+// Or in search results
+const memories = await cortex.memory.recall("user-123-space", "preferences", {
+  factsFilter: {
+    isSuperseded: false,  // Current beliefs only
+  },
+});
+```
+
+### Conflict Resolution Strategies
+
+The Belief Revision System uses configurable strategies:
+
+| Strategy | Behavior | Use Case |
+|----------|----------|----------|
+| `higher-confidence` | New fact wins if confidence is higher | Default, objective facts |
+| `newer-wins` | Most recent fact always supersedes | Preferences, settings |
+| `ask-user` | Flag for manual resolution | Critical decisions |
+| `merge` | Combine compatible facts | Additive knowledge |
+
+```typescript
+// Configure strategy per fact type
+await cortex.facts.revise({
+  memorySpaceId: "user-123-space",
+  fact: "User works at Acme Corp",
+  factType: "relationship",
+  conflictStrategy: "newer-wins",  // Employment changes, new wins
+  // ...
+});
 ```
 
 ## Prompt Engineering

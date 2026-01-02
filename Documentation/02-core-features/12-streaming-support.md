@@ -1,6 +1,6 @@
 # Streaming Support
 
-> **Last Updated**: 2025-11-05
+> **Last Updated**: 2026-01-01
 > **Version**: v0.9.0+
 
 Native streaming support for LLM responses with automatic memory storage.

@@ -1,8 +1,10 @@
 # Semantic Search
 
-> **Last Updated**: 2025-10-30
+> **Last Updated**: 2026-01-01
 
 AI-powered memory retrieval with multi-strategy fallback for robust results.
+
+> **New in v0.24.0**: The `cortex.memory.recall()` API provides unified orchestrated retrieval across all memory layers (Vector, Facts, Graph) with intelligent relevance scoring.
 
 ## Overview
 
@@ -15,7 +17,71 @@ Semantic search goes beyond keyword matching - it understands **meaning**. When 
 - Can optionally retrieve full conversation from **ACID store** for complete context
 - Embeddings are **optional** - falls back to text search if not provided
 
-**API Note:** This guide uses `cortex.memory.search()` (Layer 3 convenience API) which searches the Vector index and can optionally enrich with ACID conversations. For direct control, use `cortex.vector.search()` (Layer 2).
+**API Note:** This guide covers both `cortex.memory.recall()` (Layer 4 - unified orchestrated retrieval) and `cortex.memory.search()` (Layer 4 - vector-focused search). For direct control, use `cortex.vector.search()` (Layer 2).
+
+## Unified Retrieval with recall() (Recommended)
+
+> **New in v0.24.0** - The `recall()` API is the recommended approach for most retrieval use cases.
+
+The `cortex.memory.recall()` API provides **orchestrated retrieval** across all memory layers:
+
+```typescript
+// Unified retrieval across Vector, Facts, and Graph
+const memories = await cortex.memory.recall(memorySpaceId, query, {
+  embedding: await embed(query),  // Optional: enables semantic search
+  userId: "user-123",
+  limit: 10,
+  
+  // Control which layers to query
+  layers: {
+    vector: true,    // Search vector memories (default: true)
+    facts: true,     // Search structured facts (default: true)
+    graph: false,    // Query graph relationships (default: false)
+  },
+  
+  // Optional: enrichment
+  enrichWithFacts: true,        // Include related facts
+  enrichWithConversation: true, // Include ACID source
+});
+
+// Results include intelligent relevance scoring
+memories.forEach(memory => {
+  console.log(`Content: ${memory.content}`);
+  console.log(`Relevance: ${memory.relevanceScore}`);  // Combined score
+  console.log(`Source: ${memory.source.type}`);        // 'vector', 'fact', or 'graph'
+  
+  // Enriched data available
+  if (memory.facts) {
+    console.log(`Related facts: ${memory.facts.length}`);
+  }
+  if (memory.conversation) {
+    console.log(`From conversation: ${memory.conversation.id}`);
+  }
+});
+```
+
+### recall() vs search()
+
+| Feature | `recall()` | `search()` |
+|---------|-----------|-----------|
+| **Primary Use** | Unified retrieval | Vector-focused search |
+| **Layers Queried** | Vector + Facts + Graph | Vector only |
+| **Relevance Scoring** | Combined multi-layer | Vector similarity only |
+| **Fact Enrichment** | Built-in | Optional |
+| **Graph Traversal** | Supported | Not supported |
+| **Best For** | Context building, RAG | Simple searches |
+
+**When to use `recall()`:**
+- Building LLM context with comprehensive knowledge
+- RAG (Retrieval-Augmented Generation) applications
+- Need facts and memories together
+- Cross-referencing knowledge sources
+
+**When to use `search()`:**
+- Simple vector similarity queries
+- High-volume search operations
+- When you only need vector memories
+- Performance-critical scenarios
 
 ## How It Works
 
@@ -1088,10 +1154,14 @@ for (const test of searchTests) {
 
 ## Integration with Facts Layer
 
-Cortex automatically extracts and indexes structured facts during `memory.remember()`, making them available in search results:
+Cortex automatically extracts and indexes structured facts during `memory.remember()`, making them available in search results.
+
+### Enriched Fact Extraction (v0.15.0+)
+
+Facts now include enhanced semantic context for better retrieval:
 
 ```typescript
-// Remember with automatic fact extraction
+// Remember with enriched fact extraction
 const result = await cortex.memory.remember({
   memorySpaceId: "agent-1",
   conversationId: "conv-123",
@@ -1100,40 +1170,73 @@ const result = await cortex.memory.remember({
   userId: "user-123",
   userName: "Alex",
 
-  // Extract facts for structured knowledge
+  // Extract facts with enriched metadata
   extractFacts: async (userMsg, agentMsg) => {
     return [
       {
         fact: "User prefers dark mode",
         factType: "preference",
         confidence: 95,
-        tags: ["ui"],
+        tags: ["ui", "theme"],
+        // Enriched fields (v0.15.0+)
+        aliases: ["dark theme", "night mode"],      // Alternative phrasings
+        semanticContext: "UI/UX visual preference", // Search context
+        entities: ["dark mode"],                    // Extracted entities
+        subject: "user-123",
+        predicate: "prefers",
+        object: "dark-mode",
       },
       {
         fact: "User is from San Francisco",
         factType: "identity",
         confidence: 98,
-        tags: ["location"],
+        tags: ["location", "geography"],
+        aliases: ["SF resident", "San Francisco native"],
+        entities: ["San Francisco"],
+        subject: "user-123",
+        predicate: "located_in",
+        object: "San Francisco",
       },
     ];
   },
 });
+```
 
-// Search returns memories WITH extracted facts
-const memories = await cortex.memory.search("agent-1", "user preferences", {
+### Belief Revision Integration (v0.24.0+)
+
+Facts are automatically managed with **intelligent conflict resolution**:
+
+```typescript
+// Search returns memories with fact supersession info
+const memories = await cortex.memory.recall("agent-1", "user preferences", {
   embedding: await embed("user preferences"),
-  enrichConversation: true, // Facts automatically included
+  enrichWithFacts: true,
 });
 
 memories.forEach((memory) => {
-  console.log(`Memory: ${memory.memory.content}`);
+  console.log(`Memory: ${memory.content}`);
 
-  // Access extracted facts
+  // Access facts with belief revision metadata
   if (memory.facts) {
     memory.facts.forEach((fact) => {
       console.log(`  Fact: ${fact.fact} (${fact.confidence}% confidence)`);
+      
+      // Belief revision status (v0.24.0+)
+      if (fact.supersededBy) {
+        console.log(`  ⚠️ Superseded by: ${fact.supersededBy}`);
+      }
+      if (fact.isCurrentBelief) {
+        console.log(`  ✅ Current belief`);
+      }
     });
   }
+});
+
+// Query only current beliefs (exclude superseded facts)
+const currentFacts = await cortex.facts.list({
+  memorySpaceId: "agent-1",
+  isSuperseded: false,  // Only current beliefs
+  factType: "preference",
 });
 ```
 
@@ -1143,8 +1246,11 @@ memories.forEach((memory) => {
 - **Higher precision**: Search "user preferences" finds preference-type facts
 - **Confidence scoring**: Filter by extraction confidence (0-100)
 - **Cross-referencing**: Facts link back to source conversations via `sourceRef`
+- **Aliases** (v0.15.0+): Multiple phrasings improve semantic search
+- **Belief Revision** (v0.24.0+): Automatic conflict resolution and supersession tracking
 
 See **[Fact Integration](./11-fact-integration.md)** for complete documentation on automatic fact extraction in Memory API.
+See **[Fact Extraction](./08-fact-extraction.md)** for the Belief Revision System details.
 
 ## Next Steps
 

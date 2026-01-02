@@ -1,6 +1,6 @@
 # Context Chains: Hierarchical Graph Traversal
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Hierarchical context sharing for multi-agent coordination via graph-like parent-child relationships.
 

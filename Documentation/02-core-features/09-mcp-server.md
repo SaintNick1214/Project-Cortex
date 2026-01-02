@@ -1,6 +1,6 @@
 # MCP Server: Cross-Application Memory
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Share Cortex memory across all your AI tools with the Model Context Protocol server.
 

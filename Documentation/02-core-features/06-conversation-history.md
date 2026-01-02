@@ -1,6 +1,6 @@
 # Conversation History
 
-> **Last Updated**: 2025-11-05
+> **Last Updated**: 2026-01-01
 
 Persistent message storage and conversation replay for contextual agent interactions.
 

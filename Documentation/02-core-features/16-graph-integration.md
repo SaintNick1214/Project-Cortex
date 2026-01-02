@@ -1,0 +1,480 @@
+# Graph Database Integration
+
+> **Last Updated**: 2026-01-01
+> **Version**: v0.24.0
+
+Optional graph database integration for advanced knowledge discovery, multi-hop queries, and relationship-based reasoning.
+
+## Overview
+
+Cortex's graph integration extends your memory system with relationship-aware capabilities. Connect Neo4j or Memgraph to enable multi-hop queries, knowledge graphs, and cross-layer context enrichment.
+
+**Why Use Graph?**
+
+- **Multi-Hop Reasoning**: "Who does Alice know that also works with TypeScript?"
+- **Knowledge Discovery**: Automatically trace entity relationships
+- **Context Enrichment**: 5x richer context from relationship traversal
+- **Provenance Tracking**: Complete audit trail from fact to source conversation
+- **Entity Networks**: Model complex organizational and domain relationships
+
+**Key Characteristics:**
+
+- ✅ **Optional** - Works without graph, enhanced with graph
+- ✅ **Real-Time Sync** - Automatic synchronization from Convex
+- ✅ **Multi-Database** - Neo4j and Memgraph supported
+- ✅ **Orphan-Safe** - Intelligent cleanup of unreferenced nodes
+- ✅ **Multi-Tenant** - Full `tenantId` support for SaaS isolation
+
+## When to Use Graph
+
+**Recommended for:**
+
+- Deep context chains (5+ levels)
+- Knowledge graphs with entity relationships
+- Multi-hop reasoning requirements
+- Provenance and audit trail needs
+- Complex multi-agent coordination
+- Large-scale fact databases (100s+ facts)
+
+**Not needed for:**
+
+- Simple conversational memory
+- Shallow context (1-2 levels)
+- Pure vector similarity searches
+- Small fact databases (<100 facts)
+
+## Quick Start
+
+```typescript
+import { Cortex } from "@cortexmemory/sdk";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
+
+// 1. Setup graph adapter
+const graphAdapter = new CypherGraphAdapter();
+await graphAdapter.connect({
+  uri: "bolt://localhost:7687",
+  username: "neo4j",
+  password: process.env.NEO4J_PASSWORD!,
+});
+
+// 2. Initialize schema (one-time)
+await initializeGraphSchema(graphAdapter);
+
+// 3. Initialize Cortex with graph
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  graph: {
+    adapter: graphAdapter,
+    autoSync: true,  // Auto-start sync worker
+  },
+});
+
+// 4. Use Cortex normally - graph syncs automatically!
+await cortex.memory.remember({
+  memorySpaceId: "agent-1",
+  conversationId: "conv-123",
+  userMessage: "Alice works at Acme Corp with Bob",
+  agentResponse: "Got it!",
+  userId: "alice",
+  userName: "Alice",
+  extractFacts: async () => [
+    {
+      fact: "Alice works at Acme Corp",
+      factType: "relationship",
+      subject: "Alice",
+      predicate: "works_at",
+      object: "Acme Corp",
+      confidence: 95,
+    },
+    {
+      fact: "Bob works at Acme Corp",
+      factType: "relationship", 
+      subject: "Bob",
+      predicate: "works_at",
+      object: "Acme Corp",
+      confidence: 95,
+    },
+  ],
+});
+// ✅ Memory, facts, and graph all updated!
+```
+
+## Graph-Powered Queries
+
+### Find Related Entities
+
+```typescript
+// Who works at the same company as Alice?
+const coworkers = await graphAdapter.query(`
+  MATCH (alice:Entity {name: 'Alice'})-[:WORKS_AT]->(company:Entity)
+  MATCH (company)<-[:WORKS_AT]-(coworker:Entity)
+  WHERE coworker.name <> 'Alice'
+  RETURN DISTINCT coworker.name as name
+`);
+
+console.log("Alice's coworkers:", coworkers.records.map(r => r.name));
+// ["Bob", "Carol", "Dave"]
+```
+
+### Multi-Hop Knowledge Discovery
+
+```typescript
+// Find connection path: Alice → ??? → TypeScript
+const path = await graphAdapter.findPath({
+  fromId: aliceNodeId,
+  toId: typescriptNodeId,
+  maxHops: 4,
+});
+
+if (path) {
+  console.log("Connection path:", path.nodes.map(n => n.properties.name).join(" → "));
+  console.log("Via relationships:", path.relationships.map(r => r.type).join(" → "));
+  // "Alice → Acme Corp → Bob → TypeScript"
+  // "WORKS_AT → EMPLOYS → USES"
+}
+```
+
+### Context Chain Traversal
+
+```typescript
+// Get full context hierarchy via graph
+const chain = await graphAdapter.query(`
+  MATCH (current:Context {contextId: $contextId})
+  MATCH path = (current)-[:CHILD_OF*0..10]->(ancestors:Context)
+  RETURN ancestors
+  ORDER BY ancestors.depth
+`, { contextId });
+
+console.log("Full context chain:");
+for (const record of chain.records) {
+  const ctx = record.ancestors.properties;
+  console.log(`  Depth ${ctx.depth}: ${ctx.purpose}`);
+}
+```
+
+### Provenance Tracing
+
+```typescript
+// Trace fact back to source conversation and user
+const provenance = await graphAdapter.query(`
+  MATCH (f:Fact {factId: $factId})
+  MATCH (f)-[:EXTRACTED_FROM]->(conv:Conversation)
+  MATCH (conv)-[:INVOLVES]->(user:User)
+  RETURN conv.conversationId as conversation,
+         user.userId as user
+`, { factId });
+
+console.log("Fact provenance:");
+console.log("  Conversation:", provenance.records[0].conversation);
+console.log("  User:", provenance.records[0].user);
+// Complete audit trail! ✅
+```
+
+## Automatic Synchronization
+
+### Real-Time Sync Worker
+
+Enable automatic synchronization from Convex to graph:
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: "...",
+  graph: {
+    adapter: graphAdapter,
+    autoSync: true,  // Start sync worker
+    syncWorkerOptions: {
+      batchSize: 100,
+      retryAttempts: 3,
+      verbose: true,
+    },
+  },
+});
+
+// All Cortex operations now sync automatically!
+await cortex.memory.remember(params);  // → Graph updated
+await cortex.facts.store(params);      // → Graph updated
+await cortex.contexts.create(params);  // → Graph updated
+```
+
+### Monitor Sync Health
+
+```typescript
+const worker = cortex.getGraphSyncWorker();
+if (worker) {
+  const metrics = worker.getMetrics();
+  console.log("Worker metrics:", metrics);
+  // {
+  //   isRunning: true,
+  //   totalProcessed: 150,
+  //   successCount: 148,
+  //   failureCount: 2,
+  //   avgSyncTimeMs: 45,
+  //   queueSize: 3,
+  //   lastSyncAt: 1635789012345
+  // }
+}
+```
+
+### Manual Sync Control
+
+For specific operations, control sync explicitly:
+
+```typescript
+// Disable sync for high-volume operations
+await cortex.vector.store(data, { syncToGraph: false });
+
+// Enable sync for critical operations
+await cortex.facts.store(params, { syncToGraph: true });
+```
+
+## Context Enrichment Patterns
+
+### Memory → Facts Enrichment
+
+```typescript
+// Get memory and find all related facts via graph
+const memory = await cortex.vector.get(memorySpaceId, memoryId);
+
+const relatedFacts = await graphAdapter.query(`
+  MATCH (m:Memory {memoryId: $memoryId})
+  MATCH (m)-[:REFERENCES]->(conv:Conversation)
+  MATCH (conv)<-[:EXTRACTED_FROM]-(f:Fact)
+  RETURN f.fact as fact, f.confidence as confidence
+  ORDER BY f.confidence DESC
+`, { memoryId });
+
+console.log(`Memory enrichment: 1 memory → ${relatedFacts.count} related facts`);
+// Enrichment factor: 5x more context!
+```
+
+### Build Rich LLM Context
+
+```typescript
+async function buildEnrichedContext(memorySpaceId: string, query: string) {
+  // 1. Vector search for relevant memories
+  const memories = await cortex.memory.search(memorySpaceId, query, {
+    embedding: await embed(query),
+    limit: 5,
+  });
+  
+  // 2. Enrich each memory with graph relationships
+  const enrichedContext = [];
+  
+  for (const memory of memories) {
+    const related = await graphAdapter.query(`
+      MATCH (m:Memory {memoryId: $memoryId})
+      OPTIONAL MATCH (m)-[:REFERENCES]->(conv:Conversation)
+      OPTIONAL MATCH (conv)<-[:EXTRACTED_FROM]-(f:Fact)
+      OPTIONAL MATCH (f)-[:MENTIONS]->(e:Entity)
+      RETURN 
+        f.fact as fact,
+        collect(DISTINCT e.name) as entities
+    `, { memoryId: memory.memory.id });
+    
+    enrichedContext.push({
+      content: memory.memory.content,
+      facts: related.records.map(r => r.fact).filter(Boolean),
+      entities: related.records.flatMap(r => r.entities),
+    });
+  }
+  
+  return enrichedContext;
+}
+```
+
+## Belief Revision in Graph
+
+> **New in v0.24.0**: Facts support supersession tracking in the graph.
+
+```typescript
+import { syncFactSupersession, getFactSupersessionChainFromGraph } from "@cortexmemory/sdk/graph";
+
+// When a fact is superseded, sync to graph
+await syncFactSupersession(oldFact, newFact, graphAdapter, "User updated preference");
+// Creates: (newFact)-[:SUPERSEDES]->(oldFact)
+
+// Get the complete history of belief changes
+const chain = await getFactSupersessionChainFromGraph("fact-123", graphAdapter);
+for (const item of chain) {
+  console.log(`${item.factId}: ${item.fact}`);
+  if (item.supersededAt) {
+    console.log(`  Superseded at: ${new Date(item.supersededAt)}`);
+  }
+}
+```
+
+## Orphan Cleanup
+
+Graph automatically handles orphaned nodes during deletion:
+
+```typescript
+// Delete memory - orphans are cleaned up automatically
+await cortex.memory.forget("agent-1", "mem-123", {
+  deleteConversation: true,
+  syncToGraph: true,  // Enables orphan cleanup
+});
+
+// What happens:
+// 1. Delete memory from Convex
+// 2. Delete memory node from graph
+// 3. Check if conversation is now orphaned
+// 4. If orphaned, delete conversation node
+// 5. Handle circular references safely
+```
+
+**Orphan Rules:**
+
+| Node Type | When Deleted |
+|-----------|--------------|
+| Conversation | When no Memory/Fact/Context references it |
+| Entity | When no Fact mentions it |
+| User | Never auto-deleted |
+| MemorySpace | Never auto-deleted |
+
+## Performance Characteristics
+
+| Query Type | Without Graph | With Graph |
+|------------|---------------|------------|
+| 1-hop lookup | 3-10ms | 10-25ms |
+| 3-hop traversal | 10-50ms (limited) | 4-10ms |
+| 7-hop traversal | Not feasible | 4-15ms |
+| Pattern matching | Not feasible | 10-100ms |
+| Entity networks | Not feasible | 20-50ms |
+
+**Sync Performance:**
+
+- Single entity sync: 30-60ms
+- Batch sync: ~300 entities/second
+- Real-time lag: <1 second
+
+## Multi-Tenancy
+
+All graph operations support tenant isolation:
+
+```typescript
+// Sync with tenant context
+await syncMemoryToGraph(memory, graphAdapter, "tenant-acme");
+
+// Query with tenant isolation
+const result = await graphAdapter.query(`
+  MATCH (m:Memory)
+  WHERE m.tenantId = $tenantId AND m.userId = $userId
+  RETURN m
+`, { tenantId: "tenant-acme", userId: "user-123" });
+```
+
+## Node Types & Relationships
+
+### Node Types
+
+| Type | Description | Key Properties |
+|------|-------------|----------------|
+| `MemorySpace` | Isolation boundary | memorySpaceId, name, type |
+| `Memory` | Vector memory entry | memoryId, content (truncated), importance |
+| `Fact` | Structured knowledge | factId, fact, subject, predicate, object |
+| `Entity` | Subject/object of facts | name, type |
+| `Context` | Hierarchical context | contextId, purpose, depth |
+| `Conversation` | ACID conversation | conversationId, messageCount |
+| `User` | User identity | userId |
+
+### Relationship Types
+
+```cypher
+// Hierarchy
+(Context)-[:PARENT_OF]->(Context)
+(Context)-[:CHILD_OF]->(Context)
+
+// Isolation
+(Memory|Fact|Context|Conversation)-[:IN_SPACE]->(MemorySpace)
+
+// References
+(Memory)-[:REFERENCES]->(Conversation)
+(Fact)-[:EXTRACTED_FROM]->(Conversation)
+(Context)-[:TRIGGERED_BY]->(Conversation)
+
+// Users
+(Memory|Context|Conversation)-[:INVOLVES]->(User)
+
+// Facts & Entities
+(Fact)-[:MENTIONS]->(Entity)
+(Entity)-[:WORKS_AT|KNOWS|USES|...]->(Entity)
+
+// Versioning
+(Fact)-[:SUPERSEDES]->(Fact)
+```
+
+## Best Practices
+
+### 1. Convex as Source of Truth
+
+```typescript
+// ✅ Always write to Convex first
+await cortex.memory.remember(params, { syncToGraph: true });
+// Convex write succeeds → then sync to graph
+
+// ❌ Don't write to graph directly for data storage
+await adapter.createNode({ ... }); // Graph could succeed but Convex fail
+```
+
+### 2. Use Graph for Discovery, Convex for Data
+
+```typescript
+// ✅ Query graph for relationships
+const related = await graphAdapter.query(`
+  MATCH (m:Memory)-[:REFERENCES]->(conv)
+  RETURN conv.conversationId
+`);
+
+// ✅ Fetch full data from Convex
+const fullConversation = await cortex.conversations.get(conversationId);
+```
+
+### 3. Monitor Sync Health
+
+```typescript
+setInterval(() => {
+  const worker = cortex.getGraphSyncWorker();
+  if (worker) {
+    const metrics = worker.getMetrics();
+    if (metrics.queueSize > 1000) {
+      console.warn("Sync queue backing up!");
+    }
+    if (metrics.failureCount > 100) {
+      console.error("High failure rate, check graph connection");
+    }
+  }
+}, 60000);
+```
+
+## Error Handling
+
+```typescript
+import { 
+  GraphConnectionError, 
+  GraphAuthenticationError,
+  GraphQueryError 
+} from "@cortexmemory/sdk/graph";
+
+try {
+  await graphAdapter.connect(config);
+} catch (error) {
+  if (error instanceof GraphAuthenticationError) {
+    console.error(`Auth failed: ${error.username} at ${error.uri}`);
+  } else if (error instanceof GraphConnectionError) {
+    console.error("Graph unavailable - continuing without graph");
+    // Cortex works fine without graph!
+  }
+}
+```
+
+## Related Features
+
+- **[Fact Extraction](./08-fact-extraction.md)** - Extract entities for graph
+- **[Context Chains](./04-context-chains.md)** - Hierarchical contexts in graph
+- **[Semantic Search](./02-semantic-search.md)** - Combine with graph enrichment
+- **[Memory Spaces](./01-memory-spaces.md)** - Graph isolation boundaries
+
+See **[Graph Operations API](../03-api-reference/13-graph-operations.md)** for complete API documentation.
