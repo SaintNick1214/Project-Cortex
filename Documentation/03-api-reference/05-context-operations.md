@@ -55,7 +55,7 @@ Create a new context (root or child).
 
 ```typescript
 cortex.contexts.create(
-  params: ContextInput,
+  params: CreateContextParams,
   options?: CreateContextOptions
 ): Promise<Context>
 ```
@@ -65,7 +65,7 @@ cortex.contexts.create(
 **Parameters:**
 
 ```typescript
-interface ContextInput {
+interface CreateContextParams {
   purpose: string; // What this context is for (REQUIRED)
   memorySpaceId: string; // Memory space creating this context (REQUIRED)
 
@@ -78,15 +78,11 @@ interface ContextInput {
   // Conversation link (optional)
   conversationRef?: {
     conversationId: string; // Originating conversation
-    messageIds: string[]; // Triggering message(s)
+    messageIds?: string[]; // Triggering message(s) (optional)
   };
 
-  // Data
-  data?: {
-    importance?: number; // 0-100
-    tags?: string[];
-    [key: string]: any; // Context-specific data
-  };
+  // Data - flexible key-value storage
+  data?: Record<string, unknown>;
 
   // Status
   status?: "active" | "completed" | "cancelled" | "blocked"; // Default: 'active'
@@ -194,9 +190,9 @@ const root = await cortex.contexts.create({
   },
 });
 
-console.log(root.id); // 'ctx_abc123'
+console.log(root.contextId); // 'ctx-1234567890-abc123'
 console.log(root.depth); // 0 (root)
-console.log(root.rootId); // 'ctx_abc123' (self)
+console.log(root.rootId); // 'ctx-1234567890-abc123' (self)
 ```
 
 **Example 1b: Create with graph sync (v0.7.0+)**
@@ -230,7 +226,7 @@ const root = await cortex.contexts.create(
 const child = await cortex.contexts.create({
   purpose: "Approve and process $500 refund",
   memorySpaceId: "finance-agent-space",
-  parentId: root.id, // Links to parent
+  parentId: root.contextId, // Links to parent
   userId: "user-123",
   conversationRef: root.conversationRef, // Inherit conversation link
   data: {
@@ -242,17 +238,16 @@ const child = await cortex.contexts.create({
 });
 
 console.log(child.depth); // 1 (child of root)
-console.log(child.rootId); // 'ctx_abc123' (same as parent)
-console.log(child.parentId); // root.id
+console.log(child.rootId); // 'ctx-1234567890-abc123' (same as parent)
+console.log(child.parentId); // root.contextId
 ```
 
 **Errors:**
 
-- `CortexError('INVALID_PURPOSE')` - Purpose is empty
-- `CortexError('INVALID_AGENT_ID')` - Agent ID is invalid
-- `CortexError('PARENT_NOT_FOUND')` - Parent context doesn't exist
-- `CortexError('USER_NOT_FOUND')` - userId doesn't reference existing user
-- `CortexError('CONVEX_ERROR')` - Database error
+- `ContextsValidationError('MISSING_REQUIRED_FIELD')` - Purpose or memorySpaceId is empty
+- `ContextsValidationError('WHITESPACE_ONLY')` - Purpose contains only whitespace
+- `ContextsValidationError('INVALID_CONTEXT_ID_FORMAT')` - parentId format is invalid
+- `ConvexError('PARENT_NOT_FOUND')` - Parent context doesn't exist (from backend)
 
 **See Also:**
 
@@ -311,7 +306,7 @@ interface ContextWithConversation extends ContextChain {
 **Example 1: Get context only**
 
 ```typescript
-const ctx = await cortex.contexts.get("ctx_abc123");
+const ctx = await cortex.contexts.get("ctx-1234567890-abc123");
 
 console.log(ctx.purpose);
 console.log(ctx.status);
@@ -321,7 +316,7 @@ console.log(ctx.data);
 **Example 2: Get with full chain**
 
 ```typescript
-const chain = await cortex.contexts.get("ctx_child", {
+const chain = await cortex.contexts.get("ctx-1234567890-child", {
   includeChain: true,
 });
 
@@ -338,7 +333,7 @@ console.log("Depth:", chain.depth);
 **Example 3: Get with conversation context**
 
 ```typescript
-const enriched = await cortex.contexts.get("ctx_abc123", {
+const enriched = await cortex.contexts.get("ctx-1234567890-abc123", {
   includeChain: true,
   includeConversation: true,
 });
@@ -348,7 +343,7 @@ console.log("Workflow:", enriched.current.purpose);
 
 // Original conversation that triggered this workflow
 if (enriched.conversation) {
-  console.log("Original request:", enriched.triggerMessages[0].text);
+  console.log("Original request:", enriched.triggerMessages[0].content);
   console.log(
     "Full conversation:",
     enriched.conversation.messages.length,
@@ -359,7 +354,9 @@ if (enriched.conversation) {
 
 **Errors:**
 
-- `CortexError('CONTEXT_NOT_FOUND')` - Context doesn't exist
+- `ContextsValidationError('MISSING_REQUIRED_FIELD')` - contextId is empty
+- `ContextsValidationError('INVALID_CONTEXT_ID_FORMAT')` - contextId format is invalid
+- Returns `null` if context doesn't exist
 
 ---
 
@@ -382,11 +379,11 @@ cortex.contexts.update(
 **Parameters:**
 
 ```typescript
-interface ContextUpdate {
+interface UpdateContextParams {
   status?: "active" | "completed" | "cancelled" | "blocked";
-  data?: Partial<Record<string, any>>; // Merges with existing
+  data?: Record<string, unknown>; // Merges with existing
   description?: string;
-  completedAt?: Date; // Set when status='completed'
+  completedAt?: number; // Unix timestamp (ms) - auto-set when status='completed'
 }
 ```
 
@@ -404,7 +401,7 @@ interface ContextUpdate {
 
 ```typescript
 // Update status (creates v2)
-await cortex.contexts.update("ctx_abc123", {
+await cortex.contexts.update("ctx-1234567890-abc123", {
   status: "completed",
   data: {
     result: "success",
@@ -414,14 +411,14 @@ await cortex.contexts.update("ctx_abc123", {
 });
 
 // Update data only (creates v3)
-await cortex.contexts.update("ctx_abc123", {
+await cortex.contexts.update("ctx-1234567890-abc123", {
   data: {
     notes: "Customer satisfied with resolution",
   },
 });
 
 // View version history
-const ctx = await cortex.contexts.get("ctx_abc123");
+const ctx = await cortex.contexts.get("ctx-1234567890-abc123");
 console.log(`Current status: ${ctx.status} (v${ctx.version})`);
 ctx.previousVersions.forEach((v) => {
   console.log(`v${v.version}: status=${v.status}, timestamp=${v.timestamp}`);
@@ -430,9 +427,11 @@ ctx.previousVersions.forEach((v) => {
 
 **Errors:**
 
-- `CortexError('CONTEXT_NOT_FOUND')` - Context doesn't exist
-- `CortexError('INVALID_STATUS')` - Status is invalid
-- `CortexError('INVALID_UPDATE')` - Update data is malformed
+- `ContextsValidationError('MISSING_REQUIRED_FIELD')` - contextId is empty
+- `ContextsValidationError('INVALID_CONTEXT_ID_FORMAT')` - contextId format is invalid
+- `ContextsValidationError('INVALID_STATUS')` - Status is not one of valid values
+- `ContextsValidationError('INVALID_TYPE')` - data is not an object
+- `ConvexError('CONTEXT_NOT_FOUND')` - Context doesn't exist (from backend)
 
 **See Also:**
 
@@ -472,7 +471,7 @@ interface DeleteResult {
   deleted: boolean; // true if deletion succeeded
   contextId: string;
   descendantsDeleted: number; // Number of descendants deleted (0 if no cascade)
-  orphanedChildren?: string[]; // IDs of children that were orphaned (if orphanChildren: true)
+  orphanedChildren?: string[]; // IDs of children promoted to roots (if orphanChildren: true)
 }
 ```
 
@@ -480,27 +479,29 @@ interface DeleteResult {
 
 ```typescript
 // Delete single context (must have no children)
-await cortex.contexts.delete("ctx_abc123");
+await cortex.contexts.delete("ctx-1234567890-abc123");
 
 // Delete context and all descendants
-const result = await cortex.contexts.delete("ctx_root", {
+const result = await cortex.contexts.delete("ctx-1234567890-root", {
   cascadeChildren: true,
 });
 
-console.log(`Deleted ${result.deleted} contexts`);
+console.log(`Deleted: ${result.deleted}`); // true
 console.log(`Descendants: ${result.descendantsDeleted}`);
 
-// Allow orphaning (remove parent, keep children)
-await cortex.contexts.delete("ctx_parent", {
+// Allow orphaning (remove parent, promote children to roots)
+const orphanResult = await cortex.contexts.delete("ctx-1234567890-parent", {
   orphanChildren: true,
 });
+console.log("Orphaned children:", orphanResult.orphanedChildren);
 ```
 
 **Errors:**
 
-- `CortexError('CONTEXT_NOT_FOUND')` - Context doesn't exist
-- `CortexError('HAS_CHILDREN')` - Context has children and cascadeChildren=false
-- `CortexError('DELETION_FAILED')` - Delete operation failed
+- `ContextsValidationError('MISSING_REQUIRED_FIELD')` - contextId is empty
+- `ContextsValidationError('INVALID_CONTEXT_ID_FORMAT')` - contextId format is invalid
+- `ConvexError('CONTEXT_NOT_FOUND')` - Context doesn't exist (from backend)
+- `ConvexError('HAS_CHILDREN')` - Context has children and cascadeChildren=false (from backend)
 
 ---
 
@@ -525,8 +526,8 @@ interface ListContextsFilter {
   status?: "active" | "completed" | "cancelled" | "blocked";
   parentId?: string; // Filter by parent context
   rootId?: string; // Filter by root context
-  depth?: number; // Filter by hierarchy depth
-  limit?: number; // Default: 100
+  depth?: number; // Filter by hierarchy depth (0 = root)
+  limit?: number; // Default: 100, max: 1000
 }
 ```
 
@@ -556,7 +557,7 @@ const roots = await cortex.contexts.search({
 
 **Errors:**
 
-- `CortexError('INVALID_FILTERS')` - Filters are malformed
+- `ContextsValidationError` - Filters are malformed
 
 **See Also:**
 
@@ -585,8 +586,8 @@ interface ListContextsFilter {
   status?: "active" | "completed" | "cancelled" | "blocked";
   parentId?: string; // Filter by parent context
   rootId?: string; // Filter by root context
-  depth?: number; // Filter by hierarchy depth
-  limit?: number; // Default: 100
+  depth?: number; // Filter by hierarchy depth (0 = root)
+  limit?: number; // Default: 100, max: 1000
 }
 ```
 
@@ -597,7 +598,7 @@ interface ListContextsFilter {
 **Example:**
 
 ```typescript
-// List all contexts
+// List all contexts (up to default limit)
 const all = await cortex.contexts.list();
 
 // List contexts for a memory space
@@ -615,7 +616,7 @@ const activeRoots = await cortex.contexts.list({
 
 **Errors:**
 
-- `CortexError('INVALID_FILTERS')` - Invalid filter values
+- `ContextsValidationError` - Invalid filter values
 
 ---
 
@@ -627,8 +628,18 @@ Count contexts matching filters.
 
 ```typescript
 cortex.contexts.count(
-  filters?: ContextFilters
+  filter?: CountContextsFilter
 ): Promise<number>
+```
+
+**Parameters:**
+
+```typescript
+interface CountContextsFilter {
+  memorySpaceId?: string;
+  userId?: string;
+  status?: "active" | "completed" | "cancelled" | "blocked";
+}
 ```
 
 **Example:**
@@ -641,14 +652,14 @@ const total = await cortex.contexts.count();
 const active = await cortex.contexts.count({ status: "active" });
 const completed = await cortex.contexts.count({ status: "completed" });
 
-// Count for agent
+// Count for a memory space
 const agentContexts = await cortex.contexts.count({
   memorySpaceId: "finance-agent-space",
 });
 
-// Count urgent contexts
-const urgent = await cortex.contexts.count({
-  data: { importance: { $gte: 90 } },
+// Count active contexts for a user
+const userActive = await cortex.contexts.count({
+  userId: "user-123",
   status: "active",
 });
 ```
@@ -663,34 +674,46 @@ Bulk update contexts matching filters.
 
 ```typescript
 cortex.contexts.updateMany(
-  filters: ContextFilters,
-  updates: ContextUpdate,
-  options?: UpdateManyOptions
+  filters: UpdateManyFilters,
+  updates: UpdateManyUpdates
 ): Promise<UpdateManyResult>
 ```
 
 **Parameters:**
 
 ```typescript
-interface UpdateManyOptions {
-  dryRun?: boolean;
+interface UpdateManyFilters {
+  memorySpaceId?: string;
+  userId?: string;
+  status?: "active" | "completed" | "cancelled" | "blocked";
+  parentId?: string;
+  rootId?: string;
+}
+
+interface UpdateManyUpdates {
+  status?: "active" | "completed" | "cancelled" | "blocked";
+  data?: Record<string, unknown>;
 }
 
 interface UpdateManyResult {
   updated: number;
   contextIds: string[];
-  wouldUpdate?: number; // For dryRun
 }
 ```
+
+> **🔮 Planned Features**: The following options are planned for a future release:
+>
+> - `dryRun?: boolean` - Preview what would be updated without making changes
+> - `wouldUpdate?: number` - Return field showing count for dryRun mode
 
 **Example:**
 
 ```typescript
-// Mark old completed contexts as archived
+// Archive completed contexts for a memory space
 await cortex.contexts.updateMany(
   {
+    memorySpaceId: "finance-agent-space",
     status: "completed",
-    completedBefore: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
   },
   {
     data: { archived: true },
@@ -718,7 +741,7 @@ Bulk delete contexts matching filters.
 
 ```typescript
 cortex.contexts.deleteMany(
-  filters: ContextFilters,
+  filters: DeleteManyFilters,
   options?: DeleteManyOptions
 ): Promise<DeleteManyResult>
 ```
@@ -726,31 +749,47 @@ cortex.contexts.deleteMany(
 **Parameters:**
 
 ```typescript
+interface DeleteManyFilters {
+  memorySpaceId?: string;
+  userId?: string;
+  status?: "active" | "completed" | "cancelled" | "blocked";
+  completedBefore?: number; // Unix timestamp (ms)
+}
+
 interface DeleteManyOptions {
-  cascadeChildren?: boolean; // Delete descendants
-  dryRun?: boolean;
-  requireConfirmation?: boolean;
-  confirmationThreshold?: number; // Default: 10
+  cascadeChildren?: boolean; // Delete descendants (default: false)
 }
 
 interface DeleteManyResult {
   deleted: number;
   contextIds: string[];
-  descendantsDeleted?: number;
-  wouldDelete?: number;
 }
 ```
+
+> **🔮 Planned Features**: The following options are planned for a future release:
+>
+> - `dryRun?: boolean` - Preview what would be deleted without making changes
+> - `requireConfirmation?: boolean` - Require explicit confirmation for large deletions
+> - `confirmationThreshold?: number` - Auto-confirm if below this count
+> - `descendantsDeleted?: number` - Return field for cascade deletion count
+> - `wouldDelete?: number` - Return field for dryRun mode
 
 **Example:**
 
 ```typescript
-// Delete old cancelled contexts
+// Delete old cancelled contexts (completed more than 90 days ago)
 const result = await cortex.contexts.deleteMany({
   status: "cancelled",
-  completedBefore: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+  completedBefore: Date.now() - 90 * 24 * 60 * 60 * 1000,
 });
 
 console.log(`Deleted ${result.deleted} old contexts`);
+
+// Delete all contexts in a memory space with cascade
+await cortex.contexts.deleteMany(
+  { memorySpaceId: "test-space" },
+  { cascadeChildren: true },
+);
 ```
 
 ---
@@ -763,38 +802,57 @@ Export contexts to JSON or CSV.
 
 ```typescript
 cortex.contexts.export(
-  filters?: ContextFilters,
+  filters?: ExportFilters,
   options?: ExportOptions
-): Promise<string | ExportData>
+): Promise<ExportResult>
 ```
 
 **Parameters:**
 
 ```typescript
+interface ExportFilters {
+  memorySpaceId?: string;
+  userId?: string;
+  status?: "active" | "completed" | "cancelled" | "blocked";
+}
+
 interface ExportOptions {
   format: "json" | "csv";
-  outputPath?: string;
-  includeChain?: boolean; // Include full hierarchy
-  includeConversations?: boolean; // Include ACID conversations
+  includeChain?: boolean; // Include full hierarchy in JSON
   includeVersionHistory?: boolean; // Include version history
 }
+
+interface ExportResult {
+  format: string;
+  data: string; // JSON string or CSV content
+  count: number;
+  exportedAt: number; // Unix timestamp (ms)
+}
 ```
+
+> **🔮 Planned Features**: The following options are planned for a future release:
+>
+> - `outputPath?: string` - Write directly to file (currently returns data string)
+> - `includeConversations?: boolean` - Include linked ACID conversations
 
 **Example:**
 
 ```typescript
-// Export user's workflows (GDPR)
-await cortex.contexts.export(
+// Export user's workflows (GDPR compliance)
+const result = await cortex.contexts.export(
   {
     userId: "user-123",
   },
   {
     format: "json",
     includeChain: true,
-    includeConversations: true,
-    outputPath: "exports/user-123-contexts.json",
+    includeVersionHistory: true,
   },
 );
+
+console.log(`Exported ${result.count} contexts`);
+// Write to file manually if needed
+fs.writeFileSync("exports/user-123-contexts.json", result.data);
 ```
 
 ---
@@ -832,7 +890,7 @@ interface ContextChain {
 **Example:**
 
 ```typescript
-const chain = await cortex.contexts.getChain("ctx_child");
+const chain = await cortex.contexts.getChain("ctx-1234567890-child");
 
 console.log("Root:", chain.root.purpose);
 console.log("Current:", chain.current.purpose);
@@ -866,7 +924,7 @@ cortex.contexts.getRoot(
 
 ```typescript
 // From any context in the chain, get the root
-const root = await cortex.contexts.getRoot("ctx_deeply_nested_child");
+const root = await cortex.contexts.getRoot("ctx-1234567890-nested");
 
 console.log("Original purpose:", root.purpose);
 console.log("Started by:", root.memorySpaceId);
@@ -901,15 +959,15 @@ interface ChildrenOptions {
 
 ```typescript
 // Get direct children
-const children = await cortex.contexts.getChildren("ctx_root");
+const children = await cortex.contexts.getChildren("ctx-1234567890-root");
 
 // Get only active children
-const activeChildren = await cortex.contexts.getChildren("ctx_root", {
+const activeChildren = await cortex.contexts.getChildren("ctx-1234567890-root", {
   status: "active",
 });
 
 // Get all descendants recursively
-const allDescendants = await cortex.contexts.getChildren("ctx_root", {
+const allDescendants = await cortex.contexts.getChildren("ctx-1234567890-root", {
   recursive: true,
 });
 ```
@@ -936,7 +994,7 @@ console.log(`Found ${orphaned.length} orphaned contexts`);
 
 // Clean them up
 for (const ctx of orphaned) {
-  await cortex.contexts.delete(ctx.id);
+  await cortex.contexts.delete(ctx.contextId);
 }
 ```
 
@@ -961,11 +1019,11 @@ cortex.contexts.addParticipant(
 
 ```typescript
 // Add agent to existing workflow
-await cortex.contexts.addParticipant("ctx_abc123", "legal-agent");
+await cortex.contexts.addParticipant("ctx-1234567890-abc123", "legal-agent-space");
 
-const ctx = await cortex.contexts.get("ctx_abc123");
+const ctx = await cortex.contexts.get("ctx-1234567890-abc123");
 console.log("Participants:", ctx.participants);
-// ['supervisor-agent', 'finance-agent', 'legal-agent']
+// ['supervisor-agent-space', 'finance-agent-space', 'legal-agent-space']
 ```
 
 ---
@@ -1001,20 +1059,20 @@ cortex.contexts.grantAccess(
 ```typescript
 // Grant read-only access to partner agent's memory space
 await cortex.contexts.grantAccess(
-  "ctx_abc123",
+  "ctx-1234567890-abc123",
   "partner-agent-space",
   "read-only",
 );
 
 // Grant full context access for collaboration
 await cortex.contexts.grantAccess(
-  "ctx_abc123",
+  "ctx-1234567890-abc123",
   "collaborator-space",
   "context-only",
 );
 
 // Check granted access
-const ctx = await cortex.contexts.get("ctx_abc123");
+const ctx = await cortex.contexts.get("ctx-1234567890-abc123");
 console.log("Granted access:", ctx.grantedAccess);
 // [{ memorySpaceId: 'partner-agent-space', scope: 'read-only', grantedAt: 1699876543210 }]
 ```
@@ -1035,8 +1093,9 @@ console.log("Granted access:", ctx.grantedAccess);
 
 **Errors:**
 
-- `CortexError('CONTEXT_NOT_FOUND')` - Context doesn't exist
-- `CortexError('INVALID_SCOPE')` - Invalid scope value
+- `ContextsValidationError('MISSING_REQUIRED_FIELD')` - contextId, targetMemorySpaceId, or scope is empty
+- `ContextsValidationError('INVALID_CONTEXT_ID_FORMAT')` - contextId format is invalid
+- `ConvexError('CONTEXT_NOT_FOUND')` - Context doesn't exist (from backend)
 
 ---
 
@@ -1112,7 +1171,7 @@ interface ContextVersion {
 
 ```typescript
 // Get version 1 (original state)
-const v1 = await cortex.contexts.getVersion("ctx_abc123", 1);
+const v1 = await cortex.contexts.getVersion("ctx-1234567890-abc123", 1);
 
 console.log(`v1 status: ${v1.status}`);
 console.log(`v1 data:`, v1.data);
@@ -1135,7 +1194,7 @@ cortex.contexts.getHistory(
 **Example:**
 
 ```typescript
-const history = await cortex.contexts.getHistory("ctx_abc123");
+const history = await cortex.contexts.getHistory("ctx-1234567890-abc123");
 
 console.log(`Context has ${history.length} versions:`);
 history.forEach((v) => {
@@ -1183,7 +1242,7 @@ interface ContextVersion {
 ```typescript
 // What was the status on October 20th?
 const historical = await cortex.contexts.getAtTimestamp(
-  "ctx_abc123",
+  "ctx-1234567890-abc123",
   new Date("2025-10-20T10:00:00Z"),
 );
 
@@ -1195,56 +1254,104 @@ if (historical) {
 
 ---
 
-## Universal Filters Reference
+## Filter Reference
 
-All filter options that work across context operations:
+### Currently Available Filters
+
+The following filters are implemented and available across context operations:
 
 ```typescript
-interface ContextFilters {
-  // Identity
+// ListContextsFilter - used by list(), search()
+interface ListContextsFilter {
   memorySpaceId?: string; // Filter by memory space
-  userId?: string;
+  userId?: string; // Filter by user
+  status?: "active" | "completed" | "cancelled" | "blocked";
+  parentId?: string; // Filter by parent context
+  rootId?: string; // Filter by root context
+  depth?: number; // Filter by hierarchy depth (0 = root)
+  limit?: number; // Default: 100, max: 1000
+}
 
-  // Hierarchy
+// CountContextsFilter - used by count()
+interface CountContextsFilter {
+  memorySpaceId?: string;
+  userId?: string;
+  status?: "active" | "completed" | "cancelled" | "blocked";
+}
+
+// UpdateManyFilters - used by updateMany()
+interface UpdateManyFilters {
+  memorySpaceId?: string;
+  userId?: string;
+  status?: "active" | "completed" | "cancelled" | "blocked";
   parentId?: string;
   rootId?: string;
-  depth?: number | RangeQuery;
+}
 
-  // Status
+// DeleteManyFilters - used by deleteMany()
+interface DeleteManyFilters {
+  memorySpaceId?: string;
+  userId?: string;
   status?: "active" | "completed" | "cancelled" | "blocked";
+  completedBefore?: number; // Unix timestamp (ms)
+}
 
-  // Purpose
-  purposeContains?: string;
+// ExportFilters - used by export()
+interface ExportFilters {
+  memorySpaceId?: string;
+  userId?: string;
+  status?: "active" | "completed" | "cancelled" | "blocked";
+}
+```
 
-  // Data (supports nested field queries)
+### 🔮 Planned Filter Enhancements
+
+The following filters are planned for a future release to provide more powerful querying:
+
+```typescript
+// Planned additions to ContextFilters
+interface PlannedContextFilters {
+  // Text search
+  purposeContains?: string; // Search by purpose text
+
+  // Data field queries
   "data.importance"?: number | RangeQuery;
   "data.tags"?: string[];
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 
-  // Conversation
+  // Conversation link
   "conversationRef.conversationId"?: string;
 
-  // Dates
+  // Date ranges
   createdBefore?: Date;
   createdAfter?: Date;
   updatedBefore?: Date;
   updatedAfter?: Date;
-  completedBefore?: Date;
   completedAfter?: Date;
 
-  // Version
+  // Version filtering
   version?: number | RangeQuery;
+}
+
+// Range query syntax (planned)
+interface RangeQuery {
+  $gte?: number;
+  $lte?: number;
+  $gt?: number;
+  $lt?: number;
 }
 ```
 
-**Operations supporting universal filters:**
+**Operations and their filter support:**
 
-- `search()`
-- `list()`
-- `count()`
-- `updateMany()`
-- `deleteMany()`
-- `export()`
+| Operation | memorySpaceId | userId | status | parentId | rootId | depth | completedBefore | limit |
+|-----------|:-------------:|:------:|:------:|:--------:|:------:|:-----:|:---------------:|:-----:|
+| `list()` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| `search()` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| `count()` | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| `updateMany()` | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `deleteMany()` | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| `export()` | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ---
 
@@ -1282,7 +1389,7 @@ const root = await cortex.contexts.create({
 await cortex.contexts.create({
   purpose: "Gather revenue data",
   memorySpaceId: "finance-agent-space",
-  parentId: root.id,
+  parentId: root.contextId,
   userId: "user-cfo",
   conversationRef: root.conversationRef, // Same source
 });
@@ -1290,18 +1397,18 @@ await cortex.contexts.create({
 await cortex.contexts.create({
   purpose: "Compile expense reports",
   memorySpaceId: "accounting-agent-space",
-  parentId: root.id,
+  parentId: root.contextId,
   userId: "user-cfo",
   conversationRef: root.conversationRef,
 });
 
 // All agents can trace back to original user request
-const chain = await cortex.contexts.get("ctx_finance_child", {
+const chain = await cortex.contexts.get("ctx-1234567890-finance", {
   includeChain: true,
   includeConversation: true,
 });
 
-console.log("Original request:", chain.triggerMessages[0].text);
+console.log("Original request:", chain.triggerMessages[0].content);
 ```
 
 ### Pattern 2: Workflow Status Tracking
@@ -1333,12 +1440,13 @@ async function checkWorkflowComplete(rootContextId: string) {
 Link memories to contexts for workflow knowledge:
 
 ```typescript
-// Agent stores memory linked to context
-await cortex.vector.store("finance-agent", {
+// Store memory with context reference in tags/metadata
+const memory = await cortex.vector.store({
+  memorySpaceId: "finance-agent-space",
   content: "Approved $500 refund for defective product",
   contentType: "raw",
   userId: "user-123",
-  source: { type: "tool", timestamp: new Date() },
+  source: { type: "tool", timestamp: Date.now() },
   conversationRef: {
     conversationId: "conv-456",
     messageIds: ["msg-089"],
@@ -1346,15 +1454,20 @@ await cortex.vector.store("finance-agent", {
   metadata: {
     importance: 85,
     tags: ["refund", "approval", "finance"],
-    contextId: "ctx_refund_workflow", // Link to context!
+    contextId: "ctx-1234567890-refund", // Link to context!
   },
 });
 
-// Later: Find all memories for a context
-const contextMemories = await cortex.memory.search("finance-agent", "*", {
-  metadata: { contextId: "ctx_refund_workflow" },
+// Later: Search memories (contextId tracking is application-level)
+const results = await cortex.vector.search({
+  memorySpaceId: "finance-agent-space",
+  query: "refund approval",
+  limit: 10,
 });
 ```
+
+> **Note**: Context tracking in memories is an application-level pattern. 
+> Store the `contextId` in memory metadata and filter/search as needed.
 
 ### Pattern 4: Multi-Agent Coordination
 
@@ -1371,15 +1484,15 @@ const workflow = await cortex.contexts.create({
 });
 
 // Marketing agent checks in
-await cortex.contexts.addParticipant(workflow.id, "marketing-agent");
+await cortex.contexts.addParticipant(workflow.contextId, "marketing-agent-space");
 
 // Finance agent checks in
-await cortex.contexts.addParticipant(workflow.id, "finance-agent");
+await cortex.contexts.addParticipant(workflow.contextId, "finance-agent-space");
 
 // All agents can see who's involved
-const ctx = await cortex.contexts.get(workflow.id);
+const ctx = await cortex.contexts.get(workflow.contextId);
 console.log("Team:", ctx.participants);
-// ['supervisor-agent', 'marketing-agent', 'finance-agent']
+// ['supervisor-agent-space', 'marketing-agent-space', 'finance-agent-space']
 ```
 
 ---
@@ -1557,21 +1670,34 @@ const workflowsFromConvo = await cortex.contexts.search({
 
 ## Error Reference
 
-All context operation errors:
+### Client-Side Validation Errors (ContextsValidationError)
 
-| Error Code               | Description                  | Cause                                          |
-| ------------------------ | ---------------------------- | ---------------------------------------------- |
-| `INVALID_PURPOSE`        | Purpose is invalid           | Empty or malformed purpose                     |
-| `INVALID_MEMORYSPACE_ID` | Memory space ID is invalid   | Empty or malformed memorySpaceId               |
-| `CONTEXT_NOT_FOUND`      | Context doesn't exist        | Invalid contextId                              |
-| `PARENT_NOT_FOUND`       | Parent context doesn't exist | Invalid parentId                               |
-| `USER_NOT_FOUND`         | User doesn't exist           | userId doesn't reference existing user         |
-| `HAS_CHILDREN`           | Context has children         | Can't delete parent without cascade            |
-| `INVALID_STATUS`         | Status is invalid            | Not one of: active/completed/cancelled/blocked |
-| `INVALID_FILTERS`        | Filters malformed            | Bad filter syntax                              |
-| `INVALID_PAGINATION`     | Pagination params bad        | Invalid limit/offset                           |
-| `DELETION_FAILED`        | Delete failed                | Database error                                 |
-| `CONVEX_ERROR`           | Database error               | Convex operation failed                        |
+These errors are thrown by the SDK before the request reaches the backend:
+
+| Error Code                    | Description                    | Cause                                           |
+| ----------------------------- | ------------------------------ | ----------------------------------------------- |
+| `MISSING_REQUIRED_FIELD`      | Required field is missing      | Field is null, undefined, or empty string       |
+| `WHITESPACE_ONLY`             | Field contains only whitespace | Purpose has no actual content                   |
+| `INVALID_CONTEXT_ID_FORMAT`   | Context ID format is invalid   | Must match `ctx-{timestamp}-{random}`           |
+| `INVALID_CONVERSATION_ID_FORMAT` | Conversation ID format invalid | Must start with `conv-`                       |
+| `INVALID_STATUS`              | Status value is invalid        | Not one of: active/completed/cancelled/blocked  |
+| `INVALID_FORMAT`              | Export format is invalid       | Not one of: json/csv                            |
+| `INVALID_RANGE`               | Numeric value out of range     | depth < 0, limit <= 0 or > 1000, version < 1    |
+| `INVALID_TYPE`                | Type is incorrect              | data is not an object, etc.                     |
+| `INVALID_DATE`                | Date is invalid                | Not a valid Date object                         |
+| `EMPTY_UPDATES`               | Updates object is empty        | Must include at least one field to update       |
+| `EMPTY_FILTERS`               | Filters object is empty        | Must include at least one filter                |
+| `EMPTY_ARRAY`                 | Array is empty                 | Required array has no elements                  |
+
+### Backend Errors (ConvexError)
+
+These errors are returned from the Convex backend:
+
+| Error Code           | Description                    | Cause                                   |
+| -------------------- | ------------------------------ | --------------------------------------- |
+| `CONTEXT_NOT_FOUND`  | Context doesn't exist          | Invalid or non-existent contextId       |
+| `PARENT_NOT_FOUND`   | Parent context doesn't exist   | Invalid parentId in create()            |
+| `HAS_CHILDREN`       | Context has children           | Can't delete without cascade/orphan     |
 
 **See Also:**
 

@@ -1,6 +1,6 @@
 # User Operations API
 
-> **Last Updated**: 2025-12-26
+> **Last Updated**: 2026-01-01
 
 Complete API reference for user profile management, including multi-tenancy and auth context integration.
 
@@ -146,7 +146,8 @@ User profiles are stored in **`cortex.immutable.*`** with `type='user'`:
 ```typescript
 // When you call:
 await cortex.users.update("user-123", {
-  data: { displayName: "Alex", email: "alex@example.com" },
+  displayName: "Alex",
+  email: "alex@example.com",
 });
 
 // Cortex actually does:
@@ -156,6 +157,8 @@ await cortex.immutable.store({
   data: { displayName: "Alex", email: "alex@example.com" },
 });
 ```
+
+> **Note:** The `users.update()` method accepts data fields directly (not wrapped in a `data` object). The SDK handles the conversion to the immutable store format internally.
 
 **Why the wrapper exists:**
 
@@ -300,25 +303,21 @@ cortex.users.get(
 
 ```typescript
 interface UserProfile {
-  // Identity (REQUIRED)
-  id: string; // User ID
+  // Identity
+  id: string;                          // User ID
+  tenantId?: string;                   // Multi-tenancy: tenant this user belongs to
 
   // User Data (FLEXIBLE - structure is up to you!)
-  data: Record<string, any>; // Any JSON-serializable data
+  data: Record<string, unknown>;       // Any JSON-serializable data
 
   // System fields (automatic)
-  version: number;
-  createdAt: Date;
-  updatedAt: Date;
-  previousVersions?: UserVersion[];
-}
-
-interface UserVersion {
-  version: number;
-  data: Record<string, any>;
-  timestamp: Date;
+  version: number;                     // Current version number
+  createdAt: number;                   // Unix timestamp (ms) when created
+  updatedAt: number;                   // Unix timestamp (ms) when last updated
 }
 ```
+
+> **Note:** Version history is accessed via `getHistory()` and `getVersion()` methods, not returned in the profile object.
 
 **Suggested Data Structure** (not enforced):
 
@@ -399,7 +398,7 @@ cortex.users.update(
 - `userId` (string) - Unique user identifier
 - `data` (Record<string, unknown>) - User profile data to merge with existing (any JSON-serializable structure)
 
-**Note:** Unlike `immutable.*` which requires `type` and `id`, `users.update()` only needs `userId` (the `type='user'` is implicit). Updates are always merged with existing data by default.
+**Note:** Unlike `immutable.*` which requires `type` and `id`, `users.update()` only needs `userId` (the `type='user'` is implicit). Updates are always merged with existing data by default (deep merge).
 
 **Returns:**
 
@@ -409,7 +408,7 @@ cortex.users.update(
 
 - Creates new version in immutable store
 - Updates `updatedAt` timestamp
-- Merges with existing profile by default (unless `merge: false`)
+- Deep merges with existing profile data automatically
 
 **Example 1: Create new profile**
 
@@ -435,15 +434,15 @@ console.log(user.data.displayName); // "Alex Johnson"
 ```typescript
 // Get current user
 const user = await cortex.users.get("user-123");
-// user.data = { displayName: 'Alex', email: 'alex@...', preferences: { theme: 'dark' } }
+// user.data = { displayName: 'Alex', email: 'alex@example.com', preferences: { theme: 'dark' } }
 
-// Update theme (merges with existing, creates v2)
+// Update theme (deep merges with existing, creates new version)
 await cortex.users.update("user-123", {
   preferences: {
     theme: "light", // Only updates theme, keeps other preferences
   },
 });
-// Result: { displayName: 'Alex', email: 'alex@...', preferences: { theme: 'light' } }
+// Result: { displayName: 'Alex', email: 'alex@example.com', preferences: { theme: 'light' } }
 
 // Update last seen
 await cortex.users.update("user-123", {
@@ -631,88 +630,58 @@ try {
 }
 ```
 
-**Example 4: Granular Control (Cortex Cloud)**
+**Example 4: Granular Control (🚧 Planned - Cloud Mode)**
+
+> **Note:** Granular layer control is planned for Cortex Cloud. Currently, `cascade: true` deletes from ALL layers. The options below are not yet implemented.
 
 ```typescript
-// Cortex Cloud: Only delete mutable data (like sessions, cache)
+// 🚧 PLANNED - Cortex Cloud: Only delete mutable data (like sessions, cache)
 const result = await cortex.users.delete("user-123", {
   cascade: true,
-  deleteFromConversations: false, // Preserve
-  deleteFromImmutable: false, // Preserve
-  deleteFromMutable: true, // DELETE (live data only)
-  deleteFromVector: false, // Preserve
-  auditReason: "Session cleanup",
+  // 🚧 PLANNED OPTIONS (not yet implemented):
+  // deleteFromConversations: false,  // Preserve
+  // deleteFromImmutable: false,      // Preserve
+  // deleteFromMutable: true,         // DELETE (live data only)
+  // deleteFromVector: false,         // Preserve
+  // auditReason: "Session cleanup",
 });
 
-console.log(`Mutable records deleted: ${result.mutableRecordsDeleted}`);
-console.log(`Everything else preserved`);
+// Currently deletes from all layers when cascade: true
+console.log(`Total deleted: ${result.totalDeleted}`);
 ```
 
-**Example 5: Direct Mode Alternative (Manual GDPR Compliance)**
+**Example 5: Why Use Cascade (vs Manual Deletion)**
+
+The SDK's cascade deletion handles all the complexity automatically:
 
 ```typescript
-// Direct Mode: Manually delete from each store
-async function deleteUserGDPR(userId: string) {
-  const deletionLog = {
-    userId,
-    deletedAt: new Date(),
-    stores: {},
-  };
+// ✅ Recommended: Use cascade deletion (SDK handles all layers)
+const result = await cortex.users.delete("user-123", {
+  cascade: true,
+  verify: true,  // Verify deletion completeness
+});
 
-  // Layer 1a: Conversations
-  const conversations = await cortex.conversations.list({ userId });
-  for (const conv of conversations) {
-    await cortex.conversations.delete(conv.id);
-  }
-  deletionLog.stores.conversations = conversations.length;
+console.log(`Deleted ${result.totalDeleted} records`);
+console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
 
-  // Layer 1b: Immutable
-  const immutableRecords = await cortex.immutable.list({ userId });
-  for (const record of immutableRecords) {
-    await cortex.immutable.purge(record.type, record.id);
-  }
-  deletionLog.stores.immutable = immutableRecords.length;
-
-  // Layer 1c: Mutable (must know namespaces)
-  const mutableNamespaces = ["user-sessions", "user-cache", "user-preferences"];
-  let mutableCount = 0;
-  for (const ns of mutableNamespaces) {
-    const result = await cortex.mutable.purgeMany(ns, { userId });
-    mutableCount += result.deleted;
-  }
-  deletionLog.stores.mutable = mutableCount;
-
-  // Layer 2: Vector
-  const agents = await cortex.agents.list();
-  let vectorCount = 0;
-  for (const agent of agents) {
-    const result = await cortex.memory.deleteMany(agent.id, { userId });
-    vectorCount += result.deleted;
-  }
-  deletionLog.stores.vector = vectorCount;
-
-  // Delete user profile
-  await cortex.immutable.purge("user", userId);
-  deletionLog.stores.profile = 1;
-
-  return deletionLog;
-}
-
-// Usage (Direct Mode)
-const result = await deleteUserGDPR("user-123");
-// Works! But requires ~40 lines of code vs 1 line with Cortex Cloud
+// ❌ Manual approach would require calling each API separately:
+// - cortex.conversations.delete() for each conversation
+// - cortex.immutable.purge() for each record
+// - cortex.mutable.delete() for each key
+// - cortex.vector.delete() for each memory
+// - cortex.facts.delete() for each fact
+// The cascade option handles all of this automatically!
 ```
 
-**Comparison:**
+**SDK Cascade vs Cloud Mode:**
 
-| Feature              | Direct Mode     | Cortex Cloud            |
-| -------------------- | --------------- | ----------------------- |
-| **GDPR Compliant**   | ✅ Yes (manual) | ✅ Yes (automatic)      |
-| **Code Required**    | ~40 lines       | 1 line                  |
-| **Cascade Deletion** | Manual loops    | Automatic               |
-| **Audit Trail**      | DIY             | Included                |
-| **Verification**     | Manual          | Automatic               |
-| **Cost**             | Free            | Included in Cloud tiers |
+| Feature              | SDK (Free)             | Cloud Mode (Planned)    |
+| -------------------- | ---------------------- | ----------------------- |
+| **Cascade Deletion** | ✅ Automatic           | ✅ Automatic            |
+| **Verification**     | ✅ Automatic           | ✅ + Cryptographic proof |
+| **Rollback**         | ✅ Automatic           | ✅ + Audit trail        |
+| **Legal Certificate**| ❌ Not included        | ✅ Compliance document  |
+| **Graph Support**    | ✅ DIY adapter         | ✅ Managed, zero-config |
 
 **Errors:**
 
@@ -1160,7 +1129,7 @@ Export user profiles to JSON or CSV format with optional related data.
 
 ```typescript
 cortex.users.export(
-  options?: ExportUsersOptions
+  options: ExportUsersOptions    // Required - format is mandatory
 ): Promise<string>
 ```
 
@@ -1168,13 +1137,15 @@ cortex.users.export(
 
 ```typescript
 interface ExportUsersOptions {
-  filters?: UserFilters; // Filter users to export
-  format: "json" | "csv"; // Output format (required)
-  includeVersionHistory?: boolean; // Include previousVersions array
-  includeConversations?: boolean; // Include user's conversations
-  includeMemories?: boolean; // Include user's memories (from conversation memory spaces)
+  format: "json" | "csv";              // Output format (REQUIRED)
+  filters?: UserFilters;               // Filter users to export
+  includeVersionHistory?: boolean;     // Include version history for each user
+  includeConversations?: boolean;      // Include user's conversations
+  includeMemories?: boolean;           // Include user's memories (from conversation memory spaces)
 }
 ```
+
+> **Note:** The `options` parameter is required and must include `format`.
 
 **Returns:**
 
@@ -1261,17 +1232,25 @@ Get a specific version of a user profile.
 cortex.users.getVersion(
   userId: string,
   version: number
-): Promise<ProfileVersion | null>
+): Promise<UserVersion | null>
 ```
 
 **Parameters:**
 
 - `userId` (string) - User ID
-- `version` (number) - Version number to retrieve
+- `version` (number) - Version number to retrieve (must be >= 1)
 
 **Returns:**
 
-- `ProfileVersion` - Specific version
+```typescript
+interface UserVersion {
+  version: number;                    // Version number
+  data: Record<string, unknown>;      // Profile data at this version
+  timestamp: number;                  // Unix timestamp (ms) when version was created
+}
+```
+
+- `UserVersion` - Specific version data
 - `null` - If version doesn't exist
 
 **Example:**
@@ -1281,29 +1260,31 @@ cortex.users.getVersion(
 const v1 = await cortex.users.getVersion("user-123", 1);
 
 if (v1) {
-  console.log(`Original display name: ${v1.displayName}`);
-  console.log(`Original theme: ${v1.preferences.theme}`);
-  console.log(`Created: ${v1.timestamp}`);
+  console.log(`Version: ${v1.version}`);
+  console.log(`Display name: ${v1.data.displayName}`);
+  console.log(`Theme: ${v1.data.preferences?.theme}`);
+  console.log(`Created: ${new Date(v1.timestamp).toISOString()}`);
 }
 ```
 
 **Errors:**
 
-- `CortexError('USER_NOT_FOUND')` - User doesn't exist
-- `CortexError('VERSION_NOT_FOUND')` - Version doesn't exist
+- `UserValidationError('MISSING_USER_ID')` - User ID is required
+- `UserValidationError('INVALID_VERSION_NUMBER')` - Version must be a number
+- `UserValidationError('INVALID_VERSION_RANGE')` - Version must be >= 1
 
 ---
 
 ### getHistory()
 
-Get all versions of a user profile.
+Get all versions of a user profile, sorted by version descending (newest first).
 
 **Signature:**
 
 ```typescript
 cortex.users.getHistory(
   userId: string
-): Promise<ProfileVersion[]>
+): Promise<UserVersion[]>
 ```
 
 **Parameters:**
@@ -1312,7 +1293,16 @@ cortex.users.getHistory(
 
 **Returns:**
 
-- `ProfileVersion[]` - Array of all profile versions
+- `UserVersion[]` - Array of all profile versions (newest first)
+- Empty array `[]` if user doesn't exist
+
+```typescript
+interface UserVersion {
+  version: number;                    // Version number
+  data: Record<string, unknown>;      // Profile data at this version
+  timestamp: number;                  // Unix timestamp (ms) when version was created
+}
+```
 
 **Example:**
 
@@ -1321,15 +1311,14 @@ const history = await cortex.users.getHistory("user-123");
 
 console.log(`User has ${history.length} profile versions:`);
 history.forEach((v) => {
-  console.log(`v${v.version} (${v.timestamp}):`);
-  console.log(`  Name: ${v.displayName}`);
-  console.log(`  Theme: ${v.preferences?.theme}`);
-  console.log(`  Reason: ${v.updatedBy || "N/A"}`);
+  console.log(`v${v.version} (${new Date(v.timestamp).toISOString()}):`);
+  console.log(`  Name: ${v.data.displayName}`);
+  console.log(`  Theme: ${v.data.preferences?.theme}`);
 });
 
-// Analyze preference changes
+// Analyze preference changes over time
 const themeChanges = history.filter((v, i, arr) => {
-  return i > 0 && v.preferences?.theme !== arr[i - 1].preferences?.theme;
+  return i > 0 && v.data.preferences?.theme !== arr[i - 1].data.preferences?.theme;
 });
 
 console.log(`Theme changed ${themeChanges.length} times`);
@@ -1337,7 +1326,7 @@ console.log(`Theme changed ${themeChanges.length} times`);
 
 **Errors:**
 
-- `CortexError('USER_NOT_FOUND')` - User doesn't exist
+- `UserValidationError('MISSING_USER_ID')` - User ID is required
 
 **See Also:**
 
@@ -1355,7 +1344,7 @@ Get user profile state at a specific point in time.
 cortex.users.getAtTimestamp(
   userId: string,
   timestamp: Date
-): Promise<ProfileVersion | null>
+): Promise<UserVersion | null>
 ```
 
 **Parameters:**
@@ -1365,8 +1354,16 @@ cortex.users.getAtTimestamp(
 
 **Returns:**
 
-- `ProfileVersion` - Profile version that was current at that time
+- `UserVersion` - Profile version that was current at that time
 - `null` - If user didn't exist at that time
+
+```typescript
+interface UserVersion {
+  version: number;                    // Version number
+  data: Record<string, unknown>;      // Profile data at this version
+  timestamp: number;                  // Unix timestamp (ms) when version was created
+}
+```
 
 **Example:**
 
@@ -1378,17 +1375,16 @@ const augustProfile = await cortex.users.getAtTimestamp(
 );
 
 if (augustProfile) {
-  console.log(`Theme in August: ${augustProfile.preferences.theme}`);
-  console.log(`Tier in August: ${augustProfile.metadata.tier}`);
+  console.log(`Theme in August: ${augustProfile.data.preferences?.theme}`);
+  console.log(`Tier in August: ${augustProfile.data.metadata?.tier}`);
 }
 
 // Track tier changes over time
-const janTier = (
-  await cortex.users.getAtTimestamp("user-123", new Date("2025-01-01"))
-)?.metadata.tier;
-const octTier = (
-  await cortex.users.getAtTimestamp("user-123", new Date("2025-10-01"))
-)?.metadata.tier;
+const janProfile = await cortex.users.getAtTimestamp("user-123", new Date("2025-01-01"));
+const octProfile = await cortex.users.getAtTimestamp("user-123", new Date("2025-10-01"));
+
+const janTier = janProfile?.data.metadata?.tier;
+const octTier = octProfile?.data.metadata?.tier;
 
 if (janTier === "free" && octTier === "pro") {
   console.log("User upgraded from free to pro this year!");
@@ -1397,8 +1393,8 @@ if (janTier === "free" && octTier === "pro") {
 
 **Errors:**
 
-- `CortexError('USER_NOT_FOUND')` - User doesn't exist
-- `CortexError('INVALID_TIMESTAMP')` - Timestamp is invalid
+- `UserValidationError('MISSING_USER_ID')` - User ID is required
+- `UserValidationError('INVALID_TIMESTAMP')` - Timestamp is invalid or negative
 
 ---
 
@@ -1435,16 +1431,25 @@ if (await cortex.users.exists("user-123")) {
 
 ### getOrCreate()
 
-Get user profile or create default if doesn't exist.
+Get user profile or create with defaults if doesn't exist.
 
 **Signature:**
 
 ```typescript
 cortex.users.getOrCreate(
   userId: string,
-  defaults?: Partial<UserProfileUpdate>
+  defaults?: Record<string, unknown>
 ): Promise<UserProfile>
 ```
+
+**Parameters:**
+
+- `userId` (string) - User ID
+- `defaults` (Record<string, unknown>, optional) - Default profile data if user doesn't exist
+
+**Returns:**
+
+- `UserProfile` - Existing profile or newly created profile with defaults
 
 **Example:**
 
@@ -1462,183 +1467,192 @@ const user = await cortex.users.getOrCreate("user-123", {
 });
 
 // Use immediately (guaranteed to exist)
-console.log(`Hello, ${user.displayName}!`);
+console.log(`Hello, ${user.data.displayName}!`);
 ```
+
+**Errors:**
+
+- `UserValidationError('MISSING_USER_ID')` - User ID is required
+- `UserValidationError('INVALID_DATA_TYPE')` - Defaults must be an object
 
 ---
 
 ### merge()
 
-Merge partial updates with existing profile (default behavior of update).
+Merge partial updates with existing profile. This is an alias for `update()` with merge behavior.
 
 **Signature:**
 
 ```typescript
 cortex.users.merge(
   userId: string,
-  updates: Partial<UserProfileUpdate>
+  updates: Record<string, unknown>
 ): Promise<UserProfile>
 ```
+
+**Parameters:**
+
+- `userId` (string) - User ID
+- `updates` (Record<string, unknown>) - Partial updates to deep merge with existing data
+
+**Returns:**
+
+- `UserProfile` - Updated profile with merged data
 
 **Example:**
 
 ```typescript
 // Existing profile
 const existing = await cortex.users.get("user-123");
-// { displayName: 'Alex', preferences: { theme: 'dark', language: 'en' } }
+// existing.data = { displayName: 'Alex', preferences: { theme: 'dark', language: 'en' } }
 
-// Merge update (only changes specified fields)
+// Merge update (deep merges, only changes specified fields)
 await cortex.users.merge("user-123", {
   preferences: {
     notifications: true, // Adds notifications, keeps theme and language
   },
 });
 
-// Result
-// { displayName: 'Alex', preferences: { theme: 'dark', language: 'en', notifications: true } }
+// Result: { displayName: 'Alex', preferences: { theme: 'dark', language: 'en', notifications: true } }
 ```
+
+**Errors:**
+
+- `UserValidationError('MISSING_USER_ID')` - User ID is required
+- `UserValidationError('MISSING_DATA')` - Updates data is required
 
 ---
 
 ## User-Memory Integration
 
-### Finding User's Memories Across Agents
+### Finding User's Memories
+
+Use the `memory.recall()` orchestration API to get unified context for a user:
 
 ```typescript
-async function getUserMemoriesAcrossAgents(userId: string) {
-  const agents = await cortex.agents.list();
-  const allMemories = [];
+// Get memories and facts for a user
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
+  userId: "user-123",
+  limit: 20,
+});
 
-  for (const agent of agents) {
-    const memories = await cortex.memory.search(agent.id, "*", {
-      userId: userId,
-      sortBy: "createdAt",
-      sortOrder: "desc",
-    });
-
-    if (memories.length > 0) {
-      allMemories.push({
-        memorySpaceId: agent.id, // Note: Old agent registry pattern
-        agentName: agent.name,
-        memories: memories,
-      });
-    }
-  }
-
-  return allMemories;
-}
-
-// Usage
-const userMemories = await getUserMemoriesAcrossAgents("user-123");
-console.log(`User has memories in ${userMemories.length} agents`);
+console.log(`Found ${result.items.length} relevant items`);
+console.log(`Context for LLM: ${result.context}`);
 ```
 
 ### Combining Profile + Memory Search
 
 ```typescript
-async function getCompleteUserContext(userId: string, query: string) {
+async function getCompleteUserContext(userId: string, memorySpaceId: string, query: string) {
   // Get profile
   const profile = await cortex.users.get(userId);
 
-  // Search memories across all agents
-  const agents = await cortex.agents.list();
-  const memories = [];
-
-  for (const agent of agents) {
-    const agentMemories = await cortex.memory.search(agent.id, query, {
-      embedding: await embed(query),
-      userId: userId,
-      limit: 3,
-    });
-
-    memories.push(...agentMemories);
-  }
+  // Get memories using recall
+  const memoryResult = await cortex.memory.recall({
+    memorySpaceId,
+    query,
+    userId,
+    limit: 10,
+  });
 
   return {
     profile,
-    memories: memories.sort((a, b) => b.score - a.score),
+    memories: memoryResult.items,
+    context: memoryResult.context,
   };
 }
 
 // Usage
-const context = await getCompleteUserContext("user-123", "user preferences");
-console.log(`User: ${context.profile.displayName}`);
+const context = await getCompleteUserContext("user-123", "user-123-space", "user preferences");
+console.log(`User: ${context.profile?.data.displayName}`);
 console.log(`Found ${context.memories.length} relevant memories`);
 ```
 
 ---
 
-## Universal Filters Reference
+## Filters Reference
 
-All filter options that work across user operations:
+Filter options available for user operations:
 
 ```typescript
 interface UserFilters {
-  // Identity
-  email?: string;
-  displayName?: string;
+  // Pagination
+  limit?: number;              // Max results (default: 50, max: 1000)
+  offset?: number;             // Skip first N results
 
-  // Preferences (nested object filters)
-  "preferences.theme"?: "light" | "dark";
-  "preferences.language"?: string;
-  "preferences.notifications"?: boolean;
-  preferences?: Record<string, any>; // Any preference field
+  // Date filters (Unix timestamps in milliseconds)
+  createdAfter?: number;       // Filter by createdAt > timestamp
+  createdBefore?: number;      // Filter by createdAt < timestamp
+  updatedAfter?: number;       // Filter by updatedAt > timestamp
+  updatedBefore?: number;      // Filter by updatedAt < timestamp
 
-  // Metadata (nested object filters)
-  "metadata.tier"?: "free" | "pro" | "enterprise";
-  "metadata.company"?: string;
-  metadata?: Record<string, any>; // Any metadata field with operators
+  // Sorting
+  sortBy?: "createdAt" | "updatedAt";  // Sort field
+  sortOrder?: "asc" | "desc";          // Sort direction
 
-  // Date filters
-  createdBefore?: Date;
-  createdAfter?: Date;
-  updatedBefore?: Date;
-  updatedAfter?: Date;
+  // Client-side filters (see note below)
+  displayName?: string;        // Filter by data.displayName (contains match)
+  email?: string;              // Filter by data.email (contains match)
 
-  // Version filters
-  version?: number | RangeQuery;
-
-  // Range query operators
-  // { $gte: number, $lte: number, $eq: number, $ne: number, $gt: number, $lt: number }
+  // Multi-tenancy
+  tenantId?: string;           // Filter by tenant ID
 }
 ```
 
-**Operations supporting universal filters:**
+> **⚠️ Client-Side Filtering Note:** The `displayName` and `email` filters are applied client-side after fetching results from the database. This means:
+> - Results are filtered AFTER pagination is applied
+> - You may receive fewer results than your `limit` if many are filtered out
+> - For large datasets, consider using database-level filters (date ranges) first
 
-- `search()`
-- `list()`
-- `count()`
-- `updateMany()`
-- `deleteMany()`
-- `export()`
+**Operations supporting filters:**
+
+- `search()` - Returns `UserProfile[]`
+- `list()` - Returns `ListUsersResult` with pagination metadata
+- `count()` - Returns count (supports date filters only)
+- `updateMany()` - Filter-based bulk updates
+- `deleteMany()` - Filter-based bulk deletes
+- `export()` - Filter users to export
 
 **Example:**
 
 ```typescript
-// Same filters across all operations
-const filters = {
-  metadata: {
-    tier: "pro",
-    signupDate: {
-      $gte: new Date("2025-01-01"),
-    },
-  },
-  preferences: {
-    theme: "dark",
-  },
-};
+// Filter by date range
+const recentUsers = await cortex.users.list({
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,  // Last 30 days
+  sortBy: "createdAt",
+  sortOrder: "desc",
+  limit: 50,
+});
 
-// Count
-const count = await cortex.users.count(filters);
+// Client-side displayName filter
+const alexUsers = await cortex.users.search({
+  displayName: "alex",  // Case-insensitive contains match
+  limit: 100,
+});
 
-// List
-const users = await cortex.users.list(filters);
+// Bulk update with filters
+await cortex.users.updateMany(
+  { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
+  { data: { welcomeEmailSent: true } }
+);
+```
 
-// Update
-await cortex.users.updateMany(filters, { metadata: { reviewed: true } });
+### 🚧 Planned: Advanced Filters (Not Yet Implemented)
 
-// Export
-await cortex.users.export(filters, { format: "json" });
+The following advanced filter capabilities are planned for a future release:
+
+```typescript
+// 🚧 PLANNED - NOT YET IMPLEMENTED:
+interface AdvancedFilters {
+  // Nested object filters (planned)
+  "preferences.theme"?: "light" | "dark";
+  "metadata.tier"?: "free" | "pro" | "enterprise";
+  
+  // Range query operators (planned)
+  // { $gte, $lte, $eq, $ne, $gt, $lt }
+}
 ```
 
 ---
@@ -1681,32 +1695,29 @@ async function enhanceProfileFromConversation(
   conversation: string,
 ) {
   const user = await cortex.users.get(userId);
+  const existingData = user?.data || {};
 
   // Extract insights from conversation
   const insights = await extractUserInsights(conversation);
 
-  // Update profile incrementally
-  await cortex.users.update(
-    userId,
-    {
-      displayName: insights.name || user.displayName,
-      email: insights.email || user.email,
-      preferences: {
-        ...user.preferences,
-        ...insights.preferences, // Add new preferences
-      },
-      metadata: {
-        ...user.metadata,
-        lastSeen: new Date(),
-        conversationCount: (user.metadata.conversationCount || 0) + 1,
-      },
+  // Update profile incrementally (automatically deep merges)
+  await cortex.users.update(userId, {
+    displayName: insights.name || existingData.displayName,
+    email: insights.email || existingData.email,
+    preferences: {
+      ...(existingData.preferences || {}),
+      ...insights.preferences, // Add new preferences
     },
-    {
-      skipVersioning: true, // Don't version routine updates
+    metadata: {
+      ...(existingData.metadata || {}),
+      lastSeen: new Date().toISOString(),
+      conversationCount: ((existingData.metadata?.conversationCount as number) || 0) + 1,
     },
-  );
+  });
 }
 ```
+
+> **Note:** Each `update()` call creates a new version automatically. For use cases requiring version control (like skip versioning for routine updates), this feature is planned for a future release.
 
 ### Pattern 3: Personalized Responses
 
@@ -1742,40 +1753,40 @@ async function generatePersonalizedResponse(userId: string, message: string) {
 
 ### Pattern 4: Multi-Tenant User Management
 
-Isolate users by tenant:
+Use auth context for tenant isolation:
 
 ```typescript
-// Create user with tenant
+import { Cortex, createAuthContext } from "@cortex-platform/sdk";
+
+// Initialize Cortex with tenant-scoped auth
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    tenantId: "tenant-abc",  // All operations scoped to this tenant
+    userId: "admin-user",
+  }),
+});
+
+// Create user (automatically tagged with tenantId)
 await cortex.users.update("user-123", {
   displayName: "Alex Johnson",
-  metadata: {
-    tenantId: "tenant-abc",
-    role: "admin",
-    permissions: ["read", "write", "admin"],
-  },
+  role: "admin",
+  permissions: ["read", "write", "admin"],
 });
 
-// Query users by tenant
-const tenantUsers = await cortex.users.search({
-  metadata: { tenantId: "tenant-abc" },
-});
+// List users (automatically filtered by tenant from auth context)
+const result = await cortex.users.list({ limit: 100 });
+console.log(`Tenant has ${result.total} users`);
 
-// Count users per tenant
-const count = await cortex.users.count({
-  metadata: { tenantId: "tenant-abc" },
-});
+// Count users in tenant
+const count = await cortex.users.count();
 
 // Export tenant data (GDPR)
-const tenantData = await cortex.users.export(
-  {
-    metadata: { tenantId: "tenant-abc" },
-  },
-  {
-    format: "json",
-    includeMemories: true,
-    includeConversations: true,
-  },
-);
+const tenantData = await cortex.users.export({
+  format: "json",
+  includeMemories: true,
+  includeConversations: true,
+});
 ```
 
 ### Pattern 5: Preference Sync UI
@@ -1787,20 +1798,14 @@ Sync user preferences from frontend:
 async function handlePreferenceChange(
   userId: string,
   section: string,
-  value: any,
+  value: unknown,
 ) {
-  // Update just that preference section
-  await cortex.users.update(
-    userId,
-    {
-      preferences: {
-        [section]: value,
-      },
+  // Update just that preference section (deep merges automatically)
+  await cortex.users.update(userId, {
+    preferences: {
+      [section]: value,
     },
-    {
-      versionReason: "user-preference-change",
-    },
-  );
+  });
 
   // All agents immediately see the change
   console.log("Preference updated across all agents");
@@ -1821,28 +1826,28 @@ Track user engagement and behavior:
 ```typescript
 async function updateUserEngagement(userId: string, event: string) {
   const user = await cortex.users.get(userId);
+  const existingMetadata = (user?.data.metadata || {}) as Record<string, unknown>;
 
-  await cortex.users.update(
-    userId,
-    {
-      metadata: {
-        ...user.metadata,
-        lastSeen: new Date(),
-        totalSessions: (user.metadata.totalSessions || 0) + 1,
-        lastAction: event,
-        engagementScore: calculateEngagement(user),
-      },
+  await cortex.users.update(userId, {
+    metadata: {
+      ...existingMetadata,
+      lastSeen: new Date().toISOString(),
+      totalSessions: ((existingMetadata.totalSessions as number) || 0) + 1,
+      lastAction: event,
+      engagementScore: calculateEngagement(user),
     },
-    {
-      skipVersioning: true, // Don't version analytics updates
-    },
-  );
+  });
 }
 
-function calculateEngagement(user: UserProfile): number {
+function calculateEngagement(user: { data: Record<string, unknown> } | null): number {
+  if (!user) return 0;
+  const metadata = user.data.metadata as Record<string, unknown> || {};
+  const signupDate = metadata.signupDate as string;
+  if (!signupDate) return 0;
+  
   const daysSinceSignup =
-    (Date.now() - user.metadata.signupDate.getTime()) / (24 * 60 * 60 * 1000);
-  const sessions = user.metadata.totalSessions || 0;
+    (Date.now() - new Date(signupDate).getTime()) / (24 * 60 * 60 * 1000);
+  const sessions = (metadata.totalSessions as number) || 0;
 
   return Math.min((sessions / daysSinceSignup) * 10, 100);
 }
@@ -1854,108 +1859,81 @@ function calculateEngagement(user: UserProfile): number {
 
 ### Tenant-Specific User Management
 
+The SDK supports multi-tenancy through the `tenantId` field in auth context:
+
 ```typescript
-// Helper class for multi-tenant user management
-class TenantUserManager {
-  constructor(private tenantId: string) {}
+import { Cortex, createAuthContext } from "@cortex-platform/sdk";
 
-  async getUser(userLocalId: string): Promise<UserProfile | null> {
-    const userId = `${this.tenantId}:${userLocalId}`;
-    return await cortex.users.get(userId);
-  }
-
-  async updateUser(
-    userLocalId: string,
-    data: UserProfileUpdate,
-  ): Promise<UserProfile> {
-    const userId = `${this.tenantId}:${userLocalId}`;
-    return await cortex.users.update(userId, {
-      ...data,
-      metadata: {
-        ...data.metadata,
-        tenantId: this.tenantId, // Ensure tenant is set
-      },
-    });
-  }
-
-  async listTenantUsers(options?: ListOptions): Promise<ListResult> {
-    return await cortex.users.list({
-      metadata: { tenantId: this.tenantId },
-      ...options,
-    });
-  }
-
-  async countTenantUsers(): Promise<number> {
-    return await cortex.users.count({
-      metadata: { tenantId: this.tenantId },
-    });
-  }
-
-  async exportTenantData(): Promise<any> {
-    return await cortex.users.export(
-      {
-        metadata: { tenantId: this.tenantId },
-      },
-      {
-        format: "json",
-        includeMemories: true,
-        includeConversations: true,
-      },
-    );
-  }
-}
-
-// Usage
-const acmeTenant = new TenantUserManager("tenant-acme");
-
-await acmeTenant.updateUser("alex", {
-  displayName: "Alex Johnson",
-  metadata: { role: "admin" },
+// Initialize with tenant-specific auth context
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    tenantId: "tenant-acme",
+    userId: "admin-user",
+  }),
 });
 
-const users = await acmeTenant.listTenantUsers();
-console.log(`Acme has ${users.total} users`);
+// All operations are now scoped to tenant-acme
+// Users can only see/modify data within their tenant
+
+// Create user in tenant
+await cortex.users.update("alex", {
+  displayName: "Alex Johnson",
+  role: "admin",
+});
+
+// List users (automatically filtered by tenantId from auth context)
+const result = await cortex.users.list({ limit: 100 });
+console.log(`Tenant has ${result.total} users`);
+
+// Export tenant users
+const exportData = await cortex.users.export({
+  format: "json",
+  includeConversations: true,
+  includeMemories: true,
+});
 ```
+
+> **Note:** When using `authContext`, the `tenantId` is automatically injected into all operations. Users can only access data within their tenant.
 
 ---
 
 ## Configuration
 
-### Profile Validation
+### 🚧 Planned: Profile Validation (Not Yet Implemented)
 
-Configure profile validation rules:
+The following configuration options are planned for a future release:
 
 ```typescript
+// 🚧 PLANNED - NOT YET IMPLEMENTED
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
-  userProfileValidation: {
-    requiredFields: ["displayName"],
-    maxDisplayNameLength: 100,
-    emailRequired: false,
-    validateEmail: true,
-    allowCustomPreferences: true,
-    allowCustomMetadata: true,
-  },
+  // userProfileValidation: {
+  //   requiredFields: ["displayName"],
+  //   maxDisplayNameLength: 100,
+  //   emailRequired: false,
+  //   validateEmail: true,
+  // },
 });
 ```
 
-### Version Retention
+Currently, profile validation is handled through the SDK's built-in validators which check:
+- User ID is a non-empty string
+- Data is a valid object (not array, not null)
 
-Unlike Vector memories, user profiles have **no version retention limit** by default:
+### 🚧 Planned: Version Retention (Not Yet Implemented)
+
+Version retention configuration is planned for a future release:
 
 ```typescript
-// All versions kept forever (audit compliance)
+// 🚧 PLANNED - NOT YET IMPLEMENTED
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
-  userProfileVersionRetention: -1, // Unlimited (default)
-});
-
-// Or limit versions per user
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL,
-  userProfileVersionRetention: 20, // Keep last 20 versions
+  // userProfileVersionRetention: 20,  // Keep last 20 versions
 });
 ```
+
+Currently, user profiles keep **all versions** indefinitely (no automatic cleanup). Version history can be retrieved via `getHistory()` and `getVersion()` methods.
 
 ---
 
@@ -1995,37 +1973,31 @@ await cortex.users.update(userId, {
 });
 ```
 
-### 3. Skip Versioning for Routine Updates
+### 3. Version Management Best Practices
 
-Don't create versions for analytics/stats:
+Currently, every `update()` call creates a new version. Here are tips for managing version history:
 
 ```typescript
-// Create version for important changes
-await cortex.users.update(
-  userId,
-  {
-    preferences: { emailNotifications: false }, // User opt-out
-  },
-  {
-    skipVersioning: false, // Create version
-    versionReason: "user-requested",
-  },
-);
+// Important changes - update normally (creates version)
+await cortex.users.update(userId, {
+  preferences: { emailNotifications: false }, // User opt-out
+});
 
-// Skip versioning for routine stats
-await cortex.users.update(
-  userId,
-  {
-    metadata: {
-      lastSeen: new Date(),
-      sessionCount: user.metadata.sessionCount + 1,
-    },
+// Routine updates - still creates versions but that's OK
+// Use getHistory() to review version history when needed
+await cortex.users.update(userId, {
+  metadata: {
+    lastSeen: new Date().toISOString(),
+    sessionCount: ((user?.data.metadata?.sessionCount as number) || 0) + 1,
   },
-  {
-    skipVersioning: true, // Don't version stats
-  },
-);
+});
+
+// Tip: Review version history periodically
+const history = await cortex.users.getHistory(userId);
+console.log(`User has ${history.length} profile versions`);
 ```
+
+> **Note:** Skip versioning option is planned for a future release to optimize routine updates.
 
 ### 4. Privacy-First
 
@@ -2051,10 +2023,13 @@ await cortex.users.update(userId, {
 
 ### 5. Use TypeScript for Type Safety
 
-Define custom profile interfaces:
+Define custom interfaces for your profile data structure:
 
 ```typescript
-interface CustomUserProfile extends UserProfile {
+// Define your custom data shape
+interface MyUserData {
+  displayName: string;
+  email?: string;
   preferences: {
     theme: "light" | "dark";
     language: "en" | "es" | "fr";
@@ -2067,9 +2042,18 @@ interface CustomUserProfile extends UserProfile {
   };
 }
 
-// Type-safe operations
-const user = await cortex.users.get<CustomUserProfile>(userId);
-console.log(user.preferences.emailFrequency); // Typed!
+// Type-safe wrapper function
+async function getTypedUser(userId: string): Promise<MyUserData | null> {
+  const user = await cortex.users.get(userId);
+  if (!user) return null;
+  return user.data as MyUserData;
+}
+
+// Usage with type safety
+const userData = await getTypedUser(userId);
+if (userData) {
+  console.log(userData.preferences.emailFrequency); // Typed!
+}
 ```
 
 ### 6. Cascade Deletion for GDPR
@@ -2080,25 +2064,24 @@ Always use cascade for user deletions:
 // GDPR-compliant deletion
 async function handleGDPRDeletion(userId: string) {
   // Export data first (GDPR requirement)
-  const userData = await cortex.users.export(
-    {
-      email: userEmail,
-    },
-    {
-      format: "json",
-      includeMemories: true,
-      includeConversations: true,
-    },
-  );
-
-  await saveToFile(`gdpr-export-${userId}.json`, userData);
-
-  // Delete profile + all data
-  const result = await cortex.users.delete(userId, {
-    cascade: true,
-    deleteConversations: true, // Complete deletion
-    auditReason: "GDPR right to be forgotten",
+  const userData = await cortex.users.export({
+    format: "json",
+    includeMemories: true,
+    includeConversations: true,
   });
+
+  // Save export for records
+  const fs = await import("fs/promises");
+  await fs.writeFile(`gdpr-export-${userId}.json`, userData);
+
+  // Delete profile + all data with cascade
+  const result = await cortex.users.delete(userId, {
+    cascade: true,   // Delete from ALL layers
+    verify: true,    // Verify deletion completeness
+  });
+
+  console.log(`Deleted ${result.totalDeleted} records`);
+  console.log(`Verification: ${result.verification.complete ? "Complete" : "Issues found"}`);
 
   return result;
 }
@@ -2108,55 +2091,55 @@ async function handleGDPRDeletion(userId: string) {
 
 ## Graph-Lite Capabilities
 
-Users are universal graph nodes - everything in Cortex can link to a user:
+Users are universal graph nodes - everything in Cortex can link to a user via the `userId` field:
 
 **User as Graph Hub:**
 
 - Central node connecting all user-related data across the system
+- Enables GDPR cascade deletion across all layers
 
 **Incoming Edges (What Links To Users):**
 
 - `userId` from Conversations (user's chat history)
 - `userId` from Contexts (user's workflows)
-- `userId` from Memories (user-specific knowledge across all agents)
+- `userId` from Memories (user-specific knowledge)
 - `userId` from Facts (facts about the user)
 - `userId` from Immutable records (user feedback, submissions)
 - `userId` from Mutable records (user sessions, preferences)
-
-**Graph Query - Complete User Data:**
-
-```typescript
-// GDPR export = complete graph traversal from user node
-async function getUserDataGraph(userId: string) {
-  return {
-    profile: await cortex.users.get(userId),
-    conversations: await cortex.conversations.list({ userId }),
-    contexts: await cortex.contexts.list({ userId }),
-    immutableRecords: await cortex.immutable.list({ userId }),
-    mutableRecords: await cortex.mutable.list("*", { userId }),
-    memories: await getAllMemoriesForUser(userId), // Across all agents
-    facts: await cortex.immutable.list({ type: "fact", userId }),
-  };
-}
-
-// Result: Complete graph of all user data across all Cortex layers
-```
+- `userId` in Graph nodes (if graph adapter configured)
 
 **GDPR Cascade as Graph Operation:**
 
-The `delete({ cascade: true })` operation traverses the entire graph from the user node and deletes all connected entities with userId:
+The `delete({ cascade: true })` operation traverses all layers and deletes entities with matching userId:
 
 ```
 User-123 (delete this node)
   ↓ cascade follows all userId edges
-  ├──> Conversation-1, Conversation-2, ... (delete)
-  ├──> Context-1, Context-2, ... (delete)
-  ├──> Memory-1, Memory-2, ... (delete across ALL agents)
-  ├──> Fact-1, Fact-2, ... (delete)
-  └──> All other entities with userId='user-123' (delete)
+  ├──> Conversations with userId='user-123' (delete)
+  ├──> Memories with userId='user-123' (delete)
+  ├──> Facts with userId='user-123' (delete)
+  ├──> Immutable records with userId='user-123' (delete)
+  ├──> Mutable records with userId='user-123' (delete)
+  └──> Graph nodes with userId='user-123' (delete, if graph configured)
 ```
 
-**Performance:** GDPR cascade for typical user (100-1000 connected entities) completes in 1-3 seconds (Cloud Mode).
+**Example Result:**
+
+```typescript
+const result = await cortex.users.delete("user-123", { cascade: true });
+
+// Result shows per-layer deletion counts:
+// {
+//   conversationsDeleted: 15,
+//   vectorMemoriesDeleted: 234,
+//   factsDeleted: 89,
+//   immutableRecordsDeleted: 5,
+//   mutableKeysDeleted: 12,
+//   graphNodesDeleted: 47,
+//   totalDeleted: 403,
+//   deletedLayers: ['conversations', 'vector', 'facts', 'immutable', 'mutable', 'graph', 'user-profile']
+// }
+```
 
 **Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
 
@@ -2164,22 +2147,67 @@ User-123 (delete this node)
 
 ## Error Reference
 
-All user operation errors:
+The Users API exports two error classes for granular error handling:
 
-| Error Code             | Description            | Cause                                |
-| ---------------------- | ---------------------- | ------------------------------------ |
-| `INVALID_USER_ID`      | User ID is invalid     | Empty or malformed userId            |
-| `USER_NOT_FOUND`       | User doesn't exist     | Invalid userId                       |
-| `INVALID_PROFILE_DATA` | Profile data malformed | Bad data structure                   |
-| `INVALID_FILTERS`      | Filters malformed      | Bad filter syntax                    |
-| `INVALID_PAGINATION`   | Pagination params bad  | Invalid limit/offset                 |
-| `DELETION_FAILED`      | Delete failed          | Database error                       |
-| `DELETION_CANCELLED`   | User cancelled delete  | Confirmation rejected                |
-| `EXPORT_FAILED`        | Export failed          | File write error                     |
-| `CONVEX_ERROR`         | Database error         | Convex operation failed              |
-| `VERSION_NOT_FOUND`    | Version doesn't exist  | Invalid version number               |
-| `INVALID_TIMESTAMP`    | Timestamp invalid      | Malformed date                       |
-| `NO_USERS_MATCHED`     | No users match filters | No results for updateMany/deleteMany |
+### UserValidationError
+
+Thrown when client-side validation fails (before reaching the backend):
+
+```typescript
+import { UserValidationError } from "@cortex-platform/sdk";
+
+try {
+  await cortex.users.update("", { name: "Test" });  // Empty userId
+} catch (error) {
+  if (error instanceof UserValidationError) {
+    console.log(error.code);   // "MISSING_USER_ID"
+    console.log(error.field);  // "userId"
+    console.log(error.message); // "userId is required"
+  }
+}
+```
+
+### CascadeDeletionError
+
+Thrown when cascade deletion fails (automatically rolls back):
+
+```typescript
+import { CascadeDeletionError } from "@cortex-platform/sdk";
+
+try {
+  await cortex.users.delete("user-123", { cascade: true });
+} catch (error) {
+  if (error instanceof CascadeDeletionError) {
+    console.log(error.message);  // Cascade deletion failed for user...
+    console.log(error.cause);    // Original error that caused failure
+    // Note: All deleted records have been automatically restored
+  }
+}
+```
+
+### Validation Error Codes (UserValidationError)
+
+| Error Code                   | Description                          | Field               |
+| ---------------------------- | ------------------------------------ | ------------------- |
+| `MISSING_USER_ID`            | User ID is required                  | `userId`            |
+| `INVALID_USER_ID_FORMAT`     | User ID must be non-empty string     | `userId`            |
+| `MISSING_DATA`               | Data parameter is required           | `data`              |
+| `INVALID_DATA_TYPE`          | Data must be an object (not array)   | `data`              |
+| `INVALID_VERSION_NUMBER`     | Version must be a valid number       | `version`           |
+| `INVALID_VERSION_RANGE`      | Version must be >= 1                 | `version`           |
+| `INVALID_TIMESTAMP`          | Timestamp must be valid number >= 0  | `timestamp`         |
+| `INVALID_LIMIT`              | Limit must be 1-1000                 | `filters.limit`     |
+| `INVALID_OFFSET`             | Offset must be >= 0                  | `filters.offset`    |
+| `INVALID_DATE_RANGE`         | createdAfter must be < createdBefore | `filters.*`         |
+| `INVALID_SORT_BY`            | sortBy must be createdAt/updatedAt   | `filters.sortBy`    |
+| `INVALID_SORT_ORDER`         | sortOrder must be asc/desc           | `filters.sortOrder` |
+| `INVALID_FILTER_STRUCTURE`   | Filters must be an object            | `filters`           |
+| `INVALID_DELETE_OPTIONS`     | Options must be an object            | `options`           |
+| `EMPTY_USER_IDS_ARRAY`       | userIds array cannot be empty        | `userIds`           |
+| `USER_ID_ARRAY_TOO_LARGE`    | userIds array cannot exceed 100      | `userIds`           |
+| `TOO_MANY_MATCHES`           | Filter matched >100 users            | `filters`           |
+| `MISSING_REQUIRED_PARAMETER` | Export options are required          | `options`           |
+| `INVALID_EXPORT_FORMAT`      | Format must be json/csv              | `format`            |
 
 **See Also:**
 

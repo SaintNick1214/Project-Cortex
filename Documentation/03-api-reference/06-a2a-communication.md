@@ -27,6 +27,20 @@ Some A2A operations require **real-time pub/sub infrastructure**:
 
 **Key Insight:** A2A = Agent Memory + Pub/Sub (optional) + Convenience
 
+**Validation Constraints:**
+
+| Field | Constraint | Details |
+|-------|------------|---------|
+| Agent IDs (`from`, `to`) | Pattern: `/^[a-zA-Z0-9_-]+$/` | Only alphanumeric, hyphens, underscores |
+| Agent IDs (`from`, `to`) | Max length: 100 characters | |
+| `message` | Max size: 100KB | Measured in UTF-8 bytes |
+| `importance` | Integer 0-100 | Default: 60 for send/broadcast, 70 for request |
+| `timeout` | Integer 1000-300000ms | Default: 30000ms (30 seconds) |
+| `retries` | Integer 0-10 | Default: 1 |
+| `to[]` (broadcast) | Max 100 recipients | No duplicates, sender not allowed |
+| `limit` | Integer 1-1000 | Default: 100 |
+| `offset` | Integer ≥ 0 | Default: 0 |
+
 ```typescript
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Approach 1: A2A Helper (RECOMMENDED - 7 lines)
@@ -507,11 +521,11 @@ await cortex.a2a.send({
 
 **Errors:**
 
-- `CortexError('INVALID_AGENT_ID')` - from or to is invalid
-- `CortexError('INVALID_MESSAGE')` - Message is empty or too large
-- `CortexError('USER_NOT_FOUND')` - userId doesn't reference existing user
-- `CortexError('CONTEXT_NOT_FOUND')` - contextId doesn't exist
-- `CortexError('CONVEX_ERROR')` - Database error
+- `A2AValidationError('INVALID_AGENT_ID')` - from or to is empty, malformed, or exceeds 100 chars
+- `A2AValidationError('EMPTY_MESSAGE')` - Message is empty or whitespace-only
+- `A2AValidationError('MESSAGE_TOO_LARGE')` - Message exceeds 100KB (UTF-8 bytes)
+- `A2AValidationError('SAME_AGENT_COMMUNICATION')` - from and to are the same agent
+- `A2AValidationError('INVALID_IMPORTANCE')` - Importance not integer 0-100
 
 **See Also:**
 
@@ -639,47 +653,63 @@ const response = await cortex.a2a.request({
 
 ```typescript
 // If you need to manually check for requests (batch processing)
-async function handleIncomingRequests(memorySpaceId: string) {
-  const requests = await cortex.memory.search(memorySpaceId, "*", {
-    source: { type: "a2a" },
-    metadata: {
-      messageType: "request",
-      requiresResponse: true,
-      responded: { $ne: true },
-    },
-    sortBy: "createdAt",
-    sortOrder: "asc",
+async function handleIncomingRequests(memorySpaceId: string, agentId: string) {
+  // List all A2A memories and filter for pending requests
+  const allA2A = await cortex.vector.list({
+    memorySpaceId,
+    sourceType: "a2a",
+    limit: 100,
+  });
+
+  // Filter for pending requests (client-side filtering)
+  const requests = allA2A.filter((m) => {
+    const meta = m.metadata as {
+      messageType?: string;
+      requiresResponse?: boolean;
+      responded?: boolean;
+    };
+    return (
+      meta.messageType === "request" &&
+      meta.requiresResponse === true &&
+      meta.responded !== true
+    );
   });
 
   for (const request of requests) {
     const answer = await processRequest(request.content);
+    const meta = request.metadata as { fromAgent?: string; messageId?: string };
 
     await cortex.a2a.send({
       from: agentId,
-      to: request.source.fromAgent,
+      to: meta.fromAgent!,
       message: answer,
       metadata: {
         messageType: "response",
-        inReplyTo: request.metadata.messageId,
+        inReplyTo: meta.messageId,
       },
     });
 
-    await cortex.memory.update(memorySpaceId, request.id, {
-      metadata: { responded: true, respondedAt: new Date() },
+    // Mark as responded
+    await cortex.vector.update(memorySpaceId, request.memoryId, {
+      metadata: { ...request.metadata, responded: true, respondedAt: Date.now() },
     });
   }
 }
 
 // Run on schedule
-cron.schedule("*/5 * * * *", () => handleIncomingRequests("hr-agent"));
+cron.schedule("*/5 * * * *", () => handleIncomingRequests("hr-agent", "hr-agent"));
 ```
 
 **Errors:**
 
-- `CortexError('INVALID_AGENT_ID')` - from or to is invalid
-- `CortexError('PUBSUB_NOT_CONFIGURED')` - No pub/sub adapter configured
-- `A2ATimeoutError('NO_RESPONSE')` - No response within timeout
-- `CortexError('CONVEX_ERROR')` - Database error
+- `A2AValidationError('INVALID_AGENT_ID')` - from or to is empty, malformed, or exceeds 100 chars
+- `A2AValidationError('EMPTY_MESSAGE')` - Message is empty or whitespace-only
+- `A2AValidationError('MESSAGE_TOO_LARGE')` - Message exceeds 100KB (UTF-8 bytes)
+- `A2AValidationError('SAME_AGENT_COMMUNICATION')` - from and to are the same agent
+- `A2AValidationError('INVALID_TIMEOUT')` - Timeout not between 1000ms and 300000ms
+- `A2AValidationError('INVALID_RETRIES')` - Retries not integer 0-10
+- `A2AValidationError('INVALID_IMPORTANCE')` - Importance not integer 0-100
+- `A2ATimeoutError` - No response within timeout (includes pub/sub not configured)
 
 **See Also:**
 
@@ -792,21 +822,29 @@ await cortex.a2a.broadcast({
 });
 
 // Each agent can query their announcements
-const announcements = await cortex.memory.search("agent-1", "*", {
-  source: { type: "a2a" },
-  metadata: { broadcast: true },
-  tags: ["announcement"],
-  limit: 10,
+const allA2A = await cortex.vector.list({
+  memorySpaceId: "agent-1",
+  sourceType: "a2a",
+  limit: 100,
+});
+
+// Filter for broadcast announcements
+const announcements = allA2A.filter((m) => {
+  const meta = m.metadata as { broadcast?: boolean };
+  return meta.broadcast === true && m.tags.includes("announcement");
 });
 ```
 
 **Errors:**
 
-- `CortexError('INVALID_AGENT_ID')` - from or any to[] is invalid
-- `CortexError('INVALID_MESSAGE')` - Message is empty or too large
-- `CortexError('EMPTY_RECIPIENTS')` - to[] is empty
-- `CortexError('PUBSUB_NOT_CONFIGURED')` - No pub/sub adapter configured
-- `CortexError('CONVEX_ERROR')` - Database error
+- `A2AValidationError('INVALID_AGENT_ID')` - from or any to[] entry is empty, malformed, or exceeds 100 chars
+- `A2AValidationError('EMPTY_MESSAGE')` - Message is empty or whitespace-only
+- `A2AValidationError('MESSAGE_TOO_LARGE')` - Message exceeds 100KB (UTF-8 bytes)
+- `A2AValidationError('EMPTY_RECIPIENTS')` - to[] array is empty
+- `A2AValidationError('TOO_MANY_RECIPIENTS')` - More than 100 recipients
+- `A2AValidationError('DUPLICATE_RECIPIENTS')` - Same agent ID appears multiple times
+- `A2AValidationError('INVALID_RECIPIENT')` - Sender is in recipients list
+- `A2AValidationError('INVALID_IMPORTANCE')` - Importance not integer 0-100
 
 **See Also:**
 
@@ -824,14 +862,14 @@ Get chronological conversation between two agents with rich filtering.
 cortex.a2a.getConversation(
   agent1: string,
   agent2: string,
-  filters?: ConversationFilters
+  filters?: A2AConversationFilters
 ): Promise<A2AConversation>
 ```
 
 **Parameters:**
 
 ```typescript
-interface ConversationFilters {
+interface A2AConversationFilters {
   // Time range
   since?: Date;
   until?: Date;
@@ -842,11 +880,11 @@ interface ConversationFilters {
   userId?: string; // A2A about specific user
 
   // Pagination
-  limit?: number; // Default: 100
+  limit?: number; // Default: 100, max: 1000
   offset?: number;
 
-  // Format
-  format?: "chronological"; // Default
+  // Format (currently only "chronological" is supported)
+  format?: "chronological"; // Default and only option
 }
 ```
 
@@ -944,8 +982,11 @@ console.log(`${userRelated.messageCount} messages about user-123`);
 
 **Errors:**
 
-- `CortexError('INVALID_AGENT_ID')` - agent1 or agent2 is invalid
-- `CortexError('INVALID_FILTERS')` - Filters are malformed
+- `A2AValidationError('INVALID_AGENT_ID')` - agent1 or agent2 is empty, malformed, or exceeds 100 chars
+- `A2AValidationError('INVALID_DATE_RANGE')` - 'since' is after 'until'
+- `A2AValidationError('INVALID_IMPORTANCE')` - minImportance not between 0-100
+- `A2AValidationError('INVALID_LIMIT')` - Limit not integer 1-1000
+- `A2AValidationError('INVALID_OFFSET')` - Offset is negative
 
 **See Also:**
 
@@ -960,29 +1001,24 @@ Since A2A uses the memory system, you can use **any memory operation** on A2A me
 ### Finding A2A Messages
 
 ```typescript
-// All A2A for an agent
-const allA2A = await cortex.memory.search("agent-1", "*", {
-  source: { type: "a2a" },
+// All A2A for an agent (semantic search on "a2a" query)
+const allA2A = await cortex.memory.search("agent-1", "a2a communication", {
+  sourceType: "a2a",
+  limit: 100,
 });
 
-// Sent messages only
-const sent = await cortex.memory.search("agent-1", "*", {
-  source: { type: "a2a" },
-  metadata: { direction: "outbound" },
+// Use list() for non-semantic filtering by source type
+const allA2AList = await cortex.vector.list({
+  memorySpaceId: "agent-1",
+  sourceType: "a2a",
+  limit: 100,
 });
 
-// Received messages only
-const received = await cortex.memory.search("agent-1", "*", {
-  source: { type: "a2a" },
-  metadata: { direction: "inbound" },
-});
-
-// Messages with specific agent
-const withHR = await cortex.memory.search("finance-agent", "*", {
-  source: { type: "a2a" },
-  metadata: {
-    $or: [{ toAgent: "hr-agent" }, { fromAgent: "hr-agent" }],
-  },
+// Filter by tags (sent vs received are tagged)
+const sent = await cortex.vector.list({
+  memorySpaceId: "agent-1",
+  sourceType: "a2a",
+  // Post-filter for 'sent' tag
 });
 ```
 
@@ -995,31 +1031,41 @@ const results = await cortex.memory.search(
   "did we discuss the budget increase?",
   {
     embedding: await embed("budget increase discussion"),
-    source: { type: "a2a" },
+    sourceType: "a2a",
     minImportance: 50,
     limit: 10,
   },
 );
 
 results.forEach((m) => {
-  console.log(`${m.content} (score: ${m.score})`);
-  console.log(`  With: ${m.metadata.toAgent || m.metadata.fromAgent}`);
+  const meta = m.metadata as { toAgent?: string; fromAgent?: string };
+  console.log(`${m.content}`);
+  console.log(`  With: ${meta.toAgent || meta.fromAgent}`);
 });
 ```
 
 ### Finding Unanswered Requests
 
 ```typescript
-// Pending requests needing response
-const pending = await cortex.memory.search("hr-agent", "*", {
-  source: { type: "a2a" },
-  metadata: {
-    messageType: "request",
-    requiresResponse: true,
-    responded: { $ne: true },
-  },
-  sortBy: "createdAt",
-  sortOrder: "asc", // Oldest first
+// Get A2A requests and filter for pending
+const a2aMemories = await cortex.vector.list({
+  memorySpaceId: "hr-agent",
+  sourceType: "a2a",
+  limit: 100,
+});
+
+// Filter for pending requests (client-side filtering)
+const pending = a2aMemories.filter((m) => {
+  const meta = m.metadata as {
+    messageType?: string;
+    requiresResponse?: boolean;
+    responded?: boolean;
+  };
+  return (
+    meta.messageType === "request" &&
+    meta.requiresResponse === true &&
+    meta.responded !== true
+  );
 });
 
 console.log(`${pending.length} pending requests`);
@@ -1029,22 +1075,12 @@ console.log(`${pending.length} pending requests`);
 
 ```typescript
 // Total A2A messages
-const total = await cortex.memory.count("agent-1", {
-  source: { type: "a2a" },
+const total = await cortex.vector.count({
+  memorySpaceId: "agent-1",
+  sourceType: "a2a",
 });
 
-// Sent vs received
-const sentCount = await cortex.memory.count("agent-1", {
-  source: { type: "a2a" },
-  metadata: { direction: "outbound" },
-});
-
-const receivedCount = await cortex.memory.count("agent-1", {
-  source: { type: "a2a" },
-  metadata: { direction: "inbound" },
-});
-
-console.log(`Sent: ${sentCount}, Received: ${receivedCount}`);
+console.log(`Total A2A messages: ${total}`);
 ```
 
 ---
@@ -1075,9 +1111,16 @@ await cortex.a2a.send({
 const ctx = await cortex.contexts.get(context.id);
 
 // Find all A2A for this workflow
-const workflowComms = await cortex.memory.search("supervisor-agent", "*", {
-  source: { type: "a2a" },
-  metadata: { contextId: context.id },
+const allA2A = await cortex.vector.list({
+  memorySpaceId: "supervisor-agent",
+  sourceType: "a2a",
+  limit: 100,
+});
+
+// Filter for this context
+const workflowComms = allA2A.filter((m) => {
+  const meta = m.metadata as { contextId?: string };
+  return meta.contextId === context.id;
 });
 ```
 
@@ -1199,28 +1242,42 @@ async function analyzeA2ACommunication(
   memorySpaceId: string,
   period: number = 30,
 ) {
-  const since = new Date(Date.now() - period * 24 * 60 * 60 * 1000);
+  const sinceTimestamp = Date.now() - period * 24 * 60 * 60 * 1000;
 
-  // All A2A in period
-  const allA2A = await cortex.memory.search(memorySpaceId, "*", {
-    source: { type: "a2a" },
-    createdAfter: since,
+  // Get all A2A memories
+  const allMemories = await cortex.vector.list({
+    memorySpaceId,
+    sourceType: "a2a",
+    limit: 1000,
   });
+
+  // Filter for period
+  const allA2A = allMemories.filter((m) => m.createdAt >= sinceTimestamp);
+
+  // Type metadata
+  type A2AMeta = {
+    direction?: string;
+    toAgent?: string;
+    fromAgent?: string;
+  };
 
   // Sent vs received
-  const sent = allA2A.filter((m) => m.metadata.direction === "outbound");
-  const received = allA2A.filter((m) => m.metadata.direction === "inbound");
+  const sent = allA2A.filter((m) => (m.metadata as A2AMeta).direction === "outbound");
+  const received = allA2A.filter((m) => (m.metadata as A2AMeta).direction === "inbound");
 
   // By partner agent
-  const partners = {};
+  const partners: Record<string, number> = {};
   allA2A.forEach((m) => {
-    const partner = m.metadata.toAgent || m.metadata.fromAgent;
-    partners[partner] = (partners[partner] || 0) + 1;
+    const meta = m.metadata as A2AMeta;
+    const partner = meta.toAgent || meta.fromAgent;
+    if (partner) {
+      partners[partner] = (partners[partner] || 0) + 1;
+    }
   });
 
-  // By importance
-  const critical = allA2A.filter((m) => m.metadata.importance >= 90).length;
-  const important = allA2A.filter((m) => m.metadata.importance >= 70).length;
+  // By importance (importance is a top-level field on MemoryEntry)
+  const critical = allA2A.filter((m) => m.importance >= 90).length;
+  const important = allA2A.filter((m) => m.importance >= 70).length;
 
   return {
     total: allA2A.length,
@@ -1228,7 +1285,7 @@ async function analyzeA2ACommunication(
     received: received.length,
     partners,
     avgImportance:
-      allA2A.reduce((sum, m) => sum + m.metadata.importance, 0) / allA2A.length,
+      allA2A.reduce((sum, m) => sum + m.importance, 0) / allA2A.length || 0,
     critical,
     important,
   };
@@ -1241,35 +1298,48 @@ console.log("Last 30 days:", stats);
 ### Pattern 3: Bulk Operations on A2A
 
 ```typescript
-// Mark old A2A messages as archived
-await cortex.memory.updateMany(
-  "agent-1",
-  {
-    source: { type: "a2a" },
-    createdBefore: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-    importance: { $lte: 50 },
-  },
-  {
-    metadata: { archived: true },
-  },
-);
-
-// Delete trivial old A2A
-await cortex.memory.deleteMany("agent-1", {
-  source: { type: "a2a" },
-  importance: { $lte: 30 },
-  createdBefore: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000),
-  accessCount: { $lte: 1 },
+// List A2A memories for bulk processing
+const a2aMemories = await cortex.vector.list({
+  memorySpaceId: "agent-1",
+  sourceType: "a2a",
+  limit: 1000,
 });
 
-// Export A2A for audit
-await cortex.memory.export("agent-1", {
-  source: { type: "a2a" },
-  createdAfter: new Date("2025-10-01"),
-  createdBefore: new Date("2025-10-31"),
-  format: "json",
-  outputPath: "audits/october-a2a.json",
+// Filter old, low-importance messages for cleanup
+const oldLowImportance = a2aMemories.filter((m) => {
+  const ninetyDaysAgo = Date.now() - 90 * 24 * 60 * 60 * 1000;
+  return m.createdAt < ninetyDaysAgo && m.importance <= 50;
 });
+
+// Update each memory individually (mark as archived)
+for (const memory of oldLowImportance) {
+  await cortex.vector.update("agent-1", memory.memoryId, {
+    metadata: { ...memory.metadata, archived: true },
+  });
+}
+
+// Delete trivial old A2A one by one
+const trivialOld = a2aMemories.filter((m) => {
+  const sixMonthsAgo = Date.now() - 180 * 24 * 60 * 60 * 1000;
+  return (
+    m.createdAt < sixMonthsAgo && m.importance <= 30 && m.accessCount <= 1
+  );
+});
+
+for (const memory of trivialOld) {
+  await cortex.vector.delete("agent-1", memory.memoryId);
+}
+
+// Export A2A for audit (manual serialization)
+const auditMemories = a2aMemories.filter((m) => {
+  const start = new Date("2025-10-01").getTime();
+  const end = new Date("2025-10-31").getTime();
+  return m.createdAt >= start && m.createdAt <= end;
+});
+
+// Write to file or process as needed
+const auditData = JSON.stringify(auditMemories, null, 2);
+// fs.writeFileSync('audits/october-a2a.json', auditData);
 ```
 
 ---
@@ -1358,13 +1428,17 @@ await cortex.a2a.send({
   importance: 85,
 });
 
-// Query with memory API (power)
-const important = await cortex.memory.search("agent-2", "update", {
-  embedding: await embed("update"),
-  source: { type: "a2a" },
-  importance: { $gte: 80 },
-  createdAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+// Query with memory API (power) - semantic search
+const results = await cortex.memory.search("agent-2", "important update", {
+  embedding: await embed("important update"),
+  sourceType: "a2a",
+  minImportance: 80,
+  limit: 20,
 });
+
+// Filter for last 7 days (client-side)
+const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+const important = results.filter((m) => m.createdAt >= sevenDaysAgo);
 ```
 
 ---
@@ -1415,10 +1489,11 @@ await cortex.a2a.send({
   },
 });
 
-// Query by tags
-const approvals = await cortex.memory.search("agent-1", "*", {
-  source: { type: "a2a" },
+// Query by tags using semantic search
+const approvals = await cortex.memory.search("agent-1", "budget approval", {
+  sourceType: "a2a",
   tags: ["approval", "budget"],
+  limit: 20,
 });
 ```
 
@@ -1557,38 +1632,56 @@ finance-agent
 **Graph Queries via Memory API:**
 
 ```typescript
+type A2AMeta = {
+  direction?: string;
+  toAgent?: string;
+  fromAgent?: string;
+};
+
 // 1-hop: Direct collaborators
-const sent = await cortex.memory.search('finance-agent', '*', {
-  source: { type: 'a2a' },
-  metadata: { direction: 'outbound' }
+const allA2A = await cortex.vector.list({
+  memorySpaceId: "finance-agent",
+  sourceType: "a2a",
+  limit: 1000,
 });
 
-const directCollaborators = new Set(sent.map(m => m.metadata.toAgent));
+const sent = allA2A.filter((m) => (m.metadata as A2AMeta).direction === "outbound");
+const directCollaborators = new Set(
+  sent.map((m) => (m.metadata as A2AMeta).toAgent).filter(Boolean)
+);
 
 // 2-hop: Collaborator's collaborators
-const secondDegree = new Set();
+const secondDegree = new Set<string>();
 for (const agent of directCollaborators) {
-  const their Connections = await cortex.memory.search(agent, '*', {
-    source: { type: 'a2a' },
-    metadata: { direction: 'outbound' }
+  const theirA2A = await cortex.vector.list({
+    memorySpaceId: agent as string,
+    sourceType: "a2a",
+    limit: 1000,
   });
 
-  theirConnections.forEach(m => {
-    if (m.metadata.toAgent !== 'finance-agent') {
-      secondDegree.add(m.metadata.toAgent);
+  const theirSent = theirA2A.filter(
+    (m) => (m.metadata as A2AMeta).direction === "outbound"
+  );
+
+  theirSent.forEach((m) => {
+    const toAgent = (m.metadata as A2AMeta).toAgent;
+    if (toAgent && toAgent !== "finance-agent") {
+      secondDegree.add(toAgent);
     }
   });
 }
 
 // Build weighted graph (edge weights = message count + importance)
-const edges = new Map();
-sent.forEach(m => {
-  const partner = m.metadata.toAgent;
-  const current = edges.get(partner) || { count: 0, avgImportance: 0 };
+const edges = new Map<string, { count: number; avgImportance: number }>();
+sent.forEach((m) => {
+  const partner = (m.metadata as A2AMeta).toAgent;
+  if (!partner) return;
 
+  const current = edges.get(partner) || { count: 0, avgImportance: 0 };
   edges.set(partner, {
     count: current.count + 1,
-    avgImportance: (current.avgImportance * current.count + m.metadata.importance) / (current.count + 1)
+    avgImportance:
+      (current.avgImportance * current.count + m.importance) / (current.count + 1),
   });
 });
 ```
@@ -1609,18 +1702,79 @@ For advanced graph analytics (community detection, centrality, influence metrics
 
 ## Error Reference
 
-All A2A operation errors:
+### A2AValidationError Class
 
-| Error Code              | Description           | Cause                                      |
-| ----------------------- | --------------------- | ------------------------------------------ |
-| `INVALID_AGENT_ID`      | Agent ID is invalid   | Empty or malformed from/to                 |
-| `INVALID_MESSAGE`       | Message is invalid    | Empty or > 100KB                           |
-| `EMPTY_RECIPIENTS`      | No recipients         | to[] array is empty                        |
-| `PUBSUB_NOT_CONFIGURED` | Pub/sub required      | request()/broadcast() need pub/sub adapter |
-| `USER_NOT_FOUND`        | User doesn't exist    | userId doesn't reference existing user     |
-| `CONTEXT_NOT_FOUND`     | Context doesn't exist | contextId is invalid                       |
-| `A2A_TIMEOUT_ERROR`     | Request timeout       | No response within timeout                 |
-| `CONVEX_ERROR`          | Database error        | Convex operation failed                    |
+The SDK exports a custom error class for validation failures:
+
+```typescript
+import { A2AValidationError } from "@cortex/sdk/a2a";
+
+// Error properties
+interface A2AValidationError extends Error {
+  name: "A2AValidationError";
+  code: string; // Error code (e.g., 'INVALID_AGENT_ID')
+  field?: string; // Field that failed validation (e.g., 'from', 'to')
+}
+
+// Usage
+try {
+  await cortex.a2a.send({
+    from: "", // Invalid - empty
+    to: "agent-2",
+    message: "Hello",
+  });
+} catch (error) {
+  if (error instanceof A2AValidationError) {
+    console.log(`Validation failed: ${error.code}`);
+    console.log(`Field: ${error.field}`); // 'from'
+  }
+}
+```
+
+### A2ATimeoutError Class
+
+Thrown when request() times out waiting for a response:
+
+```typescript
+import { A2ATimeoutError } from "@cortex/sdk";
+
+interface A2ATimeoutError extends Error {
+  name: "A2ATimeoutError";
+  messageId: string; // ID of the request message
+  timeout: number; // Timeout value in milliseconds
+}
+
+try {
+  await cortex.a2a.request({ from: "agent-1", to: "agent-2", message: "Hello" });
+} catch (error) {
+  if (error instanceof A2ATimeoutError) {
+    console.log(`Request ${error.messageId} timed out after ${error.timeout}ms`);
+  }
+}
+```
+
+### All Error Codes
+
+| Error Code                 | Description              | Cause                                         |
+| -------------------------- | ------------------------ | --------------------------------------------- |
+| `INVALID_AGENT_ID`         | Agent ID is invalid      | Empty, malformed, or exceeds 100 chars        |
+| `EMPTY_MESSAGE`            | Message is empty         | Message is empty or whitespace-only           |
+| `MESSAGE_TOO_LARGE`        | Message exceeds limit    | Message exceeds 100KB (UTF-8 bytes)           |
+| `EMPTY_RECIPIENTS`         | No recipients            | to[] array is empty                           |
+| `TOO_MANY_RECIPIENTS`      | Too many recipients      | More than 100 recipients in broadcast         |
+| `DUPLICATE_RECIPIENTS`     | Duplicate recipients     | Same agent ID appears multiple times in to[]  |
+| `INVALID_RECIPIENT`        | Invalid recipient        | Sender included in recipients list            |
+| `SAME_AGENT_COMMUNICATION` | Self-communication       | from and to are the same agent                |
+| `INVALID_IMPORTANCE`       | Invalid importance       | Importance not integer 0-100                  |
+| `INVALID_TIMEOUT`          | Invalid timeout          | Timeout not between 1000ms and 300000ms       |
+| `INVALID_RETRIES`          | Invalid retries          | Retries not integer 0-10                      |
+| `INVALID_DATE_RANGE`       | Invalid date range       | 'since' is after 'until'                      |
+| `INVALID_LIMIT`            | Invalid limit            | Limit not integer 1-1000                      |
+| `INVALID_OFFSET`           | Invalid offset           | Offset is negative                            |
+| `PUBSUB_NOT_CONFIGURED`    | Pub/sub required         | request() needs pub/sub adapter               |
+| `A2ATimeoutError`          | Request timeout          | No response within timeout                    |
+| `A2AValidationError`       | Validation failed        | Client-side validation error (see code/field)|
+| `CONVEX_ERROR`             | Database error           | Convex operation failed                       |
 
 **See Also:**
 

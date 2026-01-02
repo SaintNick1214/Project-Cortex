@@ -1,6 +1,6 @@
 # Memory Space Operations API
 
-> **Last Updated**: 2025-12-27
+> **Last Updated**: 2026-01-01
 
 This document covers the `cortex.memorySpaces.*` namespace for managing memory spaces, participants, and access control.
 
@@ -62,6 +62,7 @@ cortex.memorySpaces.register(
 ```typescript
 interface RegisterMemorySpaceParams {
   memorySpaceId: string; // Memory space ID (e.g., "user-123-personal")
+  tenantId?: string; // Multi-tenancy isolation (auto-injected from AuthContext)
   name?: string; // Human-readable name
   type: "personal" | "team" | "project" | "custom"; // Organization type
   participants?: Array<{
@@ -226,6 +227,7 @@ cortex.memorySpaces.list(filters?: ListMemorySpacesFilter): Promise<ListMemorySp
 interface ListMemorySpacesFilter {
   type?: "personal" | "team" | "project" | "custom";
   status?: "active" | "archived";
+  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
   participant?: string; // Filter by participant ID
   limit?: number; // Default: 100
   offset?: number; // Default: 0
@@ -792,6 +794,9 @@ interface MemorySpaceStats {
     factsBytes: number;
     totalBytes: number;
   };
+
+  // Performance
+  avgSearchTime?: string; // Average search latency (e.g., "12ms")
 
   // Content Analysis
   topTags: string[];

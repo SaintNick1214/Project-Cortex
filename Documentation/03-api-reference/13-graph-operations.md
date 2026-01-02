@@ -1,7 +1,7 @@
 # Graph Operations API
 
-> **Last Updated**: 2025-12-26
-> **Version**: v0.21.0
+> **Last Updated**: 2026-01-01
+> **Version**: v0.24.0
 > **Status**: Production Ready
 
 Complete API reference for graph database integration, multi-hop queries, and knowledge graph operations.
@@ -440,22 +440,321 @@ await cortex.conversations.create(input, {
 
 ### Manual Sync Functions
 
-Direct sync control for power users.
+Direct sync control for power users. All sync functions support an optional `tenantId` parameter for multi-tenant SaaS isolation.
 
 ```typescript
 import {
   syncMemoryToGraph,
   syncFactToGraph,
   syncContextToGraph,
+  syncConversationToGraph,
+  syncMemorySpaceToGraph,
   syncMemoryRelationships,
   syncFactRelationships,
   syncContextRelationships,
+  syncConversationRelationships,
+  syncA2ARelationships,
 } from "@cortexmemory/sdk/graph";
 
 // Manual sync workflow
 const memory = await cortex.vector.store(memorySpaceId, data);
 const nodeId = await syncMemoryToGraph(memory, adapter);
 await syncMemoryRelationships(memory, nodeId, adapter);
+```
+
+#### syncContextToGraph()
+
+Sync a Context to the graph database using MERGE semantics (idempotent).
+
+```typescript
+async function syncContextToGraph(
+  context: Context,
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+const context = await cortex.contexts.get(contextId);
+const nodeId = await syncContextToGraph(context, adapter, "tenant-acme");
+await syncContextRelationships(context, nodeId, adapter);
+```
+
+#### syncConversationToGraph()
+
+Sync a Conversation to the graph database using MERGE semantics.
+
+```typescript
+async function syncConversationToGraph(
+  conversation: Conversation,
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+const conversation = await cortex.conversations.get(conversationId);
+const nodeId = await syncConversationToGraph(conversation, adapter);
+await syncConversationRelationships(conversation, nodeId, adapter);
+```
+
+#### syncMemoryToGraph()
+
+Sync a Memory to the graph database. Content is truncated to 200 characters in the graph node.
+
+```typescript
+async function syncMemoryToGraph(
+  memory: MemoryEntry,
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+const memory = await cortex.vector.get(memorySpaceId, memoryId);
+const nodeId = await syncMemoryToGraph(memory, adapter, "tenant-acme");
+await syncMemoryRelationships(memory, nodeId, adapter);
+
+// For A2A memories, also sync A2A relationships
+if (memory.sourceType === "a2a") {
+  await syncA2ARelationships(memory, adapter);
+}
+```
+
+#### syncFactToGraph()
+
+Sync a Fact to the graph database using MERGE semantics.
+
+```typescript
+async function syncFactToGraph(
+  fact: FactRecord,
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+const fact = await cortex.facts.get(memorySpaceId, factId);
+const nodeId = await syncFactToGraph(fact, adapter);
+await syncFactRelationships(fact, nodeId, adapter);
+```
+
+#### syncMemorySpaceToGraph()
+
+Sync a MemorySpace to the graph database using MERGE semantics.
+
+```typescript
+async function syncMemorySpaceToGraph(
+  memorySpace: MemorySpace,
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+const memorySpace = await cortex.memorySpaces.get(memorySpaceId);
+const nodeId = await syncMemorySpaceToGraph(memorySpace, adapter);
+// MemorySpace nodes don't have additional relationships to sync
+```
+
+#### syncConversationRelationships()
+
+Sync Conversation relationships to the graph. Creates IN_SPACE, INVOLVES, and HAS_PARTICIPANT edges.
+
+```typescript
+async function syncConversationRelationships(
+  conversation: Conversation,
+  conversationNodeId: string,
+  adapter: GraphAdapter,
+): Promise<void>;
+```
+
+#### syncA2ARelationships()
+
+Sync Agent-to-Agent (A2A) communication relationships. Creates SENT_TO edges between memory spaces.
+
+```typescript
+async function syncA2ARelationships(
+  memory: MemoryEntry,
+  adapter: GraphAdapter,
+): Promise<void>;
+```
+
+**Example:**
+
+```typescript
+// Only call for A2A memories
+if (memory.sourceType === "a2a") {
+  await syncA2ARelationships(memory, adapter);
+}
+```
+
+### Helper Functions
+
+Utility functions for managing graph nodes and lookups.
+
+#### findGraphNodeId()
+
+Find a graph node ID by Cortex entity ID.
+
+```typescript
+import { findGraphNodeId } from "@cortexmemory/sdk/graph";
+
+async function findGraphNodeId(
+  label: string, // 'Context', 'Conversation', 'Memory', 'Fact', 'MemorySpace', 'User', 'Agent', 'Participant'
+  cortexId: string, // The Cortex entity ID (e.g., memoryId, factId)
+  adapter: GraphAdapter,
+): Promise<string | null>; // Returns graph node ID or null if not found
+```
+
+**Example:**
+
+```typescript
+// Find a Memory node by memoryId
+const nodeId = await findGraphNodeId("Memory", "mem-123", adapter);
+if (nodeId) {
+  const node = await adapter.getNode(nodeId);
+  console.log("Found memory:", node?.properties);
+}
+
+// Find a Fact node by factId
+const factNodeId = await findGraphNodeId("Fact", "fact-456", adapter);
+```
+
+#### ensureUserNode()
+
+Create or get a User node using MERGE semantics (idempotent).
+
+```typescript
+import { ensureUserNode } from "@cortexmemory/sdk/graph";
+
+async function ensureUserNode(
+  userId: string,
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+// Ensure user exists in graph before creating relationships
+const userNodeId = await ensureUserNode("user-123", adapter, "tenant-acme");
+```
+
+#### ensureAgentNode()
+
+Create or get an Agent node using MERGE semantics (idempotent).
+
+```typescript
+import { ensureAgentNode } from "@cortexmemory/sdk/graph";
+
+async function ensureAgentNode(
+  agentId: string,
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+// Ensure agent exists in graph
+const agentNodeId = await ensureAgentNode("assistant-v1", adapter);
+```
+
+#### ensureParticipantNode()
+
+Create or get a Participant node for Hive Mode using MERGE semantics.
+
+```typescript
+import { ensureParticipantNode } from "@cortexmemory/sdk/graph";
+
+async function ensureParticipantNode(
+  participantId: string,
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+// Ensure participant exists for Hive Mode tracking
+const participantNodeId = await ensureParticipantNode(
+  "participant-alice",
+  adapter,
+);
+```
+
+#### ensureEntityNode()
+
+Create or get an Entity node using MERGE semantics. Used for fact subject/object entities.
+
+```typescript
+import { ensureEntityNode } from "@cortexmemory/sdk/graph";
+
+async function ensureEntityNode(
+  entityName: string, // Entity name (e.g., "Alice", "Acme Corp")
+  entityType: string, // Entity type (e.g., "subject", "object", "person", "company")
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+// Create entity nodes for a fact relationship
+const aliceNodeId = await ensureEntityNode("Alice", "person", adapter);
+const acmeNodeId = await ensureEntityNode("Acme Corp", "company", adapter);
+
+// Create relationship between entities
+await adapter.createEdge({
+  type: "WORKS_AT",
+  from: aliceNodeId,
+  to: acmeNodeId,
+  properties: { since: 2020 },
+});
+```
+
+#### ensureEnrichedEntityNode()
+
+Create or get an enriched Entity node with additional metadata from bullet-proof extraction.
+
+```typescript
+import { ensureEnrichedEntityNode } from "@cortexmemory/sdk/graph";
+
+async function ensureEnrichedEntityNode(
+  entityName: string, // Entity name (e.g., "Alex")
+  entityType: string, // Specific type (e.g., "preferred_name", "full_name")
+  fullValue: string | undefined, // Full value if available (e.g., "Alexander Johnson")
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+// Create enriched entity with full value context
+const entityNodeId = await ensureEnrichedEntityNode(
+  "Alex", // Short name
+  "preferred_name", // Specific entity type
+  "Alexander Johnson", // Full value
+  adapter,
+);
+// Node properties: { name: "Alex", type: "preferred_name", entityType: "preferred_name", fullValue: "Alexander Johnson" }
 ```
 
 ---
@@ -642,6 +941,64 @@ const result = await deleteMemorySpaceFromGraph(
 );
 ```
 
+#### deleteImmutableFromGraph()
+
+Delete an immutable record from the graph. For facts, uses `deleteFactFromGraph` internally.
+
+```typescript
+import { deleteImmutableFromGraph } from "@cortexmemory/sdk/graph";
+
+async function deleteImmutableFromGraph(
+  immutableType: string, // Type of immutable record (e.g., "fact")
+  immutableId: string, // Record ID
+  adapter: GraphAdapter,
+  enableOrphanCleanup?: boolean, // Default: true
+): Promise<DeleteResult>;
+```
+
+**Example:**
+
+```typescript
+// Delete a fact via immutable API
+const result = await deleteImmutableFromGraph(
+  "fact",
+  "fact-123",
+  adapter,
+  true,
+);
+
+// Delete other immutable types
+const result2 = await deleteImmutableFromGraph(
+  "document",
+  "doc-456",
+  adapter,
+);
+```
+
+#### deleteMutableFromGraph()
+
+Delete a mutable record from the graph. Simple delete with no cascading.
+
+```typescript
+import { deleteMutableFromGraph } from "@cortexmemory/sdk/graph";
+
+async function deleteMutableFromGraph(
+  namespace: string, // Mutable namespace
+  key: string, // Mutable key
+  adapter: GraphAdapter,
+): Promise<DeleteResult>;
+```
+
+**Example:**
+
+```typescript
+const result = await deleteMutableFromGraph(
+  "user_preferences",
+  "theme",
+  adapter,
+);
+```
+
 ### Orphan Detection
 
 **Handles complex scenarios**:
@@ -776,6 +1133,183 @@ if (canRun) {
 
 ---
 
+## Belief Revision (Fact Supersession)
+
+> **Added in v0.24.0**
+
+Functions for managing fact versioning and supersession in the graph database. These functions sync belief revision actions to maintain fact lineage and provenance.
+
+### syncFactSupersession()
+
+Sync a fact supersession to the graph database. Creates a SUPERSEDES relationship from the new fact to the old fact.
+
+```typescript
+import { syncFactSupersession } from "@cortexmemory/sdk/graph";
+
+async function syncFactSupersession(
+  oldFact: FactRecord, // The fact being superseded
+  newFact: FactRecord, // The fact that supersedes
+  adapter: GraphAdapter,
+  reason?: string, // Optional reason for supersession
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<{
+  oldNodeId: string; // Graph ID of superseded fact
+  newNodeId: string; // Graph ID of new fact
+  relationshipId: string; // Graph ID of SUPERSEDES relationship
+}>;
+```
+
+**Example:**
+
+```typescript
+// When belief revision determines a fact should be superseded
+const result = await syncFactSupersession(
+  oldFact,
+  newFact,
+  adapter,
+  "User corrected their preference",
+  "tenant-acme",
+);
+
+console.log(`Fact ${newFact.factId} supersedes ${oldFact.factId}`);
+// Creates: (newFact)-[:SUPERSEDES]->(oldFact)
+```
+
+### updateFactGraphStatus()
+
+Update the status of a fact node in the graph.
+
+```typescript
+import { updateFactGraphStatus } from "@cortexmemory/sdk/graph";
+
+async function updateFactGraphStatus(
+  factId: string,
+  status: "active" | "superseded" | "deleted",
+  adapter: GraphAdapter,
+): Promise<void>;
+```
+
+**Example:**
+
+```typescript
+// Mark a fact as superseded
+await updateFactGraphStatus("fact-123", "superseded", adapter);
+
+// Mark a fact as deleted (soft delete)
+await updateFactGraphStatus("fact-456", "deleted", adapter);
+```
+
+### syncFactUpdateInPlace()
+
+Sync an in-place fact update to the graph. Used for UPDATE action in belief revision (content refinement without supersession).
+
+```typescript
+import { syncFactUpdateInPlace } from "@cortexmemory/sdk/graph";
+
+async function syncFactUpdateInPlace(
+  fact: FactRecord, // The updated fact
+  adapter: GraphAdapter,
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<string>; // Returns graph node ID
+```
+
+**Example:**
+
+```typescript
+// When belief revision merges/updates an existing fact
+const nodeId = await syncFactUpdateInPlace(updatedFact, adapter);
+// Fact node is updated with new content, status remains "active"
+```
+
+### syncFactRevision()
+
+Create a REVISED_FROM relationship between facts. Used when a fact is refined (content updated) rather than superseded.
+
+```typescript
+import { syncFactRevision } from "@cortexmemory/sdk/graph";
+
+async function syncFactRevision(
+  originalFact: FactRecord, // The original fact
+  revisedFact: FactRecord, // The revised fact
+  adapter: GraphAdapter,
+  reason?: string, // Optional reason for revision
+  tenantId?: string, // Optional: Multi-tenancy isolation
+): Promise<{
+  originalNodeId: string;
+  revisedNodeId: string;
+  relationshipId: string;
+}>;
+```
+
+**Example:**
+
+```typescript
+// Create revision relationship for fact refinement
+const result = await syncFactRevision(
+  originalFact,
+  revisedFact,
+  adapter,
+  "Added more specific details",
+);
+// Creates: (revisedFact)-[:REVISED_FROM]->(originalFact)
+```
+
+### getFactSupersessionChainFromGraph()
+
+Get the complete supersession chain for a fact from the graph.
+
+```typescript
+import { getFactSupersessionChainFromGraph } from "@cortexmemory/sdk/graph";
+
+async function getFactSupersessionChainFromGraph(
+  factId: string,
+  adapter: GraphAdapter,
+): Promise<
+  Array<{
+    factId: string;
+    fact: string;
+    supersededAt?: number;
+  }>
+>;
+```
+
+**Example:**
+
+```typescript
+// Get the full history of a fact
+const chain = await getFactSupersessionChainFromGraph("fact-123", adapter);
+for (const item of chain) {
+  console.log(`${item.factId}: ${item.fact}`);
+  if (item.supersededAt) {
+    console.log(`  Superseded at: ${new Date(item.supersededAt)}`);
+  }
+}
+// Returns facts ordered from oldest to newest
+```
+
+### removeFactSupersessionRelationships()
+
+Remove supersession relationships for a fact. Used when undoing a supersession or during cleanup.
+
+```typescript
+import { removeFactSupersessionRelationships } from "@cortexmemory/sdk/graph";
+
+async function removeFactSupersessionRelationships(
+  factId: string,
+  adapter: GraphAdapter,
+): Promise<number>; // Returns count of deleted relationships
+```
+
+**Example:**
+
+```typescript
+// Remove all SUPERSEDES relationships for a fact
+const deleted = await removeFactSupersessionRelationships("fact-123", adapter);
+console.log(`Removed ${deleted} supersession relationships`);
+```
+
+---
+
 ## Schema Management
 
 ### initializeGraphSchema()
@@ -802,6 +1336,22 @@ const status = await verifyGraphSchema(adapter);
 console.log("Schema valid:", status.valid);
 console.log("Constraints:", status.constraints.length);
 console.log("Indexes:", status.indexes.length);
+console.log("Missing constraints:", status.missing);
+```
+
+**Return type:**
+
+```typescript
+interface VerifySchemaResult {
+  /** Whether all required constraints exist */
+  valid: boolean;
+  /** List of existing constraint names */
+  constraints: string[];
+  /** List of existing index names */
+  indexes: string[];
+  /** List of missing required constraint names */
+  missing: string[];
+}
 ```
 
 ### dropGraphSchema()
@@ -1220,7 +1770,10 @@ console.log("  Duration:", result.duration, "ms");
 try {
   await adapter.connect(config);
 } catch (error) {
-  if (error.code === "CONNECTION_ERROR") {
+  if (error instanceof GraphAuthenticationError) {
+    console.error(`Auth failed for ${error.username} at ${error.uri}`);
+    console.error("Check NEO4J_USERNAME and NEO4J_PASSWORD");
+  } else if (error instanceof GraphConnectionError) {
     console.error("Failed to connect to graph database");
     // Fall back to Graph-Lite or disable graph features
   }
@@ -1321,21 +1874,93 @@ for (const record of related.records) {
 
 ```typescript
 import type {
+  // Adapter Interface
   GraphAdapter,
+
+  // Node & Edge Types
   GraphNode,
   GraphEdge,
   GraphPath,
+
+  // Query Types
   GraphQuery,
   GraphQueryResult,
   QueryStatistics,
+
+  // Configuration
   GraphConnectionConfig,
   GraphOperation,
   TraversalConfig,
   ShortestPathConfig,
+
+  // Sync Worker
   SyncHealthMetrics,
   GraphSyncWorkerOptions,
+
+  // Batch Sync
   BatchSyncOptions,
   BatchSyncResult,
+
+  // Orphan Detection
+  OrphanRule,
+  DeletionContext,
+  DeleteResult,
+  OrphanCheckResult,
+} from "@cortexmemory/sdk/graph";
+```
+
+### Sync Functions
+
+```typescript
+import {
+  // Node Sync
+  syncContextToGraph,
+  syncConversationToGraph,
+  syncMemoryToGraph,
+  syncFactToGraph,
+  syncMemorySpaceToGraph,
+
+  // Relationship Sync
+  syncContextRelationships,
+  syncConversationRelationships,
+  syncMemoryRelationships,
+  syncFactRelationships,
+  syncA2ARelationships,
+
+  // Helper Functions
+  findGraphNodeId,
+  ensureUserNode,
+  ensureAgentNode,
+  ensureParticipantNode,
+  ensureEntityNode,
+  ensureEnrichedEntityNode,
+
+  // Belief Revision
+  syncFactSupersession,
+  updateFactGraphStatus,
+  syncFactUpdateInPlace,
+  syncFactRevision,
+  getFactSupersessionChainFromGraph,
+  removeFactSupersessionRelationships,
+
+  // Delete Functions
+  deleteMemoryFromGraph,
+  deleteFactFromGraph,
+  deleteContextFromGraph,
+  deleteConversationFromGraph,
+  deleteMemorySpaceFromGraph,
+  deleteImmutableFromGraph,
+  deleteMutableFromGraph,
+
+  // Orphan Detection
+  ORPHAN_RULES,
+  createDeletionContext,
+  deleteWithOrphanCleanup,
+  detectOrphan,
+  canRunOrphanCleanup,
+
+  // Batch Sync
+  initialGraphSync,
 } from "@cortexmemory/sdk/graph";
 ```
 
@@ -1553,6 +2178,18 @@ import type {
 } from "@cortexmemory/sdk/graph";
 ```
 
+### Error Classes
+
+```typescript
+import {
+  GraphDatabaseError,
+  GraphConnectionError,
+  GraphAuthenticationError,
+  GraphQueryError,
+  GraphNotFoundError,
+} from "@cortexmemory/sdk/graph";
+```
+
 ### OrphanRule
 
 Orphan detection rules for node types.
@@ -1639,6 +2276,7 @@ interface OrphanCheckResult {
 import {
   GraphDatabaseError,
   GraphConnectionError,
+  GraphAuthenticationError,
   GraphQueryError,
   GraphNotFoundError,
 } from "@cortexmemory/sdk/graph";
@@ -1646,8 +2284,42 @@ import {
 
 - **GraphDatabaseError** - Base error for graph operations
 - **GraphConnectionError** - Connection failures (code: `CONNECTION_ERROR`)
+- **GraphAuthenticationError** - Authentication failures (subclass of `GraphConnectionError`)
 - **GraphQueryError** - Query execution failures (includes query string)
 - **GraphNotFoundError** - Node or edge not found (code: `NOT_FOUND`)
+
+#### GraphAuthenticationError
+
+Specific error class for authentication failures. Provides additional context for debugging credential issues.
+
+```typescript
+class GraphAuthenticationError extends GraphConnectionError {
+  readonly name: "GraphAuthenticationError";
+  readonly uri: string; // The connection URI that failed
+  readonly username: string; // The username that was used
+
+  constructor(message: string, uri: string, username: string, cause?: Error);
+}
+```
+
+**Example:**
+
+```typescript
+try {
+  await adapter.connect({
+    uri: "bolt://localhost:7687",
+    username: "neo4j",
+    password: "wrong-password",
+  });
+} catch (error) {
+  if (error instanceof GraphAuthenticationError) {
+    console.error(`Authentication failed for ${error.username} at ${error.uri}`);
+    console.error("Check NEO4J_USERNAME and NEO4J_PASSWORD environment variables");
+  } else if (error instanceof GraphConnectionError) {
+    console.error("Connection failed - is the database running?");
+  }
+}
+```
 
 ---
 

@@ -496,12 +496,13 @@ cortex.mutable.list(
 interface ListMutableFilter {
   namespace: string; // Required: namespace to list
   keyPrefix?: string; // Keys starting with prefix
+  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
   userId?: string; // Filter by user
   limit?: number; // Max results (default: 100)
   offset?: number; // Pagination offset
   updatedAfter?: number; // Filter by updatedAt > timestamp
   updatedBefore?: number; // Filter by updatedAt < timestamp
-  sortBy?: "key" | "updatedAt"; // Sort field
+  sortBy?: "key" | "updatedAt" | "accessCount"; // Sort field
   sortOrder?: "asc" | "desc"; // Sort direction (default: "asc")
 }
 ```
@@ -562,6 +563,7 @@ cortex.mutable.count(
 ```typescript
 interface CountMutableFilter {
   namespace: string; // Required: namespace to count
+  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
   userId?: string; // Filter by user
   keyPrefix?: string; // Keys starting with prefix
   updatedAfter?: number; // Filter by updatedAt > timestamp
@@ -820,12 +822,14 @@ await cortex.mutable.set("grocery-stores", "store-15:inventory:dairy:milk", {
 });
 
 // Query all produce for store 15
-const produce = await cortex.mutable.list("grocery-stores", {
+const produce = await cortex.mutable.list({
+  namespace: "grocery-stores",
   keyPrefix: "store-15:inventory:produce:",
 });
 
 // Query all inventory for store 15
-const allInventory = await cortex.mutable.list("grocery-stores", {
+const allInventory = await cortex.mutable.list({
+  namespace: "grocery-stores",
   keyPrefix: "store-15:inventory:",
 });
 ```
@@ -873,12 +877,12 @@ await cortex.mutable.set(
 );
 
 // Query entire namespace
-const storeInventory = await cortex.mutable.list(
-  "grocery-stores:store-15:inventory",
-);
-const storeMetrics = await cortex.mutable.list(
-  "grocery-stores:store-15:metrics",
-);
+const storeInventory = await cortex.mutable.list({
+  namespace: "grocery-stores:store-15:inventory",
+});
+const storeMetrics = await cortex.mutable.list({
+  namespace: "grocery-stores:store-15:metrics",
+});
 ```
 
 **Benefits:**
@@ -1034,7 +1038,8 @@ console.log(`Store: ${parts[0]}, Department: ${parts[2]}, Item: ${parts[3]}`);
 // Query helpers
 async function listByPrefix(namespace: string, ...prefixParts: string[]) {
   const prefix = buildKey(...prefixParts);
-  return await cortex.mutable.list(namespace, {
+  return await cortex.mutable.list({
+    namespace,
     keyPrefix: prefix,
   });
 }
@@ -1138,60 +1143,47 @@ await cortex.mutable.update("inventory", "store-15:produce:apples", (item) => {
   };
 });
 
-// Multi-item purchase (ACID transaction)
-await cortex.mutable.transaction(async (tx) => {
-  // Buy apples, bananas, and milk
-  tx.update("inventory", "store-15:produce:apples", (item) => ({
-    ...item,
-    quantity: item.quantity - 5,
-  }));
-
-  tx.update("inventory", "store-15:produce:bananas", (item) => ({
-    ...item,
-    quantity: item.quantity - 3,
-  }));
-
-  tx.update("inventory", "store-15:dairy:milk", (item) => ({
-    ...item,
-    quantity: item.quantity - 2,
-  }));
-
-  // Update store metrics
-  tx.update("metrics", "store-15-daily", (metrics) => ({
-    ...metrics,
-    sales: (metrics?.sales || 0) + 1,
-    revenue: (metrics?.revenue || 0) + 24.43, // Total purchase
-  }));
-
-  // All updates succeed together or fail together
-});
+// Multi-item purchase (ACID transaction with decrement operations)
+// Note: transaction() uses array-based operations, not callback functions
+await cortex.mutable.transaction([
+  // Buy apples, bananas, and milk (using decrement)
+  { op: "decrement", namespace: "inventory", key: "store-15:produce:apples", amount: 5 },
+  { op: "decrement", namespace: "inventory", key: "store-15:produce:bananas", amount: 3 },
+  { op: "decrement", namespace: "inventory", key: "store-15:dairy:milk", amount: 2 },
+  // Increment sales counter
+  { op: "increment", namespace: "metrics", key: "store-15-daily-sales", amount: 1 },
+]);
+// All operations succeed together or fail together (ACID)
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Queries: Get inventory by hierarchy level
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 // Get all produce for store 15
-const produce = await cortex.mutable.list("inventory", {
+const produce = await cortex.mutable.list({
+  namespace: "inventory",
   keyPrefix: "store-15:produce:",
 });
 
-console.log(`Store 15 produce items: ${produce.records.length}`);
-produce.records.forEach((item) => {
+console.log(`Store 15 produce items: ${produce.length}`);
+produce.forEach((item) => {
   console.log(
     `- ${item.key.split(":")[2]}: ${item.value.quantity} ${item.value.unit}`,
   );
 });
 
 // Get ALL inventory for store 15
-const allInventory = await cortex.mutable.list("inventory", {
+const allInventory = await cortex.mutable.list({
+  namespace: "inventory",
   keyPrefix: "store-15:",
 });
 
 // Get specific item across all stores
-const allApples = await cortex.mutable.list("inventory", {
+const allApples = await cortex.mutable.list({
+  namespace: "inventory",
   keyPrefix: "store-", // Gets all stores
 });
-const applesOnly = allApples.records.filter((r) => r.key.endsWith(":apples"));
+const applesOnly = allApples.filter((r) => r.key.endsWith(":apples"));
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Aggregation: Chain-wide reports
@@ -1206,11 +1198,12 @@ async function getChainwideInventory(department?: string) {
   for (const storeId of allStores.storeIds) {
     const prefix = department ? `${storeId}:${department}:` : `${storeId}:`;
 
-    const items = await cortex.mutable.list("inventory", {
+    const items = await cortex.mutable.list({
+      namespace: "inventory",
       keyPrefix: prefix,
     });
 
-    items.records.forEach((record) => {
+    items.forEach((record) => {
       const itemName = record.key.split(":").pop()!;
       inventory[itemName] = (inventory[itemName] || 0) + record.value.quantity;
     });
@@ -1228,23 +1221,23 @@ console.log("Chain-wide produce:", chainProduce);
 // Restocking: Bulk updates
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// Restock all produce for store 15
+// Restock all produce for store 15 (using transaction for atomicity)
+// Note: For simple numeric inventory, use increment operations
 async function restockDepartment(
   storeId: string,
   department: string,
   items: Record<string, number>,
 ) {
-  await cortex.mutable.transaction(async (tx) => {
-    for (const [itemName, quantity] of Object.entries(items)) {
-      const key = `${storeId}:${department}:${itemName}`;
+  // Build array of increment operations
+  const operations = Object.entries(items).map(([itemName, quantity]) => ({
+    op: "increment" as const,
+    namespace: "inventory",
+    key: `${storeId}:${department}:${itemName}`,
+    amount: quantity,
+  }));
 
-      tx.update("inventory", key, (current) => ({
-        ...current,
-        quantity: current.quantity + quantity,
-        lastRestocked: new Date(),
-      }));
-    }
-  });
+  // Execute all increments atomically
+  await cortex.mutable.transaction(operations);
 }
 
 await restockDepartment("store-15", "produce", {
@@ -1258,11 +1251,12 @@ await restockDepartment("store-15", "produce", {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 async function checkLowStock(storeId: string, threshold: number = 20) {
-  const inventory = await cortex.mutable.list("inventory", {
+  const inventory = await cortex.mutable.list({
+    namespace: "inventory",
     keyPrefix: `${storeId}:`,
   });
 
-  const lowStock = inventory.records.filter(
+  const lowStock = inventory.filter(
     (item) => item.value.quantity < threshold,
   );
 
@@ -1347,16 +1341,16 @@ const qty = await getOrInitialize("inventory", "new-product", 0);
 ### 4. Use Transactions for Multi-Key Operations
 
 ```typescript
-// ✅ Atomic multi-key update
-await cortex.mutable.transaction(async (tx) => {
-  tx.update("inventory", "product-a", (qty) => qty - 1);
-  tx.update("counters", "total-sales", (n) => n + 1);
-  // Both or neither
-});
+// ✅ Atomic multi-key update (array-based API)
+await cortex.mutable.transaction([
+  { op: "decrement", namespace: "inventory", key: "product-a", amount: 1 },
+  { op: "increment", namespace: "counters", key: "total-sales", amount: 1 },
+]);
+// Both or neither - ACID guarantees
 
 // ❌ Non-atomic (could fail partway)
-await cortex.mutable.update("inventory", "product-a", (qty) => qty - 1);
-await cortex.mutable.update("counters", "total-sales", (n) => n + 1);
+await cortex.mutable.decrement("inventory", "product-a", 1);
+await cortex.mutable.increment("counters", "total-sales", 1);
 // Second could fail, leaving inconsistent state
 ```
 
@@ -1396,7 +1390,8 @@ await cortex.mutable.set("inventory", "store-15:produce:bananas", {...});
 // Can have thousands of products
 
 // ✅ Need prefix queries
-const produce = await cortex.mutable.list("inventory", {
+const produce = await cortex.mutable.list({
+  namespace: "inventory",
   keyPrefix: "store-15:produce:",
 });
 
@@ -1589,6 +1584,7 @@ cortex.mutable.purgeNamespace(
 ```typescript
 interface PurgeNamespaceOptions {
   dryRun?: boolean; // Preview what would be deleted without deleting
+  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
 }
 ```
 
@@ -1641,6 +1637,7 @@ interface PurgeManyFilter {
   keyPrefix?: string; // Keys starting with prefix
   userId?: string; // Filter by user
   updatedBefore?: number; // Delete keys updated before this timestamp
+  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
 }
 ```
 
@@ -1726,11 +1723,12 @@ await cortex.mutable.update("inventory", "store-15:produce:apples", (item) => ({
 }));
 
 // Query all produce for this store
-const allProduce = await cortex.mutable.list("inventory", {
+const allProduce = await cortex.mutable.list({
+  namespace: "inventory",
   keyPrefix: "store-15:produce:",
 });
 
-console.log(`Store 15 has ${allProduce.total} produce items`);
+console.log(`Store 15 has ${allProduce.length} produce items`);
 ```
 
 ### Use Case 2: Live Configuration (Complex Nested Objects)
@@ -1974,12 +1972,12 @@ console.log(current); // 60 only
 ```typescript
 // Snapshot mutable data for backups
 async function backupMutableNamespace(namespace: string) {
-  const all = await cortex.mutable.list(namespace);
+  const all = await cortex.mutable.list({ namespace });
 
   const backup = {
     namespace,
     timestamp: new Date(),
-    data: all.records.reduce(
+    data: all.reduce(
       (acc, record) => {
         acc[record.key] = record.value;
         return acc;
@@ -2028,8 +2026,9 @@ Mutable records can participate in the graph structure via userId:
 
 ```typescript
 // User → Mutable Records (via userId)
-const userSessions = await cortex.mutable.list('user-sessions', {
-  userId: 'user-123'
+const userSessions = await cortex.mutable.list({
+  namespace: 'user-sessions',
+  userId: 'user-123',
 });
 
 const userPreferences = await cortex.mutable.get('user-preferences', 'user-123-prefs');
@@ -2059,6 +2058,67 @@ Memory-def
 **GDPR:** Mutable records with userId are included in cascade deletion traversal.
 
 **Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+
+---
+
+## Error Handling
+
+### MutableValidationError
+
+The Mutable API exports `MutableValidationError` for client-side validation errors. This error is thrown before any network requests when input validation fails.
+
+**Import:**
+
+```typescript
+import { MutableValidationError } from "@cortex/sdk/mutable";
+// or from main export:
+import { MutableValidationError } from "@cortex/sdk";
+```
+
+**Error Structure:**
+
+```typescript
+class MutableValidationError extends Error {
+  name: "MutableValidationError";
+  code: string; // Error code for programmatic handling
+  field?: string; // Which field failed validation
+}
+```
+
+**Example:**
+
+```typescript
+import { MutableValidationError } from "@cortex/sdk";
+
+try {
+  await cortex.mutable.set("", "key", "value"); // Invalid namespace
+} catch (error) {
+  if (error instanceof MutableValidationError) {
+    console.log(`Validation failed: ${error.message}`);
+    console.log(`Error code: ${error.code}`); // "MISSING_NAMESPACE"
+    console.log(`Field: ${error.field}`); // "namespace"
+  }
+}
+```
+
+**Common Error Codes:**
+
+| Code | Description |
+|------|-------------|
+| `MISSING_NAMESPACE` | Namespace is required but was empty or undefined |
+| `INVALID_NAMESPACE` | Namespace format is invalid (must be alphanumeric, hyphens, underscores, dots, colons) |
+| `NAMESPACE_TOO_LONG` | Namespace exceeds 100 characters |
+| `MISSING_KEY` | Key is required but was empty or undefined |
+| `INVALID_KEY` | Key format is invalid |
+| `KEY_TOO_LONG` | Key exceeds 255 characters |
+| `MISSING_VALUE` | Value is required for set operations |
+| `VALUE_TOO_LARGE` | Value exceeds 1MB size limit |
+| `INVALID_USER_ID` | userId format is invalid |
+| `INVALID_LIMIT_RANGE` | limit must be between 0 and 1000 |
+| `INVALID_UPDATER_TYPE` | Updater must be a function |
+| `MISSING_OPERATIONS` | Transaction requires operations array |
+| `EMPTY_OPERATIONS_ARRAY` | Transaction operations array cannot be empty |
+| `INVALID_OPERATION_TYPE` | Transaction operation must be set, update, delete, increment, or decrement |
 
 ---
 

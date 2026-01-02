@@ -1,6 +1,6 @@
 # Governance Policies API
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Complete API reference for configuring retention, purging, and governance rules across all Cortex layers.
 
@@ -20,10 +20,10 @@ The Governance Policies API provides centralized control over data retention, pu
 
 - Per-layer retention rules
 - Per-type/importance rules
-- Automatic enforcement
-- Compliance templates (GDPR, HIPAA, SOC2)
+- Manual enforcement (automatic enforcement planned)
+- Compliance templates (GDPR, HIPAA, SOC2, FINRA)
 - Organization-wide or per-agent
-- Dry-run mode for testing
+- Dry-run mode for testing (via `simulate()`)
 
 ---
 
@@ -95,13 +95,23 @@ interface GovernancePolicy {
     };
   };
 
-  // Sessions: Lifecycle configuration
-  sessions: {
-    inactiveTimeout: number; // Milliseconds until session goes idle (default: 1800000 = 30min)
-    absoluteTimeout: number; // Milliseconds until session expires (default: 86400000 = 24h)
-    maxSessionsPerUser?: number; // Optional limit on concurrent sessions
-    cleanupOrphanedSessions?: boolean; // Auto-cleanup ended sessions
-    orphanedSessionRetention?: string; // How long to keep ended sessions (default: '30d')
+  // Sessions: Lifecycle configuration (optional)
+  sessions?: {
+    lifecycle: {
+      idleTimeout: string;      // Duration until idle (e.g., '30m', '1h') - default: '30m'
+      maxDuration: string;      // Max session lifetime (e.g., '24h', '7d') - default: '24h'
+      autoExtend: boolean;      // Extend session on activity - default: true
+      warnBeforeExpiry?: string; // Warning duration (e.g., '5m', '15m')
+    };
+    cleanup: {
+      autoExpireIdle: boolean;     // Auto-expire idle sessions - default: true
+      deleteEndedAfter?: string;   // Delete ended sessions after duration (e.g., '30d')
+      archiveAfter?: string;       // Archive before deletion (e.g., '7d')
+    };
+    limits?: {
+      maxActiveSessions?: number;    // Max concurrent sessions per user
+      maxSessionsPerDevice?: number; // Max sessions per device type
+    };
   };
 
   // Cross-layer rules
@@ -342,7 +352,33 @@ const soc2Policy = await cortex.governance.getTemplate("SOC2");
 // - Version tracking
 // - Access controls
 // - Purge auditing
+
+await cortex.governance.setPolicy({
+  organizationId: "enterprise-org",
+  ...soc2Policy,
+});
 ```
+
+### FINRA Template
+
+```typescript
+const finraPolicy = await cortex.governance.getTemplate("FINRA");
+
+// Applies:
+// - 7-year mandatory retention (no early deletion)
+// - Unlimited versions for financial records
+// - No purgeOnUserRequest (regulatory override)
+// - No auto-deletion
+// - Strict audit logging
+// - All importance levels require justification
+
+await cortex.governance.setPolicy({
+  organizationId: "financial-services-org",
+  ...finraPolicy,
+});
+```
+
+> **Note:** FINRA regulations require retention even when users request deletion. The `purgeOnUserRequest: false` setting ensures regulatory compliance takes precedence over deletion requests.
 
 ---
 
@@ -356,19 +392,24 @@ Configure session lifecycle timeouts and limits.
 await cortex.governance.setPolicy({
   organizationId: "org-123",
 
+  // ... other policy fields (conversations, immutable, mutable, vector, compliance) ...
+
   sessions: {
-    // Inactivity timeout (default: 30 minutes)
-    inactiveTimeout: 1800000, // 30 min in milliseconds
-
-    // Absolute session lifetime (default: 24 hours)
-    absoluteTimeout: 86400000, // 24h in milliseconds
-
-    // Optional: limit concurrent sessions per user
-    maxSessionsPerUser: 5,
-
-    // Cleanup configuration
-    cleanupOrphanedSessions: true,
-    orphanedSessionRetention: "30d",
+    lifecycle: {
+      idleTimeout: '30m',      // Inactivity timeout (default: 30 minutes)
+      maxDuration: '24h',      // Absolute session lifetime (default: 24 hours)
+      autoExtend: true,        // Extend session on activity
+      warnBeforeExpiry: '5m',  // Warn user 5 minutes before expiry
+    },
+    cleanup: {
+      autoExpireIdle: true,      // Auto-expire idle sessions
+      deleteEndedAfter: '30d',   // Delete ended sessions after 30 days
+      archiveAfter: '7d',        // Archive sessions before deletion
+    },
+    limits: {
+      maxActiveSessions: 5,      // Max concurrent sessions per user
+      maxSessionsPerDevice: 3,   // Max sessions per device type
+    },
   },
 });
 ```
@@ -379,35 +420,61 @@ await cortex.governance.setPolicy({
 // Enterprise tenant: longer sessions
 await cortex.governance.setAgentOverride("enterprise-memory-space", {
   sessions: {
-    inactiveTimeout: 3600000, // 1 hour
-    absoluteTimeout: 604800000, // 7 days
-    maxSessionsPerUser: 20,
+    lifecycle: {
+      idleTimeout: '1h',       // 1 hour idle timeout
+      maxDuration: '7d',       // 7 day max session
+      autoExtend: true,
+    },
+    cleanup: {
+      autoExpireIdle: true,
+      deleteEndedAfter: '90d',
+    },
+    limits: {
+      maxActiveSessions: 20,
+    },
   },
 });
 
 // Security-sensitive tenant: shorter sessions
 await cortex.governance.setAgentOverride("banking-memory-space", {
   sessions: {
-    inactiveTimeout: 300000, // 5 minutes
-    absoluteTimeout: 3600000, // 1 hour
-    maxSessionsPerUser: 3,
+    lifecycle: {
+      idleTimeout: '5m',       // 5 minute idle timeout
+      maxDuration: '1h',       // 1 hour max session
+      autoExtend: false,       // No auto-extension for security
+      warnBeforeExpiry: '2m',  // Warn 2 minutes before expiry
+    },
+    cleanup: {
+      autoExpireIdle: true,
+      deleteEndedAfter: '7d',
+    },
+    limits: {
+      maxActiveSessions: 3,
+    },
   },
 });
 ```
 
-### Session Cleanup Jobs
+### Session Policy Integration
+
+Session policies defined here configure the behavior enforced by the [Sessions API](./11-sessions-operations.md). The Governance API defines the *rules*, while the Sessions API *executes* them.
 
 ```typescript
-// Expire idle sessions based on policy
-const result = await cortex.sessions.expireIdle({
-  tenantId: "tenant-123",
+// Governance defines the policy
+await cortex.governance.setPolicy({
+  organizationId: "org-123",
+  // ... other policy fields ...
+  sessions: {
+    lifecycle: { idleTimeout: '30m', maxDuration: '24h', autoExtend: true },
+    cleanup: { autoExpireIdle: true, deleteEndedAfter: '30d' },
+  },
 });
 
-console.log(`Expired ${result.expired} idle sessions`);
-
-// The inactiveTimeout and absoluteTimeout from policy are used
-// to determine which sessions should be expired
+// Sessions API operations respect these governance policies
+// See Sessions API documentation for expireIdle(), cleanup(), etc.
 ```
+
+> **Note:** Session operations like `expireIdle()` are part of the Sessions API, not the Governance API. The governance policy configures timeouts and limits that the Sessions API enforces.
 
 ---
 
@@ -415,8 +482,12 @@ console.log(`Expired ${result.expired} idle sessions`);
 
 ### Automatic Enforcement
 
+> ⚠️ **PLANNED FEATURE**: Automatic policy enforcement is on the roadmap but not yet fully implemented. Currently, use `enforce()` for manual policy execution. Automatic hooks into storage operations are planned for a future release.
+
+When fully implemented, policies will be enforced automatically on storage operations:
+
 ```typescript
-// Policy is enforced automatically
+// PLANNED: Policy will be enforced automatically on store/update operations
 
 // Example: Vector with importance-based retention
 await cortex.vector.store('agent-1', {
@@ -425,9 +496,16 @@ await cortex.vector.store('agent-1', {
 });
 
 // Policy says: 0-20 = keep 1 version
-// After first update, v1 is automatically purged
+// PLANNED: After first update, v1 would be automatically purged
 await cortex.vector.update('agent-1', memoryId, {...});
-// v1 deleted automatically, only v2 kept
+// PLANNED: v1 deleted automatically, only v2 kept
+
+// CURRENT: Use manual enforcement instead
+await cortex.governance.enforce({
+  scope: { organizationId: 'org-123' },
+  layers: ['vector'],
+  rules: ['retention'],
+});
 ```
 
 ### Manual Enforcement
@@ -464,6 +542,46 @@ const spaceResult = await cortex.governance.enforce({
   layers: ["vector"],
   rules: ["retention"],
 });
+```
+
+### EnforcementResult Interface
+
+```typescript
+interface EnforcementResult {
+  enforcedAt: number;           // Unix timestamp when enforcement ran
+  versionsDeleted: number;      // Total versions deleted across all layers
+  recordsPurged: number;        // Total records purged
+  storageFreed: number;         // Storage freed in MB
+  affectedLayers: string[];     // Layers that were affected
+}
+```
+
+### EnforcementStats Interface
+
+```typescript
+interface EnforcementStats {
+  period: {
+    start: number;              // Unix timestamp
+    end: number;                // Unix timestamp
+  };
+  conversations: {
+    purged: number;             // Conversations deleted
+    archived: number;           // Conversations archived
+  };
+  immutable: {
+    versionsDeleted: number;    // Immutable versions cleaned up
+    entitiesPurged: number;     // Immutable entities removed
+  };
+  vector: {
+    versionsDeleted: number;    // Vector memory versions deleted
+    memoriesPurged: number;     // Vector memories removed
+  };
+  mutable: {
+    keysDeleted: number;        // Mutable keys deleted
+  };
+  storageFreed: number;         // Total storage freed in MB
+  costSavings: number;          // Estimated cost savings in USD
+}
 ```
 
 ---
@@ -546,6 +664,77 @@ console.log(report);
 
 ---
 
+## Error Handling
+
+The Governance API provides a custom error class for validation failures, allowing you to catch and handle governance-specific errors.
+
+### GovernanceValidationError
+
+```typescript
+import { GovernanceValidationError } from '@cortex/sdk';
+
+class GovernanceValidationError extends Error {
+  name: "GovernanceValidationError";
+  code: string;     // Error code for programmatic handling
+  field?: string;   // Field that caused the error (if applicable)
+}
+```
+
+### Error Codes
+
+| Code | Description |
+|------|-------------|
+| `MISSING_POLICY` | Policy object is required but not provided |
+| `MISSING_REQUIRED_FIELD` | Required field missing (e.g., `conversations`, `compliance`) |
+| `MISSING_SCOPE` | Scope (organizationId or memorySpaceId) is required |
+| `INVALID_SCOPE` | Scope provided but invalid (empty string, etc.) |
+| `INVALID_PERIOD_FORMAT` | Period string doesn't match format (e.g., `7d`, `1y`) |
+| `INVALID_IMPORTANCE_RANGE` | Importance range invalid (not 0-100, min >= max) |
+| `OVERLAPPING_IMPORTANCE_RANGES` | Two importance ranges overlap |
+| `INVALID_VERSIONS` | Version count invalid (must be >= -1) |
+| `INVALID_LAYERS` | Invalid layer specified for enforcement |
+| `INVALID_RULES` | Invalid rule specified for enforcement |
+| `INVALID_DATE_RANGE` | Start date must be before end date |
+| `INVALID_PERIOD` | Stats period invalid (must be `7d`, `30d`, `90d`, `1y`) |
+| `INVALID_COMPLIANCE_MODE` | Invalid compliance template name |
+
+### Example Usage
+
+```typescript
+import { GovernanceValidationError } from '@cortex/sdk';
+
+try {
+  await cortex.governance.setPolicy({
+    organizationId: "org-123",
+    conversations: {
+      retention: { deleteAfter: "invalid" }, // Invalid format
+      purging: { autoDelete: true },
+    },
+    // ... other fields
+  });
+} catch (error) {
+  if (error instanceof GovernanceValidationError) {
+    console.error(`Validation failed: ${error.message}`);
+    console.error(`Error code: ${error.code}`);
+    console.error(`Field: ${error.field}`);
+    
+    // Handle specific error codes
+    switch (error.code) {
+      case 'INVALID_PERIOD_FORMAT':
+        console.error('Period must be like "7d", "30d", "1y"');
+        break;
+      case 'MISSING_SCOPE':
+        console.error('Provide organizationId or memorySpaceId');
+        break;
+    }
+  } else {
+    throw error; // Re-throw non-validation errors
+  }
+}
+```
+
+---
+
 ## Best Practices
 
 ### 1. Start with Template
@@ -621,10 +810,11 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 
 - ✅ Centralized retention rules
 - ✅ Per-layer configuration
-- ✅ Compliance templates (GDPR, HIPAA, SOC2)
-- ✅ Automatic enforcement
-- ✅ Cost optimization
-- ✅ Audit trail
+- ✅ Compliance templates (GDPR, HIPAA, SOC2, FINRA)
+- ✅ Manual enforcement via `enforce()`
+- ⏳ Automatic enforcement *(planned)*
+- ✅ Cost optimization via `simulate()`
+- ✅ Audit trail via `getComplianceReport()`
 
 **Configuration Hierarchy:**
 
@@ -635,10 +825,10 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 
 **Enterprise Value:**
 
-- Automatic compliance
-- Cost control at scale
-- No manual retention management
-- Built-in audit trails
+- Compliance template support (GDPR, HIPAA, SOC2, FINRA)
+- Cost control at scale via policy simulation
+- Centralized retention management
+- Built-in audit trails and compliance reporting
 
 ---
 
