@@ -1,987 +1,875 @@
-# Types & Interfaces
+# Types & Interfaces Reference
 
-> **Last Updated**: 2025-12-26
-
-Complete TypeScript type definitions for all Cortex APIs.
+> **Last Updated**: January 1, 2026
+> **SDK Version**: 0.27.0
+> **Source**: `src/types/index.ts`
 
 ## Overview
 
-This document provides the complete TypeScript interfaces for Cortex. All types are exported from the main package:
+Complete TypeScript type reference for the Cortex SDK. All type definitions are extracted directly from the SDK source code and represent the authoritative type definitions.
+
+**Import Types:**
 
 ```typescript
 import type {
-  // Layer 1: ACID Stores
+  // Core entities
   Conversation,
   Message,
-  ImmutableRecord,
-  MutableRecord,
-
-  // Layer 2: Vector
   MemoryEntry,
-  MemoryVersion,
-
-  // Entities
   UserProfile,
   Context,
-  AgentRegistration,
-
-  // Sessions & Auth (NEW)
   Session,
-  AuthContext,
-
+  Agent,
+  
+  // Facts
+  FactRecord,
+  StoreFactParams,
+  
   // Filters
   UniversalFilters,
+  MemoryFilters,
   ConversationFilters,
-  ContextFilters,
-  UserFilters,
-  SessionFilters,
-
+  
   // Results
   RememberResult,
-  DeleteResult,
   SearchResult,
-
-  // And more...
-} from "@cortex-platform/sdk";
+  RememberStreamResult,
+  
+  // Options
+  RememberParams,
+  SearchOptions,
+  RecallParams,
+  
+  // And all other types...
+} from '@cortexmemory/sdk';
 ```
 
 ---
 
-## Layer 1: ACID Stores
+## Table of Contents
 
-### Layer 1a: Conversations
+### Core Entities
+- [Conversation](#conversation) - ACID conversation records
+- [Message](#message) - Individual messages within conversations
+- [MemoryEntry](#memoryentry) - Vector memory entries
+- [UserProfile](#userprofile) - User profile records
+- [FactRecord](#factrecord) - Extracted facts
+- [ImmutableRecord](#immutablerecord) - Immutable versioned entities
+- [MutableRecord](#mutablerecord) - Mutable key-value storage
+- [MemorySpace](#memoryspace) - Memory space registry
+- [RegisteredAgent](#registeredagent) - Agent registry
+- [Session](#session) - User session management
+
+### Orchestration Types
+- [RememberParams](#rememberparams) - remember() parameters
+- [RememberResult](#rememberresult) - remember() result
+- [RememberStreamParams](#rememberstreamparams) - rememberStream() parameters
+- [RememberStreamResult](#rememberstreamresult) - rememberStream() result
+- [RecallParams](#recallparams) - recall() parameters
+- [RecallResult](#recallresult) - recall() result
+- [ForgetOptions](#forgetoptions) - forget() options
+
+### Filter Types
+- [ListConversationsFilter](#listconversationsfilter)
+- [ListMemoriesFilter](#listmemoriesfilter)
+- [ListFactsFilter](#listfactsfilter)
+- [SearchMemoriesOptions](#searchmemoriesoptions)
+- [SearchFactsOptions](#searchfactsoptions)
+
+### A2A Communication
+- [A2ASendParams](#a2asendparams)
+- [A2AMessage](#a2amessage)
+- [A2ARequestParams](#a2arequestparams)
+- [A2AResponse](#a2aresponse)
+- [A2ABroadcastParams](#a2abroadcastparams)
+
+### Governance & Policies
+- [GovernancePolicy](#governancepolicy)
+- [SessionPolicy](#sessionpolicy)
+- [ComplianceMode](#compliancemode)
+
+### Graph Integration
+- [GraphSyncOption](#graphsyncoption)
+- [RecallParams (with graph)](#recallparams)
+
+### Observer Pattern
+- [OrchestrationObserver](#orchestrationobserver)
+- [LayerEvent](#layerevent)
+- [OrchestrationSummary](#orchestrationsummary)
+
+### Resilience Types
+- [ResilienceConfig](#resilienceconfig)
+- [Priority](#priority)
+- [CircuitState](#circuitstate)
+
+### Enums & Literals
+- [ConversationType](#conversationtype)
+- [SourceType](#sourcetype)
+- [ContentType](#contenttype)
+- [FactType](#facttype)
+- [SkippableLayer](#skippablelayer)
+
+---
+
+## Detailed Type Definitions
+
+### Conversation
+
+**Layer 1a: ACID Conversations**
 
 ```typescript
 interface Conversation {
-  // Identity
+  _id: string;
   conversationId: string;
-  type: "user-agent" | "agent-agent";
-
-  // Participants
-  participants: UserAgentParticipants | AgentAgentParticipants;
-
-  // Messages
+  memorySpaceId: string; // Memory space isolation
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode tracking
+  type: ConversationType;
+  participants: {
+    userId?: string; // The human user in the conversation
+    agentId?: string; // The agent/assistant in the conversation
+    participantId?: string; // Hive Mode: who created this
+    memorySpaceIds?: string[]; // Collaboration Mode (agent-agent)
+  };
   messages: Message[];
   messageCount: number;
-
-  // Metadata
-  metadata: Record<string, any>;
-
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
-  lastMessageAt?: Date;
-}
-
-interface UserAgentParticipants {
-  userId: string;
-  memorySpaceId: string;
-}
-
-interface AgentAgentParticipants {
-  agent1: string;
-  agent2: string;
-}
-
-interface Message {
-  id: string;
-
-  // User-agent messages
-  role?: "user" | "agent" | "system";
-  content?: string;
-  userId?: string;
-  memorySpaceId?: string;
-
-  // Agent-agent messages (A2A)
-  type?: "a2a";
-  from?: string;
-  to?: string;
-  text?: string;
-
-  // Common
-  timestamp: Date;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
+  createdAt: number;
+  updatedAt: number;
 }
 ```
 
-### Layer 1b: Immutable Store
+**Used in:**
+- [Conversation Operations API](../03-api-reference/03-conversation-operations.md)
+- [Conversation History](../02-core-features/06-conversation-history.md)
 
-```typescript
-interface ImmutableEntry {
-  type: string; // Entity type
-  id: string; // Logical ID (versioned)
-  data: Record<string, any>; // The actual data
-  userId?: string; // OPTIONAL: User link (GDPR-enabled)
-  metadata?: {
-    publishedBy?: string;
-    tags?: string[];
-    importance?: number; // 0-100
-    [key: string]: any;
-  };
-}
-
-interface ImmutableRecord {
-  type: string;
-  id: string;
-  version: number;
-  data: Record<string, any>;
-  userId?: string;
-  metadata: any;
-  createdAt: Date;
-  previousVersions: ImmutableVersion[];
-}
-
-interface ImmutableVersion {
-  version: number;
-  data: any;
-  userId?: string;
-  metadata: any;
-  timestamp: Date;
-}
-```
-
-### Layer 1c: Mutable Store
-
-```typescript
-interface MutableRecord {
-  namespace: string;
-  key: string;
-  value: any;
-  userId?: string; // OPTIONAL: User link (GDPR-enabled)
-  updatedAt: Date;
-  createdAt: Date;
-  accessCount: number;
-  lastAccessed?: Date;
-}
-```
+**Related types:**
+- [Message](#message)
+- [ConversationType](#conversationtype)
 
 ---
 
-## Layer 2: Vector Index
+### Message
 
-### MemoryEntry (Core)
+```typescript
+interface Message {
+  id: string;
+  role: "user" | "agent" | "system";
+  content: string;
+  timestamp: number;
+  participantId?: string; // Hive Mode: which participant sent this
+  metadata?: Record<string, unknown>;
+}
+```
+
+**Used in:**
+- [Conversation](#conversation)
+- [Conversation Operations API](../03-api-reference/03-conversation-operations.md)
+
+---
+
+### MemoryEntry
+
+**Layer 2: Vector Memory**
 
 ```typescript
 interface MemoryEntry {
-  // Identity
-  id: string;
+  _id: string;
+  memoryId: string;
   memorySpaceId: string;
-  userId?: string;
-
-  // Content
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode
+  userId?: string; // For user-owned memories
+  agentId?: string; // For agent-owned memories
   content: string;
-  contentType: "raw" | "summarized";
+  contentType: ContentType;
   embedding?: number[];
-
-  // Source
-  source: MemorySource;
-
-  // Layer 1 References (mutually exclusive)
+  sourceType: SourceType;
+  sourceUserId?: string;
+  sourceUserName?: string;
+  sourceTimestamp: number;
+  messageRole?: "user" | "agent" | "system"; // For semantic search weighting
   conversationRef?: ConversationRef;
   immutableRef?: ImmutableRef;
   mutableRef?: MutableRef;
-
-  // Metadata
-  metadata: MemoryMetadata;
-
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
-  lastAccessed?: Date;
-  accessCount: number;
-
-  // Versioning
-  version: number;
-  previousVersions?: MemoryVersion[];
-}
-
-interface MemorySource {
-  type: "conversation" | "system" | "tool" | "a2a";
-  userId?: string;
-  userName?: string;
-  fromAgent?: string; // For A2A
-  toAgent?: string; // For A2A
-  timestamp: Date;
-}
-
-interface ConversationRef {
-  conversationId: string;
-  messageIds: string[];
-}
-
-interface ImmutableRef {
-  type: string;
-  id: string;
-  version?: number;
-}
-
-interface MutableRef {
-  namespace: string;
-  key: string;
-  snapshotValue: any;
-  snapshotAt: Date;
-}
-
-interface MemoryMetadata {
-  importance: number; // 0-100
+  factsRef?: FactsRef; // Reference to Layer 3 fact
+  importance: number;
   tags: string[];
-  direction?: "inbound" | "outbound"; // For A2A
-  messageId?: string; // For A2A
-  contextId?: string; // Link to context
-  [key: string]: any;
-}
 
-interface MemoryVersion {
+  // Enrichment fields (for bullet-proof retrieval)
+  enrichedContent?: string; // Concatenated searchable content for embedding
+  factCategory?: string; // Category for filtering (e.g., "addressing_preference")
+
   version: number;
-  content: string;
-  contentType: "raw" | "summarized";
-  embedding?: number[];
-  conversationRef?: ConversationRef;
-  metadata: any;
-  timestamp: Date;
-  updatedBy?: string;
+  previousVersions: MemoryVersion[];
+  createdAt: number;
+  updatedAt: number;
+  lastAccessed?: number;
+  accessCount: number;
 }
 ```
 
+**Used in:**
+- [Memory Operations API](../03-api-reference/02-memory-operations.md)
+- [Semantic Search](../02-core-features/02-semantic-search.md)
+
+**Related types:**
+- [ContentType](#contenttype)
+- [SourceType](#sourcetype)
+- [ConversationRef](#conversationref)
+- [FactsRef](#factsref)
+
 ---
 
-## Layer 3: Memory API
+### FactRecord
 
-### Memory Operations
+**Layer 3: Facts Store**
 
 ```typescript
-interface MemoryInput {
-  // Content
-  content: string;
-  contentType: "raw" | "summarized";
+interface FactRecord {
+  _id: string;
+  factId: string;
+  memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode tracking
+  userId?: string; // GDPR compliance - links to user
+  fact: string; // The fact statement
+  factType:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "observation"
+    | "custom";
+  subject?: string; // Primary entity
+  predicate?: string; // Relationship type
+  object?: string; // Secondary entity
+  confidence: number; // 0-100
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
+  sourceRef?: {
+    conversationId?: string;
+    messageIds?: string[];
+    memoryId?: string;
+  };
+  metadata?: Record<string, unknown>;
+  tags: string[];
 
-  // Embedding
-  embedding?: number[];
+  // Enrichment fields (for bullet-proof retrieval)
+  category?: string; // Specific sub-category (e.g., "addressing_preference")
+  searchAliases?: string[]; // Alternative search terms
+  semanticContext?: string; // Usage context sentence
+  entities?: EnrichedEntity[]; // Extracted entities with types
+  relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
 
-  // Context
+  validFrom?: number;
+  validUntil?: number;
+  version: number;
+  supersededBy?: string; // factId of newer version
+  supersedes?: string; // factId of previous version
+  createdAt: number;
+  updatedAt: number;
+}
+```
+
+**Used in:**
+- [Facts Operations API](../03-api-reference/12-facts-operations.md)
+- [Fact Extraction](../02-core-features/08-fact-extraction.md)
+- [Fact Integration](../02-core-features/11-fact-integration.md)
+
+---
+
+### UserProfile
+
+```typescript
+interface UserProfile {
+  id: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  data: Record<string, unknown>;
+  version: number;
+  createdAt: number;
+  updatedAt: number;
+}
+```
+
+**Used in:**
+- [User Operations API](../03-api-reference/04-user-operations.md)
+- [User Profiles](../02-core-features/03-user-profiles.md)
+
+---
+
+### ImmutableRecord
+
+**Layer 1b: Immutable Store**
+
+```typescript
+interface ImmutableRecord {
+  _id: string;
+  type: string;
+  id: string;
+  data: Record<string, unknown>;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
   userId?: string;
+  version: number;
+  previousVersions: ImmutableVersion[];
+  metadata?: {
+    publishedBy?: string;
+    tags?: string[];
+    importance?: number;
+    [key: string]: unknown;
+  };
+  createdAt: number;
+  updatedAt: number;
+}
+```
 
-  // Source
-  source: MemorySource;
+**Used in:**
+- [Immutable Store API](../03-api-reference/07-immutable-store-api.md)
 
-  // Layer 1 References (optional, mutually exclusive)
-  conversationRef?: ConversationRef;
-  immutableRef?: ImmutableRef;
-  mutableRef?: MutableRef;
+**Related types:**
+- [ImmutableVersion](#immutableversion)
 
-  // Metadata
-  metadata: MemoryMetadata;
+---
+
+### MutableRecord
+
+**Layer 1c: Mutable Store**
+
+```typescript
+interface MutableRecord {
+  _id: string;
+  namespace: string;
+  key: string;
+  value: unknown;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  userId?: string;
+  metadata?: Record<string, unknown>;
+  createdAt: number;
+  updatedAt: number;
+}
+```
+
+**Used in:**
+- [Mutable Store API](../03-api-reference/08-mutable-store-api.md)
+
+---
+
+### MemorySpace
+
+```typescript
+interface MemorySpace {
+  _id: string;
+  memorySpaceId: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  name?: string;
+  type: "personal" | "team" | "project" | "custom";
+  participants: Array<{
+    id: string;
+    type: string;
+    joinedAt: number;
+  }>;
+  metadata: Record<string, unknown>;
+  status: "active" | "archived";
+  createdAt: number;
+  updatedAt: number;
+}
+```
+
+**Used in:**
+- [Memory Space Operations API](../03-api-reference/11-memory-space-operations.md)
+- [Memory Spaces](../02-core-features/01-memory-spaces.md)
+
+---
+
+### RegisteredAgent
+
+```typescript
+interface RegisteredAgent {
+  id: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  name: string;
+  description?: string;
+  metadata: Record<string, unknown>;
+  config: Record<string, unknown>;
+  status: "active" | "inactive" | "archived";
+  registeredAt: number;
+  updatedAt: number;
+  lastActive?: number;
+  stats?: AgentStats;
+}
+```
+
+**Used in:**
+- [Agent Management API](../03-api-reference/09-agent-management.md)
+
+**Related types:**
+- [AgentStats](#agentstats)
+
+---
+
+### Session
+
+```typescript
+type SessionStatus = "active" | "idle" | "ended";
+
+interface SessionMetadata {
+  ipAddress?: string;
+  userAgent?: string;
+  deviceType?: string;
+  sessionName?: string;
+  [key: string]: unknown;
 }
 
-interface RememberParams {
-  memorySpaceId: string;
-  conversationId: string;
-  userMessage: string;
-  agentResponse: string;
-  userId: string;
-  userName: string;
+interface Session {
+  _id: string;
+  sessionId: string;
+  tenantId?: string;
+  userId?: string;
+  participantId?: string;
+  memorySpaceId?: string;
+  status: SessionStatus;
+  startedAt: number;
+  lastActivityAt: number;
+  endedAt?: number;
+  expiresAt?: number;
+  metadata?: SessionMetadata;
+  createdAt: number;
+  updatedAt: number;
+}
+```
 
-  // Optional
+**Used in:**
+- [Sessions Operations API](../03-api-reference/14-sessions-operations.md)
+- [Sessions Management](../02-core-features/14-sessions-management.md)
+
+---
+
+## Orchestration Types
+
+### RememberParams
+
+**Parameters for memory.remember() - the primary orchestration API**
+
+```typescript
+interface RememberParams {
+  /**
+   * Memory space for isolation. If not provided, defaults to 'default'
+   * with a warning. Auto-registers the memory space if it doesn't exist.
+   */
+  memorySpaceId?: string;
+
+  /**
+   * Multi-tenancy: SaaS platform isolation.
+   * When provided, all data is scoped to this tenant.
+   * Note: If using authContext, tenantId is auto-injected unless explicitly provided here.
+   */
+  tenantId?: string;
+
+  /**
+   * Conversation ID. Required.
+   */
+  conversationId: string;
+
+  /**
+   * The user's message content. Required.
+   */
+  userMessage: string;
+
+  /**
+   * The agent's response content. Required.
+   */
+  agentResponse: string;
+
+  /**
+   * User ID for user-owned memories. At least one of userId or agentId is required.
+   * Auto-creates user profile if it doesn't exist (unless 'users' is in skipLayers).
+   */
+  userId?: string;
+
+  /**
+   * Agent ID for agent-owned memories. At least one of userId or agentId is required.
+   * Auto-registers agent if it doesn't exist (unless 'agents' is in skipLayers).
+   */
+  agentId?: string;
+
+  /**
+   * Display name for the user (used in conversation tracking).
+   * Required when userId is provided.
+   */
+  userName?: string;
+
+  /**
+   * Participant ID for Hive Mode tracking.
+   * This tracks WHO stored the memory within a shared memory space,
+   * distinct from userId/agentId which indicates ownership.
+   */
+  participantId?: string;
+
+  /**
+   * Layers to explicitly skip during orchestration.
+   * By default, all configured layers are enabled.
+   */
+  skipLayers?: SkippableLayer[];
+
+  // Optional extraction
   extractContent?: (
     userMessage: string,
     agentResponse: string,
   ) => Promise<string | null>;
+
+  // Optional embedding
   generateEmbedding?: (content: string) => Promise<number[] | null>;
 
-  // Cloud Mode
+  // Optional fact extraction
+  extractFacts?: (
+    userMessage: string,
+    agentResponse: string,
+  ) => Promise<Array<{
+    fact: string;
+    factType:
+      | "preference"
+      | "identity"
+      | "knowledge"
+      | "relationship"
+      | "event"
+      | "observation"
+      | "custom";
+    subject?: string;
+    predicate?: string;
+    object?: string;
+    confidence: number;
+    tags?: string[];
+  }> | null>;
+
+  // Cloud Mode options
   autoEmbed?: boolean;
   autoSummarize?: boolean;
 
   // Metadata
   importance?: number;
   tags?: string[];
-}
 
+  /**
+   * Fact deduplication strategy. Defaults to 'semantic' for maximum effectiveness.
+   *
+   * - 'semantic': Embedding-based similarity (most accurate, requires generateEmbedding)
+   * - 'structural': Subject + predicate + object match (fast, good accuracy)
+   * - 'exact': Normalized text match (fastest, lowest accuracy)
+   * - false: Disable deduplication (previous behavior)
+   *
+   * The generateEmbedding function (if provided) is automatically reused for semantic matching.
+   *
+   * @default 'semantic' (with fallback to 'structural' if no generateEmbedding)
+   */
+  factDeduplication?: "semantic" | "structural" | "exact" | false;
+
+  /**
+   * Observer for real-time orchestration monitoring.
+   *
+   * Provides callbacks for tracking layer-by-layer progress during
+   * the remember() orchestration flow. Integration-agnostic.
+   */
+  observer?: OrchestrationObserver;
+}
+```
+
+**Used in:**
+- [Memory Operations API](../03-api-reference/02-memory-operations.md#remember)
+- [Memory Orchestration](../02-core-features/00-memory-orchestration.md)
+
+**Related types:**
+- [SkippableLayer](#skippablelayer)
+- [OrchestrationObserver](#orchestrationobserver)
+- [RememberResult](#rememberresult)
+
+---
+
+### RememberResult
+
+```typescript
 interface RememberResult {
   conversation: {
     messageIds: string[];
     conversationId: string;
   };
   memories: MemoryEntry[];
-}
+  facts: FactRecord[];
 
-interface MemoryUpdate {
-  content?: string;
-  contentType?: "raw" | "summarized";
-  embedding?: number[];
-  conversationRef?: ConversationRef;
-  metadata?: Partial<MemoryMetadata>;
+  /**
+   * Belief revision actions taken for each extracted fact (v0.24.0+)
+   *
+   * Only populated when belief revision is enabled (default when LLM configured).
+   * Each entry describes what action was taken for a fact and why.
+   */
+  factRevisions?: Array<{
+    /** Action taken: ADD (new), UPDATE (merged), SUPERSEDE (replaced), NONE (skipped) */
+    action: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
+    /** The resulting fact (or existing fact for NONE) */
+    fact: FactRecord;
+    /** Facts that were superseded by this action */
+    superseded?: FactRecord[];
+    /** Reason for the action from LLM or heuristics */
+    reason?: string;
+  }>;
 }
 ```
+
+**Used in:**
+- [Memory Operations API](../03-api-reference/02-memory-operations.md#remember)
+
+**Related types:**
+- [MemoryEntry](#memoryentry)
+- [FactRecord](#factrecord)
 
 ---
 
-## Entity Types
+### RecallParams
 
-### User Profile
-
-```typescript
-interface UserProfile {
-  // Identity
-  id: string;
-
-  // User Data (flexible)
-  data: Record<string, any>;
-
-  // System fields
-  version: number;
-  createdAt: Date;
-  updatedAt: Date;
-  previousVersions?: UserVersion[];
-}
-
-interface UserVersion {
-  version: number;
-  data: Record<string, any>;
-  timestamp: Date;
-}
-
-interface UserProfileUpdate {
-  data: Record<string, any>;
-}
-```
-
-### Session (NEW)
+**Parameters for memory.recall() - unified context retrieval**
 
 ```typescript
-interface Session {
-  // Identity
-  sessionId: string;
-  userId: string;
-  tenantId?: string;
-  memorySpaceId?: string;
+interface RecallParams {
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // REQUIRED - Just these two for basic usage
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  // Session state
-  status: "active" | "idle" | "ended";
-  startedAt: number;
-  lastActiveAt: number;
-  endedAt?: number;
-  expiresAt?: number;
-
-  // Fully extensible metadata
-  metadata?: Record<string, unknown>;
-
-  // Stats
-  messageCount: number;
-  memoryCount: number;
-}
-
-interface CreateSessionParams {
-  userId: string;
-  tenantId?: string;
-  memorySpaceId?: string;
-  metadata?: Record<string, unknown>;
-  expiresAt?: number;
-}
-
-interface SessionFilters {
-  userId?: string;
-  tenantId?: string;
-  status?: "active" | "idle" | "ended";
-  startedAfter?: number;
-  startedBefore?: number;
-  limit?: number;
-  offset?: number;
-}
-```
-
-### Auth Context (NEW)
-
-```typescript
-interface AuthContext {
-  // Required
-  userId: string;
-
-  // Standard optional fields
-  tenantId?: string;
-  organizationId?: string;
-  sessionId?: string;
-  authProvider?: string;
-  authMethod?: "oauth" | "api_key" | "jwt" | "session";
-  authenticatedAt?: number;
-
-  // Fully extensible
-  claims?: Record<string, unknown>;
-  metadata?: Record<string, unknown>;
-}
-```
-
-### Context
-
-```typescript
-interface Context {
-  // Identity
-  id: string;
-  parentId?: string;
-  rootId: string;
-
-  // Purpose
-  purpose: string;
-  description?: string;
-
-  // Ownership
+  /** Memory space to search in */
   memorySpaceId: string;
-  userId?: string;
 
-  // Hierarchy
-  depth: number;
-  childIds: string[];
-  participants: string[];
+  /** Natural language query */
+  query: string;
 
-  // Conversation link
-  conversationRef?: ConversationRef;
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // OPTIONAL - All have sensible defaults for AI chatbot use cases
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  // Data
-  data: Record<string, any>;
-
-  // Status
-  status: "active" | "completed" | "cancelled" | "blocked";
-
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
-  completedAt?: Date;
-
-  // Versioning
-  version: number;
-  previousVersions?: ContextVersion[];
-}
-
-interface ContextInput {
-  purpose: string;
-  memorySpaceId: string;
-  parentId?: string;
-  userId?: string;
-  conversationRef?: ConversationRef;
-  data?: Record<string, any>;
-  status?: "active" | "completed" | "cancelled" | "blocked";
-  description?: string;
-}
-
-interface ContextVersion {
-  version: number;
-  status: string;
-  data: any;
-  timestamp: Date;
-  updatedBy: string;
-}
-
-interface ContextWithChain {
-  current: Context;
-  parent?: Context;
-  root: Context;
-  children: Context[];
-  siblings: Context[];
-  ancestors: Context[];
-  depth: number;
-  conversation?: Conversation;
-  triggerMessages?: Message[];
-}
-```
-
-### Agent Registration
-
-```typescript
-interface AgentRegistration {
-  id: string;
-  name: string;
-  description?: string;
-
-  capabilities?: string[];
-  metadata: Record<string, any>;
-
-  config: {
-    memoryVersionRetention?: number;
-    [key: string]: any;
-  };
-
-  stats: {
-    totalMemories: number;
-    totalConversations: number;
-    lastActive?: Date;
-  };
-
-  registeredAt: Date;
-  updatedAt: Date;
-}
-```
-
----
-
-## Helper APIs
-
-### A2A Communication
-
-```typescript
-interface A2ASendParams {
-  from: string;
-  to: string;
-  message: string;
-  userId?: string;
-  contextId?: string;
-  importance?: number;
-  trackConversation?: boolean;
-  autoEmbed?: boolean;
-  metadata?: {
-    tags?: string[];
-    priority?: "low" | "normal" | "high" | "urgent";
-    [key: string]: any;
-  };
-}
-
-interface A2AMessage {
-  messageId: string;
-  sentAt: Date;
-  conversationId?: string;
-  acidMessageId?: string;
-  senderMemoryId: string;
-  receiverMemoryId: string;
-}
-
-interface A2ARequestParams {
-  from: string;
-  to: string;
-  message: string;
-  timeout?: number;
-  retries?: number;
-  userId?: string;
-  contextId?: string;
-  importance?: number;
-}
-
-interface A2AResponse {
-  response: string;
-  messageId: string;
-  responseMessageId: string;
-  respondedAt: Date;
-  responseTime: number;
-}
-
-interface A2ABroadcastParams {
-  from: string;
-  to: string[];
-  message: string;
-  userId?: string;
-  contextId?: string;
-  importance?: number;
-  trackConversation?: boolean;
-  metadata?: Record<string, any>;
-}
-
-interface A2ABroadcastResult {
-  messageId: string;
-  sentAt: Date;
-  recipients: string[];
-  senderMemoryIds: string[];
-  receiverMemoryIds: string[];
-  memoriesCreated: number;
-  conversationIds?: string[];
-}
-
-interface A2AConversation {
-  participants: [string, string];
-  conversationId?: string;
-  messageCount: number;
-  messages: A2AConversationMessage[];
-  period: {
-    start: Date;
-    end: Date;
-  };
-  tags?: string[];
-  canRetrieveFullHistory: boolean;
-}
-
-interface A2AConversationMessage {
-  from: string;
-  to: string;
-  message: string;
-  importance: number;
-  timestamp: Date;
-  messageId: string;
-  memoryId: string;
-  acidMessageId?: string;
-  tags?: string[];
-}
-```
-
----
-
-## Universal Filters
-
-### Memory Filters
-
-```typescript
-interface UniversalFilters {
-  // Identity
-  userId?: string;
-
-  // Tags
-  tags?: string[];
-  tagMatch?: "any" | "all";
-
-  // Importance (0-100)
-  importance?: number | RangeQuery;
-  minImportance?: number;
-
-  // Dates
-  createdBefore?: Date;
-  createdAfter?: Date;
-  updatedBefore?: Date;
-  updatedAfter?: Date;
-  lastAccessedBefore?: Date;
-  lastAccessedAfter?: Date;
-
-  // Access patterns
-  accessCount?: number | RangeQuery;
-  version?: number | RangeQuery;
-
-  // Source
-  "source.type"?: "conversation" | "system" | "tool" | "a2a";
-
-  // Content
-  contentType?: "raw" | "summarized";
-
-  // ACID link
-  "conversationRef.conversationId"?: string;
-
-  // Metadata
-  metadata?: Record<string, any>;
-
-  // Results
-  limit?: number;
-  offset?: number;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-}
-
-interface RangeQuery {
-  $gte?: number;
-  $lte?: number;
-  $eq?: number;
-  $ne?: number;
-  $gt?: number;
-  $lt?: number;
-}
-```
-
-### Conversation Filters
-
-```typescript
-interface ConversationFilters {
-  // Type
-  type?: "user-agent" | "agent-agent";
-
-  // Participants
-  userId?: string;
-  memorySpaceId?: string;
-  "participants.agent1"?: string;
-  "participants.agent2"?: string;
-
-  // Metadata
-  metadata?: Record<string, any>;
-
-  // Dates
-  createdBefore?: Date;
-  createdAfter?: Date;
-  updatedBefore?: Date;
-  updatedAfter?: Date;
-  lastMessageBefore?: Date;
-  lastMessageAfter?: Date;
-
-  // Message count
-  messageCount?: number | RangeQuery;
-}
-```
-
-### Context Filters
-
-```typescript
-interface ContextFilters {
-  // Identity
-  memorySpaceId?: string;
-  userId?: string;
-
-  // Hierarchy
-  parentId?: string;
-  rootId?: string;
-  depth?: number | RangeQuery;
-
-  // Status
-  status?: "active" | "completed" | "cancelled" | "blocked";
-
-  // Purpose
-  purposeContains?: string;
-
-  // Data
-  "data.importance"?: number | RangeQuery;
-  "data.tags"?: string[];
-  data?: Record<string, any>;
-
-  // Conversation
-  "conversationRef.conversationId"?: string;
-
-  // Dates
-  createdBefore?: Date;
-  createdAfter?: Date;
-  updatedBefore?: Date;
-  updatedAfter?: Date;
-  completedBefore?: Date;
-  completedAfter?: Date;
-
-  // Version
-  version?: number | RangeQuery;
-}
-```
-
-### User Filters
-
-```typescript
-interface UserFilters {
-  // Identity
-  email?: string;
-  displayName?: string;
-
-  // Data (nested)
-  "data.preferences.theme"?: "light" | "dark";
-  "data.tier"?: "free" | "pro" | "enterprise";
-  data?: Record<string, any>;
-
-  // Dates
-  createdBefore?: Date;
-  createdAfter?: Date;
-  updatedBefore?: Date;
-  updatedAfter?: Date;
-
-  // Version
-  version?: number | RangeQuery;
-}
-```
-
-### Immutable Filters
-
-```typescript
-interface ImmutableFilters {
-  type?: string;
-  id?: string;
-  userId?: string;
-  "data.field"?: any;
-  "metadata.field"?: any;
-  createdBefore?: Date;
-  createdAfter?: Date;
-  version?: number | RangeQuery;
-}
-```
-
-### Mutable Filters
-
-```typescript
-interface MutableFilters {
-  key?: string;
-  keyPrefix?: string;
-  userId?: string;
-  "value.field"?: any;
-  createdBefore?: Date;
-  createdAfter?: Date;
-  updatedBefore?: Date;
-  updatedAfter?: Date;
-  lastAccessedBefore?: Date;
-  lastAccessedAfter?: Date;
-}
-```
-
----
-
-## Common Options
-
-### Search Options
-
-```typescript
-interface SearchOptions {
-  // Layer enrichment
-  enrichConversation?: boolean;
-
-  // Semantic search
+  /** Pre-computed embedding for semantic search (recommended for best results) */
   embedding?: number[];
 
-  // Filtering (extends UniversalFilters)
+  /** Filter by user ID (common in H2A chatbots) */
   userId?: string;
-  tags?: string[];
-  importance?: number | RangeQuery;
+
+  /** Filter by tenant ID for multi-tenancy (SaaS platform isolation) */
+  tenantId?: string;
+
+  /**
+   * Source selection - ALL ENABLED BY DEFAULT.
+   * Only specify to DISABLE sources.
+   */
+  sources?: {
+    /** Search vector memories (Layer 2). Default: true */
+    vector?: boolean;
+    /** Search facts directly (Layer 3). Default: true */
+    facts?: boolean;
+    /** Query graph for relationships. Default: true if graph configured */
+    graph?: boolean;
+  };
+
+  /**
+   * Graph expansion configuration - ENABLED BY DEFAULT if graph configured.
+   * Graph is the key to relational context discovery.
+   */
+  graphExpansion?: {
+    /** Enable graph expansion. Default: true if graph configured */
+    enabled?: boolean;
+    /** Maximum traversal depth. Default: 2 */
+    maxDepth?: number;
+    /** Relationship types to follow. Default: all types */
+    relationshipTypes?: string[];
+    /** Expand from discovered facts. Default: true */
+    expandFromFacts?: boolean;
+    /** Expand from discovered memories. Default: true */
+    expandFromMemories?: boolean;
+  };
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // FILTERING (optional refinement)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** Minimum importance score (0-100) */
   minImportance?: number;
 
-  // Pagination
+  /** Minimum confidence for facts (0-100) */
+  minConfidence?: number;
+
+  /** Filter by tags */
+  tags?: string[];
+
+  /** Only include items created after this date */
+  createdAfter?: Date;
+
+  /** Only include items created before this date */
+  createdBefore?: Date;
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // RESULT OPTIONS - OPTIMIZED FOR LLM INJECTION BY DEFAULT
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /** Maximum number of results. Default: 20 */
   limit?: number;
-  offset?: number;
-  minScore?: number;
 
-  // Sorting
-  sortBy?: "score" | "createdAt" | "updatedAt" | "accessCount" | "importance";
-  sortOrder?: "asc" | "desc";
+  /** Enrich with ACID conversation data. Default: true */
+  includeConversation?: boolean;
 
-  // Strategy
-  strategy?: "auto" | "semantic" | "keyword" | "recent";
-  boostImportance?: boolean;
-  boostRecent?: boolean;
-  boostPopular?: boolean;
+  /** Generate LLM-ready context string. Default: true */
+  formatForLLM?: boolean;
 }
 ```
 
-### List Options
+**Used in:**
+- [Memory Operations API](../03-api-reference/02-memory-operations.md#recall)
+- [Semantic Search](../02-core-features/02-semantic-search.md)
+- [Graph Integration](../02-core-features/16-graph-integration.md)
+
+**Related types:**
+- [RecallResult](#recallresult)
+- [RecallItem](#recallitem)
+
+---
+
+### RecallResult
 
 ```typescript
-interface ListOptions extends UniversalFilters {
-  limit?: number;
-  offset?: number;
-  sortBy?: "createdAt" | "updatedAt" | "accessCount" | "importance";
-  sortOrder?: "asc" | "desc";
+interface RecallResult {
+  /** Unified results (merged, deduped, ranked) */
+  items: RecallItem[];
+
+  /** Breakdown by source */
+  sources: RecallSourceBreakdown;
+
+  /**
+   * Formatted context for LLM injection.
+   * Present when formatForLLM: true (default).
+   */
+  context?: string;
+
+  /** Total number of results before limit */
+  totalResults: number;
+
+  /** Query execution time in milliseconds */
+  queryTimeMs: number;
+
+  /** Whether graph expansion was applied */
+  graphExpansionApplied: boolean;
 }
 ```
 
-### Update Options
+**Related types:**
+- [RecallItem](#recallitem)
+- [RecallSourceBreakdown](#recallsourcebreakdown)
+
+---
+
+## Observer Pattern Types
+
+### OrchestrationObserver
+
+**Integration-agnostic orchestration monitoring**
 
 ```typescript
-interface UpdateOptions {
-  skipVersioning?: boolean;
-  versionReason?: string;
-  merge?: boolean;
-}
+interface OrchestrationObserver {
+  /**
+   * Called when orchestration starts
+   */
+  onOrchestrationStart?: (orchestrationId: string) => void | Promise<void>;
 
-interface UpdateManyOptions {
-  skipVersioning?: boolean;
-  dryRun?: boolean;
+  /**
+   * Called when a layer's status changes
+   */
+  onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
+
+  /**
+   * Called when orchestration completes (all layers done)
+   */
+  onOrchestrationComplete?: (
+    summary: OrchestrationSummary,
+  ) => void | Promise<void>;
 }
 ```
 
-### Delete Options
+**Used in:**
+- [RememberParams](#rememberparams)
+- [RememberStreamParams](#rememberstreamparams)
+- [Memory Orchestration](../02-core-features/00-memory-orchestration.md)
+
+**Related types:**
+- [LayerEvent](#layerevent)
+- [OrchestrationSummary](#orchestrationsummary)
+
+---
+
+### LayerEvent
 
 ```typescript
-interface DeleteOptions {
-  dryRun?: boolean;
-  requireConfirmation?: boolean;
-  confirmationThreshold?: number;
-}
+type MemoryLayer =
+  | "memorySpace"
+  | "user"
+  | "agent"
+  | "conversation"
+  | "vector"
+  | "facts"
+  | "graph";
 
-interface ForgetOptions {
-  deleteConversation?: boolean;
-  deleteEntireConversation?: boolean;
-}
-```
+type LayerStatus =
+  | "pending"
+  | "in_progress"
+  | "complete"
+  | "error"
+  | "skipped";
 
-### Export Options
+type RevisionAction = "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
 
-```typescript
-interface ExportOptions extends UniversalFilters {
-  format: "json" | "csv";
-  outputPath?: string;
-  includeVersionHistory?: boolean;
-  includeConversationContext?: boolean;
+interface LayerEvent {
+  /** Which layer this event is for */
+  layer: MemoryLayer;
+
+  /** Current status of the layer */
+  status: LayerStatus;
+
+  /** Timestamp when this status was set */
+  timestamp: number;
+
+  /** Time elapsed since orchestration started (ms) */
+  latencyMs?: number;
+
+  /** Data stored in this layer (if complete) */
+  data?: {
+    /** ID of the stored record */
+    id?: string;
+    /** Summary or preview of the data */
+    preview?: string;
+    /** Additional metadata */
+    metadata?: Record<string, unknown>;
+  };
+
+  /** Error details (if error status) */
+  error?: {
+    message: string;
+    code?: string;
+  };
+
+  /**
+   * Revision action taken (for facts layer with belief revision enabled)
+   */
+  revisionAction?: RevisionAction;
+
+  /**
+   * Facts that were superseded by this action
+   * Only present when revisionAction is "SUPERSEDE"
+   */
+  supersededFacts?: string[];
 }
 ```
 
 ---
 
-## Result Types
+## Governance & Policy Types
 
-### Deletion Results
-
-```typescript
-interface DeletionResult {
-  deleted: number;
-  memoryId?: string;
-  memoryIds?: string[];
-  deletedFrom?: "vector" | "both";
-  restorable: boolean;
-  affectedUsers?: string[];
-  wouldDelete?: number;
-  memories?: MemoryEntry[];
-}
-
-interface ForgetResult {
-  memoryDeleted: boolean;
-  conversationDeleted: boolean;
-  messagesDeleted: number;
-  restorable: boolean;
-}
-
-interface DeleteResult {
-  profileDeleted?: boolean;
-  userId?: string;
-  deletedAt: Date;
-  auditReason?: string;
-
-  // Layer deletions
-  conversationsDeleted?: number;
-  totalMessagesDeleted?: number;
-  immutableRecordsDeleted?: number;
-  immutableTypes?: string[];
-  mutableRecordsDeleted?: number;
-  mutableNamespaces?: string[];
-  vectorMemoriesDeleted?: number;
-  agentsAffected?: string[];
-
-  // Summary
-  totalRecordsDeleted?: number;
-  restorable: boolean;
-}
-```
-
-### List Results
+### GovernancePolicy
 
 ```typescript
-interface ListResult {
-  memories?: MemoryEntry[];
-  conversations?: Conversation[];
-  contexts?: Context[];
-  users?: UserProfile[];
-  records?: ImmutableRecord[] | MutableRecord[];
+type ComplianceMode = "GDPR" | "HIPAA" | "SOC2" | "FINRA" | "Custom";
 
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-}
-```
-
-### Update Results
-
-```typescript
-interface UpdateManyResult {
-  updated: number;
-  memoryIds?: string[];
-  userIds?: string[];
-  contextIds?: string[];
-  newVersions?: number[];
-  wouldUpdate?: number;
-}
-```
-
-### Search Results
-
-```typescript
-interface SearchResult extends MemoryEntry {
-  score: number;
-  strategy: "semantic" | "keyword" | "recent";
-  highlights?: string[];
-  explanation?: string;
-}
-
-interface EnrichedMemory {
-  memory: MemoryEntry;
-  conversation?: Conversation;
-  sourceMessages?: Message[];
-}
-```
-
----
-
-## Governance Types
-
-```typescript
 interface GovernancePolicy {
   organizationId?: string;
   memorySpaceId?: string;
@@ -989,7 +877,7 @@ interface GovernancePolicy {
   // Layer 1a: Conversations
   conversations: {
     retention: {
-      deleteAfter: string; // e.g., '7y'
+      deleteAfter: string; // '7y', '30d', etc.
       archiveAfter?: string;
       purgeOnUserRequest: boolean;
     };
@@ -1003,21 +891,29 @@ interface GovernancePolicy {
   immutable: {
     retention: {
       defaultVersions: number;
-      byType: Record<string, { versionsToKeep: number }>;
+      byType: Record<
+        string,
+        {
+          versionsToKeep: number;
+          deleteAfter?: string;
+        }
+      >;
     };
     purging: {
       autoCleanupVersions: boolean;
+      purgeUnusedAfter?: string;
     };
   };
 
   // Layer 1c: Mutable
   mutable: {
     retention: {
-      defaultTTL: string | null;
+      defaultTTL?: string;
       purgeInactiveAfter?: string;
     };
     purging: {
       autoDelete: boolean;
+      deleteUnaccessedAfter?: string;
     };
   };
 
@@ -1025,8 +921,11 @@ interface GovernancePolicy {
   vector: {
     retention: {
       defaultVersions: number;
-      byImportance: ImportanceRetentionRule[];
-      bySourceType: Record<string, number>;
+      byImportance: Array<{
+        range: [number, number];
+        versions: number;
+      }>;
+      bySourceType?: Record<string, number>;
     };
     purging: {
       autoCleanupVersions: boolean;
@@ -1034,490 +933,304 @@ interface GovernancePolicy {
     };
   };
 
-  // Cross-layer
+  // Sessions: Session lifecycle policies
+  sessions?: SessionPolicy;
+
+  // Cross-layer compliance
   compliance: {
-    mode: "GDPR" | "HIPAA" | "SOC2" | "Custom";
+    mode: ComplianceMode;
     dataRetentionYears: number;
-    requireJustification: [number, number];
+    requireJustification: number[];
     auditLogging: boolean;
   };
 }
+```
 
-interface ImportanceRetentionRule {
-  range: [number, number];
-  versions: number;
+**Used in:**
+- [Governance Policies API](../03-api-reference/10-governance-policies-api.md)
+- [Governance Policies](../02-core-features/15-governance-policies.md)
+
+**Related types:**
+- [SessionPolicy](#sessionpolicy)
+
+---
+
+### SessionPolicy
+
+```typescript
+interface SessionLifecyclePolicy {
+  /**
+   * Idle timeout before session becomes idle/expires.
+   * Format: duration string ('30m', '1h', '24h')
+   * @default '30m'
+   */
+  idleTimeout: string;
+
+  /**
+   * Maximum session duration regardless of activity.
+   * Format: duration string ('12h', '24h', '7d')
+   * @default '24h'
+   */
+  maxDuration: string;
+
+  /**
+   * Automatically extend session on activity.
+   * @default true
+   */
+  autoExtend: boolean;
+
+  /**
+   * Warn user before session expires.
+   * Format: duration string ('5m', '15m')
+   */
+  warnBeforeExpiry?: string;
+}
+
+interface SessionCleanupPolicy {
+  /**
+   * Automatically expire idle sessions.
+   * @default true
+   */
+  autoExpireIdle: boolean;
+
+  /**
+   * Delete ended sessions after this duration.
+   * Format: duration string ('7d', '30d', '90d')
+   */
+  deleteEndedAfter?: string;
+
+  /**
+   * Archive sessions before deletion.
+   * Format: duration string
+   */
+  archiveAfter?: string;
+}
+
+interface SessionLimitsPolicy {
+  /**
+   * Maximum concurrent active sessions per user.
+   */
+  maxActiveSessions?: number;
+
+  /**
+   * Maximum sessions per device type.
+   */
+  maxSessionsPerDevice?: number;
+}
+
+interface SessionPolicy {
+  lifecycle: SessionLifecyclePolicy;
+  cleanup: SessionCleanupPolicy;
+  limits?: SessionLimitsPolicy;
 }
 ```
 
 ---
 
-## Error Types
+## Resilience Types
+
+### Priority
 
 ```typescript
-class CortexError extends Error {
-  code: CortexErrorCode;
-  details?: any;
+type Priority = "critical" | "high" | "normal" | "low" | "background";
+```
 
-  constructor(code: CortexErrorCode, message?: string, details?: any);
+**Priority order** (highest first):
+1. `critical` - GDPR/security operations (never dropped)
+2. `high` - Real-time conversation storage
+3. `normal` - Standard reads/writes
+4. `low` - Bulk operations, exports
+5. `background` - Async sync, analytics
+
+---
+
+### CircuitState
+
+```typescript
+type CircuitState = "closed" | "open" | "half-open";
+```
+
+**Used in:**
+- [Resilience Layer](../02-core-features/13-resilience-layer.md)
+
+---
+
+### ResilienceConfig
+
+```typescript
+interface ResilienceConfig {
+  /** Enable/disable resilience layer - default: true */
+  enabled?: boolean;
+
+  /** Token bucket rate limiter settings */
+  rateLimiter?: RateLimiterConfig;
+
+  /** Semaphore concurrency limiter settings */
+  concurrency?: ConcurrencyConfig;
+
+  /** Circuit breaker settings */
+  circuitBreaker?: CircuitBreakerConfig;
+
+  /** Priority queue settings */
+  queue?: QueueConfig;
+
+  /** Retry settings for transient failures */
+  retry?: RetryConfig;
+
+  // Monitoring Hooks
+  onCircuitOpen?: (failures: number) => void;
+  onCircuitClose?: () => void;
+  onCircuitHalfOpen?: () => void;
+  onQueueFull?: (priority: Priority) => void;
+  onThrottle?: (waitTimeMs: number) => void;
+  onMetrics?: (metrics: ResilienceMetrics) => void;
+  onRetry?: (attempt: number, error: Error, delayMs: number) => void;
 }
+```
 
-type CortexErrorCode =
-  // General
-  | "CONVEX_ERROR"
-  | "INVALID_INPUT"
+**Used in:**
+- [Resilience Layer](../02-core-features/13-resilience-layer.md)
 
-  // Memory
-  | "INVALID_AGENT_ID"
-  | "INVALID_CONTENT"
-  | "INVALID_IMPORTANCE"
-  | "INVALID_EMBEDDING_DIMENSION"
-  | "MEMORY_NOT_FOUND"
-  | "VERSION_NOT_FOUND"
-  | "PERMISSION_DENIED"
+---
 
-  // User
-  | "INVALID_USER_ID"
-  | "USER_NOT_FOUND"
-  | "INVALID_PROFILE_DATA"
+## Enum & Literal Types
 
-  // Context
-  | "INVALID_PURPOSE"
-  | "CONTEXT_NOT_FOUND"
-  | "PARENT_NOT_FOUND"
-  | "HAS_CHILDREN"
-  | "INVALID_STATUS"
+### ConversationType
 
-  // Conversation
-  | "INVALID_CONVERSATION_ID"
-  | "CONVERSATION_NOT_FOUND"
-  | "INVALID_TYPE"
-  | "INVALID_PARTICIPANTS"
-  | "INVALID_MESSAGE"
-
-  // Immutable
-  | "INVALID_TYPE"
-  | "INVALID_ID"
-  | "DATA_TOO_LARGE"
-  | "NOT_FOUND"
-
-  // Mutable
-  | "INVALID_NAMESPACE"
-  | "INVALID_KEY"
-  | "VALUE_TOO_LARGE"
-  | "KEY_NOT_FOUND"
-  | "UPDATE_FAILED"
-  | "TRANSACTION_FAILED"
-
-  // Operations
-  | "INVALID_FILTERS"
-  | "INVALID_PAGINATION"
-  | "INVALID_QUERY"
-  | "INVALID_OPTIONS"
-  | "INVALID_UPDATE"
-  | "INVALID_FORMAT"
-  | "INVALID_TIMESTAMP"
-
-  // Deletion
-  | "DELETION_FAILED"
-  | "DELETION_CANCELLED"
-  | "PURGE_FAILED"
-  | "PURGE_CANCELLED"
-
-  // Export
-  | "EXPORT_FAILED"
-
-  // A2A
-  | "PUBSUB_NOT_CONFIGURED"
-  | "EMPTY_RECIPIENTS"
-
-  // Matching
-  | "NO_MEMORIES_MATCHED"
-  | "NO_USERS_MATCHED"
-
-  // Cloud Mode
-  | "CLOUD_MODE_REQUIRED"
-  | "STRATEGY_FAILED";
-
-class A2ATimeoutError extends Error {
-  messageId: string;
-  timeout: number;
-
-  constructor(message: string, messageId: string, timeout: number);
-}
+```typescript
+type ConversationType = "user-agent" | "agent-agent";
 ```
 
 ---
 
-## Configuration Types
+### SourceType
 
 ```typescript
-interface CortexConfig {
-  // Connection
-  convexUrl: string;
-  mode?: "direct" | "cloud";
-  apiKey?: string; // Cloud Mode only
-
-  // Versioning
-  defaultVersionRetention?: number;
-
-  // Validation
-  userProfileValidation?: {
-    requiredFields?: string[];
-    maxDisplayNameLength?: number;
-    emailRequired?: boolean;
-    validateEmail?: boolean;
-    allowCustomPreferences?: boolean;
-    allowCustomMetadata?: boolean;
-  };
-
-  // Retention (Layer specific)
-  immutableRetention?: {
-    defaultVersions: number;
-    byType: Record<string, number>;
-  };
-
-  mutableRetention?: {
-    defaultTTL: string | null;
-    purgeInactiveAfter?: string;
-  };
-
-  // Callbacks
-  onBeforeStore?: (
-    memorySpaceId: string,
-    entry: MemoryInput,
-  ) => Promise<StoreDecision>;
-  onAfterRetrieve?: (memorySpaceId: string, memory: MemoryEntry) => void;
-  onVersionCreated?: (
-    memorySpaceId: string,
-    memoryId: string,
-    newVersion: MemoryVersion,
-    oldVersion?: MemoryVersion,
-  ) => void;
-}
-
-interface StoreDecision {
-  action: "create" | "update";
-  memoryId?: string;
-}
+type SourceType = "conversation" | "system" | "tool" | "a2a";
 ```
 
 ---
 
-## Utility Types
-
-### Pagination
+### ContentType
 
 ```typescript
-interface PaginationOptions {
-  limit?: number;
-  offset?: number;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-}
-
-interface PaginatedResult<T> {
-  items: T[];
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-}
-```
-
-### Versioning
-
-```typescript
-interface Versioned {
-  version: number;
-  previousVersions?: VersionHistory[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface VersionHistory {
-  version: number;
-  timestamp: Date;
-  [key: string]: any;
-}
-```
-
-### GDPR
-
-```typescript
-interface GDPRDeleteOptions {
-  cascade?: boolean;
-  deleteFromConversations?: boolean;
-  deleteFromImmutable?: boolean;
-  deleteFromMutable?: boolean;
-  deleteFromVector?: boolean;
-  auditReason?: string;
-}
-
-interface GDPRExportOptions {
-  includeMemories?: boolean;
-  includeConversations?: boolean;
-  includeVersionHistory?: boolean;
-  format: "json" | "csv";
-  outputPath?: string;
-}
+type ContentType = "raw" | "summarized";
 ```
 
 ---
 
-## Type Guards
-
-Cortex provides type guards for runtime type checking:
+### FactType
 
 ```typescript
-function isMemoryEntry(obj: any): obj is MemoryEntry {
-  return (
-    typeof obj === "object" &&
-    "id" in obj &&
-    "memorySpaceId" in obj &&
-    "content" in obj &&
-    "source" in obj &&
-    "metadata" in obj
-  );
-}
-
-function isConversation(obj: any): obj is Conversation {
-  return (
-    typeof obj === "object" &&
-    "conversationId" in obj &&
-    "type" in obj &&
-    "participants" in obj &&
-    "messages" in obj
-  );
-}
-
-function isUserProfile(obj: any): obj is UserProfile {
-  return (
-    typeof obj === "object" && "id" in obj && "data" in obj && "version" in obj
-  );
-}
-
-function isContext(obj: any): obj is Context {
-  return (
-    typeof obj === "object" &&
-    "id" in obj &&
-    "purpose" in obj &&
-    "memorySpaceId" in obj &&
-    "status" in obj
-  );
-}
-
-function isCortexError(error: any): error is CortexError {
-  return error instanceof CortexError;
-}
-
-function isA2ATimeoutError(error: any): error is A2ATimeoutError {
-  return error instanceof A2ATimeoutError;
-}
+type FactType = 
+  | "preference"
+  | "identity"
+  | "knowledge"
+  | "relationship"
+  | "event"
+  | "observation"
+  | "custom";
 ```
 
 ---
 
-## Generic Types
-
-### Builders
+### SkippableLayer
 
 ```typescript
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
-};
-
-type Nullable<T> = T | null;
-
-type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
-
-type Required<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+type SkippableLayer =
+  | "users"
+  | "agents"
+  | "conversations"
+  | "vector"
+  | "facts"
+  | "graph";
 ```
 
-### Promises
-
-```typescript
-type AsyncReturnType<T extends (...args: any) => Promise<any>> = T extends (
-  ...args: any
-) => Promise<infer R>
-  ? R
-  : any;
-
-type PromiseOr<T> = T | Promise<T>;
-```
+**Layers that can be explicitly skipped during remember() orchestration:**
+- `users` - Don't auto-create user profile
+- `agents` - Don't auto-register agent
+- `conversations` - Don't store messages in ACID conversation layer
+- `vector` - Don't store in vector memory layer
+- `facts` - Don't auto-extract facts (even if LLM configured)
+- `graph` - Don't sync to graph database (even if configured)
 
 ---
 
-## Usage Examples
+## Type Index
 
-### Type-Safe Operations
+Quick alphabetical reference for all types:
 
-```typescript
-import type { MemoryEntry, SearchOptions, UniversalFilters } from '@cortex-platform/sdk';
+### A
+- [A2ABroadcastParams](#a2abroadcastparams)
+- [A2AMessage](#a2amessage)
+- [A2ARequestParams](#a2arequestparams)
+- [A2AResponse](#a2aresponse)
+- [A2ASendParams](#a2asendparams)
+- [AgentStats](#agentstats)
 
-// Type-safe search
-const options: SearchOptions = {
-  embedding: [0.1, 0.2, ...],
-  userId: 'user-123',
-  minImportance: 50,
-  limit: 10,
-};
+### C
+- [CircuitState](#circuitstate)
+- [ComplianceMode](#compliancemode)
+- [ContentType](#contenttype)
+- [Conversation](#conversation)
+- [ConversationType](#conversationtype)
 
-const results = await cortex.memory.search('agent-1', 'query', options);
+### F
+- [FactRecord](#factrecord)
+- [FactType](#facttype)
+- [ForgetOptions](#forgetoptions)
 
-// Type guard
-results.forEach(memory => {
-  if (isMemoryEntry(memory)) {
-    console.log(memory.content);
-    console.log(memory.metadata.importance);
-  }
-});
-```
+### G
+- [GovernancePolicy](#governancepolicy)
+- [GraphSyncOption](#graphsyncoption)
 
-### Generic Helpers
+### I
+- [ImmutableRecord](#immutablerecord)
 
-```typescript
-// Generic search function
-async function searchEntity<T>(
-  searchFn: (filters: any) => Promise<T[]>,
-  filters: any,
-): Promise<T[]> {
-  return await searchFn(filters);
-}
+### L
+- [LayerEvent](#layerevent)
+- [ListConversationsFilter](#listconversationsfilter)
+- [ListFactsFilter](#listfactsfilter)
+- [ListMemoriesFilter](#listmemoriesfilter)
 
-// Usage
-const memories = await searchEntity<MemoryEntry>(
-  (f) => cortex.memory.search("agent-1", "*", f),
-  { userId: "user-123" },
-);
-```
+### M
+- [MemoryEntry](#memoryentry)
+- [MemorySpace](#memoryspace)
+- [Message](#message)
+- [MutableRecord](#mutablerecord)
 
-### Custom Extensions
+### O
+- [OrchestrationObserver](#orchestrationobserver)
+- [OrchestrationSummary](#orchestrationsummary)
 
-```typescript
-// Extend UserProfile for your app
-interface CustomUserProfile extends UserProfile {
-  data: {
-    displayName: string;
-    email: string;
-    preferences: {
-      theme: "light" | "dark";
-      language: "en" | "es" | "fr";
-    };
-    tier: "free" | "pro" | "enterprise";
-  };
-}
+### P
+- [Priority](#priority)
 
-// Type-safe usage
-const user = await cortex.users.get<CustomUserProfile>("user-123");
-console.log(user.data.preferences.theme); // Typed!
-```
+### R
+- [RecallParams](#recallparams)
+- [RecallResult](#recallresult)
+- [RegisteredAgent](#registeredagent)
+- [RememberParams](#rememberparams)
+- [RememberResult](#rememberresult)
+- [RememberStreamParams](#rememberstreamparams)
+- [RememberStreamResult](#rememberstreamresult)
+- [ResilienceConfig](#resilienceconfig)
 
----
+### S
+- [SearchMemoriesOptions](#searchmemoriesoptions)
+- [Session](#session)
+- [SessionPolicy](#sessionpolicy)
+- [SkippableLayer](#skippablelayer)
+- [SourceType](#sourcetype)
 
-## Namespace Organization
-
-All Cortex types are organized by namespace:
-
-```typescript
-namespace Cortex {
-  // Layer 1
-  namespace Conversations {
-    export type Conversation = ...;
-    export type Message = ...;
-    export type ConversationFilters = ...;
-  }
-
-  namespace Immutable {
-    export type ImmutableRecord = ...;
-    export type ImmutableVersion = ...;
-    export type ImmutableFilters = ...;
-  }
-
-  namespace Mutable {
-    export type MutableRecord = ...;
-    export type MutableFilters = ...;
-  }
-
-  // Layer 2
-  namespace Vector {
-    export type MemoryEntry = ...;
-    export type MemoryVersion = ...;
-  }
-
-  // Layer 3
-  namespace Memory {
-    export type RememberParams = ...;
-    export type RememberResult = ...;
-  }
-
-  // Entities
-  namespace Users {
-    export type UserProfile = ...;
-    export type UserVersion = ...;
-  }
-
-  namespace Contexts {
-    export type Context = ...;
-    export type ContextVersion = ...;
-  }
-
-  namespace Agents {
-    export type AgentRegistration = ...;
-  }
-
-  // Helpers
-  namespace A2A {
-    export type A2AMessage = ...;
-    export type A2AResponse = ...;
-  }
-
-  // Common
-  export type UniversalFilters = ...;
-  export type RangeQuery = ...;
-  export type CortexError = ...;
-}
-```
+### U
+- [UserProfile](#userprofile)
 
 ---
 
-## Import Patterns
+## See Also
 
-### Named Imports (Recommended)
-
-```typescript
-import type {
-  MemoryEntry,
-  UserProfile,
-  Context,
-  UniversalFilters,
-  SearchOptions,
-} from "@cortex-platform/sdk";
-```
-
-### Namespace Import
-
-```typescript
-import type { Cortex } from '@cortex-platform/sdk';
-
-const memory: Cortex.Memory.MemoryEntry = ...;
-const user: Cortex.Users.UserProfile = ...;
-```
-
-### Type-Only Import
-
-```typescript
-import type * as CortexTypes from '@cortex-platform/sdk';
-
-const filters: CortexTypes.UniversalFilters = { ... };
-```
-
----
-
-## Next Steps
-
-- **[Error Handling](./02-error-handling.md)** - Error codes and debugging
-- **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Using these types in practice
-
----
-
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+- [API Reference](../03-api-reference/01-overview.md) - Method signatures using these types
+- [Error Handling](./02-error-handling.md) - Error types and codes
+- [Core Concepts](../01-getting-started/04-core-concepts.md) - Understanding the type system
+- [Data Models](../04-architecture/02-data-models.md) - Architectural overview of types

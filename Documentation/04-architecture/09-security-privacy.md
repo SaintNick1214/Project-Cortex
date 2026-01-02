@@ -1,78 +1,137 @@
 # Security & Privacy
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
-Data protection, access control, GDPR compliance, and security best practices.
+Data protection, access control, memory space isolation, GDPR compliance, and security best practices.
 
 ## Overview
 
-Cortex is designed with **privacy-first architecture** and **security by default**. All data is isolated, access is controlled, and GDPR compliance is built-in.
+Cortex is designed with **privacy-first architecture** and **security by default**. All data is isolated by memory space, access is controlled, and GDPR compliance is built-in.
 
 **Core Security Principles:**
 
-1. **Agent Isolation** - Agents cannot access each other's memories
-2. **User Data Protection** - userId enables GDPR cascade deletion
-3. **Immutable Audit Trail** - ACID conversations never modified
-4. **No PII in Embeddings** - Vectors can be public, source data protected
-5. **Convex ACID** - Transaction guarantees prevent corruption
+1. **Memory Space Isolation** - Memory spaces cannot access each other's data (except via explicit context delegation)
+2. **Multi-Tenancy** - tenantId provides SaaS platform isolation
+3. **User Data Protection** - userId enables GDPR cascade deletion across ALL memory spaces
+4. **Immutable Audit Trail** - ACID conversations never modified
+5. **No PII in Embeddings** - Vectors can be public, source data protected
+6. **Convex ACID** - Transaction guarantees prevent corruption
+7. **Resilience Layer** - Rate limiting and circuit breaker prevent abuse
 
 ---
 
 ## Data Isolation
 
-### Agent-Level Isolation
+### Memory Space Isolation
 
-**Enforcement:** All queries filter by `agentId` at the index level.
+**Enforcement:** All queries filter by `memorySpaceId` at the index level.
 
 ```typescript
-// Agent 1's memories
-await cortex.memory.store('agent-1', {
-  content: 'Secret data for agent-1',
+// Space 1's memories
+await cortex.memory.store('user-123-personal', {
+  content: 'Secret data in personal space',
   ...
 });
 
-// Agent 2 CANNOT access
-const memories = await cortex.memory.search('agent-2', 'secret');
-// Returns: [] (empty - different agent) ✅
+// Space 2 CANNOT access (different isolation boundary)
+const memories = await cortex.memory.search('team-alpha-shared', 'secret');
+// Returns: [] (empty - different memory space) ✅
 
 // Convex query automatically filters
 await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", "agent-2"))  // ← Isolated
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", "team-alpha-shared"))
   .collect();
-// Never sees agent-1's data
+// Never sees user-123-personal data
 ```
 
 **Guarantees:**
 
 - ✅ Database-level isolation (Convex indexes)
-- ✅ No cross-agent queries possible
-- ✅ SDK enforces agentId in all operations
-- ✅ Cannot accidentally leak data
+- ✅ No cross-space queries possible (except via context delegation)
+- ✅ SDK enforces memorySpaceId in all operations
+- ✅ Cannot accidentally leak data between spaces
 
-### User-Level Isolation
+### Cross-Space Access (Controlled)
+
+**Context chains enable controlled cross-space delegation:**
 
 ```typescript
-// User A's data
-await cortex.memory.store('agent-1', {
+// Supervisor space creates context
+const context = await cortex.contexts.create({
+  purpose: "Approve budget",
+  memorySpaceId: "supervisor-space",
+  userId: "user-123",
+});
+
+// Grant access to finance space
+await cortex.contexts.grantAccess(context.contextId, {
+  memorySpaceId: "finance-space",
+  scope: "context-only",  // Only context data, not all memories
+});
+
+// Finance space can access context
+const ctx = await cortex.contexts.get(context.contextId, {
+  requestingSpace: "finance-space",  // Verifies grantedAccess
+});
+// ✅ Controlled access via explicit grant
+```
+
+### Multi-Tenant Isolation
+
+**Enforcement:** All operations filtered by `tenantId` when configured.
+
+```typescript
+// Tenant A's data
+await cortex.memory.store('space-1', {
+  content: 'Tenant A data',
+  tenantId: 'tenant-a',
+  ...
+});
+
+// Tenant B CANNOT access
+const cortexB = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  auth: { tenantId: 'tenant-b' },
+});
+
+const memories = await cortexB.memory.search('space-1', 'data');
+// Returns: [] (empty - different tenant) ✅
+
+// All queries auto-scoped by tenantId
+await ctx.db
+  .query("memories")
+  .withIndex("by_tenant_space", (q) =>
+    q.eq("tenantId", "tenant-b").eq("memorySpaceId", "space-1")
+  )
+  .collect();
+// Never sees tenant-a data
+```
+
+### User-Level Filtering
+
+```typescript
+// User A's data in shared memory space
+await cortex.memory.store('team-shared', {
   content: 'User A prefers dark mode',
   userId: 'user-a',
   ...
 });
 
-// User B's data
-await cortex.memory.store('agent-1', {
+// User B's data in same memory space
+await cortex.memory.store('team-shared', {
   content: 'User B prefers light mode',
   userId: 'user-b',
   ...
 });
 
 // Query with userId filter
-const userAMemories = await cortex.memory.search('agent-1', 'preferences', {
+const userAMemories = await cortex.memory.search('team-shared', 'preferences', {
   userId: 'user-a',  // ← Only user-a's data
 });
 
 // User B's data never returned ✅
+// Both users can be in same memory space, filtered by userId
 ```
 
 ---

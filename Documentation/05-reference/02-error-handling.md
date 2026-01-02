@@ -1,1320 +1,1095 @@
-# Error Handling
+# Error Handling Reference
 
-> **Last Updated**: 2025-11-25
-
-Complete guide to error handling, debugging, and troubleshooting in Cortex.
+> **Last Updated**: January 1, 2026
+> **SDK Version**: 0.27.0
+> **Sources**: `src/resilience/types.ts`, `src/*/validators.ts`, `src/graph/types.ts`
 
 ## Overview
 
-Cortex uses structured errors with specific error codes to make debugging easier. All errors extend `CortexError` with a `code` property for programmatic handling.
+Cortex uses structured errors with specific error codes for predictable error handling. Errors are categorized into:
 
-**As of v0.12.0**, Cortex includes comprehensive **client-side validation** that catches errors before they reach the backend, providing:
+1. **Validation Errors** - Client-side validation (instant feedback)
+2. **Resilience Errors** - Overload protection (rate limits, circuit breaker)
+3. **Graph Errors** - Graph database operations
+4. **Cascade Errors** - Deletion cascade operations
+5. **Convex Backend Errors** - Backend operation failures
 
-- ⚡ **Instant feedback** (<1ms vs 50-200ms backend round-trip)
-- 📝 **Better error messages** with fix suggestions and field names
-- 🎯 **Improved developer experience** with faster iteration
-
-See [Client-Side Validation](#client-side-validation) section below for details.
-
-```typescript
-try {
-  await cortex.memory.store('agent-1', { ... });
-} catch (error) {
-  if (error instanceof CortexError) {
-    console.log(`Error code: ${error.code}`);
-    console.log(`Message: ${error.message}`);
-    console.log(`Details:`, error.details);
-
-    // Handle specific errors
-    if (error.code === 'INVALID_IMPORTANCE') {
-      // Fix and retry
-    }
-  }
-}
-```
-
----
-
-## Client-Side Validation
-
-**New in v0.12.0** - All 11 APIs now validate inputs before making backend calls.
-
-### What is Client-Side Validation?
-
-Client-side validation catches common errors **synchronously** in your application before making network requests to the Convex backend:
-
-```typescript
-// ❌ Before v0.12.0 - Error requires backend round-trip (50-200ms)
-await cortex.governance.setPolicy({
-  organizationId: "my-org",
-  conversations: {
-    retention: { deleteAfter: "7years" }, // Invalid format
-  },
-});
-// → Waits for backend call, then throws error
-
-// ✅ After v0.12.0 - Error caught instantly (<1ms)
-await cortex.governance.setPolicy({
-  organizationId: "my-org",
-  conversations: {
-    retention: { deleteAfter: "7years" }, // Invalid format
-  },
-});
-// → Throws GovernanceValidationError immediately
-// → Message: "Invalid period format '7years'. Must be in format like '7d', '30m', or '1y'"
-```
-
-### Validation Error Classes
-
-Each API has its own validation error class for specific error handling:
+**Import Error Classes:**
 
 ```typescript
 import {
-  GovernanceValidationError,
+  // Validation errors
   MemoryValidationError,
   ConversationValidationError,
-  FactValidationError,
-  // ... and 7 more
-} from "@cortexmemory/sdk";
-
-try {
-  await cortex.governance.setPolicy(policy);
-} catch (error) {
-  if (error instanceof GovernanceValidationError) {
-    console.log(`Validation failed: ${error.code} - ${error.field}`);
-    // Handle client-side validation error (instant)
-  } else {
-    // Handle backend error (database, network, business logic)
-  }
-}
-```
-
-**Python:**
-
-```python
-from cortex.governance import GovernanceValidationError
-
-try:
-    await cortex.governance.set_policy(policy)
-except GovernanceValidationError as e:
-    print(f"Validation failed: {e.code} - {e.field}")
-    # Handle client-side validation error (instant)
-except Exception as e:
-    # Handle backend error (database, network, business logic)
-    pass
-```
-
-### What Gets Validated Client-Side?
-
-**All APIs validate:**
-
-- ✅ Required fields (non-null, non-empty strings)
-- ✅ Format validation (IDs, periods like "7d", dates, regex patterns)
-- ✅ Range validation (0-100 scores, array lengths, date ranges)
-- ✅ Enum validation (allowed values for string literals)
-- ✅ Business logic (no overlaps, valid combinations)
-- ✅ Reference validation (related IDs provided together)
-
-**Left for backend validation:**
-
-- ❌ Existence checks (does this ID exist in database?)
-- ❌ Authorization (does user have permission?)
-- ❌ Race conditions (concurrent modifications)
-- ❌ Complex database queries
-
-### Validation Coverage by API
-
-| API               | Validators    | Example Validations                                                        |
-| ----------------- | ------------- | -------------------------------------------------------------------------- |
-| **Governance**    | 9 validators  | Period formats, importance ranges, version counts, scopes, date ranges     |
-| **Memory**        | 12 validators | Memory space IDs, content, importance, source types, conversation refs     |
-| **Conversations** | 8 validators  | Conversation types, participants, messages, query filters                  |
-| **Facts**         | 10 validators | Fact types, confidence scores, subject/predicate/object, temporal validity |
-| **Immutable**     | 6 validators  | Type/ID validation, version numbers, data size limits                      |
-| **Mutable**       | 7 validators  | Namespace/key validation, value size, TTL formats                          |
-| **Agents**        | 5 validators  | Agent ID format, metadata, status values                                   |
-| **Users**         | 4 validators  | User ID validation, profile data structure                                 |
-| **Contexts**      | 7 validators  | Purpose, status transitions, parent-child relationships                    |
-| **Memory Spaces** | 6 validators  | Space type, participant structure                                          |
-| **Vector**        | 8 validators  | Memory space IDs, embedding dimensions, importance ranges                  |
-
-### Common Validation Errors
-
-#### 1. Invalid Period Format
-
-```typescript
-// ❌ Wrong
-await cortex.governance.setPolicy({
-  conversations: {
-    retention: { deleteAfter: "7years" }, // Wrong format
-  },
-});
-
-// ✅ Correct
-await cortex.governance.setPolicy({
-  conversations: {
-    retention: { deleteAfter: "7y" }, // ✅ "7d", "30m", "1y"
-  },
-});
-```
-
-#### 2. Invalid Importance Range
-
-```typescript
-// ❌ Wrong
-await cortex.memory.store("agent-1", {
-  content: "Test",
-  metadata: { importance: 150 }, // Must be 0-100
-});
-
-// ✅ Correct
-await cortex.memory.store("agent-1", {
-  content: "Test",
-  metadata: { importance: 100 }, // ✅ 0-100
-});
-```
-
-#### 3. Overlapping Importance Ranges
-
-```typescript
-// ❌ Wrong
-await cortex.governance.setPolicy({
-  vector: {
-    retention: {
-      byImportance: [
-        { range: [0, 50], versions: 5 },
-        { range: [40, 80], versions: 10 }, // Overlaps [0, 50]!
-      ],
-    },
-  },
-});
-
-// ✅ Correct
-await cortex.governance.setPolicy({
-  vector: {
-    retention: {
-      byImportance: [
-        { range: [0, 50], versions: 5 },
-        { range: [51, 100], versions: 10 }, // No overlap
-      ],
-    },
-  },
-});
-```
-
-#### 4. Missing Required Scope
-
-```typescript
-// ❌ Wrong
-await cortex.governance.enforce({
-  layers: ["vector"],
-  // Missing scope!
-});
-
-// ✅ Correct
-await cortex.governance.enforce({
-  scope: { organizationId: "my-org" },
-  layers: ["vector"],
-});
-```
-
-#### 5. Empty String Parameters
-
-```typescript
-// ❌ Wrong
-await cortex.conversations.create({
-  memorySpaceId: "", // Empty string!
-  type: "user-agent",
-  participants: { userId: "user-123" },
-});
-
-// ✅ Correct
-await cortex.conversations.create({
-  memorySpaceId: "user-123-personal", // Non-empty
-  type: "user-agent",
-  participants: { userId: "user-123" },
-});
-```
-
-### Benefits of Client-Side Validation
-
-1. **Faster Development** - See errors instantly without waiting for backend
-2. **Better Error Messages** - Clear descriptions with fix suggestions
-3. **Reduced Costs** - Fewer invalid requests to Convex
-4. **Type Safety++** - Runtime validation complements TypeScript/Python types
-5. **Offline Development** - Catch errors even when backend is down
-
-### Migration from v0.11.x
-
-**No changes required!** Validation is backward-compatible:
-
-```typescript
-// This code works exactly the same in v0.12.0
-await cortex.memory.store("agent-1", data);
-
-// But now you get faster error feedback if data is invalid
-// And you can optionally catch validation errors specifically:
-
-try {
-  await cortex.memory.store("agent-1", data);
-} catch (error) {
-  if (error instanceof MemoryValidationError) {
-    // Client-side validation error - fix input and retry immediately
-    console.log(`Invalid input: ${error.message}`);
-  } else {
-    // Backend error - might be transient, consider retry
-    console.log(`Backend error: ${error.message}`);
-  }
-}
+  FactsValidationError,
+  UserValidationError,
+  AgentValidationError,
+  
+  // Resilience errors
+  CircuitOpenError,
+  RateLimitExceededError,
+  QueueFullError,
+  AcquireTimeoutError,
+  
+  // Graph errors
+  GraphDatabaseError,
+  GraphConnectionError,
+  GraphQueryError,
+  
+  // Other errors
+  A2ATimeoutError,
+  CascadeDeletionError,
+} from '@cortexmemory/sdk';
 ```
 
 ---
 
-## Error Categories
+## Table of Contents
 
-### General Errors
-
-| Code            | Description               | Common Causes                              | Solution                                |
-| --------------- | ------------------------- | ------------------------------------------ | --------------------------------------- |
-| `CONVEX_ERROR`  | Database operation failed | Network issue, Convex down, quota exceeded | Check Convex status, retry with backoff |
-| `INVALID_INPUT` | Generic input validation  | Malformed data                             | Check input structure                   |
-
----
-
-### Memory Operation Errors
-
-| Code                          | Description                  | Common Causes                     | Solution                         |
-| ----------------------------- | ---------------------------- | --------------------------------- | -------------------------------- |
-| `INVALID_MEMORYSPACE_ID`      | Memory space ID is invalid   | Empty string, null, wrong format  | Provide valid memorySpaceId      |
-| `INVALID_CONTENT`             | Content is invalid           | Empty string, > 100KB             | Check content size and format    |
-| `INVALID_IMPORTANCE`          | Importance out of range      | Not 0-100                         | Use value between 0-100          |
-| `INVALID_EMBEDDING_DIMENSION` | Embedding dimension mismatch | Wrong vector size                 | Check embedding model dimensions |
-| `MEMORY_NOT_FOUND`            | Memory doesn't exist         | Invalid memoryId, already deleted | Verify memoryId exists           |
-| `VERSION_NOT_FOUND`           | Version doesn't exist        | Version purged by retention       | Check version retention settings |
-| `PERMISSION_DENIED`           | Access denied                | Agent doesn't own memory          | Verify agent owns this memory    |
-| `INVALID_FILTERS`             | Filters malformed            | Bad filter syntax                 | Check filter structure           |
-| `NO_MEMORIES_MATCHED`         | No memories match filters    | Filters too restrictive           | Broaden filter criteria          |
-
-**Example:**
-
-```typescript
-try {
-  await cortex.memory.store("agent-1", {
-    content: "Test",
-    contentType: "raw",
-    source: { type: "system", timestamp: new Date() },
-    metadata: { importance: 150 }, // ❌ Out of range!
-  });
-} catch (error) {
-  if (error.code === "INVALID_IMPORTANCE") {
-    console.log("Importance must be 0-100");
-    // Fix and retry
-    await cortex.memory.store("agent-1", {
-      ...data,
-      metadata: { importance: 100 }, // ✅ Valid
-    });
-  }
-}
-```
+1. [Error Class Hierarchy](#error-class-hierarchy)
+2. [Error Handling Patterns](#error-handling-patterns)
+3. [Validation Errors](#validation-errors)
+4. [Resilience Errors](#resilience-errors)
+5. [Graph Errors](#graph-errors)
+6. [Other Errors](#other-errors)
+7. [All Error Codes](#all-error-codes)
+8. [Troubleshooting Guide](#troubleshooting-guide)
 
 ---
 
-### User Operation Errors
-
-| Code                   | Description            | Common Causes                            | Solution                          |
-| ---------------------- | ---------------------- | ---------------------------------------- | --------------------------------- |
-| `INVALID_USER_ID`      | User ID is invalid     | Empty string, null                       | Provide valid userId              |
-| `USER_NOT_FOUND`       | User doesn't exist     | Invalid userId, not created yet, deleted | Create user profile first         |
-| `INVALID_PROFILE_DATA` | Profile data malformed | Bad data structure                       | Check UserProfileUpdate structure |
-| `NO_USERS_MATCHED`     | No users match filters | Filters too restrictive                  | Broaden criteria                  |
-
-**Example:**
+## Error Class Hierarchy
 
 ```typescript
-try {
-  await cortex.users.update("user-123", {
-    data: { displayName: "Alex" },
-  });
-} catch (error) {
-  if (error.code === "USER_NOT_FOUND") {
-    // User doesn't exist - this is an upsert, so this shouldn't happen
-    // Unless userId validation is strict
-    console.log("Unexpected: user not found on upsert");
-  }
-}
-```
-
----
-
-### Context Operation Errors
-
-| Code                | Description                  | Common Causes                          | Solution                    |
-| ------------------- | ---------------------------- | -------------------------------------- | --------------------------- |
-| `INVALID_PURPOSE`   | Purpose is invalid           | Empty string                           | Provide descriptive purpose |
-| `CONTEXT_NOT_FOUND` | Context doesn't exist        | Invalid contextId, deleted             | Verify contextId            |
-| `PARENT_NOT_FOUND`  | Parent context doesn't exist | Invalid parentId                       | Check parent exists         |
-| `HAS_CHILDREN`      | Context has children         | Deleting parent without cascade        | Use cascadeChildren: true   |
-| `INVALID_STATUS`    | Status is invalid            | Not active/completed/cancelled/blocked | Use valid status            |
-
-**Example:**
-
-```typescript
-try {
-  await cortex.contexts.delete("ctx-parent");
-} catch (error) {
-  if (error.code === "HAS_CHILDREN") {
-    // Can't delete parent with children
-    await cortex.contexts.delete("ctx-parent", {
-      cascadeChildren: true, // ✅ Delete children too
-    });
-  }
-}
-```
-
----
-
-### Conversation Operation Errors
-
-| Code                      | Description                | Common Causes                     | Solution                    |
-| ------------------------- | -------------------------- | --------------------------------- | --------------------------- |
-| `INVALID_CONVERSATION_ID` | Conversation ID invalid    | Empty, malformed                  | Provide valid ID            |
-| `CONVERSATION_NOT_FOUND`  | Conversation doesn't exist | Invalid ID, deleted               | Verify conversation exists  |
-| `INVALID_TYPE`            | Type is invalid            | Not 'user-agent' or 'agent-agent' | Use valid type              |
-| `INVALID_PARTICIPANTS`    | Participants malformed     | Missing userId/memorySpaceId      | Check participant structure |
-| `INVALID_MESSAGE`         | Message is malformed       | Missing required fields           | Check message structure     |
-| `INVALID_QUERY`           | Query is invalid           | Empty query string                | Provide non-empty query     |
-
-**Example:**
-
-```typescript
-try {
-  await cortex.conversations.create({
-    type: "user-to-agent", // ❌ Invalid type!
-    participants: { userId: "user-123", memorySpaceId: "user-123-personal" },
-  });
-} catch (error) {
-  if (error.code === "INVALID_TYPE") {
-    // Fix type
-    await cortex.conversations.create({
-      type: "user-agent", // ✅ Correct
-      participants: { userId: "user-123", memorySpaceId: "user-123-personal" },
-    });
-  }
-}
-```
-
----
-
-### Immutable Store Errors
-
-| Code              | Description            | Common Causes         | Solution                  |
-| ----------------- | ---------------------- | --------------------- | ------------------------- |
-| `INVALID_TYPE`    | Type is invalid        | Empty type            | Provide valid type        |
-| `INVALID_ID`      | ID is invalid          | Empty id              | Provide valid logical ID  |
-| `DATA_TOO_LARGE`  | Data exceeds limit     | Payload > 100KB       | Reduce data size or split |
-| `NOT_FOUND`       | Record not found       | Invalid type/id combo | Verify record exists      |
-| `PURGE_FAILED`    | Purge operation failed | Database error        | Check Convex, retry       |
-| `PURGE_CANCELLED` | User cancelled purge   | Confirmation rejected | User action required      |
-
-**Example:**
-
-```typescript
-try {
-  await cortex.immutable.store({
-    type: "kb-article",
-    id: "huge-article",
-    data: massiveObject, // > 100KB
-  });
-} catch (error) {
-  if (error.code === "DATA_TOO_LARGE") {
-    // Split into chunks
-    await cortex.immutable.store({
-      type: "kb-article",
-      id: "article-part-1",
-      data: chunk1,
-    });
-  }
-}
-```
-
----
-
-### Mutable Store Errors
-
-| Code                 | Description          | Common Causes                         | Solution                |
-| -------------------- | -------------------- | ------------------------------------- | ----------------------- |
-| `INVALID_NAMESPACE`  | Namespace is invalid | Empty namespace                       | Provide valid namespace |
-| `INVALID_KEY`        | Key is invalid       | Empty key                             | Provide valid key       |
-| `VALUE_TOO_LARGE`    | Value exceeds limit  | Payload > 1MB                         | Reduce value size       |
-| `KEY_NOT_FOUND`      | Key doesn't exist    | Invalid namespace/key                 | Verify key exists       |
-| `UPDATE_FAILED`      | Update failed        | Updater function threw                | Check updater logic     |
-| `TRANSACTION_FAILED` | Transaction failed   | Optimistic locking, error in callback | Retry transaction       |
-
-**Example:**
-
-```typescript
-try {
-  await cortex.mutable.update("inventory", "widget-qty", (qty) => {
-    if (qty < 10) throw new Error("Insufficient stock");
-    return qty - 10;
-  });
-} catch (error) {
-  if (error.code === "UPDATE_FAILED") {
-    console.log("Updater function threw error");
-    console.log("Original error:", error.details);
-  }
-}
-```
-
----
-
-### A2A Operation Errors
-
-| Code                    | Description      | Common Causes               | Solution                        |
-| ----------------------- | ---------------- | --------------------------- | ------------------------------- |
-| `PUBSUB_NOT_CONFIGURED` | Pub/sub required | request() without pub/sub   | Configure pub/sub or use send() |
-| `EMPTY_RECIPIENTS`      | No recipients    | broadcast() with empty to[] | Provide recipient list          |
-| `A2A_TIMEOUT_ERROR`     | Request timeout  | No response within timeout  | Increase timeout or use async   |
-
-**Example:**
-
-```typescript
-try {
-  const response = await cortex.a2a.request({
-    from: 'agent-1',
-    to: 'agent-2',
-    message: 'Question?',
-    timeout: 5000,
-  });
-} catch (error) {
-  if (error instanceof A2ATimeoutError) {
-    console.log(`No response within ${error.timeout}ms`);
-    // Fallback to async
-    await cortex.a2a.send({
-      from: 'agent-1',
-      to: 'agent-2',
-      message: 'Question? (respond when ready)',
-    });
-  } else if (error.code === 'PUBSUB_NOT_CONFIGURED') {
-    console.log('request() requires pub/sub configuration');
-    // Use send() instead
-    await cortex.a2a.send({ ... });
-  }
-}
-```
-
----
-
-### Cloud Mode Errors
-
-| Code                  | Description                 | Common Causes                          | Solution                             |
-| --------------------- | --------------------------- | -------------------------------------- | ------------------------------------ |
-| `CLOUD_MODE_REQUIRED` | Feature requires Cloud      | autoEmbed/autoSummarize in Direct mode | Use Cloud Mode or implement yourself |
-| `STRATEGY_FAILED`     | Smart store strategy failed | LLM error, network issue               | Retry or fall back to manual         |
-
-**Example:**
-
-```typescript
-try {
-  await cortex.memory.store('agent-1', {
-    content: 'Test',
-    autoEmbed: true,  // Cloud Mode only
-    ...
-  });
-} catch (error) {
-  if (error.code === 'CLOUD_MODE_REQUIRED') {
-    console.log('autoEmbed requires Cortex Cloud');
-    // Provide embedding manually
-    await cortex.memory.store('agent-1', {
-      content: 'Test',
-      embedding: await embed('Test'),  // Manual
-      ...
-    });
-  }
-}
+Error (native JavaScript)
+├── ValidationError (client-side validation)
+│   ├── MemoryValidationError
+│   ├── ConversationValidationError
+│   ├── FactsValidationError
+│   ├── UserValidationError
+│   ├── AgentValidationError
+│   ├── SessionValidationError
+│   ├── AuthValidationError
+│   ├── ImmutableValidationError
+│   ├── MutableValidationError
+│   ├── GovernanceValidationError
+│   ├── MemorySpaceValidationError
+│   ├── ContextsValidationError
+│   └── A2AValidationError
+├── ResilienceError (resilience layer)
+│   ├── RateLimitExceededError
+│   ├── CircuitOpenError
+│   ├── QueueFullError
+│   └── AcquireTimeoutError
+├── GraphDatabaseError (graph operations)
+│   ├── GraphConnectionError
+│   │   └── GraphAuthenticationError
+│   ├── GraphQueryError
+│   └── GraphNotFoundError
+├── CascadeDeletionError
+├── AgentCascadeDeletionError
+├── A2ATimeoutError
+└── ResumableStreamError
 ```
 
 ---
 
 ## Error Handling Patterns
 
-### Pattern 1: Try-Catch with Retry
+### Basic Error Handling
 
 ```typescript
-async function storeWithRetry(
-  memorySpaceId: string,
-  entry: MemoryInput,
-  maxRetries = 3,
-): Promise<MemoryEntry> {
-  let lastError;
+import { MemoryValidationError, CircuitOpenError } from '@cortexmemory/sdk';
 
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      return await cortex.memory.store(memorySpaceId, entry);
-    } catch (error) {
-      lastError = error;
-
-      if (error.code === "CONVEX_ERROR") {
-        // Transient error - retry with backoff
-        await sleep(Math.pow(2, i) * 1000);
-        continue;
-      }
-
-      // Non-transient error - don't retry
-      throw error;
-    }
-  }
-
-  throw lastError;
-}
-```
-
-### Pattern 2: Validation Before Operation
-
-```typescript
-async function safeStore(memorySpaceId: string, entry: MemoryInput) {
-  // Validate before calling
-  if (!entry.content || entry.content.length === 0) {
-    throw new Error("Content cannot be empty");
-  }
-
-  if (entry.metadata.importance < 0 || entry.metadata.importance > 100) {
-    throw new Error("Importance must be 0-100");
-  }
-
-  if (entry.embedding && entry.embedding.length !== 3072) {
-    throw new Error("Embedding must be 3072 dimensions");
-  }
-
-  // Now safe to store
-  return await cortex.memory.store(memorySpaceId, entry);
-}
-```
-
-### Pattern 3: Fallback Strategies
-
-```typescript
-async function searchWithFallback(
-  memorySpaceId: string,
-  query: string,
-  embedding?: number[],
-) {
-  try {
-    // Try semantic search first
-    return await cortex.memory.search(memorySpaceId, query, {
-      embedding,
-      strategy: "semantic",
-      limit: 10,
-    });
-  } catch (error) {
-    if (error.code === "INVALID_EMBEDDING_DIMENSION") {
-      // Fall back to keyword search
-      console.warn("Semantic search failed, using keyword");
-      return await cortex.memory.search(memorySpaceId, query, {
-        strategy: "keyword",
-        limit: 10,
-      });
-    }
-    throw error;
-  }
-}
-```
-
-### Pattern 4: Graceful Degradation
-
-```typescript
-async function getMemoryWithFallback(
-  memorySpaceId: string,
-  memoryId: string,
-): Promise<MemoryEntry | null> {
-  try {
-    return await cortex.memory.get(memorySpaceId, memoryId);
-  } catch (error) {
-    if (error.code === "MEMORY_NOT_FOUND") {
-      // Memory was deleted - return null gracefully
-      console.log("Memory no longer exists");
-      return null;
-    }
-
-    if (error.code === "PERMISSION_DENIED") {
-      // Agent doesn't own this memory
-      console.log("Access denied to memory");
-      return null;
-    }
-
-    // Unknown error - rethrow
-    throw error;
-  }
-}
-```
-
-### Pattern 5: Error Aggregation
-
-```typescript
-async function bulkOperationWithErrors(
-  memorySpaceId: string,
-  items: MemoryInput[],
-) {
-  const results = {
-    successful: [] as MemoryEntry[],
-    failed: [] as { item: MemoryInput; error: CortexError }[],
-  };
-
-  for (const item of items) {
-    try {
-      const memory = await cortex.memory.store(memorySpaceId, item);
-      results.successful.push(memory);
-    } catch (error) {
-      if (error instanceof CortexError) {
-        results.failed.push({ item, error });
-      } else {
-        throw error; // Unexpected error
-      }
-    }
-  }
-
-  return results;
-}
-```
-
----
-
-## Debugging Strategies
-
-### Strategy 1: Enable Debug Logging
-
-```typescript
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL,
-  debug: true, // Enable debug logging
-});
-
-// Logs all operations
-// - Memory stores
-// - Searches
-// - Updates
-// - Errors with full context
-```
-
-### Strategy 2: Inspect Error Details
-
-```typescript
-catch (error) {
-  if (error instanceof CortexError) {
-    console.log('Error Code:', error.code);
-    console.log('Message:', error.message);
-    console.log('Details:', JSON.stringify(error.details, null, 2));
-
-    // Details might include:
-    // - Invalid field names
-    // - Actual vs expected values
-    // - Stack trace
-    // - Related entity IDs
-  }
-}
-```
-
-### Strategy 3: Verify Data Integrity
-
-```typescript
-async function debugMemory(memorySpaceId: string, memoryId: string) {
-  try {
-    const memory = await cortex.memory.get(memorySpaceId, memoryId);
-
-    console.log("Memory found:", {
-      id: memory.id,
-      memorySpaceId: memory.memorySpaceId,
-      version: memory.version,
-      hasEmbedding: !!memory.embedding,
-      embeddingDimension: memory.embedding?.length,
-      hasConversationRef: !!memory.conversationRef,
-      importance: memory.metadata.importance,
-      tags: memory.metadata.tags,
-    });
-
-    // Verify conversationRef
-    if (memory.conversationRef) {
-      const conversation = await cortex.conversations.get(
-        memory.conversationRef.conversationId,
-      );
-
-      if (!conversation) {
-        console.warn("⚠️ Broken conversationRef!");
-      } else {
-        console.log("✅ ConversationRef valid");
-      }
-    }
-  } catch (error) {
-    console.error("Debug failed:", error);
-  }
-}
-```
-
-### Strategy 4: Test Filters Incrementally
-
-```typescript
-// Start broad, narrow down
-async function debugSearch(memorySpaceId: string) {
-  // 1. Get total count
-  const total = await cortex.memory.count(memorySpaceId);
-  console.log(`Total memories: ${total}`);
-
-  // 2. Filter by source
-  const conversations = await cortex.memory.count(memorySpaceId, {
-    "source.type": "conversation",
+try {
+  await cortex.memory.remember({
+    memorySpaceId: 'user-123-space',
+    conversationId: 'conv-123',
+    userMessage: 'My name is Alex',
+    agentResponse: "Nice to meet you, Alex!",
+    userId: 'user-123',
+    userName: 'Alex',
+    agentId: 'assistant',
   });
-  console.log(`Conversation memories: ${conversations}`);
-
-  // 3. Add user filter
-  const userConversations = await cortex.memory.count(memorySpaceId, {
-    "source.type": "conversation",
-    userId: "user-123",
-  });
-  console.log(`User-123 conversations: ${userConversations}`);
-
-  // 4. Add importance
-  const important = await cortex.memory.count(memorySpaceId, {
-    "source.type": "conversation",
-    userId: "user-123",
-    minImportance: 70,
-  });
-  console.log(`Important user-123 conversations: ${important}`);
-
-  // Now you know where the breakdown is!
-}
-```
-
----
-
-## Common Issues
-
-### Issue 1: Embedding Dimension Mismatch
-
-**Error:** `INVALID_EMBEDDING_DIMENSION`
-
-**Cause:** Mixing different embedding models (e.g., 1536-dim + 3072-dim)
-
-**Solution:**
-
-```typescript
-// ❌ Problem: Mixed dimensions
-await cortex.memory.store('agent-1', {
-  embedding: await embed('text', 'text-embedding-ada-002'),  // 1536-dim
-  ...
-});
-
-await cortex.memory.store('agent-1', {
-  embedding: await embed('text', 'text-embedding-3-large'),  // 3072-dim ❌
-  ...
-});
-
-// ✅ Solution: Consistent dimensions
-const EMBEDDING_MODEL = 'text-embedding-3-large';
-const EMBEDDING_DIMENSIONS = 3072;
-
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL,
-  embeddingDimensions: EMBEDDING_DIMENSIONS,  // Enforce consistency
-});
-```
-
-### Issue 2: Memory Not Found After Deletion
-
-**Error:** `MEMORY_NOT_FOUND`
-
-**Cause:** Trying to access deleted memory
-
-**Solution:**
-
-```typescript
-// Check before accessing
-const exists = await cortex.memory.count("agent-1", {
-  // Use filters to check existence
-});
-
-if (exists > 0) {
-  const memory = await cortex.memory.get("agent-1", memoryId);
-} else {
-  console.log("Memory was deleted");
-}
-
-// Or use try-catch
-try {
-  const memory = await cortex.memory.get("agent-1", memoryId);
 } catch (error) {
-  if (error.code === "MEMORY_NOT_FOUND") {
-    // Handle gracefully
-    return null;
-  }
-}
-```
-
-### Issue 3: Version Not Found
-
-**Error:** `VERSION_NOT_FOUND`
-
-**Cause:** Version purged by retention policy
-
-**Solution:**
-
-```typescript
-// Version might be purged, but ACID source still exists
-try {
-  const v1 = await cortex.memory.getVersion("agent-1", "mem-123", 1);
-} catch (error) {
-  if (error.code === "VERSION_NOT_FOUND") {
-    console.log("Version 1 purged by retention");
-
-    // But can still get from ACID!
-    const current = await cortex.memory.get("agent-1", "mem-123");
-    if (current.conversationRef) {
-      const conversation = await cortex.conversations.get(
-        current.conversationRef.conversationId,
-      );
-      console.log("Full history in ACID:", conversation.messages);
-    }
-  }
-}
-```
-
-### Issue 4: Broken conversationRef
-
-**Error:** `CONVERSATION_NOT_FOUND` when enriching
-
-**Cause:** Conversation was deleted but Vector memory still references it
-
-**Solution:**
-
-```typescript
-// Find orphaned memories
-const memories = await cortex.memory.list("agent-1");
-
-for (const memory of memories.memories) {
-  if (memory.conversationRef) {
-    const conversation = await cortex.conversations.get(
-      memory.conversationRef.conversationId,
-    );
-
-    if (!conversation) {
-      console.warn(`Orphaned memory: ${memory.id}`);
-      // Clean up or fix
-      await cortex.memory.update("agent-1", memory.id, {
-        conversationRef: undefined, // Remove broken ref
-      });
-    }
-  }
-}
-```
-
-### Issue 5: GDPR Cascade Not Deleting Everything
-
-**Error:** Records still exist after cascade deletion
-
-**Cause:** Records don't have `userId` field
-
-**Solution:**
-
-```typescript
-// Ensure all user-related data has userId
-await cortex.immutable.store({
-  type: 'feedback',
-  id: 'feedback-123',
-  userId: 'user-123',  // ← Required for GDPR cascade!
-  data: { rating: 5 },
-});
-
-await cortex.mutable.set('sessions', 'sess-123', data, 'user-123');  // ← userId param
-
-await cortex.vector.store('agent-1', {
-  userId: 'user-123',  // ← Required for cascade
-  ...
-});
-
-// Now GDPR cascade will find everything
-await cortex.users.delete('user-123', { cascade: true });
-```
-
----
-
-## Best Practices
-
-### 1. Always Catch Errors
-
-```typescript
-// ❌ Don't ignore errors
-await cortex.memory.store("agent-1", data);
-
-// ✅ Always handle
-try {
-  await cortex.memory.store("agent-1", data);
-} catch (error) {
-  console.error("Failed to store memory:", error);
-  // Handle appropriately
-}
-```
-
-### 2. Use Type Guards
-
-```typescript
-import { isCortexError, isA2ATimeoutError } from "@cortex-platform/sdk";
-
-try {
-  await operation();
-} catch (error) {
-  if (isCortexError(error)) {
-    // Type-safe access to error.code
-    console.log(error.code);
-  } else if (isA2ATimeoutError(error)) {
-    // A2A specific error
-    console.log(error.messageId, error.timeout);
+  if (error instanceof MemoryValidationError) {
+    // Client-side validation error (instant)
+    console.error(`Validation: ${error.code}`);
+    console.error(`Field: ${error.field}`);
+    console.error(`Message: ${error.message}`);
+  } else if (error instanceof CircuitOpenError) {
+    // Backend is unhealthy
+    console.error('Service temporarily unavailable');
+    console.error(`Retry after: ${error.retryAfterMs}ms`);
   } else {
-    // Unknown error
+    // Unexpected error
     throw error;
   }
 }
 ```
 
-### 3. Log Error Context
+### Validation Error Handling
 
 ```typescript
-catch (error) {
-  if (error instanceof CortexError) {
-    logger.error('Cortex operation failed', {
-      code: error.code,
-      message: error.message,
-      details: error.details,
-      operation: 'memory.store',
-      memorySpaceId: 'user-123-personal',
-      timestamp: new Date(),
+import { MemoryValidationError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({...});
+} catch (error) {
+  if (error instanceof MemoryValidationError) {
+    // Instant client-side feedback
+    switch (error.code) {
+      case 'MISSING_REQUIRED_FIELD':
+        console.error(`Required field missing: ${error.field}`);
+        break;
+      case 'INVALID_IMPORTANCE':
+        console.error(`Invalid importance value for ${error.field}`);
+        break;
+      case 'OWNER_REQUIRED':
+        console.error('Must provide userId or agentId');
+        break;
+      default:
+        console.error(`Validation error: ${error.code}`);
+    }
+  }
+}
+```
+
+### Resilience Error Handling
+
+```typescript
+import { 
+  CircuitOpenError, 
+  QueueFullError, 
+  RateLimitExceededError 
+} from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({...});
+} catch (error) {
+  if (error instanceof CircuitOpenError) {
+    // Backend is unhealthy, retry later
+    const retryAfter = error.retryAfterMs || 30000;
+    console.log(`Circuit open, retry in ${retryAfter}ms`);
+    scheduleRetry(request, retryAfter);
+  } else if (error instanceof QueueFullError) {
+    // System overloaded
+    console.error(`Queue full for priority: ${error.priority}`);
+    return { status: 503, message: 'Service temporarily unavailable' };
+  } else if (error instanceof RateLimitExceededError) {
+    // Rate limit hit
+    console.log(`Rate limited, refill in ${error.refillInMs}ms`);
+    await new Promise(resolve => setTimeout(resolve, error.refillInMs));
+    // Retry request
+  }
+}
+```
+
+### Graph Error Handling
+
+```typescript
+import { 
+  GraphConnectionError, 
+  GraphAuthenticationError, 
+  GraphQueryError 
+} from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({
+    // ... params
+    syncToGraph: true,
+  });
+} catch (error) {
+  if (error instanceof GraphAuthenticationError) {
+    console.error('Graph authentication failed');
+    console.error(`URI: ${error.uri}`);
+    console.error(`Username: ${error.username}`);
+    console.error('Check NEO4J_PASSWORD in .env');
+  } else if (error instanceof GraphConnectionError) {
+    console.error('Cannot connect to graph database');
+    // Fallback to non-graph mode
+  } else if (error instanceof GraphQueryError) {
+    console.error('Graph query failed');
+    console.error(`Query: ${error.query}`);
+  }
+}
+```
+
+---
+
+## Validation Errors
+
+### Memory Validation Errors
+
+**Class:** `MemoryValidationError`
+
+**Source:** `src/memory/validators.ts`
+
+**Structure:**
+
+```typescript
+class MemoryValidationError extends Error {
+  constructor(
+    message: string,
+    public readonly code: string,
+    public readonly field?: string,
+  );
+}
+```
+
+**Error Codes:**
+
+| Code | Field | Description | Fix |
+|------|-------|-------------|-----|
+| `MISSING_REQUIRED_FIELD` | `memorySpaceId` | Missing or empty memorySpaceId | Provide valid memorySpaceId |
+| `MISSING_REQUIRED_FIELD` | `conversationId` | Missing or empty conversationId | Provide valid conversationId |
+| `MISSING_REQUIRED_FIELD` | `userMessage` | Missing or empty userMessage | Provide message content |
+| `MISSING_REQUIRED_FIELD` | `agentResponse` | Missing or empty agentResponse | Provide response content |
+| `MISSING_REQUIRED_FIELD` | `userName` | Required when userId provided | Provide userName with userId |
+| `OWNER_REQUIRED` | `userId/agentId` | Neither userId nor agentId provided | Provide at least one owner ID |
+| `INVALID_IMPORTANCE` | `importance` | Not between 0-100 | Use number 0-100 |
+| `INVALID_ID_FORMAT` | (any ID field) | Invalid characters in ID | Use alphanumeric, hyphens, underscores |
+| `INVALID_FORMAT` | `contentType` | Invalid contentType | Use "raw" or "summarized" |
+| `INVALID_SOURCE_TYPE` | `sourceType` | Invalid sourceType | Use "conversation", "system", "tool", or "a2a" |
+| `INVALID_EMBEDDING` | `embedding` | Invalid embedding array | Provide array of finite numbers |
+| `INVALID_TIMESTAMP` | (timestamp fields) | Invalid timestamp | Use valid number or Date |
+| `EMPTY_ARRAY` | `messageIds` | Empty array | Provide at least one element |
+| `MISSING_CONVERSATION_REF` | `conversationRef` | Required for conversation source | Provide conversationRef |
+| `INVALID_STREAM` | `responseStream` | Invalid stream object | Use ReadableStream or AsyncIterable |
+| `INVALID_FILTER` | (filter) | Insufficient filter criteria | Add userId or sourceType filter |
+| `INVALID_CONFIDENCE` | `minConfidence` | Not between 0-100 | Use number 0-100 |
+| `INVALID_DATE_RANGE` | `createdAfter/createdBefore` | Invalid date range | Ensure after < before |
+| `INVALID_GRAPH_DEPTH` | `graphExpansion.maxDepth` | Not between 1-5 | Use depth 1-5 |
+| `NEGATIVE_NUMBER` | `limit`, `version` | Negative or invalid number | Use positive integer |
+
+**Example:**
+
+```typescript
+import { MemoryValidationError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({
+    conversationId: 'conv-123',
+    userMessage: 'Hello',
+    agentResponse: 'Hi!',
+    userId: 'user-123',
+    // Missing userName - will throw validation error
+  });
+} catch (error) {
+  if (error instanceof MemoryValidationError) {
+    console.error(error.code); // "MISSING_REQUIRED_FIELD"
+    console.error(error.field); // "userName"
+    console.error(error.message); // "userName is required when userId is provided"
+  }
+}
+```
+
+---
+
+### Conversation Validation Errors
+
+**Class:** `ConversationValidationError`
+
+**Source:** `src/conversations/validators.ts`
+
+**Error Codes:**
+
+| Code | Field | Description | Fix |
+|------|-------|-------------|-----|
+| `MISSING_REQUIRED_FIELD` | (various) | Required field missing | Provide required field |
+| `INVALID_TYPE` | `type` | Invalid conversation type | Use "user-agent" or "agent-agent" |
+| `INVALID_ROLE` | `role` | Invalid message role | Use "user", "agent", or "system" |
+| `INVALID_ID_FORMAT` | `conversationId`, `messageId` | Invalid ID format | Remove invalid characters |
+| `INVALID_FORMAT` | `format` | Invalid export format | Use "json" or "csv" |
+| `INVALID_SORT_ORDER` | `sortOrder` | Invalid sort order | Use "asc" or "desc" |
+| `EMPTY_STRING` | `query` | Empty search query | Provide non-empty query |
+| `INVALID_RANGE` | `limit`, `offset` | Invalid range | Use valid positive integers |
+| `EMPTY_ARRAY` | (array fields) | Empty array | Provide at least one element |
+| `INVALID_ARRAY_LENGTH` | (array fields) | Array length constraint violated | Check min/max requirements |
+| `INVALID_DATE_RANGE` | (date fields) | Start >= End | Ensure start < end |
+| `INVALID_PARTICIPANTS` | `participants` | Invalid participants structure | Match type requirements |
+| `DUPLICATE_VALUES` | (array fields) | Duplicate values in array | Remove duplicates |
+
+---
+
+### Facts Validation Errors
+
+**Class:** `FactsValidationError`
+
+**Source:** `src/facts/validators.ts`
+
+**Error Codes:**
+
+| Code | Field | Description | Fix |
+|------|-------|-------------|-----|
+| `MISSING_REQUIRED_FIELD` | (various) | Required field missing | Provide required field |
+| `INVALID_FACT_ID_FORMAT` | `factId` | Doesn't start with "fact-" | Use "fact-" prefix |
+| `INVALID_ARRAY` | (array fields) | Invalid array or element | Provide valid array |
+| `EMPTY_ARRAY` | (array fields) | Empty array | Provide at least one element |
+| `INVALID_CONFIDENCE` | `confidence` | Not between 0-100 | Use number 0-100 |
+| `INVALID_FACT_TYPE` | `factType` | Invalid fact type | Use valid fact type |
+| `INVALID_SOURCE_TYPE` | `sourceType` | Invalid source type | Use valid source type |
+| `INVALID_EXPORT_FORMAT` | `format` | Invalid export format | Use "json", "jsonld", or "csv" |
+| `INVALID_SORT_BY` | `sortBy` | Invalid sort field | Use valid sort field |
+| `INVALID_TAG_MATCH` | `tagMatch` | Invalid tag match mode | Use "any" or "all" |
+| `INVALID_SORT_ORDER` | `sortOrder` | Invalid sort order | Use "asc" or "desc" |
+| `INVALID_DATE_RANGE` | (date fields) | Invalid date range | Ensure start < end |
+| `INVALID_VALIDITY_PERIOD` | `validFrom`/`validUntil` | Invalid validity period | Ensure validFrom < validUntil |
+| `INVALID_UPDATE` | (update fields) | No fields to update | Provide at least one update field |
+| `INVALID_CONSOLIDATION` | `factIds` | Invalid consolidation params | Check requirements |
+| `INVALID_METADATA` | `metadata`, `sourceRef` | Invalid metadata structure | Provide valid object |
+
+**Valid Fact Types:**
+- `preference`
+- `identity`
+- `knowledge`
+- `relationship`
+- `event`
+- `observation`
+- `custom`
+
+---
+
+### Other Validation Errors
+
+**User Validation Error** (`src/users/validators.ts`)
+
+| Code | Description |
+|------|-------------|
+| `MISSING_REQUIRED_FIELD` | Required field missing |
+| `INVALID_FORMAT` | Invalid field format |
+
+**Agent Validation Error** (`src/agents/validators.ts`)
+
+| Code | Description |
+|------|-------------|
+| `MISSING_REQUIRED_FIELD` | Required field missing |
+| `INVALID_FORMAT` | Invalid field format |
+
+**Session Validation Error** (`src/sessions/validators.ts`)
+
+| Code | Description |
+|------|-------------|
+| `MISSING_SESSION_ID` | sessionId required |
+| `INVALID_SESSION_ID` | Invalid sessionId format |
+| `INVALID_STATUS` | Invalid session status |
+| `INVALID_FILTERS` | Invalid filter combination |
+
+**Auth Validation Error** (`src/auth/validators.ts`)
+
+| Code | Description |
+|------|-------------|
+| `MISSING_AUTH_PROVIDER` | Auth provider required |
+| `MISSING_TENANT_ID` | tenantId required |
+
+---
+
+## Resilience Errors
+
+**Source:** `src/resilience/types.ts`
+
+### CircuitOpenError
+
+**Thrown when:** Circuit breaker is open (backend unhealthy)
+
+```typescript
+class CircuitOpenError extends Error {
+  constructor(
+    message: string = "Circuit breaker is open - request rejected",
+    public readonly retryAfterMs?: number,
+  );
+}
+```
+
+**Recovery:**
+- Wait for `retryAfterMs` milliseconds
+- Retry the request
+- Backend will eventually recover
+
+**Example:**
+
+```typescript
+import { CircuitOpenError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({...});
+} catch (error) {
+  if (error instanceof CircuitOpenError) {
+    const delay = error.retryAfterMs || 30000;
+    console.log(`Circuit open, waiting ${delay}ms`);
+    await new Promise(resolve => setTimeout(resolve, delay));
+    // Retry
+  }
+}
+```
+
+---
+
+### RateLimitExceededError
+
+**Thrown when:** Rate limit exceeded and waiting is disabled
+
+```typescript
+class RateLimitExceededError extends Error {
+  constructor(
+    public readonly tokensAvailable: number,
+    public readonly refillInMs: number,
+  );
+}
+```
+
+**Recovery:**
+- Wait for `refillInMs` milliseconds
+- Token bucket will refill
+- Retry the request
+
+**Example:**
+
+```typescript
+import { RateLimitExceededError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({...});
+} catch (error) {
+  if (error instanceof RateLimitExceededError) {
+    console.log(`Rate limited, ${error.tokensAvailable} tokens available`);
+    console.log(`Refill in ${error.refillInMs}ms`);
+    await new Promise(resolve => setTimeout(resolve, error.refillInMs));
+    // Retry
+  }
+}
+```
+
+---
+
+### QueueFullError
+
+**Thrown when:** Priority queue is full for the given priority
+
+```typescript
+class QueueFullError extends Error {
+  constructor(
+    public readonly priority: Priority,
+    public readonly queueSize: number,
+  );
+}
+```
+
+**Recovery:**
+- Reduce request volume
+- Return 503 Service Unavailable
+- Implement exponential backoff
+
+**Example:**
+
+```typescript
+import { QueueFullError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({...});
+} catch (error) {
+  if (error instanceof QueueFullError) {
+    console.error(`Queue full for ${error.priority} priority`);
+    console.error(`Queue size: ${error.queueSize}`);
+    return { status: 503, message: 'Service overloaded' };
+  }
+}
+```
+
+---
+
+### AcquireTimeoutError
+
+**Thrown when:** Semaphore acquire times out
+
+```typescript
+class AcquireTimeoutError extends Error {
+  constructor(
+    public readonly timeoutMs: number,
+    public readonly waitingCount: number,
+  );
+}
+```
+
+**Recovery:**
+- Increase timeout in resilience config
+- Reduce concurrent requests
+- Scale backend capacity
+
+---
+
+## Graph Errors
+
+**Source:** `src/graph/types.ts`
+
+### GraphDatabaseError
+
+**Base class for all graph errors**
+
+```typescript
+class GraphDatabaseError extends Error {
+  constructor(
+    message: string,
+    public readonly code?: string,
+    public readonly cause?: Error,
+  );
+}
+```
+
+---
+
+### GraphConnectionError
+
+**Thrown when:** Connection to graph database fails
+
+```typescript
+class GraphConnectionError extends GraphDatabaseError {
+  constructor(message: string, cause?: Error);
+}
+```
+
+**Recovery:**
+- Check graph database is running
+- Verify connection URI
+- Check network connectivity
+
+**Example:**
+
+```typescript
+import { GraphConnectionError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({
+    // ... params
+    syncToGraph: true,
+  });
+} catch (error) {
+  if (error instanceof GraphConnectionError) {
+    console.error('Graph database unavailable');
+    // Fallback: disable graph sync
+    await cortex.memory.remember({
+      // ... params
+      syncToGraph: false,
     });
   }
 }
 ```
 
-### 4. Validate Before Expensive Operations
+---
+
+### GraphAuthenticationError
+
+**Thrown when:** Graph database authentication fails
 
 ```typescript
-// Validate before bulk operation
-const preview = await cortex.memory.deleteMany("agent-1", filters, {
-  dryRun: true,
-});
-
-if (preview.wouldDelete > 1000) {
-  throw new Error("Too many memories to delete - review filters");
+class GraphAuthenticationError extends GraphConnectionError {
+  constructor(
+    message: string,
+    public readonly uri: string,
+    public readonly username: string,
+    cause?: Error,
+  );
 }
-
-// Proceed
-await cortex.memory.deleteMany("agent-1", filters);
 ```
 
-### 5. Handle Pagination Errors
+**Recovery:**
+- Check NEO4J_PASSWORD in .env
+- Verify username
+- Check database access permissions
+
+**Example:**
 
 ```typescript
-async function getAllMemories(memorySpaceId: string) {
-  const allMemories = [];
-  let offset = 0;
-  const limit = 100;
+import { GraphAuthenticationError } from '@cortexmemory/sdk';
 
-  while (true) {
-    try {
-      const page = await cortex.memory.list(memorySpaceId, {
-        limit,
-        offset,
-      });
-
-      allMemories.push(...page.memories);
-
-      if (!page.hasMore) break;
-      offset += limit;
-    } catch (error) {
-      if (error.code === "INVALID_PAGINATION") {
-        console.log("Reached end of pagination");
-        break;
-      }
-      throw error;
-    }
+try {
+  await graphAdapter.connect(config);
+} catch (error) {
+  if (error instanceof GraphAuthenticationError) {
+    console.error('Authentication failed:');
+    console.error(`  URI: ${error.uri}`);
+    console.error(`  Username: ${error.username}`);
+    console.error('Check NEO4J_PASSWORD in .env');
   }
-
-  return allMemories;
 }
 ```
+
+---
+
+### GraphQueryError
+
+**Thrown when:** Graph query execution fails
+
+```typescript
+class GraphQueryError extends GraphDatabaseError {
+  constructor(
+    message: string,
+    public readonly query?: string,
+    cause?: Error,
+  );
+}
+```
+
+**Recovery:**
+- Check query syntax
+- Verify node/relationship exists
+- Check database constraints
+
+---
+
+### GraphNotFoundError
+
+**Thrown when:** Node or edge not found
+
+```typescript
+class GraphNotFoundError extends GraphDatabaseError {
+  constructor(
+    resourceType: "node" | "edge" | "path", 
+    identifier: string
+  );
+}
+```
+
+---
+
+## Other Errors
+
+### A2ATimeoutError
+
+**Thrown when:** A2A request times out waiting for response
+
+**Source:** `src/types/index.ts`
+
+```typescript
+class A2ATimeoutError extends Error {
+  public readonly name = "A2ATimeoutError";
+
+  constructor(
+    message: string,
+    public readonly messageId: string,
+    public readonly timeout: number,
+  );
+}
+```
+
+**Recovery:**
+- Increase timeout in A2ARequestParams
+- Check receiving agent is responding
+- Retry with exponential backoff
+
+---
+
+### CascadeDeletionError
+
+**Thrown when:** User cascade deletion encounters errors
+
+**Source:** `src/users/index.ts`
+
+```typescript
+class CascadeDeletionError extends Error {
+  constructor(
+    message: string,
+    public readonly partial: boolean,
+    public readonly completed: string[],
+    public readonly failed: Array<{ layer: string; error: string }>,
+  );
+}
+```
+
+**Recovery:**
+- Review failed layers
+- Retry deletion for failed layers
+- Check permissions
+
+---
+
+### AgentCascadeDeletionError
+
+**Thrown when:** Agent cascade deletion encounters errors
+
+**Source:** `src/agents/index.ts`
+
+```typescript
+class AgentCascadeDeletionError extends Error {
+  constructor(
+    message: string,
+    public readonly partial: boolean,
+    public readonly completed: string[],
+    public readonly failed: Array<{ layer: string; error: string }>,
+  );
+}
+```
+
+---
+
+### ResumableStreamError
+
+**Thrown when:** Streaming operation fails with resume context
+
+**Source:** `src/memory/streaming/ErrorRecovery.ts`
+
+```typescript
+class ResumableStreamError extends Error {
+  constructor(
+    message: string,
+    public readonly resumeContext: ResumeContext,
+  );
+}
+```
+
+**Recovery:**
+- Use resumeContext to resume from failure point
+- Retry with stored progress
 
 ---
 
 ## Troubleshooting Guide
 
-### Memories Not Appearing in Search
+### Common Errors
 
-**Symptoms:**
+#### "OWNER_REQUIRED"
 
-- Memory stored successfully
-- Not returned in search results
+**Cause:** Neither userId nor agentId provided
 
-**Debug:**
-
-```typescript
-// 1. Verify memory exists
-const memory = await cortex.memory.get("agent-1", memoryId);
-console.log("Memory exists:", !!memory);
-
-// 2. Check if embedding provided
-console.log("Has embedding:", !!memory.embedding);
-
-// 3. Try wildcard search
-const all = await cortex.memory.search("agent-1", "*", { limit: 100 });
-console.log("Total memories:", all.length);
-
-// 4. Check filters
-const withFilters = await cortex.memory.search("agent-1", query, {
-  userId: "user-123",
-  minImportance: 50,
-});
-console.log("With filters:", withFilters.length);
-
-// 5. Remove filters one by one
-```
-
-### Search Returns Wrong Results
-
-**Symptoms:**
-
-- Search returns irrelevant memories
-- Low similarity scores
-
-**Debug:**
+**Fix:**
 
 ```typescript
-// Check embedding quality
-const embedding = await embed(query);
-console.log("Embedding dimension:", embedding.length);
-console.log("Embedding values:", embedding.slice(0, 5));
-
-// Check stored embeddings
-const memories = await cortex.memory.list("agent-1", { limit: 10 });
-memories.memories.forEach((m) => {
-  console.log(`Memory ${m.id}: embedding=${!!m.embedding}`);
-  if (m.embedding) {
-    console.log(`  Dimension: ${m.embedding.length}`);
-  }
+// ❌ Wrong - no owner
+await cortex.memory.remember({
+  conversationId: 'conv-123',
+  userMessage: 'Hello',
+  agentResponse: 'Hi',
 });
 
-// Try different strategies
-const semantic = await cortex.memory.search(memorySpaceId, query, {
-  strategy: "semantic",
-  embedding,
+// ✅ Correct - userId provided
+await cortex.memory.remember({
+  conversationId: 'conv-123',
+  userMessage: 'Hello',
+  agentResponse: 'Hi',
+  userId: 'user-123',
+  userName: 'Alex',
+  agentId: 'assistant',
 });
-
-const keyword = await cortex.memory.search(memorySpaceId, query, {
-  strategy: "keyword",
-});
-
-console.log("Semantic results:", semantic.length);
-console.log("Keyword results:", keyword.length);
-```
-
-### GDPR Deletion Not Complete
-
-**Symptoms:**
-
-- Cascade deletion doesn't remove all data
-- Records still exist after deletion
-
-**Debug:**
-
-```typescript
-// Check what has userId
-const allStores = {
-  conversations: await cortex.conversations.count({ userId: "user-123" }),
-  immutable: await cortex.immutable.count({ userId: "user-123" }),
-  mutable: 0, // Check manually per namespace
-  vector: 0, // Check per agent
-};
-
-console.log("Records with userId:", allStores);
-
-// Find mutable records
-const namespaces = ["sessions", "cache", "preferences"];
-for (const ns of namespaces) {
-  const count = await cortex.mutable.count(ns, { userId: "user-123" });
-  console.log(`${ns}: ${count} records`);
-}
-
-// Find vector memories
-const agents = await cortex.agents.list();
-for (const agent of agents) {
-  const count = await cortex.memory.count(agent.id, { userId: "user-123" });
-  console.log(`${agent.id}: ${count} memories`);
-}
-
-// If counts > 0 after cascade, those records don't have userId set properly
 ```
 
 ---
 
-## Error Reference Quick Lookup
+#### "MISSING_REQUIRED_FIELD: userName"
 
-### By Operation
+**Cause:** userName required when userId is provided
 
-**Memory Operations:**
+**Fix:**
 
-- `INVALID_AGENT_ID`, `INVALID_CONTENT`, `INVALID_IMPORTANCE`, `INVALID_EMBEDDING_DIMENSION`
-- `MEMORY_NOT_FOUND`, `VERSION_NOT_FOUND`, `PERMISSION_DENIED`
-- `INVALID_FILTERS`, `NO_MEMORIES_MATCHED`
+```typescript
+// ❌ Wrong - missing userName
+await cortex.memory.remember({
+  conversationId: 'conv-123',
+  userMessage: 'Hello',
+  agentResponse: 'Hi',
+  userId: 'user-123', // userName required!
+  agentId: 'assistant',
+});
 
-**User Operations:**
-
-- `INVALID_USER_ID`, `USER_NOT_FOUND`, `INVALID_PROFILE_DATA`
-- `NO_USERS_MATCHED`
-
-**Context Operations:**
-
-- `INVALID_PURPOSE`, `CONTEXT_NOT_FOUND`, `PARENT_NOT_FOUND`
-- `HAS_CHILDREN`, `INVALID_STATUS`
-
-**Conversation Operations:**
-
-- `INVALID_CONVERSATION_ID`, `CONVERSATION_NOT_FOUND`, `INVALID_TYPE`
-- `INVALID_PARTICIPANTS`, `INVALID_MESSAGE`, `INVALID_QUERY`
-
-**Immutable Store:**
-
-- `INVALID_TYPE`, `INVALID_ID`, `DATA_TOO_LARGE`
-- `NOT_FOUND`, `PURGE_FAILED`, `PURGE_CANCELLED`
-
-**Mutable Store:**
-
-- `INVALID_NAMESPACE`, `INVALID_KEY`, `VALUE_TOO_LARGE`
-- `KEY_NOT_FOUND`, `UPDATE_FAILED`, `TRANSACTION_FAILED`
-
-**A2A:**
-
-- `PUBSUB_NOT_CONFIGURED`, `EMPTY_RECIPIENTS`, `A2A_TIMEOUT_ERROR`
-
-**Cloud Mode:**
-
-- `CLOUD_MODE_REQUIRED`, `STRATEGY_FAILED`
-
-### By Severity
-
-**Critical (Data Loss Risk):**
-
-- `DELETION_FAILED` - Deletion in progress but failed
-- `TRANSACTION_FAILED` - Atomic operation partially complete
-- `PURGE_FAILED` - Purge operation incomplete
-
-**High (Operation Failure):**
-
-- `CONVEX_ERROR` - Database unavailable
-- `PERMISSION_DENIED` - Access control issue
-- `USER_NOT_FOUND` - Missing dependency
-
-**Medium (Validation):**
-
-- `INVALID_*` - Input validation errors
-- `*_NOT_FOUND` - Entity doesn't exist
-
-**Low (Informational):**
-
-- `NO_*_MATCHED` - Query returned no results
-- `VERSION_NOT_FOUND` - Old version purged (expected)
+// ✅ Correct
+await cortex.memory.remember({
+  conversationId: 'conv-123',
+  userMessage: 'Hello',
+  agentResponse: 'Hi',
+  userId: 'user-123',
+  userName: 'Alex', // Added userName
+  agentId: 'assistant',
+});
+```
 
 ---
 
-## Production Error Handling
+#### "INVALID_IMPORTANCE"
 
-### Centralized Error Handler
+**Cause:** Importance not between 0-100
+
+**Fix:**
 
 ```typescript
-class CortexErrorHandler {
-  async handle(error: unknown, context: any) {
-    if (error instanceof CortexError) {
-      // Log to monitoring service
-      await this.logError(error, context);
+// ❌ Wrong
+await cortex.memory.remember({
+  // ... other params
+  importance: 150, // Out of range!
+});
 
-      // Alert for critical errors
-      if (this.isCritical(error.code)) {
-        await this.sendAlert(error, context);
+// ✅ Correct
+await cortex.memory.remember({
+  // ... other params
+  importance: 90, // 0-100
+});
+```
+
+---
+
+#### "Circuit breaker is open"
+
+**Cause:** Backend is experiencing failures
+
+**Recovery Strategy:**
+
+```typescript
+import { CircuitOpenError } from '@cortexmemory/sdk';
+
+async function rememberWithRetry(params, maxRetries = 3) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await cortex.memory.remember(params);
+    } catch (error) {
+      if (error instanceof CircuitOpenError) {
+        const delay = error.retryAfterMs || 30000 * (i + 1);
+        console.log(`Circuit open, retry ${i + 1}/${maxRetries} in ${delay}ms`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
       }
-
-      // Retry transient errors
-      if (this.isRetryable(error.code)) {
-        return { shouldRetry: true, delay: this.getRetryDelay(error) };
-      }
-
-      // Return user-friendly message
-      return {
-        shouldRetry: false,
-        userMessage: this.getUserMessage(error.code),
-      };
+      throw error;
     }
-
-    // Unknown error
-    throw error;
   }
-
-  private isCritical(code: string): boolean {
-    return [
-      'DELETION_FAILED',
-      'TRANSACTION_FAILED',
-      'CONVEX_ERROR',
-    ].includes(code);
-  }
-
-  private isRetryable(code: string): boolean {
-    return [
-      'CONVEX_ERROR',
-      'TRANSACTION_FAILED',
-    ].includes(code);
-  }
-
-  private getRetryDelay(error: CortexError): number {
-    // Exponential backoff
-    return 1000 * Math.pow(2, error.details?.retryCount || 0);
-  }
-
-  private getUserMessage(code: string): string {
-    const messages = {
-      'MEMORY_NOT_FOUND': 'This information is no longer available',
-      'PERMISSION_DENIED': 'You don't have access to this information',
-      'INVALID_IMPORTANCE': 'Please provide a valid importance score (0-100)',
-      'CONVEX_ERROR': 'Service temporarily unavailable, please try again',
-    };
-
-    return messages[code] || 'An error occurred';
-  }
+  throw new Error('Max retries exceeded');
 }
 ```
 
-### Monitoring Integration
+---
+
+#### "Queue full for priority 'normal'"
+
+**Cause:** System overloaded
+
+**Recovery Strategy:**
+
+1. **Reduce request volume:**
 
 ```typescript
-import { Sentry } from "@sentry/node";
+// Use exponential backoff
+const backoff = Math.min(1000 * Math.pow(2, attempt), 30000);
+await new Promise(resolve => setTimeout(resolve, backoff));
+```
 
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL,
-  onError: (error, operation, params) => {
-    if (error instanceof CortexError) {
-      Sentry.captureException(error, {
-        tags: {
-          cortex_operation: operation,
-          error_code: error.code,
-        },
-        extra: {
-          params,
-          details: error.details,
-        },
-      });
-    }
+2. **Use higher priority for critical operations:**
+
+```typescript
+// Configure resilience with priority
+const cortex = new CortexMemory({
+  // ... config
+  resilience: {
+    enabled: true,
+    // Critical operations get priority
   },
 });
 ```
 
+3. **Return 503 to clients:**
+
+```typescript
+import { QueueFullError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({...});
+} catch (error) {
+  if (error instanceof QueueFullError) {
+    return res.status(503).json({
+      error: 'Service temporarily unavailable',
+      retryAfter: 30,
+    });
+  }
+}
+```
+
 ---
 
-## Next Steps
+#### "Graph authentication failed"
 
-- **[Memory Operations API](../03-api-reference/02-memory-operations.md)** - Using Cortex APIs
+**Cause:** Invalid Neo4j credentials
+
+**Fix:**
+
+1. Check `.env` file:
+
+```bash
+NEO4J_URI=neo4j://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your-password-here  # Check this!
+```
+
+2. Fallback without graph:
+
+```typescript
+import { GraphAuthenticationError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({
+    // ... params
+    syncToGraph: true,
+  });
+} catch (error) {
+  if (error instanceof GraphAuthenticationError) {
+    console.error('Graph auth failed, falling back to non-graph mode');
+    await cortex.memory.remember({
+      // ... params
+      syncToGraph: false,
+    });
+  }
+}
+```
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+#### "INVALID_FACT_TYPE"
+
+**Cause:** Invalid fact type provided
+
+**Fix:**
+
+```typescript
+// ❌ Wrong
+await cortex.facts.store({
+  // ... params
+  factType: 'unknown', // Invalid!
+});
+
+// ✅ Correct - use valid fact type
+await cortex.facts.store({
+  // ... params
+  factType: 'preference', // Valid
+});
+
+// Valid fact types:
+// - preference
+// - identity
+// - knowledge
+// - relationship
+// - event
+// - observation
+// - custom
+```
+
+---
+
+## Error Recovery Strategies
+
+### Retry with Exponential Backoff
+
+```typescript
+async function withRetry<T>(
+  operation: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000,
+): Promise<T> {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      if (attempt === maxRetries - 1) {
+        throw error;
+      }
+      
+      // Exponential backoff with jitter
+      const delay = baseDelay * Math.pow(2, attempt) + Math.random() * 1000;
+      console.log(`Retry ${attempt + 1}/${maxRetries} after ${delay}ms`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  throw new Error('Max retries exceeded');
+}
+
+// Usage
+await withRetry(() => cortex.memory.remember({...}));
+```
+
+---
+
+### Circuit Breaker Pattern
+
+```typescript
+import { CircuitOpenError } from '@cortexmemory/sdk';
+
+class CircuitBreakerWrapper {
+  private failures = 0;
+  private lastFailure?: number;
+  private readonly threshold = 5;
+  private readonly timeout = 60000; // 1 minute
+
+  async execute<T>(operation: () => Promise<T>): Promise<T> {
+    // Check if circuit should be open
+    if (this.failures >= this.threshold) {
+      const elapsed = Date.now() - (this.lastFailure || 0);
+      if (elapsed < this.timeout) {
+        throw new CircuitOpenError(
+          'Circuit breaker open',
+          this.timeout - elapsed,
+        );
+      }
+      // Try half-open
+      this.failures = this.threshold - 1;
+    }
+
+    try {
+      const result = await operation();
+      this.failures = 0; // Success resets failures
+      return result;
+    } catch (error) {
+      this.failures++;
+      this.lastFailure = Date.now();
+      throw error;
+    }
+  }
+}
+
+// Usage
+const breaker = new CircuitBreakerWrapper();
+await breaker.execute(() => cortex.memory.remember({...}));
+```
+
+---
+
+### Graceful Degradation
+
+```typescript
+import { 
+  GraphConnectionError, 
+  CircuitOpenError 
+} from '@cortexmemory/sdk';
+
+async function rememberWithFallback(params: RememberParams) {
+  try {
+    // Try with full features
+    return await cortex.memory.remember({
+      ...params,
+      syncToGraph: true,
+      extractFacts: true,
+    });
+  } catch (error) {
+    if (error instanceof GraphConnectionError) {
+      // Fallback: no graph sync
+      console.warn('Graph unavailable, continuing without graph sync');
+      return await cortex.memory.remember({
+        ...params,
+        syncToGraph: false,
+        extractFacts: true,
+      });
+    }
+    
+    if (error instanceof CircuitOpenError) {
+      // Fallback: minimal storage
+      console.warn('Backend stressed, using minimal storage');
+      return await cortex.memory.remember({
+        ...params,
+        skipLayers: ['facts', 'graph'],
+      });
+    }
+    
+    throw error;
+  }
+}
+```
+
+---
+
+## See Also
+
+- [Types & Interfaces](./01-types-interfaces.md) - Type definitions
+- [API Reference](../03-api-reference/01-overview.md) - API methods
+- [Resilience Layer](../02-core-features/13-resilience-layer.md) - Overload protection
+- [Core Concepts](../01-getting-started/04-core-concepts.md) - Understanding errors

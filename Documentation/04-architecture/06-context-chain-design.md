@@ -1,35 +1,39 @@
 # Context Chain Design
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
-Architecture of hierarchical context chains for multi-agent workflow coordination.
+Architecture of hierarchical context chains for multi-memory-space workflow coordination with cross-space delegation support.
 
 ## Overview
 
-Context chains enable **hierarchical task delegation** where agents can share workflow state without repeatedly passing information. Each context in a chain has complete visibility into its parent, children, and root context.
+Context chains enable **hierarchical task delegation** with **cross-memory-space access control**. Memory spaces can share workflow state without breaking isolation boundaries. Each context in a chain has visibility into its parent, children, and root context - even across memory space boundaries.
 
 ```
 Root Context (depth=0)
 ├── Purpose: "Process customer refund"
+├── memorySpaceId: "supervisor-space"
 ├── Data: { amount: 500, userId: "user-123" }
 │
 ├─> Child 1 (depth=1)
 │   ├── Purpose: "Approve refund"
-│   ├── Can access: Root data ✅
-│   └── Agent: finance-agent
+│   ├── memorySpaceId: "finance-space"      // Different space!
+│   ├── Can access: Root data ✅ (via grantedAccess)
+│   └── Participant: finance-bot
 │
 ├─> Child 2 (depth=1)
 │   ├── Purpose: "Send apology email"
-│   ├── Can access: Root data ✅
-│   └── Agent: customer-relations-agent
+│   ├── memorySpaceId: "customer-relations-space"
+│   ├── Can access: Root data ✅ (via grantedAccess)
+│   └── Participant: relations-bot
 │
 └─> Child 3 (depth=1)
     ├── Purpose: "Update CRM"
-    ├── Can access: Root data ✅
-    └── Agent: crm-agent
+    ├── memorySpaceId: "crm-space"
+    ├── Can access: Root data ✅ (via grantedAccess)
+    └── Participant: crm-bot
 ```
 
-**Key Insight:** Context chains are a **coordination layer** separate from conversations and memories - they track workflow structure, not message history.
+**Key Insight:** Context chains enable **cross-space delegation** while maintaining memory space isolation - they're a controlled access mechanism, not a backdoor.
 
 ---
 
@@ -42,37 +46,57 @@ Root Context (depth=0)
   _id: "ctx_abc123",
 
   // Identity & hierarchy
-  parentId: "ctx_parent",      // Null if root
-  rootId: "ctx_root",          // Self if root, computed from parent chain
-  depth: 2,                    // 0=root, auto-computed from parent
+  contextId: "ctx_abc123",
+  parentId: "ctx_parent",      // Can be in different memory space
+  rootId: "ctx_root",          // Self if root
+  depth: 2,                    // 0=root
+
+  // Ownership & Isolation
+  memorySpaceId: "finance-space",  // Memory space this context lives in
+  tenantId: "tenant-acme",         // Multi-tenancy
+  userId: "user-123",              // User association (GDPR-enabled)
 
   // Purpose
   purpose: "Approve $500 refund",
   description: "Review and approve customer refund request",
 
-  // Ownership
-  memorySpaceId: "finance-agent",    // Agent working on this
-  userId: "user-123",          // User this relates to (GDPR-enabled)
-
   // Children tracking
   childIds: ["ctx_child1", "ctx_child2"],
-  participants: ["finance-agent", "legal-agent"],  // All agents in this context
+  participants: ["finance-space", "legal-space"],  // Memory spaces involved
+
+  // Cross-space access control (NEW)
+  grantedAccess: [
+    {
+      memorySpaceId: "legal-space",      // Legal space can access
+      scope: "read-only",                // Read-only permission
+      grantedAt: 1729900000000,
+    },
+    {
+      memorySpaceId: "audit-space",      // Audit space can access
+      scope: "context-only",             // Only context data, not memories
+      grantedAt: 1729900100000,
+    },
+  ],
 
   // Optional: Link to originating conversation
   conversationRef: {
     conversationId: "conv-456",
-    messageIds: ["msg-089"],   // User's original request
+    messageIds: ["msg-089"],
   },
 
   // Workflow data (flexible)
   data: {
-    importance: 85,
-    tags: ["refund", "approval"],
     amount: 500,
     reason: "defective product",
     ticketId: "TICKET-456",
     approvalRequired: true,
     // Any custom fields...
+  },
+
+  // Metadata
+  metadata: {
+    importance: 85,
+    tags: ["refund", "approval"],
   },
 
   // Status tracking
@@ -91,7 +115,7 @@ Root Context (depth=0)
       status: "active",
       data: { ... },
       timestamp: 1729900000000,
-      updatedBy: "finance-agent",
+      updatedBy: "finance-bot",
     },
   ],
 }

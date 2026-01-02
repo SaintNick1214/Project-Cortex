@@ -1,32 +1,43 @@
 # Search Strategy
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
-Multi-strategy search implementation: semantic, keyword, temporal, and hybrid approaches.
+Multi-strategy search implementation: semantic, keyword, facts, temporal, and hybrid approaches.
 
 ## Overview
 
-Cortex provides **three search strategies** that can be used independently or combined:
+Cortex provides **four primary search strategies** that can be used independently or combined:
 
 1. **Semantic Search** - Vector similarity (meaning-based)
-2. **Keyword Search** - Full-text matching (exact words)
-3. **Temporal Search** - Recent/time-based retrieval
+2. **Facts Search** - Structured knowledge from Layer 3 (most efficient)
+3. **Keyword Search** - Full-text matching (exact words)
+4. **Temporal Search** - Recent/time-based retrieval
 
-Each strategy has different strengths, and Cortex can intelligently combine them.
+The `recall()` method (v0.24.0+) automatically combines strategies for optimal results.
 
 ```
-┌─────────────────────────────────────────────────────┐
-│              Search Strategy Selection              │
-├─────────────────────────────────────────────────────┤
-│                                                     │
-│  Has embedding? ──Yes──> Semantic Search            │
-│        │                                            │
-│        No                                           │
-│        ↓                                            │
-│  Keyword Search ──────────> Results                 │
-│                                                     │
-│  Optional: Boost by recency, importance, access     │
-└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│              Search Strategy Selection                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  recall() call ───────────────┐                             │
+│                                │                             │
+│  ┌────────────────────────────┼────────────────┐            │
+│  │                            │                │            │
+│  ↓                            ↓                ↓            │
+│  Facts Search           Vector Search    Recent Search      │
+│  (Layer 3)              (Layer 2)        (Layer 2)          │
+│                                                             │
+│  ↓                            ↓                ↓            │
+│  └────────────────────────────┼────────────────┘            │
+│                                │                             │
+│  ┌────────────────────────────┼────────────────┐            │
+│  │      Merge + Deduplicate + Rank              │            │
+│  │  (Multi-signal scoring algorithm)            │            │
+│  └──────────────────────────────────────────────┘            │
+│                                                             │
+│  Optional: Boost by recency, importance, access             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -48,7 +59,8 @@ const queryEmbedding = await embed(query);
 const results = await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
-    q.similar("embedding", queryEmbedding, 20).eq("agentId", agentId),
+    q.similar("embedding", queryEmbedding, 20)
+     .eq("memorySpaceId", memorySpaceId)
   )
   .collect();
 
@@ -91,15 +103,26 @@ export const semanticSearch = query({
   handler: async (ctx, args) => {
     let q = ctx.db
       .query("memories")
-      .withIndex("by_embedding", (q) =>
-        q
+      .withIndex("by_embedding", (q) => {
+        let search = q
           .similar("embedding", args.embedding, args.filters.limit || 20)
-          .eq("agentId", args.agentId),
-      );
+          .eq("memorySpaceId", args.memorySpaceId);
+        
+        // Apply tenantId filter (pre-filtered via filterFields)
+        if (args.filters.tenantId) {
+          search = search.eq("tenantId", args.filters.tenantId);
+        }
+        
+        return search;
+      });
 
-    // Apply userId filter (pre-filtered via filterFields)
+    // Apply additional filters
     if (args.filters.userId) {
       q = q.filter((q) => q.eq(q.field("userId"), args.filters.userId));
+    }
+
+    if (args.filters.participantId) {
+      q = q.filter((q) => q.eq(q.field("participantId"), args.filters.participantId));
     }
 
     const results = await q.collect();
@@ -116,7 +139,120 @@ export const semanticSearch = query({
 
 ---
 
-## Strategy 2: Keyword Search
+## Strategy 2: Facts Search (Layer 3) ✨
+
+### How It Works
+
+Searches structured facts from Layer 3 - the most token-efficient strategy:
+
+```typescript
+// User query
+const query = "What is the user's communication preference?";
+
+// Facts search
+const results = await ctx.db
+  .query("facts")
+  .withSearchIndex("by_content", (q) =>
+    q.search("fact", query).eq("memorySpaceId", memorySpaceId)
+  )
+  .collect();
+
+// Returns:
+// 1. "User prefers email for communication" (fact)
+// 2. "User dislikes phone calls" (fact)
+// 3. "User checks email twice daily" (fact)
+// Each fact is ~8 tokens vs 50+ tokens for raw conversation
+```
+
+**Strengths:**
+
+- ✅ Most token-efficient (60-90% savings)
+- ✅ Structured knowledge (subject-predicate-object)
+- ✅ High confidence (LLM-extracted)
+- ✅ Deduplication via Belief Revision System
+- ✅ Enables infinite context capability
+
+**Weaknesses:**
+
+- ❌ Requires LLM for extraction (initial cost)
+- ❌ May miss nuance from raw conversation
+- ❌ Confidence scoring needed
+
+**Best for:**
+
+- Long-running conversations (infinite context)
+- Entity-centric queries (subject-based)
+- Knowledge retrieval across sessions
+- Token-constrained environments
+
+### Implementation
+
+```typescript
+export const factsSearch = query({
+  args: {
+    memorySpaceId: v.string(),
+    query: v.string(),
+    filters: v.any(),
+  },
+  handler: async (ctx, args) => {
+    let results = await ctx.db
+      .query("facts")
+      .withSearchIndex("by_content", (q) =>
+        q.search("fact", args.query)
+         .eq("memorySpaceId", args.memorySpaceId)
+      )
+      .take(args.filters.limit || 20);
+
+    // Apply filters
+    if (args.filters.userId) {
+      results = results.filter((f) => f.userId === args.filters.userId);
+    }
+
+    if (args.filters.factType) {
+      results = results.filter((f) => f.factType === args.filters.factType);
+    }
+
+    // Filter by confidence
+    if (args.filters.minConfidence) {
+      results = results.filter((f) => f.confidence >= args.filters.minConfidence);
+    }
+
+    return results.map((fact) => ({
+      ...fact,
+      score: fact.confidence / 100,  // Confidence as score
+      strategy: "facts",
+    }));
+  },
+});
+```
+
+### Facts by Subject (Entity-Centric)
+
+```typescript
+// Query facts about a specific entity
+export const factsAboutSubject = query({
+  args: {
+    memorySpaceId: v.string(),
+    subject: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("facts")
+      .withIndex("by_memorySpace_subject", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId).eq("subject", args.subject)
+      )
+      .collect();
+  },
+});
+
+// Get all facts about user-123
+const userFacts = await factsAboutSubject(memorySpaceId, "user-123");
+// Returns: All preferences, identities, relationships for user-123
+```
+
+---
+
+## Strategy 3: Keyword Search
 
 ### How It Works
 
@@ -130,7 +266,7 @@ const query = "password Blue";
 const results = await ctx.db
   .query("memories")
   .withSearchIndex("by_content", (q) =>
-    q.search("content", query).eq("agentId", agentId),
+    q.search("content", query).eq("memorySpaceId", memorySpaceId)
   )
   .collect();
 
@@ -174,7 +310,7 @@ export const keywordSearch = query({
     let results = await ctx.db
       .query("memories")
       .withSearchIndex("by_content", (q) =>
-        q.search("content", args.keywords).eq("agentId", args.agentId),
+        q.search("content", args.keywords).eq("memorySpaceId", args.memorySpaceId)
       )
       .take(args.filters.limit || 20);
 
@@ -190,7 +326,7 @@ export const keywordSearch = query({
 
 ---
 
-## Strategy 3: Temporal Search
+## Strategy 4: Temporal Search
 
 ### How It Works
 
@@ -200,7 +336,9 @@ Prioritizes recent or time-relevant memories:
 // Get recent memories
 const results = await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_memorySpace_created", (q) =>
+    q.eq("memorySpaceId", memorySpaceId)
+  )
   .order("desc") // Most recent first
   .take(20)
   .collect();
@@ -238,19 +376,26 @@ export const recentSearch = query({
   handler: async (ctx, args) => {
     let q = ctx.db
       .query("memories")
-      .withIndex("by_agent", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace_created", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId)
+      )
       .order("desc");
 
-    // Filter by importance
+    // Filter by importance (flattened field)
     if (args.filters.minImportance) {
       q = q.filter((q) =>
-        q.gte(q.field("metadata.importance"), args.filters.minImportance),
+        q.gte(q.field("importance"), args.filters.minImportance)
       );
     }
 
     // Filter by user
     if (args.filters.userId) {
       q = q.filter((q) => q.eq(q.field("userId"), args.filters.userId));
+    }
+
+    // Filter by participant (Hive Mode)
+    if (args.filters.participantId) {
+      q = q.filter((q) => q.eq(q.field("participantId"), args.filters.participantId));
     }
 
     const results = await q.take(args.filters.limit || 20);

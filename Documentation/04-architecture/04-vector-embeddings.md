@@ -1,6 +1,6 @@
 # Vector Embeddings
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Embedding strategy, dimension choices, and integration with Convex vector search.
 
@@ -70,15 +70,15 @@ Cortex supports **any embedding model** that produces float64 arrays:
 | 384        | ~3KB               | Fastest      | Good      | High-volume, cost-sensitive |
 | 768        | ~6KB               | Fast         | Good      | Balanced                    |
 | 1024       | ~8KB               | Fast         | Excellent | Cohere, Voyage              |
-| 1536       | ~12KB              | Medium       | Good      | OpenAI standard             |
+| 1536       | ~12KB              | Medium       | Good      | OpenAI standard (DEFAULT)   |
 | 3072       | ~24KB              | Medium       | Excellent | OpenAI large, best quality  |
 
 **Recommendations:**
 
-- **High Quality:** 3072-dim (OpenAI text-embedding-3-large)
-- **Balanced:** 1536-dim (OpenAI text-embedding-3-small)
-- **Cost-Optimized:** 768-dim (local models)
-- **High-Volume:** 384-dim (sentence-transformers)
+- **Default (Recommended):** 1536-dim (OpenAI text-embedding-3-small) - Best balance
+- **High Quality:** 3072-dim (OpenAI text-embedding-3-large) - When accuracy critical
+- **Cost-Optimized:** 768-dim (local models) - Budget-constrained
+- **High-Volume:** 384-dim (sentence-transformers) - Massive scale
 
 ### Setting Dimensions in Convex
 
@@ -89,12 +89,16 @@ import { v } from "convex/values";
 
 export default defineSchema({
   memories: defineTable({
-    // ...
+    memoryId: v.string(),
+    memorySpaceId: v.string(),
+    participantId: v.optional(v.string()),
+    tenantId: v.optional(v.string()),
     embedding: v.optional(v.array(v.float64())),
+    // ...
   }).vectorIndex("by_embedding", {
     vectorField: "embedding",
-    dimensions: 3072, // ← Set your dimension here
-    filterFields: ["agentId", "userId"],
+    dimensions: 1536, // ← Default: text-embedding-3-small
+    filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
   }),
 });
 ```
@@ -141,7 +145,7 @@ async function embed(text: string): Promise<number[]> {
 }
 
 // Store with embedding
-await cortex.memory.store("agent-1", {
+await cortex.memory.store("user-123-personal", {
   content: "User prefers dark mode",
   contentType: "raw",
   embedding: await embed("User prefers dark mode"), // ← Your embedding
@@ -150,7 +154,7 @@ await cortex.memory.store("agent-1", {
 });
 
 // Search with embedding
-const results = await cortex.memory.search("agent-1", "user preferences", {
+const results = await cortex.memory.search("user-123-personal", "user preferences", {
   embedding: await embed("user preferences"), // ← Your embedding
   limit: 10,
 });
@@ -176,7 +180,7 @@ async function embed(text: string): Promise<number[]> {
 }
 
 // Use like OpenAI
-await cortex.memory.store('agent-1', {
+await cortex.memory.store('my-memory-space', {
   content: 'Important information',
   embedding: await embed('Important information'),
   ...
@@ -204,7 +208,7 @@ async function embed(text: string): Promise<number[]> {
 }
 
 // Use with Cortex
-await cortex.memory.store('agent-1', {
+await cortex.memory.store('my-memory-space', {
   content: text,
   embedding: await embed(text),
   ...

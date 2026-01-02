@@ -85,7 +85,67 @@ Use 'cortex dev' for interactive dashboard
 
 ---
 
-## Step 4: Check Status (Optional)
+## Step 4: Integrate Your Auth (2 minutes)
+
+> **Works with ANY auth system** - Auth0, Clerk, NextAuth, Okta, WorkOS, custom JWT, OIDC, OAuth, or any auth you already use.
+
+Cortex auth integration is **just 3 lines of code**:
+
+```typescript
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
+
+// Extract from YOUR existing auth system (any provider)
+const auth = createAuthContext({
+  userId: yourUser.id,           // Required
+  tenantId: yourUser.tenantId,   // Optional (for multi-tenant SaaS)
+});
+
+// Pass to Cortex - done!
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth,  // That's it!
+});
+
+// All operations now authenticated
+await cortex.memory.remember({
+  memorySpaceId: "user-space",
+  userMessage: "Hello",
+  agentResponse: "Hi!",
+  userName: "User",
+  // userId auto-injected from auth
+});
+```
+
+**That's it!** Cortex doesn't care what auth system you use - just extract `userId` (and optionally `tenantId` for SaaS) and pass it in.
+
+**Examples for common systems:**
+
+```typescript
+// Auth0
+const auth = createAuthContext({ userId: user.sub });
+
+// Clerk
+const auth = createAuthContext({ userId: user.id, tenantId: orgId });
+
+// NextAuth
+const auth = createAuthContext({ userId: session.user.id });
+
+// Supabase
+const auth = createAuthContext({ userId: user.id });
+
+// Custom JWT
+const decoded = jwt.verify(token, secret);
+const auth = createAuthContext({ userId: decoded.sub });
+
+// Okta/WorkOS/OIDC - same pattern!
+const auth = createAuthContext({ userId: claims.sub, tenantId: claims.org });
+```
+
+**See:** [Authentication Guide](../02-core-features/18-authentication.md) for complete details.
+
+---
+
+## Step 5: Check Status (Optional)
 
 ```bash
 cortex status

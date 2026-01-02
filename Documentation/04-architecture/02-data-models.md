@@ -1,27 +1,37 @@
 # Data Models
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
 Detailed Convex schema definitions, indexes, and data structures for all Cortex tables.
 
 ## Overview
 
-Cortex uses **seven Convex tables** to implement the 4-layer architecture plus coordination entities:
+Cortex uses **12+ Convex tables** to implement the 4-layer architecture plus coordination and governance:
 
-| Table                                                             | Layer | Purpose                   | Versioned   | Retention                  |
-| ----------------------------------------------------------------- | ----- | ------------------------- | ----------- | -------------------------- |
-| `conversations`                                                   | 1a    | ACID message threads      | Append-only | Forever                    |
-| `immutable`                                                       | 1b    | Shared versioned data     | Auto        | Configurable (20 versions) |
-| `mutable`                                                         | 1c    | Shared live data          | No          | N/A (overwrites)           |
-| `memories`                                                        | 2     | Vector index              | Auto        | Configurable (10 versions) |
-| `facts`                                                           | 3     | Structured knowledge      | Auto        | Configurable (10 versions) |
-| `contexts`                                                        | -     | Workflow coordination     | Auto        | Configurable               |
-| `agents`                                                          | -     | Agent registry (optional) | No          | Until unregistered         |
-| **Layer 4**: Graph database (optional Neo4j/Memgraph integration) |
+| Table                   | Layer | Purpose                         | Scoped By       | Versioned   | Retention                  |
+| ----------------------- | ----- | ------------------------------- | --------------- | ----------- | -------------------------- |
+| `conversations`         | 1a    | ACID message threads            | memorySpaceId   | Append-only | Forever                    |
+| `immutable`             | 1b    | Shared versioned data           | NOT scoped      | Auto        | Configurable (20 versions) |
+| `mutable`               | 1c    | Shared live data                | NOT scoped      | No          | N/A (overwrites)           |
+| `memories`              | 2     | Vector index                    | memorySpaceId   | Auto        | Configurable (10 versions) |
+| `facts`                 | 3     | Structured knowledge            | memorySpaceId   | Auto        | Configurable (10 versions) |
+| `factHistory`           | 3     | Belief Revision audit           | memorySpaceId   | No          | Configurable               |
+| `memorySpaces`          | Coord | Memory space registry           | memorySpaceId   | No          | Until archived             |
+| `contexts`              | Coord | Workflow coordination           | memorySpaceId   | Auto        | Configurable               |
+| `sessions`              | Coord | Session lifecycle (v0.27.0+)    | userId          | No          | Timeout-based              |
+| `agents`                | Coord | Agent registry (DEPRECATED)     | agentId         | No          | Until unregistered         |
+| `governancePolicies`    | Gov   | Retention rules                 | org/space       | No          | Until removed              |
+| `governanceEnforcement` | Gov   | Enforcement audit               | org/space       | No          | Configurable               |
+| `graphSyncQueue`        | Graph | Real-time sync queue            | NOT scoped      | No          | Cleared after sync         |
+
+**Note:** All tables support optional `tenantId` for multi-tenancy (v0.26.0+)
 
 ---
 
 ## Complete Schema Definition
+
+> **Source of Truth:** `convex-dev/schema.ts`  
+> This documentation reflects the actual deployed schema.
 
 ### convex/schema.ts
 
@@ -30,194 +40,612 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  // Layer 1a: ACID Conversations
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 1a: Conversations (ACID, Immutable)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   conversations: defineTable({
+    // Identity
+    conversationId: v.string(),
+    
+    // Memory Space (fundamental isolation boundary)
+    memorySpaceId: v.string(),
+    participantId: v.optional(v.string()),  // Hive Mode tracking
+    
+    // Multi-tenancy
+    tenantId: v.optional(v.string()),
+    
+    // Type
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
-    participants: v.any(),
-    messages: v.array(v.any()),
+    
+    // Participants
+    participants: v.object({
+      userId: v.optional(v.string()),
+      agentId: v.optional(v.string()),
+      participantId: v.optional(v.string()),
+      memorySpaceIds: v.optional(v.array(v.string())),
+    }),
+    
+    // Messages (append-only, immutable)
+    messages: v.array(v.object({
+      id: v.string(),
+      role: v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+      content: v.string(),
+      timestamp: v.number(),
+      participantId: v.optional(v.string()),
+      metadata: v.optional(v.any()),
+    })),
+    
     messageCount: v.number(),
-    metadata: v.any(),
+    metadata: v.optional(v.any()),
+    
     createdAt: v.number(),
     updatedAt: v.number(),
-    lastMessageAt: v.optional(v.number()),
   })
-    .index("by_userId", ["participants.userId"])
-    .index("by_agentId", ["participants.agentId"])
-    .index("by_agent_user", ["participants.agentId", "participants.userId"])
+    .index("by_conversationId", ["conversationId"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"])
     .index("by_type", ["type"])
-    .index("by_lastMessage", ["lastMessageAt"])
-    .searchIndex("by_messages", {
-      searchField: "messages",
-      filterFields: ["participants.userId", "participants.agentId"],
-    }),
+    .index("by_user", ["participants.userId"])
+    .index("by_agent", ["participants.agentId"])
+    .index("by_memorySpace_user", ["memorySpaceId", "participants.userId"])
+    .index("by_memorySpace_agent", ["memorySpaceId", "participants.agentId"])
+    .index("by_created", ["createdAt"]),
 
-  // Layer 1b: Immutable Store
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 1b: Immutable Store (ACID, Versioned, Shared)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   immutable: defineTable({
-    type: v.string(),
-    id: v.string(),
+    // Identity (composite key: type + id)
+    type: v.string(),  // 'kb-article', 'policy', 'audit-log', 'feedback', 'user'
+    id: v.string(),    // Type-specific logical ID
+    
+    // Data (flexible, immutable once stored)
     data: v.any(),
+    
+    // GDPR support
     userId: v.optional(v.string()),
-    metadata: v.any(),
+    
+    // Multi-tenancy
+    tenantId: v.optional(v.string()),
+    
+    // Versioning
     version: v.number(),
-    previousVersions: v.array(v.any()),
+    previousVersions: v.array(v.object({
+      version: v.number(),
+      data: v.any(),
+      timestamp: v.number(),
+      metadata: v.optional(v.any()),
+    })),
+    
+    // Metadata
+    metadata: v.optional(v.any()),
+    
     createdAt: v.number(),
     updatedAt: v.number(),
   })
     .index("by_type_id", ["type", "id"])
-    .index("by_userId", ["userId"])
     .index("by_type", ["type"])
-    .index("by_type_userId", ["type", "userId"])
-    .index("by_version", ["type", "id", "version"])
-    .searchIndex("by_data", {
-      searchField: "data",
-      filterFields: ["type", "userId"],
-    }),
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_type_id", ["tenantId", "type", "id"])
+    .index("by_userId", ["userId"])
+    .index("by_created", ["createdAt"]),
 
-  // Layer 1c: Mutable Store
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 1c: Mutable Store (ACID, No Versioning, Shared)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   mutable: defineTable({
-    namespace: v.string(),
-    key: v.string(),
+    // Composite key
+    namespace: v.string(),  // 'inventory', 'config', 'counters', etc.
+    key: v.string(),        // Unique within namespace
+    
+    // Value (flexible, mutable)
     value: v.any(),
+    
+    // GDPR support
     userId: v.optional(v.string()),
+    
+    // Multi-tenancy
+    tenantId: v.optional(v.string()),
+    
+    // Metadata
+    metadata: v.optional(v.any()),
+    
     createdAt: v.number(),
     updatedAt: v.number(),
-    accessCount: v.number(),
-    lastAccessed: v.optional(v.number()),
   })
     .index("by_namespace_key", ["namespace", "key"])
-    .index("by_userId", ["userId"])
     .index("by_namespace", ["namespace"])
-    .index("by_namespace_userId", ["namespace", "userId"])
-    .index("by_updated", ["updatedAt"])
-    .index("by_accessed", ["lastAccessed"]),
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_namespace", ["tenantId", "namespace"])
+    .index("by_tenant_namespace_key", ["tenantId", "namespace", "key"])
+    .index("by_userId", ["userId"])
+    .index("by_updated", ["updatedAt"]),
 
-  // Layer 2: Vector Memories
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 2: Vector Memory (Searchable, memorySpace-scoped, Versioned)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   memories: defineTable({
-    memorySpaceId: v.string(),
-    userId: v.optional(v.string()),
+    // Identity
+    memoryId: v.string(),
+    memorySpaceId: v.string(),         // PRIMARY: Memory space isolation
+    participantId: v.optional(v.string()),  // Hive Mode participant tracking
+    
+    // Multi-tenancy
+    tenantId: v.optional(v.string()),
+    
+    // Content
     content: v.string(),
-    contentType: v.union(v.literal("raw"), v.literal("summarized")),
+    contentType: v.union(
+      v.literal("raw"),
+      v.literal("summarized"),
+      v.literal("fact"),               // NEW: For facts indexed in vector layer
+    ),
     embedding: v.optional(v.array(v.float64())),
-
-    source: v.object({
-      type: v.union(
-        v.literal("conversation"),
-        v.literal("system"),
-        v.literal("tool"),
-        v.literal("a2a"),
-      ),
-      userId: v.optional(v.string()),
-      userName: v.optional(v.string()),
-      fromAgent: v.optional(v.string()),
-      toAgent: v.optional(v.string()),
+    
+    // Source (flattened for indexing performance)
+    sourceType: v.union(
+      v.literal("conversation"),
+      v.literal("system"),
+      v.literal("tool"),
+      v.literal("a2a"),
+      v.literal("fact-extraction"),    // NEW: For facts
+    ),
+    sourceUserId: v.optional(v.string()),
+    sourceUserName: v.optional(v.string()),
+    sourceTimestamp: v.number(),
+    
+    // Message role (for conversation memories)
+    messageRole: v.optional(
+      v.union(v.literal("user"), v.literal("agent"), v.literal("system"))
+    ),
+    
+    // Owner Attribution
+    userId: v.optional(v.string()),    // For user-owned memories (GDPR)
+    agentId: v.optional(v.string()),   // For agent-owned memories (deletion)
+    
+    // References to Layer 1
+    conversationRef: v.optional(v.object({
+      conversationId: v.string(),
+      messageIds: v.array(v.string()),
+    })),
+    immutableRef: v.optional(v.object({
+      type: v.string(),
+      id: v.string(),
+      version: v.optional(v.number()),
+    })),
+    mutableRef: v.optional(v.object({
+      namespace: v.string(),
+      key: v.string(),
+      snapshotValue: v.any(),
+      snapshotAt: v.number(),
+    })),
+    
+    // NEW: Reference to Layer 3 fact
+    factsRef: v.optional(v.object({
+      factId: v.string(),
+      version: v.optional(v.number()),
+    })),
+    
+    // Metadata (flattened for indexing/filtering)
+    importance: v.number(),            // 0-100 (flattened for filtering)
+    tags: v.array(v.string()),         // Flattened for filtering
+    
+    // Enrichment Fields (for bullet-proof retrieval)
+    enrichedContent: v.optional(v.string()),
+    factCategory: v.optional(v.string()),
+    
+    // Flexible metadata
+    metadata: v.optional(v.any()),
+    
+    // Versioning
+    version: v.number(),
+    previousVersions: v.array(v.object({
+      version: v.number(),
+      content: v.string(),
+      embedding: v.optional(v.array(v.float64())),
       timestamp: v.number(),
-    }),
-
-    conversationRef: v.optional(
-      v.object({
-        conversationId: v.string(),
-        messageIds: v.array(v.string()),
-      }),
-    ),
-    immutableRef: v.optional(
-      v.object({
-        type: v.string(),
-        id: v.string(),
-        version: v.optional(v.number()),
-      }),
-    ),
-    mutableRef: v.optional(
-      v.object({
-        namespace: v.string(),
-        key: v.string(),
-        snapshotValue: v.any(),
-        snapshotAt: v.number(),
-      }),
-    ),
-
-    metadata: v.any(),
+    })),
+    
+    // Timestamps & Access
     createdAt: v.number(),
     updatedAt: v.number(),
     lastAccessed: v.optional(v.number()),
     accessCount: v.number(),
-    version: v.number(),
-    previousVersions: v.array(v.any()),
+    
+    // Streaming support (NEW - v0.23.0+)
+    isPartial: v.optional(v.boolean()),
+    partialMetadata: v.optional(v.any()),
   })
-    .vectorIndex("by_embedding", {
-      vectorField: "embedding",
-      dimensions: 3072, // Configurable: 1536, 3072, etc.
-      filterFields: ["agentId", "userId"],
-    })
-    .index("by_agent", ["agentId"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_memoryId", ["memoryId"])
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"])
     .index("by_userId", ["userId"])
-    .index("by_agent_userId", ["agentId", "userId"])
-    .index("by_source_type", ["source.type"])
-    .index("by_agent_source", ["agentId", "source.type"])
-    .index("by_conversationRef", ["conversationRef.conversationId"])
+    .index("by_agentId", ["agentId"])
+    .index("by_memorySpace_created", ["memorySpaceId", "createdAt"])
+    .index("by_memorySpace_userId", ["memorySpaceId", "userId"])
+    .index("by_memorySpace_agentId", ["memorySpaceId", "agentId"])
+    .index("by_participantId", ["participantId"])
     .searchIndex("by_content", {
       searchField: "content",
-      filterFields: ["agentId", "userId"],
+      filterFields: ["memorySpaceId", "tenantId", "sourceType", "userId", "agentId", "participantId"],
+    })
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,  // Default: OpenAI text-embedding-3-small
+      filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
     }),
 
-  // Coordination: Contexts
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Layer 3: Facts Store (NEW - memorySpace-scoped, Versioned)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  facts: defineTable({
+    // Identity
+    factId: v.string(),
+    memorySpaceId: v.string(),
+    participantId: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    
+    // Multi-tenancy
+    tenantId: v.optional(v.string()),
+    
+    // Fact content
+    fact: v.string(),
+    factType: v.union(
+      v.literal("preference"),
+      v.literal("identity"),
+      v.literal("knowledge"),
+      v.literal("relationship"),
+      v.literal("event"),
+      v.literal("observation"),
+      v.literal("custom"),
+    ),
+    
+    // Triple structure
+    subject: v.optional(v.string()),
+    predicate: v.optional(v.string()),
+    object: v.optional(v.string()),
+    
+    // Quality & Source
+    confidence: v.number(),
+    sourceType: v.union(
+      v.literal("conversation"),
+      v.literal("system"),
+      v.literal("tool"),
+      v.literal("manual"),
+      v.literal("a2a"),
+    ),
+    sourceRef: v.optional(v.object({
+      conversationId: v.optional(v.string()),
+      messageIds: v.optional(v.array(v.string())),
+      memoryId: v.optional(v.string()),
+    })),
+    
+    // Metadata & Tags
+    metadata: v.optional(v.any()),
+    tags: v.array(v.string()),
+    
+    // Enrichment Fields (v0.15.0+)
+    category: v.optional(v.string()),
+    searchAliases: v.optional(v.array(v.string())),
+    semanticContext: v.optional(v.string()),
+    entities: v.optional(v.array(v.object({
+      name: v.string(),
+      type: v.string(),
+      fullValue: v.optional(v.string()),
+    }))),
+    relations: v.optional(v.array(v.object({
+      subject: v.string(),
+      predicate: v.string(),
+      object: v.string(),
+    }))),
+    
+    // Temporal validity
+    validFrom: v.optional(v.number()),
+    validUntil: v.optional(v.number()),
+    
+    // Versioning (belief revision)
+    version: v.number(),
+    supersededBy: v.optional(v.string()),
+    supersedes: v.optional(v.string()),
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_factId", ["factId"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"])
+    .index("by_memorySpace_subject", ["memorySpaceId", "subject"])
+    .index("by_participantId", ["participantId"])
+    .index("by_userId", ["userId"])
+    .searchIndex("by_content", {
+      searchField: "fact",
+      filterFields: ["memorySpaceId", "tenantId", "factType"],
+    }),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Fact History (Belief Revision Audit Trail)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  factHistory: defineTable({
+    eventId: v.string(),
+    factId: v.string(),
+    memorySpaceId: v.string(),
+    
+    action: v.union(
+      v.literal("CREATE"),
+      v.literal("UPDATE"),
+      v.literal("SUPERSEDE"),
+      v.literal("DELETE"),
+    ),
+    
+    oldValue: v.optional(v.string()),
+    newValue: v.optional(v.string()),
+    
+    supersededBy: v.optional(v.string()),
+    supersedes: v.optional(v.string()),
+    
+    reason: v.optional(v.string()),
+    confidence: v.optional(v.number()),
+    
+    pipeline: v.optional(v.object({
+      slotMatching: v.optional(v.boolean()),
+      semanticMatching: v.optional(v.boolean()),
+      llmResolution: v.optional(v.boolean()),
+    })),
+    
+    userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
+    conversationId: v.optional(v.string()),
+    
+    timestamp: v.number(),
+  })
+    .index("by_eventId", ["eventId"])
+    .index("by_factId", ["factId"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_memorySpace_timestamp", ["memorySpaceId", "timestamp"])
+    .index("by_action", ["action"])
+    .index("by_userId", ["userId"])
+    .index("by_timestamp", ["timestamp"]),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Memory Spaces Registry (Hive/Collaboration Mode Management)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  memorySpaces: defineTable({
+    memorySpaceId: v.string(),
+    name: v.optional(v.string()),
+    tenantId: v.optional(v.string()),
+    
+    type: v.union(
+      v.literal("personal"),
+      v.literal("team"),
+      v.literal("project"),
+      v.literal("custom"),
+    ),
+    
+    participants: v.array(v.object({
+      id: v.string(),
+      type: v.string(),
+      joinedAt: v.number(),
+    })),
+    
+    metadata: v.any(),
+    status: v.union(v.literal("active"), v.literal("archived")),
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_memorySpaceId", ["memorySpaceId"])
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_memorySpaceId", ["tenantId", "memorySpaceId"])
+    .index("by_tenant_status", ["tenantId", "status"])
+    .index("by_status", ["status"])
+    .index("by_type", ["type"])
+    .index("by_created", ["createdAt"]),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Contexts (Hierarchical Coordination, memorySpace-scoped with cross-space support)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   contexts: defineTable({
+    // Identity
+    contextId: v.string(),
+    memorySpaceId: v.string(),
+    tenantId: v.optional(v.string()),
+    
+    // Purpose
     purpose: v.string(),
     description: v.optional(v.string()),
-    memorySpaceId: v.string(),
-    userId: v.optional(v.string()),
-
-    parentId: v.optional(v.string()),
-    rootId: v.string(),
+    
+    // Hierarchy
+    parentId: v.optional(v.string()),  // Can be cross-space
+    rootId: v.optional(v.string()),
     depth: v.number(),
     childIds: v.array(v.string()),
-    participants: v.array(v.string()),
-
-    conversationRef: v.optional(
-      v.object({
-        conversationId: v.string(),
-        messageIds: v.array(v.string()),
-      }),
-    ),
-
-    data: v.any(),
+    
+    // Status
     status: v.union(
       v.literal("active"),
       v.literal("completed"),
       v.literal("cancelled"),
       v.literal("blocked"),
     ),
-
+    
+    // Source conversation
+    conversationRef: v.optional(v.object({
+      conversationId: v.string(),
+      messageIds: v.optional(v.array(v.string())),
+    })),
+    
+    // User association
+    userId: v.optional(v.string()),
+    
+    // Participants
+    participants: v.array(v.string()),
+    
+    // Cross-space access control
+    grantedAccess: v.optional(v.array(v.object({
+      memorySpaceId: v.string(),
+      scope: v.string(),
+      grantedAt: v.number(),
+    }))),
+    
+    // Data
+    data: v.optional(v.any()),
+    metadata: v.optional(v.any()),
+    
+    // Versioning
+    version: v.number(),
+    previousVersions: v.array(v.object({
+      version: v.number(),
+      status: v.string(),
+      data: v.optional(v.any()),
+      timestamp: v.number(),
+      updatedBy: v.optional(v.string()),
+    })),
+    
     createdAt: v.number(),
     updatedAt: v.number(),
     completedAt: v.optional(v.number()),
-    version: v.number(),
-    previousVersions: v.array(v.any()),
   })
-    .index("by_agent", ["agentId"])
-    .index("by_userId", ["userId"])
-    .index("by_status", ["status"])
-    .index("by_agent_status", ["agentId", "status"])
+    .index("by_contextId", ["contextId"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_contextId", ["tenantId", "contextId"])
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"])
     .index("by_parentId", ["parentId"])
     .index("by_rootId", ["rootId"])
-    .index("by_depth", ["depth"])
-    .index("by_conversationRef", ["conversationRef.conversationId"])
-    .searchIndex("by_purpose", {
-      searchField: "purpose",
-      filterFields: ["agentId", "status"],
-    }),
+    .index("by_status", ["status"])
+    .index("by_memorySpace_status", ["memorySpaceId", "status"])
+    .index("by_userId", ["userId"])
+    .index("by_created", ["createdAt"]),
 
-  // Optional: Agent Registry
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Agents Registry (Optional Metadata Layer) - DEPRECATED
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   agents: defineTable({
-    memorySpaceId: v.string(),
+    agentId: v.string(),
+    tenantId: v.optional(v.string()),
+    
     name: v.string(),
     description: v.optional(v.string()),
-    capabilities: v.optional(v.array(v.string())),
-    metadata: v.any(),
-    config: v.any(),
-    stats: v.any(),
+    metadata: v.optional(v.any()),
+    config: v.optional(v.any()),
+    
+    status: v.union(
+      v.literal("active"),
+      v.literal("inactive"),
+      v.literal("archived"),
+    ),
+    
     registeredAt: v.number(),
     updatedAt: v.number(),
-  }).index("by_agentId", ["agentId"]),
+    lastActive: v.optional(v.number()),
+  })
+    .index("by_agentId", ["agentId"])
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_status", ["tenantId", "status"])
+    .index("by_status", ["status"])
+    .index("by_registered", ["registeredAt"]),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Sessions (Native Session Management - v0.27.0+)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  sessions: defineTable({
+    sessionId: v.string(),
+    userId: v.string(),
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
+    
+    status: v.union(v.literal("active"), v.literal("idle"), v.literal("ended")),
+    startedAt: v.number(),
+    lastActiveAt: v.number(),
+    endedAt: v.optional(v.number()),
+    expiresAt: v.optional(v.number()),
+    
+    metadata: v.optional(v.any()),
+    
+    messageCount: v.number(),
+    memoryCount: v.number(),
+  })
+    .index("by_sessionId", ["sessionId"])
+    .index("by_userId", ["userId"])
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_user", ["tenantId", "userId"])
+    .index("by_status", ["status"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_lastActive", ["lastActiveAt"])
+    .index("by_tenant_status", ["tenantId", "status"]),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Governance Policies (Data Retention, Purging, and Compliance)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  governancePolicies: defineTable({
+    organizationId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
+    
+    policy: v.any(),
+    
+    isActive: v.boolean(),
+    appliedBy: v.optional(v.string()),
+    
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_organization", ["organizationId"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_active", ["isActive", "organizationId"])
+    .index("by_updated", ["updatedAt"]),
+
+  governanceEnforcement: defineTable({
+    organizationId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
+    
+    enforcementType: v.union(v.literal("automatic"), v.literal("manual")),
+    layers: v.array(v.string()),
+    rules: v.array(v.string()),
+    
+    versionsDeleted: v.number(),
+    recordsPurged: v.number(),
+    storageFreed: v.number(),
+    
+    triggeredBy: v.optional(v.string()),
+    
+    executedAt: v.number(),
+  })
+    .index("by_organization", ["organizationId", "executedAt"])
+    .index("by_memorySpace", ["memorySpaceId", "executedAt"])
+    .index("by_executed", ["executedAt"]),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Graph Sync Queue (Real-time Graph Database Synchronization)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  graphSyncQueue: defineTable({
+    table: v.string(),
+    entityId: v.string(),
+    
+    operation: v.union(
+      v.literal("insert"),
+      v.literal("update"),
+      v.literal("delete"),
+    ),
+    
+    entity: v.optional(v.any()),
+    
+    synced: v.boolean(),
+    syncedAt: v.optional(v.number()),
+    
+    failedAttempts: v.optional(v.number()),
+    lastError: v.optional(v.string()),
+    priority: v.optional(v.string()),
+    
+    createdAt: v.number(),
+  })
+    .index("by_synced", ["synced"])
+    .index("by_table", ["table"])
+    .index("by_table_entity", ["table", "entityId"])
+    .index("by_priority", ["priority", "synced"])
+    .index("by_created", ["createdAt"]),
 });
 ```
 
@@ -227,85 +655,83 @@ export default defineSchema({
 
 ### conversations (Layer 1a)
 
-**Purpose:** Immutable conversation threads
+**Purpose:** Immutable conversation threads (memorySpace-scoped)
 
 **Document Structure:**
 
 ```typescript
 {
   _id: Id<"conversations">,
+  
+  // Identity & Isolation
+  conversationId: string,
+  memorySpaceId: string,         // PRIMARY: Isolation boundary
+  participantId?: string,        // NEW: Hive Mode tracking
+  tenantId?: string,             // NEW: Multi-tenancy
+  
+  // Type
   type: "user-agent" | "agent-agent",
-
-  // User-agent participants
+  
+  // Participants
   participants: {
-    userId: string;
-    memorySpaceId: string;
-  } | {
-    // Agent-agent participants
-    agent1: string;
-    agent2: string;
+    userId?: string,
+    agentId?: string,
+    participantId?: string,      // NEW: Hive Mode
+    memorySpaceIds?: string[],   // For agent-agent
   },
-
+  
+  // Messages (append-only)
   messages: Array<{
-    id: string;  // Unique message ID
-
-    // User-agent message
-    role?: "user" | "agent" | "system";
-    content?: string;
-    userId?: string;
-    agentId?: string;
-
-    // Agent-agent message
-    type?: "a2a";
-    from?: string;
-    to?: string;
-    text?: string;
-
-    timestamp: number;
-    metadata?: any;
+    id: string,
+    role: "user" | "agent" | "system",
+    content: string,
+    timestamp: number,
+    participantId?: string,      // NEW: Who sent this
+    metadata?: any,
   }>,
-
+  
   messageCount: number,
-  metadata: any,
-
+  metadata?: any,
+  
   createdAt: number,
   updatedAt: number,
-  lastMessageAt?: number,
 }
 ```
 
 **Indexes:**
 
-- `by_userId` - Find all conversations for a user (GDPR)
-- `by_agentId` - Find all conversations for an agent
-- `by_agent_user` - Find specific user-agent conversation
+- `by_conversationId` - Unique lookup
+- `by_memorySpace` - Memory space's conversations
+- `by_tenantId` - Tenant's conversations
+- `by_tenant_space` - Tenant + space compound
 - `by_type` - Separate user-agent from agent-agent
-- `by_lastMessage` - Sort by recent activity
-- `by_messages` (search) - Full-text search in messages
+- `by_user` - Find user's conversations (GDPR)
+- `by_agent` - Find agent's conversations
+- `by_memorySpace_user` - Space + user compound
+- `by_memorySpace_agent` - Space + agent compound
+- `by_created` - Chronological ordering
 
 **Query Patterns:**
 
 ```typescript
-// Find user's conversations
+// Find conversations in memory space
 await ctx.db
   .query("conversations")
-  .withIndex("by_userId", (q) => q.eq("participants.userId", userId))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .collect();
 
-// Find conversation between user and agent
+// Find user's conversations in specific space
 await ctx.db
   .query("conversations")
-  .withIndex("by_agent_user", (q) =>
-    q.eq("participants.agentId", agentId).eq("participants.userId", userId),
+  .withIndex("by_memorySpace_user", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("participants.userId", userId)
   )
-  .first();
+  .collect();
 
-// Search messages
+// GDPR: Find all user's conversations across ALL spaces
 await ctx.db
   .query("conversations")
-  .withSearchIndex("by_messages", (q) =>
-    q.search("messages", "refund").eq("participants.userId", userId),
-  )
+  .withIndex("by_user", (q) => q.eq("participants.userId", userId))
   .collect();
 ```
 
@@ -313,35 +739,39 @@ await ctx.db
 
 ### immutable (Layer 1b)
 
-**Purpose:** Shared, versioned, immutable data
+**Purpose:** Shared, versioned, immutable data (TRULY shared - NOT scoped by memorySpace)
 
 **Document Structure:**
 
 ```typescript
 {
   _id: Id<"immutable">,
+  
+  // Composite key
   type: string,  // 'kb-article', 'policy', 'user', 'feedback', etc.
-  id: string,    // Logical ID (versioned together)
-
-  data: any,     // Flexible payload
-  userId?: string,  // Optional user link (GDPR)
-
-  metadata?: {
-    publishedBy?: string;
-    tags?: string[];
-    importance?: number;
-    [key: string]: any;
-  },
-
+  id: string,    // Type-specific logical ID
+  
+  // Data (flexible, immutable once stored)
+  data: any,
+  
+  // GDPR support
+  userId?: string,
+  
+  // Multi-tenancy (NEW)
+  tenantId?: string,
+  
+  // Metadata
+  metadata?: any,
+  
+  // Versioning
   version: number,
   previousVersions: Array<{
-    version: number;
-    data: any;
-    userId?: string;
-    metadata: any;
-    timestamp: number;
+    version: number,
+    data: any,
+    timestamp: number,
+    metadata?: any,
   }>,
-
+  
   createdAt: number,
   updatedAt: number,
 }
@@ -350,11 +780,11 @@ await ctx.db
 **Indexes:**
 
 - `by_type_id` - Primary lookup (unique per type+id)
-- `by_userId` - Find all records for user (GDPR)
 - `by_type` - List all of a type
-- `by_type_userId` - User's records of specific type
-- `by_version` - Get specific version
-- `by_data` (search) - Full-text search in data payload
+- `by_tenantId` - Tenant's records
+- `by_tenant_type_id` - Tenant-scoped lookup
+- `by_userId` - Find all records for user (GDPR)
+- `by_created` - Chronological
 
 **Special Case: type='user' (ONLY Special Type)**
 
@@ -420,7 +850,15 @@ Every other type is just an example - you define whatever types you need:
 await ctx.db
   .query("immutable")
   .withIndex("by_type_id", (q) =>
-    q.eq("type", "kb-article").eq("id", "refund-policy"),
+    q.eq("type", "kb-article").eq("id", "refund-policy")
+  )
+  .first();
+
+// Multi-tenant lookup
+await ctx.db
+  .query("immutable")
+  .withIndex("by_tenant_type_id", (q) =>
+    q.eq("tenantId", tenantId).eq("type", "kb-article").eq("id", "refund-policy")
   )
   .first();
 
@@ -430,7 +868,7 @@ await ctx.db
   .withIndex("by_type", (q) => q.eq("type", "user"))
   .collect();
 
-// GDPR: Get all records for user
+// GDPR: Get all records for user across ALL memory spaces
 await ctx.db
   .query("immutable")
   .withIndex("by_userId", (q) => q.eq("userId", "user-123"))
@@ -441,33 +879,44 @@ await ctx.db
 
 ### mutable (Layer 1c)
 
-**Purpose:** Shared, mutable, current-value data
+**Purpose:** Shared, mutable, current-value data (TRULY shared - NOT scoped by memorySpace)
 
 **Document Structure:**
 
 ```typescript
 {
   _id: Id<"mutable">,
+  
+  // Composite key
   namespace: string,  // 'inventory', 'config', 'counters', etc.
   key: string,        // Unique within namespace
-  value: any,         // Any JSON-serializable value
-  userId?: string,    // Optional user link (GDPR)
-
+  
+  // Value (flexible, mutable)
+  value: any,
+  
+  // GDPR support
+  userId?: string,
+  
+  // Multi-tenancy (NEW)
+  tenantId?: string,
+  
+  // Metadata
+  metadata?: any,
+  
   createdAt: number,
   updatedAt: number,
-  accessCount: number,
-  lastAccessed?: number,
 }
 ```
 
 **Indexes:**
 
 - `by_namespace_key` - Primary lookup (unique per namespace+key)
-- `by_userId` - Find all records for user (GDPR)
 - `by_namespace` - List all in namespace
-- `by_namespace_userId` - User's records in namespace
+- `by_tenantId` - Tenant's records
+- `by_tenant_namespace` - Tenant-scoped namespace listing
+- `by_tenant_namespace_key` - Tenant-scoped lookup
+- `by_userId` - Find all records for user (GDPR)
 - `by_updated` - Sort by update time
-- `by_accessed` - Find inactive records
 
 **Examples:**
 
@@ -505,7 +954,15 @@ await ctx.db
 await ctx.db
   .query("mutable")
   .withIndex("by_namespace_key", (q) =>
-    q.eq("namespace", "inventory").eq("key", "widget-qty"),
+    q.eq("namespace", "inventory").eq("key", "widget-qty")
+  )
+  .unique();
+
+// Multi-tenant lookup
+await ctx.db
+  .query("mutable")
+  .withIndex("by_tenant_namespace_key", (q) =>
+    q.eq("tenantId", tenantId).eq("namespace", "inventory").eq("key", "widget-qty")
   )
   .unique();
 
@@ -515,43 +972,52 @@ await ctx.db
   .withIndex("by_namespace", (q) => q.eq("namespace", "inventory"))
   .collect();
 
-// Prefix query (hierarchical keys)
-const all = await ctx.db
+// Tenant-scoped namespace
+await ctx.db
   .query("mutable")
-  .withIndex("by_namespace", (q) => q.eq("namespace", "inventory"))
+  .withIndex("by_tenant_namespace", (q) =>
+    q.eq("tenantId", tenantId).eq("namespace", "inventory")
+  )
   .collect();
-
-const storeItems = all.filter((r) => r.key.startsWith("store-15:"));
 ```
 
 ---
 
 ### memories (Layer 2)
 
-**Purpose:** Searchable agent memories with vector embeddings
+**Purpose:** Searchable memories with semantic and keyword search (memorySpace-scoped)
 
 **Document Structure:**
 
 ```typescript
 {
   _id: Id<"memories">,
-  memorySpaceId: string,
-  userId?: string,
-
+  
+  // Identity & Isolation
+  memoryId: string,
+  memorySpaceId: string,         // PRIMARY: Isolation boundary
+  participantId?: string,        // NEW: Hive Mode tracking
+  tenantId?: string,             // NEW: Multi-tenancy
+  
+  // Content
   content: string,
-  contentType: "raw" | "summarized",
-  embedding?: number[],  // 3072-dim vector (or configured)
-
-  source: {
-    type: "conversation" | "system" | "tool" | "a2a",
-    userId?: string,
-    userName?: string,
-    fromAgent?: string,  // For A2A
-    toAgent?: string,    // For A2A
-    timestamp: number,
-  },
-
-  // Layer 1 References (mutually exclusive)
+  contentType: "raw" | "summarized" | "fact",  // NEW: "fact" option
+  embedding?: number[],          // 1536-dim default
+  
+  // Source (flattened for indexing)
+  sourceType: "conversation" | "system" | "tool" | "a2a" | "fact-extraction",
+  sourceUserId?: string,
+  sourceUserName?: string,
+  sourceTimestamp: number,
+  
+  // Message role (for conversation memories)
+  messageRole?: "user" | "agent" | "system",
+  
+  // Owner Attribution
+  userId?: string,               // For GDPR cascade
+  agentId?: string,              // For agent deletion cascade
+  
+  // Layer 1 References
   conversationRef?: {
     conversationId: string,
     messageIds: string[],
@@ -567,67 +1033,78 @@ const storeItems = all.filter((r) => r.key.startsWith("store-15:"));
     snapshotValue: any,
     snapshotAt: number,
   },
-
-  metadata: {
-    importance: number,  // Enforced 0-100 at SDK level
-    tags: string[],
-    direction?: "inbound" | "outbound",  // For A2A
-    messageId?: string,
-    contextId?: string,
-    [key: string]: any,  // Custom fields
+  
+  // NEW: Layer 3 Reference
+  factsRef?: {
+    factId: string,
+    version?: number,
   },
-
-  createdAt: number,
-  updatedAt: number,
-  lastAccessed?: number,
-  accessCount: number,
-
+  
+  // Metadata (flattened for indexing)
+  importance: number,            // 0-100 (flattened)
+  tags: string[],                // Flattened
+  
+  // Enrichment Fields
+  enrichedContent?: string,
+  factCategory?: string,
+  metadata?: any,
+  
+  // Versioning
   version: number,
   previousVersions: Array<{
     version: number,
     content: string,
-    contentType: "raw" | "summarized",
     embedding?: number[],
-    conversationRef?: { conversationId: string, messageIds: string[] },
-    metadata: any,
     timestamp: number,
-    updatedBy?: string,
   }>,
+  
+  // Timestamps & Access
+  createdAt: number,
+  updatedAt: number,
+  lastAccessed?: number,
+  accessCount: number,
+  
+  // Streaming support (NEW)
+  isPartial?: boolean,
+  partialMetadata?: any,
 }
 ```
 
 **Indexes:**
 
-- `by_embedding` (vector) - Semantic similarity search
-- `by_agent` - Agent isolation (primary query)
-- `by_userId` - User filtering
-- `by_agent_userId` - Compound (most common)
-- `by_source_type` - Filter by source
-- `by_agent_source` - Agent + source compound
-- `by_conversationRef` - Find memories from conversation
+- `by_memorySpace` - Memory space's memories (primary)
+- `by_memoryId` - Unique lookup
+- `by_tenantId` - Tenant's memories
+- `by_tenant_space` - Tenant + space compound
+- `by_userId` - GDPR cascade
+- `by_agentId` - Agent deletion cascade
+- `by_memorySpace_created` - Chronological within space
+- `by_memorySpace_userId` - Space + user compound
+- `by_memorySpace_agentId` - Space + agent compound
+- `by_participantId` - Hive Mode tracking
 - `by_content` (search) - Full-text keyword search
+- `by_embedding` (vector) - Semantic similarity search
 
 **Query Patterns:**
 
 ```typescript
-// Semantic search (agent-specific)
+// Semantic search (memorySpace-scoped)
 await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
-    q.similar("embedding", queryVector, 10).eq("agentId", agentId),
+    q.similar("embedding", queryVector, 10)
+     .eq("memorySpaceId", memorySpaceId)
+     .eq("tenantId", tenantId)
   )
   .collect();
 
-// Semantic search (user-specific)
+// Semantic search (user-specific within space)
 await ctx.db
   .query("memories")
-  .withIndex(
-    "by_embedding",
-    (q) =>
-      q
-        .similar("embedding", queryVector, 10)
-        .eq("agentId", agentId)
-        .eq("userId", userId), // ← Pre-filter before similarity
+  .withIndex("by_embedding", (q) =>
+    q.similar("embedding", queryVector, 10)
+     .eq("memorySpaceId", memorySpaceId)
+     .eq("userId", userId)
   )
   .collect();
 
@@ -635,25 +1112,289 @@ await ctx.db
 await ctx.db
   .query("memories")
   .withSearchIndex("by_content", (q) =>
-    q.search("content", "password").eq("agentId", agentId),
+    q.search("content", "password")
+     .eq("memorySpaceId", memorySpaceId)
   )
   .collect();
 
-// Get by ID (direct lookup)
-await ctx.db.get(memoryId);
-
-// Filter by source type (A2A messages)
+// Participant's memories (Hive Mode)
 await ctx.db
   .query("memories")
-  .withIndex("by_agent_source", (q) =>
-    q.eq("agentId", agentId).eq("source.type", "a2a"),
+  .withIndex("by_participantId", (q) => q.eq("participantId", "cursor"))
+  .collect();
+
+// GDPR: All user memories across ALL spaces
+await ctx.db
+  .query("memories")
+  .withIndex("by_userId", (q) => q.eq("userId", userId))
+  .collect();
+```
+
+---
+
+### facts (Layer 3)
+
+**Purpose:** Structured knowledge with belief revision (memorySpace-scoped)
+
+**Document Structure:**
+
+```typescript
+{
+  _id: Id<"facts">,
+  
+  // Identity & Isolation
+  factId: string,
+  memorySpaceId: string,
+  participantId?: string,
+  userId?: string,
+  tenantId?: string,
+  
+  // Fact content
+  fact: string,
+  factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "observation" | "custom",
+  
+  // Triple structure (subject-predicate-object)
+  subject?: string,
+  predicate?: string,
+  object?: string,
+  
+  // Quality & Source
+  confidence: number,            // 0-100
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a",
+  sourceRef?: {
+    conversationId?: string,
+    messageIds?: string[],
+    memoryId?: string,
+  },
+  
+  // Metadata & Tags
+  metadata?: any,
+  tags: string[],
+  
+  // Enrichment Fields (v0.15.0+)
+  category?: string,
+  searchAliases?: string[],
+  semanticContext?: string,
+  entities?: Array<{
+    name: string,
+    type: string,
+    fullValue?: string,
+  }>,
+  relations?: Array<{
+    subject: string,
+    predicate: string,
+    object: string,
+  }>,
+  
+  // Temporal validity
+  validFrom?: number,
+  validUntil?: number,
+  
+  // Versioning (belief revision)
+  version: number,
+  supersededBy?: string,         // factId of newer version
+  supersedes?: string,           // factId this replaces
+  
+  createdAt: number,
+  updatedAt: number,
+}
+```
+
+**Indexes:**
+
+- `by_factId` - Unique lookup
+- `by_memorySpace` - Memory space's facts
+- `by_tenantId` - Tenant's facts
+- `by_tenant_space` - Tenant + space compound
+- `by_memorySpace_subject` - Entity-centric queries
+- `by_participantId` - Hive Mode tracking
+- `by_userId` - GDPR cascade
+- `by_content` (search) - Full-text search
+
+**Query Patterns:**
+
+```typescript
+// Get fact by ID
+await ctx.db
+  .query("facts")
+  .withIndex("by_factId", (q) => q.eq("factId", factId))
+  .first();
+
+// Get all facts in memory space
+await ctx.db
+  .query("facts")
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
+  .collect();
+
+// Query by subject (entity-centric)
+await ctx.db
+  .query("facts")
+  .withIndex("by_memorySpace_subject", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("subject", "user-123")
+  )
+  .collect();
+
+// Search facts
+await ctx.db
+  .query("facts")
+  .withSearchIndex("by_content", (q) =>
+    q.search("fact", "favorite color")
+     .eq("memorySpaceId", memorySpaceId)
   )
   .collect();
 ```
 
 ---
 
-### contexts
+### factHistory (Belief Revision Audit)
+
+**Purpose:** Audit trail for Belief Revision System (v0.24.0+)
+
+**Document Structure:**
+
+```typescript
+{
+  _id: Id<"factHistory">,
+  
+  // Identity
+  eventId: string,
+  factId: string,
+  memorySpaceId: string,
+  
+  // Action
+  action: "CREATE" | "UPDATE" | "SUPERSEDE" | "DELETE",
+  
+  // Values
+  oldValue?: string,
+  newValue?: string,
+  
+  // Relationships
+  supersededBy?: string,
+  supersedes?: string,
+  
+  // Decision context
+  reason?: string,
+  confidence?: number,
+  
+  // Pipeline info
+  pipeline?: {
+    slotMatching?: boolean,
+    semanticMatching?: boolean,
+    llmResolution?: boolean,
+  },
+  
+  // Source context
+  userId?: string,
+  participantId?: string,
+  conversationId?: string,
+  
+  timestamp: number,
+}
+```
+
+**Indexes:**
+
+- `by_eventId` - Unique lookup
+- `by_factId` - Get history for a fact
+- `by_memorySpace` - All changes in a space
+- `by_memorySpace_timestamp` - Time-range queries
+- `by_action` - Filter by action type
+- `by_userId` - GDPR cascade
+- `by_timestamp` - Chronological
+
+---
+
+### memorySpaces (Coordination)
+
+**Purpose:** Memory space registry for Hive/Collaboration modes
+
+**Document Structure:**
+
+```typescript
+{
+  _id: Id<"memorySpaces">,
+  
+  // Identity
+  memorySpaceId: string,
+  name?: string,
+  tenantId?: string,
+  
+  type: "personal" | "team" | "project" | "custom",
+  
+  // Participants (for Hive Mode)
+  participants: Array<{
+    id: string,                  // Participant ID
+    type: string,                // 'ai-tool', 'human', 'ai-agent', 'system'
+    joinedAt: number,
+  }>,
+  
+  // Metadata
+  metadata: any,
+  status: "active" | "archived",
+  
+  createdAt: number,
+  updatedAt: number,
+}
+```
+
+**Indexes:**
+
+- `by_memorySpaceId` - Unique lookup
+- `by_tenantId` - Tenant's memory spaces
+- `by_tenant_memorySpaceId` - Tenant-scoped lookup
+- `by_tenant_status` - Tenant + status
+- `by_status` - Filter active/archived
+- `by_type` - Filter by type
+- `by_created` - Chronological
+
+---
+
+### sessions (Coordination - v0.27.0+)
+
+**Purpose:** Session lifecycle management
+
+**Document Structure:**
+
+```typescript
+{
+  _id: Id<"sessions">,
+  
+  // Identity
+  sessionId: string,
+  userId: string,
+  tenantId?: string,
+  memorySpaceId?: string,
+  
+  // Session state
+  status: "active" | "idle" | "ended",
+  startedAt: number,
+  lastActiveAt: number,
+  endedAt?: number,
+  expiresAt?: number,
+  
+  // Extensible metadata
+  metadata?: any,
+  
+  // Statistics
+  messageCount: number,
+  memoryCount: number,
+}
+```
+
+**Indexes:**
+
+- `by_sessionId` - Unique lookup
+- `by_userId` - User's sessions
+- `by_tenantId` - Tenant's sessions
+- `by_tenant_user` - Tenant + user sessions
+- `by_status` - Active/idle/ended
+- `by_memorySpace` - Sessions in memory space
+- `by_lastActive` - For expiration cleanup
+- `by_tenant_status` - Tenant + status
+
+---
+
+### contexts (Coordination)
 
 **Purpose:** Workflow and task coordination
 
@@ -743,89 +1484,257 @@ await ctx.db
 
 ---
 
-### agents (Optional)
+### facts (Layer 3) ✨
 
-**Purpose:** Agent registry for enhanced features
+**Purpose:** Structured knowledge with belief revision (memorySpace-scoped)
 
-**Document Structure:**
+**Document Structure:** See complete schema above
 
-```typescript
-{
-  _id: Id<"agents">,
-  memorySpaceId: string,  // Unique agent identifier
-  name: string,
-  description?: string,
-  capabilities?: string[],
+**Key Features:**
 
-  metadata: {
-    owner?: string,
-    team?: string,
-    [key: string]: any,
-  },
-
-  config: {
-    memoryVersionRetention?: number,
-    embeddingDimensions?: number,
-    [key: string]: any,
-  },
-
-  stats: {
-    totalMemories: number,
-    totalConversations: number,
-    lastActive?: number,
-  },
-
-  registeredAt: number,
-  updatedAt: number,
-}
-```
-
-**Indexes:**
-
-- `by_agentId` - Unique lookup
+- **Belief Revision System (v0.24.0+)** - Automatic conflict detection and resolution
+- **Triple structure** - Subject-predicate-object for knowledge graphs
+- **Enrichment fields** - searchAliases, semanticContext, entities, relations
+- **Temporal validity** - validFrom, validUntil for time-bound facts
+- **Supersede chains** - supersedes/supersededBy for version tracking
 
 **Query Patterns:**
 
 ```typescript
-// Get agent
+// Get facts by subject
+await ctx.db
+  .query("facts")
+  .withIndex("by_memorySpace_subject", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("subject", "user-123")
+  )
+  .collect();
+
+// Search facts
+await ctx.db
+  .query("facts")
+  .withSearchIndex("by_content", (q) =>
+    q.search("fact", query).eq("memorySpaceId", memorySpaceId)
+  )
+  .collect();
+```
+
+---
+
+### factHistory (Belief Revision Audit)
+
+**Purpose:** Complete audit trail for fact changes
+
+**Document Structure:** See complete schema above
+
+**Query Patterns:**
+
+```typescript
+// Get history for a fact
+await ctx.db
+  .query("factHistory")
+  .withIndex("by_factId", (q) => q.eq("factId", factId))
+  .order("desc")
+  .collect();
+
+// Get recent changes in memory space
+await ctx.db
+  .query("factHistory")
+  .withIndex("by_memorySpace_timestamp", (q) =>
+    q.eq("memorySpaceId", memorySpaceId)
+     .gte("timestamp", startTime)
+  )
+  .collect();
+```
+
+---
+
+### memorySpaces (Coordination)
+
+**Purpose:** Memory space registry for Hive/Collaboration modes
+
+**Document Structure:** See complete schema above
+
+**Query Patterns:**
+
+```typescript
+// Get memory space
+await ctx.db
+  .query("memorySpaces")
+  .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", memorySpaceId))
+  .first();
+
+// List tenant's active spaces
+await ctx.db
+  .query("memorySpaces")
+  .withIndex("by_tenant_status", (q) =>
+    q.eq("tenantId", tenantId).eq("status", "active")
+  )
+  .collect();
+```
+
+---
+
+### sessions (Coordination - v0.27.0+)
+
+**Purpose:** Session lifecycle management
+
+**Document Structure:** See complete schema above
+
+**Query Patterns:**
+
+```typescript
+// Get session
+await ctx.db
+  .query("sessions")
+  .withIndex("by_sessionId", (q) => q.eq("sessionId", sessionId))
+  .first();
+
+// Get user's active sessions
+await ctx.db
+  .query("sessions")
+  .withIndex("by_tenant_user", (q) =>
+    q.eq("tenantId", tenantId).eq("userId", userId)
+  )
+  .filter((q) => q.eq(q.field("status"), "active"))
+  .collect();
+
+// Find idle sessions for cleanup
+await ctx.db
+  .query("sessions")
+  .withIndex("by_lastActive", (q) => q.lt("lastActiveAt", cutoffTime))
+  .filter((q) => q.eq(q.field("status"), "active"))
+  .collect();
+```
+
+---
+
+### agents (Coordination - DEPRECATED)
+
+**Purpose:** Agent registry (superseded by memorySpaces)
+
+**Note:** This table is deprecated in favor of `memorySpaces`. Use `cortex.memorySpaces.*` for production isolation.
+
+**Document Structure:** See complete schema above
+
+**Query Patterns:**
+
+```typescript
+// Get agent (legacy)
 await ctx.db
   .query("agents")
   .withIndex("by_agentId", (q) => q.eq("agentId", agentId))
   .unique();
+```
 
-// List all agents
-await ctx.db.query("agents").collect();
+---
+
+### governancePolicies (Governance)
+
+**Purpose:** Data retention, purging, and compliance rules
+
+**Document Structure:** See complete schema above
+
+**Query Patterns:**
+
+```typescript
+// Get active policies for organization
+await ctx.db
+  .query("governancePolicies")
+  .withIndex("by_active", (q) =>
+    q.eq("isActive", true).eq("organizationId", orgId)
+  )
+  .collect();
+
+// Get policy for specific memory space
+await ctx.db
+  .query("governancePolicies")
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
+  .first();
+```
+
+---
+
+### governanceEnforcement (Governance Audit)
+
+**Purpose:** Audit trail for policy enforcement
+
+**Document Structure:** See complete schema above
+
+**Query Patterns:**
+
+```typescript
+// Get recent enforcement events for organization
+await ctx.db
+  .query("governanceEnforcement")
+  .withIndex("by_organization", (q) =>
+    q.eq("organizationId", orgId)
+     .gte("executedAt", startTime)
+  )
+  .collect();
+```
+
+---
+
+### graphSyncQueue (Graph Integration)
+
+**Purpose:** Real-time graph database synchronization queue
+
+**Document Structure:** See complete schema above
+
+**Query Patterns:**
+
+```typescript
+// Get unsynced items (reactive query for worker)
+await ctx.db
+  .query("graphSyncQueue")
+  .withIndex("by_synced", (q) => q.eq("synced", false))
+  .order("asc")
+  .take(100)
+  .collect();
+
+// Check if entity is synced
+await ctx.db
+  .query("graphSyncQueue")
+  .withIndex("by_table_entity", (q) =>
+    q.eq("table", "memories").eq("entityId", memoryId)
+  )
+  .first();
 ```
 
 ---
 
 ## Data Relationships
 
-### conversationRef (Vector → ACID Conversation)
+### conversationRef (Memory → ACID Conversation)
 
 ```typescript
-// Vector memory
+// Vector memory (Layer 2)
 {
   _id: "mem_abc",
+  memorySpaceId: "support-space",
+  participantId: "support-bot",
   content: "User password is Blue",
   conversationRef: {
-    conversationId: "conv_xyz",  // ← Points to conversation
+    conversationId: "conv_xyz",  // ← Points to Layer 1a
     messageIds: ["msg_001"],
   }
 }
 
-// ACID conversation
+// ACID conversation (Layer 1a)
 {
   _id: "conv_xyz",
+  conversationId: "conv_xyz",
+  memorySpaceId: "support-space",
   messages: [
     {
-      id: "msg_001",  // ← Referenced by memory
+      id: "msg_001",           // ← Referenced by memory
       content: "My password is Blue",
+      participantId: "support-bot",
     }
   ]
 }
 
-// Relationship: memories → conversations (many-to-one)
+// Relationship: memories (L2) → conversations (L1a) - many-to-one
 ```
 
 ### immutableRef (Vector → Immutable Record)
@@ -881,7 +1790,39 @@ await ctx.db.query("agents").collect();
   updatedAt: 1729950000000,
 }
 
-// Relationship: memories → mutable (snapshot, not live)
+// Relationship: memories (L2) → mutable (L1c) - snapshot, not live
+```
+
+### factsRef (Memory → Fact) 🆕
+
+```typescript
+// Vector memory (Layer 2) indexing a fact
+{
+  _id: "mem_xyz",
+  memorySpaceId: "user-123-personal",
+  content: "User prefers dark mode",  // Fact in vector layer for search
+  contentType: "fact",
+  factsRef: {
+    factId: "fact_abc",  // ← Points to Layer 3
+    version: 1,
+  }
+}
+
+// Fact (Layer 3)
+{
+  _id: "fact_abc",
+  factId: "fact_abc",
+  memorySpaceId: "user-123-personal",
+  fact: "User prefers dark mode",
+  factType: "preference",
+  subject: "user-123",
+  predicate: "theme_preference",
+  object: "dark",
+  confidence: 95,
+}
+
+// Relationship: memories (L2) → facts (L3) - many-to-one
+// Enables facts to be searchable via vector index
 ```
 
 ### contextId (Memory → Context)
@@ -890,7 +1831,8 @@ await ctx.db.query("agents").collect();
 // Memory metadata
 {
   _id: "mem_pqr",
-  memorySpaceId: "finance-agent",
+  memorySpaceId: "finance-space",
+  participantId: "finance-bot",
   metadata: {
     contextId: "ctx_stu",  // ← Links to workflow
   }
@@ -899,11 +1841,12 @@ await ctx.db.query("agents").collect();
 // Context
 {
   _id: "ctx_stu",
+  contextId: "ctx_stu",
   purpose: "Approve budget increase",
-  memorySpaceId: "supervisor-agent",
+  memorySpaceId: "supervisor-space",  // Can be different space!
 }
 
-// Relationship: memories ← contexts (one-to-many)
+// Relationship: memories ← contexts (one-to-many, can be cross-space)
 // Note: Stored in metadata, not separate field
 ```
 
@@ -913,46 +1856,62 @@ await ctx.db.query("agents").collect();
 
 ### Size Per Document
 
-| Table           | Typical Size | Max Size | Notes               |
-| --------------- | ------------ | -------- | ------------------- |
-| `conversations` | 5-50KB       | 1MB      | Grows with messages |
-| `immutable`     | 1-10KB       | 100KB    | Data payload size   |
-| `mutable`       | 100B-5KB     | 1MB      | Usually small       |
-| `memories`      | 2-8KB        | 50KB     | Includes embedding  |
-| `contexts`      | 500B-2KB     | 10KB     | Usually small       |
-| `agents`        | 500B         | 5KB      | Metadata only       |
+| Table                   | Typical Size | Max Size | Notes                  |
+| ----------------------- | ------------ | -------- | ---------------------- |
+| `conversations`         | 5-50KB       | 1MB      | Grows with messages    |
+| `immutable`             | 1-10KB       | 100KB    | Data payload size      |
+| `mutable`               | 100B-5KB     | 1MB      | Usually small          |
+| `memories`              | 2-8KB        | 50KB     | Includes embedding     |
+| `facts`                 | 500B-2KB     | 10KB     | Compact facts          |
+| `factHistory`           | 200B-1KB     | 5KB      | Event records          |
+| `memorySpaces`          | 500B-2KB     | 10KB     | Metadata only          |
+| `contexts`              | 500B-2KB     | 10KB     | Usually small          |
+| `sessions`              | 300B-1KB     | 5KB      | Metadata only          |
+| `agents`                | 500B         | 5KB      | DEPRECATED             |
+| `governancePolicies`    | 1-5KB        | 50KB     | Policy definitions     |
+| `governanceEnforcement` | 500B         | 5KB      | Audit records          |
+| `graphSyncQueue`        | 1-10KB       | 100KB    | Entity snapshot + meta |
 
 **Embedding sizes:**
 
-- 1536-dim × 8 bytes = 12KB
-- 3072-dim × 8 bytes = 24KB
 - 768-dim × 8 bytes = 6KB
+- 1024-dim × 8 bytes = 8KB
+- 1536-dim × 8 bytes = 12KB (default)
+- 3072-dim × 8 bytes = 24KB
 
 ### Growth Estimates
 
-**Small deployment (1K users, 10 agents):**
+**Small deployment (1K users, 10 memory spaces):**
 
 - Conversations: 5K conversations × 10KB = 50MB
 - Memories: 50K memories × 5KB = 250MB
+- Facts: 100K facts × 1KB = 100MB
 - Immutable: 100 records × 5KB = 500KB
 - Mutable: 1K records × 1KB = 1MB
-- **Total:** ~300MB
+- Sessions: 2K sessions × 500B = 1MB
+- **Total:** ~400MB
 
-**Medium deployment (100K users, 50 agents):**
+**Medium deployment (100K users, 50 memory spaces):**
 
 - Conversations: 500K × 10KB = 5GB
 - Memories: 5M × 5KB = 25GB
+- Facts: 10M × 1KB = 10GB
 - Immutable: 10K × 5KB = 50MB
 - Mutable: 100K × 1KB = 100MB
-- **Total:** ~30GB
+- Sessions: 200K × 500B = 100MB
+- factHistory: 1M × 500B = 500MB
+- **Total:** ~41GB
 
-**Large deployment (1M users, 200 agents):**
+**Large deployment (1M users, 200 memory spaces):**
 
 - Conversations: 5M × 10KB = 50GB
 - Memories: 50M × 5KB = 250GB
+- Facts: 100M × 1KB = 100GB
 - Immutable: 100K × 5KB = 500MB
 - Mutable: 1M × 1KB = 1GB
-- **Total:** ~300GB
+- Sessions: 2M × 500B = 1GB
+- factHistory: 10M × 500B = 5GB
+- **Total:** ~407GB
 
 **Convex pricing (estimate):**
 
@@ -969,18 +1928,19 @@ await ctx.db.query("agents").collect();
 
 ```typescript
 // Single field (basic)
-.index("by_agent", ["agentId"])
+.index("by_memorySpace", ["memorySpaceId"])
 
 // Compound (optimized)
-.index("by_agent_userId", ["agentId", "userId"])
-.index("by_agent_source", ["agentId", "source.type"])
+.index("by_tenant_space", ["tenantId", "memorySpaceId"])
+.index("by_memorySpace_userId", ["memorySpaceId", "userId"])
+.index("by_memorySpace_agentId", ["memorySpaceId", "agentId"])
 
 // Why: Pre-filter before expensive operations
-// Example: Get user's memories for an agent
+// Example: Get user's memories in a memory space
 await ctx.db
   .query("memories")
-  .withIndex("by_agent_userId", (q) =>
-    q.eq("agentId", agentId).eq("userId", userId)
+  .withIndex("by_memorySpace_userId", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("userId", userId)
   )
   .collect();
 // Uses compound index ✅ (fast)
@@ -988,7 +1948,7 @@ await ctx.db
 // vs
 await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .filter((q) => q.eq(q.field("userId"), userId))
   .collect();
 // Filters after index ⚠️ (slower)
@@ -999,8 +1959,8 @@ await ctx.db
 ```typescript
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
-  dimensions: 3072,
-  filterFields: ["agentId", "userId"],  // ← Fast pre-filtering
+  dimensions: 1536,  // Default
+  filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
 });
 
 // Query with pre-filter (fast)
@@ -1008,11 +1968,12 @@ await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
     q.similar("embedding", vector, 10)
-     .eq("agentId", agentId)          // ← Filtered BEFORE similarity
-     .eq("userId", userId)            // ← Filtered BEFORE similarity
+     .eq("memorySpaceId", memorySpaceId)  // ← Filtered BEFORE similarity
+     .eq("tenantId", tenantId)            // ← Filtered BEFORE similarity
+     .eq("userId", userId)                // ← Filtered BEFORE similarity
   )
   .collect();
-// Only searches vectors for this agent+user ✅
+// Only searches vectors for this space+tenant+user ✅
 ```
 
 ### Search Indexes for Keywords
@@ -1020,7 +1981,7 @@ await ctx.db
 ```typescript
 .searchIndex("by_content", {
   searchField: "content",
-  filterFields: ["agentId", "userId"],
+  filterFields: ["memorySpaceId", "tenantId", "sourceType", "userId", "agentId", "participantId"],
 });
 
 // Keyword search with filters
@@ -1028,7 +1989,8 @@ await ctx.db
   .query("memories")
   .withSearchIndex("by_content", (q) =>
     q.search("content", "password")
-     .eq("agentId", agentId)
+     .eq("memorySpaceId", memorySpaceId)
+     .eq("tenantId", tenantId)
   )
   .collect();
 ```
@@ -1086,41 +2048,77 @@ const allVersions = [
 
 ### userId Propagation
 
-All tables support optional `userId` field:
+All tables support optional `userId` field for GDPR compliance:
 
 ```typescript
-// Conversations
+// Conversations (nested in participants)
 {
-  participants: { userId: "user-123", memorySpaceId: "agent-1" }
-  // ↑ Queryable via index
+  memorySpaceId: "support-space",
+  participants: { userId: "user-123", ... }
+  // ↑ Indexed via by_user, by_memorySpace_user
 }
 
-// Immutable
+// Immutable (direct field)
 {
+  type: "user",
+  id: "user-123",
   userId: "user-123",  // ← Direct field
-  // ↑ Indexed for fast queries
+  // ↑ Indexed via by_userId
 }
 
-// Mutable
+// Mutable (direct field)
 {
+  namespace: "user-sessions",
+  key: "session-abc",
   userId: "user-123",  // ← Direct field
-  // ↑ Indexed for cascade deletion
+  // ↑ Indexed via by_userId
 }
 
-// Memories
+// Memories (direct field)
 {
+  memorySpaceId: "user-123-personal",
   userId: "user-123",  // ← Direct field
-  // ↑ Indexed with agentId compound
+  // ↑ Indexed via by_userId, by_memorySpace_userId
+}
+
+// Facts (direct field)
+{
+  memorySpaceId: "user-123-personal",
+  userId: "user-123",  // ← Direct field
+  subject: "user-123",
+  // ↑ Indexed via by_userId
+}
+
+// Sessions (direct field)
+{
+  sessionId: "sess-abc",
+  userId: "user-123",  // ← Direct field (required)
+  // ↑ Indexed via by_userId, by_tenant_user
+}
+
+// Contexts (direct field)
+{
+  contextId: "ctx-abc",
+  memorySpaceId: "support-space",
+  userId: "user-123",  // ← Optional field
+  // ↑ Indexed via by_userId
+}
+
+// factHistory (direct field)
+{
+  eventId: "evt-abc",
+  userId: "user-123",  // ← Optional field
+  // ↑ Indexed via by_userId
 }
 ```
 
 ### Cascade Deletion Query Plan (Cloud Mode)
 
 ```typescript
-// 1. Find all conversations
+// 1. Find all conversations (across ALL memory spaces)
 const convos = await ctx.db
   .query("conversations")
-  .withIndex("by_userId", (q) => q.eq("participants.userId", userId))
+  .withIndex("by_user", (q) => q.eq("participants.userId", userId))
   .collect();
 
 // 2. Find all immutable records
@@ -1135,19 +2133,47 @@ const mutable = await ctx.db
   .withIndex("by_userId", (q) => q.eq("userId", userId))
   .collect();
 
-// 4. Find all memories (across all agents)
+// 4. Find all memories (across ALL memory spaces)
 const memories = await ctx.db
   .query("memories")
   .withIndex("by_userId", (q) => q.eq("userId", userId))
   .collect();
 
-// 5. Delete all (in transaction)
-for (const record of [...convos, ...immutable, ...mutable, ...memories]) {
+// 5. Find all facts (across ALL memory spaces)
+const facts = await ctx.db
+  .query("facts")
+  .withIndex("by_userId", (q) => q.eq("userId", userId))
+  .collect();
+
+// 6. Find all sessions
+const sessions = await ctx.db
+  .query("sessions")
+  .withIndex("by_userId", (q) => q.eq("userId", userId))
+  .collect();
+
+// 7. Find all contexts
+const contexts = await ctx.db
+  .query("contexts")
+  .withIndex("by_userId", (q) => q.eq("userId", userId))
+  .collect();
+
+// 8. Find all factHistory events
+const factHistory = await ctx.db
+  .query("factHistory")
+  .withIndex("by_userId", (q) => q.eq("userId", userId))
+  .collect();
+
+// 9. Delete all (in transaction)
+for (const record of [
+  ...convos, ...immutable, ...mutable, ...memories,
+  ...facts, ...sessions, ...contexts, ...factHistory
+]) {
   await ctx.db.delete(record._id);
 }
 ```
 
-**Performance:** With proper indexes, O(log n) per table + result size deletion.
+**Performance:** With proper indexes, O(log n) per table + result size deletion.  
+**Coverage:** User data deleted from ALL layers and all memory spaces.
 
 ---
 
@@ -1197,14 +2223,14 @@ interface MemoryMetadata {
 // ❌ Slow: No index
 const memories = await ctx.db
   .query("memories")
-  .filter((q) => q.eq(q.field("agentId"), agentId))
+  .filter((q) => q.eq(q.field("memorySpaceId"), memorySpaceId))
   .collect();
 // Scans entire table!
 
 // ✅ Fast: With index
 const memories = await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .collect();
 // O(log n) lookup
 ```
@@ -1215,15 +2241,23 @@ const memories = await ctx.db
 // ❌ Inefficient: Filter after index
 await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .filter((q) => q.eq(q.field("userId"), userId))
   .collect();
 
 // ✅ Efficient: Compound index
 await ctx.db
   .query("memories")
-  .withIndex("by_agent_userId", (q) =>
-    q.eq("agentId", agentId).eq("userId", userId),
+  .withIndex("by_memorySpace_userId", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("userId", userId)
+  )
+  .collect();
+
+// ✅ Multi-tenant compound index
+await ctx.db
+  .query("memories")
+  .withIndex("by_tenant_space", (q) =>
+    q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId)
   )
   .collect();
 ```
@@ -1234,8 +2268,8 @@ await ctx.db
 // ✅ Fast: Filter before similarity
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
-  dimensions: 3072,
-  filterFields: ["agentId", "userId"],  // ← Pre-filter
+  dimensions: 1536,
+  filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
 });
 
 // Query only searches relevant subset
@@ -1243,7 +2277,8 @@ await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
     q.similar("embedding", vector, 10)
-     .eq("agentId", agentId)  // ← Filters BEFORE similarity calculation
+     .eq("memorySpaceId", memorySpaceId)  // ← Filters BEFORE similarity
+     .eq("tenantId", tenantId)            // ← Multi-tenant isolation
   )
   .collect();
 ```

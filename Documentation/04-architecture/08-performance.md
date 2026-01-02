@@ -1,20 +1,145 @@
 # Performance
 
-> **Last Updated**: 2025-10-28
+> **Last Updated**: 2026-01-01
 
-Optimization techniques, scaling strategies, and performance characteristics of Cortex on Convex.
+Optimization techniques, scaling strategies, resilience layer, and performance characteristics of Cortex on Convex.
 
 ## Overview
 
-Cortex is designed for **high performance** at scale. With proper indexing and query patterns, Cortex handles millions of memories, thousands of agents, and hundreds of concurrent users efficiently.
+Cortex is designed for **high performance** at scale with **built-in resilience**. With proper indexing, query patterns, and the resilience layer, Cortex handles millions of memories, thousands of memory spaces, and hundreds of concurrent users efficiently.
 
 **Performance Characteristics:**
 
 - **Read operations:** < 100ms (p95)
 - **Write operations:** < 50ms (p95)
 - **Vector search:** < 100ms for millions of vectors
-- **Concurrent agents:** Unlimited (Convex handles)
+- **Facts search:** < 50ms for millions of facts
+- **Concurrent operations:** 16 (Starter) / 256 (Professional)
 - **Storage:** Unlimited (pay-per-GB)
+- **Resilience:** Built-in rate limiting, circuit breaker, concurrency control
+
+---
+
+## Resilience Layer (v0.16.0+)
+
+### Built-In Protection
+
+Cortex includes a **resilience layer** that protects all operations from overload and failures:
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  resilience: {
+    // Token Bucket Rate Limiter
+    rateLimit: {
+      tokensPerSecond: 100,      // Default: 100 ops/sec
+      maxBurst: 200,              // Allow bursts up to 200
+    },
+    
+    // Concurrency Control (based on Convex plan)
+    concurrency: {
+      maxConcurrent: 16,          // Starter: 16, Professional: 256
+      queueSize: 1000,            // Queue up to 1000 requests
+    },
+    
+    // Circuit Breaker
+    circuitBreaker: {
+      failureThreshold: 5,        // Open after 5 failures
+      timeout: 60000,             // 60s timeout
+      resetTimeout: 300000,       // Try recovery after 5 minutes
+    },
+  },
+});
+```
+
+### Token Bucket Rate Limiter
+
+```typescript
+// Prevents API rate limit exhaustion
+// Example: 100 tokens/second with burst of 200
+
+┌─────────────────────────────────────────────┐
+│         Token Bucket Algorithm              │
+├─────────────────────────────────────────────┤
+│  Bucket Capacity: 200 tokens                │
+│  Refill Rate: 100 tokens/second             │
+│                                             │
+│  Request arrives:                           │
+│  1. Check if bucket has ≥1 token            │
+│  2. If yes: Consume 1 token, allow request  │
+│  3. If no: Reject with RATE_LIMIT_EXCEEDED  │
+│  4. Refill continuously at 100/sec          │
+└─────────────────────────────────────────────┘
+
+// Protects against:
+// - Sudden traffic spikes
+// - Accidental infinite loops
+// - Resource exhaustion
+```
+
+### Concurrency Control
+
+```typescript
+// Respects Convex plan limits
+// Starter: 16 concurrent operations
+// Professional: 256 concurrent operations
+
+┌─────────────────────────────────────────────┐
+│         Concurrency Semaphore               │
+├─────────────────────────────────────────────┤
+│  Active: 16/16 (at limit)                   │
+│  Queued: 5 requests waiting                 │
+│                                             │
+│  New request arrives:                       │
+│  1. Check if slot available                 │
+│  2. If yes: Execute immediately             │
+│  3. If no: Add to queue                     │
+│  4. Execute when slot frees                 │
+└─────────────────────────────────────────────┘
+
+// Prevents:
+// - Convex concurrent operation limit errors
+// - Resource contention
+// - Failed operations due to capacity
+```
+
+### Circuit Breaker
+
+```typescript
+// Protects against cascading failures
+
+┌─────────────────────────────────────────────┐
+│         Circuit Breaker States              │
+├─────────────────────────────────────────────┤
+│  CLOSED (normal operation)                  │
+│    ↓ (5 failures)                           │
+│  OPEN (reject all requests)                 │
+│    ↓ (5 minute timeout)                     │
+│  HALF_OPEN (allow 1 test request)           │
+│    ↓ (success)                              │
+│  CLOSED (recovery)                          │
+└─────────────────────────────────────────────┘
+
+// Prevents:
+// - Cascading failures
+// - Backend overload during incidents
+// - Wasted retries
+```
+
+### Monitoring Resilience
+
+```typescript
+// Track resilience metrics
+const metrics = await cortex.getResilienceMetrics();
+
+console.log({
+  rateLimitHits: metrics.rateLimit.rejected,
+  queuedRequests: metrics.concurrency.queued,
+  circuitBreakerState: metrics.circuitBreaker.state,  // CLOSED | OPEN | HALF_OPEN
+  totalRequests: metrics.total.requests,
+  failedRequests: metrics.total.failures,
+});
+```
 
 ---
 
@@ -28,14 +153,14 @@ Cortex is designed for **high performance** at scale. With proper indexing and q
 // ❌ SLOW: Table scan (no index)
 const memories = await ctx.db
   .query("memories")
-  .filter((q) => q.eq(q.field("agentId"), agentId))
+  .filter((q) => q.eq(q.field("memorySpaceId"), memorySpaceId))
   .collect();
 // Scans ENTIRE table! O(n)
 
 // ✅ FAST: Index query
 const memories = await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .collect();
 // Index lookup! O(log n)
 ```
@@ -51,24 +176,32 @@ const memories = await ctx.db
 // ❌ Less efficient: Single index + filter
 const memories = await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .filter((q) => q.eq(q.field("userId"), userId))
   .collect();
-// O(log n) + O(k) where k = agent's memories
+// O(log n) + O(k) where k = space's memories
 
 // ✅ More efficient: Compound index
 const memories = await ctx.db
   .query("memories")
-  .withIndex("by_agent_userId", (q) =>
-    q.eq("agentId", agentId).eq("userId", userId),
+  .withIndex("by_memorySpace_userId", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("userId", userId)
   )
   .collect();
 // O(log n) directly to subset
+
+// ✅ Multi-tenant compound index
+const memories = await ctx.db
+  .query("memories")
+  .withIndex("by_tenant_space", (q) =>
+    q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId)
+  )
+  .collect();
 ```
 
 **Impact:**
 
-- Agent with 10K memories, 100 for user
+- Memory space with 10K memories, 100 for user
 - Single index: 10ms + filter 10K = 15ms
 - Compound index: 10ms directly to 100 = 10ms
 
@@ -78,7 +211,7 @@ const memories = await ctx.db
 // ❌ Without filterFields: Search all vectors
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
-  dimensions: 3072,
+  dimensions: 1536,
   // No filterFields
 })
 
@@ -88,14 +221,14 @@ const results = await ctx.db
   .withIndex("by_embedding", (q) =>
     q.similar("embedding", vector, 10)
   )
-  .filter((q) => q.eq(q.field("agentId"), agentId))  // ← Filter AFTER search
+  .filter((q) => q.eq(q.field("memorySpaceId"), memorySpaceId))  // ← Filter AFTER search
   .collect();
 
 // ✅ With filterFields: Pre-filter before search
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
-  dimensions: 3072,
-  filterFields: ["agentId", "userId"],  // ← Pre-filter
+  dimensions: 1536,  // Default
+  filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
 })
 
 // Query searches only relevant subset (fast!)
@@ -103,17 +236,25 @@ const results = await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
     q.similar("embedding", vector, 10)
-     .eq("agentId", agentId)  // ← Pre-filtered BEFORE search
+     .eq("memorySpaceId", memorySpaceId)  // ← Pre-filtered BEFORE search
+     .eq("tenantId", tenantId)            // ← Multi-tenant isolation
   )
   .collect();
 ```
 
 **Impact:**
 
-- 1M total vectors, 1K per agent
+- 1M total vectors across all spaces, 1K per memory space
 - Without filterFields: Search 1M vectors = 200ms
 - With filterFields: Search 1K vectors = 10ms
 - **20× faster!**
+
+**Multi-tenancy impact:**
+
+- 10M vectors across all tenants, 100K per tenant
+- With tenant filter: Search 100K vectors = 50ms
+- With tenant + space filter: Search 1K vectors = 10ms
+- **100× faster with compound filtering!**
 
 ---
 

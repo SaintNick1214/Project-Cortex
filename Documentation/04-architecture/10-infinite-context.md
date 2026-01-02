@@ -76,22 +76,21 @@ const conversation = {
 ```typescript
 // Infinite Context pattern
 async function respondToUser(userMessage: string, memorySpaceId: string) {
-  // 1. Retrieve relevant context (NOT all history)
-  const relevantContext = await cortex.memory.search(
+  // 1. Retrieve relevant context via recall() - unified retrieval
+  const retrieved = await cortex.memory.recall({
     memorySpaceId,
-    userMessage,
-    {
-      embedding: await embed(userMessage),
-      limit: 10, // Top 10 most relevant facts/memories
-    },
-  );
+    query: userMessage,
+    embedding: await embed(userMessage),
+    userId: "user-123",
+    limit: 10,  // Top 10 most relevant from ALL layers
+  });
 
   // 2. Construct prompt with ONLY relevant context
   const prompt = `
 You are an AI assistant with access to the user's memory.
 
 Relevant Context:
-${relevantContext.map((m) => `- ${m.content}`).join("\n")}
+${retrieved.context}  // Pre-formatted from recall()
 
 Recent Conversation:
 User: ${userMessage}
@@ -103,17 +102,21 @@ Instructions: Use the context above to provide a personalized response.
   const response = await llm.complete({
     messages: [
       { role: "system", content: prompt },
+      { role: "user", content: userMessage },
       // Note: NO accumulated conversation history
     ],
   });
 
-  // 4. Store new exchange (adds to knowledge base, doesn't accumulate in context)
+  // 4. Store new exchange with full orchestration (L1 + L2 + L3)
   await cortex.memory.remember({
     memorySpaceId,
+    participantId: "my-assistant",  // Track participant
     userMessage,
     agentResponse: response,
     userId: "user-123",
-    extractFacts: true, // Extract facts for future retrieval
+    userName: "User",
+    extractFacts: true,  // Auto-extract facts (Layer 3)
+    // → Belief Revision System prevents duplicates
   });
 
   return response;
@@ -154,24 +157,30 @@ interface ConversationStore {
 ```typescript
 // Semantic index for fast retrieval
 interface VectorMemory {
-  memorySpaceId: string;
-  content: string; // Summarized or fact
+  memoryId: string;
+  memorySpaceId: string;       // Isolation boundary
+  participantId?: string;      // Hive Mode tracking
+  tenantId?: string;           // Multi-tenancy
+  content: string;             // Summarized or fact
   contentType: "raw" | "summarized" | "fact";
-  embedding: number[]; // 1536-dimensional vector
+  embedding?: number[];        // 1536-dimensional vector (default)
 
-  conversationRef: {
+  conversationRef?: {
     conversationId: string;
     messageIds: string[];
   };
-
-  metadata: {
-    importance: number;
-    tags: string[];
+  
+  factsRef?: {                 // NEW: Links to Layer 3
+    factId: string;
+    version?: number;
   };
+
+  importance: number;          // 0-100 (flattened)
+  tags: string[];              // Flattened
 }
 
 // Semantic search returns top-K relevant memories
-// This is what builds LLM context (not raw conversations)
+// Can include facts indexed in vector layer for dual retrieval
 ```
 
 **Purpose:**
@@ -179,40 +188,63 @@ interface VectorMemory {
 - Fast similarity search (<50ms for 1M+ vectors)
 - Surface relevant context from unlimited history
 - Combine facts + summaries for optimal context
+- memorySpace-scoped for isolation
 - Scale to billions of memories without performance degradation
 
-### Layer 3: Facts (Atomic Knowledge)
+### Layer 3: Facts (Atomic Knowledge) ✨
 
 ```typescript
 // LLM-extracted facts (most token-efficient)
 interface Fact {
-  id: string;
-  memorySpaceId: string;
-  participantId: string;
+  factId: string;
+  memorySpaceId: string;        // Isolation boundary
+  participantId?: string;       // Hive Mode tracking
+  userId?: string;              // GDPR compliance
+  tenantId?: string;            // Multi-tenancy
 
-  data: {
-    fact: "User prefers TypeScript over JavaScript";
-    category: "preference";
-    confidence: 0.95;
-  };
+  // Fact content
+  fact: string;
+  factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "observation" | "custom";
+  confidence: number;           // 0-100
+  
+  // Triple structure
+  subject?: string;             // "user-123"
+  predicate?: string;           // "prefers"
+  object?: string;              // "TypeScript"
 
-  conversationRef: {
-    conversationId: string;
-    messageIds: string[];
+  // Source reference
+  sourceRef: {
+    conversationId?: string;
+    messageIds?: string[];
+    memoryId?: string;
   };
+  
+  // Enrichment (v0.15.0+)
+  category?: string;
+  searchAliases?: string[];
+  semanticContext?: string;
+  entities?: Array<{ name: string, type: string }>;
+  relations?: Array<{ subject: string, predicate: string, object: string }>;
+  
+  // Belief Revision (v0.24.0+)
+  version: number;
+  supersededBy?: string;        // If updated
+  supersedes?: string;          // If replaces older fact
 }
 
 // Facts are SMALLEST representation (~8 tokens each)
 // One conversation exchange → 1-5 facts
 // 1000 exchanges → 5000 facts = 40K tokens stored, but only 10 retrieved (80 tokens)
+// Belief Revision prevents duplicates automatically
 ```
 
 **Purpose:**
 
-- Most compact representation of knowledge
+- Most compact representation of knowledge (60-90% token savings)
 - Semantically rich (LLM extracted the salient points)
 - Can retrieve 100s of facts in <100 tokens
 - Perfect for infinite context (fact pool grows indefinitely, retrieval stays constant)
+- Belief Revision System maintains consistency and prevents duplicates
 
 ## 3-Tier Retrieval Strategy
 
@@ -296,12 +328,40 @@ for (const fact of criticalFacts.slice(0, 2)) {
 
 ### Combined Strategy (Adaptive)
 
+**Use recall() for automatic multi-layer retrieval:**
+
 ```typescript
 async function intelligentRetrieval(memorySpaceId: string, query: string) {
-  // Tier 1: Facts (always)
-  const facts = await cortex.memory.search(memorySpaceId, query, {
+  // recall() automatically combines all strategies
+  const result = await cortex.memory.recall({
+    memorySpaceId,
+    query,
     embedding: await embed(query),
-    contentType: "fact",
+    userId: "user-123",
+    limit: 10,
+  });
+  
+  return {
+    // Breakdown by source
+    facts: result.sources.facts,           // Layer 3: ~8 tokens each
+    vectorMemories: result.sources.vector,  // Layer 2: ~50 tokens each
+    graphExpanded: result.sources.graph,    // Optional: related entities
+    
+    // Unified context
+    context: result.context,                // Pre-formatted for LLM
+    totalTokens: result.tokenEstimate,      // Estimated token usage
+    
+    // vs 20,000+ tokens for raw accumulation! (95-99% savings)
+  };
+}
+
+// Manual 3-tier approach (for custom logic)
+async function manualIntelligentRetrieval(memorySpaceId: string, query: string) {
+  // Tier 1: Facts (always - most efficient)
+  const facts = await cortex.facts.search({
+    memorySpaceId,
+    query,
+    userId: "user-123",
     limit: 10,
   });
 
@@ -309,23 +369,25 @@ async function intelligentRetrieval(memorySpaceId: string, query: string) {
   const summaries = await cortex.memory.search(memorySpaceId, query, {
     embedding: await embed(query),
     contentType: "summarized",
+    userId: "user-123",
     limit: 3,
   });
 
   // Tier 3: Raw (only for critical facts)
-  const criticalFacts = facts.filter((f) => f.metadata.importance >= 90);
+  const criticalFacts = facts.filter((f) => f.confidence >= 90);
   const rawContext = await fetchRawForFacts(criticalFacts.slice(0, 2));
 
   return {
-    facts, // 10 × 8 = 80 tokens
-    summaries, // 3 × 75 = 225 tokens
-    rawContext, // 2 × 50 = 100 tokens
-    totalTokens: 405, // vs 20,000+ tokens for raw-only! (95% savings)
+    facts,         // 10 × 8 = 80 tokens
+    summaries,     // 3 × 75 = 225 tokens
+    rawContext,    // 2 × 50 = 100 tokens
+    totalTokens: 405,  // vs 20,000+ tokens for raw-only! (98% savings)
   };
 }
 ```
 
-**Result:** Optimal context with minimal tokens
+**Result:** Optimal context with minimal tokens  
+**Recommendation:** Use `recall()` for automatic optimization
 
 ## Token Economics
 
@@ -392,10 +454,21 @@ Total Latency Addition:           <150ms
 // Year 3: 30,000 conversations
 // Total: 60,000 exchanges = 3M tokens if accumulated
 
-// With Infinite Context:
-const context = await cortex.memory.search(memorySpaceId, "user preferences");
-// Returns: Top 10 facts from ALL 60K exchanges
-// Tokens: 80 (vs 3,000,000!)
+// With Infinite Context + recall():
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-personal",
+  query: "What are user's preferences?",
+  embedding: await embed("What are user's preferences?"),
+  userId: "user-123",
+  limit: 10,
+});
+
+// Returns: Top 10 most relevant items from ALL 60K exchanges
+// Sources breakdown:
+// - 7 facts from Layer 3
+// - 3 vector memories from Layer 2
+// Tokens: ~90 (vs 3,000,000!)
+// Belief Revision ensures no duplicate facts ✅
 ```
 
 ### 2. Customer Support History
@@ -415,17 +488,25 @@ const relevantTickets = await cortex.memory.search(
 // Tokens: 40
 ```
 
-### 3. Multi-Agent System (Hive Mode)
+### 3. Multi-Participant System (Hive Mode)
 
 ```typescript
-// 5 agents × 1000 exchanges each = 5000 exchanges
-// Traditional: 5000 × 50 = 250K tokens per agent call
+// 5 participants (Cursor, Claude, VSCode, etc.) × 1000 exchanges each = 5000 exchanges
+// Traditional: Each tool accumulates separately, 5000 × 50 = 250K tokens per call
 
 // Hive Mode + Infinite Context:
-// All agents share memory space
-// Each retrieves only relevant subset
-const context = await cortex.memory.search("team-project-alpha", query);
+// All participants share one memory space
+// Each retrieves only relevant subset via recall()
+const context = await cortex.memory.recall({
+  memorySpaceId: "team-project-alpha",  // Shared Hive space
+  query,
+  participantId: "cursor",              // Optional: Filter by participant
+  limit: 10,
+});
+
 // Tokens: 100-500 (regardless of total history)
+// All participants benefit from shared context
+// participantId tracks who created each memory
 ```
 
 ### 4. Research Assistant
