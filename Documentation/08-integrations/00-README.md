@@ -132,7 +132,7 @@ Want an integration with your favorite framework?
 
 ## See Also
 
-- [Core Features](../02-core-features/)
-- [API Reference](../03-api-reference/)
+- [Core Features](../02-core-features/00-memory-orchestration.md)
+- [API Reference](../03-api-reference/01-overview.md)
 - [Memory Spaces](../02-core-features/01-memory-spaces.md)
 - [Authentication](../02-core-features/18-authentication.md)
