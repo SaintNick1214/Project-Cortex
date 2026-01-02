@@ -1488,7 +1488,7 @@ const partners = collaborations.map(m => m.metadata.toAgent);
 
 **Performance:** Agent-scoped queries are highly optimized (agentId is primary index). Typical queries: 10-30ms.
 
-**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities.md)
 
 ---
 

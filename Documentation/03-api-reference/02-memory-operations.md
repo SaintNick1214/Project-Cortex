@@ -3092,7 +3092,7 @@ for (const agent of agents) {
 - 1-2 hop queries: 10-50ms (direct lookups)
 - 3-5 hop queries: 50-200ms (sequential queries)
 
-**Learn more:** [Graph-Lite Traversal Guide](../07-advanced-topics/01-graph-lite-traversal.md)
+**Learn more:** [Graph Capabilities Guide](../07-advanced-topics/01-graph-capabilities.md)
 
 ## Error Reference
 

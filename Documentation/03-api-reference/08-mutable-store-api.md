@@ -2057,7 +2057,7 @@ Memory-def
 
 **GDPR:** Mutable records with userId are included in cascade deletion traversal.
 
-**Learn more:** [Graph-Lite Traversal](../07-advanced-topics/01-graph-lite-traversal.md)
+**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities.md)
 
 ---
 

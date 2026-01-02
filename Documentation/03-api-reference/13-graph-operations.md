@@ -43,7 +43,7 @@ npm install neo4j-driver
 docker-compose -f docker-compose.graph.yml up -d neo4j
 ```
 
-See [Graph Database Setup Guide](../07-advanced-topics/05-graph-database-setup.md) for complete setup.
+See [Graph Database Integration Guide](../07-advanced-topics/02-graph-database-integration.md) for complete setup.
 
 ### Configuration
 
@@ -2353,9 +2353,7 @@ Complete examples in:
 
 ## Next Steps
 
-- **[Graph Database Setup](../07-advanced-topics/05-graph-database-setup.md)** - Quick start guide
-- **[Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md)** - Detailed guide
-- **[Graph Database Selection](../07-advanced-topics/04-graph-database-selection.md)** - Neo4j vs Memgraph
+- **[Graph Database Integration](../07-advanced-topics/02-graph-database-integration.md)** - Complete integration guide (setup, selection, and patterns)
 
 ---
 
