@@ -65,7 +65,7 @@ export const search = query({
         .withIndex("by_embedding", (q) =>
           q
             .similar("embedding", args.embedding, args.filters.limit || 20)
-            .eq("memorySpaceId", args.memorySpaceId)
+            .eq("memorySpaceId", args.memorySpaceId),
         )
         .collect();
     } else {
@@ -73,7 +73,9 @@ export const search = query({
       results = await ctx.db
         .query("memories")
         .withSearchIndex("by_content", (q) =>
-          q.search("content", args.query).eq("memorySpaceId", args.memorySpaceId)
+          q
+            .search("content", args.query)
+            .eq("memorySpaceId", args.memorySpaceId),
         )
         .collect();
     }
@@ -379,7 +381,13 @@ memories: defineTable({
 }).vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 1536, // Default: text-embedding-3-small
-  filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
+  filterFields: [
+    "memorySpaceId",
+    "tenantId",
+    "userId",
+    "agentId",
+    "participantId",
+  ],
 });
 ```
 
@@ -402,7 +410,7 @@ export const semanticSearch = query({
       .withIndex("by_embedding", (q) =>
         q
           .similar("embedding", args.embedding, args.limit)
-          .eq("memorySpaceId", args.memorySpaceId)
+          .eq("memorySpaceId", args.memorySpaceId),
       );
 
     // Optional filters (pre-filtered before similarity via filterFields)
@@ -473,11 +481,11 @@ export const keywordSearch = query({
         let search = q
           .search("content", args.keywords)
           .eq("memorySpaceId", args.memorySpaceId);
-        
+
         if (args.tenantId) {
           search = search.eq("tenantId", args.tenantId);
         }
-        
+
         return search;
       })
       .take(args.limit);
@@ -730,7 +738,7 @@ export const remember = mutation({
         args.userMessage,
         args.agentResponse
       );
-      
+
       for (const fact of facts) {
         const factId = await ctx.runMutation("facts:store", {
           ...fact,
@@ -742,7 +750,7 @@ export const remember = mutation({
             messageIds: [userMsgId, agentMsgId],
           },
         });
-        
+
         factIds.push(factId);
       }
     }

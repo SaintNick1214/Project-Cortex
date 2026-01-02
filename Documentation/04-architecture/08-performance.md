@@ -32,21 +32,21 @@ const cortex = new Cortex({
   resilience: {
     // Token Bucket Rate Limiter
     rateLimit: {
-      tokensPerSecond: 100,      // Default: 100 ops/sec
-      maxBurst: 200,              // Allow bursts up to 200
+      tokensPerSecond: 100, // Default: 100 ops/sec
+      maxBurst: 200, // Allow bursts up to 200
     },
-    
+
     // Concurrency Control (based on Convex plan)
     concurrency: {
-      maxConcurrent: 16,          // Starter: 16, Professional: 256
-      queueSize: 1000,            // Queue up to 1000 requests
+      maxConcurrent: 16, // Starter: 16, Professional: 256
+      queueSize: 1000, // Queue up to 1000 requests
     },
-    
+
     // Circuit Breaker
     circuitBreaker: {
-      failureThreshold: 5,        // Open after 5 failures
-      timeout: 60000,             // 60s timeout
-      resetTimeout: 300000,       // Try recovery after 5 minutes
+      failureThreshold: 5, // Open after 5 failures
+      timeout: 60000, // 60s timeout
+      resetTimeout: 300000, // Try recovery after 5 minutes
     },
   },
 });
@@ -135,7 +135,7 @@ const metrics = await cortex.getResilienceMetrics();
 console.log({
   rateLimitHits: metrics.rateLimit.rejected,
   queuedRequests: metrics.concurrency.queued,
-  circuitBreakerState: metrics.circuitBreaker.state,  // CLOSED | OPEN | HALF_OPEN
+  circuitBreakerState: metrics.circuitBreaker.state, // CLOSED | OPEN | HALF_OPEN
   totalRequests: metrics.total.requests,
   failedRequests: metrics.total.failures,
 });
@@ -185,7 +185,7 @@ const memories = await ctx.db
 const memories = await ctx.db
   .query("memories")
   .withIndex("by_memorySpace_userId", (q) =>
-    q.eq("memorySpaceId", memorySpaceId).eq("userId", userId)
+    q.eq("memorySpaceId", memorySpaceId).eq("userId", userId),
   )
   .collect();
 // O(log n) directly to subset
@@ -194,7 +194,7 @@ const memories = await ctx.db
 const memories = await ctx.db
   .query("memories")
   .withIndex("by_tenant_space", (q) =>
-    q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId)
+    q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 ```

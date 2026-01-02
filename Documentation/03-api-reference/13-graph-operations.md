@@ -968,11 +968,7 @@ const result = await deleteImmutableFromGraph(
 );
 
 // Delete other immutable types
-const result2 = await deleteImmutableFromGraph(
-  "document",
-  "doc-456",
-  adapter,
-);
+const result2 = await deleteImmutableFromGraph("document", "doc-456", adapter);
 ```
 
 #### deleteMutableFromGraph()
@@ -2313,8 +2309,12 @@ try {
   });
 } catch (error) {
   if (error instanceof GraphAuthenticationError) {
-    console.error(`Authentication failed for ${error.username} at ${error.uri}`);
-    console.error("Check NEO4J_USERNAME and NEO4J_PASSWORD environment variables");
+    console.error(
+      `Authentication failed for ${error.username} at ${error.uri}`,
+    );
+    console.error(
+      "Check NEO4J_USERNAME and NEO4J_PASSWORD environment variables",
+    );
   } else if (error instanceof GraphConnectionError) {
     console.error("Connection failed - is the database running?");
   }

@@ -80,6 +80,7 @@ cortex start
 ```
 
 **What gets set up:**
+
 - ✅ Cortex SDK with TypeScript support
 - ✅ Convex backend functions (deployed automatically)
 - ✅ Environment configuration (.env.local)
@@ -103,6 +104,7 @@ npm install && npm run dev
 ```
 
 **See a production-ready chat app featuring:**
+
 - 🔄 Real-time memory orchestration visualization
 - 📊 Layer flow diagram (Memory Space → User → Agent → Conversation → Vector → Facts → Graph)
 - 🔀 Memory space switching (multi-tenant isolation)
@@ -171,22 +173,26 @@ Cortex provides a complete memory system for AI agents:
 ## ✨ Latest Releases
 
 **v0.27.x - Multi-Tenancy & Authentication (Dec 2025 - Jan 2026)**
+
 - Complete auth context with automatic tenantId propagation
 - Sessions API with configurable lifecycle
 - Multi-session tracking and management
 - Vercel AI SDK v6 Agent architecture support
 
 **v0.24.0 - Belief Revision System (Nov 2025)**
+
 - Automatic fact conflict resolution
 - Semantic conflict detection
 - Intelligent superseding of outdated facts
 
 **v0.21.0 - Memory Orchestration (Oct 2025)**
+
 - Automatic entity registration
 - CLI-first onboarding with interactive dev mode
 - Multi-deployment management
 
 **v0.16.0 - Resilience Layer (Sep 2025)**
+
 - Production-ready overload protection
 - Rate limiting and circuit breakers
 - Priority queue for critical operations
@@ -390,6 +396,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 ## 🚦 Roadmap
 
 **Production Ready (Now Available):**
+
 - ✅ Core SDK (TypeScript + Python)
 - ✅ CLI tooling with interactive dev mode
 - ✅ Vercel AI integration with quickstart demo
@@ -402,6 +409,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 - ✅ Resilience layer with circuit breakers
 
 **Coming Soon:**
+
 - 🔜 MCP Server (Q1 2026) - Cross-application memory sharing
 - 🔜 LangChain Integration (Q2 2026)
 - 🔜 LlamaIndex Integration (Q2 2026)

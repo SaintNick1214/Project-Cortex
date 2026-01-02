@@ -304,16 +304,16 @@ cortex.users.get(
 ```typescript
 interface UserProfile {
   // Identity
-  id: string;                          // User ID
-  tenantId?: string;                   // Multi-tenancy: tenant this user belongs to
+  id: string; // User ID
+  tenantId?: string; // Multi-tenancy: tenant this user belongs to
 
   // User Data (FLEXIBLE - structure is up to you!)
-  data: Record<string, unknown>;       // Any JSON-serializable data
+  data: Record<string, unknown>; // Any JSON-serializable data
 
   // System fields (automatic)
-  version: number;                     // Current version number
-  createdAt: number;                   // Unix timestamp (ms) when created
-  updatedAt: number;                   // Unix timestamp (ms) when last updated
+  version: number; // Current version number
+  createdAt: number; // Unix timestamp (ms) when created
+  updatedAt: number; // Unix timestamp (ms) when last updated
 }
 ```
 
@@ -658,7 +658,7 @@ The SDK's cascade deletion handles all the complexity automatically:
 // ✅ Recommended: Use cascade deletion (SDK handles all layers)
 const result = await cortex.users.delete("user-123", {
   cascade: true,
-  verify: true,  // Verify deletion completeness
+  verify: true, // Verify deletion completeness
 });
 
 console.log(`Deleted ${result.totalDeleted} records`);
@@ -675,13 +675,13 @@ console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
 
 **SDK Cascade vs Cloud Mode:**
 
-| Feature              | SDK (Free)             | Cloud Mode (Planned)    |
-| -------------------- | ---------------------- | ----------------------- |
-| **Cascade Deletion** | ✅ Automatic           | ✅ Automatic            |
-| **Verification**     | ✅ Automatic           | ✅ + Cryptographic proof |
-| **Rollback**         | ✅ Automatic           | ✅ + Audit trail        |
-| **Legal Certificate**| ❌ Not included        | ✅ Compliance document  |
-| **Graph Support**    | ✅ DIY adapter         | ✅ Managed, zero-config |
+| Feature               | SDK (Free)      | Cloud Mode (Planned)     |
+| --------------------- | --------------- | ------------------------ |
+| **Cascade Deletion**  | ✅ Automatic    | ✅ Automatic             |
+| **Verification**      | ✅ Automatic    | ✅ + Cryptographic proof |
+| **Rollback**          | ✅ Automatic    | ✅ + Audit trail         |
+| **Legal Certificate** | ❌ Not included | ✅ Compliance document   |
+| **Graph Support**     | ✅ DIY adapter  | ✅ Managed, zero-config  |
 
 **Errors:**
 
@@ -1137,11 +1137,11 @@ cortex.users.export(
 
 ```typescript
 interface ExportUsersOptions {
-  format: "json" | "csv";              // Output format (REQUIRED)
-  filters?: UserFilters;               // Filter users to export
-  includeVersionHistory?: boolean;     // Include version history for each user
-  includeConversations?: boolean;      // Include user's conversations
-  includeMemories?: boolean;           // Include user's memories (from conversation memory spaces)
+  format: "json" | "csv"; // Output format (REQUIRED)
+  filters?: UserFilters; // Filter users to export
+  includeVersionHistory?: boolean; // Include version history for each user
+  includeConversations?: boolean; // Include user's conversations
+  includeMemories?: boolean; // Include user's memories (from conversation memory spaces)
 }
 ```
 
@@ -1244,9 +1244,9 @@ cortex.users.getVersion(
 
 ```typescript
 interface UserVersion {
-  version: number;                    // Version number
-  data: Record<string, unknown>;      // Profile data at this version
-  timestamp: number;                  // Unix timestamp (ms) when version was created
+  version: number; // Version number
+  data: Record<string, unknown>; // Profile data at this version
+  timestamp: number; // Unix timestamp (ms) when version was created
 }
 ```
 
@@ -1298,9 +1298,9 @@ cortex.users.getHistory(
 
 ```typescript
 interface UserVersion {
-  version: number;                    // Version number
-  data: Record<string, unknown>;      // Profile data at this version
-  timestamp: number;                  // Unix timestamp (ms) when version was created
+  version: number; // Version number
+  data: Record<string, unknown>; // Profile data at this version
+  timestamp: number; // Unix timestamp (ms) when version was created
 }
 ```
 
@@ -1318,7 +1318,9 @@ history.forEach((v) => {
 
 // Analyze preference changes over time
 const themeChanges = history.filter((v, i, arr) => {
-  return i > 0 && v.data.preferences?.theme !== arr[i - 1].data.preferences?.theme;
+  return (
+    i > 0 && v.data.preferences?.theme !== arr[i - 1].data.preferences?.theme
+  );
 });
 
 console.log(`Theme changed ${themeChanges.length} times`);
@@ -1359,9 +1361,9 @@ cortex.users.getAtTimestamp(
 
 ```typescript
 interface UserVersion {
-  version: number;                    // Version number
-  data: Record<string, unknown>;      // Profile data at this version
-  timestamp: number;                  // Unix timestamp (ms) when version was created
+  version: number; // Version number
+  data: Record<string, unknown>; // Profile data at this version
+  timestamp: number; // Unix timestamp (ms) when version was created
 }
 ```
 
@@ -1380,8 +1382,14 @@ if (augustProfile) {
 }
 
 // Track tier changes over time
-const janProfile = await cortex.users.getAtTimestamp("user-123", new Date("2025-01-01"));
-const octProfile = await cortex.users.getAtTimestamp("user-123", new Date("2025-10-01"));
+const janProfile = await cortex.users.getAtTimestamp(
+  "user-123",
+  new Date("2025-01-01"),
+);
+const octProfile = await cortex.users.getAtTimestamp(
+  "user-123",
+  new Date("2025-10-01"),
+);
 
 const janTier = janProfile?.data.metadata?.tier;
 const octTier = octProfile?.data.metadata?.tier;
@@ -1545,7 +1553,11 @@ console.log(`Context for LLM: ${result.context}`);
 ### Combining Profile + Memory Search
 
 ```typescript
-async function getCompleteUserContext(userId: string, memorySpaceId: string, query: string) {
+async function getCompleteUserContext(
+  userId: string,
+  memorySpaceId: string,
+  query: string,
+) {
   // Get profile
   const profile = await cortex.users.get(userId);
 
@@ -1565,7 +1577,11 @@ async function getCompleteUserContext(userId: string, memorySpaceId: string, que
 }
 
 // Usage
-const context = await getCompleteUserContext("user-123", "user-123-space", "user preferences");
+const context = await getCompleteUserContext(
+  "user-123",
+  "user-123-space",
+  "user preferences",
+);
 console.log(`User: ${context.profile?.data.displayName}`);
 console.log(`Found ${context.memories.length} relevant memories`);
 ```
@@ -1579,29 +1595,30 @@ Filter options available for user operations:
 ```typescript
 interface UserFilters {
   // Pagination
-  limit?: number;              // Max results (default: 50, max: 1000)
-  offset?: number;             // Skip first N results
+  limit?: number; // Max results (default: 50, max: 1000)
+  offset?: number; // Skip first N results
 
   // Date filters (Unix timestamps in milliseconds)
-  createdAfter?: number;       // Filter by createdAt > timestamp
-  createdBefore?: number;      // Filter by createdAt < timestamp
-  updatedAfter?: number;       // Filter by updatedAt > timestamp
-  updatedBefore?: number;      // Filter by updatedAt < timestamp
+  createdAfter?: number; // Filter by createdAt > timestamp
+  createdBefore?: number; // Filter by createdAt < timestamp
+  updatedAfter?: number; // Filter by updatedAt > timestamp
+  updatedBefore?: number; // Filter by updatedAt < timestamp
 
   // Sorting
-  sortBy?: "createdAt" | "updatedAt";  // Sort field
-  sortOrder?: "asc" | "desc";          // Sort direction
+  sortBy?: "createdAt" | "updatedAt"; // Sort field
+  sortOrder?: "asc" | "desc"; // Sort direction
 
   // Client-side filters (see note below)
-  displayName?: string;        // Filter by data.displayName (contains match)
-  email?: string;              // Filter by data.email (contains match)
+  displayName?: string; // Filter by data.displayName (contains match)
+  email?: string; // Filter by data.email (contains match)
 
   // Multi-tenancy
-  tenantId?: string;           // Filter by tenant ID
+  tenantId?: string; // Filter by tenant ID
 }
 ```
 
 > **⚠️ Client-Side Filtering Note:** The `displayName` and `email` filters are applied client-side after fetching results from the database. This means:
+>
 > - Results are filtered AFTER pagination is applied
 > - You may receive fewer results than your `limit` if many are filtered out
 > - For large datasets, consider using database-level filters (date ranges) first
@@ -1620,7 +1637,7 @@ interface UserFilters {
 ```typescript
 // Filter by date range
 const recentUsers = await cortex.users.list({
-  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000,  // Last 30 days
+  createdAfter: Date.now() - 30 * 24 * 60 * 60 * 1000, // Last 30 days
   sortBy: "createdAt",
   sortOrder: "desc",
   limit: 50,
@@ -1628,14 +1645,14 @@ const recentUsers = await cortex.users.list({
 
 // Client-side displayName filter
 const alexUsers = await cortex.users.search({
-  displayName: "alex",  // Case-insensitive contains match
+  displayName: "alex", // Case-insensitive contains match
   limit: 100,
 });
 
 // Bulk update with filters
 await cortex.users.updateMany(
   { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
-  { data: { welcomeEmailSent: true } }
+  { data: { welcomeEmailSent: true } },
 );
 ```
 
@@ -1649,7 +1666,7 @@ interface AdvancedFilters {
   // Nested object filters (planned)
   "preferences.theme"?: "light" | "dark";
   "metadata.tier"?: "free" | "pro" | "enterprise";
-  
+
   // Range query operators (planned)
   // { $gte, $lte, $eq, $ne, $gt, $lt }
 }
@@ -1711,7 +1728,8 @@ async function enhanceProfileFromConversation(
     metadata: {
       ...(existingData.metadata || {}),
       lastSeen: new Date().toISOString(),
-      conversationCount: ((existingData.metadata?.conversationCount as number) || 0) + 1,
+      conversationCount:
+        ((existingData.metadata?.conversationCount as number) || 0) + 1,
     },
   });
 }
@@ -1762,7 +1780,7 @@ import { Cortex, createAuthContext } from "@cortex-platform/sdk";
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   auth: createAuthContext({
-    tenantId: "tenant-abc",  // All operations scoped to this tenant
+    tenantId: "tenant-abc", // All operations scoped to this tenant
     userId: "admin-user",
   }),
 });
@@ -1826,7 +1844,10 @@ Track user engagement and behavior:
 ```typescript
 async function updateUserEngagement(userId: string, event: string) {
   const user = await cortex.users.get(userId);
-  const existingMetadata = (user?.data.metadata || {}) as Record<string, unknown>;
+  const existingMetadata = (user?.data.metadata || {}) as Record<
+    string,
+    unknown
+  >;
 
   await cortex.users.update(userId, {
     metadata: {
@@ -1839,12 +1860,14 @@ async function updateUserEngagement(userId: string, event: string) {
   });
 }
 
-function calculateEngagement(user: { data: Record<string, unknown> } | null): number {
+function calculateEngagement(
+  user: { data: Record<string, unknown> } | null,
+): number {
   if (!user) return 0;
-  const metadata = user.data.metadata as Record<string, unknown> || {};
+  const metadata = (user.data.metadata as Record<string, unknown>) || {};
   const signupDate = metadata.signupDate as string;
   if (!signupDate) return 0;
-  
+
   const daysSinceSignup =
     (Date.now() - new Date(signupDate).getTime()) / (24 * 60 * 60 * 1000);
   const sessions = (metadata.totalSessions as number) || 0;
@@ -1918,6 +1941,7 @@ const cortex = new Cortex({
 ```
 
 Currently, profile validation is handled through the SDK's built-in validators which check:
+
 - User ID is a non-empty string
 - Data is a valid object (not array, not null)
 
@@ -2076,12 +2100,14 @@ async function handleGDPRDeletion(userId: string) {
 
   // Delete profile + all data with cascade
   const result = await cortex.users.delete(userId, {
-    cascade: true,   // Delete from ALL layers
-    verify: true,    // Verify deletion completeness
+    cascade: true, // Delete from ALL layers
+    verify: true, // Verify deletion completeness
   });
 
   console.log(`Deleted ${result.totalDeleted} records`);
-  console.log(`Verification: ${result.verification.complete ? "Complete" : "Issues found"}`);
+  console.log(
+    `Verification: ${result.verification.complete ? "Complete" : "Issues found"}`,
+  );
 
   return result;
 }
@@ -2157,11 +2183,11 @@ Thrown when client-side validation fails (before reaching the backend):
 import { UserValidationError } from "@cortex-platform/sdk";
 
 try {
-  await cortex.users.update("", { name: "Test" });  // Empty userId
+  await cortex.users.update("", { name: "Test" }); // Empty userId
 } catch (error) {
   if (error instanceof UserValidationError) {
-    console.log(error.code);   // "MISSING_USER_ID"
-    console.log(error.field);  // "userId"
+    console.log(error.code); // "MISSING_USER_ID"
+    console.log(error.field); // "userId"
     console.log(error.message); // "userId is required"
   }
 }
@@ -2178,8 +2204,8 @@ try {
   await cortex.users.delete("user-123", { cascade: true });
 } catch (error) {
   if (error instanceof CascadeDeletionError) {
-    console.log(error.message);  // Cascade deletion failed for user...
-    console.log(error.cause);    // Original error that caused failure
+    console.log(error.message); // Cascade deletion failed for user...
+    console.log(error.cause); // Original error that caused failure
     // Note: All deleted records have been automatically restored
   }
 }

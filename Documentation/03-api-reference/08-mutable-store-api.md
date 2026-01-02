@@ -1147,11 +1147,31 @@ await cortex.mutable.update("inventory", "store-15:produce:apples", (item) => {
 // Note: transaction() uses array-based operations, not callback functions
 await cortex.mutable.transaction([
   // Buy apples, bananas, and milk (using decrement)
-  { op: "decrement", namespace: "inventory", key: "store-15:produce:apples", amount: 5 },
-  { op: "decrement", namespace: "inventory", key: "store-15:produce:bananas", amount: 3 },
-  { op: "decrement", namespace: "inventory", key: "store-15:dairy:milk", amount: 2 },
+  {
+    op: "decrement",
+    namespace: "inventory",
+    key: "store-15:produce:apples",
+    amount: 5,
+  },
+  {
+    op: "decrement",
+    namespace: "inventory",
+    key: "store-15:produce:bananas",
+    amount: 3,
+  },
+  {
+    op: "decrement",
+    namespace: "inventory",
+    key: "store-15:dairy:milk",
+    amount: 2,
+  },
   // Increment sales counter
-  { op: "increment", namespace: "metrics", key: "store-15-daily-sales", amount: 1 },
+  {
+    op: "increment",
+    namespace: "metrics",
+    key: "store-15-daily-sales",
+    amount: 1,
+  },
 ]);
 // All operations succeed together or fail together (ACID)
 
@@ -1256,9 +1276,7 @@ async function checkLowStock(storeId: string, threshold: number = 20) {
     keyPrefix: `${storeId}:`,
   });
 
-  const lowStock = inventory.filter(
-    (item) => item.value.quantity < threshold,
-  );
+  const lowStock = inventory.filter((item) => item.value.quantity < threshold);
 
   if (lowStock.length > 0) {
     console.log(`⚠️ Low stock alert for ${storeId}:`);
@@ -2103,22 +2121,22 @@ try {
 
 **Common Error Codes:**
 
-| Code | Description |
-|------|-------------|
-| `MISSING_NAMESPACE` | Namespace is required but was empty or undefined |
-| `INVALID_NAMESPACE` | Namespace format is invalid (must be alphanumeric, hyphens, underscores, dots, colons) |
-| `NAMESPACE_TOO_LONG` | Namespace exceeds 100 characters |
-| `MISSING_KEY` | Key is required but was empty or undefined |
-| `INVALID_KEY` | Key format is invalid |
-| `KEY_TOO_LONG` | Key exceeds 255 characters |
-| `MISSING_VALUE` | Value is required for set operations |
-| `VALUE_TOO_LARGE` | Value exceeds 1MB size limit |
-| `INVALID_USER_ID` | userId format is invalid |
-| `INVALID_LIMIT_RANGE` | limit must be between 0 and 1000 |
-| `INVALID_UPDATER_TYPE` | Updater must be a function |
-| `MISSING_OPERATIONS` | Transaction requires operations array |
-| `EMPTY_OPERATIONS_ARRAY` | Transaction operations array cannot be empty |
-| `INVALID_OPERATION_TYPE` | Transaction operation must be set, update, delete, increment, or decrement |
+| Code                     | Description                                                                            |
+| ------------------------ | -------------------------------------------------------------------------------------- |
+| `MISSING_NAMESPACE`      | Namespace is required but was empty or undefined                                       |
+| `INVALID_NAMESPACE`      | Namespace format is invalid (must be alphanumeric, hyphens, underscores, dots, colons) |
+| `NAMESPACE_TOO_LONG`     | Namespace exceeds 100 characters                                                       |
+| `MISSING_KEY`            | Key is required but was empty or undefined                                             |
+| `INVALID_KEY`            | Key format is invalid                                                                  |
+| `KEY_TOO_LONG`           | Key exceeds 255 characters                                                             |
+| `MISSING_VALUE`          | Value is required for set operations                                                   |
+| `VALUE_TOO_LARGE`        | Value exceeds 1MB size limit                                                           |
+| `INVALID_USER_ID`        | userId format is invalid                                                               |
+| `INVALID_LIMIT_RANGE`    | limit must be between 0 and 1000                                                       |
+| `INVALID_UPDATER_TYPE`   | Updater must be a function                                                             |
+| `MISSING_OPERATIONS`     | Transaction requires operations array                                                  |
+| `EMPTY_OPERATIONS_ARRAY` | Transaction operations array cannot be empty                                           |
+| `INVALID_OPERATION_TYPE` | Transaction operation must be set, update, delete, increment, or decrement             |
 
 ---
 

@@ -191,7 +191,7 @@ interface VectorMemory {
   memorySpaceId: string; // Isolation
   content: string;
   embedding: number[];
-  metadata: { importance: number; tags: string[]; };
+  metadata: { importance: number; tags: string[] };
   createdAt: number; // Unix timestamp (milliseconds)
   updatedAt: number; // Unix timestamp (milliseconds)
 }

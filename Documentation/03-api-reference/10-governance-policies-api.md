@@ -98,18 +98,18 @@ interface GovernancePolicy {
   // Sessions: Lifecycle configuration (optional)
   sessions?: {
     lifecycle: {
-      idleTimeout: string;      // Duration until idle (e.g., '30m', '1h') - default: '30m'
-      maxDuration: string;      // Max session lifetime (e.g., '24h', '7d') - default: '24h'
-      autoExtend: boolean;      // Extend session on activity - default: true
+      idleTimeout: string; // Duration until idle (e.g., '30m', '1h') - default: '30m'
+      maxDuration: string; // Max session lifetime (e.g., '24h', '7d') - default: '24h'
+      autoExtend: boolean; // Extend session on activity - default: true
       warnBeforeExpiry?: string; // Warning duration (e.g., '5m', '15m')
     };
     cleanup: {
-      autoExpireIdle: boolean;     // Auto-expire idle sessions - default: true
-      deleteEndedAfter?: string;   // Delete ended sessions after duration (e.g., '30d')
-      archiveAfter?: string;       // Archive before deletion (e.g., '7d')
+      autoExpireIdle: boolean; // Auto-expire idle sessions - default: true
+      deleteEndedAfter?: string; // Delete ended sessions after duration (e.g., '30d')
+      archiveAfter?: string; // Archive before deletion (e.g., '7d')
     };
     limits?: {
-      maxActiveSessions?: number;    // Max concurrent sessions per user
+      maxActiveSessions?: number; // Max concurrent sessions per user
       maxSessionsPerDevice?: number; // Max sessions per device type
     };
   };
@@ -396,19 +396,19 @@ await cortex.governance.setPolicy({
 
   sessions: {
     lifecycle: {
-      idleTimeout: '30m',      // Inactivity timeout (default: 30 minutes)
-      maxDuration: '24h',      // Absolute session lifetime (default: 24 hours)
-      autoExtend: true,        // Extend session on activity
-      warnBeforeExpiry: '5m',  // Warn user 5 minutes before expiry
+      idleTimeout: "30m", // Inactivity timeout (default: 30 minutes)
+      maxDuration: "24h", // Absolute session lifetime (default: 24 hours)
+      autoExtend: true, // Extend session on activity
+      warnBeforeExpiry: "5m", // Warn user 5 minutes before expiry
     },
     cleanup: {
-      autoExpireIdle: true,      // Auto-expire idle sessions
-      deleteEndedAfter: '30d',   // Delete ended sessions after 30 days
-      archiveAfter: '7d',        // Archive sessions before deletion
+      autoExpireIdle: true, // Auto-expire idle sessions
+      deleteEndedAfter: "30d", // Delete ended sessions after 30 days
+      archiveAfter: "7d", // Archive sessions before deletion
     },
     limits: {
-      maxActiveSessions: 5,      // Max concurrent sessions per user
-      maxSessionsPerDevice: 3,   // Max sessions per device type
+      maxActiveSessions: 5, // Max concurrent sessions per user
+      maxSessionsPerDevice: 3, // Max sessions per device type
     },
   },
 });
@@ -421,13 +421,13 @@ await cortex.governance.setPolicy({
 await cortex.governance.setAgentOverride("enterprise-memory-space", {
   sessions: {
     lifecycle: {
-      idleTimeout: '1h',       // 1 hour idle timeout
-      maxDuration: '7d',       // 7 day max session
+      idleTimeout: "1h", // 1 hour idle timeout
+      maxDuration: "7d", // 7 day max session
       autoExtend: true,
     },
     cleanup: {
       autoExpireIdle: true,
-      deleteEndedAfter: '90d',
+      deleteEndedAfter: "90d",
     },
     limits: {
       maxActiveSessions: 20,
@@ -439,14 +439,14 @@ await cortex.governance.setAgentOverride("enterprise-memory-space", {
 await cortex.governance.setAgentOverride("banking-memory-space", {
   sessions: {
     lifecycle: {
-      idleTimeout: '5m',       // 5 minute idle timeout
-      maxDuration: '1h',       // 1 hour max session
-      autoExtend: false,       // No auto-extension for security
-      warnBeforeExpiry: '2m',  // Warn 2 minutes before expiry
+      idleTimeout: "5m", // 5 minute idle timeout
+      maxDuration: "1h", // 1 hour max session
+      autoExtend: false, // No auto-extension for security
+      warnBeforeExpiry: "2m", // Warn 2 minutes before expiry
     },
     cleanup: {
       autoExpireIdle: true,
-      deleteEndedAfter: '7d',
+      deleteEndedAfter: "7d",
     },
     limits: {
       maxActiveSessions: 3,
@@ -457,7 +457,7 @@ await cortex.governance.setAgentOverride("banking-memory-space", {
 
 ### Session Policy Integration
 
-Session policies defined here configure the behavior enforced by the [Sessions API](./11-sessions-operations.md). The Governance API defines the *rules*, while the Sessions API *executes* them.
+Session policies defined here configure the behavior enforced by the [Sessions API](./11-sessions-operations.md). The Governance API defines the _rules_, while the Sessions API _executes_ them.
 
 ```typescript
 // Governance defines the policy
@@ -465,8 +465,8 @@ await cortex.governance.setPolicy({
   organizationId: "org-123",
   // ... other policy fields ...
   sessions: {
-    lifecycle: { idleTimeout: '30m', maxDuration: '24h', autoExtend: true },
-    cleanup: { autoExpireIdle: true, deleteEndedAfter: '30d' },
+    lifecycle: { idleTimeout: "30m", maxDuration: "24h", autoExtend: true },
+    cleanup: { autoExpireIdle: true, deleteEndedAfter: "30d" },
   },
 });
 
@@ -548,11 +548,11 @@ const spaceResult = await cortex.governance.enforce({
 
 ```typescript
 interface EnforcementResult {
-  enforcedAt: number;           // Unix timestamp when enforcement ran
-  versionsDeleted: number;      // Total versions deleted across all layers
-  recordsPurged: number;        // Total records purged
-  storageFreed: number;         // Storage freed in MB
-  affectedLayers: string[];     // Layers that were affected
+  enforcedAt: number; // Unix timestamp when enforcement ran
+  versionsDeleted: number; // Total versions deleted across all layers
+  recordsPurged: number; // Total records purged
+  storageFreed: number; // Storage freed in MB
+  affectedLayers: string[]; // Layers that were affected
 }
 ```
 
@@ -561,26 +561,26 @@ interface EnforcementResult {
 ```typescript
 interface EnforcementStats {
   period: {
-    start: number;              // Unix timestamp
-    end: number;                // Unix timestamp
+    start: number; // Unix timestamp
+    end: number; // Unix timestamp
   };
   conversations: {
-    purged: number;             // Conversations deleted
-    archived: number;           // Conversations archived
+    purged: number; // Conversations deleted
+    archived: number; // Conversations archived
   };
   immutable: {
-    versionsDeleted: number;    // Immutable versions cleaned up
-    entitiesPurged: number;     // Immutable entities removed
+    versionsDeleted: number; // Immutable versions cleaned up
+    entitiesPurged: number; // Immutable entities removed
   };
   vector: {
-    versionsDeleted: number;    // Vector memory versions deleted
-    memoriesPurged: number;     // Vector memories removed
+    versionsDeleted: number; // Vector memory versions deleted
+    memoriesPurged: number; // Vector memories removed
   };
   mutable: {
-    keysDeleted: number;        // Mutable keys deleted
+    keysDeleted: number; // Mutable keys deleted
   };
-  storageFreed: number;         // Total storage freed in MB
-  costSavings: number;          // Estimated cost savings in USD
+  storageFreed: number; // Total storage freed in MB
+  costSavings: number; // Estimated cost savings in USD
 }
 ```
 
@@ -671,37 +671,37 @@ The Governance API provides a custom error class for validation failures, allowi
 ### GovernanceValidationError
 
 ```typescript
-import { GovernanceValidationError } from '@cortex/sdk';
+import { GovernanceValidationError } from "@cortex/sdk";
 
 class GovernanceValidationError extends Error {
   name: "GovernanceValidationError";
-  code: string;     // Error code for programmatic handling
-  field?: string;   // Field that caused the error (if applicable)
+  code: string; // Error code for programmatic handling
+  field?: string; // Field that caused the error (if applicable)
 }
 ```
 
 ### Error Codes
 
-| Code | Description |
-|------|-------------|
-| `MISSING_POLICY` | Policy object is required but not provided |
-| `MISSING_REQUIRED_FIELD` | Required field missing (e.g., `conversations`, `compliance`) |
-| `MISSING_SCOPE` | Scope (organizationId or memorySpaceId) is required |
-| `INVALID_SCOPE` | Scope provided but invalid (empty string, etc.) |
-| `INVALID_PERIOD_FORMAT` | Period string doesn't match format (e.g., `7d`, `1y`) |
-| `INVALID_IMPORTANCE_RANGE` | Importance range invalid (not 0-100, min >= max) |
-| `OVERLAPPING_IMPORTANCE_RANGES` | Two importance ranges overlap |
-| `INVALID_VERSIONS` | Version count invalid (must be >= -1) |
-| `INVALID_LAYERS` | Invalid layer specified for enforcement |
-| `INVALID_RULES` | Invalid rule specified for enforcement |
-| `INVALID_DATE_RANGE` | Start date must be before end date |
-| `INVALID_PERIOD` | Stats period invalid (must be `7d`, `30d`, `90d`, `1y`) |
-| `INVALID_COMPLIANCE_MODE` | Invalid compliance template name |
+| Code                            | Description                                                  |
+| ------------------------------- | ------------------------------------------------------------ |
+| `MISSING_POLICY`                | Policy object is required but not provided                   |
+| `MISSING_REQUIRED_FIELD`        | Required field missing (e.g., `conversations`, `compliance`) |
+| `MISSING_SCOPE`                 | Scope (organizationId or memorySpaceId) is required          |
+| `INVALID_SCOPE`                 | Scope provided but invalid (empty string, etc.)              |
+| `INVALID_PERIOD_FORMAT`         | Period string doesn't match format (e.g., `7d`, `1y`)        |
+| `INVALID_IMPORTANCE_RANGE`      | Importance range invalid (not 0-100, min >= max)             |
+| `OVERLAPPING_IMPORTANCE_RANGES` | Two importance ranges overlap                                |
+| `INVALID_VERSIONS`              | Version count invalid (must be >= -1)                        |
+| `INVALID_LAYERS`                | Invalid layer specified for enforcement                      |
+| `INVALID_RULES`                 | Invalid rule specified for enforcement                       |
+| `INVALID_DATE_RANGE`            | Start date must be before end date                           |
+| `INVALID_PERIOD`                | Stats period invalid (must be `7d`, `30d`, `90d`, `1y`)      |
+| `INVALID_COMPLIANCE_MODE`       | Invalid compliance template name                             |
 
 ### Example Usage
 
 ```typescript
-import { GovernanceValidationError } from '@cortex/sdk';
+import { GovernanceValidationError } from "@cortex/sdk";
 
 try {
   await cortex.governance.setPolicy({
@@ -717,14 +717,14 @@ try {
     console.error(`Validation failed: ${error.message}`);
     console.error(`Error code: ${error.code}`);
     console.error(`Field: ${error.field}`);
-    
+
     // Handle specific error codes
     switch (error.code) {
-      case 'INVALID_PERIOD_FORMAT':
+      case "INVALID_PERIOD_FORMAT":
         console.error('Period must be like "7d", "30d", "1y"');
         break;
-      case 'MISSING_SCOPE':
-        console.error('Provide organizationId or memorySpaceId');
+      case "MISSING_SCOPE":
+        console.error("Provide organizationId or memorySpaceId");
         break;
     }
   } else {
@@ -812,7 +812,7 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 - ✅ Per-layer configuration
 - ✅ Compliance templates (GDPR, HIPAA, SOC2, FINRA)
 - ✅ Manual enforcement via `enforce()`
-- ⏳ Automatic enforcement *(planned)*
+- ⏳ Automatic enforcement _(planned)_
 - ✅ Cost optimization via `simulate()`
 - ✅ Audit trail via `getComplianceReport()`
 

@@ -42,7 +42,7 @@ Create an authentication context for use with Cortex SDK.
 **Signature:**
 
 ```typescript
-function createAuthContext(params: AuthContextParams): AuthContext
+function createAuthContext(params: AuthContextParams): AuthContext;
 ```
 
 **Parameters:**
@@ -286,18 +286,18 @@ await cortexB.memory.search("shared", "anything");
 
 **ALL Cortex layers automatically support tenant isolation:**
 
-| Layer | API | Tenant Isolation |
-|-------|-----|------------------|
-| **Layer 1a** | `cortex.conversations.*` | ✅ Auto-filtered by tenantId |
-| **Layer 1b** | `cortex.immutable.*` | ✅ Auto-filtered by tenantId |
-| **Layer 1c** | `cortex.mutable.*` | ✅ Auto-filtered by tenantId |
-| **Layer 2** | `cortex.vector.*` | ✅ Auto-filtered by tenantId |
-| **Layer 3** | `cortex.facts.*` | ✅ Auto-filtered by tenantId |
-| **Spaces** | `cortex.memorySpaces.*` | ✅ Auto-filtered by tenantId |
-| **Users** | `cortex.users.*` | ✅ Auto-filtered by tenantId |
-| **Contexts** | `cortex.contexts.*` | ✅ Auto-filtered by tenantId |
-| **Sessions** | `cortex.sessions.*` | ✅ Auto-filtered by tenantId |
-| **Graph** | Graph nodes | ✅ tenantId property on all nodes |
+| Layer        | API                      | Tenant Isolation                  |
+| ------------ | ------------------------ | --------------------------------- |
+| **Layer 1a** | `cortex.conversations.*` | ✅ Auto-filtered by tenantId      |
+| **Layer 1b** | `cortex.immutable.*`     | ✅ Auto-filtered by tenantId      |
+| **Layer 1c** | `cortex.mutable.*`       | ✅ Auto-filtered by tenantId      |
+| **Layer 2**  | `cortex.vector.*`        | ✅ Auto-filtered by tenantId      |
+| **Layer 3**  | `cortex.facts.*`         | ✅ Auto-filtered by tenantId      |
+| **Spaces**   | `cortex.memorySpaces.*`  | ✅ Auto-filtered by tenantId      |
+| **Users**    | `cortex.users.*`         | ✅ Auto-filtered by tenantId      |
+| **Contexts** | `cortex.contexts.*`      | ✅ Auto-filtered by tenantId      |
+| **Sessions** | `cortex.sessions.*`      | ✅ Auto-filtered by tenantId      |
+| **Graph**    | Graph nodes              | ✅ tenantId property on all nodes |
 
 ### Tenant-Aware GDPR
 
@@ -504,6 +504,7 @@ await cortex.sessions.expireIdle();
 ### Required Fields
 
 **userId** (string)
+
 - Unique user identifier
 - Required for all auth contexts
 - Used for user operations and GDPR cascade
@@ -512,6 +513,7 @@ await cortex.sessions.expireIdle();
 ### Optional Standard Fields
 
 **tenantId** (string, optional)
+
 - Tenant identifier for multi-tenant SaaS
 - Auto-injected into ALL operations for complete isolation
 - Filters all queries by tenant
@@ -519,27 +521,32 @@ await cortex.sessions.expireIdle();
 - See [Isolation Boundaries](../02-core-features/17-isolation-boundaries.md)
 
 **organizationId** (string, optional)
+
 - Organization within tenant (optional sub-grouping)
 - Use for hierarchical tenant structures
 - Not auto-filtered (application-level filtering)
 
 **sessionId** (string, optional)
+
 - Current session identifier
 - Used for session activity tracking
 - References session in Sessions API
 - Enables multi-device session management
 
 **authProvider** (string, optional)
+
 - Name of auth provider (e.g., 'auth0', 'clerk', 'custom')
 - Informational only (for logging/debugging)
 - Not used for filtering or logic
 
 **authMethod** (string, optional)
+
 - Authentication method used
 - Options: 'oauth', 'api_key', 'jwt', 'session', 'custom'
 - Informational only
 
 **authenticatedAt** (number, optional)
+
 - Unix timestamp (ms) when user authenticated
 - Used for session timeout calculations
 - Informational for audit logs
@@ -547,12 +554,14 @@ await cortex.sessions.expireIdle();
 ### Extensible Fields
 
 **claims** (Record<string, unknown>, optional)
+
 - Raw claims from auth provider
 - JWT payload, OAuth token data, etc.
 - Store non-sensitive data only
 - Use for audit trails and debugging
 
 **metadata** (Record<string, unknown>, optional)
+
 - Application-specific metadata
 - Fully flexible structure
 - Store roles, permissions, preferences
@@ -587,6 +596,7 @@ async function handler(req, res) {
 ```
 
 **Benefits:**
+
 - Proper tenant isolation
 - No cross-request pollution
 - Clean auth context per request
@@ -612,6 +622,7 @@ await cortex.memory.search(...);
 ```
 
 **Benefits:**
+
 - Simpler code
 - Better performance (connection reuse)
 - Suitable for CLI, desktop, single-user apps
@@ -647,14 +658,17 @@ const cortexOrgB = await switchOrg("user-123", "org-b");
 When auth context is set, these fields are automatically added to entities:
 
 **Always Injected:**
+
 - `userId` → All entities with userId support (memories, conversations, facts, etc.)
 - `tenantId` → ALL entities in ALL layers (complete isolation)
 
 **Conditionally Injected:**
+
 - `sessionId` → Session operations only
 - `organizationId` → Metadata only (not used for filtering)
 
 **Never Injected:**
+
 - `claims` → Read from auth context as needed
 - `metadata` → Read from auth context as needed
 - `authProvider`, `authMethod`, `authenticatedAt` → Informational only
@@ -704,17 +718,17 @@ try {
 
 ### Error Codes
 
-| Code | Description | Field |
-|------|-------------|-------|
-| `MISSING_USER_ID` | userId is required | `userId` |
-| `EMPTY_USER_ID` | userId cannot be empty string | `userId` |
-| `INVALID_USER_ID_TYPE` | userId must be a string | `userId` |
-| `EMPTY_TENANT_ID` | tenantId cannot be empty if provided | `tenantId` |
-| `EMPTY_SESSION_ID` | sessionId cannot be empty if provided | `sessionId` |
-| `INVALID_TIMESTAMP` | authenticatedAt must be positive number | `authenticatedAt` |
-| `INVALID_AUTH_METHOD` | authMethod must be valid enum value | `authMethod` |
-| `INVALID_CLAIMS_TYPE` | claims must be an object | `claims` |
-| `INVALID_METADATA_TYPE` | metadata must be an object | `metadata` |
+| Code                    | Description                             | Field             |
+| ----------------------- | --------------------------------------- | ----------------- |
+| `MISSING_USER_ID`       | userId is required                      | `userId`          |
+| `EMPTY_USER_ID`         | userId cannot be empty string           | `userId`          |
+| `INVALID_USER_ID_TYPE`  | userId must be a string                 | `userId`          |
+| `EMPTY_TENANT_ID`       | tenantId cannot be empty if provided    | `tenantId`        |
+| `EMPTY_SESSION_ID`      | sessionId cannot be empty if provided   | `sessionId`       |
+| `INVALID_TIMESTAMP`     | authenticatedAt must be positive number | `authenticatedAt` |
+| `INVALID_AUTH_METHOD`   | authMethod must be valid enum value     | `authMethod`      |
+| `INVALID_CLAIMS_TYPE`   | claims must be an object                | `claims`          |
+| `INVALID_METADATA_TYPE` | metadata must be an object              | `metadata`        |
 
 ---
 

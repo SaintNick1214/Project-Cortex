@@ -60,10 +60,10 @@ Sessions follow a three-state lifecycle:
 
 **Default Timeouts:**
 
-| State | Timeout | Description |
-|-------|---------|-------------|
-| Active | 30m | No activity moves session to idle |
-| Idle | 24h | After 24h idle, session is ended |
+| State  | Timeout | Description                       |
+| ------ | ------- | --------------------------------- |
+| Active | 30m     | No activity moves session to idle |
+| Idle   | 24h     | After 24h idle, session is ended  |
 
 Timeouts are configurable via the [Governance Policies](./15-governance-policies.md).
 
@@ -75,8 +75,8 @@ Timeouts are configurable via the [Governance Policies](./15-governance-policies
 // Create a new session
 const session = await cortex.sessions.create({
   userId: "user-123",
-  tenantId: "tenant-abc",        // Optional: multi-tenant isolation
-  memorySpaceId: "personal",     // Optional: associate with memory space
+  tenantId: "tenant-abc", // Optional: multi-tenant isolation
+  memorySpaceId: "personal", // Optional: associate with memory space
   metadata: {
     deviceType: "mobile",
     appVersion: "2.1.0",
@@ -151,13 +151,13 @@ async function handleUserConnection(
 ) {
   // Try to resume existing active session
   const existingSessions = await cortex.sessions.getActive(userId);
-  
+
   if (existingSessions.length > 0) {
     const session = existingSessions[0];
     await cortex.sessions.touch(session.sessionId);
     return session;
   }
-  
+
   // Create new session
   return cortex.sessions.create({
     userId,
@@ -174,8 +174,8 @@ Show users their active devices and allow remote logout:
 // Get all active sessions for "active devices" UI
 async function getActiveSessions(userId: string) {
   const sessions = await cortex.sessions.getActive(userId);
-  
-  return sessions.map(s => ({
+
+  return sessions.map((s) => ({
     id: s.sessionId,
     device: s.metadata?.deviceType || "unknown",
     lastActive: new Date(s.lastActiveAt),
@@ -186,7 +186,7 @@ async function getActiveSessions(userId: string) {
 // Logout from all other devices
 async function logoutOtherDevices(userId: string, currentSessionId: string) {
   const sessions = await cortex.sessions.getActive(userId);
-  
+
   for (const session of sessions) {
     if (session.sessionId !== currentSessionId) {
       await cortex.sessions.end(session.sessionId);
@@ -206,7 +206,7 @@ async function getSessionStats(tenantId: string) {
     cortex.sessions.count({ tenantId, status: "idle" }),
     cortex.sessions.count({ tenantId, status: "ended" }),
   ]);
-  
+
   return {
     currentlyOnline: active,
     recentlyActive: idle,
@@ -224,9 +224,9 @@ Run periodic cleanup of idle sessions:
 async function cleanupIdleSessions() {
   const result = await cortex.sessions.expireIdle({
     tenantId: "tenant-abc",
-    idleTimeout: 30 * 60 * 1000,  // 30 minutes
+    idleTimeout: 30 * 60 * 1000, // 30 minutes
   });
-  
+
   console.log(`Expired ${result.expired} idle sessions`);
 }
 ```
@@ -298,7 +298,7 @@ import { createAuthContext } from "@cortex-platform/sdk";
 const auth = createAuthContext({
   userId: "user-123",
   sessionId: "session-xyz",
-  tenantId: "tenant-abc",  // Auto-injected to all operations
+  tenantId: "tenant-abc", // Auto-injected to all operations
 });
 
 const cortex = new Cortex({
@@ -339,25 +339,25 @@ import { SessionValidationError } from "@cortex-platform/sdk";
 
 try {
   await cortex.sessions.create({
-    userId: "",  // Invalid: empty userId
+    userId: "", // Invalid: empty userId
   });
 } catch (error) {
   if (error instanceof SessionValidationError) {
     console.log(`Validation error: ${error.message}`);
-    console.log(`Code: ${error.code}`);    // e.g., "EMPTY_USER_ID"
-    console.log(`Field: ${error.field}`);  // e.g., "userId"
+    console.log(`Code: ${error.code}`); // e.g., "EMPTY_USER_ID"
+    console.log(`Field: ${error.field}`); // e.g., "userId"
   }
 }
 ```
 
 **Common Validation Errors:**
 
-| Code | Description |
-|------|-------------|
-| `MISSING_USER_ID` | userId is required |
-| `EMPTY_USER_ID` | userId cannot be empty |
+| Code                   | Description                            |
+| ---------------------- | -------------------------------------- |
+| `MISSING_USER_ID`      | userId is required                     |
+| `EMPTY_USER_ID`        | userId cannot be empty                 |
 | `INVALID_STATUS_VALUE` | status must be: active, idle, or ended |
-| `INVALID_LIMIT` | limit must be between 1 and 1000 |
+| `INVALID_LIMIT`        | limit must be between 1 and 1000       |
 
 ## Related Features
 

@@ -71,6 +71,7 @@ cortex start
 ```
 
 The CLI handles everything:
+
 - ✅ **Zero configuration** - Works out of the box
 - ✅ **Project scaffolding** - Templates and examples included
 - ✅ **Multi-deployment** - Local, staging, production
@@ -83,11 +84,11 @@ The CLI handles everything:
 import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
 // Works with ANY auth system (Auth0, Clerk, Okta, WorkOS, custom JWT, etc.)
-const cortex = new Cortex({ 
+const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
   auth: createAuthContext({
-    userId: yourUser.id,           // From your existing auth
-    tenantId: yourUser.tenantId,   // Optional (for multi-tenant SaaS)
+    userId: yourUser.id, // From your existing auth
+    tenantId: yourUser.tenantId, // Optional (for multi-tenant SaaS)
   }),
 });
 
@@ -510,6 +511,7 @@ cortex start
 ```
 
 **What you get:**
+
 - 🚀 Complete project scaffolding
 - ⚙️ Convex backend deployed
 - 💾 Working example code

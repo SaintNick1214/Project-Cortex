@@ -140,6 +140,7 @@ cortex spaces participants user-123-personal
 ```
 
 **Learn more:**
+
 - [Memory Spaces Guide](../02-core-features/01-memory-spaces.md)
 - [CLI: spaces commands](../06-tools/01-cli-reference.md#cortex-spaces)
 
@@ -905,6 +906,7 @@ cortex memory stats --space user-123-personal
 ```
 
 **Learn more:**
+
 - [Semantic Search Guide](../02-core-features/02-semantic-search.md)
 - [CLI: memory commands](../06-tools/01-cli-reference.md#cortex-memory)
 
@@ -996,6 +998,7 @@ cortex users delete user-123 --cascade
 ```
 
 **Learn more:**
+
 - [User Profiles Guide](../02-core-features/03-user-profiles.md)
 - [CLI: users commands](../06-tools/01-cli-reference.md#cortex-users)
 
@@ -1201,6 +1204,7 @@ const hot = await cortex.analytics.findHotMemories("user-123-personal", {
 ```
 
 **Learn more:**
+
 - [Access Analytics Guide](../02-core-features/07-access-analytics.md)
 - [CLI: db commands](../06-tools/01-cli-reference.md#cortex-db-stats)
 

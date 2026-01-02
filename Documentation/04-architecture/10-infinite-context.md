@@ -82,7 +82,7 @@ async function respondToUser(userMessage: string, memorySpaceId: string) {
     query: userMessage,
     embedding: await embed(userMessage),
     userId: "user-123",
-    limit: 10,  // Top 10 most relevant from ALL layers
+    limit: 10, // Top 10 most relevant from ALL layers
   });
 
   // 2. Construct prompt with ONLY relevant context
@@ -110,12 +110,12 @@ Instructions: Use the context above to provide a personalized response.
   // 4. Store new exchange with full orchestration (L1 + L2 + L3)
   await cortex.memory.remember({
     memorySpaceId,
-    participantId: "my-assistant",  // Track participant
+    participantId: "my-assistant", // Track participant
     userMessage,
     agentResponse: response,
     userId: "user-123",
     userName: "User",
-    extractFacts: true,  // Auto-extract facts (Layer 3)
+    extractFacts: true, // Auto-extract facts (Layer 3)
     // → Belief Revision System prevents duplicates
   });
 
@@ -158,25 +158,26 @@ interface ConversationStore {
 // Semantic index for fast retrieval
 interface VectorMemory {
   memoryId: string;
-  memorySpaceId: string;       // Isolation boundary
-  participantId?: string;      // Hive Mode tracking
-  tenantId?: string;           // Multi-tenancy
-  content: string;             // Summarized or fact
+  memorySpaceId: string; // Isolation boundary
+  participantId?: string; // Hive Mode tracking
+  tenantId?: string; // Multi-tenancy
+  content: string; // Summarized or fact
   contentType: "raw" | "summarized" | "fact";
-  embedding?: number[];        // 1536-dimensional vector (default)
+  embedding?: number[]; // 1536-dimensional vector (default)
 
   conversationRef?: {
     conversationId: string;
     messageIds: string[];
   };
-  
-  factsRef?: {                 // NEW: Links to Layer 3
+
+  factsRef?: {
+    // NEW: Links to Layer 3
     factId: string;
     version?: number;
   };
 
-  importance: number;          // 0-100 (flattened)
-  tags: string[];              // Flattened
+  importance: number; // 0-100 (flattened)
+  tags: string[]; // Flattened
 }
 
 // Semantic search returns top-K relevant memories
@@ -197,20 +198,27 @@ interface VectorMemory {
 // LLM-extracted facts (most token-efficient)
 interface Fact {
   factId: string;
-  memorySpaceId: string;        // Isolation boundary
-  participantId?: string;       // Hive Mode tracking
-  userId?: string;              // GDPR compliance
-  tenantId?: string;            // Multi-tenancy
+  memorySpaceId: string; // Isolation boundary
+  participantId?: string; // Hive Mode tracking
+  userId?: string; // GDPR compliance
+  tenantId?: string; // Multi-tenancy
 
   // Fact content
   fact: string;
-  factType: "preference" | "identity" | "knowledge" | "relationship" | "event" | "observation" | "custom";
-  confidence: number;           // 0-100
-  
+  factType:
+    | "preference"
+    | "identity"
+    | "knowledge"
+    | "relationship"
+    | "event"
+    | "observation"
+    | "custom";
+  confidence: number; // 0-100
+
   // Triple structure
-  subject?: string;             // "user-123"
-  predicate?: string;           // "prefers"
-  object?: string;              // "TypeScript"
+  subject?: string; // "user-123"
+  predicate?: string; // "prefers"
+  object?: string; // "TypeScript"
 
   // Source reference
   sourceRef: {
@@ -218,18 +226,18 @@ interface Fact {
     messageIds?: string[];
     memoryId?: string;
   };
-  
+
   // Enrichment (v0.15.0+)
   category?: string;
   searchAliases?: string[];
   semanticContext?: string;
-  entities?: Array<{ name: string, type: string }>;
-  relations?: Array<{ subject: string, predicate: string, object: string }>;
-  
+  entities?: Array<{ name: string; type: string }>;
+  relations?: Array<{ subject: string; predicate: string; object: string }>;
+
   // Belief Revision (v0.24.0+)
   version: number;
-  supersededBy?: string;        // If updated
-  supersedes?: string;          // If replaces older fact
+  supersededBy?: string; // If updated
+  supersedes?: string; // If replaces older fact
 }
 
 // Facts are SMALLEST representation (~8 tokens each)
@@ -340,23 +348,26 @@ async function intelligentRetrieval(memorySpaceId: string, query: string) {
     userId: "user-123",
     limit: 10,
   });
-  
+
   return {
     // Breakdown by source
-    facts: result.sources.facts,           // Layer 3: ~8 tokens each
-    vectorMemories: result.sources.vector,  // Layer 2: ~50 tokens each
-    graphExpanded: result.sources.graph,    // Optional: related entities
-    
+    facts: result.sources.facts, // Layer 3: ~8 tokens each
+    vectorMemories: result.sources.vector, // Layer 2: ~50 tokens each
+    graphExpanded: result.sources.graph, // Optional: related entities
+
     // Unified context
-    context: result.context,                // Pre-formatted for LLM
-    totalTokens: result.tokenEstimate,      // Estimated token usage
-    
+    context: result.context, // Pre-formatted for LLM
+    totalTokens: result.tokenEstimate, // Estimated token usage
+
     // vs 20,000+ tokens for raw accumulation! (95-99% savings)
   };
 }
 
 // Manual 3-tier approach (for custom logic)
-async function manualIntelligentRetrieval(memorySpaceId: string, query: string) {
+async function manualIntelligentRetrieval(
+  memorySpaceId: string,
+  query: string,
+) {
   // Tier 1: Facts (always - most efficient)
   const facts = await cortex.facts.search({
     memorySpaceId,
@@ -378,10 +389,10 @@ async function manualIntelligentRetrieval(memorySpaceId: string, query: string) 
   const rawContext = await fetchRawForFacts(criticalFacts.slice(0, 2));
 
   return {
-    facts,         // 10 × 8 = 80 tokens
-    summaries,     // 3 × 75 = 225 tokens
-    rawContext,    // 2 × 50 = 100 tokens
-    totalTokens: 405,  // vs 20,000+ tokens for raw-only! (98% savings)
+    facts, // 10 × 8 = 80 tokens
+    summaries, // 3 × 75 = 225 tokens
+    rawContext, // 2 × 50 = 100 tokens
+    totalTokens: 405, // vs 20,000+ tokens for raw-only! (98% savings)
   };
 }
 ```
@@ -498,9 +509,9 @@ const relevantTickets = await cortex.memory.search(
 // All participants share one memory space
 // Each retrieves only relevant subset via recall()
 const context = await cortex.memory.recall({
-  memorySpaceId: "team-project-alpha",  // Shared Hive space
+  memorySpaceId: "team-project-alpha", // Shared Hive space
   query,
-  participantId: "cursor",              // Optional: Filter by participant
+  participantId: "cursor", // Optional: Filter by participant
   limit: 10,
 });
 

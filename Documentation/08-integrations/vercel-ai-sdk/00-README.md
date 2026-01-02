@@ -278,12 +278,14 @@ NEO4J_PASSWORD=your-password
 ## See Also
 
 ### Integration Guides
+
 - [Getting Started](./01-getting-started.md) - Step-by-step tutorial
 - [API Reference](./02-api-reference.md) - Complete API
 - [Advanced Usage](./03-advanced-usage.md) - Graph, facts, custom configs
 - [Troubleshooting](./07-troubleshooting.md) - Common issues
 
 ### Core Cortex Documentation
+
 - [Memory Operations](../../03-api-reference/02-memory-operations.md) - remember() and rememberStream() API
 - [Facts Operations](../../03-api-reference/12-facts-operations.md) - Fact extraction API
 - [Graph Operations](../../03-api-reference/13-graph-operations.md) - Graph database integration

@@ -187,6 +187,7 @@ const auth = createAuthContext({
 ```
 
 **Auto-injected to:**
+
 - Conversations (for GDPR cascade)
 - Vector memories (for GDPR cascade)
 - Facts (for GDPR cascade)
@@ -206,11 +207,13 @@ const auth = createAuthContext({
 ```
 
 **Auto-injected to:**
+
 - **EVERY entity in EVERY layer** (complete isolation)
 - Conversations, memories, facts, sessions, spaces, users, contexts
 - Graph nodes (if graph adapter configured)
 
 **Auto-filtered on:**
+
 - **ALL query operations** (automatic tenant scoping)
 
 ### Optional: sessionId
@@ -225,6 +228,7 @@ const auth = createAuthContext({
 ```
 
 **Used for:**
+
 - Session activity tracking
 - Multi-device management
 - Idle timeout detection
@@ -250,6 +254,7 @@ const auth = createAuthContext({
 ```
 
 **Used for:**
+
 - Application logic (role-based access)
 - Audit logging
 - Debugging authentication issues
@@ -347,6 +352,7 @@ app.post("/api/memory", authenticateUser, async (req, res) => {
 ```
 
 **Guarantees:**
+
 - ✅ Tenant A cannot query Tenant B's data
 - ✅ Tenant A cannot access Tenant B's memory spaces
 - ✅ Tenant A cannot see Tenant B's users
@@ -692,20 +698,24 @@ await cortex.memory.remember({...});
 When you set auth context, the SDK automatically:
 
 **1. Injects Fields**
+
 - `userId` → All entities with userId support
 - `tenantId` → ALL entities in ALL layers (complete isolation)
 - `sessionId` → Session operations
 
 **2. Filters Queries**
+
 - ALL query operations filtered by `tenantId` (if set)
 - No cross-tenant data leakage possible
 
 **3. Validates Operations**
+
 - Ensures user exists for user operations
 - Validates tenant membership (if configured)
 - Checks session validity
 
 **4. Enables Features**
+
 - GDPR cascade deletion by userId
 - Multi-device session management
 - Tenant-scoped analytics
@@ -737,6 +747,7 @@ await cortex.memory.remember({
 ```
 
 **When this is acceptable:**
+
 - Simple prototypes
 - Single-user applications
 - Non-production environments
@@ -777,11 +788,13 @@ metadata: {
 ### organizationId vs tenantId
 
 **tenantId** - Top-level isolation (SaaS customer):
+
 - Complete data separation
 - Auto-filtered on all queries
 - Required for proper multi-tenancy
 
 **organizationId** - Sub-grouping within tenant:
+
 - Optional hierarchy
 - Not auto-filtered (application-level)
 - Use for team/department structure
@@ -789,7 +802,7 @@ metadata: {
 ```typescript
 const auth = createAuthContext({
   userId: "user-123",
-  tenantId: "enterprise-corp",        // Complete isolation
+  tenantId: "enterprise-corp", // Complete isolation
   organizationId: "engineering-team", // Sub-group (your logic)
 });
 

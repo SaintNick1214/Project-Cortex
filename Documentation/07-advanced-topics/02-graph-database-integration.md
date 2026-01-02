@@ -88,17 +88,18 @@ Native Graph (Neo4j):
 
 ### Comparison Matrix
 
-| Database            | License     | Local Deploy      | TypeScript Support   | Query Language       | Performance            | Community | Recommendation              |
-| ------------------- | ----------- | ----------------- | -------------------- | -------------------- | ---------------------- | --------- | --------------------------- |
-| **Neo4j Community** | GPL v3      | ✅ Docker/Install | ⭐⭐⭐⭐⭐ Excellent | Cypher (native)      | ⭐⭐⭐⭐⭐             | Large     | ⭐⭐⭐⭐⭐ Best overall     |
-| **Memgraph**        | BSL         | ✅ Docker         | ⭐⭐⭐⭐⭐ Excellent | Cypher (compatible)  | ⭐⭐⭐⭐⭐ (in-memory) | Growing   | ⭐⭐⭐⭐⭐ Best performance |
-| **Kùzu**            | MIT         | ✅ Embedded       | ⭐⭐ Limited         | Cypher (compatible)  | ⭐⭐⭐⭐ Good          | Small     | ⭐⭐⭐ Experimental         |
+| Database            | License | Local Deploy      | TypeScript Support   | Query Language      | Performance            | Community | Recommendation              |
+| ------------------- | ------- | ----------------- | -------------------- | ------------------- | ---------------------- | --------- | --------------------------- |
+| **Neo4j Community** | GPL v3  | ✅ Docker/Install | ⭐⭐⭐⭐⭐ Excellent | Cypher (native)     | ⭐⭐⭐⭐⭐             | Large     | ⭐⭐⭐⭐⭐ Best overall     |
+| **Memgraph**        | BSL     | ✅ Docker         | ⭐⭐⭐⭐⭐ Excellent | Cypher (compatible) | ⭐⭐⭐⭐⭐ (in-memory) | Growing   | ⭐⭐⭐⭐⭐ Best performance |
+| **Kùzu**            | MIT     | ✅ Embedded       | ⭐⭐ Limited         | Cypher (compatible) | ⭐⭐⭐⭐ Good          | Small     | ⭐⭐⭐ Experimental         |
 
 ### Neo4j Community Edition
 
 **Overview:** Industry-standard graph database with Cypher query language.
 
 **Pros:**
+
 - Most popular graph DB (large community)
 - Excellent documentation and tooling
 - Production-ready and battle-tested
@@ -106,6 +107,7 @@ Native Graph (Neo4j):
 - Scales to billions of nodes
 
 **Cons:**
+
 - GPL license (copyleft, may require legal review)
 - Heavier than alternatives
 - Enterprise features require commercial license
@@ -117,12 +119,14 @@ Native Graph (Neo4j):
 **Overview:** High-performance in-memory graph database, Neo4j-compatible.
 
 **Pros:**
+
 - Very fast (in-memory architecture)
 - Neo4j compatible (same Bolt protocol, Cypher language)
 - Works with neo4j-driver (same code as Neo4j!)
 - Modern and actively developed
 
 **Cons:**
+
 - BSL license (source-available, not OSI open-source)
 - Requires sufficient RAM
 - Smaller community than Neo4j
@@ -132,12 +136,14 @@ Native Graph (Neo4j):
 ### License Considerations
 
 **GPL v3 (Neo4j Community):**
+
 - Free to use
 - Must open-source your application if you distribute it
 - SaaS usage: Generally okay if not competing with Neo4j
 - For Cortex integration: Likely fine (user runs Neo4j)
 
 **BSL (Memgraph):**
+
 - Source-available, free for development
 - Commercial use allowed for most cases
 - Can't offer Memgraph "as a service"
@@ -896,7 +902,10 @@ Here's a full working example:
 ```typescript
 // app.ts
 import { Cortex } from "@cortexmemory/sdk";
-import { CypherGraphAdapter, initializeGraphSchema } from "@cortexmemory/sdk/graph";
+import {
+  CypherGraphAdapter,
+  initializeGraphSchema,
+} from "@cortexmemory/sdk/graph";
 
 // Initialize graph adapter
 const graphAdapter = new CypherGraphAdapter();
@@ -948,7 +957,10 @@ const result = await session.run(`
 `);
 await session.close();
 
-console.log("Facts about Acme Corp:", result.records.map((r) => r.get("fact")));
+console.log(
+  "Facts about Acme Corp:",
+  result.records.map((r) => r.get("fact")),
+);
 ```
 
 ---

@@ -429,7 +429,9 @@ Automated alerts:
 ```typescript
 // Track custom business metrics
 async function getCustomMetrics(memorySpaceId: string) {
-  const memories = await cortex.memory.search(memorySpaceId, "*", { limit: 10000 });
+  const memories = await cortex.memory.search(memorySpaceId, "*", {
+    limit: 10000,
+  });
 
   return {
     // Customer satisfaction related

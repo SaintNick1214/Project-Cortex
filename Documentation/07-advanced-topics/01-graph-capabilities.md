@@ -134,9 +134,12 @@ console.log("Source conversation:", memory.conversationRef?.conversationId);
 // Get full conversation from ACID layer
 if (memory.conversationRef) {
   const conversation = await cortex.conversations.get(
-    memory.conversationRef.conversationId
+    memory.conversationRef.conversationId,
   );
-  console.log("Source messages:", conversation.messages.map((m) => m.content));
+  console.log(
+    "Source messages:",
+    conversation.messages.map((m) => m.content),
+  );
 }
 
 // Full audit trail preserved in ACID layer
@@ -204,7 +207,7 @@ const directConnections = await cortex.vector.search("finance-agent", "*", {
 
 const connectedSpaces = new Set(
   directConnections
-    .filter(m => m.metadata?.toMemorySpace)
+    .filter((m) => m.metadata?.toMemorySpace)
     .map((m) => m.metadata.toMemorySpace as string),
 );
 
@@ -680,10 +683,10 @@ See: **[Graph Database Integration Guide](./02-graph-database-integration.md)** 
 
 **Quick comparison:**
 
-| Database              | Setup Difficulty | Performance | Cost               | Best For            |
-| --------------------- | ---------------- | ----------- | ------------------ | ------------------- |
-| Neo4j Community       | Medium (Docker)  | Excellent   | Free (self-hosted) | Production ready    |
-| Memgraph              | Easy (Docker)    | Excellent   | Free (self-hosted) | High performance    |
+| Database        | Setup Difficulty | Performance | Cost               | Best For         |
+| --------------- | ---------------- | ----------- | ------------------ | ---------------- |
+| Neo4j Community | Medium (Docker)  | Excellent   | Free (self-hosted) | Production ready |
+| Memgraph        | Easy (Docker)    | Excellent   | Free (self-hosted) | High performance |
 
 ### Step 3: Migration Path
 
@@ -781,7 +784,7 @@ async function getWeightedCollaborationGraph() {
     a2a.forEach((m) => {
       const partner = m.metadata?.toMemorySpace as string;
       if (!partner) return;
-      
+
       const current = weights.get(partner) || {
         count: 0,
         totalImportance: 0,

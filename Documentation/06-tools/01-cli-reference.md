@@ -106,20 +106,20 @@ Commands for deploying and updating:
 
 These options work with **ALL** commands:
 
-| Option | Description |
-|--------|-------------|
+| Option                    | Description                        |
+| ------------------------- | ---------------------------------- |
 | `-d, --deployment <name>` | Use a named deployment from config |
-| `--debug` | Enable debug output |
-| `-h, --help` | Display help for command |
-| `-V, --version` | Output version number |
+| `--debug`                 | Enable debug output                |
+| `-h, --help`              | Display help for command           |
+| `-V, --version`           | Output version number              |
 
 Most data operation commands also support:
 
-| Option | Description |
-|--------|-------------|
+| Option                  | Description                           |
+| ----------------------- | ------------------------------------- |
 | `-f, --format <format>` | Output format: `table`, `json`, `csv` |
-| `-l, --limit <number>` | Maximum number of results |
-| `-y, --yes` | Skip confirmation prompts |
+| `-l, --limit <number>`  | Maximum number of results             |
+| `-y, --yes`             | Skip confirmation prompts             |
 
 ---
 
@@ -132,14 +132,17 @@ Most data operation commands also support:
 Initialize a new Cortex Memory project with interactive setup wizard.
 
 **Usage:**
+
 ```bash
 cortex init [directory] [options]
 ```
 
 **Arguments:**
+
 - `directory` - Target directory (defaults to current directory)
 
 **Options:**
+
 - `--local` - Quick setup with local Convex only [default: false]
 - `--cloud` - Quick setup with cloud Convex only [default: false]
 - `--skip-graph` - Skip graph database setup [default: false]
@@ -148,6 +151,7 @@ cortex init [directory] [options]
 - `--start` - Start Convex dev server after setup [default: false]
 
 **Examples:**
+
 ```bash
 # Interactive setup (recommended)
 cortex init
@@ -166,6 +170,7 @@ cortex init my-app --skip-graph
 ```
 
 **What It Does:**
+
 1. Creates project directory and copies template files
 2. Configures Convex backend (local or cloud)
 3. Optionally sets up graph database (Neo4j or Memgraph)
@@ -176,6 +181,7 @@ cortex init my-app --skip-graph
 8. Optionally installs Vercel AI quickstart demo
 
 **Related:**
+
 - [Getting Started: Installation](../01-getting-started/02-installation.md)
 - [Getting Started: Five Minute Quickstart](../01-getting-started/03-five-minute-quickstart.md)
 
@@ -186,11 +192,13 @@ cortex init my-app --skip-graph
 Start development services for all enabled deployments.
 
 **Usage:**
+
 ```bash
 cortex start [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Start a specific deployment only
 - `-l, --local` - Use Convex local beta mode (starts a new local backend) [default: false]
 - `-f, --foreground` - Run in foreground (only works with single deployment) [default: false]
@@ -198,6 +206,7 @@ cortex start [options]
 - `--graph-only` - Only start graph databases [default: false]
 
 **Examples:**
+
 ```bash
 # Start all enabled deployments
 cortex start
@@ -216,6 +225,7 @@ cortex start --graph-only
 ```
 
 **What It Does:**
+
 1. Reads deployment configuration from `~/.cortexrc`
 2. For each enabled deployment:
    - Starts graph database if configured
@@ -225,6 +235,7 @@ cortex start --graph-only
 4. Saves process IDs for later management
 
 **Related:**
+
 - [Configuration: Managing Deployments](#cortex-config)
 - [`cortex stop`](#cortex-stop)
 - [`cortex dev`](#cortex-dev)
@@ -236,11 +247,13 @@ cortex start --graph-only
 Stop background services (Convex, graph database, and apps).
 
 **Usage:**
+
 ```bash
 cortex stop [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Stop specific deployment only
 - `-a, --app <name>` - Stop specific app only
 - `--convex-only` - Only stop Convex server [default: false]
@@ -248,6 +261,7 @@ cortex stop [options]
 - `--apps-only` - Only stop template apps [default: false]
 
 **Examples:**
+
 ```bash
 # Stop all services
 cortex stop
@@ -263,6 +277,7 @@ cortex stop --convex-only
 ```
 
 **What It Does:**
+
 1. Finds running processes using PID files
 2. Sends SIGTERM to Convex dev servers
 3. Stops Docker containers for graph databases
@@ -270,6 +285,7 @@ cortex stop --convex-only
 5. Cleans up PID files
 
 **Related:**
+
 - [`cortex start`](#cortex-start)
 - [`cortex status`](#cortex-status)
 
@@ -280,15 +296,18 @@ cortex stop --convex-only
 Start interactive development mode with Expo-style interface.
 
 **Usage:**
+
 ```bash
 cortex dev [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Run specific deployment only
 - `-l, --local` - Force local Convex instance for all deployments [default: false]
 
 **Keyboard Shortcuts:**
+
 - `c` - Clear screen and show status
 - `s` - Show status dashboard
 - `r` - Restart all services
@@ -298,6 +317,7 @@ cortex dev [options]
 - `?` or `h` - Show help
 
 **Examples:**
+
 ```bash
 # Start interactive dev mode
 cortex dev
@@ -310,6 +330,7 @@ cortex dev --local
 ```
 
 **What It Does:**
+
 1. Syncs schema files from SDK
 2. Starts all enabled deployments and apps
 3. Displays live status dashboard
@@ -318,6 +339,7 @@ cortex dev --local
 6. Handles graceful shutdown on exit
 
 **Features:**
+
 - ✅ Multi-deployment support
 - ✅ Live status updates
 - ✅ Aggregated streaming logs
@@ -326,6 +348,7 @@ cortex dev --local
 - ✅ Graph database management
 
 **Related:**
+
 - [`cortex start`](#cortex-start)
 - [`cortex status`](#cortex-status)
 
@@ -336,16 +359,19 @@ cortex dev --local
 Show Cortex setup status dashboard for all deployments.
 
 **Usage:**
+
 ```bash
 cortex status [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Show status for specific deployment only
 - `--check` - Run health checks [default: false]
 - `-f, --format <format>` - Output format: `dashboard`, `json` [default: "dashboard"]
 
 **Examples:**
+
 ```bash
 # Show status for all deployments
 cortex status
@@ -358,6 +384,7 @@ cortex status --format json
 ```
 
 **What It Shows:**
+
 - All configured deployments
 - Convex backend status (running/stopped)
 - Graph database status (running/stopped/not configured)
@@ -367,6 +394,7 @@ cortex status --format json
 - Dashboard URLs
 
 **Related:**
+
 - [`cortex start`](#cortex-start)
 - [`cortex config list`](#cortex-config-list)
 
@@ -383,14 +411,17 @@ Manage CLI configuration. The config command has multiple subcommands:
 Show current configuration.
 
 **Usage:**
+
 ```bash
 cortex config show [options]
 ```
 
 **Options:**
+
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Show configuration
 cortex config show
@@ -406,17 +437,20 @@ cortex config show --format json
 List all deployments in table format.
 
 **Usage:**
+
 ```bash
 cortex config list
 ```
 
 **Examples:**
+
 ```bash
 # List all deployments and apps
 cortex config list
 ```
 
 **Output:**
+
 - Deployment name, status, URL, key status, project path
 - Apps with their type, status, and port
 - Default deployment indicator (→)
@@ -429,11 +463,13 @@ cortex config list
 Set a configuration value.
 
 **Usage:**
+
 ```bash
 cortex config set <key> <value>
 ```
 
 **Examples:**
+
 ```bash
 # Set default deployment
 cortex config set default production
@@ -449,14 +485,17 @@ cortex config set format json
 Test connection to Convex deployment.
 
 **Usage:**
+
 ```bash
 cortex config test [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Deployment to test
 
 **Examples:**
+
 ```bash
 # Test default deployment
 cortex config test
@@ -472,17 +511,20 @@ cortex config test --deployment production
 Add a new deployment configuration.
 
 **Usage:**
+
 ```bash
 cortex config add-deployment [name] [options]
 ```
 
 **Options:**
+
 - `-u, --url <url>` - Convex deployment URL
 - `-k, --key <key>` - Convex deploy key
 - `--default` - Set as default deployment [default: false]
 - `--json-only` - Only save to ~/.cortexrc (skip .env.local) [default: false]
 
 **Examples:**
+
 ```bash
 # Interactive mode
 cortex config add-deployment
@@ -505,14 +547,17 @@ cortex config add-deployment staging \
 Remove a deployment configuration.
 
 **Usage:**
+
 ```bash
 cortex config remove-deployment [name] [options]
 ```
 
 **Options:**
+
 - `--json-only` - Only remove from ~/.cortexrc (skip .env.local) [default: false]
 
 **Examples:**
+
 ```bash
 # Interactive mode
 cortex config remove-deployment
@@ -530,15 +575,18 @@ cortex config remove-deployment staging
 Set or update the deploy key for a deployment.
 
 **Usage:**
+
 ```bash
 cortex config set-key [deployment] [options]
 ```
 
 **Options:**
+
 - `-k, --key <key>` - Deploy key (will prompt if not provided)
 - `--json-only` - Only update ~/.cortexrc (skip .env.local) [default: false]
 
 **Examples:**
+
 ```bash
 # Interactive mode
 cortex config set-key
@@ -554,15 +602,18 @@ cortex config set-key production --key "prod|abc123..."
 Set or update the URL for a deployment.
 
 **Usage:**
+
 ```bash
 cortex config set-url [deployment] [options]
 ```
 
 **Options:**
+
 - `-u, --url <url>` - Deployment URL (will prompt if not provided)
 - `--json-only` - Only update ~/.cortexrc (skip .env.local) [default: false]
 
 **Examples:**
+
 ```bash
 # Interactive mode
 cortex config set-url
@@ -578,11 +629,13 @@ cortex config set-url production --url "https://new-app.convex.cloud"
 Set project path for a deployment (enables `cortex start -d <name>` from anywhere).
 
 **Usage:**
+
 ```bash
 cortex config set-path <deployment> [path]
 ```
 
 **Examples:**
+
 ```bash
 # Set path to current directory
 cortex config set-path production
@@ -598,11 +651,13 @@ cortex config set-path production /path/to/project
 Enable a deployment or app (will be started with `cortex start`).
 
 **Usage:**
+
 ```bash
 cortex config enable <name>
 ```
 
 **Examples:**
+
 ```bash
 # Enable deployment
 cortex config enable production
@@ -618,11 +673,13 @@ cortex config enable quickstart
 Disable a deployment or app (will not be started with `cortex start`).
 
 **Usage:**
+
 ```bash
 cortex config disable <name>
 ```
 
 **Examples:**
+
 ```bash
 # Disable deployment
 cortex config disable staging
@@ -638,11 +695,13 @@ cortex config disable quickstart
 Show configuration file paths.
 
 **Usage:**
+
 ```bash
 cortex config path
 ```
 
 **Shows:**
+
 - User config path (`~/.cortexrc`)
 - Project config paths
 - Environment variables
@@ -654,14 +713,17 @@ cortex config path
 Reset configuration to defaults.
 
 **Usage:**
+
 ```bash
 cortex config reset [options]
 ```
 
 **Options:**
+
 - `-y, --yes` - Skip confirmation [default: false]
 
 **Examples:**
+
 ```bash
 # Reset configuration
 cortex config reset
@@ -676,14 +738,17 @@ cortex config reset
 Set current deployment for all commands (session context).
 
 **Usage:**
+
 ```bash
 cortex use [deployment] [options]
 ```
 
 **Options:**
+
 - `--clear` - Clear the current deployment setting
 
 **Examples:**
+
 ```bash
 # Show current deployment
 cortex use
@@ -696,6 +761,7 @@ cortex use --clear
 ```
 
 **What It Does:**
+
 - Sets a "current deployment" for the session
 - All subsequent commands will use this deployment by default
 - Stored separately from the default deployment in config
@@ -713,11 +779,13 @@ Manage memories (vector store). The memory command has multiple subcommands:
 List memories in a memory space.
 
 **Usage:**
+
 ```bash
 cortex memory list [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-u, --user <id>` - Filter by user ID
@@ -725,6 +793,7 @@ cortex memory list [options]
 - `-f, --format <format>` - Output format: `table`, `json`, `csv`
 
 **Examples:**
+
 ```bash
 # List memories in a space
 cortex memory list --space agent-1
@@ -737,6 +806,7 @@ cortex memory list --space agent-1 --limit 100
 ```
 
 **Related:**
+
 - [Core Features: Semantic Search](../02-core-features/02-semantic-search.md)
 - [API Reference: Memory Operations](../03-api-reference/02-memory-operations.md)
 
@@ -747,11 +817,13 @@ cortex memory list --space agent-1 --limit 100
 Search memories by content.
 
 **Usage:**
+
 ```bash
 cortex memory search <query> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-u, --user <id>` - Filter by user ID
@@ -759,6 +831,7 @@ cortex memory search <query> [options]
 - `-f, --format <format>` - Output format: `table`, `json`, `csv`
 
 **Examples:**
+
 ```bash
 # Search memories
 cortex memory search "password preferences" --space agent-1
@@ -777,17 +850,20 @@ cortex memory search "configuration" --space agent-1 --limit 50
 Get details of a specific memory.
 
 **Usage:**
+
 ```bash
 cortex memory get <memoryId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `--include-conversation` - Include source conversation [default: false]
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Get memory details
 cortex memory get mem-123 --space agent-1
@@ -803,17 +879,20 @@ cortex memory get mem-123 --space agent-1 --include-conversation
 Delete a specific memory.
 
 **Usage:**
+
 ```bash
 cortex memory delete <memoryId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `--cascade` - Also delete associated facts [default: false]
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Delete memory
 cortex memory delete mem-123 --space agent-1
@@ -831,11 +910,13 @@ cortex memory delete mem-123 --space agent-1 --cascade
 Clear multiple memories.
 
 **Usage:**
+
 ```bash
 cortex memory clear [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-u, --user <id>` - Only clear memories for this user
@@ -843,6 +924,7 @@ cortex memory clear [options]
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Clear all memories in a space
 cortex memory clear --space agent-1
@@ -863,11 +945,13 @@ cortex memory clear --space agent-1 --source conversation
 Export memories to a file.
 
 **Usage:**
+
 ```bash
 cortex memory export [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-u, --user <id>` - Only export memories for this user
@@ -876,6 +960,7 @@ cortex memory export [options]
 - `-f, --format <format>` - Export format: `json`, `csv` [default: "json"]
 
 **Examples:**
+
 ```bash
 # Export memories
 cortex memory export --space agent-1 --output memories.json
@@ -894,16 +979,19 @@ cortex memory export --space agent-1 --format csv --output memories.csv
 Show memory statistics for a space.
 
 **Usage:**
+
 ```bash
 cortex memory stats [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Show statistics
 cortex memory stats --space agent-1
@@ -919,16 +1007,19 @@ cortex memory stats --space agent-1 --format json
 Archive a memory (soft delete).
 
 **Usage:**
+
 ```bash
 cortex memory archive <memoryId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Archive memory
 cortex memory archive mem-123 --space agent-1
@@ -943,15 +1034,18 @@ cortex memory archive mem-123 --space agent-1
 Restore an archived memory.
 
 **Usage:**
+
 ```bash
 cortex memory restore <memoryId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 
 **Examples:**
+
 ```bash
 # Restore memory
 cortex memory restore mem-123 --space agent-1
@@ -970,17 +1064,20 @@ Manage user profiles and data with GDPR compliance support.
 List all user profiles with usage stats.
 
 **Usage:**
+
 ```bash
 cortex users list [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-l, --limit <number>` - Maximum number of results [default: 50]
 - `-f, --format <format>` - Output format: `table`, `json`, `csv`
 - `--no-stats` - Skip gathering usage stats (faster)
 
 **Examples:**
+
 ```bash
 # List users
 cortex users list
@@ -993,6 +1090,7 @@ cortex users list --limit 100
 ```
 
 **Related:**
+
 - [Core Features: User Profiles](../02-core-features/03-user-profiles.md)
 - [API Reference: User Operations](../03-api-reference/04-user-operations.md)
 
@@ -1003,16 +1101,19 @@ cortex users list --limit 100
 Get user profile details.
 
 **Usage:**
+
 ```bash
 cortex users get <userId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-f, --format <format>` - Output format: `table`, `json`
 - `--include-history` - Include version history [default: false]
 
 **Examples:**
+
 ```bash
 # Get user profile
 cortex users get user-123
@@ -1028,11 +1129,13 @@ cortex users get user-123 --include-history
 Delete user profile with optional GDPR cascade deletion.
 
 **Usage:**
+
 ```bash
 cortex users delete <userId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `--cascade` - Delete all user data across all layers (GDPR) [default: false]
 - `--dry-run` - Preview what would be deleted without actually deleting [default: false]
@@ -1040,6 +1143,7 @@ cortex users delete <userId> [options]
 - `-y, --yes` - Skip confirmation prompt (not recommended for cascade) [default: false]
 
 **Examples:**
+
 ```bash
 # Delete user profile only
 cortex users delete user-123
@@ -1052,6 +1156,7 @@ cortex users delete user-123 --cascade --dry-run
 ```
 
 ⚠️ **Warning:** Cascade deletion permanently removes ALL user data:
+
 - User profile
 - Conversations and messages
 - Memories (vector store)
@@ -1061,6 +1166,7 @@ cortex users delete user-123 --cascade --dry-run
 - Graph nodes (if configured)
 
 **Related:**
+
 - [GDPR Compliance](#gdpr-compliance)
 
 ---
@@ -1070,17 +1176,20 @@ cortex users delete user-123 --cascade --dry-run
 Delete multiple users with optional GDPR cascade.
 
 **Usage:**
+
 ```bash
 cortex users delete-many <userIds...> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `--cascade` - Delete all user data across all layers [default: false]
 - `--dry-run` - Preview what would be deleted [default: false]
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Delete multiple users
 cortex users delete-many user-1 user-2 user-3
@@ -1099,15 +1208,18 @@ cortex users delete-many user-1 user-2 --cascade --dry-run
 Export all user data (GDPR data portability).
 
 **Usage:**
+
 ```bash
 cortex users export <userId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-o, --output <file>` - Output file path [default: "user-export.json"]
 
 **Examples:**
+
 ```bash
 # Export user data
 cortex users export user-123
@@ -1117,6 +1229,7 @@ cortex users export user-123 --output user-data.json
 ```
 
 **Related:**
+
 - [GDPR Compliance](#gdpr-compliance)
 
 ---
@@ -1126,15 +1239,18 @@ cortex users export user-123 --output user-data.json
 Show statistics for a user.
 
 **Usage:**
+
 ```bash
 cortex users stats <userId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Show user statistics
 cortex users stats user-123
@@ -1150,16 +1266,19 @@ cortex users stats user-123 --format json
 Update user profile data.
 
 **Usage:**
+
 ```bash
 cortex users update <userId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `--data <json>` - JSON data to merge into profile
 - `-f, --file <path>` - JSON file with data to merge
 
 **Examples:**
+
 ```bash
 # Update user data
 cortex users update user-123 --data '{"name":"John","role":"admin"}'
@@ -1175,15 +1294,18 @@ cortex users update user-123 --file user-data.json
 Create a new user profile.
 
 **Usage:**
+
 ```bash
 cortex users create <userId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `--data <json>` - JSON data for the profile [default: "{}"]
 
 **Examples:**
+
 ```bash
 # Create user
 cortex users create user-123
@@ -1199,14 +1321,17 @@ cortex users create user-123 --data '{"name":"John","email":"john@example.com"}'
 Check if a user exists.
 
 **Usage:**
+
 ```bash
 cortex users exists <userId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 
 **Examples:**
+
 ```bash
 # Check if user exists
 cortex users exists user-123
@@ -1225,11 +1350,13 @@ Manage memory spaces.
 List all memory spaces.
 
 **Usage:**
+
 ```bash
 cortex spaces list [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-t, --type <type>` - Filter by type: `personal`, `team`, `project`, `custom`
 - `-s, --status <status>` - Filter by status: `active`, `archived`
@@ -1237,6 +1364,7 @@ cortex spaces list [options]
 - `-f, --format <format>` - Output format: `table`, `json`, `csv`
 
 **Examples:**
+
 ```bash
 # List all memory spaces
 cortex spaces list
@@ -1249,6 +1377,7 @@ cortex spaces list --status active
 ```
 
 **Related:**
+
 - [Core Features: Memory Spaces](../02-core-features/01-memory-spaces.md)
 - [API Reference: Memory Space Operations](../03-api-reference/11-memory-space-operations.md)
 
@@ -1259,17 +1388,20 @@ cortex spaces list --status active
 Create a new memory space.
 
 **Usage:**
+
 ```bash
 cortex spaces create <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-t, --type <type>` - Space type: `personal`, `team`, `project`, `custom` **(required)**
 - `-n, --name <name>` - Human-readable name
 - `-m, --metadata <json>` - JSON metadata [default: "{}"]
 
 **Examples:**
+
 ```bash
 # Create team space
 cortex spaces create team-alpha --type team --name "Team Alpha"
@@ -1285,15 +1417,18 @@ cortex spaces create project-1 --type project --metadata '{"owner":"user-123"}'
 Get memory space details.
 
 **Usage:**
+
 ```bash
 cortex spaces get <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Get space details
 cortex spaces get team-alpha
@@ -1309,17 +1444,20 @@ cortex spaces get team-alpha --format json
 Delete a memory space.
 
 **Usage:**
+
 ```bash
 cortex spaces delete <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `--cascade` - Delete all data in the space (memories, facts, etc.) [default: false]
 - `-r, --reason <reason>` - Reason for deletion (for audit trail)
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Delete space
 cortex spaces delete team-alpha
@@ -1329,6 +1467,7 @@ cortex spaces delete team-alpha --cascade --reason "Project completed"
 ```
 
 ⚠️ **Warning:** Cascade deletion permanently removes:
+
 - All memories
 - All facts
 - All conversations
@@ -1341,16 +1480,19 @@ cortex spaces delete team-alpha --cascade --reason "Project completed"
 Archive a memory space (soft delete).
 
 **Usage:**
+
 ```bash
 cortex spaces archive <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-r, --reason <reason>` - Reason for archiving
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Archive space
 cortex spaces archive project-apollo --reason "Project completed"
@@ -1363,14 +1505,17 @@ cortex spaces archive project-apollo --reason "Project completed"
 Reactivate an archived memory space.
 
 **Usage:**
+
 ```bash
 cortex spaces reactivate <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 
 **Examples:**
+
 ```bash
 # Reactivate space
 cortex spaces reactivate project-apollo
@@ -1383,15 +1528,18 @@ cortex spaces reactivate project-apollo
 Get statistics for a memory space.
 
 **Usage:**
+
 ```bash
 cortex spaces stats <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Get statistics
 cortex spaces stats team-alpha
@@ -1407,15 +1555,18 @@ cortex spaces stats team-alpha --format json
 List participants in a memory space.
 
 **Usage:**
+
 ```bash
 cortex spaces participants <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # List participants
 cortex spaces participants team-alpha
@@ -1428,16 +1579,19 @@ cortex spaces participants team-alpha
 Add a participant to a memory space.
 
 **Usage:**
+
 ```bash
 cortex spaces add-participant <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-i, --id <participantId>` - Participant ID **(required)**
 - `-t, --type <type>` - Participant type (e.g., `user`, `ai-tool`, `ai-agent`) **(required)**
 
 **Examples:**
+
 ```bash
 # Add user participant
 cortex spaces add-participant team-alpha --id user-123 --type user
@@ -1453,16 +1607,19 @@ cortex spaces add-participant team-alpha --id agent-1 --type ai-agent
 Remove a participant from a memory space.
 
 **Usage:**
+
 ```bash
 cortex spaces remove-participant <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-i, --id <participantId>` - Participant ID to remove **(required)**
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Remove participant
 cortex spaces remove-participant team-alpha --id user-123
@@ -1475,17 +1632,20 @@ cortex spaces remove-participant team-alpha --id user-123
 Update a memory space.
 
 **Usage:**
+
 ```bash
 cortex spaces update <spaceId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-n, --name <name>` - New name
 - `-s, --status <status>` - New status: `active`, `archived`
 - `-m, --metadata <json>` - JSON metadata to merge
 
 **Examples:**
+
 ```bash
 # Update name
 cortex spaces update team-alpha --name "Team Alpha v2"
@@ -1501,16 +1661,19 @@ cortex spaces update team-alpha --metadata '{"updated":true}'
 Count memory spaces.
 
 **Usage:**
+
 ```bash
 cortex spaces count [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-t, --type <type>` - Filter by type
 - `-s, --status <status>` - Filter by status
 
 **Examples:**
+
 ```bash
 # Count all spaces
 cortex spaces count
@@ -1526,11 +1689,13 @@ cortex spaces count --type team
 Search memory spaces by name.
 
 **Usage:**
+
 ```bash
 cortex spaces search <query> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-t, --type <type>` - Filter by type
 - `-s, --status <status>` - Filter by status
@@ -1538,6 +1703,7 @@ cortex spaces search <query> [options]
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Search spaces
 cortex spaces search "alpha"
@@ -1559,11 +1725,13 @@ Manage extracted facts.
 List facts in a memory space.
 
 **Usage:**
+
 ```bash
 cortex facts list [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-t, --type <type>` - Filter by fact type
@@ -1572,6 +1740,7 @@ cortex facts list [options]
 - `-f, --format <format>` - Output format: `table`, `json`, `csv`
 
 **Examples:**
+
 ```bash
 # List facts
 cortex facts list --space agent-1
@@ -1584,6 +1753,7 @@ cortex facts list --space agent-1 --user user-123
 ```
 
 **Related:**
+
 - [Core Features: Fact Extraction](../02-core-features/08-fact-extraction.md)
 - [API Reference: Facts Operations](../03-api-reference/12-facts-operations.md)
 
@@ -1594,11 +1764,13 @@ cortex facts list --space agent-1 --user user-123
 Search facts by content.
 
 **Usage:**
+
 ```bash
 cortex facts search <query> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-t, --type <type>` - Filter by fact type
@@ -1606,6 +1778,7 @@ cortex facts search <query> [options]
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Search facts
 cortex facts search "dark mode" --space agent-1
@@ -1621,16 +1794,19 @@ cortex facts search "preference" --space agent-1 --type preference
 Get fact details.
 
 **Usage:**
+
 ```bash
 cortex facts get <factId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Get fact details
 cortex facts get fact-123 --space agent-1
@@ -1646,16 +1822,19 @@ cortex facts get fact-123 --space agent-1 --format json
 Delete a fact.
 
 **Usage:**
+
 ```bash
 cortex facts delete <factId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Delete fact
 cortex facts delete fact-123 --space agent-1
@@ -1668,11 +1847,13 @@ cortex facts delete fact-123 --space agent-1
 Export facts to a file.
 
 **Usage:**
+
 ```bash
 cortex facts export [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-t, --type <type>` - Filter by fact type
@@ -1680,6 +1861,7 @@ cortex facts export [options]
 - `-f, --format <format>` - Export format: `json`, `csv` [default: "json"]
 
 **Examples:**
+
 ```bash
 # Export facts
 cortex facts export --space agent-1 --output facts.json
@@ -1695,16 +1877,19 @@ cortex facts export --space agent-1 --format csv --output facts.csv
 Count facts in a memory space.
 
 **Usage:**
+
 ```bash
 cortex facts count [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-t, --type <type>` - Filter by fact type
 
 **Examples:**
+
 ```bash
 # Count facts
 cortex facts count --space agent-1
@@ -1720,17 +1905,20 @@ cortex facts count --space agent-1 --type preference
 Clear all facts in a memory space.
 
 **Usage:**
+
 ```bash
 cortex facts clear [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID **(required)**
 - `-t, --type <type>` - Only clear facts of this type
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Clear all facts
 cortex facts clear --space agent-1
@@ -1754,11 +1942,13 @@ Manage conversations.
 List conversations.
 
 **Usage:**
+
 ```bash
 cortex conversations list [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Filter by memory space ID
 - `-u, --user <id>` - Filter by user ID
@@ -1767,6 +1957,7 @@ cortex conversations list [options]
 - `-f, --format <format>` - Output format: `table`, `json`, `csv`
 
 **Examples:**
+
 ```bash
 # List conversations
 cortex conversations list
@@ -1782,6 +1973,7 @@ cortex conversations list --type user-agent
 ```
 
 **Related:**
+
 - [Core Features: Conversation History](../02-core-features/06-conversation-history.md)
 - [API Reference: Conversation Operations](../03-api-reference/03-conversation-operations.md)
 
@@ -1792,16 +1984,19 @@ cortex conversations list --type user-agent
 Get conversation details with messages.
 
 **Usage:**
+
 ```bash
 cortex conversations get <conversationId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-m, --messages <number>` - Number of messages to show [default: 20]
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Get conversation
 cortex conversations get conv-123
@@ -1820,15 +2015,18 @@ cortex conversations get conv-123 --format json
 Delete a conversation.
 
 **Usage:**
+
 ```bash
 cortex conversations delete <conversationId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Delete conversation
 cortex conversations delete conv-123
@@ -1841,16 +2039,19 @@ cortex conversations delete conv-123
 Export a conversation to a file.
 
 **Usage:**
+
 ```bash
 cortex conversations export <conversationId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-o, --output <file>` - Output file path [default: "conversation-export.json"]
 - `-f, --format <format>` - Export format: `json`, `txt` [default: "json"]
 
 **Examples:**
+
 ```bash
 # Export as JSON
 cortex conversations export conv-123
@@ -1866,17 +2067,20 @@ cortex conversations export conv-123 --format txt --output conv.txt
 Count conversations.
 
 **Usage:**
+
 ```bash
 cortex conversations count [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Filter by memory space ID
 - `-u, --user <id>` - Filter by user ID
 - `-t, --type <type>` - Filter by type
 
 **Examples:**
+
 ```bash
 # Count all conversations
 cortex conversations count
@@ -1895,17 +2099,20 @@ cortex conversations count --user user-123
 Clear conversations.
 
 **Usage:**
+
 ```bash
 cortex conversations clear [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-s, --space <id>` - Memory space ID (required)
 - `-u, --user <id>` - Only clear for this user
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Clear all conversations in space
 cortex conversations clear --space agent-1
@@ -1923,16 +2130,19 @@ cortex conversations clear --space agent-1 --user user-123
 List messages in a conversation.
 
 **Usage:**
+
 ```bash
 cortex conversations messages <conversationId> [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-l, --limit <number>` - Maximum number of messages [default: 50]
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # List messages
 cortex conversations messages conv-123
@@ -1950,15 +2160,18 @@ cortex conversations messages conv-123 --limit 100
 Show database statistics.
 
 **Usage:**
+
 ```bash
 cortex db stats [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-f, --format <format>` - Output format: `table`, `json`
 
 **Examples:**
+
 ```bash
 # Show statistics
 cortex db stats
@@ -1968,6 +2181,7 @@ cortex db stats --format json
 ```
 
 **Shows:**
+
 - Core entities (memory spaces, users, agents)
 - Memory data (memories, facts, contexts)
 - Conversations (conversations, messages)
@@ -1982,15 +2196,18 @@ cortex db stats --format json
 Clear entire database.
 
 **Usage:**
+
 ```bash
 cortex db clear [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-y, --yes` - Skip confirmation prompt [default: false]
 
 **Examples:**
+
 ```bash
 # Clear database (with confirmation)
 cortex db clear
@@ -2000,6 +2217,7 @@ cortex db clear --yes
 ```
 
 ⚠️ **DANGER:** This permanently deletes:
+
 - All memory spaces and memories
 - All conversations and messages
 - All facts and user profiles
@@ -2014,16 +2232,19 @@ cortex db clear --yes
 Backup database to a file.
 
 **Usage:**
+
 ```bash
 cortex db backup [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-o, --output <file>` - Output file path [default: "cortex-backup.json"]
 - `--include-all` - Include all data (may be large) [default: false]
 
 **Examples:**
+
 ```bash
 # Backup (spaces and users only)
 cortex db backup
@@ -2033,6 +2254,7 @@ cortex db backup --include-all --output full-backup.json
 ```
 
 **What It Backs Up:**
+
 - Always: Memory spaces, users
 - With `--include-all`: Conversations, memories, facts
 
@@ -2043,17 +2265,20 @@ cortex db backup --include-all --output full-backup.json
 Restore database from a backup file.
 
 **Usage:**
+
 ```bash
 cortex db restore [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-i, --input <file>` - Backup file path **(required)**
 - `--dry-run` - Preview what would be restored [default: false]
 - `-y, --yes` - Skip confirmation [default: false]
 
 **Examples:**
+
 ```bash
 # Preview restore
 cortex db restore --input backup.json --dry-run
@@ -2071,15 +2296,18 @@ cortex db restore --input backup.json
 Export all data to JSON.
 
 **Usage:**
+
 ```bash
 cortex db export [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-o, --output <file>` - Output file path [default: "cortex-export.json"]
 
 **Examples:**
+
 ```bash
 # Export all data
 cortex db export
@@ -2097,11 +2325,13 @@ cortex db export --output data-export.json
 Deploy schema and functions to Convex.
 
 **Usage:**
+
 ```bash
 cortex deploy [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-l, --local` - Deploy to local Convex instance [default: false]
 - `-p, --prod` - Deploy to production [default: false]
@@ -2109,6 +2339,7 @@ cortex deploy [options]
 - `--skip-sync` - Skip automatic schema sync from SDK [default: false]
 
 **Examples:**
+
 ```bash
 # Deploy to default deployment
 cortex deploy
@@ -2124,11 +2355,13 @@ cortex deploy --push
 ```
 
 **What It Does:**
+
 1. Syncs schema files from SDK (unless `--skip-sync`)
 2. Runs `convex deploy` in the project directory
 3. Deploys all Convex functions and schema
 
 **Related:**
+
 - [`cortex update`](#cortex-update)
 
 ---
@@ -2138,11 +2371,13 @@ cortex deploy --push
 Update `@cortexmemory/sdk` and `convex` packages across all enabled deployments and apps.
 
 **Usage:**
+
 ```bash
 cortex update [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target a specific deployment only
 - `-a, --app <name>` - Target a specific app only
 - `--apps-only` - Only update apps (skip deployments) [default: false]
@@ -2155,6 +2390,7 @@ cortex update [options]
 - `-y, --yes` - Auto-accept all updates [default: false]
 
 **Examples:**
+
 ```bash
 # Update all (shows status dashboard)
 cortex update
@@ -2177,6 +2413,7 @@ cortex update --dev --app quickstart
 ```
 
 **What It Does:**
+
 1. Checks current and latest versions
 2. Shows status dashboard for all deployments and apps
 3. Prompts for confirmation (unless `--yes`)
@@ -2184,6 +2421,7 @@ cortex update --dev --app quickstart
 5. Optionally syncs template files for apps
 
 **Related:**
+
 - [`cortex deploy`](#cortex-deploy)
 
 ---
@@ -2199,14 +2437,17 @@ Manage Convex deployments. The convex command has multiple subcommands:
 Check Convex deployment status.
 
 **Usage:**
+
 ```bash
 cortex convex status [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 
 **Examples:**
+
 ```bash
 # Check status
 cortex convex status
@@ -2222,17 +2463,20 @@ cortex convex status --deployment production
 Start Convex in development mode.
 
 **Usage:**
+
 ```bash
 cortex convex dev [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-l, --local` - Use local Convex instance [default: false]
 - `--once` - Run once and exit [default: false]
 - `--skip-sync` - Skip automatic schema sync from SDK [default: false]
 
 **Examples:**
+
 ```bash
 # Start dev server
 cortex convex dev
@@ -2251,11 +2495,13 @@ cortex convex dev --once
 View Convex deployment logs.
 
 **Usage:**
+
 ```bash
 cortex convex logs [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-l, --local` - View local logs [default: false]
 - `-p, --prod` - View production logs [default: false]
@@ -2263,6 +2509,7 @@ cortex convex logs [options]
 - `-n, --lines <number>` - Number of lines to show [default: 50]
 
 **Examples:**
+
 ```bash
 # View logs
 cortex convex logs
@@ -2281,16 +2528,19 @@ cortex convex logs --prod
 Open Convex dashboard in browser.
 
 **Usage:**
+
 ```bash
 cortex convex dashboard [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-l, --local` - Open local dashboard [default: false]
 - `-p, --prod` - Open production dashboard [default: false]
 
 **Examples:**
+
 ```bash
 # Open dashboard
 cortex convex dashboard
@@ -2306,17 +2556,20 @@ cortex convex dashboard --local
 View schema information.
 
 **Usage:**
+
 ```bash
 cortex convex schema
 ```
 
 **Examples:**
+
 ```bash
 # View schema tables
 cortex convex schema
 ```
 
 **Shows:**
+
 - All Cortex SDK tables
 - Table descriptions
 - Layer organization
@@ -2328,15 +2581,18 @@ cortex convex schema
 Initialize Convex in current project.
 
 **Usage:**
+
 ```bash
 cortex convex init [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `--skip-sync` - Skip automatic schema sync from SDK [default: false]
 
 **Examples:**
+
 ```bash
 # Initialize Convex
 cortex convex init
@@ -2349,17 +2605,20 @@ cortex convex init
 Manage environment variables.
 
 **Usage:**
+
 ```bash
 cortex convex env [options]
 ```
 
 **Options:**
+
 - `-d, --deployment <name>` - Target deployment
 - `-l, --list` - List environment variables
 - `-s, --set <key=value>` - Set environment variable
 - `-p, --prod` - Use production environment [default: false]
 
 **Examples:**
+
 ```bash
 # List env vars
 cortex convex env --list
@@ -2430,47 +2689,47 @@ The CLI uses a hierarchical configuration system.
 
 **Fields:**
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `deployments` | object | Named deployment configurations |
-| `deployments[name].url` | string | Convex deployment URL |
-| `deployments[name].key` | string | Convex deploy key (optional for local) |
-| `deployments[name].deployment` | string | Convex deployment name (optional) |
-| `deployments[name].projectPath` | string | Path to project directory |
-| `deployments[name].enabled` | boolean | Auto-start with `cortex start` |
-| `apps` | object | Named app configurations |
-| `apps[name].type` | string | App type (e.g., "nextjs") |
-| `apps[name].projectPath` | string | Path to project root |
-| `apps[name].path` | string | Relative path to app |
-| `apps[name].port` | number | Port number |
-| `apps[name].startCommand` | string | Command to start app |
-| `apps[name].enabled` | boolean | Auto-start with `cortex start` |
-| `default` | string | Default deployment name |
-| `format` | string | Default output format |
-| `confirmDangerous` | boolean | Require confirmation for dangerous operations |
+| Field                           | Type    | Description                                   |
+| ------------------------------- | ------- | --------------------------------------------- |
+| `deployments`                   | object  | Named deployment configurations               |
+| `deployments[name].url`         | string  | Convex deployment URL                         |
+| `deployments[name].key`         | string  | Convex deploy key (optional for local)        |
+| `deployments[name].deployment`  | string  | Convex deployment name (optional)             |
+| `deployments[name].projectPath` | string  | Path to project directory                     |
+| `deployments[name].enabled`     | boolean | Auto-start with `cortex start`                |
+| `apps`                          | object  | Named app configurations                      |
+| `apps[name].type`               | string  | App type (e.g., "nextjs")                     |
+| `apps[name].projectPath`        | string  | Path to project root                          |
+| `apps[name].path`               | string  | Relative path to app                          |
+| `apps[name].port`               | number  | Port number                                   |
+| `apps[name].startCommand`       | string  | Command to start app                          |
+| `apps[name].enabled`            | boolean | Auto-start with `cortex start`                |
+| `default`                       | string  | Default deployment name                       |
+| `format`                        | string  | Default output format                         |
+| `confirmDangerous`              | boolean | Require confirmation for dangerous operations |
 
 ### Environment Variables
 
 The CLI recognizes these environment variables:
 
-| Variable | Description |
-|----------|-------------|
-| `CONVEX_URL` | Convex deployment URL |
-| `CONVEX_DEPLOY_KEY` | Convex deploy key |
-| `CONVEX_DEPLOYMENT` | Convex deployment name |
-| `LOCAL_CONVEX_URL` | Local Convex URL |
-| `CLOUD_CONVEX_URL` | Cloud Convex URL |
-| `CLOUD_CONVEX_DEPLOY_KEY` | Cloud deploy key |
-| `NEO4J_URI` | Neo4j connection URI |
-| `NEO4J_USERNAME` | Neo4j username |
-| `NEO4J_PASSWORD` | Neo4j password |
-| `MEMGRAPH_URI` | Memgraph connection URI |
-| `MEMGRAPH_USERNAME` | Memgraph username |
-| `MEMGRAPH_PASSWORD` | Memgraph password |
-| `CORTEX_GRAPH_SYNC` | Enable graph sync ("true"/"false") |
-| `OPENAI_API_KEY` | OpenAI API key |
-| `CORTEX_SDK_DEV_PATH` | Path to local SDK for dev mode |
-| `DEBUG` | Enable debug output |
+| Variable                  | Description                        |
+| ------------------------- | ---------------------------------- |
+| `CONVEX_URL`              | Convex deployment URL              |
+| `CONVEX_DEPLOY_KEY`       | Convex deploy key                  |
+| `CONVEX_DEPLOYMENT`       | Convex deployment name             |
+| `LOCAL_CONVEX_URL`        | Local Convex URL                   |
+| `CLOUD_CONVEX_URL`        | Cloud Convex URL                   |
+| `CLOUD_CONVEX_DEPLOY_KEY` | Cloud deploy key                   |
+| `NEO4J_URI`               | Neo4j connection URI               |
+| `NEO4J_USERNAME`          | Neo4j username                     |
+| `NEO4J_PASSWORD`          | Neo4j password                     |
+| `MEMGRAPH_URI`            | Memgraph connection URI            |
+| `MEMGRAPH_USERNAME`       | Memgraph username                  |
+| `MEMGRAPH_PASSWORD`       | Memgraph password                  |
+| `CORTEX_GRAPH_SYNC`       | Enable graph sync ("true"/"false") |
+| `OPENAI_API_KEY`          | OpenAI API key                     |
+| `CORTEX_SDK_DEV_PATH`     | Path to local SDK for dev mode     |
+| `DEBUG`                   | Enable debug output                |
 
 ### Configuration Commands
 
@@ -2491,6 +2750,7 @@ cortex users delete user-123 --cascade
 ```
 
 **What Gets Deleted:**
+
 - ✅ User profile (all versions)
 - ✅ Conversations (all messages)
 - ✅ Memories (vector store)
@@ -2524,6 +2784,7 @@ cortex users export user-123 --output user-data.json
 ```
 
 **Related:**
+
 - [`cortex users delete`](#cortex-users-delete)
 - [`cortex users export`](#cortex-users-export)
 
@@ -2592,6 +2853,7 @@ cortex: command not found
 ```
 
 **Solution:**
+
 ```bash
 # Install globally
 npm install -g @cortexmemory/cli
@@ -2609,6 +2871,7 @@ No deployments configured
 ```
 
 **Solution:**
+
 ```bash
 # Initialize a new project
 cortex init
@@ -2626,6 +2889,7 @@ Connection failed: ECONNREFUSED
 ```
 
 **Solutions:**
+
 - Check if Convex is running: `cortex status`
 - Start Convex: `cortex start`
 - Verify URL: `cortex config show`
@@ -2642,6 +2906,7 @@ Convex was already stopped
 **Cause:** Process stopped without cleaning up PID file.
 
 **Solution:**
+
 ```bash
 # Clean up PID files
 rm .convex-dev.pid
@@ -2661,6 +2926,7 @@ Schema sync failed: SDK not found
 ```
 
 **Solutions:**
+
 ```bash
 # Install SDK
 npm install @cortexmemory/sdk
@@ -2678,6 +2944,7 @@ Graph database configured but Docker not available
 ```
 
 **Solutions:**
+
 - Start Docker Desktop
 - Check Docker: `docker ps`
 - Start manually: `docker-compose -f docker-compose.graph.yml up -d`
@@ -2697,6 +2964,7 @@ DEBUG=1 cortex <command>
 ```
 
 **Debug Output Includes:**
+
 - Environment variable loading
 - Configuration resolution
 - API request/response details

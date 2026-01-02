@@ -67,12 +67,12 @@ const context = await cortex.contexts.create({
 // Grant access to finance space
 await cortex.contexts.grantAccess(context.contextId, {
   memorySpaceId: "finance-space",
-  scope: "context-only",  // Only context data, not all memories
+  scope: "context-only", // Only context data, not all memories
 });
 
 // Finance space can access context
 const ctx = await cortex.contexts.get(context.contextId, {
-  requestingSpace: "finance-space",  // Verifies grantedAccess
+  requestingSpace: "finance-space", // Verifies grantedAccess
 });
 // ✅ Controlled access via explicit grant
 ```

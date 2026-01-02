@@ -20,28 +20,28 @@ import type {
   Context,
   Session,
   Agent,
-  
+
   // Facts
   FactRecord,
   StoreFactParams,
-  
+
   // Filters
   UniversalFilters,
   MemoryFilters,
   ConversationFilters,
-  
+
   // Results
   RememberResult,
   SearchResult,
   RememberStreamResult,
-  
+
   // Options
   RememberParams,
   SearchOptions,
   RecallParams,
-  
+
   // And all other types...
-} from '@cortexmemory/sdk';
+} from "@cortexmemory/sdk";
 ```
 
 ---
@@ -49,6 +49,7 @@ import type {
 ## Table of Contents
 
 ### Core Entities
+
 - [Conversation](#conversation) - ACID conversation records
 - [Message](#message) - Individual messages within conversations
 - [MemoryEntry](#memoryentry) - Vector memory entries
@@ -61,6 +62,7 @@ import type {
 - [Session](#session) - User session management
 
 ### Orchestration Types
+
 - [RememberParams](#rememberparams) - remember() parameters
 - [RememberResult](#rememberresult) - remember() result
 - [RememberStreamParams](#rememberstreamparams) - rememberStream() parameters
@@ -70,6 +72,7 @@ import type {
 - [ForgetOptions](#forgetoptions) - forget() options
 
 ### Filter Types
+
 - [ListConversationsFilter](#listconversationsfilter)
 - [ListMemoriesFilter](#listmemoriesfilter)
 - [ListFactsFilter](#listfactsfilter)
@@ -77,6 +80,7 @@ import type {
 - [SearchFactsOptions](#searchfactsoptions)
 
 ### A2A Communication
+
 - [A2ASendParams](#a2asendparams)
 - [A2AMessage](#a2amessage)
 - [A2ARequestParams](#a2arequestparams)
@@ -84,25 +88,30 @@ import type {
 - [A2ABroadcastParams](#a2abroadcastparams)
 
 ### Governance & Policies
+
 - [GovernancePolicy](#governancepolicy)
 - [SessionPolicy](#sessionpolicy)
 - [ComplianceMode](#compliancemode)
 
 ### Graph Integration
+
 - [GraphSyncOption](#graphsyncoption)
 - [RecallParams (with graph)](#recallparams)
 
 ### Observer Pattern
+
 - [OrchestrationObserver](#orchestrationobserver)
 - [LayerEvent](#layerevent)
 - [OrchestrationSummary](#orchestrationsummary)
 
 ### Resilience Types
+
 - [ResilienceConfig](#resilienceconfig)
 - [Priority](#priority)
 - [CircuitState](#circuitstate)
 
 ### Enums & Literals
+
 - [ConversationType](#conversationtype)
 - [SourceType](#sourcetype)
 - [ContentType](#contenttype)
@@ -140,10 +149,12 @@ interface Conversation {
 ```
 
 **Used in:**
+
 - [Conversation Operations API](../03-api-reference/03-conversation-operations.md)
 - [Conversation History](../02-core-features/06-conversation-history.md)
 
 **Related types:**
+
 - [Message](#message)
 - [ConversationType](#conversationtype)
 
@@ -163,6 +174,7 @@ interface Message {
 ```
 
 **Used in:**
+
 - [Conversation](#conversation)
 - [Conversation Operations API](../03-api-reference/03-conversation-operations.md)
 
@@ -210,10 +222,12 @@ interface MemoryEntry {
 ```
 
 **Used in:**
+
 - [Memory Operations API](../03-api-reference/02-memory-operations.md)
 - [Semantic Search](../02-core-features/02-semantic-search.md)
 
 **Related types:**
+
 - [ContentType](#contenttype)
 - [SourceType](#sourcetype)
 - [ConversationRef](#conversationref)
@@ -273,6 +287,7 @@ interface FactRecord {
 ```
 
 **Used in:**
+
 - [Facts Operations API](../03-api-reference/12-facts-operations.md)
 - [Fact Extraction](../02-core-features/08-fact-extraction.md)
 - [Fact Integration](../02-core-features/11-fact-integration.md)
@@ -293,6 +308,7 @@ interface UserProfile {
 ```
 
 **Used in:**
+
 - [User Operations API](../03-api-reference/04-user-operations.md)
 - [User Profiles](../02-core-features/03-user-profiles.md)
 
@@ -324,9 +340,11 @@ interface ImmutableRecord {
 ```
 
 **Used in:**
+
 - [Immutable Store API](../03-api-reference/07-immutable-store-api.md)
 
 **Related types:**
+
 - [ImmutableVersion](#immutableversion)
 
 ---
@@ -350,6 +368,7 @@ interface MutableRecord {
 ```
 
 **Used in:**
+
 - [Mutable Store API](../03-api-reference/08-mutable-store-api.md)
 
 ---
@@ -376,6 +395,7 @@ interface MemorySpace {
 ```
 
 **Used in:**
+
 - [Memory Space Operations API](../03-api-reference/11-memory-space-operations.md)
 - [Memory Spaces](../02-core-features/01-memory-spaces.md)
 
@@ -400,9 +420,11 @@ interface RegisteredAgent {
 ```
 
 **Used in:**
+
 - [Agent Management API](../03-api-reference/09-agent-management.md)
 
 **Related types:**
+
 - [AgentStats](#agentstats)
 
 ---
@@ -439,6 +461,7 @@ interface Session {
 ```
 
 **Used in:**
+
 - [Sessions Operations API](../03-api-reference/14-sessions-operations.md)
 - [Sessions Management](../02-core-features/14-sessions-management.md)
 
@@ -574,10 +597,12 @@ interface RememberParams {
 ```
 
 **Used in:**
+
 - [Memory Operations API](../03-api-reference/02-memory-operations.md#remember)
 - [Memory Orchestration](../02-core-features/00-memory-orchestration.md)
 
 **Related types:**
+
 - [SkippableLayer](#skippablelayer)
 - [OrchestrationObserver](#orchestrationobserver)
 - [RememberResult](#rememberresult)
@@ -615,9 +640,11 @@ interface RememberResult {
 ```
 
 **Used in:**
+
 - [Memory Operations API](../03-api-reference/02-memory-operations.md#remember)
 
 **Related types:**
+
 - [MemoryEntry](#memoryentry)
 - [FactRecord](#factrecord)
 
@@ -717,11 +744,13 @@ interface RecallParams {
 ```
 
 **Used in:**
+
 - [Memory Operations API](../03-api-reference/02-memory-operations.md#recall)
 - [Semantic Search](../02-core-features/02-semantic-search.md)
 - [Graph Integration](../02-core-features/16-graph-integration.md)
 
 **Related types:**
+
 - [RecallResult](#recallresult)
 - [RecallItem](#recallitem)
 
@@ -755,6 +784,7 @@ interface RecallResult {
 ```
 
 **Related types:**
+
 - [RecallItem](#recallitem)
 - [RecallSourceBreakdown](#recallsourcebreakdown)
 
@@ -788,11 +818,13 @@ interface OrchestrationObserver {
 ```
 
 **Used in:**
+
 - [RememberParams](#rememberparams)
 - [RememberStreamParams](#rememberstreamparams)
 - [Memory Orchestration](../02-core-features/00-memory-orchestration.md)
 
 **Related types:**
+
 - [LayerEvent](#layerevent)
 - [OrchestrationSummary](#orchestrationsummary)
 
@@ -810,12 +842,7 @@ type MemoryLayer =
   | "facts"
   | "graph";
 
-type LayerStatus =
-  | "pending"
-  | "in_progress"
-  | "complete"
-  | "error"
-  | "skipped";
+type LayerStatus = "pending" | "in_progress" | "complete" | "error" | "skipped";
 
 type RevisionAction = "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
 
@@ -947,10 +974,12 @@ interface GovernancePolicy {
 ```
 
 **Used in:**
+
 - [Governance Policies API](../03-api-reference/10-governance-policies-api.md)
 - [Governance Policies](../02-core-features/15-governance-policies.md)
 
 **Related types:**
+
 - [SessionPolicy](#sessionpolicy)
 
 ---
@@ -1036,6 +1065,7 @@ type Priority = "critical" | "high" | "normal" | "low" | "background";
 ```
 
 **Priority order** (highest first):
+
 1. `critical` - GDPR/security operations (never dropped)
 2. `high` - Real-time conversation storage
 3. `normal` - Standard reads/writes
@@ -1051,6 +1081,7 @@ type CircuitState = "closed" | "open" | "half-open";
 ```
 
 **Used in:**
+
 - [Resilience Layer](../02-core-features/13-resilience-layer.md)
 
 ---
@@ -1089,6 +1120,7 @@ interface ResilienceConfig {
 ```
 
 **Used in:**
+
 - [Resilience Layer](../02-core-features/13-resilience-layer.md)
 
 ---
@@ -1122,7 +1154,7 @@ type ContentType = "raw" | "summarized";
 ### FactType
 
 ```typescript
-type FactType = 
+type FactType =
   | "preference"
   | "identity"
   | "knowledge"
@@ -1147,6 +1179,7 @@ type SkippableLayer =
 ```
 
 **Layers that can be explicitly skipped during remember() orchestration:**
+
 - `users` - Don't auto-create user profile
 - `agents` - Don't auto-register agent
 - `conversations` - Don't store messages in ACID conversation layer
@@ -1161,6 +1194,7 @@ type SkippableLayer =
 Quick alphabetical reference for all types:
 
 ### A
+
 - [A2ABroadcastParams](#a2abroadcastparams)
 - [A2AMessage](#a2amessage)
 - [A2ARequestParams](#a2arequestparams)
@@ -1169,6 +1203,7 @@ Quick alphabetical reference for all types:
 - [AgentStats](#agentstats)
 
 ### C
+
 - [CircuitState](#circuitstate)
 - [ComplianceMode](#compliancemode)
 - [ContentType](#contenttype)
@@ -1176,37 +1211,45 @@ Quick alphabetical reference for all types:
 - [ConversationType](#conversationtype)
 
 ### F
+
 - [FactRecord](#factrecord)
 - [FactType](#facttype)
 - [ForgetOptions](#forgetoptions)
 
 ### G
+
 - [GovernancePolicy](#governancepolicy)
 - [GraphSyncOption](#graphsyncoption)
 
 ### I
+
 - [ImmutableRecord](#immutablerecord)
 
 ### L
+
 - [LayerEvent](#layerevent)
 - [ListConversationsFilter](#listconversationsfilter)
 - [ListFactsFilter](#listfactsfilter)
 - [ListMemoriesFilter](#listmemoriesfilter)
 
 ### M
+
 - [MemoryEntry](#memoryentry)
 - [MemorySpace](#memoryspace)
 - [Message](#message)
 - [MutableRecord](#mutablerecord)
 
 ### O
+
 - [OrchestrationObserver](#orchestrationobserver)
 - [OrchestrationSummary](#orchestrationsummary)
 
 ### P
+
 - [Priority](#priority)
 
 ### R
+
 - [RecallParams](#recallparams)
 - [RecallResult](#recallresult)
 - [RegisteredAgent](#registeredagent)
@@ -1217,6 +1260,7 @@ Quick alphabetical reference for all types:
 - [ResilienceConfig](#resilienceconfig)
 
 ### S
+
 - [SearchMemoriesOptions](#searchmemoriesoptions)
 - [Session](#session)
 - [SessionPolicy](#sessionpolicy)
@@ -1224,6 +1268,7 @@ Quick alphabetical reference for all types:
 - [SourceType](#sourcetype)
 
 ### U
+
 - [UserProfile](#userprofile)
 
 ---

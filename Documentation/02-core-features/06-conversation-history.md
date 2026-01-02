@@ -1082,7 +1082,10 @@ await cortex.conversations.addMessage(a2aConversationId, {
 
 ```typescript
 // For long conversations, summarize and store as separate knowledge
-async function maintainConversation(conversationId: string, memorySpaceId: string) {
+async function maintainConversation(
+  conversationId: string,
+  memorySpaceId: string,
+) {
   const conversation = await cortex.conversations.get(conversationId);
 
   if (conversation.messageCount > 100) {

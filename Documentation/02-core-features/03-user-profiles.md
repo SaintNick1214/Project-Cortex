@@ -45,13 +45,13 @@ console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
 
 **SDK vs Cloud Mode:**
 
-| Feature              | SDK (Free)             | Cloud Mode (Planned)    |
-| -------------------- | ---------------------- | ----------------------- |
-| **Cascade Deletion** | ✅ Full implementation | ✅ Same implementation  |
-| **Verification**     | ✅ Automatic           | ✅ + Cryptographic proof |
-| **Rollback**         | ✅ Automatic           | ✅ + Audit trail        |
-| **Graph Support**    | ✅ DIY adapter         | ✅ Managed, zero-config |
-| **Legal Certificate**| ❌ Not included        | ✅ Compliance document  |
+| Feature               | SDK (Free)             | Cloud Mode (Planned)     |
+| --------------------- | ---------------------- | ------------------------ |
+| **Cascade Deletion**  | ✅ Full implementation | ✅ Same implementation   |
+| **Verification**      | ✅ Automatic           | ✅ + Cryptographic proof |
+| **Rollback**          | ✅ Automatic           | ✅ + Audit trail         |
+| **Graph Support**     | ✅ DIY adapter         | ✅ Managed, zero-config  |
+| **Legal Certificate** | ❌ Not included        | ✅ Compliance document   |
 
 The SDK provides the **technical capability**, Cloud Mode provides the **legal guarantees**.
 
@@ -224,14 +224,14 @@ await cortex.users.delete("user-123");
 // Delete with cascade (SDK implements full cascade)
 const result = await cortex.users.delete("user-123", {
   cascade: true, // Delete from all layers
-  verify: true,  // Verify deletion completeness (default)
+  verify: true, // Verify deletion completeness (default)
 });
 
 console.log(result);
 // {
 //   userId: "user-123",
 //   deletedAt: 1735689600000, // Unix timestamp
-//   
+//
 //   // Per-layer deletion counts
 //   conversationsDeleted: 15,
 //   conversationMessagesDeleted: 234,
@@ -240,13 +240,13 @@ console.log(result);
 //   vectorMemoriesDeleted: 145,
 //   factsDeleted: 89,
 //   graphNodesDeleted: 47,  // undefined if no graph adapter
-//   
+//
 //   // Verification
 //   verification: {
 //     complete: true,
 //     issues: []
 //   },
-//   
+//
 //   // Summary
 //   totalDeleted: 547,
 //   deletedLayers: ['conversations', 'immutable', 'mutable', 'vector', 'facts', 'graph', 'user-profile']
@@ -328,7 +328,7 @@ async function respondToUser(
 
   // Update last seen
   await cortex.users.update(userId, {
-    metadata: { 
+    metadata: {
       lastSeen: Date.now(), // Unix timestamp (milliseconds)
     },
   });
@@ -512,12 +512,13 @@ async function learnFromConversation(userId: string, conversation: string) {
     email: insights.email || existingData.email,
     preferences: {
       ...(existingData.preferences || {}),
-      ...insights.preferences,  // Add new preferences
+      ...insights.preferences, // Add new preferences
     },
     metadata: {
       ...(existingData.metadata || {}),
       lastSeen: Date.now(),
-      conversationCount: ((existingData.metadata?.conversationCount as number) || 0) + 1,
+      conversationCount:
+        ((existingData.metadata?.conversationCount as number) || 0) + 1,
     },
   });
 }
@@ -529,7 +530,11 @@ Sync with user-facing preferences:
 
 ```typescript
 // User updates preferences in your UI
-async function handlePreferenceChange(userId: string, section: string, value: unknown) {
+async function handlePreferenceChange(
+  userId: string,
+  section: string,
+  value: unknown,
+) {
   // Update just that preference section (deep merges automatically)
   await cortex.users.update(userId, {
     preferences: {
@@ -556,7 +561,7 @@ async function handleDataDeletionRequest(userId: string) {
     includeConversations: true,
     includeMemories: true,
   });
-  
+
   // Save export
   await saveToFile(`gdpr-export-${userId}.json`, exportData);
 
@@ -572,7 +577,9 @@ async function handleDataDeletionRequest(userId: string) {
   console.log(`- Facts deleted: ${result.factsDeleted}`);
   console.log(`- Graph nodes deleted: ${result.graphNodesDeleted || "N/A"}`);
   console.log(`- Total records: ${result.totalDeleted}`);
-  console.log(`- Verification: ${result.verification.complete ? "Complete" : "Issues found"}`);
+  console.log(
+    `- Verification: ${result.verification.complete ? "Complete" : "Issues found"}`,
+  );
 
   return result;
   // Done with SDK cascade! ✅
@@ -676,10 +683,9 @@ console.log(`Active users (7 days): ${activeThisWeek}`);
 
 ```typescript
 // Update multiple users by explicit IDs
-const result = await cortex.users.updateMany(
-  ["user-1", "user-2", "user-3"],
-  { data: { welcomeEmailSent: true } },
-);
+const result = await cortex.users.updateMany(["user-1", "user-2", "user-3"], {
+  data: { welcomeEmailSent: true },
+});
 console.log(`Updated ${result.updated} users`);
 
 // Update users by date filter (users created in last 7 days)
@@ -708,7 +714,7 @@ import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
   auth: createAuthContext({
-    tenantId: "customer-acme",  // Tenant isolation
+    tenantId: "customer-acme", // Tenant isolation
     userId: "admin-user",
     sessionId: "session-xyz",
   }),
@@ -740,7 +746,7 @@ await cortex.users.delete("user-123", { cascade: true });
 ```typescript
 // List users for a tenant
 const result = await cortex.users.list({
-  tenantId: "customer-acme",  // Optional explicit filter
+  tenantId: "customer-acme", // Optional explicit filter
   limit: 100,
 });
 
@@ -758,7 +764,7 @@ const exportData = await cortex.users.export({
 // Bulk update for tenant users
 await cortex.users.updateMany(
   { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
-  { data: { welcomeEmailSent: true } }
+  { data: { welcomeEmailSent: true } },
 );
 // Automatically scoped to current tenant
 ```

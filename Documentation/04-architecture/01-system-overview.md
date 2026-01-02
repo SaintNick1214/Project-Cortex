@@ -183,6 +183,7 @@ await cortex.memory.search("user-123-personal", query, filters);
 ```
 
 **Key Insight:** `memorySpaceId` replaced `agentId` as the primary scoping parameter. This enables:
+
 - Hive Mode: Multiple participants in one shared space
 - Collaboration Mode: Memory spaces delegate via context chains
 - Flexible isolation: Per-user, per-team, per-project, or custom
@@ -358,13 +359,13 @@ See [Graph Operations API](../03-api-reference/15-graph-operations.md) for detai
 conversations: defineTable({
   // Identity & Isolation
   conversationId: v.string(),
-  memorySpaceId: v.string(),        // NEW: Primary isolation boundary
+  memorySpaceId: v.string(), // NEW: Primary isolation boundary
   participantId: v.optional(v.string()), // NEW: Hive Mode tracking
   tenantId: v.optional(v.string()), // NEW: Multi-tenancy
-  
+
   // Type
   type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
-  
+
   // Participants
   participants: v.object({
     userId: v.optional(v.string()),
@@ -372,20 +373,22 @@ conversations: defineTable({
     participantId: v.optional(v.string()),
     memorySpaceIds: v.optional(v.array(v.string())), // For agent-agent
   }),
-  
+
   // Messages (append-only)
-  messages: v.array(v.object({
-    id: v.string(),
-    role: v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
-    content: v.string(),
-    timestamp: v.number(),
-    participantId: v.optional(v.string()),
-    metadata: v.optional(v.any()),
-  })),
-  
+  messages: v.array(
+    v.object({
+      id: v.string(),
+      role: v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+      content: v.string(),
+      timestamp: v.number(),
+      participantId: v.optional(v.string()),
+      metadata: v.optional(v.any()),
+    }),
+  ),
+
   messageCount: v.number(),
   metadata: v.optional(v.any()),
-  
+
   createdAt: v.number(),
   updatedAt: v.number(),
 })
@@ -411,30 +414,32 @@ conversations: defineTable({
 ```typescript
 immutable: defineTable({
   // Composite key
-  type: v.string(),    // 'kb-article', 'policy', 'user', 'feedback', etc.
-  id: v.string(),      // Type-specific logical ID
-  
+  type: v.string(), // 'kb-article', 'policy', 'user', 'feedback', etc.
+  id: v.string(), // Type-specific logical ID
+
   // Data (flexible, immutable once stored)
   data: v.any(),
-  
+
   // GDPR support
   userId: v.optional(v.string()),
-  
+
   // Multi-tenancy (NEW)
   tenantId: v.optional(v.string()),
-  
+
   // Metadata
   metadata: v.optional(v.any()),
-  
+
   // Versioning
   version: v.number(),
-  previousVersions: v.array(v.object({
-    version: v.number(),
-    data: v.any(),
-    timestamp: v.number(),
-    metadata: v.optional(v.any()),
-  })),
-  
+  previousVersions: v.array(
+    v.object({
+      version: v.number(),
+      data: v.any(),
+      timestamp: v.number(),
+      metadata: v.optional(v.any()),
+    }),
+  ),
+
   createdAt: v.number(),
   updatedAt: v.number(),
 })
@@ -456,21 +461,21 @@ immutable: defineTable({
 ```typescript
 mutable: defineTable({
   // Composite key
-  namespace: v.string(),  // 'inventory', 'config', 'counters', etc.
-  key: v.string(),        // Unique within namespace
-  
+  namespace: v.string(), // 'inventory', 'config', 'counters', etc.
+  key: v.string(), // Unique within namespace
+
   // Value (flexible, mutable)
   value: v.any(),
-  
+
   // GDPR support
   userId: v.optional(v.string()),
-  
+
   // Multi-tenancy (NEW)
   tenantId: v.optional(v.string()),
-  
+
   // Metadata
   metadata: v.optional(v.any()),
-  
+
   createdAt: v.number(),
   updatedAt: v.number(),
 })
@@ -494,87 +499,97 @@ mutable: defineTable({
 memories: defineTable({
   // Identity & Isolation
   memoryId: v.string(),
-  memorySpaceId: v.string(),         // PRIMARY: Memory space isolation
+  memorySpaceId: v.string(), // PRIMARY: Memory space isolation
   participantId: v.optional(v.string()), // NEW: Hive Mode participant
-  tenantId: v.optional(v.string()),  // NEW: Multi-tenancy
-  
+  tenantId: v.optional(v.string()), // NEW: Multi-tenancy
+
   // Content
   content: v.string(),
   contentType: v.union(
     v.literal("raw"),
     v.literal("summarized"),
-    v.literal("fact"),               // NEW: For facts indexed in vector
+    v.literal("fact"), // NEW: For facts indexed in vector
   ),
   embedding: v.optional(v.array(v.float64())),
-  
+
   // Source (flattened for indexing)
   sourceType: v.union(
     v.literal("conversation"),
     v.literal("system"),
     v.literal("tool"),
     v.literal("a2a"),
-    v.literal("fact-extraction"),    // NEW: For facts
+    v.literal("fact-extraction"), // NEW: For facts
   ),
   sourceUserId: v.optional(v.string()),
   sourceUserName: v.optional(v.string()),
   sourceTimestamp: v.number(),
-  
+
   // Message role (for conversation memories)
   messageRole: v.optional(
-    v.union(v.literal("user"), v.literal("agent"), v.literal("system"))
+    v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
   ),
-  
+
   // Owner Attribution
-  userId: v.optional(v.string()),    // For GDPR cascade
-  agentId: v.optional(v.string()),   // For agent deletion cascade
-  
+  userId: v.optional(v.string()), // For GDPR cascade
+  agentId: v.optional(v.string()), // For agent deletion cascade
+
   // Layer 1 References
-  conversationRef: v.optional(v.object({
-    conversationId: v.string(),
-    messageIds: v.array(v.string()),
-  })),
-  immutableRef: v.optional(v.object({
-    type: v.string(),
-    id: v.string(),
-    version: v.optional(v.number()),
-  })),
-  mutableRef: v.optional(v.object({
-    namespace: v.string(),
-    key: v.string(),
-    snapshotValue: v.any(),
-    snapshotAt: v.number(),
-  })),
-  
+  conversationRef: v.optional(
+    v.object({
+      conversationId: v.string(),
+      messageIds: v.array(v.string()),
+    }),
+  ),
+  immutableRef: v.optional(
+    v.object({
+      type: v.string(),
+      id: v.string(),
+      version: v.optional(v.number()),
+    }),
+  ),
+  mutableRef: v.optional(
+    v.object({
+      namespace: v.string(),
+      key: v.string(),
+      snapshotValue: v.any(),
+      snapshotAt: v.number(),
+    }),
+  ),
+
   // NEW: Layer 3 Reference
-  factsRef: v.optional(v.object({
-    factId: v.string(),
-    version: v.optional(v.number()),
-  })),
-  
+  factsRef: v.optional(
+    v.object({
+      factId: v.string(),
+      version: v.optional(v.number()),
+    }),
+  ),
+
   // Metadata (flattened for indexing)
-  importance: v.number(),            // Flattened from metadata
-  tags: v.array(v.string()),         // Flattened from metadata
-  
+  importance: v.number(), // Flattened from metadata
+  tags: v.array(v.string()), // Flattened from metadata
+
   // Enrichment Fields
   enrichedContent: v.optional(v.string()),
   factCategory: v.optional(v.string()),
   metadata: v.optional(v.any()),
-  
+
   // Versioning
   version: v.number(),
-  previousVersions: v.array(v.object({
-    version: v.number(),
-    content: v.string(),
-    embedding: v.optional(v.array(v.float64())),
-    timestamp: v.number(),
-  })),
-  
+  previousVersions: v.array(
+    v.object({
+      version: v.number(),
+      content: v.string(),
+      embedding: v.optional(v.array(v.float64())),
+      timestamp: v.number(),
+    }),
+  ),
+
   // Timestamps & Access
   createdAt: v.number(),
   updatedAt: v.number(),
   lastAccessed: v.optional(v.number()),
   accessCount: v.number(),
-  
+
   // Streaming support (NEW)
   isPartial: v.optional(v.boolean()),
   partialMetadata: v.optional(v.any()),
@@ -591,12 +606,25 @@ memories: defineTable({
   .index("by_participantId", ["participantId"])
   .searchIndex("by_content", {
     searchField: "content",
-    filterFields: ["memorySpaceId", "tenantId", "sourceType", "userId", "agentId", "participantId"],
+    filterFields: [
+      "memorySpaceId",
+      "tenantId",
+      "sourceType",
+      "userId",
+      "agentId",
+      "participantId",
+    ],
   })
   .vectorIndex("by_embedding", {
     vectorField: "embedding",
-    dimensions: 1536,  // Default: text-embedding-3-small
-    filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
+    dimensions: 1536, // Default: text-embedding-3-small
+    filterFields: [
+      "memorySpaceId",
+      "tenantId",
+      "userId",
+      "agentId",
+      "participantId",
+    ],
   });
 ```
 
@@ -611,11 +639,11 @@ memories: defineTable({
 facts: defineTable({
   // Identity & Isolation
   factId: v.string(),
-  memorySpaceId: v.string(),         // Memory space isolation
+  memorySpaceId: v.string(), // Memory space isolation
   participantId: v.optional(v.string()), // Hive Mode tracking
-  userId: v.optional(v.string()),    // GDPR compliance
-  tenantId: v.optional(v.string()),  // Multi-tenancy
-  
+  userId: v.optional(v.string()), // GDPR compliance
+  tenantId: v.optional(v.string()), // Multi-tenancy
+
   // Fact content
   fact: v.string(),
   factType: v.union(
@@ -627,14 +655,14 @@ facts: defineTable({
     v.literal("observation"),
     v.literal("custom"),
   ),
-  
+
   // Triple structure (subject-predicate-object)
   subject: v.optional(v.string()),
   predicate: v.optional(v.string()),
   object: v.optional(v.string()),
-  
+
   // Quality & Source
-  confidence: v.number(),            // 0-100
+  confidence: v.number(), // 0-100
   sourceType: v.union(
     v.literal("conversation"),
     v.literal("system"),
@@ -642,40 +670,50 @@ facts: defineTable({
     v.literal("manual"),
     v.literal("a2a"),
   ),
-  sourceRef: v.optional(v.object({
-    conversationId: v.optional(v.string()),
-    messageIds: v.optional(v.array(v.string())),
-    memoryId: v.optional(v.string()),
-  })),
-  
+  sourceRef: v.optional(
+    v.object({
+      conversationId: v.optional(v.string()),
+      messageIds: v.optional(v.array(v.string())),
+      memoryId: v.optional(v.string()),
+    }),
+  ),
+
   // Metadata & Tags
   metadata: v.optional(v.any()),
   tags: v.array(v.string()),
-  
+
   // Enrichment Fields (v0.15.0+)
   category: v.optional(v.string()),
   searchAliases: v.optional(v.array(v.string())),
   semanticContext: v.optional(v.string()),
-  entities: v.optional(v.array(v.object({
-    name: v.string(),
-    type: v.string(),
-    fullValue: v.optional(v.string()),
-  }))),
-  relations: v.optional(v.array(v.object({
-    subject: v.string(),
-    predicate: v.string(),
-    object: v.string(),
-  }))),
-  
+  entities: v.optional(
+    v.array(
+      v.object({
+        name: v.string(),
+        type: v.string(),
+        fullValue: v.optional(v.string()),
+      }),
+    ),
+  ),
+  relations: v.optional(
+    v.array(
+      v.object({
+        subject: v.string(),
+        predicate: v.string(),
+        object: v.string(),
+      }),
+    ),
+  ),
+
   // Temporal validity
   validFrom: v.optional(v.number()),
   validUntil: v.optional(v.number()),
-  
+
   // Versioning (creates immutable chain)
   version: v.number(),
   supersededBy: v.optional(v.string()), // factId of newer version
-  supersedes: v.optional(v.string()),   // factId this replaces
-  
+  supersedes: v.optional(v.string()), // factId this replaces
+
   createdAt: v.number(),
   updatedAt: v.number(),
 })
@@ -704,7 +742,7 @@ factHistory: defineTable({
   eventId: v.string(),
   factId: v.string(),
   memorySpaceId: v.string(),
-  
+
   // Action
   action: v.union(
     v.literal("CREATE"),
@@ -712,29 +750,31 @@ factHistory: defineTable({
     v.literal("SUPERSEDE"),
     v.literal("DELETE"),
   ),
-  
+
   // Values
   oldValue: v.optional(v.string()),
   newValue: v.optional(v.string()),
-  
+
   // Relationships
   supersededBy: v.optional(v.string()),
   supersedes: v.optional(v.string()),
-  
+
   // Decision context
   reason: v.optional(v.string()),
   confidence: v.optional(v.number()),
-  pipeline: v.optional(v.object({
-    slotMatching: v.optional(v.boolean()),
-    semanticMatching: v.optional(v.boolean()),
-    llmResolution: v.optional(v.boolean()),
-  })),
-  
+  pipeline: v.optional(
+    v.object({
+      slotMatching: v.optional(v.boolean()),
+      semanticMatching: v.optional(v.boolean()),
+      llmResolution: v.optional(v.boolean()),
+    }),
+  ),
+
   // Source context
   userId: v.optional(v.string()),
   participantId: v.optional(v.string()),
   conversationId: v.optional(v.string()),
-  
+
   timestamp: v.number(),
 })
   .index("by_eventId", ["eventId"])
@@ -758,25 +798,27 @@ memorySpaces: defineTable({
   memorySpaceId: v.string(),
   name: v.optional(v.string()),
   tenantId: v.optional(v.string()),
-  
+
   type: v.union(
     v.literal("personal"),
     v.literal("team"),
     v.literal("project"),
     v.literal("custom"),
   ),
-  
+
   // Participants (for Hive Mode)
-  participants: v.array(v.object({
-    id: v.string(),
-    type: v.string(), // 'ai-tool', 'human', 'ai-agent', 'system'
-    joinedAt: v.number(),
-  })),
-  
+  participants: v.array(
+    v.object({
+      id: v.string(),
+      type: v.string(), // 'ai-tool', 'human', 'ai-agent', 'system'
+      joinedAt: v.number(),
+    }),
+  ),
+
   // Metadata
   metadata: v.any(),
   status: v.union(v.literal("active"), v.literal("archived")),
-  
+
   createdAt: v.number(),
   updatedAt: v.number(),
 })
@@ -807,19 +849,19 @@ memorySpaces: defineTable({
 contexts: defineTable({
   // Identity & Isolation
   contextId: v.string(),
-  memorySpaceId: v.string(),         // Which memory space owns this
-  tenantId: v.optional(v.string()),  // Multi-tenancy
-  
+  memorySpaceId: v.string(), // Which memory space owns this
+  tenantId: v.optional(v.string()), // Multi-tenancy
+
   // Purpose
   purpose: v.string(),
   description: v.optional(v.string()),
-  
+
   // Hierarchy
-  parentId: v.optional(v.string()),  // Can be cross-space
+  parentId: v.optional(v.string()), // Can be cross-space
   rootId: v.optional(v.string()),
   depth: v.number(),
   childIds: v.array(v.string()),
-  
+
   // Status
   status: v.union(
     v.literal("active"),
@@ -827,40 +869,48 @@ contexts: defineTable({
     v.literal("cancelled"),
     v.literal("blocked"),
   ),
-  
+
   // Source conversation (optional)
-  conversationRef: v.optional(v.object({
-    conversationId: v.string(),
-    messageIds: v.optional(v.array(v.string())),
-  })),
-  
+  conversationRef: v.optional(
+    v.object({
+      conversationId: v.string(),
+      messageIds: v.optional(v.array(v.string())),
+    }),
+  ),
+
   // User association (GDPR)
   userId: v.optional(v.string()),
-  
+
   // Participants (for tracking)
   participants: v.array(v.string()),
-  
+
   // Cross-space access control
-  grantedAccess: v.optional(v.array(v.object({
-    memorySpaceId: v.string(),
-    scope: v.string(),
-    grantedAt: v.number(),
-  }))),
-  
+  grantedAccess: v.optional(
+    v.array(
+      v.object({
+        memorySpaceId: v.string(),
+        scope: v.string(),
+        grantedAt: v.number(),
+      }),
+    ),
+  ),
+
   // Data (flexible)
   data: v.optional(v.any()),
   metadata: v.optional(v.any()),
-  
+
   // Versioning
   version: v.number(),
-  previousVersions: v.array(v.object({
-    version: v.number(),
-    status: v.string(),
-    data: v.optional(v.any()),
-    timestamp: v.number(),
-    updatedBy: v.optional(v.string()),
-  })),
-  
+  previousVersions: v.array(
+    v.object({
+      version: v.number(),
+      status: v.string(),
+      data: v.optional(v.any()),
+      timestamp: v.number(),
+      updatedBy: v.optional(v.string()),
+    }),
+  ),
+
   createdAt: v.number(),
   updatedAt: v.number(),
   completedAt: v.optional(v.number()),
@@ -892,17 +942,17 @@ sessions: defineTable({
   userId: v.string(),
   tenantId: v.optional(v.string()),
   memorySpaceId: v.optional(v.string()),
-  
+
   // Session state
   status: v.union(v.literal("active"), v.literal("idle"), v.literal("ended")),
   startedAt: v.number(),
   lastActiveAt: v.number(),
   endedAt: v.optional(v.number()),
   expiresAt: v.optional(v.number()),
-  
+
   // Fully extensible metadata
   metadata: v.optional(v.any()),
-  
+
   // Statistics
   messageCount: v.number(),
   memoryCount: v.number(),
@@ -929,7 +979,7 @@ agents: defineTable({
   // Identity
   agentId: v.string(),
   tenantId: v.optional(v.string()),
-  
+
   // Metadata
   name: v.string(),
   description: v.optional(v.string()),
@@ -937,14 +987,14 @@ agents: defineTable({
   metadata: v.optional(v.any()),
   config: v.optional(v.any()),
   stats: v.optional(v.any()),
-  
+
   // Status
   status: v.union(
     v.literal("active"),
     v.literal("inactive"),
     v.literal("archived"),
   ),
-  
+
   registeredAt: v.number(),
   updatedAt: v.number(),
   lastActive: v.optional(v.number()),
@@ -968,14 +1018,14 @@ governancePolicies: defineTable({
   // Scope
   organizationId: v.optional(v.string()),
   memorySpaceId: v.optional(v.string()),
-  
+
   // Policy configuration
-  policy: v.any(),  // Full GovernancePolicy structure
-  
+  policy: v.any(), // Full GovernancePolicy structure
+
   // Metadata
   isActive: v.boolean(),
   appliedBy: v.optional(v.string()),
-  
+
   createdAt: v.number(),
   updatedAt: v.number(),
 })
@@ -996,20 +1046,20 @@ governanceEnforcement: defineTable({
   // Scope
   organizationId: v.optional(v.string()),
   memorySpaceId: v.optional(v.string()),
-  
+
   // Enforcement details
   enforcementType: v.union(v.literal("automatic"), v.literal("manual")),
   layers: v.array(v.string()),
   rules: v.array(v.string()),
-  
+
   // Results
   versionsDeleted: v.number(),
   recordsPurged: v.number(),
   storageFreed: v.number(),
-  
+
   // Metadata
   triggeredBy: v.optional(v.string()),
-  
+
   executedAt: v.number(),
 })
   .index("by_organization", ["organizationId", "executedAt"])
@@ -1026,28 +1076,28 @@ governanceEnforcement: defineTable({
 ```typescript
 graphSyncQueue: defineTable({
   // Entity identification
-  table: v.string(),      // "memories", "facts", "contexts", etc.
+  table: v.string(), // "memories", "facts", "contexts", etc.
   entityId: v.string(),
-  
+
   // Operation
   operation: v.union(
     v.literal("insert"),
     v.literal("update"),
     v.literal("delete"),
   ),
-  
+
   // Entity data
-  entity: v.optional(v.any()),  // Null for deletes
-  
+  entity: v.optional(v.any()), // Null for deletes
+
   // Sync status
   synced: v.boolean(),
   syncedAt: v.optional(v.number()),
-  
+
   // Retry tracking
   failedAttempts: v.optional(v.number()),
   lastError: v.optional(v.string()),
   priority: v.optional(v.string()),
-  
+
   createdAt: v.number(),
 })
   .index("by_synced", ["synced"])
@@ -1347,6 +1397,7 @@ const cortex = new Cortex({
 ```
 
 **Protection against:**
+
 - API rate limit exhaustion
 - Convex concurrent operation limits
 - Backend failures and cascading errors
@@ -1556,38 +1607,38 @@ Your App → Cortex Cloud API → Your Convex Instance
 
 ### Read Operations
 
-| Operation                    | Typical Latency | Indexed                  | Scalability               |
-| ---------------------------- | --------------- | ------------------------ | ------------------------- |
-| `memory.get()`               | < 10ms          | Yes (by memoryId)        | Millions of memories      |
-| `memory.search()` (semantic) | < 100ms         | Yes (vector)             | Millions of vectors       |
-| `memory.search()` (keyword)  | < 50ms          | Yes (search index)       | Millions of memories      |
-| `memory.recall()` (unified)  | < 150ms         | Yes (multi-strategy)     | Unlimited history         |
-| `facts.search()`             | < 50ms          | Yes (search index)       | Millions of facts         |
-| `conversations.get()`        | < 20ms          | Yes (by conversationId)  | Millions of conversations |
-| `users.get()`                | < 10ms          | Yes (by type+id)         | Millions of users         |
-| `contexts.get()`             | < 10ms          | Yes (by contextId)       | Millions of contexts      |
-| `sessions.get()`             | < 10ms          | Yes (by sessionId)       | Millions of sessions      |
+| Operation                    | Typical Latency | Indexed                 | Scalability               |
+| ---------------------------- | --------------- | ----------------------- | ------------------------- |
+| `memory.get()`               | < 10ms          | Yes (by memoryId)       | Millions of memories      |
+| `memory.search()` (semantic) | < 100ms         | Yes (vector)            | Millions of vectors       |
+| `memory.search()` (keyword)  | < 50ms          | Yes (search index)      | Millions of memories      |
+| `memory.recall()` (unified)  | < 150ms         | Yes (multi-strategy)    | Unlimited history         |
+| `facts.search()`             | < 50ms          | Yes (search index)      | Millions of facts         |
+| `conversations.get()`        | < 20ms          | Yes (by conversationId) | Millions of conversations |
+| `users.get()`                | < 10ms          | Yes (by type+id)        | Millions of users         |
+| `contexts.get()`             | < 10ms          | Yes (by contextId)      | Millions of contexts      |
+| `sessions.get()`             | < 10ms          | Yes (by sessionId)      | Millions of sessions      |
 
 ### Write Operations
 
-| Operation                    | Typical Latency | ACID | Versioning                         |
-| ---------------------------- | --------------- | ---- | ---------------------------------- |
-| `memory.remember()`          | < 100ms         | ✅   | Full orchestration (L1+L2+L3)      |
-| `conversations.addMessage()` | < 20ms          | ✅   | Append-only                        |
-| `immutable.store()`          | < 30ms          | ✅   | Auto (versioned)                   |
-| `mutable.set()`              | < 15ms          | ✅   | No (overwrites)                    |
-| `facts.store()`              | < 40ms          | ✅   | Auto (with belief revision)        |
-| `users.update()`             | < 25ms          | ✅   | Auto (versioned)                   |
-| `sessions.create()`          | < 20ms          | ✅   | No versioning                      |
+| Operation                    | Typical Latency | ACID | Versioning                    |
+| ---------------------------- | --------------- | ---- | ----------------------------- |
+| `memory.remember()`          | < 100ms         | ✅   | Full orchestration (L1+L2+L3) |
+| `conversations.addMessage()` | < 20ms          | ✅   | Append-only                   |
+| `immutable.store()`          | < 30ms          | ✅   | Auto (versioned)              |
+| `mutable.set()`              | < 15ms          | ✅   | No (overwrites)               |
+| `facts.store()`              | < 40ms          | ✅   | Auto (with belief revision)   |
+| `users.update()`             | < 25ms          | ✅   | Auto (versioned)              |
+| `sessions.create()`          | < 20ms          | ✅   | No versioning                 |
 
 ### Bulk Operations
 
-| Operation                         | Typical Latency | Notes                         |
-| --------------------------------- | --------------- | ----------------------------- |
-| `memory.deleteMany()` (100 items) | < 200ms         | Parallel deletes              |
-| `facts.deleteMany()` (100 items)  | < 200ms         | Parallel deletes              |
-| `users.deleteMany()` (50 items)   | < 150ms         | Parallel deletes              |
-| GDPR cascade (1K records)         | < 3s            | All layers + factHistory      |
+| Operation                         | Typical Latency | Notes                    |
+| --------------------------------- | --------------- | ------------------------ |
+| `memory.deleteMany()` (100 items) | < 200ms         | Parallel deletes         |
+| `facts.deleteMany()` (100 items)  | < 200ms         | Parallel deletes         |
+| `users.deleteMany()` (50 items)   | < 150ms         | Parallel deletes         |
+| GDPR cascade (1K records)         | < 3s            | All layers + factHistory |
 
 ---
 

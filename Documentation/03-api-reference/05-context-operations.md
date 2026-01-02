@@ -962,14 +962,20 @@ interface ChildrenOptions {
 const children = await cortex.contexts.getChildren("ctx-1234567890-root");
 
 // Get only active children
-const activeChildren = await cortex.contexts.getChildren("ctx-1234567890-root", {
-  status: "active",
-});
+const activeChildren = await cortex.contexts.getChildren(
+  "ctx-1234567890-root",
+  {
+    status: "active",
+  },
+);
 
 // Get all descendants recursively
-const allDescendants = await cortex.contexts.getChildren("ctx-1234567890-root", {
-  recursive: true,
-});
+const allDescendants = await cortex.contexts.getChildren(
+  "ctx-1234567890-root",
+  {
+    recursive: true,
+  },
+);
 ```
 
 ---
@@ -1019,7 +1025,10 @@ cortex.contexts.addParticipant(
 
 ```typescript
 // Add agent to existing workflow
-await cortex.contexts.addParticipant("ctx-1234567890-abc123", "legal-agent-space");
+await cortex.contexts.addParticipant(
+  "ctx-1234567890-abc123",
+  "legal-agent-space",
+);
 
 const ctx = await cortex.contexts.get("ctx-1234567890-abc123");
 console.log("Participants:", ctx.participants);
@@ -1344,14 +1353,14 @@ interface RangeQuery {
 
 **Operations and their filter support:**
 
-| Operation | memorySpaceId | userId | status | parentId | rootId | depth | completedBefore | limit |
-|-----------|:-------------:|:------:|:------:|:--------:|:------:|:-----:|:---------------:|:-----:|
-| `list()` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| `search()` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
-| `count()` | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| `updateMany()` | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| `deleteMany()` | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| `export()` | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Operation      | memorySpaceId | userId | status | parentId | rootId | depth | completedBefore | limit |
+| -------------- | :-----------: | :----: | :----: | :------: | :----: | :---: | :-------------: | :---: |
+| `list()`       |      ✅       |   ✅   |   ✅   |    ✅    |   ✅   |  ✅   |       ❌        |  ✅   |
+| `search()`     |      ✅       |   ✅   |   ✅   |    ✅    |   ✅   |  ✅   |       ❌        |  ✅   |
+| `count()`      |      ✅       |   ✅   |   ✅   |    ❌    |   ❌   |  ❌   |       ❌        |  ❌   |
+| `updateMany()` |      ✅       |   ✅   |   ✅   |    ✅    |   ✅   |  ❌   |       ❌        |  ❌   |
+| `deleteMany()` |      ✅       |   ✅   |   ✅   |    ❌    |   ❌   |  ❌   |       ✅        |  ❌   |
+| `export()`     |      ✅       |   ✅   |   ✅   |    ❌    |   ❌   |  ❌   |       ❌        |  ❌   |
 
 ---
 
@@ -1466,7 +1475,7 @@ const results = await cortex.vector.search({
 });
 ```
 
-> **Note**: Context tracking in memories is an application-level pattern. 
+> **Note**: Context tracking in memories is an application-level pattern.
 > Store the `contextId` in memory metadata and filter/search as needed.
 
 ### Pattern 4: Multi-Agent Coordination
@@ -1484,7 +1493,10 @@ const workflow = await cortex.contexts.create({
 });
 
 // Marketing agent checks in
-await cortex.contexts.addParticipant(workflow.contextId, "marketing-agent-space");
+await cortex.contexts.addParticipant(
+  workflow.contextId,
+  "marketing-agent-space",
+);
 
 // Finance agent checks in
 await cortex.contexts.addParticipant(workflow.contextId, "finance-agent-space");
@@ -1674,30 +1686,30 @@ const workflowsFromConvo = await cortex.contexts.search({
 
 These errors are thrown by the SDK before the request reaches the backend:
 
-| Error Code                    | Description                    | Cause                                           |
-| ----------------------------- | ------------------------------ | ----------------------------------------------- |
-| `MISSING_REQUIRED_FIELD`      | Required field is missing      | Field is null, undefined, or empty string       |
-| `WHITESPACE_ONLY`             | Field contains only whitespace | Purpose has no actual content                   |
-| `INVALID_CONTEXT_ID_FORMAT`   | Context ID format is invalid   | Must match `ctx-{timestamp}-{random}`           |
-| `INVALID_CONVERSATION_ID_FORMAT` | Conversation ID format invalid | Must start with `conv-`                       |
-| `INVALID_STATUS`              | Status value is invalid        | Not one of: active/completed/cancelled/blocked  |
-| `INVALID_FORMAT`              | Export format is invalid       | Not one of: json/csv                            |
-| `INVALID_RANGE`               | Numeric value out of range     | depth < 0, limit <= 0 or > 1000, version < 1    |
-| `INVALID_TYPE`                | Type is incorrect              | data is not an object, etc.                     |
-| `INVALID_DATE`                | Date is invalid                | Not a valid Date object                         |
-| `EMPTY_UPDATES`               | Updates object is empty        | Must include at least one field to update       |
-| `EMPTY_FILTERS`               | Filters object is empty        | Must include at least one filter                |
-| `EMPTY_ARRAY`                 | Array is empty                 | Required array has no elements                  |
+| Error Code                       | Description                    | Cause                                          |
+| -------------------------------- | ------------------------------ | ---------------------------------------------- |
+| `MISSING_REQUIRED_FIELD`         | Required field is missing      | Field is null, undefined, or empty string      |
+| `WHITESPACE_ONLY`                | Field contains only whitespace | Purpose has no actual content                  |
+| `INVALID_CONTEXT_ID_FORMAT`      | Context ID format is invalid   | Must match `ctx-{timestamp}-{random}`          |
+| `INVALID_CONVERSATION_ID_FORMAT` | Conversation ID format invalid | Must start with `conv-`                        |
+| `INVALID_STATUS`                 | Status value is invalid        | Not one of: active/completed/cancelled/blocked |
+| `INVALID_FORMAT`                 | Export format is invalid       | Not one of: json/csv                           |
+| `INVALID_RANGE`                  | Numeric value out of range     | depth < 0, limit <= 0 or > 1000, version < 1   |
+| `INVALID_TYPE`                   | Type is incorrect              | data is not an object, etc.                    |
+| `INVALID_DATE`                   | Date is invalid                | Not a valid Date object                        |
+| `EMPTY_UPDATES`                  | Updates object is empty        | Must include at least one field to update      |
+| `EMPTY_FILTERS`                  | Filters object is empty        | Must include at least one filter               |
+| `EMPTY_ARRAY`                    | Array is empty                 | Required array has no elements                 |
 
 ### Backend Errors (ConvexError)
 
 These errors are returned from the Convex backend:
 
-| Error Code           | Description                    | Cause                                   |
-| -------------------- | ------------------------------ | --------------------------------------- |
-| `CONTEXT_NOT_FOUND`  | Context doesn't exist          | Invalid or non-existent contextId       |
-| `PARENT_NOT_FOUND`   | Parent context doesn't exist   | Invalid parentId in create()            |
-| `HAS_CHILDREN`       | Context has children           | Can't delete without cascade/orphan     |
+| Error Code          | Description                  | Cause                               |
+| ------------------- | ---------------------------- | ----------------------------------- |
+| `CONTEXT_NOT_FOUND` | Context doesn't exist        | Invalid or non-existent contextId   |
+| `PARENT_NOT_FOUND`  | Parent context doesn't exist | Invalid parentId in create()        |
+| `HAS_CHILDREN`      | Context has children         | Can't delete without cascade/orphan |
 
 **See Also:**
 

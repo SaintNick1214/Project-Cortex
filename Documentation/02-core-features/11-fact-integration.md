@@ -404,9 +404,13 @@ const foodFacts = await cortex.facts.search({
 });
 
 // Via memory enrichment (recommended)
-const memories = await cortex.memory.search("user-123-space", "user preferences", {
-  enrichConversation: true, // Facts automatically included
-});
+const memories = await cortex.memory.search(
+  "user-123-space",
+  "user preferences",
+  {
+    enrichConversation: true, // Facts automatically included
+  },
+);
 ```
 
 ## Best Practices
@@ -554,14 +558,16 @@ await cortex.memory.remember({
   agentResponse: "I'll remember that!",
   userId: "user-123",
   userName: "Alex",
-  extractFacts: async () => [{
-    fact: "User's favorite color is blue",
-    factType: "preference",
-    subject: "user-123",
-    predicate: "favoriteColor",
-    object: "blue",
-    confidence: 90,
-  }],
+  extractFacts: async () => [
+    {
+      fact: "User's favorite color is blue",
+      factType: "preference",
+      subject: "user-123",
+      predicate: "favoriteColor",
+      object: "blue",
+      confidence: 90,
+    },
+  ],
 });
 
 // Later conversation - color changed!
@@ -572,14 +578,16 @@ await cortex.memory.remember({
   agentResponse: "Got it!",
   userId: "user-123",
   userName: "Alex",
-  extractFacts: async () => [{
-    fact: "User's favorite color is red",
-    factType: "preference",
-    subject: "user-123",
-    predicate: "favoriteColor",
-    object: "red",
-    confidence: 95,  // Higher confidence
-  }],
+  extractFacts: async () => [
+    {
+      fact: "User's favorite color is red",
+      factType: "preference",
+      subject: "user-123",
+      predicate: "favoriteColor",
+      object: "red",
+      confidence: 95, // Higher confidence
+    },
+  ],
 });
 
 // The Belief Revision System:
@@ -598,7 +606,7 @@ Exclude superseded facts in queries:
 const currentPreferences = await cortex.facts.list({
   memorySpaceId: "user-123-space",
   factType: "preference",
-  isSuperseded: false,  // Current beliefs only
+  isSuperseded: false, // Current beliefs only
 });
 
 // Or via recall API
@@ -607,7 +615,7 @@ const result = await cortex.memory.recall({
   query: "user preferences",
   sources: {
     facts: {
-      isSuperseded: false,  // Current beliefs only
+      isSuperseded: false, // Current beliefs only
     },
   },
 });

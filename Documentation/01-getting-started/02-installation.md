@@ -93,6 +93,7 @@ npx @cortexmemory/cli start
 ```
 
 **When to use:**
+
 - One-time project creation
 - Testing before global install
 - CI/CD environments
@@ -167,10 +168,12 @@ cortex status
 ### 3. Verify Convex Dashboard
 
 **For local development:**
+
 - Open: http://127.0.0.1:3210
 - You should see deployed Cortex functions
 
 **For cloud deployment:**
+
 ```bash
 cortex convex dashboard
 # Opens your deployment in browser
@@ -209,6 +212,7 @@ npm config get prefix
 ### "cortex init" fails
 
 **Possible causes:**
+
 - Node.js version < 20
 - No internet connection
 - npm permissions
@@ -280,6 +284,7 @@ cortex start --help
 ```
 
 **Still stuck?**
+
 - [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
 - [CLI Reference](../06-tools/01-cli-reference.md)
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
@@ -303,6 +308,7 @@ cortex update
 ```
 
 The `cortex update` command will:
+
 - Check for newer versions of `@cortexmemory/sdk`
 - Check for newer versions of `convex`
 - Offer to update all projects
