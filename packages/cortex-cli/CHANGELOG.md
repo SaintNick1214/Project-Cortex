@@ -1,5 +1,20 @@
 # @cortexmemory/cli Changelog
 
+## [0.28.0] - 2026-01-04
+
+### Added
+
+- **Sessions and factHistory table support** - `cortex db clear` and `cortex db stats` now include all Convex tables:
+  - `sessions` - Native session management table
+  - `factHistory` - Belief revision audit trail table
+  - Both tables are now properly cleared during database reset operations
+  - Statistics now include counts for all 13 tables
+
+### Changed
+
+- `cortex db clear` now clears 13 tables (was 11): added sessions and factHistory
+- Deletion summary now shows sessions and fact history counts in the "System Tables" section
+
 ## [0.27.3] - 2026-01-01
 
 ### Added
