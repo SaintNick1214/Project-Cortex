@@ -2,279 +2,396 @@
 id: five-minute-quickstart
 title: Five-Minute Quickstart
 sidebar_position: 3
-description: Build your first AI agent with persistent memory in 5 minutes
+description: Set up your first Cortex project with the interactive CLI wizard
 ---
 
 # Five-Minute Quickstart
 
-Get your first AI agent with persistent memory running in 5 minutes.
+The Cortex CLI guides you through setting up a complete AI agent with persistent memory. This guide walks you through every option in the `cortex init` wizard.
 
 <Callout type="info" title="Before You Begin">
-  **Time**: ~5 minutes | **Prerequisites**: Node.js 20+, npm or yarn
+  **Prerequisites**: Node.js 20+, npm
 </Callout>
 
-<Steps>
-  <Step title="Install the CLI (30 seconds)">
-    Install the Cortex CLI globally:
-    
-    <Terminal>npm install -g @cortexmemory/cli</Terminal>
-    
-    Verify installation:
-    
-    <Terminal>cortex --version</Terminal>
-    
-    <Callout type="tip" title="Expected Output">
-      You should see version `0.27.4` or higher.
-    </Callout>
-  </Step>
-  
-  <Step title="Initialize Your Project (1 minute)">
-    Create a new Cortex project:
-    
-    <Terminal>cortex init my-first-agent</Terminal>
-    
-    The interactive wizard guides you through:
-    
-    1. **Project name** - Press Enter to accept default
-    2. **Convex setup** - Choose "Create new Convex project" (full features, free tier) or "Use local" (fastest, no account needed)
-    3. **Template selection** - Choose "vercel-ai-quickstart" for a full working example
-    4. **Graph database** - Recommended! Enables relationship queries and knowledge graphs (Docker for local setup, or any Neo4j-compatible DB)
-    
-    <Callout 
-      type="tip" 
-      title="What the wizard creates" 
-      collapsible
-      defaultOpen={false}
-    >
-      Project structure, dependencies (`@cortexmemory/sdk`, `convex`), environment config (`.env.local`), Convex backend with Cortex functions deployed, and persistent configuration saved to `~/.cortexrc`.
-    </Callout>
-  </Step>
-  
-  <Step title="Start Development Services (30 seconds)">
-    Start all services:
-    
-    <Terminal>cortex start</Terminal>
-    
-    The CLI uses persistent config with absolute paths, so you can run this from any directory.
-    
-    <Callout type="tip" title="Expected Output" collapsible>
-      ```
-      Starting 1 deployment(s)...
-      
-      my-first-agent
-      Project: /path/to/my-first-agent
-      URL: http://127.0.0.1:3210 (local) or https://your-app.convex.cloud (cloud)
-      
-      Convex development server started
-      All deployments started
-      ```
-    </Callout>
-    
-    **What's running:** Convex backend (database + functions), Next.js dev server (if using vercel-ai-quickstart), your app at http://localhost:3000
-  </Step>
-  
-  <Step title="Store Your First Memory">
-    Now let's store and search memories:
-    
-    <Tabs groupId="method">
-      <TabItem value="sdk" label="SDK (TypeScript)">
+---
 
-```typescript
-import { Cortex } from "@cortexmemory/sdk";
+## Step 1: Install the CLI
 
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-});
+<Terminal>npm install -g @cortexmemory/cli</Terminal>
 
-// Store a memory
-await cortex.memory.remember({
-  memorySpaceId: "my-first-agent",
-  conversationId: "conversation-1",
-  userMessage: "I prefer dark mode",
-  agentResponse: "Got it!",
-  userId: "user-123",
-  userName: "User",
-});
+Verify installation:
 
-// Search memories
-const results = await cortex.memory.search(
-  "my-first-agent",
-  "what are the user preferences?"
-);
+<Terminal>cortex --version</Terminal>
 
-console.log("Found:", results.length, "memories");
-// → Found: 1 memories
+<Callout type="tip" title="Expected">
+  Version `0.27.4` or higher
+</Callout>
+
+---
+
+## Step 2: Run the Init Wizard
+
+<Terminal>cortex init</Terminal>
+
+Or specify a directory:
+
+<Terminal>cortex init my-agent</Terminal>
+
+The wizard walks you through six configuration steps. Let's explore each one.
+
+---
+
+## Init Wizard Options
+
+### Option 1: Project Name
+
+<Terminal>? Project name: my-cortex-agent</Terminal>
+
+- **Requirements**: Lowercase letters, numbers, hyphens, underscores only
+- **Default**: `my-cortex-agent`
+- **Creates**: Directory with this name in current folder
+
+<Callout type="tip" title="Existing Directory?">
+  If the directory exists and has files, the wizard asks: "Add Cortex to existing project?" This lets you add Cortex to an existing codebase without overwriting your files.
+</Callout>
+
+---
+
+### Option 2: Convex Database Setup
+
+<Terminal>? How would you like to set up Convex?
+❯ Local development (fast, recommended)
+  Create new cloud project
+  Use existing Convex project</Terminal>
+
+This is the most important choice. Cortex uses [Convex](https://convex.dev) as its backend database.
+
+<Accordion>
+  <AccordionItem title="Local Development (Recommended for Getting Started)">
+
+**What it does:**
+- Starts a local Convex server on `http://127.0.0.1:3210`
+- No account required
+- Data stored locally
+- Full feature support including vector search
+
+**Best for:**
+- Learning Cortex
+- Local development
+- Offline work
+- Quick prototyping
+
+**Requires:** Nothing extra—works immediately
+
+  </AccordionItem>
+  <AccordionItem title="Create New Cloud Project">
+
+**What it does:**
+- Creates a new project on Convex Cloud
+- Deploys your backend to `https://[project].convex.cloud`
+- Persistent data across machines
+- Automatic scaling
+
+**Best for:**
+- Production deployments
+- Team collaboration
+- Sharing your agent
+
+**Requires:** Free Convex account (wizard prompts login if needed)
+
+  </AccordionItem>
+  <AccordionItem title="Use Existing Convex Project">
+
+**What it does:**
+- Connects to a Convex project you already have
+- Deploys Cortex functions to your existing backend
+
+**Best for:**
+- Adding Cortex to an existing Convex app
+- Migrating from another setup
+
+**Requires:** Existing Convex project name
+
+  </AccordionItem>
+</Accordion>
+
+<Callout type="info" title="Can I Change This Later?">
+  Yes! Use `cortex config add-deployment` to add more environments (local, staging, production) anytime.
+</Callout>
+
+---
+
+### Option 3: Graph Database (Optional)
+
+<Terminal>? Enable graph database integration? (Y/n)</Terminal>
+
+Graph databases enable relationship queries and knowledge graphs—powerful for complex AI agents.
+
+<Accordion>
+  <AccordionItem title="Neo4j (Most Popular)">
+
+**What it is:** Enterprise-grade graph database with Cypher query language
+
+**Best for:**
+- Production deployments
+- Complex relationship queries
+- Large-scale knowledge graphs
+
+**Local setup:** Docker container on `bolt://localhost:7687`
+
+**Cloud option:** Use Neo4j Aura or any Neo4j instance
+
+  </AccordionItem>
+  <AccordionItem title="Memgraph (High Performance)">
+
+**What it is:** In-memory graph database optimized for real-time analytics
+
+**Best for:**
+- High-throughput applications
+- Real-time relationship queries
+- Analytics workloads
+
+**Local setup:** Docker container on `bolt://localhost:7687`
+
+  </AccordionItem>
+  <AccordionItem title="Skip for Now">
+
+You can always add graph integration later. Cortex works great without it—the graph layer adds advanced relationship queries on top of the core memory features.
+
+  </AccordionItem>
+</Accordion>
+
+<Callout type="warning" title="Docker Required">
+  Local graph databases require Docker Desktop. The wizard checks for Docker and shows installation instructions if missing.
+</Callout>
+
+---
+
+### Option 4: OpenAI API Key (Optional)
+
+<Terminal>? Configure OpenAI API key now? (y/N)</Terminal>
+
+- **Used for**: AI-powered embeddings and fact extraction
+- **Required?**: No—you can add it to `.env.local` later
+- **Get a key**: [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+
+<Callout type="tip" title="Bring Your Own Embeddings">
+  Cortex is embedding-agnostic. You can use OpenAI, or provide your own embeddings from any provider (Cohere, Voyage, local models, etc.).
+</Callout>
+
+---
+
+### Option 5: CLI Scripts
+
+<Terminal>? Add Cortex CLI scripts to package.json? (Y/n)</Terminal>
+
+Adds convenient npm scripts:
+
+```json
+{
+  "scripts": {
+    "cortex": "cortex",
+    "cortex:setup": "cortex setup",
+    "cortex:stats": "cortex db stats",
+    "cortex:spaces": "cortex spaces list",
+    "cortex:status": "cortex status"
+  }
+}
 ```
 
-      </TabItem>
-      <TabItem value="cli" label="CLI">
+---
 
-<Terminal>cortex memory store --space my-first-agent --content "I prefer dark mode"</Terminal>
+### Option 6: Vercel AI Quickstart Demo
 
-Search memories:
+<Terminal>? Install Vercel AI quickstart demo? (y/N)</Terminal>
 
-<Terminal>cortex memory search "preferences" --space my-first-agent</Terminal>
+Installs a complete working example:
+- Next.js app with chat interface
+- Pre-configured Cortex integration
+- Memory visualization
+- Ready to run at `http://localhost:3000`
 
-      </TabItem>
-    </Tabs>
-  </Step>
-  
-  <Step title="Try Your Agent">
-    <Tabs groupId="template">
-      <TabItem value="vercel" label="Vercel AI Template">
-
-If you selected the `vercel-ai-quickstart` template:
-
-**1. Open your app** at http://localhost:3000
-
-**2. Chat with your agent:**
-
-- Type: "I prefer dark mode" → Agent: "I'll remember that!"
-- Type: "What are my preferences?" → Agent: "You prefer dark mode"
-
-**3. Memory persists across sessions** - Refresh the page, start a new conversation, and the agent still remembers.
-
-      </TabItem>
-      <TabItem value="basic" label="Basic Template">
-
-If you selected the `basic` template:
-
-<Terminal>npm start</Terminal>
-
-<Callout type="tip" title="Expected Output">
-  ```
-  🧠 Cortex Memory SDK - Example
-  ================================
-  
-  💾 Storing a memory...
-  ✓ Memory stored!
-  
-  🔍 Searching memories...
-  ✓ Found 1 relevant memories
-  
-  Memory: I prefer dark mode
-  ```
+<Callout type="tip" title="Great for Learning">
+  The quickstart demo shows how to integrate Cortex with a real AI chat application. Highly recommended for first-time users.
 </Callout>
 
-      </TabItem>
-    </Tabs>
-  </Step>
-</Steps>
+---
 
-<Callout type="tip" title="Congratulations!">
-  You've built an AI agent with persistent memory! Your agent can remember user preferences, search past conversations, and persist data across restarts.
+## Configuration Summary
+
+Before proceeding, the wizard shows a summary:
+
+<Terminal>Configuration Summary
+──────────────────────────────────────────────
+Project:     my-cortex-agent
+Location:    /Users/you/my-cortex-agent
+Type:        New project
+Convex:      Local development
+Graph DB:    neo4j
+OpenAI:      Configured
+CLI Scripts: Yes
+──────────────────────────────────────────────
+? Proceed with setup? (Y/n)</Terminal>
+
+---
+
+## What Gets Created
+
+After confirmation, the wizard:
+
+1. **Creates project files** - `package.json`, TypeScript config, basic agent template
+2. **Installs dependencies** - `@cortexmemory/sdk`, `convex`, and related packages
+3. **Sets up Cortex backend** - Deploys Convex functions for memory operations
+4. **Creates `.env.local`** - Environment variables for your configuration
+5. **Configures graph database** - Docker compose file and env vars (if enabled)
+6. **Saves to `~/.cortexrc`** - Persistent CLI configuration
+
+---
+
+## Step 3: Start Development
+
+After setup, start your services:
+
+<Terminal>cortex start</Terminal>
+
+Or use interactive mode with live dashboard:
+
+<Terminal>cortex dev</Terminal>
+
+<Callout type="tip" title="Interactive Dev Mode">
+  `cortex dev` provides a live dashboard with keyboard shortcuts:
+  - `s` - Show status
+  - `r` - Restart services
+  - `k` - Kill stuck ports
+  - `q` - Quit
 </Callout>
 
-<Callout type="info" title="About Authentication">
-  The quickstart template includes basic auth for development. For production, integrate your own auth system (Auth0, Clerk, NextAuth, etc.) - see the [Auth Integration Guide](/getting-started/auth-integration).
+---
+
+## Step 4: Start Using Cortex
+
+<Tabs>
+  <TabItem value="quickstart" label="With Vercel AI Quickstart">
+
+If you installed the Vercel AI Quickstart demo, open your browser:
+
+**http://localhost:3000**
+
+You'll see a fully functional ChatGPT-style interface powered by Cortex + Vercel AI SDK. Try it:
+
+1. **Chat normally** - "Hi, I'm Alex. I work as a software engineer."
+2. **Ask about yourself** - "What do I do for work?"
+3. **Watch memory work** - The agent remembers facts across conversations
+
+The quickstart includes:
+- Real-time chat with streaming responses
+- Memory visualization panel
+- Fact extraction display
+- Multi-conversation support
+
+<Callout type="tip" title="See Memory in Action">
+  Open the Convex dashboard (`cortex convex dashboard`) alongside the chat to watch memories being stored in real-time.
 </Callout>
+
+  </TabItem>
+  <TabItem value="self-dev" label="Building Your Own">
+
+If you skipped the quickstart, you're ready to start building. Your project includes:
+
+- **Cortex backend** - Already deployed and running
+- **SDK installed** - `@cortexmemory/sdk` ready to import
+- **Environment configured** - `.env.local` with your Convex URL
+
+**Next step**: See [Core Concepts](/getting-started/core-concepts) to understand memory spaces, then check the [API Reference](/api-reference/memory-operations) for SDK usage.
+
+Quick verification that everything works:
+
+<Terminal>cortex db stats</Terminal>
+
+<Terminal>cortex spaces list</Terminal>
+
+  </TabItem>
+</Tabs>
+
+---
+
+## CLI Flags for Non-Interactive Setup
+
+Skip the wizard with flags:
+
+<Terminal>cortex init my-agent --local --skip-graph -y</Terminal>
+
+| Flag | Description |
+|------|-------------|
+| `--local` | Use local Convex (no prompts) |
+| `--cloud` | Use cloud Convex (no prompts) |
+| `--skip-graph` | Skip graph database setup |
+| `-t, --template <name>` | Template to use (default: `basic`) |
+| `-y, --yes` | Skip all confirmation prompts |
+| `--start` | Start services after setup |
+
+---
 
 ## Explore Your Data
 
-### Using the Convex Dashboard
+### Convex Dashboard
 
 <Terminal>cortex convex dashboard</Terminal>
 
-This opens the correct dashboard for your deployment (local or cloud).
-
-**What you'll see:**
+Opens the correct dashboard for your deployment (local or cloud).
 
 | Table | Description |
 |-------|-------------|
 | `conversations` | All conversation threads |
-| `memories` | Searchable memory index (vector store) |
+| `memories` | Searchable memory index |
 | `immutable` | Versioned message history |
 | `users` | User profiles |
 | `memorySpaces` | Memory space registry |
 
-### Using CLI Commands
+### CLI Commands
 
-```bash
-# View database statistics
-cortex db stats
+<Terminal>cortex db stats</Terminal>
 
-# List memory spaces
-cortex spaces list
+<Terminal>cortex spaces list</Terminal>
 
-# List memories in a space
-cortex memory list --space my-first-agent
+<Terminal>cortex memory list --space my-agent</Terminal>
 
-# Search memories
-cortex memory search "preferences" --space my-first-agent
-```
+---
 
-## Interactive Development
+## Troubleshooting
 
-For the best experience, use the interactive dashboard:
+<Accordion>
+  <AccordionItem title="Connection Errors">
 
-<Terminal>cortex dev</Terminal>
+<Terminal>cortex config test</Terminal>
 
-This provides live service status, streaming logs, auto-reload on changes, and keyboard shortcuts (`c` clear, `s` status, `r` restart, `k` kill ports, `q` quit).
+Ensure Convex is running and `CONVEX_URL` is set in `.env.local`.
 
-## Common Workflows
+  </AccordionItem>
+  <AccordionItem title="Port Conflicts">
 
-<Tabs groupId="workflow">
-  <TabItem value="dev" label="Development">
+Use `cortex dev` then press `k` to kill stuck processes, or:
 
-```bash
-# 1. Start interactive dev mode
-cortex dev
+<Terminal>cortex stop</Terminal>
 
-# 2. Make code changes (Convex auto-reloads)
+  </AccordionItem>
+  <AccordionItem title="Docker Not Found (Graph Setup)">
 
-# 3. View live logs in dashboard
+Install Docker Desktop from [docker.com](https://www.docker.com/products/docker-desktop), or choose "Cloud/Existing instance" for the graph database.
 
-# 4. Test with CLI commands
-cortex memory list --space my-agent
+  </AccordionItem>
+  <AccordionItem title="Convex Auth Issues">
 
-# 5. Quit when done (press 'q')
-```
+The wizard handles authentication automatically. If you see auth errors:
 
-  </TabItem>
-<TabItem value="prod" label="Production">
+<Terminal>npx convex logout</Terminal>
 
-```bash
-# 1. Add production deployment
-cortex config add-deployment production \
-  --url https://prod.convex.cloud \
-  --key "prod|..."
+<Terminal>npx convex login</Terminal>
 
-# 2. Deploy backend to production
-cortex deploy -d production
+Then run `cortex init` again.
 
-# 3. Verify deployment
-cortex status -d production
-cortex db stats -d production
-```
-
-</TabItem>
-<TabItem value="multi" label="Multiple Environments">
-
-```bash
-# Add cloud deployment
-cortex config add-deployment cloud \
-  --url https://my-app.convex.cloud \
-  --key "prod|..."
-
-# View all deployments
-cortex config list
-
-# Target specific deployment with -d flag
-cortex db stats -d cloud
-cortex deploy -d cloud
-cortex status -d local
-```
-
-</TabItem>
-</Tabs>
-
-<Callout type="warning" title="Troubleshooting" collapsible>
-  **Connection errors?** Ensure Convex is running (`npx convex dev`) and `CONVEX_URL` is set in `.env.local`.
-  
-  **Port conflicts?** Run `cortex dev` then press `k` to kill stuck processes.
-  
-  **Vector search not working?** Vector search requires cloud Convex. Add a cloud deployment with `cortex config add-deployment cloud`, then use `-d cloud` flag.
-</Callout>
+  </AccordionItem>
+</Accordion>
 
 ---
 
