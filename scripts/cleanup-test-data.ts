@@ -16,6 +16,8 @@
  *   9. graphSyncQueue - graph sync queue
  *  10. governancePolicies - governance policies
  *  11. governanceEnforcement - enforcement logs
+ *  12. sessions - session management
+ *  13. factHistory - belief revision audit trail
  */
 
 import { ConvexClient } from "convex/browser";
@@ -89,6 +91,8 @@ async function cleanup() {
       graphSyncQueue: 0,
       governancePolicies: 0,
       governanceEnforcement: 0,
+      sessions: 0,
+      factHistory: 0,
     };
 
     // Clear tables in order (respecting dependencies)
@@ -136,6 +140,12 @@ async function cleanup() {
       "enforcement logs",
     );
 
+    console.log("🔐 Clearing sessions...");
+    stats.sessions = await clearTable("sessions", "sessions");
+
+    console.log("📜 Clearing fact history...");
+    stats.factHistory = await clearTable("factHistory", "fact history entries");
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Summary
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -150,7 +160,9 @@ async function cleanup() {
       stats.agents +
       stats.graphSyncQueue +
       stats.governancePolicies +
-      stats.governanceEnforcement;
+      stats.governanceEnforcement +
+      stats.sessions +
+      stats.factHistory;
 
     console.log(`\n${"=".repeat(60)}`);
     console.log("✅ CLEANUP COMPLETE!");
@@ -188,6 +200,12 @@ async function cleanup() {
     );
     console.log(
       `   Governance Enforce:    ${stats.governanceEnforcement.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Sessions:              ${stats.sessions.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Fact History:          ${stats.factHistory.toString().padStart(6)}`,
     );
     console.log(`   ${"─".repeat(30)}`);
     console.log(`   TOTAL DELETED:         ${total.toString().padStart(6)}`);

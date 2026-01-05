@@ -92,6 +92,7 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
                 agents: 0,
                 contexts: 0,
                 conversations: 0,
+                factHistory: 0,
                 facts: 0,
                 governanceEnforcement: 0,
                 governancePolicies: 0,
@@ -100,6 +101,7 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
                 memories: 0,
                 memorySpaces: 0,
                 mutable: 0,
+                sessions: 0,
               };
             }
 
@@ -323,16 +325,18 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
               agents: 0,
               contexts: 0,
               conversations: 0,
-              messages: 0,
+              factHistory: 0,
               facts: 0,
+              governanceEnforcement: 0,
+              governancePolicies: 0,
+              graphSyncQueue: 0,
+              immutable: 0,
               memories: 0,
               memorySpaces: 0,
-              immutable: 0,
+              messages: 0,
               mutable: 0,
+              sessions: 0,
               users: 0,
-              governancePolicies: 0,
-              governanceEnforcement: 0,
-              graphSyncQueue: 0,
             };
 
             // Get raw Convex client for direct table access via admin functions
@@ -405,7 +409,15 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
             // 12. Clear graph sync queue
             await clearTableDirect("graphSyncQueue", "graphSyncQueue");
 
-            // 13. Clear graph database if graph sync is enabled
+            // 13. Clear sessions
+            spinner.text = `Clearing sessions...`;
+            await clearTableDirect("sessions", "sessions");
+
+            // 14. Clear fact history (belief revision audit trail)
+            spinner.text = `Clearing factHistory...`;
+            await clearTableDirect("factHistory", "factHistory");
+
+            // 15. Clear graph database if graph sync is enabled
             // Check both explicit flag and auto-detection (same logic as Cortex.create())
             const neo4jUri = process.env.NEO4J_URI;
             const memgraphUri = process.env.MEMGRAPH_URI;
@@ -502,6 +514,8 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
               "Governance Logs": deleted.governanceEnforcement,
               "Graph Sync Queue":
                 deleted.graphSyncQueue >= 0 ? deleted.graphSyncQueue : 0,
+              Sessions: deleted.sessions,
+              "Fact History": deleted.factHistory,
             };
 
             printSection("Core Entities", coreEntities);

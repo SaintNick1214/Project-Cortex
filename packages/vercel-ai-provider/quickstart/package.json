@@ -5,9 +5,9 @@
   "license": "UNLICENSED",
   "description": "Cortex Memory + Vercel AI SDK Quickstart Demo",
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "next dev --webpack -H 0.0.0.0",
     "build": "next build --webpack",
-    "start": "next start",
+    "start": "next start -H 0.0.0.0",
     "lint": "next lint",
     "test": "jest --selectProjects unit integration",
     "test:unit": "jest --selectProjects unit",
@@ -46,5 +46,12 @@
     "tailwindcss": "^4.1.18",
     "ts-jest": "^29.2.5",
     "typescript": "^5.9.3"
-  }
+  },
+  "main": "jest.config.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": ""
 }
