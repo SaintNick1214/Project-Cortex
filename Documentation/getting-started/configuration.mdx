@@ -9,34 +9,9 @@ description: Configure Cortex for development, staging, and production environme
 
 Cortex uses a hierarchical configuration system managed by the CLI. Configuration is minimal by default but offers extensive customization when needed.
 
----
-
-## Quick: Auth Integration
-
-<Callout type="info" title="Common Question">
-  "How do I integrate my auth system (Auth0, Clerk, Okta, WorkOS, etc.)?"
+<Callout type="info" title="Cortex Cloud Coming Soon">
+  This guide covers self-hosted configuration. **Cortex Cloud** will offer zero-config managed deployments—coming soon.
 </Callout>
-
-**Answer:** Cortex works with **ANY auth system** - just extract `userId` and optionally `tenantId`:
-
-```typescript
-import { createAuthContext } from "@cortexmemory/sdk";
-
-// Extract from YOUR auth (3 lines of code)
-const auth = createAuthContext({
-  userId: yourAuthData.id, // Required
-  tenantId: yourAuthData.tenantId, // Optional (multi-tenant SaaS)
-});
-
-// Pass to Cortex
-const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL!, auth });
-
-// Done! All operations now authenticated
-```
-
-**Works with:** Auth0, Clerk, NextAuth, Supabase, Firebase, Okta, WorkOS, OIDC, OAuth, custom JWT, sessions, API keys, or any auth system you already use.
-
-**See:** [Authentication Guide](/core-features/authentication) for complete setup.
 
 ---
 
@@ -44,10 +19,40 @@ const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL!, auth });
 
 The CLI uses a hierarchical configuration system (highest priority first):
 
-1. **CLI Flags** - `--url`, `--key`, `--deployment`
-2. **Environment Variables** - `CONVEX_URL`, `CONVEX_DEPLOY_KEY`
-3. **Project Config** - `./cortex.config.json` (optional)
-4. **User Config** - `~/.cortexrc` (managed by CLI)
+<FlowDiagram
+  title="Configuration Priority"
+  caption="Higher priority sources override lower ones"
+  direction="vertical"
+>
+  <FlowNode
+    title="CLI Flags"
+    icon="terminal"
+    variant="primary"
+  >
+    --url, --key, --deployment (highest priority)
+  </FlowNode>
+  <FlowNode
+    title="Environment Variables"
+    icon="settings"
+    variant="warning"
+  >
+    CONVEX_URL, CONVEX_DEPLOY_KEY
+  </FlowNode>
+  <FlowNode
+    title="Project Config"
+    icon="file"
+    variant="default"
+  >
+    ./cortex.config.json (optional)
+  </FlowNode>
+  <FlowNode
+    title="User Config"
+    icon="user"
+    variant="success"
+  >
+    ~/.cortexrc (managed by CLI, lowest priority)
+  </FlowNode>
+</FlowDiagram>
 
 ### Example: How Priority Works
 
@@ -70,13 +75,9 @@ The CLI automatically manages `~/.cortexrc` for deployment settings.
 
 <Terminal>cortex config show</Terminal>
 
-```bash
-# List all deployments
-cortex config list
+<Terminal>cortex config list</Terminal>
 
-# View config file path
-cortex config path
-```
+<Terminal>cortex config path</Terminal>
 
 ### Configuration File Format
 
@@ -152,33 +153,21 @@ The `~/.cortexrc` file is JSON:
   </Step>
   <Step title="With options">
 
-```bash
-cortex config add-deployment cloud \
-  --url https://your-app.convex.cloud \
-  --key "prod|..."
-```
+<Terminal>cortex config add-deployment cloud --url https://your-app.convex.cloud --key "prod|..."</Terminal>
 
   </Step>
   <Step title="Set as default">
 
-```bash
-cortex config add-deployment production \
-  --url https://prod.convex.cloud \
-  --default
-```
+<Terminal>cortex config add-deployment production --url https://prod.convex.cloud --default</Terminal>
 
   </Step>
 </Steps>
 
 ### Removing Deployments
 
-```bash
-# Interactive mode
-cortex config remove-deployment
+<Terminal>cortex config remove-deployment</Terminal>
 
-# Specific deployment
-cortex config remove-deployment staging
-```
+<Terminal>cortex config remove-deployment staging</Terminal>
 
 <Callout type="note">
   Cannot remove the default deployment. Set a different default first.
@@ -186,58 +175,35 @@ cortex config remove-deployment staging
 
 ### Updating Deployment Settings
 
-```bash
-# Update URL
-cortex config set-url production \
-  --url https://new-prod.convex.cloud
+<Terminal>cortex config set-url production --url https://new-prod.convex.cloud</Terminal>
 
-# Update deploy key
-cortex config set-key production \
-  --key "prod|new-key"
+<Terminal>cortex config set-key production --key "prod|new-key"</Terminal>
 
-# Set project path (enables running from anywhere)
-cortex config set-path production /path/to/project
-```
+<Terminal>cortex config set-path production /path/to/project</Terminal>
 
 ### Enabling/Disabling Deployments
 
 Control which deployments start with `cortex start`:
 
-```bash
-# Enable (will auto-start)
-cortex config enable staging
+<Terminal>cortex config enable staging</Terminal>
 
-# Disable (won't auto-start)
-cortex config disable production
+<Terminal>cortex config disable production</Terminal>
 
-# View status
-cortex config list
-```
+<Terminal>cortex config list</Terminal>
 
 ### Switching Deployments
 
-```bash
-# Show current deployment
-cortex use
+<Terminal>cortex use</Terminal>
 
-# Switch to different deployment
-cortex use production
+<Terminal>cortex use production</Terminal>
 
-# Clear current deployment
-cortex use --clear
-
-# All subsequent commands use the current deployment
-cortex db stats  # Uses production (from 'cortex use production')
-```
+<Terminal>cortex use --clear</Terminal>
 
 ### Testing Configuration
 
 <Terminal>cortex config test</Terminal>
 
-```bash
-# Test specific deployment
-cortex config test --deployment production
-```
+<Terminal>cortex config test --deployment production</Terminal>
 
 ---
 
@@ -346,65 +312,47 @@ OPENAI_API_KEY=sk-your-key-here
 <Steps>
   <Step title="Add local development">
 
-```bash
-cortex config add-deployment local \
-  --url http://127.0.0.1:3210
+<Terminal>cortex config add-deployment local --url http://127.0.0.1:3210</Terminal>
 
-cortex config set-path local ~/projects/my-agent
-```
+<Terminal>cortex config set-path local ~/projects/my-agent</Terminal>
 
   </Step>
   <Step title="Add staging">
 
-```bash
-cortex config add-deployment staging \
-  --url https://staging.convex.cloud
+<Terminal>cortex config add-deployment staging --url https://staging.convex.cloud</Terminal>
 
-cortex config set-key staging  # Prompts for key
-```
+<Terminal>cortex config set-key staging</Terminal>
 
   </Step>
   <Step title="Add production">
 
-```bash
-cortex config add-deployment production \
-  --url https://prod.convex.cloud
+<Terminal>cortex config add-deployment production --url https://prod.convex.cloud</Terminal>
 
-cortex config set-key production  # Prompts for key
-```
+<Terminal>cortex config set-key production</Terminal>
 
   </Step>
   <Step title="Enable only local for auto-start">
 
-```bash
-cortex config enable local
-cortex config disable staging
-cortex config disable production
+<Terminal>cortex config enable local</Terminal>
 
-# Now 'cortex start' starts only local
-# Use 'cortex start -d staging' for staging
-# Use 'cortex start -d production' for production
-```
+<Terminal>cortex config disable staging</Terminal>
+
+<Terminal>cortex config disable production</Terminal>
+
+<Callout type="tip">
+  Now `cortex start` starts only local. Use `cortex start -d staging` or `cortex start -d production` for other environments.
+</Callout>
 
   </Step>
 </Steps>
 
 ### Switching Between Environments
 
-```bash
-# Work on local
-cortex use local
-cortex start
-cortex db stats
+<Terminal>cortex use local</Terminal>
 
-# Switch to production
-cortex use production
-cortex db stats           # Shows production stats
-cortex memory list --space user-123
+<Terminal>cortex use production</Terminal>
 
-# Or target specific deployment without switching
-cortex db stats -d staging
-```
+<Terminal>cortex db stats -d staging</Terminal>
 
 ---
 
@@ -481,147 +429,15 @@ const cortex = new Cortex({
 
 ---
 
-## Authentication Configuration
-
-<Tabs>
-  <TabItem value="clerk" label="Clerk">
-
-```typescript
-import { Cortex, createAuthContext } from "@cortexmemory/sdk";
-import { auth } from "@clerk/nextjs";
-
-const { userId } = auth();
-
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  auth: createAuthContext({
-    userId,
-    authMethod: "clerk",
-  }),
-});
-```
-
-  </TabItem>
-  <TabItem value="auth0" label="Auth0">
-
-```typescript
-import { Cortex, createAuthContext } from "@cortexmemory/sdk";
-
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  auth: createAuthContext({
-    userId: session.user.sub,
-    authMethod: "auth0",
-  }),
-});
-```
-
-  </TabItem>
-  <TabItem value="nextauth" label="NextAuth">
-
-```typescript
-import { Cortex, createAuthContext } from "@cortexmemory/sdk";
-import { getServerSession } from "next-auth";
-
-const session = await getServerSession();
-
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  auth: createAuthContext({
-    userId: session?.user?.id,
-    authMethod: "nextauth",
-  }),
-});
-```
-
-  </TabItem>
-  <TabItem value="custom" label="Custom JWT">
-
-```typescript
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  auth: createAuthContext({
-    userId: decodedToken.sub,
-    tenantId: decodedToken.org_id,
-    authMethod: "custom-jwt",
-  }),
-});
-```
-
-  </TabItem>
-</Tabs>
-
----
-
-## Common CLI Workflows
-
-### Workflow 1: Multi-Environment Development
-
-```bash
-# Morning: Start local development
-cortex use local
-cortex dev  # Interactive dashboard
-
-# Afternoon: Test on staging
-cortex use staging
-cortex start
-cortex db stats  # Check staging data
-
-# Evening: Deploy to production
-cortex use production
-cortex deploy
-cortex status  # Verify deployment
-```
-
-### Workflow 2: Database Management
-
-```bash
-# Backup production before changes
-cortex use production
-cortex db backup --output prod-backup-$(date +%Y%m%d).json
-
-# Make changes on staging
-cortex use staging
-cortex db clear  # Clear test data
-# ... make changes ...
-
-# Verify changes worked
-cortex db stats
-
-# Deploy to production
-cortex use production
-cortex deploy
-```
-
-### Workflow 3: GDPR Compliance
-
-```bash
-# Export user data (GDPR portability)
-cortex users export user-123 --output user-data.json
-
-# Preview deletion (dry run)
-cortex users delete user-123 --cascade --dry-run
-
-# Delete user data (GDPR erasure)
-cortex users delete user-123 --cascade --verify
-```
-
----
-
 ## Security Configuration
 
 ### Data Isolation
 
 Ensure proper memory space boundaries:
 
-```bash
-# Good: User-specific space
-cortex memory list --space user-alice
-cortex memory list --space user-bob
+<Terminal>cortex memory list --space user-alice</Terminal>
 
-# Bad: Shared space (unless intentional)
-cortex memory list --space global
-```
+<Terminal>cortex memory list --space user-bob</Terminal>
 
 ### Sensitive Data
 
@@ -629,50 +445,11 @@ cortex memory list --space global
   Be careful with personally identifiable information (PII).
 </Callout>
 
-```bash
-# Search for potential PII
-cortex memory search "password" --space user-123
-cortex memory search "email" --space user-123
+<Terminal>cortex memory search "password" --space user-123</Terminal>
 
-# Export for review
-cortex memory export --space user-123 --output review.json
+<Terminal>cortex memory export --space user-123 --output review.json</Terminal>
 
-# Delete if needed
-cortex memory delete <memoryId> --space user-123
-```
-
----
-
-## Performance Configuration
-
-### Connection Reuse
-
-The CLI reuses connections automatically. For SDK usage:
-
-```typescript
-// Good: Single instance (recommended)
-const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
-
-// Use this instance throughout your app
-export default cortex;
-
-// Bad: Creating new instance for each operation
-// This creates unnecessary connections
-```
-
-### Batch Operations
-
-Use CLI commands efficiently:
-
-```bash
-# Export all spaces at once
-cortex spaces list --format json > spaces.json
-
-# Export memories for multiple spaces
-for space in $(cat spaces.json | jq -r '.[].id'); do
-  cortex memory export --space $space --output "$space-memories.json"
-done
-```
+<Terminal>cortex memory delete [memoryId] --space user-123</Terminal>
 
 ---
 
@@ -682,32 +459,17 @@ done
 
 Enable verbose logging:
 
-```bash
-# Via flag
-cortex db stats --debug
+<Terminal>cortex db stats --debug</Terminal>
 
-# Via environment variable
-DEBUG=1 cortex db stats
-
-# Shows:
-# - Environment variable loading
-# - Configuration resolution
-# - API request/response details
-# - Process spawning
-```
+<Terminal>DEBUG=1 cortex db stats</Terminal>
 
 ### Custom Output Formats
 
-```bash
-# Table format (default)
-cortex db stats
+<Terminal>cortex db stats</Terminal>
 
-# JSON format (for scripting)
-cortex db stats --format json
+<Terminal>cortex db stats --format json</Terminal>
 
-# CSV format (for export)
-cortex memory list --space user-123 --format csv
-```
+<Terminal>cortex memory list --space user-123 --format csv</Terminal>
 
 ### Configuration Reset
 
@@ -719,127 +481,52 @@ cortex memory list --space user-123 --format csv
 
 ---
 
-## Configuration Best Practices
+## Best Practices
 
-### 1. Use Environment Variables
-
-```typescript
-// Good: Environment-based config
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-});
-
-// Bad: Hardcoded values
-const cortex = new Cortex({
-  convexUrl: "https://my-deployment.convex.cloud", // Don't!
-});
-```
-
-### 2. Separate Environments
-
-```bash
-# Development
-cortex use local
-
-# Staging
-cortex use staging
-
-# Production
-cortex use production
-
-# Never mix!
-```
-
-### 3. Secure Credentials
-
-```bash
-# Store deploy keys securely
-cortex config set-key production  # Prompts for key
-
-# Never commit keys to git
-echo ".env.local" >> .gitignore
-```
-
-### 4. Test Before Production
-
-```bash
-# Always test on staging first
-cortex use staging
-cortex deploy
-cortex db stats
-# ... verify everything works ...
-
-# Then deploy to production
-cortex use production
-cortex deploy
-```
-
-### 5. Regular Backups
-
-```bash
-# Backup production regularly
-cortex use production
-cortex db backup --output prod-backup-$(date +%Y%m%d).json
-
-# Automate with cron
-0 2 * * * cd /path/to/project && cortex use production && cortex db backup
-```
+1. **Use environment variables** - Never hardcode URLs or keys
+2. **Separate environments** - Use `cortex use local|staging|production`
+3. **Secure credentials** - Use `cortex config set-key` (prompts securely), add `.env.local` to `.gitignore`
+4. **Test before production** - Always verify on staging first
+5. **Regular backups** - Run `cortex db backup` before major changes
 
 ---
 
 ## Troubleshooting
 
-### Configuration Not Found
+<Accordion>
+  <AccordionItem title="Configuration Not Found">
 
-```bash
-# Error: No deployments configured
+<Terminal>cortex init</Terminal>
 
-# Fix: Initialize a project
-cortex init
+<Terminal>cortex config add-deployment</Terminal>
 
-# Or add existing deployment
-cortex config add-deployment
-```
+  </AccordionItem>
+  <AccordionItem title="Wrong Deployment">
 
-### Wrong Deployment
+<Terminal>cortex use</Terminal>
 
-```bash
-# Check current deployment
-cortex use
+<Terminal>cortex use local</Terminal>
 
-# Switch to correct one
-cortex use local
+<Terminal>cortex use --clear</Terminal>
 
-# Or clear and specify
-cortex use --clear
-cortex db stats -d local
-```
+  </AccordionItem>
+  <AccordionItem title="Connection Failed">
 
-### Connection Failed
+<Terminal>cortex config test</Terminal>
 
-```bash
-# Test connection
-cortex config test
+<Terminal>cortex config show</Terminal>
 
-# Check URL
-cortex config show
+<Terminal>cortex status && cortex start</Terminal>
 
-# Verify Convex is running
-cortex status
-cortex start
-```
+  </AccordionItem>
+  <AccordionItem title="Environment Variable Conflicts">
 
-### Environment Variable Conflicts
+<Terminal>cortex config show --debug</Terminal>
 
-```bash
-# Check what's being used
-cortex config show --debug
+Priority: CLI flags > Environment variables > ~/.cortexrc
 
-# Priority order:
-# 1. CLI flags (--url, --key)
-# 2. Environment variables
-# 3. User config (~/.cortexrc)
-```
+  </AccordionItem>
+</Accordion>
 
 ---
 
