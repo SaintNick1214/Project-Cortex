@@ -137,7 +137,10 @@ describe("Password Utilities", () => {
     });
 
     it("should return false for invalid base64 in salt", async () => {
-      const result = await verifyPassword("password", "!!!invalid!!!:validhash");
+      const result = await verifyPassword(
+        "password",
+        "!!!invalid!!!:validhash",
+      );
 
       expect(result).toBe(false);
     });

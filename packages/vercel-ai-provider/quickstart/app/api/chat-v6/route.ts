@@ -52,7 +52,7 @@ function getCortexMemoryConfig(
   memorySpaceId: string,
   userId: string,
   conversationId: string,
-  layerObserver?: LayerObserver
+  layerObserver?: LayerObserver,
 ): CortexMemoryConfig {
   return {
     convexUrl: process.env.CONVEX_URL!,
@@ -191,7 +191,7 @@ export async function POST(req: Request) {
     if (!messages || !Array.isArray(messages)) {
       return new Response(
         JSON.stringify({ error: "messages array is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
 
@@ -206,7 +206,9 @@ export async function POST(req: Request) {
 
     // Convert to model messages
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const modelMessagesResult = convertToModelMessages(normalizedMessages as any);
+    const modelMessagesResult = convertToModelMessages(
+      normalizedMessages as any,
+    );
     const modelMessages =
       modelMessagesResult instanceof Promise
         ? await modelMessagesResult
@@ -214,14 +216,18 @@ export async function POST(req: Request) {
 
     // Get first user message for title
     const firstUserMessage = messages.find(
-      (m: { role: string }) => m.role === "user"
-    ) as {
-      role: string;
-      content?: string;
-      parts?: Array<{ type: string; text?: string }>;
-    } | undefined;
+      (m: { role: string }) => m.role === "user",
+    ) as
+      | {
+          role: string;
+          content?: string;
+          parts?: Array<{ type: string; text?: string }>;
+        }
+      | undefined;
 
-    const messageText = firstUserMessage ? getMessageText(firstUserMessage) : "";
+    const messageText = firstUserMessage
+      ? getMessageText(firstUserMessage)
+      : "";
 
     // Use createUIMessageStreamResponse - same as v5 for full memory support
     return createUIMessageStreamResponse({
@@ -270,7 +276,7 @@ export async function POST(req: Request) {
             memorySpaceId,
             userId,
             conversationId,
-            layerObserver
+            layerObserver,
           );
 
           // Create memory-augmented model - THIS handles both recall AND storage!
@@ -327,7 +333,7 @@ export async function POST(req: Request) {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
   }
 }

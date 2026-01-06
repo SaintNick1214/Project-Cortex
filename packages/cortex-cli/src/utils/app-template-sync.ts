@@ -107,7 +107,13 @@ function findTemplatePath(appType: string): string | null {
   // Check for development override first
   const devPath = process.env.CORTEX_SDK_DEV_PATH;
   if (devPath) {
-    const devTemplatePath = join(devPath, "packages", "cortex-cli", "templates", appType);
+    const devTemplatePath = join(
+      devPath,
+      "packages",
+      "cortex-cli",
+      "templates",
+      appType,
+    );
     if (existsSync(devTemplatePath)) {
       return devTemplatePath;
     }
@@ -172,7 +178,10 @@ function shouldExclude(relativePath: string): boolean {
       // Simple glob matching for patterns like ".cortex-app-*.pid"
       const regex = new RegExp("^" + pattern.replace(/\*/g, ".*") + "$");
       if (regex.test(relativePath)) return true;
-    } else if (relativePath === pattern || relativePath.startsWith(pattern + "/")) {
+    } else if (
+      relativePath === pattern ||
+      relativePath.startsWith(pattern + "/")
+    ) {
       return true;
     }
   }
@@ -264,6 +273,7 @@ function compareFiles(
  */
 function getTemplateDir(appType: string): string {
   const typeMap: Record<string, string> = {
+    "basic": "basic",
     "vercel-ai-quickstart": "vercel-ai-quickstart",
   };
   return typeMap[appType] || appType;
@@ -311,9 +321,15 @@ async function mergePackageJson(
 
   // Calculate what needs to be merged without reading app package.json yet
   // This determines the merge spec, not the actual merge
-  const depsToMerge = templatePkg.dependencies as Record<string, string> | undefined;
-  const devDepsToMerge = templatePkg.devDependencies as Record<string, string> | undefined;
-  const scriptsToMerge = templatePkg.scripts as Record<string, string> | undefined;
+  const depsToMerge = templatePkg.dependencies as
+    | Record<string, string>
+    | undefined;
+  const devDepsToMerge = templatePkg.devDependencies as
+    | Record<string, string>
+    | undefined;
+  const scriptsToMerge = templatePkg.scripts as
+    | Record<string, string>
+    | undefined;
 
   if (!depsToMerge && !devDepsToMerge && !scriptsToMerge) {
     return result;
@@ -440,7 +456,9 @@ export async function syncAppTemplate(
   const comparisons = compareFiles(templatePath, appPath, templateFiles);
 
   // Filter to files that need updating
-  const filesToSync = comparisons.filter((c) => options?.force || c.needsUpdate);
+  const filesToSync = comparisons.filter(
+    (c) => options?.force || c.needsUpdate,
+  );
 
   // Perform sync (if any files need updating)
   for (const comparison of filesToSync) {
@@ -554,7 +572,11 @@ export function printTemplateSyncResult(
       console.log(pc.dim(`     Added: ${result.filesAdded.join(", ")}`));
     }
   } else {
-    console.log(pc.dim(`     Updated ${result.filesUpdated.length} files, added ${result.filesAdded.length} files`));
+    console.log(
+      pc.dim(
+        `     Updated ${result.filesUpdated.length} files, added ${result.filesAdded.length} files`,
+      ),
+    );
   }
 
   // Show package.json changes
@@ -564,7 +586,9 @@ export function printTemplateSyncResult(
       console.log(pc.dim(`     Dependencies added: ${allDeps.join(", ")}`));
     }
     if (result.scriptsAdded.length > 0) {
-      console.log(pc.dim(`     Scripts added: ${result.scriptsAdded.join(", ")}`));
+      console.log(
+        pc.dim(`     Scripts added: ${result.scriptsAdded.join(", ")}`),
+      );
     }
   }
 }

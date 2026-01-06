@@ -28,7 +28,7 @@ describe("Session Validators", () => {
       expect(() => validateSessionId("sess_abc123")).not.toThrow();
       expect(() => validateSessionId("session-uuid-v4")).not.toThrow();
       expect(() =>
-        validateSessionId("550e8400-e29b-41d4-a716-446655440000")
+        validateSessionId("550e8400-e29b-41d4-a716-446655440000"),
       ).not.toThrow();
       expect(() => validateSessionId("s")).not.toThrow();
     });
@@ -40,13 +40,13 @@ describe("Session Validators", () => {
 
     it("should reject non-string session IDs", () => {
       expect(() => validateSessionId(null as unknown as string)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
       expect(() => validateSessionId(undefined as unknown as string)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
       expect(() => validateSessionId(123 as unknown as string)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
     });
 
@@ -94,10 +94,10 @@ describe("Session Validators", () => {
       const params = {} as CreateSessionParams;
 
       expect(() => validateCreateSessionParams(params)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
       expect(() => validateCreateSessionParams(params)).toThrow(
-        "userId is required"
+        "userId is required",
       );
     });
 
@@ -107,7 +107,7 @@ describe("Session Validators", () => {
       };
 
       expect(() => validateCreateSessionParams(params)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
     });
 
@@ -118,7 +118,7 @@ describe("Session Validators", () => {
       };
 
       expect(() => validateCreateSessionParams(params)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
     });
   });
@@ -173,7 +173,7 @@ describe("Session Validators", () => {
       };
 
       expect(() => validateSessionFilters(filters)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
     });
 
@@ -204,7 +204,7 @@ describe("Session Validators", () => {
       };
 
       expect(() => validateSessionFilters(filters)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
     });
 
@@ -214,7 +214,7 @@ describe("Session Validators", () => {
       };
 
       expect(() => validateSessionFilters(filters)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
     });
   });
@@ -232,10 +232,10 @@ describe("Session Validators", () => {
 
     it("should reject invalid statuses", () => {
       expect(() => validateStatus("pending" as any)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
       expect(() => validateStatus("expired" as any)).toThrow(
-        SessionValidationError
+        SessionValidationError,
       );
       expect(() => validateStatus("" as any)).toThrow(SessionValidationError);
     });
@@ -261,7 +261,7 @@ describe("Session Validators", () => {
       const error = new SessionValidationError(
         "invalid value",
         "INVALID_VALUE",
-        "sessionId"
+        "sessionId",
       );
       expect(error.message).toContain("invalid value");
       expect(error.field).toBe("sessionId");

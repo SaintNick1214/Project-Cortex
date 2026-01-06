@@ -1,0 +1,347 @@
+# Troubleshooting
+
+Common issues and solutions for Cortex Memory Provider with SDK v0.21.0+.
+
+## SDK v0.17.0+ Breaking Changes
+
+### ❌ "agentId is required"
+
+**Error:**
+
+```
+Error: agentId is required. User-agent conversations require both a user and an agent participant.
+```
+
+**Cause:** Since SDK v0.17.0, all conversations require an `agentId` to identify the AI agent participant.
+
+**Solution:** Add `agentId` to your configuration:
+
+```typescript
+// ❌ Old way (throws error)
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-chatbot",
+  userId: "user-123",
+});
+
+// ✅ New way (v0.17.0+)
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-chatbot",
+  userId: "user-123",
+  agentId: "my-assistant", // Required!
+});
+```
+
+### ❌ "agentId must be a non-empty string"
+
+**Cause:** You provided an empty string or invalid value for `agentId`.
+
+**Solution:** Provide a valid agent identifier:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ...
+  agentId: "my-assistant", // Valid non-empty string
+});
+```
+
+## Installation Issues
+
+### "Cannot find module '@cortexmemory/sdk'"
+
+```bash
+npm install @cortexmemory/sdk@latest
+```
+
+### "Peer dependency warnings"
+
+Ensure compatible versions:
+
+```bash
+npm install ai@^4.0.0 convex@^1.17.0
+```
+
+## Connection Issues
+
+### "Failed to connect to Convex"
+
+1. Check `CONVEX_URL` is set correctly in `.env.local`:
+
+   ```env
+   CONVEX_URL=https://your-project.convex.cloud
+   ```
+
+2. Ensure Convex is running: `npx convex dev`
+
+3. Verify Cortex backend is deployed to Convex
+
+### "Convex function not found"
+
+**Cause:** Cortex schema not deployed to Convex.
+
+**Solution:** Run `npx create-cortex-memories` to set up the backend, or manually copy schema files from `@cortexmemory/sdk/convex-dev/`.
+
+## Memory Issues
+
+### "Memory search returns empty"
+
+Common causes:
+
+1. **No prior conversations** - Expected for first use, send a message first
+2. **Wrong memory space** - Check `memorySpaceId` matches between requests
+3. **Using local Convex** - Vector search not supported locally
+4. **No embeddings** - Using keyword search without embedding provider
+
+**Solution:**
+
+```typescript
+// Add embeddings for better search
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-agent",
+  userId: "user-123",
+  agentId: "my-assistant",
+
+  embeddingProvider: {
+    generate: async (text) => {
+      const { embedding } = await embed({
+        model: openai.embedding("text-embedding-3-small"),
+        value: text,
+      });
+      return embedding;
+    },
+  },
+});
+```
+
+### "Memory not persisting across sessions"
+
+**Causes:**
+
+1. `enableMemoryStorage` set to `false`
+2. Different `memorySpaceId` between requests
+3. Different `userId` between requests
+4. Convex deployment issue
+
+**Solution:**
+
+```typescript
+// Ensure consistent configuration
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!, // Same URL
+  memorySpaceId: "my-agent", // Same space ID
+  userId: currentUser.id, // Same user ID
+  agentId: "my-assistant",
+  enableMemoryStorage: true, // Default is true
+});
+```
+
+## Graph Memory Issues
+
+### "Graph sync not working"
+
+**Cause:** Graph database not configured correctly.
+
+**Solution:** Check environment variables:
+
+```env
+CORTEX_GRAPH_SYNC=true
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your-password
+```
+
+Or use explicit configuration:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ...
+  enableGraphMemory: true,
+  graphConfig: {
+    uri: "bolt://localhost:7687",
+    username: "neo4j",
+    password: "your-password",
+    type: "neo4j",
+  },
+});
+```
+
+### "Graph connection timeout"
+
+**Cause:** Graph database not running or unreachable.
+
+**Solution:**
+
+1. Start your Neo4j/Memgraph instance
+2. Check the URI is correct and accessible
+3. Verify firewall allows connections
+
+## Fact Extraction Issues
+
+### "Facts not being extracted"
+
+**Cause:** Fact extraction not enabled or misconfigured.
+
+**Solution:**
+
+```env
+CORTEX_FACT_EXTRACTION=true
+CORTEX_FACT_EXTRACTION_MODEL=gpt-4o-mini
+```
+
+Or explicitly enable:
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ...
+  enableFactExtraction: true,
+});
+```
+
+### "Fact extraction slow"
+
+**Cause:** Using a large model for extraction.
+
+**Solution:** Use a faster model:
+
+```typescript
+factExtractionConfig: {
+  model: "gpt-4o-mini", // Faster than gpt-4o
+}
+```
+
+## Type Issues
+
+### "Type errors with LanguageModelV1"
+
+**Cause:** Version mismatch between AI SDK versions.
+
+**Solution:**
+
+```bash
+npm update ai @ai-sdk/openai @cortexmemory/vercel-ai-provider
+```
+
+### "Property 'agentId' does not exist"
+
+**Cause:** Using old type definitions.
+
+**Solution:** Update to latest version:
+
+```bash
+npm update @cortexmemory/vercel-ai-provider
+```
+
+## Edge Runtime Issues
+
+### "process is not defined"
+
+**Cause:** Using Node.js APIs in edge runtime.
+
+**Solution:** Use edge-compatible environment variable access:
+
+```typescript
+// Edge-compatible
+const convexUrl = process.env.CONVEX_URL!;
+```
+
+Most Next.js edge runtimes support `process.env` for build-time variables.
+
+### "Cannot use fs module"
+
+**Cause:** Edge runtimes don't have `fs`.
+
+**Solution:** Use web-standard APIs only. Cortex is fully edge-compatible.
+
+## Performance Issues
+
+### "Slow responses"
+
+**Causes:**
+
+- Too many memories searched
+- Slow embedding generation
+- Network latency to Convex
+
+**Solutions:**
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ...
+  memorySearchLimit: 3, // Reduce from default 5
+  minMemoryRelevance: 0.8, // Higher = fewer, more relevant results
+});
+```
+
+### "High latency on first request"
+
+**Cause:** Cold start for Convex functions.
+
+**Solution:** This is normal. Subsequent requests will be faster. Consider Convex's "scheduled functions" for warming.
+
+## Streaming Issues
+
+### "Stream interrupted"
+
+**Cause:** Network issues or timeout.
+
+**Solution:** Enable error recovery:
+
+```typescript
+streamingOptions: {
+  partialFailureHandling: 'store-partial',
+  maxRetries: 3,
+  generateResumeToken: true,
+  streamTimeout: 60000, // Increase timeout
+}
+```
+
+### "Streaming metrics not appearing"
+
+**Cause:** Metrics collection disabled.
+
+**Solution:**
+
+```typescript
+enableStreamMetrics: true, // Default is true
+```
+
+## Debugging
+
+### Enable Debug Logging
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ...
+  debug: true,
+});
+```
+
+This will log:
+
+- Memory search queries and results
+- Context injection details
+- Storage operations
+- Timing information
+
+### Custom Logger
+
+```typescript
+const cortexMemory = createCortexMemory({
+  // ...
+  logger: {
+    debug: (...args) => console.log("[DEBUG]", ...args),
+    info: (...args) => console.log("[INFO]", ...args),
+    warn: (...args) => console.warn("[WARN]", ...args),
+    error: (...args) => console.error("[ERROR]", ...args),
+  },
+});
+```
+
+## Getting Help
+
+- [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues) - Bug reports
+- [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions) - Questions
+- [Quickstart Demo](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart) - Working example
+- [Getting Started Guide](./getting-started) - Setup tutorial

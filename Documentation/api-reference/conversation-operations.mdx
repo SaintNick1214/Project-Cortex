@@ -1,0 +1,1309 @@
+# Conversation Operations API
+
+> **Last Updated**: 2026-01-01
+
+Complete API reference for ACID conversation management (Layer 1a).
+
+## Overview
+
+The Conversation Operations API (`cortex.conversations.*`) manages **immutable conversation threads** - the Layer 1a foundation that provides the source of truth for all message history.
+
+**Key Characteristics:**
+
+- ✅ **Immutable** - Messages never modified, only appended
+- ✅ **Append-Only** - Conversations grow, never shrink (unless deleted)
+- ✅ **ACID Guarantees** - Atomic, consistent, isolated, durable
+- ✅ **No Retention Limits** - Kept forever (unlike Vector with retention)
+- ✅ **Audit Trail** - Complete message history for compliance
+- ✅ **Referenced** - Vector memories link back via `conversationRef`
+- ✅ **Multi-Tenant** - Automatic `tenantId` isolation for SaaS platforms
+
+**Relationship to Other Layers:**
+
+```
+Layer 1a: ACID Conversations (THIS API)
+└── Immutable source of truth
+
+Layer 2: Vector Memories
+└── References Layer 1a via conversationRef
+
+Layer 3: Memory API
+└── Uses Layer 1a + Layer 2 (cortex.memory.remember())
+```
+
+**Conversation Types:**
+
+| Type          | Participants  | Use Case                                          |
+| ------------- | ------------- | ------------------------------------------------- |
+| `user-agent`  | User + Agent  | User chatting with AI agent                       |
+| `agent-agent` | Agent + Agent | A2A communication (managed by cortex.a2a helpers) |
+
+**Why Layer 1a Exists:**
+
+- ✅ Complete audit trail (Vector has retention limits)
+- ✅ Compliance (legal requirement for message history)
+- ✅ Context retrieval (can always get full conversation)
+- ✅ Source of truth (Vector is index, this is reality)
+
+---
+
+## Core Operations
+
+### create()
+
+Create a new conversation.
+
+**Signature:**
+
+```typescript
+cortex.conversations.create(
+  input: CreateConversationInput,
+  options?: { syncToGraph?: boolean }
+): Promise<Conversation>
+```
+
+**Parameters:**
+
+```typescript
+interface CreateConversationInput {
+  // Memory space (REQUIRED) - top-level for isolation
+  memorySpaceId: string;
+
+  // Type (REQUIRED)
+  type: "user-agent" | "agent-agent";
+
+  // Participants (REQUIRED)
+  participants: {
+    userId?: string; // For user-agent conversations
+    agentId?: string; // Agent in the conversation
+    participantId?: string; // Hive Mode: who created this
+    memorySpaceIds?: string[]; // For agent-agent (Collaboration Mode)
+  };
+
+  // Optional fields
+  conversationId?: string; // Auto-generated if not provided
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode tracking (top-level)
+  metadata?: Record<string, unknown>;
+}
+```
+
+**Returns:**
+
+```typescript
+interface Conversation {
+  _id: string; // Convex internal ID
+  conversationId: string;
+  memorySpaceId: string; // Memory space this conversation belongs to
+  type: "user-agent" | "agent-agent";
+  participants: {
+    userId?: string;
+    agentId?: string;
+    participantId?: string;
+    memorySpaceIds?: string[];
+  };
+
+  messages: Message[]; // Initially empty
+  messageCount: number; // Initially 0
+
+  metadata?: Record<string, unknown>;
+
+  tenantId?: string; // Auto-injected from AuthContext for multi-tenancy
+  participantId?: string; // Hive Mode tracking
+
+  createdAt: number; // Unix timestamp (milliseconds)
+  updatedAt: number; // Unix timestamp (milliseconds)
+}
+```
+
+**Side Effects:**
+
+- Creates new conversation entity in Convex
+- Initially contains no messages (append via `addMessage()`)
+
+**Example 1: User-agent conversation**
+
+```typescript
+const conversation = await cortex.conversations.create({
+  memorySpaceId: "support-bot-space", // Required - top-level
+  type: "user-agent",
+  participants: {
+    userId: "user-123",
+    agentId: "support-agent",
+  },
+  participantId: "support-agent", // Hive Mode tracking (optional)
+  metadata: {
+    channel: "web-chat",
+    source: "website",
+  },
+});
+
+console.log(conversation.conversationId); // 'conv-abc123'
+console.log(conversation.messageCount); // 0 (empty initially)
+```
+
+**Example 2: Agent-agent conversation (A2A)**
+
+```typescript
+const a2aConvo = await cortex.conversations.create({
+  memorySpaceId: "shared-workspace", // Required - top-level
+  type: "agent-agent",
+  participants: {
+    memorySpaceIds: ["finance-space", "hr-space"], // Required for agent-agent
+  },
+  metadata: {
+    createdBy: "finance-agent",
+    purpose: "budget-discussion",
+  },
+});
+
+console.log(a2aConvo.conversationId); // 'a2a-conv-789'
+```
+
+**Errors:**
+
+- `CortexError('INVALID_TYPE')` - Type is not 'user-agent' or 'agent-agent'
+- `CortexError('INVALID_PARTICIPANTS')` - Participants are malformed
+- `CortexError('AGENT_NOT_FOUND')` - Agent ID doesn't exist (if registry enabled)
+- `CortexError('CONVEX_ERROR')` - Database error
+
+**See Also:**
+
+- [Conversation History Guide](../02-core-features/06-conversation-history.md#storing-messages)
+
+---
+
+### get()
+
+Retrieve a conversation by ID.
+
+**Signature:**
+
+```typescript
+cortex.conversations.get(
+  conversationId: string,
+  options?: GetOptions
+): Promise<Conversation | null>
+```
+
+**Parameters:**
+
+```typescript
+interface GetOptions {
+  includeMessages?: boolean; // Include message array (default: true)
+  messageLimit?: number; // Limit messages returned (default: all)
+}
+```
+
+**Returns:**
+
+- `Conversation` - Complete conversation with messages
+- `null` - If conversation doesn't exist
+
+**Example:**
+
+```typescript
+const conversation = await cortex.conversations.get("conv-123");
+
+if (conversation) {
+  console.log(`Conversation with ${conversation.participants.userId}`);
+  console.log(`${conversation.messageCount} total messages`);
+  console.log(`Last message: ${conversation.lastMessageAt}`);
+
+  // Access messages
+  conversation.messages.forEach((msg) => {
+    console.log(`${msg.role}: ${msg.content}`);
+  });
+}
+```
+
+**Errors:**
+
+- `CortexError('INVALID_CONVERSATION_ID')` - Conversation ID is invalid
+
+---
+
+### addMessage()
+
+Add a message to an existing conversation (append-only).
+
+**Signature:**
+
+```typescript
+cortex.conversations.addMessage(
+  input: AddMessageInput,
+  options?: { syncToGraph?: boolean }
+): Promise<Conversation>
+```
+
+**Parameters:**
+
+```typescript
+interface AddMessageInput {
+  conversationId: string;
+  message: {
+    id?: string; // Auto-generated if not provided
+    role: "user" | "agent" | "system";
+    content: string;
+    participantId?: string; // Hive Mode: which participant sent this
+    metadata?: Record<string, any>;
+  };
+}
+```
+
+**Returns:**
+
+Returns the updated `Conversation` object with the new message appended:
+
+```typescript
+interface Conversation {
+  conversationId: string;
+  messages: Message[]; // Now includes the new message
+  messageCount: number; // Incremented
+  updatedAt: number; // Updated timestamp
+  // ... other fields
+}
+```
+
+> **Note:** For agent-to-agent (A2A) messaging, use the dedicated `cortex.a2a.*` API which handles both ACID storage and Vector memory automatically.
+
+**Side Effects:**
+
+- Appends message to conversation (immutable)
+- Updates conversation `updatedAt` and `lastMessageAt`
+- Increments `messageCount`
+
+**Example: Adding messages to a conversation**
+
+```typescript
+// User message
+const updatedConvo = await cortex.conversations.addMessage({
+  conversationId: "conv-123",
+  message: {
+    role: "user",
+    content: "What is my account balance?",
+  },
+});
+
+// Get the message ID from the last message
+const userMsgId = updatedConvo.messages[updatedConvo.messages.length - 1].id;
+console.log(userMsgId); // 'msg-001' - use in conversationRef!
+
+// Agent response
+const withResponse = await cortex.conversations.addMessage({
+  conversationId: "conv-123",
+  message: {
+    role: "agent",
+    content: "Your account balance is $1,234.56",
+    participantId: "support-agent", // Hive Mode tracking
+  },
+});
+
+const agentMsgId = withResponse.messages[withResponse.messages.length - 1].id;
+console.log(agentMsgId); // 'msg-002'
+
+// Now create Vector memory referencing these ACID messages
+await cortex.vector.store("support-agent", {
+  content: "User asked about balance, replied with $1,234.56",
+  contentType: "summarized",
+  userId: "user-123",
+  source: { type: "conversation", userId: "user-123", timestamp: new Date() },
+  conversationRef: {
+    conversationId: "conv-123",
+    messageIds: [userMsgId, agentMsgId], // ← Links to ACID!
+  },
+  metadata: { importance: 70, tags: ["balance", "query"] },
+});
+```
+
+> **Tip:** For A2A messaging, use `cortex.a2a.send()` which handles ACID storage and Vector memory automatically.
+
+**Errors:**
+
+- `CortexError('CONVERSATION_NOT_FOUND')` - Conversation doesn't exist
+- `CortexError('INVALID_MESSAGE')` - Message is malformed
+- `CortexError('CONVEX_ERROR')` - Database error
+
+**See Also:**
+
+- [Storing Messages](../02-core-features/06-conversation-history.md#storing-messages)
+
+---
+
+### getHistory()
+
+Get message thread from a conversation with pagination and filtering.
+
+**Signature:**
+
+```typescript
+cortex.conversations.getHistory(
+  conversationId: string,
+  options?: GetHistoryOptions
+): Promise<HistoryResult>
+```
+
+**Parameters:**
+
+```typescript
+interface GetHistoryOptions {
+  limit?: number; // Max messages (default: 50)
+  offset?: number; // Skip N messages (default: 0)
+  sortOrder?: "asc" | "desc"; // Chronological order (default: 'asc')
+  since?: number; // Messages after timestamp (milliseconds)
+  until?: number; // Messages before timestamp (milliseconds)
+  roles?: ("user" | "agent" | "system")[]; // Filter by role
+}
+```
+
+**Returns:**
+
+```typescript
+interface HistoryResult {
+  messages: Message[]; // Filtered and paginated messages
+  total: number; // Total count after filtering
+  hasMore: boolean; // More messages available
+  conversationId: string;
+}
+```
+
+**Example:**
+
+```typescript
+// Get last 50 messages
+const recent = await cortex.conversations.getHistory("conv-123", {
+  limit: 50,
+  sortOrder: "desc", // Most recent first
+});
+
+// Get messages from specific date range (timestamps in milliseconds)
+const october = await cortex.conversations.getHistory("conv-123", {
+  since: new Date("2025-10-01").getTime(),
+  until: new Date("2025-10-31").getTime(),
+  sortOrder: "asc", // Chronological
+});
+
+// Get only user messages
+const userMessages = await cortex.conversations.getHistory("conv-123", {
+  roles: ["user"],
+  limit: 20,
+});
+
+// Display conversation - result is an object with messages array
+recent.messages.forEach((msg) => {
+  console.log(`${msg.role}: ${msg.content}`);
+});
+
+console.log(`Total: ${recent.total}, Has more: ${recent.hasMore}`);
+```
+
+**Errors:**
+
+- `CortexError('CONVERSATION_NOT_FOUND')` - Conversation doesn't exist
+- `CortexError('INVALID_OPTIONS')` - Options are malformed
+
+---
+
+### list()
+
+List conversations with filters, sorting, and pagination.
+
+**Signature:**
+
+```typescript
+cortex.conversations.list(
+  filter?: ListConversationsFilter
+): Promise<ListConversationsResult>
+```
+
+**Parameters:**
+
+```typescript
+interface ListConversationsFilter {
+  // Type filter
+  type?: "user-agent" | "agent-agent";
+
+  // Participant filters
+  userId?: string;
+  memorySpaceId?: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  participantId?: string; // Hive Mode tracking
+
+  // Date filters (timestamps in milliseconds)
+  createdBefore?: number;
+  createdAfter?: number;
+  updatedBefore?: number;
+  updatedAfter?: number;
+  lastMessageBefore?: number;
+  lastMessageAfter?: number;
+
+  // Message count filter
+  messageCount?: number | { min?: number; max?: number };
+
+  // Metadata filter
+  metadata?: Record<string, unknown>;
+
+  // Pagination
+  limit?: number; // Default: 50
+  offset?: number; // Default: 0
+
+  // Sorting
+  sortBy?: "createdAt" | "updatedAt" | "lastMessageAt" | "messageCount";
+  sortOrder?: "asc" | "desc"; // Default: "desc"
+
+  // Options
+  includeMessages?: boolean; // Default: true
+}
+```
+
+**Returns:**
+
+```typescript
+interface ListConversationsResult {
+  conversations: Conversation[];
+  total: number; // Total matching conversations
+  limit: number;
+  offset: number;
+  hasMore: boolean;
+}
+```
+
+**Example:**
+
+```typescript
+// List all user-agent conversations
+const userConvos = await cortex.conversations.list({
+  type: "user-agent",
+  sortBy: "lastMessageAt",
+  sortOrder: "desc",
+  limit: 50,
+});
+
+console.log(`Found ${userConvos.total} conversations`);
+
+// List conversations for specific user
+const userHistory = await cortex.conversations.list({
+  userId: "user-123",
+  sortBy: "lastMessageAt",
+  sortOrder: "desc",
+});
+
+// List active conversations (recent messages)
+const active = await cortex.conversations.list({
+  lastMessageAfter: new Date(Date.now() - 24 * 60 * 60 * 1000), // Last 24h
+});
+
+// List A2A conversations in a specific memory space
+const a2aConvos = await cortex.conversations.list({
+  type: "agent-agent",
+  memorySpaceId: "shared-workspace",
+});
+
+// Note: For finding A2A conversations between specific agents,
+// use findConversation() with memorySpaceIds instead
+```
+
+**Errors:**
+
+- `CortexError('INVALID_FILTERS')` - Filters are malformed
+- `CortexError('INVALID_PAGINATION')` - Invalid limit/offset
+
+---
+
+### search()
+
+Search conversations by content with filters and search options.
+
+**Signature:**
+
+```typescript
+cortex.conversations.search(
+  input: SearchConversationsInput
+): Promise<ConversationSearchResult[]>
+```
+
+**Parameters:**
+
+```typescript
+interface SearchConversationsInput {
+  query: string; // Search query (required)
+
+  filters?: {
+    type?: "user-agent" | "agent-agent";
+    userId?: string;
+    memorySpaceId?: string;
+    dateRange?: {
+      start?: number; // Timestamp in milliseconds
+      end?: number;
+    };
+    limit?: number; // Default: 10
+  };
+
+  options?: {
+    searchIn?: "content" | "metadata" | "both"; // Default: "content"
+    matchMode?: "contains" | "exact" | "fuzzy"; // Default: "contains"
+  };
+}
+```
+
+**Returns:**
+
+```typescript
+interface ConversationSearchResult {
+  conversation: Conversation;
+  matchedMessages: Message[]; // Messages that matched query
+  score: number; // Relevance score (0-1)
+  highlights: string[]; // Matched snippets for display
+}
+```
+
+**Example:**
+
+```typescript
+// Search for conversations about "refund"
+const results = await cortex.conversations.search({
+  query: "refund",
+  filters: {
+    type: "user-agent",
+    userId: "user-123",
+    limit: 10,
+  },
+});
+
+results.forEach((result) => {
+  console.log(`Conversation: ${result.conversation.conversationId}`);
+  console.log(`Matched messages: ${result.matchedMessages.length}`);
+  result.matchedMessages.forEach((msg) => {
+    console.log(`  ${msg.role}: ${msg.content}`);
+  });
+});
+
+// Search A2A conversations in a memory space
+const a2aResults = await cortex.conversations.search({
+  query: "budget approval",
+  filters: {
+    type: "agent-agent",
+    memorySpaceId: "shared-workspace",
+  },
+});
+
+// Search with options
+const fuzzyResults = await cortex.conversations.search({
+  query: "account balance",
+  filters: { userId: "user-123" },
+  options: {
+    searchIn: "both", // Search content and metadata
+    matchMode: "fuzzy",
+  },
+});
+```
+
+**Errors:**
+
+- `CortexError('INVALID_QUERY')` - Query is empty
+- `CortexError('INVALID_FILTERS')` - Filters are malformed
+
+---
+
+### count()
+
+Count conversations matching filters.
+
+**Signature:**
+
+```typescript
+cortex.conversations.count(
+  filters?: ConversationFilters
+): Promise<number>
+```
+
+**Parameters:**
+
+```typescript
+interface CountConversationsFilter {
+  type?: "user-agent" | "agent-agent";
+  userId?: string;
+  tenantId?: string; // Multi-tenancy: SaaS platform isolation
+  memorySpaceId?: string;
+}
+```
+
+**Example:**
+
+```typescript
+// Total conversations
+const total = await cortex.conversations.count();
+
+// Count for specific user
+const userCount = await cortex.conversations.count({
+  userId: "user-123",
+});
+
+// Count conversations in a memory space
+const spaceCount = await cortex.conversations.count({
+  memorySpaceId: "user-123-personal",
+});
+
+// Count A2A conversations
+const a2aCount = await cortex.conversations.count({
+  type: "agent-agent",
+});
+```
+
+---
+
+### export()
+
+Export conversations to JSON or CSV.
+
+**Signature:**
+
+```typescript
+cortex.conversations.export(
+  options: ExportConversationsOptions
+): Promise<ExportResult>
+```
+
+**Parameters:**
+
+```typescript
+interface ExportConversationsOptions {
+  filters?: {
+    userId?: string;
+    participantId?: string; // Hive Mode filter
+    memorySpaceId?: string;
+    conversationIds?: string[];
+    type?: "user-agent" | "agent-agent";
+    dateRange?: {
+      start?: number; // Timestamp in milliseconds
+      end?: number;
+    };
+  };
+  format: "json" | "csv";
+  includeMetadata?: boolean; // Default: true
+}
+
+interface ExportResult {
+  format: "json" | "csv";
+  data: string; // The exported data as string
+  count: number; // Number of conversations exported
+  exportedAt: number; // Timestamp
+}
+```
+
+> **Note:** The following features are **planned but not yet implemented**:
+>
+> - `outputPath` - Direct file writing (currently returns data string)
+> - `includeFullMessages` - Message content filtering (currently includes all)
+
+**Example:**
+
+```typescript
+// Export all conversations for a user (GDPR)
+const userData = await cortex.conversations.export({
+  filters: {
+    userId: "user-123",
+  },
+  format: "json",
+  includeMetadata: true,
+});
+
+console.log(`Exported ${userData.count} conversations`);
+// userData.data contains the JSON string
+
+// Export conversations from date range
+const octoberData = await cortex.conversations.export({
+  filters: {
+    dateRange: {
+      start: new Date("2025-10-01").getTime(),
+      end: new Date("2025-10-31").getTime(),
+    },
+  },
+  format: "csv",
+});
+```
+
+**Errors:**
+
+- `ConversationValidationError('INVALID_FORMAT')` - Format not 'json' or 'csv'
+
+---
+
+### delete()
+
+Delete a conversation and all its messages.
+
+> **Warning:** This is permanent! Consider using Vector memory deletion instead to preserve ACID audit trail.
+
+**Signature:**
+
+```typescript
+cortex.conversations.delete(
+  conversationId: string,
+  options?: { syncToGraph?: boolean }
+): Promise<ConversationDeletionResult>
+```
+
+**Returns:**
+
+```typescript
+interface ConversationDeletionResult {
+  deleted: boolean;
+  conversationId: string;
+  messagesDeleted: number;
+  deletedAt: number; // Timestamp in milliseconds
+  restorable: boolean; // Always false (permanent)
+}
+```
+
+**Example:**
+
+```typescript
+const result = await cortex.conversations.delete("conv-123");
+
+console.log(`Deleted conversation with ${result.messagesDeleted} messages`);
+console.log(`Restorable: ${result.restorable}`); // false - permanent!
+
+// WARNING: Vector memories with conversationRef to this conversation
+// will have broken references! Usually better to delete Vector only.
+```
+
+**Errors:**
+
+- `CortexError('CONVERSATION_NOT_FOUND')` - Conversation doesn't exist
+- `CortexError('DELETION_FAILED')` - Delete operation failed
+
+---
+
+### deleteMany()
+
+Bulk delete conversations matching filters with safety features.
+
+**Signature:**
+
+```typescript
+cortex.conversations.deleteMany(
+  filter: {
+    userId?: string;
+    memorySpaceId?: string;
+    type?: "user-agent" | "agent-agent";
+  },
+  options?: DeleteManyConversationsOptions
+): Promise<DeleteManyConversationsResult>
+```
+
+**Parameters:**
+
+```typescript
+interface DeleteManyConversationsOptions {
+  dryRun?: boolean; // Preview what would be deleted
+  confirmationThreshold?: number; // Safety threshold (default: 10)
+}
+
+interface DeleteManyConversationsResult {
+  deleted: number; // 0 if dryRun
+  conversationIds: string[];
+  totalMessagesDeleted: number;
+  wouldDelete?: number; // Set when dryRun=true
+  dryRun?: boolean;
+}
+```
+
+> **Note:** At least one filter (userId, memorySpaceId, or type) is required. If deletion would exceed the `confirmationThreshold`, an error is thrown unless using `dryRun`.
+
+**Example:**
+
+```typescript
+// Preview deletion (dryRun)
+const preview = await cortex.conversations.deleteMany(
+  {
+    userId: "user-123",
+    memorySpaceId: "user-123-personal",
+  },
+  {
+    dryRun: true,
+  },
+);
+
+console.log(`Would delete ${preview.wouldDelete} conversations`);
+
+// Execute deletion
+if (preview.wouldDelete && preview.wouldDelete < 100) {
+  const result = await cortex.conversations.deleteMany({
+    userId: "user-123",
+    memorySpaceId: "user-123-personal",
+  });
+
+  console.log(`Deleted ${result.deleted} conversations`);
+  console.log(`Total messages deleted: ${result.totalMessagesDeleted}`);
+}
+
+// Delete all A2A conversations in a memory space
+const a2aResult = await cortex.conversations.deleteMany(
+  { type: "agent-agent", memorySpaceId: "shared-workspace" },
+  { confirmationThreshold: 50 }, // Allow up to 50 without error
+);
+```
+
+---
+
+## Advanced Operations
+
+### getMessage()
+
+Get a specific message by ID.
+
+**Signature:**
+
+```typescript
+cortex.conversations.getMessage(
+  conversationId: string,
+  messageId: string
+): Promise<Message | null>
+```
+
+**Example:**
+
+```typescript
+const msg = await cortex.conversations.getMessage("conv-123", "msg-001");
+
+console.log(msg.content);
+console.log(msg.timestamp);
+```
+
+---
+
+### getMessagesByIds()
+
+Get multiple messages by their IDs (batch retrieval).
+
+**Signature:**
+
+```typescript
+cortex.conversations.getMessagesByIds(
+  conversationId: string,
+  messageIds: string[]
+): Promise<Message[]>
+```
+
+**Example:**
+
+```typescript
+// Get specific messages referenced by Vector memory
+const memory = await cortex.memory.get("agent-1", "mem-123");
+
+if (memory.conversationRef) {
+  const sourceMessages = await cortex.conversations.getMessagesByIds(
+    memory.conversationRef.conversationId,
+    memory.conversationRef.messageIds,
+  );
+
+  console.log("Original messages that informed this memory:");
+  sourceMessages.forEach((msg) => console.log(msg.content));
+}
+```
+
+---
+
+### findConversation()
+
+Find an existing conversation by type and participants.
+
+**Signature:**
+
+```typescript
+cortex.conversations.findConversation(
+  params: FindConversationParams
+): Promise<Conversation | null>
+```
+
+**Parameters:**
+
+```typescript
+interface FindConversationParams {
+  memorySpaceId: string; // Required
+  type: "user-agent" | "agent-agent";
+  userId?: string; // Required for user-agent
+  memorySpaceIds?: string[]; // Required for agent-agent (min 2)
+}
+```
+
+**Example:**
+
+```typescript
+// Find existing user-agent conversation
+const existing = await cortex.conversations.findConversation({
+  memorySpaceId: 'support-bot-space',
+  type: 'user-agent',
+  userId: 'user-123',
+});
+
+if (existing) {
+  // Reuse existing conversation
+  await cortex.conversations.addMessage({
+    conversationId: existing.conversationId,
+    message: { role: 'user', content: 'Hello again!' }
+  });
+} else {
+  // Create new
+  const newConvo = await cortex.conversations.create({ ... });
+}
+
+// Find A2A conversation (Collaboration Mode)
+const a2a = await cortex.conversations.findConversation({
+  memorySpaceId: 'shared-workspace',
+  type: 'agent-agent',
+  memorySpaceIds: ['finance-space', 'hr-space'],
+});
+```
+
+---
+
+### getOrCreate()
+
+Get existing conversation or create if doesn't exist.
+
+**Signature:**
+
+```typescript
+cortex.conversations.getOrCreate(
+  params: ConversationInput
+): Promise<Conversation>
+```
+
+**Example:**
+
+```typescript
+// Always get a conversation (creates if needed)
+const conversation = await cortex.conversations.getOrCreate({
+  memorySpaceId: "support-bot-space",
+  type: "user-agent",
+  participants: {
+    userId: "user-123",
+    agentId: "support-agent",
+  },
+});
+
+// Use immediately
+await cortex.conversations.addMessage({
+  conversationId: conversation.conversationId,
+  message: {
+    role: "user",
+    content: "Hello!",
+  },
+});
+```
+
+---
+
+## GDPR and Deletion
+
+### Conversations Support userId
+
+Conversations with `userId` are targets for GDPR cascade deletion:
+
+```typescript
+// Create user conversation (GDPR-enabled)
+const convo = await cortex.conversations.create({
+  memorySpaceId: "user-123-personal",
+  type: "user-agent",
+  participants: {
+    userId: "user-123", // ← GDPR link
+    agentId: "support-agent",
+  },
+  participantId: "support-agent", // Hive Mode (top-level)
+});
+
+// GDPR cascade deletion
+const result = await cortex.users.delete("user-123", {
+  cascade: true,
+});
+
+console.log(`Conversations deleted: ${result.conversationsDeleted}`);
+console.log(`Messages deleted: ${result.conversationMessagesDeleted}`);
+```
+
+**Preservation Options:**
+
+```typescript
+// Delete Vector memories but preserve ACID audit trail
+await cortex.users.delete("user-123", {
+  cascade: true,
+  deleteFromConversations: false, // ← Preserve Layer 1a
+  deleteFromVector: true, // Delete Layer 2
+});
+
+// Conversations remain for compliance/audit
+const preserved = await cortex.conversations.list({ userId: "user-123" });
+console.log(`${preserved.total} conversations preserved for audit`);
+```
+
+---
+
+## Best Practices
+
+### 1. Create Conversations Early
+
+```typescript
+// ✅ Create at start of session
+const conversation = await cortex.conversations.getOrCreate({
+  memorySpaceId: "user-123-personal",
+  type: "user-agent",
+  participants: { userId: "user-123", agentId: "support-agent" },
+});
+
+// Then use throughout session
+await cortex.conversations.addMessage({
+  conversationId: conversation.conversationId,
+  message: { role: "user", content: "Hello!" },
+});
+```
+
+### 2. Link Vector Memories to ACID
+
+```typescript
+// Always link Vector memories to their ACID source
+const updatedConvo = await cortex.conversations.addMessage({
+  conversationId: 'conv-123',
+  message: {
+    role: 'user',
+    content: 'The password is Blue',
+  },
+});
+
+// Get the message ID from the last message
+const msg = updatedConvo.messages[updatedConvo.messages.length - 1];
+
+await cortex.vector.store('agent-1', {
+  content: 'The password is Blue',
+  conversationRef: {
+    conversationId: 'conv-123',
+    messageIds: [msg.id],  // ← Critical for audit trail!
+  },
+  ...
+});
+
+// Or use cortex.memory.remember() which does this automatically
+```
+
+### 3. Preserve for Audit
+
+```typescript
+// Don't delete ACID conversations unless legally required
+// Instead, delete Vector memories (searchable index)
+
+// ✅ Good: Delete Vector, keep ACID
+await cortex.memory.delete("agent-1", "mem-123");
+// Vector deleted, ACID preserved ✅
+
+// ⚠️ Caution: Delete ACID (breaks audit trail)
+await cortex.conversations.delete("conv-123");
+// Permanent, unrestorable ❌
+```
+
+### 4. Use Pagination for Large Conversations
+
+```typescript
+// ✅ Paginate large conversations
+const page1 = await cortex.conversations.getHistory("conv-123", {
+  limit: 50,
+  offset: 0,
+  sortOrder: "desc",
+});
+
+const page2 = await cortex.conversations.getHistory("conv-123", {
+  limit: 50,
+  offset: 50,
+  sortOrder: "desc",
+});
+
+// ❌ Don't load huge conversations at once
+const all = await cortex.conversations.get("conv-with-10k-messages");
+// Could be slow!
+```
+
+### 5. Metadata for Organization
+
+```typescript
+// Add useful metadata
+await cortex.conversations.create({
+  memorySpaceId: "user-123-personal",
+  type: "user-agent",
+  participants: { userId: "user-123", agentId: "support-agent" },
+  metadata: {
+    channel: "web-chat",
+    source: "website",
+    campaign: "q4-promotion",
+    tags: ["support", "billing"],
+  },
+});
+
+// Query by metadata
+const campaignConvos = await cortex.conversations.list({
+  metadata: { campaign: "q4-promotion" },
+});
+```
+
+---
+
+## Integration Patterns
+
+### Pattern 1: With cortex.memory.remember()
+
+```typescript
+// Layer 3 handles ACID + Vector automatically
+const result = await cortex.memory.remember({
+  participantId: "support-agent", // Hive Mode
+  conversationId: "conv-123",
+  userMessage: "I need help",
+  agentResponse: "How can I assist you?",
+  userId: "user-123",
+  userName: "Alex",
+});
+
+// Behind the scenes:
+// 1. Adds 2 messages to ACID conversation
+// 2. Creates 2 Vector memories with conversationRef
+console.log("ACID messages:", result.conversation.messageIds);
+console.log(
+  "Vector memories:",
+  result.memories.map((m) => m.id),
+);
+```
+
+### Pattern 2: Manual Layer 1 + Layer 2
+
+```typescript
+// Step 1: Store in ACID (Layer 1a)
+const userConvo = await cortex.conversations.addMessage({
+  conversationId: "conv-123",
+  message: {
+    role: "user",
+    content: "What is my balance?",
+  },
+});
+const userMsgId = userConvo.messages[userConvo.messages.length - 1].id;
+
+const agentConvo = await cortex.conversations.addMessage({
+  conversationId: "conv-123",
+  message: {
+    role: "agent",
+    content: "$1,234.56",
+    participantId: "support-agent", // Hive Mode
+  },
+});
+const agentMsgId = agentConvo.messages[agentConvo.messages.length - 1].id;
+
+// Step 2: Index in Vector (Layer 2)
+await cortex.vector.store("user-123-personal", {
+  content: "User asked about balance: $1,234.56",
+  contentType: "summarized",
+  source: { type: "conversation" },
+  conversationRef: {
+    conversationId: "conv-123",
+    messageIds: [userMsgId, agentMsgId],
+  },
+  metadata: { importance: 70, tags: [] },
+});
+```
+
+### Pattern 3: A2A with cortex.a2a helpers
+
+```typescript
+// A2A helpers manage ACID conversations automatically
+await cortex.a2a.send({
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "What is the budget?",
+});
+
+// Behind the scenes:
+// 1. Creates/finds agent-agent conversation in ACID
+// 2. Adds message to ACID
+// 3. Stores in both agents' Vector memories with conversationRef
+```
+
+---
+
+## Graph-Lite Capabilities
+
+Conversations serve as central graph nodes connecting users, agents, contexts, and memories:
+
+**Conversation as Graph Hub:**
+
+- Connects user to agent (via participants)
+- Referenced by memories (via conversationRef)
+- Referenced by facts (via conversationRef)
+- Referenced by contexts (via conversationRef)
+
+**Graph Patterns:**
+
+```typescript
+// User → Conversations (1-hop)
+const convos = await cortex.conversations.list({ userId: 'user-123' });
+
+// Conversation → Contexts (reverse lookup)
+const contexts = await cortex.contexts.search({
+  'conversationRef.conversationId': 'conv-456'
+});
+
+// Conversation → Memories (reverse lookup)
+const memories = await cortex.memory.search('agent-1', '*', {
+  'conversationRef.conversationId': 'conv-456'
+});
+
+// Complete graph from conversation
+{
+  conversation: 'conv-456',
+  user: 'user-123',
+  agent: 'agent-1',
+  triggeredWorkflows: contexts,
+  generatedMemories: memories
+}
+```
+
+**Performance:** Conversations are efficiently indexed by userId and memorySpaceId. Finding related entities within a memory space typically takes 20-80ms.
+
+**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities)
+
+---
+
+## Error Reference
+
+### SDK Validation Errors (ConversationValidationError)
+
+| Error Code               | Description                | Cause                               |
+| ------------------------ | -------------------------- | ----------------------------------- |
+| `MISSING_REQUIRED_FIELD` | Required field missing     | Field like conversationId is empty  |
+| `INVALID_TYPE`           | Type is invalid            | Not 'user-agent' or 'agent-agent'   |
+| `INVALID_ROLE`           | Message role invalid       | Not 'user', 'agent', or 'system'    |
+| `INVALID_ID_FORMAT`      | ID format invalid          | Contains invalid chars or too long  |
+| `INVALID_FORMAT`         | Export format invalid      | Not 'json' or 'csv'                 |
+| `INVALID_SORT_ORDER`     | Sort order invalid         | Not 'asc' or 'desc'                 |
+| `EMPTY_STRING`           | String is empty            | Search query is empty               |
+| `INVALID_RANGE`          | Numeric value out of range | limit < 1 or > 1000, offset < 0     |
+| `EMPTY_ARRAY`            | Array is empty             | Required array has no elements      |
+| `INVALID_ARRAY_LENGTH`   | Array length wrong         | memorySpaceIds has < 2 elements     |
+| `INVALID_DATE_RANGE`     | Date range invalid         | Start date >= end date              |
+| `INVALID_PARTICIPANTS`   | Participants malformed     | Missing required participant fields |
+| `DUPLICATE_VALUES`       | Array has duplicates       | memorySpaceIds contains duplicates  |
+
+### Backend Errors (Convex)
+
+| Error Code                       | Description                 | Cause                            |
+| -------------------------------- | --------------------------- | -------------------------------- |
+| `CONVERSATION_NOT_FOUND`         | Conversation doesn't exist  | Invalid conversationId           |
+| `CONVERSATION_ALREADY_EXISTS`    | Conversation already exists | Duplicate conversationId         |
+| `DELETE_MANY_THRESHOLD_EXCEEDED` | Too many to delete          | Use dryRun or increase threshold |
+
+---
+
+## Next Steps
+
+- **[Memory Operations API](./memory-operations)** - Layer 2 (Vector) and Layer 3 (Memory) APIs
+- **[A2A Communication API](./a2a-communication)** - Agent-to-agent messaging
+- **[Types & Interfaces](../05-reference/01-types-interfaces)** - Complete TypeScript definitions
+
+---
+
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).

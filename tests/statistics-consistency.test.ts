@@ -10,19 +10,22 @@
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../src/index";
+import { createTestRunContext } from "./helpers/isolation";
 
 describe("Statistics Consistency Testing", () => {
   let cortex: Cortex;
-  const BASE_ID = `stats-test-${Date.now()}`;
-  const TEST_USER_ID = "stats-test-user";
-  const TEST_AGENT_ID = "stats-test-agent";
+  // Use TestRunContext for parallel-safe test isolation
+  const ctx = createTestRunContext();
+  const BASE_ID = ctx.runId;
+  const TEST_USER_ID = ctx.userId("stats-user");
+  const TEST_AGENT_ID = ctx.agentId("stats-agent");
 
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
   });
 
   afterAll(async () => {
-    // Cleanup
+    // Cleanup all test spaces created by this run
     try {
       await cortex.memorySpaces.delete(BASE_ID, {
         cascade: true,

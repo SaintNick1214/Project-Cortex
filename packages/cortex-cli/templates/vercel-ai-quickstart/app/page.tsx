@@ -52,7 +52,9 @@ const ChatHistorySidebar = dynamic(
 function MainContent() {
   const { isLoading, isAdminSetup, isAuthenticated, user } = useAuth();
   const [memorySpaceId, setMemorySpaceId] = useState("quickstart-demo");
-  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+  const [currentConversationId, setCurrentConversationId] = useState<
+    string | null
+  >(null);
   const [versions, setVersions] = useState<VersionInfo | null>(null);
   const {
     layers,
@@ -74,18 +76,24 @@ function MainContent() {
   }, [resetLayers]);
 
   // Handle conversation selection
-  const handleSelectConversation = useCallback((conversationId: string) => {
-    setCurrentConversationId(conversationId);
-    resetLayers();
-  }, [resetLayers]);
+  const handleSelectConversation = useCallback(
+    (conversationId: string) => {
+      setCurrentConversationId(conversationId);
+      resetLayers();
+    },
+    [resetLayers],
+  );
 
   // Handle conversation update (e.g., title change after first message)
-  const handleConversationUpdate = useCallback((conversationId: string) => {
-    // Update current conversation ID if it was null (new chat created)
-    if (!currentConversationId) {
-      setCurrentConversationId(conversationId);
-    }
-  }, [currentConversationId]);
+  const handleConversationUpdate = useCallback(
+    (conversationId: string) => {
+      // Update current conversation ID if it was null (new chat created)
+      if (!currentConversationId) {
+        setCurrentConversationId(conversationId);
+      }
+    },
+    [currentConversationId],
+  );
 
   // Loading state
   if (isLoading) {
@@ -158,7 +166,9 @@ function MainContent() {
             memorySpaceId={memorySpaceId}
             userId={userId}
             conversationId={currentConversationId}
-            apiEndpoint={versions?.aiSdkMajor === 6 ? "/api/chat-v6" : "/api/chat"}
+            apiEndpoint={
+              versions?.aiSdkMajor === 6 ? "/api/chat-v6" : "/api/chat"
+            }
             onOrchestrationStart={startOrchestration}
             onLayerUpdate={updateLayer}
             onReset={resetLayers}
@@ -193,7 +203,9 @@ function MainContent() {
       <footer className="border-t border-white/10 px-6 py-3">
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center gap-4">
-            <span>Cortex SDK {versions ? `v${versions.cortexSdk}` : "..."}</span>
+            <span>
+              Cortex SDK {versions ? `v${versions.cortexSdk}` : "..."}
+            </span>
             <span>•</span>
             <span>Vercel AI SDK {versions?.aiSdk ?? "..."}</span>
             {versions?.aiSdkMajor === 6 && (

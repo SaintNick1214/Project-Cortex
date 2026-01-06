@@ -122,48 +122,56 @@ export const exists = query({
 
 /**
  * Compute agent statistics
+ *
+ * Note: Uses sampling with limits to avoid hitting Convex's read limits.
+ * For exact counts on large datasets, use dedicated count functions with indexes.
  */
 export const computeStats = query({
   args: {
     agentId: v.string(),
   },
   handler: async (ctx, args) => {
-    // Count memories where participantId = agentId
+    // Use limits to avoid hitting Convex's 16MB read limit
+    // These are approximate counts for large datasets
+    const SAMPLE_LIMIT = 1000;
+
+    // Count memories where participantId = agentId (with limit)
     const memories = await ctx.db
       .query("memories")
-      .filter((q) => q.eq(q.field("participantId"), args.agentId))
-      .collect();
+      .withIndex("by_participantId", (q) => q.eq("participantId", args.agentId))
+      .take(SAMPLE_LIMIT);
 
-    // Count conversations where agent is participant
+    // Count conversations where memorySpaceId = agentId (with limit)
+    // Note: This is a simplified query - full participant matching would need a different approach
     const conversations = await ctx.db
       .query("conversations")
-      .filter((q) =>
-        q.or(
-          q.eq(q.field("participants.participantId"), args.agentId),
-          // Check if agentId is in memorySpaceIds array (for agent-agent convos)
-          q.eq(q.field("memorySpaceId"), args.agentId),
-        ),
-      )
-      .collect();
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.agentId))
+      .take(SAMPLE_LIMIT);
 
-    // Count facts where participantId = agentId
+    // Count facts where participantId = agentId (with limit)
     const facts = await ctx.db
       .query("facts")
-      .filter((q) => q.eq(q.field("participantId"), args.agentId))
-      .collect();
+      .withIndex("by_participantId", (q) => q.eq("participantId", args.agentId))
+      .take(SAMPLE_LIMIT);
 
-    // Find unique memory spaces
+    // Find unique memory spaces from sampled memories
     const memorySpaces = new Set(memories.map((m) => m.memorySpaceId));
 
-    // Find last active time
+    // Find last active time from sampled data
     const allTimestamps = [
       ...memories.map((m) => m.updatedAt),
       ...conversations.map((c) => c.updatedAt),
       ...facts.map((f) => f.updatedAt),
-    ];
+    ].filter((t): t is number => t !== undefined);
 
     const lastActive =
       allTimestamps.length > 0 ? Math.max(...allTimestamps) : undefined;
+
+    // Indicate if results are approximate (hit limit)
+    const isApproximate =
+      memories.length >= SAMPLE_LIMIT ||
+      conversations.length >= SAMPLE_LIMIT ||
+      facts.length >= SAMPLE_LIMIT;
 
     return {
       totalMemories: memories.length,
@@ -171,6 +179,7 @@ export const computeStats = query({
       totalFacts: facts.length,
       memorySpacesActive: memorySpaces.size,
       lastActive,
+      isApproximate,
     };
   },
 });

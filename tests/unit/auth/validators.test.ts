@@ -37,13 +37,13 @@ describe("Auth Validators", () => {
 
     it("should reject non-string user IDs", () => {
       expect(() => validateUserId(null as unknown as string)).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
       expect(() => validateUserId(undefined as unknown as string)).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
       expect(() => validateUserId(123 as unknown as string)).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
     });
 
@@ -99,7 +99,7 @@ describe("Auth Validators", () => {
       expect(() => validateSessionId("sess_abc123")).not.toThrow();
       expect(() => validateSessionId("session-uuid-here")).not.toThrow();
       expect(() =>
-        validateSessionId("550e8400-e29b-41d4-a716-446655440000")
+        validateSessionId("550e8400-e29b-41d4-a716-446655440000"),
       ).not.toThrow();
     });
 
@@ -129,13 +129,13 @@ describe("Auth Validators", () => {
 
     it("should reject invalid auth methods", () => {
       expect(() => validateAuthMethod("password" as any)).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
       expect(() => validateAuthMethod("basic" as any)).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
       expect(() => validateAuthMethod("invalid" as any)).toThrow(
-        "must be one of"
+        "must be one of",
       );
     });
   });
@@ -151,7 +151,7 @@ describe("Auth Validators", () => {
           sub: "user123",
           email: "user@example.com",
           roles: ["admin", "user"],
-        })
+        }),
       ).not.toThrow();
 
       expect(() =>
@@ -161,7 +161,7 @@ describe("Auth Validators", () => {
           exp: 1735344000,
           iat: 1735257600,
           custom_claim: { nested: "value" },
-        })
+        }),
       ).not.toThrow();
     });
 
@@ -171,7 +171,7 @@ describe("Auth Validators", () => {
 
     it("should reject non-object claims", () => {
       expect(() => validateClaims("string" as any)).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
       expect(() => validateClaims(123 as any)).toThrow(AuthValidationError);
       expect(() => validateClaims([] as any)).toThrow(AuthValidationError);
@@ -206,14 +206,14 @@ describe("Auth Validators", () => {
           deviceId: "device-123",
           ipAddress: "192.168.1.1",
           userAgent: "Mozilla/5.0...",
-        })
+        }),
       ).not.toThrow();
 
       expect(() =>
         validateMetadata({
           customField: "value",
           nested: { data: [1, 2, 3] },
-        })
+        }),
       ).not.toThrow();
     });
 
@@ -223,7 +223,7 @@ describe("Auth Validators", () => {
 
     it("should reject non-object metadata", () => {
       expect(() => validateMetadata("string" as any)).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
       expect(() => validateMetadata(123 as any)).toThrow(AuthValidationError);
     });
@@ -269,7 +269,7 @@ describe("Auth Validators", () => {
       const error = new AuthValidationError(
         "invalid value",
         "INVALID_VALUE",
-        "userId"
+        "userId",
       );
       expect(error.message).toContain("invalid value");
       expect(error.field).toBe("userId");

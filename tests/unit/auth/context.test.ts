@@ -51,10 +51,10 @@ describe("Auth Context", () => {
 
     it("should throw on missing userId", () => {
       expect(() => createAuthContext({} as AuthContextParams)).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
       expect(() => createAuthContext({ userId: "" })).toThrow(
-        AuthValidationError
+        AuthValidationError,
       );
     });
   });
@@ -113,7 +113,7 @@ describe("Auth Context", () => {
       });
 
       expect(
-        (context.claims?.organization as any)?.settings?.features?.premium
+        (context.claims?.organization as any)?.settings?.features?.premium,
       ).toBe(true);
     });
   });
@@ -212,7 +212,7 @@ describe("Auth Context", () => {
         createAuthContext({
           userId: "user_123",
           authMethod: "invalid" as any,
-        })
+        }),
       ).toThrow(AuthValidationError);
     });
   });
@@ -304,7 +304,10 @@ describe("Auth Context", () => {
         claims: {
           iss: "https://my-tenant.auth0.com/",
           sub: "auth0|507f1f77bcf86cd799439011",
-          aud: ["https://api.myapp.com", "https://my-tenant.auth0.com/userinfo"],
+          aud: [
+            "https://api.myapp.com",
+            "https://my-tenant.auth0.com/userinfo",
+          ],
           iat: 1735257600,
           exp: 1735344000,
           scope: "openid profile email",
@@ -337,7 +340,7 @@ describe("Auth Context", () => {
       expect(firebaseContext.userId).toBe("firebase:abc123xyz");
       expect(firebaseContext.authProvider).toBe("firebase");
       expect((firebaseContext.claims?.firebase as any)?.sign_in_provider).toBe(
-        "google.com"
+        "google.com",
       );
     });
 
@@ -379,7 +382,7 @@ describe("Auth Context", () => {
 
       expect(apiKeyContext.userId).toBe("api_user_system");
       expect(apiKeyContext.authMethod).toBe("api_key");
-      expect((apiKeyContext.metadata?.scopes as string[])).toContain("admin");
+      expect(apiKeyContext.metadata?.scopes as string[]).toContain("admin");
     });
   });
 

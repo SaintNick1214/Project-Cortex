@@ -14,7 +14,11 @@
 
 import { CypherGraphAdapter } from "../../src/graph/adapters/CypherGraphAdapter";
 
-describe("Neo4j URI Schemes", () => {
+// Skip tests when graph testing is not enabled (e.g., in CI pipeline)
+const GRAPH_TESTING_ENABLED = process.env.GRAPH_TESTING_ENABLED === "true";
+const describeIfEnabled = GRAPH_TESTING_ENABLED ? describe : describe.skip;
+
+describeIfEnabled("Neo4j URI Schemes", () => {
   describe("bolt:// scheme (local Docker)", () => {
     let adapter: CypherGraphAdapter;
 
@@ -103,7 +107,9 @@ describe("Neo4j URI Schemes", () => {
     });
 
     it("should execute queries over encrypted connection", async () => {
-      const result = await adapter.query("RETURN 'encrypted-bolt+ssc' as scheme");
+      const result = await adapter.query(
+        "RETURN 'encrypted-bolt+ssc' as scheme",
+      );
       expect(result.records).toHaveLength(1);
       expect(result.records[0].scheme).toBe("encrypted-bolt+ssc");
     });
@@ -133,7 +139,9 @@ describe("Neo4j URI Schemes", () => {
     });
 
     it("should execute queries over encrypted routing connection", async () => {
-      const result = await adapter.query("RETURN 'encrypted-neo4j+ssc' as scheme");
+      const result = await adapter.query(
+        "RETURN 'encrypted-neo4j+ssc' as scheme",
+      );
       expect(result.records).toHaveLength(1);
       expect(result.records[0].scheme).toBe("encrypted-neo4j+ssc");
     });
@@ -152,7 +160,7 @@ describe("Neo4j URI Schemes", () => {
           uri: "neo4j+s://fake-cloud-host.neo4j.io:7687",
           username: "neo4j",
           password: "password",
-        })
+        }),
       ).rejects.toThrow(); // Connection error expected, not URI validation error
 
       await adapter.disconnect();
@@ -167,10 +175,20 @@ describe("Neo4j URI Schemes", () => {
           uri: "bolt+s://fake-cloud-host.neo4j.io:7687",
           username: "neo4j",
           password: "password",
-        })
+        }),
       ).rejects.toThrow(); // Connection error expected, not URI validation error
 
       await adapter.disconnect();
     });
   });
 });
+
+// Log skip message when graph testing is disabled
+if (!GRAPH_TESTING_ENABLED) {
+  describe("Neo4j URI Schemes", () => {
+    it("SKIPPED: Graph testing not enabled", () => {
+      console.log("\n   ⚠️  Neo4j URI Scheme tests are SKIPPED.");
+      console.log("   To enable, set GRAPH_TESTING_ENABLED=true\n");
+    });
+  });
+}

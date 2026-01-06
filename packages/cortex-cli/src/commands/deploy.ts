@@ -199,11 +199,22 @@ export function registerDeployCommands(
     .option("-a, --app <name>", "Target a specific app only")
     .option("--apps-only", "Only update apps (skip deployments)", false)
     .option("--deployments-only", "Only update deployments (skip apps)", false)
-    .option("--dev", "Use dev mode (link to local SDK via CORTEX_SDK_DEV_PATH)", false)
-    .option("--sync-template", "Sync app template files (components, routes, etc.)", false)
+    .option(
+      "--dev",
+      "Use dev mode (link to local SDK via CORTEX_SDK_DEV_PATH)",
+      false,
+    )
+    .option(
+      "--sync-template",
+      "Sync app template files (components, routes, etc.)",
+      false,
+    )
     .option("--sdk-version <version>", "Specific Cortex SDK version to install")
     .option("--convex-version <version>", "Specific Convex version to install")
-    .option("--provider-version <version>", "Specific vercel-ai-provider version to install")
+    .option(
+      "--provider-version <version>",
+      "Specific vercel-ai-provider version to install",
+    )
     .option("-y, --yes", "Auto-accept all updates", false)
     .action(async (options) => {
       const currentConfig = await loadConfig();
@@ -213,9 +224,17 @@ export function registerDeployCommands(
       const isDevMode = options.dev || !!devPath;
 
       if (isDevMode && !devPath) {
-        console.log(pc.red("\n   Dev mode requires CORTEX_SDK_DEV_PATH environment variable"));
-        console.log(pc.dim("   Set it to the path of your local Project-Cortex repo:"));
-        console.log(pc.dim("   export CORTEX_SDK_DEV_PATH=/path/to/Project-Cortex\n"));
+        console.log(
+          pc.red(
+            "\n   Dev mode requires CORTEX_SDK_DEV_PATH environment variable",
+          ),
+        );
+        console.log(
+          pc.dim("   Set it to the path of your local Project-Cortex repo:"),
+        );
+        console.log(
+          pc.dim("   export CORTEX_SDK_DEV_PATH=/path/to/Project-Cortex\n"),
+        );
         return;
       }
 
@@ -228,7 +247,9 @@ export function registerDeployCommands(
           if (appNames.length > 0) {
             console.log(pc.dim(`   Available: ${appNames.join(", ")}`));
           } else {
-            console.log(pc.dim("   No apps configured. Run 'cortex init' to add one."));
+            console.log(
+              pc.dim("   No apps configured. Run 'cortex init' to add one."),
+            );
           }
           return;
         }
@@ -271,7 +292,8 @@ export function registerDeployCommands(
       const updateApps = !options.deploymentsOnly;
 
       // Get enabled deployments and apps
-      const { deployments: enabledDeployments } = getEnabledDeployments(currentConfig);
+      const { deployments: enabledDeployments } =
+        getEnabledDeployments(currentConfig);
       const enabledApps = Object.entries(currentConfig.apps || {})
         .filter(([, app]) => app.enabled)
         .map(([name, app]) => ({ name, app }));
@@ -287,18 +309,23 @@ export function registerDeployCommands(
         console.log(pc.yellow("\n   No enabled apps found"));
       }
 
-      if ((!updateDeployments || !hasDeployments) && (!updateApps || !hasApps)) {
+      if (
+        (!updateDeployments || !hasDeployments) &&
+        (!updateApps || !hasApps)
+      ) {
         console.log(pc.red("\n   Nothing to update"));
         console.log(
-          pc.dim(
-            "   Run 'cortex init' to configure deployments and apps\n",
-          ),
+          pc.dim("   Run 'cortex init' to configure deployments and apps\n"),
         );
         return;
       }
 
       // Single deployment + no apps - proceed directly (backwards compatibility)
-      if (updateDeployments && enabledDeployments.length === 1 && (!updateApps || !hasApps)) {
+      if (
+        updateDeployments &&
+        enabledDeployments.length === 1 &&
+        (!updateApps || !hasApps)
+      ) {
         const { name, deployment } = enabledDeployments[0];
         console.log(pc.dim(`   Using: ${name}`));
         await updateDeployment(name, deployment, options);
@@ -321,7 +348,12 @@ export function registerDeployCommands(
         // In dev mode, read versions from local source package.json files
         try {
           const sdkPkgPath = path.join(devPath, "package.json");
-          const providerPkgPath = path.join(devPath, "packages", "vercel-ai-provider", "package.json");
+          const providerPkgPath = path.join(
+            devPath,
+            "packages",
+            "vercel-ai-provider",
+            "package.json",
+          );
 
           if (await fs.pathExists(sdkPkgPath)) {
             const sdkPkg = await fs.readJson(sdkPkgPath);
@@ -353,16 +385,26 @@ export function registerDeployCommands(
       } else {
         // Normal mode: fetch all versions from npm
         try {
-          const [sdkResult, convexResult, providerResult, aiResult, peerDepResult] = await Promise.all([
+          const [
+            sdkResult,
+            convexResult,
+            providerResult,
+            aiResult,
+            peerDepResult,
+          ] = await Promise.all([
             execCommand("npm", ["view", "@cortexmemory/sdk", "version"], {
               quiet: true,
             }).catch(() => ({ stdout: "unknown" })),
             execCommand("npm", ["view", "convex", "version"], {
               quiet: true,
             }).catch(() => ({ stdout: "unknown" })),
-            execCommand("npm", ["view", "@cortexmemory/vercel-ai-provider", "version"], {
-              quiet: true,
-            }).catch(() => ({ stdout: "unknown" })),
+            execCommand(
+              "npm",
+              ["view", "@cortexmemory/vercel-ai-provider", "version"],
+              {
+                quiet: true,
+              },
+            ).catch(() => ({ stdout: "unknown" })),
             execCommand("npm", ["view", "ai", "version"], {
               quiet: true,
             }).catch(() => ({ stdout: "unknown" })),
@@ -430,14 +472,23 @@ export function registerDeployCommands(
           try {
             const result = await execCommand(
               "npm",
-              ["list", "@cortexmemory/sdk", "@cortexmemory/vercel-ai-provider", "convex", "ai", "--json"],
+              [
+                "list",
+                "@cortexmemory/sdk",
+                "@cortexmemory/vercel-ai-provider",
+                "convex",
+                "ai",
+                "--json",
+              ],
               { quiet: true, cwd: projectPath },
             );
             const data = JSON.parse(result.stdout);
             currentSdkVersion =
-              data.dependencies?.["@cortexmemory/sdk"]?.version ?? "not installed";
+              data.dependencies?.["@cortexmemory/sdk"]?.version ??
+              "not installed";
             currentProviderVersion =
-              data.dependencies?.["@cortexmemory/vercel-ai-provider"]?.version ?? "not installed";
+              data.dependencies?.["@cortexmemory/vercel-ai-provider"]
+                ?.version ?? "not installed";
             currentAiVersion =
               data.dependencies?.ai?.version ?? "not installed";
             currentConvexVersion =
@@ -480,8 +531,10 @@ export function registerDeployCommands(
             if (await fs.pathExists(packageJsonPath)) {
               const pkg = await fs.readJson(packageJsonPath);
               const sdkDep = pkg.dependencies?.["@cortexmemory/sdk"];
-              const providerDep = pkg.dependencies?.["@cortexmemory/vercel-ai-provider"];
-              isDevLinked = sdkDep?.startsWith("file:") || providerDep?.startsWith("file:");
+              const providerDep =
+                pkg.dependencies?.["@cortexmemory/vercel-ai-provider"];
+              isDevLinked =
+                sdkDep?.startsWith("file:") || providerDep?.startsWith("file:");
             }
           } catch {
             // Ignore errors
@@ -491,14 +544,23 @@ export function registerDeployCommands(
           try {
             const result = await execCommand(
               "npm",
-              ["list", "@cortexmemory/sdk", "@cortexmemory/vercel-ai-provider", "convex", "ai", "--json"],
+              [
+                "list",
+                "@cortexmemory/sdk",
+                "@cortexmemory/vercel-ai-provider",
+                "convex",
+                "ai",
+                "--json",
+              ],
               { quiet: true, cwd: appPath },
             );
             const data = JSON.parse(result.stdout);
             currentSdkVersion =
-              data.dependencies?.["@cortexmemory/sdk"]?.version ?? "not installed";
+              data.dependencies?.["@cortexmemory/sdk"]?.version ??
+              "not installed";
             currentProviderVersion =
-              data.dependencies?.["@cortexmemory/vercel-ai-provider"]?.version ?? "not installed";
+              data.dependencies?.["@cortexmemory/vercel-ai-provider"]
+                ?.version ?? "not installed";
             currentConvexVersion =
               data.dependencies?.convex?.version ?? "not installed";
             currentAiVersion =
@@ -507,10 +569,13 @@ export function registerDeployCommands(
             // Ignore errors
           }
 
-          const targetSdkVersion = isDevMode ? "dev" : (options.sdkVersion ?? latestSdkVersion);
+          const targetSdkVersion = isDevMode
+            ? "dev"
+            : (options.sdkVersion ?? latestSdkVersion);
           const needsUpdate = isDevMode
             ? !isDevLinked // Dev mode: needs update if not already dev-linked
-            : (currentSdkVersion !== targetSdkVersion || currentSdkVersion === "not installed");
+            : currentSdkVersion !== targetSdkVersion ||
+              currentSdkVersion === "not installed";
 
           // Check template sync status if --sync-template is enabled
           let templateFilesToUpdate = 0;
@@ -558,7 +623,9 @@ export function registerDeployCommands(
       const versionsLabel = isDevMode ? "Source versions" : "Latest versions";
       console.log(pc.bold(`  ${versionsLabel}:`));
       console.log(`    @cortexmemory/sdk: ${pc.cyan(latestSdkVersion)}`);
-      console.log(`    @cortexmemory/vercel-ai-provider: ${pc.cyan(latestProviderVersion)}`);
+      console.log(
+        `    @cortexmemory/vercel-ai-provider: ${pc.cyan(latestProviderVersion)}`,
+      );
       console.log(`    convex: ${pc.cyan(latestConvexVersion)}`);
       console.log(`    ai: ${pc.cyan(latestAiVersion)}`);
       if (sdkConvexPeerDep !== "unknown") {
@@ -574,9 +641,7 @@ export function registerDeployCommands(
         for (const info of deploymentInfos) {
           const isDefault = info.name === currentConfig.default;
           const defaultBadge = isDefault ? pc.cyan(" (default)") : "";
-          const statusIcon = info.needsUpdate
-            ? pc.yellow("●")
-            : pc.green("●");
+          const statusIcon = info.needsUpdate ? pc.yellow("●") : pc.green("●");
 
           console.log(`  ${statusIcon} ${pc.bold(info.name)}${defaultBadge}`);
           console.log(pc.dim(`      Path: ${info.projectPath}`));
@@ -609,17 +674,15 @@ export function registerDeployCommands(
         for (const info of appInfos) {
           const devBadge = info.isDevLinked ? pc.magenta(" [DEV]") : "";
           const needsAnyUpdate = info.needsUpdate || info.needsTemplateSync;
-          const statusIcon = needsAnyUpdate
-            ? pc.yellow("●")
-            : pc.green("●");
+          const statusIcon = needsAnyUpdate ? pc.yellow("●") : pc.green("●");
 
           console.log(`  ${statusIcon} ${pc.bold(info.name)}${devBadge}`);
           console.log(pc.dim(`      Path: ${info.appPath}`));
           console.log(
-            `      SDK: ${info.isDevLinked ? pc.magenta("file:...") : (info.currentSdkVersion === latestSdkVersion ? pc.green(info.currentSdkVersion) : pc.yellow(info.currentSdkVersion))}`,
+            `      SDK: ${info.isDevLinked ? pc.magenta("file:...") : info.currentSdkVersion === latestSdkVersion ? pc.green(info.currentSdkVersion) : pc.yellow(info.currentSdkVersion)}`,
           );
           console.log(
-            `      Provider: ${info.isDevLinked ? pc.magenta("file:...") : (info.currentProviderVersion === latestProviderVersion ? pc.green(info.currentProviderVersion) : pc.yellow(info.currentProviderVersion))}`,
+            `      Provider: ${info.isDevLinked ? pc.magenta("file:...") : info.currentProviderVersion === latestProviderVersion ? pc.green(info.currentProviderVersion) : pc.yellow(info.currentProviderVersion)}`,
           );
           console.log(
             `      AI: ${info.currentAiVersion === latestAiVersion ? pc.green(info.currentAiVersion) : pc.yellow(info.currentAiVersion)}`,
@@ -629,15 +692,14 @@ export function registerDeployCommands(
           );
           // Show template sync status if --sync-template is enabled
           if (options.syncTemplate) {
-            const totalTemplateChanges = info.templateFilesToUpdate + info.templateFilesToAdd;
+            const totalTemplateChanges =
+              info.templateFilesToUpdate + info.templateFilesToAdd;
             if (totalTemplateChanges > 0) {
               console.log(
                 `      Template: ${pc.yellow(`${totalTemplateChanges} file(s) to sync`)}`,
               );
             } else {
-              console.log(
-                `      Template: ${pc.green("up to date")}`,
-              );
+              console.log(`      Template: ${pc.green("up to date")}`);
             }
           }
           console.log();
@@ -645,9 +707,14 @@ export function registerDeployCommands(
       }
 
       // Count updates needed
-      const deploymentsNeedingUpdate = deploymentInfos.filter((d) => d.needsUpdate);
-      const appsNeedingUpdate = appInfos.filter((a) => a.needsUpdate || (options.syncTemplate && a.needsTemplateSync));
-      const totalNeedingUpdate = deploymentsNeedingUpdate.length + appsNeedingUpdate.length;
+      const deploymentsNeedingUpdate = deploymentInfos.filter(
+        (d) => d.needsUpdate,
+      );
+      const appsNeedingUpdate = appInfos.filter(
+        (a) => a.needsUpdate || (options.syncTemplate && a.needsTemplateSync),
+      );
+      const totalNeedingUpdate =
+        deploymentsNeedingUpdate.length + appsNeedingUpdate.length;
 
       // Check if any updates needed
       if (totalNeedingUpdate === 0) {
@@ -664,9 +731,7 @@ export function registerDeployCommands(
         updateParts.push(`${appsNeedingUpdate.length} app(s)`);
       }
 
-      console.log(
-        pc.cyan(`  ${updateParts.join(" and ")} need updates`),
-      );
+      console.log(pc.cyan(`  ${updateParts.join(" and ")} need updates`));
       console.log();
 
       let shouldProceed = options.yes;
@@ -684,7 +749,9 @@ export function registerDeployCommands(
       if (!shouldProceed) {
         console.log(pc.yellow("\n   Operation cancelled\n"));
         console.log(
-          pc.dim("   Tip: Use '-d <name>' for deployments or '-a <name>' for apps\n"),
+          pc.dim(
+            "   Tip: Use '-d <name>' for deployments or '-a <name>' for apps\n",
+          ),
         );
         return;
       }
@@ -737,7 +804,9 @@ export function registerDeployCommands(
       console.log(pc.bold("━━━ Summary ━━━"));
       console.log();
       if (deploymentSuccessCount > 0) {
-        printSuccess(`${deploymentSuccessCount} deployment(s) updated successfully`);
+        printSuccess(
+          `${deploymentSuccessCount} deployment(s) updated successfully`,
+        );
       }
       if (deploymentFailCount > 0) {
         printWarning(`${deploymentFailCount} deployment(s) failed to update`);
@@ -1020,7 +1089,7 @@ async function updateApp(
   const appPath = path.join(app.projectPath, app.path);
   const isDevMode = !!options.devPath;
 
-  if (!await fs.pathExists(appPath)) {
+  if (!(await fs.pathExists(appPath))) {
     printError(`App path not found: ${appPath}`);
     throw new Error(`App path not found: ${appPath}`);
   }
@@ -1030,7 +1099,7 @@ async function updateApp(
   try {
     // Read package.json
     const packageJsonPath = path.join(appPath, "package.json");
-    if (!await fs.pathExists(packageJsonPath)) {
+    if (!(await fs.pathExists(packageJsonPath))) {
       spinner.stop();
       printError(`No package.json found at ${appPath}`);
       throw new Error(`No package.json found at ${appPath}`);
@@ -1048,24 +1117,32 @@ async function updateApp(
     // Check if already dev-linked
     const sdkDep = pkg.dependencies?.["@cortexmemory/sdk"];
     const providerDep = pkg.dependencies?.["@cortexmemory/vercel-ai-provider"];
-    isDevLinked = sdkDep?.startsWith("file:") || providerDep?.startsWith("file:");
+    isDevLinked =
+      sdkDep?.startsWith("file:") || providerDep?.startsWith("file:");
 
     // Get installed versions
     try {
       const result = await execCommand(
         "npm",
-        ["list", "@cortexmemory/sdk", "@cortexmemory/vercel-ai-provider", "convex", "ai", "--json"],
+        [
+          "list",
+          "@cortexmemory/sdk",
+          "@cortexmemory/vercel-ai-provider",
+          "convex",
+          "ai",
+          "--json",
+        ],
         { quiet: true, cwd: appPath },
       );
       const data = JSON.parse(result.stdout);
       currentSdkVersion =
         data.dependencies?.["@cortexmemory/sdk"]?.version ?? "not installed";
       currentProviderVersion =
-        data.dependencies?.["@cortexmemory/vercel-ai-provider"]?.version ?? "not installed";
+        data.dependencies?.["@cortexmemory/vercel-ai-provider"]?.version ??
+        "not installed";
       currentConvexVersion =
         data.dependencies?.convex?.version ?? "not installed";
-      currentAiVersion =
-        data.dependencies?.ai?.version ?? "not installed";
+      currentAiVersion = data.dependencies?.ai?.version ?? "not installed";
     } catch {
       // Ignore errors
     }
@@ -1080,7 +1157,12 @@ async function updateApp(
       // In dev mode, read versions from local source package.json files
       try {
         const sdkPkgPath = path.join(options.devPath, "package.json");
-        const providerPkgPath = path.join(options.devPath, "packages", "vercel-ai-provider", "package.json");
+        const providerPkgPath = path.join(
+          options.devPath,
+          "packages",
+          "vercel-ai-provider",
+          "package.json",
+        );
 
         if (await fs.pathExists(sdkPkgPath)) {
           const sdkPkg = await fs.readJson(sdkPkgPath);
@@ -1094,8 +1176,12 @@ async function updateApp(
 
         // Still fetch convex and ai versions from npm (external dependencies)
         const [convexResult, aiResult] = await Promise.all([
-          execCommand("npm", ["view", "convex", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-          execCommand("npm", ["view", "ai", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
+          execCommand("npm", ["view", "convex", "version"], {
+            quiet: true,
+          }).catch(() => ({ stdout: "unknown" })),
+          execCommand("npm", ["view", "ai", "version"], { quiet: true }).catch(
+            () => ({ stdout: "unknown" }),
+          ),
         ]);
 
         latestConvexVersion = convexResult.stdout.trim() || "unknown";
@@ -1106,12 +1192,23 @@ async function updateApp(
     } else {
       // Normal mode: fetch all versions from npm
       try {
-        const [sdkResult, providerResult, convexResult, aiResult] = await Promise.all([
-          execCommand("npm", ["view", "@cortexmemory/sdk", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-          execCommand("npm", ["view", "@cortexmemory/vercel-ai-provider", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-          execCommand("npm", ["view", "convex", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-          execCommand("npm", ["view", "ai", "version"], { quiet: true }).catch(() => ({ stdout: "unknown" })),
-        ]);
+        const [sdkResult, providerResult, convexResult, aiResult] =
+          await Promise.all([
+            execCommand("npm", ["view", "@cortexmemory/sdk", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+            execCommand(
+              "npm",
+              ["view", "@cortexmemory/vercel-ai-provider", "version"],
+              { quiet: true },
+            ).catch(() => ({ stdout: "unknown" })),
+            execCommand("npm", ["view", "convex", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+            execCommand("npm", ["view", "ai", "version"], {
+              quiet: true,
+            }).catch(() => ({ stdout: "unknown" })),
+          ]);
 
         latestSdkVersion = sdkResult.stdout.trim() || "unknown";
         latestProviderVersion = providerResult.stdout.trim() || "unknown";
@@ -1182,18 +1279,25 @@ async function updateApp(
     if (isDevMode) {
       // Dev mode: update package.json with file: references
       if (isDevLinked) {
-        printSuccess("App is already dev-linked. Running npm install to refresh...");
+        printSuccess(
+          "App is already dev-linked. Running npm install to refresh...",
+        );
       } else {
         printInfo("Switching to dev mode with local SDK...");
       }
 
       // Update package.json with file: references
       const devSdkPath = options.devPath!;
-      const devProviderPath = path.join(devSdkPath, "packages", "vercel-ai-provider");
+      const devProviderPath = path.join(
+        devSdkPath,
+        "packages",
+        "vercel-ai-provider",
+      );
 
       pkg.dependencies = pkg.dependencies || {};
       pkg.dependencies["@cortexmemory/sdk"] = `file:${devSdkPath}`;
-      pkg.dependencies["@cortexmemory/vercel-ai-provider"] = `file:${devProviderPath}`;
+      pkg.dependencies["@cortexmemory/vercel-ai-provider"] =
+        `file:${devProviderPath}`;
 
       await fs.writeJson(packageJsonPath, pkg, { spaces: 2 });
       console.log(pc.cyan("   Updated package.json with file: references"));
@@ -1221,22 +1325,26 @@ async function updateApp(
     } else {
       // Normal mode: update to latest versions from npm
       const targetSdkVersion = options.sdkVersion ?? latestSdkVersion;
-      const targetProviderVersion = options.providerVersion ?? latestProviderVersion;
+      const targetProviderVersion =
+        options.providerVersion ?? latestProviderVersion;
 
       // Check if we need to remove dev links first
       if (isDevLinked) {
         printInfo("Removing dev links and switching to npm packages...");
 
         pkg.dependencies["@cortexmemory/sdk"] = `^${targetSdkVersion}`;
-        pkg.dependencies["@cortexmemory/vercel-ai-provider"] = `^${targetProviderVersion}`;
+        pkg.dependencies["@cortexmemory/vercel-ai-provider"] =
+          `^${targetProviderVersion}`;
 
         await fs.writeJson(packageJsonPath, pkg, { spaces: 2 });
         console.log(pc.cyan("   Updated package.json with npm versions"));
       }
 
       // Determine what needs updating
-      const sdkNeedsUpdate = currentSdkVersion !== targetSdkVersion || isDevLinked;
-      const providerNeedsUpdate = currentProviderVersion !== targetProviderVersion || isDevLinked;
+      const sdkNeedsUpdate =
+        currentSdkVersion !== targetSdkVersion || isDevLinked;
+      const providerNeedsUpdate =
+        currentProviderVersion !== targetProviderVersion || isDevLinked;
 
       // Nothing to update
       if (!sdkNeedsUpdate && !providerNeedsUpdate) {
@@ -1251,7 +1359,9 @@ async function updateApp(
         packagesToInstall.push(`@cortexmemory/sdk@${targetSdkVersion}`);
       }
       if (providerNeedsUpdate) {
-        packagesToInstall.push(`@cortexmemory/vercel-ai-provider@${targetProviderVersion}`);
+        packagesToInstall.push(
+          `@cortexmemory/vercel-ai-provider@${targetProviderVersion}`,
+        );
       }
 
       if (packagesToInstall.length > 0) {
@@ -1293,7 +1403,9 @@ async function updateApp(
 
           // Run npm install if package.json was updated with new dependencies
           if (templateResult.packageJsonUpdated) {
-            const totalNewDeps = templateResult.depsAdded.length + templateResult.devDepsAdded.length;
+            const totalNewDeps =
+              templateResult.depsAdded.length +
+              templateResult.devDepsAdded.length;
             if (totalNewDeps > 0) {
               console.log();
               printInfo(`Installing ${totalNewDeps} new dependencies...`);
@@ -1309,7 +1421,9 @@ async function updateApp(
               if (exitCode === 0) {
                 printSuccess("Dependencies installed");
               } else {
-                printWarning("npm install failed - you may need to run it manually");
+                printWarning(
+                  "npm install failed - you may need to run it manually",
+                );
               }
             }
           }

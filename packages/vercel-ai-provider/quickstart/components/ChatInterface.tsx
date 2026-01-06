@@ -69,6 +69,9 @@ export function ChatInterface({
     conversationIdRef.current = conversationId;
   }, [conversationId]);
 
+  // Track if we should skip history load (when we create a new conversation ourselves)
+  const skipHistoryLoadRef = useRef<string | null>(null);
+
   // Create transport with a function that reads from ref for conversationId
   // This ensures we always send the latest conversationId
   const transport = useMemo(
@@ -104,6 +107,8 @@ export function ChatInterface({
       // Handle conversation title update
       if (part.type === "data-conversation-update") {
         const update = part.data as { conversationId: string; title: string };
+        // Mark this conversation ID to skip history load - we just created it
+        skipHistoryLoadRef.current = update.conversationId;
         onConversationUpdate?.(update.conversationId, update.title);
       }
     },
@@ -122,20 +127,28 @@ export function ChatInterface({
 
   // Load messages when conversation changes
   useEffect(() => {
-    // Clear messages first
-    setMessages([]);
-
-    // If no conversation selected, nothing more to do
+    // If no conversation selected, just clear messages
     if (!conversationId) {
+      setMessages([]);
       return;
     }
+
+    // Skip loading if we just created this conversation ourselves
+    // (we already have the messages in state from the current chat session)
+    if (skipHistoryLoadRef.current === conversationId) {
+      skipHistoryLoadRef.current = null;
+      return;
+    }
+
+    // Clear messages before loading new conversation
+    setMessages([]);
 
     // Fetch conversation history
     const loadConversationHistory = async () => {
       setIsLoadingHistory(true);
       try {
         const response = await fetch(
-          `/api/conversations?conversationId=${encodeURIComponent(conversationId)}`
+          `/api/conversations?conversationId=${encodeURIComponent(conversationId)}`,
         );
 
         if (!response.ok) {
@@ -147,12 +160,19 @@ export function ChatInterface({
 
         if (data.messages && data.messages.length > 0) {
           // Transform to the format expected by useChat
-          const loadedMessages = data.messages.map((msg: { id: string; role: string; content: string; createdAt: string }) => ({
-            id: msg.id,
-            role: msg.role,
-            content: msg.content,
-            createdAt: new Date(msg.createdAt),
-          }));
+          const loadedMessages = data.messages.map(
+            (msg: {
+              id: string;
+              role: string;
+              content: string;
+              createdAt: string;
+            }) => ({
+              id: msg.id,
+              role: msg.role,
+              content: msg.content,
+              createdAt: new Date(msg.createdAt),
+            }),
+          );
           setMessages(loadedMessages);
         }
       } catch (error) {
@@ -193,7 +213,10 @@ export function ChatInterface({
   };
 
   // Extract text content from message parts (AI SDK v5 format)
-  const getMessageContent = (message: { content?: string; parts?: Array<{ type: string; text?: string }> }): string => {
+  const getMessageContent = (message: {
+    content?: string;
+    parts?: Array<{ type: string; text?: string }>;
+  }): string => {
     if (typeof message.content === "string") {
       return message.content;
     }
@@ -233,7 +256,9 @@ export function ChatInterface({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                 />
               </svg>
-              <span className="text-gray-400 text-sm">Loading conversation...</span>
+              <span className="text-gray-400 text-sm">
+                Loading conversation...
+              </span>
             </div>
           </div>
         )}
@@ -244,7 +269,9 @@ export function ChatInterface({
               <span className="text-3xl">🧠</span>
             </div>
             <h2 className="text-xl font-semibold mb-2">
-              {conversationId ? "Continue your conversation" : "Start a new conversation"}
+              {conversationId
+                ? "Continue your conversation"
+                : "Start a new conversation"}
             </h2>
             <p className="text-gray-400 max-w-md mx-auto mb-6">
               This demo shows how Cortex orchestrates memory across multiple

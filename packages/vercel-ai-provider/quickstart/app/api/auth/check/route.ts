@@ -24,7 +24,7 @@ export async function GET() {
 
     return Response.json(
       { error: "Failed to check admin setup status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

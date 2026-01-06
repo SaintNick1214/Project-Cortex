@@ -1,0 +1,3272 @@
+# Cortex CLI Reference
+
+> **Last Updated**: January 1, 2026  
+> **CLI Version**: 0.27.4  
+> **Package**: `@cortexmemory/cli`
+
+## What is Cortex CLI?
+
+The Cortex CLI is a command-line tool for managing Cortex Memory deployments, performing administrative tasks, and streamlining development workflows. It provides comprehensive functionality for:
+
+- **Project initialization** and lifecycle management
+- **Database operations** and statistics
+- **Memory management** (vector store operations)
+- **User data management** with GDPR compliance
+- **Deployment management** across multiple environments
+- **Interactive development** with live-reloading
+
+## Installation
+
+```bash
+# Install globally
+npm install -g @cortexmemory/cli
+
+# Or use with npx (no installation needed)
+npx @cortexmemory/cli <command>
+
+# Or install as dev dependency in your project
+npm install --save-dev @cortexmemory/cli
+```
+
+**Requirements**: Node.js >= 20
+
+## Quick Start
+
+The most common workflow for getting started:
+
+```bash
+# 1. Initialize a new Cortex project
+cortex init my-cortex-app
+
+# 2. Start development services
+cortex start
+
+# 3. Check status
+cortex status
+
+# 4. View database statistics
+cortex db stats
+
+# 5. List memory spaces
+cortex spaces list
+```
+
+---
+
+## Command Categories
+
+### 🚀 Project Lifecycle
+
+Commands for managing your Cortex project lifecycle:
+
+- [`cortex init`](#cortex-init) - Initialize a new Cortex Memory project
+- [`cortex start`](#cortex-start) - Start development services
+- [`cortex stop`](#cortex-stop) - Stop background services
+- [`cortex dev`](#cortex-dev) - Interactive development mode (Expo-style)
+- [`cortex status`](#cortex-status) - Show status dashboard
+
+### ⚙️ Configuration
+
+Commands for managing CLI configuration:
+
+- [`cortex config`](#cortex-config) - Configuration management
+- [`cortex use`](#cortex-use) - Switch deployment context
+
+### 💾 Data Operations
+
+Commands for managing data:
+
+- [`cortex memory`](#cortex-memory) - Memory operations (vector store)
+- [`cortex users`](#cortex-users) - User management with GDPR support
+- [`cortex spaces`](#cortex-spaces) - Memory space operations
+- [`cortex facts`](#cortex-facts) - Facts operations
+- [`cortex conversations`](#cortex-conversations) - Conversation operations
+
+### 🗄️ Database
+
+Commands for database-wide operations:
+
+- [`cortex db stats`](#cortex-db-stats) - Show database statistics
+- [`cortex db clear`](#cortex-db-clear) - Clear entire database
+- [`cortex db backup`](#cortex-db-backup) - Backup database
+- [`cortex db restore`](#cortex-db-restore) - Restore from backup
+- [`cortex db export`](#cortex-db-export) - Export all data
+
+### 📦 Deployment
+
+Commands for deploying and updating:
+
+- [`cortex deploy`](#cortex-deploy) - Deploy schema and functions
+- [`cortex update`](#cortex-update) - Update packages across deployments
+- [`cortex convex`](#cortex-convex) - Convex management
+
+---
+
+## Global Options
+
+These options work with **ALL** commands:
+
+| Option                    | Description                        |
+| ------------------------- | ---------------------------------- |
+| `-d, --deployment <name>` | Use a named deployment from config |
+| `--debug`                 | Enable debug output                |
+| `-h, --help`              | Display help for command           |
+| `-V, --version`           | Output version number              |
+
+Most data operation commands also support:
+
+| Option                  | Description                           |
+| ----------------------- | ------------------------------------- |
+| `-f, --format <format>` | Output format: `table`, `json`, `csv` |
+| `-l, --limit <number>`  | Maximum number of results             |
+| `-y, --yes`             | Skip confirmation prompts             |
+
+---
+
+## Detailed Command Reference
+
+### Project Lifecycle Commands
+
+#### `cortex init`
+
+Initialize a new Cortex Memory project with interactive setup wizard.
+
+**Usage:**
+
+```bash
+cortex init [directory] [options]
+```
+
+**Arguments:**
+
+- `directory` - Target directory (defaults to current directory)
+
+**Options:**
+
+- `--local` - Quick setup with local Convex only [default: false]
+- `--cloud` - Quick setup with cloud Convex only [default: false]
+- `--skip-graph` - Skip graph database setup [default: false]
+- `-t, --template <name>` - Template to use [default: "basic"]
+- `-y, --yes` - Skip confirmation prompts [default: false]
+- `--start` - Start Convex dev server after setup [default: false]
+
+**Examples:**
+
+```bash
+# Interactive setup (recommended)
+cortex init
+
+# Create project with local Convex (fastest)
+cortex init my-app --local
+
+# Create project with cloud Convex
+cortex init my-app --cloud
+
+# Create and start immediately
+cortex init my-app --local --start
+
+# Skip graph database setup
+cortex init my-app --skip-graph
+```
+
+**What It Does:**
+
+1. Creates project directory and copies template files
+2. Configures Convex backend (local or cloud)
+3. Optionally sets up graph database (Neo4j or Memgraph)
+4. Optionally configures OpenAI API key
+5. Installs dependencies
+6. Deploys Cortex backend functions
+7. Saves deployment configuration to `~/.cortexrc`
+8. Optionally installs Vercel AI quickstart demo
+
+**Related:**
+
+- [Getting Started: Installation](../01-getting-started/02-installation)
+- [Getting Started: Five Minute Quickstart](../01-getting-started/03-five-minute-quickstart)
+
+---
+
+#### `cortex start`
+
+Start development services for all enabled deployments.
+
+**Usage:**
+
+```bash
+cortex start [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Start a specific deployment only
+- `-l, --local` - Use Convex local beta mode (starts a new local backend) [default: false]
+- `-f, --foreground` - Run in foreground (only works with single deployment) [default: false]
+- `--convex-only` - Only start Convex servers [default: false]
+- `--graph-only` - Only start graph databases [default: false]
+
+**Examples:**
+
+```bash
+# Start all enabled deployments
+cortex start
+
+# Start specific deployment
+cortex start --deployment production
+
+# Start with local Convex
+cortex start --local
+
+# Start in foreground (see logs)
+cortex start --deployment local --foreground
+
+# Start only graph databases
+cortex start --graph-only
+```
+
+**What It Does:**
+
+1. Reads deployment configuration from `~/.cortexrc`
+2. For each enabled deployment:
+   - Starts graph database if configured
+   - Deploys functions to production (for cloud deployments)
+   - Starts Convex dev server in background
+3. Starts enabled template apps
+4. Saves process IDs for later management
+
+**Related:**
+
+- [Configuration: Managing Deployments](#cortex-config)
+- [`cortex stop`](#cortex-stop)
+- [`cortex dev`](#cortex-dev)
+
+---
+
+#### `cortex stop`
+
+Stop background services (Convex, graph database, and apps).
+
+**Usage:**
+
+```bash
+cortex stop [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Stop specific deployment only
+- `-a, --app <name>` - Stop specific app only
+- `--convex-only` - Only stop Convex server [default: false]
+- `--graph-only` - Only stop graph database [default: false]
+- `--apps-only` - Only stop template apps [default: false]
+
+**Examples:**
+
+```bash
+# Stop all services
+cortex stop
+
+# Stop specific deployment
+cortex stop --deployment local
+
+# Stop specific app
+cortex stop --app quickstart
+
+# Stop only Convex (leave graph running)
+cortex stop --convex-only
+```
+
+**What It Does:**
+
+1. Finds running processes using PID files
+2. Sends SIGTERM to Convex dev servers
+3. Stops Docker containers for graph databases
+4. Stops template apps
+5. Cleans up PID files
+
+**Related:**
+
+- [`cortex start`](#cortex-start)
+- [`cortex status`](#cortex-status)
+
+---
+
+#### `cortex dev`
+
+Start interactive development mode with Expo-style interface.
+
+**Usage:**
+
+```bash
+cortex dev [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Run specific deployment only
+- `-l, --local` - Force local Convex instance for all deployments [default: false]
+
+**Keyboard Shortcuts:**
+
+- `c` - Clear screen and show status
+- `s` - Show status dashboard
+- `r` - Restart all services
+- `g` - Toggle graph database
+- `k` - Kill Convex instances (port conflicts)
+- `q` - Quit (or Ctrl+C)
+- `?` or `h` - Show help
+
+**Examples:**
+
+```bash
+# Start interactive dev mode
+cortex dev
+
+# Dev mode for specific deployment
+cortex dev --deployment local
+
+# Force local mode
+cortex dev --local
+```
+
+**What It Does:**
+
+1. Syncs schema files from SDK
+2. Starts all enabled deployments and apps
+3. Displays live status dashboard
+4. Streams aggregated logs from all services
+5. Provides keyboard shortcuts for common actions
+6. Handles graceful shutdown on exit
+
+**Features:**
+
+- ✅ Multi-deployment support
+- ✅ Live status updates
+- ✅ Aggregated streaming logs
+- ✅ Keyboard shortcuts
+- ✅ Automatic schema sync
+- ✅ Graph database management
+
+**Related:**
+
+- [`cortex start`](#cortex-start)
+- [`cortex status`](#cortex-status)
+
+---
+
+#### `cortex status`
+
+Show Cortex setup status dashboard for all deployments.
+
+**Usage:**
+
+```bash
+cortex status [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Show status for specific deployment only
+- `--check` - Run health checks [default: false]
+- `-f, --format <format>` - Output format: `dashboard`, `json` [default: "dashboard"]
+
+**Examples:**
+
+```bash
+# Show status for all deployments
+cortex status
+
+# Status for specific deployment
+cortex status --deployment production
+
+# JSON output
+cortex status --format json
+```
+
+**What It Shows:**
+
+- All configured deployments
+- Convex backend status (running/stopped)
+- Graph database status (running/stopped/not configured)
+- Template apps status
+- SDK version information
+- Process IDs and ports
+- Dashboard URLs
+
+**Related:**
+
+- [`cortex start`](#cortex-start)
+- [`cortex config list`](#cortex-config-list)
+
+---
+
+### Configuration Commands
+
+#### `cortex config`
+
+Manage CLI configuration. The config command has multiple subcommands:
+
+##### `cortex config show`
+
+Show current configuration.
+
+**Usage:**
+
+```bash
+cortex config show [options]
+```
+
+**Options:**
+
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Show configuration
+cortex config show
+
+# JSON output
+cortex config show --format json
+```
+
+---
+
+##### `cortex config list`
+
+List all deployments in table format.
+
+**Usage:**
+
+```bash
+cortex config list
+```
+
+**Examples:**
+
+```bash
+# List all deployments and apps
+cortex config list
+```
+
+**Output:**
+
+- Deployment name, status, URL, key status, project path
+- Apps with their type, status, and port
+- Default deployment indicator (→)
+- Enabled/disabled status
+
+---
+
+##### `cortex config set`
+
+Set a configuration value.
+
+**Usage:**
+
+```bash
+cortex config set <key> <value>
+```
+
+**Examples:**
+
+```bash
+# Set default deployment
+cortex config set default production
+
+# Set output format
+cortex config set format json
+```
+
+---
+
+##### `cortex config test`
+
+Test connection to Convex deployment.
+
+**Usage:**
+
+```bash
+cortex config test [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Deployment to test
+
+**Examples:**
+
+```bash
+# Test default deployment
+cortex config test
+
+# Test specific deployment
+cortex config test --deployment production
+```
+
+---
+
+##### `cortex config add-deployment`
+
+Add a new deployment configuration.
+
+**Usage:**
+
+```bash
+cortex config add-deployment [name] [options]
+```
+
+**Options:**
+
+- `-u, --url <url>` - Convex deployment URL
+- `-k, --key <key>` - Convex deploy key
+- `--default` - Set as default deployment [default: false]
+- `--json-only` - Only save to ~/.cortexrc (skip .env.local) [default: false]
+
+**Examples:**
+
+```bash
+# Interactive mode
+cortex config add-deployment
+
+# Add cloud deployment
+cortex config add-deployment cloud \
+  --url https://my-app.convex.cloud \
+  --key "prod|abc123..."
+
+# Add and set as default
+cortex config add-deployment staging \
+  --url https://staging.convex.cloud \
+  --default
+```
+
+---
+
+##### `cortex config remove-deployment`
+
+Remove a deployment configuration.
+
+**Usage:**
+
+```bash
+cortex config remove-deployment [name] [options]
+```
+
+**Options:**
+
+- `--json-only` - Only remove from ~/.cortexrc (skip .env.local) [default: false]
+
+**Examples:**
+
+```bash
+# Interactive mode
+cortex config remove-deployment
+
+# Remove specific deployment
+cortex config remove-deployment staging
+```
+
+**Note:** Cannot remove the default deployment. Set a different default first.
+
+---
+
+##### `cortex config set-key`
+
+Set or update the deploy key for a deployment.
+
+**Usage:**
+
+```bash
+cortex config set-key [deployment] [options]
+```
+
+**Options:**
+
+- `-k, --key <key>` - Deploy key (will prompt if not provided)
+- `--json-only` - Only update ~/.cortexrc (skip .env.local) [default: false]
+
+**Examples:**
+
+```bash
+# Interactive mode
+cortex config set-key
+
+# Set key for specific deployment
+cortex config set-key production --key "prod|abc123..."
+```
+
+---
+
+##### `cortex config set-url`
+
+Set or update the URL for a deployment.
+
+**Usage:**
+
+```bash
+cortex config set-url [deployment] [options]
+```
+
+**Options:**
+
+- `-u, --url <url>` - Deployment URL (will prompt if not provided)
+- `--json-only` - Only update ~/.cortexrc (skip .env.local) [default: false]
+
+**Examples:**
+
+```bash
+# Interactive mode
+cortex config set-url
+
+# Set URL for specific deployment
+cortex config set-url production --url "https://new-app.convex.cloud"
+```
+
+---
+
+##### `cortex config set-path`
+
+Set project path for a deployment (enables `cortex start -d <name>` from anywhere).
+
+**Usage:**
+
+```bash
+cortex config set-path <deployment> [path]
+```
+
+**Examples:**
+
+```bash
+# Set path to current directory
+cortex config set-path production
+
+# Set specific path
+cortex config set-path production /path/to/project
+```
+
+---
+
+##### `cortex config enable`
+
+Enable a deployment or app (will be started with `cortex start`).
+
+**Usage:**
+
+```bash
+cortex config enable <name>
+```
+
+**Examples:**
+
+```bash
+# Enable deployment
+cortex config enable production
+
+# Enable app
+cortex config enable quickstart
+```
+
+---
+
+##### `cortex config disable`
+
+Disable a deployment or app (will not be started with `cortex start`).
+
+**Usage:**
+
+```bash
+cortex config disable <name>
+```
+
+**Examples:**
+
+```bash
+# Disable deployment
+cortex config disable staging
+
+# Disable app
+cortex config disable quickstart
+```
+
+---
+
+##### `cortex config path`
+
+Show configuration file paths.
+
+**Usage:**
+
+```bash
+cortex config path
+```
+
+**Shows:**
+
+- User config path (`~/.cortexrc`)
+- Project config paths
+- Environment variables
+
+---
+
+##### `cortex config reset`
+
+Reset configuration to defaults.
+
+**Usage:**
+
+```bash
+cortex config reset [options]
+```
+
+**Options:**
+
+- `-y, --yes` - Skip confirmation [default: false]
+
+**Examples:**
+
+```bash
+# Reset configuration
+cortex config reset
+```
+
+⚠️ **Warning:** This cannot be undone.
+
+---
+
+#### `cortex use`
+
+Set current deployment for all commands (session context).
+
+**Usage:**
+
+```bash
+cortex use [deployment] [options]
+```
+
+**Options:**
+
+- `--clear` - Clear the current deployment setting
+
+**Examples:**
+
+```bash
+# Show current deployment
+cortex use
+
+# Switch to production
+cortex use production
+
+# Clear current deployment
+cortex use --clear
+```
+
+**What It Does:**
+
+- Sets a "current deployment" for the session
+- All subsequent commands will use this deployment by default
+- Stored separately from the default deployment in config
+
+---
+
+### Memory Commands
+
+#### `cortex memory`
+
+Manage memories (vector store). The memory command has multiple subcommands:
+
+##### `cortex memory list`
+
+List memories in a memory space.
+
+**Usage:**
+
+```bash
+cortex memory list [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-u, --user <id>` - Filter by user ID
+- `-l, --limit <number>` - Maximum number of results [default: 50]
+- `-f, --format <format>` - Output format: `table`, `json`, `csv`
+
+**Examples:**
+
+```bash
+# List memories in a space
+cortex memory list --space agent-1
+
+# Filter by user
+cortex memory list --space agent-1 --user user-123
+
+# Increase limit
+cortex memory list --space agent-1 --limit 100
+```
+
+**Related:**
+
+- [Core Features: Semantic Search](../02-core-features/02-semantic-search)
+- [API Reference: Memory Operations](../03-api-reference/02-memory-operations)
+
+---
+
+##### `cortex memory search`
+
+Search memories by content.
+
+**Usage:**
+
+```bash
+cortex memory search <query> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-u, --user <id>` - Filter by user ID
+- `-l, --limit <number>` - Maximum number of results [default: 20]
+- `-f, --format <format>` - Output format: `table`, `json`, `csv`
+
+**Examples:**
+
+```bash
+# Search memories
+cortex memory search "password preferences" --space agent-1
+
+# Search for specific user
+cortex memory search "API keys" --space agent-1 --user user-123
+
+# Increase results
+cortex memory search "configuration" --space agent-1 --limit 50
+```
+
+---
+
+##### `cortex memory get`
+
+Get details of a specific memory.
+
+**Usage:**
+
+```bash
+cortex memory get <memoryId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `--include-conversation` - Include source conversation [default: false]
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Get memory details
+cortex memory get mem-123 --space agent-1
+
+# Include source conversation
+cortex memory get mem-123 --space agent-1 --include-conversation
+```
+
+---
+
+##### `cortex memory delete`
+
+Delete a specific memory.
+
+**Usage:**
+
+```bash
+cortex memory delete <memoryId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `--cascade` - Also delete associated facts [default: false]
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Delete memory
+cortex memory delete mem-123 --space agent-1
+
+# Delete with cascade (also deletes facts)
+cortex memory delete mem-123 --space agent-1 --cascade
+```
+
+⚠️ **Warning:** Deletion is permanent and cannot be undone.
+
+---
+
+##### `cortex memory clear`
+
+Clear multiple memories.
+
+**Usage:**
+
+```bash
+cortex memory clear [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-u, --user <id>` - Only clear memories for this user
+- `--source <type>` - Only clear memories of this source type
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Clear all memories in a space
+cortex memory clear --space agent-1
+
+# Clear memories for specific user
+cortex memory clear --space agent-1 --user user-123
+
+# Clear by source type
+cortex memory clear --space agent-1 --source conversation
+```
+
+⚠️ **Warning:** This operation is permanent and cannot be undone.
+
+---
+
+##### `cortex memory export`
+
+Export memories to a file.
+
+**Usage:**
+
+```bash
+cortex memory export [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-u, --user <id>` - Only export memories for this user
+- `-o, --output <file>` - Output file path [default: "memories-export.json"]
+- `--include-facts` - Include associated facts [default: false]
+- `-f, --format <format>` - Export format: `json`, `csv` [default: "json"]
+
+**Examples:**
+
+```bash
+# Export memories
+cortex memory export --space agent-1 --output memories.json
+
+# Export with facts
+cortex memory export --space agent-1 --include-facts
+
+# Export as CSV
+cortex memory export --space agent-1 --format csv --output memories.csv
+```
+
+---
+
+##### `cortex memory stats`
+
+Show memory statistics for a space.
+
+**Usage:**
+
+```bash
+cortex memory stats [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Show statistics
+cortex memory stats --space agent-1
+
+# JSON output
+cortex memory stats --space agent-1 --format json
+```
+
+---
+
+##### `cortex memory archive`
+
+Archive a memory (soft delete).
+
+**Usage:**
+
+```bash
+cortex memory archive <memoryId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Archive memory
+cortex memory archive mem-123 --space agent-1
+```
+
+**Note:** Archived memories can be restored later using `cortex memory restore`.
+
+---
+
+##### `cortex memory restore`
+
+Restore an archived memory.
+
+**Usage:**
+
+```bash
+cortex memory restore <memoryId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+
+**Examples:**
+
+```bash
+# Restore memory
+cortex memory restore mem-123 --space agent-1
+```
+
+---
+
+### User Commands
+
+#### `cortex users`
+
+Manage user profiles and data with GDPR compliance support.
+
+##### `cortex users list`
+
+List all user profiles with usage stats.
+
+**Usage:**
+
+```bash
+cortex users list [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-l, --limit <number>` - Maximum number of results [default: 50]
+- `-f, --format <format>` - Output format: `table`, `json`, `csv`
+- `--no-stats` - Skip gathering usage stats (faster)
+
+**Examples:**
+
+```bash
+# List users
+cortex users list
+
+# List without stats (faster)
+cortex users list --no-stats
+
+# Increase limit
+cortex users list --limit 100
+```
+
+**Related:**
+
+- [Core Features: User Profiles](../02-core-features/03-user-profiles)
+- [API Reference: User Operations](../03-api-reference/04-user-operations)
+
+---
+
+##### `cortex users get`
+
+Get user profile details.
+
+**Usage:**
+
+```bash
+cortex users get <userId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-f, --format <format>` - Output format: `table`, `json`
+- `--include-history` - Include version history [default: false]
+
+**Examples:**
+
+```bash
+# Get user profile
+cortex users get user-123
+
+# Include version history
+cortex users get user-123 --include-history
+```
+
+---
+
+##### `cortex users delete`
+
+Delete user profile with optional GDPR cascade deletion.
+
+**Usage:**
+
+```bash
+cortex users delete <userId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `--cascade` - Delete all user data across all layers (GDPR) [default: false]
+- `--dry-run` - Preview what would be deleted without actually deleting [default: false]
+- `--verify` - Verify deletion completeness after cascade [default: true]
+- `-y, --yes` - Skip confirmation prompt (not recommended for cascade) [default: false]
+
+**Examples:**
+
+```bash
+# Delete user profile only
+cortex users delete user-123
+
+# GDPR cascade deletion (all user data)
+cortex users delete user-123 --cascade
+
+# Dry run to preview deletion
+cortex users delete user-123 --cascade --dry-run
+```
+
+⚠️ **Warning:** Cascade deletion permanently removes ALL user data:
+
+- User profile
+- Conversations and messages
+- Memories (vector store)
+- Facts
+- Immutable records
+- Mutable records
+- Graph nodes (if configured)
+
+**Related:**
+
+- [GDPR Compliance](#gdpr-compliance)
+
+---
+
+##### `cortex users delete-many`
+
+Delete multiple users with optional GDPR cascade.
+
+**Usage:**
+
+```bash
+cortex users delete-many <userIds...> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `--cascade` - Delete all user data across all layers [default: false]
+- `--dry-run` - Preview what would be deleted [default: false]
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Delete multiple users
+cortex users delete-many user-1 user-2 user-3
+
+# Delete with cascade
+cortex users delete-many user-1 user-2 --cascade
+
+# Dry run
+cortex users delete-many user-1 user-2 --cascade --dry-run
+```
+
+---
+
+##### `cortex users export`
+
+Export all user data (GDPR data portability).
+
+**Usage:**
+
+```bash
+cortex users export <userId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-o, --output <file>` - Output file path [default: "user-export.json"]
+
+**Examples:**
+
+```bash
+# Export user data
+cortex users export user-123
+
+# Custom output file
+cortex users export user-123 --output user-data.json
+```
+
+**Related:**
+
+- [GDPR Compliance](#gdpr-compliance)
+
+---
+
+##### `cortex users stats`
+
+Show statistics for a user.
+
+**Usage:**
+
+```bash
+cortex users stats <userId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Show user statistics
+cortex users stats user-123
+
+# JSON output
+cortex users stats user-123 --format json
+```
+
+---
+
+##### `cortex users update`
+
+Update user profile data.
+
+**Usage:**
+
+```bash
+cortex users update <userId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `--data <json>` - JSON data to merge into profile
+- `-f, --file <path>` - JSON file with data to merge
+
+**Examples:**
+
+```bash
+# Update user data
+cortex users update user-123 --data '{"name":"John","role":"admin"}'
+
+# Update from file
+cortex users update user-123 --file user-data.json
+```
+
+---
+
+##### `cortex users create`
+
+Create a new user profile.
+
+**Usage:**
+
+```bash
+cortex users create <userId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `--data <json>` - JSON data for the profile [default: "{}"]
+
+**Examples:**
+
+```bash
+# Create user
+cortex users create user-123
+
+# Create with data
+cortex users create user-123 --data '{"name":"John","email":"john@example.com"}'
+```
+
+---
+
+##### `cortex users exists`
+
+Check if a user exists.
+
+**Usage:**
+
+```bash
+cortex users exists <userId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+
+**Examples:**
+
+```bash
+# Check if user exists
+cortex users exists user-123
+```
+
+---
+
+### Memory Space Commands
+
+#### `cortex spaces`
+
+Manage memory spaces.
+
+##### `cortex spaces list`
+
+List all memory spaces.
+
+**Usage:**
+
+```bash
+cortex spaces list [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-t, --type <type>` - Filter by type: `personal`, `team`, `project`, `custom`
+- `-s, --status <status>` - Filter by status: `active`, `archived`
+- `-l, --limit <number>` - Maximum number of results [default: 100]
+- `-f, --format <format>` - Output format: `table`, `json`, `csv`
+
+**Examples:**
+
+```bash
+# List all memory spaces
+cortex spaces list
+
+# Filter by type
+cortex spaces list --type team
+
+# Filter by status
+cortex spaces list --status active
+```
+
+**Related:**
+
+- [Core Features: Memory Spaces](../02-core-features/01-memory-spaces)
+- [API Reference: Memory Space Operations](../03-api-reference/11-memory-space-operations)
+
+---
+
+##### `cortex spaces create`
+
+Create a new memory space.
+
+**Usage:**
+
+```bash
+cortex spaces create <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-t, --type <type>` - Space type: `personal`, `team`, `project`, `custom` **(required)**
+- `-n, --name <name>` - Human-readable name
+- `-m, --metadata <json>` - JSON metadata [default: "{}"]
+
+**Examples:**
+
+```bash
+# Create team space
+cortex spaces create team-alpha --type team --name "Team Alpha"
+
+# Create with metadata
+cortex spaces create project-1 --type project --metadata '{"owner":"user-123"}'
+```
+
+---
+
+##### `cortex spaces get`
+
+Get memory space details.
+
+**Usage:**
+
+```bash
+cortex spaces get <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Get space details
+cortex spaces get team-alpha
+
+# JSON output
+cortex spaces get team-alpha --format json
+```
+
+---
+
+##### `cortex spaces delete`
+
+Delete a memory space.
+
+**Usage:**
+
+```bash
+cortex spaces delete <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `--cascade` - Delete all data in the space (memories, facts, etc.) [default: false]
+- `-r, --reason <reason>` - Reason for deletion (for audit trail)
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Delete space
+cortex spaces delete team-alpha
+
+# Delete with cascade (all data)
+cortex spaces delete team-alpha --cascade --reason "Project completed"
+```
+
+⚠️ **Warning:** Cascade deletion permanently removes:
+
+- All memories
+- All facts
+- All conversations
+- All contexts
+
+---
+
+##### `cortex spaces archive`
+
+Archive a memory space (soft delete).
+
+**Usage:**
+
+```bash
+cortex spaces archive <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-r, --reason <reason>` - Reason for archiving
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Archive space
+cortex spaces archive project-apollo --reason "Project completed"
+```
+
+---
+
+##### `cortex spaces reactivate`
+
+Reactivate an archived memory space.
+
+**Usage:**
+
+```bash
+cortex spaces reactivate <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+
+**Examples:**
+
+```bash
+# Reactivate space
+cortex spaces reactivate project-apollo
+```
+
+---
+
+##### `cortex spaces stats`
+
+Get statistics for a memory space.
+
+**Usage:**
+
+```bash
+cortex spaces stats <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Get statistics
+cortex spaces stats team-alpha
+
+# JSON output
+cortex spaces stats team-alpha --format json
+```
+
+---
+
+##### `cortex spaces participants`
+
+List participants in a memory space.
+
+**Usage:**
+
+```bash
+cortex spaces participants <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# List participants
+cortex spaces participants team-alpha
+```
+
+---
+
+##### `cortex spaces add-participant`
+
+Add a participant to a memory space.
+
+**Usage:**
+
+```bash
+cortex spaces add-participant <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-i, --id <participantId>` - Participant ID **(required)**
+- `-t, --type <type>` - Participant type (e.g., `user`, `ai-tool`, `ai-agent`) **(required)**
+
+**Examples:**
+
+```bash
+# Add user participant
+cortex spaces add-participant team-alpha --id user-123 --type user
+
+# Add AI agent participant
+cortex spaces add-participant team-alpha --id agent-1 --type ai-agent
+```
+
+---
+
+##### `cortex spaces remove-participant`
+
+Remove a participant from a memory space.
+
+**Usage:**
+
+```bash
+cortex spaces remove-participant <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-i, --id <participantId>` - Participant ID to remove **(required)**
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Remove participant
+cortex spaces remove-participant team-alpha --id user-123
+```
+
+---
+
+##### `cortex spaces update`
+
+Update a memory space.
+
+**Usage:**
+
+```bash
+cortex spaces update <spaceId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-n, --name <name>` - New name
+- `-s, --status <status>` - New status: `active`, `archived`
+- `-m, --metadata <json>` - JSON metadata to merge
+
+**Examples:**
+
+```bash
+# Update name
+cortex spaces update team-alpha --name "Team Alpha v2"
+
+# Update metadata
+cortex spaces update team-alpha --metadata '{"updated":true}'
+```
+
+---
+
+##### `cortex spaces count`
+
+Count memory spaces.
+
+**Usage:**
+
+```bash
+cortex spaces count [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-t, --type <type>` - Filter by type
+- `-s, --status <status>` - Filter by status
+
+**Examples:**
+
+```bash
+# Count all spaces
+cortex spaces count
+
+# Count by type
+cortex spaces count --type team
+```
+
+---
+
+##### `cortex spaces search`
+
+Search memory spaces by name.
+
+**Usage:**
+
+```bash
+cortex spaces search <query> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-t, --type <type>` - Filter by type
+- `-s, --status <status>` - Filter by status
+- `-l, --limit <number>` - Maximum results [default: 20]
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Search spaces
+cortex spaces search "alpha"
+
+# Search with filter
+cortex spaces search "team" --type team
+```
+
+---
+
+### Facts Commands
+
+#### `cortex facts`
+
+Manage extracted facts.
+
+##### `cortex facts list`
+
+List facts in a memory space.
+
+**Usage:**
+
+```bash
+cortex facts list [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-t, --type <type>` - Filter by fact type
+- `-u, --user <id>` - Filter by user ID
+- `-l, --limit <number>` - Maximum number of results [default: 50]
+- `-f, --format <format>` - Output format: `table`, `json`, `csv`
+
+**Examples:**
+
+```bash
+# List facts
+cortex facts list --space agent-1
+
+# Filter by type
+cortex facts list --space agent-1 --type preference
+
+# Filter by user
+cortex facts list --space agent-1 --user user-123
+```
+
+**Related:**
+
+- [Core Features: Fact Extraction](../02-core-features/08-fact-extraction)
+- [API Reference: Facts Operations](../03-api-reference/12-facts-operations)
+
+---
+
+##### `cortex facts search`
+
+Search facts by content.
+
+**Usage:**
+
+```bash
+cortex facts search <query> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-t, --type <type>` - Filter by fact type
+- `-l, --limit <number>` - Maximum number of results [default: 20]
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Search facts
+cortex facts search "dark mode" --space agent-1
+
+# Search by type
+cortex facts search "preference" --space agent-1 --type preference
+```
+
+---
+
+##### `cortex facts get`
+
+Get fact details.
+
+**Usage:**
+
+```bash
+cortex facts get <factId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Get fact details
+cortex facts get fact-123 --space agent-1
+
+# JSON output
+cortex facts get fact-123 --space agent-1 --format json
+```
+
+---
+
+##### `cortex facts delete`
+
+Delete a fact.
+
+**Usage:**
+
+```bash
+cortex facts delete <factId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Delete fact
+cortex facts delete fact-123 --space agent-1
+```
+
+---
+
+##### `cortex facts export`
+
+Export facts to a file.
+
+**Usage:**
+
+```bash
+cortex facts export [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-t, --type <type>` - Filter by fact type
+- `-o, --output <file>` - Output file path [default: "facts-export.json"]
+- `-f, --format <format>` - Export format: `json`, `csv` [default: "json"]
+
+**Examples:**
+
+```bash
+# Export facts
+cortex facts export --space agent-1 --output facts.json
+
+# Export as CSV
+cortex facts export --space agent-1 --format csv --output facts.csv
+```
+
+---
+
+##### `cortex facts count`
+
+Count facts in a memory space.
+
+**Usage:**
+
+```bash
+cortex facts count [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-t, --type <type>` - Filter by fact type
+
+**Examples:**
+
+```bash
+# Count facts
+cortex facts count --space agent-1
+
+# Count by type
+cortex facts count --space agent-1 --type preference
+```
+
+---
+
+##### `cortex facts clear`
+
+Clear all facts in a memory space.
+
+**Usage:**
+
+```bash
+cortex facts clear [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID **(required)**
+- `-t, --type <type>` - Only clear facts of this type
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Clear all facts
+cortex facts clear --space agent-1
+
+# Clear specific type
+cortex facts clear --space agent-1 --type preference
+```
+
+⚠️ **Warning:** This operation is permanent and cannot be undone.
+
+---
+
+### Conversation Commands
+
+#### `cortex conversations` (alias: `convs`)
+
+Manage conversations.
+
+##### `cortex conversations list`
+
+List conversations.
+
+**Usage:**
+
+```bash
+cortex conversations list [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Filter by memory space ID
+- `-u, --user <id>` - Filter by user ID
+- `-t, --type <type>` - Filter by type: `user-agent`, `agent-agent`
+- `-l, --limit <number>` - Maximum number of results [default: 50]
+- `-f, --format <format>` - Output format: `table`, `json`, `csv`
+
+**Examples:**
+
+```bash
+# List conversations
+cortex conversations list
+
+# Filter by space
+cortex conversations list --space agent-1
+
+# Filter by user
+cortex conversations list --user user-123
+
+# Filter by type
+cortex conversations list --type user-agent
+```
+
+**Related:**
+
+- [Core Features: Conversation History](../02-core-features/06-conversation-history)
+- [API Reference: Conversation Operations](../03-api-reference/03-conversation-operations)
+
+---
+
+##### `cortex conversations get`
+
+Get conversation details with messages.
+
+**Usage:**
+
+```bash
+cortex conversations get <conversationId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-m, --messages <number>` - Number of messages to show [default: 20]
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Get conversation
+cortex conversations get conv-123
+
+# Show more messages
+cortex conversations get conv-123 --messages 50
+
+# JSON output
+cortex conversations get conv-123 --format json
+```
+
+---
+
+##### `cortex conversations delete`
+
+Delete a conversation.
+
+**Usage:**
+
+```bash
+cortex conversations delete <conversationId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Delete conversation
+cortex conversations delete conv-123
+```
+
+---
+
+##### `cortex conversations export`
+
+Export a conversation to a file.
+
+**Usage:**
+
+```bash
+cortex conversations export <conversationId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-o, --output <file>` - Output file path [default: "conversation-export.json"]
+- `-f, --format <format>` - Export format: `json`, `txt` [default: "json"]
+
+**Examples:**
+
+```bash
+# Export as JSON
+cortex conversations export conv-123
+
+# Export as text
+cortex conversations export conv-123 --format txt --output conv.txt
+```
+
+---
+
+##### `cortex conversations count`
+
+Count conversations.
+
+**Usage:**
+
+```bash
+cortex conversations count [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Filter by memory space ID
+- `-u, --user <id>` - Filter by user ID
+- `-t, --type <type>` - Filter by type
+
+**Examples:**
+
+```bash
+# Count all conversations
+cortex conversations count
+
+# Count by space
+cortex conversations count --space agent-1
+
+# Count by user
+cortex conversations count --user user-123
+```
+
+---
+
+##### `cortex conversations clear`
+
+Clear conversations.
+
+**Usage:**
+
+```bash
+cortex conversations clear [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-s, --space <id>` - Memory space ID (required)
+- `-u, --user <id>` - Only clear for this user
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Clear all conversations in space
+cortex conversations clear --space agent-1
+
+# Clear for specific user
+cortex conversations clear --space agent-1 --user user-123
+```
+
+⚠️ **Warning:** This operation is permanent and cannot be undone.
+
+---
+
+##### `cortex conversations messages`
+
+List messages in a conversation.
+
+**Usage:**
+
+```bash
+cortex conversations messages <conversationId> [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-l, --limit <number>` - Maximum number of messages [default: 50]
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# List messages
+cortex conversations messages conv-123
+
+# Show more messages
+cortex conversations messages conv-123 --limit 100
+```
+
+---
+
+### Database Commands
+
+#### `cortex db stats`
+
+Show database statistics.
+
+**Usage:**
+
+```bash
+cortex db stats [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-f, --format <format>` - Output format: `table`, `json`
+
+**Examples:**
+
+```bash
+# Show statistics
+cortex db stats
+
+# JSON output
+cortex db stats --format json
+```
+
+**Shows:**
+
+- Core entities (memory spaces, users, agents)
+- Memory data (memories, facts, contexts)
+- Conversations (conversations, messages)
+- Shared stores (immutable, mutable)
+- System tables (governance, graph sync)
+- Deployment info (URL, mode)
+
+---
+
+#### `cortex db clear`
+
+Clear entire database.
+
+**Usage:**
+
+```bash
+cortex db clear [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-y, --yes` - Skip confirmation prompt [default: false]
+
+**Examples:**
+
+```bash
+# Clear database (with confirmation)
+cortex db clear
+
+# Skip confirmation
+cortex db clear --yes
+```
+
+⚠️ **DANGER:** This permanently deletes:
+
+- All memory spaces and memories
+- All conversations and messages
+- All facts and user profiles
+- All graph nodes (if configured)
+
+**This operation cannot be undone.**
+
+---
+
+#### `cortex db backup`
+
+Backup database to a file.
+
+**Usage:**
+
+```bash
+cortex db backup [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-o, --output <file>` - Output file path [default: "cortex-backup.json"]
+- `--include-all` - Include all data (may be large) [default: false]
+
+**Examples:**
+
+```bash
+# Backup (spaces and users only)
+cortex db backup
+
+# Full backup (all data)
+cortex db backup --include-all --output full-backup.json
+```
+
+**What It Backs Up:**
+
+- Always: Memory spaces, users
+- With `--include-all`: Conversations, memories, facts
+
+---
+
+#### `cortex db restore`
+
+Restore database from a backup file.
+
+**Usage:**
+
+```bash
+cortex db restore [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-i, --input <file>` - Backup file path **(required)**
+- `--dry-run` - Preview what would be restored [default: false]
+- `-y, --yes` - Skip confirmation [default: false]
+
+**Examples:**
+
+```bash
+# Preview restore
+cortex db restore --input backup.json --dry-run
+
+# Restore backup
+cortex db restore --input backup.json
+```
+
+⚠️ **Warning:** Existing data may be overwritten.
+
+---
+
+#### `cortex db export`
+
+Export all data to JSON.
+
+**Usage:**
+
+```bash
+cortex db export [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-o, --output <file>` - Output file path [default: "cortex-export.json"]
+
+**Examples:**
+
+```bash
+# Export all data
+cortex db export
+
+# Custom output file
+cortex db export --output data-export.json
+```
+
+---
+
+### Deployment Commands
+
+#### `cortex deploy`
+
+Deploy schema and functions to Convex.
+
+**Usage:**
+
+```bash
+cortex deploy [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-l, --local` - Deploy to local Convex instance [default: false]
+- `-p, --prod` - Deploy to production [default: false]
+- `--push` - Push without prompts [default: false]
+- `--skip-sync` - Skip automatic schema sync from SDK [default: false]
+
+**Examples:**
+
+```bash
+# Deploy to default deployment
+cortex deploy
+
+# Deploy to specific deployment
+cortex deploy --deployment production
+
+# Deploy to local
+cortex deploy --local
+
+# Deploy without prompts
+cortex deploy --push
+```
+
+**What It Does:**
+
+1. Syncs schema files from SDK (unless `--skip-sync`)
+2. Runs `convex deploy` in the project directory
+3. Deploys all Convex functions and schema
+
+**Related:**
+
+- [`cortex update`](#cortex-update)
+
+---
+
+#### `cortex update`
+
+Update `@cortexmemory/sdk` and `convex` packages across all enabled deployments and apps.
+
+**Usage:**
+
+```bash
+cortex update [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target a specific deployment only
+- `-a, --app <name>` - Target a specific app only
+- `--apps-only` - Only update apps (skip deployments) [default: false]
+- `--deployments-only` - Only update deployments (skip apps) [default: false]
+- `--dev` - Use dev mode (link to local SDK via CORTEX_SDK_DEV_PATH) [default: false]
+- `--sync-template` - Sync app template files (components, routes, etc.) [default: false]
+- `--sdk-version <version>` - Specific Cortex SDK version to install
+- `--convex-version <version>` - Specific Convex version to install
+- `--provider-version <version>` - Specific vercel-ai-provider version to install
+- `-y, --yes` - Auto-accept all updates [default: false]
+
+**Examples:**
+
+```bash
+# Update all (shows status dashboard)
+cortex update
+
+# Update specific deployment
+cortex update --deployment production
+
+# Update specific app
+cortex update --app quickstart
+
+# Update with template sync
+cortex update --app quickstart --sync-template
+
+# Specific versions
+cortex update --sdk-version 0.27.4 --convex-version 1.31.2
+
+# Dev mode (link to local SDK)
+export CORTEX_SDK_DEV_PATH=/path/to/Project-Cortex
+cortex update --dev --app quickstart
+```
+
+**What It Does:**
+
+1. Checks current and latest versions
+2. Shows status dashboard for all deployments and apps
+3. Prompts for confirmation (unless `--yes`)
+4. Updates packages for selected targets
+5. Optionally syncs template files for apps
+
+**Related:**
+
+- [`cortex deploy`](#cortex-deploy)
+
+---
+
+### Convex Commands
+
+#### `cortex convex`
+
+Manage Convex deployments. The convex command has multiple subcommands:
+
+##### `cortex convex status`
+
+Check Convex deployment status.
+
+**Usage:**
+
+```bash
+cortex convex status [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+
+**Examples:**
+
+```bash
+# Check status
+cortex convex status
+
+# Specific deployment
+cortex convex status --deployment production
+```
+
+---
+
+##### `cortex convex dev`
+
+Start Convex in development mode.
+
+**Usage:**
+
+```bash
+cortex convex dev [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-l, --local` - Use local Convex instance [default: false]
+- `--once` - Run once and exit [default: false]
+- `--skip-sync` - Skip automatic schema sync from SDK [default: false]
+
+**Examples:**
+
+```bash
+# Start dev server
+cortex convex dev
+
+# Local mode
+cortex convex dev --local
+
+# Run once (for CI)
+cortex convex dev --once
+```
+
+---
+
+##### `cortex convex logs`
+
+View Convex deployment logs.
+
+**Usage:**
+
+```bash
+cortex convex logs [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-l, --local` - View local logs [default: false]
+- `-p, --prod` - View production logs [default: false]
+- `-t, --tail` - Tail logs continuously [default: false]
+- `-n, --lines <number>` - Number of lines to show [default: 50]
+
+**Examples:**
+
+```bash
+# View logs
+cortex convex logs
+
+# Tail logs
+cortex convex logs --tail
+
+# View production logs
+cortex convex logs --prod
+```
+
+---
+
+##### `cortex convex dashboard`
+
+Open Convex dashboard in browser.
+
+**Usage:**
+
+```bash
+cortex convex dashboard [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-l, --local` - Open local dashboard [default: false]
+- `-p, --prod` - Open production dashboard [default: false]
+
+**Examples:**
+
+```bash
+# Open dashboard
+cortex convex dashboard
+
+# Open local dashboard
+cortex convex dashboard --local
+```
+
+---
+
+##### `cortex convex schema`
+
+View schema information.
+
+**Usage:**
+
+```bash
+cortex convex schema
+```
+
+**Examples:**
+
+```bash
+# View schema tables
+cortex convex schema
+```
+
+**Shows:**
+
+- All Cortex SDK tables
+- Table descriptions
+- Layer organization
+
+---
+
+##### `cortex convex init`
+
+Initialize Convex in current project.
+
+**Usage:**
+
+```bash
+cortex convex init [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `--skip-sync` - Skip automatic schema sync from SDK [default: false]
+
+**Examples:**
+
+```bash
+# Initialize Convex
+cortex convex init
+```
+
+---
+
+##### `cortex convex env`
+
+Manage environment variables.
+
+**Usage:**
+
+```bash
+cortex convex env [options]
+```
+
+**Options:**
+
+- `-d, --deployment <name>` - Target deployment
+- `-l, --list` - List environment variables
+- `-s, --set <key=value>` - Set environment variable
+- `-p, --prod` - Use production environment [default: false]
+
+**Examples:**
+
+```bash
+# List env vars
+cortex convex env --list
+
+# Set env var
+cortex convex env --set OPENAI_API_KEY=sk-...
+
+# Production env
+cortex convex env --list --prod
+```
+
+---
+
+## Configuration
+
+The CLI uses a hierarchical configuration system.
+
+### Configuration Priority (highest first)
+
+1. **CLI flags**: `--url`, `--key`, `--deployment`
+2. **Environment variables**: `CONVEX_URL`, `CONVEX_DEPLOY_KEY`
+3. **Project config**: `./cortex.config.json`
+4. **User config**: `~/.cortexrc`
+
+### User Config File
+
+**Location:** `~/.cortexrc`
+
+**Format:** JSON
+
+```json
+{
+  "deployments": {
+    "local": {
+      "url": "http://127.0.0.1:3210",
+      "deployment": "anonymous:anonymous-cortex-sdk-local",
+      "projectPath": "/Users/me/projects/my-cortex-app",
+      "enabled": true
+    },
+    "staging": {
+      "url": "https://staging.convex.cloud",
+      "key": "staging|...",
+      "projectPath": "/Users/me/projects/my-cortex-app",
+      "enabled": false
+    },
+    "production": {
+      "url": "https://prod.convex.cloud",
+      "key": "prod|...",
+      "projectPath": "/Users/me/projects/my-cortex-app",
+      "enabled": false
+    }
+  },
+  "apps": {
+    "quickstart": {
+      "type": "nextjs",
+      "projectPath": "/Users/me/projects/my-cortex-app",
+      "path": "quickstart",
+      "port": 3000,
+      "startCommand": "npm run dev",
+      "enabled": true
+    }
+  },
+  "default": "local",
+  "format": "table",
+  "confirmDangerous": true
+}
+```
+
+**Fields:**
+
+| Field                           | Type    | Description                                   |
+| ------------------------------- | ------- | --------------------------------------------- |
+| `deployments`                   | object  | Named deployment configurations               |
+| `deployments[name].url`         | string  | Convex deployment URL                         |
+| `deployments[name].key`         | string  | Convex deploy key (optional for local)        |
+| `deployments[name].deployment`  | string  | Convex deployment name (optional)             |
+| `deployments[name].projectPath` | string  | Path to project directory                     |
+| `deployments[name].enabled`     | boolean | Auto-start with `cortex start`                |
+| `apps`                          | object  | Named app configurations                      |
+| `apps[name].type`               | string  | App type (e.g., "nextjs")                     |
+| `apps[name].projectPath`        | string  | Path to project root                          |
+| `apps[name].path`               | string  | Relative path to app                          |
+| `apps[name].port`               | number  | Port number                                   |
+| `apps[name].startCommand`       | string  | Command to start app                          |
+| `apps[name].enabled`            | boolean | Auto-start with `cortex start`                |
+| `default`                       | string  | Default deployment name                       |
+| `format`                        | string  | Default output format                         |
+| `confirmDangerous`              | boolean | Require confirmation for dangerous operations |
+
+### Environment Variables
+
+The CLI recognizes these environment variables:
+
+| Variable                  | Description                        |
+| ------------------------- | ---------------------------------- |
+| `CONVEX_URL`              | Convex deployment URL              |
+| `CONVEX_DEPLOY_KEY`       | Convex deploy key                  |
+| `CONVEX_DEPLOYMENT`       | Convex deployment name             |
+| `LOCAL_CONVEX_URL`        | Local Convex URL                   |
+| `CLOUD_CONVEX_URL`        | Cloud Convex URL                   |
+| `CLOUD_CONVEX_DEPLOY_KEY` | Cloud deploy key                   |
+| `NEO4J_URI`               | Neo4j connection URI               |
+| `NEO4J_USERNAME`          | Neo4j username                     |
+| `NEO4J_PASSWORD`          | Neo4j password                     |
+| `MEMGRAPH_URI`            | Memgraph connection URI            |
+| `MEMGRAPH_USERNAME`       | Memgraph username                  |
+| `MEMGRAPH_PASSWORD`       | Memgraph password                  |
+| `CORTEX_GRAPH_SYNC`       | Enable graph sync ("true"/"false") |
+| `OPENAI_API_KEY`          | OpenAI API key                     |
+| `CORTEX_SDK_DEV_PATH`     | Path to local SDK for dev mode     |
+| `DEBUG`                   | Enable debug output                |
+
+### Configuration Commands
+
+See [`cortex config`](#cortex-config) for managing configuration.
+
+---
+
+## GDPR Compliance
+
+The CLI provides GDPR-compliant data management features.
+
+### Cascade Deletion
+
+When deleting users with the `--cascade` flag, ALL user data is permanently removed:
+
+```bash
+cortex users delete user-123 --cascade
+```
+
+**What Gets Deleted:**
+
+- ✅ User profile (all versions)
+- ✅ Conversations (all messages)
+- ✅ Memories (vector store)
+- ✅ Facts
+- ✅ Immutable records
+- ✅ Mutable records
+- ✅ Graph nodes (if configured)
+
+**Verification:**
+
+Use `--verify` (enabled by default) to check deletion completeness:
+
+```bash
+cortex users delete user-123 --cascade --verify
+```
+
+**Dry Run:**
+
+Preview what would be deleted without actually deleting:
+
+```bash
+cortex users delete user-123 --cascade --dry-run
+```
+
+### Data Portability
+
+Export all user data in machine-readable format:
+
+```bash
+cortex users export user-123 --output user-data.json
+```
+
+**Related:**
+
+- [`cortex users delete`](#cortex-users-delete)
+- [`cortex users export`](#cortex-users-export)
+
+---
+
+## Safety Features
+
+The CLI includes multiple safety features for dangerous operations:
+
+### Confirmation Prompts
+
+Dangerous operations require explicit confirmation:
+
+```bash
+cortex db clear
+# → Prompts: "Clear ALL data from local?"
+```
+
+Bypass with `--yes` flag (use carefully):
+
+```bash
+cortex db clear --yes
+```
+
+### Dry Run Mode
+
+Preview what would happen without executing:
+
+```bash
+# Preview user deletion
+cortex users delete user-123 --cascade --dry-run
+
+# Preview database restore
+cortex db restore --input backup.json --dry-run
+```
+
+### Exact Confirmation
+
+For cascade deletions, you must type the exact ID:
+
+```bash
+cortex users delete user-123 --cascade
+# → Prompts: Type "user-123" to confirm cascade deletion
+```
+
+### Verification
+
+Automatic verification after cascade deletions:
+
+```bash
+cortex users delete user-123 --cascade --verify
+# → Verifies all user data was deleted
+# → Reports any potential issues
+```
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+#### Command Not Found
+
+```bash
+cortex: command not found
+```
+
+**Solution:**
+
+```bash
+# Install globally
+npm install -g @cortexmemory/cli
+
+# Or use npx
+npx @cortexmemory/cli <command>
+```
+
+---
+
+#### No Deployments Configured
+
+```bash
+No deployments configured
+```
+
+**Solution:**
+
+```bash
+# Initialize a new project
+cortex init
+
+# Or add existing deployment
+cortex config add-deployment
+```
+
+---
+
+#### Connection Failed
+
+```bash
+Connection failed: ECONNREFUSED
+```
+
+**Solutions:**
+
+- Check if Convex is running: `cortex status`
+- Start Convex: `cortex start`
+- Verify URL: `cortex config show`
+- Test connection: `cortex config test`
+
+---
+
+#### PID File Stale
+
+```bash
+Convex was already stopped
+```
+
+**Cause:** Process stopped without cleaning up PID file.
+
+**Solution:**
+
+```bash
+# Clean up PID files
+rm .convex-dev.pid
+rm .quickstart-app.pid
+
+# Or stop by port
+cortex dev
+# Press 'k' to kill processes by port
+```
+
+---
+
+#### Schema Sync Failed
+
+```bash
+Schema sync failed: SDK not found
+```
+
+**Solutions:**
+
+```bash
+# Install SDK
+npm install @cortexmemory/sdk
+
+# Skip schema sync
+cortex deploy --skip-sync
+```
+
+---
+
+#### Graph Database Not Starting
+
+```bash
+Graph database configured but Docker not available
+```
+
+**Solutions:**
+
+- Start Docker Desktop
+- Check Docker: `docker ps`
+- Start manually: `docker-compose -f docker-compose.graph.yml up -d`
+
+---
+
+### Debug Mode
+
+Enable debug output for troubleshooting:
+
+```bash
+# Via flag
+cortex <command> --debug
+
+# Via environment variable
+DEBUG=1 cortex <command>
+```
+
+**Debug Output Includes:**
+
+- Environment variable loading
+- Configuration resolution
+- API request/response details
+- Process spawning details
+- File operations
+
+---
+
+### Getting Help
+
+```bash
+# General help
+cortex --help
+
+# Command help
+cortex <command> --help
+
+# Subcommand help
+cortex <command> <subcommand> --help
+```
+
+---
+
+## Real-World Workflows
+
+### Workflow 1: New Project Setup
+
+```bash
+# 1. Create new project with local Convex
+cortex init my-app --local
+
+# 2. Navigate to project
+cd my-app
+
+# 3. Start development services
+cortex start
+
+# 4. Check status
+cortex status
+
+# 5. View database statistics
+cortex db stats
+```
+
+---
+
+### Workflow 2: Multi-Environment Setup
+
+```bash
+# 1. Add deployments
+cortex config add-deployment local \
+  --url http://127.0.0.1:3210
+
+cortex config add-deployment staging \
+  --url https://staging.convex.cloud \
+  --key "staging|..."
+
+cortex config add-deployment production \
+  --url https://prod.convex.cloud \
+  --key "prod|..."
+
+# 2. Set project paths
+cortex config set-path local /path/to/project
+cortex config set-path staging /path/to/project
+cortex config set-path production /path/to/project
+
+# 3. Enable only local for auto-start
+cortex config enable local
+cortex config disable staging
+cortex config disable production
+
+# 4. Deploy to production
+cortex deploy --deployment production
+
+# 5. View all deployments
+cortex config list
+```
+
+---
+
+### Workflow 3: GDPR Data Export & Deletion
+
+```bash
+# 1. Search for user
+cortex users list | grep john@example.com
+
+# 2. View user data
+cortex users stats user-123
+
+# 3. Export user data (GDPR portability)
+cortex users export user-123 --output user-123-export.json
+
+# 4. Preview deletion
+cortex users delete user-123 --cascade --dry-run
+
+# 5. Delete user data (GDPR right to erasure)
+cortex users delete user-123 --cascade --verify
+```
+
+---
+
+### Workflow 4: Interactive Development
+
+```bash
+# 1. Start interactive dev mode
+cortex dev
+
+# Keyboard shortcuts:
+# - 'c' to clear screen
+# - 's' to show status
+# - 'r' to restart services
+# - 'g' to toggle graph database
+# - 'k' to kill stuck processes
+# - 'q' to quit
+
+# 2. Watch logs in real-time
+# (automatically displayed)
+
+# 3. Make code changes
+# (Convex auto-reloads)
+
+# 4. Toggle graph database
+# Press 'g' key
+
+# 5. Quit gracefully
+# Press 'q' key
+```
+
+---
+
+### Workflow 5: Database Backup & Restore
+
+```bash
+# 1. Backup database
+cortex db backup --include-all --output backup-2026-01-01.json
+
+# 2. Verify backup
+ls -lh backup-2026-01-01.json
+
+# 3. Clear database for testing
+cortex db clear --deployment local
+
+# 4. Restore from backup
+cortex db restore --input backup-2026-01-01.json --deployment local
+```
+
+---
+
+### Workflow 6: Package Updates
+
+```bash
+# 1. Check current versions
+cortex update
+
+# 2. Update specific deployment
+cortex update --deployment production
+
+# 3. Update all with specific version
+cortex update --sdk-version 0.27.4 --yes
+
+# 4. Update app with template sync
+cortex update --app quickstart --sync-template
+
+# 5. Dev mode (link to local SDK)
+export CORTEX_SDK_DEV_PATH=/path/to/Project-Cortex
+cortex update --dev --app quickstart
+```
+
+---
+
+## Examples
+
+### Example 1: Search and Clear Memories
+
+```bash
+# Search for sensitive data
+cortex memory search "password" --space agent-1
+
+# Review results and delete specific memory
+cortex memory delete mem-456 --space agent-1
+
+# Or clear all for a user
+cortex memory clear --space agent-1 --user user-123
+```
+
+---
+
+### Example 2: Manage Memory Spaces
+
+```bash
+# Create team space
+cortex spaces create team-alpha \
+  --type team \
+  --name "Team Alpha"
+
+# Add participants
+cortex spaces add-participant team-alpha --id user-123 --type user
+cortex spaces add-participant team-alpha --id agent-1 --type ai-agent
+
+# View statistics
+cortex spaces stats team-alpha
+
+# List participants
+cortex spaces participants team-alpha
+
+# Archive when done
+cortex spaces archive team-alpha --reason "Project completed"
+```
+
+---
+
+### Example 3: Export Conversations
+
+```bash
+# List conversations
+cortex conversations list --space agent-1 --user user-123
+
+# Get specific conversation
+cortex conversations get conv-789
+
+# Export to file
+cortex conversations export conv-789 --format txt --output conv.txt
+
+# Share with user
+cat conv.txt
+```
+
+---
+
+### Example 4: Database Statistics
+
+```bash
+# View overall stats
+cortex db stats
+
+# View space-specific stats
+cortex spaces stats agent-1
+cortex memory stats --space agent-1
+
+# View user-specific stats
+cortex users stats user-123
+
+# Export to JSON for analysis
+cortex db stats --format json > db-stats.json
+```
+
+---
+
+## Version History
+
+### v0.27.4 (Current)
+
+- Interactive dev mode with keyboard shortcuts
+- Multi-deployment support for `cortex start`
+- Template app management
+- Automatic schema sync from SDK
+- Graph database integration
+- GDPR cascade deletion with verification
+- Improved status dashboard
+- Package update management across deployments and apps
+
+### Related
+
+- [Changelog](https://github.com/SaintNick1214/Project-Cortex/blob/main/CHANGELOG)
+- [GitHub Releases](https://github.com/SaintNick1214/Project-Cortex/releases)
+
+---
+
+## Additional Resources
+
+### Documentation
+
+- [Getting Started: Installation](../01-getting-started/02-installation)
+- [Getting Started: Five Minute Quickstart](../01-getting-started/03-five-minute-quickstart)
+- [Getting Started: Configuration](../01-getting-started/05-configuration)
+
+### Core Features
+
+- [Memory Spaces](../02-core-features/01-memory-spaces)
+- [Semantic Search](../02-core-features/02-semantic-search)
+- [User Profiles](../02-core-features/03-user-profiles)
+- [Conversation History](../02-core-features/06-conversation-history)
+- [Fact Extraction](../02-core-features/08-fact-extraction)
+
+### API Reference
+
+- [Memory Operations](../03-api-reference/02-memory-operations)
+- [Conversation Operations](../03-api-reference/03-conversation-operations)
+- [User Operations](../03-api-reference/04-user-operations)
+- [Memory Space Operations](../03-api-reference/11-memory-space-operations)
+- [Facts Operations](../03-api-reference/12-facts-operations)
+
+### Repository
+
+- [GitHub Repository](https://github.com/SaintNick1214/Project-Cortex)
+- [npm Package](https://www.npmjs.com/package/@cortexmemory/cli)
+- [Report Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
+
+---
+
+## License
+
+Cortex CLI is licensed under the FSL-1.1-Apache-2.0 license.
+
+See [LICENSE.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/LICENSE) for details.

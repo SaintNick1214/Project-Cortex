@@ -375,7 +375,10 @@ export async function installVercelAIQuickstart(
  * @param projectPath - Project root path
  * @returns Path to the PID file
  */
-export function getAppPidFilePath(appName: string, projectPath: string): string {
+export function getAppPidFilePath(
+  appName: string,
+  projectPath: string,
+): string {
   // Sanitize app name for use in filename
   const safeName = appName.replace(/[^a-zA-Z0-9-_]/g, "-");
   return path.join(projectPath, `.cortex-app-${safeName}.pid`);

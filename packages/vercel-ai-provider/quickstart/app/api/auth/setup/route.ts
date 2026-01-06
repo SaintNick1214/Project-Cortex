@@ -16,16 +16,13 @@ export async function POST(req: Request) {
     const { password } = body;
 
     if (!password || typeof password !== "string") {
-      return Response.json(
-        { error: "Password is required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "Password is required" }, { status: 400 });
     }
 
     if (password.length < 4) {
       return Response.json(
         { error: "Password must be at least 4 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -36,7 +33,7 @@ export async function POST(req: Request) {
     if (existingHash !== null) {
       return Response.json(
         { error: "Admin already configured" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -53,7 +50,7 @@ export async function POST(req: Request) {
 
     return Response.json(
       { error: "Failed to configure admin password" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

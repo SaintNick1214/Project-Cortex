@@ -5,7 +5,7 @@
 [![License: FSL-1.1-Apache-2.0](https://img.shields.io/badge/License-FSL--1.1--Apache--2.0-blue.svg)](https://fsl.software/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
-[![Status](https://img.shields.io/badge/Status-Working-green.svg)](https://github.com/SaintNick1214/cortex/discussions)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-green.svg)](https://github.com/SaintNick1214/cortex/discussions)
 
 ### 🔒 Security Scanning
 
@@ -21,22 +21,26 @@
 [![TypeScript SDK](https://img.shields.io/badge/TypeScript%20SDK-Passing-brightgreen?logo=typescript)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
 [![Python SDK](https://img.shields.io/badge/Python%20SDK-Passing-brightgreen?logo=python)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
 [![Vercel AI Provider](https://img.shields.io/badge/Vercel%20AI%20Provider-Passing-brightgreen?logo=vercel)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
-[![Socket.dev](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.10.0)](https://socket.dev/npm/package/@cortexmemory/sdk)
+[![Socket.dev](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.27.0)](https://socket.dev/npm/package/@cortexmemory/sdk)
 
 **🌐 [cortexmemory.dev](https://cortexmemory.dev) | 📚 [docs.cortexmemory.dev](https://docs.cortexmemory.dev)**
 
-## 🚧 Project Status: In Active Development
+## 🚀 Status: Production Ready
 
-**Cortex is currently in the design and early implementation phase.** We're building a production-ready memory system for AI agents, and we're doing it in public!
+**Cortex v0.27.x is production-ready** with comprehensive features and battle-tested stability.
 
-**What this means:**
+**What you get:**
 
-- 📝 Architecture and documentation are actively being refined
-- 💻 Core SDK implementation is in progress
-- 🎯 API design is stabilizing but may still change
-- 🤝 Community input is shaping the direction
+- ✅ **Stable APIs** - TypeScript and Python SDKs with consistent interfaces
+- ✅ **Comprehensive Testing** - 124 test files with 18,460+ assertions
+- ✅ **CLI Tooling** - Complete project management and development workflow
+- ✅ **Security Scanning** - CodeQL, Semgrep, Trivy, Gitleaks, Bandit, OpenSSF Scorecard
+- ✅ **Production Demo** - Interactive Vercel AI quickstart with live visualization
+- ✅ **Complete Documentation** - Getting started guides, API reference, and tutorials
 
-**Want to contribute or follow along?**
+**Ready to use in production.** Join developers building AI agents with persistent memory.
+
+**Want to follow along?**
 
 - 🌐 [cortexmemory.dev](https://cortexmemory.dev) - Official website and project information
 - 📚 [docs.cortexmemory.dev](https://docs.cortexmemory.dev) - Complete documentation and guides
@@ -57,278 +61,55 @@ Traditional memory solutions force you to choose between vector databases (Pinec
 
 A unified memory system that gives you everything in one package - production-ready memory that scales automatically, works with any LLM framework, supports any embedding provider, and requires zero infrastructure management.
 
-## ✨ Features
-
-Cortex provides a complete memory system for AI agents:
-
-- 🧠 **Flexible Memory** - Remember anything without hardcoded topics or schemas ✅
-- 🔒 **Memory Space Isolation** - Flexible boundaries (per user, team, or project) ✅
-- ♾️ **Long-term Persistence** - Memories last forever with automatic indexing ✅
-- ⏱️ **Automatic Versioning** - Updates preserve history, never lose data (10 versions default) ✅
-- 🗄️ **4-Layer Hybrid Architecture** - ACID conversations + vector search + facts extraction + graph integration ✅
-- 🔍 **Semantic Search** - AI-powered retrieval with multi-strategy fallback ✅
-- 📊 **Vector Embeddings** - Optional but preferred, support any dimension (768, 1536, 3072+) ✅
-- 🔗 **Context Chains** - Hierarchical context sharing across memory spaces ✅
-- 👥 **User Profiles** - Rich user context with GDPR cascade deletion ✅
-- 📈 **Access Analytics** - Built-in statistics and insights ✅
-- 🎯 **Agent Registry** - Optional metadata for discovery and cascade cleanup ✅
-- 🚀 **Embedding Agnostic** - Works with OpenAI, Cohere, local models, or any provider ✅
-- 🕸️ **Graph Database Integration** - Neo4j/Memgraph support with orphan detection ✅
-- 🧠 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings ✅
-- 🛡️ **Governance Policies** - Centralized data retention, purging, and compliance (GDPR, HIPAA, SOC2, FINRA) ✅
-- 🔌 **MCP Server** - Cross-application memory sharing (planned)
-- 💬 **A2A Communication** - Inter-space messaging helpers (planned)
-- ✅ **Client-Side Validation** - Instant error feedback (<1ms) for all 11 APIs ✅
-- 🛡️ **Resilience Layer** - Rate limiting, circuit breaker, priority queue for overload protection ✅
-
-## ✨ What's New in v0.16.0
-
-### Resilience Layer - Production-Ready Overload Protection
-
-**NEW: Built-in protection against server overload during extreme traffic bursts:**
-
-- ⚡ **Token Bucket Rate Limiter** - Smooths bursty traffic (100 tokens, 50/sec refill default)
-- 🚦 **Concurrency Limiter** - Controls parallel requests (20 max concurrent, 1000 queue)
-- 🎯 **Priority Queue** - Critical ops (deletes) get priority, low-priority ops queue
-- 🔌 **Circuit Breaker** - Fails fast when backend is unhealthy (5 failures → open)
-- 📊 **Full Metrics** - Monitor rate limiter, queue depth, circuit state
-
-```typescript
-import { Cortex, ResiliencePresets } from "@cortexmemory/sdk";
-
-// Default - enabled with balanced settings (no config needed!)
-const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
-
-// Or use a preset for your use case
-const realtimeCortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  resilience: ResiliencePresets.realTimeAgent, // Low latency
-});
-
-const batchCortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  resilience: ResiliencePresets.batchProcessing, // Large queues
-});
-
-// Monitor health
-console.log(cortex.isHealthy()); // false if circuit is open
-console.log(cortex.getResilienceMetrics()); // Full metrics
-
-// Graceful shutdown
-await cortex.shutdown(30000); // Wait up to 30s for pending ops
-```
-
-**Zero breaking changes** - resilience is enabled by default with sensible settings. All existing code works without modification.
-
----
-
-## ✨ What's New in v0.12.0
-
-### Client-Side Validation - Instant Error Feedback
-
-**All 11 APIs now validate inputs client-side before making backend calls:**
-
-- ⚡ **10-200x faster error feedback** (<1ms vs 50-200ms backend round-trip)
-- 📝 **Better error messages** with field names and fix suggestions
-- 🔒 **Defense in depth** with both client and backend validation
-- 🧪 **420+ validation tests** across both TypeScript and Python SDKs
-
-```typescript
-// ❌ Before v0.12.0 - Wait for backend to validate
-await cortex.governance.setPolicy({
-  conversations: { retention: { deleteAfter: "7years" } }, // Invalid format
-});
-// → 50-200ms wait → Error thrown
-
-// ✅ After v0.12.0 - Instant validation
-await cortex.governance.setPolicy({
-  conversations: { retention: { deleteAfter: "7years" } }, // Invalid format
-});
-// → <1ms → GovernanceValidationError with helpful message:
-//   "Invalid period format '7years'. Must be in format like '7d', '30m', or '1y'"
-
-// Optional: Catch validation errors specifically
-import { GovernanceValidationError } from "@cortexmemory/sdk";
-
-try {
-  await cortex.governance.setPolicy(policy);
-} catch (error) {
-  if (error instanceof GovernanceValidationError) {
-    console.log(`Validation failed: ${error.code} - ${error.field}`);
-    // Fix input and retry immediately
-  }
-}
-```
-
-**Validation Coverage:**
-
-- ✅ Governance API (9 validators) - Period formats, ranges, scopes, dates
-- ✅ Memory API (12 validators) - IDs, content, importance, source types
-- ✅ All 9 other APIs (62+ validators total)
-
----
-
-## ✨ What's New in v0.10.0
-
-### Governance Policies API - Enterprise Compliance Made Simple
-
-**NEW: `cortex.governance.*`** - Centralized control over data retention, purging, and compliance:
-
-- **8 Core Operations**: setPolicy, getPolicy, setAgentOverride, getTemplate, enforce, simulate, getComplianceReport, getEnforcementStats
-- **4 Compliance Templates**: GDPR, HIPAA, SOC2, FINRA (one-click compliance)
-- **Multi-Layer Governance**: Manage retention across conversations, immutable, mutable, and vector layers
-- **Policy Simulation**: Test policies before applying (impact analysis, cost savings)
-- **Compliance Reporting**: Detailed reports with per-layer compliance status
-- **Flexible Scoping**: Organization-wide policies with memory-space overrides
-- **Automatic Enforcement**: Policies enforced on write operations
-- **Audit Trail**: Complete enforcement history and statistics
-
-```typescript
-// Apply GDPR template
-const policy = await cortex.governance.getTemplate("GDPR");
-await cortex.governance.setPolicy({
-  ...policy,
-  organizationId: "my-org",
-});
-
-// Override for audit agent (unlimited retention)
-await cortex.governance.setAgentOverride("audit-agent", {
-  vector: { retention: { defaultVersions: -1 } },
-});
-
-// Simulate policy impact before applying
-const impact = await cortex.governance.simulate(newPolicy);
-console.log(
-  `Would save ${impact.storageFreed} MB, $${impact.costSavings}/month`,
-);
-
-// Generate compliance report
-const report = await cortex.governance.getComplianceReport({
-  organizationId: "my-org",
-  period: { start: new Date("2025-01-01"), end: new Date("2025-12-31") },
-});
-```
-
-**Enterprise Value:**
-
-- ✅ One-click GDPR, HIPAA, SOC2, FINRA compliance
-- ✅ Automatic data lifecycle management
-- ✅ Cost optimization insights
-- ✅ Complete audit trails
-
----
-
-## ✨ What's New in v0.9.0
-
-### Streaming Support - Native Edge Runtime Compatibility
-
-**NEW: `memory.rememberStream()`** - First-class streaming support for AI responses:
-
-- **Stream any response format**: ReadableStream or AsyncIterable
-- **Edge runtime compatible**: Works in Vercel Edge Functions, Cloudflare Workers
-- **Zero buffering required**: Handles stream consumption internally
-- **All features supported**: Embeddings, facts extraction, graph sync
-- **Production ready**: 28/28 streaming tests + 19/19 edge tests passing
-
-```typescript
-// With Vercel AI SDK streaming
-const stream = await generateText({ model: "gpt-5-nano", messages });
-
-const result = await cortex.memory.rememberStream({
-  memorySpaceId: "agent-1",
-  conversationId: "conv-123",
-  userMessage: "What is the weather?",
-  responseStream: stream, // ReadableStream or AsyncIterable
-  userId: "user-1",
-  userName: "Alex",
-});
-
-console.log("Full response:", result.fullResponse);
-// All memories stored automatically once stream completes
-```
-
-**Edge Runtime verified**: All SDK operations work in edge environments - no Node.js APIs used.
-
----
-
-## ✨ What's New in v0.8.0
-
-### Users & Agents APIs - GDPR Compliance & Cascade Deletion
-
-Complete implementation of coordination layer APIs with powerful cascade deletion:
-
-**Users API (`cortex.users.*`)** - GDPR Compliance
-
-- User profile management with automatic versioning
-- **GDPR cascade deletion by userId** across all layers
-- Works in free SDK (DIY graph) and Cloud Mode (managed + legal guarantees)
-- Deletes from: conversations, immutable, mutable, vector, facts, graph
-- Transaction-like rollback on failures
-- 23/23 tests passing on LOCAL and MANAGED
-
-**Agents API (`cortex.agents.*`)** - Optional Registry
-
-- Optional metadata registration for discovery and analytics
-- **Cascade deletion by participantId** across all memory spaces
-- Works even if agent was never registered
-- Deletes from: conversations, memories, facts, graph
-- Graph orphan detection included
-- 20/20 tests passing on LOCAL and MANAGED
-
-```typescript
-// GDPR cascade deletion by userId
-await cortex.users.delete("user-123", {
-  cascade: true, // Deletes across ALL layers
-  verify: true, // Checks for orphaned records
-});
-
-// Agent cleanup by participantId
-await cortex.agents.unregister("agent-xyz", {
-  cascade: true, // Deletes across ALL memory spaces
-  verify: true, // Includes graph orphan detection
-});
-```
-
 ## 🚀 Quick Start
 
-Get started with Cortex in under 5 minutes:
+Get started in under 5 minutes:
 
-### Install the Cortex CLI
+### Install & Initialize
 
 ```bash
+# Install CLI
 npm install -g @cortexmemory/cli
+
+# Create project
+cortex init my-agent
+
+# Start building
+cd my-agent
+cortex start
 ```
 
-### Create Your First Cortex Project
+**What gets set up:**
+
+- ✅ Cortex SDK with TypeScript support
+- ✅ Convex backend functions (deployed automatically)
+- ✅ Environment configuration (.env.local)
+- ✅ Example code to get you started
+- ✅ Optional graph database integration
+- ✅ Deployment saved to `~/.cortexrc` for CLI management
+
+### 🎬 Try the Interactive Quickstart
+
+**The fastest way to see Cortex in action** - complete working demo:
 
 ```bash
-cortex init my-cortex-agent
+# Option 1: Via CLI
+cortex init demo --template vercel-ai-quickstart
+cd demo && cortex start
+# Open http://localhost:3000
+
+# Option 2: From monorepo
+cd packages/vercel-ai-provider/quickstart
+npm install && npm run dev
 ```
 
-The interactive wizard will guide you through:
+**See a production-ready chat app featuring:**
 
-- **Project Setup** - Choose new project or add to existing
-- **Convex Configuration** - Local development, new cloud database, or existing database
-- **Graph Database** - Optional Neo4j/Memgraph integration with Docker
-- **Automatic Setup** - Installs dependencies and deploys backend functions
-
-### What Gets Set Up
-
-✅ Cortex SDK with TypeScript support  
-✅ Convex backend functions (deployed automatically)  
-✅ Environment configuration (.env.local)  
-✅ Example code to get you started  
-✅ Optional graph database integration  
-✅ Deployment saved to `~/.cortexrc` for CLI management
-
-### Start Building
-
-```bash
-cd my-cortex-agent
-cortex start           # Starts Convex + graph DB (if configured)
-# Or use interactive dev mode:
-cortex dev             # Live dashboard with keyboard shortcuts
-```
+- 🔄 Real-time memory orchestration visualization
+- 📊 Layer flow diagram (Memory Space → User → Agent → Conversation → Vector → Facts → Graph)
+- 🔀 Memory space switching (multi-tenant isolation)
+- ⚡ Streaming with progressive storage
+- 🧹 Belief revision (facts update when user changes their mind)
 
 ### Your First Memory
 
@@ -341,100 +122,133 @@ const cortex = new Cortex({
 
 // Store a memory
 await cortex.memory.remember({
-  memorySpaceId: "my-agent",
+  memorySpaceId: "user-123-personal",
   conversationId: "conv-1",
   userMessage: "I prefer dark mode",
-  agentResponse: "Got it! I'll remember that.",
+  agentResponse: "I'll remember that!",
   userId: "user-123",
   userName: "User",
 });
 
 // Search your memories
 const results = await cortex.memory.search(
-  "my-agent",
+  "user-123-personal",
   "what are the user's preferences?",
 );
 ```
 
 **That's it!** Your AI agent now has persistent memory.
 
-### Adding to Existing Project
-
-```bash
-cd your-existing-project
-cortex init .
-```
-
-### CLI Commands
-
-Once installed, manage your Cortex projects with:
-
-```bash
-cortex status          # View all deployments and their status
-cortex start           # Start all enabled deployments
-cortex stop            # Stop all running services
-cortex dev             # Interactive dev mode with live dashboard
-cortex config list     # View configured deployments
-cortex use <name>      # Switch between deployments
-```
-
-> **Note:** `npm create cortex-memories` is still available as an alternative, but `cortex init` is recommended as it provides additional features like multi-deployment management and interactive dev mode.
+**Next steps:** [Getting Started Guide](./Documentation/01-getting-started/01-introduction.md) | [CLI Reference](./Documentation/06-tools/01-cli-reference.md)
 
 ---
 
-## ✨ What's New in v0.7.0
+## ✨ Features
 
-### Graph Database Integration
+Cortex provides a complete memory system for AI agents:
 
-Add powerful graph database capabilities to Cortex for advanced relationship queries:
+- 🧠 **Flexible Memory** - Remember anything without hardcoded topics or schemas ✅
+- 🔒 **Memory Space Isolation** - Flexible boundaries (per user, team, or project) ✅
+- ♾️ **Infinite Context** - Never run out via retrieval (up to 99% token reduction) ✅
+- 🔍 **Semantic Search** - AI-powered retrieval with multi-strategy fallback ✅
+- ⏱️ **Automatic Versioning** - Updates preserve history, never lose data (10 versions default) ✅
+- 👥 **User Profiles** - Rich user context with GDPR cascade deletion ✅
+- 🐝 **Hive Mode** - Multi-tool memory sharing (MCP ready) ✅
+- 🛡️ **Resilience Layer** - Overload protection with circuit breakers ✅
+- 🔧 **CLI Tools** - Complete project management (init, start, dev, deploy) ✅
+- 📦 **Vercel AI Integration** - Production-ready with interactive demo ✅
+- 🔐 **Sessions** - Multi-session tracking with configurable lifecycle ✅
+- 📈 **Governance** - Compliance templates (GDPR, HIPAA, SOC2, FINRA) ✅
+- 🧠 **Fact Extraction** - LLM-powered extraction for 60-90% storage savings ✅
+- 🔄 **Belief Revision** - Intelligent conflict resolution for facts ✅
+- ⚡ **Streaming** - Native streaming support with progressive storage ✅
+- 🕸️ **Graph Integration** - Optional Neo4j/Memgraph with orphan detection ✅
+- 🔗 **Context Chains** - Hierarchical context sharing across memory spaces ✅
+- 📊 **Access Analytics** - Built-in statistics and insights ✅
+- 🎯 **Agent Registry** - Optional metadata for discovery and cascade cleanup ✅
+- 🚀 **Embedding Agnostic** - Works with OpenAI, Cohere, local models, or any provider ✅
+- 🔌 **Multi-Tenancy** - Complete tenant isolation with auth context ✅
+- ✅ **Client-Side Validation** - Instant error feedback (<1ms) for all APIs ✅
 
-```typescript
-import { Cortex } from "@cortexmemory/sdk";
-import { CypherGraphAdapter, initializeGraphSchema } from "@cortexmemory/sdk/graph";
+## ✨ Latest Releases
 
-// Setup graph database
-const graph = new CypherGraphAdapter();
-await graph.connect({ uri: "bolt://localhost:7687", ... });
-await initializeGraphSchema(graph);
+**v0.27.x - Multi-Tenancy & Authentication (Dec 2025 - Jan 2026)**
 
-// Initialize Cortex with graph
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
-  graph: { adapter: graph }
-});
+- Complete auth context with automatic tenantId propagation
+- Sessions API with configurable lifecycle
+- Multi-session tracking and management
+- Vercel AI SDK v6 Agent architecture support
 
-// Use normally - auto-syncs to graph!
-await cortex.memory.remember({
-  memorySpaceId: "agent-1",
-  conversationId: "conv-123",
-  userMessage: "Alice works at Acme Corp using TypeScript",
-  agentResponse: "Got it!",
-  userId: "alice",
-  userName: "Alice"
-});
+**v0.24.0 - Belief Revision System (Nov 2025)**
 
-// Graph enrichment provides 2-5x more context:
-// - Discovers entity relationships (Alice knows Bob, Bob uses TypeScript)
-// - Reconstructs full context chains (parent-child workflows)
-// - Traces provenance (memory → conversation → context → user)
-// - Enables multi-hop knowledge discovery
-```
+- Automatic fact conflict resolution
+- Semantic conflict detection
+- Intelligent superseding of outdated facts
 
-**When to use:**
+**v0.21.0 - Memory Orchestration (Oct 2025)**
 
-- Deep context chains (5+ levels)
-- Knowledge graphs with entity relationships
-- Multi-hop reasoning (Alice → Company → Bob → Technology)
-- Provenance tracking and audit trails
-- Complex multi-agent coordination
+- Automatic entity registration
+- CLI-first onboarding with interactive dev mode
+- Multi-deployment management
 
-**Performance:** 3.8x faster for deep traversals, <100ms enrichment overhead
+**v0.16.0 - Resilience Layer (Sep 2025)**
 
-See [Graph Database Setup Guide](./Documentation/07-advanced-topics/05-graph-database-setup.md) for quick start!
+- Production-ready overload protection
+- Rate limiting and circuit breakers
+- Priority queue for critical operations
+
+See [CHANGELOG.md](./CHANGELOG.md) for complete release history.
+
+---
+
+## ✨ Key Differentiators
+
+### 🚀 Infinite Context
+
+- Never run out of context again
+- Recall from millions of past messages via retrieval
+- Up to 99% token reduction vs traditional accumulation
+- Works with any LLM (smaller models perform like SOTA with perfect memory)
+
+### 🐝 Hive Mode
+
+- Multiple AI tools share one memory space
+- Zero duplication (Cursor + Claude + custom tools)
+- Cross-application memory via MCP
+- Your memory follows you everywhere
+
+### 🏢 Enterprise-Ready
+
+- Complete ACID audit trails
+- Automatic versioning (temporal queries)
+- One-click GDPR cascade deletion
+- Governance policies built-in
+
+### 🤝 Multi-Agent Orchestration
+
+- Context Chains for workflow coordination
+- A2A communication protocol
+- Hive Mode (shared space) OR Collaboration Mode (separate spaces)
+- Flexible isolation models
+
+### 🔧 Developer Experience
+
+- Single database (Convex - no polyglot complexity)
+- Framework-agnostic (LangChain, Vercel AI, custom)
+- Embedding-agnostic (OpenAI, Cohere, local models)
+- TypeScript-first with full type safety
+- CLI-first workflow with interactive dev mode
+
+### 📊 Unified Architecture
+
+- 4-layer hybrid design (ACID + Vector + Facts + Graph)
+- Graph-Lite built-in, native Neo4j/Memgraph optional
+- Facts extraction (DIY or Cloud auto)
+- All data in one place (Convex)
 
 ## 🏗️ Architecture Overview
 
-Cortex is being designed with two deployment modes:
+Cortex is designed with two deployment modes:
 
 ### Direct Mode (Open Source)
 
@@ -463,7 +277,7 @@ Cortex is being designed with two deployment modes:
 
 **Perfect for:** Getting started, prototyping, and self-managed deployments.
 
-### Cloud Mode (Managed Service)
+### Cloud Mode (Managed Service - Coming Q3 2026)
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -504,7 +318,7 @@ Cortex is being designed with two deployment modes:
 - **Flexible dimensions**: Support for any vector dimension (768, 1536, 3072+)
 - **Your data, your instance**: Whether direct or cloud mode, data lives in your Convex deployment
 
-## 🌟 Planned Use Cases
+## 🌟 Use Cases
 
 - **Chatbots** - Remember user preferences and conversation history
 - **Multi-agent Systems** - Coordinate between specialized agents
@@ -546,8 +360,8 @@ Cortex is being designed with two deployment modes:
 ### Reference
 
 - [API Reference](https://docs.cortexmemory.dev/api-reference/overview) - Full API documentation
+- [CLI Reference](./Documentation/06-tools/01-cli-reference.md) - Complete command documentation
 - [System Architecture](https://docs.cortexmemory.dev/architecture/system-overview) - How it works
-- [Recipes & Examples](https://docs.cortexmemory.dev/recipes/simple-chatbot) - Real-world patterns
 - [Local Documentation](./Documentation/00-README.md) - Repository documentation
 
 ## 🤝 Get Involved
@@ -563,7 +377,7 @@ We're building Cortex in public and would love your input!
   - 🎯 Discussing roadmap priorities
 
 - **[GitHub Issues](https://github.com/SaintNick1214/cortex/issues)** - Best for:
-  - 🐛 Reporting bugs (when we have code to break!)
+  - 🐛 Reporting bugs
   - ✨ Requesting specific features
   - 📝 Tracking development progress
   - 🔍 Following implementation work
@@ -573,54 +387,38 @@ We're building Cortex in public and would love your input!
 1. **Share Your Use Case** - Tell us how you'd use Cortex in your AI agent system
 2. **Review the Architecture** - Check our docs and provide feedback on the design
 3. **Propose Features** - What would make Cortex perfect for your needs?
-4. **Test Early Builds** - Try out alpha/beta releases and report issues
+4. **Test Builds** - Try out releases and report issues
 5. **Improve Documentation** - Help us make the docs clearer and more comprehensive
 6. **Spread the Word** - Star the repo, share with others building AI agents
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 
-## 🚦 Development Roadmap
+## 🚦 Roadmap
 
-**Current Phase: Foundation (Q4 2025)**
+**Production Ready (Now Available):**
 
-- ✅ Core architecture design
-- ✅ Documentation framework
-- 🔄 Convex schema implementation
-- 🔄 Core SDK development
-- 🔜 Unit test framework
-- 🔜 Integration tests
+- ✅ Core SDK (TypeScript + Python)
+- ✅ CLI tooling with interactive dev mode
+- ✅ Vercel AI integration with quickstart demo
+- ✅ Complete documentation site
+- ✅ Multi-tenancy and authentication
+- ✅ Sessions management
+- ✅ GDPR compliance features
+- ✅ Fact extraction and belief revision
+- ✅ Graph database integration (Neo4j/Memgraph)
+- ✅ Resilience layer with circuit breakers
 
-**Next Phases:**
+**Coming Soon:**
 
-- **Q1 2026**: Alpha release (Direct Mode)
-  - Core memory operations working
-  - Basic agent management
-  - Essential documentation
-  - Developer preview for feedback
-
-- **Q2 2026**: Beta release
-  - Full Direct Mode implementation
-  - Context chains and user profiles
-  - Integration examples (LangChain, Vercel AI SDK)
-  - Production-ready documentation
-
-- **Q3 2026**: v1.0 Public Launch
-  - Stable API
-  - Comprehensive test coverage
-  - Performance optimization
-  - Migration tools
-
-- **Q4 2026**: Cloud Mode Preview
-  - Analytics and insights
-  - Team management features
-  - Advanced monitoring
-  - Enterprise features
+- 🔜 MCP Server (Q1 2026) - Cross-application memory sharing
+- 🔜 LangChain Integration (Q2 2026)
+- 🔜 LlamaIndex Integration (Q2 2026)
+- 🔜 Cloud Mode Preview (Q3 2026) - Analytics, team management, advanced features
 
 **Follow our progress:**
 
 - Check [Project Boards](https://github.com/SaintNick1214/cortex/projects) for current work
 - Read [Development Updates](https://github.com/SaintNick1214/cortex/discussions/categories/announcements) for milestone announcements
-- Join [Discord](https://discord.gg/cortex) for real-time development chat (coming soon)
 
 ## 🔒 Security & Privacy
 
@@ -629,6 +427,30 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 - **No External Calls**: Cortex never sends data outside your Convex deployment
 - **Flexible Access Control**: Implement your own auth layer on top
 - **Open Source Core**: Audit the code yourself - full transparency
+
+### Automated Security Scanning
+
+- ✅ **CodeQL** - Static analysis for vulnerabilities
+- ✅ **Trivy** - Dependency vulnerability scanning
+- ✅ **Gitleaks** - Secret detection
+- ✅ **Semgrep** - API security & OWASP Top 10
+- ✅ **Bandit & Safety** - Python security scanning
+- ✅ **OpenSSF Scorecard** - Supply chain security rating
+- ✅ **Dependency Review** - Automated PR checks
+
+### Supply Chain Transparency
+
+Socket.dev may flag "network access" in this package. This is **expected and safe**:
+
+- The SDK requires network access to communicate with Convex (cloud database)
+- All network calls go to `*.convex.cloud` endpoints only
+- This is documented, audited, and necessary for core functionality
+- See [`.socket.dev.yml`](./.socket.dev.yml) for our security policy
+
+**Report Security Issues:**
+
+- 🔒 Email: security@cortexmemory.dev
+- 🔐 See [SECURITY.md](./SECURITY.md) for our security policy
 
 ## 📦 Publishing Releases
 
@@ -645,80 +467,6 @@ Cortex SDK uses **dual release workflows**:
 - See: [scripts/release.ps1](./scripts/release.ps1)
 
 **Setup**: [.github/SETUP-AUTOMATED-RELEASES.md](.github/SETUP-AUTOMATED-RELEASES.md)
-
-## 🎯 Why Cortex?
-
-### Unique Differentiators
-
-**🚀 Infinite Context**
-
-- Never run out of context again
-- Recall from millions of past messages via retrieval
-- Up to 99% token reduction vs traditional accumulation
-- Works with any LLM (smaller models perform like SOTA with perfect memory)
-
-**🐝 Hive Mode**
-
-- Multiple AI tools share one memory space
-- Zero duplication (Cursor + Claude + custom tools)
-- Cross-application memory via MCP
-- Your memory follows you everywhere
-
-**🏢 Enterprise-Ready**
-
-- Complete ACID audit trails
-- Automatic versioning (temporal queries)
-- One-click GDPR cascade deletion
-- Governance policies built-in
-
-**🤝 Multi-Agent Orchestration**
-
-- Context Chains for workflow coordination
-- A2A communication protocol
-- Hive Mode (shared space) OR Collaboration Mode (separate spaces)
-- Flexible isolation models
-
-**🔧 Developer Experience**
-
-- Single database (Convex - no polyglot complexity)
-- Framework-agnostic (LangChain, Vercel AI, custom)
-- Embedding-agnostic (OpenAI, Cohere, local models)
-- TypeScript-first with full type safety
-
-**📊 Unified Architecture**
-
-- 4-layer hybrid design (ACID + Vector + Facts + Graph)
-- Graph-Lite built-in, native Neo4j/Memgraph optional
-- Facts extraction (DIY or Cloud auto)
-- All data in one place (Convex)
-
-## 🔒 Security
-
-Cortex maintains enterprise-grade security practices:
-
-**Automated Security Scanning:**
-
-- ✅ **CodeQL** - Static analysis for vulnerabilities
-- ✅ **Trivy** - Dependency vulnerability scanning
-- ✅ **Gitleaks** - Secret detection
-- ✅ **Semgrep** - API security & OWASP Top 10
-- ✅ **Bandit & Safety** - Python security scanning
-- ✅ **OpenSSF Scorecard** - Supply chain security rating
-- ✅ **Dependency Review** - Automated PR checks
-
-**Supply Chain Transparency:**
-
-Socket.dev may flag "network access" in this package. This is **expected and safe**:
-
-- The SDK requires network access to communicate with Convex (cloud database)
-- All network calls go to `*.convex.cloud` endpoints only
-- This is documented, audited, and necessary for core functionality
-- See [`.socket.dev.yml`](./.socket.dev.yml) for our security policy
-
-**Report Security Issues:**
-
-- 🔒 Email: security@cortexmemory.dev
-- 🔐 See [SECURITY.md](./SECURITY.md) for our security policy
 
 ## 📄 License
 
@@ -779,10 +527,10 @@ Cortex was born out of building [Project Constellation](https://github.com/Saint
 
 <div align="center">
 
-**⭐ Star this repo to follow our progress ⭐**
+**⭐ Star this repo if you're building AI agents with persistent memory ⭐**
 
 Built with ❤️ for the AI agent community by [Nicholas Geil](https://github.com/SaintNick1214) / [Saint Nick LLC](https://saintnick.ai)
 
-_Cortex is in active development. Join [Discussions](https://github.com/SaintNick1214/cortex/discussions) to shape the future of AI agent memory._
+_Cortex is production-ready. Join [Discussions](https://github.com/SaintNick1214/cortex/discussions) to share your use case and help shape the future of AI agent memory._
 
 </div>

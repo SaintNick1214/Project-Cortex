@@ -411,9 +411,7 @@ export function registerLifecycleCommands(
           const matchingApp = appPidFiles.find((a) => a.name === options.app);
 
           if (!matchingApp) {
-            console.error(
-              pc.red(`\n   Error: App "${options.app}" not found`),
-            );
+            console.error(pc.red(`\n   Error: App "${options.app}" not found`));
             console.log(
               pc.dim("   Run 'cortex config list' to see available apps\n"),
             );
@@ -423,9 +421,7 @@ export function registerLifecycleCommands(
           // Stop from current directory
           const stopped = await stopApp(options.app, cwd);
           if (stopped) {
-            console.log(
-              pc.green(`\n   ✓ App "${options.app}" stopped\n`),
-            );
+            console.log(pc.green(`\n   ✓ App "${options.app}" stopped\n`));
           } else {
             console.log(
               pc.yellow(`\n   App "${options.app}" was not running\n`),
@@ -439,9 +435,7 @@ export function registerLifecycleCommands(
         if (stopped) {
           console.log(pc.green(`\n   ✓ App "${options.app}" stopped\n`));
         } else {
-          console.log(
-            pc.yellow(`\n   App "${options.app}" was not running\n`),
-          );
+          console.log(pc.yellow(`\n   App "${options.app}" was not running\n`));
         }
         return;
       }
@@ -518,7 +512,10 @@ export function registerLifecycleCommands(
         for (const [projectPath, name] of projectPaths) {
           // Check if anything is running for this deployment
           const pidFile = path.join(projectPath, ".convex-dev.pid");
-          const dockerCompose = path.join(projectPath, "docker-compose.graph.yml");
+          const dockerCompose = path.join(
+            projectPath,
+            "docker-compose.graph.yml",
+          );
           const appPidFiles = await findAppPidFiles(projectPath);
 
           const hasPidFile = fs.existsSync(pidFile);
@@ -592,9 +589,9 @@ export function registerLifecycleCommands(
           // Fallback: try to stop by port if no PID file and deployment is local
           if (!convexStopped) {
             // Check if this is a local deployment (port 3210)
-            const deploymentConfig = Object.values(config.deployments || {}).find(
-              (d) => d.projectPath === projectPath,
-            );
+            const deploymentConfig = Object.values(
+              config.deployments || {},
+            ).find((d) => d.projectPath === projectPath);
             const isLocal =
               deploymentConfig?.url?.includes("127.0.0.1:3210") ||
               deploymentConfig?.url?.includes("localhost:3210");
@@ -608,7 +605,9 @@ export function registerLifecycleCommands(
                 const stopped = await stopProcessByPort(3210);
                 if (stopped) {
                   console.log(
-                    pc.green(`   ✓ Convex stopped (port 3210, PID: ${convexPid})`),
+                    pc.green(
+                      `   ✓ Convex stopped (port 3210, PID: ${convexPid})`,
+                    ),
                   );
                   stoppedSomething = true;
                   deploymentStopped = true;
@@ -618,7 +617,9 @@ export function registerLifecycleCommands(
                 console.log(pc.dim("   No Convex process running"));
               }
             } else if (!options.graphOnly && !options.appsOnly) {
-              console.log(pc.dim("   No Convex process running (PID file not found)"));
+              console.log(
+                pc.dim("   No Convex process running (PID file not found)"),
+              );
             }
           }
         }
@@ -657,7 +658,9 @@ export function registerLifecycleCommands(
                 const stopped = await stopApp(appName, projectPath);
                 if (stopped) {
                   console.log(
-                    pc.green(`   ✓ App "${appName}" stopped (PID: ${appStatus.pid})`),
+                    pc.green(
+                      `   ✓ App "${appName}" stopped (PID: ${appStatus.pid})`,
+                    ),
                   );
                   stoppedSomething = true;
                   stoppedAppsCount++;
@@ -691,7 +694,9 @@ export function registerLifecycleCommands(
                 const stopped = await stopProcessByPort(port);
                 if (stopped) {
                   console.log(
-                    pc.green(`   ✓ App "${appName}" stopped (port ${port}, PID: ${pid})`),
+                    pc.green(
+                      `   ✓ App "${appName}" stopped (port ${port}, PID: ${pid})`,
+                    ),
                   );
                   stoppedSomething = true;
                   stoppedAppsCount++;
@@ -830,6 +835,19 @@ export async function runInitWizard(
 
   // Execute setup (returns SDK metadata for post-setup steps)
   const sdkMetadata = await executeSetup(config);
+
+  // Register basic template in CLI config for template sync support
+  const cliConfig = await loadConfig();
+  cliConfig.apps = cliConfig.apps || {};
+  cliConfig.apps[config.projectName] = {
+    type: "basic",
+    path: ".", // Basic template is the root project
+    projectPath: config.projectPath,
+    enabled: true,
+    port: 3001, // Default port for basic template server mode
+    startCommand: "npm start",
+  };
+  await saveUserConfig(cliConfig);
 
   // Ask about Vercel AI quickstart (optional demo app)
   let installedQuickstart = false;

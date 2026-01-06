@@ -10,26 +10,22 @@
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../src/index";
+import { createNamedTestRunContext } from "./helpers";
 
 describe("Operation Sequence Validation", () => {
+  // Create unique test run context for parallel-safe execution
+  const ctx = createNamedTestRunContext("opseq");
   let cortex: Cortex;
-  const BASE_ID = `seq-test-${Date.now()}`;
-  const TEST_AGENT_ID = `seq-test-agent-${Date.now()}`;
+  const TEST_AGENT_ID = ctx.agentId("test");
 
   beforeAll(() => {
+    console.log(`\n🧪 Operation Sequence Tests - Run ID: ${ctx.runId}\n`);
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
   });
 
   afterAll(async () => {
-    // Cleanup
-    try {
-      await cortex.memorySpaces.delete(BASE_ID, {
-        cascade: true,
-        reason: "test cleanup",
-      });
-    } catch (_e) {
-      // Ignore
-    }
+    // Note: With TestRunContext, cleanup is less critical since IDs are unique
+    console.log(`\n🧹 Operation Sequence Tests - Run ${ctx.runId} complete\n`);
   });
 
   // ══════════════════════════════════════════════════════════════════════
@@ -38,7 +34,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Vector Memory: CRUD Sequence", () => {
     it("create→get→update→get→delete→get validates state at each step", async () => {
-      const spaceId = `${BASE_ID}-vector-crud`;
+      const spaceId = `${ctx.runId}-vector-crud`;
 
       // STEP 1: Create
       const created = await cortex.vector.store(spaceId, {
@@ -84,7 +80,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("list reflects state after each operation", async () => {
-      const spaceId = `${BASE_ID}-vector-list`;
+      const spaceId = `${ctx.runId}-vector-list`;
 
       // Initial list
       const list0 = await cortex.vector.list({ memorySpaceId: spaceId });
@@ -139,7 +135,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("count matches list.length after each operation", async () => {
-      const spaceId = `${BASE_ID}-vector-count`;
+      const spaceId = `${ctx.runId}-vector-count`;
 
       // Initial count
       const count0 = await cortex.vector.count({ memorySpaceId: spaceId });
@@ -183,7 +179,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Conversations: CRUD Sequence", () => {
     it("create→get→addMessage→get→delete→get validates state", async () => {
-      const spaceId = `${BASE_ID}-conv-crud`;
+      const spaceId = `${ctx.runId}-conv-crud`;
 
       // STEP 1: Create
       const created = await cortex.conversations.create({
@@ -229,7 +225,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("count reflects each message addition", async () => {
-      const spaceId = `${BASE_ID}-conv-count`;
+      const spaceId = `${ctx.runId}-conv-count`;
 
       const conv = await cortex.conversations.create({
         type: "user-agent",
@@ -260,7 +256,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Facts: Version Chain Sequence", () => {
     it("store→update→update→delete validates versions", async () => {
-      const spaceId = `${BASE_ID}-facts-seq`;
+      const spaceId = `${ctx.runId}-facts-seq`;
 
       // STEP 1: Store v1
       const v1 = await cortex.facts.store({
@@ -309,7 +305,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("list excludes superseded facts by default", async () => {
-      const spaceId = `${BASE_ID}-facts-list`;
+      const spaceId = `${ctx.runId}-facts-list`;
 
       // Create and update fact
       const v1 = await cortex.facts.store({
@@ -339,7 +335,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("count reflects fact versioning correctly", async () => {
-      const spaceId = `${BASE_ID}-facts-count`;
+      const spaceId = `${ctx.runId}-facts-count`;
 
       const count0 = await cortex.facts.count({ memorySpaceId: spaceId });
 
@@ -376,7 +372,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Contexts: Full Lifecycle Sequence", () => {
     it("create→get→update→get→complete→get→delete→get", async () => {
-      const spaceId = `${BASE_ID}-ctx-lifecycle`;
+      const spaceId = `${ctx.runId}-ctx-lifecycle`;
       const userId = "lifecycle-user";
 
       // STEP 1: Create
@@ -431,7 +427,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("hierarchical operations maintain parent-child integrity", async () => {
-      const spaceId = `${BASE_ID}-ctx-hierarchy-seq`;
+      const spaceId = `${ctx.runId}-ctx-hierarchy-seq`;
       const userId = "hierarchy-user";
 
       // Create parent
@@ -550,7 +546,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Mutable Store: Update Sequence", () => {
     it("set→get→update→get→delete→get validates state", async () => {
-      const ns = `${BASE_ID}-mutable`;
+      const ns = `${ctx.runId}-mutable`;
       const key = "sequence-test";
 
       // STEP 1: Set
@@ -582,7 +578,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("increment sequence maintains consistency", async () => {
-      const ns = `${BASE_ID}-mutable-increment`;
+      const ns = `${ctx.runId}-mutable-increment`;
       const key = "counter";
 
       // Set initial
@@ -598,7 +594,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("extended increment chain (20+ operations) maintains exact consistency", async () => {
-      const ns = `${BASE_ID}-mutable-extended-inc`;
+      const ns = `${ctx.runId}-mutable-extended-inc`;
       const key = "extended-counter";
 
       // Set initial value
@@ -628,7 +624,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("mixed increment/decrement chain maintains consistency", async () => {
-      const ns = `${BASE_ID}-mutable-mixed`;
+      const ns = `${ctx.runId}-mutable-mixed`;
       const key = "mixed-counter";
 
       await cortex.mutable.set(ns, key, 50);
@@ -674,7 +670,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("transaction with multiple increment operations", async () => {
-      const ns = `${BASE_ID}-mutable-tx-inc`;
+      const ns = `${ctx.runId}-mutable-tx-inc`;
 
       // Setup keys
       await cortex.mutable.set(ns, "counter-a", 0);
@@ -704,7 +700,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("list reflects mutable operations", async () => {
-      const ns = `${BASE_ID}-mutable-list`;
+      const ns = `${ctx.runId}-mutable-list`;
 
       const list0 = await cortex.mutable.list({ namespace: ns });
       const count0 = list0.length;
@@ -732,7 +728,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Memory Spaces: Full Lifecycle", () => {
     it("register→addParticipant→removeParticipant→delete sequence", async () => {
-      const spaceId = `${BASE_ID}-space-lifecycle-${Date.now()}`;
+      const spaceId = `${ctx.runId}-space-lifecycle-${Date.now()}`;
 
       // STEP 1: Register
       const space = await cortex.memorySpaces.register({
@@ -774,7 +770,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("stats update after each data operation", async () => {
-      const spaceId = `${BASE_ID}-stats-seq-${Date.now()}`;
+      const spaceId = `${ctx.runId}-stats-seq-${Date.now()}`;
 
       await cortex.memorySpaces.register({
         memorySpaceId: spaceId,
@@ -892,7 +888,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Concurrent Operation Sequences", () => {
     it("parallel creates don't corrupt state", async () => {
-      const spaceId = `${BASE_ID}-parallel`;
+      const spaceId = `${ctx.runId}-parallel`;
 
       // Create 20 memories in parallel
       const promises = Array.from({ length: 20 }, (_, i) =>
@@ -925,7 +921,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("parallel updates to different entities don't interfere", async () => {
-      const spaceId = `${BASE_ID}-parallel-update`;
+      const spaceId = `${ctx.runId}-parallel-update`;
 
       // Create 10 memories
       const memories = await Promise.all(
@@ -957,7 +953,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("parallel deletes all succeed", async () => {
-      const spaceId = `${BASE_ID}-parallel-delete`;
+      const spaceId = `${ctx.runId}-parallel-delete`;
 
       // Create memories
       const memories = await Promise.all(
@@ -984,7 +980,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("interleaved create/update/delete maintains consistency", async () => {
-      const spaceId = `${BASE_ID}-interleaved`;
+      const spaceId = `${ctx.runId}-interleaved`;
 
       // Create some memories
       const mems = await Promise.all([
@@ -1034,7 +1030,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Cross-Layer Operation Sequences", () => {
     it("conversation→memory→fact→context sequence", async () => {
-      const spaceId = `${BASE_ID}-cross-layer`;
+      const spaceId = `${ctx.runId}-cross-layer`;
       const userId = "cross-user";
 
       // STEP 1: Create conversation
@@ -1088,7 +1084,7 @@ describe("Operation Sequence Validation", () => {
       expect(fact.sourceRef!.memoryId).toBe(mem.memoryId);
 
       // STEP 5: Create context
-      const ctx = await cortex.contexts.create({
+      const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
         userId,
         purpose: "Handle preference update",
@@ -1102,7 +1098,7 @@ describe("Operation Sequence Validation", () => {
       const convCheck = await cortex.conversations.get(conv.conversationId);
       const memCheck = await cortex.vector.get(spaceId, mem.memoryId);
       const factCheck = await cortex.facts.get(spaceId, fact.factId);
-      const ctxCheck = await cortex.contexts.get(ctx.contextId);
+      const ctxCheck = await cortex.contexts.get(testCtx.contextId);
 
       expect(convCheck).not.toBeNull();
       expect(memCheck).not.toBeNull();
@@ -1111,7 +1107,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("remember→get→forget sequence cleans all layers", async () => {
-      const spaceId = `${BASE_ID}-remember-forget`;
+      const spaceId = `${ctx.runId}-remember-forget`;
 
       // Remember
       const result = await cortex.memory.remember({
@@ -1163,7 +1159,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Bulk Operation Sequences", () => {
     it("deleteMany→count→list validates complete removal", async () => {
-      const spaceId = `${BASE_ID}-bulk-delete`;
+      const spaceId = `${ctx.runId}-bulk-delete`;
 
       // Create 10 memories with same tag
       const created = await Promise.all(
@@ -1217,7 +1213,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("updateMany→list validates all updated", async () => {
-      const spaceId = `${BASE_ID}-bulk-update`;
+      const spaceId = `${ctx.runId}-bulk-update`;
 
       // Create memories
       const created = await Promise.all(
@@ -1267,7 +1263,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Error Recovery Sequences", () => {
     it("failed update doesn't corrupt state", async () => {
-      const spaceId = `${BASE_ID}-error-recovery`;
+      const spaceId = `${ctx.runId}-error-recovery`;
 
       const mem = await cortex.vector.store(spaceId, {
         content: "Original",
@@ -1293,7 +1289,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("failed delete leaves entity intact", async () => {
-      const spaceId = `${BASE_ID}-failed-delete`;
+      const spaceId = `${ctx.runId}-failed-delete`;
 
       const mem = await cortex.vector.store(spaceId, {
         content: "Test",
@@ -1315,7 +1311,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("operation failure doesn't affect count", async () => {
-      const spaceId = `${BASE_ID}-count-recovery`;
+      const spaceId = `${ctx.runId}-count-recovery`;
 
       const countBefore = await cortex.vector.count({ memorySpaceId: spaceId });
 
@@ -1335,7 +1331,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Complex Multi-Step Workflows", () => {
     it("complete user journey maintains consistency", async () => {
-      const spaceId = `${BASE_ID}-journey`;
+      const spaceId = `${ctx.runId}-journey`;
       const userId = "journey-user";
 
       // Step 1: User profile
@@ -1384,7 +1380,7 @@ describe("Operation Sequence Validation", () => {
       });
 
       // Step 6: Create workflow context
-      const ctx = await cortex.contexts.create({
+      const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
         userId,
         purpose: "Handle food preferences",
@@ -1403,7 +1399,7 @@ describe("Operation Sequence Validation", () => {
         remembered.memories[0].memoryId,
       );
       const factCheck = await cortex.facts.get(spaceId, fact.factId);
-      const ctxCheck = await cortex.contexts.get(ctx.contextId);
+      const ctxCheck = await cortex.contexts.get(testCtx.contextId);
 
       expect(userCheck).not.toBeNull();
       expect(convCheck).not.toBeNull();
@@ -1422,7 +1418,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("cascade delete cleans entire workflow", async () => {
-      const spaceId = `${BASE_ID}-cascade-workflow-${Date.now()}`;
+      const spaceId = `${ctx.runId}-cascade-workflow-${Date.now()}`;
 
       // Create complete workflow
       await cortex.memorySpaces.register({
@@ -1476,7 +1472,7 @@ describe("Operation Sequence Validation", () => {
 
   describe("Sequence Edge Cases", () => {
     it("rapid create/delete/create with same ID", async () => {
-      const spaceId = `${BASE_ID}-rapid`;
+      const spaceId = `${ctx.runId}-rapid`;
       const convId = `rapid-conv-${Date.now()}`;
 
       // Create
@@ -1503,7 +1499,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("update sequence with no actual changes is idempotent", async () => {
-      const spaceId = `${BASE_ID}-idempotent`;
+      const spaceId = `${ctx.runId}-idempotent`;
 
       const mem = await cortex.vector.store(spaceId, {
         content: "Unchanged",
@@ -1525,7 +1521,7 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("sequence with mixed success/failure maintains consistency", async () => {
-      const spaceId = `${BASE_ID}-mixed`;
+      const spaceId = `${ctx.runId}-mixed`;
 
       // Create valid memory
       const mem = await cortex.vector.store(spaceId, {
@@ -1553,11 +1549,11 @@ describe("Operation Sequence Validation", () => {
     });
 
     it("long sequence maintains data integrity", async () => {
-      const spaceId = `${BASE_ID}-long-seq`;
+      const spaceId = `${ctx.runId}-long-seq`;
       const userId = "long-user";
 
       // 20-step sequence
-      let ctx = await cortex.contexts.create({
+      let context = await cortex.contexts.create({
         memorySpaceId: spaceId,
         userId,
         purpose: "Long sequence test",
@@ -1566,17 +1562,17 @@ describe("Operation Sequence Validation", () => {
       });
 
       for (let i = 1; i <= 20; i++) {
-        ctx = await cortex.contexts.update(ctx.contextId, {
+        context = await cortex.contexts.update(context.contextId, {
           data: { step: i },
         });
 
         // Verify state after each step
-        const check = await cortex.contexts.get(ctx.contextId);
+        const check = await cortex.contexts.get(context.contextId);
         expect((check as any).data?.step).toBe(i);
       }
 
       // Final check
-      const final = await cortex.contexts.get(ctx.contextId);
+      const final = await cortex.contexts.get(context.contextId);
       expect((final as any).data?.step).toBe(20);
     });
   });
