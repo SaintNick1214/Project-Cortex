@@ -15,6 +15,8 @@ import {
   printRecallResults,
   printOrchestrationComplete,
   printInfo,
+  startSpinner,
+  stopSpinner,
 } from "./display.js";
 import { generateResponse, isLLMAvailable } from "./llm.js";
 
@@ -100,8 +102,10 @@ export async function chat(
   let memories: Memory[] = [];
   let facts: Fact[] = [];
 
+  startSpinner("Searching memories...");
+
   try {
-    // Use the unified recall API (v0.23.0+) if available
+    // Use the unified recall API (v0.23.0+)
     const recallResult = await cortex.memory.recall({
       memorySpaceId: CONFIG.memorySpaceId,
       query: userMessage,
@@ -113,12 +117,19 @@ export async function chat(
       },
     });
 
-    memories = (recallResult.memories || []) as Memory[];
-    facts = (recallResult.facts || []) as Fact[];
+    // Extract memories and facts from the correct result structure
+    // SDK returns: result.sources.vector.items and result.sources.facts.items
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = recallResult as any;
+    memories = (result.sources?.vector?.items || result.memories || []) as Memory[];
+    facts = (result.sources?.facts?.items || result.facts || []) as Fact[];
+
+    stopSpinner(true, `Found ${memories.length} memories, ${facts.length} facts`);
 
     // Display recall results
     printRecallResults(memories, facts);
   } catch (error) {
+    stopSpinner(false, "No memories found (starting fresh)");
     // Recall might fail if no memories exist yet - that's ok
     if (CONFIG.debug) {
       console.log("[Debug] Recall error (may be empty):", error);
@@ -129,7 +140,9 @@ export async function chat(
   // Step 2: Generate response
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+  startSpinner("Thinking...");
   const response = await generateResponse(userMessage, memories, facts);
+  stopSpinner(true, "Response generated");
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Step 3: Remember the exchange (triggers orchestration)
@@ -144,13 +157,10 @@ export async function chat(
       conversationId: convId,
     });
 
-    // Add layer observer for console output
-    const observer = createLayerObserver();
-
+    // Add layer observer for console output - uses 'observer' not 'layerObserver'
     await cortex.memory.remember({
       ...params,
-      // @ts-expect-error - layerObserver is internal but we're using it for demo
-      layerObserver: observer,
+      observer: createLayerObserver(),
     });
 
     // Print orchestration summary
@@ -179,8 +189,10 @@ export async function chat(
 export async function recallMemories(query: string): Promise<void> {
   const cortex = getCortex();
 
+  startSpinner("Searching memories...");
+
   try {
-    const result = await cortex.memory.recall({
+    const recallResult = await cortex.memory.recall({
       memorySpaceId: CONFIG.memorySpaceId,
       query,
       limit: 10,
@@ -191,11 +203,16 @@ export async function recallMemories(query: string): Promise<void> {
       },
     });
 
-    const memories = (result.memories || []) as Memory[];
-    const facts = (result.facts || []) as Fact[];
+    // Extract from correct result structure
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = recallResult as any;
+    const memories = (result.sources?.vector?.items || result.memories || []) as Memory[];
+    const facts = (result.sources?.facts?.items || result.facts || []) as Fact[];
 
+    stopSpinner(true, `Found ${memories.length} memories, ${facts.length} facts`);
     printRecallResults(memories, facts);
   } catch (error) {
+    stopSpinner(false, "Recall failed");
     console.error("Recall failed:", error);
   }
 }
@@ -206,6 +223,8 @@ export async function recallMemories(query: string): Promise<void> {
 export async function listFacts(): Promise<void> {
   const cortex = getCortex();
 
+  startSpinner("Loading facts...");
+
   try {
     const result = await cortex.facts.list({
       memorySpaceId: CONFIG.memorySpaceId,
@@ -214,8 +233,10 @@ export async function listFacts(): Promise<void> {
 
     const facts = (result.facts || result || []) as Fact[];
 
+    stopSpinner(true, `Found ${facts.length} facts`);
     printRecallResults([], facts);
   } catch (error) {
+    stopSpinner(false, "Failed to load facts");
     console.error("List facts failed:", error);
   }
 }
@@ -232,10 +253,13 @@ export async function getHistory(): Promise<void> {
     return;
   }
 
+  startSpinner("Loading history...");
+
   try {
     const conversation = await cortex.conversations.get(convId);
 
     if (conversation && conversation.messages) {
+      stopSpinner(true, `Found ${conversation.messages.length} messages`);
       console.log("");
       console.log(`📜 Conversation: ${convId}`);
       console.log(`   Messages: ${conversation.messages.length}`);
@@ -251,9 +275,10 @@ export async function getHistory(): Promise<void> {
       }
       console.log("");
     } else {
-      printInfo("Conversation not found or empty");
+      stopSpinner(false, "Conversation not found or empty");
     }
   } catch (error) {
+    stopSpinner(false, "Failed to load history");
     console.error("Get history failed:", error);
   }
 }

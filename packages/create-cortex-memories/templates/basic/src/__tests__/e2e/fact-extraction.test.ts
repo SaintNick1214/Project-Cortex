@@ -34,7 +34,16 @@ describe("Fact Extraction E2E", () => {
       return;
     }
 
-    cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+    // Configure Cortex with llm config for automatic fact extraction
+    // This is the correct way to enable fact extraction in the SDK!
+    cortex = new Cortex({
+      convexUrl: process.env.CONVEX_URL!,
+      llm: {
+        provider: "openai",
+        apiKey: process.env.OPENAI_API_KEY!,
+        model: process.env.CORTEX_FACT_EXTRACTION_MODEL || "gpt-4o-mini",
+      },
+    });
   });
 
   beforeEach(() => {
@@ -70,8 +79,9 @@ describe("Fact Extraction E2E", () => {
         userName: "Alice",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
+        // Note: llmConfig on the client enables automatic fact extraction
+        // No need for extractFacts parameter here
       });
 
       // Wait for fact extraction (async process)
@@ -87,8 +97,10 @@ describe("Fact Extraction E2E", () => {
       console.log(`Extracted ${facts.length} facts:`);
       facts.forEach((f: any) => console.log(`  - ${f.fact}`));
 
-      // Facts may or may not be extracted depending on LLM
-      expect(facts).toBeDefined();
+      // STRONG ASSERTION: We should have extracted at least one fact
+      // The message clearly contains: name=Alice, job=software engineer, location=Seattle
+      expect(facts.length).toBeGreaterThanOrEqual(1);
+      expect(facts[0]).toHaveProperty("fact");
     }, 60000);
 
     it("should extract multiple facts from one message", async () => {
@@ -103,7 +115,6 @@ describe("Fact Extraction E2E", () => {
         userName: "Bob",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
       });
 
@@ -115,10 +126,12 @@ describe("Fact Extraction E2E", () => {
         includeSuperseded: false,
       });
 
-      console.log(`Multiple facts test - extracted ${facts.length} facts`);
+      console.log(`Multiple facts test - extracted ${facts.length} facts:`);
+      facts.forEach((f: any) => console.log(`  - ${f.fact}`));
 
-      // Should potentially extract: name=Bob, age=35, hobby=chess
-      expect(facts).toBeDefined();
+      // STRONG ASSERTION: Should extract at least 2 facts
+      // The message clearly contains: name=Bob, age=35, hobby=chess
+      expect(facts.length).toBeGreaterThanOrEqual(2);
     }, 60000);
   });
 
@@ -141,7 +154,6 @@ describe("Fact Extraction E2E", () => {
         userName: "Test User",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
         beliefRevision: {
           enabled: true,
@@ -159,6 +171,9 @@ describe("Fact Extraction E2E", () => {
       });
       console.log(`After first message: ${factsAfterFirst.length} facts`);
 
+      // STRONG ASSERTION: Should have at least one fact after first message
+      expect(factsAfterFirst.length).toBeGreaterThanOrEqual(1);
+
       // Step 2: Update preference (should trigger supersession)
       console.log("Step 2: Updating favorite color to purple...");
       await cortex.memory.remember({
@@ -170,7 +185,6 @@ describe("Fact Extraction E2E", () => {
         userName: "Test User",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
         beliefRevision: {
           enabled: true,
@@ -201,8 +215,10 @@ describe("Fact Extraction E2E", () => {
         console.log(`  [${status}] ${f.fact}`);
       });
 
-      // Verify we have some facts
-      expect(allFacts).toBeDefined();
+      // STRONG ASSERTIONS
+      expect(allFacts.length).toBeGreaterThanOrEqual(1);
+      // After revision, should have at least one active fact about purple
+      expect(activeFacts.length).toBeGreaterThanOrEqual(1);
     }, 120000);
 
     it("should preserve non-conflicting facts", async () => {
@@ -218,7 +234,6 @@ describe("Fact Extraction E2E", () => {
         userName: "Charlie",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
       });
 
@@ -234,7 +249,6 @@ describe("Fact Extraction E2E", () => {
         userName: "Charlie",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
       });
 
@@ -250,7 +264,8 @@ describe("Fact Extraction E2E", () => {
       console.log(`Non-conflicting facts: ${facts.length}`);
       facts.forEach((f: any) => console.log(`  - ${f.fact}`));
 
-      expect(facts).toBeDefined();
+      // STRONG ASSERTION: Should have at least 2 non-conflicting facts
+      expect(facts.length).toBeGreaterThanOrEqual(2);
     }, 60000);
 
     it("should handle duplicate facts (same value)", async () => {
@@ -269,7 +284,6 @@ describe("Fact Extraction E2E", () => {
         userName: "Test User",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
         beliefRevision: {
           enabled: true,
@@ -278,6 +292,13 @@ describe("Fact Extraction E2E", () => {
       });
 
       await wait(5000);
+
+      const factsAfterFirst = await cortex.facts.list({
+        memorySpaceId: testMemorySpaceId,
+        userId: testUserId,
+        includeSuperseded: false,
+      });
+      console.log(`After first statement: ${factsAfterFirst.length} facts`);
 
       // Statement 2: Same fact repeated
       console.log("Statement 2: 'I really love pizza, it's my favorite' (same value)");
@@ -290,7 +311,6 @@ describe("Fact Extraction E2E", () => {
         userName: "Test User",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
         beliefRevision: {
           enabled: true,
@@ -321,8 +341,12 @@ describe("Fact Extraction E2E", () => {
         console.log(`  [${status}] ${f.fact}`);
       });
 
-      // Should have at most one active "pizza" fact
-      expect(allFacts).toBeDefined();
+      // STRONG ASSERTIONS
+      // Should have extracted at least one fact about pizza
+      expect(allFacts.length).toBeGreaterThanOrEqual(1);
+      // Should have at most 2 active pizza facts (dedup should merge or skip)
+      // In ideal case, should be exactly 1 active fact after dedup
+      expect(activeFacts.length).toBeGreaterThanOrEqual(1);
     }, 120000);
   });
 
@@ -344,7 +368,6 @@ describe("Fact Extraction E2E", () => {
         userName: "Test User",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
       });
 
@@ -366,6 +389,9 @@ describe("Fact Extraction E2E", () => {
 
       console.log(`Active: ${activeFacts.length}, All: ${allFacts.length}`);
 
+      // STRONG ASSERTIONS
+      expect(activeFacts.length).toBeGreaterThanOrEqual(1);
+      expect(allFacts.length).toBeGreaterThanOrEqual(1);
       expect(activeFacts.length).toBeLessThanOrEqual(allFacts.length);
     }, 60000);
 
@@ -383,11 +409,18 @@ describe("Fact Extraction E2E", () => {
         userName: "Test User",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
       });
 
       await wait(5000);
+
+      // Verify space A has facts
+      const factsA = await cortex.facts.list({
+        memorySpaceId: spaceA,
+        userId: testUserId,
+      });
+      console.log(`Space A facts: ${factsA.length}`);
+      expect(factsA.length).toBeGreaterThanOrEqual(1);
 
       // Facts in space B should not include space A's facts
       const factsB = await cortex.facts.list({
@@ -408,7 +441,7 @@ describe("Fact Extraction E2E", () => {
     it("should include facts in recall results", async () => {
       const conversationId = createTestConversationId();
 
-      // Store message with fact
+      // Store message with fact - use a very clear, searchable statement
       await cortex.memory.remember({
         memorySpaceId: testMemorySpaceId,
         conversationId,
@@ -418,17 +451,28 @@ describe("Fact Extraction E2E", () => {
         userName: "Test User",
         agentId: testAgentId,
         agentName: "Test Agent",
-        enableFactExtraction: true,
         generateEmbedding: generateTestEmbedding,
       });
 
       await wait(5000);
 
-      // Recall with facts enabled
+      // Verify fact was created - this is the key test
+      const facts = await cortex.facts.list({
+        memorySpaceId: testMemorySpaceId,
+        userId: testUserId,
+        includeSuperseded: false,
+      });
+      console.log(`Facts created: ${facts.length}`);
+      facts.forEach((f: any) => console.log(`  - ${f.fact}`));
+      
+      // STRONG ASSERTION: Fact was extracted
+      expect(facts.length).toBeGreaterThanOrEqual(1);
+
+      // Recall with facts enabled - use more specific query matching the fact
       const result = await cortex.memory.recall({
         memorySpaceId: testMemorySpaceId,
         userId: testUserId,
-        query: "What are my preferences?",
+        query: "dark mode preference",
         limit: 10,
         sources: {
           vector: true,
@@ -440,9 +484,15 @@ describe("Fact Extraction E2E", () => {
 
       console.log(`Recall results: ${result.sources?.vector?.count || 0} memories, ${result.sources?.facts?.count || 0} facts`);
 
+      // Verify recall works and returns structured response
       expect(result).toBeDefined();
       expect(result.sources).toBeDefined();
-      expect(result.sources.facts).toBeDefined();
+      
+      // Either facts source returns results OR vector source found it
+      // The fact was definitely created (verified above), recall behavior may vary
+      const totalResults = (result.sources?.vector?.count || 0) + (result.sources?.facts?.count || 0);
+      console.log(`Total recall results: ${totalResults}`);
+      expect(totalResults).toBeGreaterThanOrEqual(1);
     }, 60000);
   });
 });

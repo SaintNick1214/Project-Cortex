@@ -52,9 +52,20 @@ export function getCortex(): Cortex {
       );
     }
 
-    cortexClient = new Cortex({
-      convexUrl,
-    });
+    // Build client config
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const config: any = { convexUrl };
+
+    // Configure LLM for auto fact extraction when OpenAI key is available
+    if (process.env.OPENAI_API_KEY && CONFIG.enableFactExtraction) {
+      config.llm = {
+        provider: "openai",
+        apiKey: process.env.OPENAI_API_KEY,
+        model: process.env.CORTEX_FACT_EXTRACTION_MODEL || "gpt-4o-mini",
+      };
+    }
+
+    cortexClient = new Cortex(config);
   }
 
   return cortexClient;
@@ -174,8 +185,8 @@ export async function buildRememberParams(
     // Optional embedding
     generateEmbedding: embeddingProvider,
 
-    // Fact extraction (enabled by default)
-    extractFacts: CONFIG.enableFactExtraction ? true : undefined,
+    // Fact extraction is handled by llmConfig on the Cortex client
+    // No need to pass extractFacts here - SDK auto-extracts when llmConfig is set
 
     // Belief revision (v0.24.0+)
     // Automatically handles fact updates, supersessions, and deduplication
