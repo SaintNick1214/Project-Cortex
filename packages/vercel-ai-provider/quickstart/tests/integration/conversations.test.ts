@@ -33,7 +33,7 @@ function createRequest(
   options: {
     body?: Record<string, unknown>;
     searchParams?: Record<string, string>;
-  } = {}
+  } = {},
 ): Request {
   const url = new URL("http://localhost:3000/api/conversations");
 
@@ -102,8 +102,12 @@ describe("Conversations API Routes", () => {
 
       expect(status).toBe(200);
       expect(data.conversation).toBeDefined();
-      expect((data.conversation as { id: string }).id).toBe("conv-with-messages");
-      expect((data.conversation as { title: string }).title).toBe("Test Conversation");
+      expect((data.conversation as { id: string }).id).toBe(
+        "conv-with-messages",
+      );
+      expect((data.conversation as { title: string }).title).toBe(
+        "Test Conversation",
+      );
       expect(data.messages).toBeDefined();
       expect((data.messages as unknown[]).length).toBe(2);
     });
@@ -235,7 +239,7 @@ describe("Conversations API Routes", () => {
         expect.objectContaining({
           memorySpaceId: "quickstart-demo",
           userId: "testuser",
-        })
+        }),
       );
     });
   });
@@ -304,7 +308,7 @@ describe("Conversations API Routes", () => {
       expect(mockCortex.conversations.create).toHaveBeenCalledWith(
         expect.objectContaining({
           memorySpaceId: "custom-space",
-        })
+        }),
       );
     });
 
@@ -317,7 +321,7 @@ describe("Conversations API Routes", () => {
       expect(mockCortex.conversations.create).toHaveBeenCalledWith(
         expect.objectContaining({
           memorySpaceId: "quickstart-demo",
-        })
+        }),
       );
     });
 
@@ -330,7 +334,7 @@ describe("Conversations API Routes", () => {
       expect(mockCortex.conversations.create).toHaveBeenCalledWith(
         expect.objectContaining({
           type: "user-agent",
-        })
+        }),
       );
     });
 
@@ -346,7 +350,7 @@ describe("Conversations API Routes", () => {
             userId: "testuser",
             agentId: "quickstart-assistant",
           },
-        })
+        }),
       );
     });
 

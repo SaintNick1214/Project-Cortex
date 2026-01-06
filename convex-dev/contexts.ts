@@ -161,7 +161,9 @@ export const update = mutation({
       // For non-tenant: check globally but only match records without tenantId
       const candidate = await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", args.contextId),
+        )
         .first();
       // SECURITY: Only match truly global records (no tenantId set)
       // Check for undefined, null, or empty string to handle all falsy cases
@@ -242,7 +244,9 @@ export const deleteContext = mutation({
     } else {
       const candidate = await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", args.contextId),
+        )
         .first();
       // SECURITY: Only match truly global records (no tenantId set)
       // Check for undefined, null, or empty string to handle all falsy cases
@@ -481,7 +485,9 @@ export const get = query({
     } else {
       const candidate = await ctx.db
         .query("contexts")
-        .withIndex("by_contextId", (q: any) => q.eq("contextId", args.contextId))
+        .withIndex("by_contextId", (q: any) =>
+          q.eq("contextId", args.contextId),
+        )
         .first();
       // SECURITY: Only match truly global records (no tenantId set)
       // Check for undefined, null, or empty string to handle all falsy cases
@@ -654,7 +660,9 @@ export const list = query({
       contexts = await ctx.db
         .query("contexts")
         .withIndex("by_tenant_space", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!),
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("memorySpaceId", args.memorySpaceId!),
         )
         .take(args.limit || 100);
     } else if (args.tenantId) {
@@ -741,24 +749,34 @@ export const count = query({
   handler: async (ctx, args) => {
     let contexts;
 
-    if (args.memorySpaceId) {
+    // Use best index based on available filters (matching list function behavior)
+    if (args.memorySpaceId && args.status) {
+      // Use composite index for memorySpace + status
+      contexts = await ctx.db
+        .query("contexts")
+        .withIndex("by_memorySpace_status", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!).eq("status", args.status!),
+        )
+        .collect();
+    } else if (args.memorySpaceId) {
       contexts = await ctx.db
         .query("contexts")
         .withIndex("by_memorySpace", (q) =>
           q.eq("memorySpaceId", args.memorySpaceId!),
         )
         .collect();
+    } else if (args.status) {
+      contexts = await ctx.db
+        .query("contexts")
+        .withIndex("by_status", (q) => q.eq("status", args.status!))
+        .collect();
     } else {
       contexts = await ctx.db.query("contexts").collect();
     }
 
-    // Apply filters
+    // Apply remaining filters (userId is not indexed)
     if (args.userId) {
       contexts = contexts.filter((c) => c.userId === args.userId);
-    }
-
-    if (args.status) {
-      contexts = contexts.filter((c) => c.status === args.status);
     }
 
     return contexts.length;

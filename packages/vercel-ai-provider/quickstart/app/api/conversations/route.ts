@@ -13,7 +13,8 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const conversationId = searchParams.get("conversationId");
     const userId = searchParams.get("userId");
-    const memorySpaceId = searchParams.get("memorySpaceId") || "quickstart-demo";
+    const memorySpaceId =
+      searchParams.get("memorySpaceId") || "quickstart-demo";
 
     const cortex = getCortex();
 
@@ -27,7 +28,7 @@ export async function GET(req: Request) {
       if (!conversation) {
         return Response.json(
           { error: "Conversation not found" },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -42,7 +43,9 @@ export async function GET(req: Request) {
       return Response.json({
         conversation: {
           id: conversation.conversationId,
-          title: (conversation.metadata?.title as string) || getDefaultTitle(conversation),
+          title:
+            (conversation.metadata?.title as string) ||
+            getDefaultTitle(conversation),
           createdAt: conversation.createdAt,
           updatedAt: conversation.updatedAt,
           messageCount: conversation.messageCount || 0,
@@ -53,10 +56,7 @@ export async function GET(req: Request) {
 
     // List conversations for user (requires userId)
     if (!userId) {
-      return Response.json(
-        { error: "userId is required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "userId is required" }, { status: 400 });
     }
 
     // Get conversations for the user
@@ -84,7 +84,7 @@ export async function GET(req: Request) {
 
     return Response.json(
       { error: "Failed to fetch conversations" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -95,10 +95,7 @@ export async function POST(req: Request) {
     const { userId, memorySpaceId = "quickstart-demo", title } = body;
 
     if (!userId) {
-      return Response.json(
-        { error: "userId is required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "userId is required" }, { status: 400 });
     }
 
     const cortex = getCortex();
@@ -134,7 +131,7 @@ export async function POST(req: Request) {
 
     return Response.json(
       { error: "Failed to create conversation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -147,7 +144,7 @@ export async function DELETE(req: Request) {
     if (!conversationId) {
       return Response.json(
         { error: "conversationId is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -161,7 +158,7 @@ export async function DELETE(req: Request) {
 
     return Response.json(
       { error: "Failed to delete conversation" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -169,7 +166,10 @@ export async function DELETE(req: Request) {
 /**
  * Generate a default title from conversation data
  */
-function getDefaultTitle(conv: { createdAt: number; messageCount?: number }): string {
+function getDefaultTitle(conv: {
+  createdAt: number;
+  messageCount?: number;
+}): string {
   const date = new Date(conv.createdAt);
   const timeStr = date.toLocaleTimeString("en-US", {
     hour: "numeric",

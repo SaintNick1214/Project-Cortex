@@ -862,8 +862,14 @@ describe("GDPR: Cascade Deletion", () => {
       expect(tenantBFacts[0].fact).toBe("Tenant B secret data");
 
       // Cleanup
-      await cortexA.memorySpaces.delete(spaceA, { cascade: true, reason: "test cleanup" });
-      await cortexB.memorySpaces.delete(spaceB, { cascade: true, reason: "test cleanup" });
+      await cortexA.memorySpaces.delete(spaceA, {
+        cascade: true,
+        reason: "test cleanup",
+      });
+      await cortexB.memorySpaces.delete(spaceB, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     });
 
     it("cascade deletion only affects tenant's own data", async () => {
@@ -913,7 +919,10 @@ describe("GDPR: Cascade Deletion", () => {
       });
 
       // Cascade delete Tenant A's space
-      await cortexA.memorySpaces.delete(spaceA, { cascade: true, reason: "test cleanup" });
+      await cortexA.memorySpaces.delete(spaceA, {
+        cascade: true,
+        reason: "test cleanup",
+      });
 
       // Verify Tenant A space is gone
       const spaceACheck = await cortexA.memorySpaces.get(spaceA);
@@ -929,7 +938,10 @@ describe("GDPR: Cascade Deletion", () => {
       expect(tenantBMemories.length).toBe(1);
 
       // Cleanup
-      await cortexB.memorySpaces.delete(spaceB, { cascade: true, reason: "test cleanup" });
+      await cortexB.memorySpaces.delete(spaceB, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     });
   });
 

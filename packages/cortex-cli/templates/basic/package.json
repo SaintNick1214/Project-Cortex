@@ -1,22 +1,40 @@
 {
   "name": "{{PROJECT_NAME}}",
-  "version": "0.1.1",
-  "description": "AI agent with Cortex Memory SDK",
+  "version": "1.0.0",
+  "description": "AI agent with Cortex Memory SDK - demonstrating memory orchestration",
   "type": "module",
   "scripts": {
     "dev": "node dev-runner.mjs",
+    "start": "tsx --env-file=.env.local src/index.ts",
+    "server": "tsx --env-file=.env.local src/server.ts",
     "build": "tsc && npm run build:convex",
     "build:convex": "convex deploy",
-    "start": "tsx --env-file=.env.local src/index.ts"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:unit": "vitest run --config vitest.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e"
   },
   "dependencies": {
     "@cortexmemory/sdk": "latest",
     "convex": "^1.31.2",
-    "dotenv": "^17.2.3"
+    "dotenv": "^17.2.3",
+    "hono": "^4.11.3",
+    "@hono/node-server": "^1.19.7"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
+    "@vitest/coverage-v8": "^4.0.16",
     "typescript": "^5.9.3",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "vitest": "^4.0.16"
+  },
+  "optionalDependencies": {
+    "openai": "^6.15.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

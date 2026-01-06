@@ -139,7 +139,10 @@ describe("AI SDK v6 Routes E2E", () => {
         // Test prepareCall with a fresh user (no memories stored yet)
         // The function should still work, just return no context
         const originalMessages = [
-          { role: "user", content: [{ type: "text", text: "Hello, this is a test" }] },
+          {
+            role: "user",
+            content: [{ type: "text", text: "Hello, this is a test" }],
+          },
         ];
 
         const result = await prepareCall({
@@ -150,11 +153,16 @@ describe("AI SDK v6 Routes E2E", () => {
         // The result should have the messages property
         expect(result).toBeDefined();
         expect(result.messages).toBeDefined();
-        
+
         // Should return at least the original messages
-        expect(result.messages.length).toBeGreaterThanOrEqual(originalMessages.length);
-        
-        console.log("PrepareCall result:", JSON.stringify(result, null, 2).slice(0, 500));
+        expect(result.messages.length).toBeGreaterThanOrEqual(
+          originalMessages.length,
+        );
+
+        console.log(
+          "PrepareCall result:",
+          JSON.stringify(result, null, 2).slice(0, 500),
+        );
       }, 30000);
     },
   );
@@ -224,15 +232,15 @@ describe("AI SDK v6 Routes E2E", () => {
 
     it("should handle mixed format messages", () => {
       const normalized = normalizeMessagesForTest(mixedMessages);
-      
+
       // First message: content -> parts
       expect(normalized[0].parts).toBeDefined();
       expect(normalized[0].parts[0].text).toBe("First message");
-      
+
       // Second message: agent -> assistant, content -> parts
       expect(normalized[1].role).toBe("assistant");
       expect(normalized[1].parts[0].text).toBe("Response from agent");
-      
+
       // Third message: already has parts
       expect(normalized[2].parts[0].text).toBe("Follow up question");
     });

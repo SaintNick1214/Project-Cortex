@@ -32,7 +32,7 @@ export interface AuthContextValue extends AuthState {
   register: (
     username: string,
     password: string,
-    displayName?: string
+    displayName?: string,
   ) => Promise<boolean>;
   logout: () => void;
   clearError: () => void;
@@ -164,7 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             JSON.stringify({
               user: data.user,
               sessionToken: data.sessionToken,
-            })
+            }),
           );
         }
 
@@ -184,7 +184,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return false;
       }
     },
-    []
+    [],
   );
 
   // Register
@@ -192,7 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (
       username: string,
       password: string,
-      displayName?: string
+      displayName?: string,
     ): Promise<boolean> => {
       setState((prev) => ({ ...prev, error: null }));
 
@@ -217,7 +217,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             JSON.stringify({
               user: data.user,
               sessionToken: data.sessionToken,
-            })
+            }),
           );
         }
 
@@ -237,7 +237,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return false;
       }
     },
-    []
+    [],
   );
 
   // Logout

@@ -29,7 +29,9 @@ describe("AI SDK v6 API Route Integration", () => {
         }
 
         // Ensure parts array exists
-        let parts = m.parts as Array<{ type: string; text?: string }> | undefined;
+        let parts = m.parts as
+          | Array<{ type: string; text?: string }>
+          | undefined;
         if (!parts) {
           const content = m.content as string | undefined;
           if (content) {
@@ -227,15 +229,21 @@ describe("AI SDK v6 API Route Integration", () => {
         const normalized = normalizeMessages(messages);
 
         // First message: v5 format -> converted
-        expect((normalized[0] as any).parts[0].text).toBe("What's my favorite color?");
+        expect((normalized[0] as any).parts[0].text).toBe(
+          "What's my favorite color?",
+        );
         expect((normalized[0] as any).role).toBe("user");
 
         // Second message: agent role -> assistant, content -> parts
         expect((normalized[1] as any).role).toBe("assistant");
-        expect((normalized[1] as any).parts[0].text).toContain("favorite color is blue");
+        expect((normalized[1] as any).parts[0].text).toContain(
+          "favorite color is blue",
+        );
 
         // Third message: already v6 format
-        expect((normalized[2] as any).parts[0].text).toBe("Actually, I prefer purple now");
+        expect((normalized[2] as any).parts[0].text).toBe(
+          "Actually, I prefer purple now",
+        );
         expect((normalized[2] as any).role).toBe("user");
       });
     });
@@ -323,7 +331,9 @@ describe("AI SDK v6 API Route Integration", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   describe("request body validation", () => {
-    const validateRequestBody = (body: any): { valid: boolean; error?: string } => {
+    const validateRequestBody = (
+      body: any,
+    ): { valid: boolean; error?: string } => {
       if (!body.messages || !Array.isArray(body.messages)) {
         return { valid: false, error: "messages array is required" };
       }
@@ -392,13 +402,17 @@ describe("AI SDK v6 API Route Integration", () => {
   describe("conversation ID generation", () => {
     it("should use provided conversation ID", () => {
       const providedId = "conv-provided-123";
-      const conversationId = providedId || `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const conversationId =
+        providedId ||
+        `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       expect(conversationId).toBe(providedId);
     });
 
     it("should generate unique ID when not provided", () => {
       const providedId = null;
-      const conversationId = providedId || `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const conversationId =
+        providedId ||
+        `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       expect(conversationId).toMatch(/^conv-\d+-[a-z0-9]+$/);
     });
 
@@ -435,7 +449,8 @@ describe("AI SDK v6 API Route Integration", () => {
     });
 
     it("should truncate long messages at word boundary", () => {
-      const longMessage = "This is a very long message that should be truncated at a word boundary";
+      const longMessage =
+        "This is a very long message that should be truncated at a word boundary";
       const title = generateTitle(longMessage);
       expect(title.length).toBeLessThanOrEqual(53); // 50 + "..."
       expect(title).toMatch(/\.\.\.$/);

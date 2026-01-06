@@ -26,9 +26,15 @@ interface ChatHistorySidebarProps {
 // Helpers
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function groupByDate(conversations: Conversation[]): Record<string, Conversation[]> {
+function groupByDate(
+  conversations: Conversation[],
+): Record<string, Conversation[]> {
   const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const today = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
   const yesterday = today - 86400000;
   const weekAgo = today - 7 * 86400000;
 
@@ -44,7 +50,7 @@ function groupByDate(conversations: Conversation[]): Record<string, Conversation
     const convDay = new Date(
       convDate.getFullYear(),
       convDate.getMonth(),
-      convDate.getDate()
+      convDate.getDate(),
     ).getTime();
 
     if (convDay >= today) {
@@ -89,7 +95,7 @@ export function ChatHistorySidebar({
 
     try {
       const response = await fetch(
-        `/api/conversations?userId=${encodeURIComponent(user.id)}&memorySpaceId=${encodeURIComponent(memorySpaceId)}`
+        `/api/conversations?userId=${encodeURIComponent(user.id)}&memorySpaceId=${encodeURIComponent(memorySpaceId)}`,
       );
       const data = await response.json();
       if (data.conversations) {
@@ -121,13 +127,18 @@ export function ChatHistorySidebar({
     setDeletingId(conversationId);
 
     try {
-      const response = await fetch(`/api/conversations?conversationId=${encodeURIComponent(conversationId)}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/conversations?conversationId=${encodeURIComponent(conversationId)}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || `Delete failed with status ${response.status}`);
+        throw new Error(
+          data.error || `Delete failed with status ${response.status}`,
+        );
       }
 
       // Remove from local state only after successful deletion

@@ -45,7 +45,10 @@ describeWithConvex("Sessions Lifecycle", () => {
   afterAll(async () => {
     // Cleanup
     try {
-      await cortex.memorySpaces.delete(testMemorySpaceId, { cascade: true, reason: "test cleanup" });
+      await cortex.memorySpaces.delete(testMemorySpaceId, {
+        cascade: true,
+        reason: "test cleanup",
+      });
     } catch {
       // Ignore cleanup errors
     }
@@ -242,7 +245,7 @@ describeWithConvex("Sessions Lifecycle", () => {
 
     it("should fail to touch a non-existent session", async () => {
       await expect(
-        cortex.sessions.touch("sess_nonexistent_xyz")
+        cortex.sessions.touch("sess_nonexistent_xyz"),
       ).rejects.toThrow();
     });
   });
@@ -286,7 +289,7 @@ describeWithConvex("Sessions Lifecycle", () => {
 
       // Second end should not throw (idempotent)
       await expect(
-        cortex.sessions.end(session.sessionId)
+        cortex.sessions.end(session.sessionId),
       ).resolves.not.toThrow();
     });
   });
@@ -507,19 +510,19 @@ describeWithConvex("Sessions Lifecycle", () => {
       const tenantBSessions = await cortex.sessions.list({ tenantId: tenantB });
 
       // Verify isolation
-      expect(tenantASessions.some((s) => s.sessionId === sessionA.sessionId)).toBe(
-        true
-      );
-      expect(tenantASessions.some((s) => s.sessionId === sessionB.sessionId)).toBe(
-        false
-      );
+      expect(
+        tenantASessions.some((s) => s.sessionId === sessionA.sessionId),
+      ).toBe(true);
+      expect(
+        tenantASessions.some((s) => s.sessionId === sessionB.sessionId),
+      ).toBe(false);
 
-      expect(tenantBSessions.some((s) => s.sessionId === sessionB.sessionId)).toBe(
-        true
-      );
-      expect(tenantBSessions.some((s) => s.sessionId === sessionA.sessionId)).toBe(
-        false
-      );
+      expect(
+        tenantBSessions.some((s) => s.sessionId === sessionB.sessionId),
+      ).toBe(true);
+      expect(
+        tenantBSessions.some((s) => s.sessionId === sessionA.sessionId),
+      ).toBe(false);
 
       // Cleanup
       await cortex.sessions.end(sessionA.sessionId);

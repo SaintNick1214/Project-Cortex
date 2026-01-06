@@ -1,85 +1,215 @@
 /**
- * Cortex Memory SDK - Getting Started
+ * Cortex Memory - CLI Demo
  *
- * This is a simple example to get you started with Cortex.
- * Your AI agent now has persistent memory!
+ * Interactive command-line interface for demonstrating Cortex Memory SDK.
+ * Shows the "thinking" behind each memory layer as messages are processed.
  *
- * Note: This is a template file. TypeScript errors about missing '@cortexmemory/sdk'
- * are expected and will be resolved when dependencies are installed in your project.
+ * Usage:
+ *   npm start              # Start CLI mode
+ *   npm run server         # Start HTTP server mode
+ *
+ * Commands:
+ *   /recall <query>        # Search memories without storing
+ *   /facts                 # List all stored facts
+ *   /history               # Show conversation history
+ *   /new                   # Start a new conversation
+ *   /config                # Show current configuration
+ *   /clear                 # Clear the screen
+ *   /exit                  # Exit the demo
  */
 
-import { Cortex } from "@cortexmemory/sdk";
+import * as readline from "readline";
+import { closeCortex } from "./cortex.js";
+import {
+  chat,
+  recallMemories,
+  listFacts,
+  getHistory,
+  newConversation,
+  printConfig,
+  getConversationId,
+} from "./chat.js";
+import { printWelcome, printError, printInfo, printSuccess } from "./display.js";
 
-// Initialize Cortex with your Convex deployment
-const cortex = new Cortex({
-  convexUrl: process.env.CONVEX_URL!,
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CLI Interface
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
 });
 
-async function main() {
-  console.log("🧠 Cortex Memory SDK - Example");
-  console.log("================================\n");
+/**
+ * Process a line of input
+ */
+async function processInput(input: string): Promise<boolean> {
+  const trimmed = input.trim();
 
-  // Define your memory space (isolation boundary)
-  const memorySpaceId = "my-first-agent";
-  const conversationId = "conversation-1";
+  if (!trimmed) {
+    return true; // Continue
+  }
 
+  // Handle commands
+  if (trimmed.startsWith("/")) {
+    return handleCommand(trimmed);
+  }
+
+  // Regular chat message
   try {
-    // Store a memory (remember() auto-creates conversation if needed!)
-    console.log("💾 Storing a memory...");
-    await cortex.memory.remember({
-      memorySpaceId,
-      conversationId,
-      userMessage: "I prefer dark mode and TypeScript",
-      agentResponse: "Got it! I'll remember your preferences.",
-      userId: "user-123",
-      userName: "User",
-    });
-    console.log("✓ Memory stored!\n");
+    console.log("");
+    const result = await chat(trimmed);
 
-    // Search for memories
-    console.log("🔍 Searching memories...");
-    const results = await cortex.memory.search(
-      memorySpaceId,
-      "what are the user preferences?",
-    );
+    // Print assistant response
+    console.log("\x1b[36mAssistant:\x1b[0m");
+    console.log(result.response);
+    console.log("");
 
-    console.log(`✓ Found ${results.length} relevant memories:`);
-    results.forEach((result: any, i: number) => {
-      // Handle both MemoryEntry and EnrichedMemory formats
-      const memory = "memory" in result ? result.memory : result;
-      console.log(`\n${i + 1}. ${memory.content}`);
-      console.log(`   Importance: ${memory.importance}`);
-    });
-
-    // Get conversation history
-    console.log("\n📜 Getting conversation history...");
-    const conversation = await cortex.conversations.get(conversationId);
-
-    if (conversation) {
-      console.log(
-        `✓ Conversation has ${conversation.messages.length} messages`,
-      );
-    }
-
-    console.log("\n🎉 Success! Your AI agent has persistent memory.");
-    console.log("\n📚 Next steps:");
-    console.log(
-      "   - Explore the API: https://github.com/SaintNick1214/Project-Cortex",
-    );
-    console.log("   - Add vector embeddings for semantic search");
-    console.log("   - Set up graph database for advanced queries");
-    console.log("   - Build multi-agent systems with context chains\n");
+    return true;
   } catch (error) {
-    console.error("❌ Error:", error);
-    throw error;
-  } finally {
-    // Cleanup
-    cortex.close();
+    printError("Failed to process message", error instanceof Error ? error : undefined);
+    return true;
   }
 }
 
-// Run the example
+/**
+ * Handle slash commands
+ */
+async function handleCommand(input: string): Promise<boolean> {
+  const parts = input.slice(1).split(" ");
+  const command = parts[0].toLowerCase();
+  const args = parts.slice(1).join(" ");
+
+  switch (command) {
+    case "exit":
+    case "quit":
+    case "q":
+      printInfo("Goodbye!");
+      return false;
+
+    case "clear":
+    case "cls":
+      console.clear();
+      printWelcome("cli");
+      return true;
+
+    case "recall":
+    case "search":
+      if (!args) {
+        printInfo("Usage: /recall <query>");
+      } else {
+        await recallMemories(args);
+      }
+      return true;
+
+    case "facts":
+      await listFacts();
+      return true;
+
+    case "history":
+    case "h":
+      await getHistory();
+      return true;
+
+    case "new":
+      newConversation();
+      return true;
+
+    case "config":
+    case "status":
+      printConfig();
+      return true;
+
+    case "help":
+    case "?":
+      printHelp();
+      return true;
+
+    default:
+      printInfo(`Unknown command: /${command}. Type /help for available commands.`);
+      return true;
+  }
+}
+
+/**
+ * Print help message
+ */
+function printHelp(): void {
+  console.log("");
+  console.log("📖 Available Commands:");
+  console.log("");
+  console.log("  /recall <query>  Search memories without storing");
+  console.log("  /facts           List all stored facts");
+  console.log("  /history         Show conversation history");
+  console.log("  /new             Start a new conversation");
+  console.log("  /config          Show current configuration");
+  console.log("  /clear           Clear the screen");
+  console.log("  /help            Show this help message");
+  console.log("  /exit            Exit the demo");
+  console.log("");
+}
+
+/**
+ * Prompt for input
+ */
+function prompt(): void {
+  rl.question("\x1b[33mYou:\x1b[0m ", async (input) => {
+    const shouldContinue = await processInput(input);
+
+    if (shouldContinue) {
+      prompt();
+    } else {
+      cleanup();
+    }
+  });
+}
+
+/**
+ * Cleanup on exit
+ */
+function cleanup(): void {
+  closeCortex();
+  rl.close();
+  process.exit(0);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Main Entry Point
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function main(): Promise<void> {
+  // Check for required environment
+  if (!process.env.CONVEX_URL) {
+    printError(
+      "CONVEX_URL is required. Set it in .env.local or run: cortex init",
+    );
+    process.exit(1);
+  }
+
+  // Print welcome
+  printWelcome("cli");
+
+  // Initialize conversation
+  const convId = getConversationId();
+  printSuccess(`Conversation: ${convId}`);
+  console.log("");
+
+  // Handle signals
+  process.on("SIGINT", () => {
+    console.log("");
+    cleanup();
+  });
+
+  process.on("SIGTERM", () => {
+    cleanup();
+  });
+
+  // Start prompt loop
+  prompt();
+}
+
+// Run
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  printError("Fatal error", error instanceof Error ? error : undefined);
   process.exit(1);
 });

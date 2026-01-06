@@ -279,7 +279,7 @@ describe("User Schemas", () => {
 
         const result = validateUserProfile(
           profileWithoutEmail,
-          validationPresets.strict
+          validationPresets.strict,
         );
         expect(result.valid).toBe(false);
         expect(result.errors.some((e) => e.includes("email"))).toBe(true);
@@ -293,7 +293,7 @@ describe("User Schemas", () => {
 
         const result = validateUserProfile(
           profileWithBadEmail,
-          validationPresets.strict
+          validationPresets.strict,
         );
         expect(result.valid).toBe(false);
         expect(result.errors.some((e) => e.includes("email"))).toBe(true);
@@ -307,7 +307,7 @@ describe("User Schemas", () => {
 
         const result = validateUserProfile(
           validProfile,
-          validationPresets.strict
+          validationPresets.strict,
         );
         expect(result.valid).toBe(true);
       });
@@ -325,9 +325,9 @@ describe("User Schemas", () => {
 
         const result = validateUserProfile(profile, validationPresets.strict);
         expect(result.valid).toBe(false);
-        expect(result.errors.some((e) => e.includes("exceeds maximum size"))).toBe(
-          true
-        );
+        expect(
+          result.errors.some((e) => e.includes("exceeds maximum size")),
+        ).toBe(true);
       });
     });
 
@@ -357,7 +357,10 @@ describe("User Schemas", () => {
       it("should accept any profile", () => {
         const emptyProfile = {} as StandardUserProfile;
 
-        const result = validateUserProfile(emptyProfile, validationPresets.none);
+        const result = validateUserProfile(
+          emptyProfile,
+          validationPresets.none,
+        );
         expect(result.valid).toBe(true);
       });
 
@@ -369,7 +372,7 @@ describe("User Schemas", () => {
 
         const result = validateUserProfile(
           invalidProfile,
-          validationPresets.none
+          validationPresets.none,
         );
         expect(result.valid).toBe(true);
       });
@@ -409,7 +412,7 @@ describe("User Schemas", () => {
     it("should create profile with defaults", () => {
       const profile = createUserProfile(
         { displayName: "Alice" },
-        { status: "active", preferences: { theme: "light" } }
+        { status: "active", preferences: { theme: "light" } },
       );
 
       expect(profile.displayName).toBe("Alice");
@@ -419,14 +422,14 @@ describe("User Schemas", () => {
 
     it("should throw on missing displayName", () => {
       expect(() => createUserProfile({} as any)).toThrow(
-        "displayName is required"
+        "displayName is required",
       );
     });
 
     it("should override defaults with provided values", () => {
       const profile = createUserProfile(
         { displayName: "Alice", status: "inactive" },
-        { status: "active" }
+        { status: "active" },
       );
 
       expect(profile.status).toBe("inactive");

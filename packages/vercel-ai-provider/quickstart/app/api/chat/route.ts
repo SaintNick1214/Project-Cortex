@@ -164,7 +164,10 @@ function normalizeMessages(messages: unknown[]): unknown[] {
 /**
  * Extract text from a message (handles both content string and parts array)
  */
-function getMessageText(message: { content?: string; parts?: Array<{ type: string; text?: string }> }): string {
+function getMessageText(message: {
+  content?: string;
+  parts?: Array<{ type: string; text?: string }>;
+}): string {
   if (typeof message.content === "string") {
     return message.content;
   }
@@ -180,7 +183,12 @@ function getMessageText(message: { content?: string; parts?: Array<{ type: strin
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages, memorySpaceId, userId, conversationId: providedConversationId } = body;
+    const {
+      messages,
+      memorySpaceId,
+      userId,
+      conversationId: providedConversationId,
+    } = body;
 
     // Validate messages array exists
     if (!messages || !Array.isArray(messages)) {
@@ -191,7 +199,8 @@ export async function POST(req: Request) {
     }
 
     // Generate conversation ID if not provided (new chat)
-    const conversationId = providedConversationId || 
+    const conversationId =
+      providedConversationId ||
       `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const isNewConversation = !providedConversationId;
 
@@ -202,20 +211,28 @@ export async function POST(req: Request) {
     // Convert UIMessage[] from useChat to ModelMessage[] for streamText
     // Note: In AI SDK v6+, convertToModelMessages may return a Promise
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const modelMessagesResult = convertToModelMessages(normalizedMessages as any);
+    const modelMessagesResult = convertToModelMessages(
+      normalizedMessages as any,
+    );
     const modelMessages =
       modelMessagesResult instanceof Promise
         ? await modelMessagesResult
         : modelMessagesResult;
 
     // Get the first user message for title generation
-    const firstUserMessage = messages.find((m: { role: string }) => m.role === "user") as {
-      role: string;
-      content?: string;
-      parts?: Array<{ type: string; text?: string }>;
-    } | undefined;
-    
-    const messageText = firstUserMessage ? getMessageText(firstUserMessage) : "";
+    const firstUserMessage = messages.find(
+      (m: { role: string }) => m.role === "user",
+    ) as
+      | {
+          role: string;
+          content?: string;
+          parts?: Array<{ type: string; text?: string }>;
+        }
+      | undefined;
+
+    const messageText = firstUserMessage
+      ? getMessageText(firstUserMessage)
+      : "";
 
     // Use createUIMessageStream to send both LLM text and layer events
     return createUIMessageStreamResponse({

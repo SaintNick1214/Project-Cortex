@@ -24,15 +24,14 @@ Example:
 
 # Main client
 # Auth module
+# Validation Errors
+from .a2a.validators import A2AValidationError
+from .agents.validators import AgentValidationError
 from .auth import (
     AuthValidationError,
     create_auth_context,
     validate_auth_context,
 )
-
-# Validation Errors
-from .a2a.validators import A2AValidationError
-from .agents.validators import AgentValidationError
 from .client import Cortex
 from .contexts.validators import ContextsValidationError
 from .conversations.validators import ConversationValidationError
@@ -132,6 +131,7 @@ from .types import (
     # Mutable
     CountMutableFilter,
     CreateConversationInput,
+    CreateSessionParams,
     DeleteConversationOptions,
     DeleteFactResult,
     DeleteManyConversationsOptions,
@@ -148,11 +148,14 @@ from .types import (
     DeleteResult,
     DeleteUserOptions,
     DeletionContext,
+    EndAllOptions,
+    EndSessionsResult,
     EnforcementOptions,
     EnforcementResult,
     EnforcementStats,
     EnforcementStatsOptions,
     EnrichedMemory,
+    ExpireSessionsOptions,
     ExportAgentsOptions,
     ExportAgentsResult,
     ExportResult,
@@ -264,15 +267,11 @@ from .types import (
     SearchOptions,
     # Session Types
     Session,
-    SessionMetadata,
-    SessionStatus,
     SessionFilters,
-    CreateSessionParams,
-    ExpireSessionsOptions,
-    EndAllOptions,
-    EndSessionsResult,
     SessionLifecyclePolicy,
+    SessionMetadata,
     SessionPolicy,
+    SessionStatus,
     SetMutableOptions,
     ShortestPathConfig,
     SimulationOptions,

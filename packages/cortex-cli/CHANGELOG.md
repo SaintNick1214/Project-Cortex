@@ -1,5 +1,28 @@
 # @cortexmemory/cli Changelog
 
+## [0.28.0] - 2026-01-05
+
+### Added
+
+- **Basic template tracking in CLI config** - Basic template projects are now registered in `cortex.config.json` like quickstart apps:
+  - `cortex init` automatically registers basic projects in the `apps` section
+  - `cortex update --sync-template` now works with basic template projects
+  - `cortex config list` shows basic projects alongside quickstart apps
+  - Enables future template updates to be synced to existing basic projects
+
+- **Sessions and factHistory table support** - `cortex db clear` and `cortex db stats` now include all Convex tables:
+  - `sessions` - Native session management table
+  - `factHistory` - Belief revision audit trail table
+  - Both tables are now properly cleared during database reset operations
+  - Statistics now include counts for all 13 tables
+
+### Changed
+
+- Added `"basic"` to `AppType` union type for template app tracking
+- Added `"basic"` to template directory mapping for `--sync-template` support
+- `cortex db clear` now clears 13 tables (was 11): added sessions and factHistory
+- Deletion summary now shows sessions and fact history counts in the "System Tables" section
+
 ## [0.27.3] - 2026-01-01
 
 ### Added

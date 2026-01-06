@@ -62,7 +62,7 @@ import {
 } from "@cortexmemory/vercel-ai-provider";
 
 const memoryAgent = new ToolLoopAgent({
-  model: openai("gpt-4o-mini"),  // Use actual provider, not gateway string
+  model: openai("gpt-4o-mini"), // Use actual provider, not gateway string
   instructions: "You are a helpful assistant with long-term memory.",
   callOptionsSchema: createCortexCallOptionsSchema(),
   prepareCall: createMemoryPrepareCall({
