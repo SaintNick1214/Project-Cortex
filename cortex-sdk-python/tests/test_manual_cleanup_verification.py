@@ -35,6 +35,17 @@ async def test_manual_cleanup_verification(cortex_client, test_ids):
     print("=" * 70)
 
     # ========================================================================
+    # STEP 0: Register memory space (required before creating items in it)
+    # ========================================================================
+    print("\n📦 STEP 0: Registering memory space...")
+    await cortex_client.memory_spaces.register({
+        "memory_space_id": memory_space_id,
+        "type": "personal",
+        "name": f"Cleanup Verification Space {memory_space_id}",
+    })
+    print(f"  ✓ Registered memory space: {memory_space_id}")
+
+    # ========================================================================
     # STEP 1: Create test data
     # ========================================================================
     print("\n📝 STEP 1: Creating test data...")
@@ -98,9 +109,12 @@ async def test_manual_cleanup_verification(cortex_client, test_ids):
     print(f"    - Immutable: {purge_result['immutable']}")
     print(f"    - Mutable: {purge_result['mutable']}")
 
-    # Purge user
-    user_count = await cleanup.purge_users(prefix="test-user-")
-    print(f"  Purged users: {user_count}")
+    # Purge only the specific user created in this test (not all test-user-* which would affect parallel tests)
+    try:
+        await cortex_client.users.delete(user_id)
+        print(f"  Purged user: {user_id}")
+    except Exception as e:
+        print(f"  User deletion failed (may already be deleted): {e}")
 
     # ========================================================================
     # STEP 4: Verify data is gone
