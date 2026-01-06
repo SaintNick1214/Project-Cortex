@@ -69,6 +69,9 @@ export function ChatInterface({
     conversationIdRef.current = conversationId;
   }, [conversationId]);
 
+  // Track if we should skip history load (when we create a new conversation ourselves)
+  const skipHistoryLoadRef = useRef<string | null>(null);
+
   // Create transport with a function that reads from ref for conversationId
   // This ensures we always send the latest conversationId
   const transport = useMemo(
@@ -104,6 +107,8 @@ export function ChatInterface({
       // Handle conversation title update
       if (part.type === "data-conversation-update") {
         const update = part.data as { conversationId: string; title: string };
+        // Mark this conversation ID to skip history load - we just created it
+        skipHistoryLoadRef.current = update.conversationId;
         onConversationUpdate?.(update.conversationId, update.title);
       }
     },
@@ -122,13 +127,21 @@ export function ChatInterface({
 
   // Load messages when conversation changes
   useEffect(() => {
-    // Clear messages first
-    setMessages([]);
-
-    // If no conversation selected, nothing more to do
+    // If no conversation selected, just clear messages
     if (!conversationId) {
+      setMessages([]);
       return;
     }
+
+    // Skip loading if we just created this conversation ourselves
+    // (we already have the messages in state from the current chat session)
+    if (skipHistoryLoadRef.current === conversationId) {
+      skipHistoryLoadRef.current = null;
+      return;
+    }
+
+    // Clear messages before loading new conversation
+    setMessages([]);
 
     // Fetch conversation history
     const loadConversationHistory = async () => {

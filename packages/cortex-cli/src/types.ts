@@ -10,7 +10,7 @@ export type OutputFormat = "table" | "json" | "csv";
 /**
  * Template app types
  */
-export type AppType = "vercel-ai-quickstart";
+export type AppType = "basic" | "vercel-ai-quickstart";
 
 /**
  * Configuration for an installed template app

@@ -836,6 +836,19 @@ export async function runInitWizard(
   // Execute setup (returns SDK metadata for post-setup steps)
   const sdkMetadata = await executeSetup(config);
 
+  // Register basic template in CLI config for template sync support
+  const cliConfig = await loadConfig();
+  cliConfig.apps = cliConfig.apps || {};
+  cliConfig.apps[config.projectName] = {
+    type: "basic",
+    path: ".", // Basic template is the root project
+    projectPath: config.projectPath,
+    enabled: true,
+    port: 3001, // Default port for basic template server mode
+    startCommand: "npm start",
+  };
+  await saveUserConfig(cliConfig);
+
   // Ask about Vercel AI quickstart (optional demo app)
   let installedQuickstart = false;
   let quickstartAppConfig = null;

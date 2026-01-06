@@ -86,6 +86,74 @@ let orchestrationStartTime = 0;
 let isOrchestrating = false;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Spinner (Waiting Indicator)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const SPINNER_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+let spinnerInterval: ReturnType<typeof setInterval> | null = null;
+let spinnerFrame = 0;
+let currentSpinnerMessage = "";
+
+/**
+ * Start a spinner with a message
+ */
+export function startSpinner(message: string): void {
+  // Stop any existing spinner first
+  if (spinnerInterval) {
+    stopSpinner();
+  }
+
+  currentSpinnerMessage = message;
+  spinnerFrame = 0;
+
+  // Write initial frame
+  process.stdout.write(`\r\x1b[36m${SPINNER_FRAMES[0]}\x1b[0m ${message}`);
+
+  // Animate the spinner
+  spinnerInterval = setInterval(() => {
+    spinnerFrame = (spinnerFrame + 1) % SPINNER_FRAMES.length;
+    process.stdout.write(`\r\x1b[36m${SPINNER_FRAMES[spinnerFrame]}\x1b[0m ${currentSpinnerMessage}`);
+  }, 80);
+}
+
+/**
+ * Update spinner message without stopping
+ */
+export function updateSpinner(message: string): void {
+  if (!spinnerInterval) return;
+
+  // Clear the line and write new message
+  currentSpinnerMessage = message;
+  process.stdout.write(`\r\x1b[K\x1b[36m${SPINNER_FRAMES[spinnerFrame]}\x1b[0m ${message}`);
+}
+
+/**
+ * Stop the spinner with optional success/failure indicator
+ */
+export function stopSpinner(success?: boolean, message?: string): void {
+  if (spinnerInterval) {
+    clearInterval(spinnerInterval);
+    spinnerInterval = null;
+  }
+
+  // Clear the spinner line
+  process.stdout.write("\r\x1b[K");
+
+  // Print final message if provided
+  if (message !== undefined) {
+    if (success === true) {
+      console.log(`\x1b[32m✓\x1b[0m ${message}`);
+    } else if (success === false) {
+      console.log(`\x1b[31m✗\x1b[0m ${message}`);
+    } else {
+      console.log(`  ${message}`);
+    }
+  }
+
+  currentSpinnerMessage = "";
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Box Drawing Helpers
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

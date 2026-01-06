@@ -273,6 +273,7 @@ function compareFiles(
  */
 function getTemplateDir(appType: string): string {
   const typeMap: Record<string, string> = {
+    "basic": "basic",
     "vercel-ai-quickstart": "vercel-ai-quickstart",
   };
   return typeMap[appType] || appType;
