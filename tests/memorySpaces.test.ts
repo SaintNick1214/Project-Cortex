@@ -664,24 +664,53 @@ describe("Memory Spaces Registry API", () => {
     });
 
     it("hasMore is false when at end", async () => {
-      const allResult = await cortex.memorySpaces.list();
-      const total = allResult.total;
+      // Create a dedicated set of test spaces for pagination testing
+      // This isolates us from parallel test interference
+      const paginationTestParticipant = ctx.userId("pagination-test");
+      const paginationSpaceIds: string[] = [];
 
-      // Cap at max limit of 1000 - if total > 1000, we can't fetch all in one page
-      // In that case, we test that fetching up to the max works correctly
-      const effectiveLimit = Math.min(total, 1000);
+      // Create exactly 3 spaces for this test
+      for (let i = 0; i < 3; i++) {
+        const spaceId = ctx.memorySpaceId(`pagination-${i}`);
+        paginationSpaceIds.push(spaceId);
+        await cortex.memorySpaces.register({
+          memorySpaceId: spaceId,
+          name: `Pagination Test Space ${i}`,
+          type: "personal",
+          participants: [{ id: paginationTestParticipant, type: "user" }],
+        });
+      }
 
-      const lastPageResult = await cortex.memorySpaces.list({
-        limit: effectiveLimit,
-        offset: 0,
-      });
+      try {
+        // Query only spaces with our test participant - isolated from other tests
+        const allResult = await cortex.memorySpaces.list({
+          participant: paginationTestParticipant,
+        });
 
-      // hasMore is false only if we fetched everything (total <= 1000)
-      if (total <= 1000) {
+        expect(allResult.total).toBe(3);
+
+        // Fetch all 3 at once
+        const lastPageResult = await cortex.memorySpaces.list({
+          participant: paginationTestParticipant,
+          limit: 3,
+          offset: 0,
+        });
+
+        // Since we fetched all 3, hasMore should be false
         expect(lastPageResult.hasMore).toBe(false);
-      } else {
-        // When total > max limit, there will always be more
-        expect(lastPageResult.hasMore).toBe(true);
+        expect(lastPageResult.spaces).toHaveLength(3);
+      } finally {
+        // Clean up pagination test spaces
+        for (const spaceId of paginationSpaceIds) {
+          try {
+            await cortex.memorySpaces.delete(spaceId, {
+              cascade: false,
+              reason: "Test cleanup",
+            });
+          } catch {
+            // Ignore cleanup errors
+          }
+        }
       }
     });
   });
