@@ -779,8 +779,8 @@ jobs:
           # The API commit is signed by GitHub, satisfying the branch protection rule
           echo "📤 Pushing formula update via GitHub API (creates verified commit)..."
           
-          # Base64 encode the content for the API
-          ENCODED_CONTENT=$(echo "$UPDATED_CONTENT" | base64 -w 0)
+          # Base64 encode the content for the API (use printf to avoid adding extra newline)
+          ENCODED_CONTENT=$(printf '%s' "$UPDATED_CONTENT" | base64 -w 0)
 
           gh api --method PUT repos/Cortex-Memory/homebrew-tap/contents/Formula/cli.rb \
             -f message="chore: update cli formula to v${VERSION}" \
