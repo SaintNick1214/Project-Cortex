@@ -687,7 +687,7 @@ jobs:
 
       - name: Update Homebrew tap formula
         env:
-          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
           VERSION=${{ needs.check-version.outputs.cli-new-version }}
           echo "════════════════════════════════════════════════════════════"
@@ -756,33 +756,39 @@ jobs:
 
           echo "🔐 SHA256: ${SHA256}"
 
-          # Clone homebrew-tap repo and update formula
-          git clone https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/Cortex-Memory/homebrew-tap.git /tmp/homebrew-tap
-          cd /tmp/homebrew-tap
+          # Get current formula content to build updated version
+          echo "📥 Fetching current formula from GitHub..."
+          CURRENT_CONTENT=$(gh api repos/Cortex-Memory/homebrew-tap/contents/Formula/cli.rb --jq '.content' | base64 -d)
+          CURRENT_SHA=$(gh api repos/Cortex-Memory/homebrew-tap/contents/Formula/cli.rb --jq '.sha')
 
-          # Update formula
-          FORMULA_PATH="Formula/cli.rb"
-          sed -i "s|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-[0-9.]*\.tgz\"|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz\"|" "${FORMULA_PATH}"
-          sed -i "s|sha256 \"[a-f0-9]*\"|sha256 \"${SHA256}\"|" "${FORMULA_PATH}"
+          # Update formula content using sed
+          UPDATED_CONTENT=$(echo "$CURRENT_CONTENT" | \
+            sed "s|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-[0-9.]*\.tgz\"|url \"https://registry.npmjs.org/@cortexmemory/cli/-/cli-${VERSION}.tgz\"|" | \
+            sed "s|sha256 \"[a-f0-9]*\"|sha256 \"${SHA256}\"|")
 
-          echo "✅ Formula updated"
-          cat "${FORMULA_PATH}"
+          echo "✅ Formula updated locally"
+          echo "$UPDATED_CONTENT"
 
-          # Commit and push
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          if git diff --quiet "${FORMULA_PATH}"; then
+          # Check if content actually changed
+          if [ "$CURRENT_CONTENT" = "$UPDATED_CONTENT" ]; then
             echo "No changes to formula, skipping commit"
-          else
-            git add "${FORMULA_PATH}"
-            git commit -m "chore: update cli formula to v${VERSION}"
-            git push origin main
-            echo "✅ Pushed formula update to homebrew-tap"
+            exit 0
           fi
 
-          # Cleanup
-          rm -rf /tmp/homebrew-tap
+          # Use GitHub API to commit - this creates a verified/signed commit
+          # The API commit is signed by GitHub, satisfying the branch protection rule
+          echo "📤 Pushing formula update via GitHub API (creates verified commit)..."
+          
+          # Base64 encode the content for the API
+          ENCODED_CONTENT=$(echo "$UPDATED_CONTENT" | base64 -w 0)
+
+          gh api --method PUT repos/Cortex-Memory/homebrew-tap/contents/Formula/cli.rb \
+            -f message="chore: update cli formula to v${VERSION}" \
+            -f content="$ENCODED_CONTENT" \
+            -f sha="$CURRENT_SHA" \
+            -f branch="main"
+
+          echo "✅ Pushed formula update to homebrew-tap (verified commit)"
 
   publish-python:
     needs: check-version
