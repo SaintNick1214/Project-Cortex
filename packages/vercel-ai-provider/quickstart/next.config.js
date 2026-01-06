@@ -4,6 +4,11 @@ const path = require("path");
 const nextConfig = {
   transpilePackages: ["@cortexmemory/sdk", "@cortexmemory/vercel-ai-provider"],
   serverExternalPackages: ["convex"],
+  // Disable image optimization to avoid sharp dependency (LGPL licensed)
+  // This quickstart doesn't use image optimization features
+  images: {
+    unoptimized: true,
+  },
   experimental: {
     // Ensure linked packages resolve dependencies from this project's node_modules
     externalDir: true,
