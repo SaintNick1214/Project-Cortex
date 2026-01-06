@@ -19,6 +19,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## SDK Releases
 
+### [0.28.0] - 2026-01-05
+
+#### 🛠️ Basic Template & Convex Query Fixes
+
+**New Basic Template** - Complete headless demo of Cortex Memory SDK with both CLI and HTTP server modes.
+
+**Features:**
+- **Dual-mode operation** - Interactive CLI (`npm start`) or REST API server (`npm run server`)
+- **Optional LLM integration** - Works with or without OpenAI API key
+- **Rich console output** - Animated spinners and memory orchestration visualization
+- **Layer observer** - Real-time display of all memory layers (memorySpace, user, agent, conversation, vector, facts)
+- **Full test suite** - Unit, integration, and E2E tests included
+
+**CLI Commands:**
+- `/recall <query>` - Search memories without storing
+- `/facts` - List all stored facts
+- `/history` - Show conversation history
+- `/new` - Start a new conversation
+- `/config` - Show current configuration
+
+**Bugfix: `computeStats` Query Performance**
+
+Fixed "Too many bytes read" error in `agents:computeStats` Convex function that occurred with large datasets.
+
+```typescript
+// Before: Full table scans hitting 16MB limit
+const memories = await ctx.db.query("memories").collect();
+
+// After: Indexed queries with sampling
+const SAMPLE_LIMIT = 1000;
+const memories = await ctx.db
+  .query("memories")
+  .withIndex("by_participantId", (q) => q.eq("participantId", args.agentId))
+  .take(SAMPLE_LIMIT);
+```
+
+- Uses proper indexes (`by_participantId`, `by_memorySpace`)
+- Limits results to 1000 per query to stay within Convex read limits
+- Returns `isApproximate: true` when results are sampled
+- Conversations query fixed to use correct `by_memorySpace` index
+
+**Upgrade Notes:**
+- Run `npx convex deploy` after updating to push the fixed Convex functions
+
+---
+
 ### [0.27.0] - 2025-12-27
 
 #### 🏢 Multi-Tenancy & Authentication Context
