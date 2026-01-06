@@ -7,6 +7,7 @@ Run this to manually verify cleanup helpers are working correctly.
 
 import pytest
 
+from cortex.types import RegisterMemorySpaceParams
 from tests.helpers import (
     TestCleanup,
     create_test_conversation_input,
@@ -38,11 +39,13 @@ async def test_manual_cleanup_verification(cortex_client, test_ids):
     # STEP 0: Register memory space (required before creating items in it)
     # ========================================================================
     print("\n📦 STEP 0: Registering memory space...")
-    await cortex_client.memory_spaces.register({
-        "memory_space_id": memory_space_id,
-        "type": "personal",
-        "name": f"Cleanup Verification Space {memory_space_id}",
-    })
+    await cortex_client.memory_spaces.register(
+        RegisterMemorySpaceParams(
+            memory_space_id=memory_space_id,
+            type="personal",
+            name=f"Cleanup Verification Space {memory_space_id}",
+        )
+    )
     print(f"  ✓ Registered memory space: {memory_space_id}")
 
     # ========================================================================
