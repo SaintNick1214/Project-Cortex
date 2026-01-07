@@ -17,7 +17,14 @@ The fastest way to get started with Cortex:
   <Step title="Install the CLI">
     Install Cortex globally:
     
-    <Terminal>npm install -g @cortexmemory/cli</Terminal>
+    <Tabs groupId="install-method">
+      <TabItem value="brew" label="Homebrew (Recommended)">
+        <Terminal>brew install cortex-memory/tap/cli</Terminal>
+      </TabItem>
+      <TabItem value="npm" label="npm">
+        <Terminal>npm install -g @cortexmemory/cli</Terminal>
+      </TabItem>
+    </Tabs>
   </Step>
   <Step title="Verify installation">
     Check that the CLI is installed correctly:
@@ -77,6 +84,11 @@ Expected output: Node.js `v20.0.0+` and npm `9.0.0+`
 Install the CLI globally to use it from anywhere:
 
 <Tabs groupId="package-manager">
+  <TabItem value="brew" label="Homebrew (Recommended)">
+    <Terminal>brew install cortex-memory/tap/cli</Terminal>
+    
+    Homebrew handles PATH configuration automatically and makes updates easy with `brew upgrade`.
+  </TabItem>
   <TabItem value="npm" label="npm">
     <Terminal>npm install -g @cortexmemory/cli</Terminal>
   </TabItem>
@@ -187,15 +199,17 @@ After installation, verify everything works:
   <AccordionItem title="cortex: command not found" defaultOpen={true}>
     **Cause:** CLI not installed or not in PATH
 
-    **Fix:**
+    **Fix (Recommended):**
+
+    <Terminal>brew install cortex-memory/tap/cli</Terminal>
+
+    **Alternative (npm):**
 
     <Terminal>npm install -g @cortexmemory/cli</Terminal>
 
-    Or check npm global bin path:
+    If using npm, check global bin path is in your PATH:
 
     <Terminal>npm config get prefix</Terminal>
-
-    Make sure this directory is in your PATH.
   </AccordionItem>
 
   <AccordionItem title="cortex init fails">
@@ -204,9 +218,13 @@ After installation, verify everything works:
     - No internet connection
     - npm permissions
 
-    **Fix:**
+    **Fix (Recommended):**
 
-    Update Node.js to v20+, then clear npm cache:
+    Update Node.js to v20+, then reinstall via Homebrew:
+
+    <Terminal>brew reinstall cortex-memory/tap/cli</Terminal>
+
+    **Alternative (npm):**
 
     <Terminal>npm cache clean --force && npm install -g @cortexmemory/cli</Terminal>
   </AccordionItem>
@@ -262,6 +280,9 @@ cortex <command> --help
 To upgrade to the latest version:
 
 <Tabs groupId="package-manager">
+  <TabItem value="brew" label="Homebrew (Recommended)">
+    <Terminal>brew upgrade cortex-memory/tap/cli</Terminal>
+  </TabItem>
   <TabItem value="npm" label="npm">
     <Terminal>npm install -g @cortexmemory/cli@latest</Terminal>
   </TabItem>
