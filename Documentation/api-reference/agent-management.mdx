@@ -1,14 +1,23 @@
+---
+id: agent-management
+title: Agent Management API
+sidebar_position: 3
+description: Complete API reference for agent management operations including registration, discovery, and lifecycle management.
+---
+
 # Agent Management API
 
-> **Last Updated**: 2026-01-01
+**Last Updated**: 2026-01-01
 
-> ⚠️ **IMPORTANT:** The Agent Management API is being superseded by [Memory Space Operations](./memory-space-operations). While agent-based terminology remains supported for backwards compatibility, new applications should use memory spaces.
->
-> **Migration Path:**
->
-> - `agentId` → `memorySpaceId` (fundamental change)
-> - `cortex.agents.*` → `cortex.memorySpaces.*` (new API)
-> - See [Memory Spaces Guide](../02-core-features/01-memory-spaces) for details
+<Callout type="warning">
+**IMPORTANT:** The Agent Management API is being superseded by [Memory Space Operations](/api-reference/memory-space-operations). While agent-based terminology remains supported for backwards compatibility, new applications should use memory spaces.
+
+**Migration Path:**
+
+- `agentId` → `memorySpaceId` (fundamental change)
+- `cortex.agents.*` → `cortex.memorySpaces.*` (new API)
+- See [Memory Spaces Guide](/core-features/memory-spaces) for details
+</Callout>
 
 Complete API reference for agent management operations (legacy model).
 
@@ -16,7 +25,9 @@ Complete API reference for agent management operations (legacy model).
 
 The Agent Management API provides **optional metadata registration** for agent discovery, analytics, and team organization, plus **convenient cascade deletion** by participantId across all memory spaces.
 
-**⚠️ New Architecture:** Cortex now uses **Memory Spaces** as the fundamental isolation boundary, not agents. Multiple agents/tools can share one memory space (Hive Mode), or operate in separate spaces (Collaboration Mode).
+<Callout type="warning">
+**New Architecture:** Cortex now uses **Memory Spaces** as the fundamental isolation boundary, not agents. Multiple agents/tools can share one memory space (Hive Mode), or operate in separate spaces (Collaboration Mode).
+</Callout>
 
 ### Two Key Features
 
@@ -78,10 +89,10 @@ const memories = await cortex.memory.search("my-agent", "hello");
 
 **Use when:**
 
-- ✅ Getting started quickly
-- ✅ Simple applications
-- ✅ Don't need agent metadata or analytics
-- ✅ Maximum flexibility
+- Getting started quickly
+- Simple applications
+- Don't need agent metadata or analytics
+- Maximum flexibility
 
 ### Registry Mode (Optional Registration)
 
@@ -111,10 +122,10 @@ const supportAgents = await cortex.agents.search({
 
 **Use when:**
 
-- ✅ Multiple agents (need organization)
-- ✅ Want analytics and insights
-- ✅ Team collaboration
-- ✅ Agent discovery needed
+- Multiple agents (need organization)
+- Want analytics and insights
+- Team collaboration
+- Agent discovery needed
 
 ---
 
@@ -134,25 +145,16 @@ cortex.agents.register(
 
 **Parameters:**
 
-```typescript
-interface AgentRegistration {
-  id: string; // Agent ID (must match ID used in memory ops)
-  tenantId?: string; // Multi-tenancy: SaaS platform isolation
-  name: string; // Display name
-  description?: string; // What this agent does
-  metadata?: {
-    team?: string;
-    capabilities?: string[];
-    version?: string;
-    owner?: string;
-    [key: string]: unknown; // Custom fields
-  };
-  config?: {
-    memoryVersionRetention?: number; // Version retention override
-    [key: string]: unknown; // Custom config
-  };
-}
-```
+<APITable
+  parameters={[
+    { name: "id", type: "string", required: true, description: "Agent ID (must match ID used in memory ops)" },
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenancy: SaaS platform isolation" },
+    { name: "name", type: "string", required: true, description: "Display name" },
+    { name: "description", type: "string", required: false, description: "What this agent does" },
+    { name: "metadata", type: "object", required: false, description: "Custom metadata including team, capabilities, version, owner, and any custom fields" },
+    { name: "config", type: "object", required: false, description: "Agent configuration including memoryVersionRetention and custom config options" },
+  ]}
+/>
 
 **Returns:**
 
@@ -215,7 +217,7 @@ console.log(`Total memories: ${agent.stats?.totalMemories}`);
 
 **See Also:**
 
-- [Hybrid Agent Management](../02-core-features/01-memory-spaces.md#hybrid-agent-management)
+- [Hybrid Agent Management](/core-features/memory-spaces#hybrid-agent-management)
 
 ---
 
@@ -233,7 +235,11 @@ cortex.agents.get(
 
 **Parameters:**
 
-- `agentId` (string) - Agent ID to retrieve
+<APITable
+  parameters={[
+    { name: "agentId", type: "string", required: true, description: "Agent ID to retrieve" },
+  ]}
+/>
 
 **Returns:**
 
@@ -260,7 +266,9 @@ if (agent) {
 - `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
 - `AgentValidationError('EMPTY_AGENT_ID')` - Agent ID is empty string
 
-**Note:** Agents don't need to be registered to function. This just retrieves registry info if it exists.
+<Callout type="info">
+Agents don't need to be registered to function. This just retrieves registry info if it exists.
+</Callout>
 
 ---
 
@@ -278,24 +286,24 @@ cortex.agents.search(
 
 **Parameters:**
 
-```typescript
-interface AgentFilters {
-  tenantId?: string; // Multi-tenancy filter
-  metadata?: Record<string, unknown>; // Filter by metadata fields (exact match)
-  name?: string; // Search by name (partial match)
-  capabilities?: string[]; // Has these capabilities
-  capabilitiesMatch?: "any" | "all"; // Match mode (default: "any")
-  status?: "active" | "inactive" | "archived";
-  registeredAfter?: number; // Unix timestamp (ms)
-  registeredBefore?: number; // Unix timestamp (ms)
-  lastActiveAfter?: number; // Unix timestamp (ms)
-  lastActiveBefore?: number; // Unix timestamp (ms)
-  limit?: number; // Max results (1-1000)
-  offset?: number; // Skip first N results
-  sortBy?: "name" | "registeredAt" | "lastActive";
-  sortOrder?: "asc" | "desc";
-}
-```
+<APITable
+  parameters={[
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenancy filter" },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Filter by metadata fields (exact match)" },
+    { name: "name", type: "string", required: false, description: "Search by name (partial match)" },
+    { name: "capabilities", type: "string[]", required: false, description: "Has these capabilities" },
+    { name: "capabilitiesMatch", type: "'any' | 'all'", required: false, default: "'any'", description: "Match mode for capabilities" },
+    { name: "status", type: "'active' | 'inactive' | 'archived'", required: false, description: "Filter by agent status" },
+    { name: "registeredAfter", type: "number", required: false, description: "Unix timestamp (ms) - filter by registration date" },
+    { name: "registeredBefore", type: "number", required: false, description: "Unix timestamp (ms) - filter by registration date" },
+    { name: "lastActiveAfter", type: "number", required: false, description: "Unix timestamp (ms) - filter by activity" },
+    { name: "lastActiveBefore", type: "number", required: false, description: "Unix timestamp (ms) - filter by activity" },
+    { name: "limit", type: "number", required: false, default: "100", description: "Max results (1-1000)" },
+    { name: "offset", type: "number", required: false, default: "0", description: "Skip first N results" },
+    { name: "sortBy", type: "'name' | 'registeredAt' | 'lastActive'", required: false, description: "Sort field" },
+    { name: "sortOrder", type: "'asc' | 'desc'", required: false, description: "Sort direction" },
+  ]}
+/>
 
 **Returns:**
 
@@ -334,7 +342,9 @@ const found = await cortex.agents.search({
 - `AgentValidationError('INVALID_STATUS')` - Invalid status value
 - `AgentValidationError('INVALID_TIMESTAMP_RANGE')` - registeredAfter >= registeredBefore
 
-**Note:** Only returns **registered** agents. Unregistered agents (simple ID mode) won't appear.
+<Callout type="info">
+Only returns **registered** agents. Unregistered agents (simple ID mode) won't appear.
+</Callout>
 
 ---
 
@@ -352,39 +362,41 @@ cortex.agents.list(
 
 **Parameters:**
 
-```typescript
-interface AgentFilters {
-  tenantId?: string; // Multi-tenancy filter (backend-applied)
-  metadata?: Record<string, unknown>; // Filter by metadata (client-side)
-  name?: string; // Search by name (client-side, partial match)
-  capabilities?: string[]; // Has these capabilities (client-side)
-  capabilitiesMatch?: "any" | "all"; // Match mode (default: "any")
-  status?: "active" | "inactive" | "archived"; // Status filter (backend-applied)
-  registeredAfter?: number; // Unix timestamp (ms)
-  registeredBefore?: number; // Unix timestamp (ms)
-  lastActiveAfter?: number; // Unix timestamp (ms) (client-side)
-  lastActiveBefore?: number; // Unix timestamp (ms) (client-side)
-  limit?: number; // Max results (default: 100, max: 1000)
-  offset?: number; // Skip first N results (default: 0)
-  sortBy?: "name" | "registeredAt" | "lastActive";
-  sortOrder?: "asc" | "desc";
-}
-```
+<APITable
+  parameters={[
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenancy filter (backend-applied)" },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Filter by metadata (client-side)" },
+    { name: "name", type: "string", required: false, description: "Search by name (client-side, partial match)" },
+    { name: "capabilities", type: "string[]", required: false, description: "Has these capabilities (client-side)" },
+    { name: "capabilitiesMatch", type: "'any' | 'all'", required: false, default: "'any'", description: "Match mode" },
+    { name: "status", type: "'active' | 'inactive' | 'archived'", required: false, description: "Status filter (backend-applied)" },
+    { name: "registeredAfter", type: "number", required: false, description: "Unix timestamp (ms)" },
+    { name: "registeredBefore", type: "number", required: false, description: "Unix timestamp (ms)" },
+    { name: "lastActiveAfter", type: "number", required: false, description: "Unix timestamp (ms) (client-side)" },
+    { name: "lastActiveBefore", type: "number", required: false, description: "Unix timestamp (ms) (client-side)" },
+    { name: "limit", type: "number", required: false, default: "100", description: "Max results (max: 1000)" },
+    { name: "offset", type: "number", required: false, default: "0", description: "Skip first N results" },
+    { name: "sortBy", type: "'name' | 'registeredAt' | 'lastActive'", required: false, description: "Sort field" },
+    { name: "sortOrder", type: "'asc' | 'desc'", required: false, description: "Sort direction" },
+  ]}
+/>
 
-> ⚠️ **Pagination Limitation:** The `offset` and `limit` parameters are applied at the database level BEFORE the following client-side filters:
->
-> - `metadata`
-> - `name`
-> - `capabilities`
-> - `lastActiveAfter` / `lastActiveBefore`
->
-> This means combining `offset` with any of these filters may produce unexpected results. For example, requesting `{ metadata: { team: "alpha" }, offset: 10 }` skips the first 10 agents regardless of team, then filters the remaining results.
->
-> **Safe pagination patterns:**
->
-> - Use `offset`/`limit` with `status` filter only (backend-applied)
-> - Use `offset`/`limit` without any client-side filters
-> - For paginating with metadata/name/capabilities, fetch all results and paginate client-side
+<Callout type="warning">
+**Pagination Limitation:** The `offset` and `limit` parameters are applied at the database level BEFORE the following client-side filters:
+
+- `metadata`
+- `name`
+- `capabilities`
+- `lastActiveAfter` / `lastActiveBefore`
+
+This means combining `offset` with any of these filters may produce unexpected results. For example, requesting `{ metadata: { team: "alpha" }, offset: 10 }` skips the first 10 agents regardless of team, then filters the remaining results.
+
+**Safe pagination patterns:**
+
+- Use `offset`/`limit` with `status` filter only (backend-applied)
+- Use `offset`/`limit` without any client-side filters
+- For paginating with metadata/name/capabilities, fetch all results and paginate client-side
+</Callout>
 
 **Returns:**
 
@@ -415,7 +427,7 @@ const teamAgents = await cortex.agents.list({
 // WARNING: offset + metadata may produce unexpected results
 // const paginated = await cortex.agents.list({
 //   metadata: { team: "alpha" },
-//   offset: 10,  // ⚠️ Applied before metadata filter
+//   offset: 10,  // Applied before metadata filter
 // });
 ```
 
@@ -440,7 +452,11 @@ cortex.agents.count(
 
 **Parameters:**
 
-- `filters` (AgentFilters, optional) - Same filters as search()
+<APITable
+  parameters={[
+    { name: "filters", type: "AgentFilters", required: false, description: "Same filters as search()" },
+  ]}
+/>
 
 **Returns:**
 
@@ -476,7 +492,11 @@ cortex.agents.exists(
 
 **Parameters:**
 
-- `agentId` (string) - Agent ID to check
+<APITable
+  parameters={[
+    { name: "agentId", type: "string", required: true, description: "Agent ID to check" },
+  ]}
+/>
 
 **Returns:**
 
@@ -506,7 +526,9 @@ if (!(await cortex.agents.exists("support-agent"))) {
 - `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
 - `AgentValidationError('EMPTY_AGENT_ID')` - Agent ID is empty string
 
-**Note:** An agent doesn't need to be registered to function. This just checks the registry.
+<Callout type="info">
+An agent doesn't need to be registered to function. This just checks the registry.
+</Callout>
 
 ---
 
@@ -525,8 +547,12 @@ cortex.agents.update(
 
 **Parameters:**
 
-- `agentId` (string) - Agent to update
-- `updates` (Partial<AgentRegistration>) - Fields to update
+<APITable
+  parameters={[
+    { name: "agentId", type: "string", required: true, description: "Agent to update" },
+    { name: "updates", type: "Partial<AgentRegistration>", required: true, description: "Fields to update" },
+  ]}
+/>
 
 **Returns:**
 
@@ -577,12 +603,13 @@ cortex.agents.configure(
 
 **Parameters:**
 
-```typescript
-interface AgentConfig {
-  memoryVersionRetention?: number; // -1 = unlimited, 1 = no history, 10 = default
-  [key: string]: any; // Custom config options
-}
-```
+<APITable
+  parameters={[
+    { name: "agentId", type: "string", required: true, description: "Agent ID to configure" },
+    { name: "config.memoryVersionRetention", type: "number", required: false, description: "-1 = unlimited, 1 = no history, 10 = default" },
+    { name: "config.[key]", type: "any", required: false, description: "Custom config options" },
+  ]}
+/>
 
 **Returns:**
 
@@ -614,7 +641,9 @@ await cortex.agents.configure("support-agent", {
 - `AgentValidationError('INVALID_CONFIG_FORMAT')` - Config is not a plain object
 - `AgentValidationError('EMPTY_CONFIG_OBJECT')` - Config object is empty
 
-**Note:** Configuration works even if agent isn't registered. It's stored separately.
+<Callout type="info">
+Configuration works even if agent isn't registered. It's stored separately.
+</Callout>
 
 ---
 
@@ -622,7 +651,9 @@ await cortex.agents.configure("support-agent", {
 
 Remove agent from registry with optional cascade deletion by participantId.
 
-> **Cascade Deletion**: Fully implemented in SDK with graph orphan detection. Filters by `participantId` across ALL memory spaces.
+<Callout type="tip">
+**Cascade Deletion**: Fully implemented in SDK with graph orphan detection. Filters by `participantId` across ALL memory spaces.
+</Callout>
 
 **Signature:**
 
@@ -635,13 +666,14 @@ cortex.agents.unregister(
 
 **Parameters:**
 
-```typescript
-interface UnregisterAgentOptions {
-  cascade?: boolean; // Delete all data where participantId = agentId (default: false)
-  verify?: boolean; // Verify deletion completeness (default: true)
-  dryRun?: boolean; // Preview what would be deleted (default: false)
-}
-```
+<APITable
+  parameters={[
+    { name: "agentId", type: "string", required: true, description: "Agent ID to unregister" },
+    { name: "options.cascade", type: "boolean", required: false, default: "false", description: "Delete all data where participantId = agentId" },
+    { name: "options.verify", type: "boolean", required: false, default: "true", description: "Verify deletion completeness" },
+    { name: "options.dryRun", type: "boolean", required: false, default: "false", description: "Preview what would be deleted" },
+  ]}
+/>
 
 **Returns:**
 
@@ -718,9 +750,9 @@ console.log(`Layers: ${result.deletedLayers.join(", ")}`);
 
 // Verification
 if (result.verification.complete) {
-  console.log("✅ Deletion verified - no orphaned records");
+  console.log("Deletion verified - no orphaned records");
 } else {
-  console.warn("⚠️ Verification issues:");
+  console.warn("Verification issues:");
   result.verification.issues.forEach((issue) => console.warn(`  - ${issue}`));
 }
 ```
@@ -753,7 +785,7 @@ console.log(`Agent still registered: ${agent !== null}`); // true
 // Day 1: Create data (no registration)
 await cortex.memory.remember({
   memorySpaceId: "space-1",
-  participantId: "agent-xyz", // ← Agent never registered
+  participantId: "agent-xyz", // Agent never registered
   conversationId: "conv-1",
   userMessage: "Hello",
   agentResponse: "Hi",
@@ -766,8 +798,8 @@ const result = await cortex.agents.unregister("agent-xyz", {
   cascade: true,
 });
 
-// ✅ Deletes memories even though agent was never registered
-// ✅ Queries by participantId field in data, not registration
+// Deletes memories even though agent was never registered
+// Queries by participantId field in data, not registration
 console.log(
   `Deleted ${result.memoriesDeleted} memories from unregistered agent`,
 );
@@ -783,8 +815,8 @@ console.log(
 | **Required**         | Legal requirement             | Optional feature               |
 | **Registration**     | Works even if no user profile | Works even if never registered |
 | **Query logic**      | `WHERE userId = X`            | `WHERE participantId = X`      |
-| **Orphan detection** | ✅ Included                   | ✅ Included                    |
-| **Rollback**         | ✅ Transaction-like           | ✅ Transaction-like            |
+| **Orphan detection** | Included                      | Included                       |
+| **Rollback**         | Transaction-like              | Transaction-like               |
 
 **Why both exist:**
 
@@ -801,9 +833,13 @@ console.log(
 - `AgentCascadeDeletionError` - Cascade deletion failed (all changes rolled back)
 - `ConvexError('AGENT_NOT_REGISTERED')` - Agent not in registry (when cascade=false)
 
-> **Note on AgentCascadeDeletionError:** This error is thrown when cascade deletion fails partway through. The SDK automatically rolls back all changes made before the failure. The error includes a `cause` property with the original error for debugging.
+<Callout type="info">
+**Note on AgentCascadeDeletionError:** This error is thrown when cascade deletion fails partway through. The SDK automatically rolls back all changes made before the failure. The error includes a `cause` property with the original error for debugging.
+</Callout>
 
-**Warning:** This doesn't prevent using the agent ID again. It just removes registry entry and optionally deletes data.
+<Callout type="warning">
+This doesn't prevent using the agent ID again. It just removes registry entry and optionally deletes data.
+</Callout>
 
 **Graph Integration:**
 
@@ -831,8 +867,8 @@ const cortex = new Cortex({
 
 // Now cascade includes graph with orphan detection!
 await cortex.agents.unregister("agent-123", { cascade: true });
-// ✅ Deletes from memories, conversations, facts, AND graph
-// ✅ Includes orphan island detection
+// Deletes from memories, conversations, facts, AND graph
+// Includes orphan island detection
 ```
 
 ---
@@ -911,9 +947,13 @@ if (agent) {
 }
 ```
 
-> 🚧 **PLANNED FEATURE:** A dedicated `cortex.analytics.getAgentStats()` API for retrieving statistics for unregistered agents is planned for a future release. Currently, stats are only computed for registered agents via the agents API.
+<Callout type="note">
+**PLANNED FEATURE:** A dedicated `cortex.analytics.getAgentStats()` API for retrieving statistics for unregistered agents is planned for a future release. Currently, stats are only computed for registered agents via the agents API.
+</Callout>
 
-**Note:** Stats are computed on-demand and included in `RegisteredAgent` responses. For unregistered agents, use memory space queries to gather statistics.
+<Callout type="info">
+Stats are computed on-demand and included in `RegisteredAgent` responses. For unregistered agents, use memory space queries to gather statistics.
+</Callout>
 
 ---
 
@@ -944,12 +984,12 @@ await cortex.memory.remember({
 ### 2. Use Meaningful IDs
 
 ```typescript
-// ✅ Good agent IDs
+// Good agent IDs
 "customer-support-agent";
 "finance-analyst-agent";
 "hr-recruiter-agent";
 
-// ❌ Bad agent IDs
+// Bad agent IDs
 "agent1";
 "bot";
 "a";
@@ -995,7 +1035,7 @@ await cortex.agents.update("support-agent", {
 
 ---
 
-## Migration: Simple → Registry
+## Migration: Simple to Registry
 
 Agents can be used without registration, then registered later:
 
@@ -1082,7 +1122,9 @@ await cortex.agents.export({ filters, format: "json" });
 - `registeredBefore/After` - Unix timestamps in milliseconds
 - `lastActiveBefore/After` - Unix timestamps in milliseconds (client-side)
 
-> **Note:** Metadata filters use exact equality matching. Advanced query operators (like `$gte`, `$in`, etc.) are not supported. For complex queries, fetch all results and filter client-side.
+<Callout type="info">
+Metadata filters use exact equality matching. Advanced query operators (like `$gte`, `$in`, etc.) are not supported. For complex queries, fetch all results and filter client-side.
+</Callout>
 
 ---
 
@@ -1103,12 +1145,15 @@ cortex.agents.updateMany(
 
 **Parameters:**
 
-- `filters` (AgentFilters) - Filter criteria to select agents (see `list()` for filter options)
-- `updates` (Partial<AgentRegistration>) - Fields to update on matching agents:
-  - `name?: string` - New display name
-  - `description?: string` - New description
-  - `metadata?: Record<string, unknown>` - New metadata (replaces existing)
-  - `config?: Record<string, unknown>` - New config (replaces existing)
+<APITable
+  parameters={[
+    { name: "filters", type: "AgentFilters", required: true, description: "Filter criteria to select agents (see list() for filter options)" },
+    { name: "updates.name", type: "string", required: false, description: "New display name" },
+    { name: "updates.description", type: "string", required: false, description: "New description" },
+    { name: "updates.metadata", type: "Record<string, unknown>", required: false, description: "New metadata (replaces existing)" },
+    { name: "updates.config", type: "Record<string, unknown>", required: false, description: "New config (replaces existing)" },
+  ]}
+/>
 
 **Returns:**
 
@@ -1169,11 +1214,14 @@ cortex.agents.unregisterMany(
 
 **Parameters:**
 
-- `filters` (AgentFilters) - Filter criteria for agents to unregister
-- `options` (UnregisterAgentOptions, optional):
-  - `cascade?: boolean` - Delete all data where participantId = agentId (default: false)
-  - `verify?: boolean` - Verify deletion completeness (default: true)
-  - `dryRun?: boolean` - Preview what would be deleted (default: false)
+<APITable
+  parameters={[
+    { name: "filters", type: "AgentFilters", required: true, description: "Filter criteria for agents to unregister" },
+    { name: "options.cascade", type: "boolean", required: false, default: "false", description: "Delete all data where participantId = agentId" },
+    { name: "options.verify", type: "boolean", required: false, default: "true", description: "Verify deletion completeness" },
+    { name: "options.dryRun", type: "boolean", required: false, default: "false", description: "Preview what would be deleted" },
+  ]}
+/>
 
 **Returns:**
 
@@ -1228,14 +1276,14 @@ cortex.agents.export(
 
 **Parameters:**
 
-```typescript
-interface ExportAgentsOptions {
-  filters?: AgentFilters; // Filter agents to export
-  format: "json" | "csv"; // Output format
-  includeStats?: boolean; // Include agent statistics (default: false)
-  includeMetadata?: boolean; // Include full metadata (default: true)
-}
-```
+<APITable
+  parameters={[
+    { name: "options.filters", type: "AgentFilters", required: false, description: "Filter agents to export" },
+    { name: "options.format", type: "'json' | 'csv'", required: true, description: "Output format" },
+    { name: "options.includeStats", type: "boolean", required: false, default: "false", description: "Include agent statistics" },
+    { name: "options.includeMetadata", type: "boolean", required: false, default: "true", description: "Include full metadata" },
+  ]}
+/>
 
 **Returns:**
 
@@ -1337,7 +1385,9 @@ When `format: "csv"` is specified, the output includes these columns:
 
 ## Cloud Mode Features
 
-> **Cloud Mode Only**: Enhanced agent management features
+<Callout type="tip">
+**Cloud Mode Only**: Enhanced agent management features
+</Callout>
 
 ### Agent Analytics Dashboard
 
@@ -1493,7 +1543,7 @@ const partners = collaborations.map(m => m.metadata.toAgent);
 
 **Performance:** Agent-scoped queries are highly optimized (agentId is primary index). Typical queries: 10-30ms.
 
-**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities)
+**Learn more:** [Graph Capabilities](/advanced-topics/graph-capabilities)
 
 ---
 
@@ -1501,12 +1551,12 @@ const partners = collaborations.map(m => m.metadata.toAgent);
 
 **Agent Management is optional but powerful:**
 
-- ✅ Start with simple string IDs (zero configuration)
-- ✅ All layers work immediately (ACID, Vector, Facts, Graph)
-- ✅ Register when you need organization and analytics
-- ✅ Configure retention and behavior per agent
-- ✅ Search and discover agents by capabilities
-- ✅ Same universal filter patterns as other operations
+- Start with simple string IDs (zero configuration)
+- All layers work immediately (ACID, Vector, Facts, Graph)
+- Register when you need organization and analytics
+- Configure retention and behavior per agent
+- Search and discover agents by capabilities
+- Same universal filter patterns as other operations
 
 **Registration provides:**
 
@@ -1522,9 +1572,30 @@ const partners = collaborations.map(m => m.metadata.toAgent);
 
 ## Next Steps
 
-- **[User Operations API](./user-operations)** - User profile management
-- **[Memory Operations API](./memory-operations)** - Memory CRUD
-- **[Types & Interfaces](../05-reference/01-types-interfaces)** - Complete TypeScript definitions
+<QuickNav>
+
+<QuickNavItem
+  title="User Operations API"
+  description="User profile management and GDPR compliance"
+  href="/api-reference/user-operations"
+  icon="user"
+/>
+
+<QuickNavItem
+  title="Memory Operations API"
+  description="Memory CRUD operations and search"
+  href="/api-reference/memory-operations"
+  icon="database"
+/>
+
+<QuickNavItem
+  title="Types & Interfaces"
+  description="Complete TypeScript definitions"
+  href="/reference/types-interfaces"
+  icon="code"
+/>
+
+</QuickNav>
 
 ---
 

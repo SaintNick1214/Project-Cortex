@@ -1,12 +1,23 @@
+---
+id: memory-operations
+title: Memory Operations API
+sidebar_position: 2
+description: Complete API reference for memory operations across memory spaces, including remember, recall, search, and versioning.
+---
+
 # Memory Operations API
 
-> **Last Updated**: 2026-01-01
+<Callout type="note">
+**Last Updated**: 2026-01-01
+</Callout>
 
 Complete API reference for memory operations across memory spaces.
 
-> **Enhanced in v0.15.0**: `memory.rememberStream()` with progressive storage, streaming hooks, and comprehensive metrics
->
-> **New in v0.15.0**: Enriched fact extraction with `enrichedContent` and `factCategory` for bullet-proof semantic search
+<Callout type="info">
+**Enhanced in v0.15.0**: `memory.rememberStream()` with progressive storage, streaming hooks, and comprehensive metrics
+
+**New in v0.15.0**: Enriched fact extraction with `enrichedContent` and `factCategory` for bullet-proof semantic search
+</Callout>
 
 ## Important: Timestamp Convention
 
@@ -37,7 +48,9 @@ await cortex.vector.getAtTimestamp(
 );
 ```
 
-> **Why Unix milliseconds?** Convex (the backend) stores timestamps as `number`. Using consistent types avoids serialization issues and timezone bugs.
+<Callout type="info">
+**Why Unix milliseconds?** Convex (the backend) stores timestamps as `number`. Using consistent types avoids serialization issues and timezone bugs.
+</Callout>
 
 ## Overview
 
@@ -195,7 +208,7 @@ const memories = await cortex.memory.search('user-space', 'query');
 // Only returns data from 'tenant-acme'
 ```
 
-See [Auth Integration](../08-integrations/auth-providers) for complete multi-tenancy documentation.
+See [Auth Integration](/integrations/auth-providers) for complete multi-tenancy documentation.
 
 ## Three-Namespace Architecture
 
@@ -380,7 +393,7 @@ const memory = await cortex.memory.store("user-123-personal", {
 | `export(filters, options)`            | Export conversations    | JSON/CSV       |
 | `delete(conversationId)`              | Delete conversation     | DeletionResult |
 
-**See:** [Conversation Operations API](./conversation-operations)
+**See:** [Conversation Operations API](/api-reference/conversation-operations)
 
 ### Layer 2: cortex.vector.\* Operations
 
@@ -402,7 +415,9 @@ const memory = await cortex.memory.store("user-123-personal", {
 | `getHistory(memorySpaceId, memoryId)`                | Get version history             | MemoryVersion[]                                                       |
 | `getAtTimestamp(memorySpaceId, memoryId, timestamp)` | Temporal query                  | MemoryVersion \| null                                                 |
 
-> **Note:** All methods use the resilience layer (if configured) for automatic retries and circuit breaking.
+<Callout type="note">
+All methods use the resilience layer (if configured) for automatic retries and circuit breaking.
+</Callout>
 
 ### Layer 4: cortex.memory.\* Operations (Convenience API)
 
@@ -456,13 +471,17 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 ## Core Operations (Layer 4: cortex.memory.\*)
 
-> Note: Layer 4 operations are convenience wrappers that orchestrate across all layers. For direct control, use Layer 1 (`cortex.conversations.*`), Layer 2 (`cortex.vector.*`), and Layer 3 (`cortex.facts.*`) separately.
+<Callout type="note">
+Layer 4 operations are convenience wrappers that orchestrate across all layers. For direct control, use Layer 1 (`cortex.conversations.*`), Layer 2 (`cortex.vector.*`), and Layer 3 (`cortex.facts.*`) separately.
+</Callout>
 
 ### remember()
 
 **RECOMMENDED HELPER** - Full orchestration across all memory layers.
 
-> **Enhanced in v0.17.0**: Full multi-layer orchestration with auto-registration of memory spaces, users, and agents. Use `skipLayers` for explicit opt-out.
+<Callout type="info">
+**Enhanced in v0.17.0**: Full multi-layer orchestration with auto-registration of memory spaces, users, and agents. Use `skipLayers` for explicit opt-out.
+</Callout>
 
 **Signature:**
 
@@ -614,7 +633,9 @@ interface RememberOptions {
 
 ### Automatic Fact Revision in `remember()` (v0.24.0+)
 
-> **New in v0.24.0**: When belief revision is configured, extracted facts automatically go through the revision pipeline.
+<Callout type="info">
+**New in v0.24.0**: When belief revision is configured, extracted facts automatically go through the revision pipeline.
+</Callout>
 
 When you call `remember()` with fact extraction enabled and belief revision configured, the SDK automatically:
 
@@ -689,7 +710,9 @@ await cortex.memory.remember(
 # )
 ```
 
-> **Note:** Fine-grained control over individual pipeline stages (slot matching, LLM resolution) is available through the `cortex.facts.revise()` API directly. The `remember()` integration uses a batteries-included approach - full pipeline when enabled, deduplication-only when disabled.
+<Callout type="note">
+Fine-grained control over individual pipeline stages (slot matching, LLM resolution) is available through the `cortex.facts.revise()` API directly. The `remember()` integration uses a batteries-included approach - full pipeline when enabled, deduplication-only when disabled.
+</Callout>
 
 **Return value changes with belief revision:**
 
@@ -818,11 +841,11 @@ CortexError(
 
 **See Also:**
 
-- [Helper Functions](../02-core-features/01-memory-spaces.md#helper-store-from-conversation-recommended)
-- [Conversation Operations](./conversation-operations) - Managing ACID conversations
-- [Memory Space Operations](./memory-space-operations) - Managing memory spaces
-- [User Operations](./user-operations) - User profile management
-- [Agent Management](./agent-management) - Agent registration
+- [Helper Functions](/core-features/memory-spaces#helper-store-from-conversation-recommended)
+- [Conversation Operations](/api-reference/conversation-operations) - Managing ACID conversations
+- [Memory Space Operations](/api-reference/memory-space-operations) - Managing memory spaces
+- [User Operations](/api-reference/user-operations) - User profile management
+- [Agent Management](/api-reference/agent-management) - Agent registration
 
 ---
 
@@ -830,7 +853,9 @@ CortexError(
 
 **NEW in v0.24.0** - Unified orchestrated retrieval across all memory layers.
 
-> **Design Philosophy**: `recall()` is the retrieval counterpart to `remember()`. It provides **total and complete orchestrated context retrieval** by default - batteries included.
+<Callout type="info">
+**Design Philosophy**: `recall()` is the retrieval counterpart to `remember()`. It provides **total and complete orchestrated context retrieval** by default - batteries included.
+</Callout>
 
 **Signature:**
 
@@ -1142,9 +1167,9 @@ When `formatForLLM: true` (default), the context string is structured as:
 **See Also:**
 
 - [remember()](#remember) - The storage counterpart
-- [Semantic Search Guide](../02-core-features/02-semantic-search)
-- [Graph Operations](./graph-operations)
-- [Facts Operations](./facts-operations)
+- [Semantic Search Guide](/core-features/semantic-search)
+- [Graph Operations](/api-reference/graph-operations)
+- [Facts Operations](/api-reference/facts-operations)
 
 ---
 
@@ -1553,8 +1578,8 @@ export async function POST(req: Request) {
 
 **See Also:**
 
-- [Streaming Support Guide](../02-core-features/12-streaming-support) - Complete streaming documentation
-- [Conversation History](../02-core-features/06-conversation-history.md#streaming-support) - Streaming in context
+- [Streaming Support Guide](/core-features/streaming-support) - Complete streaming documentation
+- [Conversation History](/core-features/conversation-history#streaming-support) - Streaming in context
 - [remember()](#remember) - Non-streaming variant
 
 ---
@@ -1726,8 +1751,8 @@ const enriched = await cortex.memory.search("user-123-personal", query, {
 
 **See Also:**
 
-- [Semantic Search Guide](../02-core-features/02-semantic-search)
-- [Universal Filters](../02-core-features/01-memory-spaces.md#core-api-principle-universal-filters)
+- [Semantic Search Guide](/core-features/semantic-search)
+- [Universal Filters](/core-features/memory-spaces#core-api-principle-universal-filters)
 
 ---
 
@@ -1828,7 +1853,7 @@ const enriched = await cortex.memory.get("user-123-personal", "mem_abc123", {
 
 **See Also:**
 
-- [Retrieving Memories](../02-core-features/01-memory-spaces.md#retrieving-specific-memories)
+- [Retrieving Memories](/core-features/memory-spaces#retrieving-specific-memories)
 
 ---
 
@@ -1945,7 +1970,9 @@ interface MemoryEntry {
 }
 ```
 
-> **Note:** All timestamps (`createdAt`, `updatedAt`, `lastAccessed`, `sourceTimestamp`) are Unix timestamps in **milliseconds** (not JavaScript `Date` objects).
+<Callout type="note">
+All timestamps (`createdAt`, `updatedAt`, `lastAccessed`, `sourceTimestamp`) are Unix timestamps in **milliseconds** (not JavaScript `Date` objects).
+</Callout>
 
 **Example 1: Conversation Memory (conversationRef required)**
 
@@ -1987,7 +2014,9 @@ console.log(memory.importance); // 100 (flattened from input)
 console.log(memory.tags); // ["password", "security"]
 ```
 
-> **Note:** When storing, you provide `metadata.importance` and `metadata.tags` in the input. The returned `MemoryEntry` has these as top-level fields: `importance` and `tags`.
+<Callout type="note">
+When storing, you provide `metadata.importance` and `metadata.tags` in the input. The returned `MemoryEntry` has these as top-level fields: `importance` and `tags`.
+</Callout>
 
 **Example 2: System Memory (no conversationRef)**
 
@@ -2040,8 +2069,8 @@ const result = await cortex.memory.remember({
 
 **See Also:**
 
-- [Agent Memory Guide](../02-core-features/01-memory-spaces.md#storing-memories)
-- [Store vs Update Decision](../02-core-features/01-memory-spaces.md#store-vs-update-decision)
+- [Agent Memory Guide](/core-features/memory-spaces#storing-memories)
+- [Store vs Update Decision](/core-features/memory-spaces#store-vs-update-decision)
 
 ---
 
@@ -2075,7 +2104,9 @@ interface UpdateMemoryOptions {
 }
 ```
 
-> **Note:** Unlike the nested `metadata` structure shown in `store()` input, updates use **flattened** fields for `importance` and `tags`.
+<Callout type="note">
+Unlike the nested `metadata` structure shown in `store()` input, updates use **flattened** fields for `importance` and `tags`.
+</Callout>
 
 **Returns:**
 
@@ -2119,7 +2150,9 @@ if (result.factsReextracted?.length) {
 }
 ```
 
-> **Note:** The `update()` method does NOT support updating `conversationRef`. To link to a new ACID conversation, use `store()` to create a new memory.
+<Callout type="note">
+The `update()` method does NOT support updating `conversationRef`. To link to a new ACID conversation, use `store()` to create a new memory.
+</Callout>
 
 **Errors:**
 
@@ -2129,8 +2162,8 @@ if (result.factsReextracted?.length) {
 
 **See Also:**
 
-- [Updating Memories](../02-core-features/01-memory-spaces.md#updating-memories)
-- [Memory Versioning](../02-core-features/01-memory-spaces.md#memory-versioning-automatic)
+- [Updating Memories](/core-features/memory-spaces#updating-memories)
+- [Memory Versioning](/core-features/memory-spaces#memory-versioning-automatic)
 
 ---
 
@@ -2203,7 +2236,7 @@ await cortex.memory.updateMany(
 
 **See Also:**
 
-- [Bulk Operations](../02-core-features/01-memory-spaces.md#update-many-memories-bulk)
+- [Bulk Operations](/core-features/memory-spaces#update-many-memories-bulk)
 
 ---
 
@@ -2288,7 +2321,7 @@ await cortex.memory.forget("user-123-personal", "mem_abc123", {
 
 **See Also:**
 
-- [Deleting Memories](../02-core-features/01-memory-spaces.md#deleting-memories)
+- [Deleting Memories](/core-features/memory-spaces#deleting-memories)
 
 ---
 
@@ -2351,7 +2384,7 @@ console.log(`Restorable: ${result.restorable}`); // false - gone from both layer
 
 **See Also:**
 
-- [GDPR Compliance](../02-core-features/01-memory-spaces.md#pattern-5-user-data-deletion-gdpr)
+- [GDPR Compliance](/core-features/memory-spaces#pattern-5-user-data-deletion-gdpr)
 
 ---
 
@@ -2379,11 +2412,13 @@ interface DeleteManyFilter {
 }
 ```
 
-> **Planned Features (Not Yet Implemented):**
->
-> - `dryRun` - Preview what would be deleted without actually deleting
-> - `requireConfirmation` - Prompt when deletion count exceeds threshold
-> - `confirmationThreshold` - Threshold for auto-confirmation (default: 10)
+<Callout type="warning">
+**Planned Features (Not Yet Implemented):**
+
+- `dryRun` - Preview what would be deleted without actually deleting
+- `requireConfirmation` - Prompt when deletion count exceeds threshold
+- `confirmationThreshold` - Threshold for auto-confirmation (default: 10)
+</Callout>
 
 **Returns:**
 
@@ -2394,7 +2429,9 @@ interface DeleteManyResult {
 }
 ```
 
-> **Note:** The Layer 4 `memory.deleteMany()` API includes additional return fields (`restorable`, `affectedUsers`, `wouldDelete`, `memories`) that are not present in the Layer 2 `vector.deleteMany()` API.
+<Callout type="note">
+The Layer 4 `memory.deleteMany()` API includes additional return fields (`restorable`, `affectedUsers`, `wouldDelete`, `memories`) that are not present in the Layer 2 `vector.deleteMany()` API.
+</Callout>
 
 **Example:**
 
@@ -2432,8 +2469,8 @@ if (preview.wouldDelete < 100) {
 
 **See Also:**
 
-- [Bulk Deletion](../02-core-features/01-memory-spaces.md#delete-by-user-gdpr-compliance)
-- [Deletion Best Practices](../02-core-features/01-memory-spaces.md#deletion-best-practices)
+- [Bulk Deletion](/core-features/memory-spaces#delete-by-user-gdpr-compliance)
+- [Deletion Best Practices](/core-features/memory-spaces#deletion-best-practices)
 
 ---
 
@@ -2459,10 +2496,12 @@ interface CountMemoriesFilter {
 }
 ```
 
-> **Planned Features (Not Yet Functional):**
->
-> - `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
-> - `participantId` - Hive Mode filter (defined in type but not passed to backend)
+<Callout type="warning">
+**Planned Features (Not Yet Functional):**
+
+- `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
+- `participantId` - Hive Mode filter (defined in type but not passed to backend)
+</Callout>
 
 **Returns:**
 
@@ -2500,7 +2539,7 @@ console.log(`Found ${oldUnused} old, unused, low-importance memories`);
 
 **See Also:**
 
-- [Counting Memories](../02-core-features/01-memory-spaces.md#counting-memories)
+- [Counting Memories](/core-features/memory-spaces#counting-memories)
 
 ---
 
@@ -2528,10 +2567,12 @@ interface ListMemoriesFilter {
 }
 ```
 
-> **Planned Features (Not Yet Functional):**
->
-> - `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
-> - `participantId` - Hive Mode filter (defined in type but not passed to backend)
+<Callout type="warning">
+**Planned Features (Not Yet Functional):**
+
+- `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
+- `participantId` - Hive Mode filter (defined in type but not passed to backend)
+</Callout>
 
 **Returns:**
 
@@ -2539,7 +2580,9 @@ interface ListMemoriesFilter {
 MemoryEntry[] | EnrichedMemory[]  // Array of memory entries
 ```
 
-> **Note:** Returns `EnrichedMemory[]` when `enrichFacts: true` is specified, otherwise returns `MemoryEntry[]`.
+<Callout type="note">
+Returns `EnrichedMemory[]` when `enrichFacts: true` is specified, otherwise returns `MemoryEntry[]`.
+</Callout>
 
 **Example:**
 
@@ -2586,7 +2629,7 @@ enrichedMemories.forEach((m) => {
 
 **See Also:**
 
-- [Listing Memories](../02-core-features/01-memory-spaces.md#listing-memories)
+- [Listing Memories](/core-features/memory-spaces#listing-memories)
 
 ---
 
@@ -2614,11 +2657,13 @@ interface ExportOptions {
 }
 ```
 
-> **Planned Features (Not Yet Implemented):**
->
-> - `outputPath` - Write directly to file path
-> - `includeVersionHistory` - Include previousVersions array
-> - `includeConversationContext` - Fetch and include ACID conversations
+<Callout type="warning">
+**Planned Features (Not Yet Implemented):**
+
+- `outputPath` - Write directly to file path
+- `includeVersionHistory` - Include previousVersions array
+- `includeConversationContext` - Fetch and include ACID conversations
+</Callout>
 
 **Returns:**
 
@@ -2659,7 +2704,7 @@ console.log(`Exported to ${criticalBackup}`);
 
 **See Also:**
 
-- [Exporting Memories](../02-core-features/01-memory-spaces.md#exporting-memories)
+- [Exporting Memories](/core-features/memory-spaces#exporting-memories)
 
 ---
 
@@ -2698,7 +2743,9 @@ interface MemoryArchiveResult extends VectorArchiveResult {
 }
 ```
 
-> **Note:** The `factsArchived` and `factIds` fields are only returned by the Layer 4 `memory.archive()` API, not the Layer 2 `vector.archive()` API.
+<Callout type="note">
+The `factsArchived` and `factIds` fields are only returned by the Layer 4 `memory.archive()` API, not the Layer 2 `vector.archive()` API.
+</Callout>
 
 **Example:**
 
@@ -2724,7 +2771,7 @@ const restored = await cortex.memory.restoreFromArchive(
 
 **See Also:**
 
-- [Soft Delete](../02-core-features/01-memory-spaces.md#soft-delete-archive)
+- [Soft Delete](/core-features/memory-spaces#soft-delete-archive)
 
 ---
 
@@ -2780,7 +2827,7 @@ if (result.restored) {
 **See Also:**
 
 - [archive()](#archive) - Archive memories (soft delete)
-- [Soft Delete](../02-core-features/01-memory-spaces.md#soft-delete-archive)
+- [Soft Delete](/core-features/memory-spaces#soft-delete-archive)
 
 ---
 
@@ -2837,7 +2884,7 @@ if (v1) {
 
 **See Also:**
 
-- [Accessing Historical Versions](../02-core-features/01-memory-spaces.md#accessing-historical-versions)
+- [Accessing Historical Versions](/core-features/memory-spaces#accessing-historical-versions)
 
 ---
 
@@ -2889,7 +2936,7 @@ history.forEach((v) => {
 
 **See Also:**
 
-- [Version History](../02-core-features/01-memory-spaces.md#memory-versioning-automatic)
+- [Version History](/core-features/memory-spaces#memory-versioning-automatic)
 
 ---
 
@@ -2953,8 +3000,8 @@ if (historicalMemory) {
 
 **See Also:**
 
-- [Temporal Queries](../02-core-features/01-memory-spaces.md#temporal-queries)
-- [Conflict Resolution](../02-core-features/01-memory-spaces.md#conflict-resolution-example)
+- [Temporal Queries](/core-features/memory-spaces#temporal-queries)
+- [Conflict Resolution](/core-features/memory-spaces#conflict-resolution-example)
 
 ---
 
@@ -3019,7 +3066,7 @@ interface UniversalFilters {
 
 **See Also:**
 
-- [Universal Filters](../02-core-features/01-memory-spaces.md#core-api-principle-universal-filters)
+- [Universal Filters](/core-features/memory-spaces#core-api-principle-universal-filters)
 
 ---
 
@@ -3048,7 +3095,7 @@ await cortex.agents.configure("temp-agent", {
 
 **See Also:**
 
-- [Version Retention](../02-core-features/01-memory-spaces.md#version-retention-configuration)
+- [Version Retention](/core-features/memory-spaces#version-retention-configuration)
 
 ---
 
@@ -3097,7 +3144,7 @@ for (const agent of agents) {
 - 1-2 hop queries: 10-50ms (direct lookups)
 - 3-5 hop queries: 50-200ms (sequential queries)
 
-**Learn more:** [Graph Capabilities Guide](../07-advanced-topics/01-graph-capabilities)
+**Learn more:** [Graph Capabilities Guide](/advanced-topics/graph-capabilities)
 
 ## Error Reference
 
@@ -3157,18 +3204,50 @@ try {
 
 **See Also:**
 
-- [Error Handling Guide](../05-reference/02-error-handling)
+- [Error Handling Guide](/reference/error-handling)
 
 ---
 
 ## Next Steps
 
-- **[Agent Management API](./agent-management)** - Agent registry operations
-- **[User Operations API](./user-operations)** - User profile API
-- **[Context Operations API](./context-operations)** - Context chain API
-- **[Graph Operations API](./graph-operations)** - Graph database integration
-- **[Types & Interfaces](../05-reference/01-types-interfaces)** - Complete TypeScript definitions
+- **[Agent Management API](/api-reference/agent-management)** - Agent registry operations
+- **[User Operations API](/api-reference/user-operations)** - User profile API
+- **[Context Operations API](/api-reference/context-operations)** - Context chain API
+- **[Graph Operations API](/api-reference/graph-operations)** - Graph database integration
+- **[Types & Interfaces](/reference/types-interfaces)** - Complete TypeScript definitions
 
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+
+<QuickNav>
+
+<QuickNavItem
+  title="Memory Spaces"
+  description="Managing memory space lifecycle and configuration"
+  href="/api-reference/memory-space-operations"
+  icon="database"
+/>
+
+<QuickNavItem
+  title="Conversation Operations"
+  description="Managing ACID conversations and message threads"
+  href="/api-reference/conversation-operations"
+  icon="message-square"
+/>
+
+<QuickNavItem
+  title="Facts Operations"
+  description="LLM-extracted facts and belief revision"
+  href="/api-reference/facts-operations"
+  icon="brain"
+/>
+
+<QuickNavItem
+  title="Graph Operations"
+  description="Graph database integration and entity relationships"
+  href="/api-reference/graph-operations"
+  icon="share-2"
+/>
+
+</QuickNav>

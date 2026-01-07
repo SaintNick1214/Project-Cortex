@@ -1,6 +1,11 @@
-# Conversation Operations API
+---
+id: conversation-operations
+title: Conversation Operations API
+sidebar_position: 2
+description: Complete API reference for ACID conversation management (Layer 1a) - immutable conversation threads that provide the source of truth for all message history.
+---
 
-> **Last Updated**: 2026-01-01
+# Conversation Operations API
 
 Complete API reference for ACID conversation management (Layer 1a).
 
@@ -8,15 +13,20 @@ Complete API reference for ACID conversation management (Layer 1a).
 
 The Conversation Operations API (`cortex.conversations.*`) manages **immutable conversation threads** - the Layer 1a foundation that provides the source of truth for all message history.
 
-**Key Characteristics:**
+<Card
+  title="Key Characteristics"
+  icon="check"
+>
 
-- ✅ **Immutable** - Messages never modified, only appended
-- ✅ **Append-Only** - Conversations grow, never shrink (unless deleted)
-- ✅ **ACID Guarantees** - Atomic, consistent, isolated, durable
-- ✅ **No Retention Limits** - Kept forever (unlike Vector with retention)
-- ✅ **Audit Trail** - Complete message history for compliance
-- ✅ **Referenced** - Vector memories link back via `conversationRef`
-- ✅ **Multi-Tenant** - Automatic `tenantId` isolation for SaaS platforms
+- **Immutable** - Messages never modified, only appended
+- **Append-Only** - Conversations grow, never shrink (unless deleted)
+- **ACID Guarantees** - Atomic, consistent, isolated, durable
+- **No Retention Limits** - Kept forever (unlike Vector with retention)
+- **Audit Trail** - Complete message history for compliance
+- **Referenced** - Vector memories link back via `conversationRef`
+- **Multi-Tenant** - Automatic `tenantId` isolation for SaaS platforms
+
+</Card>
 
 **Relationship to Other Layers:**
 
@@ -40,10 +50,10 @@ Layer 3: Memory API
 
 **Why Layer 1a Exists:**
 
-- ✅ Complete audit trail (Vector has retention limits)
-- ✅ Compliance (legal requirement for message history)
-- ✅ Context retrieval (can always get full conversation)
-- ✅ Source of truth (Vector is index, this is reality)
+- Complete audit trail (Vector has retention limits)
+- Compliance (legal requirement for message history)
+- Context retrieval (can always get full conversation)
+- Source of truth (Vector is index, this is reality)
 
 ---
 
@@ -169,7 +179,7 @@ console.log(a2aConvo.conversationId); // 'a2a-conv-789'
 
 **See Also:**
 
-- [Conversation History Guide](../02-core-features/06-conversation-history.md#storing-messages)
+- [Conversation History Guide](/core-features/conversation-history#storing-messages)
 
 ---
 
@@ -265,7 +275,11 @@ interface Conversation {
 }
 ```
 
-> **Note:** For agent-to-agent (A2A) messaging, use the dedicated `cortex.a2a.*` API which handles both ACID storage and Vector memory automatically.
+<Callout type="info">
+
+For agent-to-agent (A2A) messaging, use the dedicated `cortex.a2a.*` API which handles both ACID storage and Vector memory automatically.
+
+</Callout>
 
 **Side Effects:**
 
@@ -316,7 +330,11 @@ await cortex.vector.store("support-agent", {
 });
 ```
 
-> **Tip:** For A2A messaging, use `cortex.a2a.send()` which handles ACID storage and Vector memory automatically.
+<Callout type="tip">
+
+For A2A messaging, use `cortex.a2a.send()` which handles ACID storage and Vector memory automatically.
+
+</Callout>
 
 **Errors:**
 
@@ -326,7 +344,7 @@ await cortex.vector.store("support-agent", {
 
 **See Also:**
 
-- [Storing Messages](../02-core-features/06-conversation-history.md#storing-messages)
+- [Storing Messages](/core-features/conversation-history#storing-messages)
 
 ---
 
@@ -691,10 +709,14 @@ interface ExportResult {
 }
 ```
 
-> **Note:** The following features are **planned but not yet implemented**:
->
-> - `outputPath` - Direct file writing (currently returns data string)
-> - `includeFullMessages` - Message content filtering (currently includes all)
+<Callout type="note">
+
+The following features are **planned but not yet implemented**:
+
+- `outputPath` - Direct file writing (currently returns data string)
+- `includeFullMessages` - Message content filtering (currently includes all)
+
+</Callout>
 
 **Example:**
 
@@ -733,7 +755,11 @@ const octoberData = await cortex.conversations.export({
 
 Delete a conversation and all its messages.
 
-> **Warning:** This is permanent! Consider using Vector memory deletion instead to preserve ACID audit trail.
+<Callout type="warning">
+
+This is permanent! Consider using Vector memory deletion instead to preserve ACID audit trail.
+
+</Callout>
 
 **Signature:**
 
@@ -809,7 +835,11 @@ interface DeleteManyConversationsResult {
 }
 ```
 
-> **Note:** At least one filter (userId, memorySpaceId, or type) is required. If deletion would exceed the `confirmationThreshold`, an error is thrown unless using `dryRun`.
+<Callout type="info">
+
+At least one filter (userId, memorySpaceId, or type) is required. If deletion would exceed the `confirmationThreshold`, an error is thrown unless using `dryRun`.
+
+</Callout>
 
 **Example:**
 
@@ -1264,7 +1294,7 @@ const memories = await cortex.memory.search('agent-1', '*', {
 
 **Performance:** Conversations are efficiently indexed by userId and memorySpaceId. Finding related entities within a memory space typically takes 20-80ms.
 
-**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities)
+**Learn more:** [Graph Capabilities](/advanced-topics/graph-capabilities)
 
 ---
 
@@ -1300,9 +1330,30 @@ const memories = await cortex.memory.search('agent-1', '*', {
 
 ## Next Steps
 
-- **[Memory Operations API](./memory-operations)** - Layer 2 (Vector) and Layer 3 (Memory) APIs
-- **[A2A Communication API](./a2a-communication)** - Agent-to-agent messaging
-- **[Types & Interfaces](../05-reference/01-types-interfaces)** - Complete TypeScript definitions
+<QuickNav>
+
+<QuickNavItem
+  title="Memory Operations API"
+  description="Layer 2 (Vector) and Layer 3 (Memory) APIs"
+  href="/api-reference/memory-operations"
+  icon="brain"
+/>
+
+<QuickNavItem
+  title="A2A Communication API"
+  description="Agent-to-agent messaging"
+  href="/api-reference/a2a-communication"
+  icon="messages"
+/>
+
+<QuickNavItem
+  title="Types & Interfaces"
+  description="Complete TypeScript definitions"
+  href="/reference/types-interfaces"
+  icon="code"
+/>
+
+</QuickNav>
 
 ---
 

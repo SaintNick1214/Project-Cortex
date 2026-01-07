@@ -1,6 +1,11 @@
-# Mutable Store API
+---
+id: mutable-store-api
+title: Mutable Store API
+sidebar_position: 5
+description: Complete API reference for shared mutable data with ACID transaction guarantees.
+---
 
-> **Last Updated**: 2025-12-27
+# Mutable Store API
 
 Complete API reference for shared mutable data with ACID transaction guarantees.
 
@@ -58,13 +63,16 @@ cortex.mutable.set(
 
 **Parameters:**
 
-- `namespace` (string) - Logical grouping (e.g., 'inventory', 'config', 'counters')
-- `key` (string) - Unique key within namespace
-- `value` (any) - JSON-serializable value
-- `userId` (string, optional) - Link to user (enables GDPR cascade). Must reference existing user.
-- `metadata` (object, optional) - Additional metadata to store with the record
-- `options` (object, optional) - Additional options:
-  - `syncToGraph` (boolean) - Sync this operation to graph database (if configured)
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Logical grouping (e.g., 'inventory', 'config', 'counters')" },
+    { name: "key", type: "string", required: true, description: "Unique key within namespace" },
+    { name: "value", type: "any", required: true, description: "JSON-serializable value" },
+    { name: "userId", type: "string", required: false, description: "Link to user (enables GDPR cascade). Must reference existing user." },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Additional metadata to store with the record" },
+    { name: "options", type: "SetMutableOptions", required: false, description: "Additional options including syncToGraph (boolean) to sync operation to graph database" },
+  ]}
+/>
 
 **Returns:**
 
@@ -144,13 +152,16 @@ cortex.mutable.get(
 
 **Parameters:**
 
-- `namespace` (string) - Namespace
-- `key` (string) - Key
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace" },
+    { name: "key", type: "string", required: true, description: "Key" },
+  ]}
+/>
 
 **Returns:**
 
-- Value - Current value
-- `null` - If key doesn't exist
+- `any | null` - Current value, or `null` if key doesn't exist
 
 **Example:**
 
@@ -186,9 +197,13 @@ cortex.mutable.update(
 
 **Parameters:**
 
-- `namespace` (string) - Namespace
-- `key` (string) - Key
-- `updater` (function) - Function that receives current value, returns new value
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace" },
+    { name: "key", type: "string", required: true, description: "Key" },
+    { name: "updater", type: "(current: any) => any", required: true, description: "Function that receives current value, returns new value" },
+  ]}
+/>
 
 **Returns:**
 
@@ -249,9 +264,13 @@ cortex.mutable.increment(
 
 **Parameters:**
 
-- `namespace` (string) - Namespace
-- `key` (string) - Key
-- `amount` (number, optional) - Amount to increment (default: 1)
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace" },
+    { name: "key", type: "string", required: true, description: "Key" },
+    { name: "amount", type: "number", required: false, default: "1", description: "Amount to increment" },
+  ]}
+/>
 
 **Returns:**
 
@@ -273,7 +292,11 @@ const views = await cortex.mutable.get("counters", "page-views");
 console.log(`Total views: ${views}`); // 11
 ```
 
-**Note:** This is a convenience wrapper around `update()`. For more control, use `update()` directly.
+<Callout type="note">
+
+This is a convenience wrapper around `update()`. For more control, use `update()` directly.
+
+</Callout>
 
 ---
 
@@ -293,9 +316,13 @@ cortex.mutable.decrement(
 
 **Parameters:**
 
-- `namespace` (string) - Namespace
-- `key` (string) - Key
-- `amount` (number, optional) - Amount to decrement (default: 1)
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace" },
+    { name: "key", type: "string", required: true, description: "Key" },
+    { name: "amount", type: "number", required: false, default: "1", description: "Amount to decrement" },
+  ]}
+/>
 
 **Returns:**
 
@@ -378,10 +405,13 @@ cortex.mutable.delete(
 
 **Parameters:**
 
-- `namespace` (string) - Namespace
-- `key` (string) - Key
-- `options` (object, optional) - Additional options:
-  - `syncToGraph` (boolean) - Sync deletion to graph database (if configured)
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace" },
+    { name: "key", type: "string", required: true, description: "Key" },
+    { name: "options", type: "DeleteMutableOptions", required: false, description: "Additional options including syncToGraph (boolean) to sync deletion to graph database" },
+  ]}
+/>
 
 **Returns:**
 
@@ -492,20 +522,20 @@ cortex.mutable.list(
 
 **Parameters:**
 
-```typescript
-interface ListMutableFilter {
-  namespace: string; // Required: namespace to list
-  keyPrefix?: string; // Keys starting with prefix
-  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
-  userId?: string; // Filter by user
-  limit?: number; // Max results (default: 100)
-  offset?: number; // Pagination offset
-  updatedAfter?: number; // Filter by updatedAt > timestamp
-  updatedBefore?: number; // Filter by updatedAt < timestamp
-  sortBy?: "key" | "updatedAt" | "accessCount"; // Sort field
-  sortOrder?: "asc" | "desc"; // Sort direction (default: "asc")
-}
-```
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace to list" },
+    { name: "keyPrefix", type: "string", required: false, description: "Keys starting with prefix" },
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenancy filter (auto-injected from AuthContext)" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "limit", type: "number", required: false, default: "100", description: "Max results" },
+    { name: "offset", type: "number", required: false, description: "Pagination offset" },
+    { name: "updatedAfter", type: "number", required: false, description: "Filter by updatedAt > timestamp" },
+    { name: "updatedBefore", type: "number", required: false, description: "Filter by updatedAt < timestamp" },
+    { name: "sortBy", type: "\"key\" | \"updatedAt\" | \"accessCount\"", required: false, description: "Sort field" },
+    { name: "sortOrder", type: "\"asc\" | \"desc\"", required: false, default: "\"asc\"", description: "Sort direction" },
+  ]}
+/>
 
 **Example:**
 
@@ -560,16 +590,16 @@ cortex.mutable.count(
 
 **Parameters:**
 
-```typescript
-interface CountMutableFilter {
-  namespace: string; // Required: namespace to count
-  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
-  userId?: string; // Filter by user
-  keyPrefix?: string; // Keys starting with prefix
-  updatedAfter?: number; // Filter by updatedAt > timestamp
-  updatedBefore?: number; // Filter by updatedAt < timestamp
-}
-```
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace to count" },
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenancy filter (auto-injected from AuthContext)" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "keyPrefix", type: "string", required: false, description: "Keys starting with prefix" },
+    { name: "updatedAfter", type: "number", required: false, description: "Filter by updatedAt > timestamp" },
+    { name: "updatedBefore", type: "number", required: false, description: "Filter by updatedAt < timestamp" },
+  ]}
+/>
 
 **Example:**
 
@@ -1599,12 +1629,13 @@ cortex.mutable.purgeNamespace(
 
 **Parameters:**
 
-```typescript
-interface PurgeNamespaceOptions {
-  dryRun?: boolean; // Preview what would be deleted without deleting
-  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
-}
-```
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace to purge" },
+    { name: "options.dryRun", type: "boolean", required: false, default: "false", description: "Preview what would be deleted without deleting" },
+    { name: "options.tenantId", type: "string", required: false, description: "Multi-tenancy filter (auto-injected from AuthContext)" },
+  ]}
+/>
 
 **Returns:**
 
@@ -1649,15 +1680,15 @@ cortex.mutable.purgeMany(
 
 **Parameters:**
 
-```typescript
-interface PurgeManyFilter {
-  namespace: string; // Required: namespace to purge from
-  keyPrefix?: string; // Keys starting with prefix
-  userId?: string; // Filter by user
-  updatedBefore?: number; // Delete keys updated before this timestamp
-  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
-}
-```
+<APITable
+  parameters={[
+    { name: "namespace", type: "string", required: true, description: "Namespace to purge from" },
+    { name: "keyPrefix", type: "string", required: false, description: "Keys starting with prefix" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "updatedBefore", type: "number", required: false, description: "Delete keys updated before this timestamp" },
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenancy filter (auto-injected from AuthContext)" },
+  ]}
+/>
 
 **Returns:**
 
@@ -2071,11 +2102,19 @@ Memory-def
   └──[mutableRef]──> Mutable: config/api-endpoint (snapshot at time T)
 ```
 
-**Note:** Mutable data changes frequently, so `mutableRef` stores snapshots (value at time of reference), not live links.
+<Callout type="note">
+
+Mutable data changes frequently, so `mutableRef` stores snapshots (value at time of reference), not live links.
+
+</Callout>
+
+<Callout type="info">
 
 **GDPR:** Mutable records with userId are included in cascade deletion traversal.
 
-**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities)
+</Callout>
+
+**Learn more:** [Graph Capabilities](/advanced-topics/graph-capabilities)
 
 ---
 
@@ -2169,10 +2208,35 @@ try {
 
 ## Next Steps
 
-- **[Immutable Store API](./immutable-store-api)** - Versioned shared data
-- **[Conversation Operations API](./conversation-operations)** - Private conversations
-- **[Governance Policies API](./governance-policies-api)** - Multi-layer retention rules
+- **[Immutable Store API](/api-reference/immutable-store-api)** - Versioned shared data
+- **[Conversation Operations API](/api-reference/conversation-operations)** - Private conversations
+- **[Governance Policies API](/api-reference/governance-policies-api)** - Multi-layer retention rules
 
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+
+<QuickNav>
+
+<QuickNavItem
+  title="Immutable Store API"
+  description="Versioned shared data with automatic history"
+  href="/api-reference/immutable-store-api"
+  icon="database"
+/>
+
+<QuickNavItem
+  title="Conversation Operations"
+  description="Private memory-space scoped conversations"
+  href="/api-reference/conversation-operations"
+  icon="message-circle"
+/>
+
+<QuickNavItem
+  title="Governance Policies"
+  description="Multi-layer retention and compliance rules"
+  href="/api-reference/governance-policies-api"
+  icon="shield"
+/>
+
+</QuickNav>

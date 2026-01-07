@@ -1,6 +1,15 @@
+---
+id: user-operations
+title: User Operations API
+sidebar_position: 6
+description: Complete API reference for user profile management, including multi-tenancy, GDPR-compliant cascade deletion, and auth context integration.
+---
+
 # User Operations API
 
-> **Last Updated**: 2026-01-01
+<Callout type="info">
+**Last Updated**: 2026-01-01
+</Callout>
 
 Complete API reference for user profile management, including multi-tenancy and auth context integration.
 
@@ -18,9 +27,9 @@ The User Operations API (`cortex.users.*`) provides user profile management with
 
 ### Primary Feature: GDPR Cascade Deletion
 
-### Primary Feature: GDPR Cascade Deletion
-
-> **Available in SDK**: Full cascade deletion is implemented in the open-source SDK. Cloud Mode adds legal guarantees, certificates, and managed graph integration.
+<Callout type="tip">
+**Available in SDK**: Full cascade deletion is implemented in the open-source SDK. Cloud Mode adds legal guarantees, certificates, and managed graph integration.
+</Callout>
 
 When a user requests data deletion (GDPR "right to be forgotten"), a single API call removes their data from **every store that contains an explicit `userId` reference**:
 
@@ -158,7 +167,9 @@ await cortex.immutable.store({
 });
 ```
 
-> **Note:** The `users.update()` method accepts data fields directly (not wrapped in a `data` object). The SDK handles the conversion to the immutable store format internally.
+<Callout type="note">
+The `users.update()` method accepts data fields directly (not wrapped in a `data` object). The SDK handles the conversion to the immutable store format internally.
+</Callout>
 
 **Why the wrapper exists:**
 
@@ -277,7 +288,7 @@ const profile = await cortex.users.get("user-123");
 // tenantId is automatically validated from auth context
 ```
 
-See [Auth Integration](../08-integrations/auth-providers) for complete details.
+See [Auth Integration](/integrations/auth-providers) for complete details.
 
 ---
 
@@ -297,7 +308,11 @@ cortex.users.get(
 
 **Parameters:**
 
-- `userId` (string) - Unique user identifier
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "Unique user identifier" }
+  ]}
+/>
 
 **Returns:**
 
@@ -317,7 +332,9 @@ interface UserProfile {
 }
 ```
 
-> **Note:** Version history is accessed via `getHistory()` and `getVersion()` methods, not returned in the profile object.
+<Callout type="note">
+Version history is accessed via `getHistory()` and `getVersion()` methods, not returned in the profile object.
+</Callout>
 
 **Suggested Data Structure** (not enforced):
 
@@ -376,7 +393,7 @@ if (user) {
 
 **See Also:**
 
-- [User Profiles Guide](../02-core-features/03-user-profiles.md#retrieving-a-profile)
+- [User Profiles Guide](/core-features/user-profiles#retrieving-a-profile)
 
 ---
 
@@ -395,10 +412,16 @@ cortex.users.update(
 
 **Parameters:**
 
-- `userId` (string) - Unique user identifier
-- `data` (Record<string, unknown>) - User profile data to merge with existing (any JSON-serializable structure)
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "Unique user identifier" },
+    { name: "data", type: "Record<string, unknown>", required: true, description: "User profile data to merge with existing (any JSON-serializable structure)" }
+  ]}
+/>
 
-**Note:** Unlike `immutable.*` which requires `type` and `id`, `users.update()` only needs `userId` (the `type='user'` is implicit). Updates are always merged with existing data by default (deep merge).
+<Callout type="note">
+Unlike `immutable.*` which requires `type` and `id`, `users.update()` only needs `userId` (the `type='user'` is implicit). Updates are always merged with existing data by default (deep merge).
+</Callout>
 
 **Returns:**
 
@@ -475,8 +498,8 @@ await cortex.users.update("user-123", {
 
 **See Also:**
 
-- [Creating Profiles](../02-core-features/03-user-profiles.md#creating-a-profile)
-- [Updating Profiles](../02-core-features/03-user-profiles.md#updating-profiles)
+- [Creating Profiles](/core-features/user-profiles#creating-a-profile)
+- [Updating Profiles](/core-features/user-profiles#updating-profiles)
 
 ---
 
@@ -484,7 +507,9 @@ await cortex.users.update("user-123", {
 
 Delete a user profile with optional cascade to delete all associated data across all layers.
 
-> **Fully Implemented in SDK**: Cascade deletion with verification and rollback is available in the free SDK. Cloud Mode adds legal certificates and guarantees.
+<Callout type="tip">
+**Fully Implemented in SDK**: Cascade deletion with verification and rollback is available in the free SDK. Cloud Mode adds legal certificates and guarantees.
+</Callout>
 
 **Signature:**
 
@@ -497,13 +522,14 @@ cortex.users.delete(
 
 **Parameters:**
 
-```typescript
-interface DeleteOptions {
-  cascade?: boolean; // Delete from ALL stores with userId (default: false)
-  verify?: boolean; // Verify deletion completeness (default: true)
-  dryRun?: boolean; // Preview what would be deleted without actually deleting (default: false)
-}
-```
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "Unique user identifier to delete" },
+    { name: "options.cascade", type: "boolean", required: false, default: "false", description: "Delete from ALL stores with userId" },
+    { name: "options.verify", type: "boolean", required: false, default: "true", description: "Verify deletion completeness" },
+    { name: "options.dryRun", type: "boolean", required: false, default: "false", description: "Preview what would be deleted without actually deleting" }
+  ]}
+/>
 
 **Returns:**
 
@@ -630,9 +656,11 @@ try {
 }
 ```
 
-**Example 4: Granular Control (🚧 Planned - Cloud Mode)**
+**Example 5: Granular Control (🚧 Planned - Cloud Mode)**
 
-> **Note:** Granular layer control is planned for Cortex Cloud. Currently, `cascade: true` deletes from ALL layers. The options below are not yet implemented.
+<Callout type="warning">
+Granular layer control is planned for Cortex Cloud. Currently, `cascade: true` deletes from ALL layers. The options below are not yet implemented.
+</Callout>
 
 ```typescript
 // 🚧 PLANNED - Cortex Cloud: Only delete mutable data (like sessions, cache)
@@ -650,7 +678,7 @@ const result = await cortex.users.delete("user-123", {
 console.log(`Total deleted: ${result.totalDeleted}`);
 ```
 
-**Example 5: Why Use Cascade (vs Manual Deletion)**
+**Example 6: Why Use Cascade (vs Manual Deletion)**
 
 The SDK's cascade deletion handles all the complexity automatically:
 
@@ -690,8 +718,8 @@ console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
 
 **See Also:**
 
-- [Deleting Profiles](../02-core-features/03-user-profiles.md#deleting-profiles)
-- [GDPR Compliance](../02-core-features/03-user-profiles.md#pattern-4-gdpr-compliance)
+- [Deleting Profiles](/core-features/user-profiles#deleting-profiles)
+- [GDPR Compliance](/core-features/user-profiles#pattern-4-gdpr-compliance)
 
 ---
 
@@ -709,27 +737,20 @@ cortex.users.search(
 
 **Parameters:**
 
-```typescript
-interface UserFilters {
-  // Pagination
-  limit?: number; // Maximum results (default: 50, max: 1000)
-  offset?: number; // Skip first N results (default: 0)
-
-  // Date filters (timestamps in milliseconds)
-  createdAfter?: number; // Filter by createdAt > timestamp
-  createdBefore?: number; // Filter by createdAt < timestamp
-  updatedAfter?: number; // Filter by updatedAt > timestamp
-  updatedBefore?: number; // Filter by updatedAt < timestamp
-
-  // Sorting
-  sortBy?: "createdAt" | "updatedAt"; // Sort field (default: "createdAt")
-  sortOrder?: "asc" | "desc"; // Sort direction (default: "desc")
-
-  // Client-side filters (filter on nested data properties)
-  displayName?: string; // Filter by data.displayName (contains match)
-  email?: string; // Filter by data.email (contains match)
-}
-```
+<APITable
+  parameters={[
+    { name: "filters.limit", type: "number", required: false, default: "50", description: "Maximum results (max: 1000)" },
+    { name: "filters.offset", type: "number", required: false, default: "0", description: "Skip first N results" },
+    { name: "filters.createdAfter", type: "number", required: false, description: "Filter by createdAt > timestamp (ms)" },
+    { name: "filters.createdBefore", type: "number", required: false, description: "Filter by createdAt < timestamp (ms)" },
+    { name: "filters.updatedAfter", type: "number", required: false, description: "Filter by updatedAt > timestamp (ms)" },
+    { name: "filters.updatedBefore", type: "number", required: false, description: "Filter by updatedAt < timestamp (ms)" },
+    { name: "filters.sortBy", type: "\"createdAt\" | \"updatedAt\"", required: false, default: "\"createdAt\"", description: "Sort field" },
+    { name: "filters.sortOrder", type: "\"asc\" | \"desc\"", required: false, default: "\"desc\"", description: "Sort direction" },
+    { name: "filters.displayName", type: "string", required: false, description: "Filter by data.displayName (contains match)" },
+    { name: "filters.email", type: "string", required: false, description: "Filter by data.email (contains match)" }
+  ]}
+/>
 
 **Returns:**
 
@@ -775,7 +796,7 @@ const alexUsers = await cortex.users.search({
 
 **See Also:**
 
-- [Querying Profiles](../02-core-features/03-user-profiles.md#querying-user-profiles)
+- [Querying Profiles](/core-features/user-profiles#querying-user-profiles)
 
 ---
 
@@ -793,27 +814,20 @@ cortex.users.list(
 
 **Parameters:**
 
-```typescript
-interface ListUsersFilter {
-  // Pagination
-  limit?: number; // Maximum results (default: 50, max: 1000)
-  offset?: number; // Skip first N results (default: 0)
-
-  // Date filters (timestamps in milliseconds)
-  createdAfter?: number; // Filter by createdAt > timestamp
-  createdBefore?: number; // Filter by createdAt < timestamp
-  updatedAfter?: number; // Filter by updatedAt > timestamp
-  updatedBefore?: number; // Filter by updatedAt < timestamp
-
-  // Sorting
-  sortBy?: "createdAt" | "updatedAt"; // Sort field (default: "createdAt")
-  sortOrder?: "asc" | "desc"; // Sort direction (default: "desc")
-
-  // Client-side filters (filter on nested data properties)
-  displayName?: string; // Filter by data.displayName (contains match)
-  email?: string; // Filter by data.email (contains match)
-}
-```
+<APITable
+  parameters={[
+    { name: "filters.limit", type: "number", required: false, default: "50", description: "Maximum results (max: 1000)" },
+    { name: "filters.offset", type: "number", required: false, default: "0", description: "Skip first N results" },
+    { name: "filters.createdAfter", type: "number", required: false, description: "Filter by createdAt > timestamp (ms)" },
+    { name: "filters.createdBefore", type: "number", required: false, description: "Filter by createdAt < timestamp (ms)" },
+    { name: "filters.updatedAfter", type: "number", required: false, description: "Filter by updatedAt > timestamp (ms)" },
+    { name: "filters.updatedBefore", type: "number", required: false, description: "Filter by updatedAt < timestamp (ms)" },
+    { name: "filters.sortBy", type: "\"createdAt\" | \"updatedAt\"", required: false, default: "\"createdAt\"", description: "Sort field" },
+    { name: "filters.sortOrder", type: "\"asc\" | \"desc\"", required: false, default: "\"desc\"", description: "Sort direction" },
+    { name: "filters.displayName", type: "string", required: false, description: "Filter by data.displayName (contains match)" },
+    { name: "filters.email", type: "string", required: false, description: "Filter by data.email (contains match)" }
+  ]}
+/>
 
 **Returns:**
 
@@ -870,7 +884,7 @@ const recent = await cortex.users.list({
 
 **See Also:**
 
-- [List Users](../02-core-features/03-user-profiles.md#list-users-paginated)
+- [List Users](/core-features/user-profiles#list-users-paginated)
 
 ---
 
@@ -888,15 +902,14 @@ cortex.users.count(
 
 **Parameters:**
 
-```typescript
-interface UserFilters {
-  // Date filters (timestamps in milliseconds)
-  createdAfter?: number; // Count users created after timestamp
-  createdBefore?: number; // Count users created before timestamp
-  updatedAfter?: number; // Count users updated after timestamp
-  updatedBefore?: number; // Count users updated before timestamp
-}
-```
+<APITable
+  parameters={[
+    { name: "filters.createdAfter", type: "number", required: false, description: "Count users created after timestamp (ms)" },
+    { name: "filters.createdBefore", type: "number", required: false, description: "Count users created before timestamp (ms)" },
+    { name: "filters.updatedAfter", type: "number", required: false, description: "Count users updated after timestamp (ms)" },
+    { name: "filters.updatedBefore", type: "number", required: false, description: "Count users updated before timestamp (ms)" }
+  ]}
+/>
 
 **Returns:**
 
@@ -931,7 +944,7 @@ console.log(`Active users (7 days): ${activeThisWeek}`);
 
 **See Also:**
 
-- [Count Users](../02-core-features/03-user-profiles.md#count-users)
+- [Count Users](/core-features/user-profiles#count-users)
 
 ---
 
@@ -959,28 +972,23 @@ cortex.users.updateMany(
 
 **Parameters:**
 
-- `userIdsOrFilters` (string[] | UserFilters) - Either:
-  - Array of user IDs to update (1-100 items), OR
-  - UserFilters object to select users dynamically
-- `updates` (object) - Updates to apply
-  - `data` (Record<string, unknown>) - Data to merge with existing profiles
-- `options` (UpdateManyOptions, optional) - Update options
+<APITable
+  parameters={[
+    { name: "userIdsOrFilters", type: "string[] | UserFilters", required: true, description: "Array of user IDs (1-100) OR UserFilters object to select users" },
+    { name: "updates.data", type: "Record<string, unknown>", required: true, description: "Data to merge with existing profiles" },
+    { name: "options.skipVersioning", type: "boolean", required: false, default: "false", description: "Don't create versions" },
+    { name: "options.dryRun", type: "boolean", required: false, default: "false", description: "Preview without updating" }
+  ]}
+/>
+
+**Returns:**
 
 ```typescript
-interface UpdateManyOptions {
-  skipVersioning?: boolean; // Don't create versions (default: false)
-  dryRun?: boolean; // Preview without updating
-}
-
 interface UpdateManyResult {
   updated: number; // Number of users successfully updated
   userIds: string[]; // IDs of users that were updated
 }
 ```
-
-**Returns:**
-
-- `UpdateManyResult` - Details about bulk update
 
 **Example 1: Update by explicit IDs**
 
@@ -1053,26 +1061,22 @@ cortex.users.deleteMany(
 
 **Parameters:**
 
-- `userIdsOrFilters` (string[] | UserFilters) - Either:
-  - Array of user IDs to delete (1-100 items), OR
-  - UserFilters object to select users dynamically
-- `options` (DeleteManyOptions, optional) - Delete options
+<APITable
+  parameters={[
+    { name: "userIdsOrFilters", type: "string[] | UserFilters", required: true, description: "Array of user IDs (1-100) OR UserFilters object to select users" },
+    { name: "options.cascade", type: "boolean", required: false, default: "false", description: "Enable cascade deletion across all layers" },
+    { name: "options.dryRun", type: "boolean", required: false, default: "false", description: "Preview without deleting" }
+  ]}
+/>
+
+**Returns:**
 
 ```typescript
-interface DeleteManyOptions {
-  cascade?: boolean; // Enable cascade deletion across all layers (default: false)
-  dryRun?: boolean; // Preview without deleting
-}
-
 interface DeleteManyResult {
   deleted: number; // Number of users successfully deleted
   userIds: string[]; // IDs of users that were deleted
 }
 ```
-
-**Returns:**
-
-- `DeleteManyResult` - Details about bulk deletion
 
 **Example 1: Delete by explicit IDs**
 
@@ -1135,17 +1139,19 @@ cortex.users.export(
 
 **Parameters:**
 
-```typescript
-interface ExportUsersOptions {
-  format: "json" | "csv"; // Output format (REQUIRED)
-  filters?: UserFilters; // Filter users to export
-  includeVersionHistory?: boolean; // Include version history for each user
-  includeConversations?: boolean; // Include user's conversations
-  includeMemories?: boolean; // Include user's memories (from conversation memory spaces)
-}
-```
+<APITable
+  parameters={[
+    { name: "options.format", type: "\"json\" | \"csv\"", required: true, description: "Output format" },
+    { name: "options.filters", type: "UserFilters", required: false, description: "Filter users to export" },
+    { name: "options.includeVersionHistory", type: "boolean", required: false, default: "false", description: "Include version history for each user" },
+    { name: "options.includeConversations", type: "boolean", required: false, default: "false", description: "Include user's conversations" },
+    { name: "options.includeMemories", type: "boolean", required: false, default: "false", description: "Include user's memories (from conversation memory spaces)" }
+  ]}
+/>
 
-> **Note:** The `options` parameter is required and must include `format`.
+<Callout type="note">
+The `options` parameter is required and must include `format`.
+</Callout>
 
 **Returns:**
 
@@ -1201,12 +1207,6 @@ const recentExport = await cortex.users.export({
 ```
 id,version,createdAt,updatedAt,data,versionHistoryCount,conversationsCount,memoriesCount
 user-123,1,2025-01-01T00:00:00.000Z,2025-01-01T00:00:00.000Z,"{""displayName"":""Alex""}",3,5,12
-  },
-  {
-    format: "json",
-    outputPath: "exports/users-2025.json",
-  },
-);
 ```
 
 **Errors:**
@@ -1216,7 +1216,7 @@ user-123,1,2025-01-01T00:00:00.000Z,2025-01-01T00:00:00.000Z,"{""displayName"":"
 
 **See Also:**
 
-- [GDPR Compliance](../02-core-features/03-user-profiles.md#pattern-4-gdpr-compliance)
+- [GDPR Compliance](/core-features/user-profiles#pattern-4-gdpr-compliance)
 
 ---
 
@@ -1237,8 +1237,12 @@ cortex.users.getVersion(
 
 **Parameters:**
 
-- `userId` (string) - User ID
-- `version` (number) - Version number to retrieve (must be >= 1)
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID" },
+    { name: "version", type: "number", required: true, description: "Version number to retrieve (must be >= 1)" }
+  ]}
+/>
 
 **Returns:**
 
@@ -1289,7 +1293,11 @@ cortex.users.getHistory(
 
 **Parameters:**
 
-- `userId` (string) - User ID
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID" }
+  ]}
+/>
 
 **Returns:**
 
@@ -1332,7 +1340,7 @@ console.log(`Theme changed ${themeChanges.length} times`);
 
 **See Also:**
 
-- [Profile Version History](../02-core-features/03-user-profiles.md#profile-version-history)
+- [Profile Version History](/core-features/user-profiles#profile-version-history)
 
 ---
 
@@ -1351,8 +1359,12 @@ cortex.users.getAtTimestamp(
 
 **Parameters:**
 
-- `userId` (string) - User ID
-- `timestamp` (Date) - Point in time to query
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID" },
+    { name: "timestamp", type: "Date", required: true, description: "Point in time to query" }
+  ]}
+/>
 
 **Returns:**
 
@@ -1420,6 +1432,14 @@ cortex.users.exists(
 ): Promise<boolean>
 ```
 
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID to check" }
+  ]}
+/>
+
 **Example:**
 
 ```typescript
@@ -1452,8 +1472,12 @@ cortex.users.getOrCreate(
 
 **Parameters:**
 
-- `userId` (string) - User ID
-- `defaults` (Record<string, unknown>, optional) - Default profile data if user doesn't exist
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID" },
+    { name: "defaults", type: "Record<string, unknown>", required: false, description: "Default profile data if user doesn't exist" }
+  ]}
+/>
 
 **Returns:**
 
@@ -1500,8 +1524,12 @@ cortex.users.merge(
 
 **Parameters:**
 
-- `userId` (string) - User ID
-- `updates` (Record<string, unknown>) - Partial updates to deep merge with existing data
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID" },
+    { name: "updates", type: "Record<string, unknown>", required: true, description: "Partial updates to deep merge with existing data" }
+  ]}
+/>
 
 **Returns:**
 
@@ -1617,11 +1645,13 @@ interface UserFilters {
 }
 ```
 
-> **⚠️ Client-Side Filtering Note:** The `displayName` and `email` filters are applied client-side after fetching results from the database. This means:
->
-> - Results are filtered AFTER pagination is applied
-> - You may receive fewer results than your `limit` if many are filtered out
-> - For large datasets, consider using database-level filters (date ranges) first
+<Callout type="warning">
+**Client-Side Filtering Note:** The `displayName` and `email` filters are applied client-side after fetching results from the database. This means:
+
+- Results are filtered AFTER pagination is applied
+- You may receive fewer results than your `limit` if many are filtered out
+- For large datasets, consider using database-level filters (date ranges) first
+</Callout>
 
 **Operations supporting filters:**
 
@@ -1735,7 +1765,9 @@ async function enhanceProfileFromConversation(
 }
 ```
 
-> **Note:** Each `update()` call creates a new version automatically. For use cases requiring version control (like skip versioning for routine updates), this feature is planned for a future release.
+<Callout type="note">
+Each `update()` call creates a new version automatically. For use cases requiring version control (like skip versioning for routine updates), this feature is planned for a future release.
+</Callout>
 
 ### Pattern 3: Personalized Responses
 
@@ -1917,7 +1949,9 @@ const exportData = await cortex.users.export({
 });
 ```
 
-> **Note:** When using `authContext`, the `tenantId` is automatically injected into all operations. Users can only access data within their tenant.
+<Callout type="note">
+When using `authContext`, the `tenantId` is automatically injected into all operations. Users can only access data within their tenant.
+</Callout>
 
 ---
 
@@ -2021,7 +2055,9 @@ const history = await cortex.users.getHistory(userId);
 console.log(`User has ${history.length} profile versions`);
 ```
 
-> **Note:** Skip versioning option is planned for a future release to optimize routine updates.
+<Callout type="note">
+Skip versioning option is planned for a future release to optimize routine updates.
+</Callout>
 
 ### 4. Privacy-First
 
@@ -2167,7 +2203,7 @@ const result = await cortex.users.delete("user-123", { cascade: true });
 // }
 ```
 
-**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities)
+**Learn more:** [Graph Capabilities](/advanced-topics/graph-capabilities)
 
 ---
 
@@ -2213,40 +2249,67 @@ try {
 
 ### Validation Error Codes (UserValidationError)
 
-| Error Code                   | Description                          | Field               |
-| ---------------------------- | ------------------------------------ | ------------------- |
-| `MISSING_USER_ID`            | User ID is required                  | `userId`            |
-| `INVALID_USER_ID_FORMAT`     | User ID must be non-empty string     | `userId`            |
-| `MISSING_DATA`               | Data parameter is required           | `data`              |
-| `INVALID_DATA_TYPE`          | Data must be an object (not array)   | `data`              |
-| `INVALID_VERSION_NUMBER`     | Version must be a valid number       | `version`           |
-| `INVALID_VERSION_RANGE`      | Version must be >= 1                 | `version`           |
-| `INVALID_TIMESTAMP`          | Timestamp must be valid number >= 0  | `timestamp`         |
-| `INVALID_LIMIT`              | Limit must be 1-1000                 | `filters.limit`     |
-| `INVALID_OFFSET`             | Offset must be >= 0                  | `filters.offset`    |
-| `INVALID_DATE_RANGE`         | createdAfter must be < createdBefore | `filters.*`         |
-| `INVALID_SORT_BY`            | sortBy must be createdAt/updatedAt   | `filters.sortBy`    |
-| `INVALID_SORT_ORDER`         | sortOrder must be asc/desc           | `filters.sortOrder` |
-| `INVALID_FILTER_STRUCTURE`   | Filters must be an object            | `filters`           |
-| `INVALID_DELETE_OPTIONS`     | Options must be an object            | `options`           |
-| `EMPTY_USER_IDS_ARRAY`       | userIds array cannot be empty        | `userIds`           |
-| `USER_ID_ARRAY_TOO_LARGE`    | userIds array cannot exceed 100      | `userIds`           |
-| `TOO_MANY_MATCHES`           | Filter matched >100 users            | `filters`           |
-| `MISSING_REQUIRED_PARAMETER` | Export options are required          | `options`           |
-| `INVALID_EXPORT_FORMAT`      | Format must be json/csv              | `format`            |
+<APITable
+  parameters={[
+    { name: "MISSING_USER_ID", type: "error", required: false, description: "User ID is required (field: userId)" },
+    { name: "INVALID_USER_ID_FORMAT", type: "error", required: false, description: "User ID must be non-empty string (field: userId)" },
+    { name: "MISSING_DATA", type: "error", required: false, description: "Data parameter is required (field: data)" },
+    { name: "INVALID_DATA_TYPE", type: "error", required: false, description: "Data must be an object (not array) (field: data)" },
+    { name: "INVALID_VERSION_NUMBER", type: "error", required: false, description: "Version must be a valid number (field: version)" },
+    { name: "INVALID_VERSION_RANGE", type: "error", required: false, description: "Version must be >= 1 (field: version)" },
+    { name: "INVALID_TIMESTAMP", type: "error", required: false, description: "Timestamp must be valid number >= 0 (field: timestamp)" },
+    { name: "INVALID_LIMIT", type: "error", required: false, description: "Limit must be 1-1000 (field: filters.limit)" },
+    { name: "INVALID_OFFSET", type: "error", required: false, description: "Offset must be >= 0 (field: filters.offset)" },
+    { name: "INVALID_DATE_RANGE", type: "error", required: false, description: "createdAfter must be < createdBefore (field: filters.*)" },
+    { name: "INVALID_SORT_BY", type: "error", required: false, description: "sortBy must be createdAt/updatedAt (field: filters.sortBy)" },
+    { name: "INVALID_SORT_ORDER", type: "error", required: false, description: "sortOrder must be asc/desc (field: filters.sortOrder)" },
+    { name: "INVALID_FILTER_STRUCTURE", type: "error", required: false, description: "Filters must be an object (field: filters)" },
+    { name: "INVALID_DELETE_OPTIONS", type: "error", required: false, description: "Options must be an object (field: options)" },
+    { name: "EMPTY_USER_IDS_ARRAY", type: "error", required: false, description: "userIds array cannot be empty (field: userIds)" },
+    { name: "USER_ID_ARRAY_TOO_LARGE", type: "error", required: false, description: "userIds array cannot exceed 100 (field: userIds)" },
+    { name: "TOO_MANY_MATCHES", type: "error", required: false, description: "Filter matched >100 users (field: filters)" },
+    { name: "MISSING_REQUIRED_PARAMETER", type: "error", required: false, description: "Export options are required (field: options)" },
+    { name: "INVALID_EXPORT_FORMAT", type: "error", required: false, description: "Format must be json/csv (field: format)" }
+  ]}
+/>
 
 **See Also:**
 
-- [Error Handling Guide](../05-reference/02-error-handling)
+- [Error Handling Guide](/reference/error-handling)
 
 ---
 
-## Next Steps
+<QuickNav>
 
-- **[Context Operations API](./context-operations)** - Context chain management
-- **[A2A Communication API](./a2a-communication)** - Agent-to-agent messaging
-- **[Conversation Operations API](./conversation-operations)** - ACID conversation management
-- **[Types & Interfaces](../05-reference/01-types-interfaces)** - Complete TypeScript definitions
+<QuickNavItem
+  title="Context Operations API"
+  description="Context chain management"
+  href="/api-reference/context-operations"
+  icon="layers"
+/>
+
+<QuickNavItem
+  title="A2A Communication API"
+  description="Agent-to-agent messaging"
+  href="/api-reference/a2a-communication"
+  icon="message-square"
+/>
+
+<QuickNavItem
+  title="Conversation Operations API"
+  description="ACID conversation management"
+  href="/api-reference/conversation-operations"
+  icon="messages-square"
+/>
+
+<QuickNavItem
+  title="Types & Interfaces"
+  description="Complete TypeScript definitions"
+  href="/reference/types-interfaces"
+  icon="code"
+/>
+
+</QuickNav>
 
 ---
 

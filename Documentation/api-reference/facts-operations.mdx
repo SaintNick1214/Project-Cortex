@@ -1,7 +1,20 @@
+---
+id: facts-operations
+title: Facts Operations API
+sidebar_position: 3
+description: Complete API reference for the Facts layer (Layer 3) - structured knowledge extraction, storage, and belief revision system.
+---
+
 # Facts Operations API
 
-> **Last Updated**: 2026-01-01
-> **Version**: v0.7.0+ (Belief Revision: v0.24.0+)
+<Callout
+  type="info"
+  icon="clock"
+>
+
+**Last Updated**: 2026-01-01 | **Version**: v0.7.0+ (Belief Revision: v0.24.0+)
+
+</Callout>
 
 Complete API reference for the Facts layer (Layer 3) - structured knowledge extraction and storage.
 
@@ -9,22 +22,39 @@ Complete API reference for the Facts layer (Layer 3) - structured knowledge extr
 
 The Facts API (`cortex.facts.*`) provides structured knowledge storage with versioning, relationships, and temporal validity. Facts are memory-space scoped and can be automatically extracted from conversations or stored manually.
 
-**Key Features:**
+<CardGroup cols={2}>
 
-- ✅ Structured fact storage (subject-predicate-object triples)
-- ✅ Confidence scoring (0-100)
-- ✅ Temporal validity (validFrom/validUntil)
-- ✅ Automatic versioning and supersession
-- ✅ **Graph database integration (v0.7.0+)** - Optional syncToGraph
-- ✅ **Universal filters (v0.9.1+)** - Same filters as Memory API
-- ✅ sourceRef linking to memories and conversations
-- ✅ Memory space isolation
-- ✅ **userId support (v0.9.1+)** - GDPR cascade deletion
-- ✅ **participantId support** - Hive Mode tracking
-- ✅ **Enriched fact extraction (v0.15.0+)** - Search aliases, semantic context, entities, relations
-- ✅ **Belief Revision System (v0.24.0+)** - Intelligent fact management with `revise()`, conflict detection, and history tracking
-- ✅ **Integration with `remember()` (v0.24.0+)** - Automatic fact revision when storing conversations
-- ✅ **Multi-Tenancy** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
+<Card
+  title="Key Features"
+  icon="list-check"
+>
+
+- Structured fact storage (subject-predicate-object triples)
+- Confidence scoring (0-100)
+- Temporal validity (validFrom/validUntil)
+- Automatic versioning and supersession
+- **Graph database integration (v0.7.0+)** - Optional syncToGraph
+- **Universal filters (v0.9.1+)** - Same filters as Memory API
+- sourceRef linking to memories and conversations
+
+</Card>
+
+<Card
+  title="Advanced Capabilities"
+  icon="rocket"
+>
+
+- Memory space isolation
+- **userId support (v0.9.1+)** - GDPR cascade deletion
+- **participantId support** - Hive Mode tracking
+- **Enriched fact extraction (v0.15.0+)** - Search aliases, semantic context, entities, relations
+- **Belief Revision System (v0.24.0+)** - Intelligent fact management with `revise()`, conflict detection, and history tracking
+- **Integration with `remember()` (v0.24.0+)** - Automatic fact revision when storing conversations
+- **Multi-Tenancy** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
+
+</Card>
+
+</CardGroup>
 
 **Relationship to Layers:**
 
@@ -186,7 +216,14 @@ const enrichedFact = await cortex.facts.store({
 
 ### `facts.storeWithDedup()`
 
-> **New in v0.22.0**: Store a fact with automatic cross-session deduplication.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.22.0**: Store a fact with automatic cross-session deduplication.
+
+</Callout>
 
 Store a fact, automatically checking for and handling duplicates. If a duplicate is found, either returns the existing fact or updates it if the new confidence is higher.
 
@@ -290,7 +327,14 @@ console.log(semanticResult.deduplication?.similarityScore); // ~0.92
 
 ## Belief Revision System (v0.24.0+)
 
-> **New in v0.24.0**: Intelligent fact management that prevents duplicates and maintains knowledge consistency.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Intelligent fact management that prevents duplicates and maintains knowledge consistency.
+
+</Callout>
 
 The Belief Revision System determines whether a new fact should:
 
@@ -338,7 +382,14 @@ if (cortex.facts.hasBeliefRevision()) {
 
 ### `facts.configureBeliefRevision()`
 
-> **New in v0.24.0**: Configure or reconfigure the belief revision service at runtime.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Configure or reconfigure the belief revision service at runtime.
+
+</Callout>
 
 Use this method to change the LLM client or belief revision configuration after the Cortex instance has been created.
 
@@ -406,7 +457,14 @@ cortex.facts.configureBeliefRevision(openaiClient, {
 
 ### `facts.hasBeliefRevision()`
 
-> **New in v0.24.0**: Check if belief revision is configured and available.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Check if belief revision is configured and available.
+
+</Callout>
 
 **Signature:**
 
@@ -452,7 +510,14 @@ else:
 
 ### `facts.revise()`
 
-> **New in v0.24.0**: Intelligently store a fact using the belief revision pipeline.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Intelligently store a fact using the belief revision pipeline.
+
+</Callout>
 
 **Signature:**
 
@@ -532,7 +597,14 @@ if (result.pipeline.llmResolution?.executed) {
 
 ### `facts.checkConflicts()`
 
-> **New in v0.24.0**: Preview conflicts without executing - useful for user confirmation flows.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Preview conflicts without executing - useful for user confirmation flows.
+
+</Callout>
 
 **Signature:**
 
@@ -586,7 +658,14 @@ if (conflicts.hasConflicts) {
 
 ### `facts.supersede()`
 
-> **New in v0.24.0**: Manually supersede a fact with another.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Manually supersede a fact with another.
+
+</Callout>
 
 **Signature:**
 
@@ -617,7 +696,14 @@ console.log(oldFact.validUntil); // Set to supersession time
 
 ### `facts.history()`
 
-> **New in v0.24.0**: Get the change history for a fact.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Get the change history for a fact.
+
+</Callout>
 
 **Signature:**
 
@@ -671,7 +757,14 @@ history.forEach((event) => {
 
 ### `facts.getChanges()`
 
-> **New in v0.24.0**: Get change events for a memory space with filtering.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Get change events for a memory space with filtering.
+
+</Callout>
 
 Query the change history across a memory space, with optional filtering by action type, user, participant, time range, or specific fact.
 
@@ -765,7 +858,14 @@ const rangeChanges = await cortex.facts.getChanges({
 
 ### `facts.getSupersessionChain()`
 
-> **New in v0.24.0**: Get the evolution of a fact over time.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Get the evolution of a fact over time.
+
+</Callout>
 
 **Signature:**
 
@@ -791,7 +891,14 @@ chain.forEach((entry, i) => {
 
 ### `facts.getActivitySummary()`
 
-> **New in v0.24.0**: Get activity summary for a memory space.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.24.0**: Get activity summary for a memory space.
+
+</Callout>
 
 **Signature:**
 
@@ -1231,7 +1338,14 @@ const prefResult = await cortex.facts.deleteMany({
 });
 ```
 
-> **Note:** This is a hard delete operation. For soft delete (marking as superseded), use `delete()` on individual facts.
+<Callout
+  type="warning"
+  icon="triangle-exclamation"
+>
+
+This is a hard delete operation. For soft delete (marking as superseded), use `delete()` on individual facts.
+
+</Callout>
 
 ### `facts.count()`
 
@@ -1325,7 +1439,14 @@ console.log(`Email agent stored ${participantFactCount} preferences`);
 
 ## Universal Filters Support
 
-> **Key Design Principle:** Facts API supports the same universal filters as Memory Operations for consistency.
+<Callout
+  type="info"
+  icon="lightbulb"
+>
+
+**Key Design Principle:** Facts API supports the same universal filters as Memory Operations for consistency.
+
+</Callout>
 
 The Facts API now supports **universal filters** across all query operations (`list()`, `search()`, `count()`, `queryBySubject()`, etc.), making it consistent with Cortex's core design philosophy.
 
@@ -1476,19 +1597,26 @@ const exactFacts = await cortex.facts.list({
 });
 ```
 
-> **Planned Feature:** Range queries for confidence (`maxConfidence`, `$gte`, `$lte` syntax) are planned for a future release. Currently only `minConfidence` (lower bound) and `confidence` (exact match) are supported.
+<Callout
+  type="info"
+  icon="clock"
+>
+
+**Planned Feature:** Range queries for confidence (`maxConfidence`, `$gte`, `$lte` syntax) are planned for a future release. Currently only `minConfidence` (lower bound) and `confidence` (exact match) are supported.
+
+</Callout>
 
 ### Operations Supporting Universal Filters
 
 All major query operations support universal filters:
 
-- ✅ `facts.list()` - Full filter support
-- ✅ `facts.search()` - Full filter support + text search
-- ✅ `facts.count()` - Full filter support
-- ✅ `facts.queryBySubject()` - Universal filters + subject focus
-- ✅ `facts.queryByRelationship()` - Universal filters + relationship focus
-- ✅ `facts.export()` - Universal filters for selective export
-- ✅ `facts.consolidate()` - Can filter facts to consolidate
+- `facts.list()` - Full filter support
+- `facts.search()` - Full filter support + text search
+- `facts.count()` - Full filter support
+- `facts.queryBySubject()` - Universal filters + subject focus
+- `facts.queryByRelationship()` - Universal filters + relationship focus
+- `facts.export()` - Universal filters for selective export
+- `facts.consolidate()` - Can filter facts to consolidate
 
 ### Migration Note
 
@@ -1869,7 +1997,7 @@ result = await cortex.memory.remember(
 )
 ```
 
-**See also:** [Memory Operations - Automatic Fact Revision](./memory-operations.md#automatic-fact-revision-in-remember-v0240)
+**See also:** [Memory Operations - Automatic Fact Revision](/api-reference/memory-operations#automatic-fact-revision-in-remember-v0240)
 
 ### Automatic Enrichment
 
@@ -1954,7 +2082,14 @@ type FactType =
 
 ## Enriched Fact Extraction (v0.15.0+)
 
-> **New in v0.15.0**: Bullet-proof fact retrieval through enriched extraction.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.15.0**: Bullet-proof fact retrieval through enriched extraction.
+
+</Callout>
 
 Cortex v0.15.0 introduces **enriched fact extraction** - a system for extracting facts with rich metadata that dramatically improves semantic search accuracy.
 
@@ -2324,10 +2459,37 @@ const enriched = await cortex.memory.search("agent-1", query, {
 
 ## Next Steps
 
-- **[Fact Integration Guide](../02-core-features/11-fact-integration)** - Extraction strategies and patterns
-- **[Memory Operations API](./memory-operations)** - Memory API integration
-- **[Semantic Search Guide](../02-core-features/02-semantic-search)** - Using facts in search
-- **[Graph Database Integration](../07-advanced-topics/02-graph-database-integration)** - Advanced graph queries
+<QuickNav>
+
+<QuickNavItem
+  title="Fact Integration Guide"
+  description="Extraction strategies and patterns"
+  href="/core-features/fact-integration"
+  icon="puzzle-piece"
+/>
+
+<QuickNavItem
+  title="Memory Operations API"
+  description="Memory API integration"
+  href="/api-reference/memory-operations"
+  icon="brain"
+/>
+
+<QuickNavItem
+  title="Semantic Search Guide"
+  description="Using facts in search"
+  href="/core-features/semantic-search"
+  icon="search"
+/>
+
+<QuickNavItem
+  title="Graph Database Integration"
+  description="Advanced graph queries"
+  href="/advanced-topics/graph-database-integration"
+  icon="diagram-project"
+/>
+
+</QuickNav>
 
 ---
 
