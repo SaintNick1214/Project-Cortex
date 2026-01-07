@@ -19,21 +19,13 @@ Some A2A operations require **real-time pub/sub infrastructure**.
 
 </Callout>
 
-<APITable
-  parameters={[
-    { name: "send()", type: "No", required: false, default: "Yes", description: "Fire-and-forget (async)" },
-    { name: "request()", type: "Yes", required: true, default: "No", description: "Needs real-time response notification" },
-    { name: "broadcast()", type: "Yes (optimal)", required: false, default: "Degraded", description: "Can store without pub/sub, but no delivery confirmation" },
-    { name: "subscribe()", type: "Yes", required: true, default: "No", description: "Real-time inbox notifications (Planned)" },
-    { name: "getConversation()", type: "No", required: false, default: "Yes", description: "Database query only" },
-  ]}
-  columns={[
-    { key: "name", header: "Operation" },
-    { key: "type", header: "Pub/Sub Required" },
-    { key: "default", header: "Works Without" },
-    { key: "description", header: "Why" },
-  ]}
-/>
+| Operation | Pub/Sub Required | Works Without | Why |
+|-----------|------------------|---------------|-----|
+| `send()` | No | Yes | Fire-and-forget (async) |
+| `request()` | Yes | No | Needs real-time response notification |
+| `broadcast()` | Yes (optimal) | Degraded | Can store without pub/sub, but no delivery confirmation |
+| `subscribe()` | Yes | No | Real-time inbox notifications (Planned) |
+| `getConversation()` | No | Yes | Database query only |
 
 **Pub/Sub Options:**
 
@@ -48,25 +40,17 @@ A2A = Agent Memory + Pub/Sub (optional) + Convenience
 
 **Validation Constraints:**
 
-<APITable
-  parameters={[
-    { name: "Agent IDs (from, to)", type: "Pattern: /^[a-zA-Z0-9_-]+$/", required: true, description: "Only alphanumeric, hyphens, underscores" },
-    { name: "Agent IDs (from, to)", type: "Max length: 100 characters", required: true, description: "" },
-    { name: "message", type: "Max size: 100KB", required: true, description: "Measured in UTF-8 bytes" },
-    { name: "importance", type: "Integer 0-100", required: false, default: "60 for send/broadcast, 70 for request", description: "" },
-    { name: "timeout", type: "Integer 1000-300000ms", required: false, default: "30000ms (30 seconds)", description: "" },
-    { name: "retries", type: "Integer 0-10", required: false, default: "1", description: "" },
-    { name: "to[] (broadcast)", type: "Max 100 recipients", required: true, description: "No duplicates, sender not allowed" },
-    { name: "limit", type: "Integer 1-1000", required: false, default: "100", description: "" },
-    { name: "offset", type: "Integer >= 0", required: false, default: "0", description: "" },
-  ]}
-  columns={[
-    { key: "name", header: "Field" },
-    { key: "type", header: "Constraint" },
-    { key: "default", header: "Default" },
-    { key: "description", header: "Details" },
-  ]}
-/>
+| Field | Constraint | Default | Details |
+|-------|------------|---------|---------|
+| Agent IDs (from, to) | Pattern: `/^[a-zA-Z0-9_-]+$/` | — | Only alphanumeric, hyphens, underscores |
+| Agent IDs (from, to) | Max length: 100 characters | — | — |
+| message | Max size: 100KB | — | Measured in UTF-8 bytes |
+| importance | Integer 0-100 | 60 for send/broadcast, 70 for request | — |
+| timeout | Integer 1000-300000ms | 30000ms (30 seconds) | — |
+| retries | Integer 0-10 | 1 | — |
+| to[] (broadcast) | Max 100 recipients | — | No duplicates, sender not allowed |
+| limit | Integer 1-1000 | 100 | — |
+| offset | Integer >= 0 | 0 | — |
 
 ```typescript
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -190,19 +174,11 @@ await cortex.vector.store("hr-agent", {
 
 **Code Reduction:**
 
-<APITable
-  parameters={[
-    { name: "cortex.a2a.send()", type: "7", required: false, default: "Automatic", description: "Both agents | Low complexity" },
-    { name: "cortex.memory.remember()", type: "~20", required: false, default: "Automatic", description: "One agent (call 2x) | Medium complexity" },
-    { name: "Manual (Layer 1+2)", type: "50+", required: false, default: "Manual", description: "One agent (call 2x) | High complexity" },
-  ]}
-  columns={[
-    { key: "name", header: "Approach" },
-    { key: "type", header: "Lines of Code" },
-    { key: "default", header: "Handles ACID" },
-    { key: "description", header: "Bidirectional | Complexity" },
-  ]}
-/>
+| Approach | Lines of Code | Handles ACID | Bidirectional / Complexity |
+|----------|---------------|--------------|----------------------------|
+| `cortex.a2a.send()` | 7 | Automatic | Both agents / Low complexity |
+| `cortex.memory.remember()` | ~20 | Automatic | One agent (call 2x) / Medium complexity |
+| Manual (Layer 1+2) | 50+ | Manual | One agent (call 2x) / High complexity |
 
 <Callout type="tip" title="Why cortex.a2a.send() is best for A2A">
 
@@ -1635,21 +1611,13 @@ async function askWithFallback(from: string, to: string, message: string) {
 
 ## Comparison: Helper vs Direct
 
-<APITable
-  parameters={[
-    { name: "Send message", type: "a2a.send()", required: false, default: "ACID + 2x Vector stores", description: "7 vs 40+" },
-    { name: "Request-response", type: "a2a.request()", required: false, default: "Send + polling loop", description: "5 vs 35+" },
-    { name: "Broadcast", type: "a2a.broadcast()", required: false, default: "Loop + Nx2 stores", description: "8 vs 50+" },
-    { name: "Get conversation", type: "a2a.getConversation()", required: false, default: "Bidirectional search + merge", description: "6 vs 40+" },
-    { name: "Total saved", type: "26 lines", required: false, default: "165+ lines", description: "85% reduction" },
-  ]}
-  columns={[
-    { key: "name", header: "Operation" },
-    { key: "type", header: "A2A Helper" },
-    { key: "default", header: "Memory API Direct" },
-    { key: "description", header: "Lines of Code" },
-  ]}
-/>
+| Operation | A2A Helper | Memory API Direct | Lines of Code |
+|-----------|------------|-------------------|---------------|
+| Send message | `a2a.send()` | ACID + 2x Vector stores | 7 vs 40+ |
+| Request-response | `a2a.request()` | Send + polling loop | 5 vs 35+ |
+| Broadcast | `a2a.broadcast()` | Loop + Nx2 stores | 8 vs 50+ |
+| Get conversation | `a2a.getConversation()` | Bidirectional search + merge | 6 vs 40+ |
+| **Total saved** | **26 lines** | **165+ lines** | **85% reduction** |
 
 <Callout type="info" title="Helpers are pure convenience">
 
@@ -1843,33 +1811,26 @@ try {
 
 ### All Error Codes
 
-<APITable
-  parameters={[
-    { name: "INVALID_AGENT_ID", type: "Agent ID is invalid", required: false, description: "Empty, malformed, or exceeds 100 chars" },
-    { name: "EMPTY_MESSAGE", type: "Message is empty", required: false, description: "Message is empty or whitespace-only" },
-    { name: "MESSAGE_TOO_LARGE", type: "Message exceeds limit", required: false, description: "Message exceeds 100KB (UTF-8 bytes)" },
-    { name: "EMPTY_RECIPIENTS", type: "No recipients", required: false, description: "to[] array is empty" },
-    { name: "TOO_MANY_RECIPIENTS", type: "Too many recipients", required: false, description: "More than 100 recipients in broadcast" },
-    { name: "DUPLICATE_RECIPIENTS", type: "Duplicate recipients", required: false, description: "Same agent ID appears multiple times in to[]" },
-    { name: "INVALID_RECIPIENT", type: "Invalid recipient", required: false, description: "Sender included in recipients list" },
-    { name: "SAME_AGENT_COMMUNICATION", type: "Self-communication", required: false, description: "from and to are the same agent" },
-    { name: "INVALID_IMPORTANCE", type: "Invalid importance", required: false, description: "Importance not integer 0-100" },
-    { name: "INVALID_TIMEOUT", type: "Invalid timeout", required: false, description: "Timeout not between 1000ms and 300000ms" },
-    { name: "INVALID_RETRIES", type: "Invalid retries", required: false, description: "Retries not integer 0-10" },
-    { name: "INVALID_DATE_RANGE", type: "Invalid date range", required: false, description: "'since' is after 'until'" },
-    { name: "INVALID_LIMIT", type: "Invalid limit", required: false, description: "Limit not integer 1-1000" },
-    { name: "INVALID_OFFSET", type: "Invalid offset", required: false, description: "Offset is negative" },
-    { name: "PUBSUB_NOT_CONFIGURED", type: "Pub/sub required", required: false, description: "request() needs pub/sub adapter" },
-    { name: "A2ATimeoutError", type: "Request timeout", required: false, description: "No response within timeout" },
-    { name: "A2AValidationError", type: "Validation failed", required: false, description: "Client-side validation error (see code/field)" },
-    { name: "CONVEX_ERROR", type: "Database error", required: false, description: "Convex operation failed" },
-  ]}
-  columns={[
-    { key: "name", header: "Error Code" },
-    { key: "type", header: "Description" },
-    { key: "description", header: "Cause" },
-  ]}
-/>
+| Error Code | Description | Cause |
+|------------|-------------|-------|
+| `INVALID_AGENT_ID` | Agent ID is invalid | Empty, malformed, or exceeds 100 chars |
+| `EMPTY_MESSAGE` | Message is empty | Message is empty or whitespace-only |
+| `MESSAGE_TOO_LARGE` | Message exceeds limit | Message exceeds 100KB (UTF-8 bytes) |
+| `EMPTY_RECIPIENTS` | No recipients | to[] array is empty |
+| `TOO_MANY_RECIPIENTS` | Too many recipients | More than 100 recipients in broadcast |
+| `DUPLICATE_RECIPIENTS` | Duplicate recipients | Same agent ID appears multiple times in to[] |
+| `INVALID_RECIPIENT` | Invalid recipient | Sender included in recipients list |
+| `SAME_AGENT_COMMUNICATION` | Self-communication | from and to are the same agent |
+| `INVALID_IMPORTANCE` | Invalid importance | Importance not integer 0-100 |
+| `INVALID_TIMEOUT` | Invalid timeout | Timeout not between 1000ms and 300000ms |
+| `INVALID_RETRIES` | Invalid retries | Retries not integer 0-10 |
+| `INVALID_DATE_RANGE` | Invalid date range | 'since' is after 'until' |
+| `INVALID_LIMIT` | Invalid limit | Limit not integer 1-1000 |
+| `INVALID_OFFSET` | Invalid offset | Offset is negative |
+| `PUBSUB_NOT_CONFIGURED` | Pub/sub required | request() needs pub/sub adapter |
+| `A2ATimeoutError` | Request timeout | No response within timeout |
+| `A2AValidationError` | Validation failed | Client-side validation error (see code/field) |
+| `CONVEX_ERROR` | Database error | Convex operation failed |
 
 **See Also:**
 
@@ -1880,37 +1841,28 @@ try {
 ## Next Steps
 
 <QuickNav>
-
-<QuickNavItem
-  icon="database"
-  title="Conversation Operations API"
-  description="ACID conversation management"
-  href="/api-reference/conversation-operations"
-/>
-
-<QuickNavItem
-  icon="brain"
-  title="Memory Operations API"
-  description="Underlying memory system"
-  href="/api-reference/memory-operations"
-/>
-
-<QuickNavItem
-  icon="workflow"
-  title="Context Operations API"
-  description="Workflow coordination"
-  href="/api-reference/context-operations"
-/>
-
-<QuickNavItem
-  icon="code"
-  title="Types & Interfaces"
-  description="Complete TypeScript definitions"
-  href="/reference/types-interfaces"
-/>
-
+  <QuickNavItem
+    title="Conversation Operations API"
+    description="ACID conversation management"
+    href="/api-reference/conversation-operations"
+  />
+  <QuickNavItem
+    title="Memory Operations API"
+    description="Underlying memory system"
+    href="/api-reference/memory-operations"
+  />
+  <QuickNavItem
+    title="Context Operations API"
+    description="Workflow coordination"
+    href="/api-reference/context-operations"
+  />
+  <QuickNavItem
+    title="Types & Interfaces"
+    description="Complete TypeScript definitions"
+    href="/reference/types-interfaces"
+  />
 </QuickNav>
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

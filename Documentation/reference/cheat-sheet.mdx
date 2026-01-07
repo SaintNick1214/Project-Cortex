@@ -1,0 +1,443 @@
+---
+id: cheat-sheet
+title: Cheat Sheet
+sidebar_position: 4
+description: Quick reference for Cortex SDK operations and common tasks
+---
+
+# Cheat Sheet
+
+Quick reference for the most common Cortex operations. Copy-paste ready!
+
+---
+
+## Setup
+
+### Import
+
+```typescript
+import { Cortex } from "@cortexmemory/sdk";
+import type { MemoryEntry, UserProfile, Context } from "@cortexmemory/sdk";
+```
+
+### Initialize
+
+<Tabs groupId="mode">
+<TabItem value="direct" label="Direct Mode">
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+});
+```
+
+</TabItem>
+<TabItem value="cloud" label="Cloud Mode">
+
+```typescript
+const cortex = new Cortex({
+  mode: "cloud",
+  apiKey: process.env.CORTEX_CLOUD_KEY,
+});
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## Core Namespaces
+
+```typescript
+cortex.memory.*          // Layer 4: Memory convenience API (primary interface)
+cortex.memorySpaces.*    // Memory space management (Hive/Collaboration)
+cortex.conversations.*   // Layer 1a: ACID conversations (memorySpace-scoped)
+cortex.immutable.*       // Layer 1b: Shared versioned data (NO memorySpace)
+cortex.mutable.*         // Layer 1c: Shared live data (NO memorySpace)
+cortex.vector.*          // Layer 2: Vector index (memorySpace-scoped)
+cortex.facts.*           // Layer 3: Facts store (memorySpace-scoped, LLM extraction)
+cortex.users.*           // User profiles + GDPR (shared across all spaces)
+cortex.contexts.*        // Workflow coordination (cross-space support)
+cortex.a2a.*             // Inter-agent messaging
+cortex.governance.*      // Retention policies & compliance
+cortex.sessions.*        // Session lifecycle management
+cortex.agents.*          // Agent registry (optional, superseded by memorySpaces)
+```
+
+---
+
+## Memory Operations
+
+The most commonly used API - handles Layers 1-3 automatically.
+
+```typescript
+// Store conversation (ACID + Vector)
+await cortex.memory.remember({
+  memorySpaceId,
+  participantId, // Optional: Hive Mode tracking
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
+});
+
+// Store system memory (Vector only)
+await cortex.vector.store(memorySpaceId, {
+  content,
+  source: { type: "system" },
+  metadata,
+});
+
+// Search
+await cortex.memory.search(memorySpaceId, query, {
+  embedding,
+  userId,
+  minImportance,
+  limit,
+  participantId, // Optional: Filter by participant
+});
+
+// Get
+await cortex.memory.get(memorySpaceId, memoryId, { includeConversation: true });
+
+// Update
+await cortex.memory.update(memorySpaceId, memoryId, { content, metadata });
+
+// Delete (preserves ACID)
+await cortex.memory.delete(memorySpaceId, memoryId);
+
+// Count
+await cortex.memory.count(memorySpaceId, filters);
+
+// List
+await cortex.memory.list(memorySpaceId, { limit, offset, sortBy });
+
+// Export
+await cortex.memory.export(memorySpaceId, { userId, format: "json" });
+```
+
+---
+
+## User Operations
+
+```typescript
+// Create/update
+await cortex.users.update(userId, {
+  data: { displayName, email, preferences },
+});
+
+// Get
+await cortex.users.get(userId);
+
+// Delete (Cloud Mode - cascade across all stores)
+await cortex.users.delete(userId, { cascade: true });
+
+// Search
+await cortex.users.search({ data: { tier: "pro" } });
+
+// Count
+await cortex.users.count({ createdAfter: new Date("2025-01-01") });
+```
+
+---
+
+## Context Operations
+
+```typescript
+// Create workflow
+const ctx = await cortex.contexts.create({
+  purpose,
+  memorySpaceId, // Which memory space
+  userId,
+  parentId, // Cross-space parent allowed
+  data,
+});
+
+// Get with chain (supports cross-space traversal)
+await cortex.contexts.get(contextId, {
+  includeChain: true,
+  requestingSpace: memorySpaceId, // For cross-space access
+});
+
+// Update status
+await cortex.contexts.update(contextId, { status: "completed", data });
+
+// Delete with children
+await cortex.contexts.delete(contextId, { cascadeChildren: true });
+
+// Search
+await cortex.contexts.search({
+  memorySpaceId,
+  status: "active",
+  data: { importance: { $gte: 80 } },
+});
+```
+
+---
+
+## A2A Communication
+
+```typescript
+// Send message
+await cortex.a2a.send({ from, to, message, importance, userId, contextId });
+
+// Request-response (requires pub/sub)
+const response = await cortex.a2a.request({ from, to, message, timeout });
+
+// Broadcast
+await cortex.a2a.broadcast({ from, to: [agent1, agent2, agent3], message });
+
+// Get conversation
+await cortex.a2a.getConversation(agent1, agent2, {
+  since,
+  minImportance,
+  tags,
+});
+```
+
+---
+
+## Immutable Store
+
+```typescript
+// Store versioned data
+await cortex.immutable.store({ type, id, data, userId, metadata });
+
+// Get current version
+await cortex.immutable.get(type, id);
+
+// Get specific version
+await cortex.immutable.getVersion(type, id, version);
+
+// Get history
+await cortex.immutable.getHistory(type, id);
+
+// Purge
+await cortex.immutable.purge(type, id);
+```
+
+---
+
+## Mutable Store
+
+```typescript
+// Set value
+await cortex.mutable.set(namespace, key, value, userId);
+
+// Get value
+await cortex.mutable.get(namespace, key);
+
+// Atomic update
+await cortex.mutable.update(namespace, key, (current) => current + 1);
+
+// Transaction
+await cortex.mutable.transaction(async (tx) => {
+  tx.update("inventory", "product-a", (qty) => qty - 1);
+  tx.update("counters", "sales", (n) => n + 1);
+});
+
+// Delete
+await cortex.mutable.delete(namespace, key);
+```
+
+---
+
+## Sessions
+
+```typescript
+// Create session
+const session = await cortex.sessions.create({
+  userId,
+  deviceType: "web",
+  metadata,
+});
+
+// Get or create
+const session = await cortex.sessions.getOrCreate(userId, { deviceType });
+
+// Touch (update activity)
+await cortex.sessions.touch(sessionId);
+
+// End session
+await cortex.sessions.end(sessionId);
+
+// Get active sessions
+await cortex.sessions.getActive(userId);
+
+// Expire idle sessions
+await cortex.sessions.expireIdle({ maxIdleMinutes: 30 });
+```
+
+---
+
+## Facts
+
+```typescript
+// Store fact
+await cortex.facts.store(memorySpaceId, {
+  fact: "User prefers dark mode",
+  subject: userId,
+  predicate: "preference",
+  object: "dark mode",
+  confidence: 95,
+});
+
+// Search facts
+await cortex.facts.search(memorySpaceId, query, { userId });
+
+// Check conflicts (Belief Revision)
+const conflicts = await cortex.facts.checkConflicts({
+  memorySpaceId,
+  fact: newFact,
+});
+
+// Get fact history
+await cortex.facts.history(factId);
+```
+
+---
+
+## Universal Filters
+
+The same filters work across ALL operations:
+
+```typescript
+const filters = {
+  userId: "user-123",
+  tags: ["preferences"],
+  minImportance: 50,
+  createdAfter: new Date("2025-10-01"),
+};
+
+// Use everywhere
+await cortex.memory.search(memorySpaceId, query, filters);
+await cortex.memory.count(memorySpaceId, filters);
+await cortex.memory.list(memorySpaceId, filters);
+await cortex.memory.updateMany(memorySpaceId, filters, updates);
+await cortex.memory.deleteMany(memorySpaceId, filters);
+await cortex.memory.export(memorySpaceId, filters);
+```
+
+**Supported Filters:**
+
+| Filter | Type | Description |
+|--------|------|-------------|
+| `userId` | `string` | Filter by user |
+| `tags` | `string[]` | Filter by tags (AND) |
+| `minImportance` | `number` | Minimum importance (0-100) |
+| `maxImportance` | `number` | Maximum importance (0-100) |
+| `createdBefore` | `Date` | Created before date |
+| `createdAfter` | `Date` | Created after date |
+| `accessCount` | `number` | Minimum access count |
+| `version` | `number` | Specific version |
+| `source.type` | `string` | Source type filter |
+| `metadata.*` | `any` | Any metadata field |
+
+---
+
+## Most Used Operations
+
+Quick copy-paste for the 5 most common operations:
+
+```typescript
+// 1. Remember conversation
+await cortex.memory.remember({
+  memorySpaceId,
+  participantId, // Optional: Hive Mode tracking
+  conversationId,
+  userMessage,
+  agentResponse,
+  userId,
+  userName,
+});
+
+// 2. Search memories (infinite context pattern)
+await cortex.memory.search(memorySpaceId, query, { embedding, filters });
+
+// 3. Update user profile
+await cortex.users.update(userId, { data });
+
+// 4. Send inter-space message (Collaboration Mode)
+await cortex.a2a.send({ from, to, message });
+
+// 5. Create context
+await cortex.contexts.create({ purpose, memorySpaceId, userId });
+```
+
+---
+
+## API Conventions
+
+### Naming Patterns
+
+| Pattern | Example | Description |
+|---------|---------|-------------|
+| Operations | `create`, `get`, `update`, `delete`, `search` | Verb-based |
+| Namespaces | `conversations`, `users`, `contexts` | Plural nouns |
+| Options | `SearchOptions`, `DeleteOptions` | `*Options` suffix |
+| Results | `RememberResult`, `DeleteResult` | `*Result` suffix |
+| Filters | `UniversalFilters`, `UserFilters` | `*Filters` suffix |
+
+### Return Values
+
+| Pattern | Type | Example |
+|---------|------|---------|
+| Single item | `Entity \| null` | `cortex.users.get()` |
+| Multiple items | `Entity[]` | `cortex.users.search()` |
+| Paginated | `{ items, total, hasMore }` | `cortex.memory.list()` |
+| Operations | `*Result` | `cortex.memory.remember()` |
+
+### Async/Await
+
+```typescript
+// ✅ Always use await
+const memory = await cortex.memory.get("agent-1", memoryId);
+
+// ❌ Don't forget await
+const memory = cortex.memory.get("agent-1", memoryId); // Returns Promise!
+```
+
+---
+
+## Error Handling
+
+```typescript
+import { CortexError } from "@cortexmemory/sdk";
+
+try {
+  await cortex.memory.store("agent-1", data);
+} catch (error) {
+  if (error instanceof CortexError) {
+    console.log(`Error: ${error.code}`);
+    // Type-safe error handling
+  }
+}
+```
+
+---
+
+## Related Resources
+
+<QuickNav>
+  <QuickNavItem
+    title="Patterns & Practices"
+    description="Common implementation patterns"
+    href="/reference/patterns-and-practices"
+  />
+  <QuickNavItem
+    title="Memory Operations"
+    description="Complete API reference"
+    href="/api-reference/memory-operations"
+  />
+  <QuickNavItem
+    title="Types & Interfaces"
+    description="TypeScript definitions"
+    href="/reference/types-interfaces"
+  />
+  <QuickNavItem
+    title="Error Handling"
+    description="Error codes and debugging"
+    href="/reference/error-handling"
+  />
+</QuickNav>

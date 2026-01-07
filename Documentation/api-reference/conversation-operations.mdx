@@ -13,10 +13,7 @@ Complete API reference for ACID conversation management (Layer 1a).
 
 The Conversation Operations API (`cortex.conversations.*`) manages **immutable conversation threads** - the Layer 1a foundation that provides the source of truth for all message history.
 
-<Card
-  title="Key Characteristics"
-  icon="check"
->
+<Callout type="info" title="Key Characteristics">
 
 - **Immutable** - Messages never modified, only appended
 - **Append-Only** - Conversations grow, never shrink (unless deleted)
@@ -26,7 +23,7 @@ The Conversation Operations API (`cortex.conversations.*`) manages **immutable c
 - **Referenced** - Vector memories link back via `conversationRef`
 - **Multi-Tenant** - Automatic `tenantId` isolation for SaaS platforms
 
-</Card>
+</Callout>
 
 **Relationship to Other Layers:**
 
@@ -1357,4 +1354,4 @@ const memories = await cortex.memory.search('agent-1', '*', {
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

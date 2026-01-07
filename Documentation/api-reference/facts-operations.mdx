@@ -22,12 +22,22 @@ Complete API reference for the Facts layer (Layer 3) - structured knowledge extr
 
 The Facts API (`cortex.facts.*`) provides structured knowledge storage with versioning, relationships, and temporal validity. Facts are memory-space scoped and can be automatically extracted from conversations or stored manually.
 
-<CardGroup cols={2}>
+<FeatureGrid>
+  <FeatureCard
+    title="Key Features"
+    icon="list-check"
+    description="Structured fact storage with confidence scoring, temporal validity, and automatic versioning"
+    size="large"
+  />
+  <FeatureCard
+    title="Advanced Capabilities"
+    icon="rocket"
+    description="Belief Revision System, enriched extraction, Graph DB integration, and multi-tenancy"
+    size="large"
+  />
+</FeatureGrid>
 
-<Card
-  title="Key Features"
-  icon="list-check"
->
+**Key Features:**
 
 - Structured fact storage (subject-predicate-object triples)
 - Confidence scoring (0-100)
@@ -37,12 +47,7 @@ The Facts API (`cortex.facts.*`) provides structured knowledge storage with vers
 - **Universal filters (v0.9.1+)** - Same filters as Memory API
 - sourceRef linking to memories and conversations
 
-</Card>
-
-<Card
-  title="Advanced Capabilities"
-  icon="rocket"
->
+**Advanced Capabilities:**
 
 - Memory space isolation
 - **userId support (v0.9.1+)** - GDPR cascade deletion
@@ -51,10 +56,6 @@ The Facts API (`cortex.facts.*`) provides structured knowledge storage with vers
 - **Belief Revision System (v0.24.0+)** - Intelligent fact management with `revise()`, conflict detection, and history tracking
 - **Integration with `remember()` (v0.24.0+)** - Automatic fact revision when storing conversations
 - **Multi-Tenancy** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
-
-</Card>
-
-</CardGroup>
 
 **Relationship to Layers:**
 
@@ -2493,4 +2494,4 @@ const enriched = await cortex.memory.search("agent-1", query, {
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
