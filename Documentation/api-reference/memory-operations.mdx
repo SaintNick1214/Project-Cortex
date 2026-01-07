@@ -841,7 +841,7 @@ CortexError(
 
 **See Also:**
 
-- [Helper Functions](/core-features/memory-spaces#helper-store-from-conversation-recommended)
+- [Helper Functions](/core-features/memory-spaces)
 - [Conversation Operations](/api-reference/conversation-operations) - Managing ACID conversations
 - [Memory Space Operations](/api-reference/memory-space-operations) - Managing memory spaces
 - [User Operations](/api-reference/user-operations) - User profile management
@@ -1752,7 +1752,7 @@ const enriched = await cortex.memory.search("user-123-personal", query, {
 **See Also:**
 
 - [Semantic Search Guide](/core-features/semantic-search)
-- [Universal Filters](/core-features/memory-spaces#core-api-principle-universal-filters)
+- [Universal Filters](/core-features/memory-spaces)
 
 ---
 
@@ -1853,7 +1853,7 @@ const enriched = await cortex.memory.get("user-123-personal", "mem_abc123", {
 
 **See Also:**
 
-- [Retrieving Memories](/core-features/memory-spaces#retrieving-specific-memories)
+- [Retrieving Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2069,8 +2069,8 @@ const result = await cortex.memory.remember({
 
 **See Also:**
 
-- [Agent Memory Guide](/core-features/memory-spaces#storing-memories)
-- [Store vs Update Decision](/core-features/memory-spaces#store-vs-update-decision)
+- [Agent Memory Guide](/core-features/memory-spaces)
+- [Store vs Update Decision](/core-features/memory-spaces)
 
 ---
 
@@ -2162,8 +2162,8 @@ The `update()` method does NOT support updating `conversationRef`. To link to a 
 
 **See Also:**
 
-- [Updating Memories](/core-features/memory-spaces#updating-memories)
-- [Memory Versioning](/core-features/memory-spaces#memory-versioning-automatic)
+- [Updating Memories](/core-features/memory-spaces)
+- [Memory Versioning](/core-features/memory-spaces)
 
 ---
 
@@ -2236,7 +2236,7 @@ await cortex.memory.updateMany(
 
 **See Also:**
 
-- [Bulk Operations](/core-features/memory-spaces#update-many-memories-bulk)
+- [Bulk Operations](/core-features/memory-spaces)
 
 ---
 
@@ -2321,7 +2321,7 @@ await cortex.memory.forget("user-123-personal", "mem_abc123", {
 
 **See Also:**
 
-- [Deleting Memories](/core-features/memory-spaces#deleting-memories)
+- [Deleting Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2384,7 +2384,7 @@ console.log(`Restorable: ${result.restorable}`); // false - gone from both layer
 
 **See Also:**
 
-- [GDPR Compliance](/core-features/memory-spaces#pattern-5-user-data-deletion-gdpr)
+- [GDPR Compliance](/core-features/memory-spaces)
 
 ---
 
@@ -2469,8 +2469,8 @@ if (preview.wouldDelete < 100) {
 
 **See Also:**
 
-- [Bulk Deletion](/core-features/memory-spaces#delete-by-user-gdpr-compliance)
-- [Deletion Best Practices](/core-features/memory-spaces#deletion-best-practices)
+- [Bulk Deletion](/core-features/memory-spaces)
+- [Deletion Best Practices](/core-features/memory-spaces)
 
 ---
 
@@ -2539,7 +2539,7 @@ console.log(`Found ${oldUnused} old, unused, low-importance memories`);
 
 **See Also:**
 
-- [Counting Memories](/core-features/memory-spaces#counting-memories)
+- [Counting Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2629,7 +2629,7 @@ enrichedMemories.forEach((m) => {
 
 **See Also:**
 
-- [Listing Memories](/core-features/memory-spaces#listing-memories)
+- [Listing Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2704,7 +2704,7 @@ console.log(`Exported to ${criticalBackup}`);
 
 **See Also:**
 
-- [Exporting Memories](/core-features/memory-spaces#exporting-memories)
+- [Exporting Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2771,7 +2771,7 @@ const restored = await cortex.memory.restoreFromArchive(
 
 **See Also:**
 
-- [Soft Delete](/core-features/memory-spaces#soft-delete-archive)
+- [Soft Delete](/core-features/memory-spaces)
 
 ---
 
@@ -2827,7 +2827,7 @@ if (result.restored) {
 **See Also:**
 
 - [archive()](#archive) - Archive memories (soft delete)
-- [Soft Delete](/core-features/memory-spaces#soft-delete-archive)
+- [Soft Delete](/core-features/memory-spaces)
 
 ---
 
@@ -2884,7 +2884,7 @@ if (v1) {
 
 **See Also:**
 
-- [Accessing Historical Versions](/core-features/memory-spaces#accessing-historical-versions)
+- [Accessing Historical Versions](/core-features/memory-spaces)
 
 ---
 
@@ -2936,7 +2936,7 @@ history.forEach((v) => {
 
 **See Also:**
 
-- [Version History](/core-features/memory-spaces#memory-versioning-automatic)
+- [Version History](/core-features/memory-spaces)
 
 ---
 
@@ -3000,8 +3000,8 @@ if (historicalMemory) {
 
 **See Also:**
 
-- [Temporal Queries](/core-features/memory-spaces#temporal-queries)
-- [Conflict Resolution](/core-features/memory-spaces#conflict-resolution-example)
+- [Temporal Queries](/core-features/memory-spaces)
+- [Conflict Resolution](/core-features/memory-spaces)
 
 ---
 
@@ -3066,7 +3066,7 @@ interface UniversalFilters {
 
 **See Also:**
 
-- [Universal Filters](/core-features/memory-spaces#core-api-principle-universal-filters)
+- [Universal Filters](/core-features/memory-spaces)
 
 ---
 
@@ -3095,7 +3095,7 @@ await cortex.agents.configure("temp-agent", {
 
 **See Also:**
 
-- [Version Retention](/core-features/memory-spaces#version-retention-configuration)
+- [Version Retention](/core-features/memory-spaces)
 
 ---
 
