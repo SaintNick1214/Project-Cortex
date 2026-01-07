@@ -376,41 +376,48 @@ async def test_count_users(cortex_client):
 
 
 @pytest.mark.asyncio
-async def test_delete_user_full_cascade(cortex_client, test_user_id, test_memory_space_id, test_conversation_id, cleanup_helper):
+async def test_delete_user_full_cascade(cortex_client, ctx, cleanup_helper):
     """
     Test full GDPR cascade deletion across all layers.
 
     Port of: users.test.ts - full cascade tests
+    
+    PARALLEL-SAFE: Uses ctx for isolated test data.
     """
+    # Use ctx for parallel-safe unique IDs
+    user_id = ctx.user_id("cascade")
+    memory_space_id = ctx.memory_space_id("cascade")
+    conversation_id = ctx.conversation_id("cascade")
+    
     # Create user
-    await cortex_client.users.update(test_user_id, {"displayName": "Cascade Test"})
+    await cortex_client.users.update(user_id, {"displayName": "Cascade Test"})
 
     # Create user data across layers
     from cortex import RememberParams
     await cortex_client.memory.remember(
         RememberParams(
-            memory_space_id=test_memory_space_id,
-            conversation_id=test_conversation_id,
+            memory_space_id=memory_space_id,
+            conversation_id=conversation_id,
             user_message="User message",
             agent_response="Agent response",
-            user_id=test_user_id,
+            user_id=user_id,
             user_name="Tester",
-            agent_id="test-agent",
+            agent_id=ctx.agent_id("cascade"),
         )
     )
 
     # Verify user was created before attempting delete
-    user_before = await cortex_client.users.get(test_user_id)
+    user_before = await cortex_client.users.get(user_id)
     assert user_before is not None, "User should exist before cascade delete"
 
     # Delete with cascade
     result = await cortex_client.users.delete(
-        test_user_id,
+        user_id,
         DeleteUserOptions(cascade=True, verify=True),
     )
 
     # The key assertion: user should be gone after cascade
-    user_after = await cortex_client.users.get(test_user_id)
+    user_after = await cortex_client.users.get(user_id)
     assert user_after is None, "User should not exist after cascade delete"
 
     # Note: In parallel execution, we can't reliably assert which layers

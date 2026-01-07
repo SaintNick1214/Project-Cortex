@@ -6,11 +6,13 @@
  * and streamlining development workflows.
  */
 
-import { existsSync } from "fs";
-import { join } from "path";
+import { existsSync, readFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { config as loadEnv } from "dotenv";
 import { Command } from "commander";
 import pc from "picocolors";
+
 // Core commands
 import {
   registerLifecycleCommands,
@@ -30,7 +32,15 @@ import { registerConversationsCommands } from "./commands/conversations.js";
 import { registerConvexCommands } from "./commands/convex.js";
 // Deploy/update commands (top-level)
 import { registerDeployCommands } from "./commands/deploy.js";
+// Shell completion
+import { registerCompletionCommand } from "./commands/completion.js";
 import { loadConfig } from "./utils/config.js";
+
+// Read version dynamically from package.json to ensure CLI version always matches published version
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJsonPath = join(__dirname, "..", "package.json");
+const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+const VERSION: string = packageJson.version;
 
 // Auto-load .env.local if it exists in current directory
 const envLocalPath = join(process.cwd(), ".env.local");
@@ -44,9 +54,6 @@ if (envLoaded) {
     );
   }
 }
-
-// Package version - synced with @cortexmemory/sdk
-const VERSION = "0.27.3";
 
 const program = new Command();
 
@@ -89,6 +96,9 @@ async function main() {
 
     // Register Convex operations
     registerConvexCommands(program, config);
+
+    // Register shell completion command
+    registerCompletionCommand(program);
 
     // Hide memory operation commands from main list (will show in custom section)
     const memoryOpsCommands = [

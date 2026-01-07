@@ -165,8 +165,8 @@ describe("State Transition Testing", () => {
     );
 
     it("should preserve data through status transitions", async () => {
-      const spaceId = `${ctx.runId}-ctx-preserve`;
-      const userId = "preserve-user";
+      const spaceId = ctx.memorySpaceId("ctx-preserve");
+      const userId = ctx.userId("preserve");
       const originalData = {
         taskId: "task-123",
         priority: "high",
@@ -197,8 +197,8 @@ describe("State Transition Testing", () => {
     });
 
     it("should set completedAt when transitioning to completed", async () => {
-      const spaceId = `${ctx.runId}-ctx-completed`;
-      const userId = "completed-user";
+      const spaceId = ctx.memorySpaceId("ctx-completed");
+      const userId = ctx.userId("completed");
 
       const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -219,8 +219,8 @@ describe("State Transition Testing", () => {
     });
 
     it("should preserve parent/child relationships through transitions", async () => {
-      const spaceId = `${ctx.runId}-ctx-hierarchy`;
-      const userId = "hierarchy-user";
+      const spaceId = ctx.memorySpaceId("ctx-hierarchy");
+      const userId = ctx.userId("hierarchy");
 
       const parent = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -246,8 +246,8 @@ describe("State Transition Testing", () => {
     });
 
     it("should handle rapid state transitions", async () => {
-      const spaceId = `${ctx.runId}-ctx-rapid`;
-      const userId = "rapid-user";
+      const spaceId = ctx.memorySpaceId("ctx-rapid");
+      const userId = ctx.userId("rapid");
 
       const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -267,12 +267,14 @@ describe("State Transition Testing", () => {
     });
 
     it("should allow all contexts to independently transition", async () => {
-      const spaceId = `${ctx.runId}-ctx-independent`;
-      const userId = "independent-user";
+      const spaceId = ctx.memorySpaceId("ctx-independent");
+      const userId = ctx.userId("independent");
 
-      // Create 4 contexts, one in each status
+      // Create 3 contexts in states that have valid outbound transitions
+      // Note: cancelled has no valid outbound transitions, so we skip it
+      const transitionableStatuses = ["active", "completed", "blocked"] as const;
       const contexts = await Promise.all(
-        CONTEXT_STATUSES.map((status) =>
+        transitionableStatuses.map((status) =>
           cortex.contexts.create({
             memorySpaceId: spaceId,
             userId,
@@ -283,8 +285,8 @@ describe("State Transition Testing", () => {
       );
 
       // Verify each in correct status list
-      for (let i = 0; i < CONTEXT_STATUSES.length; i++) {
-        const status = CONTEXT_STATUSES[i];
+      for (let i = 0; i < transitionableStatuses.length; i++) {
+        const status = transitionableStatuses[i];
         const list = await cortex.contexts.list({
           memorySpaceId: spaceId,
           status,
@@ -294,15 +296,12 @@ describe("State Transition Testing", () => {
         ).toBe(true);
       }
 
-      // Transition each to different status
+      // Transition each to a valid different status
       await cortex.contexts.update(contexts[0].contextId, {
         status: "completed",
       }); // active → completed
       await cortex.contexts.update(contexts[1].contextId, { status: "active" }); // completed → active
       await cortex.contexts.update(contexts[2].contextId, {
-        status: "blocked",
-      }); // cancelled → blocked
-      await cortex.contexts.update(contexts[3].contextId, {
         status: "cancelled",
       }); // blocked → cancelled
 
@@ -310,12 +309,10 @@ describe("State Transition Testing", () => {
       const ctx0 = await cortex.contexts.get(contexts[0].contextId);
       const ctx1 = await cortex.contexts.get(contexts[1].contextId);
       const ctx2 = await cortex.contexts.get(contexts[2].contextId);
-      const ctx3 = await cortex.contexts.get(contexts[3].contextId);
 
       expect((ctx0 as any).status).toBe("completed");
       expect((ctx1 as any).status).toBe("active");
-      expect((ctx2 as any).status).toBe("blocked");
-      expect((ctx3 as any).status).toBe("cancelled");
+      expect((ctx2 as any).status).toBe("cancelled");
     });
   });
 
@@ -325,7 +322,7 @@ describe("State Transition Testing", () => {
 
   describe("Memory Space State Transitions", () => {
     it("should transition from active to archived", async () => {
-      const spaceId = `${ctx.runId}-space-archive-${Date.now()}`;
+      const spaceId = ctx.memorySpaceId("space-archive");
 
       // Register as active
       const space = await cortex.memorySpaces.register({
@@ -368,7 +365,7 @@ describe("State Transition Testing", () => {
     });
 
     it("should transition from archived to active via reactivate", async () => {
-      const spaceId = `${ctx.runId}-space-reactivate-${Date.now()}`;
+      const spaceId = ctx.memorySpaceId("space-reactivate");
 
       // Register and archive
       await cortex.memorySpaces.register({
@@ -410,7 +407,7 @@ describe("State Transition Testing", () => {
     });
 
     it("count reflects archive transition", async () => {
-      const spaceId = `${ctx.runId}-space-count-${Date.now()}`;
+      const spaceId = ctx.memorySpaceId("space-count");
 
       // Register active space
       await cortex.memorySpaces.register({
@@ -450,7 +447,7 @@ describe("State Transition Testing", () => {
     });
 
     it("should preserve metadata through archive/reactivate cycle", async () => {
-      const spaceId = `${ctx.runId}-space-preserve-${Date.now()}`;
+      const spaceId = ctx.memorySpaceId("space-preserve");
       const originalMetadata = {
         projectName: "Test Project",
         owner: "team-alpha",
@@ -483,7 +480,7 @@ describe("State Transition Testing", () => {
     });
 
     it("should preserve participants through archive/reactivate", async () => {
-      const spaceId = `${ctx.runId}-space-participants-${Date.now()}`;
+      const spaceId = ctx.memorySpaceId("space-participants");
       const participants = [
         { id: "user-1", type: "user", joinedAt: Date.now() },
         { id: "agent-1", type: "agent", joinedAt: Date.now() },
@@ -511,7 +508,7 @@ describe("State Transition Testing", () => {
     });
 
     it("archived space can still be queried but not modified", async () => {
-      const spaceId = `${ctx.runId}-space-readonly-${Date.now()}`;
+      const spaceId = ctx.memorySpaceId("space-readonly");
 
       await cortex.memorySpaces.register({
         memorySpaceId: spaceId,
@@ -543,7 +540,7 @@ describe("State Transition Testing", () => {
     });
 
     it("archiving with reason stores metadata", async () => {
-      const spaceId = `${ctx.runId}-space-reason-${Date.now()}`;
+      const spaceId = ctx.memorySpaceId("space-reason");
 
       await cortex.memorySpaces.register({
         memorySpaceId: spaceId,
@@ -670,8 +667,8 @@ describe("State Transition Testing", () => {
 
   describe("Cross-Entity State Effects", () => {
     it("archiving memory space doesn't affect contexts (they persist)", async () => {
-      const spaceId = `${ctx.runId}-cross-archive-${Date.now()}`;
-      const userId = "cross-user";
+      const spaceId = ctx.memorySpaceId("cross-archive");
+      const userId = ctx.userId("cross");
 
       await cortex.memorySpaces.register({
         memorySpaceId: spaceId,
@@ -697,8 +694,8 @@ describe("State Transition Testing", () => {
     });
 
     it("completing parent context doesn't auto-complete children", async () => {
-      const spaceId = `${ctx.runId}-parent-complete-${Date.now()}`;
-      const userId = "parent-user";
+      const spaceId = ctx.memorySpaceId("parent-complete");
+      const userId = ctx.userId("parent");
 
       const parent = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -724,8 +721,8 @@ describe("State Transition Testing", () => {
     });
 
     it("multiple contexts in same space can have different statuses", async () => {
-      const spaceId = `${ctx.runId}-mixed-status-${Date.now()}`;
-      const userId = "mixed-user";
+      const spaceId = ctx.memorySpaceId("mixed-status");
+      const userId = ctx.userId("mixed");
 
       // Create contexts with different statuses
       const active = await cortex.contexts.create({
@@ -781,8 +778,8 @@ describe("State Transition Testing", () => {
 
   describe("State Transition Edge Cases", () => {
     it("repeated transitions to same state are idempotent", async () => {
-      const spaceId = `${ctx.runId}-idempotent-${Date.now()}`;
-      const userId = "idempotent-user";
+      const spaceId = ctx.memorySpaceId("idempotent");
+      const userId = ctx.userId("idempotent");
 
       const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -811,8 +808,8 @@ describe("State Transition Testing", () => {
     });
 
     it("concurrent transitions to different states handled correctly", async () => {
-      const spaceId = `${ctx.runId}-concurrent-${Date.now()}`;
-      const userId = "concurrent-user";
+      const spaceId = ctx.memorySpaceId("concurrent");
+      const userId = ctx.userId("concurrent");
 
       const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -836,8 +833,8 @@ describe("State Transition Testing", () => {
     });
 
     it("transition with data update preserves both changes", async () => {
-      const spaceId = `${ctx.runId}-combined-${Date.now()}`;
-      const userId = "combined-user";
+      const spaceId = ctx.memorySpaceId("combined");
+      const userId = ctx.userId("combined");
 
       const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -859,8 +856,8 @@ describe("State Transition Testing", () => {
     });
 
     it("all status values tested exhaustively", async () => {
-      const spaceId = `${ctx.runId}-exhaustive-${Date.now()}`;
-      const userId = "exhaustive-user";
+      const spaceId = ctx.memorySpaceId("exhaustive");
+      const userId = ctx.userId("exhaustive");
 
       // Create one context for each possible status
       for (const status of CONTEXT_STATUSES) {
@@ -887,7 +884,7 @@ describe("State Transition Testing", () => {
     });
 
     it("archived space with data can be reactivated with data intact", async () => {
-      const spaceId = `${ctx.runId}-data-cycle-${Date.now()}`;
+      const spaceId = ctx.memorySpaceId("data-cycle");
 
       // Create space with conversations and memories
       await cortex.memorySpaces.register({
@@ -940,8 +937,8 @@ describe("State Transition Testing", () => {
 
   describe("Invalid Transition Rejection", () => {
     it("rejects invalid status value", async () => {
-      const spaceId = `${ctx.runId}-invalid-${Date.now()}`;
-      const userId = "invalid-user";
+      const spaceId = ctx.memorySpaceId("invalid");
+      const userId = ctx.userId("invalid");
 
       const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -959,8 +956,8 @@ describe("State Transition Testing", () => {
     });
 
     it("rejects transition with conflicting data", async () => {
-      const spaceId = `${ctx.runId}-conflict-${Date.now()}`;
-      const userId = "conflict-user";
+      const spaceId = ctx.memorySpaceId("conflict");
+      const userId = ctx.userId("conflict");
 
       const testCtx = await cortex.contexts.create({
         memorySpaceId: spaceId,
@@ -987,8 +984,8 @@ describe("State Transition Testing", () => {
 
   describe("Batch State Transitions", () => {
     it("multiple contexts can transition simultaneously", async () => {
-      const spaceId = `${ctx.runId}-batch-${Date.now()}`;
-      const userId = "batch-user";
+      const spaceId = ctx.memorySpaceId("batch");
+      const userId = ctx.userId("batch");
 
       // Create 5 active contexts
       const contexts = await Promise.all(
@@ -1027,7 +1024,7 @@ describe("State Transition Testing", () => {
       const spaces = await Promise.all(
         Array.from({ length: 3 }, (_, i) =>
           cortex.memorySpaces.register({
-            memorySpaceId: `${ctx.runId}-multi-${i}-${Date.now()}`,
+            memorySpaceId: ctx.memorySpaceId(`multi-${i}`),
             type: "project",
             name: `Multi space ${i}`,
           }),

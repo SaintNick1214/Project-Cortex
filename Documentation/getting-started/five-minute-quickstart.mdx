@@ -201,18 +201,19 @@ Adds convenient npm scripts:
 
 ---
 
-### Option 6: Vercel AI Quickstart Demo
+### Option 6: Vercel AI Quickstart (Optional)
 
 <Terminal>? Install Vercel AI quickstart demo? (y/N)</Terminal>
 
-Installs a complete working example:
-- Next.js app with chat interface
-- Pre-configured Cortex integration
-- Memory visualization
-- Ready to run at `http://localhost:3000`
+The **basic template** is always installed—it includes a full CLI and HTTP API for testing Cortex. The Vercel AI Quickstart is an **optional addition** that gives you a web-based chat UI.
 
-<Callout type="tip" title="Great for Learning">
-  The quickstart demo shows how to integrate Cortex with a real AI chat application. Highly recommended for first-time users.
+| Template | Installed | What You Get |
+|----------|-----------|--------------|
+| **Basic Template** | Always | Interactive CLI + HTTP API server |
+| **Vercel AI Quickstart** | Optional | Next.js ChatGPT-style web app |
+
+<Callout type="info" title="Both Templates Are Fully Functional">
+  Either template lets you immediately start chatting and see Cortex memory in action. Choose based on whether you prefer terminal or browser.
 </Callout>
 
 ---
@@ -270,45 +271,97 @@ Or use interactive mode with live dashboard:
 
 ## Step 4: Start Using Cortex
 
-<Tabs>
-  <TabItem value="quickstart" label="With Vercel AI Quickstart">
+<Callout type="info" title="Choose Your Interface">
+  **Basic Template** — CLI + HTTP API (always installed) | **Vercel AI Quickstart** — Web chat UI (optional)
+</Callout>
 
-If you installed the Vercel AI Quickstart demo, open your browser:
+<Tabs>
+  <TabItem value="basic" label="Basic Template" default>
+
+The basic template gives you an interactive CLI and HTTP API to explore Cortex immediately.
+
+### Chat via CLI
+
+<Terminal>npm start</Terminal>
+
+You'll see an interactive prompt where you can chat and watch memory orchestration in real-time:
+
+```
+You: Hi, I'm Alex. I work as a software engineer.
+
+┌────────────────────────────────────────────────────────────────────┐
+│  MEMORY ORCHESTRATION                                              │
+├────────────────────────────────────────────────────────────────────┤
+│  📦 Memory Space   ✓ complete (2ms)                                │
+│  👤 User           ✓ complete (5ms)                                │
+│  🤖 Agent          ✓ complete (3ms)                                │
+│  💬 Conversation   ✓ complete (8ms)                                │
+│  🎯 Vector Store   ✓ complete (45ms)                               │
+│  💡 Facts          ✓ complete [NEW] (120ms)                        │
+│     → "User's name is Alex" (identity, 95%)                        │
+│     → "User works as software engineer" (employment, 90%)          │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+**CLI Commands:**
+
+| Command | Description |
+|---------|-------------|
+| `/recall <query>` | Search memories without storing |
+| `/facts` | List all extracted facts |
+| `/history` | Show conversation history |
+| `/new` | Start a new conversation |
+| `/config` | Show current configuration |
+| `/exit` | Exit the demo |
+
+### Or Use the HTTP API
+
+<Terminal>npm run server</Terminal>
+
+Then send requests from another terminal:
+
+```bash
+curl -X POST http://localhost:3001/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hi, I am Alex. I work as a software engineer."}'
+```
+
+**API Endpoints:**
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/chat` | POST | Chat and store memory |
+| `/recall?query=...` | GET | Search memories |
+| `/facts` | GET | List extracted facts |
+| `/history/:id` | GET | Get conversation history |
+| `/health` | GET | Health check |
+
+  </TabItem>
+  <TabItem value="vercel" label="Vercel AI Quickstart">
+
+If you installed the Vercel AI Quickstart, open your browser:
 
 **http://localhost:3000**
 
-You'll see a fully functional ChatGPT-style interface powered by Cortex + Vercel AI SDK. Try it:
+You'll see a fully functional ChatGPT-style interface powered by Cortex + Vercel AI SDK v6.
+
+**Try it:**
 
 1. **Chat normally** - "Hi, I'm Alex. I work as a software engineer."
 2. **Ask about yourself** - "What do I do for work?"
 3. **Watch memory work** - The agent remembers facts across conversations
 
-The quickstart includes:
+**Features:**
+
 - Real-time chat with streaming responses
 - Memory visualization panel
 - Fact extraction display
 - Multi-conversation support
+- User authentication
 
 <Callout type="tip" title="See Memory in Action">
   Open the Convex dashboard (`cortex convex dashboard`) alongside the chat to watch memories being stored in real-time.
 </Callout>
-
-  </TabItem>
-  <TabItem value="self-dev" label="Building Your Own">
-
-If you skipped the quickstart, you're ready to start building. Your project includes:
-
-- **Cortex backend** - Already deployed and running
-- **SDK installed** - `@cortexmemory/sdk` ready to import
-- **Environment configured** - `.env.local` with your Convex URL
-
-**Next step**: See [Core Concepts](/getting-started/core-concepts) to understand memory spaces, then check the [API Reference](/api-reference/memory-operations) for SDK usage.
-
-Quick verification that everything works:
-
-<Terminal>cortex db stats</Terminal>
-
-<Terminal>cortex spaces list</Terminal>
 
   </TabItem>
 </Tabs>
