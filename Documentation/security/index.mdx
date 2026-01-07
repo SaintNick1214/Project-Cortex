@@ -1,0 +1,50 @@
+---
+id: security
+title: Security
+sidebar_position: 1
+description: Authentication, authorization, and data isolation in Cortex
+---
+
+# Security
+
+Cortex provides comprehensive security features for authentication, multi-tenancy, and data isolation.
+
+<FeatureGrid>
+  <FeatureCard
+    title="Authentication"
+    description="Auth context, user tracking, and session management"
+    icon="lock"
+    href="/security/authentication"
+    size="large"
+  />
+  <FeatureCard
+    title="Isolation Boundaries"
+    description="Multi-layer isolation for security and compliance"
+    icon="shield"
+    href="/security/isolation-boundaries"
+    size="large"
+  />
+</FeatureGrid>
+
+## Key Concepts
+
+- **Auth Context** — Pass user identity and tenant information to all Cortex operations
+- **Tenant Isolation** — Complete data separation for multi-tenant SaaS applications
+- **Memory Space Isolation** — Fundamental data boundaries (Hive or Collaboration Mode)
+- **User Data Isolation** — GDPR-compliant cascade deletion
+- **Participant Tracking** — Attribution for Hive Mode debugging
+
+## Quick Links
+
+<QuickNav>
+  <QuickNavItem 
+    title="Auth Providers" 
+    description="Integration guides for Auth0, Clerk, etc." 
+    href="/integrations/auth-providers" 
+  />
+  <QuickNavItem 
+    title="Auth Context API" 
+    description="Complete API reference" 
+    href="/api-reference/auth-context-api" 
+  />
+</QuickNav>

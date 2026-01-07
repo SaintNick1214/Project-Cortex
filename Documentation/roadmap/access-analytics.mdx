@@ -1,0 +1,265 @@
+---
+id: access-analytics
+title: Access Analytics
+sidebar_position: 2
+description: Track memory access patterns and usage analytics (Planned)
+---
+
+# Access Analytics
+
+<Callout type="warning" title="Planned Feature">
+  The full `cortex.analytics.*` API is planned for a future release. Currently, basic access tracking is built-in to all memories (`accessCount`, `lastAccessed`), and memory space statistics are available via `cortex.memorySpaces.getStats()`. See the [Memory Space Operations API](/api-reference/memory-space-operations) for available methods.
+</Callout>
+
+---
+
+## What's Available Now
+
+<Callout type="info" title="Built-in Access Tracking">
+  Every memory access automatically updates:
+  - `accessCount` - Number of times accessed
+  - `lastAccessed` - Timestamp of last access
+  
+  No additional configuration needed!
+</Callout>
+
+```typescript
+const memory = await cortex.memory.get(spaceId, memoryId);
+
+console.log(memory.accessCount);   // 47
+console.log(memory.lastAccessed);  // 1735689600000 (Unix ms)
+```
+
+---
+
+## Querying by Access Patterns
+
+<Tabs>
+  <TabItem value="popular" label="Most Accessed">
+
+```typescript
+// Find frequently accessed memories
+const popular = await cortex.memory.search(spaceId, "*", {
+  sortBy: "accessCount",
+  sortOrder: "desc",
+  limit: 10,
+});
+
+popular.forEach(m => {
+  console.log(`${m.accessCount} accesses: ${m.content.substring(0, 50)}...`);
+});
+```
+
+  </TabItem>
+  <TabItem value="unused" label="Unused Memories">
+
+```typescript
+// Find memories never accessed in 30+ days
+const unused = await cortex.memory.list({
+  memorySpaceId: spaceId,
+  accessCount: { $lte: 1 },
+  createdBefore: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+});
+
+console.log(`${unused.length} potentially stale memories`);
+```
+
+  </TabItem>
+  <TabItem value="recent" label="Recently Accessed">
+
+```typescript
+// Find memories accessed this week
+const recentlyUsed = await cortex.memory.list({
+  memorySpaceId: spaceId,
+  lastAccessedAfter: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+  sortBy: "lastAccessed",
+  sortOrder: "desc",
+});
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Memory Space Statistics
+
+```typescript
+const stats = await cortex.memorySpaces.getStats(spaceId);
+
+console.log(stats);
+// {
+//   totalMemories: 1543,
+//   totalConversations: 45,
+//   avgSearchTime: '12ms',
+//   importanceBreakdown: {
+//     critical: 23,   // 90-100
+//     high: 100,      // 70-89
+//     medium: 987,    // 40-69
+//     low: 400,       // 10-39
+//     trivial: 33,    // 0-9
+//   },
+//   memoryHealth: {
+//     withEmbeddings: 1450,
+//     withoutEmbeddings: 93,
+//     withConversationRef: 1234,
+//   },
+// }
+```
+
+---
+
+## Planned Features
+
+### Boost by Access Patterns
+
+<Callout type="tip" title="Boost Popular Memories in Search (Planned)">
+  Use access patterns to improve search relevance:
+  
+```typescript
+const results = await cortex.memory.search(spaceId, query, {
+  embedding: await embed(query),
+  boostPopular: true,   // Boost frequently accessed
+  boostRecent: true,    // Boost recently accessed
+});
+```
+
+</Callout>
+
+### Full Analytics API
+
+The planned `cortex.analytics.*` API will provide:
+
+- **Visual Dashboard**: Charts for memory growth, search performance, access heat maps
+- **Predictive Analytics**: Growth forecasts, performance predictions
+- **Cost Tracking**: Storage costs, embedding costs, optimization recommendations
+- **Automated Alerts**: Threshold notifications, anomaly detection
+
+---
+
+## Memory Health Patterns (DIY)
+
+Until the full analytics API is available, you can implement these patterns yourself:
+
+### Finding Duplicates
+
+```typescript
+async function findDuplicateCandidates(spaceId: string) {
+  const all = await cortex.memory.list({ memorySpaceId: spaceId, limit: 1000 });
+  
+  const duplicates = [];
+  for (let i = 0; i < all.length; i++) {
+    for (let j = i + 1; j < all.length; j++) {
+      const similarity = cosineSimilarity(all[i].embedding, all[j].embedding);
+      if (similarity > 0.95) {
+        duplicates.push({ memory1: all[i], memory2: all[j], similarity });
+      }
+    }
+  }
+  
+  return duplicates;
+}
+```
+
+### Cleanup Unused Memories
+
+```typescript
+async function cleanupUnused(spaceId: string) {
+  const unused = await cortex.memory.list({
+    memorySpaceId: spaceId,
+    accessCount: 0,
+    createdBefore: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+  });
+
+  // Safe to delete: low importance, no ACID link
+  const safeToDelete = unused.filter(
+    m => m.metadata.importance < 30 && !m.conversationRef
+  );
+
+  for (const memory of safeToDelete) {
+    await cortex.memory.delete(spaceId, memory.id);
+  }
+
+  console.log(`Cleaned up ${safeToDelete.length} unused memories`);
+}
+```
+
+### Agent Performance Check
+
+```typescript
+async function checkAgentHealth(spaceId: string) {
+  const stats = await cortex.memorySpaces.getStats(spaceId);
+
+  const issues = [];
+
+  // Too many memories?
+  if (stats.totalMemories > 10000) {
+    issues.push('Consider archiving old, low-importance memories');
+  }
+
+  // Poor embedding coverage?
+  if (stats.memoryHealth.withoutEmbeddings > 100) {
+    issues.push('Add embeddings to improve semantic search');
+  }
+
+  // Low ACID linkage?
+  const linkRate = stats.memoryHealth.withConversationRef / stats.totalMemories;
+  if (linkRate < 0.5) {
+    issues.push('Many memories lack ACID source - consider using remember()');
+  }
+
+  return issues;
+}
+```
+
+---
+
+## Best Practices
+
+<Callout type="tip" title="Regular Health Checks">
+
+```typescript
+// Run weekly to maintain memory health
+async function weeklyMaintenance(spaceId: string) {
+  // 1. Clean up unused low-importance memories
+  await cleanupUnused(spaceId);
+  
+  // 2. Check for duplicates
+  const dupes = await findDuplicateCandidates(spaceId);
+  if (dupes.length > 10) {
+    console.log(`Found ${dupes.length} potential duplicates`);
+  }
+  
+  // 3. Review health metrics
+  const issues = await checkAgentHealth(spaceId);
+  issues.forEach(issue => console.log(`Issue: ${issue}`));
+}
+```
+
+</Callout>
+
+<Callout type="warning" title="Preserve ACID Links">
+  When cleaning up unused memories, always check `conversationRef`. Memories with ACID links can be retrieved later even after deletion from vector storage.
+</Callout>
+
+---
+
+## Related Features
+
+<QuickNav>
+  <QuickNavItem 
+    title="Memory Space API" 
+    description="Available statistics methods" 
+    href="/api-reference/memory-space-operations" 
+  />
+  <QuickNavItem 
+    title="Semantic Search" 
+    description="Use analytics in search" 
+    href="/core-features/semantic-search" 
+  />
+  <QuickNavItem 
+    title="Memory Operations" 
+    description="Memory CRUD operations" 
+    href="/api-reference/memory-operations" 
+  />
+</QuickNav>
