@@ -1,6 +1,11 @@
-# A2A Communication API
+---
+id: a2a-communication
+title: A2A Communication API
+sidebar_position: 4
+description: Complete API reference for agent-to-agent communication helpers including send, request, broadcast, and conversation management.
+---
 
-> **Last Updated**: 2025-12-10
+# A2A Communication API
 
 Complete API reference for agent-to-agent communication helpers.
 
@@ -8,38 +13,60 @@ Complete API reference for agent-to-agent communication helpers.
 
 The A2A Communication API (`cortex.a2a.*`) provides **convenience helpers** for inter-agent communication. It's not a separate storage system - it's syntactic sugar over the standard memory system with `source.type='a2a'`.
 
-**Infrastructure Requirement:**
+<Callout type="warning" title="Infrastructure Requirement">
 
-Some A2A operations require **real-time pub/sub infrastructure**:
+Some A2A operations require **real-time pub/sub infrastructure**.
 
-| Operation           | Pub/Sub Required | Works Without | Why                                                     |
-| ------------------- | ---------------- | ------------- | ------------------------------------------------------- |
-| `send()`            | ❌ No            | ✅ Yes        | Fire-and-forget (async)                                 |
-| `request()`         | ✅ Yes           | ❌ No         | Needs real-time response notification                   |
-| `broadcast()`       | ✅ Yes (optimal) | ⚠️ Degraded   | Can store without pub/sub, but no delivery confirmation |
-| `subscribe()`       | ✅ Yes           | ❌ No         | Real-time inbox notifications _(Planned)_               |
-| `getConversation()` | ❌ No            | ✅ Yes        | Database query only                                     |
+</Callout>
+
+<APITable
+  parameters={[
+    { name: "send()", type: "No", required: false, default: "Yes", description: "Fire-and-forget (async)" },
+    { name: "request()", type: "Yes", required: true, default: "No", description: "Needs real-time response notification" },
+    { name: "broadcast()", type: "Yes (optimal)", required: false, default: "Degraded", description: "Can store without pub/sub, but no delivery confirmation" },
+    { name: "subscribe()", type: "Yes", required: true, default: "No", description: "Real-time inbox notifications (Planned)" },
+    { name: "getConversation()", type: "No", required: false, default: "Yes", description: "Database query only" },
+  ]}
+  columns={[
+    { key: "name", header: "Operation" },
+    { key: "type", header: "Pub/Sub Required" },
+    { key: "default", header: "Works Without" },
+    { key: "description", header: "Why" },
+  ]}
+/>
 
 **Pub/Sub Options:**
 
 - **Direct Mode**: Bring your own Redis, RabbitMQ, NATS, or similar
 - **Cloud Mode**: Pub/sub infrastructure included and optimized
 
-**Key Insight:** A2A = Agent Memory + Pub/Sub (optional) + Convenience
+<Callout type="tip" title="Key Insight">
+
+A2A = Agent Memory + Pub/Sub (optional) + Convenience
+
+</Callout>
 
 **Validation Constraints:**
 
-| Field                    | Constraint                    | Details                                        |
-| ------------------------ | ----------------------------- | ---------------------------------------------- |
-| Agent IDs (`from`, `to`) | Pattern: `/^[a-zA-Z0-9_-]+$/` | Only alphanumeric, hyphens, underscores        |
-| Agent IDs (`from`, `to`) | Max length: 100 characters    |                                                |
-| `message`                | Max size: 100KB               | Measured in UTF-8 bytes                        |
-| `importance`             | Integer 0-100                 | Default: 60 for send/broadcast, 70 for request |
-| `timeout`                | Integer 1000-300000ms         | Default: 30000ms (30 seconds)                  |
-| `retries`                | Integer 0-10                  | Default: 1                                     |
-| `to[]` (broadcast)       | Max 100 recipients            | No duplicates, sender not allowed              |
-| `limit`                  | Integer 1-1000                | Default: 100                                   |
-| `offset`                 | Integer ≥ 0                   | Default: 0                                     |
+<APITable
+  parameters={[
+    { name: "Agent IDs (from, to)", type: "Pattern: /^[a-zA-Z0-9_-]+$/", required: true, description: "Only alphanumeric, hyphens, underscores" },
+    { name: "Agent IDs (from, to)", type: "Max length: 100 characters", required: true, description: "" },
+    { name: "message", type: "Max size: 100KB", required: true, description: "Measured in UTF-8 bytes" },
+    { name: "importance", type: "Integer 0-100", required: false, default: "60 for send/broadcast, 70 for request", description: "" },
+    { name: "timeout", type: "Integer 1000-300000ms", required: false, default: "30000ms (30 seconds)", description: "" },
+    { name: "retries", type: "Integer 0-10", required: false, default: "1", description: "" },
+    { name: "to[] (broadcast)", type: "Max 100 recipients", required: true, description: "No duplicates, sender not allowed" },
+    { name: "limit", type: "Integer 1-1000", required: false, default: "100", description: "" },
+    { name: "offset", type: "Integer >= 0", required: false, default: "0", description: "" },
+  ]}
+  columns={[
+    { key: "name", header: "Field" },
+    { key: "type", header: "Constraint" },
+    { key: "default", header: "Default" },
+    { key: "description", header: "Details" },
+  ]}
+/>
 
 ```typescript
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -51,7 +78,7 @@ await cortex.a2a.send({
   message: "What is the Q4 budget?",
   importance: 85,
 });
-// Done! Handles ACID + both Vector memories automatically ✅
+// Done! Handles ACID + both Vector memories automatically
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Approach 2: Layer 3 remember() (Better than manual - 20 lines)
@@ -158,24 +185,34 @@ await cortex.vector.store("hr-agent", {
   },
 });
 
-// That's 50+ lines vs 7 lines with cortex.a2a.send()! 😱
+// That's 50+ lines vs 7 lines with cortex.a2a.send()!
 ```
 
 **Code Reduction:**
 
-| Approach                     | Lines of Code | Handles ACID | Bidirectional          | Complexity |
-| ---------------------------- | ------------- | ------------ | ---------------------- | ---------- |
-| **cortex.a2a.send()**        | 7             | ✅ Automatic | ✅ Both agents         | Low        |
-| **cortex.memory.remember()** | ~20           | ✅ Automatic | ❌ One agent (call 2×) | Medium     |
-| **Manual (Layer 1+2)**       | 50+           | ⚠️ Manual    | ❌ One agent (call 2×) | High       |
+<APITable
+  parameters={[
+    { name: "cortex.a2a.send()", type: "7", required: false, default: "Automatic", description: "Both agents | Low complexity" },
+    { name: "cortex.memory.remember()", type: "~20", required: false, default: "Automatic", description: "One agent (call 2x) | Medium complexity" },
+    { name: "Manual (Layer 1+2)", type: "50+", required: false, default: "Manual", description: "One agent (call 2x) | High complexity" },
+  ]}
+  columns={[
+    { key: "name", header: "Approach" },
+    { key: "type", header: "Lines of Code" },
+    { key: "default", header: "Handles ACID" },
+    { key: "description", header: "Bidirectional | Complexity" },
+  ]}
+/>
 
-**Why cortex.a2a.send() is best for A2A:**
+<Callout type="tip" title="Why cortex.a2a.send() is best for A2A">
 
 - Handles ACID conversation management
 - Stores in BOTH agents automatically
 - Consistent metadata and tagging
 - One call instead of four
 - 85% less code
+
+</Callout>
 
 **Architecture Integration:**
 
@@ -196,14 +233,16 @@ A2A Helpers:
 └── Convenience wrappers (handle ACID + bidirectional Vector storage + pub/sub)
 ```
 
-**Why use A2A helpers:**
+<Callout type="info" title="Why use A2A helpers">
 
-- ✅ **Reduce code** - 7 lines instead of 40+
-- ✅ **Bidirectional** - Automatically stores in both agents
-- ✅ **ACID tracking** - Manages A2A conversations automatically
-- ✅ **Real-time** - Pub/sub notifications (BYO or Cloud-provided)
-- ✅ **Consistent** - Standard tagging and linking
-- ✅ **Fewer bugs** - Less code to maintain
+- **Reduce code** - 7 lines instead of 40+
+- **Bidirectional** - Automatically stores in both agents
+- **ACID tracking** - Manages A2A conversations automatically
+- **Real-time** - Pub/sub notifications (BYO or Cloud-provided)
+- **Consistent** - Standard tagging and linking
+- **Fewer bugs** - Less code to maintain
+
+</Callout>
 
 ---
 
@@ -349,7 +388,11 @@ const response = await manualRequest(
 
 ### Cloud Mode: Cortex Manages Everything
 
-> **Cloud Feature**: Cloud Mode messaging layer provides managed pub/sub infrastructure (planned).
+<Callout type="info" title="Cloud Feature">
+
+Cloud Mode messaging layer provides managed pub/sub infrastructure (planned).
+
+</Callout>
 
 In Cloud Mode, Cortex will provide:
 
@@ -366,9 +409,9 @@ const response = await cortex.a2a.request({
   message: "What is the budget?",
 });
 // Cloud handles:
-// ✅ Pub/sub infrastructure (managed Redis)
-// ✅ Agent execution (webhooks or serverless functions)
-// ✅ Subscription wiring (automatic)
+// - Pub/sub infrastructure (managed Redis)
+// - Agent execution (webhooks or serverless functions)
+// - Subscription wiring (automatic)
 ```
 
 ---
@@ -379,7 +422,11 @@ const response = await cortex.a2a.request({
 
 Send a message from one agent to another. Stores in ACID conversation + both agents' Vector memories.
 
-> **No Pub/Sub Required**: This is a fire-and-forget operation. Works in all modes without pub/sub.
+<Callout type="tip" title="No Pub/Sub Required">
+
+This is a fire-and-forget operation. Works in all modes without pub/sub.
+
+</Callout>
 
 **Signature:**
 
@@ -476,7 +523,7 @@ await cortex.a2a.send({
 
 // Later: GDPR deletion includes this A2A message
 await cortex.users.delete("user-123", { cascade: true });
-// A2A message deleted from both agents! ✅
+// A2A message deleted from both agents!
 ```
 
 **Example 3: With workflow context**
@@ -529,7 +576,7 @@ await cortex.a2a.send({
 
 **See Also:**
 
-- [A2A Communication Guide](../02-core-features/05-a2a-communication.md#send-bidirectional-storage)
+- [A2A Communication Guide](/core-features/a2a-communication#send-bidirectional-storage)
 
 ---
 
@@ -537,10 +584,14 @@ await cortex.a2a.send({
 
 Send a request and wait for response (synchronous request-response pattern).
 
-> **Requires Pub/Sub Infrastructure**: This operation requires real-time messaging.
->
-> - **Direct Mode**: Configure your own Redis/RabbitMQ/NATS adapter (see Configuration)
-> - **Cloud Mode**: Pub/sub infrastructure included automatically
+<Callout type="warning" title="Requires Pub/Sub Infrastructure">
+
+This operation requires real-time messaging.
+
+- **Direct Mode**: Configure your own Redis/RabbitMQ/NATS adapter (see Configuration)
+- **Cloud Mode**: Pub/sub infrastructure included automatically
+
+</Callout>
 
 **How it works:**
 
@@ -719,7 +770,7 @@ cron.schedule("*/5 * * * *", () =>
 
 **See Also:**
 
-- [Request-Response Pattern](../02-core-features/05-a2a-communication.md#request-synchronous-request-response)
+- [Request-Response Pattern](/core-features/a2a-communication#request-synchronous-request-response)
 
 ---
 
@@ -727,10 +778,14 @@ cron.schedule("*/5 * * * *", () =>
 
 Send one message to multiple agents efficiently.
 
-> **Requires Pub/Sub Infrastructure**: Optimized delivery requires real-time messaging.
->
-> - **Direct Mode**: Configure your own pub/sub adapter
-> - **Cloud Mode**: Pub/sub infrastructure included
+<Callout type="warning" title="Requires Pub/Sub Infrastructure">
+
+Optimized delivery requires real-time messaging.
+
+- **Direct Mode**: Configure your own pub/sub adapter
+- **Cloud Mode**: Pub/sub infrastructure included
+
+</Callout>
 
 **Signature:**
 
@@ -854,7 +909,7 @@ const announcements = allA2A.filter((m) => {
 
 **See Also:**
 
-- [Broadcast Communication](../02-core-features/05-a2a-communication.md#broadcast-one-to-many)
+- [Broadcast Communication](/core-features/a2a-communication#broadcast-one-to-many)
 
 ---
 
@@ -996,7 +1051,7 @@ console.log(`${userRelated.messageCount} messages about user-123`);
 
 **See Also:**
 
-- [Get Conversation](../02-core-features/05-a2a-communication.md#get-conversation-rich-filtering)
+- [Get Conversation](/core-features/a2a-communication#get-conversation-rich-filtering)
 
 ---
 
@@ -1183,7 +1238,7 @@ await cortex.a2a.send({
 const result = await cortex.users.delete("user-123", { cascade: true });
 
 console.log(`A2A messages deleted: ${result.vectorMemoriesDeleted}`);
-// Includes the A2A message above! ✅
+// Includes the A2A message above!
 ```
 
 ---
@@ -1237,7 +1292,7 @@ const userConvo = await cortex.conversations.get(
   ctx.conversationRef.conversationId,
 );
 
-// Complete audit trail! ✅
+// Complete audit trail!
 ```
 
 ### Pattern 2: A2A Communication Analytics
@@ -1411,19 +1466,19 @@ interface A2ASenderMemory extends MemoryEntry {
 
 ### Use A2A Helpers When:
 
-✅ **Simple send** - One agent to another  
-✅ **Request-response** - Need synchronous answer  
-✅ **Broadcasting** - One to many  
-✅ **Viewing conversation** - Chronological thread between two agents  
-✅ **Less code** - Want convenience
+- **Simple send** - One agent to another  
+- **Request-response** - Need synchronous answer  
+- **Broadcasting** - One to many  
+- **Viewing conversation** - Chronological thread between two agents  
+- **Less code** - Want convenience
 
 ### Use Memory API Directly When:
 
-✅ **Complex queries** - Semantic search, multiple filters  
-✅ **Bulk operations** - updateMany, deleteMany on A2A messages  
-✅ **Custom logic** - Need full control  
-✅ **Advanced filtering** - Combining many criteria  
-✅ **Performance** - Optimizing specific queries
+- **Complex queries** - Semantic search, multiple filters  
+- **Bulk operations** - updateMany, deleteMany on A2A messages  
+- **Custom logic** - Need full control  
+- **Advanced filtering** - Combining many criteria  
+- **Performance** - Optimizing specific queries
 
 ### Mix Both:
 
@@ -1525,7 +1580,7 @@ await cortex.a2a.send({
 ### 4. Track Conversation for Audit
 
 ```typescript
-// ✅ Default: Track in ACID (audit trail)
+// Default: Track in ACID (audit trail)
 await cortex.a2a.send({
   from: "agent-1",
   to: "agent-2",
@@ -1534,7 +1589,7 @@ await cortex.a2a.send({
   // trackConversation: true (default)
 });
 
-// ⚠️ Only skip for ephemeral, low-value messages
+// Only skip for ephemeral, low-value messages
 await cortex.a2a.send({
   from: "agent-1",
   to: "agent-2",
@@ -1580,21 +1635,37 @@ async function askWithFallback(from: string, to: string, message: string) {
 
 ## Comparison: Helper vs Direct
 
-| Operation        | A2A Helper              | Memory API Direct            | Lines of Code     |
-| ---------------- | ----------------------- | ---------------------------- | ----------------- |
-| Send message     | `a2a.send()`            | ACID + 2× Vector stores      | 7 vs 40+          |
-| Request-response | `a2a.request()`         | Send + polling loop          | 5 vs 35+          |
-| Broadcast        | `a2a.broadcast()`       | Loop + N×2 stores            | 8 vs 50+          |
-| Get conversation | `a2a.getConversation()` | Bidirectional search + merge | 6 vs 40+          |
-| **Total saved**  | **26 lines**            | **165+ lines**               | **85% reduction** |
+<APITable
+  parameters={[
+    { name: "Send message", type: "a2a.send()", required: false, default: "ACID + 2x Vector stores", description: "7 vs 40+" },
+    { name: "Request-response", type: "a2a.request()", required: false, default: "Send + polling loop", description: "5 vs 35+" },
+    { name: "Broadcast", type: "a2a.broadcast()", required: false, default: "Loop + Nx2 stores", description: "8 vs 50+" },
+    { name: "Get conversation", type: "a2a.getConversation()", required: false, default: "Bidirectional search + merge", description: "6 vs 40+" },
+    { name: "Total saved", type: "26 lines", required: false, default: "165+ lines", description: "85% reduction" },
+  ]}
+  columns={[
+    { key: "name", header: "Operation" },
+    { key: "type", header: "A2A Helper" },
+    { key: "default", header: "Memory API Direct" },
+    { key: "description", header: "Lines of Code" },
+  ]}
+/>
 
-**The helpers are pure convenience** - everything they do can be done with the memory API directly. But they eliminate boilerplate and ensure consistency.
+<Callout type="info" title="Helpers are pure convenience">
+
+Everything A2A helpers do can be done with the memory API directly. But they eliminate boilerplate and ensure consistency.
+
+</Callout>
 
 ---
 
 ## Cloud Mode Features
 
-> **Cloud Mode Only**: Enhanced A2A features with Cortex Cloud
+<Callout type="info" title="Cloud Mode Only">
+
+Enhanced A2A features with Cortex Cloud.
+
+</Callout>
 
 ### A2A Analytics Dashboard
 
@@ -1707,7 +1778,7 @@ sent.forEach((m) => {
 
 For advanced graph analytics (community detection, centrality, influence metrics), consider integrating a graph database:
 
-**Learn more:** [Graph Database Integration](../07-advanced-topics/02-graph-database-integration)
+**Learn more:** [Graph Database Integration](/advanced-topics/graph-database-integration)
 
 ---
 
@@ -1772,39 +1843,73 @@ try {
 
 ### All Error Codes
 
-| Error Code                 | Description           | Cause                                         |
-| -------------------------- | --------------------- | --------------------------------------------- |
-| `INVALID_AGENT_ID`         | Agent ID is invalid   | Empty, malformed, or exceeds 100 chars        |
-| `EMPTY_MESSAGE`            | Message is empty      | Message is empty or whitespace-only           |
-| `MESSAGE_TOO_LARGE`        | Message exceeds limit | Message exceeds 100KB (UTF-8 bytes)           |
-| `EMPTY_RECIPIENTS`         | No recipients         | to[] array is empty                           |
-| `TOO_MANY_RECIPIENTS`      | Too many recipients   | More than 100 recipients in broadcast         |
-| `DUPLICATE_RECIPIENTS`     | Duplicate recipients  | Same agent ID appears multiple times in to[]  |
-| `INVALID_RECIPIENT`        | Invalid recipient     | Sender included in recipients list            |
-| `SAME_AGENT_COMMUNICATION` | Self-communication    | from and to are the same agent                |
-| `INVALID_IMPORTANCE`       | Invalid importance    | Importance not integer 0-100                  |
-| `INVALID_TIMEOUT`          | Invalid timeout       | Timeout not between 1000ms and 300000ms       |
-| `INVALID_RETRIES`          | Invalid retries       | Retries not integer 0-10                      |
-| `INVALID_DATE_RANGE`       | Invalid date range    | 'since' is after 'until'                      |
-| `INVALID_LIMIT`            | Invalid limit         | Limit not integer 1-1000                      |
-| `INVALID_OFFSET`           | Invalid offset        | Offset is negative                            |
-| `PUBSUB_NOT_CONFIGURED`    | Pub/sub required      | request() needs pub/sub adapter               |
-| `A2ATimeoutError`          | Request timeout       | No response within timeout                    |
-| `A2AValidationError`       | Validation failed     | Client-side validation error (see code/field) |
-| `CONVEX_ERROR`             | Database error        | Convex operation failed                       |
+<APITable
+  parameters={[
+    { name: "INVALID_AGENT_ID", type: "Agent ID is invalid", required: false, description: "Empty, malformed, or exceeds 100 chars" },
+    { name: "EMPTY_MESSAGE", type: "Message is empty", required: false, description: "Message is empty or whitespace-only" },
+    { name: "MESSAGE_TOO_LARGE", type: "Message exceeds limit", required: false, description: "Message exceeds 100KB (UTF-8 bytes)" },
+    { name: "EMPTY_RECIPIENTS", type: "No recipients", required: false, description: "to[] array is empty" },
+    { name: "TOO_MANY_RECIPIENTS", type: "Too many recipients", required: false, description: "More than 100 recipients in broadcast" },
+    { name: "DUPLICATE_RECIPIENTS", type: "Duplicate recipients", required: false, description: "Same agent ID appears multiple times in to[]" },
+    { name: "INVALID_RECIPIENT", type: "Invalid recipient", required: false, description: "Sender included in recipients list" },
+    { name: "SAME_AGENT_COMMUNICATION", type: "Self-communication", required: false, description: "from and to are the same agent" },
+    { name: "INVALID_IMPORTANCE", type: "Invalid importance", required: false, description: "Importance not integer 0-100" },
+    { name: "INVALID_TIMEOUT", type: "Invalid timeout", required: false, description: "Timeout not between 1000ms and 300000ms" },
+    { name: "INVALID_RETRIES", type: "Invalid retries", required: false, description: "Retries not integer 0-10" },
+    { name: "INVALID_DATE_RANGE", type: "Invalid date range", required: false, description: "'since' is after 'until'" },
+    { name: "INVALID_LIMIT", type: "Invalid limit", required: false, description: "Limit not integer 1-1000" },
+    { name: "INVALID_OFFSET", type: "Invalid offset", required: false, description: "Offset is negative" },
+    { name: "PUBSUB_NOT_CONFIGURED", type: "Pub/sub required", required: false, description: "request() needs pub/sub adapter" },
+    { name: "A2ATimeoutError", type: "Request timeout", required: false, description: "No response within timeout" },
+    { name: "A2AValidationError", type: "Validation failed", required: false, description: "Client-side validation error (see code/field)" },
+    { name: "CONVEX_ERROR", type: "Database error", required: false, description: "Convex operation failed" },
+  ]}
+  columns={[
+    { key: "name", header: "Error Code" },
+    { key: "type", header: "Description" },
+    { key: "description", header: "Cause" },
+  ]}
+/>
 
 **See Also:**
 
-- [Error Handling Guide](../05-reference/02-error-handling)
+- [Error Handling Guide](/reference/error-handling)
 
 ---
 
 ## Next Steps
 
-- **[Conversation Operations API](./conversation-operations)** - ACID conversation management
-- **[Memory Operations API](./memory-operations)** - Underlying memory system
-- **[Context Operations API](./context-operations)** - Workflow coordination
-- **[Types & Interfaces](../05-reference/01-types-interfaces)** - Complete TypeScript definitions
+<QuickNav>
+
+<QuickNavItem
+  icon="database"
+  title="Conversation Operations API"
+  description="ACID conversation management"
+  href="/api-reference/conversation-operations"
+/>
+
+<QuickNavItem
+  icon="brain"
+  title="Memory Operations API"
+  description="Underlying memory system"
+  href="/api-reference/memory-operations"
+/>
+
+<QuickNavItem
+  icon="workflow"
+  title="Context Operations API"
+  description="Workflow coordination"
+  href="/api-reference/context-operations"
+/>
+
+<QuickNavItem
+  icon="code"
+  title="Types & Interfaces"
+  description="Complete TypeScript definitions"
+  href="/reference/types-interfaces"
+/>
+
+</QuickNav>
 
 ---
 

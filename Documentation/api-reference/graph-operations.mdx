@@ -1,8 +1,15 @@
+---
+id: graph-operations
+title: Graph Operations API
+sidebar_position: 6
+description: Complete API reference for graph database integration, multi-hop queries, and knowledge graph operations in Cortex.
+---
+
 # Graph Operations API
 
-> **Last Updated**: 2026-01-01
-> **Version**: v0.24.0
-> **Status**: Production Ready
+<Callout type="info">
+  **Last Updated**: 2026-01-01 | **Version**: v0.24.0 | **Status**: Production Ready
+</Callout>
 
 Complete API reference for graph database integration, multi-hop queries, and knowledge graph operations.
 
@@ -12,13 +19,13 @@ The Graph Operations API (`@cortexmemory/sdk/graph`) provides advanced graph dat
 
 **Key Characteristics:**
 
-- ✅ **Optional** - Graph integration is completely optional
-- ✅ **Multi-Database** - Works with Neo4j, Memgraph (single codebase)
-- ✅ **Real-Time Sync** - Reactive worker for automatic synchronization
-- ✅ **Orphan-Safe** - Sophisticated deletion with circular reference protection
-- ✅ **Cross-Layer** - Connects L1a, L2, L3, L4 via relationships
-- ✅ **Backward Compatible** - Existing code works unchanged
-- ✅ **Multi-Tenant** - Full `tenantId` support for SaaS isolation (NEW)
+- **Optional** - Graph integration is completely optional
+- **Multi-Database** - Works with Neo4j, Memgraph (single codebase)
+- **Real-Time Sync** - Reactive worker for automatic synchronization
+- **Orphan-Safe** - Sophisticated deletion with circular reference protection
+- **Cross-Layer** - Connects L1a, L2, L3, L4 via relationships
+- **Backward Compatible** - Existing code works unchanged
+- **Multi-Tenant** - Full `tenantId` support for SaaS isolation (NEW)
 
 **When to Use Graph:**
 
@@ -35,6 +42,8 @@ The Graph Operations API (`@cortexmemory/sdk/graph`) provides advanced graph dat
 
 ### Installation
 
+<Terminal>
+
 ```bash
 # Install Neo4j driver
 npm install neo4j-driver
@@ -43,7 +52,9 @@ npm install neo4j-driver
 docker-compose -f docker-compose.graph.yml up -d neo4j
 ```
 
-See [Graph Database Integration Guide](../07-advanced-topics/02-graph-database-integration) for complete setup.
+</Terminal>
+
+See [Graph Database Integration Guide](/advanced-topics/graph-database-integration) for complete setup.
 
 ### Configuration
 
@@ -385,10 +396,12 @@ console.log(`References: ${references}, Mentions: ${mentions}`);
 
 Clear all data from the database.
 
+<Callout type="danger">
+  This operation deletes ALL nodes and relationships. Use only for testing or complete reset.
+</Callout>
+
 ```typescript
-// ⚠️ WARNING: Deletes ALL nodes and relationships!
 await adapter.clearDatabase();
-// Use only for testing or complete reset
 ```
 
 ---
@@ -933,8 +946,11 @@ const result = await deleteConversationFromGraph(
 
 Delete a memory space node (use with caution).
 
+<Callout type="warning">
+  Does NOT cascade to memories/contexts in that space. Use with caution.
+</Callout>
+
 ```typescript
-// ⚠️ WARNING: Does NOT cascade to memories/contexts in that space
 const result = await deleteMemorySpaceFromGraph(
   "space-123", // memorySpaceId
   adapter,
@@ -1131,7 +1147,9 @@ if (canRun) {
 
 ## Belief Revision (Fact Supersession)
 
-> **Added in v0.24.0**
+<Callout type="info">
+  Added in v0.24.0
+</Callout>
 
 Functions for managing fact versioning and supersession in the graph database. These functions sync belief revision actions to maintain fact lineage and provenance.
 
@@ -1354,11 +1372,14 @@ interface VerifySchemaResult {
 
 Remove all constraints and indexes (testing/reset).
 
+<Callout type="danger">
+  Removes all schema constraints and indexes. Use only for testing or reset scenarios.
+</Callout>
+
 ```typescript
 import { dropGraphSchema } from "@cortexmemory/sdk/graph";
 
 await dropGraphSchema(adapter);
-// ⚠️ WARNING: Removes all schema constraints and indexes!
 ```
 
 ---
@@ -2337,9 +2358,9 @@ Complete examples in:
 
 ### Memgraph Compatibility
 
-- ✅ Basic operations: 100%
-- ✅ Traversal: 100%
-- ⚠️ shortestPath: Not supported (use traversal instead)
+- Basic operations: 100% compatible
+- Traversal: 100% compatible
+- shortestPath: Not supported (use traversal instead)
 - Overall: ~80% compatible
 
 ### Real-Time Sync
@@ -2353,8 +2374,30 @@ Complete examples in:
 
 ## Next Steps
 
-- **[Graph Database Integration](../07-advanced-topics/02-graph-database-integration)** - Complete integration guide (setup, selection, and patterns)
+- **[Graph Database Integration](/advanced-topics/graph-database-integration)** - Complete integration guide (setup, selection, and patterns)
 
 ---
 
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+
+<QuickNav>
+
+<QuickNavItem
+  title="Vector Operations API"
+  href="/api-reference/vector-operations"
+  description="Vector storage and similarity search operations"
+/>
+
+<QuickNavItem
+  title="Facts API"
+  href="/api-reference/facts"
+  description="Structured fact storage and retrieval"
+/>
+
+<QuickNavItem
+  title="Graph Database Integration"
+  href="/advanced-topics/graph-database-integration"
+  description="Complete setup and configuration guide"
+/>
+
+</QuickNav>

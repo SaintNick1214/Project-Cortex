@@ -1,6 +1,17 @@
+---
+id: sessions-operations
+title: Sessions Operations API
+sidebar_position: 8
+description: Complete API reference for session lifecycle management and multi-session support in Cortex.
+---
+
 # Sessions Operations API
 
-> **Last Updated**: 2026-01-01
+<Callout type="info">
+
+**Last Updated**: 2026-01-01
+
+</Callout>
 
 Complete API reference for session lifecycle management and multi-session support.
 
@@ -36,10 +47,12 @@ The Sessions API (`cortex.sessions.*`) provides native session management for us
 
 **Default Timeouts (Configurable via Governance):**
 
-| State  | Timeout | Description                      |
-| ------ | ------- | -------------------------------- |
-| Active | 30m     | No activity moves to idle        |
-| Idle   | 24h     | After 24h idle, session is ended |
+<APITable
+  parameters={[
+    { name: "Active", type: "30m", required: false, description: "No activity moves to idle" },
+    { name: "Idle", type: "24h", required: false, description: "After 24h idle, session is ended" },
+  ]}
+/>
 
 ---
 
@@ -87,6 +100,9 @@ interface SessionMetadata {
 
 The `metadata` field is completely flexible and can store any data your application needs:
 
+<Tabs>
+<TabItem value="device" label="Device Info">
+
 ```typescript
 // Device and client info
 await cortex.sessions.create({
@@ -98,7 +114,12 @@ await cortex.sessions.create({
     deviceId: "device-xyz",
   },
 });
+```
 
+</TabItem>
+<TabItem value="auth" label="Auth Claims">
+
+```typescript
 // Auth provider claims
 await cortex.sessions.create({
   userId: "user-123",
@@ -111,7 +132,12 @@ await cortex.sessions.create({
     customClaim: "any-value",
   },
 });
+```
 
+</TabItem>
+<TabItem value="geo" label="Geographic">
+
+```typescript
 // Geographic context
 await cortex.sessions.create({
   userId: "user-123",
@@ -123,6 +149,9 @@ await cortex.sessions.create({
   },
 });
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 
@@ -136,16 +165,20 @@ Create a new session for a user.
 
 ```typescript
 cortex.sessions.create(params: CreateSessionParams): Promise<Session>
-
-interface CreateSessionParams {
-  sessionId?: string;                  // Optional: custom ID (auto-generated if not provided)
-  userId: string;                      // Required: user this session belongs to
-  tenantId?: string;                   // Multi-tenant isolation
-  memorySpaceId?: string;              // Associate with memory space
-  metadata?: SessionMetadata;          // Fully extensible metadata
-  expiresAt?: number;                  // Optional: override default expiry (ms since epoch)
-}
 ```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "sessionId", type: "string", required: false, description: "Custom ID (auto-generated if not provided)" },
+    { name: "userId", type: "string", required: true, description: "User this session belongs to" },
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenant isolation" },
+    { name: "memorySpaceId", type: "string", required: false, description: "Associate with memory space" },
+    { name: "metadata", type: "SessionMetadata", required: false, description: "Fully extensible metadata" },
+    { name: "expiresAt", type: "number", required: false, description: "Override default expiry (ms since epoch)" },
+  ]}
+/>
 
 **Example:**
 
@@ -177,6 +210,14 @@ Get a session by ID.
 cortex.sessions.get(sessionId: string): Promise<Session | null>
 ```
 
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "sessionId", type: "string", required: true, description: "The unique session identifier to retrieve" },
+  ]}
+/>
+
 **Example:**
 
 ```typescript
@@ -202,6 +243,15 @@ cortex.sessions.getOrCreate(
 ): Promise<Session>
 ```
 
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID to find or create session for" },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Metadata for new session if created" },
+  ]}
+/>
+
 **Example:**
 
 ```typescript
@@ -226,6 +276,14 @@ Update session activity timestamp (heartbeat).
 cortex.sessions.touch(sessionId: string): Promise<void>
 ```
 
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "sessionId", type: "string", required: true, description: "Session ID to update activity for" },
+  ]}
+/>
+
 **Example:**
 
 ```typescript
@@ -246,6 +304,14 @@ Explicitly end a session.
 ```typescript
 cortex.sessions.end(sessionId: string): Promise<void>
 ```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "sessionId", type: "string", required: true, description: "Session ID to end" },
+  ]}
+/>
 
 **Example:**
 
@@ -269,21 +335,25 @@ cortex.sessions.endAll(
   userId: string,
   options?: EndAllOptions
 ): Promise<EndSessionsResult>
-
-interface EndAllOptions {
-  /**
-   * Tenant ID for multi-tenant isolation.
-   * When provided, only ends sessions for the user within that tenant.
-   * Without this (and no AuthContext), ALL sessions for the userId across ALL tenants are ended.
-   */
-  tenantId?: string;
-}
-
-interface EndSessionsResult {
-  ended: number;           // Number of sessions ended
-  sessionIds: string[];    // IDs of sessions that were ended
-}
 ```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID to end all sessions for" },
+    { name: "options.tenantId", type: "string", required: false, description: "Tenant ID for multi-tenant isolation. When provided, only ends sessions for the user within that tenant. Without this (and no AuthContext), ALL sessions for the userId across ALL tenants are ended." },
+  ]}
+/>
+
+**Returns:**
+
+<APITable
+  parameters={[
+    { name: "ended", type: "number", required: true, description: "Number of sessions ended" },
+    { name: "sessionIds", type: "string[]", required: true, description: "IDs of sessions that were ended" },
+  ]}
+/>
 
 **Example:**
 
@@ -310,20 +380,29 @@ List sessions with filters.
 
 ```typescript
 cortex.sessions.list(filters: SessionFilters): Promise<Session[]>
-
-interface SessionFilters {
-  userId?: string;                         // Filter by user ID
-  tenantId?: string;                       // Filter by tenant ID
-  memorySpaceId?: string;                  // Filter by memory space
-  status?: 'active' | 'idle' | 'ended';    // Filter by status
-  limit?: number;                          // Max results (1-1000, default: 50)
-  offset?: number;                         // Pagination offset
-
-  // 🔮 PLANNED: Date range filters (not yet implemented)
-  // startedAfter?: number;
-  // startedBefore?: number;
-}
 ```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: false, description: "Filter by user ID" },
+    { name: "tenantId", type: "string", required: false, description: "Filter by tenant ID" },
+    { name: "memorySpaceId", type: "string", required: false, description: "Filter by memory space" },
+    { name: "status", type: "'active' | 'idle' | 'ended'", required: false, description: "Filter by status" },
+    { name: "limit", type: "number", required: false, default: "50", description: "Max results (1-1000)" },
+    { name: "offset", type: "number", required: false, default: "0", description: "Pagination offset" },
+  ]}
+/>
+
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**PLANNED:** Date range filters (`startedAfter`, `startedBefore`) are planned for a future release.
+
+</Callout>
 
 **Example:**
 
@@ -360,6 +439,17 @@ Count sessions matching filters.
 cortex.sessions.count(filters: SessionFilters): Promise<number>
 ```
 
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: false, description: "Filter by user ID" },
+    { name: "tenantId", type: "string", required: false, description: "Filter by tenant ID" },
+    { name: "memorySpaceId", type: "string", required: false, description: "Filter by memory space" },
+    { name: "status", type: "'active' | 'idle' | 'ended'", required: false, description: "Filter by status" },
+  ]}
+/>
+
 **Example:**
 
 ```typescript
@@ -383,6 +473,14 @@ Get all active sessions for a user.
 cortex.sessions.getActive(userId: string): Promise<Session[]>
 ```
 
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "userId", type: "string", required: true, description: "User ID to get active sessions for" },
+  ]}
+/>
+
 **Example:**
 
 ```typescript
@@ -405,15 +503,25 @@ Expire idle sessions (typically run as background job).
 
 ```typescript
 cortex.sessions.expireIdle(options?: ExpireSessionsOptions): Promise<{ expired: number }>
-
-interface ExpireSessionsOptions {
-  tenantId?: string;       // Limit to specific tenant
-  idleTimeout?: number;    // Idle timeout in milliseconds (default: 30 minutes)
-
-  // 🔮 PLANNED: Dry run mode (not yet implemented)
-  // dryRun?: boolean;     // Preview without expiring
-}
 ```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "tenantId", type: "string", required: false, description: "Limit to specific tenant" },
+    { name: "idleTimeout", type: "number", required: false, default: "1800000", description: "Idle timeout in milliseconds (default: 30 minutes)" },
+  ]}
+/>
+
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**PLANNED:** Dry run mode (`dryRun: boolean`) is planned for a future release to preview without expiring.
+
+</Callout>
 
 **Example:**
 
@@ -462,7 +570,7 @@ await cortex.governance.setPolicy({
 });
 ```
 
-See [Governance Policies API](./governance-policies-api) for full configuration options.
+See [Governance Policies API](/api-reference/governance-policies-api) for full configuration options.
 
 ---
 
@@ -527,9 +635,11 @@ const sessions = await cortex.sessions.list({
 });
 ```
 
-> **Note:** The `sessionId` in AuthContext is for reference/tracking purposes.
-> Session activity tracking (incrementing message/memory counts) should be done
-> explicitly by calling `touch()` on user interactions.
+<Callout type="note">
+
+The `sessionId` in AuthContext is for reference/tracking purposes. Session activity tracking (incrementing message/memory counts) should be done explicitly by calling `touch()` on user interactions.
+
+</Callout>
 
 ---
 
@@ -648,27 +758,29 @@ try {
 
 **Validation Error Codes:**
 
-| Code                      | Description                               |
-| ------------------------- | ----------------------------------------- |
-| `INVALID_SESSION_ID`      | sessionId must be a string                |
-| `EMPTY_SESSION_ID`        | sessionId cannot be empty                 |
-| `SESSION_ID_TOO_LONG`     | sessionId cannot exceed 256 characters    |
-| `INVALID_USER_ID`         | userId must be a string                   |
-| `EMPTY_USER_ID`           | userId cannot be empty                    |
-| `USER_ID_TOO_LONG`        | userId cannot exceed 256 characters       |
-| `INVALID_TENANT_ID`       | tenantId must be a string                 |
-| `EMPTY_TENANT_ID`         | tenantId cannot be empty                  |
-| `TENANT_ID_TOO_LONG`      | tenantId cannot exceed 256 characters     |
-| `INVALID_STATUS`          | status must be a string                   |
-| `INVALID_STATUS_VALUE`    | status must be: active, idle, or ended    |
-| `INVALID_PARAMS`          | Session params must be an object          |
-| `MISSING_USER_ID`         | userId is required                        |
-| `INVALID_MEMORY_SPACE_ID` | memorySpaceId must be a string            |
-| `INVALID_EXPIRES_AT`      | expiresAt must be a positive number       |
-| `INVALID_METADATA`        | metadata must be a plain object           |
-| `INVALID_FILTERS`         | Session filters must be an object         |
-| `INVALID_LIMIT`           | limit must be a number between 1 and 1000 |
-| `INVALID_OFFSET`          | offset must be a non-negative number      |
+<APITable
+  parameters={[
+    { name: "INVALID_SESSION_ID", type: "error", required: false, description: "sessionId must be a string" },
+    { name: "EMPTY_SESSION_ID", type: "error", required: false, description: "sessionId cannot be empty" },
+    { name: "SESSION_ID_TOO_LONG", type: "error", required: false, description: "sessionId cannot exceed 256 characters" },
+    { name: "INVALID_USER_ID", type: "error", required: false, description: "userId must be a string" },
+    { name: "EMPTY_USER_ID", type: "error", required: false, description: "userId cannot be empty" },
+    { name: "USER_ID_TOO_LONG", type: "error", required: false, description: "userId cannot exceed 256 characters" },
+    { name: "INVALID_TENANT_ID", type: "error", required: false, description: "tenantId must be a string" },
+    { name: "EMPTY_TENANT_ID", type: "error", required: false, description: "tenantId cannot be empty" },
+    { name: "TENANT_ID_TOO_LONG", type: "error", required: false, description: "tenantId cannot exceed 256 characters" },
+    { name: "INVALID_STATUS", type: "error", required: false, description: "status must be a string" },
+    { name: "INVALID_STATUS_VALUE", type: "error", required: false, description: "status must be: active, idle, or ended" },
+    { name: "INVALID_PARAMS", type: "error", required: false, description: "Session params must be an object" },
+    { name: "MISSING_USER_ID", type: "error", required: false, description: "userId is required" },
+    { name: "INVALID_MEMORY_SPACE_ID", type: "error", required: false, description: "memorySpaceId must be a string" },
+    { name: "INVALID_EXPIRES_AT", type: "error", required: false, description: "expiresAt must be a positive number" },
+    { name: "INVALID_METADATA", type: "error", required: false, description: "metadata must be a plain object" },
+    { name: "INVALID_FILTERS", type: "error", required: false, description: "Session filters must be an object" },
+    { name: "INVALID_LIMIT", type: "error", required: false, description: "limit must be a number between 1 and 1000" },
+    { name: "INVALID_OFFSET", type: "error", required: false, description: "offset must be a non-negative number" },
+  ]}
+/>
 
 ### Runtime Errors
 
@@ -685,15 +797,42 @@ try {
 }
 ```
 
-> **🔮 PLANNED:** Session-specific error codes (`CortexErrorCode.SESSION_NOT_FOUND`,
-> `CortexErrorCode.SESSION_EXPIRED`, `CortexErrorCode.SESSION_ALREADY_ENDED`) are
-> planned for a future release to provide more structured error handling.
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**PLANNED:** Session-specific error codes (`CortexErrorCode.SESSION_NOT_FOUND`, `CortexErrorCode.SESSION_EXPIRED`, `CortexErrorCode.SESSION_ALREADY_ENDED`) are planned for a future release to provide more structured error handling.
+
+</Callout>
 
 ---
 
 ## Related APIs
 
-- [User Operations](./user-operations) - User profiles and GDPR deletion
-- [Auth Integration](../08-integrations/auth-providers) - Authentication context
-- [Governance Policies](./governance-policies-api) - Session lifecycle policies
-- [Memory Operations](./memory-operations) - Session-scoped memories
+<QuickNav>
+  <QuickNavItem
+    title="User Operations"
+    icon="user"
+    href="/api-reference/user-operations"
+    description="User profiles and GDPR deletion"
+  />
+  <QuickNavItem
+    title="Auth Integration"
+    icon="lock"
+    href="/integrations/auth-providers"
+    description="Authentication context"
+  />
+  <QuickNavItem
+    title="Governance Policies"
+    icon="shield"
+    href="/api-reference/governance-policies-api"
+    description="Session lifecycle policies"
+  />
+  <QuickNavItem
+    title="Memory Operations"
+    icon="brain"
+    href="/api-reference/memory-operations"
+    description="Session-scoped memories"
+  />
+</QuickNav>

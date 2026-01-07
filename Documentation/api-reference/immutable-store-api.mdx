@@ -1,6 +1,11 @@
-# Immutable Store API
+---
+id: immutable-store-api
+title: Immutable Store API
+sidebar_position: 9
+description: Complete API reference for shared immutable data storage with automatic versioning. Layer 1b provides TRULY SHARED immutable data across ALL memory spaces with ACID guarantees, automatic versioning, and configurable retention.
+---
 
-> **Last Updated**: 2026-01-01
+# Immutable Store API
 
 Complete API reference for shared immutable data storage with automatic versioning.
 
@@ -206,7 +211,9 @@ console.log(v2.previousVersions.length); // 1 (contains v1)
 - `ImmutableValidationError('INVALID_METADATA')` - Metadata is not a valid object
 - `ImmutableValidationError('MISSING_REQUIRED_FIELD')` - Required field missing
 
-> **Note:** Validation errors throw `ImmutableValidationError` (exported from `@cortexso/sdk/immutable`). Backend errors are wrapped in standard `Error` objects.
+<Callout type="info">
+Validation errors throw `ImmutableValidationError` (exported from `@cortexso/sdk/immutable`). Backend errors are wrapped in standard `Error` objects.
+</Callout>
 
 ---
 
@@ -574,7 +581,9 @@ if (result.deleted) {
 - `ImmutableValidationError('INVALID_ID')` - ID is empty or invalid
 - `Error('IMMUTABLE_ENTRY_NOT_FOUND')` - Entry doesn't exist (from Convex backend)
 
-**Warning:** This deletes ALL versions. Vector memories with `immutableRef` will have broken references.
+<Callout type="warning">
+This deletes ALL versions. Vector memories with `immutableRef` will have broken references.
+</Callout>
 
 ---
 
@@ -599,7 +608,9 @@ interface PurgeManyFilter {
 }
 ```
 
-**Note:** At least one filter (type or userId) must be provided to prevent accidental deletion of all records.
+<Callout type="info">
+At least one filter (type or userId) must be provided to prevent accidental deletion of all records.
+</Callout>
 
 **Returns:**
 
@@ -1104,7 +1115,7 @@ if (fact?.data.conversationRef) {
 
 **Use Case:** Facts with entity relationships can be synced to graph databases for knowledge graph construction.
 
-**Learn more:** [Graph Database Integration](../07-advanced-topics/02-graph-database-integration)
+**Learn more:** [Graph Database Integration](/advanced-topics/graph-database-integration)
 
 ---
 
@@ -1138,9 +1149,26 @@ if (fact?.data.conversationRef) {
 
 ## Next Steps
 
-- **[Mutable Store API](./mutable-store-api)** - Live shared data
-- **[Governance Policies API](./governance-policies-api)** - Multi-layer retention rules
-- **[Memory Operations API](./memory-operations)** - Vector layer operations
+<QuickNav>
+  <QuickNavItem
+    title="Mutable Store API"
+    description="Live shared data with ACID transaction guarantees"
+    href="/api-reference/mutable-store-api"
+    icon="database"
+  />
+  <QuickNavItem
+    title="Governance Policies API"
+    description="Multi-layer retention rules and compliance"
+    href="/api-reference/governance-policies-api"
+    icon="shield"
+  />
+  <QuickNavItem
+    title="Memory Operations API"
+    description="Vector layer operations for semantic search"
+    href="/api-reference/memory-operations"
+    icon="brain"
+  />
+</QuickNav>
 
 ---
 

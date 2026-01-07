@@ -1,6 +1,11 @@
-# Auth Context API
+---
+id: auth-context-api
+title: Auth Context API
+sidebar_position: 3
+description: Complete API reference for authentication context and multi-tenancy integration with Cortex SDK.
+---
 
-> **Last Updated**: 2026-01-01
+# Auth Context API
 
 Complete API reference for authentication context and multi-tenancy integration.
 
@@ -8,19 +13,40 @@ Complete API reference for authentication context and multi-tenancy integration.
 
 The Auth Context API provides a framework-agnostic authentication layer that enables:
 
-- **User tracking** - Link all operations to authenticated users
-- **Multi-tenancy** - Complete SaaS tenant isolation via `tenantId`
-- **Session management** - Track user sessions across devices
-- **GDPR compliance** - Enable cascade deletion by userId
-- **Audit trails** - Log who did what and when
+<CardGroup cols={2}>
+  <Card
+    title="User Tracking"
+    icon="user"
+  >
+    Link all operations to authenticated users
+  </Card>
+  <Card
+    title="Multi-Tenancy"
+    icon="building"
+  >
+    Complete SaaS tenant isolation via tenantId
+  </Card>
+  <Card
+    title="Session Management"
+    icon="clock"
+  >
+    Track user sessions across devices
+  </Card>
+  <Card
+    title="GDPR Compliance"
+    icon="shield"
+  >
+    Enable cascade deletion by userId
+  </Card>
+</CardGroup>
 
 **Key Characteristics:**
 
-- ✅ **Framework Agnostic** - Works with any auth system
-- ✅ **Auto-Injection** - Auth context propagates through all operations
-- ✅ **Flexible** - Standard fields + fully extensible
-- ✅ **Zero Lock-in** - Just data, no proprietary protocol
-- ✅ **Multi-Tenant** - Built-in `tenantId` for SaaS isolation
+- **Framework Agnostic** - Works with any auth system
+- **Auto-Injection** - Auth context propagates through all operations
+- **Flexible** - Standard fields + fully extensible
+- **Zero Lock-in** - Just data, no proprietary protocol
+- **Multi-Tenant** - Built-in tenantId for SaaS isolation
 
 **Architecture:**
 
@@ -47,28 +73,64 @@ function createAuthContext(params: AuthContextParams): AuthContext;
 
 **Parameters:**
 
-```typescript
-interface AuthContextParams {
-  // Required
-  userId: string; // Unique user identifier (REQUIRED)
-
-  // Multi-tenancy (optional but recommended for SaaS)
-  tenantId?: string; // Tenant identifier for multi-tenant isolation
-  organizationId?: string; // Organization within tenant (optional sub-grouping)
-
-  // Session tracking (optional)
-  sessionId?: string; // Current session identifier
-
-  // Auth provider metadata (optional)
-  authProvider?: string; // e.g., 'auth0', 'clerk', 'nextauth', 'custom'
-  authMethod?: "oauth" | "api_key" | "jwt" | "session" | "custom";
-  authenticatedAt?: number; // Unix timestamp (ms) when authenticated
-
-  // Extensible (optional)
-  claims?: Record<string, unknown>; // Raw claims from auth provider (JWT, token)
-  metadata?: Record<string, unknown>; // Application-specific metadata
-}
-```
+<APITable
+  parameters={[
+    {
+      name: "userId",
+      type: "string",
+      required: true,
+      description: "Unique user identifier. Required for all auth contexts."
+    },
+    {
+      name: "tenantId",
+      type: "string",
+      required: false,
+      description: "Tenant identifier for multi-tenant SaaS isolation. Recommended for SaaS applications."
+    },
+    {
+      name: "organizationId",
+      type: "string",
+      required: false,
+      description: "Organization within tenant for optional sub-grouping."
+    },
+    {
+      name: "sessionId",
+      type: "string",
+      required: false,
+      description: "Current session identifier for session tracking."
+    },
+    {
+      name: "authProvider",
+      type: "string",
+      required: false,
+      description: "Name of auth provider (e.g., 'auth0', 'clerk', 'nextauth', 'custom')."
+    },
+    {
+      name: "authMethod",
+      type: "'oauth' | 'api_key' | 'jwt' | 'session' | 'custom'",
+      required: false,
+      description: "Authentication method used for this context."
+    },
+    {
+      name: "authenticatedAt",
+      type: "number",
+      required: false,
+      description: "Unix timestamp (ms) when the user was authenticated."
+    },
+    {
+      name: "claims",
+      type: "Record<string, unknown>",
+      required: false,
+      description: "Raw claims from auth provider (JWT payload, OAuth token data, etc.)."
+    },
+    {
+      name: "metadata",
+      type: "Record<string, unknown>",
+      required: false,
+      description: "Application-specific metadata (roles, permissions, preferences)."
+    }
+  ]}
+/>
 
 **Returns:**
 
@@ -96,6 +158,9 @@ interface AuthContext {
 
 **Example:**
 
+<Tabs>
+  <TabItem value="minimal" label="Minimal">
+
 ```typescript
 import { createAuthContext } from "@cortexmemory/sdk";
 
@@ -103,6 +168,13 @@ import { createAuthContext } from "@cortexmemory/sdk";
 const auth = createAuthContext({
   userId: "user-123",
 });
+```
+
+  </TabItem>
+  <TabItem value="multi-tenant" label="Multi-Tenant">
+
+```typescript
+import { createAuthContext } from "@cortexmemory/sdk";
 
 // With multi-tenancy
 const auth = createAuthContext({
@@ -110,6 +182,13 @@ const auth = createAuthContext({
   tenantId: "customer-acme",
   sessionId: "session-xyz",
 });
+```
+
+  </TabItem>
+  <TabItem value="complete" label="Complete">
+
+```typescript
+import { createAuthContext } from "@cortexmemory/sdk";
 
 // Complete (all fields)
 const auth = createAuthContext({
@@ -132,6 +211,9 @@ const auth = createAuthContext({
   },
 });
 ```
+
+  </TabItem>
+</Tabs>
 
 **Errors:**
 
@@ -286,18 +368,70 @@ await cortexB.memory.search("shared", "anything");
 
 **ALL Cortex layers automatically support tenant isolation:**
 
-| Layer        | API                      | Tenant Isolation                  |
-| ------------ | ------------------------ | --------------------------------- |
-| **Layer 1a** | `cortex.conversations.*` | ✅ Auto-filtered by tenantId      |
-| **Layer 1b** | `cortex.immutable.*`     | ✅ Auto-filtered by tenantId      |
-| **Layer 1c** | `cortex.mutable.*`       | ✅ Auto-filtered by tenantId      |
-| **Layer 2**  | `cortex.vector.*`        | ✅ Auto-filtered by tenantId      |
-| **Layer 3**  | `cortex.facts.*`         | ✅ Auto-filtered by tenantId      |
-| **Spaces**   | `cortex.memorySpaces.*`  | ✅ Auto-filtered by tenantId      |
-| **Users**    | `cortex.users.*`         | ✅ Auto-filtered by tenantId      |
-| **Contexts** | `cortex.contexts.*`      | ✅ Auto-filtered by tenantId      |
-| **Sessions** | `cortex.sessions.*`      | ✅ Auto-filtered by tenantId      |
-| **Graph**    | Graph nodes              | ✅ tenantId property on all nodes |
+<APITable
+  parameters={[
+    {
+      name: "Layer 1a",
+      type: "cortex.conversations.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Layer 1b",
+      type: "cortex.immutable.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Layer 1c",
+      type: "cortex.mutable.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Layer 2",
+      type: "cortex.vector.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Layer 3",
+      type: "cortex.facts.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Spaces",
+      type: "cortex.memorySpaces.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Users",
+      type: "cortex.users.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Contexts",
+      type: "cortex.contexts.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Sessions",
+      type: "cortex.sessions.*",
+      required: false,
+      description: "Auto-filtered by tenantId"
+    },
+    {
+      name: "Graph",
+      type: "Graph nodes",
+      required: false,
+      description: "tenantId property on all nodes"
+    }
+  ]}
+/>
 
 ### Tenant-Aware GDPR
 
@@ -315,8 +449,8 @@ const cortex = new Cortex({
 await cortex.users.delete("user-123", { cascade: true });
 
 // Deletes:
-// ✅ All data with userId="user-123" AND tenantId="tenant-acme"
-// ❌ Does NOT affect user-123 in other tenants
+// - All data with userId="user-123" AND tenantId="tenant-acme"
+// - Does NOT affect user-123 in other tenants
 ```
 
 ---
@@ -367,15 +501,21 @@ await cortex.sessions.touch("current-session");
 
 ### 1. Always Extract tenantId from Secure Source
 
+<Callout type="warning">
+
+Never trust client-provided tenantId values. Always extract from a secure, signed source like a JWT.
+
+</Callout>
+
 ```typescript
-// ✅ GOOD: Extract from signed JWT
+// GOOD: Extract from signed JWT
 const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 const auth = createAuthContext({
   userId: decoded.sub,
   tenantId: decoded.tenant_id, // From secure token
 });
 
-// ❌ BAD: Trust client-provided value
+// BAD: Trust client-provided value
 const auth = createAuthContext({
   userId: decoded.sub,
   tenantId: req.body.tenantId, // User could lie!
@@ -384,8 +524,14 @@ const auth = createAuthContext({
 
 ### 2. Don't Store Sensitive Tokens
 
+<Callout type="danger">
+
+Never store access tokens, refresh tokens, or API keys in claims or metadata.
+
+</Callout>
+
 ```typescript
-// ❌ BAD: Storing secrets
+// BAD: Storing secrets
 const auth = createAuthContext({
   userId: "user-123",
   claims: {
@@ -395,7 +541,7 @@ const auth = createAuthContext({
   },
 });
 
-// ✅ GOOD: Only public claims
+// GOOD: Only public claims
 const auth = createAuthContext({
   userId: decoded.sub,
   claims: {
@@ -503,69 +649,78 @@ await cortex.sessions.expireIdle();
 
 ### Required Fields
 
-**userId** (string)
-
-- Unique user identifier
-- Required for all auth contexts
-- Used for user operations and GDPR cascade
-- Auto-injected into all entities with userId support
+<APITable
+  parameters={[
+    {
+      name: "userId",
+      type: "string",
+      required: true,
+      description: "Unique user identifier. Required for all auth contexts. Used for user operations and GDPR cascade. Auto-injected into all entities with userId support."
+    }
+  ]}
+/>
 
 ### Optional Standard Fields
 
-**tenantId** (string, optional)
-
-- Tenant identifier for multi-tenant SaaS
-- Auto-injected into ALL operations for complete isolation
-- Filters all queries by tenant
-- Required for proper multi-tenant SaaS
-- See [Isolation Boundaries](../02-core-features/17-isolation-boundaries)
-
-**organizationId** (string, optional)
-
-- Organization within tenant (optional sub-grouping)
-- Use for hierarchical tenant structures
-- Not auto-filtered (application-level filtering)
-
-**sessionId** (string, optional)
-
-- Current session identifier
-- Used for session activity tracking
-- References session in Sessions API
-- Enables multi-device session management
-
-**authProvider** (string, optional)
-
-- Name of auth provider (e.g., 'auth0', 'clerk', 'custom')
-- Informational only (for logging/debugging)
-- Not used for filtering or logic
-
-**authMethod** (string, optional)
-
-- Authentication method used
-- Options: 'oauth', 'api_key', 'jwt', 'session', 'custom'
-- Informational only
-
-**authenticatedAt** (number, optional)
-
-- Unix timestamp (ms) when user authenticated
-- Used for session timeout calculations
-- Informational for audit logs
+<APITable
+  parameters={[
+    {
+      name: "tenantId",
+      type: "string",
+      required: false,
+      description: "Tenant identifier for multi-tenant SaaS. Auto-injected into ALL operations for complete isolation. Filters all queries by tenant. Required for proper multi-tenant SaaS."
+    },
+    {
+      name: "organizationId",
+      type: "string",
+      required: false,
+      description: "Organization within tenant (optional sub-grouping). Use for hierarchical tenant structures. Not auto-filtered (application-level filtering)."
+    },
+    {
+      name: "sessionId",
+      type: "string",
+      required: false,
+      description: "Current session identifier. Used for session activity tracking. References session in Sessions API. Enables multi-device session management."
+    },
+    {
+      name: "authProvider",
+      type: "string",
+      required: false,
+      description: "Name of auth provider (e.g., 'auth0', 'clerk', 'custom'). Informational only (for logging/debugging). Not used for filtering or logic."
+    },
+    {
+      name: "authMethod",
+      type: "'oauth' | 'api_key' | 'jwt' | 'session' | 'custom'",
+      required: false,
+      description: "Authentication method used. Informational only."
+    },
+    {
+      name: "authenticatedAt",
+      type: "number",
+      required: false,
+      description: "Unix timestamp (ms) when user authenticated. Used for session timeout calculations. Informational for audit logs."
+    }
+  ]}
+/>
 
 ### Extensible Fields
 
-**claims** (Record<string, unknown>, optional)
-
-- Raw claims from auth provider
-- JWT payload, OAuth token data, etc.
-- Store non-sensitive data only
-- Use for audit trails and debugging
-
-**metadata** (Record<string, unknown>, optional)
-
-- Application-specific metadata
-- Fully flexible structure
-- Store roles, permissions, preferences
-- Not auto-injected (read from auth context as needed)
+<APITable
+  parameters={[
+    {
+      name: "claims",
+      type: "Record<string, unknown>",
+      required: false,
+      description: "Raw claims from auth provider. JWT payload, OAuth token data, etc. Store non-sensitive data only. Use for audit trails and debugging."
+    },
+    {
+      name: "metadata",
+      type: "Record<string, unknown>",
+      required: false,
+      description: "Application-specific metadata. Fully flexible structure. Store roles, permissions, preferences. Not auto-injected (read from auth context as needed)."
+    }
+  ]}
+/>
 
 ---
 
@@ -595,12 +750,11 @@ async function handler(req, res) {
 }
 ```
 
-**Benefits:**
+<Callout type="tip">
 
-- Proper tenant isolation
-- No cross-request pollution
-- Clean auth context per request
-- Garbage collected after response
+**Benefits:** Proper tenant isolation, no cross-request pollution, clean auth context per request, garbage collected after response.
+
+</Callout>
 
 ### Pattern 2: Singleton Context (Single-User Apps)
 
@@ -621,11 +775,11 @@ await cortex.memory.remember({...});
 await cortex.memory.search(...);
 ```
 
-**Benefits:**
+<Callout type="tip">
 
-- Simpler code
-- Better performance (connection reuse)
-- Suitable for CLI, desktop, single-user apps
+**Benefits:** Simpler code, better performance (connection reuse), suitable for CLI, desktop, single-user apps.
+
+</Callout>
 
 ### Pattern 3: Context Switching (Multi-Org Users)
 
@@ -685,10 +839,9 @@ const auth = createAuthContext({
 
 const cortex = new Cortex({ convexUrl, auth });
 
-// ✅ Valid: userId matches auth
+// Valid: userId matches auth
 await cortex.users.update("user-123", { displayName: "Alice" });
 
-// ❌ Invalid: userId doesn't match auth (validation error in some contexts)
 // Note: You CAN update other users, but some operations validate
 await cortex.users.update("user-456", { displayName: "Bob" });
 // This works but may be restricted based on your application logic
@@ -718,17 +871,64 @@ try {
 
 ### Error Codes
 
-| Code                    | Description                             | Field             |
-| ----------------------- | --------------------------------------- | ----------------- |
-| `MISSING_USER_ID`       | userId is required                      | `userId`          |
-| `EMPTY_USER_ID`         | userId cannot be empty string           | `userId`          |
-| `INVALID_USER_ID_TYPE`  | userId must be a string                 | `userId`          |
-| `EMPTY_TENANT_ID`       | tenantId cannot be empty if provided    | `tenantId`        |
-| `EMPTY_SESSION_ID`      | sessionId cannot be empty if provided   | `sessionId`       |
-| `INVALID_TIMESTAMP`     | authenticatedAt must be positive number | `authenticatedAt` |
-| `INVALID_AUTH_METHOD`   | authMethod must be valid enum value     | `authMethod`      |
-| `INVALID_CLAIMS_TYPE`   | claims must be an object                | `claims`          |
-| `INVALID_METADATA_TYPE` | metadata must be an object              | `metadata`        |
+<APITable
+  parameters={[
+    {
+      name: "MISSING_USER_ID",
+      type: "userId",
+      required: false,
+      description: "userId is required"
+    },
+    {
+      name: "EMPTY_USER_ID",
+      type: "userId",
+      required: false,
+      description: "userId cannot be empty string"
+    },
+    {
+      name: "INVALID_USER_ID_TYPE",
+      type: "userId",
+      required: false,
+      description: "userId must be a string"
+    },
+    {
+      name: "EMPTY_TENANT_ID",
+      type: "tenantId",
+      required: false,
+      description: "tenantId cannot be empty if provided"
+    },
+    {
+      name: "EMPTY_SESSION_ID",
+      type: "sessionId",
+      required: false,
+      description: "sessionId cannot be empty if provided"
+    },
+    {
+      name: "INVALID_TIMESTAMP",
+      type: "authenticatedAt",
+      required: false,
+      description: "authenticatedAt must be positive number"
+    },
+    {
+      name: "INVALID_AUTH_METHOD",
+      type: "authMethod",
+      required: false,
+      description: "authMethod must be valid enum value"
+    },
+    {
+      name: "INVALID_CLAIMS_TYPE",
+      type: "claims",
+      required: false,
+      description: "claims must be an object"
+    },
+    {
+      name: "INVALID_METADATA_TYPE",
+      type: "metadata",
+      required: false,
+      description: "metadata must be an object"
+    }
+  ]}
+/>
 
 ---
 
@@ -737,27 +937,33 @@ try {
 ### 1. Extract Auth Context Once Per Request
 
 ```typescript
-// ✅ GOOD: Extract once, reuse
+// GOOD: Extract once, reuse
 const auth = extractAuthContext(req);
 const cortex = new Cortex({ convexUrl, auth });
 await cortex.memory.remember({...});
 await cortex.memory.search(...);
 
-// ❌ BAD: Extract multiple times
+// BAD: Extract multiple times
 const cortex1 = new Cortex({ convexUrl, auth: extractAuthContext(req) });
 const cortex2 = new Cortex({ convexUrl, auth: extractAuthContext(req) });
 ```
 
 ### 2. Use tenantId for All SaaS Apps
 
+<Callout type="warning">
+
+Missing tenantId in a multi-tenant app creates data leakage risk between customers.
+
+</Callout>
+
 ```typescript
-// ✅ GOOD: Tenant isolation
+// GOOD: Tenant isolation
 const auth = createAuthContext({
   userId: "user-123",
   tenantId: "customer-acme", // Required for SaaS
 });
 
-// ❌ BAD: No tenant isolation in multi-tenant app
+// BAD: No tenant isolation in multi-tenant app
 const auth = createAuthContext({
   userId: "user-123",
   // Missing tenantId - data leakage risk!
@@ -767,7 +973,7 @@ const auth = createAuthContext({
 ### 3. Track Sessions for Analytics
 
 ```typescript
-// ✅ GOOD: Session tracking
+// GOOD: Session tracking
 const auth = createAuthContext({
   userId: "user-123",
   sessionId: req.session.id,
@@ -783,7 +989,7 @@ const auth = createAuthContext({
 ### 4. Store Minimal Claims
 
 ```typescript
-// ✅ GOOD: Only what you need
+// GOOD: Only what you need
 const auth = createAuthContext({
   userId: decoded.sub,
   claims: {
@@ -792,7 +998,7 @@ const auth = createAuthContext({
   },
 });
 
-// ❌ BAD: Entire JWT payload
+// BAD: Entire JWT payload
 const auth = createAuthContext({
   userId: decoded.sub,
   claims: decoded, // Could include sensitive data
@@ -805,7 +1011,11 @@ const auth = createAuthContext({
 
 ### Dynamic Auth Context Updates
 
-**Note:** Auth context is immutable once set. To change context, create new Cortex instance:
+<Callout type="info">
+
+Auth context is immutable once set. To change context, create a new Cortex instance.
+
+</Callout>
 
 ```typescript
 // Initial auth
@@ -963,11 +1173,37 @@ class CortexSDK {
 
 ## Next Steps
 
-- **[Isolation Boundaries](../02-core-features/17-isolation-boundaries)** - Complete isolation model
-- **[Sessions Operations](./sessions-operations)** - Session lifecycle API
-- **[User Operations](./user-operations)** - User profile management
-- **[Memory Space Operations](./memory-space-operations)** - Space management
+<QuickNav>
+  <QuickNavItem
+    title="Isolation Boundaries"
+    description="Complete isolation model for multi-tenancy"
+    href="/core-features/isolation-boundaries"
+    icon="shield"
+  />
+  <QuickNavItem
+    title="Sessions Operations"
+    description="Session lifecycle API"
+    href="/api-reference/sessions-operations"
+    icon="clock"
+  />
+  <QuickNavItem
+    title="User Operations"
+    description="User profile management"
+    href="/api-reference/user-operations"
+    icon="user"
+  />
+  <QuickNavItem
+    title="Memory Space Operations"
+    description="Space management"
+    href="/api-reference/memory-space-operations"
+    icon="database"
+  />
+</QuickNav>
 
 ---
 
+<Callout type="info">
+
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+
+</Callout>
