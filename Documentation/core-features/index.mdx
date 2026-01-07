@@ -6,164 +6,102 @@ sidebar_position: 0
 
 # Core Features
 
-Cortex provides a comprehensive set of features for building AI agents with persistent memory. 
-This section covers everything from basic memory operations to advanced multi-agent coordination.
+The essential concepts every developer needs to build AI agents with persistent memory.
 
-## Feature Categories
+## Memory Foundation
 
-### Memory & Storage
-
-<FeatureGrid columns={3}>
+<FeatureGrid>
   <FeatureCard 
-    icon="📝"
+    icon="brain"
     title="Memory Orchestration"
-    description="Automatic entity registration and memory coordination"
+    description="The remember() and recall() APIs — your main interface"
     href="/core-features/memory-orchestration"
+    size="large"
   />
   <FeatureCard 
-    icon="🗂️"
+    icon="database"
     title="Memory Spaces"
-    description="Isolated memory banks with optional collaboration"
+    description="Isolated memory banks with Hive or Collaboration modes"
     href="/core-features/memory-spaces"
+    size="large"
   />
+</FeatureGrid>
+
+## Retrieval & Search
+
+<FeatureGrid>
   <FeatureCard 
-    icon="🔍"
+    icon="search"
     title="Semantic Search"
     description="AI-powered memory retrieval using embeddings"
     href="/core-features/semantic-search"
-  />
-</FeatureGrid>
-
-### Context & Coordination
-
-<FeatureGrid columns={3}>
-  <FeatureCard 
-    icon="🔗"
-    title="Context Chains"
-    description="Hierarchical agent coordination and context propagation"
-    href="/core-features/context-chains"
+    size="medium"
   />
   <FeatureCard 
-    icon="💬"
-    title="Conversation History"
-    description="Persist message threads with automatic context"
-    href="/core-features/conversation-history"
-  />
-  <FeatureCard 
-    icon="🤝"
-    title="A2A Communication"
-    description="Agent-to-agent memory tracking"
-    href="/core-features/a2a-communication"
-  />
-</FeatureGrid>
-
-### Advanced Features
-
-<FeatureGrid columns={3}>
-  <FeatureCard 
-    icon="🐝"
-    title="Hive Mode"
-    description="Multi-participant agent coordination"
-    href="/core-features/hive-mode"
-  />
-  <FeatureCard 
-    icon="📊"
+    icon="fact"
     title="Fact Extraction"
-    description="Automatic knowledge extraction from conversations"
+    description="60-90% token savings via structured facts"
     href="/core-features/fact-extraction"
+    size="medium"
   />
   <FeatureCard 
-    icon="🛡️"
-    title="Resilience Layer"
-    description="Rate limiting and circuit breakers"
-    href="/core-features/resilience-layer"
-  />
-</FeatureGrid>
-
-### Infrastructure & Security
-
-<FeatureGrid columns={3}>
-  <FeatureCard 
-    icon="📡"
+    icon="stream"
     title="Streaming Support"
-    description="Real-time LLM response streaming"
+    description="Store streaming LLM responses progressively"
     href="/core-features/streaming-support"
-  />
-  <FeatureCard 
-    icon="🔐"
-    title="Authentication"
-    description="Multi-tenant auth patterns"
-    href="/core-features/authentication"
-  />
-  <FeatureCard 
-    icon="🏛️"
-    title="Governance Policies"
-    description="Retention and compliance controls"
-    href="/core-features/governance-policies"
+    size="medium"
   />
 </FeatureGrid>
 
-## All Features
+## Identity & Sharing
+
+<FeatureGrid>
+  <FeatureCard 
+    icon="user"
+    title="User Profiles"
+    description="Cross-tool memory sharing via user identity"
+    href="/core-features/user-profiles"
+    size="medium"
+  />
+  <FeatureCard 
+    icon="hive"
+    title="Hive Mode"
+    description="Multiple AI tools sharing one memory space"
+    href="/core-features/hive-mode"
+    size="medium"
+  />
+  <FeatureCard 
+    icon="message"
+    title="Conversation History"
+    description="Persist message threads with audit trails"
+    href="/core-features/conversation-history"
+    size="medium"
+  />
+</FeatureGrid>
+
+---
+
+## Looking for More?
 
 <QuickNav>
   <QuickNavItem 
-    title="Memory Orchestration" 
-    description="Auto-registration and coordination" 
-    href="/core-features/memory-orchestration" 
+    title="Security" 
+    description="Authentication and isolation" 
+    href="/security/authentication" 
   />
   <QuickNavItem 
-    title="Memory Spaces" 
-    description="Isolation and collaboration" 
-    href="/core-features/memory-spaces" 
+    title="Advanced Topics" 
+    description="A2A, context chains, graph integration" 
+    href="/advanced-topics/a2a-communication" 
   />
   <QuickNavItem 
-    title="Semantic Search" 
-    description="AI-powered retrieval" 
-    href="/core-features/semantic-search" 
+    title="Architecture" 
+    description="System design and data models" 
+    href="/architecture/system-overview" 
   />
   <QuickNavItem 
-    title="User Profiles" 
-    description="Store user context" 
-    href="/core-features/user-profiles" 
-  />
-  <QuickNavItem 
-    title="Context Chains" 
-    description="Hierarchical coordination" 
-    href="/core-features/context-chains" 
-  />
-  <QuickNavItem 
-    title="A2A Communication" 
-    description="Agent-to-agent tracking" 
-    href="/core-features/a2a-communication" 
-  />
-  <QuickNavItem 
-    title="Conversation History" 
-    description="Message persistence" 
-    href="/core-features/conversation-history" 
-  />
-  <QuickNavItem 
-    title="Sessions Management" 
-    description="Multi-session tracking" 
-    href="/core-features/sessions-management" 
-  />
-  <QuickNavItem 
-    title="Governance Policies" 
-    description="Retention and compliance" 
-    href="/core-features/governance-policies" 
-  />
-  <QuickNavItem 
-    title="Hive Mode" 
-    description="Multi-agent coordination" 
-    href="/core-features/hive-mode" 
-  />
-  <QuickNavItem 
-    title="Fact Extraction" 
-    description="Automatic knowledge extraction" 
-    href="/core-features/fact-extraction" 
-  />
-  <QuickNavItem 
-    title="Resilience Layer" 
-    description="Rate limiting and circuit breakers" 
-    href="/core-features/resilience-layer" 
+    title="API Reference" 
+    description="Complete API documentation" 
+    href="/api-reference/overview" 
   />
 </QuickNav>

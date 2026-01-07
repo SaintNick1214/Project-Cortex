@@ -1,0 +1,363 @@
+---
+id: resilience-layer
+title: Resilience Layer
+sidebar_position: 14
+description: Automatic retries, circuit breaking, and fault tolerance
+---
+
+# Resilience Layer
+
+<Callout type="info" title="Built-in Resilience">
+  All Cortex operations include automatic:
+  - **Rate limiting** - Smooths traffic bursts
+  - **Concurrency control** - Respects Convex limits (16 concurrent on free plan)
+  - **Circuit breaking** - Fast-fails when backend is unhealthy
+  - **Priority queuing** - Critical operations execute first
+</Callout>
+
+---
+
+## Why It Matters
+
+Without protection, traffic spikes overwhelm your database:
+
+```
+Without Resilience:
+100 agents burst → 100 concurrent queries → Convex rejects (limit: 16)
+                                          → Errors cascade
+                                          → System fails
+
+With Resilience:
+100 agents burst → Rate limiter smooths → 16 execute (Convex limit)
+                                        → 84 queue with priority
+                                        → All succeed
+```
+
+---
+
+## Quick Start
+
+### Zero Configuration
+
+Resilience is enabled by default with safe settings for Convex Free plan:
+
+```typescript
+import { Cortex } from '@cortexmemory/sdk';
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  // Resilience enabled automatically
+});
+
+// All operations automatically protected
+await cortex.memory.remember({...});
+```
+
+### Environment Variable
+
+Set `CONVEX_PLAN` to auto-configure for your subscription:
+
+```bash
+# .env
+CONVEX_PLAN=free          # 16 concurrent (default)
+CONVEX_PLAN=professional  # 256 concurrent
+```
+
+```typescript
+import { getPresetForPlan } from '@cortexmemory/sdk';
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: getPresetForPlan(),  // Reads CONVEX_PLAN
+});
+```
+
+---
+
+## Configuration Options
+
+<APITable parameters={[
+  { name: "maxConcurrent", type: "number", required: false, default: "16", description: "Max simultaneous operations (Convex free plan limit)" },
+  { name: "bucketSize", type: "number", required: false, default: "100", description: "Rate limiter burst capacity" },
+  { name: "refillRate", type: "number", required: false, default: "50", description: "Tokens per second (rate limit)" },
+  { name: "circuitThreshold", type: "number", required: false, default: "5", description: "Failures before circuit opens" },
+  { name: "timeout", type: "number", required: false, default: "30000", description: "Request timeout (ms)" },
+  { name: "queueSize", type: "number", required: false, default: "1000", description: "Max queued requests" },
+]} />
+
+### Custom Configuration
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: {
+    enabled: true,
+    
+    rateLimiter: {
+      bucketSize: 100,      // Max burst
+      refillRate: 50,       // Per second
+    },
+    
+    concurrency: {
+      maxConcurrent: 16,    // Convex free limit
+      queueSize: 1000,
+      timeout: 30000,       // 30s
+    },
+    
+    circuitBreaker: {
+      failureThreshold: 5,  // Open after 5 failures
+      successThreshold: 2,  // Close after 2 successes
+      timeout: 30000,       // 30s recovery wait
+    },
+  },
+});
+```
+
+---
+
+## Presets
+
+<Tabs>
+  <TabItem value="default" label="default (Free Plan)">
+
+Safe defaults for Convex Free/Starter (16 concurrent limit):
+
+```typescript
+import { ResiliencePresets } from '@cortexmemory/sdk';
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  resilience: ResiliencePresets.default,
+});
+```
+
+**Settings:** Max concurrent: 16, Bucket size: 100, Refill rate: 50/sec, Circuit threshold: 5 failures
+
+  </TabItem>
+  <TabItem value="realtime" label="realTimeAgent">
+
+Low-latency settings for chat apps:
+
+```typescript
+resilience: ResiliencePresets.realTimeAgent
+```
+
+**Settings:** Max concurrent: 8 (conservative), Timeout: 5s (fail fast), Circuit threshold: 3 (trip quickly)
+
+  </TabItem>
+  <TabItem value="batch" label="batchProcessing">
+
+High throughput for bulk operations (requires Professional plan):
+
+```typescript
+resilience: ResiliencePresets.batchProcessing
+```
+
+**Settings:** Max concurrent: 64, Queue size: 10,000, Timeout: 60s
+
+  </TabItem>
+  <TabItem value="hive" label="hiveMode">
+
+Extreme concurrency for agent swarms (requires Professional plan):
+
+```typescript
+resilience: ResiliencePresets.hiveMode
+```
+
+**Settings:** Max concurrent: 128, Queue size: 50,000, Timeout: 120s
+
+  </TabItem>
+</Tabs>
+
+<Callout type="warning" title="Professional Plan Required">
+  `batchProcessing` and `hiveMode` presets require Convex Professional plan (256+ concurrent limit). Using with Free plan will cause queuing.
+</Callout>
+
+---
+
+## Architecture
+
+Four protection layers execute in sequence:
+
+```
+Request → [Rate Limiter] → [Concurrency Limiter] → [Circuit Breaker] → Convex
+              ↓                    ↓                      ↓
+         Smooth burst        Queue excess           Fast-fail if
+         into tokens         requests               unhealthy
+```
+
+### Token Bucket Rate Limiter
+
+Controls request **rate**. Bucket starts full, requests consume tokens, tokens refill over time.
+
+<Callout type="tip" title="Exponential Backoff">
+  When tokens depleted, requests wait with exponential backoff:
+  
+  - Attempt 1: Immediate
+  - Attempt 2: 1s delay
+  - Attempt 3: 2s delay
+  - Attempt 4: 4s delay
+  
+  With jitter to prevent thundering herd.
+</Callout>
+
+### Concurrency Limiter
+
+Controls **how many** simultaneous requests. Max 16 concurrent on free plan. Excess requests queue by priority.
+
+### Priority Queue
+
+| Priority | Operations | Queue Size |
+|----------|------------|------------|
+| `critical` | Circuit breaker tests | 100 |
+| `high` | User-facing reads | 500 |
+| `normal` | Standard writes | 1,000 |
+| `low` | Analytics | 2,000 |
+| `background` | Cleanup | 5,000 |
+
+### Circuit Breaker
+
+Prevents cascading failures when backend is unhealthy:
+
+```
+CLOSED (normal) → 5 failures → OPEN (fast-fail)
+                                    ↓
+                              30s timeout
+                                    ↓
+                              HALF-OPEN (test)
+                                    ↓
+                    2 successes → CLOSED
+                    failure → OPEN
+```
+
+---
+
+## Monitoring
+
+```typescript
+const metrics = cortex.getResilienceMetrics();
+
+console.log(metrics);
+// {
+//   rateLimiter: { availableTokens: 87, bucketSize: 100 },
+//   concurrency: { active: 12, waiting: 5, maxConcurrent: 16 },
+//   circuitBreaker: { state: 'closed', failures: 0 },
+//   queue: { critical: 0, high: 2, normal: 3, total: 5 }
+// }
+
+// Alert if circuit opens
+if (metrics.circuitBreaker.state === 'open') {
+  console.error('Backend unhealthy!');
+}
+
+// Alert if queue backing up
+if (metrics.queue.total > 500) {
+  console.warn(`Queue depth: ${metrics.queue.total}`);
+}
+```
+
+---
+
+## Error Handling
+
+```typescript
+import { CircuitOpenError, QueueFullError, AcquireTimeoutError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.remember({...});
+} catch (error) {
+  if (error instanceof CircuitOpenError) {
+    // Backend unhealthy, circuit tripped
+    console.error('Service unavailable, try later');
+  } else if (error instanceof QueueFullError) {
+    // System overloaded
+    console.error('Too many requests, try later');
+  } else if (error instanceof AcquireTimeoutError) {
+    // Waited too long for permit
+    console.error('Request timed out');
+  }
+}
+```
+
+---
+
+## Best Practices
+
+<Callout type="tip" title="Start with Defaults">
+
+```typescript
+// Good: Use defaults tuned for Convex Free plan
+const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+
+// Avoid: Over-customizing without measurement
+const cortex = new Cortex({
+  resilience: { concurrency: { maxConcurrent: 100 } }  // Exceeds Convex limits!
+});
+```
+
+</Callout>
+
+<Callout type="tip" title="Match Preset to Plan">
+
+```typescript
+// Free/Starter: Use default or realTimeAgent
+resilience: ResiliencePresets.default
+
+// Professional: Can use batchProcessing or hiveMode
+resilience: ResiliencePresets.batchProcessing
+```
+
+</Callout>
+
+<Callout type="warning" title="Monitor Circuit State">
+
+```typescript
+const cortex = new Cortex({
+  resilience: {
+    onCircuitOpen: () => console.error('Circuit OPEN'),
+    onCircuitClose: () => console.log('Circuit CLOSED'),
+  },
+});
+```
+
+</Callout>
+
+---
+
+## Graceful Shutdown
+
+```typescript
+// Wait for in-flight requests
+await cortex.shutdown();
+
+// Or force immediate shutdown
+cortex.forceShutdown();
+
+// In server shutdown handler
+process.on('SIGTERM', async () => {
+  await cortex.shutdown();
+  process.exit(0);
+});
+```
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Error Handling" 
+    description="All error codes" 
+    href="/reference/error-handling" 
+  />
+  <QuickNavItem 
+    title="Performance" 
+    description="Optimization guide" 
+    href="/architecture/performance" 
+  />
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Multi-agent coordination" 
+    href="/core-features/hive-mode" 
+  />
+</QuickNav>

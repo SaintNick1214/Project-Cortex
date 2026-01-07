@@ -1,0 +1,335 @@
+---
+id: mcp-server
+title: MCP Server
+sidebar_position: 1
+description: Cross-application memory via Model Context Protocol (Planned)
+---
+
+# MCP Server
+
+<Callout type="warning" title="Planned Feature">
+  The MCP Server is planned for a future release. This documentation describes the intended functionality to help you plan your integration ahead of time.
+</Callout>
+
+<Callout type="info" title="What is MCP?">
+  The **Model Context Protocol** (MCP) is a standard for AI tools to share context. Cortex will provide an MCP server that enables tools like Cursor, Claude Desktop, and custom apps to share memory.
+  
+  **Result:** Tell one tool something, all tools remember it!
+</Callout>
+
+---
+
+## Compatible Tools
+
+<FeatureGrid columns={4}>
+  <FeatureCard title="Cursor" icon="code" size="small" />
+  <FeatureCard title="Claude Desktop" icon="message-circle" size="small" />
+  <FeatureCard title="Windsurf" icon="layers" size="small" />
+  <FeatureCard title="Custom Apps" icon="zap" size="small" />
+</FeatureGrid>
+
+---
+
+## Planned Setup
+
+<Tabs>
+  <TabItem value="cursor" label="Cursor">
+
+<Steps>
+  <Step title="Install Cortex CLI">
+
+<Tabs groupId="install-method">
+  <TabItem value="brew" label="Homebrew (Recommended)">
+    <Terminal>brew install cortex-memory/tap/cli</Terminal>
+  </TabItem>
+  <TabItem value="npm" label="npm">
+    <Terminal>npm install -g @cortexmemory/cli</Terminal>
+  </TabItem>
+</Tabs>
+
+  </Step>
+  <Step title="Start MCP server">
+    <Terminal>cortex mcp start</Terminal>
+  </Step>
+  <Step title="Configure Cursor">
+
+Add to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "cortex": {
+      "command": "cortex",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
+```
+
+  </Step>
+  <Step title="Restart Cursor">
+    Restart Cursor to load the MCP server.
+  </Step>
+</Steps>
+
+  </TabItem>
+  <TabItem value="claude" label="Claude Desktop">
+
+<Steps>
+  <Step title="Install Cortex CLI">
+
+<Tabs groupId="install-method">
+  <TabItem value="brew" label="Homebrew (Recommended)">
+    <Terminal>brew install cortex-memory/tap/cli</Terminal>
+  </TabItem>
+  <TabItem value="npm" label="npm">
+    <Terminal>npm install -g @cortexmemory/cli</Terminal>
+  </TabItem>
+</Tabs>
+
+  </Step>
+  <Step title="Configure Claude Desktop">
+
+Add to Claude Desktop config:
+
+```json
+{
+  "mcpServers": {
+    "cortex": {
+      "command": "cortex",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
+```
+
+Config locations: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS), `%APPDATA%\Claude\claude_desktop_config.json` (Windows), `~/.config/Claude/claude_desktop_config.json` (Linux)
+
+  </Step>
+  <Step title="Restart Claude Desktop">
+    Restart Claude to load the MCP server.
+  </Step>
+</Steps>
+
+  </TabItem>
+  <TabItem value="custom" label="Custom Integration">
+
+```typescript
+import axios from 'axios';
+
+const MCP_ENDPOINT = 'http://localhost:3000';
+const USER_ID = 'user-123';
+
+// Store memory
+async function remember(content: string) {
+  await axios.post(`${MCP_ENDPOINT}/add_memories`, {
+    memory: content,
+    user_id: USER_ID,
+  });
+}
+
+// Retrieve context
+async function search(query: string) {
+  const response = await axios.post(`${MCP_ENDPOINT}/search_memory`, {
+    query,
+    user_id: USER_ID,
+    limit: 5,
+  });
+  return response.data.results;
+}
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## How MCP Memory Works
+
+<Callout type="tip" title="Hive Mode in Action">
+  When using MCP, all your AI tools share ONE memory space (Hive Mode). Cursor stores a preference, Claude can read it!
+</Callout>
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  Your Personal Memory Space                  │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│   Cursor ──────┐                                             │
+│                │                                             │
+│   Claude ──────┼───▶ Cortex MCP Server ───▶ Shared Memory   │
+│                │                                             │
+│   Custom ──────┘                                             │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Example Flow
+
+1. **In Cursor:** You say "I prefer TypeScript for backend"
+2. **Cursor → MCP:** Stores preference via `add_memories`
+3. **Later, in Claude:** You ask about coding advice
+4. **Claude → MCP:** Searches for "coding preferences"
+5. **Claude:** Uses that fact to personalize response
+
+**Result:** Claude knows your preferences without you repeating them!
+
+---
+
+## Planned MCP Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `cortex_remember` / `/add_memories` | POST | Store a memory |
+| `cortex_search` / `/search_memory` | POST | Search memories |
+| `cortex_recall` / `/list_memories` | GET | Get context for LLM |
+| `cortex_get_facts` / `/get_memory` | GET | Retrieve extracted facts |
+| `/delete_all_memories` | POST | Clear user memories |
+
+### Store Memory
+
+```typescript
+POST /add_memories
+{
+  "memory": "User prefers dark mode",
+  "user_id": "user-123",
+  "metadata": { "source": "cursor", "importance": 70 }
+}
+```
+
+### Search Memory
+
+```typescript
+POST /search_memory
+{
+  "query": "user preferences",
+  "user_id": "user-123",
+  "limit": 5
+}
+```
+
+---
+
+## Deployment Options
+
+<Tabs>
+  <TabItem value="local" label="Local (Free)">
+
+Run MCP server locally on your machine:
+
+<Terminal>cortex mcp start</Terminal>
+
+<Callout type="tip">
+  Free, data stays local, requires server running.
+</Callout>
+
+**Environment Variables:**
+
+```bash
+CONVEX_URL=https://your-project.convex.cloud
+MCP_PORT=3000
+MCP_LOG_LEVEL=info
+```
+
+  </TabItem>
+  <TabItem value="cloud" label="Cloud (Premium)">
+
+Cloud-hosted MCP endpoint—no local server needed:
+
+```json
+{
+  "mcpServers": {
+    "cortex-cloud": {
+      "url": "https://mcp.cortex.cloud/v1",
+      "auth": {
+        "type": "bearer",
+        "token": "cortex_sk_your_api_key"
+      }
+    }
+  }
+}
+```
+
+<Callout type="info" title="Premium Benefits">
+  - Always available (99.9% uptime)
+  - Auto-embeddings (no API key needed)
+  - Auto-fact extraction
+  - Team sharing
+  - Analytics dashboard
+</Callout>
+
+  </TabItem>
+</Tabs>
+
+---
+
+## User Isolation
+
+<Callout type="info" title="Automatic Isolation">
+  Each `user_id` has completely isolated memories. User A cannot see User B's data.
+</Callout>
+
+```typescript
+// User A stores preference
+POST /add_memories
+{ "memory": "I prefer light mode", "user_id": "alice@example.com" }
+
+// User B stores preference
+POST /add_memories
+{ "memory": "I prefer dark mode", "user_id": "bob@example.com" }
+
+// Searches are isolated
+POST /search_memory
+{ "query": "theme preference", "user_id": "alice@example.com" }
+// Returns: "I prefer light mode" (Alice's only)
+```
+
+---
+
+## Use Cases
+
+### Cross-IDE Preferences
+
+```
+1. In Cursor: "I prefer 2-space indentation"
+   → Stores in MCP
+
+2. Later, in Windsurf: Ask AI to generate code
+   → Queries MCP, gets "2-space indentation" preference
+   → Generates code with correct indentation
+
+3. In Claude: "Help me write a config file"
+   → Knows your preferences from MCP
+```
+
+### Personal Knowledge Base
+
+```
+Day 1 (Cursor): "Working on Project Apollo, a React app"
+Day 3 (Claude): "Apollo uses PostgreSQL"  
+Day 7 (Any tool): "Tell me about Apollo"
+→ MCP returns all accumulated facts
+→ All tools have complete context
+```
+
+---
+
+## Related Features
+
+<QuickNav>
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Multi-tool memory sharing" 
+    href="/core-features/hive-mode" 
+  />
+  <QuickNavItem 
+    title="User Profiles" 
+    description="Cross-tool user identity" 
+    href="/core-features/user-profiles" 
+  />
+  <QuickNavItem 
+    title="CLI Reference" 
+    description="All CLI commands" 
+    href="/tools/cli-reference" 
+  />
+</QuickNav>
