@@ -73,13 +73,14 @@ function getShellRcPath(shell) {
   switch (shell) {
     case 'zsh':
       return join(home, '.zshrc');
-    case 'bash':
+    case 'bash': {
       // Check for .bashrc first, then .bash_profile
       const bashrc = join(home, '.bashrc');
       const bashProfile = join(home, '.bash_profile');
       if (existsSync(bashrc)) return bashrc;
       if (existsSync(bashProfile)) return bashProfile;
       return bashrc; // Default to .bashrc
+    }
     case 'fish':
       return join(home, '.config', 'fish', 'config.fish');
     default:
@@ -186,7 +187,7 @@ function main() {
         installCompletion(otherShell);
       }
     }
-  } catch (error) {
+  } catch {
     // Silently fail - completion is not critical
     // User can manually run `cortex completion <shell>` if needed
   }

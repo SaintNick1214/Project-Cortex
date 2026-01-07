@@ -113,7 +113,7 @@ function main() {
 
     // Remove completion scripts directory
     removeCompletionsDir();
-  } catch (error) {
+  } catch {
     // Silently fail - cleanup is not critical
   }
 }
