@@ -759,7 +759,9 @@ jobs:
           # Get current formula content to build updated version
           echo "📥 Fetching current formula from GitHub..."
           CURRENT_CONTENT=$(gh api repos/Cortex-Memory/homebrew-tap/contents/Formula/cli.rb --jq '.content' | base64 -d)
-          CURRENT_SHA=$(gh api repos/Cortex-Memory/homebrew-tap/contents/Formula/cli.rb --jq '.sha')
+          
+          # Get current HEAD commit OID for the branch (needed for GraphQL mutation)
+          HEAD_OID=$(gh api repos/Cortex-Memory/homebrew-tap/git/ref/heads/main --jq '.object.sha')
 
           # Update formula content using sed
           UPDATED_CONTENT=$(echo "$CURRENT_CONTENT" | \
@@ -775,18 +777,44 @@ jobs:
             exit 0
           fi
 
-          # Use GitHub API to commit - this creates a verified/signed commit
-          # The API commit is signed by GitHub, satisfying the branch protection rule
-          echo "📤 Pushing formula update via GitHub API (creates verified commit)..."
+          # Use GitHub GraphQL API to commit - createCommitOnBranch creates verified commits
+          # when called from GitHub Actions (unlike the REST API)
+          echo "📤 Pushing formula update via GitHub GraphQL API (creates verified commit)..."
           
-          # Base64 encode the content for the API (use printf to avoid adding extra newline)
+          # Base64 encode the content for the GraphQL API
           ENCODED_CONTENT=$(printf '%s' "$UPDATED_CONTENT" | base64 -w 0)
 
-          gh api --method PUT repos/Cortex-Memory/homebrew-tap/contents/Formula/cli.rb \
+          gh api graphql -f query='
+            mutation CreateCommit($nwo: String!, $branch: String!, $oid: GitObjectID!, $message: String!, $path: String!, $contents: Base64String!) {
+              createCommitOnBranch(input: {
+                branch: {
+                  repositoryNameWithOwner: $nwo
+                  branchName: $branch
+                }
+                expectedHeadOid: $oid
+                message: {
+                  headline: $message
+                }
+                fileChanges: {
+                  additions: [{
+                    path: $path
+                    contents: $contents
+                  }]
+                }
+              }) {
+                commit {
+                  url
+                  oid
+                }
+              }
+            }
+          ' \
+            -f nwo="Cortex-Memory/homebrew-tap" \
+            -f branch="main" \
+            -f oid="$HEAD_OID" \
             -f message="chore: update cli formula to v${VERSION}" \
-            -f content="$ENCODED_CONTENT" \
-            -f sha="$CURRENT_SHA" \
-            -f branch="main"
+            -f path="Formula/cli.rb" \
+            -f contents="$ENCODED_CONTENT"
 
           echo "✅ Pushed formula update to homebrew-tap (verified commit)"
 

@@ -392,6 +392,30 @@ jobs:
           CONVEX_TEST_MODE: managed
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
+      - name: Verify Python SDK version matches pyproject.toml
+        run: |
+          cd cortex-sdk-python
+          echo "🔍 Verifying Python SDK version synchronization..."
+          # Use tomllib (3.11+) with tomli fallback (3.10)
+          PYPROJECT_VERSION=$(python -c "
+          try:
+              import tomllib
+          except ImportError:
+              import tomli as tomllib
+          print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])
+          ")
+          SDK_VERSION=$(python -c "import cortex; print(cortex.__version__)")
+          echo "  pyproject.toml version: $PYPROJECT_VERSION"
+          echo "  cortex.__version__:     $SDK_VERSION"
+          if [[ "$PYPROJECT_VERSION" != "$SDK_VERSION" ]]; then
+            echo ""
+            echo "❌ Version mismatch detected!"
+            echo "   The SDK __version__ is different from pyproject.toml."
+            echo "   This can happen if __version__ was hardcoded instead of read from package metadata."
+            exit 1
+          fi
+          echo "✅ Python SDK version matches pyproject.toml"
+
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: Vercel AI Provider Tests (parallel with other test jobs)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -509,6 +533,22 @@ jobs:
 
       - name: Build CLI
         run: npm run build --workspace=@cortexmemory/cli
+
+      - name: Verify CLI version matches package.json
+        run: |
+          echo "🔍 Verifying CLI version synchronization..."
+          PACKAGE_VERSION=$(node -p "require('./packages/cortex-cli/package.json').version")
+          CLI_VERSION=$(node packages/cortex-cli/dist/index.js --version)
+          echo "  package.json version: $PACKAGE_VERSION"
+          echo "  CLI --version output:  $CLI_VERSION"
+          if [[ "$PACKAGE_VERSION" != "$CLI_VERSION" ]]; then
+            echo ""
+            echo "❌ Version mismatch detected!"
+            echo "   The CLI is reporting a different version than package.json."
+            echo "   This can happen if VERSION was hardcoded instead of read from package.json."
+            exit 1
+          fi
+          echo "✅ CLI version matches package.json"
 
       - name: Verify package contents
         run: npm pack --dry-run --workspace=@cortexmemory/cli

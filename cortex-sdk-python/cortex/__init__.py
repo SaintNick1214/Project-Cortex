@@ -22,6 +22,8 @@ Example:
     >>> await cortex.close()
 """
 
+from importlib.metadata import version as _get_version
+
 # Main client
 # Auth module
 # Validation Errors
@@ -323,7 +325,9 @@ except ImportError:
     GraphSyncWorker = None  # type: ignore
 
 
-__version__ = "0.27.0"
+# Read version dynamically from package metadata (pyproject.toml)
+# This ensures __version__ always matches the published package version
+__version__ = _get_version("cortex-memory")
 
 __all__ = [
     # Main
