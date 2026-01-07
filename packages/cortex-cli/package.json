@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/cli",
-  "version": "0.28.0",
+  "version": "0.28.1",
   "description": "CLI tool for managing Cortex Memory deployments, performing administrative tasks, and streamlining development workflows",
   "type": "module",
   "bin": {
@@ -11,9 +11,14 @@
   "files": [
     "dist",
     "templates",
+    "scripts/completions",
+    "scripts/postinstall.js",
+    "scripts/preuninstall.js",
     "README.md"
   ],
   "scripts": {
+    "postinstall": "node scripts/postinstall.js",
+    "preuninstall": "node scripts/preuninstall.js",
     "prebuild": "node scripts/sync-quickstart-template.js",
     "build": "npm run prebuild && tsc && chmod +x dist/index.js",
     "dev": "tsc --watch",

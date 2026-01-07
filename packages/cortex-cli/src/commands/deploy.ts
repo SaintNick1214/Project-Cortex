@@ -656,7 +656,7 @@ export function registerDeployCommands(
           }
           if (info.currentAiVersion !== "not installed") {
             console.log(
-              `      AI: ${info.currentAiVersion === latestAiVersion ? pc.green(info.currentAiVersion) : pc.yellow(info.currentAiVersion)}`,
+              `      Vercel AI: ${info.currentAiVersion === latestAiVersion ? pc.green(info.currentAiVersion) : pc.yellow(info.currentAiVersion)}`,
             );
           }
           console.log(
@@ -685,7 +685,7 @@ export function registerDeployCommands(
             `      Provider: ${info.isDevLinked ? pc.magenta("file:...") : info.currentProviderVersion === latestProviderVersion ? pc.green(info.currentProviderVersion) : pc.yellow(info.currentProviderVersion)}`,
           );
           console.log(
-            `      AI: ${info.currentAiVersion === latestAiVersion ? pc.green(info.currentAiVersion) : pc.yellow(info.currentAiVersion)}`,
+            `      Vercel AI: ${info.currentAiVersion === latestAiVersion ? pc.green(info.currentAiVersion) : pc.yellow(info.currentAiVersion)}`,
           );
           console.log(
             `      Convex: ${info.currentConvexVersion === latestConvexVersion ? pc.green(info.currentConvexVersion) : pc.yellow(info.currentConvexVersion)}`,

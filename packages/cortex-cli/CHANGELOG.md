@@ -1,5 +1,22 @@
 # @cortexmemory/cli Changelog
 
+## [0.28.1] - 2026-01-06
+
+### Added
+
+- **Automatic shell tab completion** - Tab completion for zsh, bash, and fish shells:
+  - Auto-installs during `npm install -g @cortexmemory/cli` via postinstall script
+  - Completes all commands, subcommands, and options with descriptions
+  - Dynamic completion of deployment and app names from `~/.cortexrc`
+  - Completion scripts installed to `~/.cortex/completions/`
+  - Source line added automatically to shell RC files (idempotent)
+  - Clean removal via preuninstall script on `npm uninstall -g`
+  - Manual fallback: `cortex completion <zsh|bash|fish>` outputs completion script
+
+### Changed
+
+- Package version display now shows "Vercel AI" instead of "AI" for clarity in `cortex update` output
+
 ## [0.28.0] - 2026-01-05
 
 ### Added
