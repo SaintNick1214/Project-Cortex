@@ -412,14 +412,15 @@ const memory = cortex.memory.get("agent-1", memoryId); // Returns Promise!
 ## Error Handling
 
 ```typescript
-import { CortexError } from "@cortexmemory/sdk";
+import { MemoryValidationError, CircuitOpenError } from "@cortexmemory/sdk";
 
 try {
   await cortex.memory.store("agent-1", data);
 } catch (error) {
-  if (error instanceof CortexError) {
-    console.log(`Error: ${error.code}`);
-    // Type-safe error handling
+  if (error instanceof MemoryValidationError) {
+    console.error(`Validation error: ${error.message}`);
+  } else if (error instanceof CircuitOpenError) {
+    console.error(`Service temporarily unavailable`);
   }
 }
 ```

@@ -27,15 +27,21 @@ const conv = await cortex.conversations.create({
 });
 
 // Add messages (immutable, append-only)
-await cortex.conversations.addMessage(conv.id, {
-  role: 'user',
-  text: 'Hello!',
-  userId: 'user-123',
+await cortex.conversations.addMessage({
+  conversationId: conv.id,
+  message: {
+    role: 'user',
+    content: 'Hello!',
+    userId: 'user-123',
+  },
 });
 
-await cortex.conversations.addMessage(conv.id, {
-  role: 'agent',
-  text: 'Hi there! How can I help?',
+await cortex.conversations.addMessage({
+  conversationId: conv.id,
+  message: {
+    role: 'agent',
+    content: 'Hi there! How can I help?',
+  },
 });
 
 // Retrieve history
@@ -43,6 +49,7 @@ const history = await cortex.conversations.getHistory(conv.id, {
   limit: 50,
   order: 'desc',
 });
+// history.messages contains the array of messages
 ```
 
 ---
@@ -101,16 +108,22 @@ const a2aConv = await cortex.conversations.create({
 
 ```typescript
 // User message
-const msg = await cortex.conversations.addMessage(conv.id, {
-  role: 'user',
-  text: 'What is the weather?',
-  userId: 'user-123',
+const msg = await cortex.conversations.addMessage({
+  conversationId: conv.id,
+  message: {
+    role: 'user',
+    content: 'What is the weather?',
+    userId: 'user-123',
+  },
 });
 
 // Agent response
-await cortex.conversations.addMessage(conv.id, {
-  role: 'agent',
-  text: 'The weather is sunny and 72°F.',
+await cortex.conversations.addMessage({
+  conversationId: conv.id,
+  message: {
+    role: 'agent',
+    content: 'The weather is sunny and 72°F.',
+  },
 });
 
 // Messages are NEVER modified - append-only
@@ -127,8 +140,8 @@ const history = await cortex.conversations.getHistory(conv.id, {
   order: 'desc',  // Most recent first
 });
 
-history.forEach(msg => {
-  console.log(`${msg.role}: ${msg.text}`);
+history.messages.forEach(msg => {
+  console.log(`${msg.role}: ${msg.content}`);
 });
 
 // Get full conversation
@@ -165,7 +178,7 @@ const results = await cortex.conversations.search(
 
 <APITable parameters={[
   { name: "role", type: "string", required: true, description: "'user' | 'agent' | 'system'" },
-  { name: "text", type: "string", required: true, description: "Message content" },
+  { name: "content", type: "string", required: true, description: "Message content" },
   { name: "userId", type: "string", required: false, description: "User who sent (for user messages)" },
   { name: "timestamp", type: "Date", required: false, description: "Auto-set if not provided" },
   { name: "metadata", type: "object", required: false, description: "Custom message data (channel, device, etc.)" },
@@ -189,8 +202,8 @@ Standard chat between user and AI:
     memorySpaceId: 'agent-1'
   },
   messages: [
-    { id: 'msg-001', role: 'user', text: '...', timestamp: T1 },
-    { id: 'msg-002', role: 'agent', text: '...', timestamp: T2 }
+    { id: 'msg-001', role: 'user', content: '...', timestamp: T1 },
+    { id: 'msg-002', role: 'agent', content: '...', timestamp: T2 }
   ]
 }
 ```
@@ -222,7 +235,7 @@ The resulting ACID conversation structure:
     agent2: 'hr-agent'
   },
   messages: [
-    { id: 'a2a-msg-001', from: 'finance-agent', to: 'hr-agent', text: '...' }
+    { id: 'a2a-msg-001', from: 'finance-agent', to: 'hr-agent', content: '...' }
   ]
 }
 ```
@@ -292,8 +305,8 @@ async function buildRecentContext(conversationId: string) {
     limit: 10,
   });
 
-  return history
-    .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.text}`)
+  return history.messages
+    .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
     .join('\n');
 }
 ```
@@ -349,10 +362,13 @@ async function handleReturningUser(userId: string, message: string) {
         participants: { userId, agentId: 'assistant' },
       })).id;
 
-  await cortex.conversations.addMessage(conversationId, {
-    role: 'user',
-    text: message,
-    userId,
+  await cortex.conversations.addMessage({
+    conversationId,
+    message: {
+      role: 'user',
+      content: message,
+      userId,
+    },
   });
 
   return conversationId;
@@ -363,14 +379,15 @@ async function handleReturningUser(userId: string, message: string) {
 
 ```typescript
 async function buildContextWindow(conversationId: string, maxTokens: number) {
-  const messages = await cortex.conversations.getHistory(conversationId);
+  const history = await cortex.conversations.getHistory(conversationId);
+  const messages = history.messages;
   
   const contextMessages = [];
   let tokenCount = 0;
 
   // Build from newest to oldest
   for (let i = messages.length - 1; i >= 0; i--) {
-    const tokens = estimateTokens(messages[i].text);
+    const tokens = estimateTokens(messages[i].content);
     if (tokenCount + tokens > maxTokens) break;
     contextMessages.unshift(messages[i]);
     tokenCount += tokens;
@@ -387,14 +404,17 @@ async function buildContextWindow(conversationId: string, maxTokens: number) {
 <Callout type="tip" title="Store Complete Metadata">
 
 ```typescript
-await cortex.conversations.addMessage(conv.id, {
-  role: 'user',
-  text: message,
-  userId,
-  metadata: {
-    channel: 'web',
-    device: 'desktop',
-    sessionId: 'session-123',
+await cortex.conversations.addMessage({
+  conversationId: conv.id,
+  message: {
+    role: 'user',
+    content: message,
+    userId,
+    metadata: {
+      channel: 'web',
+      device: 'desktop',
+      sessionId: 'session-123',
+    },
   },
 });
 ```
@@ -411,11 +431,15 @@ function redact(text: string) {
     .replace(/\b\d{16}\b/g, '[CARD REDACTED]');
 }
 
-await cortex.conversations.addMessage(conv.id, {
-  role: 'user',
-  text: redact(userMessage),
-  userId,
+await cortex.conversations.addMessage({
+  conversationId: conv.id,
+  message: {
+    role: 'user',
+    content: redact(userMessage),
+    userId,
+  },
 });
+```
 ```
 
 </Callout>

@@ -201,9 +201,11 @@ Control which deployments start with `cortex start`:
 
 ### Testing Configuration
 
-<Terminal>cortex config test</Terminal>
+You can verify your configuration by checking the connection:
 
-<Terminal>cortex config test --deployment production</Terminal>
+<Terminal>cortex config show</Terminal>
+
+<Terminal>cortex db stats</Terminal>
 
 ---
 
@@ -512,9 +514,9 @@ Enable verbose logging:
   </AccordionItem>
   <AccordionItem title="Connection Failed">
 
-<Terminal>cortex config test</Terminal>
-
 <Terminal>cortex config show</Terminal>
+
+<Terminal>cortex db stats</Terminal>
 
 <Terminal>cortex status && cortex start</Terminal>
 
