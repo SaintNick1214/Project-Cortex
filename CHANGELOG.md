@@ -175,8 +175,8 @@ New `sessions` table and `tenantId` column added to all existing tables with app
 
 **Documentation:**
 
-- New: [Auth Integration Guide](Documentation/08-integrations/auth-providers.md)
-- New: [Sessions API Reference](Documentation/03-api-reference/14-sessions-operations.md)
+- New: [Auth Integration Guide](/integrations/auth-providers)
+- New: [Sessions API Reference](/api-reference/sessions-operations)
 - Updated: All API reference docs with tenantId support
 
 ---
@@ -577,7 +577,7 @@ interface RecallResult {
 
 **Documentation:**
 
-- Updated [Memory Operations API](Documentation/03-api-reference/02-memory-operations.md) with full `recall()` reference
+- Updated [Memory Operations API](/api-reference/memory-operations) with full `recall()` reference
 - Added comprehensive unit and integration tests
 
 ---
@@ -2373,8 +2373,8 @@ metadata: v.optional(v.any()),
 
 Full API documentation available at:
 
-- [A2A Communication API Reference](./Documentation/03-api-reference/06-a2a-communication.md)
-- [A2A Core Features Guide](./Documentation/02-core-features/05-a2a-communication.md)
+- [A2A Communication API Reference](/api-reference/a2a-communication)
+- [A2A Core Features Guide](/advanced-topics/a2a-communication)
 
 #### 🔄 Migration Guide
 
@@ -5060,7 +5060,7 @@ Once we reach v1.0.0:
 
 ## How to Contribute
 
-Found a bug? Want to request a feature? See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+Found a bug? Want to request a feature? See [CONTRIBUTING.md](/project/contributing) for guidelines.
 
 ---
 
