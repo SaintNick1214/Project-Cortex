@@ -235,14 +235,18 @@ const chain = await cortex.contexts.get(contextId, {
 console.log("Ancestors:", chain.ancestors.length); // Walk up
 console.log("Descendants:", chain.descendants.length); // Walk down
 
-// Native Graph DB (if integrated): Complex queries
-const related = await cortex.graph.traverse({
-  start: { type: "user", id: "user-123" },
-  relationships: ["CREATED", "TRIGGERED", "HANDLED_BY"],
-  maxDepth: 10,
-});
-
-console.log("All entities user touched:", related);
+// Native Graph DB (planned): Complex queries
+// Note: cortex.graph.traverse() is planned for a future release.
+// Currently, use the low-level graph adapter directly:
+// import { CypherGraphAdapter } from "@cortexmemory/sdk/graph";
+// const graphAdapter = new CypherGraphAdapter();
+// await graphAdapter.connect({ uri, username, password });
+// const related = await graphAdapter.traverse({
+//   startId: "user-123",
+//   relationshipTypes: ["CREATED", "TRIGGERED", "HANDLED_BY"],
+//   maxDepth: 10,
+// });
+// See src/graph/README.md for current graph integration status.
 ```
 
 ---

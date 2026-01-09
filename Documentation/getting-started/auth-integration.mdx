@@ -79,7 +79,8 @@ Clerk, Auth0, NextAuth, Supabase Auth, Firebase Auth, Okta, WorkOS, Custom JWT â
             auth: createAuthContext({
               userId,
               tenantId: orgId, // For multi-tenant apps
-              authMethod: 'clerk',
+              authProvider: 'clerk',
+              authMethod: 'oauth',
               authenticatedAt: Date.now(),
             }),
           });
@@ -106,7 +107,8 @@ Clerk, Auth0, NextAuth, Supabase Auth, Firebase Auth, Okta, WorkOS, Custom JWT â
           auth: createAuthContext({
             userId: session.user.sub,
             tenantId: session.user.org_id,
-            authMethod: 'auth0',
+            authProvider: 'auth0',
+            authMethod: 'oauth',
           }),
         });
         ```
@@ -129,7 +131,8 @@ Clerk, Auth0, NextAuth, Supabase Auth, Firebase Auth, Okta, WorkOS, Custom JWT â
           convexUrl: process.env.CONVEX_URL!,
           auth: createAuthContext({
             userId: session.user.id,
-            authMethod: 'next-auth',
+            authProvider: 'nextauth',
+            authMethod: 'oauth',
           }),
         });
         ```
@@ -153,7 +156,8 @@ Clerk, Auth0, NextAuth, Supabase Auth, Firebase Auth, Okta, WorkOS, Custom JWT â
           convexUrl: process.env.CONVEX_URL!,
           auth: createAuthContext({
             userId: user.id,
-            authMethod: 'supabase',
+            authProvider: 'supabase',
+            authMethod: 'session',
           }),
         });
         ```
@@ -173,7 +177,8 @@ Clerk, Auth0, NextAuth, Supabase Auth, Firebase Auth, Okta, WorkOS, Custom JWT â
       auth: createAuthContext({
         userId: decoded.sub,
         tenantId: decoded.org_id,
-        authMethod: 'custom-jwt',
+        authProvider: 'custom',
+        authMethod: 'jwt',
         sessionId: decoded.sid,
       }),
     });
@@ -205,7 +210,8 @@ const cortex = new Cortex({
   auth: createAuthContext({
     userId: 'user-123',
     tenantId: 'customer-acme', // Critical for SaaS!
-    authMethod: 'clerk',
+    authProvider: 'clerk',
+    authMethod: 'oauth',
   }),
 });
 

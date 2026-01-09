@@ -442,7 +442,7 @@ await cortex.memory.remember({
 });
 
 // Queries respect tenant isolation
-const memories = await cortex.vector.search(
+const memories = await cortex.memory.search(
   "acme-shared", // memorySpaceId as first parameter
   "meeting notes", // query as second parameter
   {

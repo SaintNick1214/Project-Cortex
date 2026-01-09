@@ -29,7 +29,12 @@ await cortex.a2a.send({
 });
 
 // HR agent receives it in their memory
-const inbox = await cortex.a2a.getInbox("hr-agent", { limit: 10 });
+// Note: getInbox() is planned - see /roadmap/a2a-communication-enhancements
+// Current workaround: use memory.search() with filters
+const inbox = await cortex.memory.search("hr-agent", "*", {
+  source: { type: "a2a", recipient: "hr-agent" },
+  limit: 10,
+});
 ```
 
 ---
@@ -158,35 +163,45 @@ console.log(`Sent to ${result.recipients.length} agents`);
 <Tabs>
   <TabItem value="inbox" label="Inbox">
 
+<Callout type="info" title="Convenience Methods Planned">
+  The convenience methods `getInbox()`, `getSent()`, and `markRead()` are planned for a future release. See [A2A Communication Enhancements](/roadmap/a2a-communication-enhancements) for details. Use the workaround below for now.
+</Callout>
+
 ```typescript
-// Get received messages
-const inbox = await cortex.a2a.getInbox("hr-agent", {
+// Get received messages (workaround using memory.search)
+const inbox = await cortex.memory.search("hr-agent", "*", {
+  source: { type: "a2a", recipient: "hr-agent" },
   limit: 20,
-  unreadOnly: true,
+  // Filter unread messages if needed (check metadata.unread or similar)
 });
 
 inbox.forEach(msg => {
-  console.log(`From: ${msg.from}`);
-  console.log(`Message: ${msg.message}`);
+  console.log(`From: ${msg.metadata?.fromAgent || msg.source?.sender}`);
+  console.log(`Message: ${msg.content}`);
   console.log(`Importance: ${msg.importance}`);
 });
 
-// Mark as read
-await cortex.a2a.markRead(inbox[0].id);
+// Note: markRead() is planned - for now, you can track read status
+// in your application or update message metadata if needed
 ```
 
   </TabItem>
   <TabItem value="sent" label="Sent">
 
+<Callout type="info" title="Convenience Methods Planned">
+  The convenience method `getSent()` is planned for a future release. See [A2A Communication Enhancements](/roadmap/a2a-communication-enhancements) for details. Use the workaround below for now.
+</Callout>
+
 ```typescript
-// Get sent messages
-const sent = await cortex.a2a.getSent("finance-agent", {
+// Get sent messages (workaround using memory.search)
+const sent = await cortex.memory.search("finance-agent", "*", {
+  source: { type: "a2a", sender: "finance-agent" },
   limit: 20,
 });
 
 sent.forEach(msg => {
-  console.log(`To: ${msg.to}`);
-  console.log(`Message: ${msg.message}`);
+  console.log(`To: ${msg.metadata?.toAgent || msg.source?.recipient}`);
+  console.log(`Message: ${msg.content}`);
 });
 ```
 
@@ -261,16 +276,22 @@ await cortex.a2a.broadcast({
 ```typescript
 // Responder handles incoming requests
 async function handleRequests(agentId: string) {
-  const requests = await cortex.a2a.getInbox(agentId, {
-    metadata: { requiresResponse: true, responded: false },
+  // Workaround: use memory.search() instead of getInbox()
+  const requests = await cortex.memory.search(agentId, "*", {
+    source: { type: "a2a", recipient: agentId },
+    metadata: { 
+      requiresResponse: true, 
+      responded: false 
+    },
   });
 
   for (const req of requests) {
-    const answer = await processRequest(req.message);
+    const answer = await processRequest(req.content);
+    const fromAgent = req.metadata?.fromAgent || req.source?.sender;
     
     await cortex.a2a.send({
       from: agentId,
-      to: req.from,
+      to: fromAgent,
       message: answer,
       replyTo: req.id,
     });
