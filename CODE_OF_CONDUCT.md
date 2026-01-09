@@ -119,7 +119,7 @@ The Cortex community is led by:
 - **Code of Conduct Committee**: Dedicated team handling conduct issues
 - **Community Moderators**: Volunteers helping maintain community spaces
 
-Current community leaders can be found in [MAINTAINERS.md](./MAINTAINERS.md).
+Current community leaders can be found in [MAINTAINERS.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/MAINTAINERS.md).
 
 ## Questions
 
@@ -145,7 +145,7 @@ This Code of Conduct may be updated from time to time. We will notify the commun
 - Announcement in Discord
 - Email newsletter (if applicable)
 
-The current version will always be available at [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
+The current version will always be available at [CODE_OF_CONDUCT.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 

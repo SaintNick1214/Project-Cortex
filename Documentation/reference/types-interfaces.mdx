@@ -65,44 +65,40 @@ import type {
 
 - [RememberParams](#rememberparams) - remember() parameters
 - [RememberResult](#rememberresult) - remember() result
-- [RememberStreamParams](#rememberstreamparams) - rememberStream() parameters
-- [RememberStreamResult](#rememberstreamresult) - rememberStream() result
+- [RememberStreamParams](/api-reference/memory-operations#rememberstream) - rememberStream() parameters
 - [RecallParams](#recallparams) - recall() parameters
 - [RecallResult](#recallresult) - recall() result
-- [ForgetOptions](#forgetoptions) - forget() options
+- [ForgetOptions](/api-reference/memory-operations#forget) - forget() options
 
 ### Filter Types
 
-- [ListConversationsFilter](#listconversationsfilter)
-- [ListMemoriesFilter](#listmemoriesfilter)
-- [ListFactsFilter](#listfactsfilter)
-- [SearchMemoriesOptions](#searchmemoriesoptions)
-- [SearchFactsOptions](#searchfactsoptions)
+- [ListConversationsFilter](/api-reference/conversation-operations#list)
+- [ListMemoriesFilter](/api-reference/memory-operations#list)
+- [ListFactsFilter](/api-reference/facts-operations#factslist)
+- [SearchFactsOptions](/api-reference/facts-operations#factssearch)
 
 ### A2A Communication
 
-- [A2ASendParams](#a2asendparams)
-- [A2AMessage](#a2amessage)
-- [A2ARequestParams](#a2arequestparams)
-- [A2AResponse](#a2aresponse)
-- [A2ABroadcastParams](#a2abroadcastparams)
+- [A2ASendParams](/api-reference/a2a-communication#send)
+- [A2AMessage](/api-reference/a2a-communication#send)
+- [A2ARequestParams](/api-reference/a2a-communication#request)
+- [A2AResponse](/api-reference/a2a-communication#request)
+- [A2ABroadcastParams](/api-reference/a2a-communication#broadcast)
 
 ### Governance & Policies
 
 - [GovernancePolicy](#governancepolicy)
 - [SessionPolicy](#sessionpolicy)
-- [ComplianceMode](#compliancemode)
 
 ### Graph Integration
 
-- [GraphSyncOption](#graphsyncoption)
-- [RecallParams (with graph)](#recallparams)
+- [Graph Sync Options](/advanced-topics/graph-integration#automatic-synchronization)
 
 ### Observer Pattern
 
 - [OrchestrationObserver](#orchestrationobserver)
 - [LayerEvent](#layerevent)
-- [OrchestrationSummary](#orchestrationsummary)
+- [OrchestrationSummary](/advanced-topics/orchestration-observer#orchestrationsummary)
 
 ### Resilience Types
 
@@ -230,8 +226,8 @@ interface MemoryEntry {
 
 - [ContentType](#contenttype)
 - [SourceType](#sourcetype)
-- [ConversationRef](#conversationref)
-- [FactsRef](#factsref)
+- `ConversationRef`
+- `FactsRef`
 
 ---
 
@@ -345,7 +341,7 @@ interface ImmutableRecord {
 
 **Related types:**
 
-- [ImmutableVersion](#immutableversion)
+- [ImmutableVersion](/api-reference/immutable-store-api#getversion)
 
 ---
 
@@ -425,7 +421,7 @@ interface RegisteredAgent {
 
 **Related types:**
 
-- [AgentStats](#agentstats)
+- [AgentStats](/api-reference/agent-management#get)
 
 ---
 
@@ -752,7 +748,7 @@ interface RecallParams {
 **Related types:**
 
 - [RecallResult](#recallresult)
-- [RecallItem](#recallitem)
+- [RecallItem](/api-reference/memory-operations#recall)
 
 ---
 
@@ -785,8 +781,8 @@ interface RecallResult {
 
 **Related types:**
 
-- [RecallItem](#recallitem)
-- [RecallSourceBreakdown](#recallsourcebreakdown)
+- [RecallItem](/api-reference/memory-operations#recall)
+- `RecallSourceBreakdown` (inline type in RecallResult)
 
 ---
 
@@ -820,13 +816,13 @@ interface OrchestrationObserver {
 **Used in:**
 
 - [RememberParams](#rememberparams)
-- [RememberStreamParams](#rememberstreamparams)
+- [RememberStreamParams](/api-reference/memory-operations#rememberstream)
 - [Memory Orchestration](/core-features/memory-orchestration)
 
 **Related types:**
 
 - [LayerEvent](#layerevent)
-- [OrchestrationSummary](#orchestrationsummary)
+- [OrchestrationSummary](/advanced-topics/orchestration-observer#orchestrationsummary)
 
 ---
 
@@ -1191,21 +1187,20 @@ type SkippableLayer =
 
 ## Type Index
 
-Quick alphabetical reference for all types:
+Quick alphabetical reference for all types (links to this page or external API docs):
 
 ### A
 
-- [A2ABroadcastParams](#a2abroadcastparams)
-- [A2AMessage](#a2amessage)
-- [A2ARequestParams](#a2arequestparams)
-- [A2AResponse](#a2aresponse)
-- [A2ASendParams](#a2asendparams)
-- [AgentStats](#agentstats)
+- [A2ABroadcastParams](/api-reference/a2a-communication#broadcast)
+- [A2AMessage](/api-reference/a2a-communication#send)
+- [A2ARequestParams](/api-reference/a2a-communication#request)
+- [A2AResponse](/api-reference/a2a-communication#request)
+- [A2ASendParams](/api-reference/a2a-communication#send)
+- [AgentStats](/api-reference/agent-management#get)
 
 ### C
 
 - [CircuitState](#circuitstate)
-- [ComplianceMode](#compliancemode)
 - [ContentType](#contenttype)
 - [Conversation](#conversation)
 - [ConversationType](#conversationtype)
@@ -1214,23 +1209,23 @@ Quick alphabetical reference for all types:
 
 - [FactRecord](#factrecord)
 - [FactType](#facttype)
-- [ForgetOptions](#forgetoptions)
+- [ForgetOptions](/api-reference/memory-operations#forget)
 
 ### G
 
 - [GovernancePolicy](#governancepolicy)
-- [GraphSyncOption](#graphsyncoption)
 
 ### I
 
 - [ImmutableRecord](#immutablerecord)
+- [ImmutableVersion](/api-reference/immutable-store-api#getversion)
 
 ### L
 
 - [LayerEvent](#layerevent)
-- [ListConversationsFilter](#listconversationsfilter)
-- [ListFactsFilter](#listfactsfilter)
-- [ListMemoriesFilter](#listmemoriesfilter)
+- [ListConversationsFilter](/api-reference/conversation-operations#list)
+- [ListFactsFilter](/api-reference/facts-operations#factslist)
+- [ListMemoriesFilter](/api-reference/memory-operations#list)
 
 ### M
 
@@ -1242,7 +1237,7 @@ Quick alphabetical reference for all types:
 ### O
 
 - [OrchestrationObserver](#orchestrationobserver)
-- [OrchestrationSummary](#orchestrationsummary)
+- [OrchestrationSummary](/advanced-topics/orchestration-observer#orchestrationsummary)
 
 ### P
 
@@ -1250,18 +1245,18 @@ Quick alphabetical reference for all types:
 
 ### R
 
+- [RecallItem](/api-reference/memory-operations#recall)
 - [RecallParams](#recallparams)
 - [RecallResult](#recallresult)
 - [RegisteredAgent](#registeredagent)
 - [RememberParams](#rememberparams)
 - [RememberResult](#rememberresult)
-- [RememberStreamParams](#rememberstreamparams)
-- [RememberStreamResult](#rememberstreamresult)
+- [RememberStreamParams](/api-reference/memory-operations#rememberstream)
 - [ResilienceConfig](#resilienceconfig)
 
 ### S
 
-- [SearchMemoriesOptions](#searchmemoriesoptions)
+- [SearchFactsOptions](/api-reference/facts-operations#factssearch)
 - [Session](#session)
 - [SessionPolicy](#sessionpolicy)
 - [SkippableLayer](#skippablelayer)
