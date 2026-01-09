@@ -2,7 +2,7 @@
 
 **📍 The changelog has moved!**
 
-View the complete changelog at: **https://docs.cortexmemory.dev/project/changelog**
+View the complete changelog at: **https://docs.cortexmemory.dev/whats-new**
 
 All releases across the Cortex ecosystem are now unified in one easy-to-browse timeline:
 
