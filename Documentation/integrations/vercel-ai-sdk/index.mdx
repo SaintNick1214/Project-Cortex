@@ -1,48 +1,46 @@
 # Vercel AI SDK Integration
 
-> **Package**: `@cortexmemory/vercel-ai-provider`  
-> **Version**: 0.27.2  
-> **SDK Compatibility**: Cortex SDK v0.21.0+  
-> **AI SDK Compatibility**: v3.0.0, v4.0.0, v5.0.0, v6.0.0+  
-> **Status**: ✅ Production Ready
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
+**Package**: `@cortexmemory/vercel-ai-provider` | **Version**: 0.27.2 | **SDK**: v0.21.0+ | **Status**: Production Ready
 
 Complete integration with Vercel AI SDK for Next.js applications with full memory orchestration capabilities.
 
-## 🚀 Quickstart Demo (Recommended)
+## Quickstart Demo (Recommended)
 
 **The fastest way to get started** is with our interactive quickstart demo:
 
-```bash
-# Option 1: Run the demo from the monorepo
+<Terminal title="Option 1: Run from monorepo">
 cd packages/vercel-ai-provider/quickstart
 npm install && npm run dev
+</Terminal>
 
-# Option 2: Use Cortex CLI to scaffold a new project
+<Terminal title="Option 2: Use Cortex CLI">
 cortex init my-app --template vercel-ai-quickstart
 cd my-app && cortex start
-```
+</Terminal>
 
 Open http://localhost:3000 to see:
 
-- 🔄 **Real-time Memory Orchestration** - Watch data flow through all 7 Cortex layers
-- 📊 **Layer Flow Visualization** - Memory Space → User → Agent → Conversation → Vector → Facts → Graph
-- 🔀 **Memory Space Switching** - Live demonstration of multi-tenant isolation
-- ⚡ **Streaming with Progressive Storage** - Real-time fact extraction during streaming
-- 🧹 **Belief Revision** - See facts update when user changes their mind (SDK v0.24.0)
+- **Real-time Memory Orchestration** - Watch data flow through all 7 Cortex layers
+- **Layer Flow Visualization** - Memory Space → User → Agent → Conversation → Vector → Facts → Graph
+- **Memory Space Switching** - Live demonstration of multi-tenant isolation
+- **Streaming with Progressive Storage** - Real-time fact extraction during streaming
+- **Belief Revision** - See facts update when user changes their mind (SDK v0.24.0)
 
-[📖 View Quickstart Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
+[View Quickstart Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
 
 ---
 
 ## Documentation
 
-- [Getting Started](./getting-started) - Step-by-step setup tutorial
-- [API Reference](./api-reference) - Complete API documentation
-- [Advanced Usage](./advanced-usage) - Graph memory, fact extraction, and custom configurations
-- [Memory Spaces](./memory-spaces) - Multi-tenancy guide
-- [Hive Mode](./hive-mode) - Cross-application memory sharing
-- [Migration from mem0](./migration-from-mem0) - Switch from mem0
-- [Troubleshooting](./troubleshooting) - Common issues and solutions
+- [Getting Started](/integrations/vercel-ai-sdk/getting-started) - Step-by-step setup tutorial
+- [API Reference](/integrations/vercel-ai-sdk/api-reference) - Complete API documentation
+- [Advanced Usage](/integrations/vercel-ai-sdk/advanced-usage) - Graph memory, fact extraction, and custom configurations
+- [Memory Spaces](/integrations/vercel-ai-sdk/memory-spaces) - Multi-tenancy guide
+- [Hive Mode](/integrations/vercel-ai-sdk/hive-mode) - Cross-application memory sharing
+- [Migration from mem0](/integrations/vercel-ai-sdk/migration-from-mem0) - Switch from mem0
+- [Troubleshooting](/integrations/vercel-ai-sdk/troubleshooting) - Common issues and solutions
 
 ## Overview
 
@@ -50,28 +48,55 @@ The Cortex Memory Provider for Vercel AI SDK enables automatic persistent memory
 
 ### Key Features
 
-- 🧠 **Automatic Memory** - Retrieves context before responses, stores conversations after
-- 🚀 **Zero Configuration** - Works out of the box with sensible defaults
-- 📦 **TypeScript Native** - Built for TypeScript from the ground up
-- 🔒 **Self-Hosted** - Deploy Convex anywhere, no API keys or vendor lock-in
-- ⚡ **Edge Compatible** - Works in Vercel Edge Functions, Cloudflare Workers
-- 🎯 **Memory Spaces** - Isolate memory by user, team, or project
-- 🐝 **Hive Mode** - Share memory across multiple agents/applications
-- 📊 **ACID Guarantees** - Never lose data with Convex transactions
-- 🔍 **Semantic Search** - Find relevant memories with embeddings
-- 🧬 **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings (SDK v0.18.0+)
-- 🕸️ **Graph Memory** - Optional Neo4j/Memgraph integration for relationship queries (SDK v0.19.0+)
-- ⚡ **Enhanced Streaming** - Progressive storage, real-time hooks, and metrics
-- 📊 **Layer Observation** - Real-time visualization of memory orchestration
-- 🧹 **Belief Revision** - Intelligent fact updates when information changes (SDK v0.24.0+)
+<FeatureGrid>
+  <FeatureCard
+    icon="brain"
+    title="Automatic Memory"
+    description="Retrieves context before responses, stores conversations after"
+  />
+  <FeatureCard
+    icon="rocket"
+    title="Zero Configuration"
+    description="Works out of the box with sensible defaults"
+  />
+  <FeatureCard
+    icon="code"
+    title="TypeScript Native"
+    description="Built for TypeScript from the ground up"
+  />
+  <FeatureCard
+    icon="lock"
+    title="Self-Hosted"
+    description="Deploy Convex anywhere, no API keys or vendor lock-in"
+  />
+  <FeatureCard
+    icon="fast"
+    title="Edge Compatible"
+    description="Works in Vercel Edge Functions, Cloudflare Workers"
+  />
+  <FeatureCard
+    icon="isolation"
+    title="Memory Spaces"
+    description="Isolate memory by user, team, or project"
+  />
+</FeatureGrid>
+
+**Additional Features:**
+- **Hive Mode** - Share memory across multiple agents/applications
+- **ACID Guarantees** - Never lose data with Convex transactions
+- **Semantic Search** - Find relevant memories with embeddings
+- **Fact Extraction** - LLM-powered fact extraction for 60-90% storage savings (SDK v0.18.0+)
+- **Graph Memory** - Optional Neo4j/Memgraph integration (SDK v0.19.0+)
+- **Enhanced Streaming** - Progressive storage, real-time hooks, and metrics
+- **Belief Revision** - Intelligent fact updates when information changes (SDK v0.24.0+)
 
 ## Quick Start
 
 ### Installation
 
-```bash
+<Terminal>
 npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
-```
+</Terminal>
 
 ### Basic Example
 
@@ -112,9 +137,13 @@ const result = await streamText({
 
 **That's it!** Memory is automatically orchestrated across all layers.
 
-> ⚠️ **Important:** Since SDK v0.17.0, `agentId` is required for all user-agent conversations. See [Breaking Changes](#breaking-changes) below.
+<Callout type="warning">
+Since SDK v0.17.0, `agentId` is required for all user-agent conversations. See [Breaking Changes](#breaking-changes) below.
+</Callout>
 
-> 💡 **Note:** For async initialization (e.g., when Convex client needs to be created asynchronously), use `createCortexMemoryAsync` instead of `createCortexMemory`. See the [API Reference](./api-reference) for details.
+<Callout type="tip">
+For async initialization (e.g., when Convex client needs to be created asynchronously), use `createCortexMemoryAsync` instead of `createCortexMemory`. See the [API Reference](/integrations/vercel-ai-sdk/api-reference) for details.
+</Callout>
 
 ## Key Capabilities
 
@@ -138,14 +167,14 @@ This integration provides:
 Since SDK v0.17.0, all user-agent conversations **require an `agentId`**:
 
 ```typescript
-// ❌ Old way (will throw error)
+// Old way (will throw error)
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
   userId: "user-123",
 });
 
-// ✅ New way (v0.17.0+)
+// New way (v0.17.0+)
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
@@ -258,19 +287,27 @@ NEO4J_PASSWORD=your-password
 - Quickstart Demo: [`packages/vercel-ai-provider/quickstart/`](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
 - NPM: [@cortexmemory/vercel-ai-provider](https://www.npmjs.com/package/@cortexmemory/vercel-ai-provider)
 
-## See Also
+## Next Steps
 
-### Integration Guides
-
-- [Getting Started](./getting-started) - Step-by-step tutorial
-- [API Reference](./api-reference) - Complete API
-- [Advanced Usage](./advanced-usage) - Graph, facts, custom configs
-- [Troubleshooting](./troubleshooting) - Common issues
-
-### Core Cortex Documentation
-
-- [Memory Operations](/api-reference/memory-operations) - remember() and rememberStream() API
-- [Facts Operations](/api-reference/facts-operations) - Fact extraction API
-- [Graph Operations](/api-reference/graph-operations) - Graph database integration
-- [Memory Spaces](/core-features/memory-spaces) - Multi-tenancy
-- [Hive Mode](/core-features/hive-mode) - Cross-application memory
+<QuickNav>
+  <QuickNavItem 
+    title="Getting Started" 
+    description="Step-by-step setup tutorial" 
+    href="/integrations/vercel-ai-sdk/getting-started" 
+  />
+  <QuickNavItem 
+    title="API Reference" 
+    description="Complete API documentation" 
+    href="/integrations/vercel-ai-sdk/api-reference" 
+  />
+  <QuickNavItem 
+    title="Memory Spaces" 
+    description="Multi-tenancy guide" 
+    href="/core-features/memory-spaces" 
+  />
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Cross-application memory" 
+    href="/core-features/hive-mode" 
+  />
+</QuickNav>

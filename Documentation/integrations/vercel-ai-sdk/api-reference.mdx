@@ -20,35 +20,35 @@ function createCortexMemory(config: CortexMemoryConfig): CortexMemoryModel;
 
 | Property                   | Type                                    | Required | Default        | Description                      |
 | -------------------------- | --------------------------------------- | -------- | -------------- | -------------------------------- |
-| `convexUrl`                | string                                  | ✅       | -              | Convex deployment URL            |
-| `memorySpaceId`            | string                                  | ✅       | -              | Memory space for isolation       |
-| `userId`                   | string \| () => string\|Promise<string> | ✅       | -              | User ID (static or function)     |
-| `agentId`                  | string                                  | ✅       | -              | Agent ID (required v0.17.0+)     |
-| `userName`                 | string                                  | ❌       | 'User'         | Display name for user            |
-| `agentName`                | string                                  | ❌       | agentId        | Display name for agent           |
-| `conversationId`           | string \| () => string                  | ❌       | auto-generated | Conversation ID                  |
-| `embeddingProvider`        | object                                  | ❌       | undefined      | Custom embedding provider        |
-| `memorySearchLimit`        | number                                  | ❌       | 5              | Max memories to retrieve         |
-| `minMemoryRelevance`       | number                                  | ❌       | 0.7            | Min relevance score (0-1)        |
-| `enableMemorySearch`       | boolean                                 | ❌       | true           | Auto-search before generation    |
-| `enableMemoryStorage`      | boolean                                 | ❌       | true           | Auto-store after generation      |
-| `contextInjectionStrategy` | 'system'\|'user'\|'custom'              | ❌       | 'system'       | Where to inject context          |
-| `customContextBuilder`     | function                                | ❌       | undefined      | Custom context formatter         |
-| `enableFactExtraction`     | boolean                                 | ❌       | false          | Extract facts from conversations |
-| `factExtractionConfig`     | object                                  | ❌       | undefined      | Fact extraction configuration    |
-| `extractFacts`             | function                                | ❌       | undefined      | Custom fact extraction           |
-| `enableGraphMemory`        | boolean                                 | ❌       | false          | Sync to graph database           |
-| `graphConfig`              | object                                  | ❌       | undefined      | Graph database configuration     |
-| `hiveMode`                 | object                                  | ❌       | undefined      | Cross-app memory config          |
-| `defaultImportance`        | number                                  | ❌       | 50             | Default importance (0-100)       |
-| `defaultTags`              | string[]                                | ❌       | []             | Default tags                     |
-| `streamingOptions`         | object                                  | ❌       | undefined      | Streaming enhancement options    |
-| `streamingHooks`           | object                                  | ❌       | undefined      | Real-time streaming callbacks    |
-| `beliefRevision`          | object \| false                         | ❌       | undefined      | Belief revision configuration    |
-| `enableStreamMetrics`     | boolean                                 | ❌       | true           | Enable streaming metrics         |
-| `layerObserver`            | object                                  | ❌       | undefined      | Layer orchestration observer     |
-| `debug`                    | boolean                                 | ❌       | false          | Enable debug logging             |
-| `logger`                   | object                                  | ❌       | console        | Custom logger                    |
+| `convexUrl`                | string                                  | Yes      | -              | Convex deployment URL            |
+| `memorySpaceId`            | string                                  | Yes      | -              | Memory space for isolation       |
+| `userId`                   | string \| () => string\|Promise<string> | Yes      | -              | User ID (static or function)     |
+| `agentId`                  | string                                  | Yes      | -              | Agent ID (required v0.17.0+)     |
+| `userName`                 | string                                  | No       | 'User'         | Display name for user            |
+| `agentName`                | string                                  | No       | agentId        | Display name for agent           |
+| `conversationId`           | string \| () => string                  | No       | auto-generated | Conversation ID                  |
+| `embeddingProvider`        | object                                  | No       | undefined      | Custom embedding provider        |
+| `memorySearchLimit`        | number                                  | No       | 5              | Max memories to retrieve         |
+| `minMemoryRelevance`       | number                                  | No       | 0.7            | Min relevance score (0-1)        |
+| `enableMemorySearch`       | boolean                                 | No       | true           | Auto-search before generation    |
+| `enableMemoryStorage`      | boolean                                 | No       | true           | Auto-store after generation      |
+| `contextInjectionStrategy` | 'system'\|'user'\|'custom'              | No       | 'system'       | Where to inject context          |
+| `customContextBuilder`     | function                                | No       | undefined      | Custom context formatter         |
+| `enableFactExtraction`     | boolean                                 | No       | false          | Extract facts from conversations |
+| `factExtractionConfig`     | object                                  | No       | undefined      | Fact extraction configuration    |
+| `extractFacts`             | function                                | No       | undefined      | Custom fact extraction           |
+| `enableGraphMemory`        | boolean                                 | No       | false          | Sync to graph database           |
+| `graphConfig`              | object                                  | No       | undefined      | Graph database configuration     |
+| `hiveMode`                 | object                                  | No       | undefined      | Cross-app memory config          |
+| `defaultImportance`        | number                                  | No       | 50             | Default importance (0-100)       |
+| `defaultTags`              | string[]                                | No       | []             | Default tags                     |
+| `streamingOptions`         | object                                  | No       | undefined      | Streaming enhancement options    |
+| `streamingHooks`           | object                                  | No       | undefined      | Real-time streaming callbacks    |
+| `beliefRevision`          | object \| false                         | No       | undefined      | Belief revision configuration    |
+| `enableStreamMetrics`     | boolean                                 | No       | true           | Enable streaming metrics         |
+| `layerObserver`            | object                                  | No       | undefined      | Layer orchestration observer     |
+| `debug`                    | boolean                                 | No       | false          | Enable debug logging             |
+| `logger`                   | object                                  | No       | console        | Custom logger                    |
 
 #### factExtractionConfig
 
@@ -452,7 +452,7 @@ export type {
 ```
 
 <Callout type="info">
-AI SDK v6 compatibility layer APIs (including `isV6Available`, `createMemoryPrepareCall`, `CortexCallOptions`, etc.) are documented separately. See the [AI SDK v6 Integration Guide](/integrations/vercel-ai-sdk/v6-integration) for details.
+AI SDK v6 compatibility layer APIs (including `isV6Available`, `createMemoryPrepareCall`, `CortexCallOptions`, etc.) are supported. The Vercel AI Provider is compatible with AI SDK versions 3, 4, 5, and 6.
 </Callout>
 
 ## Next Steps
