@@ -21,4 +21,4 @@ The new changelog features:
 
 ---
 
-For local development, see the source at: `Documentation/project/changelog.mdx`
+For local development, see the source at: `Documentation/whats-new.mdx`

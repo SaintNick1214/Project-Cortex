@@ -1,5 +1,7 @@
 # Getting Started with Cortex Memory for Vercel AI SDK
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 Complete guide to adding persistent memory to your Next.js application using Cortex Memory SDK v0.21.0+.
 
 ## Prerequisites
@@ -9,32 +11,35 @@ Complete guide to adding persistent memory to your Next.js application using Cor
 - Convex account (free tier available)
 - OpenAI API key (or other LLM provider)
 
-## Option 1: Run the Quickstart Demo ⭐ RECOMMENDED
+## Option 1: Run the Quickstart Demo (Recommended)
 
 The **fastest way** to understand Cortex Memory is with our interactive quickstart demo. This is a complete Next.js app with:
 
-- ✅ Real-time layer flow visualization
-- ✅ Live memory orchestration
-- ✅ Multi-tenant memory space switching
-- ✅ Streaming with progressive fact extraction
-- ✅ Authentication system
-- ✅ Data preview panels
+- Real-time layer flow visualization
+- Live memory orchestration
+- Multi-tenant memory space switching
+- Streaming with progressive fact extraction
+- Authentication system
+- Data preview panels
 
-```bash
-# From within the Project-Cortex monorepo
+<Terminal title="Clone and install">
 cd packages/vercel-ai-provider/quickstart
 npm install
+</Terminal>
 
-# Configure environment
+<Terminal title="Configure environment">
 cp .env.local.example .env.local
-# Edit .env.local with your Convex URL and OpenAI key
+</Terminal>
 
-# Deploy Convex schema (REQUIRED)
+Edit `.env.local` with your Convex URL and OpenAI key.
+
+<Terminal title="Deploy Convex schema (required)">
 npm run convex:dev
+</Terminal>
 
-# Start the demo
+<Terminal title="Start the demo">
 npm run dev
-```
+</Terminal>
 
 Open [http://localhost:3000](http://localhost:3000) and:
 
@@ -44,22 +49,24 @@ Open [http://localhost:3000](http://localhost:3000) and:
 4. **Refresh the page** and see memory persists across sessions
 5. **Try fact updates** - say "I actually prefer purple" after mentioning "I like blue" to see belief revision
 
-[📖 View Quickstart Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
+[View Quickstart Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
 
 ## Option 2: Add to Existing Project
 
 ### Step 1: Install Dependencies
 
-```bash
+<Terminal>
 npm install @cortexmemory/vercel-ai-provider @cortexmemory/sdk ai convex
-npm install @ai-sdk/openai  # or @ai-sdk/anthropic, @ai-sdk/google, etc.
-```
+npm install @ai-sdk/openai
+</Terminal>
+
+You can also use `@ai-sdk/anthropic`, `@ai-sdk/google`, or other providers.
 
 ### Step 2: Set Up Convex Backend
 
-```bash
+<Terminal>
 npm create cortex-memories
-```
+</Terminal>
 
 Follow the wizard to set up Convex with Cortex backend automatically.
 
@@ -67,9 +74,9 @@ Follow the wizard to set up Convex with Cortex backend automatically.
 
 After setting up Convex, deploy the schema:
 
-```bash
+<Terminal>
 npm run convex:dev
-```
+</Terminal>
 
 This initializes the Convex backend and is required before running your app.
 
@@ -247,9 +254,9 @@ export default function ChatPage() {
 
 1. Start your app:
 
-```bash
+<Terminal>
 npm run dev
-```
+</Terminal>
 
 2. Open http://localhost:3000
 
@@ -285,7 +292,9 @@ npm run dev
 | `minMemoryRelevance`   | number  | 0.7     | Min similarity score (0-1) |
 | `debug`                | boolean | false   | Enable debug logging       |
 
-**Note**: Use `createCortexMemoryAsync` (with `await`) instead of `createCortexMemory` when you need graph memory support or want automatic configuration from environment variables.
+<Callout type="info">
+Use `createCortexMemoryAsync` (with `await`) instead of `createCortexMemory` when you need graph memory support or want automatic configuration from environment variables.
+</Callout>
 
 ## Dynamic User Resolution
 
@@ -347,9 +356,9 @@ export async function POST(req: Request) {
 
 ## Deploy to Vercel
 
-```bash
+<Terminal>
 vercel
-```
+</Terminal>
 
 Set environment variables in Vercel dashboard:
 
@@ -401,17 +410,29 @@ const modelMessages = await convertToModelMessages(normalizedMessages);
 2. If using semantic search, set up `embeddingProvider`
 3. Check that `memorySpaceId` matches between requests
 
-See [Troubleshooting Guide](./troubleshooting) for more solutions.
+See the [Troubleshooting Guide](/integrations/vercel-ai-sdk/troubleshooting) for more solutions.
 
 ## Next Steps
 
-- [Advanced Usage](./advanced-usage) - Graph memory, fact extraction, custom configurations
-- [Memory Spaces](./memory-spaces) - Multi-tenancy guide
-- [Hive Mode](./hive-mode) - Cross-application memory
-- [API Reference](./api-reference) - Complete API documentation
-
-## Support
-
-- [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
-- [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
-- [Cortex Documentation](/) - Main documentation
+<QuickNav>
+  <QuickNavItem 
+    title="Advanced Usage" 
+    description="Graph memory, fact extraction, custom configurations" 
+    href="/integrations/vercel-ai-sdk/advanced-usage" 
+  />
+  <QuickNavItem 
+    title="Memory Spaces" 
+    description="Multi-tenancy guide" 
+    href="/integrations/vercel-ai-sdk/memory-spaces" 
+  />
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Cross-application memory" 
+    href="/integrations/vercel-ai-sdk/hive-mode" 
+  />
+  <QuickNavItem 
+    title="API Reference" 
+    description="Complete API documentation" 
+    href="/integrations/vercel-ai-sdk/api-reference" 
+  />
+</QuickNav>

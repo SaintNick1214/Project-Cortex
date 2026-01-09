@@ -1,40 +1,39 @@
 # Integrations
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 Official and community integrations for Cortex Memory.
 
 ## Production Ready Integrations
 
-### Vercel AI SDK ✅ PRODUCTION READY
+### Vercel AI SDK (Production Ready)
 
-**Package**: `@cortexmemory/vercel-ai-provider`  
-**Version**: v0.27.2  
-**SDK Compatibility**: Cortex SDK v0.21.0+  
-**Status**: Production Ready ✅
+**Package**: `@cortexmemory/vercel-ai-provider` | **Version**: v0.27.2 | **SDK**: v0.21.0+
 
 Add persistent memory to Next.js applications with full streaming support, layer visualization, and memory orchestration.
 
 **Features:**
 
-- ✅ Automatic memory retrieval and storage
-- ✅ Streaming with progressive storage
-- ✅ Memory Spaces for multi-tenancy
-- ✅ Hive Mode for cross-application memory
-- ✅ Interactive quickstart demo
-- ✅ Layer flow visualization
-- ✅ Edge runtime compatible
-- ✅ TypeScript native
-- ✅ Self-hosted with Convex
+- Automatic memory retrieval and storage
+- Streaming with progressive storage
+- Memory Spaces for multi-tenancy
+- Hive Mode for cross-application memory
+- Interactive quickstart demo
+- Layer flow visualization
+- Edge runtime compatible
+- TypeScript native
+- Self-hosted with Convex
 
 **Quick Start:**
 
-```bash
-# Option 1: Run the quickstart demo (recommended)
+<Terminal title="Option 1: Run quickstart demo (recommended)">
 cd packages/vercel-ai-provider/quickstart
 npm install && npm run dev
+</Terminal>
 
-# Option 2: Use CLI to scaffold new project
+<Terminal title="Option 2: Use CLI to scaffold project">
 cortex init my-app --template vercel-ai-quickstart
-```
+</Terminal>
 
 **Example:**
 
@@ -58,9 +57,9 @@ const result = await streamText({
 
 **Learn More:**
 
-- [📖 Getting Started Guide](./vercel-ai-sdk/getting-started)
-- [🎯 API Reference](./vercel-ai-sdk/api-reference)
-- [🚀 Quickstart Demo](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
+- [Getting Started Guide](/integrations/vercel-ai-sdk/getting-started)
+- [API Reference](/integrations/vercel-ai-sdk/api-reference)
+- [Quickstart Demo](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
 
 ---
 
@@ -68,19 +67,21 @@ const result = await streamText({
 
 ### Authentication
 
-**Status**: 🔧 DIY Integration Guide  
-**Documentation**: [01-auth-providers.md](./auth-providers)
+**Status**: DIY Integration Guide  
+**Documentation**: [Auth Providers Guide](/integrations/auth-providers)
 
 Cortex provides a framework-agnostic AuthContext API. This guide shows patterns for integrating with Auth0, Clerk, NextAuth, Firebase, or custom JWT systems.
 
-**⚠️ Important:** Cortex does NOT include specific auth provider packages. You integrate your existing auth system using the AuthContext API.
+<Callout type="warning">
+Cortex does NOT include specific auth provider packages. You integrate your existing auth system using the AuthContext API.
+</Callout>
 
 **What you get:**
 
-- ✅ Generic integration patterns
-- ✅ AuthContext API documentation
-- ✅ Example adapters for common providers
-- ✅ DIY implementation guidance
+- Generic integration patterns
+- AuthContext API documentation
+- Example adapters for common providers
+- DIY implementation guidance
 
 **What Cortex provides:**
 
@@ -95,7 +96,7 @@ Cortex provides a framework-agnostic AuthContext API. This guide shows patterns 
 - Code to extract userId/tenantId from tokens
 - User validation logic
 
-[View Auth Integration Patterns →](./auth-providers)
+[View Auth Integration Patterns →](/integrations/auth-providers)
 
 ---
 
@@ -105,18 +106,15 @@ These integrations are planned but not yet implemented:
 
 ### LangChain.js
 
-**Status**: 🔄 Planned  
-**Target**: Q2 2026
+**Status**: Planned | **Target**: Q2 2026
 
 ### LlamaIndex.TS
 
-**Status**: 🔄 Planned  
-**Target**: Q2 2026
+**Status**: Planned | **Target**: Q2 2026
 
 ### MCP Servers
 
-**Status**: 🔄 Planned  
-**Target**: Q1 2026
+**Status**: Planned | **Target**: Q1 2026
 
 ---
 
@@ -136,9 +134,27 @@ Want an integration with your favorite framework?
 
 ---
 
-## See Also
+## Next Steps
 
-- [Core Features](/core-features/memory-orchestration)
-- [API Reference](/api-reference/overview)
-- [Memory Spaces](/core-features/memory-spaces)
-- [Authentication](/security/authentication)
+<QuickNav>
+  <QuickNavItem 
+    title="Vercel AI SDK" 
+    description="Production-ready integration" 
+    href="/integrations/vercel-ai-sdk" 
+  />
+  <QuickNavItem 
+    title="Auth Providers" 
+    description="Authentication integration patterns" 
+    href="/integrations/auth-providers" 
+  />
+  <QuickNavItem 
+    title="Memory Operations" 
+    description="Core SDK API reference" 
+    href="/api-reference/memory-operations" 
+  />
+  <QuickNavItem 
+    title="Core Features" 
+    description="Memory orchestration overview" 
+    href="/core-features/memory-orchestration" 
+  />
+</QuickNav>

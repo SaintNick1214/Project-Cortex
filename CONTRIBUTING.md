@@ -514,7 +514,7 @@ We are committed to providing a welcoming and inclusive environment for all cont
 
 Contributors are recognized in:
 
-- [CHANGELOG.md](/project/changelog) for each release
+- [What's New](/whats-new) for each release
 - GitHub contributors page
 - Annual contributor spotlight posts
 

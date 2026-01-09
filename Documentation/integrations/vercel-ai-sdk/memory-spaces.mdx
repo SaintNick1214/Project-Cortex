@@ -1,5 +1,7 @@
 # Memory Spaces Guide
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 Multi-tenancy and isolation with Cortex Memory Spaces.
 
 ## Overview
@@ -49,10 +51,32 @@ const cortexMemory = createCortexMemory({
 
 ## Benefits
 
-- 🔒 Data isolation
-- 🏢 Multi-tenant SaaS ready
-- 👥 Team collaboration
-- 📊 Per-space analytics
+<FeatureGrid>
+  <FeatureCard
+    icon="lock"
+    title="Data Isolation"
+    description="Complete separation of data between memory spaces"
+    size="large"
+  />
+  <FeatureCard
+    icon="users"
+    title="Multi-Tenant SaaS"
+    description="Built-in support for SaaS multi-tenancy"
+    size="large"
+  />
+  <FeatureCard
+    icon="hive"
+    title="Team Collaboration"
+    description="Share memory within teams or organizations"
+    size="large"
+  />
+  <FeatureCard
+    icon="analytics"
+    title="Per-Space Analytics"
+    description="Track usage and performance per memory space"
+    size="large"
+  />
+</FeatureGrid>
 
 ## Managing Memory Spaces
 
@@ -62,3 +86,28 @@ For advanced usage, you can explicitly manage memory spaces using the Cortex SDK
 - Querying memory space details and statistics
 - Updating memory space configurations
 - Deleting memory spaces (with cascade options)
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Memory Space Operations" 
+    description="Full API reference" 
+    href="/api-reference/memory-space-operations" 
+  />
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Cross-application memory sharing" 
+    href="/integrations/vercel-ai-sdk/hive-mode" 
+  />
+  <QuickNavItem 
+    title="Getting Started" 
+    description="Vercel AI SDK setup guide" 
+    href="/integrations/vercel-ai-sdk/getting-started" 
+  />
+  <QuickNavItem 
+    title="Core Memory Spaces" 
+    description="Core feature documentation" 
+    href="/core-features/memory-spaces" 
+  />
+</QuickNav>

@@ -1,5 +1,7 @@
 # Hive Mode - Cross-Application Memory
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 Share memory across multiple agents and applications.
 
 ## Overview
@@ -110,10 +112,32 @@ const emailFacts = await cortex.facts.list({
 
 ## Benefits
 
-- 🐝 Unified context across tools
-- 👥 Multi-agent coordination
-- 🔄 Real-time updates
-- 📍 Participant tracking
+<FeatureGrid>
+  <FeatureCard
+    icon="hive"
+    title="Unified Context"
+    description="Share memory seamlessly across your entire AI ecosystem"
+    size="large"
+  />
+  <FeatureCard
+    icon="users"
+    title="Multi-Agent Coordination"
+    description="Enable multiple agents to work together with shared context"
+    size="large"
+  />
+  <FeatureCard
+    icon="sync"
+    title="Real-time Updates"
+    description="Changes from one participant are immediately available to all"
+    size="large"
+  />
+  <FeatureCard
+    icon="time"
+    title="Participant Tracking"
+    description="Filter and attribute memories by which tool or agent stored them"
+    size="large"
+  />
+</FeatureGrid>
 
 ## Limitations
 
@@ -122,3 +146,28 @@ When using Hive Mode, be aware of the following:
 - **`participantId` is optional**: You can use hive mode without specifying a `participantId`, though it's recommended for tracking purposes.
 - **No data isolation**: All participants can see all data in the shared memory space. `participantId` is for attribution and filtering, not access control.
 - **Attribution, not security**: The `participantId` field tracks who stored data but does not provide any security or access control. All participants have full access to all memories in the shared space.
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Memory Spaces" 
+    description="Understand memory isolation" 
+    href="/core-features/memory-spaces" 
+  />
+  <QuickNavItem 
+    title="A2A Communication" 
+    description="Agent-to-agent collaboration" 
+    href="/advanced-topics/a2a-communication" 
+  />
+  <QuickNavItem 
+    title="User Profiles" 
+    description="Cross-tool user identity" 
+    href="/core-features/user-profiles" 
+  />
+  <QuickNavItem 
+    title="Getting Started" 
+    description="Vercel AI SDK integration guide" 
+    href="/integrations/vercel-ai-sdk/getting-started" 
+  />
+</QuickNav>

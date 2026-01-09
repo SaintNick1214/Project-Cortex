@@ -1,10 +1,12 @@
 # Troubleshooting
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 Common issues and solutions for Cortex Memory Provider with SDK v0.21.0+.
 
 ## SDK v0.17.0+ Breaking Changes
 
-### ❌ "agentId is required"
+### "agentId is required"
 
 **Error:**
 
@@ -12,21 +14,23 @@ Common issues and solutions for Cortex Memory Provider with SDK v0.21.0+.
 Error: agentId is required. User-agent conversations require both a user and an agent participant. Provide agentId in your configuration, e.g., agentId: 'my-assistant'
 ```
 
-**Note:** The actual error message includes additional configuration help text to guide users.
+<Callout type="info">
+The actual error message includes additional configuration help text to guide users.
+</Callout>
 
 **Cause:** Since SDK v0.17.0, all conversations require an `agentId` to identify the AI agent participant.
 
 **Solution:** Add `agentId` to your configuration:
 
 ```typescript
-// ❌ Old way (throws error)
+// Old way (throws error)
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
   userId: "user-123",
 });
 
-// ✅ New way (v0.17.0+)
+// New way (v0.17.0+)
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
@@ -35,7 +39,7 @@ const cortexMemory = createCortexMemory({
 });
 ```
 
-### ❌ "agentId must be a non-empty string"
+### "agentId must be a non-empty string"
 
 **Cause:** You provided an empty string or invalid value for `agentId`.
 
@@ -52,19 +56,21 @@ const cortexMemory = createCortexMemory({
 
 ### "Cannot find module '@cortexmemory/sdk'"
 
-```bash
+<Terminal>
 npm install @cortexmemory/sdk@latest
-```
+</Terminal>
 
 ### "Peer dependency warnings"
 
 Ensure compatible versions:
 
-```bash
+<Terminal>
 npm install ai@^4.0.0 convex@^1.28.2
-```
+</Terminal>
 
-**Note:** The AI SDK supports versions 3, 4, 5, and 6 (`^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0`).
+<Callout type="info">
+The AI SDK supports versions 3, 4, 5, and 6 (`^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0`).
+</Callout>
 
 ## Connection Issues
 
@@ -228,9 +234,9 @@ factExtractionConfig: {
 
 **Solution:**
 
-```bash
+<Terminal>
 npm update ai @ai-sdk/openai @cortexmemory/vercel-ai-provider
-```
+</Terminal>
 
 ### "Property 'agentId' does not exist"
 
@@ -238,9 +244,9 @@ npm update ai @ai-sdk/openai @cortexmemory/vercel-ai-provider
 
 **Solution:** Update to latest version:
 
-```bash
+<Terminal>
 npm update @cortexmemory/vercel-ai-provider
-```
+</Terminal>
 
 ## Edge Runtime Issues
 
@@ -353,4 +359,29 @@ const cortexMemory = createCortexMemory({
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues) - Bug reports
 - [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions) - Questions
 - [Quickstart Demo](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart) - Working example
-- [Getting Started Guide](./getting-started) - Setup tutorial
+- [Getting Started Guide](/integrations/vercel-ai-sdk/getting-started) - Setup tutorial
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Getting Started" 
+    description="Setup tutorial" 
+    href="/integrations/vercel-ai-sdk/getting-started" 
+  />
+  <QuickNavItem 
+    title="API Reference" 
+    description="Complete API documentation" 
+    href="/integrations/vercel-ai-sdk/api-reference" 
+  />
+  <QuickNavItem 
+    title="Advanced Usage" 
+    description="Custom patterns" 
+    href="/integrations/vercel-ai-sdk/advanced-usage" 
+  />
+  <QuickNavItem 
+    title="Memory Operations" 
+    description="Core SDK operations" 
+    href="/api-reference/memory-operations" 
+  />
+</QuickNav>

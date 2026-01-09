@@ -197,7 +197,7 @@ Cortex provides a complete memory system for AI agents:
 - Rate limiting and circuit breakers
 - Priority queue for critical operations
 
-See [CHANGELOG.md](/project/changelog) for complete release history.
+See [What's New](/whats-new) for complete release history.
 
 ---
 
