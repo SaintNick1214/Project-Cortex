@@ -1,30 +1,42 @@
 # Agent Registry
 
-> **Last Updated**: 2026-01-01  
-> **Status**: DEPRECATED - Use `memorySpaces` table instead
+> **Last Updated**: 2026-01-08  
+> **Status**: ACTIVE - Optional metadata layer for agent management
 
-## ⚠️ Deprecation Notice
+## Overview
 
-**The `agents` table is deprecated as of v0.21.0.** Use the `memorySpaces` table for production isolation.
+The agent registry provides **optional metadata registration** for agents, enabling discovery, analytics, and team organization. This is complementary to memory spaces, which define isolation boundaries.
 
-**Why deprecated:**
+**Key Concepts:**
 
-- Memory spaces are the primary isolation boundary (not agents)
-- Hive Mode requires participant tracking within spaces
-- Collaboration Mode requires cross-space delegation
-- memorySpaces table provides superior flexibility
+- **Memory Spaces:** Primary isolation boundary (replaces old agentId role)
+- **Agent Registry:** Optional metadata layer for tracking agent information
+- **Complementary:** Both serve different purposes and can be used together
 
-**Migration path:** Replace `agentId` with `memorySpaceId` + optional `participantId`
+## Agents vs Memory Spaces
 
-## Overview (Legacy)
+| Feature | Memory Spaces | Agent Registry |
+|---------|---------------|----------------|
+| **Purpose** | Define isolation boundaries | Track agent metadata |
+| **Status** | Active, required concept | Active, optional feature |
+| **Use Case** | Scope for data (conversations, memories, facts) | Analytics, discovery, team organization |
+| **Registration** | Optional | Optional |
+| **Enables** | Hive Mode, Collaboration Mode | Agent discovery, statistics, cascade deletion |
+| **Supports** | Multi-participant spaces | Single agent tracking |
+| **Query by** | memorySpaceId | agentId, capabilities, team |
+| **Cascade delete** | All data in space | All data by participantId across spaces |
 
-The agent registry was originally designed for agent-centric isolation. It has been superseded by the **memory space** paradigm, which enables:
+**Architecture Pattern:**
 
+Memory spaces support:
 - **Hive Mode:** Multiple participants (Cursor, Claude, etc.) share one memory space
 - **Collaboration Mode:** Memory spaces delegate via context chains
 - **Flexible boundaries:** Per-user, per-team, per-project isolation
 
-**Current recommendation:** Use `cortex.memorySpaces.*` for registration and `participantId` for tracking.
+**Two Complementary Systems:**
+
+1. **Memory Spaces (`cortex.memorySpaces.*`)**: Define isolation boundaries and manage participants
+2. **Agent Registry (`cortex.agents.*`)**: Track agent metadata, analytics, and capabilities
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -36,7 +48,7 @@ The agent registry was originally designed for agent-centric isolation. It has b
 └────────────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────────┐
-│         Memory Space Mode (Recommended)                    │
+│         Memory Space Registry (Isolation Boundaries)       │
 ├────────────────────────────────────────────────────────────┤
 │ await cortex.memorySpaces.register({                       │
 │   memorySpaceId: 'user-123-personal',                      │
@@ -48,24 +60,25 @@ The agent registry was originally designed for agent-centric isolation. It has b
 │   ],                                                       │
 │ });                                                        │
 │                                                            │
-│ Enables: Hive Mode, analytics, participant tracking ✅     │
+│ Enables: Hive Mode, cross-space collaboration ✅           │
 └────────────────────────────────────────────────────────────┘
 
 ┌────────────────────────────────────────────────────────────┐
-│         Legacy Agent Registry (Deprecated)                 │
+│         Agent Registry (Metadata & Analytics)              │
 ├────────────────────────────────────────────────────────────┤
 │ await cortex.agents.register({ id: 'my-agent', ... })      │
-│ ⚠️ DEPRECATED - Use memorySpaces instead                   │
+│ ✅ ACTIVE - Optional metadata for agent tracking           │
+│ Use for: Analytics, discovery, team organization           │
 └────────────────────────────────────────────────────────────┘
 ```
 
-**Current Principle:** Use memory spaces as primary isolation boundary, track participants within spaces via `participantId`.
+**Architecture Principle:** Memory spaces define isolation, agent registry provides optional metadata and analytics.
 
 ---
 
-## New Approach: Memory Spaces
+## Memory Spaces vs Agent Registry
 
-### Memory Space Document
+### Memory Space Document (Isolation Boundary)
 
 ```typescript
 {
@@ -104,18 +117,18 @@ The agent registry was originally designed for agent-centric isolation. It has b
 - `by_status` - Filter active/archived
 - `by_type` - Filter by type
 
-### Legacy Agent Document (Deprecated)
+### Agent Document (Optional Metadata Layer)
 
 ```typescript
 {
   _id: Id<"agents">,
-  agentId: string,             // ⚠️ DEPRECATED concept
+  agentId: string,             // Agent identifier (for metadata tracking)
   tenantId?: string,
 
   name: string,
   description?: string,
-  metadata?: any,
-  config?: any,
+  metadata?: any,              // Team, capabilities, version, etc.
+  config?: any,                // Agent-specific configuration
 
   status: "active" | "inactive" | "archived",
 
@@ -508,28 +521,32 @@ export const storeMemory = mutation({
 ### Mix Registered and Unregistered
 
 ```typescript
-// Production agents: Registered
+// Production agents: Register for analytics
 await cortex.agents.register({
   id: 'support-agent-prod',
   name: 'Production Support Agent',
-  capabilities: ['support'],
+  metadata: {
+    team: 'support',
+    capabilities: ['support', 'billing'],
+    version: '2.0.0',
+  },
 });
 
-// Development agents: Unregistered (simple strings)
+// Development agents: Unregistered (simple strings work fine)
 await cortex.memory.store('test-agent-123', { ... });
 await cortex.memory.store('dev-agent-temp', { ... });
 
 // Both work! ✅
-// Registered agents get analytics
-// Unregistered agents work without setup
+// Registered agents get analytics and discovery
+// Unregistered agents work without any setup
 ```
 
 **Best Practice:**
 
-- Development: Use simple strings
-- Production: Register for analytics
-- Temporary: Use simple strings
-- Critical: Register for config overrides
+- **Development:** Use simple string IDs (no registration needed)
+- **Production:** Register for analytics, discovery, and team organization
+- **Temporary/Test:** Use simple string IDs
+- **Critical/Audit:** Register for enhanced tracking and config overrides
 
 ---
 
@@ -864,7 +881,7 @@ await cortex.agents.configure("demo-agent", {
 
 - **[Performance](./performance)** - Optimization techniques
 - **[Security & Privacy](./security-privacy)** - Data protection
-- **[Agent Management API](../03-api-reference/09-agent-management)** - API usage
+- **[Agent Management API](/api-reference/agent-management)** - API usage
 
 ---
 

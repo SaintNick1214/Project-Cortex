@@ -192,22 +192,20 @@ await cortex.vector.store("hr-agent", {
 
 **Architecture Integration:**
 
-```
-Layer 1a: ACID Conversations
-└── A2A conversations (type='agent-agent') ← Immutable threads
-
-Layer 2: Vector Memories
-├── Sender memory (source.type='a2a', direction='outbound')
-└── Receiver memory (source.type='a2a', direction='inbound')
-    Both reference ACID via conversationRef
-
-Pub/Sub Infrastructure (for real-time operations)
-├── Direct Mode: Your Redis/RabbitMQ/NATS
-└── Cloud Mode: Cortex-managed infrastructure
-
-A2A Helpers:
-└── Convenience wrappers (handle ACID + bidirectional Vector storage + pub/sub)
-```
+<FlowDiagram title="A2A Architecture">
+  <FlowNode title="Layer 1a: ACID Conversations" icon="database" variant="primary">
+    A2A conversations (type='agent-agent') — Immutable threads
+  </FlowNode>
+  <FlowNode title="Layer 2: Vector Memories" icon="search" variant="secondary">
+    Sender memory (direction='outbound') + Receiver memory (direction='inbound') — Both reference ACID via conversationRef
+  </FlowNode>
+  <FlowNode title="Pub/Sub Infrastructure" icon="network" variant="warning">
+    Direct Mode: Your Redis/RabbitMQ/NATS — Cloud Mode (planned): Cortex-managed infrastructure
+  </FlowNode>
+  <FlowNode title="A2A Helpers" icon="layers" variant="success">
+    Convenience wrappers (handle ACID + bidirectional Vector storage + pub/sub)
+  </FlowNode>
+</FlowDiagram>
 
 <Callout type="info" title="Why use A2A helpers">
 
@@ -565,7 +563,7 @@ Send a request and wait for response (synchronous request-response pattern).
 This operation requires real-time messaging.
 
 - **Direct Mode**: Configure your own Redis/RabbitMQ/NATS adapter (see Configuration)
-- **Cloud Mode**: Pub/sub infrastructure included automatically
+- **Cloud Mode (planned)**: Pub/sub infrastructure will be included automatically
 
 </Callout>
 
@@ -759,7 +757,7 @@ Send one message to multiple agents efficiently.
 Optimized delivery requires real-time messaging.
 
 - **Direct Mode**: Configure your own pub/sub adapter
-- **Cloud Mode**: Pub/sub infrastructure included
+- **Cloud Mode (planned)**: Pub/sub infrastructure will be included
 
 </Callout>
 
@@ -1627,11 +1625,11 @@ Everything A2A helpers do can be done with the memory API directly. But they eli
 
 ---
 
-## Cloud Mode Features
+## Cloud Mode Features (Planned)
 
-<Callout type="info" title="Cloud Mode Only">
+<Callout type="note" title="Cloud Mode Under Development">
 
-Enhanced A2A features with Cortex Cloud.
+The following features are planned for Cortex Cloud Mode. The SDK provides full A2A functionality today via Direct Mode.
 
 </Callout>
 

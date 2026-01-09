@@ -19,7 +19,7 @@ Cortex uses **12+ Convex tables** to implement the 4-layer architecture plus coo
 | `memorySpaces`          | Coord | Memory space registry        | memorySpaceId | No          | Until archived             |
 | `contexts`              | Coord | Workflow coordination        | memorySpaceId | Auto        | Configurable               |
 | `sessions`              | Coord | Session lifecycle (v0.27.0+) | userId        | No          | Timeout-based              |
-| `agents`                | Coord | Agent registry (DEPRECATED)  | agentId       | No          | Until unregistered         |
+| `agents`                | Coord | Agent metadata (optional)    | agentId       | No          | Until unregistered         |
 | `governancePolicies`    | Gov   | Retention rules              | org/space     | No          | Until removed              |
 | `governanceEnforcement` | Gov   | Enforcement audit            | org/space     | No          | Configurable               |
 | `graphSyncQueue`        | Graph | Real-time sync queue         | NOT scoped    | No          | Cleared after sync         |
@@ -574,7 +574,7 @@ export default defineSchema({
     .index("by_created", ["createdAt"]),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Agents Registry (Optional Metadata Layer) - DEPRECATED
+  // Agents Registry (Optional Metadata Layer)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   agents: defineTable({
     agentId: v.string(),
@@ -582,8 +582,8 @@ export default defineSchema({
 
     name: v.string(),
     description: v.optional(v.string()),
-    metadata: v.optional(v.any()),
-    config: v.optional(v.any()),
+    metadata: v.optional(v.any()),  // Team, capabilities, version, etc.
+    config: v.optional(v.any()),    // Agent-specific configuration
 
     status: v.union(
       v.literal("active"),
@@ -1666,18 +1666,18 @@ await ctx.db
 
 ---
 
-### agents (Coordination - DEPRECATED)
+### agents (Coordination - Optional Metadata)
 
-**Purpose:** Agent registry (superseded by memorySpaces)
+**Purpose:** Agent metadata registry for analytics, discovery, and team organization
 
-**Note:** This table is deprecated in favor of `memorySpaces`. Use `cortex.memorySpaces.*` for production isolation.
+**Note:** This is an optional metadata layer complementary to `memorySpaces`. Memory spaces define isolation boundaries; the agent registry provides optional tracking and analytics.
 
 **Document Structure:** See complete schema above
 
 **Query Patterns:**
 
 ```typescript
-// Get agent (legacy)
+// Get agent metadata
 await ctx.db
   .query("agents")
   .withIndex("by_agentId", (q) => q.eq("agentId", agentId))
@@ -1924,7 +1924,7 @@ await ctx.db
 | `memorySpaces`          | 500B-2KB     | 10KB     | Metadata only          |
 | `contexts`              | 500B-2KB     | 10KB     | Usually small          |
 | `sessions`              | 300B-1KB     | 5KB      | Metadata only          |
-| `agents`                | 500B         | 5KB      | DEPRECATED             |
+| `agents`                | 500B         | 5KB      | Optional metadata      |
 | `governancePolicies`    | 1-5KB        | 50KB     | Policy definitions     |
 | `governanceEnforcement` | 500B         | 5KB      | Audit records          |
 | `graphSyncQueue`        | 1-10KB       | 100KB    | Entity snapshot + meta |

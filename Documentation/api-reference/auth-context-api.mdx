@@ -7,6 +7,10 @@ description: Complete API reference for authentication context and multi-tenancy
 
 # Auth Context API
 
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
 Complete API reference for authentication context and multi-tenancy integration.
 
 ## Overview
@@ -18,25 +22,25 @@ The Auth Context API provides a framework-agnostic authentication layer that ena
     title="User Tracking"
     icon="user"
     description="Link all operations to authenticated users"
-    size="medium"
+    size="large"
   />
   <FeatureCard
     title="Multi-Tenancy"
     icon="users"
     description="Complete SaaS tenant isolation via tenantId"
-    size="medium"
+    size="large"
   />
   <FeatureCard
     title="Session Management"
-    icon="clock"
+    icon="history"
     description="Track user sessions across devices"
-    size="medium"
+    size="large"
   />
   <FeatureCard
     title="GDPR Compliance"
     icon="shield"
     description="Enable cascade deletion by userId"
-    size="medium"
+    size="large"
   />
 </FeatureGrid>
 
@@ -50,12 +54,20 @@ The Auth Context API provides a framework-agnostic authentication layer that ena
 
 **Architecture:**
 
-```typescript
-// Auth context flows through Cortex SDK
-Your Auth Provider → AuthContext → Cortex SDK → All Operations
-                                         ↓
-                    (tenantId, userId auto-injected to all entities)
-```
+<FlowDiagram title="Auth Context Flow">
+  <FlowNode title="1. Your Auth Provider" icon="shield" variant="primary">
+    Auth0, Clerk, NextAuth, Custom JWT — validates user credentials
+  </FlowNode>
+  <FlowNode title="2. Create AuthContext" icon="user" variant="secondary">
+    createAuthContext() extracts tenantId, userId, sessionId from token
+  </FlowNode>
+  <FlowNode title="3. Initialize Cortex SDK" icon="layers" variant="warning">
+    Pass auth context to Cortex — auto-injects to ALL operations
+  </FlowNode>
+  <FlowNode title="4. All Operations Isolated" icon="database" variant="success">
+    Memories, Users, Sessions, Facts — fully tenant-isolated
+  </FlowNode>
+</FlowDiagram>
 
 ---
 
@@ -1178,32 +1190,24 @@ class CortexSDK {
     title="Isolation Boundaries"
     description="Complete isolation model for multi-tenancy"
     href="/security/isolation-boundaries"
-    icon="shield"
   />
   <QuickNavItem
     title="Sessions Operations"
     description="Session lifecycle API"
     href="/api-reference/sessions-operations"
-    icon="clock"
   />
   <QuickNavItem
     title="User Operations"
     description="User profile management"
     href="/api-reference/user-operations"
-    icon="user"
   />
   <QuickNavItem
     title="Memory Space Operations"
     description="Space management"
     href="/api-reference/memory-space-operations"
-    icon="database"
   />
 </QuickNav>
 
 ---
 
-<Callout type="info">
-
 **Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
-
-</Callout>

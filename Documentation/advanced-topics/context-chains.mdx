@@ -7,6 +7,10 @@ description: Hierarchical context sharing for multi-agent coordination
 
 # Context Chains
 
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
 <Callout type="info" title="What are Context Chains?">
   Context Chains enable **hierarchical context sharing** between agents. A supervisor can delegate tasks to specialists while sharing relevant context—without giving full access to its memory space.
 </Callout>
@@ -46,30 +50,22 @@ const fullContext = await cortex.contexts.get(childContext.id, {
 <Tabs>
   <TabItem value="traditional" label="Traditional (Fragile)">
 
-```
-User: "Create a marketing campaign for Q4"
-  └─> CEO Agent: "Let me delegate..."
-      ├─> Marketing Agent (gets: "Create campaign")
-      │   └─> Misses: Q4 timeframe, budget, audience
-      └─> Finance Agent (gets: "Review budget")
-          └─> Misses: What the campaign is for
-```
-
-Information gets lost at each delegation level.
+<FlowDiagram title="Traditional Delegation" caption="Information gets lost at each delegation level">
+  <FlowNode title="User Request" icon="user" variant="primary">"Create a marketing campaign for Q4"</FlowNode>
+  <FlowNode title="CEO Agent" icon="bot" variant="secondary">"Let me delegate..."</FlowNode>
+  <FlowNode title="Marketing Agent" icon="bot" variant="warning">Gets: "Create campaign" — Misses: Q4 timeframe, budget, audience</FlowNode>
+  <FlowNode title="Finance Agent" icon="bot" variant="warning">Gets: "Review budget" — Misses: What the campaign is for</FlowNode>
+</FlowDiagram>
 
   </TabItem>
   <TabItem value="context-chains" label="Context Chains (Robust)">
 
-```
-User: "Create a marketing campaign for Q4"
-  └─> CEO Agent creates context: CTX-001
-      ├─> Marketing Agent accesses CTX-001
-      │   └─> Sees: Complete request, budget, timeline
-      └─> Finance Agent accesses CTX-001
-          └─> Sees: Same complete context
-```
-
-Everyone has the full picture via the chain.
+<FlowDiagram title="Context Chain Delegation" caption="Everyone has the full picture via the chain">
+  <FlowNode title="User Request" icon="user" variant="primary">"Create a marketing campaign for Q4"</FlowNode>
+  <FlowNode title="CEO Agent" icon="bot" variant="secondary">Creates context: CTX-001</FlowNode>
+  <FlowNode title="Marketing Agent" icon="bot" variant="success">Accesses CTX-001 — Sees: Complete request, budget, timeline</FlowNode>
+  <FlowNode title="Finance Agent" icon="bot" variant="success">Accesses CTX-001 — Sees: Same complete context</FlowNode>
+</FlowDiagram>
 
   </TabItem>
 </Tabs>
@@ -384,26 +380,12 @@ await cortex.contexts.deleteMany({
 
 ## Graph Visualization
 
-```
-Root Context (ctx-001, depth=0)
-Purpose: "Process customer refund"
-Status: active
-    │
-    ├─> Child (ctx-002, depth=1)
-    │   Purpose: "Approve refund"
-    │   Agent: finance-space
-    │   Status: completed
-    │
-    ├─> Child (ctx-003, depth=1)
-    │   Purpose: "Send apology"
-    │   Agent: customer-space
-    │   Status: completed
-    │
-    └─> Child (ctx-004, depth=1)
-        Purpose: "Update CRM"
-        Agent: crm-space
-        Status: active
-```
+<FlowDiagram title="Context Hierarchy Example">
+  <FlowNode title="Root Context (ctx-001)" icon="layers" variant="primary">Purpose: "Process customer refund" | Status: active | Depth: 0</FlowNode>
+  <FlowNode title="Child ctx-002" icon="bot" variant="success">Purpose: "Approve refund" | Agent: finance-space | Status: completed</FlowNode>
+  <FlowNode title="Child ctx-003" icon="bot" variant="success">Purpose: "Send apology" | Agent: customer-space | Status: completed</FlowNode>
+  <FlowNode title="Child ctx-004" icon="bot" variant="secondary">Purpose: "Update CRM" | Agent: crm-space | Status: active</FlowNode>
+</FlowDiagram>
 
 <Callout type="info" title="Graph Integration">
   For deep hierarchies (7+ levels), sync contexts to a graph database for faster queries. See [Graph Integration](/advanced-topics/graph-integration).

@@ -7,27 +7,38 @@ description: Complete API reference for agent management operations including re
 
 # Agent Management API
 
-**Last Updated**: 2026-01-01
-
-<Callout type="warning">
-**IMPORTANT:** The Agent Management API is being superseded by [Memory Space Operations](/api-reference/memory-space-operations). While agent-based terminology remains supported for backwards compatibility, new applications should use memory spaces.
-
-**Migration Path:**
-
-- `agentId` → `memorySpaceId` (fundamental change)
-- `cortex.agents.*` → `cortex.memorySpaces.*` (new API)
-- See [Memory Spaces Guide](/core-features/memory-spaces) for details
+<Callout type="info">
+**Last Updated**: 2026-01-08
 </Callout>
 
-Complete API reference for agent management operations (legacy model).
+<Callout type="info">
+**Relationship to Memory Spaces:** The Agent Management API provides **optional metadata registration** for agents, enabling discovery, analytics, and team organization. This is complementary to [Memory Space Operations](/api-reference/memory-space-operations), which define isolation boundaries.
+</Callout>
+
+Complete API reference for agent management operations.
 
 ## Overview
 
 The Agent Management API provides **optional metadata registration** for agent discovery, analytics, and team organization, plus **convenient cascade deletion** by participantId across all memory spaces.
 
-<Callout type="warning">
-**New Architecture:** Cortex now uses **Memory Spaces** as the fundamental isolation boundary, not agents. Multiple agents/tools can share one memory space (Hive Mode), or operate in separate spaces (Collaboration Mode).
+<Callout type="info">
+**Architecture:** Cortex uses **Memory Spaces** as the fundamental isolation boundary. Multiple agents/tools can share one memory space (Hive Mode), or operate in separate spaces (Collaboration Mode). The Agent Registry is an optional metadata layer on top of this architecture for tracking agent information.
 </Callout>
+
+### Agents vs Memory Spaces: Complementary Systems
+
+| Feature | Memory Spaces | Agent Registry |
+|---------|---------------|----------------|
+| **Purpose** | Isolation boundary | Metadata & analytics |
+| **Status** | Active, required concept | Active, optional feature |
+| **When to use** | Define data scope | Track agent info |
+| **Hive Mode** | Required | Not required |
+| **Registration** | Optional | Optional |
+| **Analytics** | Manual queries | Auto-computed stats |
+| **Discovery** | By type/participants | By capabilities/team |
+| **Cascade deletion** | By memorySpaceId | By participantId |
+
+**Both can be used together** for complete agent management.
 
 ### Two Key Features
 
@@ -53,15 +64,14 @@ The Agent Management API provides **optional metadata registration** for agent d
 
 **Relationship to Four-Layer Architecture:**
 
-- **Legacy:** Agents were used across all layers
-- **New Model:** Memory Spaces replace agents as isolation boundary
+- **Isolation Boundary:** Memory Spaces define data scoping (replaced old agentId role)
   - Layer 1a: Conversations (memorySpace-scoped)
   - Layer 2: Vector memories (memorySpace-scoped)
   - Layer 3: Facts (memorySpace-scoped)
   - Layer 4: Convenience API (memorySpace-scoped)
-- **Migration:** Where you used `agentId`, now use `memorySpaceId`
+- **Participant Tracking:** `participantId` field tracks which agent/tool created data within a space
 - **Hive Mode:** Multiple agents can share one memorySpace
-- Agent registry is now optional metadata (analytics only)
+- **Agent Registry:** Optional metadata layer for analytics, discovery, and team organization
 
 ---
 
@@ -73,7 +83,7 @@ The Agent Management API provides **optional metadata registration** for agent d
 // Works immediately - no registration needed
 // Layer 3 - stores in ACID + Vector automatically
 await cortex.memory.remember({
-  agentId: "my-agent", // Just a string ID
+  memorySpaceId: "my-agent", // Just a string ID (was formerly agentId)
   conversationId: "conv-123",
   userMessage: "Hello!",
   agentResponse: "Hi there!",
@@ -82,7 +92,10 @@ await cortex.memory.remember({
 });
 
 // Search works (searches Vector index)
-const memories = await cortex.memory.search("my-agent", "hello");
+const memories = await cortex.memory.search({
+  memorySpaceId: "my-agent",
+  query: "hello",
+});
 
 // That's it! No setup required - all layers work immediately.
 ```
@@ -179,8 +192,13 @@ interface AgentStats {
   totalFacts: number; // Facts extracted by this agent
   memorySpacesActive: number; // Memory spaces with agent data
   lastActive?: number; // Unix timestamp (ms)
+  isApproximate?: boolean; // True if counts are sampled (large datasets)
 }
 ```
+
+<Callout type="info">
+**Note on Stats Accuracy:** For performance reasons, stats are computed using sampling with a limit of 1000 records per query. For agents with large amounts of data, the counts may be approximate (indicated by `isApproximate: true`).
+</Callout>
 
 **Example:**
 
@@ -274,15 +292,19 @@ Agents don't need to be registered to function. This just retrieves registry inf
 
 ### search()
 
-Find registered agents by metadata.
+Find registered agents by metadata. This is an alias for `list()` with filters.
 
 **Signature:**
 
 ```typescript
 cortex.agents.search(
-  filters?: AgentFilters
+  filters: AgentFilters
 ): Promise<RegisteredAgent[]>
 ```
+
+<Callout type="info">
+**Note:** `search()` requires a filters object. To list all agents without filters, use `list()` instead.
+</Callout>
 
 **Parameters:**
 
@@ -300,10 +322,14 @@ cortex.agents.search(
     { name: "lastActiveBefore", type: "number", required: false, description: "Unix timestamp (ms) - filter by activity" },
     { name: "limit", type: "number", required: false, default: "100", description: "Max results (1-1000)" },
     { name: "offset", type: "number", required: false, default: "0", description: "Skip first N results" },
-    { name: "sortBy", type: "'name' | 'registeredAt' | 'lastActive'", required: false, description: "Sort field" },
-    { name: "sortOrder", type: "'asc' | 'desc'", required: false, description: "Sort direction" },
+    { name: "sortBy", type: "'name' | 'registeredAt' | 'lastActive'", required: false, description: "Sort field (validated but not yet implemented)" },
+    { name: "sortOrder", type: "'asc' | 'desc'", required: false, description: "Sort direction (validated but not yet implemented)" },
   ]}
 />
+
+<Callout type="warning">
+**Implementation Note:** The `sortBy` and `sortOrder` parameters are validated but not currently implemented. Results are returned in database order (by `registeredAt` descending). For custom sorting, sort results client-side.
+</Callout>
 
 **Returns:**
 
@@ -446,7 +472,7 @@ Count registered agents.
 
 ```typescript
 cortex.agents.count(
-  filters?: AgentFilters
+  filters?: { status?: 'active' | 'inactive' | 'archived' }
 ): Promise<number>
 ```
 
@@ -454,9 +480,13 @@ cortex.agents.count(
 
 <APITable
   parameters={[
-    { name: "filters", type: "AgentFilters", required: false, description: "Same filters as search()" },
+    { name: "filters.status", type: "'active' | 'inactive' | 'archived'", required: false, description: "Filter by agent status" },
   ]}
 />
+
+<Callout type="warning">
+**Limitation:** The `count()` method only supports the `status` filter. Other filters like `metadata`, `name`, and `capabilities` are not supported. To count agents with complex filters, use `list()` and check the array length.
+</Callout>
 
 **Returns:**
 
@@ -468,12 +498,18 @@ cortex.agents.count(
 // Total registered agents
 const total = await cortex.agents.count();
 
-// Count by team
-const supportCount = await cortex.agents.count({
-  metadata: { team: "support" },
+// Count by status
+const activeCount = await cortex.agents.count({
+  status: "active",
 });
 
-console.log(`${supportCount} agents on support team`);
+console.log(`${activeCount} active agents`);
+
+// For complex filters, use list() instead:
+const supportAgents = await cortex.agents.list({
+  metadata: { team: "support" },
+});
+console.log(`${supportAgents.length} agents on support team`);
 ```
 
 ---
@@ -640,9 +676,10 @@ await cortex.agents.configure("support-agent", {
 - `AgentValidationError('MISSING_AGENT_ID')` - Agent ID not provided
 - `AgentValidationError('INVALID_CONFIG_FORMAT')` - Config is not a plain object
 - `AgentValidationError('EMPTY_CONFIG_OBJECT')` - Config object is empty
+- `ConvexError('AGENT_NOT_REGISTERED')` - Agent not found in registry
 
-<Callout type="info">
-Configuration works even if agent isn't registered. It's stored separately.
+<Callout type="warning">
+Configuration requires the agent to be registered first. If the agent is not registered, this method throws `AGENT_NOT_REGISTERED`.
 </Callout>
 
 ---
@@ -704,11 +741,12 @@ interface UnregisterAgentResult {
 
 **Implementation:**
 
-Uses three-phase cascade deletion (same pattern as users API):
+Uses four-phase cascade deletion (same pattern as users API):
 
 1. **Collection**: Query all memory spaces for records where participantId = agentId
 2. **Backup**: Create rollback snapshots
 3. **Execution**: Delete in reverse dependency order (facts → memories → conversations → graph → registration)
+4. **Verification**: Confirm all records were deleted (if `verify: true`)
 
 If any deletion fails, automatically rolls back all changes.
 
@@ -793,9 +831,9 @@ await cortex.memory.remember({
   userName: "User",
 });
 
-// Day 30: Delete all agent data (works without registration!)
+// Day 30: Delete all agent data (works without registration when cascade=true!)
 const result = await cortex.agents.unregister("agent-xyz", {
-  cascade: true,
+  cascade: true, // Required: cascade=true works even without registration
 });
 
 // Deletes memories even though agent was never registered
@@ -804,6 +842,10 @@ console.log(
   `Deleted ${result.memoriesDeleted} memories from unregistered agent`,
 );
 ```
+
+<Callout type="info">
+**Note:** When `cascade: false` (default), the agent must be registered or `AGENT_NOT_REGISTERED` is thrown. When `cascade: true`, deletion works by querying the `participantId` field across all data, even if the agent was never registered.
+</Callout>
 
 **Cascade Deletion: Users vs Agents**
 
@@ -971,7 +1013,7 @@ await cortex.agents.register({
 
 // Experimental agents - simple IDs are fine (Layer 3)
 await cortex.memory.remember({
-  agentId: "experiment-123", // Not registered, still works
+  memorySpaceId: "experiment-123", // Not registered, still works
   conversationId: "conv-456",
   userMessage: "Test message",
   agentResponse: "Test response",
@@ -1000,7 +1042,7 @@ await cortex.memory.remember({
 ```typescript
 // Start simple (Layer 3 - all layers work)
 await cortex.memory.remember({
-  agentId: "my-agent",
+  memorySpaceId: "my-agent",
   conversationId: "conv-123",
   userMessage: "Hello",
   agentResponse: "Hi",
@@ -1042,7 +1084,7 @@ Agents can be used without registration, then registered later:
 ```typescript
 // Day 1: Simple usage (Layer 3 - ACID + Vector automatic)
 await cortex.memory.remember({
-  agentId: "agent-1",
+  memorySpaceId: "agent-1",
   conversationId: "conv-1",
   userMessage: "First message",
   agentResponse: "First response",
@@ -1051,7 +1093,7 @@ await cortex.memory.remember({
 });
 
 await cortex.memory.remember({
-  agentId: "agent-1",
+  memorySpaceId: "agent-1",
   conversationId: "conv-1",
   userMessage: "Second message",
   agentResponse: "Second response",
@@ -1345,48 +1387,27 @@ When `format: "csv"` is specified, the output includes these columns:
 
 ### Typical Lifecycle
 
-```
-┌──────────────┐
-│   Created    │ (Just use agentId string)
-│  (Implicit)  │
-└──────┬───────┘
-       │
-       ├─> Use with simple ID
-       │   await cortex.memory.remember({ agentId: 'agent-1', ... })
-       │
-       ↓
-┌──────────────┐
-│  Registered  │ (Optional: cortex.agents.register())
-│  (Explicit)  │
-└──────┬───────┘
-       │
-       ├─> Enhanced analytics
-       ├─> Team organization
-       ├─> Agent discovery
-       │
-       ↓
-┌──────────────┐
-│ Configured   │ (cortex.agents.configure())
-└──────┬───────┘
-       │
-       ├─> Custom retention rules
-       ├─> Team-specific settings
-       │
-       ↓
-┌──────────────┐
-│ Unregistered │ (cortex.agents.unregister())
-│ (Optional)   │
-└──────────────┘
-       │
-       └─> Can still use with simple ID
-```
+<FlowDiagram title="Agent Lifecycle">
+  <FlowNode title="1. Created (Implicit)" icon="bot" variant="primary">
+    Just use memorySpaceId string — No registration needed
+  </FlowNode>
+  <FlowNode title="2. Registered (Optional)" icon="database" variant="secondary">
+    cortex.agents.register() — Enables analytics, team organization, agent discovery
+  </FlowNode>
+  <FlowNode title="3. Configured" icon="settings" variant="warning">
+    cortex.agents.configure() — Custom retention rules, team-specific settings
+  </FlowNode>
+  <FlowNode title="4. Unregistered (Optional)" icon="user" variant="success">
+    cortex.agents.unregister() — Can still use with simple ID afterward
+  </FlowNode>
+</FlowDiagram>
 
 ---
 
-## Cloud Mode Features
+## Cloud Mode Features (Planned)
 
-<Callout type="tip">
-**Cloud Mode Only**: Enhanced agent management features
+<Callout type="info">
+**Cloud Mode (Under Development)**: These enhanced agent management features will be available when the managed Cortex Cloud service launches. The SDK provides full technical capability today.
 </Callout>
 
 ### Agent Analytics Dashboard
@@ -1518,27 +1539,37 @@ Agents are graph nodes representing AI assistants or human operators:
 **Graph Queries:**
 
 ```typescript
-// Agent → Memories
-const agentMemories = await cortex.memory.search('agent-1', '*');
-
-// Agent → Contexts
-const agentContexts = await cortex.contexts.search({ agentId: 'agent-1' });
-
-// Agent → Agent (collaboration graph via A2A)
-const collaborations = await cortex.memory.search('agent-1', '*', {
-  source: { type: 'a2a' },
-  metadata: { direction: 'outbound' }
+// Agent → Memories (via memory space)
+const agentMemories = await cortex.memory.search({
+  memorySpaceId: "agent-1-space",
+  query: "*",
 });
 
-const partners = collaborations.map(m => m.metadata.toAgent);
+// Agent → Contexts (via memory space)
+const agentContexts = await cortex.contexts.list({
+  memorySpaceId: "agent-1-space",
+});
+
+// Agent → Agent (collaboration graph via A2A)
+const collaborations = await cortex.memory.search({
+  memorySpaceId: "agent-1-space",
+  query: "*",
+  sourceType: "a2a",
+});
+
+// Filter for outbound messages in application code
+const outbound = collaborations.filter(
+  (m) => m.metadata?.direction === "outbound"
+);
+const partners = outbound.map((m) => m.metadata?.toAgent);
 
 // Build agent network
-{
-  agent: 'agent-1',
-  memories: 1543,
-  activeContexts: 12,
-  collaborators: ['agent-2', 'agent-3', 'agent-5']
-}
+const network = {
+  agent: "agent-1",
+  memories: agentMemories.length,
+  activeContexts: agentContexts.length,
+  collaborators: partners.filter(Boolean),
+};
 ```
 
 **Performance:** Agent-scoped queries are highly optimized (agentId is primary index). Typical queries: 10-30ms.
@@ -1578,21 +1609,18 @@ const partners = collaborations.map(m => m.metadata.toAgent);
   title="User Operations API"
   description="User profile management and GDPR compliance"
   href="/api-reference/user-operations"
-  icon="user"
 />
 
 <QuickNavItem
   title="Memory Operations API"
   description="Memory CRUD operations and search"
   href="/api-reference/memory-operations"
-  icon="database"
 />
 
 <QuickNavItem
   title="Types & Interfaces"
   description="Complete TypeScript definitions"
   href="/reference/types-interfaces"
-  icon="code"
 />
 
 </QuickNav>

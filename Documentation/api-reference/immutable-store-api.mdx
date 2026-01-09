@@ -7,6 +7,10 @@ description: Complete API reference for shared immutable data storage with autom
 
 # Immutable Store API
 
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
 Complete API reference for shared immutable data storage with automatic versioning.
 
 ## Overview
@@ -15,20 +19,20 @@ The Immutable Store API (Layer 1b) provides methods for storing **TRULY SHARED**
 
 **Critical Distinction:**
 
-- ❌ **NO memorySpaceId parameter** - This layer is shared across ALL spaces
-- ✅ Accessible from any memory space
-- ✅ Perfect for: KB articles, policies, org docs, shared knowledge
+- **NO memorySpaceId parameter** - This layer is shared across ALL spaces
+- Accessible from any memory space
+- Perfect for: KB articles, policies, org docs, shared knowledge
 
 **Key Characteristics:**
 
-- ✅ **TRULY Shared** - ALL memory spaces can access
-- ✅ **NO Isolation** - Not scoped to memorySpace (unlike L1a, L2, L3)
-- ✅ **Immutable** - Can't edit once stored
-- ✅ **Versioned** - Automatic version tracking
-- ✅ **Append-only** - New versions append, old preserved
-- ✅ **Purgeable** - Can delete by policy or manually
-- ✅ **ACID** - All guarantees of Layer 1
-- ✅ **Multi-Tenant** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
+- **TRULY Shared** - ALL memory spaces can access
+- **NO Isolation** - Not scoped to memorySpace (unlike L1a, L2, L3)
+- **Immutable** - Can't edit once stored
+- **Versioned** - Automatic version tracking
+- **Append-only** - New versions append, old preserved
+- **Purgeable** - Can delete by policy or manually
+- **ACID** - All guarantees of Layer 1
+- **Multi-Tenant** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
 
 **Comparison to Other Stores:**
 
@@ -863,13 +867,13 @@ if (results[0].immutableRef) {
 ### 1. Use Meaningful Types
 
 ```typescript
-// ✅ Good types
+// Good types
 "kb-article";
 "policy-refund";
 "audit-log-financial";
 "agent-reasoning";
 
-// ❌ Bad types
+// Avoid: Generic types
 "data";
 "item";
 "thing";
@@ -878,19 +882,19 @@ if (results[0].immutableRef) {
 ### 2. Version-Aware IDs
 
 ```typescript
-// ✅ Logical IDs that can be versioned
+// Good: Logical IDs that can be versioned
 "refund-policy"; // Same ID, multiple versions
 "guide-refunds";
 "config-max-users";
 
-// ❌ Timestamped IDs (defeats versioning)
+// Avoid: Timestamped IDs (defeats versioning)
 "refund-policy-2025-10-24"; // Each is separate, no version tracking
 ```
 
 ### 3. Store Complete Data
 
 ```typescript
-// ✅ Self-contained
+// Good: Self-contained
 await cortex.immutable.store({
   type: "kb-article",
   id: "guide-1",
@@ -903,7 +907,7 @@ await cortex.immutable.store({
   },
 });
 
-// ❌ Partial data requiring joins
+// Avoid: Partial data requiring joins
 await cortex.immutable.store({
   type: "kb-article",
   id: "guide-1",
@@ -1123,12 +1127,12 @@ if (fact?.data.conversationRef) {
 
 **Immutable Store provides:**
 
-- ✅ Shared knowledge across all agents
-- ✅ Automatic versioning (no data loss)
-- ✅ Temporal queries (what was true when)
-- ✅ ACID guarantees
-- ✅ Configurable retention
-- ✅ Full audit trail
+- Shared knowledge across all agents
+- Automatic versioning (no data loss)
+- Temporal queries (what was true when)
+- ACID guarantees
+- Configurable retention
+- Full audit trail
 
 **Use for:**
 
@@ -1154,19 +1158,16 @@ if (fact?.data.conversationRef) {
     title="Mutable Store API"
     description="Live shared data with ACID transaction guarantees"
     href="/api-reference/mutable-store-api"
-    icon="database"
   />
   <QuickNavItem
     title="Governance Policies API"
     description="Multi-layer retention rules and compliance"
     href="/api-reference/governance-policies-api"
-    icon="shield"
   />
   <QuickNavItem
     title="Memory Operations API"
     description="Vector layer operations for semantic search"
     href="/api-reference/memory-operations"
-    icon="brain"
   />
 </QuickNav>
 

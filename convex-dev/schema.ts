@@ -17,7 +17,7 @@
  * Coordination:
  * - contexts - Hierarchical context chains (memorySpace-scoped, cross-space support)
  * - memorySpaces - Memory space registry (Hive/Collaboration modes)
- * - agents - DEPRECATED: Use memorySpaces instead
+ * - agents - Optional agent metadata registry (analytics, discovery, team organization)
  */
 
 import { defineSchema, defineTable } from "convex/server";

@@ -1,7 +1,8 @@
 # Graph Database Integration
 
-> **Last Updated**: 2026-01-01
-> **Version**: v0.24.0
+<Callout type="info">
+**Last Updated**: 2026-01-08 | **Version**: v0.24.0
+</Callout>
 
 Optional graph database integration for advanced knowledge discovery, multi-hop queries, and relationship-based reasoning.
 
@@ -19,11 +20,11 @@ Cortex's graph integration extends your memory system with relationship-aware ca
 
 **Key Characteristics:**
 
-- ✅ **Optional** - Works without graph, enhanced with graph
-- ✅ **Real-Time Sync** - Automatic synchronization from Convex
-- ✅ **Multi-Database** - Neo4j and Memgraph supported
-- ✅ **Orphan-Safe** - Intelligent cleanup of unreferenced nodes
-- ✅ **Multi-Tenant** - Full `tenantId` support for SaaS isolation
+- **Optional** - Works without graph, enhanced with graph
+- **Real-Time Sync** - Automatic synchronization from Convex
+- **Multi-Database** - Neo4j and Memgraph supported
+- **Orphan-Safe** - Intelligent cleanup of unreferenced nodes
+- **Multi-Tenant** - Full `tenantId` support for SaaS isolation
 
 ## When to Use Graph
 
@@ -99,7 +100,7 @@ await cortex.memory.remember({
     },
   ],
 });
-// ✅ Memory, facts, and graph all updated!
+// Memory, facts, and graph all updated!
 ```
 
 ## Graph-Powered Queries
@@ -185,7 +186,7 @@ const provenance = await graphAdapter.query(
 console.log("Fact provenance:");
 console.log("  Conversation:", provenance.records[0].conversation);
 console.log("  User:", provenance.records[0].user);
-// Complete audit trail! ✅
+// Complete audit trail!
 ```
 
 ## Automatic Synchronization
@@ -445,24 +446,24 @@ const result = await graphAdapter.query(
 ### 1. Convex as Source of Truth
 
 ```typescript
-// ✅ Always write to Convex first
+// Recommended: Always write to Convex first
 await cortex.memory.remember(params, { syncToGraph: true });
 // Convex write succeeds → then sync to graph
 
-// ❌ Don't write to graph directly for data storage
+// Avoid: Writing to graph directly for data storage
 await adapter.createNode({ ... }); // Graph could succeed but Convex fail
 ```
 
 ### 2. Use Graph for Discovery, Convex for Data
 
 ```typescript
-// ✅ Query graph for relationships
+// Good: Query graph for relationships
 const related = await graphAdapter.query(`
   MATCH (m:Memory)-[:REFERENCES]->(conv)
   RETURN conv.conversationId
 `);
 
-// ✅ Fetch full data from Convex
+// Good: Fetch full data from Convex
 const fullConversation = await cortex.conversations.get(conversationId);
 ```
 
@@ -506,9 +507,9 @@ try {
 
 ## Related Features
 
-- **[Fact Extraction](./fact-extraction)** - Extract entities for graph
-- **[Context Chains](./context-chains)** - Hierarchical contexts in graph
-- **[Semantic Search](./semantic-search)** - Combine with graph enrichment
-- **[Memory Spaces](./memory-spaces)** - Graph isolation boundaries
+- **[Fact Extraction](/core-features/fact-extraction)** - Extract entities for graph
+- **[Context Chains](/advanced-topics/context-chains)** - Hierarchical contexts in graph
+- **[Semantic Search](/core-features/semantic-search)** - Combine with graph enrichment
+- **[Memory Spaces](/core-features/memory-spaces)** - Graph isolation boundaries
 
-See **[Graph Operations API](../03-api-reference/13-graph-operations)** for complete API documentation.
+See **[Graph Operations API](/api-reference/graph-operations)** for complete API documentation.

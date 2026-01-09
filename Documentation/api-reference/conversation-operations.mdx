@@ -27,16 +27,20 @@ The Conversation Operations API (`cortex.conversations.*`) manages **immutable c
 
 **Relationship to Other Layers:**
 
-```
-Layer 1a: ACID Conversations (THIS API)
-└── Immutable source of truth
-
-Layer 2: Vector Memories
-└── References Layer 1a via conversationRef
-
-Layer 3: Memory API
-└── Uses Layer 1a + Layer 2 (cortex.memory.remember())
-```
+<FlowDiagram title="Layer Architecture">
+  <FlowNode title="Layer 1a: ACID Conversations" icon="database" variant="primary">
+    THIS API — Immutable source of truth
+  </FlowNode>
+  <FlowNode title="Layer 2: Vector Memories" icon="search" variant="secondary">
+    References Layer 1a via conversationRef
+  </FlowNode>
+  <FlowNode title="Layer 3: Facts Store" icon="brain" variant="warning">
+    LLM-extracted facts from conversations
+  </FlowNode>
+  <FlowNode title="Layer 4: Memory API" icon="layers" variant="success">
+    Uses L1a + L2 + L3 via cortex.memory.remember()
+  </FlowNode>
+</FlowDiagram>
 
 **Conversation Types:**
 
@@ -1072,7 +1076,7 @@ console.log(`${preserved.total} conversations preserved for audit`);
 ### 1. Create Conversations Early
 
 ```typescript
-// ✅ Create at start of session
+// Good: Create at start of session
 const conversation = await cortex.conversations.getOrCreate({
   memorySpaceId: "user-123-personal",
   type: "user-agent",
@@ -1119,19 +1123,19 @@ await cortex.vector.store('agent-1', {
 // Don't delete ACID conversations unless legally required
 // Instead, delete Vector memories (searchable index)
 
-// ✅ Good: Delete Vector, keep ACID
+// Good: Delete Vector, keep ACID
 await cortex.memory.delete("agent-1", "mem-123");
-// Vector deleted, ACID preserved ✅
+// Vector deleted, ACID preserved
 
-// ⚠️ Caution: Delete ACID (breaks audit trail)
+// Caution: Delete ACID (breaks audit trail)
 await cortex.conversations.delete("conv-123");
-// Permanent, unrestorable ❌
+// Permanent, unrestorable - use with care
 ```
 
 ### 4. Use Pagination for Large Conversations
 
 ```typescript
-// ✅ Paginate large conversations
+// Good: Paginate large conversations
 const page1 = await cortex.conversations.getHistory("conv-123", {
   limit: 50,
   offset: 0,
@@ -1144,7 +1148,7 @@ const page2 = await cortex.conversations.getHistory("conv-123", {
   sortOrder: "desc",
 });
 
-// ❌ Don't load huge conversations at once
+// Avoid: Don't load huge conversations at once
 const all = await cortex.conversations.get("conv-with-10k-messages");
 // Could be slow!
 ```
@@ -1328,28 +1332,21 @@ const memories = await cortex.memory.search('agent-1', '*', {
 ## Next Steps
 
 <QuickNav>
-
-<QuickNavItem
-  title="Memory Operations API"
-  description="Layer 2 (Vector) and Layer 3 (Memory) APIs"
-  href="/api-reference/memory-operations"
-  icon="brain"
-/>
-
-<QuickNavItem
-  title="A2A Communication API"
-  description="Agent-to-agent messaging"
-  href="/api-reference/a2a-communication"
-  icon="messages"
-/>
-
-<QuickNavItem
-  title="Types & Interfaces"
-  description="Complete TypeScript definitions"
-  href="/reference/types-interfaces"
-  icon="code"
-/>
-
+  <QuickNavItem
+    title="Memory Operations API"
+    description="Layer 2 (Vector) and Layer 4 (Memory) APIs"
+    href="/api-reference/memory-operations"
+  />
+  <QuickNavItem
+    title="A2A Communication API"
+    description="Agent-to-agent messaging"
+    href="/api-reference/a2a-communication"
+  />
+  <QuickNavItem
+    title="Types & Interfaces"
+    description="Complete TypeScript definitions"
+    href="/reference/types-interfaces"
+  />
 </QuickNav>
 
 ---

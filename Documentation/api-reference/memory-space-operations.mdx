@@ -7,6 +7,10 @@ description: Complete API reference for cortex.memorySpaces.* namespace - managi
 
 # Memory Space Operations API
 
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
 This document covers the `cortex.memorySpaces.*` namespace for managing memory spaces, participants, and access control.
 
 ## Overview
@@ -15,18 +19,18 @@ This document covers the `cortex.memorySpaces.*` namespace for managing memory s
 
 **When to use this API:**
 
-- ✅ Production deployments (explicit registration)
-- ✅ Analytics and observability needs
-- ✅ Hive Mode with participant tracking
-- ✅ Memory space lifecycle management
-- ✅ Access control and permissions
-- ✅ Multi-tenant SaaS (automatic `tenantId` isolation via AuthContext)
+- Production deployments (explicit registration)
+- Analytics and observability needs
+- Hive Mode with participant tracking
+- Memory space lifecycle management
+- Access control and permissions
+- Multi-tenant SaaS (automatic `tenantId` isolation via AuthContext)
 
 **When you don't need it:**
 
-- ⚠️ Quick prototypes (use implicit creation)
-- ⚠️ Simple single-agent apps
-- ⚠️ When you just want memory to "just work"
+- Quick prototypes (use implicit creation)
+- Simple single-agent apps
+- When you just want memory to "just work"
 
 ---
 
@@ -1141,12 +1145,12 @@ console.table(dashboard);
 ### 1. Use Structured IDs
 
 ```typescript
-// ✅ GOOD: Structured, searchable
+// Good: Structured, searchable
 "user-{userId}-personal";
 "team-{teamId}-workspace";
 "project-{projectId}-memory";
 
-// ❌ BAD: Random, opaque
+// Avoid: Random, opaque
 "abc123";
 "temp";
 "space1";
@@ -1170,7 +1174,7 @@ await cortex.memorySpaces.register({
 ### 3. Track Participants in Hive Mode
 
 ```typescript
-// ✅ GOOD: Clear participant list with types
+// Good: Clear participant list with types
 await cortex.memorySpaces.register({
   memorySpaceId: "user-123-personal",
   participants: [
@@ -1207,7 +1211,7 @@ Always archive a memory space before deleting it. This provides a grace period f
 </Callout>
 
 ```typescript
-// ✅ GOOD: Archive first, delete later
+// Recommended: Archive first, delete later
 await cortex.memorySpaces.archive(memorySpaceId, { reason: "Inactive" });
 
 // Wait for retention period...
@@ -1218,7 +1222,7 @@ await cortex.memorySpaces.delete(memorySpaceId, {
   reason: "Retention period expired",
 });
 
-// ❌ BAD: Direct deletion without archival period
+// Avoid: Direct deletion without archival period
 ```
 
 ---
@@ -1293,11 +1297,11 @@ The Memory Space Operations API provides explicit control over memory space life
 
 **Key Takeaways:**
 
-- ✅ Registration is optional (implicit creation works)
-- ✅ Register in production for analytics and tracking
-- ✅ Use participants for Hive Mode tracking
-- ✅ Archive before delete (safer)
-- ✅ Monitor with getStats() for observability
+- Registration is optional (implicit creation works)
+- Register in production for analytics and tracking
+- Use participants for Hive Mode tracking
+- Archive before delete (safer)
+- Monitor with getStats() for observability
 
 <Callout type="info">
 
@@ -1313,28 +1317,24 @@ The Memory Space Operations API provides explicit control over memory space life
   title="Memory Operations API"
   description="Using memory spaces"
   href="/api-reference/memory-operations"
-  icon="brain"
 />
 
 <QuickNavItem
   title="Hive Mode Guide"
   description="Multi-tool memory sharing"
   href="/core-features/hive-mode"
-  icon="users"
 />
 
 <QuickNavItem
   title="Memory Spaces Guide"
   description="Core concepts"
   href="/core-features/memory-spaces"
-  icon="database"
 />
 
 <QuickNavItem
   title="A2A Communication"
   description="Collaboration Mode"
   href="/api-reference/a2a-communication"
-  icon="message-circle"
 />
 
 </QuickNav>
