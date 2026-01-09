@@ -763,14 +763,14 @@ class ResumableStreamError extends Error {
 **Fix:**
 
 ```typescript
-// ❌ Wrong - no owner
+// Wrong - no owner
 await cortex.memory.remember({
   conversationId: "conv-123",
   userMessage: "Hello",
   agentResponse: "Hi",
 });
 
-// ✅ Correct - userId provided
+// Correct - userId provided
 await cortex.memory.remember({
   conversationId: "conv-123",
   userMessage: "Hello",
@@ -790,7 +790,7 @@ await cortex.memory.remember({
 **Fix:**
 
 ```typescript
-// ❌ Wrong - missing userName
+// Wrong - missing userName
 await cortex.memory.remember({
   conversationId: "conv-123",
   userMessage: "Hello",
@@ -799,7 +799,7 @@ await cortex.memory.remember({
   agentId: "assistant",
 });
 
-// ✅ Correct
+// Correct
 await cortex.memory.remember({
   conversationId: "conv-123",
   userMessage: "Hello",
@@ -819,13 +819,13 @@ await cortex.memory.remember({
 **Fix:**
 
 ```typescript
-// ❌ Wrong
+// Wrong
 await cortex.memory.remember({
   // ... other params
   importance: 150, // Out of range!
 });
 
-// ✅ Correct
+// Correct
 await cortex.memory.remember({
   // ... other params
   importance: 90, // 0-100
@@ -953,13 +953,13 @@ try {
 **Fix:**
 
 ```typescript
-// ❌ Wrong
+// Wrong
 await cortex.facts.store({
   // ... params
   factType: "unknown", // Invalid!
 });
 
-// ✅ Correct - use valid fact type
+// Correct - use valid fact type
 await cortex.facts.store({
   // ... params
   factType: "preference", // Valid

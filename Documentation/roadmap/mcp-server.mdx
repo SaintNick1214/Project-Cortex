@@ -21,11 +21,11 @@ description: Cross-application memory via Model Context Protocol (Planned)
 
 ## Compatible Tools
 
-<FeatureGrid columns={4}>
-  <FeatureCard title="Cursor" icon="code" size="small" />
-  <FeatureCard title="Claude Desktop" icon="message-circle" size="small" />
-  <FeatureCard title="Windsurf" icon="layers" size="small" />
-  <FeatureCard title="Custom Apps" icon="zap" size="small" />
+<FeatureGrid>
+  <FeatureCard title="Cursor" icon="code" size="large" />
+  <FeatureCard title="Claude Desktop" icon="message" size="large" />
+  <FeatureCard title="Windsurf" icon="layers" size="large" />
+  <FeatureCard title="Custom Apps" icon="rocket" size="large" />
 </FeatureGrid>
 
 ---
@@ -150,19 +150,26 @@ async function search(query: string) {
   When using MCP, all your AI tools share ONE memory space (Hive Mode). Cursor stores a preference, Claude can read it!
 </Callout>
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                  Your Personal Memory Space                  │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   Cursor ──────┐                                             │
-│                │                                             │
-│   Claude ──────┼───▶ Cortex MCP Server ───▶ Shared Memory   │
-│                │                                             │
-│   Custom ──────┘                                             │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+<FlowDiagram title="MCP Memory Architecture">
+  <FlowNode 
+    id="tools" 
+    icon="app" 
+    title="AI Tools" 
+    description="Cursor, Claude, Windsurf, Custom Apps"
+  />
+  <FlowNode 
+    id="mcp-server" 
+    icon="server" 
+    title="Cortex MCP Server" 
+    description="Routes memory operations"
+  />
+  <FlowNode 
+    id="memory" 
+    icon="database" 
+    title="Shared Memory Space" 
+    description="Your personal memory (Hive Mode)"
+  />
+</FlowDiagram>
 
 ### Example Flow
 
