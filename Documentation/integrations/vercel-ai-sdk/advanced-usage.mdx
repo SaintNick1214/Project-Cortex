@@ -1,5 +1,7 @@
 # Advanced Usage
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 Advanced patterns and configurations for Cortex Memory Provider with SDK v0.24.0+.
 
 ## Graph Memory Integration (SDK v0.19.0+)
@@ -269,7 +271,9 @@ layerObserver: {
 },
 ```
 
-**Note:** `revisionAction` and `supersededFacts` are optional properties that are only present for facts layer events. The `revisionAction` value will be `"ADD"`, `"UPDATE"`, `"SUPERSEDE"`, or `"NONE"`.
+<Callout type="info">
+`revisionAction` and `supersededFacts` are optional properties that are only present for facts layer events. The `revisionAction` value will be `"ADD"`, `"UPDATE"`, `"SUPERSEDE"`, or `"NONE"`.
+</Callout>
 
 ### Best Practices
 
@@ -564,9 +568,27 @@ const cortexMemory = createCortexMemory({
 });
 ```
 
-## See Also
+## Next Steps
 
-- [API Reference](./api-reference) - Complete API documentation
-- [Memory Operations](/api-reference/memory-operations) - Core SDK memory operations
-- [Graph Operations](/api-reference/graph-operations) - Graph database integration
-- [Facts Operations](/api-reference/facts-operations) - Fact extraction API
+<QuickNav>
+  <QuickNavItem 
+    title="API Reference" 
+    description="Complete API documentation" 
+    href="/integrations/vercel-ai-sdk/api-reference" 
+  />
+  <QuickNavItem 
+    title="Memory Operations" 
+    description="Core SDK memory operations" 
+    href="/api-reference/memory-operations" 
+  />
+  <QuickNavItem 
+    title="Graph Operations" 
+    description="Graph database integration" 
+    href="/api-reference/graph-operations" 
+  />
+  <QuickNavItem 
+    title="Facts Operations" 
+    description="Fact extraction API" 
+    href="/api-reference/facts-operations" 
+  />
+</QuickNav>
