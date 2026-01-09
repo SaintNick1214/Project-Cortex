@@ -1,0 +1,492 @@
+---
+id: api-enhancements
+title: API Enhancements
+sidebar_position: 5
+description: Planned improvements to bulk operations, filtering, and export capabilities (Planned)
+---
+
+# API Enhancements
+
+<Callout type="warning" title="Planned Features">
+  These API enhancements are planned for future releases. All current APIs are fully functional—these enhancements focus on improving developer experience, safety, and flexibility.
+</Callout>
+
+---
+
+## Bulk Operations Safety
+
+Enhanced safety controls for bulk operations to prevent accidental data loss.
+
+### Dry Run Mode
+
+Preview operations without executing them.
+
+**Memory Operations:**
+```typescript
+// Preview deletion
+const result = await cortex.memory.deleteMany(spaceId, {
+  filters: { "metadata.importance": { $lt: 20 } },
+  dryRun: true,
+});
+
+console.log(`Would delete ${result.wouldDelete} memories`);
+// Decide whether to proceed
+
+if (result.wouldDelete < 100) {
+  await cortex.memory.deleteMany(spaceId, {
+    filters: { "metadata.importance": { $lt: 20 } },
+  });
+}
+```
+
+**Context Operations:**
+```typescript
+// Preview updates
+const result = await cortex.contexts.updateMany(spaceId, {
+  filters: { status: "blocked" },
+  updates: { status: "cancelled" },
+  dryRun: true,
+});
+
+console.log(`Would update ${result.wouldUpdate} contexts`);
+```
+
+### Confirmation Thresholds
+
+Require explicit confirmation for large bulk operations.
+
+```typescript
+// Automatic confirmation if below threshold
+await cortex.memory.deleteMany(spaceId, {
+  filters: { accessCount: 0 },
+  confirmationThreshold: 10, // Auto-confirm if ≤ 10 records
+  requireConfirmation: true,  // Prompt if > 10 records
+});
+
+// If > 10 records:
+// Error: Confirmation required (47 records would be deleted)
+// Use { confirmed: true } to proceed
+
+await cortex.memory.deleteMany(spaceId, {
+  filters: { accessCount: 0 },
+  confirmed: true, // Explicit confirmation
+});
+```
+
+### Cascade Deletion Tracking
+
+Track descendants deleted in cascade operations.
+
+```typescript
+const result = await cortex.contexts.deleteMany(spaceId, {
+  filters: { status: "cancelled" },
+});
+
+console.log(result.deleted);            // 5 (direct matches)
+console.log(result.descendantsDeleted); // 12 (children/grandchildren)
+```
+
+---
+
+## Advanced Filtering
+
+Enhanced filtering capabilities for queries and bulk operations.
+
+### Text Search Filters
+
+Search by text content in string fields.
+
+**Context Operations:**
+```typescript
+// Search by purpose
+const contexts = await cortex.contexts.list(spaceId, {
+  filters: {
+    purposeContains: "user authentication", // Text search
+  },
+});
+```
+
+### Nested Data Queries
+
+Filter by nested object fields in `data` or `metadata`.
+
+**Memory Operations:**
+```typescript
+// Query nested metadata
+const memories = await cortex.memory.list({
+  memorySpaceId: spaceId,
+  filters: {
+    "metadata.tags": "urgent",              // Array contains
+    "metadata.priority": { $gte: 8 },       // Comparison
+    "data.user.tier": "premium",            // Nested object
+  },
+});
+```
+
+**User Operations:**
+```typescript
+// Query nested profile data
+const users = await cortex.users.list({
+  filters: {
+    "preferences.theme": "dark",            // Nested preference
+    "metadata.tier": "enterprise",          // Metadata field
+  },
+});
+```
+
+### Range Query Operators
+
+Use comparison operators for numeric and date fields.
+
+**Supported Operators:**
+- `$gte` - Greater than or equal
+- `$lte` - Less than or equal
+- `$gt` - Greater than
+- `$lt` - Less than
+- `$eq` - Equal
+- `$ne` - Not equal
+
+**Examples:**
+```typescript
+// Numeric range
+const memories = await cortex.memory.list({
+  memorySpaceId: spaceId,
+  filters: {
+    "metadata.importance": { $gte: 70, $lte: 90 },
+    accessCount: { $gt: 10 },
+  },
+});
+
+// Date range
+const contexts = await cortex.contexts.list(spaceId, {
+  filters: {
+    createdAfter: new Date("2026-01-01"),
+    createdBefore: new Date("2026-12-31"),
+    completedAfter: new Date("2026-06-01"),
+  },
+});
+```
+
+### Conversation Reference Filters
+
+Filter by linked ACID conversation properties.
+
+```typescript
+const contexts = await cortex.contexts.list(spaceId, {
+  filters: {
+    "conversationRef.conversationId": "conv-123",
+  },
+});
+```
+
+### Version Filtering
+
+Filter by version numbers (for versioned entities).
+
+```typescript
+const contexts = await cortex.contexts.list(spaceId, {
+  filters: {
+    version: { $gte: 5 }, // Version 5 or higher
+  },
+});
+```
+
+### Facts Confidence Range Queries
+
+Filter facts by confidence ranges.
+
+```typescript
+// Current: Only lower bound
+const facts = await cortex.facts.list({
+  memorySpaceId: spaceId,
+  minConfidence: 0.8, // confidence >= 0.8
+});
+
+// Planned: Full range queries
+const facts = await cortex.facts.list({
+  memorySpaceId: spaceId,
+  filters: {
+    confidence: { $gte: 0.7, $lte: 0.9 }, // 0.7 ≤ confidence ≤ 0.9
+  },
+});
+```
+
+---
+
+## Enhanced Export Capabilities
+
+More powerful export options for data portability.
+
+### Direct File Writing
+
+Write exports directly to file paths.
+
+```typescript
+// Current: Returns data as string
+const data = await cortex.memory.export(spaceId);
+await fs.writeFile("memories.json", data);
+
+// Planned: Direct file writing
+await cortex.memory.export(spaceId, {
+  outputPath: "./backups/memories-2026-01.json",
+});
+```
+
+### Include Version History
+
+Export with full version history.
+
+```typescript
+await cortex.memory.export(spaceId, {
+  outputPath: "./backups/memories-full.json",
+  includeVersionHistory: true, // Include previousVersions array
+});
+```
+
+### Include Linked Conversations
+
+Export with linked ACID conversation data.
+
+```typescript
+await cortex.contexts.export(spaceId, {
+  outputPath: "./backups/contexts.json",
+  includeConversations: true, // Include linked conversation messages
+});
+
+await cortex.memory.export(spaceId, {
+  outputPath: "./backups/memories.json",
+  includeConversationContext: true, // Include ACID source conversations
+});
+```
+
+### Selective Message Export
+
+Filter messages in conversation exports.
+
+```typescript
+// Current: Includes all messages
+const data = await cortex.conversations.export(spaceId, conversationId);
+
+// Planned: Filter messages
+await cortex.conversations.export(spaceId, conversationId, {
+  outputPath: "./backups/conversation.json",
+  includeFullMessages: false, // Only include message metadata
+  messageFilters: {
+    role: "assistant", // Only assistant messages
+  },
+});
+```
+
+---
+
+## Multi-Tenancy Filters
+
+Filter by tenant ID in multi-tenant deployments.
+
+```typescript
+// Count memories by tenant
+const count = await cortex.memory.count({
+  memorySpaceId: spaceId,
+  tenantId: "tenant-123", // Multi-tenancy filter
+});
+
+// List memories by tenant
+const memories = await cortex.memory.list({
+  memorySpaceId: spaceId,
+  tenantId: "tenant-123",
+});
+```
+
+**Note:** Currently, `tenantId` and `participantId` parameters are defined in TypeScript types but not yet passed to the backend.
+
+---
+
+## Sessions API Enhancements
+
+Improved session management capabilities.
+
+### Date Range Filters
+
+Filter sessions by start date.
+
+```typescript
+const sessions = await cortex.sessions.list(spaceId, {
+  startedAfter: new Date("2026-01-01"),
+  startedBefore: new Date("2026-01-31"),
+});
+```
+
+### Dry Run for Expiration
+
+Preview idle session expiration.
+
+```typescript
+const result = await cortex.sessions.expireIdle(spaceId, {
+  idleTimeoutMs: 30 * 60 * 1000, // 30 minutes
+  dryRun: true,
+});
+
+console.log(`Would expire ${result.expired.length} sessions`);
+```
+
+### Session-Specific Error Codes
+
+Dedicated error codes for session operations.
+
+```typescript
+try {
+  await cortex.sessions.get(spaceId, sessionId);
+} catch (error) {
+  if (error.code === CortexErrorCode.SESSION_NOT_FOUND) {
+    // Session doesn't exist
+  } else if (error.code === CortexErrorCode.SESSION_EXPIRED) {
+    // Session expired
+  } else if (error.code === CortexErrorCode.SESSION_ALREADY_ENDED) {
+    // Session already ended
+  }
+}
+```
+
+---
+
+## User Operations Enhancements
+
+Advanced user profile management features.
+
+### Profile Validation Configuration
+
+Configure profile validation rules.
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  userProfileValidation: {
+    requiredFields: ["displayName", "email"],
+    maxDisplayNameLength: 100,
+    emailRequired: true,
+    validateEmail: true,
+  },
+});
+
+// Validation enforced on create/update
+await cortex.users.create({
+  id: "user-123",
+  displayName: "Alice",
+  // Error: email is required
+});
+```
+
+### Version Retention Configuration
+
+Control how many profile versions to keep.
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  userProfileVersionRetention: 10, // Keep last 10 versions only
+});
+```
+
+### Skip Versioning Option
+
+Skip version creation for routine updates.
+
+```typescript
+// Routine update (no version created)
+await cortex.users.update("user-123", {
+  displayName: "Alice Smith",
+  skipVersioning: true,
+});
+```
+
+---
+
+## Agent Management Enhancements
+
+### Sorting Implementation
+
+Sort agent lists by various fields.
+
+```typescript
+// Currently: Returns agents in database order
+const agents = await cortex.agents.list();
+
+// Planned: Sorting support
+const agents = await cortex.agents.list({
+  sortBy: "totalMemories",  // Sort by memory count
+  sortOrder: "desc",        // Descending order
+});
+```
+
+### Analytics for Unregistered Agents
+
+Get statistics for unregistered agents.
+
+```typescript
+// Planned: Analytics for any agent ID
+const stats = await cortex.analytics.getAgentStats("unregistered-agent-456");
+
+console.log(stats.totalMemories);
+console.log(stats.totalConversations);
+```
+
+---
+
+## Workarounds (Current Implementation)
+
+Until these features are available, use these patterns:
+
+### Manual Dry Run
+
+```typescript
+// Count before deleting
+const count = await cortex.memory.count({
+  memorySpaceId: spaceId,
+  filters: { accessCount: 0 },
+});
+
+console.log(`Will delete ${count} memories`);
+
+if (count < 100) {
+  await cortex.memory.deleteMany(spaceId, {
+    filters: { accessCount: 0 },
+  });
+}
+```
+
+### Manual Nested Filtering
+
+```typescript
+// Client-side filtering for nested fields
+const allMemories = await cortex.memory.list({ memorySpaceId: spaceId });
+const filtered = allMemories.filter(m => m.metadata.tags?.includes("urgent"));
+```
+
+### Manual Export to File
+
+```typescript
+const data = await cortex.memory.export(spaceId);
+await fs.writeFile("./backups/memories.json", data, "utf-8");
+```
+
+---
+
+## Related Features
+
+<QuickNav>
+  <QuickNavItem 
+    title="Memory Operations API" 
+    description="Current memory API" 
+    href="/api-reference/memory-operations" 
+  />
+  <QuickNavItem 
+    title="Context Operations API" 
+    description="Current context API" 
+    href="/api-reference/context-operations" 
+  />
+  <QuickNavItem 
+    title="Error Handling" 
+    description="Error codes and handling" 
+    href="/reference/error-handling" 
+  />
+</QuickNav>

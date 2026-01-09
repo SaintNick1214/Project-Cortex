@@ -17,9 +17,8 @@ import type {
   Message,
   MemoryEntry,
   UserProfile,
-  Context,
   Session,
-  Agent,
+  RegisteredAgent,
 
   // Facts
   FactRecord,
@@ -113,6 +112,7 @@ import type {
 - [ContentType](#contenttype)
 - [FactType](#facttype)
 - [SkippableLayer](#skippablelayer)
+- [DeduplicationStrategy](#deduplicationstrategy)
 
 ---
 
@@ -431,28 +431,33 @@ interface RegisteredAgent {
 type SessionStatus = "active" | "idle" | "ended";
 
 interface SessionMetadata {
-  ipAddress?: string;
+  device?: string;
+  browser?: string;
+  browserVersion?: string;
+  os?: string;
+  deviceType?: "desktop" | "mobile" | "tablet" | string;
+  ip?: string;
+  location?: string;
+  timezone?: string;
+  language?: string;
   userAgent?: string;
-  deviceType?: string;
-  sessionName?: string;
   [key: string]: unknown;
 }
 
 interface Session {
   _id: string;
   sessionId: string;
+  userId: string;
   tenantId?: string;
-  userId?: string;
-  participantId?: string;
   memorySpaceId?: string;
   status: SessionStatus;
   startedAt: number;
-  lastActivityAt: number;
+  lastActiveAt: number;
   endedAt?: number;
   expiresAt?: number;
   metadata?: SessionMetadata;
-  createdAt: number;
-  updatedAt: number;
+  messageCount: number;
+  memoryCount: number;
 }
 ```
 
@@ -1134,7 +1139,7 @@ type ConversationType = "user-agent" | "agent-agent";
 ### SourceType
 
 ```typescript
-type SourceType = "conversation" | "system" | "tool" | "a2a";
+type SourceType = "conversation" | "system" | "tool" | "a2a" | "fact-extraction";
 ```
 
 ---
@@ -1142,7 +1147,7 @@ type SourceType = "conversation" | "system" | "tool" | "a2a";
 ### ContentType
 
 ```typescript
-type ContentType = "raw" | "summarized";
+type ContentType = "raw" | "summarized" | "fact";
 ```
 
 ---
@@ -1185,6 +1190,26 @@ type SkippableLayer =
 
 ---
 
+### DeduplicationStrategy
+
+```typescript
+type DeduplicationStrategy = "none" | "exact" | "structural" | "semantic";
+```
+
+**Fact deduplication strategies:**
+
+- `none` - Skip deduplication (fastest, no accuracy)
+- `exact` - Normalized text match (fast, low accuracy)
+- `structural` - Subject + predicate + object match (fast, medium accuracy)
+- `semantic` - Embedding similarity search (slower, highest accuracy)
+
+**Used in:**
+
+- [RememberParams](#rememberparams) - `factDeduplication` option
+- [Facts Operations API](/api-reference/facts-operations)
+
+---
+
 ## Type Index
 
 Quick alphabetical reference for all types (links to this page or external API docs):
@@ -1204,6 +1229,10 @@ Quick alphabetical reference for all types (links to this page or external API d
 - [ContentType](#contenttype)
 - [Conversation](#conversation)
 - [ConversationType](#conversationtype)
+
+### D
+
+- [DeduplicationStrategy](#deduplicationstrategy)
 
 ### F
 

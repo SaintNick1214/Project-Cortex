@@ -7,6 +7,8 @@ description: Automatic retries, circuit breaking, and fault tolerance
 
 # Resilience Layer
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 <Callout type="info" title="Built-in Resilience">
   All Cortex operations include automatic:
   - **Rate limiting** - Smooths traffic bursts
@@ -21,17 +23,26 @@ description: Automatic retries, circuit breaking, and fault tolerance
 
 Without protection, traffic spikes overwhelm your database:
 
-```
-Without Resilience:
-100 agents burst → 100 concurrent queries → Convex rejects (limit: 16)
-                                          → Errors cascade
-                                          → System fails
+<Tabs>
+  <TabItem value="without" label="Without Resilience">
 
-With Resilience:
-100 agents burst → Rate limiter smooths → 16 execute (Convex limit)
-                                        → 84 queue with priority
-                                        → All succeed
-```
+<FlowDiagram title="System Failure" direction="horizontal">
+  <FlowNode title="100 Agents Burst" icon="users" variant="primary">Simultaneous requests</FlowNode>
+  <FlowNode title="100 Concurrent Queries" icon="database" variant="warning">All hit database</FlowNode>
+  <FlowNode title="System Fails" icon="shield" variant="danger">Convex rejects (limit: 16) • Errors cascade</FlowNode>
+</FlowDiagram>
+
+  </TabItem>
+  <TabItem value="with" label="With Resilience">
+
+<FlowDiagram title="Graceful Handling" direction="horizontal">
+  <FlowNode title="100 Agents Burst" icon="users" variant="primary">Simultaneous requests</FlowNode>
+  <FlowNode title="Rate Limiter" icon="server" variant="secondary">Smooths traffic</FlowNode>
+  <FlowNode title="All Succeed" icon="shield" variant="success">16 execute • 84 queue with priority</FlowNode>
+</FlowDiagram>
+
+  </TabItem>
+</Tabs>
 
 ---
 
@@ -77,12 +88,22 @@ const cortex = new Cortex({
 ## Configuration Options
 
 <APITable parameters={[
-  { name: "maxConcurrent", type: "number", required: false, default: "16", description: "Max simultaneous operations (Convex free plan limit)" },
-  { name: "bucketSize", type: "number", required: false, default: "100", description: "Rate limiter burst capacity" },
-  { name: "refillRate", type: "number", required: false, default: "50", description: "Tokens per second (rate limit)" },
-  { name: "circuitThreshold", type: "number", required: false, default: "5", description: "Failures before circuit opens" },
-  { name: "timeout", type: "number", required: false, default: "30000", description: "Request timeout (ms)" },
-  { name: "queueSize", type: "number", required: false, default: "1000", description: "Max queued requests" },
+  { name: "enabled", type: "boolean", required: false, default: "true", description: "Enable/disable resilience layer" },
+  { name: "rateLimiter.bucketSize", type: "number", required: false, default: "100", description: "Rate limiter burst capacity" },
+  { name: "rateLimiter.refillRate", type: "number", required: false, default: "50", description: "Tokens per second (rate limit)" },
+  { name: "concurrency.maxConcurrent", type: "number", required: false, default: "20", description: "Max simultaneous operations" },
+  { name: "concurrency.queueSize", type: "number", required: false, default: "1000", description: "Max queued requests" },
+  { name: "concurrency.timeout", type: "number", required: false, default: "30000", description: "Request timeout (ms)" },
+  { name: "circuitBreaker.failureThreshold", type: "number", required: false, default: "5", description: "Failures before circuit opens" },
+  { name: "circuitBreaker.successThreshold", type: "number", required: false, default: "2", description: "Successes in half-open to close circuit" },
+  { name: "circuitBreaker.timeout", type: "number", required: false, default: "30000", description: "Time to wait in open state before half-open (ms)" },
+  { name: "circuitBreaker.halfOpenMax", type: "number", required: false, default: "3", description: "Max test requests allowed in half-open state" },
+  { name: "queue.maxSize", type: "object", required: false, default: "See defaults", description: "Max queue size per priority level (Partial<Record<Priority, number>>)" },
+  { name: "retry.maxRetries", type: "number", required: false, default: "3", description: "Maximum number of retry attempts" },
+  { name: "retry.baseDelayMs", type: "number", required: false, default: "500", description: "Base delay between retries (ms)" },
+  { name: "retry.maxDelayMs", type: "number", required: false, default: "10000", description: "Maximum delay between retries (ms)" },
+  { name: "retry.exponentialBase", type: "number", required: false, default: "2.0", description: "Exponential backoff base" },
+  { name: "retry.jitter", type: "boolean", required: false, default: "true", description: "Add jitter to prevent thundering herd" },
 ]} />
 
 ### Custom Configuration
@@ -108,6 +129,25 @@ const cortex = new Cortex({
       failureThreshold: 5,  // Open after 5 failures
       successThreshold: 2,  // Close after 2 successes
       timeout: 30000,       // 30s recovery wait
+      halfOpenMax: 3,       // Max test requests in half-open
+    },
+    
+    queue: {
+      maxSize: {            // Per-priority limits
+        critical: 100,
+        high: 500,
+        normal: 1000,
+        low: 2000,
+        background: 5000,
+      },
+    },
+    
+    retry: {
+      maxRetries: 3,        // Retry up to 3 times
+      baseDelayMs: 500,     // Start with 0.5s delay
+      maxDelayMs: 10000,    // Cap at 10s
+      exponentialBase: 2.0, // Double delay each attempt
+      jitter: true,         // Prevent thundering herd
     },
   },
 });
@@ -179,26 +219,27 @@ resilience: ResiliencePresets.hiveMode
 
 Four protection layers execute in sequence:
 
-```
-Request → [Rate Limiter] → [Concurrency Limiter] → [Circuit Breaker] → Convex
-              ↓                    ↓                      ↓
-         Smooth burst        Queue excess           Fast-fail if
-         into tokens         requests               unhealthy
-```
+<FlowDiagram title="Resilience Layer Flow" caption="Request flows through four protection layers before reaching Convex">
+  <FlowNode title="Request" icon="code" variant="default">Incoming request</FlowNode>
+  <FlowNode title="Rate Limiter" icon="server" variant="primary">Smooth burst into tokens</FlowNode>
+  <FlowNode title="Concurrency Limiter" icon="layers" variant="secondary">Queue excess requests</FlowNode>
+  <FlowNode title="Circuit Breaker" icon="shield" variant="warning">Fast-fail if unhealthy</FlowNode>
+  <FlowNode title="Convex" icon="database" variant="success">Backend database</FlowNode>
+</FlowDiagram>
 
 ### Token Bucket Rate Limiter
 
 Controls request **rate**. Bucket starts full, requests consume tokens, tokens refill over time.
 
 <Callout type="tip" title="Exponential Backoff">
-  When tokens depleted, requests wait with exponential backoff:
+  When tokens depleted or retries occur, requests wait with exponential backoff:
   
-  - Attempt 1: Immediate
-  - Attempt 2: 1s delay
-  - Attempt 3: 2s delay
-  - Attempt 4: 4s delay
+  - Attempt 1: Immediate (0ms)
+  - Attempt 2: ~500ms delay (baseDelayMs)
+  - Attempt 3: ~1000ms delay (baseDelayMs × 2)
+  - Attempt 4: ~2000ms delay (baseDelayMs × 4)
   
-  With jitter to prevent thundering herd.
+  Default `baseDelayMs: 500ms` with jitter (random factor 0.5-1.5x) to prevent thundering herd.
 </Callout>
 
 ### Concurrency Limiter
@@ -219,16 +260,17 @@ Controls **how many** simultaneous requests. Max 16 concurrent on free plan. Exc
 
 Prevents cascading failures when backend is unhealthy:
 
-```
-CLOSED (normal) → 5 failures → OPEN (fast-fail)
-                                    ↓
-                              30s timeout
-                                    ↓
-                              HALF-OPEN (test)
-                                    ↓
-                    2 successes → CLOSED
-                    failure → OPEN
-```
+<FlowDiagram title="Circuit Breaker State Transitions" caption="Circuit breaker transitions between CLOSED, OPEN, and HALF-OPEN states">
+  <FlowNode title="CLOSED" icon="shield" variant="success">Normal operation - requests pass through</FlowNode>
+  <FlowNode title="OPEN" icon="shield" variant="danger">5 failures detected - fast-fail mode</FlowNode>
+  <FlowNode title="HALF-OPEN" icon="time" variant="warning">30s timeout - testing recovery</FlowNode>
+</FlowDiagram>
+
+**State Transitions:**
+- CLOSED → OPEN: After 5 failures
+- OPEN → HALF-OPEN: After 30s timeout
+- HALF-OPEN → CLOSED: After 2 successes
+- HALF-OPEN → OPEN: On any failure
 
 ---
 
@@ -239,10 +281,37 @@ const metrics = cortex.getResilienceMetrics();
 
 console.log(metrics);
 // {
-//   rateLimiter: { availableTokens: 87, bucketSize: 100 },
-//   concurrency: { active: 12, waiting: 5, maxConcurrent: 16 },
-//   circuitBreaker: { state: 'closed', failures: 0 },
-//   queue: { critical: 0, high: 2, normal: 3, total: 5 }
+//   rateLimiter: {
+//     tokensAvailable: 87,
+//     requestsThrottled: 15,
+//     avgWaitTimeMs: 234
+//   },
+//   concurrency: {
+//     active: 12,
+//     waiting: 5,
+//     maxReached: 16,
+//     timeouts: 0
+//   },
+//   circuitBreaker: {
+//     state: 'closed',
+//     failures: 0,
+//     lastStateChangeAt: 1234567890,
+//     totalOpens: 0
+//   },
+//   queue: {
+//     total: 5,
+//     byPriority: {
+//       critical: 0,
+//       high: 2,
+//       normal: 3,
+//       low: 0,
+//       background: 0
+//     },
+//     processed: 1234,
+//     dropped: 5,
+//     oldestRequestAgeMs: 1234
+//   },
+//   timestamp: 1234567890
 // }
 
 // Alert if circuit opens
@@ -327,11 +396,8 @@ const cortex = new Cortex({
 ## Graceful Shutdown
 
 ```typescript
-// Wait for in-flight requests
-await cortex.shutdown();
-
-// Or force immediate shutdown
-cortex.forceShutdown();
+// Wait for in-flight requests (with optional timeout)
+await cortex.shutdown(30000); // Default: 30s timeout
 
 // In server shutdown handler
 process.on('SIGTERM', async () => {

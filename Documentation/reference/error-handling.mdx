@@ -693,17 +693,15 @@ class A2ATimeoutError extends Error {
 class CascadeDeletionError extends Error {
   constructor(
     message: string,
-    public readonly partial: boolean,
-    public readonly completed: string[],
-    public readonly failed: Array<{ layer: string; error: string }>,
+    public readonly cause?: unknown,
   );
 }
 ```
 
 **Recovery:**
 
-- Review failed layers
-- Retry deletion for failed layers
+- Check the `cause` property for underlying error details
+- Retry deletion operation
 - Check permissions
 
 ---
@@ -718,12 +716,16 @@ class CascadeDeletionError extends Error {
 class AgentCascadeDeletionError extends Error {
   constructor(
     message: string,
-    public readonly partial: boolean,
-    public readonly completed: string[],
-    public readonly failed: Array<{ layer: string; error: string }>,
+    public readonly cause?: unknown,
   );
 }
 ```
+
+**Recovery:**
+
+- Check the `cause` property for underlying error details
+- Retry deletion operation
+- Check permissions
 
 ---
 
@@ -736,16 +738,17 @@ class AgentCascadeDeletionError extends Error {
 ```typescript
 class ResumableStreamError extends Error {
   constructor(
-    message: string,
-    public readonly resumeContext: ResumeContext,
+    public readonly originalError: Error,
+    public readonly resumeToken: string,
   );
 }
 ```
 
 **Recovery:**
 
-- Use resumeContext to resume from failure point
+- Use `resumeToken` to resume from failure point
 - Retry with stored progress
+- Check `originalError` for underlying failure details
 
 ---
 

@@ -344,8 +344,8 @@ export interface PurgeManyFilter {
 // Vector Memory (Layer 2)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export type SourceType = "conversation" | "system" | "tool" | "a2a";
-export type ContentType = "raw" | "summarized";
+export type SourceType = "conversation" | "system" | "tool" | "a2a" | "fact-extraction";
+export type ContentType = "raw" | "summarized" | "fact";
 
 export interface ConversationRef {
   conversationId: string;

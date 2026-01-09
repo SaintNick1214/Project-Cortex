@@ -1,6 +1,17 @@
+---
+id: infinite-context
+title: Infinite Context Architecture
+sidebar_position: 9
+description: Never run out of context again - retrieval-based context architecture that scales infinitely
+---
+
 # Infinite Context Architecture
 
-> **The Breakthrough:** Never run out of context again
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
+<Callout type="tip">
+**The Breakthrough:** Never run out of context again
+</Callout>
 
 ## Executive Summary
 
@@ -37,11 +48,11 @@ const conversation = {
 
 **Limitations:**
 
-- ❌ Older messages get truncated/forgotten
-- ❌ Token costs grow linearly with conversation length
-- ❌ Eventually hits hard model limits (even with 200K context)
-- ❌ Can't reference information from months ago
-- ❌ Forced to use expensive high-context-window models
+- Older messages get truncated/forgotten
+- Token costs grow linearly with conversation length
+- Eventually hits hard model limits (even with 200K context)
+- Can't reference information from months ago
+- Forced to use expensive high-context-window models
 
 ### Band-Aid Solutions (Don't Scale)
 
@@ -192,7 +203,7 @@ interface VectorMemory {
 - memorySpace-scoped for isolation
 - Scale to billions of memories without performance degradation
 
-### Layer 3: Facts (Atomic Knowledge) ✨
+### Layer 3: Facts (Atomic Knowledge)
 
 ```typescript
 // LLM-extracted facts (most token-efficient)
@@ -304,7 +315,7 @@ const summaries = await cortex.memory.search(memorySpaceId, query, {
 
 ```typescript
 // For critical facts, fetch raw source
-const criticalFacts = facts.filter((f) => f.metadata.importance >= 90);
+const criticalFacts = facts.filter((f) => f.confidence >= 90);
 
 for (const fact of criticalFacts.slice(0, 2)) {
   // Top 2 only
@@ -357,7 +368,8 @@ async function intelligentRetrieval(memorySpaceId: string, query: string) {
 
     // Unified context
     context: result.context, // Pre-formatted for LLM
-    totalTokens: result.tokenEstimate, // Estimated token usage
+    // Note: Token estimation not provided by recall() - estimate manually:
+    // totalTokens ≈ result.items.length * avgTokensPerItem (typically 8-50 tokens/item)
 
     // vs 20,000+ tokens for raw accumulation! (95-99% savings)
   };
@@ -369,12 +381,14 @@ async function manualIntelligentRetrieval(
   query: string,
 ) {
   // Tier 1: Facts (always - most efficient)
-  const facts = await cortex.facts.search({
+  const facts = await cortex.facts.search(
     memorySpaceId,
     query,
-    userId: "user-123",
-    limit: 10,
-  });
+    {
+      userId: "user-123",
+      limit: 10,
+    }
+  );
 
   // Tier 2: Summaries (for additional context)
   const summaries = await cortex.memory.search(memorySpaceId, query, {
@@ -406,10 +420,10 @@ async function manualIntelligentRetrieval(
 
 | Approach                       | Tokens per Request | Cost per Request   | Scalability                      |
 | ------------------------------ | ------------------ | ------------------ | -------------------------------- |
-| **Traditional (Accumulation)** | 50,000 tokens      | $1.50 (GPT-5-nano) | ❌ Hits limits at ~2K exchanges  |
-| **Summarization**              | 10,000 tokens      | $0.30              | ⚠️ Loses nuance, still expensive |
-| **Infinite Context (Facts)**   | 80 tokens          | $0.0024            | ✅ Scales to 1M+ exchanges       |
-| **Infinite Context (Hybrid)**  | 405 tokens         | $0.012             | ✅ Scales + full fidelity        |
+| **Traditional (Accumulation)** | 50,000 tokens      | $1.50 (GPT-5-nano) | Hits limits at ~2K exchanges  |
+| **Summarization**              | 10,000 tokens      | $0.30              | Loses nuance, still expensive |
+| **Infinite Context (Facts)**   | 80 tokens          | $0.0024            | Scales to 1M+ exchanges       |
+| **Infinite Context (Hybrid)**  | 405 tokens         | $0.012             | Scales + full fidelity        |
 
 **Cost Reduction:** 99% vs traditional, 97% vs summarization
 
@@ -419,10 +433,10 @@ async function manualIntelligentRetrieval(
 
 | Model               | Context Window | Cost per 1M Tokens | With Infinite Context                        |
 | ------------------- | -------------- | ------------------ | -------------------------------------------- |
-| gpt-5-nano (legacy) | 16K            | $0.50              | ✅ Effectively unlimited (via retrieval)     |
-| GPT-5               | 1M             | $5                 | ✅ Retrieval still better (cheaper + faster) |
-| Claude-4.5-sonnet   | 200K           | $3                 | ✅ Retrieval is faster than large context    |
-| o3-mini             | 128K           | $2                 | ✅ Can use smaller models effectively        |
+| gpt-5-nano (legacy) | 16K            | $0.50              | Effectively unlimited (via retrieval)     |
+| GPT-5               | 1M             | $5                 | Retrieval still better (cheaper + faster) |
+| Claude-4.5-sonnet   | 200K           | $3                 | Retrieval is faster than large context    |
+| o3-mini             | 128K           | $2                 | Can use smaller models effectively        |
 
 **Key Insight:** Even with 1M+ context window models, retrieval-based context is:
 
@@ -479,7 +493,7 @@ const result = await cortex.memory.recall({
 // - 7 facts from Layer 3
 // - 3 vector memories from Layer 2
 // Tokens: ~90 (vs 3,000,000!)
-// Belief Revision ensures no duplicate facts ✅
+// Belief Revision ensures no duplicate facts
 ```
 
 ### 2. Customer Support History
@@ -581,6 +595,7 @@ async function handleUserMessage(message: string, memorySpaceId: string) {
 const CONVERSATION_RETENTION_DAYS = 90;
 
 // Governance policy
+// Note: Verify governance API signature matches your Cortex version
 await cortex.governance.addPolicy({
   name: "Prune Old Conversations",
   type: "retention",
@@ -681,9 +696,9 @@ class TraditionalChatbot {
       content: response,
     });
 
-    // ❌ Grows unbounded
-    // ❌ Token cost increases linearly
-    // ❌ Eventually hits limits
+    // Grows unbounded
+    // Token cost increases linearly
+    // Eventually hits limits
 
     return response;
   }
@@ -723,9 +738,9 @@ class InfiniteContextAgent {
       extractFacts: true,
     });
 
-    // ✅ Constant token usage
-    // ✅ Scales infinitely
-    // ✅ Never hits limits
+    // Constant token usage
+    // Scales infinitely
+    // Never hits limits
 
     return response;
   }
@@ -747,11 +762,11 @@ class InfiniteContextAgent {
 
 | Capability           | Cortex                                  | Traditional LLM Apps      |
 | -------------------- | --------------------------------------- | ------------------------- |
-| Context Limit        | ♾️ Infinite                             | 🔢 16K-200K               |
+| Context Limit        | Infinite                             | 16K-200K               |
 | Token Efficiency     | 99% reduction                           | Baseline (accumulation)   |
 | Retrieval Speed      | <50ms                                   | N/A (no retrieval)        |
 | Cost at Scale        | Constant                                | Grows linearly            |
-| Works with Any Model | ✅ Yes (small models perform like SOTA) | ❌ Limited by window      |
+| Works with Any Model | Yes (small models perform like SOTA) | Limited by window      |
 | History Length       | Unlimited                               | Limited by context window |
 
 **Unique to Cortex:**
@@ -765,37 +780,35 @@ class InfiniteContextAgent {
 ### ROI Calculator
 
 ```
-Input: 10,000 user conversations/month, 50 exchanges each
+Input: 10,000 user conversations/month, 50 exchanges each = 500,000 exchanges/month
 
-Traditional Approach:
-- Tokens per conversation: 50 exchanges × 50 tokens = 2,500 tokens
-- Total tokens: 10,000 × 2,500 = 25M tokens/month
-- Cost (GPT-5-nano): 25M × $0.03/1K = $750/month
-- Problem: Hits context limits at ~200 exchanges
+Traditional Approach (Accumulation):
+- Tokens per exchange: Grows linearly with conversation length
+  - Exchange 1: 50 tokens
+  - Exchange 50: 2,500 tokens (50 × 50)
+  - Exchange 200: 10,000 tokens (hits context limit)
+- Average tokens per exchange: ~1,250 tokens (assuming linear growth)
+- Total tokens: 500,000 exchanges × 1,250 tokens = 625M tokens/month
+- Cost (GPT-5 @ $5/1M tokens): 625M × $5/1M = $3,125/month
+- Problem: Hits context limits at ~200 exchanges, forcing truncation or model upgrade
 
-With Cortex Infinite Context:
-- Tokens per request: 400 tokens (retrieved)
-- Total tokens: 10,000 conversations × 50 exchanges × 400 = 200M tokens/month
-  (But each REQUEST is only 400 tokens regardless of history!)
-- Cost: 10,000 × 50 × 400 tokens = 200M tokens × $0.03/1K = $6,000/month
-  Wait... that's wrong. Let me recalculate.
+With Cortex Infinite Context (Retrieval-Based):
+- Tokens per exchange: Constant regardless of history
+  - Each exchange: 400 tokens (retrieved context + current message)
+  - Exchange 1: 400 tokens
+  - Exchange 50: 400 tokens
+  - Exchange 10,000: 400 tokens (no growth!)
+- Total tokens: 500,000 exchanges × 400 tokens = 200M tokens/month
+- Cost options:
+  - Efficient model (GPT-4o-mini @ $0.15/1M): 200M × $0.15/1M = $30/month
+  - Mid-tier model (Claude Sonnet @ $3/1M): 200M × $3/1M = $600/month
+  - SOTA model (GPT-5 @ $5/1M): 200M × $5/1M = $1,000/month
 
-Actually:
-- Each exchange: 1 LLM call with 400 token context
-- Exchanges: 10,000 conversations × 50 exchanges = 500,000 exchanges
-- Token usage: 500,000 × 400 = 200M tokens
-- Cost (GPT-5-nano): 200M × $0.03/1K = $6,000/month
-
-Hmm, that doesn't look cheaper. Let me reconsider...
-
-The savings come from being able to use cheaper models:
-- Traditional: MUST use expensive high-context models (GPT-5 @ $5/1M tokens)
-- Infinite Context: Can use efficient smaller models because context is retrieved
-- Cost with smaller model: 200M × $0.001/1K = $200/month
-- Cost with SOTA if needed: 200M × $5/1K = $1,000/month
-
-Savings: Up to 90% depending on model selection
-Plus: No context window limits (can scale to 1000s of exchanges per conversation)
+Savings Comparison:
+- vs Traditional (SOTA): $3,125 - $1,000 = $2,125/month (68% savings)
+- vs Traditional (Efficient): $3,125 - $30 = $3,095/month (99% savings)
+- Plus: No context window limits (scales to unlimited exchanges)
+- Plus: Consistent performance (no degradation as history grows)
 ```
 
 ## Future Enhancements
@@ -883,26 +896,27 @@ This capability alone justifies Cortex's existence. It's not just an incremental
 
 ---
 
-**Next Steps:**
+## Next Steps
 
-- Implement adaptive retrieval strategies
-- Optimize fact extraction for token efficiency
-- Build dashboards showing context vs token usage
-- Create ROI calculators for sales
-- Position "Infinite Context" as primary marketing message
-
-**Target Customers:**
-
-- Long-running AI assistants (personal, enterprise)
-- Customer support systems (years of history)
-- Research tools (vast knowledge bases)
-- Multi-agent systems (shared memory pools)
-
-**Competitive Moat:**
-
-- First-mover with infinite context architecture
-- 3-tier retrieval strategy (unique)
-- Memory space + Hive Mode (unique)
-- Full ACID conversation store (vs competitors who discard raw data)
-
-This is the breakthrough that sets Cortex apart. 🚀
+<QuickNav>
+  <QuickNavItem 
+    href="/architecture/search-strategy" 
+    title="Search Strategy"
+    description="Learn about multi-strategy retrieval"
+  />
+  <QuickNavItem 
+    href="/core-features/memory-orchestration" 
+    title="Memory Orchestration"
+    description="Understand the 4-layer architecture"
+  />
+  <QuickNavItem 
+    href="/core-features/fact-extraction" 
+    title="Fact Extraction"
+    description="Optimize token efficiency with facts"
+  />
+  <QuickNavItem 
+    href="/architecture/performance" 
+    title="Performance"
+    description="Optimization techniques for scale"
+  />
+</QuickNav>

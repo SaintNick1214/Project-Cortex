@@ -1,0 +1,372 @@
+---
+id: context-chains-enhancements
+title: Context Chains Enhancements
+sidebar_position: 4
+description: Advanced context chain capabilities for better workflow management (Planned)
+---
+
+# Context Chains Enhancements
+
+<Callout type="warning" title="Planned Features">
+  These context chain enhancements are planned for a future release. Basic context chains are fully implemented—see the [Context Chain Design](/architecture/context-chain-design) documentation for current capabilities.
+</Callout>
+
+<Callout type="info" title="What Are Context Chains?">
+  Context chains link related contexts together in parent-child relationships, enabling workflows like multi-step tasks, recursive agents, and conversation threading. Current features include `addChild()`, `getChain()`, status tracking, and participant management.
+</Callout>
+
+---
+
+## Current Capabilities
+
+Context chains already support:
+- Parent-child relationships with `addChild()`
+- Chain traversal with `getChain()`
+- Status tracking (active, completed, cancelled, blocked)
+- Participant management
+- Custom data fields
+- Conversation linking (ACID)
+
+---
+
+## Planned Enhancements
+
+### 1. Status Transition Validation
+
+Enforce valid status transitions to prevent invalid state changes.
+
+**Current Behavior:**
+```typescript
+// Any status transition is accepted
+await cortex.contexts.update(spaceId, contextId, {
+  status: "completed",
+});
+
+// Even invalid transitions work
+await cortex.contexts.update(spaceId, contextId, {
+  status: "active", // From completed → active (invalid!)
+});
+```
+
+**Planned Behavior:**
+```typescript
+// Valid transitions enforced
+await cortex.contexts.update(spaceId, contextId, {
+  status: "completed", // active → completed ✓
+});
+
+// Invalid transitions throw errors
+await cortex.contexts.update(spaceId, contextId, {
+  status: "active", // completed → active ✗
+});
+// Error: Invalid status transition (completed → active)
+```
+
+**Valid Transitions:**
+- `active` → `completed` | `cancelled` | `blocked`
+- `blocked` → `active` | `cancelled`
+- `completed` → (terminal state, no transitions)
+- `cancelled` → (terminal state, no transitions)
+
+---
+
+### 2. Auto-Complete Parent Contexts
+
+Automatically complete parent contexts when all children are completed.
+
+**Current Behavior:**
+```typescript
+// Manual completion required
+const parent = await cortex.contexts.get(spaceId, parentId);
+const children = await cortex.contexts.getChain(spaceId, parentId);
+
+const allComplete = children.every(c => c.status === "completed");
+if (allComplete) {
+  await cortex.contexts.update(spaceId, parentId, { status: "completed" });
+}
+```
+
+**Planned Behavior:**
+```typescript
+// Automatic completion when all children complete
+await cortex.contexts.update(spaceId, childId, {
+  status: "completed", // Last child
+});
+// Parent automatically marked as "completed"
+```
+
+**Configuration:**
+```typescript
+await cortex.contexts.create(spaceId, {
+  purpose: "Multi-step workflow",
+  autoComplete: true, // Enable automatic completion
+});
+```
+
+---
+
+### 3. Automatic Inherited Data Merging
+
+Children automatically access parent data without manual traversal.
+
+**Current Behavior:**
+```typescript
+// Manual traversal required to merge data
+const chain = await cortex.contexts.getChain(spaceId, contextId);
+
+const mergedData = {};
+for (const ctx of chain.reverse()) {
+  Object.assign(mergedData, ctx.data);
+}
+
+console.log(mergedData.apiKey); // From ancestor
+```
+
+**Planned Behavior:**
+```typescript
+// Automatic data inheritance
+const context = await cortex.contexts.get(spaceId, contextId, {
+  inheritData: true, // Merge data from ancestors
+});
+
+console.log(context.data.apiKey); // Inherited from parent
+```
+
+**Inheritance Rules:**
+- Child data overrides parent data
+- Nearest ancestor takes precedence
+- Original `data` field preserved in `data._original`
+
+**Example:**
+```typescript
+// Parent context
+await cortex.contexts.create(spaceId, {
+  purpose: "API Integration",
+  data: { apiKey: "sk_...", timeout: 5000 },
+});
+
+// Child context (overrides timeout)
+const child = await cortex.contexts.addChild(spaceId, parentId, {
+  purpose: "Fetch User Data",
+  data: { timeout: 10000, endpoint: "/users" },
+});
+
+// Automatic merge
+const childData = await cortex.contexts.get(spaceId, child.id, { inheritData: true });
+console.log(childData.data);
+// {
+//   apiKey: "sk_...",      // Inherited
+//   timeout: 10000,        // Overridden
+//   endpoint: "/users",    // Child-specific
+// }
+```
+
+---
+
+### 4. Chain-Wide Participant Propagation
+
+Add a participant to a context and all ancestors automatically.
+
+**Current Behavior:**
+```typescript
+// Manual propagation required
+const chain = await cortex.contexts.getChain(spaceId, contextId);
+for (const ctx of chain) {
+  await cortex.contexts.addParticipant(spaceId, ctx.id, "user-123");
+}
+```
+
+**Planned Behavior:**
+```typescript
+// Automatic propagation to ancestors
+await cortex.contexts.addParticipant(spaceId, contextId, "user-123", {
+  propagateToAncestors: true, // Add to entire chain
+});
+```
+
+**Use Case:**
+When a user joins a nested context (e.g., a sub-task), they should automatically have access to parent contexts (e.g., the main task).
+
+---
+
+### 5. Depth Limit Enforcement
+
+Prevent excessively deep context chains that could cause performance issues.
+
+**Current Behavior:**
+```typescript
+// No depth limit enforced
+let currentId = rootId;
+for (let i = 0; i < 100; i++) {
+  const child = await cortex.contexts.addChild(spaceId, currentId, {
+    purpose: `Level ${i}`,
+  });
+  currentId = child.id;
+}
+// Works, but could cause performance issues
+```
+
+**Planned Behavior:**
+```typescript
+// Depth limit enforced
+const child = await cortex.contexts.addChild(spaceId, currentId, {
+  purpose: "Too deep!",
+});
+// Error: Maximum context depth exceeded (limit: 10)
+```
+
+**Configuration:**
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  contextChainDepthLimit: 15, // Default: 10
+});
+```
+
+---
+
+### 6. GDPR Cascade Deletion
+
+Delete user data from context chains when a user is deleted (Cloud Mode).
+
+**Planned Behavior:**
+```typescript
+// Cloud Mode: Cascade delete user-specific contexts
+await cortex.users.delete("user-123", { cascade: true });
+```
+
+**Deletion Rules:**
+- Contexts with explicit `userId` field are deleted
+- Contexts with `userId` in `participants` are NOT deleted (shared contexts)
+- Children without explicit `userId` are preserved (workflow metadata)
+
+**Example:**
+```typescript
+// User-specific context (deleted)
+await cortex.contexts.create(spaceId, {
+  purpose: "User's personal task",
+  userId: "user-123",
+});
+
+// Shared context (preserved)
+await cortex.contexts.create(spaceId, {
+  purpose: "Team workflow",
+  participants: ["user-123", "user-456"],
+});
+```
+
+---
+
+## Implementation Priority
+
+These enhancements will be implemented in phases:
+
+**High Priority:**
+1. Status transition validation - Prevents invalid state changes
+2. Auto-complete parent contexts - Reduces manual workflow management
+3. Depth limit enforcement - Prevents performance issues
+
+**Medium Priority:**
+4. Automatic inherited data merging - Improves developer experience
+5. Chain-wide participant propagation - Simplifies access control
+
+**Low Priority (Cloud Mode):**
+6. GDPR cascade deletion - Enterprise compliance feature
+
+---
+
+## Migration Path
+
+All enhancements are **opt-in** and backward compatible. Existing code will continue to work unchanged.
+
+**Example:**
+```typescript
+// Existing code (works unchanged)
+await cortex.contexts.update(spaceId, contextId, {
+  status: "completed",
+});
+
+// New features (opt-in)
+await cortex.contexts.update(spaceId, contextId, {
+  status: "completed",
+  validateTransition: true, // Opt-in to validation
+});
+```
+
+---
+
+## Workarounds (Current Implementation)
+
+Until these features are available, use these patterns:
+
+### Manual Status Validation
+
+```typescript
+function validateTransition(from: ContextStatus, to: ContextStatus) {
+  const valid = {
+    active: ["completed", "cancelled", "blocked"],
+    blocked: ["active", "cancelled"],
+    completed: [],
+    cancelled: [],
+  };
+  
+  if (!valid[from].includes(to)) {
+    throw new Error(`Invalid transition: ${from} → ${to}`);
+  }
+}
+
+// Use before updates
+validateTransition(context.status, "completed");
+await cortex.contexts.update(spaceId, contextId, { status: "completed" });
+```
+
+### Manual Auto-Completion
+
+```typescript
+async function checkAndCompleteParent(spaceId: string, parentId: string) {
+  const chain = await cortex.contexts.getChain(spaceId, parentId);
+  const children = chain.filter(c => c.parentContextId === parentId);
+  
+  const allComplete = children.every(c => c.status === "completed");
+  if (allComplete) {
+    await cortex.contexts.update(spaceId, parentId, { status: "completed" });
+  }
+}
+```
+
+### Manual Data Inheritance
+
+```typescript
+async function getWithInheritedData(spaceId: string, contextId: string) {
+  const chain = await cortex.contexts.getChain(spaceId, contextId);
+  
+  const mergedData = {};
+  for (const ctx of chain.reverse()) {
+    Object.assign(mergedData, ctx.data);
+  }
+  
+  return mergedData;
+}
+```
+
+---
+
+## Related Features
+
+<QuickNav>
+  <QuickNavItem 
+    title="Context Chain Design" 
+    description="Current context chain architecture" 
+    href="/architecture/context-chain-design" 
+  />
+  <QuickNavItem 
+    title="Context Operations API" 
+    description="Context chain API reference" 
+    href="/api-reference/context-operations" 
+  />
+  <QuickNavItem 
+    title="Cloud Mode" 
+    description="GDPR cascade deletion" 
+    href="/roadmap/cloud-mode" 
+  />
+</QuickNav>

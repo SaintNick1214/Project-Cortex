@@ -77,7 +77,7 @@ await cortex.a2a.send({
 
 // Finance agent accesses context (cross-space via context chain)
 const ctx = await cortex.contexts.get(context.id, {
-  requestingSpace: "finance-agent-space", // Cross-space access
+  includeChain: true,
 });
 ```
 
@@ -109,11 +109,14 @@ await cortex.immutable.store({
 // Index for search (optional) - in a memory space
 await cortex.vector.store("support-bot-space", {
   content: "Refund Policy: Refunds available within 30 days...",
+  contentType: "fact",
+  embedding: await embed("Refund Policy: Refunds available within 30 days..."),
+  source: { type: "system" },
+  metadata: { importance: 90, tags: ["policy"] },
   immutableRef: {
     type: "kb-article",
     id: "refund-policy",
   },
-  metadata: { importance: 90, tags: ["policy"] },
 });
 
 // Search within memory space
@@ -187,6 +190,10 @@ const facts = await cortex.memory.search(
 ```
 
 ---
+
+<Callout type="info">
+**Coming Soon**: MCP Server integration is planned for Q1 2026. This pattern describes future functionality that is not yet available.
+</Callout>
 
 ### Pattern 6: Cross-Application Memory (MCP)
 
@@ -270,11 +277,14 @@ Link Vector memories to their conversation source for full audit trails:
 // ✅ Good: With conversationRef
 await cortex.vector.store('user-123-personal', {
   content: 'User prefers dark mode',
+  contentType: 'fact',
+  embedding: await embed('User prefers dark mode'),
+  source: { type: 'conversation' },
   conversationRef: {
     conversationId: 'conv-123',
     messageIds: ['msg-456'],
   },
-  ...
+  metadata: { importance: 75 },
 });
 
 // ⚠️ Only omit for non-conversation sources (system data, imports)
@@ -313,12 +323,15 @@ await cortex.memory.deleteMany("user-123-personal", oldDebugLogs);
 Always catch and handle errors with type information:
 
 ```typescript
+import { MemoryValidationError, CircuitOpenError } from '@cortexmemory/sdk';
+
 try {
   await cortex.memory.store("user-123-personal", data);
 } catch (error) {
-  if (error instanceof CortexError) {
-    console.error(`Cortex error: ${error.code}`);
-    // Handle specific error codes
+  if (error instanceof MemoryValidationError) {
+    console.error(`Validation error: ${error.message}`);
+  } else if (error instanceof CircuitOpenError) {
+    console.error(`Service temporarily unavailable`);
   }
 }
 ```

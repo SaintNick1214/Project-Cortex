@@ -29,6 +29,9 @@ npm install
 cp .env.local.example .env.local
 # Edit .env.local with your Convex URL and OpenAI key
 
+# Deploy Convex schema (REQUIRED)
+npm run convex:dev
+
 # Start the demo
 npm run dev
 ```
@@ -55,10 +58,20 @@ npm install @ai-sdk/openai  # or @ai-sdk/anthropic, @ai-sdk/google, etc.
 ### Step 2: Set Up Convex Backend
 
 ```bash
-npx create-cortex-memories
+npm create cortex-memories
 ```
 
 Follow the wizard to set up Convex with Cortex backend automatically.
+
+### Step 2.5: Deploy Convex Schema
+
+After setting up Convex, deploy the schema:
+
+```bash
+npm run convex:dev
+```
+
+This initializes the Convex backend and is required before running your app.
 
 ### Step 3: Configure Environment Variables
 
@@ -67,6 +80,7 @@ Create `.env.local`:
 ```env
 # Required
 CONVEX_URL=https://your-deployment.convex.cloud
+NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
 OPENAI_API_KEY=sk-your-key-here
 
 # Optional: Memory Space
@@ -87,38 +101,91 @@ CORTEX_FACT_EXTRACTION_MODEL=gpt-4o-mini
 
 ```typescript
 // app/api/chat/route.ts
-import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
-import { openai } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
+import { openai, createOpenAI } from "@ai-sdk/openai";
+import {
+  streamText,
+  embed,
+  convertToModelMessages,
+  createUIMessageStream,
+  createUIMessageStreamResponse,
+} from "ai";
 
-const cortexMemory = createCortexMemory({
-  convexUrl: process.env.CONVEX_URL!,
-  memorySpaceId: process.env.MEMORY_SPACE_ID || "default-chat",
-
-  // User identification
-  userId: "demo-user", // Replace with real user ID
-  userName: "User",
-
-  // REQUIRED in SDK v0.17.0+
-  agentId: "my-assistant",
-  agentName: "My AI Assistant",
-
-  // Optional: Enable enhanced features
-  enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
-  enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
-});
+// Create OpenAI client for embeddings
+const openaiClient = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, conversationId: providedConversationId } = await req.json();
 
+  // Generate conversation ID if not provided (new chat)
+  const conversationId =
+    providedConversationId ||
+    `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+  // Normalize messages for AI SDK v6 compatibility
+  // This ensures messages have the `parts` array format expected by convertToModelMessages
+  const normalizedMessages = messages.map((msg: any) => {
+    const role = msg.role === "agent" ? "assistant" : msg.role;
+    const parts = msg.parts || (msg.content ? [{ type: "text", text: msg.content }] : []);
+    return { ...msg, role, parts };
+  });
+
+  // Convert UIMessage[] to ModelMessage[] for streamText
+  const modelMessagesResult = convertToModelMessages(normalizedMessages);
+  const modelMessages =
+    modelMessagesResult instanceof Promise
+      ? await modelMessagesResult
+      : modelMessagesResult;
+
+  // Create memory-augmented model with async initialization
+  // Use createCortexMemoryAsync for graph memory support
+  const cortexMemory = await createCortexMemoryAsync({
+    convexUrl: process.env.CONVEX_URL!,
+    memorySpaceId: process.env.MEMORY_SPACE_ID || "default-chat",
+
+    // User identification
+    userId: "demo-user", // Replace with real user ID
+    userName: "User",
+
+    // REQUIRED in SDK v0.17.0+
+    agentId: "my-assistant",
+    agentName: "My AI Assistant",
+
+    // Conversation ID for chat history isolation
+    conversationId,
+
+    // Embedding provider (required for semantic deduplication)
+    embeddingProvider: {
+      generate: async (text: string) => {
+        const result = await embed({
+          model: openaiClient.embedding("text-embedding-3-small"),
+          value: text,
+        });
+        return result.embedding;
+      },
+    },
+
+    // Optional: Enable enhanced features
+    enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
+    enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
+  });
+
+  // Stream response with memory integration
   const result = await streamText({
     model: cortexMemory(openai("gpt-4o-mini")),
-    messages,
+    messages: modelMessages,
     system: `You are a helpful assistant with long-term memory.
 You remember everything users tell you and can recall it naturally.`,
   });
 
-  return result.toDataStreamResponse();
+  // Use createUIMessageStreamResponse for advanced streaming features
+  return createUIMessageStreamResponse({
+    stream: createUIMessageStream({
+      execute: async ({ writer }) => {
+        writer.merge(result.toUIMessageStream());
+      },
+    }),
+  });
 }
 ```
 
@@ -203,6 +270,8 @@ npm run dev
 | `memorySpaceId` | string | Namespace for memory isolation          |
 | `userId`        | string | User identifier                         |
 | `agentId`       | string | Agent identifier (required in v0.17.0+) |
+| `conversationId`| string | Conversation identifier for chat isolation |
+| `embeddingProvider` | object | Embedding provider for semantic deduplication (required for belief revision) |
 
 ### Optional Options
 
@@ -212,9 +281,11 @@ npm run dev
 | `agentName`            | string  | agentId | Agent display name         |
 | `enableFactExtraction` | boolean | false   | Enable LLM fact extraction |
 | `enableGraphMemory`    | boolean | false   | Sync to graph database     |
-| `memorySearchLimit`    | number  | 5       | Max memories to retrieve   |
+| `memorySearchLimit`    | number  | 20      | Max memories to retrieve   |
 | `minMemoryRelevance`   | number  | 0.7     | Min similarity score (0-1) |
 | `debug`                | boolean | false   | Enable debug logging       |
+
+**Note**: Use `createCortexMemoryAsync` (with `await`) instead of `createCortexMemory` when you need graph memory support or want automatic configuration from environment variables.
 
 ## Dynamic User Resolution
 
@@ -222,6 +293,7 @@ For authentication systems:
 
 ```typescript
 import { auth } from "@clerk/nextjs";
+import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
 
 export async function POST(req: Request) {
   const { userId } = await auth();
@@ -230,12 +302,13 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const cortexMemory = createCortexMemory({
+  const cortexMemory = await createCortexMemoryAsync({
     convexUrl: process.env.CONVEX_URL!,
     memorySpaceId: "app",
     userId,
     userName: "User",
     agentId: "app-assistant",
+    conversationId: `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   });
 
   // ... use cortexMemory
@@ -247,15 +320,20 @@ export async function POST(req: Request) {
 Different memory space per team/tenant:
 
 ```typescript
-export async function POST(req: Request) {
-  const { teamId, messages } = await req.json();
+import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
 
-  const cortexMemory = createCortexMemory({
+export async function POST(req: Request) {
+  const { teamId, messages, conversationId } = await req.json();
+
+  const cortexMemory = await createCortexMemoryAsync({
     convexUrl: process.env.CONVEX_URL!,
     memorySpaceId: `team-${teamId}`, // Isolated per team
     userId: currentUser.id,
     userName: currentUser.name,
     agentId: "team-assistant",
+    conversationId: conversationId || `conv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
   });
 
   const result = await streamText({
@@ -276,8 +354,9 @@ vercel
 Set environment variables in Vercel dashboard:
 
 - `CONVEX_URL`
+- `NEXT_PUBLIC_CONVEX_URL`
 - `OPENAI_API_KEY`
-- `MEMORY_SPACE_ID`
+- `MEMORY_SPACE_ID` (optional)
 - `CORTEX_FACT_EXTRACTION` (optional)
 - `CORTEX_GRAPH_SYNC` (optional)
 
@@ -288,10 +367,26 @@ Set environment variables in Vercel dashboard:
 Add `agentId` to your configuration (required in SDK v0.17.0+):
 
 ```typescript
-const cortexMemory = createCortexMemory({
+const cortexMemory = await createCortexMemoryAsync({
   // ... other config
   agentId: "my-assistant", // Add this!
 });
+```
+
+### AI SDK v6 Message Format
+
+If you encounter issues with message formatting, ensure you normalize messages for AI SDK v6 compatibility:
+
+```typescript
+// Normalize messages to ensure they have the `parts` array format
+const normalizedMessages = messages.map((msg: any) => {
+  const role = msg.role === "agent" ? "assistant" : msg.role;
+  const parts = msg.parts || (msg.content ? [{ type: "text", text: msg.content }] : []);
+  return { ...msg, role, parts };
+});
+
+// Convert to ModelMessage[] format
+const modelMessages = await convertToModelMessages(normalizedMessages);
 ```
 
 ### Memory not persisting

@@ -82,11 +82,13 @@ await cortex.memory.remember({
   userName,
 });
 
-// Store system memory (Vector only)
-await cortex.vector.store(memorySpaceId, {
-  content,
+// Store system memory
+await cortex.memories.store(memorySpaceId, {
+  content: "System announcement",
+  contentType: "raw",
+  embedding: await embed("System announcement"),
   source: { type: "system" },
-  metadata,
+  metadata: { importance: 50, tags: [] },
 });
 
 // Search
@@ -124,7 +126,9 @@ await cortex.memory.export(memorySpaceId, { userId, format: "json" });
 ```typescript
 // Create/update
 await cortex.users.update(userId, {
-  data: { displayName, email, preferences },
+  displayName: 'Alex Johnson',
+  email: 'alex@example.com',
+  preferences: { theme: 'dark' },
 });
 
 // Get
@@ -134,7 +138,7 @@ await cortex.users.get(userId);
 await cortex.users.delete(userId, { cascade: true });
 
 // Search
-await cortex.users.search({ data: { tier: "pro" } });
+await cortex.users.search({ displayName: 'Alex' });
 
 // Count
 await cortex.users.count({ createdAfter: new Date("2025-01-01") });
@@ -157,7 +161,6 @@ const ctx = await cortex.contexts.create({
 // Get with chain (supports cross-space traversal)
 await cortex.contexts.get(contextId, {
   includeChain: true,
-  requestingSpace: memorySpaceId, // For cross-space access
 });
 
 // Update status
@@ -170,7 +173,7 @@ await cortex.contexts.delete(contextId, { cascadeChildren: true });
 await cortex.contexts.search({
   memorySpaceId,
   status: "active",
-  data: { importance: { $gte: 80 } },
+  userId: "user-456",
 });
 ```
 
@@ -232,10 +235,10 @@ await cortex.mutable.get(namespace, key);
 await cortex.mutable.update(namespace, key, (current) => current + 1);
 
 // Transaction
-await cortex.mutable.transaction(async (tx) => {
-  tx.update("inventory", "product-a", (qty) => qty - 1);
-  tx.update("counters", "sales", (n) => n + 1);
-});
+await cortex.mutable.transaction([
+  { op: 'decrement', namespace: 'inventory', key: 'product-a', amount: 1 },
+  { op: 'increment', namespace: 'counters', key: 'sales', amount: 1 },
+]);
 
 // Delete
 await cortex.mutable.delete(namespace, key);
@@ -249,12 +252,11 @@ await cortex.mutable.delete(namespace, key);
 // Create session
 const session = await cortex.sessions.create({
   userId,
-  deviceType: "web",
-  metadata,
+  metadata: { deviceType: 'web' },
 });
 
 // Get or create
-const session = await cortex.sessions.getOrCreate(userId, { deviceType });
+const session = await cortex.sessions.getOrCreate(userId, { deviceType: 'web' });
 
 // Touch (update activity)
 await cortex.sessions.touch(sessionId);
@@ -266,7 +268,7 @@ await cortex.sessions.end(sessionId);
 await cortex.sessions.getActive(userId);
 
 // Expire idle sessions
-await cortex.sessions.expireIdle({ maxIdleMinutes: 30 });
+await cortex.sessions.expireIdle({ idleTimeout: 30 * 60 * 1000 });
 ```
 
 ---
@@ -286,21 +288,30 @@ await cortex.facts.store(memorySpaceId, {
 // Search facts
 await cortex.facts.search(memorySpaceId, query, { userId });
 
-// Check conflicts (Belief Revision)
-const conflicts = await cortex.facts.checkConflicts({
+// Belief revision with conflict resolution
+const result = await cortex.facts.revise({
   memorySpaceId,
-  fact: newFact,
+  newFacts: [{ 
+    fact: "User prefers light mode",
+    factType: "preference",
+    subject: userId,
+    confidence: 90,
+  }],
 });
 
 // Get fact history
-await cortex.facts.history(factId);
+await cortex.facts.getHistory(memorySpaceId, factId);
 ```
 
 ---
 
 ## Universal Filters
 
-The same filters work across ALL operations:
+:::warning Filter Support Varies
+Not all filters are supported by all operations. Check the specific API documentation for each namespace to see which filters are available.
+:::
+
+Common filters that work across memory operations:
 
 ```typescript
 const filters = {
@@ -314,25 +325,23 @@ const filters = {
 await cortex.memory.search(memorySpaceId, query, filters);
 await cortex.memory.count(memorySpaceId, filters);
 await cortex.memory.list(memorySpaceId, filters);
-await cortex.memory.updateMany(memorySpaceId, filters, updates);
-await cortex.memory.deleteMany(memorySpaceId, filters);
 await cortex.memory.export(memorySpaceId, filters);
 ```
 
 **Supported Filters:**
 
-| Filter | Type | Description |
-|--------|------|-------------|
-| `userId` | `string` | Filter by user |
-| `tags` | `string[]` | Filter by tags (AND) |
-| `minImportance` | `number` | Minimum importance (0-100) |
-| `maxImportance` | `number` | Maximum importance (0-100) |
-| `createdBefore` | `Date` | Created before date |
-| `createdAfter` | `Date` | Created after date |
-| `accessCount` | `number` | Minimum access count |
-| `version` | `number` | Specific version |
-| `source.type` | `string` | Source type filter |
-| `metadata.*` | `any` | Any metadata field |
+| Filter | Type | Description | Supported Operations |
+|--------|------|-------------|---------------------|
+| `userId` | `string` | Filter by user | memory.*, contexts.*, facts.* |
+| `tags` | `string[]` | Filter by tags (AND) | memory.* |
+| `minImportance` | `number` | Minimum importance (0-100) | memory.*, facts.* |
+| `maxImportance` | `number` | Maximum importance (0-100) | memory.*, facts.* |
+| `createdBefore` | `Date` | Created before date | memory.*, contexts.* |
+| `createdAfter` | `Date` | Created after date | memory.*, contexts.* |
+| `accessCount` | `number` | Minimum access count | memory.* |
+| `version` | `number` | Specific version | immutable.* |
+| `source.type` | `string` | Source type filter | memory.* |
+| `metadata.*` | `any` | Any metadata field | memory.*, contexts.* |
 
 ---
 
