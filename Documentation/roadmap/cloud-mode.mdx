@@ -343,26 +343,20 @@ const cortex = new Cortex({
 
 ## Cloud Mode Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Your Application                      │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Cortex Cloud API Layer                     │
-│  ┌──────────────┬──────────────┬─────────────┬───────────┐  │
-│  │Auto-Embeddings│GDPR Cascade  │   Pub/Sub   │ Analytics │  │
-│  │   (OpenAI)    │  Orchestrator│  (Redis)    │ Dashboard │  │
-│  └──────────────┴──────────────┴─────────────┴───────────┘  │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Your Convex Instance                       │
-│   (Data stays in your account - full control)                │
-└─────────────────────────────────────────────────────────────┘
-```
+<ArchitectureDiagram title="Cloud Mode Architecture">
+  <ArchitectureLayer title="Your Application">
+    <ArchitectureBox title="App" description="Your Next.js, React, or Node.js application" />
+  </ArchitectureLayer>
+  <ArchitectureLayer title="Cortex Cloud API Layer">
+    <ArchitectureBox title="Auto-Embeddings" description="OpenAI text-embedding-3-large" />
+    <ArchitectureBox title="GDPR Cascade" description="Deletion orchestrator" />
+    <ArchitectureBox title="Pub/Sub" description="Redis infrastructure" />
+    <ArchitectureBox title="Analytics" description="Dashboard & metrics" />
+  </ArchitectureLayer>
+  <ArchitectureLayer title="Your Convex Instance">
+    <ArchitectureBox title="Data Storage" description="Your data stays in your account" />
+  </ArchitectureLayer>
+</ArchitectureDiagram>
 
 ---
 

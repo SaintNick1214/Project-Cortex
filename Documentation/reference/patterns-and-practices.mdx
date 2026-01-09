@@ -211,7 +211,7 @@ Share memory across multiple AI tools using Model Context Protocol.
 // In Claude: "What language does user prefer?"
 // → Claude queries MCP
 // → Retrieves "User prefers TypeScript"
-// → Personalizes response ✅
+// → Personalizes response
 
 // Your memory follows you across all AI tools!
 ```
@@ -258,10 +258,10 @@ console.log("Descendants:", chain.descendants.length); // Walk down
 Use `cortex.memory.*` for most operations - it handles the complexity for you:
 
 ```typescript
-// ✅ Recommended: Layer 4 (handles L1a + L2 + L3)
+// Recommended: Layer 4 (handles L1a + L2 + L3)
 await cortex.memory.remember({ ... });
 
-// ⚠️ Advanced: Manual Layer 1 + Layer 2 + Layer 3
+// Advanced: Manual Layer 1 + Layer 2 + Layer 3
 const msg = await cortex.conversations.addMessage(...);
 await cortex.vector.store(...);
 await cortex.facts.store(...);
@@ -278,7 +278,7 @@ Layer 4's `remember()` and `recall()` automatically orchestrate conversations, v
 Link Vector memories to their conversation source for full audit trails:
 
 ```typescript
-// ✅ Good: With conversationRef
+// Good: With conversationRef
 await cortex.vector.store('user-123-personal', {
   content: 'User prefers dark mode',
   contentType: 'fact',
@@ -291,7 +291,7 @@ await cortex.vector.store('user-123-personal', {
   metadata: { importance: 75 },
 });
 
-// ⚠️ Only omit for non-conversation sources (system data, imports)
+// Only omit for non-conversation sources (system data, imports)
 ```
 
 ---
@@ -349,7 +349,7 @@ See [Error Handling](/reference/error-handling) for the complete error code refe
 Link user-related data for compliance and cascade deletion:
 
 ```typescript
-// ✅ With userId (GDPR-enabled)
+// With userId (GDPR-enabled)
 await cortex.memory.store('user-123-personal', {
   userId: 'user-123',  // ← Critical for GDPR
   ...
@@ -363,7 +363,7 @@ await cortex.immutable.store({
 
 // When user requests deletion
 await cortex.users.delete('user-123', { cascade: true });
-// Deletes from ALL stores automatically ✅
+// Deletes from ALL stores automatically
 ```
 
 <Callout type="warning">

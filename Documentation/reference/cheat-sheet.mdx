@@ -400,10 +400,10 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 ### Async/Await
 
 ```typescript
-// ✅ Always use await
+// Always use await
 const memory = await cortex.memory.get("agent-1", memoryId);
 
-// ❌ Don't forget await
+// Don't forget await
 const memory = cortex.memory.get("agent-1", memoryId); // Returns Promise!
 ```
 
