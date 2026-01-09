@@ -4,37 +4,46 @@ Multi-tenancy and isolation with Cortex Memory Spaces.
 
 ## Overview
 
-Memory Spaces provide isolated memory contexts for different users, teams, or projects.
+Memory Spaces provide isolated memory contexts for different users, teams, or projects. They are automatically created when you first use a `memorySpaceId` - no explicit registration is required for basic usage. Memory spaces provide complete data isolation, ensuring that all memories, conversations, facts, and contexts are scoped to a specific memory space.
 
 ## Use Cases
 
 ### 1. Per-User Isolation
 
 ```typescript
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: `user-${currentUser.id}`,
   userId: currentUser.id,
+  agentId: 'my-assistant',
 });
 ```
 
 ### 2. Team Workspaces
 
 ```typescript
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: `team-${currentTeam.id}`,
   userId: currentUser.id,
+  agentId: 'my-assistant',
 });
 ```
 
 ### 3. Project-Based
 
 ```typescript
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: `project-${projectId}`,
   userId: currentUser.id,
+  agentId: 'my-assistant',
 });
 ```
 
@@ -45,4 +54,11 @@ const cortexMemory = createCortexMemory({
 - 👥 Team collaboration
 - 📊 Per-space analytics
 
-See examples/memory-spaces for complete multi-tenant application.
+## Managing Memory Spaces
+
+For advanced usage, you can explicitly manage memory spaces using the Cortex SDK. Memory spaces can be registered, queried, updated, and deleted through the [Memory Space Operations API](/api-reference/memory-space-operations). This includes capabilities like:
+
+- Explicitly registering memory spaces with metadata
+- Querying memory space details and statistics
+- Updating memory space configurations
+- Deleting memory spaces (with cascade options)

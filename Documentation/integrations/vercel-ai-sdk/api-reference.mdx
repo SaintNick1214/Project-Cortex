@@ -30,7 +30,7 @@ function createCortexMemory(config: CortexMemoryConfig): CortexMemoryModel;
 | `minMemoryRelevance`       | number                                  | ❌       | 0.7            | Min relevance score (0-1)        |
 | `enableMemorySearch`       | boolean                                 | ❌       | true           | Auto-search before generation    |
 | `enableMemoryStorage`      | boolean                                 | ❌       | true           | Auto-store after generation      |
-| `contextInjectionStrategy` | 'system'\|'user'                        | ❌       | 'system'       | Where to inject context          |
+| `contextInjectionStrategy` | 'system'\|'user'\|'custom'              | ❌       | 'system'       | Where to inject context          |
 | `customContextBuilder`     | function                                | ❌       | undefined      | Custom context formatter         |
 | `enableFactExtraction`     | boolean                                 | ❌       | false          | Extract facts from conversations |
 | `factExtractionConfig`     | object                                  | ❌       | undefined      | Fact extraction configuration    |
@@ -42,6 +42,8 @@ function createCortexMemory(config: CortexMemoryConfig): CortexMemoryModel;
 | `defaultTags`              | string[]                                | ❌       | []             | Default tags                     |
 | `streamingOptions`         | object                                  | ❌       | undefined      | Streaming enhancement options    |
 | `streamingHooks`           | object                                  | ❌       | undefined      | Real-time streaming callbacks    |
+| `beliefRevision`          | object \| false                         | ❌       | undefined      | Belief revision configuration    |
+| `enableStreamMetrics`     | boolean                                 | ❌       | true           | Enable streaming metrics         |
 | `layerObserver`            | object                                  | ❌       | undefined      | Layer orchestration observer     |
 | `debug`                    | boolean                                 | ❌       | false          | Enable debug logging             |
 | `logger`                   | object                                  | ❌       | console        | Custom logger                    |
@@ -89,11 +91,44 @@ streamingOptions?: {
 
 ```typescript
 streamingHooks?: {
-  onChunk?: (event: ChunkEvent) => void | Promise<void>;
-  onProgress?: (event: ProgressEvent) => void | Promise<void>;
-  onError?: (event: ErrorEvent) => void | Promise<void>;
-  onComplete?: (event: CompleteEvent) => void | Promise<void>;
+  onChunk?: (event: {
+    chunk: string;
+    chunkNumber: number;
+    accumulated: string;
+    timestamp: number;
+    estimatedTokens: number;
+  }) => void | Promise<void>;
+  onProgress?: (event: {
+    bytesProcessed: number;
+    chunks: number;
+    elapsedMs: number;
+    estimatedCompletion?: number;
+    currentPhase?: "streaming" | "fact-extraction" | "storage" | "finalization";
+  }) => void | Promise<void>;
+  onError?: (error: {
+    message: string;
+    code?: string;
+    phase?: string;
+    recoverable?: boolean;
+    resumeToken?: string;
+  }) => void | Promise<void>;
+  onComplete?: (event: {
+    fullResponse: string;
+    totalChunks: number;
+    durationMs: number;
+    factsExtracted: number;
+  }) => void | Promise<void>;
 }
+```
+
+#### beliefRevision
+
+```typescript
+beliefRevision?: {
+  enabled?: boolean;        // Enable belief revision
+  slotMatching?: boolean;   // Enable slot matching
+  llmResolution?: boolean;  // Enable LLM-based resolution
+} | false;
 ```
 
 #### layerObserver
@@ -320,19 +355,35 @@ console.log(`Agent: ${config.agentId}`);
 
 ```typescript
 interface MemoryEntry {
-  memoryId: string;
-  memorySpaceId: string;
-  content: string;
-  embedding?: number[];
-  userId?: string;
-  participantId?: string;
+  _id: string;                    // Internal ID
+  memoryId: string;                // Memory identifier
+  memorySpaceId: string;           // Memory space for isolation
+  tenantId?: string;               // Tenant identifier
+  participantId?: string;           // Participant identifier
+  userId?: string;                 // User identifier
+  agentId?: string;                // Agent identifier
+  content: string;                 // Memory content
+  contentType: ContentType;        // Content type classification
+  embedding?: number[];            // Vector embedding
   sourceType: "conversation" | "system" | "tool" | "a2a";
-  metadata: {
-    importance: number; // 0-100
-    tags: string[];
-  };
-  createdAt: number;
-  updatedAt: number;
+  sourceUserId?: string;           // Source user ID
+  sourceUserName?: string;         // Source user name
+  sourceTimestamp: number;         // Source timestamp
+  messageRole?: "user" | "agent" | "system";
+  conversationRef?: ConversationRef;
+  immutableRef?: ImmutableRef;
+  mutableRef?: MutableRef;
+  factsRef?: FactsRef;
+  importance: number;              // 0-100
+  tags: string[];                  // Tags for categorization
+  enrichedContent?: string;        // Enriched/processed content
+  factCategory?: string;           // Fact category classification
+  version: number;                 // Version number
+  previousVersions: MemoryVersion[]; // Version history
+  createdAt: number;               // Creation timestamp
+  updatedAt: number;               // Last update timestamp
+  lastAccessed?: number;           // Last access timestamp
+  accessCount: number;             // Access count
 }
 ```
 
@@ -394,8 +445,11 @@ export type {
   LayerStatus,
   MemoryLayer,
   OrchestrationSummary,
+  RevisionAction,
 } from "@cortexmemory/vercel-ai-provider";
 ```
+
+> **Note:** AI SDK v6 compatibility layer APIs (including `isV6Available`, `createMemoryPrepareCall`, `CortexCallOptions`, etc.) are documented separately. See the [AI SDK v6 Integration Guide](./v6-integration) for details.
 
 ## See Also
 

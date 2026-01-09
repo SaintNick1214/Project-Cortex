@@ -1,6 +1,6 @@
 # Performance
 
-> **Last Updated**: 2026-01-01
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
 Optimization techniques, scaling strategies, resilience layer, and performance characteristics of Cortex on Convex.
 
@@ -10,11 +10,13 @@ Cortex is designed for **high performance** at scale with **built-in resilience*
 
 **Performance Characteristics:**
 
-- **Read operations:** < 100ms (p95)
-- **Write operations:** < 50ms (p95)
-- **Vector search:** < 100ms for millions of vectors
-- **Facts search:** < 50ms for millions of facts
-- **Concurrent operations:** 16 (Starter) / 256 (Professional)
+<Callout type="info">These are target performance characteristics based on Convex platform capabilities and theoretical estimates. Actual performance may vary based on data size, query patterns, and system load.</Callout>
+
+- **Read operations:** < 100ms (p95) - target
+- **Write operations:** < 50ms (p95) - target
+- **Vector search:** < 100ms for millions of vectors - target
+- **Facts search:** < 50ms for millions of facts - target
+- **Concurrent operations:** 16 (Starter) / 64 (Professional preset, max 256)
 - **Storage:** Unlimited (pay-per-GB)
 - **Resilience:** Built-in rate limiting, circuit breaker, concurrency control
 
@@ -31,21 +33,21 @@ const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
   resilience: {
     // Token Bucket Rate Limiter
-    rateLimit: {
-      tokensPerSecond: 100, // Default: 100 ops/sec
-      maxBurst: 200, // Allow bursts up to 200
+    rateLimiter: {
+      refillRate: 100, // Default: 100 ops/sec
+      bucketSize: 200, // Allow bursts up to 200
     },
 
     // Concurrency Control (based on Convex plan)
     concurrency: {
-      maxConcurrent: 16, // Starter: 16, Professional: 256
+      maxConcurrent: 16, // Starter: 16, Professional preset: 64 (max: 256)
       queueSize: 1000, // Queue up to 1000 requests
     },
 
     // Circuit Breaker
     circuitBreaker: {
       failureThreshold: 5, // Open after 5 failures
-      timeout: 60000, // 60s timeout
+      timeout: 30000, // 30s timeout before attempting recovery
       resetTimeout: 300000, // Try recovery after 5 minutes
     },
   },
@@ -57,87 +59,96 @@ const cortex = new Cortex({
 ```typescript
 // Prevents API rate limit exhaustion
 // Example: 100 tokens/second with burst of 200
-
-┌─────────────────────────────────────────────┐
-│         Token Bucket Algorithm              │
-├─────────────────────────────────────────────┤
-│  Bucket Capacity: 200 tokens                │
-│  Refill Rate: 100 tokens/second             │
-│                                             │
-│  Request arrives:                           │
-│  1. Check if bucket has ≥1 token            │
-│  2. If yes: Consume 1 token, allow request  │
-│  3. If no: Reject with RATE_LIMIT_EXCEEDED  │
-│  4. Refill continuously at 100/sec          │
-└─────────────────────────────────────────────┘
-
-// Protects against:
-// - Sudden traffic spikes
-// - Accidental infinite loops
-// - Resource exhaustion
 ```
+
+<FlowDiagram title="Token Bucket Algorithm" caption="Prevents API rate limit exhaustion with configurable refill rate and bucket capacity">
+  <FlowNode title="Request Arrives" icon="network" variant="default">
+    Check if bucket has ≥1 token
+  </FlowNode>
+  <FlowNode title="Token Available" icon="shield" variant="success">
+    Consume 1 token, allow request
+  </FlowNode>
+  <FlowNode title="No Token" icon="shield" variant="error">
+    Reject with RATE_LIMIT_EXCEEDED
+  </FlowNode>
+  <FlowNode title="Refill Continuously" icon="server" variant="default">
+    100 tokens/second refill rate
+  </FlowNode>
+</FlowDiagram>
+
+**Configuration:**
+- Bucket Capacity: 200 tokens (allows bursts)
+- Refill Rate: 100 tokens/second
+- Protects against: Sudden traffic spikes, accidental infinite loops, resource exhaustion
 
 ### Concurrency Control
 
 ```typescript
 // Respects Convex plan limits
 // Starter: 16 concurrent operations
-// Professional: 256 concurrent operations
-
-┌─────────────────────────────────────────────┐
-│         Concurrency Semaphore               │
-├─────────────────────────────────────────────┤
-│  Active: 16/16 (at limit)                   │
-│  Queued: 5 requests waiting                 │
-│                                             │
-│  New request arrives:                       │
-│  1. Check if slot available                 │
-│  2. If yes: Execute immediately             │
-│  3. If no: Add to queue                     │
-│  4. Execute when slot frees                 │
-└─────────────────────────────────────────────┘
-
-// Prevents:
-// - Convex concurrent operation limit errors
-// - Resource contention
-// - Failed operations due to capacity
+// Professional preset: 64 concurrent operations (max: 256)
 ```
+
+<FlowDiagram title="Concurrency Semaphore" caption="Respects Convex plan limits and queues requests when at capacity">
+  <FlowNode title="New Request Arrives" icon="network" variant="default">
+    Check if slot available
+  </FlowNode>
+  <FlowNode title="Slot Available" icon="shield" variant="success">
+    Execute immediately
+  </FlowNode>
+  <FlowNode title="At Capacity" icon="time" variant="warning">
+    Add to queue (up to 1000 requests)
+  </FlowNode>
+  <FlowNode title="Slot Frees" icon="server" variant="default">
+    Execute queued request
+  </FlowNode>
+</FlowDiagram>
+
+**Configuration:**
+- Starter: 16 concurrent operations
+- Professional preset: 64 concurrent operations (max: 256)
+- Queue size: Up to 1000 requests
+- Prevents: Convex concurrent operation limit errors, resource contention, failed operations due to capacity
 
 ### Circuit Breaker
 
 ```typescript
 // Protects against cascading failures
-
-┌─────────────────────────────────────────────┐
-│         Circuit Breaker States              │
-├─────────────────────────────────────────────┤
-│  CLOSED (normal operation)                  │
-│    ↓ (5 failures)                           │
-│  OPEN (reject all requests)                 │
-│    ↓ (5 minute timeout)                     │
-│  HALF_OPEN (allow 1 test request)           │
-│    ↓ (success)                              │
-│  CLOSED (recovery)                          │
-└─────────────────────────────────────────────┘
-
-// Prevents:
-// - Cascading failures
-// - Backend overload during incidents
-// - Wasted retries
 ```
+
+<FlowDiagram title="Circuit Breaker States" caption="Protects against cascading failures by temporarily blocking requests after repeated failures">
+  <FlowNode title="CLOSED" icon="shield" variant="success">
+    Normal operation - requests allowed
+  </FlowNode>
+  <FlowNode title="OPEN" icon="shield" variant="error">
+    After 5 failures - reject all requests
+  </FlowNode>
+  <FlowNode title="HALF_OPEN" icon="time" variant="warning">
+    After 5 minute timeout - allow 1 test request
+  </FlowNode>
+  <FlowNode title="CLOSED" icon="server" variant="success">
+    On success - recovery complete
+  </FlowNode>
+</FlowDiagram>
+
+**Configuration:**
+- Failure threshold: 5 failures
+- Timeout: 30 seconds before attempting recovery
+- Reset timeout: 5 minutes before trying recovery
+- Prevents: Cascading failures, backend overload during incidents, wasted retries
 
 ### Monitoring Resilience
 
 ```typescript
-// Track resilience metrics
-const metrics = await cortex.getResilienceMetrics();
+// Track resilience metrics (synchronous method, no await needed)
+const metrics = cortex.getResilienceMetrics();
 
 console.log({
-  rateLimitHits: metrics.rateLimit.rejected,
-  queuedRequests: metrics.concurrency.queued,
+  rateLimitHits: metrics.rateLimiter.requestsThrottled,
+  queuedRequests: metrics.concurrency.waiting,
   circuitBreakerState: metrics.circuitBreaker.state, // CLOSED | OPEN | HALF_OPEN
-  totalRequests: metrics.total.requests,
-  failedRequests: metrics.total.failures,
+  totalProcessed: metrics.queue.processed,
+  droppedRequests: metrics.queue.dropped,
 });
 ```
 
@@ -150,14 +161,14 @@ console.log({
 **Rule #1:** Always use indexes for queries.
 
 ```typescript
-// ❌ SLOW: Table scan (no index)
+// Avoid: SLOW - Table scan (no index)
 const memories = await ctx.db
   .query("memories")
   .filter((q) => q.eq(q.field("memorySpaceId"), memorySpaceId))
   .collect();
 // Scans ENTIRE table! O(n)
 
-// ✅ FAST: Index query
+// Good: FAST - Index query
 const memories = await ctx.db
   .query("memories")
   .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
@@ -173,7 +184,7 @@ const memories = await ctx.db
 ### Compound Indexes
 
 ```typescript
-// ❌ Less efficient: Single index + filter
+// Less efficient: Single index + filter
 const memories = await ctx.db
   .query("memories")
   .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
@@ -181,7 +192,7 @@ const memories = await ctx.db
   .collect();
 // O(log n) + O(k) where k = space's memories
 
-// ✅ More efficient: Compound index
+// More efficient: Compound index
 const memories = await ctx.db
   .query("memories")
   .withIndex("by_memorySpace_userId", (q) =>
@@ -190,7 +201,7 @@ const memories = await ctx.db
   .collect();
 // O(log n) directly to subset
 
-// ✅ Multi-tenant compound index
+// Multi-tenant compound index
 const memories = await ctx.db
   .query("memories")
   .withIndex("by_tenant_space", (q) =>
@@ -208,7 +219,7 @@ const memories = await ctx.db
 ### Vector Search with filterFields
 
 ```typescript
-// ❌ Without filterFields: Search all vectors
+// Without filterFields: Search all vectors
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 1536,
@@ -224,7 +235,7 @@ const results = await ctx.db
   .filter((q) => q.eq(q.field("memorySpaceId"), memorySpaceId))  // ← Filter AFTER search
   .collect();
 
-// ✅ With filterFields: Pre-filter before search
+// With filterFields: Pre-filter before search
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 1536,  // Default
@@ -266,13 +277,22 @@ const results = await ctx.db
 export const listPaginated = query({
   args: {
     memorySpaceId: v.string(),
+    agentId: v.optional(v.string()), // Optional: filter by agent if provided
     cursor: v.optional(v.number()), // Timestamp cursor
     limit: v.number(),
   },
   handler: async (ctx, args) => {
+    // Use compound index if agentId provided, otherwise use memorySpace index
+    const indexName = args.agentId ? "by_memorySpace_agentId" : "by_memorySpace";
     let q = ctx.db
       .query("memories")
-      .withIndex("by_agent", (q) => q.eq("agentId", args.agentId))
+      .withIndex(indexName, (q) => {
+        let query = q.eq("memorySpaceId", args.memorySpaceId);
+        if (args.agentId) {
+          query = query.eq("agentId", args.agentId);
+        }
+        return query;
+      })
       .order("desc");
 
     // Apply cursor
@@ -319,13 +339,16 @@ do {
 export const listOffset = query({
   args: {
     memorySpaceId: v.string(),
+    agentId: v.string(),
     offset: v.number(),
     limit: v.number(),
   },
   handler: async (ctx, args) => {
     const results = await ctx.db
       .query("memories")
-      .withIndex("by_agent", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace_agentId", (q) => 
+        q.eq("memorySpaceId", args.memorySpaceId).eq("agentId", args.agentId)
+      )
       .order("desc")
       .skip(args.offset) // ← Skips documents
       .take(args.limit)
@@ -367,7 +390,7 @@ export const cachedList = query({
     // Execute query
     const data = await ctx.db
       .query("memories")
-      .withIndex("by_agent", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
       .collect();
 
     // Cache result
@@ -412,16 +435,18 @@ await cortex.memory.search("agent-1", "user preferences", {
 
 ## Batch Operations
 
+<Callout type="info">The SDK doesn't provide a built-in `storeBatch()` method. Batch operations require creating custom Convex mutations. This example shows how to implement batch operations efficiently.</Callout>
+
 ### Batch Insertions
 
 ```typescript
-// ❌ Slow: One at a time
+// Slow: One at a time
 for (const item of items) {
   await cortex.memory.store("agent-1", item);
 }
 // N round trips, N transactions
 
-// ✅ Fast: Batch mutation
+// Fast: Custom batch mutation
 export const storeBatch = mutation({
   args: { memorySpaceId: v.string(), items: v.array(v.any()) },
   handler: async (ctx, args) => {
@@ -430,7 +455,7 @@ export const storeBatch = mutation({
     // All inserts in single transaction
     for (const item of args.items) {
       const id = await ctx.db.insert("memories", {
-        memorySpaceId: args.agentId,
+        memorySpaceId: args.memorySpaceId, // Fixed: use memorySpaceId from args
         ...item,
         version: 1,
         previousVersions: [],
@@ -446,9 +471,12 @@ export const storeBatch = mutation({
   },
 });
 
-// Usage
-await cortex.memory.storeBatch("agent-1", items);
-// 1 round trip, 1 transaction ✅
+// Usage: Call via Convex client (not SDK method)
+await convexClient.mutation(api.memories.storeBatch, {
+  memorySpaceId: "agent-1",
+  items: items,
+});
+// 1 round trip, 1 transaction
 ```
 
 **Impact:**
@@ -458,19 +486,19 @@ await cortex.memory.storeBatch("agent-1", items);
 ### Parallel Queries
 
 ```typescript
-// ❌ Sequential: Slow
+// Sequential: Slow
 const memories = await cortex.memory.search("agent-1", query);
 const contexts = await cortex.contexts.list({ memorySpaceId: "agent-1" });
 const user = await cortex.users.get("user-123");
 // 3× latency
 
-// ✅ Parallel: Fast
+// Parallel: Fast
 const [memories, contexts, user] = await Promise.all([
   cortex.memory.search("agent-1", query),
   cortex.contexts.list({ memorySpaceId: "agent-1" }),
   cortex.users.get("user-123"),
 ]);
-// 1× latency ✅
+// 1× latency
 ```
 
 ---
@@ -511,7 +539,7 @@ await cortex.memory.store("agent-1", {
 ### Content Summarization
 
 ```typescript
-// Store summarized content (Cloud Mode or DIY)
+// Store summarized content (planned feature or DIY)
 const summary = await summarize(longContent);  // 1000 chars -> 100 chars
 
 await cortex.memory.store('agent-1', {
@@ -552,20 +580,20 @@ Convex automatically scales:
 // Agents are naturally isolated by agentId
 // No cross-agent queries = better performance
 
-// ✅ Fast: Single agent
+// Fast: Single agent
 await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_agentId", (q) => q.eq("agentId", agentId))
   .collect();
 
-// ⚠️ Slower: All agents
+// Slower: All agents
 const allAgents = await ctx.db.query("agents").collect();
 const allMemories = [];
 
 for (const agent of allAgents) {
   const memories = await ctx.db
     .query("memories")
-    .withIndex("by_agent", (q) => q.eq("agentId", agent.agentId))
+    .withIndex("by_agentId", (q) => q.eq("agentId", agent.agentId))
     .collect();
 
   allMemories.push(...memories);
@@ -578,6 +606,8 @@ for (const agent of allAgents) {
 ---
 
 ## Benchmark Results
+
+<Callout type="info">These benchmark results are theoretical estimates based on Convex platform capabilities. Actual performance may vary based on data distribution, query complexity, network conditions, and system load. Performance targets are not guarantees.</Callout>
 
 ### Read Operations (1M memories)
 
@@ -615,22 +645,83 @@ for (const agent of allAgents) {
 
 ### Essential Optimizations
 
-- ✅ Use compound indexes for common query patterns
-- ✅ Add filterFields to vector indexes
-- ✅ Paginate large result sets
-- ✅ Limit query results (.take(n))
-- ✅ Cache frequent queries
-- ✅ Batch write operations
-- ✅ Use parallel queries (Promise.all)
+<FeatureGrid>
+  <FeatureCard
+    title="Use compound indexes"
+    description="For common query patterns"
+    icon="database"
+  />
+  <FeatureCard
+    title="Add filterFields"
+    description="To vector indexes for faster searches"
+    icon="search"
+  />
+  <FeatureCard
+    title="Paginate large result sets"
+    description="Use cursor-based pagination"
+    icon="layers"
+  />
+  <FeatureCard
+    title="Limit query results"
+    description="Use .take(n) to cap results"
+    icon="find"
+  />
+  <FeatureCard
+    title="Cache frequent queries"
+    description="Reduce redundant database calls"
+    icon="fast"
+  />
+  <FeatureCard
+    title="Batch write operations"
+    description="Group multiple writes together"
+    icon="package"
+  />
+  <FeatureCard
+    title="Use parallel queries"
+    description="Promise.all for concurrent operations"
+    icon="analytics"
+  />
+  <FeatureCard
+    title="Use projection queries"
+    description="Select only the fields you need"
+    icon="code"
+  />
+</FeatureGrid>
 
 ### Advanced Optimizations
 
-- ✅ Aggressive version retention (1-5 versions)
-- ✅ Selective embeddings (importance >= threshold)
-- ✅ Content summarization
-- ✅ Lazy load children/descendants
-- ✅ Cursor-based pagination
-- ✅ Cache embeddings for common queries
+<FeatureGrid>
+  <FeatureCard
+    title="Aggressive version retention"
+    description="Keep 1-5 versions to save storage"
+    icon="storage"
+  />
+  <FeatureCard
+    title="Selective embeddings"
+    description="Only embed high-importance memories"
+    icon="search"
+  />
+  <FeatureCard
+    title="Content summarization"
+    description="Reduce storage and token costs"
+    icon="file"
+  />
+  <FeatureCard
+    title="Lazy load children"
+    description="Load descendants on demand"
+    icon="sync"
+  />
+  <FeatureCard
+    title="Cursor-based pagination"
+    description="Efficient pagination for large datasets"
+    icon="link"
+  />
+  <FeatureCard
+    title="Cache embeddings"
+    description="For common queries"
+    icon="server"
+  />
+</FeatureGrid>
 
 ---
 
@@ -700,14 +791,24 @@ const totalTokens = avgTokensPerMemory * memoriesPerMonth; // 1M tokens
 ```typescript
 // Track query latency
 export const search = query({
+  args: {
+    memorySpaceId: v.string(),
+    agentId: v.optional(v.string()),
+    embedding: v.array(v.number()),
+  },
   handler: async (ctx, args) => {
     const startTime = Date.now();
 
     const results = await ctx.db
       .query("memories")
-      .withIndex("by_embedding", (q) =>
-        q.similar("embedding", args.embedding, 10).eq("agentId", args.agentId),
-      )
+      .withIndex("by_embedding", (q) => {
+        let query = q.similar("embedding", args.embedding, 10)
+          .eq("memorySpaceId", args.memorySpaceId);
+        if (args.agentId) {
+          query = query.eq("agentId", args.agentId);
+        }
+        return query;
+      })
       .collect();
 
     const latency = Date.now() - startTime;
@@ -715,7 +816,7 @@ export const search = query({
     // Log slow queries
     if (latency > 100) {
       console.warn(`Slow search: ${latency}ms`, {
-        memorySpaceId: args.agentId,
+        memorySpaceId: args.memorySpaceId,
         resultCount: results.length,
       });
     }
@@ -734,7 +835,7 @@ export const getStorageStats = query({
   handler: async (ctx, args) => {
     const memories = await ctx.db
       .query("memories")
-      .withIndex("by_agent", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
       .collect();
 
     const stats = {
@@ -769,10 +870,10 @@ export const getStorageStats = query({
 ### 1. Partition by Agent
 
 ```typescript
-// ✅ Agent-specific queries (fast)
+// Agent-specific queries (fast)
 const memories = await cortex.memory.search("agent-1", query);
 
-// ⚠️ Cross-agent queries (slower)
+// Cross-agent queries (slower)
 const allAgents = await cortex.agents.list();
 const allMemories = await Promise.all(
   allAgents.map((a) => cortex.memory.search(a.id, query)),
@@ -782,12 +883,12 @@ const allMemories = await Promise.all(
 ### 2. Limit Result Sets
 
 ```typescript
-// ✅ Always set reasonable limits
+// Always set reasonable limits
 const results = await cortex.memory.search("agent-1", query, {
   limit: 20, // Don't return 1000s of results
 });
 
-// ❌ Don't load everything
+// Don't load everything
 const all = await cortex.memory.list("agent-1"); // Could be huge!
 ```
 
@@ -795,13 +896,14 @@ const all = await cortex.memory.list("agent-1"); // Could be huge!
 
 ```typescript
 // If you frequently query by importance
-.index("by_agent_importance", ["agentId", "metadata.importance"])
+// Note: This is a custom index example - add to schema if needed
+.index("by_memorySpace_importance", ["memorySpaceId", "metadata.importance"])
 
 // Fast importance queries
 await ctx.db
   .query("memories")
-  .withIndex("by_agent_importance", (q) =>
-    q.eq("agentId", agentId).gte("metadata.importance", 80)
+  .withIndex("by_memorySpace_importance", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).gte("metadata.importance", 80)
   )
   .collect();
 ```
@@ -869,34 +971,34 @@ const wrapQuery =
 
 **Solutions:**
 
-- ✅ Add filterFields to vector index
-- ✅ Reduce search limit
-- ✅ Add userId filter (if applicable)
-- ✅ Check embedding dimension (smaller = faster)
+- Add filterFields to vector index
+- Reduce search limit
+- Add userId filter (if applicable)
+- Check embedding dimension (smaller = faster)
 
 **Issue:** Pagination is slow
 
 **Solutions:**
 
-- ✅ Use cursor-based pagination
-- ✅ Avoid large offsets
-- ✅ Add index on sort field
+- Use cursor-based pagination
+- Avoid large offsets
+- Add index on sort field
 
 **Issue:** Filter queries are slow
 
 **Solutions:**
 
-- ✅ Create compound index for filter combination
-- ✅ Use .withIndex() instead of .filter()
-- ✅ Limit result set with .take()
+- Create compound index for filter combination
+- Use .withIndex() instead of .filter()
+- Limit result set with .take()
 
 ---
 
 ## Next Steps
 
-- **[Security & Privacy](./security-privacy)** - Data protection
-- **[Data Models](./data-models)** - Schema and indexes
-- **[Convex Integration](./convex-integration)** - Convex features
+- **[Security & Privacy](/architecture/security-privacy)** - Data protection
+- **[Data Models](/architecture/data-models)** - Schema and indexes
+- **[Convex Integration](/architecture/convex-integration)** - Convex features
 
 ---
 

@@ -9,8 +9,10 @@ Common issues and solutions for Cortex Memory Provider with SDK v0.21.0+.
 **Error:**
 
 ```
-Error: agentId is required. User-agent conversations require both a user and an agent participant.
+Error: agentId is required. User-agent conversations require both a user and an agent participant. Provide agentId in your configuration, e.g., agentId: 'my-assistant'
 ```
+
+**Note:** The actual error message includes additional configuration help text to guide users.
 
 **Cause:** Since SDK v0.17.0, all conversations require an `agentId` to identify the AI agent participant.
 
@@ -59,8 +61,10 @@ npm install @cortexmemory/sdk@latest
 Ensure compatible versions:
 
 ```bash
-npm install ai@^4.0.0 convex@^1.17.0
+npm install ai@^4.0.0 convex@^1.28.2
 ```
+
+**Note:** The AI SDK supports versions 3, 4, 5, and 6 (`^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0`).
 
 ## Connection Issues
 
@@ -96,6 +100,11 @@ Common causes:
 **Solution:**
 
 ```typescript
+import { embed } from 'ai';
+import { createOpenAI } from '@ai-sdk/openai';
+
+const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 // Add embeddings for better search
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
@@ -290,10 +299,10 @@ const cortexMemory = createCortexMemory({
 
 ```typescript
 streamingOptions: {
-  partialFailureHandling: 'store-partial',
-  maxRetries: 3,
-  generateResumeToken: true,
-  streamTimeout: 60000, // Increase timeout
+  partialFailureHandling: 'store-partial', // Optional
+  maxRetries: 3, // Default: 3
+  generateResumeToken: true, // Default: false
+  streamTimeout: 60000, // Default: 30000, increasing for reliability
 }
 ```
 

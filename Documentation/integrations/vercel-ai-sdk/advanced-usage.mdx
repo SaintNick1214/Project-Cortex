@@ -197,7 +197,7 @@ When a user says "I like blue" and later says "I prefer purple now", without bel
 
 | Action      | Description                                        | Example                               |
 | ----------- | -------------------------------------------------- | ------------------------------------- |
-| `CREATE`    | New fact with no conflicts                         | First time mentioning favorite color  |
+| `ADD`       | New fact with no conflicts                         | First time mentioning favorite color  |
 | `UPDATE`    | Existing fact refined with new details             | "I like blue" → "I love dark blue"    |
 | `SUPERSEDE` | Old fact replaced by contradicting new information | "I like blue" → "I prefer purple now" |
 | `NONE`      | Duplicate or irrelevant, no storage needed         | Saying "I like blue" twice            |
@@ -220,7 +220,7 @@ const cortexMemory = createCortexMemory({
     llmResolution: true, // LLM resolves nuanced conflicts
   },
 
-  // Required for semantic matching
+  // Recommended for semantic matching
   embeddingProvider: {
     generate: async (text) => {
       const { embedding } = await embed({
@@ -256,6 +256,8 @@ When using the layer observer, facts layer events now include revision informati
 ```typescript
 layerObserver: {
   onLayerUpdate: (event) => {
+    // revisionAction and supersededFacts are optional properties
+    // Only present when event.layer === 'facts'
     if (event.layer === 'facts' && event.revisionAction) {
       console.log(`Fact ${event.revisionAction}: ${event.data?.preview}`);
 
@@ -266,6 +268,8 @@ layerObserver: {
   },
 },
 ```
+
+**Note:** `revisionAction` and `supersededFacts` are optional properties that are only present for facts layer events. The `revisionAction` value will be `"ADD"`, `"UPDATE"`, `"SUPERSEDE"`, or `"NONE"`.
 
 ### Best Practices
 

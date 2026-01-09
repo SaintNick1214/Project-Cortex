@@ -1,6 +1,6 @@
 # Data Models
 
-> **Last Updated**: 2026-01-01
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
 Detailed Convex schema definitions, indexes, and data structures for all Cortex tables.
 
@@ -30,8 +30,7 @@ Cortex uses **12+ Convex tables** to implement the 4-layer architecture plus coo
 
 ## Complete Schema Definition
 
-> **Source of Truth:** `convex-dev/schema.ts`  
-> This documentation reflects the actual deployed schema.
+<Callout type="info">**Source of Truth:** `convex-dev/schema.ts` — This documentation reflects the actual deployed schema.</Callout>
 
 ### convex/schema.ts
 
@@ -1123,9 +1122,10 @@ await ctx.db
   lastAccessed?: number,
   accessCount: number,
 
-  // Streaming support (NEW)
-  isPartial?: boolean,
-  partialMetadata?: any,
+  // Streaming support (v0.23.0+)
+  // Used during progressive storage of streaming responses
+  isPartial?: boolean,  // true when memory is being streamed/stored incrementally
+  partialMetadata?: any,  // Metadata for partial/streaming memories (chunk info, progress, etc.)
 }
 ```
 
@@ -1472,7 +1472,7 @@ await ctx.db
   rootId: string,  // Self if root
   depth: number,   // 0 = root
   childIds: string[],
-  participants: string[],  // All agents involved
+  participants: string[],  // Memory spaces or participants involved (not just agents)
 
   conversationRef?: {
     conversationId: string,
@@ -1490,60 +1490,67 @@ await ctx.db
   previousVersions: Array<{
     version: number,
     status: string,
-    data: any,
+    data?: any,
     timestamp: number,
-    updatedBy: string,
+    updatedBy?: string,  // Agent/participant that made the change
   }>,
 }
 ```
 
 **Indexes:**
 
-- `by_agent` - Find contexts for agent
-- `by_userId` - Find contexts for user
-- `by_status` - Find active/completed workflows
-- `by_agent_status` - Agent's active workflows
+- `by_contextId` - Unique lookup
+- `by_memorySpace` - Memory space's contexts
+- `by_tenantId` - Tenant's contexts
+- `by_tenant_contextId` - Tenant + context ID compound
+- `by_tenant_space` - Tenant + space compound
 - `by_parentId` - Get children
-- `by_rootId` - Get all in workflow
-- `by_depth` - Get by hierarchy level
-- `by_conversationRef` - Find workflows from conversation
-- `by_purpose` (search) - Search workflow purposes
+- `by_rootId` - Get all in workflow tree
+- `by_status` - Filter by status
+- `by_memorySpace_status` - Space + status compound
+- `by_userId` - GDPR cascade
+- `by_created` - Chronological ordering
 
 **Query Patterns:**
 
 ```typescript
-// Get active contexts for agent
+// Get active contexts in memory space
 await ctx.db
   .query("contexts")
-  .withIndex("by_agent_status", (q) =>
-    q.eq("agentId", agentId).eq("status", "active"),
+  .withIndex("by_memorySpace_status", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("status", "active"),
   )
   .collect();
 
-// Get all children
+// Get all children of a context
 await ctx.db
   .query("contexts")
   .withIndex("by_parentId", (q) => q.eq("parentId", parentId))
   .collect();
 
-// Get all in workflow
+// Get all contexts in workflow tree
 await ctx.db
   .query("contexts")
   .withIndex("by_rootId", (q) => q.eq("rootId", rootId))
   .collect();
 
-// Search by purpose
+// Filter by status (then filter by participants in application code)
 await ctx.db
   .query("contexts")
-  .withSearchIndex("by_purpose", (q) =>
-    q.search("purpose", "refund").eq("status", "active"),
-  )
+  .withIndex("by_status", (q) => q.eq("status", "active"))
+  .filter((q) => q.field("participants").includes(participantId))
+  .collect();
+
+// Get contexts for user (GDPR)
+await ctx.db
+  .query("contexts")
+  .withIndex("by_userId", (q) => q.eq("userId", userId))
   .collect();
 ```
 
 ---
 
-### facts (Layer 3) ✨
+### facts (Layer 3)
 
 **Purpose:** Structured knowledge with belief revision (memorySpace-scoped)
 
@@ -1850,7 +1857,7 @@ await ctx.db
 // Relationship: memories (L2) → mutable (L1c) - snapshot, not live
 ```
 
-### factsRef (Memory → Fact) 🆕
+### factsRef (Memory → Fact)
 
 ```typescript
 // Vector memory (Layer 2) indexing a fact
@@ -2000,7 +2007,7 @@ await ctx.db
     q.eq("memorySpaceId", memorySpaceId).eq("userId", userId)
   )
   .collect();
-// Uses compound index ✅ (fast)
+// Uses compound index (fast)
 
 // vs
 await ctx.db
@@ -2008,7 +2015,7 @@ await ctx.db
   .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .filter((q) => q.eq(q.field("userId"), userId))
   .collect();
-// Filters after index ⚠️ (slower)
+// Filters after index (slower)
 ```
 
 ### Vector Index with Filters
@@ -2030,7 +2037,7 @@ await ctx.db
      .eq("userId", userId)                // ← Filtered BEFORE similarity
   )
   .collect();
-// Only searches vectors for this space+tenant+user ✅
+// Only searches vectors for this space+tenant+user
 ```
 
 ### Search Indexes for Keywords
@@ -2169,7 +2176,7 @@ All tables support optional `userId` field for GDPR compliance:
 }
 ```
 
-### Cascade Deletion Query Plan (Cloud Mode)
+### Cascade Deletion Query Plan (Planned - Cloud Mode)
 
 ```typescript
 // 1. Find all conversations (across ALL memory spaces)
@@ -2283,14 +2290,14 @@ interface MemoryMetadata {
 ### Use Appropriate Index
 
 ```typescript
-// ❌ Slow: No index
+// Slow: No index
 const memories = await ctx.db
   .query("memories")
   .filter((q) => q.eq(q.field("memorySpaceId"), memorySpaceId))
   .collect();
 // Scans entire table!
 
-// ✅ Fast: With index
+// Fast: With index
 const memories = await ctx.db
   .query("memories")
   .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
@@ -2301,14 +2308,14 @@ const memories = await ctx.db
 ### Compound Indexes for Multiple Filters
 
 ```typescript
-// ❌ Inefficient: Filter after index
+// Inefficient: Filter after index
 await ctx.db
   .query("memories")
   .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .filter((q) => q.eq(q.field("userId"), userId))
   .collect();
 
-// ✅ Efficient: Compound index
+// Efficient: Compound index
 await ctx.db
   .query("memories")
   .withIndex("by_memorySpace_userId", (q) =>
@@ -2316,7 +2323,7 @@ await ctx.db
   )
   .collect();
 
-// ✅ Multi-tenant compound index
+// Multi-tenant compound index
 await ctx.db
   .query("memories")
   .withIndex("by_tenant_space", (q) =>
@@ -2328,7 +2335,7 @@ await ctx.db
 ### Vector Search with Pre-Filtering
 
 ```typescript
-// ✅ Fast: Filter before similarity
+// Fast: Filter before similarity
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 1536,
@@ -2350,10 +2357,10 @@ await ctx.db
 
 ## Next Steps
 
-- **[Convex Integration](./convex-integration)** - How we use Convex features
-- **[Vector Embeddings](./vector-embeddings)** - Embedding strategy and dimensions
-- **[Search Strategy](./search-strategy)** - Multi-strategy search implementation
-- **[Performance](./performance)** - Optimization techniques
+- **[Convex Integration](/architecture/convex-integration)** - How we use Convex features
+- **[Vector Embeddings](/architecture/vector-embeddings)** - Embedding strategy and dimensions
+- **[Search Strategy](/architecture/search-strategy)** - Multi-strategy search implementation
+- **[Performance](/architecture/performance)** - Optimization techniques
 
 ---
 

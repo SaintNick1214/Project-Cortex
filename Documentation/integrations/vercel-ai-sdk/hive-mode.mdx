@@ -13,24 +13,53 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "shared-workspace", // Same across apps
   userId: currentUser.id,
-
+  agentId: "web-assistant", // REQUIRED: identifies the agent in user-agent conversations
   hiveMode: {
-    participantId: "web-assistant", // Identify this agent
+    participantId: "web-assistant", // Optional: tracks which tool/agent stored data
   },
 });
 ```
+
+### Understanding `agentId` vs `participantId`
+
+- **`agentId`** (required): Identifies the agent participating in a user-agent conversation. This is the agent that responds to the user.
+- **`participantId`** (optional, hive mode): Tracks which tool/agent stored a particular piece of data within a shared memory space. Used for attribution and filtering.
 
 ## Use Cases
 
 ### 1. Next.js App + Cursor + Claude
 
 ```typescript
-// All three share the same memory space:
-// - Your Next.js app (participantId: 'web-app')
-// - Cursor (participantId: 'cursor')
-// - Claude Desktop (participantId: 'claude-desktop')
+// Next.js App
+const webAppMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "shared-workspace", // Same across all three
+  userId: currentUser.id,
+  agentId: "web-app-agent",
+  hiveMode: { participantId: "web-app" },
+});
+
+// Cursor (if using SDK)
+const cursorMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "shared-workspace", // Same space
+  userId: currentUser.id,
+  agentId: "cursor-agent",
+  hiveMode: { participantId: "cursor" },
+});
+
+// Claude Desktop (if using SDK)
+const claudeMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "shared-workspace", // Same space
+  userId: currentUser.id,
+  agentId: "claude-agent",
+  hiveMode: { participantId: "claude-desktop" },
+});
 
 // They can all see each other's conversations
+const sharedMemories = await webAppMemory.search('user preferences');
+// Returns memories from all three participants
 ```
 
 ### 2. Multi-Agent Systems
@@ -40,6 +69,7 @@ const cortexMemory = createCortexMemory({
 const agentA = createCortexMemory({
   memorySpaceId: "team-workspace",
   userId: "user-123",
+  agentId: "analyzer-agent",
   hiveMode: { participantId: "analyzer" },
 });
 
@@ -47,10 +77,35 @@ const agentA = createCortexMemory({
 const agentB = createCortexMemory({
   memorySpaceId: "team-workspace",
   userId: "user-123",
+  agentId: "writer-agent",
   hiveMode: { participantId: "writer" },
 });
 
-// Both see all memories, but can filter by participant
+// Both see all memories
+const allMemories = await agentA.search('project status');
+// Returns memories from both analyzer and writer
+
+// But can filter by participant
+const analyzerMemories = await agentA.search('project status', {
+  participantId: 'analyzer' // Filter to only analyzer's memories
+});
+```
+
+## Filtering by Participant
+
+You can filter memories and facts by `participantId` to see data from specific tools or agents:
+
+```typescript
+// Filter memories by participant
+const calendarMemories = await cortexMemory.search('meetings', {
+  participantId: 'calendar-tool'
+});
+
+// Filter facts by participant
+const emailFacts = await cortex.facts.list({
+  memorySpaceId: 'shared-workspace',
+  participantId: 'email-tool'
+});
 ```
 
 ## Benefits
@@ -60,4 +115,10 @@ const agentB = createCortexMemory({
 - 🔄 Real-time updates
 - 📍 Participant tracking
 
-See examples/hive-mode for complete implementation.
+## Limitations
+
+When using Hive Mode, be aware of the following:
+
+- **`participantId` is optional**: You can use hive mode without specifying a `participantId`, though it's recommended for tracking purposes.
+- **No data isolation**: All participants can see all data in the shared memory space. `participantId` is for attribution and filtering, not access control.
+- **Attribution, not security**: The `participantId` field tracks who stored data but does not provide any security or access control. All participants have full access to all memories in the shared space.

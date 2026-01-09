@@ -152,7 +152,7 @@ interface AuthContext {
 ### Basic Setup
 
 ```typescript
-import { Cortex, createAuthContext } from "@cortex-platform/sdk";
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
 // Create auth context from your auth provider
 const auth = createAuthContext({
@@ -170,7 +170,9 @@ const cortex = new Cortex({
 
 // All operations now include auth context
 await cortex.memory.remember({
-  content: "User prefers dark mode",
+  conversationId: "conv-123", // Required
+  userMessage: "User prefers dark mode",
+  agentResponse: "I'll remember that.",
   memorySpaceId: "user-123-personal",
   // userId is automatically set from auth context
 });
@@ -240,6 +242,7 @@ const cortex = new Cortex({
 ```typescript
 // All operations automatically include auth context
 await cortex.memory.remember({
+  conversationId: "conv-123", // Required
   memorySpaceId: "user-space",
   userMessage: "Hello",
   agentResponse: "Hi!",
@@ -310,6 +313,7 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
 
   // Use cortex with auth context
   await cortex.memory.remember({
+    conversationId: req.body.conversationId || "conv-default", // Required
     memorySpaceId: `user-${req.authContext.userId}-personal`,
     userMessage: req.body.message,
     agentResponse: await generateResponse(req.body.message),
@@ -430,17 +434,22 @@ const cortex = new Cortex({ convexUrl, auth });
 
 // All operations are tenant-scoped
 await cortex.memory.remember({
-  content: "Team meeting notes...",
+  conversationId: "conv-123", // Required
+  userMessage: "Team meeting notes...",
+  agentResponse: "I've noted that.",
   memorySpaceId: "acme-shared",
   // tenantId: 'customer-acme' is automatically set
 });
 
 // Queries respect tenant isolation
-const memories = await cortex.vector.search({
-  memorySpaceId: "acme-shared",
-  query: "meeting notes",
-  // Only returns memories from tenant 'customer-acme'
-});
+const memories = await cortex.vector.search(
+  "acme-shared", // memorySpaceId as first parameter
+  "meeting notes", // query as second parameter
+  {
+    // options object
+  }
+);
+// Only returns memories from tenant 'customer-acme'
 ```
 
 ### Cross-Tenant Queries (Admin)
@@ -490,7 +499,9 @@ const session = await cortex.sessions.getOrCreate("user-123", {
 
 // Memory operations track session
 await cortex.memory.remember({
-  content: "User said hello",
+  conversationId: "conv-123", // Required
+  userMessage: "User said hello",
+  agentResponse: "Hello!",
   memorySpaceId: "user-123-personal",
   // sessionId: 'session-xyz' tracked implicitly
 });
@@ -684,6 +695,7 @@ export async function POST(req: Request) {
   const { message } = await req.json();
 
   await cortex.memory.remember({
+    conversationId: "conv-123", // Required
     memorySpaceId: `user-${yourAuthData.userId}-personal`,
     userMessage: message,
     agentResponse: "Processing...",

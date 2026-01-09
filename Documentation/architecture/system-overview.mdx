@@ -1,6 +1,6 @@
 # System Overview
 
-> **Last Updated**: 2026-01-01
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
 High-level architecture of Cortex and how it leverages Convex.
 
@@ -8,101 +8,90 @@ High-level architecture of Cortex and how it leverages Convex.
 
 Cortex is built **natively on Convex** - a reactive TypeScript database with built-in vector search. We organize storage into **four layers** (ACID + Vector + Facts + Convenience) plus **coordination entities** and a **resilience layer**:
 
-```
-                    ┌─────────────────────────────┐
-                    │    Resilience Layer         │
-                    │  (Rate Limiting, Circuit    │
-                    │   Breaker, Concurrency)     │
-                    └──────────────┬──────────────┘
-                                   ↓
-┌─────────────────────────────────────────────────────────────┐
-│                   Layer 1: ACID Stores                      │
-│                  (Convex Tables - Immutable Sources)        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐  │
-│  │ Conversations   │  │  Immutable      │  │  Mutable    │  │
-│  │ (Layer 1a)      │  │  (Layer 1b)     │  │  (Layer 1c) │  │
-│  │                 │  │                 │  │             │  │
-│  │ User↔Agent      │  │ KB Articles     │  │ Inventory   │  │
-│  │ Agent↔Agent     │  │ Policies        │  │ Config      │  │
-│  │                 │  │ Audit Logs      │  │ Counters    │  │
-│  │                 │  │ User Profiles   │  │             │  │
-│  └─────────────────┘  └─────────────────┘  └─────────────┘  │
-│  Append-only          Versioned             Current-value   │
-│  memorySpace-scoped   TRULY SHARED          TRULY SHARED    │
-│  Indexes: memorySpace Indexes: type, userId Indexes: userId │
-└───────────┬───────────────────┬─────────────────┬───────────┘
-            │                   │                 │
-            │ conversationRef   │ immutableRef    │ mutableRef
-            │                   │                 │
-            └───────────────────┴─────────────────┘
-                                │
-                                ↓
-┌─────────────────────────────────────────────────────────────┐
-│              Layer 2: Vector Index (Convex Table)           │
-├─────────────────────────────────────────────────────────────┤
-│  memories                                                   │
-│  ├── Vector Index: by_embedding (1536-dim default)          │
-│  ├── Regular Indexes: by_memorySpace, by_userId, etc.       │
-│  └── Search Index: by_content (full-text)                   │
-│                                                             │
-│  memorySpace-scoped memories with embeddings                │
-│  References Layer 1 stores via Ref fields                   │
-│  Versioned with retention rules                             │
-│  participantId tracking for Hive Mode                       │
-└───────────────────────────┬─────────────────────────────────┘
-                            │ factsRef
-                            ↓
-┌─────────────────────────────────────────────────────────────┐
-│       Layer 3: Facts Store (Convex Table)                   │
-├─────────────────────────────────────────────────────────────┤
-│  facts                                                      │
-│  ├── Structured knowledge with versioning                   │
-│  ├── Belief Revision System (v0.24.0+)                      │
-│  ├── 60-90% token savings for infinite context              │
-│  └── Search Index: by_content (full-text)                   │
-│                                                             │
-│  memorySpace-scoped facts with confidence scoring           │
-│  factHistory table for audit trail                          │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ↓
-┌─────────────────────────────────────────────────────────────┐
-│       Layer 4: Convenience API (TypeScript SDK)             │
-├─────────────────────────────────────────────────────────────┤
-│  cortex.memory.remember() → Orchestrates L1 + L2 + L3       │
-│  cortex.memory.recall() → Unified retrieval + ranking       │
-│  TypeScript helpers over Convex functions                   │
-│  Automatic orchestration across all layers                  │
-└─────────────────────────────────────────────────────────────┘
+<ArchitectureDiagram title="Cortex System Architecture" caption="Four-layer architecture with resilience layer, coordination entities, and optional graph integration">
 
-┌─────────────────────────────────────────────────────────────┐
-│         Coordination Entities (Convex Tables)               │
-├─────────────────────────────────────────────────────────────┤
-│  memorySpaces     - Memory space registry (Hive/Collab)     │
-│  users            - User profiles (GDPR cascade engine)     │
-│  contexts         - Workflow coordination                   │
-│  sessions         - Session lifecycle management (v0.27.0+) │
-│  agents           - Agent metadata (optional analytics)     │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ↓ (Optional Sync)
-┌─────────────────────────────────────────────────────────────┐
-│        Graph Database (Optional - Neo4j/Memgraph)           │
-├─────────────────────────────────────────────────────────────┤
-│  graphSyncQueue   - Real-time sync queue                    │
-│  Entities extracted from memories, facts, contexts          │
-│  Enables multi-hop traversal and complex relationships      │
-└─────────────────────────────────────────────────────────────┘
+<ArchitectureLayer 
+  title="Resilience Layer" 
+  variant="muted"
+  showArrow={true}
+>
+  <ArchitectureBox title="Rate Limiting, Circuit Breaker, Concurrency">
+    Protects all operations from overload
+  </ArchitectureBox>
+</ArchitectureLayer>
 
-┌─────────────────────────────────────────────────────────────┐
-│            Governance & Compliance (Convex Tables)          │
-├─────────────────────────────────────────────────────────────┤
-│  governancePolicies      - Retention rules, compliance      │
-│  governanceEnforcement   - Audit trail for enforcement      │
-└─────────────────────────────────────────────────────────────┘
-```
+<ArchitectureLayer 
+  title="Layer 1: ACID Stores" 
+  variant="primary"
+  connectionLabels={["conversationRef", "immutableRef", "mutableRef"]}
+>
+  <ArchitectureBox title="Conversations" subtitle="(Layer 1a)" footer="Append-only • memorySpace-scoped">
+    User↔Agent • Agent↔Agent • Indexes: memorySpace
+  </ArchitectureBox>
+  <ArchitectureBox title="Immutable" subtitle="(Layer 1b)" footer="Versioned • TRULY SHARED">
+    KB Articles • Policies • Audit Logs • User Profiles • Indexes: type, userId
+  </ArchitectureBox>
+  <ArchitectureBox title="Mutable" subtitle="(Layer 1c)" footer="Current-value • TRULY SHARED">
+    Inventory • Config • Counters • Indexes: userId
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Layer 2: Vector Index" 
+  variant="secondary"
+  connectionLabels={["factsRef"]}
+>
+  <ArchitectureBox title="memories">
+    Vector Index: by_embedding (1536-dim default) • Regular Indexes: by_memorySpace, by_userId • Search Index: by_content • memorySpace-scoped • References Layer 1 via Ref fields • Versioned with retention rules • participantId tracking for Hive Mode
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Layer 3: Facts Store" 
+  variant="tertiary"
+>
+  <ArchitectureBox title="facts">
+    Structured knowledge with versioning • Belief Revision System (v0.24.0+) • 60-90% token savings for infinite context • Search Index: by_content • memorySpace-scoped • factHistory table for audit trail
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Layer 4: Convenience API" 
+  variant="quaternary"
+>
+  <ArchitectureBox title="TypeScript SDK">
+    cortex.memory.remember() → Orchestrates L1 + L2 + L3 • cortex.memory.recall() → Unified retrieval + ranking • TypeScript helpers over Convex functions • Automatic orchestration across all layers
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Coordination Entities" 
+  showArrow={true}
+>
+  <ArchitectureBox title="Coordination Tables" variant="muted">
+    memorySpaces - Memory space registry (Hive/Collab) • users - User profiles (GDPR cascade engine) • contexts - Workflow coordination • sessions - Session lifecycle management (v0.27.0+) • agents - Agent metadata (optional analytics)
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Graph Database (Optional)" 
+  showArrow={false}
+>
+  <ArchitectureBox title="Neo4j/Memgraph" variant="muted">
+    graphSyncQueue - Real-time sync queue • Entities extracted from memories, facts, contexts • Enables multi-hop traversal and complex relationships
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Governance & Compliance" 
+  showArrow={false}
+>
+  <ArchitectureBox title="Governance Tables" variant="muted">
+    governancePolicies - Retention rules, compliance • governanceEnforcement - Audit trail for enforcement
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+</ArchitectureDiagram>
 
 ---
 
@@ -126,12 +115,38 @@ Cortex is built **natively on Convex** - a reactive TypeScript database with bui
 
 **Benefits:**
 
-- ✅ ACID transactions (Convex guarantees)
-- ✅ Real-time reactivity (Convex subscriptions)
-- ✅ TypeScript type safety (end-to-end)
-- ✅ Built-in vector search (native Convex feature)
-- ✅ Automatic indexing (optimized queries)
-- ✅ Multi-tenancy support (tenantId throughout)
+<FeatureGrid>
+  <FeatureCard
+    icon="shield"
+    title="ACID Transactions"
+    description="Convex guarantees"
+  />
+  <FeatureCard
+    icon="sync"
+    title="Real-time Reactivity"
+    description="Convex subscriptions"
+  />
+  <FeatureCard
+    icon="code"
+    title="TypeScript Type Safety"
+    description="End-to-end"
+  />
+  <FeatureCard
+    icon="search"
+    title="Built-in Vector Search"
+    description="Native Convex feature"
+  />
+  <FeatureCard
+    icon="database"
+    title="Automatic Indexing"
+    description="Optimized queries"
+  />
+  <FeatureCard
+    icon="users"
+    title="Multi-tenancy Support"
+    description="tenantId throughout"
+  />
+</FeatureGrid>
 
 ### 2. Layer Separation
 
@@ -277,7 +292,7 @@ await cortex.memory.update(memorySpaceId, memoryId, { content: "New value" });
 // Does NOT apply to: conversations (append-only), mutable (overwrites)
 ```
 
-**Retention:** Configurable per layer (default: 10 versions)
+**Retention:** Configurable per layer via governance policies (not hardcoded defaults)
 
 ### 7. Optional Graph Integration
 
@@ -318,7 +333,7 @@ memories: defineTable({
 }).vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 3072,
-  filterFields: ["agentId"],
+  filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
 });
 
 // TypeScript SDK (structure enforcement)
@@ -454,7 +469,7 @@ immutable: defineTable({
 **Purpose:** Shared, versioned, immutable data (KB, policies, user profiles)  
 **Scoped:** NOT scoped by memorySpace - TRULY SHARED across all spaces  
 **Size:** Medium (50-100KB per record)  
-**Retention:** Configurable (default: 20 versions)
+**Retention:** Governed by governance policies (not hardcoded defaults)
 
 ### Layer 1c: mutable
 
@@ -631,7 +646,7 @@ memories: defineTable({
 **Purpose:** Searchable memories with semantic and keyword search  
 **Scoped:** memorySpaceId (primary isolation)  
 **Size:** Small (< 10KB per memory)  
-**Retention:** Versioned (default: 10 versions per memory)
+**Retention:** Versioned, governed by governance policies (not hardcoded defaults)
 
 ### Layer 3: facts
 
@@ -1115,101 +1130,78 @@ graphSyncQueue: defineTable({
 
 ### Storing a Conversation Memory (Full Orchestration)
 
-```
-User Message → Agent Response
-     ↓
-┌────────────────────────────────────────────────────────┐
-│ 1. cortex.memory.remember()                            │ ← SDK Layer 4
-│    Auto-registers: memorySpace, user, conversation     │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 2. Resilience Layer                                    │
-│    - Rate limiting (token bucket)                      │
-│    - Concurrency control (16/256 based on plan)       │
-│    - Circuit breaker (if backend overloaded)          │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 3. Convex Mutation: conversations.addMessage()        │ ← Layer 1a (ACID)
-│    Stores both user + agent messages                   │
-│    Returns: messageIds                                 │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 4. Convex Mutation: memories.insert()                 │ ← Layer 2 (Vector)
-│    With: conversationRef linking to Layer 1            │
-│    Optional: embedding for semantic search             │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 5. Fact Extraction (if configured)                    │ ← Layer 3
-│    - Extract facts via LLM                             │
-│    - Belief Revision System checks conflicts           │
-│    - Store in facts table                              │
-│    - Log in factHistory                                │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 6. Optional: Graph Sync (if configured)               │
-│    - Queue in graphSyncQueue                           │
-│    - GraphSyncWorker syncs to Neo4j/Memgraph          │
-└────────────────────────────────────────────────────────┘
-```
+<FlowDiagram title="Storing a Conversation Memory">
+  <FlowNode title="User Message → Agent Response" icon="message" variant="default" />
+  <FlowNode title="1. cortex.memory.remember()" icon="code" variant="primary">
+    SDK Layer 4 • Auto-registers: memorySpace, user, conversation
+  </FlowNode>
+  <FlowNode title="2. Resilience Layer" icon="shield" variant="secondary">
+    Rate limiting (token bucket) • Concurrency control (16/256 based on plan) • Circuit breaker (if backend overloaded)
+  </FlowNode>
+  <FlowNode title="3. Convex Mutation: conversations.addMessage()" icon="database" variant="success">
+    Layer 1a (ACID) • Stores both user + agent messages • Returns: messageIds
+  </FlowNode>
+  <FlowNode title="4. Convex Mutation: memories.insert()" icon="search" variant="success">
+    Layer 2 (Vector) • With: conversationRef linking to Layer 1 • Optional: embedding for semantic search
+  </FlowNode>
+  <FlowNode title="5. Fact Extraction (if configured)" icon="brain" variant="warning">
+    Layer 3 • Extract facts via LLM • Belief Revision System checks conflicts • Store in facts table • Log in factHistory
+  </FlowNode>
+  <FlowNode title="6. Optional: Graph Sync (if configured)" icon="network" variant="warning">
+    Queue in graphSyncQueue • GraphSyncWorker syncs to Neo4j/Memgraph
+  </FlowNode>
+</FlowDiagram>
 
 ### Searching Memories (Unified Retrieval)
 
-```
-Search Query
-     ↓
-┌────────────────────────────────────────────────────────┐
-│ 1. cortex.memory.recall()                              │ ← SDK Layer 4
-│    Or: cortex.memory.search()                          │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 2. Resilience Layer                                    │
-│    - Rate limiting check                               │
-│    - Circuit breaker check                             │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 3. Multi-Strategy Search                               │
-│    ├─ Vector search (Layer 2) - semantic similarity    │
-│    ├─ Facts search (Layer 3) - structured knowledge    │
-│    └─ Graph expansion (optional) - entity relationships│
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 4. Merge, Deduplicate, and Rank                        │
-│    Multi-signal scoring algorithm                      │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-┌────────────────────────────────────────────────────────┐
-│ 5. Optional: Enrich with ACID                          │
-│    conversations.get() via conversationRef             │ ← Layer 1a
-└────────────────────────────────────────────────────────┘
-```
+<FlowDiagram title="Searching Memories">
+  <FlowNode title="Search Query" icon="search" variant="default" />
+  <FlowNode title="1. cortex.memory.recall()" icon="code" variant="primary">
+    SDK Layer 4 • Or: cortex.memory.search()
+  </FlowNode>
+  <FlowNode title="2. Resilience Layer" icon="shield" variant="secondary">
+    Rate limiting check • Circuit breaker check
+  </FlowNode>
+  <FlowNode title="3. Multi-Strategy Search" icon="layers" variant="success">
+    Vector search (Layer 2) - semantic similarity • Facts search (Layer 3) - structured knowledge • Graph expansion (optional) - entity relationships
+  </FlowNode>
+  <FlowNode title="4. Merge, Deduplicate, and Rank" icon="search" variant="success">
+    Multi-signal scoring algorithm
+  </FlowNode>
+  <FlowNode title="5. Optional: Enrich with ACID" icon="database" variant="warning">
+    conversations.get() via conversationRef • Layer 1a
+  </FlowNode>
+</FlowDiagram>
 
-### GDPR Cascade Deletion (Cloud Mode)
+### GDPR Cascade Deletion (Cloud Mode - Planned)
 
-```
-cortex.users.delete(userId, { cascade: true })
-     ↓
-┌────────────────────────────────────────────────────────┐
-│ Cloud Mode Service: Orchestrates deletions             │
-└────────────┬───────────────────────────────────────────┘
-             ↓
-     ┌───────┴────────┬──────────┬──────────┬────────────┐
-     ↓                ↓          ↓          ↓            ↓
-┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
-│ Layer 1a │  │ Layer 1b │  │ Layer 1c │  │ Layer 2  │  │ Layer 3  │
-│ convos   │  │ immut.   │  │ mutable  │  │ memories │  │ facts    │
-│ .delete  │  │ .delete  │  │ .delete  │  │ .delete  │  │ .delete  │
-└──────────┘  └──────────┘  └──────────┘  └──────────┘  └──────────┘
-    All records with userId='user-123' deleted across ALL layers
-    Also: sessions, contexts, factHistory with userId
-```
+<ArchitectureDiagram title="GDPR Cascade Deletion" caption="All user data deleted across all layers with a single API call">
+
+<ArchitectureLayer title="API Call" variant="primary" showArrow={true}>
+  <ArchitectureBox title="cortex.users.delete()" subtitle="cascade: true">
+    Single API call triggers complete user data removal
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer title="Cloud Mode Service (Planned)" variant="secondary" showArrow={true}>
+  <ArchitectureBox title="Deletion Orchestrator">
+    Coordinates parallel deletions • Ensures consistency • Audit logging
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer title="All Layers Deleted in Parallel" variant="tertiary" showArrow={false}>
+  <ArchitectureBox title="Layer 1a" subtitle="Conversations" variant="primary">convos.delete</ArchitectureBox>
+  <ArchitectureBox title="Layer 1b" subtitle="Immutable" variant="primary">immutable.delete</ArchitectureBox>
+  <ArchitectureBox title="Layer 1c" subtitle="Mutable" variant="primary">mutable.delete</ArchitectureBox>
+  <ArchitectureBox title="Layer 2" subtitle="Memories" variant="success">memories.delete</ArchitectureBox>
+  <ArchitectureBox title="Layer 3" subtitle="Facts" variant="warning">facts.delete</ArchitectureBox>
+</ArchitectureLayer>
+
+</ArchitectureDiagram>
+
+<Callout type="info">
+All records with the specified `userId` are deleted across ALL layers, including: sessions, contexts, and factHistory.
+</Callout>
 
 ---
 
@@ -1354,26 +1346,26 @@ export const storeMemory = mutation({
 
 Cortex includes a **resilience layer** that protects all operations from overload:
 
-```typescript
-┌────────────────────────────────────────────────────────┐
-│              Resilience Layer                          │
-├────────────────────────────────────────────────────────┤
-│  Token Bucket Rate Limiter                             │
-│  ├─ 100 tokens per second default                      │
-│  ├─ Configurable per operation                         │
-│  └─ Prevents API overload                              │
-│                                                        │
-│  Concurrency Control                                   │
-│  ├─ 16 concurrent (Convex Starter)                     │
-│  ├─ 256 concurrent (Convex Professional)               │
-│  └─ Based on your Convex plan                          │
-│                                                        │
-│  Circuit Breaker                                       │
-│  ├─ Detects backend failures                           │
-│  ├─ Opens circuit after N failures                     │
-│  └─ Auto-recovery with exponential backoff             │
-└────────────────────────────────────────────────────────┘
-```
+<FeatureGrid>
+  <FeatureCard
+    icon="speed"
+    title="Token Bucket Rate Limiter"
+    description="50 ops/sec refill rate, 100 burst capacity default. Configurable per operation. Prevents API overload."
+    size="medium"
+  />
+  <FeatureCard
+    icon="layers"
+    title="Concurrency Control"
+    description="16 concurrent (Convex Starter) or 256 concurrent (Convex Professional). Based on your Convex plan."
+    size="medium"
+  />
+  <FeatureCard
+    icon="resilience"
+    title="Circuit Breaker"
+    description="Detects backend failures. Opens circuit after N failures. Auto-recovery with exponential backoff."
+    size="medium"
+  />
+</FeatureGrid>
 
 **Configuration:**
 
@@ -1381,14 +1373,15 @@ Cortex includes a **resilience layer** that protects all operations from overloa
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
   resilience: {
-    rateLimit: {
-      tokensPerSecond: 100,
-      maxBurst: 200,
+    rateLimiter: {
+      refillRate: 50,
+      bucketSize: 100,
     },
     circuitBreaker: {
       failureThreshold: 5,
       timeout: 60000,
-      resetTimeout: 300000,
+      successThreshold: 2,
+      halfOpenMax: 3,
     },
   },
 });
@@ -1418,7 +1411,7 @@ const cortex = new Cortex({
 - Facts: ~1KB each (very efficient)
 - Conversations: Paginated (load in chunks)
 - Vectors: 1536-dim × 8 bytes = ~12KB (default)
-- All well within limits ✅
+- All well within limits
 
 ### Query Performance
 
@@ -1459,8 +1452,8 @@ const cortex = new Cortex({
 
 **Cortex benefits:**
 
-- Multiple memory spaces writing concurrently ✅
-- Multiple participants in Hive Mode ✅
+- Multiple memory spaces writing concurrently
+- Multiple participants in Hive Mode
 - No race conditions
 - Atomic updates (e.g., inventory decrement)
 - Transactional multi-key updates (mutable store)
@@ -1493,7 +1486,7 @@ Your App → Cortex SDK → Your Convex Instance
 - Helper utilities
 - Documentation
 
-### Cloud Mode (Managed - Future)
+### Cloud Mode (Planned - Under Development)
 
 **Architecture:**
 
@@ -1642,10 +1635,10 @@ Your App → Cortex Cloud API → Your Convex Instance
 
 ## Next Steps
 
-- **[Data Models](./data-models)** - Detailed schema definitions
-- **[Convex Integration](./convex-integration)** - How we use Convex features
-- **[Vector Embeddings](./vector-embeddings)** - Embedding strategy
-- **[Performance](./performance)** - Optimization techniques
+- **[Data Models](/architecture/data-models)** - Detailed schema definitions
+- **[Convex Integration](/architecture/convex-integration)** - How we use Convex features
+- **[Vector Embeddings](/architecture/vector-embeddings)** - Embedding strategy
+- **[Performance](/architecture/performance)** - Optimization techniques
 
 ---
 

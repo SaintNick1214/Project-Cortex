@@ -49,6 +49,8 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!, // No mem0 API key needed
   memorySpaceId: "assistant",
   userId: "user-123",
+  userName: "User", // Optional but recommended
+  agentId: "assistant", // REQUIRED - SDK v0.17.0+
 });
 
 const result = await streamText({
@@ -104,6 +106,8 @@ const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "assistant",
   userId: "user-123",
+  userName: "User", // Optional but recommended
+  agentId: "assistant", // REQUIRED - SDK v0.17.0+
   conversationId: "session-456", // Optional
 });
 ```
@@ -149,16 +153,32 @@ OPENAI_API_KEY=sk-openai-...
 
 ### Advanced Features
 
-| mem0 Feature | Cortex Equivalent             |
-| ------------ | ----------------------------- |
-| `user_id`    | `userId`                      |
-| `agent_id`   | `memorySpaceId`               |
-| `run_id`     | `conversationId`              |
-| Graph memory | `enableGraphMemory: true`     |
-| N/A          | Memory Spaces (multi-tenancy) |
-| N/A          | Hive Mode (cross-app sharing) |
-| N/A          | ACID guarantees               |
-| N/A          | Version history               |
+| mem0 Feature | Cortex Equivalent             | Notes                                    |
+| ------------ | ----------------------------- | ---------------------------------------- |
+| `user_id`    | `userId`                      | User identifier                          |
+| `agent_id`   | `memorySpaceId`               | Maps to memory space (isolation)         |
+| N/A          | `agentId`                     | **Required** - Identifies agent participant (SDK v0.17.0+) |
+| `run_id`     | `conversationId`              | Conversation identifier                  |
+| Graph memory | `enableGraphMemory: true`     | Enable graph-based memory                |
+| N/A          | Memory Spaces (multi-tenancy) | Built-in isolation                       |
+| N/A          | Hive Mode (cross-app sharing) | Cross-application memory sharing         |
+| N/A          | ACID guarantees               | Transactional consistency                |
+| N/A          | Version history               | Automatic versioning                     |
+
+**Important**: `agentId` is a separate required field from `memorySpaceId`. While `agent_id` from mem0 maps to `memorySpaceId` (for memory isolation), Cortex also requires `agentId` to identify the agent participant in user-agent conversations.
+
+## Required Configuration Fields
+
+When migrating, ensure your `createCortexMemory()` config includes:
+
+- ✅ `convexUrl` - Your Convex deployment URL (required)
+- ✅ `memorySpaceId` - Memory space identifier (maps from mem0's `agent_id`) (required)
+- ✅ `userId` - User identifier (maps from mem0's `user_id`) (required)
+- ✅ `agentId` - **REQUIRED** - Agent participant identifier (SDK v0.17.0+) (required)
+- ⚠️ `userName` - Optional but recommended for better UX
+- ⚠️ `conversationId` - Optional (auto-generated if not provided)
+
+**Note**: Since SDK v0.17.0, `agentId` is mandatory for all user-agent conversations. This is separate from `memorySpaceId`, which handles memory isolation.
 
 ## Data Migration
 
@@ -193,6 +213,7 @@ for (const mem of mem0Data) {
     agentResponse: mem.agent_message || "",
     userId: mem.user_id,
     userName: "Migrated User",
+    agentId: "migration-agent", // REQUIRED - SDK v0.17.0+
   });
 }
 
