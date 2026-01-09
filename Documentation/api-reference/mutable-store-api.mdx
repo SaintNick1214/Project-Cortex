@@ -7,6 +7,10 @@ description: Complete API reference for shared mutable data with ACID transactio
 
 # Mutable Store API
 
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
 Complete API reference for shared mutable data with ACID transaction guarantees.
 
 ## Overview
@@ -15,20 +19,20 @@ The Mutable Store API (Layer 1c) provides methods for storing **TRULY SHARED** m
 
 **Critical Distinction:**
 
-- ❌ **NO memorySpaceId parameter** - This layer is shared across ALL spaces
-- ✅ Accessible from any memory space
-- ✅ Perfect for: Inventory, config, counters, live shared state
+- **NO memorySpaceId parameter** - This layer is shared across ALL spaces
+- Accessible from any memory space
+- Perfect for: Inventory, config, counters, live shared state
 
 **Key Characteristics:**
 
-- ✅ **TRULY Shared** - ALL memory spaces can access
-- ✅ **NO Isolation** - Not scoped to memorySpace (unlike L1a, L2, L3)
-- ✅ **Mutable** - Designed to be updated in-place
-- ✅ **ACID** - Atomic transactions
-- ✅ **Current-value** - No version history (by design)
-- ✅ **Fast** - Optimized for frequent updates
-- ✅ **Purgeable** - Can delete keys
-- ✅ **Multi-Tenant** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
+- **TRULY Shared** - ALL memory spaces can access
+- **NO Isolation** - Not scoped to memorySpace (unlike L1a, L2, L3)
+- **Mutable** - Designed to be updated in-place
+- **ACID** - Atomic transactions
+- **Current-value** - No version history (by design)
+- **Fast** - Optimized for frequent updates
+- **Purgeable** - Can delete keys
+- **Multi-Tenant** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
 
 **Comparison to Other Stores:**
 
@@ -124,7 +128,7 @@ console.log(session.userId); // "user-123"
 
 // When user requests deletion:
 await cortex.users.delete("user-123", { cascade: true });
-// This session is automatically deleted! ✅
+// This session is automatically deleted!
 ```
 
 **Errors:**
@@ -790,7 +794,7 @@ await cortex.mutable.set("stores", "store-15", {
 ### Size Considerations
 
 ```typescript
-// ✅ Good: Reasonable size (< 100KB recommended)
+// Good: Reasonable size (< 100KB recommended)
 await cortex.mutable.set("config", "app-settings", {
   theme: "dark",
   language: "en",
@@ -798,13 +802,13 @@ await cortex.mutable.set("config", "app-settings", {
   // ... dozens of settings
 });
 
-// ⚠️ Be careful: Very large objects (> 1MB)
+// Caution: Very large objects (> 1MB)
 await cortex.mutable.set("cache", "entire-product-catalog", {
   // Thousands of products...
   // Consider breaking into multiple keys instead
 });
 
-// ✅ Better: Split large datasets
+// Better: Split large datasets
 await cortex.mutable.set("catalog", "page-1", products.slice(0, 100));
 await cortex.mutable.set("catalog", "page-2", products.slice(100, 200));
 await cortex.mutable.set("catalog", "page-3", products.slice(200, 300));
@@ -1090,10 +1094,10 @@ const inventory = await listByPrefix("grocery-stores", "store-15", "inventory");
 
 | Pattern                 | Best For                           | Query Performance | Update Performance | Complexity |
 | ----------------------- | ---------------------------------- | ----------------- | ------------------ | ---------- |
-| Hierarchical Keys       | Prefix queries, flat relationships | ⭐⭐⭐⭐⭐        | ⭐⭐⭐⭐⭐         | Low        |
-| Hierarchical Namespaces | Organizational structure           | ⭐⭐⭐⭐          | ⭐⭐⭐⭐⭐         | Low        |
-| Nested Object Values    | Related data, small datasets       | ⭐⭐⭐            | ⭐⭐⭐             | Medium     |
-| Hybrid                  | Large systems, mixed access        | ⭐⭐⭐⭐⭐        | ⭐⭐⭐⭐⭐         | Medium     |
+| Hierarchical Keys       | Prefix queries, flat relationships | Excellent         | Excellent          | Low        |
+| Hierarchical Namespaces | Organizational structure           | Good              | Excellent          | Low        |
+| Nested Object Values    | Related data, small datasets       | Moderate          | Moderate           | Medium     |
+| Hybrid                  | Large systems, mixed access        | Excellent         | Excellent          | Medium     |
 
 **Recommendations:**
 
@@ -1309,7 +1313,7 @@ async function checkLowStock(storeId: string, threshold: number = 20) {
   const lowStock = inventory.filter((item) => item.value.quantity < threshold);
 
   if (lowStock.length > 0) {
-    console.log(`⚠️ Low stock alert for ${storeId}:`);
+    console.log(`[ALERT] Low stock for ${storeId}:`);
     lowStock.forEach((item) => {
       const [store, dept, product] = item.key.split(":");
       console.log(
@@ -1326,13 +1330,13 @@ await checkLowStock("store-15", 25);
 
 **This example demonstrates:**
 
-- ✅ Complex objects as values (store metadata, inventory items)
-- ✅ Hierarchical keys for scalable queries (`store:dept:item`)
-- ✅ Nested objects for related configuration
-- ✅ Atomic transactions across multiple keys
-- ✅ Prefix-based queries for hierarchy traversal
-- ✅ Aggregation across hierarchies
-- ✅ Real-world business logic (purchases, restocking, alerts)
+- Complex objects as values (store metadata, inventory items)
+- Hierarchical keys for scalable queries (`store:dept:item`)
+- Nested objects for related configuration
+- Atomic transactions across multiple keys
+- Prefix-based queries for hierarchy traversal
+- Aggregation across hierarchies
+- Real-world business logic (purchases, restocking, alerts)
 
 ---
 
@@ -1341,13 +1345,13 @@ await checkLowStock("store-15", 25);
 ### 1. Use Descriptive Namespaces
 
 ```typescript
-// ✅ Good namespaces
+// Good namespaces
 "inventory";
 "config-production";
 "counters-analytics";
 "docs-api";
 
-// ❌ Bad namespaces
+// Avoid: Generic namespaces
 "data";
 "stuff";
 "temp";
@@ -1356,12 +1360,12 @@ await checkLowStock("store-15", 25);
 ### 2. Atomic Operations Only
 
 ```typescript
-// ❌ DON'T: Race condition
+// Avoid: Race condition
 const current = await cortex.mutable.get("inventory", "widget-qty");
 await cortex.mutable.set("inventory", "widget-qty", current - 1);
 // Another agent could modify between get and set!
 
-// ✅ DO: Atomic update
+// Recommended: Atomic update
 await cortex.mutable.update("inventory", "widget-qty", (qty) => qty - 1);
 // ACID guarantees no race condition
 ```
@@ -1389,14 +1393,14 @@ const qty = await getOrInitialize("inventory", "new-product", 0);
 ### 4. Use Transactions for Multi-Key Operations
 
 ```typescript
-// ✅ Atomic multi-key update (array-based API)
+// Recommended: Atomic multi-key update (array-based API)
 await cortex.mutable.transaction([
   { op: "decrement", namespace: "inventory", key: "product-a", amount: 1 },
   { op: "increment", namespace: "counters", key: "total-sales", amount: 1 },
 ]);
 // Both or neither - ACID guarantees
 
-// ❌ Non-atomic (could fail partway)
+// Avoid: Non-atomic (could fail partway)
 await cortex.mutable.decrement("inventory", "product-a", 1);
 await cortex.mutable.increment("counters", "total-sales", 1);
 // Second could fail, leaving inconsistent state
@@ -1407,7 +1411,7 @@ await cortex.mutable.increment("counters", "total-sales", 1);
 **Use Complex Objects When:**
 
 ```typescript
-// ✅ Related data that changes together
+// Related data that changes together
 await cortex.mutable.set("stores", "store-15", {
   name: "Downtown",
   manager: "Alice",
@@ -1415,14 +1419,14 @@ await cortex.mutable.set("stores", "store-15", {
   // All fields updated as a unit
 });
 
-// ✅ Small datasets (< 100 items)
+// Small datasets (< 100 items)
 await cortex.mutable.set("config", "app-settings", {
   theme: "dark",
   language: "en",
   features: { chat: true, voice: false },
 });
 
-// ✅ Configuration that's read together
+// Configuration that's read together
 await cortex.mutable.set("email", "settings", {
   smtp: { host: "...", port: 587 },
   templates: { welcome: "...", reset: "..." },
@@ -1432,22 +1436,22 @@ await cortex.mutable.set("email", "settings", {
 **Use Hierarchical Keys When:**
 
 ```typescript
-// ✅ Large datasets (> 100 items)
+// Large datasets (> 100 items)
 await cortex.mutable.set("inventory", "store-15:produce:apples", {...});
 await cortex.mutable.set("inventory", "store-15:produce:bananas", {...});
 // Can have thousands of products
 
-// ✅ Need prefix queries
+// Need prefix queries
 const produce = await cortex.mutable.list({
   namespace: "inventory",
   keyPrefix: "store-15:produce:",
 });
 
-// ✅ Independent updates (no related data)
+// Independent updates (no related data)
 await cortex.mutable.update("inventory", "store-15:dairy:milk", ...);
 // Doesn't affect produce or other items
 
-// ✅ Different access patterns
+// Different access patterns
 const apples = await cortex.mutable.get("inventory", "store-15:produce:apples");
 // Fast direct access to single item
 ```
@@ -2183,11 +2187,11 @@ try {
 
 **Mutable Store provides:**
 
-- ✅ Shared live data across agents
-- ✅ ACID transaction guarantees
-- ✅ Current-value semantics (fast)
-- ✅ No version overhead
-- ✅ Atomic updates (no race conditions)
+- Shared live data across agents
+- ACID transaction guarantees
+- Current-value semantics (fast)
+- No version overhead
+- Atomic updates (no race conditions)
 
 **Use for:**
 
@@ -2222,21 +2226,18 @@ try {
   title="Immutable Store API"
   description="Versioned shared data with automatic history"
   href="/api-reference/immutable-store-api"
-  icon="database"
 />
 
 <QuickNavItem
   title="Conversation Operations"
   description="Private memory-space scoped conversations"
   href="/api-reference/conversation-operations"
-  icon="message-circle"
 />
 
 <QuickNavItem
   title="Governance Policies"
   description="Multi-layer retention and compliance rules"
   href="/api-reference/governance-policies-api"
-  icon="shield"
 />
 
 </QuickNav>

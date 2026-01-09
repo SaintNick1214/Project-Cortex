@@ -8,75 +8,83 @@ description: Complete API reference for user profile management, including multi
 # User Operations API
 
 <Callout type="info">
-**Last Updated**: 2026-01-01
+**Last Updated**: 2026-01-08
 </Callout>
 
 Complete API reference for user profile management, including multi-tenancy and auth context integration.
 
 ## Overview
 
-The User Operations API (`cortex.users.*`) provides user profile management with **GDPR-compliant cascade deletion** across all Cortex layers and stores.
+The User Operations API (`cortex.users.*`) provides user profile management that enables **memories to follow users across tools**.
+
+<Callout type="info" title="Memory Follows the User">
+The primary purpose of user profiles is **cross-tool memory sharing**. Same `userId` = same memories, whether accessed from Cursor, Claude Desktop, custom apps, or any MCP-connected tool. This is the foundation of [Hive Mode](/core-features/hive-mode).
+</Callout>
 
 **Key Features:**
 
+- **Cross-Tool Memory Sharing** - Same `userId` means same memories across all tools
 - **GDPR Cascade Deletion** - One call deletes across all layers with userId
 - **Multi-Tenancy** - Full tenant isolation via `tenantId`
 - **Extensible Profiles** - Flexible data field for any developer needs
-- **Validation Presets** - Strict, minimal, or custom validation
 - **Version History** - Time-travel queries for user data
 
-### Primary Feature: GDPR Cascade Deletion
+### Primary Feature: Cross-Tool Memory Sharing
+
+```typescript
+// In Cursor: Store a preference
+await cortex.memory.remember({
+  memorySpaceId: 'user-123-space',
+  userId: 'user-123',  // Same userId
+  userMessage: 'I prefer TypeScript',
+  // ...
+});
+
+// In Claude Desktop: Recall the same memory
+const memories = await cortex.memory.recall({
+  memorySpaceId: 'user-123-space', 
+  userId: 'user-123',  // Same userId = same memories
+  query: 'programming preferences',
+});
+// Returns: "User prefers TypeScript" - stored in Cursor, recalled in Claude!
+```
+
+### Secondary Feature: GDPR Cascade Deletion
 
 <Callout type="tip">
-**Available in SDK**: Full cascade deletion is implemented in the open-source SDK. Cloud Mode adds legal guarantees, certificates, and managed graph integration.
+**Available in SDK**: Full cascade deletion is implemented in the open-source SDK. Cloud Mode (planned) will add legal guarantees, certificates, and managed graph integration.
 </Callout>
 
 When a user requests data deletion (GDPR "right to be forgotten"), a single API call removes their data from **every store that contains an explicit `userId` reference**:
 
 ```typescript
-// SDK (Free) & Cloud Mode: One call deletes from ALL stores with userId
+// SDK: One call deletes from ALL stores with userId
 await cortex.users.delete("user-123", { cascade: true });
 
 // Automatically deletes from:
-// ✅ User profile (immutable store, type='user')
-// ✅ Layer 1a (conversations.*) - All conversations with userId
-// ✅ Layer 1b (immutable.*) - All records with userId
-// ✅ Layer 1c (mutable.*) - All keys with userId
-// ✅ Layer 2 (vector.*) - All memories with userId (across ALL memory spaces)
-// ✅ Layer 3 (facts.*) - All facts referencing userId
-// ✅ Graph (if adapter configured) - All nodes with userId property
+// - User profile (immutable store, type='user')
+// - Layer 1a (conversations.*) - All conversations with userId
+// - Layer 1b (immutable.*) - All records with userId
+// - Layer 1c (mutable.*) - All keys with userId
+// - Layer 2 (vector.*) - All memories with userId (across ALL memory spaces)
+// - Layer 3 (facts.*) - All facts referencing userId
+// - Graph (if adapter configured) - All nodes with userId property
 ```
 
 **No other API provides this cross-layer, cross-store cascade capability.**
 
-**Key Principle: Same Code, Different Context**
+**Key Principle: Full Capability in Free SDK**
 
-- **Free SDK**: Full cascade implementation works when you provide graph adapter (DIY setup)
-- **Cloud Mode**: Same code, but adds legal certificates, guarantees, managed graph, and liability
+The free SDK provides **complete cascade deletion** functionality. You get everything you need:
 
-**What Cloud Mode Adds:**
+- Full cascade implementation across all layers
+- Graph support when you provide an adapter (DIY setup)
+- Best-effort verification checks
+- Transaction-like rollback on failure
 
-- **Legal Certificate of Deletion** - Compliance audit document for legal teams
-- **GDPR Liability Guarantee** - Cortex assumes legal responsibility
-- **Managed Graph Adapter** - Zero configuration, always works (no DIY setup)
-- **Compliance Audit Trail** - Immutable timestamped log of all deletions
-- **Verification Report** - Cryptographically signed proof that nothing was missed
-- **Insurance/Indemnification** - If deletion is incomplete, Cortex is liable
-- **Priority Support** - Expert help if issues arise
-
-**Free SDK vs Cloud Mode:**
-
-| Feature               | Free SDK                     | Cloud Mode              |
-| --------------------- | ---------------------------- | ----------------------- |
-| **Cascade Deletion**  | ✅ Full implementation       | ✅ Same implementation  |
-| **Graph Support**     | ✅ Works with DIY adapter    | ✅ Managed, zero-config |
-| **Verification**      | ✅ Best-effort checks        | ✅ Cryptographic proof  |
-| **Rollback**          | ✅ Transaction-like rollback | ✅ Same + audit trail   |
-| **Legal Certificate** | ❌ None                      | ✅ Compliance document  |
-| **GDPR Liability**    | ❌ User responsible          | ✅ Cortex liable        |
-| **Support**           | Community                    | Priority + SLA          |
-
-The free SDK provides the **technical capability**, Cloud Mode provides the **legal guarantees**.
+<Callout type="info" title="Cloud Mode (Planned)">
+A managed Cloud Mode is under development that will add legal guarantees, certificates, managed graph integration, and enterprise support. The SDK already provides the full technical capability.
+</Callout>
 
 **Implementation Details:**
 
@@ -134,9 +142,9 @@ await cortex.users.delete("user-123", { cascade: true });
 // Deletes from Convex (conversations, immutable, mutable, vector, facts) AND graph
 ```
 
-In Cloud Mode, the graph adapter is provided and managed automatically.
+In Cloud Mode (planned), the graph adapter will be provided and managed automatically.
 
-### Secondary Feature: Semantic Convenience
+### Additional Feature: Semantic Convenience
 
 Provides user-friendly syntax for user profile management:
 
@@ -180,29 +188,30 @@ The `users.update()` method accepts data fields directly (not wrapped in a `data
 
 **Relationship to Layers:**
 
-```
-Layer 1: ACID Stores
-├── conversations.* (userId: optional) ← GDPR cascade target
-├── immutable.* (userId: optional) ← USER PROFILES + GDPR cascade target
-└── mutable.* (userId: optional) ← GDPR cascade target
-
-Layer 2: Vector Index
-└── vector.* (userId: optional) ← GDPR cascade target
-
-Convenience APIs:
-├── memory.* (conversations + vector)
-└── users.* (immutable type='user' + GDPR cascade) ← SPECIALIZED WRAPPER
-```
+<FlowDiagram title="User API Layer Relationships">
+  <FlowNode title="Layer 1: ACID Stores" icon="database" variant="primary">
+    conversations.*, immutable.*, mutable.* — all support userId for GDPR cascade
+  </FlowNode>
+  <FlowNode title="Layer 2: Vector Index" icon="search" variant="secondary">
+    vector.* — userId optional, included in GDPR cascade
+  </FlowNode>
+  <FlowNode title="Layer 3: Facts Store" icon="brain" variant="warning">
+    facts.* — userId tracked, included in GDPR cascade
+  </FlowNode>
+  <FlowNode title="Convenience APIs" icon="layers" variant="success">
+    users.* wraps immutable (type='user') + GDPR cascade across ALL layers
+  </FlowNode>
+</FlowDiagram>
 
 **User Profiles vs Other Stores:**
 
 | Feature          | cortex.users.\*         | cortex.immutable.\*         | cortex.mutable.\*          | cortex.vector.\*                    |
 | ---------------- | ----------------------- | --------------------------- | -------------------------- | ----------------------------------- |
 | **Storage**      | immutable (type='user') | immutable                   | mutable                    | vector index                        |
-| **Shared**       | ✅ All agents           | ✅ All agents               | ✅ All agents              | ❌ Per-agent                        |
-| **Versioning**   | ✅ Auto (unlimited)     | ✅ Auto (20 versions)       | ❌ None                    | ✅ Auto (10 versions)               |
-| **userId**       | N/A (IS the user)       | ✅ Optional                 | ✅ Optional                | ✅ Optional                         |
-| **GDPR Cascade** | ✅ **ALL stores**       | ❌ No                       | ❌ No                      | ❌ No                               |
+| **Shared**       | All agents              | All agents                  | All agents                 | Per-agent (memorySpace)             |
+| **Versioning**   | Auto (unlimited)        | Auto (20 versions)          | None                       | Auto (10 versions)                  |
+| **userId**       | N/A (IS the user)       | Optional                    | Optional                   | Optional                            |
+| **GDPR Cascade** | **ALL stores**          | No                          | No                         | No                                  |
 | **API**          | `users.get(id)`         | `immutable.get('user', id)` | `mutable.get('users', id)` | `vector.search(memorySpaceId, ...)` |
 | **Use Case**     | User profiles           | User feedback, submissions  | User sessions, cache       | Memory space memories               |
 
@@ -250,14 +259,14 @@ When cascade deleting a user with `tenantId`, all associated data across all sto
 
 ```typescript
 // Cascade deletion covers:
-// ✅ User profile (with tenantId)
-// ✅ Conversations (all with userId, filtered by tenantId)
-// ✅ Immutable records (all with userId, filtered by tenantId)
-// ✅ Mutable keys (all with userId, filtered by tenantId)
-// ✅ Vector memories (all with userId, filtered by tenantId)
-// ✅ Facts (all with userId, filtered by tenantId)
-// ✅ Sessions (all with userId, filtered by tenantId)
-// ✅ Graph nodes (with userId AND tenantId properties)
+// - User profile (with tenantId)
+// - Conversations (all with userId, filtered by tenantId)
+// - Immutable records (all with userId, filtered by tenantId)
+// - Mutable keys (all with userId, filtered by tenantId)
+// - Vector memories (all with userId, filtered by tenantId)
+// - Facts (all with userId, filtered by tenantId)
+// - Sessions (all with userId, filtered by tenantId)
+// - Graph nodes (with userId AND tenantId properties)
 ```
 
 ---
@@ -608,9 +617,9 @@ console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
 
 // Verification
 if (result.verification.complete) {
-  console.log("✅ Deletion verified - no orphaned records");
+  console.log("Deletion verified - no orphaned records");
 } else {
-  console.warn("⚠️ Verification issues:");
+  console.warn("Verification issues:");
   result.verification.issues.forEach((issue) => console.warn(`  - ${issue}`));
 }
 ```
@@ -683,7 +692,7 @@ console.log(`Total deleted: ${result.totalDeleted}`);
 The SDK's cascade deletion handles all the complexity automatically:
 
 ```typescript
-// ✅ Recommended: Use cascade deletion (SDK handles all layers)
+// Recommended: Use cascade deletion (SDK handles all layers)
 const result = await cortex.users.delete("user-123", {
   cascade: true,
   verify: true, // Verify deletion completeness
@@ -692,7 +701,7 @@ const result = await cortex.users.delete("user-123", {
 console.log(`Deleted ${result.totalDeleted} records`);
 console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
 
-// ❌ Manual approach would require calling each API separately:
+// Manual approach would require calling each API separately:
 // - cortex.conversations.delete() for each conversation
 // - cortex.immutable.purge() for each record
 // - cortex.mutable.delete() for each key
@@ -701,15 +710,9 @@ console.log(`Layers affected: ${result.deletedLayers.join(", ")}`);
 // The cascade option handles all of this automatically!
 ```
 
-**SDK Cascade vs Cloud Mode:**
-
-| Feature               | SDK (Free)      | Cloud Mode (Planned)     |
-| --------------------- | --------------- | ------------------------ |
-| **Cascade Deletion**  | ✅ Automatic    | ✅ Automatic             |
-| **Verification**      | ✅ Automatic    | ✅ + Cryptographic proof |
-| **Rollback**          | ✅ Automatic    | ✅ + Audit trail         |
-| **Legal Certificate** | ❌ Not included | ✅ Compliance document   |
-| **Graph Support**     | ✅ DIY adapter  | ✅ Managed, zero-config  |
+<Callout type="info" title="SDK vs Cloud Mode (Planned)">
+The SDK provides full cascade deletion with automatic verification and rollback. Cloud Mode (under development) will add legal certificates, cryptographic proof, and managed graph adapters.
+</Callout>
 
 **Errors:**
 
@@ -2002,7 +2005,7 @@ Currently, user profiles keep **all versions** indefinitely (no automatic cleanu
 Only require essential information:
 
 ```typescript
-// ✅ Start minimal
+// Start minimal
 await cortex.users.update(userId, {
   displayName: name,
 });
@@ -2064,7 +2067,7 @@ Skip versioning option is planned for a future release to optimize routine updat
 Don't store unnecessary PII:
 
 ```typescript
-// ❌ Don't store sensitive data
+// Avoid: Don't store sensitive data
 await cortex.users.update(userId, {
   metadata: {
     ssn: "123-45-6789", // Never!
@@ -2072,7 +2075,7 @@ await cortex.users.update(userId, {
   },
 });
 
-// ✅ Store references only
+// Good: Store references only
 await cortex.users.update(userId, {
   metadata: {
     paymentMethodId: "pm_abc123", // Stripe reference
@@ -2280,35 +2283,26 @@ try {
 ---
 
 <QuickNav>
-
-<QuickNavItem
-  title="Context Operations API"
-  description="Context chain management"
-  href="/api-reference/context-operations"
-  icon="layers"
-/>
-
-<QuickNavItem
-  title="A2A Communication API"
-  description="Agent-to-agent messaging"
-  href="/api-reference/a2a-communication"
-  icon="message-square"
-/>
-
-<QuickNavItem
-  title="Conversation Operations API"
-  description="ACID conversation management"
-  href="/api-reference/conversation-operations"
-  icon="messages-square"
-/>
-
-<QuickNavItem
-  title="Types & Interfaces"
-  description="Complete TypeScript definitions"
-  href="/reference/types-interfaces"
-  icon="code"
-/>
-
+  <QuickNavItem
+    title="Context Operations API"
+    description="Context chain management"
+    href="/api-reference/context-operations"
+  />
+  <QuickNavItem
+    title="A2A Communication API"
+    description="Agent-to-agent messaging"
+    href="/api-reference/a2a-communication"
+  />
+  <QuickNavItem
+    title="Conversation Operations API"
+    description="ACID conversation management"
+    href="/api-reference/conversation-operations"
+  />
+  <QuickNavItem
+    title="Types & Interfaces"
+    description="Complete TypeScript definitions"
+    href="/reference/types-interfaces"
+  />
 </QuickNav>
 
 ---

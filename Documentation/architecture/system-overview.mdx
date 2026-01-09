@@ -84,7 +84,7 @@ Cortex is built **natively on Convex** - a reactive TypeScript database with bui
 │  users            - User profiles (GDPR cascade engine)     │
 │  contexts         - Workflow coordination                   │
 │  sessions         - Session lifecycle management (v0.27.0+) │
-│  agents           - Agent registry (DEPRECATED)             │
+│  agents           - Agent metadata (optional analytics)     │
 └───────────────────────────┬─────────────────────────────────┘
                             │
                             ↓ (Optional Sync)
@@ -295,7 +295,7 @@ await cortex.memory.update(memorySpaceId, memoryId, { content: "New value" });
 - Managed automatically via `syncToGraph` option
 - Best for knowledge graphs and complex dependency analysis
 
-**Learn more:** [Graph Operations API](../03-api-reference/13-graph-operations)
+**Learn more:** [Graph Operations API](/api-reference/graph-operations)
 
 ### 5. Flexible Yet Typed
 
@@ -347,7 +347,7 @@ Cortex offers two levels of graph capabilities:
 - Managed automatically via `syncToGraph` option in all APIs
 - Best for social graphs, knowledge graphs, and complex dependency analysis
 
-See [Graph Operations API](../03-api-reference/15-graph-operations) for details.
+See [Graph Operations API](/api-reference/graph-operations) for details.
 
 ---
 
@@ -972,7 +972,7 @@ sessions: defineTable({
 **Size:** Small  
 **Retention:** Configurable timeouts via governance
 
-### Coordination: agents (DEPRECATED)
+### Coordination: agents (Optional Metadata)
 
 ```typescript
 agents: defineTable({
@@ -983,10 +983,8 @@ agents: defineTable({
   // Metadata
   name: v.string(),
   description: v.optional(v.string()),
-  capabilities: v.optional(v.array(v.string())),
-  metadata: v.optional(v.any()),
-  config: v.optional(v.any()),
-  stats: v.optional(v.any()),
+  metadata: v.optional(v.any()),  // Team, capabilities, version, etc.
+  config: v.optional(v.any()),    // Agent-specific configuration
 
   // Status
   status: v.union(
@@ -1006,8 +1004,8 @@ agents: defineTable({
   .index("by_registered", ["registeredAt"]);
 ```
 
-**Purpose:** Optional metadata registry (DEPRECATED - use memorySpaces instead)  
-**Note:** Superseded by `memorySpaces` table for production isolation  
+**Purpose:** Optional metadata registry for agent analytics, discovery, and team organization  
+**Note:** Complementary to `memorySpaces` (which define isolation boundaries)  
 **Size:** Small  
 **Retention:** Until unregistered
 

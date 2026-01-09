@@ -7,6 +7,10 @@ description: Complete API reference for context chain management and multi-agent
 
 # Context Operations API
 
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
 Complete API reference for context chain management and multi-agent workflow coordination.
 
 ## Overview
@@ -26,18 +30,20 @@ The Context Operations API (`cortex.contexts.*`) provides methods for managing h
 
 Context chains are a **separate coordination entity** that can reference all layers:
 
-```
-Layer 1: ACID Stores
-├── conversations.* ← Contexts can reference via conversationRef
-├── immutable.*
-└── mutable.*
-
-Layer 2: Vector Index
-└── vector.* ← Memories can reference contexts via metadata.contextId
-
-Coordination:
-└── contexts.* ← Workflow/task hierarchy (links to conversations, used by memories)
-```
+<FlowDiagram title="Context API Layer Relationships">
+  <FlowNode title="Layer 1: ACID Stores" icon="database" variant="primary">
+    conversations.*, immutable.*, mutable.* — Contexts reference via conversationRef
+  </FlowNode>
+  <FlowNode title="Layer 2: Vector Index" icon="search" variant="secondary">
+    vector.* — Memories can reference contexts via metadata.contextId
+  </FlowNode>
+  <FlowNode title="Layer 3: Facts Store" icon="brain" variant="warning">
+    facts.* — Facts can be linked to contexts for workflow knowledge
+  </FlowNode>
+  <FlowNode title="Coordination Layer" icon="layers" variant="success">
+    contexts.* — Workflow/task hierarchy (links to conversations, used by memories)
+  </FlowNode>
+</FlowDiagram>
 
 **Use Cases:**
 
@@ -65,12 +71,9 @@ cortex.contexts.create(
 ): Promise<Context>
 ```
 
-<Callout
-  type="info"
-  title="New in v0.7.0"
->
+<Callout type="info">
 
-`options` parameter with `syncToGraph` support for graph database integration.
+`options` parameter supports `syncToGraph` for graph database integration.
 
 </Callout>
 
@@ -198,7 +201,7 @@ console.log(root.depth); // 0 (root)
 console.log(root.rootId); // 'ctx-1234567890-abc123' (self)
 ```
 
-**Example 1b: Create with graph sync (v0.7.0+)**
+**Example 1b: Create with graph sync**
 
 ```typescript
 // Same as above, but sync to graph database
@@ -385,12 +388,9 @@ cortex.contexts.update(
 ): Promise<Context>
 ```
 
-<Callout
-  type="info"
-  title="New in v0.7.0"
->
+<Callout type="info">
 
-`options` parameter with `syncToGraph` support.
+`options` parameter supports `syncToGraph` for graph database integration.
 
 </Callout>
 
@@ -489,10 +489,7 @@ cortex.contexts.delete(
   ]}
 />
 
-<Callout
-  type="info"
-  title="New in v0.7.0"
->
+<Callout type="info">
 
 `syncToGraph` option enables graph deletion with sophisticated orphan cleanup.
 
@@ -743,11 +740,7 @@ interface UpdateManyResult {
 }
 ```
 
-<Callout
-  type="note"
-  title="Planned Features"
-  icon="sparkles"
->
+<Callout type="note" title="Planned Features">
 
 The following options are planned for a future release:
 - `dryRun?: boolean` - Preview what would be updated without making changes
@@ -823,11 +816,7 @@ interface DeleteManyResult {
 }
 ```
 
-<Callout
-  type="note"
-  title="Planned Features"
-  icon="sparkles"
->
+<Callout type="note" title="Planned Features">
 
 The following options are planned for a future release:
 - `dryRun?: boolean` - Preview what would be deleted without making changes
@@ -902,11 +891,7 @@ interface ExportResult {
 }
 ```
 
-<Callout
-  type="note"
-  title="Planned Features"
-  icon="sparkles"
->
+<Callout type="note" title="Planned Features">
 
 The following options are planned for a future release:
 - `outputPath?: string` - Write directly to file (currently returns data string)
@@ -1408,11 +1393,7 @@ interface ExportFilters {
 
 ### Planned Filter Enhancements
 
-<Callout
-  type="note"
-  title="Planned Features"
-  icon="sparkles"
->
+<Callout type="note" title="Planned Features">
 
 The following filters are planned for a future release to provide more powerful querying:
 
@@ -1552,17 +1533,13 @@ async function checkWorkflowComplete(rootContextId: string) {
 Link memories to contexts for workflow knowledge:
 
 ```typescript
-// Store memory with context reference in tags/metadata
-const memory = await cortex.vector.store({
+// Store memory with context reference using Layer 4 API (recommended)
+await cortex.memory.remember({
   memorySpaceId: "finance-agent-space",
-  content: "Approved $500 refund for defective product",
-  contentType: "raw",
   userId: "user-123",
-  source: { type: "tool", timestamp: Date.now() },
-  conversationRef: {
-    conversationId: "conv-456",
-    messageIds: ["msg-089"],
-  },
+  agentId: "finance-agent",
+  userMessage: "Please process the refund",
+  agentResponse: "Approved $500 refund for defective product",
   metadata: {
     importance: 85,
     tags: ["refund", "approval", "finance"],
@@ -1571,20 +1548,15 @@ const memory = await cortex.vector.store({
 });
 
 // Later: Search memories (contextId tracking is application-level)
-const results = await cortex.vector.search({
+const results = await cortex.memory.recall({
   memorySpaceId: "finance-agent-space",
+  userId: "user-123",
   query: "refund approval",
-  limit: 10,
 });
 ```
 
-<Callout
-  type="info"
-  title="Note"
->
-
+<Callout type="info" title="Note">
 Context tracking in memories is an application-level pattern. Store the `contextId` in memory metadata and filter/search as needed.
-
 </Callout>
 
 ### Pattern 4: Multi-Agent Coordination
@@ -1623,12 +1595,12 @@ console.log("Team:", ctx.participants);
 ### 1. Descriptive Purposes
 
 ```typescript
-// ❌ Vague
+// Avoid: Vague
 await cortex.contexts.create({
   purpose: "Process request",
 });
 
-// ✅ Specific
+// Better: Specific
 await cortex.contexts.create({
   purpose: "Process $500 refund for defective product (ticket #456)",
   data: {
@@ -1641,7 +1613,7 @@ await cortex.contexts.create({
 ### 2. Link to Originating Conversations
 
 ```typescript
-// ✅ Always link when context comes from user conversation
+// Always link when context comes from user conversation
 await cortex.contexts.create({
   purpose: "Handle support ticket",
   conversationRef: {
@@ -1665,11 +1637,9 @@ await cortex.contexts.create({
   data: { importance: 100 }, // Maximum priority
 });
 
-// Find urgent work
-const urgent = await cortex.contexts.search({
-  data: { importance: { $gte: 90 } },
-  status: "active",
-});
+// Find active contexts and filter by importance (application-level)
+const active = await cortex.contexts.search({ status: "active" });
+const urgent = active.filter((ctx) => (ctx.data?.importance ?? 0) >= 90);
 ```
 
 ### 4. Update Status Promptly
@@ -1697,21 +1667,16 @@ await cortex.contexts.update(contextId, {
 ### 5. Clean Up Old Contexts
 
 ```typescript
-// Archive completed workflows after 90 days
+// Archive completed contexts (filter by status, then update)
 await cortex.contexts.updateMany(
-  {
-    status: "completed",
-    completedBefore: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-  },
-  {
-    data: { archived: true },
-  },
+  { status: "completed" },
+  { data: { archived: true } },
 );
 
-// Delete cancelled after 180 days
+// Delete old cancelled contexts (completedBefore supported by deleteMany)
 await cortex.contexts.deleteMany({
   status: "cancelled",
-  updatedBefore: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000),
+  completedBefore: Date.now() - 180 * 24 * 60 * 60 * 1000,
 });
 ```
 
@@ -1830,7 +1795,7 @@ These errors are returned from the Convex backend:
 
 ---
 
-## Graph Integration (v0.7.0+)
+## Graph Integration
 
 Context chains integrate with graph databases for advanced queries:
 
@@ -1852,11 +1817,7 @@ const hierarchy = await graphAdapter.query(
 // Result: Entire hierarchy in single query (<10ms)!
 ```
 
-<Callout
-  type="tip"
-  title="Performance"
-  icon="zap"
->
+<Callout type="tip" title="Performance">
 
 Graph integration provides 3.8x faster queries for deep hierarchies (7+ levels).
 
@@ -1869,42 +1830,31 @@ See **[Graph Operations API](/api-reference/graph-operations)** for complete gra
 ## Next Steps
 
 <QuickNav>
-
-<QuickNavItem
-  title="Graph Operations API"
-  description="Graph database integration (NEW in v0.7.0)"
-  href="/api-reference/graph-operations"
-  icon="share-2"
-/>
-
-<QuickNavItem
-  title="Facts Operations API"
-  description="Structured knowledge extraction"
-  href="/api-reference/facts-operations"
-  icon="file-text"
-/>
-
-<QuickNavItem
-  title="Memory Space Operations API"
-  description="Hive/Collaboration Mode"
-  href="/api-reference/memory-space-operations"
-  icon="database"
-/>
-
-<QuickNavItem
-  title="A2A Communication API"
-  description="Agent-to-agent messaging"
-  href="/api-reference/a2a-communication"
-  icon="message-circle"
-/>
-
-<QuickNavItem
-  title="Types & Interfaces"
-  description="Complete TypeScript definitions"
-  href="/reference/types-interfaces"
-  icon="code"
-/>
-
+  <QuickNavItem
+    title="Graph Operations API"
+    description="Graph database integration"
+    href="/api-reference/graph-operations"
+  />
+  <QuickNavItem
+    title="Facts Operations API"
+    description="Structured knowledge extraction"
+    href="/api-reference/facts-operations"
+  />
+  <QuickNavItem
+    title="Memory Space Operations API"
+    description="Hive/Collaboration Mode"
+    href="/api-reference/memory-space-operations"
+  />
+  <QuickNavItem
+    title="A2A Communication API"
+    description="Agent-to-agent messaging"
+    href="/api-reference/a2a-communication"
+  />
+  <QuickNavItem
+    title="Types & Interfaces"
+    description="Complete TypeScript definitions"
+    href="/reference/types-interfaces"
+  />
 </QuickNav>
 
 ---

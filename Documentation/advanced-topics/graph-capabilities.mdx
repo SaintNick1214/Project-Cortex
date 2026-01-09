@@ -1,10 +1,12 @@
 # Graph Capabilities: Built-In Graph Traversal
 
-> **Last Updated**: 2026-01-01
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
 
 Navigate relationships and traverse knowledge graphs using Cortex's document-oriented architecture.
 
-> **Note:** This document covers advanced graph patterns and performance analysis. For basic context chain operations (creating, updating, querying), see **[Context Chains](../02-core-features/04-context-chains)**.
+> **Note:** This document covers advanced graph patterns and performance analysis. For basic context chain operations (creating, updating, querying), see **[Context Chains](/advanced-topics/context-chains)**.
 
 ## Overview
 
@@ -18,21 +20,14 @@ Cortex is built on Convex, a **document-oriented database**, but provides **grap
 
 Every entity in Cortex is a graph node:
 
-```
-┌──────────────┐
-│ Agents       │ - AI agents, human operators
-├──────────────┤
-│ Users        │ - End users, customers
-├──────────────┤
-│ Contexts     │ - Workflow tasks, hierarchies
-├──────────────┤
-│ Conversations│ - Message threads
-├──────────────┤
-│ Memories     │ - Agent knowledge
-├──────────────┤
-│ Facts        │ - Extracted knowledge (optional)
-└──────────────┘
-```
+| Entity | Description |
+|--------|-------------|
+| **Agents** | AI agents, human operators |
+| **Users** | End users, customers |
+| **Contexts** | Workflow tasks, hierarchies |
+| **Conversations** | Message threads |
+| **Memories** | Agent knowledge |
+| **Facts** | Extracted knowledge (optional) |
 
 ### Edges (Relationships)
 
@@ -51,32 +46,18 @@ fromAgent/toAgent → Links A2A Messages between Agents
 
 ### Visualizing the Graph
 
-```
-User-123
-  │
-  ├──[CREATED]──> Conversation-456 (ACID)
-  │                    │
-  │                    └──[TRIGGERED]──> Context-001 (Root)
-  │                                           │
-  │                                           ├──[PARENT_OF]──> Context-002 (Finance)
-  │                                           │                      │
-  │                                           │                      └──[HANDLED_BY]──> finance-agent
-  │                                           │
-  │                                           └──[PARENT_OF]──> Context-003 (Customer)
-  │                                                                  │
-  │                                                                  └──[HANDLED_BY]──> customer-agent
-  │
-  └──[RELATES_TO]──> Memory-abc (Vector)
-                          │
-                          ├──[REFERENCES]──> Conversation-456
-                          ├──[SOURCED_FROM]──> Fact-xyz
-                          └──[LINKED_TO]──> Context-001
+<FlowDiagram title="Cortex Implicit Graph Structure">
+  <FlowNode title="User-123" icon="user" variant="primary">Root entity with connections to conversations and memories</FlowNode>
+  <FlowNode title="Conversation-456" icon="message" variant="secondary">ACID layer — triggered Context-001</FlowNode>
+  <FlowNode title="Context-001 (Root)" icon="layers" variant="secondary">Parent of Finance and Customer contexts</FlowNode>
+  <FlowNode title="Memory-abc" icon="brain" variant="success">Vector layer — references Conversation, Fact, and Context</FlowNode>
+</FlowDiagram>
 
-finance-agent ──[SENT_TO]──> customer-agent
-      │                            │
-      │                            └──[STORED_IN]──> Memory-def (A2A)
-      └──[STORED_IN]──> Memory-ghi (A2A)
-```
+<Callout type="tip" title="Key Relationships">
+**Context hierarchy**: Context-001 → Context-002 (Finance) → finance-agent  
+**Memory links**: Memory → Conversation, Fact, Context  
+**A2A messaging**: finance-agent → customer-agent (dual-write)
+</Callout>
 
 ## Built-In Graph Traversals
 
@@ -563,7 +544,7 @@ const contexts = await cortex.contexts.search({
 // Query 3: Get agent handling context
 const memorySpace = await cortex.memorySpaces.get(contexts[0].memorySpaceId); // 15ms
 
-// Total: ~65ms (acceptable!) ✅
+// Total: ~65ms (acceptable)
 ```
 
 **Scaling:**
@@ -638,13 +619,13 @@ const memorySpace = await cortex.memorySpaces.get(contexts[0].memorySpaceId); //
 
 | Your Need                      | Graph-Lite      | Native Graph DB |
 | ------------------------------ | --------------- | --------------- |
-| Context hierarchies (depth <5) | ✅ Perfect      | ⚠️ Overkill     |
-| Audit trails (known paths)     | ✅ Perfect      | ⚠️ Overkill     |
-| Agent collaboration (1-3 hops) | ✅ Good         | Better          |
-| Deep traversals (6+ hops)      | ❌ Too slow     | ✅ Required     |
-| Pattern matching               | ❌ Very hard    | ✅ Required     |
-| Graph algorithms               | ❌ Not feasible | ✅ Required     |
-| Dense relationship networks    | ⚠️ Slow         | ✅ Best         |
+| Context hierarchies (depth <5) | Perfect         | Overkill        |
+| Audit trails (known paths)     | Perfect         | Overkill        |
+| Agent collaboration (1-3 hops) | Good            | Better          |
+| Deep traversals (6+ hops)      | Too slow        | Required        |
+| Pattern matching               | Very hard       | Required        |
+| Graph algorithms               | Not feasible    | Required        |
+| Dense relationship networks    | Slow            | Best            |
 
 **When to Upgrade:**
 
@@ -827,10 +808,10 @@ async function getWeightedCollaborationGraph() {
 ### 1. Use Existing Traversal Methods
 
 ```typescript
-// ✅ Use built-in traversal when available
+// Good: Use built-in traversal when available
 const chain = await cortex.contexts.get(contextId, { includeChain: true });
 
-// ❌ Don't manually traverse when built-in exists
+// Avoid: Manual traversal when built-in exists
 const context = await cortex.contexts.get(contextId);
 const parent = context.parentId
   ? await cortex.contexts.get(context.parentId)
@@ -844,7 +825,7 @@ const grandparent = parent?.parentId
 ### 2. Limit Traversal Depth
 
 ```typescript
-// ✅ Set reasonable depth limits
+// Good: Set reasonable depth limits
 const MAX_DEPTH = 5;
 
 async function safeTraverse(contextId: string, depth = 0) {
@@ -880,12 +861,12 @@ async function cachedContextChain(contextId: string) {
 ### 4. Use Batch Queries
 
 ```typescript
-// ✅ Fetch all related entities in one query when possible
+// Good: Fetch all related entities in one query when possible
 const contexts = await cortex.contexts.list({
   rootId: rootContextId, // Gets entire workflow in one query
 });
 
-// ❌ Don't query one-by-one
+// Avoid: Querying one-by-one
 const root = await cortex.contexts.get(rootId);
 for (const childId of root.childIds) {
   const child = await cortex.contexts.get(childId); // N queries!
@@ -915,7 +896,7 @@ for (const childId of root.childIds) {
 ```typescript
 // Current code works fine
 const chain = await cortex.contexts.get(contextId, { includeChain: true });
-// 150ms, depth 3 - acceptable ✅
+// 150ms, depth 3 - acceptable
 ```
 
 **Phase 2: Hit Limits**
@@ -925,7 +906,7 @@ const chain = await cortex.contexts.get(contextId, { includeChain: true });
 const chain = await cortex.contexts.get(complexContextId, {
   includeChain: true,
 });
-// 800ms, depth 8 - too slow ❌
+// 800ms, depth 8 - too slow
 
 // Complex query needed
 // "Find all agents who worked on contexts related to user-123 through any path"
@@ -951,7 +932,7 @@ const agents = await cortex.graph.traverse({
   relationships: ['INVOLVES', 'HANDLED_BY'],
   maxDepth: 10
 });
-// 45ms - fast! ✅
+// 45ms - fast!
 
 // Keep using Graph-Lite for simple queries
 const chain = await cortex.contexts.get(contextId, { includeChain: true });
@@ -961,9 +942,9 @@ const chain = await cortex.contexts.get(contextId, { includeChain: true });
 ## Next Steps
 
 - **[Graph Database Integration](./graph-database-integration)** - Complete guide to external graph databases
-- **[Context Chains](../02-core-features/04-context-chains)** - Basic hierarchical operations
-- **[A2A Communication](../02-core-features/05-a2a-communication)** - Agent communication patterns
-- **[Graph Operations API](../03-api-reference/13-graph-operations)** - Complete API reference
+- **[Context Chains](/advanced-topics/context-chains)** - Basic hierarchical operations
+- **[A2A Communication](/advanced-topics/a2a-communication)** - Agent communication patterns
+- **[Graph Operations API](/api-reference/graph-operations)** - Complete API reference
 
 ---
 

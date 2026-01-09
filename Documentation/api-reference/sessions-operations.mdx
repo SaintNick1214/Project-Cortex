@@ -9,7 +9,7 @@ description: Complete API reference for session lifecycle management and multi-s
 
 <Callout type="info">
 
-**Last Updated**: 2026-01-01
+**Last Updated**: 2026-01-08
 
 </Callout>
 
@@ -31,19 +31,17 @@ The Sessions API (`cortex.sessions.*`) provides native session management for us
 
 ## Session Lifecycle
 
-```
-┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│   ACTIVE    │──────│    IDLE     │──────│   ENDED     │
-│             │      │             │      │             │
-│ User active │      │ No activity │      │ Terminated  │
-│ < 30min     │      │ < 24h       │      │             │
-└─────────────┘      └─────────────┘      └─────────────┘
-       │                    │                    ▲
-       │    touch()         │    expireIdle()    │
-       └────────────────────┼────────────────────┘
-                            │
-                    After 24h idle
-```
+<FlowDiagram title="Session State Transitions" direction="horizontal">
+  <FlowNode title="ACTIVE" icon="user" variant="success">
+    User active (< 30min since last touch)
+  </FlowNode>
+  <FlowNode title="IDLE" icon="time" variant="warning">
+    No activity (< 24h) — touch() returns to ACTIVE
+  </FlowNode>
+  <FlowNode title="ENDED" icon="shield" variant="primary">
+    Terminated — expireIdle() after 24h idle
+  </FlowNode>
+</FlowDiagram>
 
 **Default Timeouts (Configurable via Governance):**
 
@@ -652,12 +650,12 @@ Sessions are included in GDPR cascade deletion:
 await cortex.users.delete("user-123", { cascade: true });
 
 // Sessions are deleted as part of the cascade:
-// ✅ User profile
-// ✅ All sessions for user  <-- NEW
-// ✅ All conversations
-// ✅ All memories
-// ✅ All facts
-// ✅ Graph nodes (if configured)
+// - User profile
+// - All sessions for user
+// - All conversations
+// - All memories
+// - All facts
+// - Graph nodes (if configured)
 ```
 
 ---
@@ -813,25 +811,21 @@ try {
 <QuickNav>
   <QuickNavItem
     title="User Operations"
-    icon="user"
     href="/api-reference/user-operations"
     description="User profiles and GDPR deletion"
   />
   <QuickNavItem
     title="Auth Integration"
-    icon="lock"
     href="/integrations/auth-providers"
     description="Authentication context"
   />
   <QuickNavItem
     title="Governance Policies"
-    icon="shield"
     href="/api-reference/governance-policies-api"
     description="Session lifecycle policies"
   />
   <QuickNavItem
     title="Memory Operations"
-    icon="brain"
     href="/api-reference/memory-operations"
     description="Session-scoped memories"
   />

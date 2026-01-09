@@ -8,7 +8,7 @@ description: Complete API reference for graph database integration, multi-hop qu
 # Graph Operations API
 
 <Callout type="info">
-  **Last Updated**: 2026-01-01 | **Version**: v0.24.0 | **Status**: Production Ready
+  **Last Updated**: 2026-01-08 | **Version**: v0.24.0 | **Status**: Production Ready
 </Callout>
 
 Complete API reference for graph database integration, multi-hop queries, and knowledge graph operations.
@@ -424,7 +424,7 @@ await cortex.memory.remember({
   userId: "alice",
   userName: "Alice",
 });
-// ✅ Automatically synced to graph!
+// Automatically synced to graph!
 
 // Disable if needed
 await cortex.memory.remember(params, { syncToGraph: false });
@@ -1015,25 +1015,36 @@ const result = await deleteMutableFromGraph(
 
 **Handles complex scenarios**:
 
+<Tabs>
+  <TabItem value="circular" label="Circular References">
+
 ```typescript
 // Scenario: Circular references
-Entity A → KNOWS → Entity B
-Entity B → KNOWS → Entity A
-Fact F1 → MENTIONS → Entity A
+// Entity A → KNOWS → Entity B
+// Entity B → KNOWS → Entity A
+// Fact F1 → MENTIONS → Entity A
 
 // Delete F1:
 // - A and B reference each other (circular!)
 // - But no external references remain (F1 was only anchor)
-// - Algorithm: Detects orphan island, deletes both A and B ✅
+// - Algorithm: Detects orphan island, deletes both A and B
+```
 
+  </TabItem>
+  <TabItem value="still-referenced" label="Still Referenced">
+
+```typescript
 // Scenario: Still referenced
-Memory M1 → Conversation C1
-Memory M2 → Conversation C1
+// Memory M1 → Conversation C1
+// Memory M2 → Conversation C1
 
 // Delete M1:
 // - C1 still referenced by M2
-// - Algorithm: Keeps C1 (not orphaned) ✅
+// - Algorithm: Keeps C1 (not orphaned)
 ```
+
+  </TabItem>
+</Tabs>
 
 **Orphan Rules**:
 
@@ -1488,7 +1499,7 @@ console.log("Fact provenance:");
 console.log("  Conversation:", provenance.records[0].conversation);
 console.log("  Context:", provenance.records[0].context);
 console.log("  User:", provenance.records[0].user);
-// Complete audit trail! ✅
+// Complete audit trail!
 ```
 
 ---
@@ -1825,18 +1836,18 @@ try {
 ### 1. Convex as Source of Truth
 
 ```typescript
-// ✅ Always write to Convex first
+// Recommended: Always write to Convex first
 await cortex.memory.remember(params, { syncToGraph: true });
 // Convex write succeeds → then sync to graph
 
-// ❌ Don't write to graph first
+// Avoid: Writing to graph first
 await adapter.createNode({ ... }); // Graph could succeed but Convex fail
 ```
 
 ### 2. Use Auto-Sync for Simplicity
 
 ```typescript
-// ✅ Enable auto-sync, use convenience APIs
+// Recommended: Enable auto-sync, use convenience APIs
 const cortex = new Cortex({
   convexUrl: "...",
   graph: { adapter, autoSync: true },
@@ -1867,13 +1878,13 @@ if (worker) {
 ### 4. Use Graph for Discovery, Not Storage
 
 ```typescript
-// ✅ Query graph for relationships
+// Good: Query graph for relationships
 const related = await adapter.query(`
   MATCH (m:Memory)-[:REFERENCES]->(conv:Conversation)<-[:EXTRACTED_FROM]-(f:Fact)
   RETURN f
 `);
 
-// ✅ But fetch full data from Convex
+// Good: Fetch full data from Convex
 for (const record of related.records) {
   const fullFact = await cortex.facts.get(
     memorySpaceId,

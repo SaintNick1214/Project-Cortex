@@ -7,6 +7,10 @@ description: Agent-to-agent messaging for Collaboration Mode
 
 # A2A Communication
 
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
 <Callout type="info" title="What is A2A Communication?">
   A2A (Agent-to-Agent) enables agents in **separate memory spaces** to communicate via dual-write messaging. Messages are stored in BOTH sender and receiver spaces—complete isolation with coordination.
 </Callout>
@@ -32,19 +36,18 @@ const inbox = await cortex.a2a.getInbox("hr-agent", { limit: 10 });
 
 ## How Dual-Write Works
 
-```
-Finance Agent                       HR Agent
-(finance-space)                    (hr-space)
-      │                                 │
-      │   ┌─────────────────────┐       │
-      │───│ "Budget approved"   │───────│
-      │   │ (stored in BOTH)    │       │
-      │   └─────────────────────┘       │
-      │                                 │
-      ▼                                 ▼
-[Message in                    [Message in
- finance-space]                 hr-space]
-```
+<ArchitectureDiagram title="Dual-Write Message Storage" caption="Messages are stored in BOTH sender and receiver memory spaces">
+  <ArchitectureLayer title="Sender" variant="primary" showArrow={false}>
+    <ArchitectureBox title="Finance Agent" subtitle="(finance-space)" variant="primary">Sends: "Budget approved"</ArchitectureBox>
+  </ArchitectureLayer>
+  <ArchitectureLayer title="Message Written to Both Spaces" variant="secondary" showArrow={false}>
+    <ArchitectureBox title="Message in finance-space" footer="Sender's copy">Outbox record with metadata</ArchitectureBox>
+    <ArchitectureBox title="Message in hr-space" footer="Receiver's copy">Inbox record with metadata</ArchitectureBox>
+  </ArchitectureLayer>
+  <ArchitectureLayer title="Receiver" variant="tertiary" showArrow={false}>
+    <ArchitectureBox title="HR Agent" subtitle="(hr-space)" variant="success">Receives in inbox</ArchitectureBox>
+  </ArchitectureLayer>
+</ArchitectureDiagram>
 
 <Callout type="tip" title="Why Dual-Write?">
   Each agent maintains complete isolation while still being able to coordinate. No shared state—just message passing.
