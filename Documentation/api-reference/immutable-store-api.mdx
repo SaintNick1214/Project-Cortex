@@ -8,7 +8,7 @@ description: Complete API reference for shared immutable data storage with autom
 # Immutable Store API
 
 <Callout type="info">
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-09
 </Callout>
 
 Complete API reference for shared immutable data storage with automatic versioning.
@@ -57,10 +57,13 @@ Store immutable data. Creates v1 or increments version if ID exists.
 
 ```typescript
 cortex.immutable.store(
-  entry: ImmutableEntry,
-  options?: StoreImmutableOptions
+  entry: ImmutableEntry
 ): Promise<ImmutableRecord>
 ```
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 
 **Parameters:**
 
@@ -78,9 +81,6 @@ interface ImmutableEntry {
   };
 }
 
-interface StoreImmutableOptions {
-  syncToGraph?: boolean; // Sync to graph database (if configured)
-}
 ```
 
 **userId Field:**
@@ -116,18 +116,15 @@ await cortex.immutable.store({
   },
 });
 
-// With graph sync (if graph adapter configured)
-await cortex.immutable.store(
-  {
-    type: "kb-article",
-    id: "product-guide",
-    data: {
-      title: "Product Guide",
-      content: "...",
-    },
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true
+await cortex.immutable.store({
+  type: "kb-article",
+  id: "product-guide",
+  data: {
+    title: "Product Guide",
+    content: "...",
   },
-  { syncToGraph: true },
-);
+});
 ```
 
 **Returns:**

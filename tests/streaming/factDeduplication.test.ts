@@ -122,7 +122,6 @@ describe("ProgressiveFactExtractor - Deduplication", () => {
         extractFacts,
         "What's your favorite language?",
         convId,
-        false,
       );
 
       // Second extractor instance (simulating session 2)
@@ -140,7 +139,6 @@ describe("ProgressiveFactExtractor - Deduplication", () => {
         extractFacts,
         "Tell me about your coding preferences",
         convId,
-        false,
       );
 
       // Count facts - should be 1 due to cross-session deduplication

@@ -12,7 +12,7 @@ description: Complete API reference for the Facts layer (Layer 3) - structured k
   icon="clock"
 >
 
-**Last Updated**: 2026-01-08 | **Version**: v0.7.0+ (Belief Revision: v0.24.0+)
+**Last Updated**: 2026-01-09 | **Version**: v0.7.0+ (Belief Revision: v0.24.0+, Auto Graph Sync: v0.29.0+)
 
 </Callout>
 
@@ -43,7 +43,7 @@ The Facts API (`cortex.facts.*`) provides structured knowledge storage with vers
 - Confidence scoring (0-100)
 - Temporal validity (validFrom/validUntil)
 - Automatic versioning and supersession
-- **Graph database integration (v0.7.0+)** - Optional syncToGraph
+- **Automatic graph database sync (v0.29.0+)** - Facts and entities sync automatically when `CORTEX_GRAPH_SYNC=true`
 - **Universal filters (v0.9.1+)** - Same filters as Memory API
 - sourceRef linking to memories and conversations
 
@@ -82,7 +82,7 @@ cortex.facts.store(
 ): Promise<FactRecord>
 ```
 
-**New in v0.7.0**: `options` parameter with `syncToGraph` support for graph database integration.
+**New in v0.29.0**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true`. The `syncToGraph` option has been removed.
 
 **Parameters:**
 
@@ -130,9 +130,9 @@ interface EnrichedRelation {
   object: string; // Object entity (e.g., "Alex")
 }
 
-interface StoreFactOptions {
-  syncToGraph?: boolean; // Sync to graph DB (default: true if configured)
-}
+// StoreFactOptions is now empty (v0.29.0+)
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true
+// interface StoreFactOptions {}
 ```
 
 **Example:**
@@ -1251,9 +1251,8 @@ interface UpdateFactInput {
   metadata?: any; // Updated metadata
 }
 
-interface UpdateFactOptions {
-  syncToGraph?: boolean;
-}
+// Note: UpdateFactOptions no longer includes syncToGraph (v0.29.0+)
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true
 ```
 
 **Example:**
@@ -1288,9 +1287,8 @@ async delete(
 **Example:**
 
 ```typescript
-await cortex.facts.delete("agent-1", "fact-123", {
-  syncToGraph: true, // Remove from graph DB
-});
+// Graph cleanup is automatic when CORTEX_GRAPH_SYNC=true
+await cortex.facts.delete("agent-1", "fact-123");
 ```
 
 ### `facts.deleteMany()`
@@ -2185,13 +2183,16 @@ Return ONLY a valid JSON array.
 `;
 ```
 
-### Graph Integration
+### Graph Integration (v0.29.0+)
 
-When `syncToGraph: true`, enriched facts automatically:
+When `CORTEX_GRAPH_SYNC=true` is set in your environment, enriched facts automatically:
 
-1. Create **Entity nodes** for each item in `entities[]`
-2. Create **relationship edges** for each item in `relations[]`
-3. Update existing Entity nodes with enriched metadata (fullValue, entityType)
+1. Create **Fact nodes** in the graph with all fact properties
+2. Create **Entity nodes** for each item in `entities[]`
+3. Create **relationship edges** (MENTIONS) linking facts to entities
+4. Create **predicate-based relationships** from `relations[]`
+5. Create **EXTRACTED_FROM** relationships linking facts to source conversations
+6. Create **SUPERSEDES** relationships when belief revision supersedes facts
 
 ```typescript
 // Entities become graph nodes

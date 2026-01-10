@@ -205,7 +205,7 @@ export class ContextsAPI {
    */
   async create(
     params: CreateContextParams,
-    options?: CreateContextOptions,
+    _options?: CreateContextOptions,
   ): Promise<Context> {
     // Client-side validation
     validatePurpose(params.purpose);
@@ -253,7 +253,7 @@ export class ContextsAPI {
     }
 
     // Sync to graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         const nodeId = await syncContextToGraph(
           result as Context,
@@ -325,7 +325,7 @@ export class ContextsAPI {
   async update(
     contextId: string,
     updates: UpdateContextParams,
-    options?: UpdateContextOptions,
+    _options?: UpdateContextOptions,
   ): Promise<Context> {
     // Client-side validation
     validateRequiredString(contextId, "contextId");
@@ -357,7 +357,7 @@ export class ContextsAPI {
     );
 
     // Update in graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         const nodes = await this.graphAdapter.findNodes(
           "Context",
@@ -426,7 +426,7 @@ export class ContextsAPI {
     }
 
     // Delete from graph with orphan cleanup
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         await deleteContextFromGraph(contextId, this.graphAdapter, true);
       } catch (error) {

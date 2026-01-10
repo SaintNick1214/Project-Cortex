@@ -216,7 +216,7 @@ export class FactsAPI {
    */
   async store(
     params: StoreFactParams,
-    options?: StoreFactOptions,
+    _options?: StoreFactOptions,
   ): Promise<FactRecord> {
     // Validate required fields
     validateMemorySpaceId(params.memorySpaceId);
@@ -268,24 +268,24 @@ export class FactsAPI {
       "facts:store",
     );
 
-    // Sync to graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    const factRecord = result as FactRecord;
+
+    // Sync to graph automatically when graph adapter is configured
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
+    if (this.graphAdapter) {
       try {
         const nodeId = await syncFactToGraph(
-          result as FactRecord,
+          factRecord,
           this.graphAdapter,
+          this.authContext?.tenantId,
         );
-        await syncFactRelationships(
-          result as FactRecord,
-          nodeId,
-          this.graphAdapter,
-        );
+        await syncFactRelationships(factRecord, nodeId, this.graphAdapter);
       } catch (error) {
-        console.warn("Failed to sync fact to graph:", error);
+        console.warn("[Cortex] Failed to sync fact to graph:", error);
       }
     }
 
-    return result as FactRecord;
+    return factRecord;
   }
 
   /**
@@ -381,7 +381,6 @@ export class FactsAPI {
               ? [...new Set([...existing.tags, ...params.tags])]
               : undefined,
           },
-          { syncToGraph: options?.syncToGraph },
         );
 
         return {
@@ -750,7 +749,7 @@ export class FactsAPI {
     memorySpaceId: string,
     factId: string,
     updates: UpdateFactInput,
-    options?: UpdateFactOptions,
+    _options?: UpdateFactOptions,
   ): Promise<FactRecord> {
     validateMemorySpaceId(memorySpaceId);
     validateRequiredString(factId, "factId");
@@ -792,8 +791,11 @@ export class FactsAPI {
       this.handleConvexError(error);
     }
 
-    // Update in graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    const factRecord = result as FactRecord;
+
+    // Sync to graph automatically when graph adapter is configured
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
+    if (this.graphAdapter) {
       try {
         const nodes = await this.graphAdapter.findNodes("Fact", { factId }, 1);
         if (nodes.length > 0) {
@@ -803,11 +805,11 @@ export class FactsAPI {
           );
         }
       } catch (error) {
-        console.warn("Failed to update fact in graph:", error);
+        console.warn("[Cortex] Failed to update fact in graph:", error);
       }
     }
 
-    return result as FactRecord;
+    return factRecord;
   }
 
   /**
@@ -821,7 +823,7 @@ export class FactsAPI {
   async delete(
     memorySpaceId: string,
     factId: string,
-    options?: DeleteFactOptions,
+    _options?: DeleteFactOptions,
   ): Promise<{ deleted: boolean; factId: string }> {
     validateMemorySpaceId(memorySpaceId);
     validateRequiredString(factId, "factId");
@@ -841,12 +843,13 @@ export class FactsAPI {
       this.handleConvexError(error);
     }
 
-    // Delete from graph with Entity orphan cleanup
-    if (options?.syncToGraph && this.graphAdapter) {
+    // Delete from graph automatically with Entity orphan cleanup
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
+    if (this.graphAdapter) {
       try {
         await deleteFactFromGraph(factId, this.graphAdapter, true);
       } catch (error) {
-        console.warn("Failed to delete fact from graph:", error);
+        console.warn("[Cortex] Failed to delete fact from graph:", error);
       }
     }
 

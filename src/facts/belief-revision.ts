@@ -16,6 +16,7 @@
 import type { ConvexClient } from "convex/browser";
 import type { FactRecord } from "../types";
 import type { GraphAdapter } from "../graph/types";
+import { syncFactToGraph, syncFactRelationships } from "../graph/sync";
 import {
   SlotMatchingService,
   type SlotMatchingConfig,
@@ -561,7 +562,12 @@ export class BeliefRevisionService {
             confidence: params.fact.confidence,
             tags: params.fact.tags,
           });
-          return { fact: updated as FactRecord, superseded: [] };
+          const updatedFact = updated as FactRecord;
+
+          // Sync updated fact to graph
+          await this.syncFactToGraphIfConfigured(updatedFact, params.tenantId);
+
+          return { fact: updatedFact, superseded: [] };
         }
         break;
       }
@@ -585,20 +591,24 @@ export class BeliefRevisionService {
             sourceRef: params.sourceRef,
             tags: params.fact.tags || [],
           });
+          const createdFact = newFact as FactRecord;
 
           // Mark old fact as superseded by the new fact
           // This sets both supersededBy and validUntil, and links the facts together
           await this.client.mutation(api.facts.supersede, {
             memorySpaceId: params.memorySpaceId,
             oldFactId: targetFact.factId,
-            newFactId: (newFact as FactRecord).factId,
+            newFactId: createdFact.factId,
             reason: _reason,
           });
 
           // Update supersededBy relationship (done via update mutation)
           superseded.push(targetFact);
 
-          return { fact: newFact as FactRecord, superseded };
+          // Sync new fact to graph (includes SUPERSEDES relationship)
+          await this.syncFactToGraphIfConfigured(createdFact, params.tenantId);
+
+          return { fact: createdFact, superseded };
         }
         break;
       }
@@ -622,7 +632,12 @@ export class BeliefRevisionService {
           sourceRef: params.sourceRef,
           tags: params.fact.tags || [],
         });
-        return { fact: newFact as FactRecord, superseded: [] };
+        const createdFact = newFact as FactRecord;
+
+        // Sync new fact to graph
+        await this.syncFactToGraphIfConfigured(createdFact, params.tenantId);
+
+        return { fact: createdFact, superseded: [] };
       }
     }
 
@@ -643,7 +658,41 @@ export class BeliefRevisionService {
       sourceRef: params.sourceRef,
       tags: params.fact.tags || [],
     });
-    return { fact: newFact as FactRecord, superseded: [] };
+    const createdFact = newFact as FactRecord;
+
+    // Sync new fact to graph
+    await this.syncFactToGraphIfConfigured(createdFact, params.tenantId);
+
+    return { fact: createdFact, superseded: [] };
+  }
+
+  /**
+   * Stage 5: Sync fact to graph database (if configured)
+   *
+   * Creates Fact node and Entity nodes with relationships:
+   * - Fact node with all properties
+   * - Entity nodes from fact.entities array
+   * - MENTIONS relationships from Fact to Entity
+   * - Predicate-based relationships (e.g., WORKS_AT, KNOWS)
+   * - EXTRACTED_FROM relationship if sourceRef exists
+   * - IN_SPACE relationship to MemorySpace
+   * - SUPERSEDES relationship if fact supersedes another
+   */
+  private async syncFactToGraphIfConfigured(
+    fact: FactRecord,
+    tenantId?: string,
+  ): Promise<void> {
+    if (!this.graphAdapter) {
+      return;
+    }
+
+    try {
+      const nodeId = await syncFactToGraph(fact, this.graphAdapter, tenantId);
+      await syncFactRelationships(fact, nodeId, this.graphAdapter);
+    } catch (error) {
+      // Log but don't fail the operation - graph sync is secondary
+      console.warn("[Cortex] Failed to sync fact to graph:", error);
+    }
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

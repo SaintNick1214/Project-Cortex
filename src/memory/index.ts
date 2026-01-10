@@ -238,12 +238,12 @@ export class MemoryAPI {
 
   /**
    * Helper: Find and cascade delete facts linked to a memory
+   * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
   private async cascadeDeleteFacts(
     memorySpaceId: string,
     memoryId: string,
     conversationId?: string,
-    syncToGraph?: boolean,
   ): Promise<{ count: number; factIds: string[] }> {
     const allFacts = await this.facts.list({
       memorySpaceId,
@@ -259,7 +259,7 @@ export class MemoryAPI {
     const deletedFactIds: string[] = [];
     for (const fact of factsToDelete) {
       try {
-        await this.facts.delete(memorySpaceId, fact.factId, { syncToGraph });
+        await this.facts.delete(memorySpaceId, fact.factId);
         deletedFactIds.push(fact.factId);
       } catch (error) {
         console.warn("Failed to delete linked fact:", error);
@@ -271,12 +271,12 @@ export class MemoryAPI {
 
   /**
    * Helper: Archive facts (mark as expired)
+   * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
   private async archiveFacts(
     memorySpaceId: string,
     memoryId: string,
     conversationId?: string,
-    syncToGraph?: boolean,
   ): Promise<{ count: number; factIds: string[] }> {
     const allFacts = await this.facts.list({
       memorySpaceId,
@@ -292,15 +292,10 @@ export class MemoryAPI {
     const archivedFactIds: string[] = [];
     for (const fact of factsToArchive) {
       try {
-        await this.facts.update(
-          memorySpaceId,
-          fact.factId,
-          {
-            validUntil: Date.now(),
-            tags: [...fact.tags, "archived"],
-          },
-          { syncToGraph },
-        );
+        await this.facts.update(memorySpaceId, fact.factId, {
+          validUntil: Date.now(),
+          tags: [...fact.tags, "archived"],
+        });
         archivedFactIds.push(fact.factId);
       } catch (error) {
         console.warn("Failed to archive linked fact:", error);
@@ -573,11 +568,9 @@ export class MemoryAPI {
 
   /**
    * Ensure memory space exists, auto-register if not
+   * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
-  private async ensureMemorySpaceExists(
-    memorySpaceId: string,
-    syncToGraph: boolean,
-  ): Promise<void> {
+  private async ensureMemorySpaceExists(memorySpaceId: string): Promise<void> {
     if (!this.memorySpacesAPI) {
       // No memorySpaces API available - skip auto-registration
       return;
@@ -585,14 +578,11 @@ export class MemoryAPI {
 
     const existingSpace = await this.memorySpacesAPI.get(memorySpaceId);
     if (!existingSpace) {
-      await this.memorySpacesAPI.register(
-        {
-          memorySpaceId,
-          type: "custom",
-          name: memorySpaceId,
-        },
-        { syncToGraph },
-      );
+      await this.memorySpacesAPI.register({
+        memorySpaceId,
+        type: "custom",
+        name: memorySpaceId,
+      });
     }
   }
 
@@ -808,9 +798,9 @@ export class MemoryAPI {
       this.notifyOrchestrationStart(observer, orchestrationId);
     }
 
-    // Determine if we should sync to graph (default: true if configured)
+    // Determine if we should sync to graph (automatic when graphAdapter is configured)
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
     const shouldSyncToGraph =
-      options?.syncToGraph !== false &&
       this.graphAdapter !== undefined &&
       !this.shouldSkipLayer("graph", skipLayers);
 
@@ -829,7 +819,7 @@ export class MemoryAPI {
     }
 
     try {
-      await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
+      await this.ensureMemorySpaceExists(memorySpaceId);
       if (observer && !isPartialOrchestration) {
         const event = this.createLayerEvent(
           "memorySpace",
@@ -1437,20 +1427,16 @@ export class MemoryAPI {
                   };
 
                   // Use storeWithDedup if deduplication is enabled
+                  // Graph sync is automatic when graphAdapter is configured
                   if (dedupConfig) {
                     const result = await this.facts.storeWithDedup(
                       storeParams,
-                      {
-                        syncToGraph: shouldSyncToGraph,
-                        deduplication: dedupConfig,
-                      },
+                      { deduplication: dedupConfig },
                     );
                     extractedFacts.push(result.fact);
                   } else {
                     // Deduplication disabled - use regular store
-                    const storedFact = await this.facts.store(storeParams, {
-                      syncToGraph: shouldSyncToGraph,
-                    });
+                    const storedFact = await this.facts.store(storeParams);
                     extractedFacts.push(storedFact);
                   }
                 }
@@ -1525,9 +1511,9 @@ export class MemoryAPI {
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // STEP 7: GRAPH (handled via syncToGraph in previous steps)
+    // STEP 7: GRAPH (automatic when CORTEX_GRAPH_SYNC=true)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Graph sync is handled inline with each layer via the syncToGraph option
+    // Graph sync is handled automatically by each layer when graphAdapter is configured
     // We just need to notify the observer of the status
     if (observer) {
       if (shouldSyncToGraph) {
@@ -1737,9 +1723,9 @@ export class MemoryAPI {
       "./streaming/ProgressiveGraphSync"
     );
 
-    // Determine if we should sync to graph (default: true if configured)
+    // Determine if we should sync to graph (automatic when graphAdapter is configured)
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
     const shouldSyncToGraph =
-      options?.syncToGraph !== false &&
       this.graphAdapter !== undefined &&
       !this.shouldSkipLayer("graph", skipLayers);
 
@@ -1769,7 +1755,7 @@ export class MemoryAPI {
     }
 
     try {
-      await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
+      await this.ensureMemorySpaceExists(memorySpaceId);
       if (observer) {
         const event = this.createLayerEvent(
           "memorySpace",
@@ -2142,7 +2128,6 @@ export class MemoryAPI {
           ],
         },
         {
-          syncToGraph: options?.syncToGraph,
           // Translate streaming beliefRevision (boolean) to remember() format
           // true → { enabled: true }, false → false, undefined → undefined
           beliefRevision:
@@ -2277,21 +2262,17 @@ export class MemoryAPI {
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    // Determine if we should sync to graph (default: true if configured)
-    const shouldSyncToGraph =
-      options?.syncToGraph !== false && this.graphAdapter !== undefined;
+    // Graph sync is automatic when graphAdapter is configured
+    // (controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization)
 
-    // Delete from vector (with graph cascade)
-    await this.vector.delete(memorySpaceId, memoryId, {
-      syncToGraph: shouldSyncToGraph,
-    });
+    // Delete from vector (graph sync handled automatically)
+    await this.vector.delete(memorySpaceId, memoryId);
 
-    // Cascade delete associated facts
+    // Cascade delete associated facts (graph sync handled automatically)
     const { count: factsDeleted, factIds } = await this.cascadeDeleteFacts(
       memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
-      shouldSyncToGraph,
     );
 
     let conversationDeleted = false;
@@ -2307,10 +2288,10 @@ export class MemoryAPI {
 
         messagesDeleted = conv?.messageCount || 0;
 
-        // Delete entire conversation (with graph cascade)
-        await this.conversations.delete(memory.conversationRef.conversationId, {
-          syncToGraph: shouldSyncToGraph,
-        });
+        // Delete entire conversation (graph sync handled automatically)
+        await this.conversations.delete(
+          memory.conversationRef.conversationId,
+        );
         conversationDeleted = true;
       } else {
         // Delete specific messages (not implemented in Layer 1a yet)
@@ -2784,30 +2765,29 @@ export class MemoryAPI {
       if (factsToStore && factsToStore.length > 0) {
         for (const factData of factsToStore) {
           try {
-            const storedFact = await this.facts.store(
-              {
-                memorySpaceId: memorySpaceId,
-                participantId: input.participantId,
-                userId: input.userId, // ← BUG FIX: Add userId to facts!
-                fact: factData.fact,
-                factType: factData.factType,
-                subject: factData.subject || input.userId,
-                predicate: factData.predicate,
-                object: factData.object,
-                confidence: factData.confidence,
-                sourceType: input.source.type,
-                sourceRef: {
-                  conversationId: input.conversationRef?.conversationId,
-                  messageIds: input.conversationRef?.messageIds,
-                  memoryId: memory.memoryId,
-                },
-                tags:
-                  factData.tags && factData.tags.length > 0
-                    ? factData.tags
-                    : input.metadata.tags,
+            // Store fact (graph sync handled automatically)
+            const storedFact = await this.facts.store({
+              memorySpaceId: memorySpaceId,
+              participantId: input.participantId,
+              userId: input.userId, // ← BUG FIX: Add userId to facts!
+              fact: factData.fact,
+              factType: factData.factType,
+              subject: factData.subject || input.userId,
+              predicate: factData.predicate,
+              object: factData.object,
+              confidence: factData.confidence,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              sourceType: input.source.type as any,
+              sourceRef: {
+                conversationId: input.conversationRef?.conversationId,
+                messageIds: input.conversationRef?.messageIds,
+                memoryId: memory.memoryId,
               },
-              { syncToGraph: true },
-            );
+              tags:
+                factData.tags && factData.tags.length > 0
+                  ? factData.tags
+                  : input.metadata.tags,
+            });
 
             extractedFacts.push(storedFact);
           } catch (error) {
@@ -2870,13 +2850,8 @@ export class MemoryAPI {
 
     // Re-extract facts if content changed and reextract requested
     if (options?.reextractFacts && updates.content && options.extractFacts) {
-      // Delete old facts first
-      await this.cascadeDeleteFacts(
-        memorySpaceId,
-        memoryId,
-        undefined,
-        options.syncToGraph,
-      );
+      // Delete old facts first (graph sync handled automatically)
+      await this.cascadeDeleteFacts(memorySpaceId, memoryId, undefined);
 
       // Extract new facts
       const factsToStore = await options.extractFacts(updates.content);
@@ -2884,30 +2859,29 @@ export class MemoryAPI {
       if (factsToStore && factsToStore.length > 0) {
         for (const factData of factsToStore) {
           try {
-            const storedFact = await this.facts.store(
-              {
-                memorySpaceId: memorySpaceId,
-                participantId: updatedMemory.participantId, // ← BUG FIX: Add participantId
-                userId: updatedMemory.userId, // ← BUG FIX: Add userId to facts!
-                fact: factData.fact,
-                factType: factData.factType,
-                subject: factData.subject || updatedMemory.userId,
-                predicate: factData.predicate,
-                object: factData.object,
-                confidence: factData.confidence,
-                sourceType: updatedMemory.sourceType,
-                sourceRef: {
-                  conversationId: updatedMemory.conversationRef?.conversationId,
-                  messageIds: updatedMemory.conversationRef?.messageIds,
-                  memoryId: updatedMemory.memoryId,
-                },
-                tags:
-                  factData.tags && factData.tags.length > 0
-                    ? factData.tags
-                    : updatedMemory.tags,
+            // Store new fact (graph sync handled automatically)
+            const storedFact = await this.facts.store({
+              memorySpaceId: memorySpaceId,
+              participantId: updatedMemory.participantId, // ← BUG FIX: Add participantId
+              userId: updatedMemory.userId, // ← BUG FIX: Add userId to facts!
+              fact: factData.fact,
+              factType: factData.factType,
+              subject: factData.subject || updatedMemory.userId,
+              predicate: factData.predicate,
+              object: factData.object,
+              confidence: factData.confidence,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              sourceType: updatedMemory.sourceType as any,
+              sourceRef: {
+                conversationId: updatedMemory.conversationRef?.conversationId,
+                messageIds: updatedMemory.conversationRef?.messageIds,
+                memoryId: updatedMemory.memoryId,
               },
-              { syncToGraph: options.syncToGraph },
-            );
+              tags:
+                factData.tags && factData.tags.length > 0
+                  ? factData.tags
+                  : updatedMemory.tags,
+            });
 
             factsReextracted.push(storedFact);
           } catch (error) {
@@ -2953,11 +2927,11 @@ export class MemoryAPI {
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    const shouldSyncToGraph =
-      options?.syncToGraph !== false && this.graphAdapter !== undefined;
+    // Graph sync is automatic when graphAdapter is configured
+    // (controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization)
     const shouldCascade = options?.cascadeDeleteFacts !== false; // Default: true
 
-    // Delete facts if cascade enabled
+    // Delete facts if cascade enabled (graph sync handled automatically)
     let factsDeleted = 0;
     let factIds: string[] = [];
 
@@ -2966,16 +2940,13 @@ export class MemoryAPI {
         memorySpaceId,
         memoryId,
         memory.conversationRef?.conversationId,
-        shouldSyncToGraph,
       );
       factsDeleted = result.count;
       factIds = result.factIds;
     }
 
-    // Delete from vector
-    await this.vector.delete(memorySpaceId, memoryId, {
-      syncToGraph: shouldSyncToGraph,
-    });
+    // Delete from vector (graph sync handled automatically)
+    await this.vector.delete(memorySpaceId, memoryId);
 
     return {
       deleted: true,
@@ -3079,7 +3050,8 @@ export class MemoryAPI {
       validateSourceType(filter.sourceType);
     }
 
-    const result = await this.vector.updateMany(filter, updates);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await this.vector.updateMany(filter as any, updates);
 
     // Count facts that reference updated memories
     const allFacts = await this.facts.list({
@@ -3123,20 +3095,20 @@ export class MemoryAPI {
     let totalFactsDeleted = 0;
     const allFactIds: string[] = [];
 
-    // Cascade delete facts for each memory
+    // Cascade delete facts for each memory (graph sync handled automatically)
     for (const memory of memories) {
       const { count, factIds } = await this.cascadeDeleteFacts(
         filter.memorySpaceId,
         memory.memoryId,
         memory.conversationRef?.conversationId,
-        true,
       );
       totalFactsDeleted += count;
       allFactIds.push(...factIds);
     }
 
     // Delete memories
-    const result = await this.vector.deleteMany(filter);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await this.vector.deleteMany(filter as any);
 
     return {
       ...result,
@@ -3229,11 +3201,11 @@ export class MemoryAPI {
     }
 
     // Archive facts (mark as expired, not deleted)
+    // Graph sync handled automatically
     const { count: factsArchived, factIds } = await this.archiveFacts(
       memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
-      true,
     );
 
     // Archive memory

@@ -1,7 +1,7 @@
 # Graph Database Integration
 
 <Callout type="info">
-**Last Updated**: 2026-01-08 | **Version**: v0.24.0
+**Last Updated**: 2026-01-09 | **Version**: v0.29.0+
 </Callout>
 
 Optional graph database integration for advanced knowledge discovery, multi-hop queries, and relationship-based reasoning.
@@ -234,17 +234,25 @@ if (worker) {
 }
 ```
 
-### Manual Sync Control
+### Automatic Sync (v0.29.0+)
 
-For specific operations, control sync explicitly:
+Graph synchronization is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been deprecated and removed.
 
 ```typescript
-// Disable sync for high-volume operations
-await cortex.vector.store(data, { syncToGraph: false });
+// Graph sync happens automatically for all operations when CORTEX_GRAPH_SYNC=true
+await cortex.vector.store(data);  // → Auto-syncs to graph
+await cortex.facts.store(params); // → Auto-syncs to graph (including entities)
 
-// Enable sync for critical operations
-await cortex.facts.store(params, { syncToGraph: true });
+// To skip graph sync for specific operations, use skipLayers
+await cortex.memory.remember({
+  // ... params
+  skipLayers: ['graph'],  // Explicitly skip graph sync
+});
 ```
+
+<Callout type="info">
+**v0.29.0 Breaking Change**: The `syncToGraph` option has been removed from all API methods. Graph sync is now controlled exclusively via the `CORTEX_GRAPH_SYNC` environment variable.
+</Callout>
 
 ## Context Enrichment Patterns
 
@@ -340,18 +348,17 @@ for (const item of chain) {
 
 ## Orphan Cleanup
 
-Graph automatically handles orphaned nodes during deletion:
+Graph automatically handles orphaned nodes during deletion when graph sync is enabled:
 
 ```typescript
-// Delete memory - orphans are cleaned up automatically
+// Delete memory - orphans are cleaned up automatically (when CORTEX_GRAPH_SYNC=true)
 await cortex.memory.forget("agent-1", "mem-123", {
   deleteConversation: true,
-  syncToGraph: true, // Enables orphan cleanup
 });
 
 // What happens:
 // 1. Delete memory from Convex
-// 2. Delete memory node from graph
+// 2. Delete memory node from graph (automatic)
 // 3. Check if conversation is now orphaned
 // 4. If orphaned, delete conversation node
 // 5. Handle circular references safely
@@ -446,9 +453,9 @@ const result = await graphAdapter.query(
 ### 1. Convex as Source of Truth
 
 ```typescript
-// Recommended: Always write to Convex first
-await cortex.memory.remember(params, { syncToGraph: true });
-// Convex write succeeds → then sync to graph
+// Recommended: Always write to Convex first (graph sync is automatic)
+await cortex.memory.remember(params);
+// Convex write succeeds → then auto-syncs to graph when CORTEX_GRAPH_SYNC=true
 
 // Avoid: Writing to graph directly for data storage
 await adapter.createNode({ ... }); // Graph could succeed but Convex fail

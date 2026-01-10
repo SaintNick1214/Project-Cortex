@@ -20,6 +20,63 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### TypeScript SDK v0.29.0 · Jan 9, 2026
+
+**Automatic Fact and Entity Graph Sync**
+
+🔗 Graph sync now automatic when `CORTEX_GRAPH_SYNC=true`  
+📊 Facts extracted via `remember()` automatically sync to graph  
+🏷️ Entity nodes created with MENTIONS relationships  
+⚠️ **Breaking:** `syncToGraph` option removed from all APIs
+
+<details>
+<summary>Show full details</summary>
+
+#### Major Changes
+
+**Automatic Graph Synchronization**
+
+Graph database synchronization for facts and entities is now automatic when `CORTEX_GRAPH_SYNC=true`:
+
+- Facts stored via `remember()`, `facts.store()`, or `facts.revise()` automatically sync to graph
+- Entity nodes are created from `fact.entities` array
+- MENTIONS relationships link Fact nodes to Entity nodes
+- Predicate-based relationships (e.g., WORKS_AT, KNOWS) created from `fact.relations`
+- SUPERSEDES relationships created when belief revision supersedes facts
+- Graph sync is gated entirely by environment variable
+
+**Breaking Change**
+
+The `syncToGraph` option has been removed from all APIs:
+
+```typescript
+// Before (v0.28.x)
+await cortex.facts.store(params, { syncToGraph: true });
+
+// After (v0.29.0+) - automatic when CORTEX_GRAPH_SYNC=true
+await cortex.facts.store(params);
+```
+
+APIs affected:
+- `cortex.facts.store()`, `update()`, `delete()`
+- `cortex.memory.remember()`, `forget()`, `delete()`
+- `cortex.vector.store()`, `update()`, `delete()`
+- `cortex.conversations.create()`, `addMessage()`, `delete()`
+- `cortex.contexts.create()`, `update()`, `delete()`
+- `cortex.memorySpaces.register()`
+
+**Migration:** Remove `{ syncToGraph: true/false }` from all API calls. Set `CORTEX_GRAPH_SYNC=true` in your environment to enable graph sync.
+
+#### Technical Details
+
+- `BeliefRevisionService.executeDecision()` now calls `syncFactToGraph()` and `syncFactRelationships()` after all fact operations
+- All layer APIs check `if (this.graphAdapter)` instead of `if (options?.syncToGraph && this.graphAdapter)`
+- Graph sync is non-blocking - failures are logged but don't fail the main operation
+
+</details>
+
+---
+
 ### CLI v0.28.1 · Jan 6, 2026
 
 **Automatic Shell Tab Completion**

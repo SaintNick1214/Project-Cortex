@@ -408,48 +408,59 @@ await adapter.clearDatabase();
 
 ## Sync Operations
 
-### syncToGraph Option
+### Automatic Graph Sync (v0.29.0+)
 
-All Cortex APIs now support optional graph synchronization.
+**Important:** As of v0.29.0, graph synchronization is **automatic** when `CORTEX_GRAPH_SYNC=true` is set in your environment variables.
 
-#### Convenience APIs (Auto-Sync)
+The `syncToGraph` option has been removed from all APIs. Graph sync is now controlled entirely by:
+1. Setting `CORTEX_GRAPH_SYNC=true` in your environment
+2. Providing valid graph credentials (e.g., `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`)
+
+#### Automatic Sync Behavior
 
 ```typescript
-// memory.remember() auto-syncs by default if graph configured
-await cortex.memory.remember({
+// All operations auto-sync to graph when CORTEX_GRAPH_SYNC=true
+
+// Facts are automatically synced including Entity nodes
+await cortex.facts.store({
   memorySpaceId: "agent-1",
-  conversationId: "conv-123",
-  userMessage: "Alice works at Acme Corp",
-  agentResponse: "Got it!",
-  userId: "alice",
-  userName: "Alice",
+  fact: "Alice works at Acme Corp",
+  factType: "relationship",
+  subject: "Alice",
+  predicate: "works_at",
+  object: "Acme Corp",
+  entities: [
+    { name: "Alice", type: "person" },
+    { name: "Acme Corp", type: "organization" },
+  ],
 });
-// Automatically synced to graph!
+// ✅ Fact node + Entity nodes + MENTIONS relationships created automatically!
 
-// Disable if needed
-await cortex.memory.remember(params, { syncToGraph: false });
+// Memories are automatically synced
+await cortex.vector.store(memorySpaceId, data);
+// ✅ Memory node synced automatically!
+
+// Conversations are automatically synced
+await cortex.conversations.create(input);
+// ✅ Conversation node synced automatically!
 ```
 
-#### Low-Level APIs (Manual Sync)
+#### Disabling Graph Sync
 
-```typescript
-// Explicit opt-in via syncToGraph option
-await cortex.vector.store(memorySpaceId, data, {
-  syncToGraph: true,
-});
+To disable graph sync, simply don't set `CORTEX_GRAPH_SYNC` or set it to `false`:
 
-await cortex.facts.store(params, {
-  syncToGraph: true,
-});
+```bash
+# Disable graph sync (default)
+CORTEX_GRAPH_SYNC=false
 
-await cortex.contexts.create(params, {
-  syncToGraph: true,
-});
-
-await cortex.conversations.create(input, {
-  syncToGraph: true,
-});
+# Or simply don't set the variable
+# CORTEX_GRAPH_SYNC=...
 ```
+
+<Note>
+The `syncToGraph` option was removed in v0.29.0 as part of simplifying the API. 
+Graph sync is now a deployment-time decision controlled by environment variables.
+</Note>
 
 ### Manual Sync Functions
 
@@ -861,9 +872,9 @@ All delete operations support sophisticated orphan cleanup:
 
 ```typescript
 // Delete memory - checks if conversation becomes orphaned
+// Graph cleanup is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 await cortex.memory.forget("agent-1", "mem-123", {
   deleteConversation: true,
-  syncToGraph: true, // Enables orphan cleanup
 });
 
 // What happens:
@@ -1674,65 +1685,70 @@ const query = `
 
 ---
 
-## syncToGraph Option Reference
+## Automatic Graph Sync Reference (v0.29.0+)
 
-All Cortex APIs support the `syncToGraph` option:
+<Note>
+**Breaking Change in v0.29.0:** The `syncToGraph` option has been removed from all APIs.
+Graph synchronization is now automatic when `CORTEX_GRAPH_SYNC=true` is set.
+</Note>
+
+All Cortex APIs automatically sync to the graph database when:
+1. `CORTEX_GRAPH_SYNC=true` is set in environment variables
+2. Valid graph credentials are configured
 
 ### Conversations API
 
 ```typescript
-await cortex.conversations.create(input, { syncToGraph: true });
-await cortex.conversations.addMessage(input, { syncToGraph: true });
-await cortex.conversations.delete(id, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.conversations.create(input);
+await cortex.conversations.addMessage(input);
+await cortex.conversations.delete(id);
 ```
 
 ### Vector API
 
 ```typescript
-await cortex.vector.store(memorySpaceId, input, { syncToGraph: true });
-await cortex.vector.update(memorySpaceId, memoryId, updates, {
-  syncToGraph: true,
-});
-await cortex.vector.delete(memorySpaceId, memoryId, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.vector.store(memorySpaceId, input);
+await cortex.vector.update(memorySpaceId, memoryId, updates);
+await cortex.vector.delete(memorySpaceId, memoryId);
 ```
 
 ### Facts API
 
 ```typescript
-await cortex.facts.store(params, { syncToGraph: true });
-await cortex.facts.update(memorySpaceId, factId, updates, {
-  syncToGraph: true,
-});
-await cortex.facts.delete(memorySpaceId, factId, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+// Includes Entity nodes and MENTIONS relationships
+await cortex.facts.store(params);
+await cortex.facts.update(memorySpaceId, factId, updates);
+await cortex.facts.delete(memorySpaceId, factId);
 ```
 
 ### Contexts API
 
 ```typescript
-await cortex.contexts.create(params, { syncToGraph: true });
-await cortex.contexts.update(contextId, updates, { syncToGraph: true });
-await cortex.contexts.delete(contextId, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.contexts.create(params);
+await cortex.contexts.update(contextId, updates);
+await cortex.contexts.delete(contextId);
 ```
 
 ### Memory Spaces API
 
 ```typescript
-await cortex.memorySpaces.register(params, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.memorySpaces.register(params);
 ```
 
 ### Memory API (Convenience)
 
 ```typescript
-// Auto-syncs by default if graph configured
-await cortex.memory.remember(params); // syncToGraph: true by default
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.memory.remember(params);
 
-// Explicit control
-await cortex.memory.remember(params, { syncToGraph: false });
-
-// Forget with cascade
+// Forget with cascade (graph orphan cleanup is automatic)
 await cortex.memory.forget(memorySpaceId, memoryId, {
   deleteConversation: true,
-  syncToGraph: true, // Orphan cleanup enabled
 });
 ```
 
@@ -1811,8 +1827,9 @@ try {
 ### Sync Failures
 
 ```typescript
-// Sync failures log warnings but don't throw
-await cortex.vector.store(data, { syncToGraph: true });
+// Sync failures log warnings but don't throw (v0.29.0+)
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true
+await cortex.vector.store(data);
 // If graph sync fails: Logs warning, continues
 // Convex remains source of truth
 ```
@@ -1836,9 +1853,10 @@ try {
 ### 1. Convex as Source of Truth
 
 ```typescript
-// Recommended: Always write to Convex first
-await cortex.memory.remember(params, { syncToGraph: true });
-// Convex write succeeds → then sync to graph
+// Recommended: Always write to Convex first (v0.29.0+)
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true
+await cortex.memory.remember(params);
+// Convex write succeeds → then auto-syncs to graph
 
 // Avoid: Writing to graph first
 await adapter.createNode({ ... }); // Graph could succeed but Convex fail

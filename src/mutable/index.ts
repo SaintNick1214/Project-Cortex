@@ -95,7 +95,7 @@ export class MutableAPI {
     value: unknown,
     userId?: string,
     metadata?: Record<string, unknown>,
-    options?: SetMutableOptions,
+    _options?: SetMutableOptions,
   ): Promise<MutableRecord> {
     // Client-side validation
     validateNamespace(namespace);
@@ -123,7 +123,7 @@ export class MutableAPI {
     );
 
     // Sync to graph if requested (mutable data in graph is rare, but supported)
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         await this.graphAdapter.createNode({
           label: "Mutable",
@@ -441,7 +441,7 @@ export class MutableAPI {
   async delete(
     namespace: string,
     key: string,
-    options?: DeleteMutableOptions,
+    _options?: DeleteMutableOptions,
   ): Promise<{ deleted: boolean; namespace: string; key: string }> {
     // Client-side validation
     validateNamespace(namespace);
@@ -465,7 +465,7 @@ export class MutableAPI {
     }
 
     // Delete from graph
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         await deleteMutableFromGraph(namespace, key, this.graphAdapter);
       } catch (error) {
