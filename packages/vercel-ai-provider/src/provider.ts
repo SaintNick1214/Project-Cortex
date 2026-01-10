@@ -193,7 +193,7 @@ export class CortexMemoryProvider {
               observer: this.config.layerObserver,
             },
             {
-              syncToGraph: this.config.enableGraphMemory || false,
+              // Note: syncToGraph removed in v0.29.0+ - graph sync is automatic when graphAdapter is configured
               // Belief revision (v0.24.0+) - automatically handle fact updates/supersessions
               beliefRevision:
                 this.config.beliefRevision !== false
@@ -453,7 +453,7 @@ export class CortexMemoryProvider {
         }
 
         const streamingOptions = {
-          syncToGraph: this.config.enableGraphMemory || false,
+          // Note: syncToGraph removed in v0.29.0+ - graph sync is automatic when graphAdapter is configured
           beliefRevision: beliefRevisionEnabled,
           ...this.config.streamingOptions,
           hooks: this.config.streamingHooks,

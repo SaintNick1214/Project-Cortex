@@ -802,8 +802,9 @@ cortex.memorySpaces.delete(
     { name: "reason", type: "string", required: true, description: "Why deleting (for audit trail)" },
     { name: "confirmId", type: "string", required: false, description: "Safety check - must match memorySpaceId" },
   ]}
-  // Note: syncToGraph removed in v0.29.0+ - graph cleanup is automatic when CORTEX_GRAPH_SYNC=true
 />
+
+{/* Note: syncToGraph removed in v0.29.0+ - graph cleanup is automatic when CORTEX_GRAPH_SYNC=true */}
 
 ### Returns
 

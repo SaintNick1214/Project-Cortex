@@ -395,7 +395,9 @@ describe("Streaming Flow Integration", () => {
 
       const rememberStreamOptions =
         mockCortex.memory.rememberStream.mock.calls[0][1];
-      expect(rememberStreamOptions.syncToGraph).toBe(true);
+      // Note: syncToGraph removed in v0.29.0+ - graph sync is automatic when graphAdapter is configured
+      // The option should not be present in the call
+      expect(rememberStreamOptions.syncToGraph).toBeUndefined();
     });
   });
 

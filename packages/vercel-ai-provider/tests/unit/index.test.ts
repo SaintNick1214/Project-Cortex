@@ -326,12 +326,15 @@ describe("Manual Control Methods", () => {
       );
     });
 
-    it("should pass syncToGraph option", async () => {
+    it("should pass options without deprecated syncToGraph (v0.29.0+)", async () => {
+      // syncToGraph option is deprecated in v0.29.0+ - graph sync is now automatic
+      // when graphAdapter is configured. The option is ignored if passed.
       await factory.remember("Hello", "Hi", { syncToGraph: true });
 
+      // Options object should be passed but syncToGraph should not be forwarded
       expect(mockMemory.remember).toHaveBeenCalledWith(
         expect.any(Object),
-        expect.objectContaining({ syncToGraph: true }),
+        expect.any(Object), // Options are passed but syncToGraph is not included
       );
     });
 
