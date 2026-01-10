@@ -47,7 +47,9 @@ describeIfEnabled("E2E: Fact and Entity Graph Sync", () => {
     // Note: In production, this would be configured via CORTEX_GRAPH_SYNC=true
     cortex = new Cortex({
       convexUrl: CONVEX_URL,
-      graphAdapter,
+      graph: {
+        adapter: graphAdapter,
+      },
     });
 
     // Create test memory space
@@ -131,7 +133,7 @@ describeIfEnabled("E2E: Fact and Entity Graph Sync", () => {
     });
 
     it("should create IN_SPACE relationship to MemorySpace", async () => {
-      const fact = await cortex.facts.store({
+      const _fact = await cortex.facts.store({
         memorySpaceId: TEST_MEMSPACE_ID,
         fact: "User prefers dark mode",
         factType: "preference",
@@ -149,13 +151,8 @@ describeIfEnabled("E2E: Fact and Entity Graph Sync", () => {
       // Verify IN_SPACE relationship exists
       const inSpaceEdges = await graphAdapter.findEdges("IN_SPACE", {}, 100);
       // Should have at least one IN_SPACE edge for this fact
-      const _factInSpace = inSpaceEdges.some(
-        (edge) =>
-          edge.fromNodeId?.includes(fact.factId) ||
-          edge.toNodeId?.includes(TEST_MEMSPACE_ID),
-      );
-      // May or may not exist depending on implementation
-      // Just verify the query doesn't fail
+      // Note: edge.from and edge.to contain node IDs, not factId/memorySpaceId strings directly
+      // So we just verify the query works and returns valid edges
       expect(Array.isArray(inSpaceEdges)).toBe(true);
     });
   });

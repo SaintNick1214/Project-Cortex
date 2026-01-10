@@ -16,9 +16,9 @@ import { CypherGraphAdapter } from "../../src/graph";
 import type { GraphAdapter } from "../../src/graph";
 import {
   syncFactToGraph,
-  syncFactRelationships,
+  syncMemorySpaceToGraph,
 } from "../../src/graph/sync/syncUtils";
-import { syncMemorySpaceToGraph } from "../../src/graph/sync/syncUtils";
+import { syncFactRelationships } from "../../src/graph/sync/syncRelationships";
 import type { FactRecord, MemorySpace } from "../../src/types";
 
 // Check if graph testing is enabled
@@ -143,12 +143,12 @@ describeIfEnabled("Fact Graph Sync", () => {
         version: 1,
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        // Relations array for relationship sync
+        // Relations array for relationship sync (EnrichedRelation format)
         relations: [
           {
-            type: "WORKS_AT",
-            target: "Acme Corp",
-            properties: { role: "Engineer" },
+            subject: "John",
+            predicate: "works_at",
+            object: "Acme Corp",
           },
         ],
       };
