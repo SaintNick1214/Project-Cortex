@@ -1372,7 +1372,6 @@ export interface DeleteMemorySpaceOptions {
   cascade: boolean; // Required: Must be true to proceed
   reason: string; // Required: Why deleting (audit trail)
   confirmId?: string; // Optional: Safety check (must match memorySpaceId)
-  syncToGraph?: boolean; // Delete from graph database
 }
 
 export interface DeleteMemorySpaceResult {
@@ -1393,9 +1392,7 @@ export interface GetMemorySpaceStatsOptions {
   includeParticipants?: boolean;
 }
 
-export interface UpdateMemorySpaceOptions {
-  syncToGraph?: boolean;
-}
+export interface UpdateMemorySpaceOptions {}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Coordination: Agents Registry API (Optional Metadata)
@@ -2193,17 +2190,20 @@ export interface EnforcementStats {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Graph Integration Options (syncToGraph pattern across all APIs)
+// Graph Integration Options (automatic sync via CORTEX_GRAPH_SYNC env var)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /**
- * Standard graph sync option
- * Follows existing SDK pattern (autoEmbed, deleteConversation, etc.)
+ * Graph sync option placeholder for backward compatibility.
+ *
+ * As of v0.29.0, graph sync is automatic when CORTEX_GRAPH_SYNC=true is set.
+ * The syncToGraph option has been removed - graph sync is now controlled
+ * entirely by the environment variable and graphAdapter configuration.
+ *
+ * @deprecated The syncToGraph option is no longer used. Graph sync is automatic
+ * when CORTEX_GRAPH_SYNC=true and graph credentials are configured.
  */
-export interface GraphSyncOption {
-  /** Sync this operation to graph database (if graph configured) */
-  syncToGraph?: boolean;
-}
+export interface GraphSyncOption {}
 
 // ────────────────────────────────────────────────────────────────────────────
 // Layer 1a: Conversations API Options
@@ -2294,7 +2294,7 @@ export interface UnregisterMemorySpaceOptions extends GraphSyncOption {}
 
 /**
  * Options for memory.remember() convenience method
- * Defaults to syncToGraph: true if graph is configured
+ * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
  */
 export interface RememberOptions extends GraphSyncOption {
   /** Extract facts from conversation (default: false) */
@@ -2334,8 +2334,8 @@ export interface RememberOptions extends GraphSyncOption {
 }
 
 /**
- * Extended forget options with graph sync
- * Defaults to syncToGraph: true if graph is configured
+ * Extended forget options
+ * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
  */
 export interface ExtendedForgetOptions extends ForgetOptions, GraphSyncOption {}
 

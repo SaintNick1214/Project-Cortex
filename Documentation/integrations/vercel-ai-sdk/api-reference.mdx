@@ -1,6 +1,6 @@
 # API Reference
 
-<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+<Callout type="info"> **Last Updated**: 2026-01-09 | **Version**: v0.29.0+ </Callout>
 
 Complete API documentation for @cortexmemory/vercel-ai-provider (SDK v0.21.0+)
 
@@ -270,7 +270,7 @@ async remember(
     conversationId?: string;
     generateEmbedding?: (text: string) => Promise<number[]>;
     extractFacts?: (userMsg: string, agentResp: string) => Promise<Fact[]>;
-    syncToGraph?: boolean;
+    // Note: syncToGraph removed in v0.29.0+ - sync is automatic when CORTEX_GRAPH_SYNC=true
   }
 ): Promise<void>
 ```
@@ -278,12 +278,13 @@ async remember(
 **Example:**
 
 ```typescript
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 await cortexMemory.remember(
   "My favorite color is blue",
   "I will remember that!",
   {
     conversationId: "conv-123",
-    syncToGraph: true,
+    // No syncToGraph needed - sync is automatic
   },
 );
 ```

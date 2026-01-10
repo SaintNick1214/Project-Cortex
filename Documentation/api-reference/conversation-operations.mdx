@@ -68,10 +68,13 @@ Create a new conversation.
 
 ```typescript
 cortex.conversations.create(
-  input: CreateConversationInput,
-  options?: { syncToGraph?: boolean }
+  input: CreateConversationInput
 ): Promise<Conversation>
 ```
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 
 **Parameters:**
 
@@ -242,10 +245,13 @@ Add a message to an existing conversation (append-only).
 
 ```typescript
 cortex.conversations.addMessage(
-  input: AddMessageInput,
-  options?: { syncToGraph?: boolean }
+  input: AddMessageInput
 ): Promise<Conversation>
 ```
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 
 **Parameters:**
 
@@ -766,10 +772,13 @@ This is permanent! Consider using Vector memory deletion instead to preserve ACI
 
 ```typescript
 cortex.conversations.delete(
-  conversationId: string,
-  options?: { syncToGraph?: boolean }
+  conversationId: string
 ): Promise<ConversationDeletionResult>
 ```
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 
 **Returns:**
 

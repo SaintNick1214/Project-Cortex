@@ -307,6 +307,7 @@ export const search = query({
         v.literal("system"),
         v.literal("tool"),
         v.literal("a2a"),
+        v.literal("fact-extraction"), // For fact-extracted memories
       ),
     ),
     minImportance: v.optional(v.number()),

@@ -112,7 +112,6 @@ export class ProgressiveFactExtractor {
     }> | null>,
     userMessage: string,
     conversationId: string,
-    syncToGraph: boolean = false,
   ): Promise<ProgressiveFact[]> {
     const newFacts: ProgressiveFact[] = [];
 
@@ -137,11 +136,11 @@ export class ProgressiveFactExtractor {
           if (factData.confidence > existing.confidence) {
             // Update confidence in database
             try {
+              // Graph sync is automatic when graphAdapter is configured
               await this.factsAPI.update(
                 this.memorySpaceId,
                 existing.factId,
                 { confidence: factData.confidence },
-                { syncToGraph },
               );
             } catch (error) {
               console.warn("Failed to update fact confidence:", error);
@@ -178,18 +177,16 @@ export class ProgressiveFactExtractor {
           let wasDeduped = false;
 
           // Use storeWithDedup if deduplication is configured
+          // Graph sync is automatic when graphAdapter is configured
           if (this.deduplicationConfig) {
             const result = await this.factsAPI.storeWithDedup(storeParams, {
-              syncToGraph,
               deduplication: this.deduplicationConfig,
             });
             storedFact = result.fact;
             wasDeduped = result.deduplication?.matchedExisting ?? false;
           } else {
             // Fallback to regular store (in-memory only dedup)
-            storedFact = await this.factsAPI.store(storeParams, {
-              syncToGraph,
-            });
+            storedFact = await this.factsAPI.store(storeParams);
           }
 
           // Track this fact
@@ -240,7 +237,6 @@ export class ProgressiveFactExtractor {
     conversationId: string,
     memoryId: string,
     messageIds: string[],
-    syncToGraph: boolean = false,
   ): Promise<FactRecord[]> {
     try {
       // Extract facts from complete response
@@ -281,16 +277,14 @@ export class ProgressiveFactExtractor {
           let storedFact: FactRecord;
 
           // Use storeWithDedup if deduplication is configured
+          // Graph sync is automatic when graphAdapter is configured
           if (this.deduplicationConfig) {
             const result = await this.factsAPI.storeWithDedup(storeParams, {
-              syncToGraph,
               deduplication: this.deduplicationConfig,
             });
             storedFact = result.fact;
           } else {
-            storedFact = await this.factsAPI.store(storeParams, {
-              syncToGraph,
-            });
+            storedFact = await this.factsAPI.store(storeParams);
           }
 
           const factKey = this.generateFactKey(factData.fact, factData.subject);
@@ -301,7 +295,7 @@ export class ProgressiveFactExtractor {
       }
 
       // Update all facts with final memory reference
-      await this.updateFactsWithMemoryRef(memoryId, messageIds, syncToGraph);
+      await this.updateFactsWithMemoryRef(memoryId, messageIds);
 
       return Array.from(this.extractedFacts.values());
     } catch (error) {
@@ -371,24 +365,19 @@ export class ProgressiveFactExtractor {
   /**
    * Update all extracted facts with final memory reference
    * Note: sourceRef cannot be updated after creation, so we just remove progressive tags
+   * Graph sync is automatic when graphAdapter is configured
    */
   private async updateFactsWithMemoryRef(
-    memoryId: string,
-    messageIds: string[],
-    syncToGraph: boolean,
+    _memoryId: string,
+    _messageIds: string[],
   ): Promise<void> {
     const updatePromises = Array.from(this.extractedFacts.values()).map(
       async (fact) => {
         try {
           // Remove progressive tag to mark as finalized
-          await this.factsAPI.update(
-            this.memorySpaceId,
-            fact.factId,
-            {
-              tags: fact.tags.filter((tag) => tag !== "progressive"),
-            },
-            { syncToGraph },
-          );
+          await this.factsAPI.update(this.memorySpaceId, fact.factId, {
+            tags: fact.tags.filter((tag) => tag !== "progressive"),
+          });
         } catch (error) {
           console.warn(
             `Failed to update fact ${fact.factId} with memory ref:`,

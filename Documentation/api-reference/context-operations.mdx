@@ -8,7 +8,7 @@ description: Complete API reference for context chain management and multi-agent
 # Context Operations API
 
 <Callout type="info">
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-09
 </Callout>
 
 Complete API reference for context chain management and multi-agent workflow coordination.
@@ -66,15 +66,12 @@ Create a new context (root or child).
 
 ```typescript
 cortex.contexts.create(
-  params: CreateContextParams,
-  options?: CreateContextOptions
+  params: CreateContextParams
 ): Promise<Context>
 ```
 
 <Callout type="info">
-
-`options` parameter supports `syncToGraph` for graph database integration.
-
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
 </Callout>
 
 **Parameters:**
@@ -92,13 +89,6 @@ cortex.contexts.create(
   ]}
 />
 
-**Options:**
-
-<APITable
-  parameters={[
-    { name: "syncToGraph", type: "boolean", required: false, default: "false", description: "Sync to graph database" },
-  ]}
-/>
 
 **Returns:**
 
@@ -201,27 +191,25 @@ console.log(root.depth); // 0 (root)
 console.log(root.rootId); // 'ctx-1234567890-abc123' (self)
 ```
 
-**Example 1b: Create with graph sync**
+**Example 1b: Graph sync is automatic**
 
 ```typescript
-// Same as above, but sync to graph database
-const root = await cortex.contexts.create(
-  {
-    purpose: "Process customer refund request",
-    memorySpaceId: "supervisor-agent-space",
-    userId: "user-123",
-    conversationRef: {
-      conversationId: "conv-456",
-      messageIds: [msg.id],
-    },
-    data: {
-      importance: 85,
-      tags: ["refund", "customer-service", "ticket-456"],
-    },
+// Graph sync happens automatically when CORTEX_GRAPH_SYNC=true
+const root = await cortex.contexts.create({
+  purpose: "Process customer refund request",
+  memorySpaceId: "supervisor-agent-space",
+  userId: "user-123",
+  conversationRef: {
+    conversationId: "conv-456",
+    messageIds: [msg.id],
   },
-  { syncToGraph: true },
-); // ← Syncs to graph!
+  data: {
+    importance: 85,
+    tags: ["refund", "customer-service", "ticket-456"],
+  },
+});
 
+// Context is automatically synced to graph if CORTEX_GRAPH_SYNC=true
 // Now queryable via graph for multi-hop queries
 ```
 
@@ -383,15 +371,12 @@ Update a context (status, data, etc.). Creates new version automatically.
 ```typescript
 cortex.contexts.update(
   contextId: string,
-  updates: ContextUpdate,
-  options?: UpdateContextOptions
+  updates: ContextUpdate
 ): Promise<Context>
 ```
 
 <Callout type="info">
-
-`options` parameter supports `syncToGraph` for graph database integration.
-
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
 </Callout>
 
 **Parameters:**
@@ -485,14 +470,11 @@ cortex.contexts.delete(
   parameters={[
     { name: "cascadeChildren", type: "boolean", required: false, default: "false", description: "Delete all descendants" },
     { name: "orphanChildren", type: "boolean", required: false, default: "false", description: "If false and has children, error" },
-    { name: "syncToGraph", type: "boolean", required: false, default: "false", description: "Delete from graph with orphan cleanup" },
   ]}
 />
 
 <Callout type="info">
-
-`syncToGraph` option enables graph deletion with sophisticated orphan cleanup.
-
+**v0.29.0+**: Graph deletion with orphan cleanup is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
 </Callout>
 
 **Returns:**
@@ -1800,8 +1782,8 @@ These errors are returned from the Convex backend:
 Context chains integrate with graph databases for advanced queries:
 
 ```typescript
-// Create context with graph sync
-await cortex.contexts.create(params, { syncToGraph: true });
+// Create context (graph sync is automatic when CORTEX_GRAPH_SYNC=true)
+await cortex.contexts.create(params);
 
 // Query via graph for multi-hop traversal
 const hierarchy = await graphAdapter.query(

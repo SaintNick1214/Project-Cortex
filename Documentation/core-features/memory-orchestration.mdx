@@ -27,7 +27,7 @@ await generateEmbedding(userMessage + agentResponse);
 await storeInVectorDB(embedding, content, metadata);
 await extractFacts(userMessage, agentResponse);
 await storeFacts(facts, conversationId);
-await syncToGraph(entities, relationships);
+// Graph sync handled automatically when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 await linkEverythingTogether(ids);
 // ...and handle failures, retries, consistency
 ```

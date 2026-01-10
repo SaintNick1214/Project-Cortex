@@ -1,6 +1,6 @@
 # System Overview
 
-<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+<Callout type="info"> **Last Updated**: 2026-01-09 | **Version**: v0.29.0+ </Callout>
 
 High-level architecture of Cortex and how it leverages Convex.
 
@@ -303,11 +303,12 @@ await cortex.memory.update(memorySpaceId, memoryId, { content: "New value" });
 - Zero setup, always available
 - Powered by efficient indexed lookups
 
-**Native Graph (Optional):**
+**Native Graph (Optional, v0.29.0+):**
 
 - Syncs to Neo4j or Memgraph via graphSyncQueue
 - Enables deep traversals (6+ hops), complex pattern matching
-- Managed automatically via `syncToGraph` option
+- **Automatic sync when `CORTEX_GRAPH_SYNC=true`** - no manual `syncToGraph` needed
+- Facts and entities automatically synced to graph
 - Best for knowledge graphs and complex dependency analysis
 
 **Learn more:** [Graph Operations API](/api-reference/graph-operations)
@@ -355,11 +356,12 @@ Cortex offers two levels of graph capabilities:
 - Zero setup, always available
 - Powered by efficient indexed lookups
 
-**Native Graph (Optional Integration):**
+**Native Graph (Optional Integration, v0.29.0+):**
 
 - Syncs Cortex data to Neo4j or Memgraph
 - Enables deep traversals (6+ hops), complex pattern matching, and graph algorithms
-- Managed automatically via `syncToGraph` option in all APIs
+- **Automatic sync when `CORTEX_GRAPH_SYNC=true`** - no manual `syncToGraph` option needed
+- Facts and entities automatically synced to graph with relationships
 - Best for social graphs, knowledge graphs, and complex dependency analysis
 
 See [Graph Operations API](/api-reference/graph-operations) for details.

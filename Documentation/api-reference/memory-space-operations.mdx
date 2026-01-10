@@ -8,7 +8,7 @@ description: Complete API reference for cortex.memorySpaces.* namespace - managi
 # Memory Space Operations API
 
 <Callout type="info">
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-09 | **Version**: v0.29.0+
 </Callout>
 
 This document covers the `cortex.memorySpaces.*` namespace for managing memory spaces, participants, and access control.
@@ -61,8 +61,7 @@ Register a memory space with metadata and participant tracking.
 
 ```typescript
 cortex.memorySpaces.register(
-  params: RegisterMemorySpaceParams,
-  options?: { syncToGraph?: boolean }
+  params: RegisterMemorySpaceParams
 ): Promise<MemorySpace>
 ```
 
@@ -79,13 +78,9 @@ cortex.memorySpaces.register(
   ]}
 />
 
-**Options:**
-
-<APITable
-  parameters={[
-    { name: "syncToGraph", type: "boolean", required: false, default: "false", description: "Sync to graph database" },
-  ]}
-/>
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true`. The `syncToGraph` option has been removed.
+</Callout>
 
 ### Returns
 
@@ -164,8 +159,8 @@ await cortex.memorySpaces.register(
     type: "custom",
     participants: [{ id: "finance-agent", type: "agent" }],
   },
-  { syncToGraph: true },
 );
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 ```
 
 </TabItem>
@@ -456,9 +451,9 @@ Update memory space metadata (not participants - use updateParticipants()).
 ```typescript
 cortex.memorySpaces.update(
   memorySpaceId: string,
-  updates: MemorySpaceUpdates,
-  options?: { syncToGraph?: boolean }
+  updates: MemorySpaceUpdates
 ): Promise<MemorySpace>
+// Note: syncToGraph option removed in v0.29.0+ - sync is automatic
 ```
 
 ### Parameters
@@ -474,11 +469,9 @@ cortex.memorySpaces.update(
 
 **Options:**
 
-<APITable
-  parameters={[
-    { name: "syncToGraph", type: "boolean", required: false, default: "false", description: "Sync changes to graph database" },
-  ]}
-/>
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true`. No options parameter needed.
+</Callout>
 
 ### Examples
 
@@ -510,8 +503,8 @@ await cortex.memorySpaces.update("team-engineering-workspace", {
 await cortex.memorySpaces.update(
   "team-engineering-workspace",
   { name: "Updated Team Space" },
-  { syncToGraph: true },
 );
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 ```
 
 </TabItem>
@@ -808,8 +801,8 @@ cortex.memorySpaces.delete(
     { name: "cascade", type: "boolean", required: true, description: "Must be true to proceed with deletion" },
     { name: "reason", type: "string", required: true, description: "Why deleting (for audit trail)" },
     { name: "confirmId", type: "string", required: false, description: "Safety check - must match memorySpaceId" },
-    { name: "syncToGraph", type: "boolean", required: false, description: "Also delete from graph database" },
   ]}
+  // Note: syncToGraph removed in v0.29.0+ - graph cleanup is automatic when CORTEX_GRAPH_SYNC=true
 />
 
 ### Returns

@@ -8,7 +8,7 @@ description: Complete API reference for memory operations across memory spaces, 
 # Memory Operations API
 
 <Callout type="note">
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-09
 </Callout>
 
 Complete API reference for memory operations across memory spaces.
@@ -598,13 +598,15 @@ interface RememberParams {
 }
 
 interface RememberOptions {
-  syncToGraph?: boolean; // Sync to graph database (default: true if configured)
-
   // NEW in v0.24.0: Belief Revision control
   beliefRevision?: boolean; // Enable/disable belief revision
   // - undefined/true: Use belief revision if LLM is configured (batteries-included default)
   // - false: Force deduplication-only mode (skip belief revision)
 }
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 ```
 
 ### Automatic Fact Revision in `remember()` (v0.24.0+)
@@ -1227,8 +1229,7 @@ interface RememberStreamParams {
 }
 
 interface StreamingOptions {
-  // Graph sync
-  syncToGraph?: boolean;
+  // Graph sync (v0.29.0+): Automatic when CORTEX_GRAPH_SYNC=true
   progressiveGraphSync?: boolean; // Sync during streaming
   graphSyncInterval?: number; // How often to sync (ms)
 
@@ -2089,7 +2090,7 @@ interface MemoryUpdate {
 }
 
 interface UpdateMemoryOptions {
-  syncToGraph?: boolean; // Sync to graph database (default: true if configured)
+  // Note: syncToGraph option removed in v0.29.0+ - sync is automatic when CORTEX_GRAPH_SYNC=true
 }
 ```
 
@@ -2250,7 +2251,7 @@ cortex.memory.delete(
 
 ```typescript
 interface DeleteMemoryOptions {
-  syncToGraph?: boolean; // Sync deletion to graph database (default: true if configured)
+  // Note: syncToGraph option removed in v0.29.0+ - graph cleanup is automatic when CORTEX_GRAPH_SYNC=true
 }
 ```
 

@@ -347,6 +347,7 @@ export default defineSchema({
       v.literal("tool"),
       v.literal("manual"),
       v.literal("a2a"),
+      v.literal("fact-extraction"), // For fact-extracted content
     ),
     sourceRef: v.optional(
       v.object({
