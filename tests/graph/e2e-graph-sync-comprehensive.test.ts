@@ -269,23 +269,14 @@ describeIfEnabled("E2E: Comprehensive Graph Sync Tests", () => {
 
             await new Promise((resolve) => setTimeout(resolve, 150));
 
-            // Query MENTIONS relationships from this fact
-            const mentionsEdges = await graphAdapter.findEdges("MENTIONS", {}, 100);
+            // Use Cypher query to find MENTIONS relationships for this specific fact
+            // This avoids ID comparison issues between Neo4j (string elementId) and Memgraph (integer id)
+            const result = await graphAdapter.query(`
+              MATCH (f:Fact {factId: $factId})-[m:MENTIONS]->(e:Entity)
+              RETURN e.name as entityName, m.role as role
+            `, { factId: fact.factId });
             
-            // Find edges from this specific fact
-            const factNodes = await graphAdapter.findNodes(
-              "Fact",
-              { factId: fact.factId },
-              1,
-            );
-            expect(factNodes.length).toBe(1);
-            
-            const factNodeId = factNodes[0].id;
-            const factMentions = mentionsEdges.filter(
-              (e) => e.from === factNodeId,
-            );
-            
-            expect(factMentions.length).toBeGreaterThanOrEqual(2);
+            expect(result.count).toBeGreaterThanOrEqual(2);
           });
 
           it("should include entity role in MENTIONS edge properties", async () => {
