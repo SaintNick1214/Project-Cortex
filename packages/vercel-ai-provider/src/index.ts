@@ -190,8 +190,7 @@ export function createCortexMemory(
               tags: config.defaultTags || [],
             },
             {
-              syncToGraph:
-                options?.syncToGraph ?? config.enableGraphMemory ?? false,
+              // Note: syncToGraph removed in v0.29.0+ - graph sync is automatic when graphAdapter is configured
             },
           );
 
@@ -374,8 +373,7 @@ export async function createCortexMemoryAsync(
               tags: config.defaultTags || [],
             },
             {
-              syncToGraph:
-                options?.syncToGraph ?? config.enableGraphMemory ?? false,
+              // Note: syncToGraph removed in v0.29.0+ - graph sync is automatic when graphAdapter is configured
             },
           );
 
