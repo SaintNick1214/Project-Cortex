@@ -2,8 +2,8 @@ const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@cortexmemory/sdk", "@cortexmemory/vercel-ai-provider"],
-  serverExternalPackages: ["convex"],
+  transpilePackages: ["@cortexmemory/vercel-ai-provider"],
+  serverExternalPackages: ["convex", "neo4j-driver", "@cortexmemory/sdk"],
   // Disable image optimization to avoid sharp dependency (LGPL licensed)
   // This quickstart doesn't use image optimization features
   images: {
@@ -18,7 +18,7 @@ const nextConfig = {
   // Webpack configuration for module resolution when SDK is file-linked
   // This is needed because the SDK uses dynamic imports that don't resolve
   // correctly from a linked package's location during local development
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
     config.resolve.alias = {
       ...config.resolve.alias,
       "@anthropic-ai/sdk": path.resolve(
@@ -26,8 +26,17 @@ const nextConfig = {
         "node_modules/@anthropic-ai/sdk",
       ),
       openai: path.resolve(__dirname, "node_modules/openai"),
-      "neo4j-driver": path.resolve(__dirname, "node_modules/neo4j-driver"),
     };
+
+    // Mark neo4j-driver and its rxjs dependency as external for server builds
+    // neo4j-driver uses rxjs for reactive sessions which doesn't bundle well
+    if (isServer) {
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push("neo4j-driver", /^rxjs/, /^rxjs\//);
+      }
+    }
+
     return config;
   },
 };
