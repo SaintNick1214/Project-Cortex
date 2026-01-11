@@ -77,6 +77,91 @@ APIs affected:
 
 ---
 
+### Vercel AI Provider v0.29.0 · Jan 10, 2026
+
+**Automatic Graph Sync Compatibility**
+
+🔗 Removed deprecated `syncToGraph` option from all memory operations  
+📊 Graph sync now automatic when `enableGraphMemory=true` with configured adapter  
+🧪 Updated tests to reflect new automatic sync behavior
+
+<details>
+<summary>Show full details</summary>
+
+#### Breaking Changes
+
+- **Removed `syncToGraph` option** - Graph sync is now automatic:
+  ```typescript
+  // Before (v0.28.x)
+  await cortexMemory.remember("Hello", "Hi", { syncToGraph: true });
+  
+  // After (v0.29.0+) - automatic when enableGraphMemory is configured
+  await cortexMemory.remember("Hello", "Hi");
+  ```
+
+#### Changed
+
+- `CortexMemoryProvider.doGenerate()` no longer passes `syncToGraph` to `remember()`
+- `CortexMemoryProvider.doStream()` no longer passes `syncToGraph` to `rememberStream()`
+- Manual `remember()` method no longer forwards `syncToGraph` option
+- `ManualRememberOptions.syncToGraph` marked as deprecated (ignored if passed)
+
+#### Fixed
+
+- Quickstart template: Fixed neo4j-driver/rxjs bundling issues with Next.js
+- Quickstart template: Added proper webpack externals configuration
+- Quickstart template: Fixed AI SDK v6 type compatibility in memory-agent.ts
+
+</details>
+
+---
+
+### CLI v0.29.0 · Jan 10, 2026
+
+**Enhanced Update Display & Graph Template Improvements**
+
+📊 Version transitions now show `current → latest` format  
+🎨 Color-coded display: green (up-to-date), yellow (outdated)  
+🔗 Basic template now uses async initialization for graph support  
+✅ Accurate graph status messages based on actual configuration
+
+<details>
+<summary>Show full details</summary>
+
+#### Changed
+
+- **Update command version display** - `cortex update` now shows version transitions clearly:
+  - Up-to-date packages shown in green: `1.0.0`
+  - Outdated packages show transition: `1.0.0 → 1.1.0` (yellow → green)
+  - Not installed packages show: `not installed → 1.1.0`
+  - Applies to all package types: SDK, Provider, Convex, Vercel AI
+  - Works in both multi-deployment dashboard and single deployment/app views
+
+- **Basic template graph initialization** - Now uses `Cortex.create()` for automatic graph configuration:
+  - Async initialization enables auto-configuration from environment variables
+  - `CORTEX_GRAPH_SYNC=true` with `NEO4J_URI` or `MEMGRAPH_URI` auto-connects graph adapter
+  - Graph sync is automatic on `remember()` calls (no `syncToGraph` option needed)
+
+#### Fixed
+
+- **Accurate graph status messages** - Template now checks for both flag AND URI:
+  - Shows `✓ Graph memory connected (auto-sync active)` when fully configured
+  - Shows `ℹ Graph sync enabled but no database URI configured` when URI missing
+  - Previously showed misleading "enabled" message even without database URI
+
+#### Example Output
+
+```
+● my-deployment
+    Path: /path/to/project
+    SDK: 0.28.0 → 0.29.0
+    Convex: 1.31.0
+```
+
+</details>
+
+---
+
 ### CLI v0.28.1 · Jan 6, 2026
 
 **Automatic Shell Tab Completion**
@@ -1212,6 +1297,12 @@ const cortexMemory = createCortexMemory({
 
 ## January 2026
 
+### v0.29.0 · Jan 10 - Enhanced Update Display & Graph Template
+
+📊 Version transitions show `current → latest`  
+🎨 Color-coded status display  
+🔗 Async graph initialization in basic template
+
 ### v0.28.1 · Jan 6 - Shell Tab Completion
 
 ⌨️ Auto-installs for zsh, bash, fish  
@@ -1268,6 +1359,16 @@ const cortexMemory = createCortexMemory({
 </TabItem>
 
 <TabItem value="vercel" label="Vercel AI">
+
+## January 2026
+
+### v0.29.0 · Jan 10 - Automatic Graph Sync
+
+🔗 Removed deprecated `syncToGraph` option  
+📊 Graph sync automatic with `enableGraphMemory`  
+🛠️ Fixed quickstart bundling issues
+
+---
 
 ## November 2025
 

@@ -277,7 +277,6 @@ describe("ProgressiveFactExtractor", () => {
         "test-space",
         expect.any(String),
         expect.objectContaining({ confidence: 95 }),
-        expect.any(Object),
       );
     });
 
