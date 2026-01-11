@@ -1,0 +1,287 @@
+---
+id: isolation-boundaries
+title: Isolation Boundaries
+sidebar_position: 2
+description: Understanding Cortex's multi-layered isolation model for security, privacy, and compliance
+---
+
+# Isolation Boundaries
+
+Understanding Cortex's multi-layered isolation model for security, privacy, and compliance.
+
+## Overview
+
+Cortex provides **four layers of isolation** that work together to ensure data security, enable multi-tenancy, and maintain privacy boundaries:
+
+<FlowDiagram 
+  title="Isolation Hierarchy" 
+  caption="Four layers of data isolation"
+>
+  <FlowNode 
+    title="1. Tenant Isolation" 
+    icon="shield" 
+    variant="primary"
+  >
+    tenantId • Multi-tenant SaaS separation • Auto-injected via AuthContext
+  </FlowNode>
+  <FlowNode 
+    title="2. Memory Space Isolation" 
+    icon="database" 
+    variant="warning"
+  >
+    memorySpaceId • Fundamental data boundary • Hive or Collaboration Mode
+  </FlowNode>
+  <FlowNode 
+    title="3. User Isolation" 
+    icon="user" 
+    variant="success"
+  >
+    userId • GDPR compliance • Enables cascade deletion
+  </FlowNode>
+  <FlowNode 
+    title="4. Participant Tracking" 
+    icon="bot" 
+    variant="default"
+  >
+    participantId • Hive Mode attribution • Audit trail
+  </FlowNode>
+</FlowDiagram>
+
+<Callout type="info" title="Key Principle">
+  Each layer serves a distinct purpose and can be used independently or combined.
+</Callout>
+
+---
+
+## 1. Tenant Isolation (Multi-Tenant SaaS)
+
+Complete data separation for SaaS platforms serving multiple organizations.
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth: createAuthContext({
+    tenantId: "customer-acme", // All operations scoped to this tenant
+    userId: "user-123",
+  }),
+});
+
+// All operations automatically include tenantId
+await cortex.memory.remember({
+  memorySpaceId: "user-123-personal",
+  // tenantId: "customer-acme" ← Auto-injected!
+  userMessage: "Hello",
+  agentResponse: "Hi!",
+  userId: "user-123",
+  userName: "Alice",
+});
+```
+
+<Callout type="tip" title="Tenant Guarantees">
+
+- Tenant A cannot query Tenant B's data
+- Tenant A cannot access Tenant B's memory spaces
+- GDPR deletion respects tenant boundaries
+- Complete isolation at database level
+
+</Callout>
+
+---
+
+## 2. Memory Space Isolation
+
+Core data isolation boundary for organizing memories, conversations, and facts.
+
+<ComparisonTable
+  headers={["Hive Mode", "Collaboration Mode"]}
+  items={[
+    { feature: "Spaces", values: ["One shared space", "Separate spaces per agent"] },
+    { feature: "Data Access", values: ["All participants see all data", "Agents only see their own"] },
+    { feature: "Cross-Access", values: ["Automatic", "Via A2A or Context Chains"] },
+    { feature: "Use Case", values: ["Personal AI tools", "Enterprise workflows"] },
+  ]}
+/>
+
+<Tabs groupId="isolation-mode">
+  <TabItem value="hive" label="Hive Mode">
+
+All AI tools share user's personal space:
+
+```typescript
+const memorySpaceId = "user-123-personal";
+
+// Cursor stores
+await cortex.memory.remember({
+  memorySpaceId,
+  participantId: "cursor",
+  userMessage: "I prefer TypeScript",
+  agentResponse: "Noted!",
+  userId: "user-123",
+  userName: "Alice",
+});
+
+// Claude reads same space — sees Cursor's memories
+const memories = await cortex.memory.search(memorySpaceId, "preferences");
+```
+
+  </TabItem>
+  <TabItem value="collaboration" label="Collaboration Mode">
+
+Each agent has separate space:
+
+```typescript
+// Finance agent stores in its own space
+await cortex.memory.remember({
+  memorySpaceId: "finance-agent-space",
+  userMessage: "Approve budget",
+  agentResponse: "Approved",
+  userId: "user-123",
+  userName: "CFO",
+});
+
+// Communication via A2A (dual-write to both spaces)
+await cortex.a2a.send({
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "Budget approved",
+});
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## 3. User Data Isolation (GDPR)
+
+<Callout type="info" title="Right to Be Forgotten">
+  Link data to users via `userId` to enable cascade deletion across ALL layers with a single API call.
+</Callout>
+
+```typescript
+// Link data to user
+await cortex.memory.remember({
+  memorySpaceId: "support-bot-space",
+  userId: "user-123", // ← GDPR link
+  userMessage: "My account issue",
+  agentResponse: "Let me help",
+  userName: "Alice",
+});
+
+// One API call deletes from ALL layers
+const result = await cortex.users.delete("user-123", {
+  cascade: true,
+  verify: true,
+});
+```
+
+**Deleted from:** Conversations • Memories • Facts • Sessions • User Profile
+
+---
+
+## 4. Participant Tracking
+
+<Callout type="warning" title="Not Isolation — Attribution">
+  `participantId` tracks which tool stored data. It does NOT isolate data — all participants can still see all memories in the space.
+</Callout>
+
+```typescript
+// Track which tool stored what
+await cortex.memory.remember({
+  memorySpaceId: "shared-space",
+  participantId: "cursor", // Attribution
+  userMessage: "User message",
+  agentResponse: "Response",
+  userId: "user-123",
+  userName: "Alice",
+});
+
+// Filter by participant for debugging
+const cursorMemories = await cortex.memory.list({
+  memorySpaceId: "shared-space",
+  participantId: "cursor",
+});
+```
+
+---
+
+## Isolation Matrix
+
+How each data type is scoped by isolation layer:
+
+| Data Type | tenantId | memorySpaceId | userId | participantId |
+|-----------|:--------:|:-------------:|:------:|:-------------:|
+| Conversations | ✅ | ✅ | Optional | Optional |
+| Vector Memories | ✅ | ✅ | Optional | Optional |
+| Facts | ✅ | ✅ | Optional | Optional |
+| User Profiles | ✅ | Shared | N/A | N/A |
+| Immutable Store | ✅ | Shared | Optional | N/A |
+| Mutable Store | ✅ | Shared | Optional | N/A |
+
+---
+
+## Best Practices
+
+<Callout type="tip" title="Always Use tenantId for SaaS">
+
+```typescript
+const cortex = new Cortex({
+  auth: createAuthContext({
+    tenantId: req.tenant.id, // REQUIRED for multi-tenant
+    userId: req.user.id,
+  }),
+});
+```
+
+</Callout>
+
+<Callout type="tip" title="Always Set userId for GDPR">
+
+```typescript
+await cortex.memory.remember({
+  memorySpaceId: "bot-space",
+  userId: "user-123", // Required for cascade deletion
+  // ...
+});
+```
+
+</Callout>
+
+<Callout type="tip" title="Use participantId in Hive Mode">
+
+```typescript
+await cortex.memory.remember({
+  memorySpaceId: "shared-space",
+  participantId: "my-bot", // Track attribution
+  // ...
+});
+```
+
+</Callout>
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Authentication" 
+    description="Auth context setup" 
+    href="/security/authentication" 
+  />
+  <QuickNavItem 
+    title="Memory Spaces" 
+    description="Space isolation patterns" 
+    href="/core-features/memory-spaces" 
+  />
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Shared space pattern" 
+    href="/core-features/hive-mode" 
+  />
+  <QuickNavItem 
+    title="User Profiles" 
+    description="GDPR and user management" 
+    href="/core-features/user-profiles" 
+  />
+</QuickNav>

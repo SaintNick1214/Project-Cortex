@@ -514,7 +514,7 @@ We are committed to providing a welcoming and inclusive environment for all cont
 
 Contributors are recognized in:
 
-- [CHANGELOG.md](./CHANGELOG.md) for each release
+- [What's New](/whats-new) for each release
 - GitHub contributors page
 - Annual contributor spotlight posts
 
@@ -536,7 +536,7 @@ This includes:
 - **Patent Retaliation**: If you sue over patents, your license terminates
 - **Future Apache 2.0**: Each version becomes Apache 2.0 licensed two years after release
 
-This protects both contributors and users. See [LICENSE.md](./LICENSE.md) for full details.
+This protects both contributors and users. See [LICENSE.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/LICENSE.md) for full details.
 
 ---
 

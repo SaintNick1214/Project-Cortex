@@ -1,0 +1,439 @@
+---
+id: infinite-context-enhancements
+title: Infinite Context Capabilities
+sidebar_position: 8
+description: Advanced retrieval strategies for scaling to infinite context (Planned)
+---
+
+# Infinite Context Enhancements
+
+<Callout type="warning" title="Planned Features">
+  These infinite context enhancements are planned for future releases. Current infinite context capabilities are fully functional—see the [Infinite Context](/architecture/infinite-context) documentation for current strategies.
+</Callout>
+
+<Callout type="info" title="What is Infinite Context?">
+  Infinite Context enables AI agents to maintain coherent, accurate memory across millions of tokens and thousands of interactions. Current capabilities include semantic search, fact extraction, belief revision, and multi-layer storage. These enhancements focus on even more sophisticated retrieval strategies.
+</Callout>
+
+---
+
+## Current Capabilities
+
+Infinite context already supports:
+- Semantic search with vector embeddings
+- Hybrid search (semantic + keyword)
+- Multi-layer storage (vector, immutable, mutable)
+- Fact extraction and belief revision
+- Importance-based retrieval
+- Context chains for workflows
+- ACID conversation linking
+
+---
+
+## Planned Enhancements
+
+### 1. Predictive Pre-Fetching
+
+Anticipate the user's next query and pre-fetch relevant context before it's requested.
+
+**Concept:**
+Use conversation patterns and user behavior to predict what information will be needed next, then pre-load it into cache.
+
+**Example:**
+```typescript
+// Enable predictive pre-fetching
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  predictiveFetch: {
+    enabled: true,
+    cacheSize: 1000, // Pre-fetch up to 1000 memories
+    predictionModel: "conversation-flow", // or "user-behavior"
+  },
+});
+
+// User query: "What are my task deadlines?"
+const results = await cortex.memory.search(spaceId, "task deadlines");
+
+// System automatically pre-fetches:
+// - Related tasks
+// - Project information
+// - Calendar events
+// - Previous task completion patterns
+
+// Next query is instant (served from cache)
+const related = await cortex.memory.search(spaceId, "project milestones");
+// < 50ms response time (pre-fetched)
+```
+
+**Prediction Strategies:**
+- **Conversation Flow:** Analyze conversation patterns (if user asks about X, they often ask about Y next)
+- **User Behavior:** Learn from historical query patterns
+- **Semantic Proximity:** Pre-fetch semantically similar memories
+- **Temporal Patterns:** Pre-fetch time-related memories (e.g., upcoming deadlines if user asks about tasks)
+
+---
+
+### 2. Hierarchical Retrieval
+
+Two-pass retrieval: coarse-grained (categories) then fine-grained (specific facts).
+
+**Concept:**
+First retrieve high-level category summaries, then drill down into specific details only in relevant categories.
+
+**Example:**
+```typescript
+// Enable hierarchical retrieval
+const results = await cortex.memory.search(spaceId, "Python web frameworks", {
+  retrievalStrategy: "hierarchical",
+  maxCategories: 5,      // Step 1: Top 5 categories
+  maxPerCategory: 10,    // Step 2: Top 10 facts per category
+});
+
+// Step 1: Retrieve category summaries
+// - "Programming Languages" (semantic similarity: 0.87)
+// - "Web Development" (semantic similarity: 0.92)
+// - "Backend Frameworks" (semantic similarity: 0.94)
+// - "API Development" (semantic similarity: 0.81)
+// - "Database Integration" (semantic similarity: 0.79)
+
+// Step 2: Retrieve top 10 facts from each category
+// Total: 50 facts (5 categories × 10 facts)
+// vs. 50 facts from entire corpus (standard retrieval)
+```
+
+**Category Creation:**
+```typescript
+// Store memories with categories
+await cortex.memory.store(spaceId, {
+  content: "Django is a Python web framework",
+  metadata: {
+    category: "Backend Frameworks",
+    subcategory: "Python",
+    contentType: "fact",
+  },
+});
+
+// Or use automatic categorization
+await cortex.memory.store(spaceId, {
+  content: "Django is a Python web framework",
+  metadata: {
+    autoCategories: true, // AI-generated categories
+  },
+});
+```
+
+**Benefits:**
+- Faster retrieval (search within subset)
+- Better precision (category filtering)
+- Scalable to millions of memories
+
+---
+
+### 3. Cross-MemorySpace Retrieval
+
+Retrieve from multiple memory spaces with permission controls.
+
+**Concept:**
+Allow agents to search across memory spaces (e.g., personal + team + company knowledge base) with proper access control.
+
+**Example:**
+```typescript
+// Retrieve from multiple spaces
+const results = await cortex.memory.searchMultiSpace({
+  spaces: [
+    { spaceId: "personal-123", boost: 1.0 },
+    { spaceId: "team-456", boost: 0.8 },
+    { spaceId: "company-789", boost: 0.5 },
+  ],
+  query: "deployment process",
+  limit: 20,
+  requirePermission: true, // Check participant access
+});
+
+// Results include source labels
+results.forEach(result => {
+  console.log(`${result.content} (from ${result.spaceLabel})`);
+});
+```
+
+**Access Control:**
+```typescript
+// User must be participant in all spaces
+// Or use cross-space access via context chains
+
+const context = await cortex.contexts.create(personalSpace, {
+  purpose: "Cross-team collaboration",
+  crossSpaceAccess: [
+    { spaceId: "team-456", permission: "read" },
+    { spaceId: "company-789", permission: "read" },
+  ],
+});
+
+// Retrieve with context chain access
+const results = await cortex.memory.searchMultiSpace({
+  spaces: ["personal-123", "team-456", "company-789"],
+  query: "deployment process",
+  contextChainId: context.id, // Access granted via context chain
+});
+```
+
+**Boosting:**
+Weight results from different spaces (e.g., prioritize personal space over company knowledge base).
+
+---
+
+### 4. Adaptive Fact Extraction
+
+Extract more facts from important conversations, fewer from casual ones.
+
+**Concept:**
+Automatically adjust fact extraction depth based on conversation importance.
+
+**Example:**
+```typescript
+// Enable adaptive fact extraction
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  factExtraction: {
+    adaptive: true,
+    importanceThreshold: 70, // Extract from conversations with importance >= 70
+    modes: {
+      comprehensive: { minImportance: 90 }, // Extract all facts
+      standard: { minImportance: 70 },      // Extract key facts only
+      selective: { minImportance: 50 },     // Extract critical facts only
+      minimal: { minImportance: 0 },        // Extract almost nothing
+    },
+  },
+});
+
+// High-importance conversation
+await cortex.memory.remember(spaceId, {
+  role: "user",
+  content: "Our Q1 revenue target is $5M. Key milestones: close 3 enterprise deals, launch premium tier, expand to EU market.",
+  metadata: { importance: 95 }, // High importance
+});
+// Extracts: "Q1 revenue target: $5M", "Close 3 enterprise deals", "Launch premium tier", "Expand to EU market" (4 facts)
+
+// Low-importance conversation
+await cortex.memory.remember(spaceId, {
+  role: "user",
+  content: "I prefer dark mode and using tabs instead of spaces.",
+  metadata: { importance: 30 }, // Low importance
+});
+// Extracts: Nothing (below threshold) or only critical preference (1 fact)
+```
+
+**Benefits:**
+- Reduce storage costs (fewer facts from casual conversations)
+- Focus on important information
+- Prevent fact explosion
+
+---
+
+### 5. Automatic Hybrid Search
+
+Automatically combine semantic and keyword search without manual implementation.
+
+**Current Behavior:**
+```typescript
+// Manual hybrid search (both methods called separately)
+const semanticResults = await cortex.memory.search(spaceId, query, {
+  embedding: await embed(query),
+  limit: 20,
+});
+
+const keywordResults = await cortex.memory.search(spaceId, query, {
+  useKeywordSearch: true,
+  limit: 20,
+});
+
+// Manual merging and deduplication
+const merged = deduplicateAndRank([...semanticResults, ...keywordResults]);
+```
+
+**Planned Behavior:**
+```typescript
+// Automatic hybrid search
+const results = await cortex.memory.search(spaceId, query, {
+  searchMode: "hybrid", // Automatic semantic + keyword
+  semanticWeight: 0.7,   // 70% semantic, 30% keyword
+  limit: 20,
+});
+
+// System automatically:
+// - Runs semantic search
+// - Runs keyword search
+// - Merges results with weighted scoring
+// - Deduplicates
+// - Returns top 20
+```
+
+**Automatic Weight Tuning:**
+```typescript
+// Adaptive weights based on query type
+const results = await cortex.memory.search(spaceId, query, {
+  searchMode: "hybrid-adaptive",
+  // System automatically adjusts weights:
+  // - Exact phrases (e.g., "API key for OpenAI") → More keyword weight
+  // - Conceptual queries (e.g., "how to improve performance") → More semantic weight
+});
+```
+
+---
+
+### 6. Content Summarization
+
+Store summarized content for long-form memories to reduce token usage.
+
+**Concept:**
+Automatically generate and store summaries for long content, retrieve summaries first, then fetch full content if needed.
+
+**Example:**
+```typescript
+// Enable automatic summarization
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  summarization: {
+    enabled: true,
+    minLength: 500,      // Summarize content > 500 chars
+    summaryLength: 100,  // Target summary length
+  },
+});
+
+// Store long content
+await cortex.memory.store(spaceId, {
+  content: `[5000 character technical document]`,
+  metadata: { importance: 80 },
+});
+// System automatically generates summary and stores both
+
+// Retrieve summary first
+const results = await cortex.memory.search(spaceId, "deployment process", {
+  retrieveSummaries: true, // Return summaries only
+});
+
+console.log(results[0].summary); // 100-char summary
+
+// Fetch full content if needed
+const fullMemory = await cortex.memory.get(spaceId, results[0].id, {
+  includeFullContent: true,
+});
+console.log(fullMemory.content); // Full 5000-char content
+```
+
+**Benefits:**
+- Reduce token usage in LLM context
+- Faster retrieval (smaller data transfer)
+- Better relevance ranking (summarized content is clearer)
+
+---
+
+## Implementation Priority
+
+These enhancements will be implemented in phases:
+
+**High Priority:**
+1. Automatic hybrid search - Simplifies common use case
+2. Content summarization - Reduces token usage and costs
+
+**Medium Priority:**
+3. Hierarchical retrieval - Scalability for large memory spaces
+4. Adaptive fact extraction - Cost optimization
+
+**Low Priority (Advanced):**
+5. Predictive pre-fetching - Performance optimization
+6. Cross-MemorySpace retrieval - Multi-tenant and collaboration use case
+
+---
+
+## Workarounds (Current Implementation)
+
+Until these features are available, use these patterns:
+
+### Manual Hybrid Search
+
+```typescript
+async function hybridSearch(spaceId: string, query: string) {
+  const [semantic, keyword] = await Promise.all([
+    cortex.memory.search(spaceId, query, {
+      embedding: await embed(query),
+      limit: 20,
+    }),
+    cortex.memory.search(spaceId, query, {
+      useKeywordSearch: true,
+      limit: 20,
+    }),
+  ]);
+  
+  // Merge with weighted scoring
+  const merged = new Map();
+  semantic.forEach((m, i) => merged.set(m.id, { ...m, score: (20 - i) * 0.7 }));
+  keyword.forEach((m, i) => {
+    const existing = merged.get(m.id);
+    if (existing) {
+      existing.score += (20 - i) * 0.3;
+    } else {
+      merged.set(m.id, { ...m, score: (20 - i) * 0.3 });
+    }
+  });
+  
+  return Array.from(merged.values())
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 20);
+}
+```
+
+### Manual Categorization
+
+```typescript
+await cortex.memory.store(spaceId, {
+  content: "...",
+  metadata: {
+    category: "Programming",
+    subcategory: "Python",
+    tags: ["web", "framework", "backend"],
+  },
+});
+
+// Search within category
+const results = await cortex.memory.search(spaceId, query, {
+  filters: {
+    "metadata.category": "Programming",
+    "metadata.subcategory": "Python",
+  },
+});
+```
+
+### Multi-Space Search (Manual)
+
+```typescript
+async function searchMultiSpace(spaces: string[], query: string) {
+  const results = await Promise.all(
+    spaces.map(spaceId => cortex.memory.search(spaceId, query, { limit: 10 }))
+  );
+  
+  return results.flat().sort((a, b) => b.similarity - a.similarity);
+}
+```
+
+---
+
+## Related Features
+
+<QuickNav>
+  <QuickNavItem 
+    title="Infinite Context" 
+    description="Current infinite context architecture" 
+    href="/architecture/infinite-context" 
+  />
+  <QuickNavItem 
+    title="Semantic Search" 
+    description="Current search capabilities" 
+    href="/core-features/semantic-search" 
+  />
+  <QuickNavItem 
+    title="Fact Extraction" 
+    description="Current fact extraction" 
+    href="/core-features/fact-extraction" 
+  />
+</QuickNav>

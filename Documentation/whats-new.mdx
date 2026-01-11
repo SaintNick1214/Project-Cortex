@@ -1,0 +1,1438 @@
+---
+title: What's New
+description: Latest updates and improvements across all Cortex packages
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# What's New
+
+Track the latest features, improvements, and fixes across the entire Cortex ecosystem.
+
+:::info Single Source of Truth
+This is the complete changelog for all Cortex packages. Individual package CHANGELOG.md files have been consolidated here for easier tracking.
+:::
+
+<Tabs groupId="package-filter">
+<TabItem value="all" label="All Packages" default>
+
+## January 2026
+
+### TypeScript SDK v0.29.0 · Jan 9, 2026
+
+**Automatic Fact and Entity Graph Sync**
+
+🔗 Graph sync now automatic when `CORTEX_GRAPH_SYNC=true`  
+📊 Facts extracted via `remember()` automatically sync to graph  
+🏷️ Entity nodes created with MENTIONS relationships  
+⚠️ **Breaking:** `syncToGraph` option removed from all APIs
+
+<details>
+<summary>Show full details</summary>
+
+#### Major Changes
+
+**Automatic Graph Synchronization**
+
+Graph database synchronization for facts and entities is now automatic when `CORTEX_GRAPH_SYNC=true`:
+
+- Facts stored via `remember()`, `facts.store()`, or `facts.revise()` automatically sync to graph
+- Entity nodes are created from `fact.entities` array
+- MENTIONS relationships link Fact nodes to Entity nodes
+- Predicate-based relationships (e.g., WORKS_AT, KNOWS) created from `fact.relations`
+- SUPERSEDES relationships created when belief revision supersedes facts
+- Graph sync is gated entirely by environment variable
+
+**Breaking Change**
+
+The `syncToGraph` option has been removed from all APIs:
+
+```typescript
+// Before (v0.28.x)
+await cortex.facts.store(params, { syncToGraph: true });
+
+// After (v0.29.0+) - automatic when CORTEX_GRAPH_SYNC=true
+await cortex.facts.store(params);
+```
+
+APIs affected:
+- `cortex.facts.store()`, `update()`, `delete()`
+- `cortex.memory.remember()`, `forget()`, `delete()`
+- `cortex.vector.store()`, `update()`, `delete()`
+- `cortex.conversations.create()`, `addMessage()`, `delete()`
+- `cortex.contexts.create()`, `update()`, `delete()`
+- `cortex.memorySpaces.register()`
+
+**Migration:** Remove `{ syncToGraph: true/false }` from all API calls. Set `CORTEX_GRAPH_SYNC=true` in your environment to enable graph sync.
+
+#### Technical Details
+
+- `BeliefRevisionService.executeDecision()` now calls `syncFactToGraph()` and `syncFactRelationships()` after all fact operations
+- All layer APIs check `if (this.graphAdapter)` instead of `if (options?.syncToGraph && this.graphAdapter)`
+- Graph sync is non-blocking - failures are logged but don't fail the main operation
+
+</details>
+
+---
+
+### Vercel AI Provider v0.29.0 · Jan 10, 2026
+
+**Automatic Graph Sync Compatibility**
+
+🔗 Removed deprecated `syncToGraph` option from all memory operations  
+📊 Graph sync now automatic when `enableGraphMemory=true` with configured adapter  
+🧪 Updated tests to reflect new automatic sync behavior
+
+<details>
+<summary>Show full details</summary>
+
+#### Breaking Changes
+
+- **Removed `syncToGraph` option** - Graph sync is now automatic:
+  ```typescript
+  // Before (v0.28.x)
+  await cortexMemory.remember("Hello", "Hi", { syncToGraph: true });
+  
+  // After (v0.29.0+) - automatic when enableGraphMemory is configured
+  await cortexMemory.remember("Hello", "Hi");
+  ```
+
+#### Changed
+
+- `CortexMemoryProvider.doGenerate()` no longer passes `syncToGraph` to `remember()`
+- `CortexMemoryProvider.doStream()` no longer passes `syncToGraph` to `rememberStream()`
+- Manual `remember()` method no longer forwards `syncToGraph` option
+- `ManualRememberOptions.syncToGraph` marked as deprecated (ignored if passed)
+
+#### Fixed
+
+- Quickstart template: Fixed neo4j-driver/rxjs bundling issues with Next.js
+- Quickstart template: Added proper webpack externals configuration
+- Quickstart template: Fixed AI SDK v6 type compatibility in memory-agent.ts
+
+</details>
+
+---
+
+### CLI v0.29.0 · Jan 10, 2026
+
+**Enhanced Update Display & Graph Template Improvements**
+
+📊 Version transitions now show `current → latest` format  
+🎨 Color-coded display: green (up-to-date), yellow (outdated)  
+🔗 Basic template now uses async initialization for graph support  
+✅ Accurate graph status messages based on actual configuration
+
+<details>
+<summary>Show full details</summary>
+
+#### Changed
+
+- **Update command version display** - `cortex update` now shows version transitions clearly:
+  - Up-to-date packages shown in green: `1.0.0`
+  - Outdated packages show transition: `1.0.0 → 1.1.0` (yellow → green)
+  - Not installed packages show: `not installed → 1.1.0`
+  - Applies to all package types: SDK, Provider, Convex, Vercel AI
+  - Works in both multi-deployment dashboard and single deployment/app views
+
+- **Basic template graph initialization** - Now uses `Cortex.create()` for automatic graph configuration:
+  - Async initialization enables auto-configuration from environment variables
+  - `CORTEX_GRAPH_SYNC=true` with `NEO4J_URI` or `MEMGRAPH_URI` auto-connects graph adapter
+  - Graph sync is automatic on `remember()` calls (no `syncToGraph` option needed)
+
+#### Fixed
+
+- **Accurate graph status messages** - Template now checks for both flag AND URI:
+  - Shows `✓ Graph memory connected (auto-sync active)` when fully configured
+  - Shows `ℹ Graph sync enabled but no database URI configured` when URI missing
+  - Previously showed misleading "enabled" message even without database URI
+
+#### Example Output
+
+```
+● my-deployment
+    Path: /path/to/project
+    SDK: 0.28.0 → 0.29.0
+    Convex: 1.31.0
+```
+
+</details>
+
+---
+
+### CLI v0.28.1 · Jan 6, 2026
+
+**Automatic Shell Tab Completion**
+
+⌨️ Auto-installs completions for zsh, bash, and fish shells  
+✨ Dynamic completion for deployment and app names  
+🧹 Clean removal on uninstall via preuninstall script
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **Automatic shell tab completion** - Tab completion auto-installs during `npm install -g @cortexmemory/cli`:
+  - Completes all commands, subcommands, and options with descriptions
+  - Dynamic completion of deployment and app names from `~/.cortexrc`
+  - Completion scripts installed to `~/.cortex/completions/`
+  - Source line added automatically to shell RC files (idempotent)
+  - Clean removal via preuninstall script on `npm uninstall -g`
+  - Manual fallback: `cortex completion <zsh|bash|fish>` outputs completion script
+
+#### Changed
+
+- Package version display now shows "Vercel AI" instead of "AI" for clarity in `cortex update` output
+
+</details>
+
+---
+
+### TypeScript SDK v0.28.0 · Jan 5, 2026
+
+**Basic Template & Query Performance Fixes**
+
+🎯 New headless template with dual CLI/server modes  
+⚡ Fixed "too many bytes" error in stats queries  
+🧪 Complete test suite with E2E coverage
+
+<details>
+<summary>Show full details</summary>
+
+#### New Basic Template
+
+Complete headless demo of Cortex Memory SDK with both CLI and HTTP server modes:
+
+- **Dual-mode operation** - Interactive CLI (`npm start`) or REST API server (`npm run server`)
+- **Optional LLM integration** - Works with or without OpenAI API key
+- **Rich console output** - Animated spinners and memory orchestration visualization
+- **Layer observer** - Real-time display of all memory layers
+- **Full test suite** - Unit, integration, and E2E tests included
+
+**CLI Commands:**
+- `/recall <query>` - Search memories without storing
+- `/facts` - List all stored facts
+- `/history` - Show conversation history
+- `/new` - Start a new conversation
+- `/config` - Show current configuration
+
+#### Fixed
+
+**Query Performance** - Resolved "Too many bytes read" error in `agents:computeStats`:
+
+```typescript
+// Before: Full table scans hitting 16MB limit
+const memories = await ctx.db.query("memories").collect();
+
+// After: Indexed queries with sampling
+const SAMPLE_LIMIT = 1000;
+const memories = await ctx.db
+  .query("memories")
+  .withIndex("by_participantId", (q) => q.eq("participantId", args.agentId))
+  .take(SAMPLE_LIMIT);
+```
+
+- Uses proper indexes for better performance
+- Limits results to 1000 per query
+- Returns `isApproximate: true` when sampled
+
+**Upgrade:** Run `npx convex deploy` after updating
+
+</details>
+
+---
+
+### CLI v0.28.0 · Jan 5, 2026
+
+**Basic Template Tracking & Sessions Support**
+
+📁 Basic template projects now tracked in CLI config  
+🗃️ Sessions and factHistory tables added to db commands  
+📊 Database stats now cover all 13 tables
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **Basic template tracking in CLI config** - Basic template projects are now registered in `cortex.config.json`:
+  - `cortex init` automatically registers basic projects in the `apps` section
+  - `cortex update --sync-template` now works with basic template projects
+  - `cortex config list` shows basic projects alongside quickstart apps
+
+- **Sessions and factHistory table support** - `cortex db clear` and `cortex db stats` now include all Convex tables:
+  - `sessions` - Native session management table
+  - `factHistory` - Belief revision audit trail table
+  - Statistics now include counts for all 13 tables
+
+#### Changed
+
+- Added `"basic"` to `AppType` union type for template app tracking
+- `cortex db clear` now clears 13 tables (was 11)
+
+</details>
+
+---
+
+### TypeScript SDK v0.27.2 · Jan 1, 2026
+
+**V6 Route Feature Parity Fix**
+
+🔧 `/api/chat-v6` route now has full feature parity with v5  
+🧪 Comprehensive E2E tests for quickstart  
+✅ Fact extraction and belief revision working in v6
+
+<details>
+<summary>Show full details</summary>
+
+#### Fixed
+
+**`/api/chat-v6` route** now has full feature parity with the v5 route using `createCortexMemoryAsync`:
+
+- ✅ Memory recall (pre-call context injection)
+- ✅ Memory storage (post-call conversation saving)
+- ✅ Fact extraction (`enableFactExtraction`)
+- ✅ Belief revision (superseding outdated facts)
+- ✅ Embedding generation for semantic search
+- ✅ Layer observer for real-time UI updates
+
+#### Added
+
+Comprehensive E2E tests for the quickstart covering:
+
+- Fact storage verification
+- Belief revision (updating preferences through conversation)
+- Memory recall across conversations
+- V5/V6 parity validation
+- Conversation lifecycle (create, list, delete)
+
+</details>
+
+---
+
+### TypeScript SDK v0.27.1 · Jan 1, 2026
+
+**AI SDK v6 Agent Architecture Support**
+
+🤖 Full integration with Vercel AI SDK v6's `ToolLoopAgent`  
+🎯 Type-safe `callOptionsSchema` for runtime configuration  
+🔌 `createMemoryPrepareCall` for automatic memory injection
+
+<details>
+<summary>Show full details</summary>
+
+#### New Exports
+
+```typescript
+import {
+  createCortexCallOptionsSchema,  // Type-safe call options
+  CortexCallOptions,
+  createMemoryPrepareCall,        // Memory injection via prepareCall
+  MemoryInjectionConfig,
+  isV6Available,                  // v6 feature detection
+  InferAgentUIMessage,            // Type inference for UI messages
+} from "@cortexmemory/vercel-ai-provider";
+```
+
+#### Usage with ToolLoopAgent
+
+```typescript
+import { ToolLoopAgent } from "ai";
+
+const memoryAgent = new ToolLoopAgent({
+  model: "openai/gpt-4o-mini",
+  instructions: "You are a helpful assistant with long-term memory.",
+  callOptionsSchema: createCortexCallOptionsSchema(),
+  prepareCall: createMemoryPrepareCall({
+    convexUrl: process.env.CONVEX_URL!,
+    maxMemories: 20,
+  }),
+});
+
+await memoryAgent.generate({
+  prompt: "Hello!",
+  options: { userId: "u1", memorySpaceId: "app1" },
+});
+```
+
+#### Auto-Detection
+
+The quickstart automatically detects AI SDK version and routes appropriately:
+- **AI SDK v6**: Uses `/api/chat-v6` with `ToolLoopAgent`
+- **AI SDK v5**: Uses `/api/chat` with `streamText`
+
+</details>
+
+---
+
+### CLI v0.27.3 · Jan 1, 2026
+
+**Neo4j Encrypted URI Scheme Support**
+
+🔐 Graph database setup now accepts all neo4j-driver URI schemes  
+🔒 Support for TLS with system CA validation (`+s` suffix)  
+📜 Support for self-signed certificates (`+ssc` suffix)
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **Neo4j encrypted URI scheme support** - All neo4j-driver URI schemes now accepted:
+  - `bolt://`, `bolt+s://`, `bolt+ssc://` (direct connections)
+  - `neo4j://`, `neo4j+s://`, `neo4j+ssc://` (routing/cluster connections)
+  - `+s` suffix for TLS with system CA validation
+  - `+ssc` suffix for TLS with self-signed certificate acceptance
+
+#### Changed
+
+- Updated Docker Compose graph configuration to support optional TLS
+- Added SSL policy configuration for Neo4j bolt connector
+
+</details>
+
+---
+
+## December 2025
+
+### Python SDK v0.27.0 · Dec 28, 2025
+
+**Multi-Tenancy & Auth Context System**
+
+🔐 Complete multi-tenancy with automatic `tenantId` propagation  
+📱 New Sessions API for multi-session management  
+👤 User profile schemas with validation presets
+
+<details>
+<summary>Show full details</summary>
+
+#### New Auth Module (`cortex.auth`)
+
+```python
+from cortex.auth import create_auth_context
+from cortex import AuthContext, AuthMethod
+
+auth = create_auth_context(
+    user_id='user-123',
+    tenant_id='tenant-acme',
+    organization_id='org-engineering',
+    session_id='sess-abc',
+    auth_provider='auth0',
+    auth_method='oauth',
+    claims={'roles': ['admin', 'editor']},
+)
+
+cortex = Cortex(CortexConfig(
+    convex_url=os.getenv("CONVEX_URL"),
+    auth=auth,
+))
+
+# All operations automatically scoped to tenant
+await cortex.memory.remember(...)
+await cortex.conversations.create(...)
+await cortex.facts.store(...)
+```
+
+#### Sessions API
+
+```python
+session = await cortex.sessions.create(CreateSessionParams(
+    user_id='user-123',
+    tenant_id='tenant-456',
+    metadata={'device': 'Chrome on macOS'},
+))
+
+await cortex.sessions.touch(session.session_id)
+active = await cortex.sessions.get_active('user-123')
+await cortex.sessions.end(session.session_id)
+```
+
+#### User Profile Schemas
+
+| Preset     | Required Fields    | Email Validation | Max Size |
+| ---------- | ------------------ | ---------------- | -------- |
+| `strict`   | displayName, email | ✓                | 64KB     |
+| `standard` | displayName        | ✓                | 256KB    |
+| `minimal`  | displayName        | ✗                | None     |
+| `none`     | None               | ✗                | None     |
+
+</details>
+
+---
+
+### TypeScript SDK v0.27.0 · Dec 27, 2025
+
+**Multi-Tenancy & Authentication Context**
+
+🏢 Complete multi-tenancy support for SaaS platforms  
+🔐 Automatic `tenantId` propagation across all APIs  
+📱 New Sessions API with governance integration
+
+<details>
+<summary>Show full details</summary>
+
+#### AuthContext Integration
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  auth: {
+    userId: "user-123",
+    tenantId: "tenant-acme",
+    sessionId: "sess-abc",
+    authMethod: "clerk",
+    authenticatedAt: Date.now(),
+    claims: { role: "admin" },
+  },
+});
+
+// All operations automatically scoped to tenant
+await cortex.memory.remember({...});
+await cortex.conversations.create({...});
+await cortex.facts.store({...});
+```
+
+#### Sessions API
+
+```typescript
+const session = await cortex.sessions.create({
+  userId: "user-123",
+  metadata: { device: "mobile", ip: "..." },
+});
+
+await cortex.sessions.touch(session.sessionId);
+const activeSessions = await cortex.sessions.getActive("user-123");
+await cortex.sessions.expireIdle({ maxIdleMs: 30 * 60 * 1000 });
+```
+
+#### Key Features
+
+- ✅ Automatic TenantId Propagation
+- ✅ Sessions API for multi-session management
+- ✅ Auth Validators for format validation
+- ✅ Framework-Agnostic (Auth0, Clerk, NextAuth, Firebase)
+- ✅ Graph Integration with tenant boundaries
+- ✅ GDPR Compatible cascade deletion
+
+</details>
+
+---
+
+### CLI v0.27.2 · Dec 28, 2025
+
+**Multi-Deployment Update Command**
+
+🔄 `cortex update` now checks all enabled deployments by default  
+📊 Color-coded version status table  
+🎯 Sequential updates with summary
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **Multi-deployment update command** - `cortex update` now checks all enabled deployments:
+  - Displays status table with latest SDK/Convex versions and each deployment's current versions
+  - Color-coded display (green = up to date, yellow = needs update)
+  - Prompts to confirm updating all deployments that need updates
+  - Sequential updates with summary at the end
+  - `-d, --deployment <name>` flag for single-deployment mode
+
+</details>
+
+---
+
+### CLI v0.27.1 · Dec 27, 2025
+
+**App Lifecycle Management**
+
+🛑 Stop command detects and stops running template apps  
+🔍 Port-based process detection fallback  
+📊 Enhanced status dashboard with app information
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **App lifecycle management in `cortex stop`**:
+  - `-a, --app <name>` option to stop a specific app
+  - `--apps-only` flag to stop only apps (skip Convex/graph)
+  - Apps tracked via PID files (`.cortex-app-{name}.pid`)
+
+- **Port-based process detection** when PID files don't exist:
+  - Detects Convex on port 3210 for local deployments
+  - Detects apps by their configured port (default 3000)
+
+- **Enhanced `cortex status` dashboard**:
+  - Displays running apps with PID and port information
+  - Shows detection method (via PID file or via port)
+
+</details>
+
+---
+
+### CLI v0.27.0 · Dec 26, 2025
+
+**Vercel AI Quickstart Integration**
+
+🚀 Optional demo app installation during `cortex init`  
+📱 Template apps management and tracking  
+⚡ Default enabled for init-created resources
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **Vercel AI Quickstart integration** - Optional demo app installation:
+  - Installs as `/quickstart` subfolder
+  - Full Next.js app with chat interface and real-time memory visualization
+  - Auto-configured with Convex URL and OpenAI API key
+
+- **Template apps management**:
+  - New `apps` section in config (`~/.cortexrc`)
+  - Apps shown in `cortex config list`
+  - `cortex start` automatically starts enabled apps
+
+- **Default enabled** - Deployments and apps from `cortex init` enabled by default
+
+</details>
+
+---
+
+### TypeScript SDK v0.26.1 · Dec 26, 2025
+
+**Vercel AI SDK v6.0 Support**
+
+✅ Extended peer dependencies to accept `ai` v6.x  
+🔧 No breaking changes - fully backward compatible
+
+<details>
+<summary>Show full details</summary>
+
+#### Changed
+
+- **Extended peerDependencies** - `@cortexmemory/vercel-ai-provider` now accepts `ai` versions `^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0`
+- Users on Vercel AI SDK v6.x will no longer see peer dependency warnings
+
+</details>
+
+---
+
+### Create v0.26.0 · Dec 23, 2025
+
+**Cortex CLI Integration**
+
+🔧 Optional `@cortexmemory/cli` installation during setup  
+📜 Adds CLI scripts to generated package.json  
+✨ Enhanced success messages with CLI commands
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **Cortex CLI Integration**:
+  - New optional step to install `@cortexmemory/cli` during project setup
+  - Automatic CLI installation as dev dependency when selected
+  - Adds scripts: `npm run cortex`, `cortex:setup`, `cortex:stats`, `cortex:spaces`
+
+- **User Experience**:
+  - Updated configuration summary shows CLI installation status
+  - Enhanced success message with CLI commands when installed
+
+</details>
+
+---
+
+### TypeScript SDK v0.26.0 · Dec 23, 2025
+
+**Enhanced Belief Revision - Subject+FactType Matching**
+
+🧠 New pipeline stage catches conflicts missed by pattern matching  
+🔋 "Batteries included" mode - works without LLM configuration  
+🔧 Fixed SUPERSEDE and UPDATE actions
+
+<details>
+<summary>Show full details</summary>
+
+#### New Pipeline Stage
+
+```
+NEW FACT → [Slot Match] → [Semantic Match] → [Subject+Type Match] → [LLM/Heuristic] → Execute
+                                                    │
+                                            Same subject AND factType?
+                                            → Candidate for review
+```
+
+#### Key Improvements
+
+- ✅ **Subject+FactType Matching (Stage 2.5)** - Catches conflicts with same subject AND factType
+- ✅ **Batteries-Included Mode** - Works WITHOUT LLM using `getDefaultDecision()` heuristics
+- ✅ **Fixed SUPERSEDE Action** - Now uses `facts.supersede` mutation properly
+- ✅ **Fixed UPDATE Action** - Uses `updateInPlace` to avoid creating unwanted versions
+
+```typescript
+// Works WITHOUT LLM configuration
+const cortex = new Cortex({ convexUrl: "..." });
+
+await cortex.memory.remember({
+  memorySpaceId: "user-space",
+  userMessage: "Actually, I prefer purple now",
+  agentResponse: "Got it!",
+  userId: "user-123",
+});
+// Old "blue" fact properly SUPERSEDED
+```
+
+</details>
+
+---
+
+### Python SDK v0.26.0 · Dec 23, 2025
+
+**OrchestrationObserver API**
+
+📊 Real-time monitoring of `remember()` and `remember_stream()` pipeline  
+🐛 Fixed `user_id` propagation in fact extraction  
+🧠 Subject+FactType matching for belief revision
+
+<details>
+<summary>Show full details</summary>
+
+#### OrchestrationObserver
+
+```python
+class MyObserver:
+    def on_orchestration_start(self, orchestration_id: str) -> None:
+        print(f"Starting: {orchestration_id}")
+
+    def on_layer_update(self, event: LayerEvent) -> None:
+        print(f"Layer {event.layer}: {event.status} ({event.latency_ms}ms)")
+
+    def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
+        print(f"Done in {summary.total_latency_ms}ms")
+
+result = await cortex.memory.remember(
+    RememberParams(..., observer=MyObserver())
+)
+```
+
+#### Bug Fixes
+
+- Fixed `user_id`, `participant_id`, and `source_ref` not propagating to facts during belief revision
+- Fixed SUPERSEDE action to use dedicated `facts:supersede` mutation
+- Fixed UPDATE action to use `facts:updateInPlace`
+
+</details>
+
+---
+
+### CLI v0.26.2 · Dec 25, 2025
+
+**Non-Interactive Convex Setup**
+
+🤖 Init wizard sets up Convex without interactive prompts  
+🔄 Three streamlined setup paths  
+🔑 Automatic Convex login handling
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **Non-interactive Convex setup in `cortex init`**:
+  - Automatically detects Convex authentication status
+  - Retrieves team slug automatically from login status
+  - Uses Convex CLI flags for seamless setup
+
+- **Three streamlined setup paths**:
+  - **Local development** - Cloud project with local backend (recommended)
+  - **Cloud project** - New cloud deployment with full features
+  - **Existing project** - Connect to existing Convex deployment
+
+</details>
+
+---
+
+### CLI v0.26.1 · Dec 25, 2025
+
+**Environment Variable Fixes**
+
+🔧 Fixed `cortex dev` overwriting local deployment configs  
+🔑 Fixed OpenAI API key not saved during init
+
+<details>
+<summary>Show full details</summary>
+
+#### Fixed
+
+- **`cortex dev` overwriting `.env.local`** - Inherited `CONVEX_*` variables were polluting child processes
+- **OpenAI API key not saved** - Init wizard now correctly saves the configured key
+
+</details>
+
+---
+
+### CLI v0.26.0 · Dec 23, 2025
+
+**Secure Password Generation**
+
+🔐 Cryptographically secure passwords for Neo4j/Memgraph  
+🔑 OpenAI API key setup during init
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- **Secure password generation** - `cortex init` generates 20-character passwords for graph databases
+- **OpenAI API key setup** - New optional step with `sk-` prefix validation
+
+</details>
+
+---
+
+### TypeScript SDK v0.24.0 · Dec 20, 2025
+
+**Belief Revision System**
+
+🧠 Intelligent fact management preventing duplicates  
+🔄 Slot-based, semantic, and LLM-based conflict resolution  
+📜 Complete audit trail with fact history
+
+<details>
+<summary>Show full details</summary>
+
+#### The Problem Solved
+
+Previously, fact storage was append-only:
+- Conflicting facts accumulated
+- No semantic understanding of when facts should update vs. add
+- No history of how knowledge evolved
+
+#### Now with Belief Revision
+
+```typescript
+const result = await cortex.facts.revise({
+  memorySpaceId: "user-123-space",
+  fact: {
+    fact: "User prefers purple",
+    subject: "user-123",
+    predicate: "favorite color",
+    object: "purple",
+    confidence: 90,
+  },
+});
+
+console.log(result.action); // "SUPERSEDE"
+console.log(result.reason); // "Color preference has changed"
+```
+
+#### New API Methods
+
+| Method | Purpose |
+|--------|---------|
+| `facts.revise()` | Full belief revision pipeline |
+| `facts.checkConflicts()` | Preview conflicts without executing |
+| `facts.supersede()` | Manually supersede one fact with another |
+| `facts.history()` | Get change history for a fact |
+| `facts.getSupersessionChain()` | Get lineage of fact versions |
+| `facts.getActivitySummary()` | Analytics on fact changes |
+
+</details>
+
+---
+
+### Python SDK v0.24.0 · Dec 19, 2025
+
+**Belief Revision System**
+
+🧠 Intelligent fact management with conflict resolution  
+🔄 Pipeline: Slot matching → Semantic → LLM resolution  
+📜 Fact history and audit trail
+
+<details>
+<summary>Show full details</summary>
+
+#### Usage
+
+```python
+result = await cortex.facts.revise(ReviseParams(
+    memory_space_id="agent-1",
+    fact=ConflictCandidate(
+        fact="User prefers purple",
+        subject="user-123",
+        predicate="favorite color",
+        object="purple",
+        confidence=90,
+    ),
+))
+
+print(f"Action: {result.action}")  # SUPERSEDE
+print(f"Reason: {result.reason}")  # "Color preference has changed"
+```
+
+#### Available Actions
+
+| Action | When Used |
+|--------|-----------|
+| **ADD** | Genuinely new information |
+| **UPDATE** | Refines existing fact |
+| **SUPERSEDE** | Replaces contradictory fact |
+| **NONE** | Already captured |
+
+</details>
+
+---
+
+### TypeScript SDK v0.23.0 · Dec 19, 2025
+
+**Unified Context Retrieval with `recall()`**
+
+🔍 The retrieval counterpart to `remember()`  
+🎯 Get LLM-ready context from all memory layers  
+🔗 Graph expansion for discovering related context
+
+<details>
+<summary>Show full details</summary>
+
+#### Usage
+
+```typescript
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
+});
+
+// Inject directly into LLM prompt
+const response = await llm.chat({
+  messages: [
+    { role: "system", content: `Context:\n${result.context}` },
+    { role: "user", content: userMessage },
+  ],
+});
+```
+
+#### Features
+
+- ✅ Batteries Included - All sources enabled by default
+- ✅ Graph Expansion - Discovers related context via relationships
+- ✅ Unified Deduplication - Removes duplicates across sources
+- ✅ Multi-Signal Ranking - Semantic similarity, confidence, importance, recency
+- ✅ LLM-Ready Formatting - Structured markdown context
+
+</details>
+
+---
+
+### Python SDK v0.23.0 · Dec 19, 2025
+
+**recall() Orchestration API**
+
+🔮 Unified context retrieval counterpart to `remember()`  
+🎯 Multi-signal ranking with configurable weights  
+📊 Source breakdown in results
+
+<details>
+<summary>Show full details</summary>
+
+#### Usage
+
+```python
+result = await cortex.memory.recall(
+    RecallParams(
+        memory_space_id="agent-1",
+        query="user preferences",
+    )
+)
+
+# Use directly in LLM prompts
+print(result.context)
+```
+
+#### Ranking Algorithm
+
+| Signal | Weight | Description |
+|--------|--------|-------------|
+| Semantic | 35% | Vector similarity score |
+| Confidence | 20% | Fact confidence (0-100) |
+| Importance | 15% | Memory importance (0-100) |
+| Recency | 15% | Time decay (30-day half-life) |
+| Graph Connectivity | 15% | Connected entity count |
+
+</details>
+
+---
+
+### TypeScript SDK v0.22.0 · Dec 19, 2025
+
+**Cross-Session Fact Deduplication**
+
+🎯 Facts no longer duplicated across conversations  
+🔄 Three deduplication strategies: semantic, structural, exact  
+⬆️ Confidence-based updates
+
+<details>
+<summary>Show full details</summary>
+
+#### The Problem Solved
+
+```
+Session 1: "My name is Alice" → Fact created ✅
+Session 2: "I'm Alice" → Duplicate detected, skipped ✅
+Session 3: "Call me Alice" → Duplicate detected, skipped ✅
+Result: 1 fact instead of 3!
+```
+
+#### Deduplication Strategies
+
+| Strategy | Speed | Accuracy |
+|----------|-------|----------|
+| `semantic` | Slower | Highest |
+| `structural` | Fast | Medium |
+| `exact` | Fastest | Low |
+
+#### Configuration
+
+```typescript
+await cortex.memory.remember({
+  ...params,
+  factDeduplication: "semantic", // Default
+});
+```
+
+</details>
+
+---
+
+### Python SDK v0.22.0 · Dec 19, 2025
+
+**Cross-Session Fact Deduplication**
+
+🎯 Automatic duplicate fact prevention  
+🔄 Configurable deduplication strategies  
+📈 Confidence-based updates for higher-quality facts
+
+<details>
+<summary>Show full details</summary>
+
+#### The Solution
+
+```python
+# Deduplication is ON by default
+await cortex.memory.remember(
+    RememberParams(
+        memory_space_id="agent-1",
+        conversation_id="conv-123",
+        user_message="I'm Alex",
+        agent_response="Nice to meet you!",
+        user_id="user-123",
+        user_name="Alex",
+        agent_id="assistant",
+        extract_facts=my_fact_extractor,
+    )
+)
+```
+
+#### Strategies
+
+| Strategy | Speed | Accuracy |
+|----------|-------|----------|
+| `none` | ⚡ Fastest | None |
+| `exact` | ⚡ Fast | Low |
+| `structural` | ⚡ Fast | Medium |
+| `semantic` | 🐢 Slower | High |
+
+</details>
+
+---
+
+## November 2025
+
+### Vercel AI Provider v0.2.0 · Nov 24, 2025
+
+**Enhanced Streaming with rememberStream()**
+
+🚀 Direct integration with `rememberStream()` API  
+📊 Comprehensive streaming metrics  
+🔄 Progressive fact extraction and graph sync
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+- **Progressive Storage** - Store partial responses during streaming
+- **Streaming Hooks** - `onChunk`, `onProgress`, `onError`, `onComplete`
+- **Comprehensive Metrics** - First chunk latency, throughput, estimated costs
+- **Progressive Fact Extraction** - Extract facts incrementally during streaming
+- **Progressive Graph Sync** - Sync to graph databases during streaming
+- **Error Recovery** - Resume tokens and partial failure strategies
+
+#### Configuration
+
+```typescript
+const cortexMemory = createCortexMemory({
+  convexUrl: process.env.CONVEX_URL!,
+  memorySpaceId: "my-chat",
+  userId: "user-123",
+  streamingOptions: {
+    storePartialResponse: true,
+    progressiveFactExtraction: true,
+  },
+  streamingHooks: {
+    onProgress: (event) => console.log(event),
+  },
+});
+```
+
+</details>
+
+---
+
+### Create v0.2.0 · Nov 24, 2025
+
+**Smart Version Detection**
+
+🔍 Auto-fetches latest SDK version from npm  
+🔄 Dynamic Convex version sync with peer dependencies  
+✨ Graceful fallback to safe defaults
+
+<details>
+<summary>Show full details</summary>
+
+#### Added
+
+- CLI now automatically fetches latest SDK version from npm registry
+- Dynamically detects correct Convex version from SDK's peerDependencies
+- Template always uses `"latest"` for SDK
+
+</details>
+
+---
+
+### Vercel AI Provider v0.1.0 · Nov 5, 2025
+
+**Initial Release**
+
+🎉 First release of Cortex Memory Provider for Vercel AI SDK  
+🔌 Works with OpenAI, Anthropic, Google, Groq  
+🌐 Edge runtime compatible
+
+<details>
+<summary>Show full details</summary>
+
+#### Core Features
+
+- `createCortexMemory()` - Factory function for memory-augmented models
+- Automatic memory search before each LLM call
+- Automatic memory storage after each response
+- Works with streaming and non-streaming responses
+
+#### Memory Management
+
+- `cortexMemory.search()` - Manual memory search
+- `cortexMemory.remember()` - Manual memory storage
+- `cortexMemory.getMemories()` - Retrieve all memories
+- `cortexMemory.clearMemories()` - Delete memories
+
+</details>
+
+---
+
+### Create v0.1.0 · Nov 2, 2025
+
+**Initial Release**
+
+🎉 Interactive CLI wizard for Cortex project setup  
+🐳 Docker integration for Neo4j/Memgraph  
+📦 Complete project scaffolding
+
+<details>
+<summary>Show full details</summary>
+
+#### Features
+
+- `npm create cortex-memories` - Zero-config project creation
+- Three Convex setup modes (local/new cloud/existing)
+- Optional graph database integration (Neo4j/Memgraph)
+- Docker detection with platform-specific instructions
+- Automatic dependency installation
+- Backend function deployment
+
+</details>
+
+---
+
+### CLI v0.1.0 · Nov 29, 2025
+
+**Initial Release**
+
+🎉 First release of @cortexmemory/cli  
+📋 Complete command suite for memory management  
+🔧 Multi-deployment support
+
+<details>
+<summary>Show full details</summary>
+
+#### Core Commands
+
+- **Memory Operations** - `memory list`, `search`, `delete`, `export`, `stats`
+- **User Management** - `users list`, `get`, `delete`, `export`, GDPR cascade deletion
+- **Memory Spaces** - `spaces list`, `create`, `delete`, `archive`, participants management
+- **Facts Operations** - `facts list`, `search`, `get`, `delete`, `export`
+- **Conversations** - `conversations list`, `get`, `delete`, `export`
+- **Convex Management** - `convex status`, `deploy`, `dev`, `logs`, `dashboard`
+- **Database Operations** - `db stats`, `clear`, `backup`, `restore`, `export`
+
+#### Features
+
+- Configuration management with multiple deployment support
+- Table, JSON, and CSV output formats
+- Interactive confirmations for dangerous operations
+- Dry-run mode for previewing changes
+
+</details>
+
+---
+
+</TabItem>
+
+<TabItem value="ts-sdk" label="TypeScript SDK">
+
+## January 2026
+
+### v0.28.0 · Jan 5, 2026 - Basic Template & Query Fixes
+
+🎯 New headless template with dual CLI/server modes  
+⚡ Fixed "too many bytes" error in stats queries  
+🧪 Complete test suite with E2E coverage
+
+### v0.27.2 · Jan 1, 2026 - V6 Route Feature Parity
+
+🔧 `/api/chat-v6` route now has full feature parity with v5
+
+### v0.27.1 · Jan 1, 2026 - AI SDK v6 Agent Support
+
+🤖 Full integration with `ToolLoopAgent`  
+🎯 Type-safe `callOptionsSchema`  
+🔌 `createMemoryPrepareCall` for memory injection
+
+---
+
+## December 2025
+
+### v0.27.0 · Dec 27 - Multi-Tenancy & Auth Context
+
+🏢 Complete multi-tenancy for SaaS platforms  
+🔐 Automatic `tenantId` propagation  
+📱 New Sessions API
+
+### v0.26.1 · Dec 26 - Vercel AI SDK v6.0 Support
+
+✅ Extended peer dependencies to accept `ai` v6.x
+
+### v0.26.0 · Dec 23 - Enhanced Belief Revision
+
+🧠 Subject+FactType matching (Stage 2.5)  
+🔋 "Batteries included" mode  
+🔧 Fixed SUPERSEDE and UPDATE actions
+
+### v0.24.0 · Dec 20 - Belief Revision System
+
+🧠 Intelligent fact management  
+📜 Complete audit trail
+
+### v0.23.0 · Dec 19 - `recall()` API
+
+🔍 Unified context retrieval  
+🎯 LLM-ready context generation
+
+### v0.22.0 · Dec 19 - Cross-Session Fact Deduplication
+
+🎯 Automatic duplicate prevention
+
+</TabItem>
+
+<TabItem value="py-sdk" label="Python SDK">
+
+## December 2025
+
+### v0.27.0 · Dec 28 - Multi-Tenancy & Auth Context
+
+🔐 Complete multi-tenancy with `tenantId` propagation  
+📱 New Sessions API  
+👤 User profile schemas with validation
+
+### v0.26.0 · Dec 23 - OrchestrationObserver API
+
+📊 Real-time pipeline monitoring  
+🐛 Fixed `user_id` propagation  
+🧠 Subject+FactType matching
+
+### v0.24.0 · Dec 19 - Belief Revision System
+
+🧠 Intelligent fact management  
+🔄 Pipeline: Slot → Semantic → LLM  
+📜 Fact history and audit trail
+
+### v0.23.0 · Dec 19 - `recall()` API
+
+🔮 Unified context retrieval  
+🎯 Multi-signal ranking
+
+### v0.22.0 · Dec 19 - Cross-Session Fact Deduplication
+
+🎯 Automatic duplicate prevention  
+🔄 Configurable strategies
+
+</TabItem>
+
+<TabItem value="cli" label="CLI">
+
+## January 2026
+
+### v0.29.0 · Jan 10 - Enhanced Update Display & Graph Template
+
+📊 Version transitions show `current → latest`  
+🎨 Color-coded status display  
+🔗 Async graph initialization in basic template
+
+### v0.28.1 · Jan 6 - Shell Tab Completion
+
+⌨️ Auto-installs for zsh, bash, fish  
+✨ Dynamic completion for deployments
+
+### v0.28.0 · Jan 5 - Basic Template Tracking
+
+📁 Basic projects tracked in config  
+🗃️ Sessions and factHistory support
+
+### v0.27.3 · Jan 1 - Neo4j Encrypted URIs
+
+🔐 All neo4j-driver URI schemes supported
+
+---
+
+## December 2025
+
+### v0.27.2 · Dec 28 - Multi-Deployment Updates
+
+🔄 `cortex update` checks all deployments  
+📊 Color-coded version status
+
+### v0.27.1 · Dec 27 - App Lifecycle Management
+
+🛑 Stop running template apps  
+🔍 Port-based process detection
+
+### v0.27.0 · Dec 26 - Quickstart Integration
+
+🚀 Optional demo app installation  
+📱 Template apps management
+
+### v0.26.2 · Dec 25 - Non-Interactive Convex Setup
+
+🤖 Streamlined setup paths
+
+### v0.26.1 · Dec 25 - Environment Fixes
+
+🔧 Fixed `.env.local` overwrites
+
+### v0.26.0 · Dec 23 - Secure Passwords
+
+🔐 Cryptographically secure passwords
+
+---
+
+## November 2025
+
+### v0.1.0 · Nov 29 - Initial Release
+
+🎉 Complete CLI for Cortex memory management
+
+</TabItem>
+
+<TabItem value="vercel" label="Vercel AI">
+
+## January 2026
+
+### v0.29.0 · Jan 10 - Automatic Graph Sync
+
+🔗 Removed deprecated `syncToGraph` option  
+📊 Graph sync automatic with `enableGraphMemory`  
+🛠️ Fixed quickstart bundling issues
+
+---
+
+## November 2025
+
+### v0.2.0 · Nov 24 - Enhanced Streaming
+
+🚀 Direct `rememberStream()` integration  
+📊 Streaming metrics  
+🔄 Progressive fact extraction
+
+### v0.1.0 · Nov 5 - Initial Release
+
+🎉 Cortex Memory Provider for Vercel AI SDK  
+🔌 Works with OpenAI, Anthropic, Google, Groq
+
+</TabItem>
+
+<TabItem value="create" label="Create">
+
+## December 2025
+
+### v0.26.0 · Dec 23 - CLI Integration
+
+🔧 Optional `@cortexmemory/cli` installation
+
+---
+
+## November 2025
+
+### v0.2.0 · Nov 24 - Smart Version Detection
+
+🔍 Auto-fetches latest SDK version  
+🔄 Dynamic Convex version sync
+
+### v0.1.0 · Nov 2 - Initial Release
+
+🎉 Interactive CLI wizard for project setup
+
+</TabItem>
+</Tabs>
+
+---
+
+## Versioning Policy
+
+Cortex packages follow semantic versioning:
+
+- **Major (X.0.0)**: Breaking API changes
+- **Minor (0.X.0)**: New features, backwards compatible
+- **Patch (0.0.X)**: Bug fixes, backwards compatible
+
+## Deprecation Policy
+
+- Features are marked deprecated for at least one minor version before removal
+- Deprecated features include migration guides
+- Breaking changes are documented with upgrade paths
+
+---
+
+## Roadmap
+
+### Planned for v1.0.0
+
+- Complete API stabilization
+- Integration examples for all major frameworks
+- Real-time graph sync worker
+- MCP Server implementation
+- Cloud Mode with Graph-Premium

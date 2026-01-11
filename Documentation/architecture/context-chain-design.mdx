@@ -1,6 +1,13 @@
+---
+id: context-chain-design
+title: Context Chain Design
+sidebar_position: 6
+description: Architecture of hierarchical context chains for multi-memory-space workflow coordination with cross-space delegation support
+---
+
 # Context Chain Design
 
-> **Last Updated**: 2026-01-01
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
 Architecture of hierarchical context chains for multi-memory-space workflow coordination with cross-space delegation support.
 
@@ -8,30 +15,31 @@ Architecture of hierarchical context chains for multi-memory-space workflow coor
 
 Context chains enable **hierarchical task delegation** with **cross-memory-space access control**. Memory spaces can share workflow state without breaking isolation boundaries. Each context in a chain has visibility into its parent, children, and root context - even across memory space boundaries.
 
-```
-Root Context (depth=0)
-├── Purpose: "Process customer refund"
-├── memorySpaceId: "supervisor-space"
-├── Data: { amount: 500, userId: "user-123" }
-│
-├─> Child 1 (depth=1)
-│   ├── Purpose: "Approve refund"
-│   ├── memorySpaceId: "finance-space"      // Different space!
-│   ├── Can access: Root data ✅ (via grantedAccess)
-│   └── Participant: finance-bot
-│
-├─> Child 2 (depth=1)
-│   ├── Purpose: "Send apology email"
-│   ├── memorySpaceId: "customer-relations-space"
-│   ├── Can access: Root data ✅ (via grantedAccess)
-│   └── Participant: relations-bot
-│
-└─> Child 3 (depth=1)
-    ├── Purpose: "Update CRM"
-    ├── memorySpaceId: "crm-space"
-    ├── Can access: Root data ✅ (via grantedAccess)
-    └── Participant: crm-bot
-```
+<FlowDiagram title="Context Chain Hierarchy" caption="Root context delegates to children across different memory spaces" direction="vertical">
+  <FlowNode title="Root Context (depth=0)" icon="layers" variant="primary">
+    Purpose: "Process customer refund"
+    Memory Space: supervisor-space
+    Data: amount: 500, userId: "user-123"
+  </FlowNode>
+  <FlowNode title="Child 1 (depth=1)" icon="user" variant="success">
+    Purpose: "Approve refund"
+    Memory Space: finance-space (Different space!)
+    Can access: Root data (via grantedAccess)
+    Participant: finance-bot
+  </FlowNode>
+  <FlowNode title="Child 2 (depth=1)" icon="message" variant="success">
+    Purpose: "Send apology email"
+    Memory Space: customer-relations-space
+    Can access: Root data (via grantedAccess)
+    Participant: relations-bot
+  </FlowNode>
+  <FlowNode title="Child 3 (depth=1)" icon="database" variant="success">
+    Purpose: "Update CRM"
+    Memory Space: crm-space
+    Can access: Root data (via grantedAccess)
+    Participant: crm-bot
+  </FlowNode>
+</FlowDiagram>
 
 **Key Insight:** Context chains enable **cross-space delegation** while maintaining memory space isolation - they're a controlled access mechanism, not a backdoor.
 
@@ -128,71 +136,24 @@ Root Context (depth=0)
 ### Creating Root Context
 
 ```typescript
-// Convex mutation
-export const create = mutation({
-  args: {
-    purpose: v.string(),
-    memorySpaceId: v.string(),
-    userId: v.optional(v.string()),
-    parentId: v.optional(v.id("contexts")),
-    data: v.any(),
+// Create root context
+const rootContext = await cortex.contexts.create({
+  purpose: "Process customer refund",
+  memorySpaceId: "supervisor-space",
+  userId: "user-123",
+  data: {
+    amount: 500,
+    ticketId: "TICKET-456",
   },
-  handler: async (ctx, args) => {
-    let rootId, depth;
+});
 
-    if (args.parentId) {
-      // Child context - inherit from parent
-      const parent = await ctx.db.get(args.parentId);
-
-      if (!parent) {
-        throw new Error("PARENT_NOT_FOUND");
-      }
-
-      rootId = parent.rootId;
-      depth = parent.depth + 1;
-
-      // Add to parent's childIds
-      await ctx.db.patch(args.parentId, {
-        childIds: [...parent.childIds /* will be set after insert */],
-      });
-    } else {
-      // Root context
-      rootId = null; // Will be set to self after insert
-      depth = 0;
-    }
-
-    // Create context
-    const contextId = await ctx.db.insert("contexts", {
-      purpose: args.purpose,
-      memorySpaceId: args.agentId,
-      userId: args.userId,
-      parentId: args.parentId,
-      rootId: rootId || contextId, // Self if root
-      depth,
-      childIds: [],
-      participants: [args.agentId],
-      data: args.data || {},
-      status: "active",
-      version: 1,
-      previousVersions: [],
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-
-    // If root, update rootId to self
-    if (!args.parentId) {
-      await ctx.db.patch(contextId, { rootId: contextId });
-    }
-
-    // Update parent's childIds
-    if (args.parentId) {
-      const parent = await ctx.db.get(args.parentId);
-      await ctx.db.patch(args.parentId, {
-        childIds: [...parent.childIds, contextId],
-      });
-    }
-
-    return await ctx.db.get(contextId);
+// Create child context (automatically inherits rootId and depth)
+const childContext = await cortex.contexts.create({
+  purpose: "Approve refund",
+  memorySpaceId: "finance-space",
+  parentId: rootContext._id, // Links to parent
+  data: {
+    approvalRequired: true,
   },
 });
 ```
@@ -279,8 +240,10 @@ async function getAllDescendants(
 
 ### Status Transitions
 
+<Callout type="info">Status transition validation is not currently enforced in the implementation. The `update` method accepts any status transition. This validation is planned for a future release.</Callout>
+
 ```typescript
-// Valid transitions
+// Planned: Valid transitions (not currently enforced)
 const STATUS_TRANSITIONS = {
   active: ["completed", "cancelled", "blocked"],
   blocked: ["active", "cancelled"],
@@ -288,86 +251,24 @@ const STATUS_TRANSITIONS = {
   cancelled: [], // Terminal state
 };
 
-export const updateStatus = mutation({
-  args: {
-    contextId: v.id("contexts"),
-    newStatus: v.union(
-      v.literal("active"),
-      v.literal("completed"),
-      v.literal("cancelled"),
-      v.literal("blocked"),
-    ),
-    data: v.optional(v.any()),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db.get(args.contextId);
-
-    // Validate transition
-    const validTransitions = STATUS_TRANSITIONS[context.status];
-    if (!validTransitions.includes(args.newStatus)) {
-      throw new Error(
-        `Invalid transition: ${context.status} -> ${args.newStatus}`,
-      );
-    }
-
-    // Create version snapshot
-    const snapshot = {
-      version: context.version,
-      status: context.status,
-      data: context.data,
-      timestamp: context.updatedAt,
-      updatedBy: "system", // Or from auth context
-    };
-
-    // Update
-    await ctx.db.patch(args.contextId, {
-      status: args.newStatus,
-      data: { ...context.data, ...args.data },
-      version: context.version + 1,
-      previousVersions: [...context.previousVersions, snapshot],
-      updatedAt: Date.now(),
-      completedAt: args.newStatus === "completed" ? Date.now() : undefined,
-    });
-
-    return await ctx.db.get(args.contextId);
-  },
+// Current implementation: Use SDK update method
+await cortex.contexts.update(contextId, {
+  status: "completed",
+  data: { result: "success" },
 });
 ```
 
 ### Auto-Complete Parent
 
+<Callout type="info">Auto-completion of parent contexts when all children complete is not currently implemented. This feature is planned for a future release.</Callout>
+
 ```typescript
-// When all children complete, complete parent
+// Planned: When all children complete, complete parent
+// This function does not exist in the current implementation
 export const checkAndCompleteParent = mutation({
   args: { contextId: v.id("contexts") },
   handler: async (ctx, args) => {
-    const context = await ctx.db.get(args.contextId);
-
-    if (!context.parentId) {
-      return; // No parent
-    }
-
-    const parent = await ctx.db.get(context.parentId);
-
-    // Check if all siblings are completed
-    const siblings = await Promise.all(
-      parent.childIds.map((id) => ctx.db.get(id)),
-    );
-
-    const allComplete = siblings.every((s) => s.status === "completed");
-
-    if (allComplete && parent.status !== "completed") {
-      // Complete parent
-      await ctx.runMutation("contexts:updateStatus", {
-        contextId: parent._id,
-        newStatus: "completed",
-      });
-
-      // Recursively check grandparent
-      await ctx.runMutation("contexts:checkAndCompleteParent", {
-        contextId: parent._id,
-      });
-    }
+    // Implementation planned for future release
   },
 });
 ```
@@ -378,42 +279,26 @@ export const checkAndCompleteParent = mutation({
 
 ### Data Inheritance
 
+<Callout type="info">Automatic inherited data merging is not currently implemented. You can manually traverse the chain using `getChain()` to access parent data. This feature is planned for a future release.</Callout>
+
 ```typescript
-// Children can access parent data
+// Planned: Children can access parent data automatically
+// This function does not exist in the current implementation
 export const getWithInheritedData = query({
   args: { contextId: v.id("contexts") },
   handler: async (ctx, args) => {
-    const current = await ctx.db.get(args.contextId);
-
-    // Collect data from entire chain
-    const inheritedData = {};
-
-    // Walk up to root
-    let node = current;
-    const chain = [];
-
-    while (node) {
-      chain.unshift(node); // Add to front
-      node = node.parentId ? await ctx.db.get(node.parentId) : null;
-    }
-
-    // Merge data (root -> parent -> current)
-    for (const context of chain) {
-      Object.assign(inheritedData, context.data);
-    }
-
-    return {
-      context: current,
-      inheritedData, // All data from root down
-      chain,
-    };
+    // Implementation planned for future release
   },
 });
 
-// Usage
-const { context, inheritedData } = await cortex.contexts.get(childContextId, {
-  includeInheritedData: true,
-});
+// Current implementation: Manually traverse chain
+const chain = await cortex.contexts.getChain(childContextId);
+
+// Manually merge data from chain
+const inheritedData = {};
+for (const context of [chain.root, ...chain.ancestors, chain.current]) {
+  Object.assign(inheritedData, context.data || {});
+}
 
 console.log(inheritedData);
 // {
@@ -426,36 +311,21 @@ console.log(inheritedData);
 
 ### Participant Propagation
 
+<Callout type="info">Automatic participant propagation up the chain is not currently implemented. Use `addParticipant()` to add participants to individual contexts. Chain-wide propagation is planned for a future release.</Callout>
+
 ```typescript
-// Add participant to context and all ancestors
+// Current implementation: Add participant to single context
+await cortex.contexts.addParticipant(contextId, "legal-space");
+
+// Planned: Add participant to context and all ancestors
+// This function does not exist in the current implementation
 export const addParticipantToChain = mutation({
   args: {
     contextId: v.id("contexts"),
     memorySpaceId: v.string(),
   },
   handler: async (ctx, args) => {
-    const context = await ctx.db.get(args.contextId);
-
-    // Add to current
-    if (!context.participants.includes(args.agentId)) {
-      await ctx.db.patch(args.contextId, {
-        participants: [...context.participants, args.agentId],
-      });
-    }
-
-    // Propagate up to root
-    let node = context;
-    while (node.parentId) {
-      const parent = await ctx.db.get(node.parentId);
-
-      if (!parent.participants.includes(args.agentId)) {
-        await ctx.db.patch(parent._id, {
-          participants: [...parent.participants, args.agentId],
-        });
-      }
-
-      node = parent;
-    }
+    // Implementation planned for future release
   },
 });
 ```
@@ -466,78 +336,37 @@ export const addParticipantToChain = mutation({
 
 ### Contexts Reference Conversations
 
+<Callout type="info">There is no separate `createFromConversation` function. Use the standard `create()` method with `conversationRef` parameter.</Callout>
+
 ```typescript
-// Create context from user conversation
-export const createFromConversation = mutation({
-  args: {
-    purpose: v.string(),
-    memorySpaceId: v.string(),
-    conversationId: v.id("conversations"),
-    messageIds: v.array(v.string()),
-    userId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const contextId = await ctx.db.insert("contexts", {
-      purpose: args.purpose,
-      memorySpaceId: args.agentId,
-      userId: args.userId,
-
-      // Link to conversation
-      conversationRef: {
-        conversationId: args.conversationId,
-        messageIds: args.messageIds,
-      },
-
-      rootId: null, // Will be set to self
-      depth: 0,
-      childIds: [],
-      participants: [args.agentId],
-      data: {},
-      status: "active",
-      version: 1,
-      previousVersions: [],
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-
-    // Set rootId to self
-    await ctx.db.patch(contextId, { rootId: contextId });
-
-    return await ctx.db.get(contextId);
+// Current implementation: Create context with conversation reference
+const context = await cortex.contexts.create({
+  purpose: "Process customer refund",
+  memorySpaceId: "supervisor-space",
+  userId: "user-123",
+  conversationRef: {
+    conversationId: "conv-456",
+    messageIds: ["msg-089"],
   },
 });
 ```
 
 ### Retrieve Original Conversation
 
+<Callout type="info">Use `get()` with `includeConversation: true` option to retrieve context with conversation data.</Callout>
+
 ```typescript
-// Get context with conversation
-export const getWithConversation = query({
-  args: { contextId: v.id("contexts") },
-  handler: async (ctx, args) => {
-    const context = await ctx.db.get(args.contextId);
-
-    if (!context.conversationRef) {
-      return { context, conversation: null };
-    }
-
-    // Fetch conversation
-    const conversation = await ctx.db.get(
-      context.conversationRef.conversationId,
-    );
-
-    // Get specific trigger messages
-    const triggerMessages = conversation.messages.filter((m) =>
-      context.conversationRef.messageIds.includes(m.id),
-    );
-
-    return {
-      context,
-      conversation,
-      triggerMessages,
-    };
-  },
+// Current implementation: Get context with conversation
+const result = await cortex.contexts.get(contextId, {
+  includeChain: true,
+  includeConversation: true,
 });
+
+// Result includes conversation and triggerMessages if conversationRef exists
+if (result.conversation) {
+  console.log(result.conversation);
+  console.log(result.triggerMessages);
+}
 ```
 
 ---
@@ -546,78 +375,52 @@ export const getWithConversation = query({
 
 ### Linking Memories to Contexts
 
+<Callout type="info">There is no separate `storeWithContext` function. Use the standard memory storage API and include `contextId` in metadata.</Callout>
+
 ```typescript
-// Store memory with context reference
-export const storeWithContext = mutation({
-  args: {
-    memorySpaceId: v.string(),
-    content: v.string(),
-    contextId: v.id("contexts"),
-    metadata: v.any(),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db.get(args.contextId);
+// Current implementation: Store memory with context reference
+const context = await cortex.contexts.get(contextId);
 
-    // Store memory with contextId in metadata
-    const memoryId = await ctx.db.insert("memories", {
-      memorySpaceId: args.agentId,
-      content: args.content,
-      contentType: "raw",
-      source: { type: "tool", timestamp: Date.now() },
-
-      // Inherit conversationRef from context
-      conversationRef: context.conversationRef,
-
-      metadata: {
-        ...args.metadata,
-        contextId: context._id, // ← Link to context
-        workflowPurpose: context.purpose,
-      },
-
-      version: 1,
-      previousVersions: [],
-      accessCount: 0,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-
-    return await ctx.db.get(memoryId);
+const memory = await cortex.memories.store({
+  memorySpaceId: "finance-space",
+  content: "Refund approved for $500",
+  metadata: {
+    contextId: context._id, // ← Link to context
+    workflowPurpose: context.purpose,
   },
 });
 ```
 
 ### Finding Memories by Context
 
+<Callout type="info">There is no `getMemoriesForWorkflow` function. Query memories by filtering on `metadata.contextId` manually.</Callout>
+
 ```typescript
-// Get all memories for a workflow
-export const getMemoriesForWorkflow = query({
-  args: { rootId: v.id("contexts") },
-  handler: async (ctx, args) => {
-    // Get all contexts in workflow
-    const contexts = await ctx.db
-      .query("contexts")
-      .withIndex("by_rootId", (q) => q.eq("rootId", args.rootId))
-      .collect();
+// Current implementation: Find memories for a workflow
+// Get all contexts in workflow
+const chain = await cortex.contexts.getChain(rootContextId);
+const allContextIds = [
+  chain.root._id,
+  ...chain.descendants.map((c) => c._id),
+];
 
-    // Get all agents in workflow
-    const allAgents = new Set(contexts.flatMap((c) => c.participants));
+// Query memories from all memory spaces involved
+const allMemories = [];
+for (const context of [chain.root, ...chain.descendants]) {
+  const memories = await cortex.memories.list({
+    memorySpaceId: context.memorySpaceId,
+  });
+  
+  // Filter memories linked to this workflow
+  const workflowMemories = memories.filter(
+    (m) => m.metadata?.contextId && allContextIds.includes(m.metadata.contextId)
+  );
+  
+  allMemories.push(...workflowMemories);
+}
 
-    // Get memories from all agents with this contextId
-    const allMemories = [];
-
-    for (const agentId of allAgents) {
-      const memories = await ctx.db
-        .query("memories")
-        .withIndex("by_agent", (q) => q.eq("agentId", agentId))
-        .filter((q) => q.eq(q.field("metadata.contextId"), args.rootId))
-        .collect();
-
-      allMemories.push(...memories);
-    }
-
-    return allMemories.sort((a, b) => a.createdAt - b.createdAt);
-  },
-});
+// Sort by creation time
+allMemories.sort((a, b) => a.createdAt - b.createdAt);
 ```
 
 ---
@@ -644,19 +447,14 @@ async function createSequentialWorkflow(purpose: string, steps: any[]) {
   // Create steps as siblings (all same parent)
   const stepIds = [];
   for (const step of steps) {
-    const stepId = await ctx.db.insert("contexts", {
+    const stepContext = await cortex.contexts.create({
       purpose: step.purpose,
-      memorySpaceId: step.agentId,
-      parentId: root,
-      rootId: root,
-      depth: 1,
-      childIds: [],
-      status: "active",
+      memorySpaceId: step.memorySpaceId,
+      parentId: root._id,
       data: { stepNumber: stepIds.length + 1 },
-      ...
     });
 
-    stepIds.push(stepId);
+    stepIds.push(stepContext._id);
   }
 
   // Update root with all children
@@ -672,25 +470,25 @@ async function createSequentialWorkflow(purpose: string, steps: any[]) {
 // Request -> Manager -> Finance (nested)
 async function createApprovalChain(request: any) {
   // Level 1: Request
-  const requestCtx = await createContext({
+  const requestCtx = await cortex.contexts.create({
     purpose: "Expense approval request",
-    memorySpaceId: "employee-agent",
+    memorySpaceId: "employee-space",
     data: { amount: request.amount },
   });
 
   // Level 2: Manager review
-  const managerCtx = await createContext({
+  const managerCtx = await cortex.contexts.create({
     purpose: "Manager review",
-    memorySpaceId: "manager-agent",
-    parentId: requestCtx, // ← Nested
+    memorySpaceId: "manager-space",
+    parentId: requestCtx._id, // ← Nested
     data: { approved: null }, // To be filled
   });
 
   // Level 3: Finance approval
-  const financeCtx = await createContext({
+  const financeCtx = await cortex.contexts.create({
     purpose: "Finance approval",
-    memorySpaceId: "finance-agent",
-    parentId: managerCtx, // ← Nested deeper
+    memorySpaceId: "finance-space",
+    parentId: managerCtx._id, // ← Nested deeper
     data: { allocated: null },
   });
 
@@ -706,15 +504,18 @@ async function createApprovalChain(request: any) {
 ```typescript
 // Fork: One parent, multiple parallel children
 async function createParallelWorkflow(purpose: string, tasks: any[]) {
-  const root = await createContext({ purpose, depth: 0 });
+  const root = await cortex.contexts.create({
+    purpose,
+    memorySpaceId: "supervisor-space",
+  });
 
   // Create all children in parallel
   const children = await Promise.all(
     tasks.map((task) =>
-      createContext({
+      cortex.contexts.create({
         purpose: task.purpose,
-        memorySpaceId: task.agentId,
-        parentId: root,
+        memorySpaceId: task.memorySpaceId,
+        parentId: root._id,
         data: task.data,
       }),
     ),
@@ -731,28 +532,15 @@ async function createParallelWorkflow(purpose: string, tasks: any[]) {
 ### Finding Contexts by Status
 
 ```typescript
-// Get all active workflows for an agent
-export const getActiveWorkflows = query({
-  args: { memorySpaceId: v.string() },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("contexts")
-      .withIndex("by_agent_status", (q) =>
-        q.eq("agentId", args.agentId).eq("status", "active"),
-      )
-      .collect();
-  },
+// Current implementation: Get all active workflows for a memory space
+const activeWorkflows = await cortex.contexts.list({
+  memorySpaceId: "finance-space",
+  status: "active",
 });
 
 // Get blocked workflows (needs attention)
-export const getBlockedWorkflows = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx.db
-      .query("contexts")
-      .withIndex("by_status", (q) => q.eq("status", "blocked"))
-      .collect();
-  },
+const blockedWorkflows = await cortex.contexts.list({
+  status: "blocked",
 });
 ```
 
@@ -781,18 +569,8 @@ export const getLeaves = query({
 ### Finding by Conversation
 
 ```typescript
-// Get all workflows from a conversation
-export const getByConversation = query({
-  args: { conversationId: v.id("conversations") },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("contexts")
-      .withIndex("by_conversationRef", (q) =>
-        q.eq("conversationRef.conversationId", args.conversationId),
-      )
-      .collect();
-  },
-});
+// Current implementation: Get all workflows from a conversation
+const contexts = await cortex.contexts.getByConversation("conv-456");
 ```
 
 ---
@@ -855,13 +633,13 @@ export const cleanupOrphans = mutation({
 
 ```typescript
 // Create context for user
-const context = await createContext({
+const context = await cortex.contexts.create({
   purpose: "Handle user request",
-  memorySpaceId: "support-agent",
+  memorySpaceId: "support-space",
   userId: "user-123", // ← GDPR-enabled
 });
 
-// GDPR cascade (Cloud Mode)
+// GDPR cascade (planned for Cloud Mode)
 await cortex.users.delete("user-123", { cascade: true });
 
 // Contexts with userId are deleted
@@ -910,7 +688,7 @@ async function deleteWithDescendants(ctx: any, contextId: string) {
 
 **Required indexes:**
 
-- `by_agent` - Find agent's contexts
+- `by_memorySpace` - Find memory space's contexts
 - `by_userId` - GDPR cascade
 - `by_status` - Filter by status
 - `by_parentId` - Get children
@@ -918,53 +696,37 @@ async function deleteWithDescendants(ctx: any, contextId: string) {
 
 **Compound indexes:**
 
-- `by_agent_status` - Agent's active workflows (common query)
-- `by_conversationRef` - Find workflows from conversation
+- `by_memorySpace_status` - Memory space's active workflows (common query)
 
 ### Depth Limits
 
+<Callout type="info">Depth limit enforcement is not currently implemented in the SDK. This validation is planned for a future release.</Callout>
+
 ```typescript
-// Enforce maximum depth
+// Planned: Enforce maximum depth
 const MAX_DEPTH = 10;
 
-export const create = mutation({
-  handler: async (ctx, args) => {
-    if (args.parentId) {
-      const parent = await ctx.db.get(args.parentId);
-
-      if (parent.depth >= MAX_DEPTH) {
-        throw new Error("Maximum context depth exceeded");
-      }
-    }
-
-    // Proceed with creation...
-  },
-});
+// Current implementation: No depth limit enforced
+// You can manually check depth before creating child contexts
+const parent = await cortex.contexts.get(parentId);
+if (parent.depth >= MAX_DEPTH) {
+  throw new Error("Maximum context depth exceeded");
+}
 ```
 
 ### Lazy Loading Children
 
 ```typescript
-// Don't load all descendants by default
-export const get = query({
-  args: {
-    contextId: v.id("contexts"),
-    includeChildren: v.optional(v.boolean()),
-  },
-  handler: async (ctx, args) => {
-    const context = await ctx.db.get(args.contextId);
+// Current implementation: Use getChain() for full chain, or getChildren() for children
+// Get single context (lightweight)
+const context = await cortex.contexts.get(contextId);
 
-    if (!args.includeChildren) {
-      return context;
-    }
+// Get full chain (includes children, ancestors, descendants)
+const chain = await cortex.contexts.getChain(contextId);
 
-    // Load children only if requested
-    const children = await Promise.all(
-      context.childIds.map((id) => ctx.db.get(id)),
-    );
-
-    return { ...context, children };
-  },
+// Get just children (with optional recursion)
+const children = await cortex.contexts.getChildren(contextId, {
+  recursive: false, // Set to true for all descendants
 });
 ```
 
@@ -972,11 +734,11 @@ export const get = query({
 
 ## Next Steps
 
-- **[Agent Registry](./agent-registry)** - Optional registry architecture
-- **[Performance](./performance)** - Optimization techniques
-- **[Security & Privacy](./security-privacy)** - Data protection
-- **[Context Operations API](../03-api-reference/05-context-operations)** - API usage
+- **[Agent Registry](/architecture/agent-registry)** - Optional registry architecture
+- **[Performance](/architecture/performance)** - Optimization techniques
+- **[Security & Privacy](/architecture/security-privacy)** - Data protection
+- **[Context Operations API](/api-reference/context-operations)** - API usage
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

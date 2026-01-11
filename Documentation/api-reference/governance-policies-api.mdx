@@ -1,6 +1,15 @@
+---
+id: governance-policies-api
+title: Governance Policies API
+sidebar_position: 7
+description: Complete API reference for configuring retention, purging, and governance rules across all Cortex layers.
+---
+
 # Governance Policies API
 
-> **Last Updated**: 2026-01-01
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
 
 Complete API reference for configuring retention, purging, and governance rules across all Cortex layers.
 
@@ -378,7 +387,9 @@ await cortex.governance.setPolicy({
 });
 ```
 
-> **Note:** FINRA regulations require retention even when users request deletion. The `purgeOnUserRequest: false` setting ensures regulatory compliance takes precedence over deletion requests.
+<Callout type="warning">
+FINRA regulations require retention even when users request deletion. The `purgeOnUserRequest: false` setting ensures regulatory compliance takes precedence over deletion requests.
+</Callout>
 
 ---
 
@@ -457,7 +468,7 @@ await cortex.governance.setAgentOverride("banking-memory-space", {
 
 ### Session Policy Integration
 
-Session policies defined here configure the behavior enforced by the [Sessions API](./sessions-operations). The Governance API defines the _rules_, while the Sessions API _executes_ them.
+Session policies defined here configure the behavior enforced by the [Sessions API](/api-reference/sessions-operations). The Governance API defines the _rules_, while the Sessions API _executes_ them.
 
 ```typescript
 // Governance defines the policy
@@ -474,7 +485,9 @@ await cortex.governance.setPolicy({
 // See Sessions API documentation for expireIdle(), cleanup(), etc.
 ```
 
-> **Note:** Session operations like `expireIdle()` are part of the Sessions API, not the Governance API. The governance policy configures timeouts and limits that the Sessions API enforces.
+<Callout type="info">
+Session operations like `expireIdle()` are part of the Sessions API, not the Governance API. The governance policy configures timeouts and limits that the Sessions API enforces.
+</Callout>
 
 ---
 
@@ -482,7 +495,9 @@ await cortex.governance.setPolicy({
 
 ### Automatic Enforcement
 
-> ⚠️ **PLANNED FEATURE**: Automatic policy enforcement is on the roadmap but not yet fully implemented. Currently, use `enforce()` for manual policy execution. Automatic hooks into storage operations are planned for a future release.
+<Callout type="warning">
+**PLANNED FEATURE**: Automatic policy enforcement is on the roadmap but not yet fully implemented. Currently, use `enforce()` for manual policy execution. Automatic hooks into storage operations are planned for a future release.
+</Callout>
 
 When fully implemented, policies will be enforced automatically on storage operations:
 
@@ -682,21 +697,23 @@ class GovernanceValidationError extends Error {
 
 ### Error Codes
 
-| Code                            | Description                                                  |
-| ------------------------------- | ------------------------------------------------------------ |
-| `MISSING_POLICY`                | Policy object is required but not provided                   |
-| `MISSING_REQUIRED_FIELD`        | Required field missing (e.g., `conversations`, `compliance`) |
-| `MISSING_SCOPE`                 | Scope (organizationId or memorySpaceId) is required          |
-| `INVALID_SCOPE`                 | Scope provided but invalid (empty string, etc.)              |
-| `INVALID_PERIOD_FORMAT`         | Period string doesn't match format (e.g., `7d`, `1y`)        |
-| `INVALID_IMPORTANCE_RANGE`      | Importance range invalid (not 0-100, min >= max)             |
-| `OVERLAPPING_IMPORTANCE_RANGES` | Two importance ranges overlap                                |
-| `INVALID_VERSIONS`              | Version count invalid (must be >= -1)                        |
-| `INVALID_LAYERS`                | Invalid layer specified for enforcement                      |
-| `INVALID_RULES`                 | Invalid rule specified for enforcement                       |
-| `INVALID_DATE_RANGE`            | Start date must be before end date                           |
-| `INVALID_PERIOD`                | Stats period invalid (must be `7d`, `30d`, `90d`, `1y`)      |
-| `INVALID_COMPLIANCE_MODE`       | Invalid compliance template name                             |
+<APITable
+  parameters={[
+    { name: "MISSING_POLICY", type: "error", required: false, description: "Policy object is required but not provided" },
+    { name: "MISSING_REQUIRED_FIELD", type: "error", required: false, description: "Required field missing (e.g., `conversations`, `compliance`)" },
+    { name: "MISSING_SCOPE", type: "error", required: false, description: "Scope (organizationId or memorySpaceId) is required" },
+    { name: "INVALID_SCOPE", type: "error", required: false, description: "Scope provided but invalid (empty string, etc.)" },
+    { name: "INVALID_PERIOD_FORMAT", type: "error", required: false, description: "Period string doesn't match format (e.g., `7d`, `1y`)" },
+    { name: "INVALID_IMPORTANCE_RANGE", type: "error", required: false, description: "Importance range invalid (not 0-100, min >= max)" },
+    { name: "OVERLAPPING_IMPORTANCE_RANGES", type: "error", required: false, description: "Two importance ranges overlap" },
+    { name: "INVALID_VERSIONS", type: "error", required: false, description: "Version count invalid (must be >= -1)" },
+    { name: "INVALID_LAYERS", type: "error", required: false, description: "Invalid layer specified for enforcement" },
+    { name: "INVALID_RULES", type: "error", required: false, description: "Invalid rule specified for enforcement" },
+    { name: "INVALID_DATE_RANGE", type: "error", required: false, description: "Start date must be before end date" },
+    { name: "INVALID_PERIOD", type: "error", required: false, description: "Stats period invalid (must be `7d`, `30d`, `90d`, `1y`)" },
+    { name: "INVALID_COMPLIANCE_MODE", type: "error", required: false, description: "Invalid compliance template name" },
+  ]}
+/>
 
 ### Example Usage
 
@@ -808,13 +825,13 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 
 **Governance Policies provide:**
 
-- ✅ Centralized retention rules
-- ✅ Per-layer configuration
-- ✅ Compliance templates (GDPR, HIPAA, SOC2, FINRA)
-- ✅ Manual enforcement via `enforce()`
-- ⏳ Automatic enforcement _(planned)_
-- ✅ Cost optimization via `simulate()`
-- ✅ Audit trail via `getComplianceReport()`
+- Centralized retention rules
+- Per-layer configuration
+- Compliance templates (GDPR, HIPAA, SOC2, FINRA)
+- Manual enforcement via `enforce()`
+- Automatic enforcement _(planned)_
+- Cost optimization via `simulate()`
+- Audit trail via `getComplianceReport()`
 
 **Configuration Hierarchy:**
 
@@ -834,11 +851,29 @@ console.log(`- Cost savings: $${stats.costSavings}`);
 
 ## Next Steps
 
-- **[Immutable Store API](./immutable-store-api)** - Versioned shared data
-- **[Mutable Store API](./mutable-store-api)** - Live shared data
-- **[Memory Operations API](./memory-operations)** - Vector layer
-- **[Conversation Operations API](./conversation-operations)** - Private conversations
+<QuickNav>
+  <QuickNavItem
+    title="Immutable Store API"
+    description="Versioned shared data"
+    href="/api-reference/immutable-store-api"
+  />
+  <QuickNavItem
+    title="Mutable Store API"
+    description="Live shared data"
+    href="/api-reference/mutable-store-api"
+  />
+  <QuickNavItem
+    title="Memory Operations API"
+    description="Vector layer"
+    href="/api-reference/memory-operations"
+  />
+  <QuickNavItem
+    title="Conversation Operations API"
+    description="Private conversations"
+    href="/api-reference/conversation-operations"
+  />
+</QuickNav>
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

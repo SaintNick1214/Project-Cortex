@@ -1,5 +1,9 @@
 # Orchestration Observer API
 
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
 Real-time monitoring of the memory orchestration pipeline for building responsive UIs.
 
 ## Overview
@@ -260,7 +264,7 @@ function MemoryProgress() {
           {event.latencyMs && ` (${event.latencyMs}ms)`}
         </div>
       ))}
-      {isComplete && <div>✓ Memory saved!</div>}
+      {isComplete && <div>Memory saved!</div>}
     </div>
   );
 }

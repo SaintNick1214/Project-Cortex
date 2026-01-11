@@ -97,13 +97,14 @@ export const memoryAgent = new ToolLoopAgent({
   // │ - Facts (extracted knowledge)                                  │
   // │ - Graph relationships (if configured)                          │
   // └─────────────────────────────────────────────────────────────────┘
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   prepareCall: createMemoryPrepareCall({
     convexUrl: process.env.CONVEX_URL!,
     maxMemories: 20, // Max items to inject from recall
     includeFacts: true, // Include Layer 3 facts
     includeVector: true, // Include Layer 2 vector memories
     includeGraph: true, // Expand through graph relationships
-  }),
+  }) as any, // Type assertion needed due to AI SDK v6 type evolution
 
   // Default to 5 steps (sufficient for most chat interactions)
   stopWhen: stepCountIs(5),

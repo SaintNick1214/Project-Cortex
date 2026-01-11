@@ -1,0 +1,442 @@
+---
+id: a2a-communication-enhancements
+title: Agent-to-Agent Communication
+sidebar_position: 6
+description: Advanced A2A features including real-time subscriptions and smart routing (Planned)
+---
+
+# Agent-to-Agent Communication Enhancements
+
+<Callout type="warning" title="Planned Features">
+  These A2A communication enhancements are planned for future releases. Basic A2A messaging is fully implemented—see the [A2A Communication API](/api-reference/a2a-communication) for current capabilities.
+</Callout>
+
+<Callout type="info" title="What is A2A?">
+  Agent-to-Agent (A2A) communication enables agents to send structured messages to each other, request actions, broadcast notifications, and collaborate on tasks. Current features include `send()`, `request()`, `broadcast()`, and message retrieval.
+</Callout>
+
+---
+
+## Current Capabilities
+
+A2A communication already supports:
+- Direct messaging with `send()`
+- Request/response patterns with `request()`
+- Broadcasting to multiple agents with `broadcast()`
+- Message retrieval with memory search
+- Metadata and attachments
+- Message status tracking (pending, delivered, read)
+
+---
+
+## Planned Enhancements
+
+### 1. Real-Time Subscriptions
+
+Subscribe to incoming messages with real-time notifications.
+
+**Current Behavior:**
+```typescript
+// Manual polling required
+setInterval(async () => {
+  const messages = await cortex.memory.search(spaceId, "*", {
+    filters: {
+      "source.type": "a2a",
+      "source.recipient": "agent-123",
+      unread: true,
+    },
+  });
+  
+  for (const msg of messages) {
+    console.log(`New message from ${msg.source.sender}`);
+  }
+}, 5000); // Poll every 5 seconds
+```
+
+**Planned Behavior:**
+```typescript
+// Real-time subscriptions
+cortex.a2a.subscribe("agent-123", (message) => {
+  console.log(`New message from ${message.from}: ${message.content}`);
+});
+
+// Automatic real-time delivery
+await cortex.a2a.send({
+  from: "agent-456",
+  to: "agent-123",
+  content: "Task completed!",
+});
+// Subscriber callback invoked immediately
+```
+
+**Features:**
+- WebSocket-based real-time notifications
+- Automatic reconnection on disconnect
+- Message delivery guarantees
+- Subscription filters (e.g., only high-priority messages)
+
+**Requirements:**
+- Managed pub/sub infrastructure (Cloud Mode)
+- WebSocket connection from client to Cortex Cloud
+
+---
+
+### 2. Convenience Inbox Methods
+
+Dedicated methods for inbox and sent message management.
+
+**Current Behavior:**
+```typescript
+// Manual search required
+const inbox = await cortex.memory.search(spaceId, "*", {
+  filters: {
+    "source.type": "a2a",
+    "source.recipient": "agent-123",
+  },
+  sortBy: "createdAt",
+  sortOrder: "desc",
+});
+
+const sent = await cortex.memory.search(spaceId, "*", {
+  filters: {
+    "source.type": "a2a",
+    "source.sender": "agent-123",
+  },
+  sortBy: "createdAt",
+  sortOrder: "desc",
+});
+```
+
+**Planned Behavior:**
+```typescript
+// Dedicated inbox methods
+const inbox = await cortex.a2a.getInbox("agent-123", {
+  status: "unread",
+  limit: 20,
+});
+
+const sent = await cortex.a2a.getSent("agent-123", {
+  limit: 20,
+});
+
+// Mark messages as read
+await cortex.a2a.markRead(messageIds);
+```
+
+**Methods:**
+- `getInbox(agentId, options)` - Get inbox messages
+- `getSent(agentId, options)` - Get sent messages
+- `markRead(messageIds)` - Mark messages as read
+- `markUnread(messageIds)` - Mark messages as unread
+- `archive(messageIds)` - Archive messages
+- `delete(messageIds)` - Delete messages
+
+---
+
+### 3. Cloud Mode Managed Pub/Sub
+
+Automatic pub/sub infrastructure without managing Redis/RabbitMQ/NATS.
+
+**Current Behavior:**
+```typescript
+// Manual pub/sub setup required for real-time features
+// 1. Deploy Redis/RabbitMQ/NATS
+// 2. Configure connection in Convex
+// 3. Implement subscription logic
+// 4. Handle reconnection, dead-letter queues, etc.
+```
+
+**Planned Behavior (Cloud Mode):**
+```typescript
+// Automatic pub/sub infrastructure
+const cortex = new Cortex({
+  mode: "cloud",
+  apiKey: "cortex_sk_...",
+  pubsub: "managed", // Cloud Mode handles infrastructure
+});
+
+// Subscriptions work automatically
+cortex.a2a.subscribe("agent-123", (message) => {
+  console.log(`Message: ${message.content}`);
+});
+```
+
+**Features:**
+- Managed Redis/NATS infrastructure
+- Automatic scaling based on load
+- Dead-letter queue for failed deliveries
+- Retry logic with exponential backoff
+- Monitoring and alerting
+
+---
+
+### 4. Automated Agent Execution
+
+Automatically execute agent code when messages are received (webhooks or serverless).
+
+**Current Behavior:**
+```typescript
+// Agent must poll for messages or subscribe manually
+// No automatic execution on message receipt
+```
+
+**Planned Behavior (Cloud Mode):**
+```typescript
+// Register webhook for automatic execution
+await cortex.a2a.registerWebhook("agent-123", {
+  url: "https://my-app.com/api/agent-123/inbox",
+  events: ["message.received", "message.urgent"],
+});
+
+// Or serverless function
+await cortex.a2a.registerFunction("agent-123", {
+  handler: async (message) => {
+    // Automatic execution on message receipt
+    console.log(`Processing: ${message.content}`);
+    return { status: "processed" };
+  },
+});
+```
+
+**Features:**
+- Webhook delivery with retry logic
+- Serverless function execution (AWS Lambda, Vercel Functions)
+- Event filtering (only urgent messages, specific senders, etc.)
+- Execution logs and monitoring
+
+---
+
+### 5. A2A Analytics Dashboard
+
+Visual analytics for agent communication patterns.
+
+**Communication Frequency:**
+```typescript
+const analytics = await cortex.analytics.getA2ACommunication("agent-123", {
+  period: "last-30-days",
+});
+
+console.log(analytics);
+// {
+//   messagesSent: 450,
+//   messagesReceived: 380,
+//   requestsSent: 120,
+//   requestsReceived: 95,
+//   broadcastsSent: 25,
+//   avgResponseTime: "2.3s",
+//   mostFrequentPartners: [
+//     { agentId: "agent-456", messageCount: 95 },
+//     { agentId: "agent-789", messageCount: 67 },
+//   ],
+// }
+```
+
+**Response Times:**
+- Average response time to requests
+- 95th percentile response time
+- Response time trends over time
+
+**Bottleneck Identification:**
+- Agents with high pending request counts
+- Agents with slow response times
+- Failed delivery analysis
+
+**Collaboration Graphs:**
+- Visual graph of agent-to-agent communication
+- Message flow diagrams
+- Identify communication hubs and isolated agents
+
+**Topic Clustering:**
+- Automatic clustering of message topics
+- Identify common collaboration themes
+- Track topic trends over time
+
+---
+
+### 6. Smart Routing
+
+AI-powered agent selection and load balancing.
+
+**AI-Suggested Agent Selection:**
+```typescript
+// Suggest best agent for a task
+const suggestion = await cortex.a2a.suggestAgent({
+  task: "Summarize a research paper",
+  requiredCapabilities: ["text-processing", "summarization"],
+});
+
+console.log(suggestion);
+// {
+//   agentId: "agent-summarizer-001",
+//   confidence: 0.92,
+//   reason: "Highest success rate for summarization tasks (95%)",
+// }
+```
+
+**Learning from Patterns:**
+- Track successful vs. failed request outcomes
+- Learn which agents are best for specific tasks
+- Automatically improve suggestions over time
+
+**Automatic Load Balancing:**
+```typescript
+// Broadcast with automatic load balancing
+await cortex.a2a.broadcast({
+  from: "agent-coordinator",
+  to: ["agent-worker-*"], // Wildcard: all worker agents
+  content: "Process batch job",
+  routingStrategy: "least-loaded", // Route to least-busy agent
+});
+```
+
+**Routing Strategies:**
+- `round-robin` - Distribute evenly
+- `least-loaded` - Route to agent with fewest pending messages
+- `fastest-response` - Route to agent with best response time
+- `capability-match` - Route based on agent capabilities
+
+---
+
+### 7. Automated Summarization
+
+Daily/weekly summaries of agent communication.
+
+**Daily Summaries:**
+```typescript
+// Automatic daily summary
+const summary = await cortex.a2a.getDailySummary("agent-123", {
+  date: new Date("2026-01-08"),
+});
+
+console.log(summary);
+// {
+//   date: "2026-01-08",
+//   messagesSent: 45,
+//   messagesReceived: 38,
+//   topTopics: ["task-assignment", "status-update", "error-report"],
+//   actionItems: [
+//     "Follow up with agent-456 on pending request",
+//     "Review error reports from agent-789",
+//   ],
+//   notableTrends: "20% increase in error reports compared to yesterday",
+// }
+```
+
+**Topic Extraction:**
+- Automatic extraction of message topics
+- Clustering of similar messages
+- Trend analysis (increasing/decreasing topics)
+
+**Action Item Detection:**
+- Identify pending requests
+- Flag overdue responses
+- Highlight urgent messages
+
+---
+
+## Implementation Priority
+
+These enhancements will be implemented in phases:
+
+**High Priority:**
+1. Convenience inbox methods (`getInbox()`, `getSent()`, `markRead()`) - Improves developer experience
+2. Real-time subscriptions - Enables true event-driven architectures
+3. Cloud Mode managed pub/sub - Eliminates infrastructure complexity
+
+**Medium Priority:**
+4. Automated agent execution (webhooks) - Simplifies agent coordination
+5. Smart routing - Improves system efficiency
+
+**Low Priority (Cloud Mode):**
+6. A2A Analytics Dashboard - Enterprise insights
+7. Automated summarization - Convenience feature
+
+---
+
+## Workarounds (Current Implementation)
+
+Until these features are available, use these patterns:
+
+### Manual Inbox Retrieval
+
+```typescript
+async function getInbox(agentId: string) {
+  return await cortex.memory.search(spaceId, "*", {
+    filters: {
+      "source.type": "a2a",
+      "source.recipient": agentId,
+    },
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  });
+}
+
+async function markRead(messageIds: string[]) {
+  for (const id of messageIds) {
+    await cortex.memory.update(spaceId, id, {
+      metadata: { ...memory.metadata, status: "read" },
+    });
+  }
+}
+```
+
+### Manual Polling
+
+```typescript
+async function pollInbox(agentId: string, interval: number = 5000) {
+  setInterval(async () => {
+    const unread = await cortex.memory.search(spaceId, "*", {
+      filters: {
+        "source.type": "a2a",
+        "source.recipient": agentId,
+        "metadata.status": "unread",
+      },
+    });
+    
+    for (const message of unread) {
+      console.log(`New message: ${message.content}`);
+    }
+  }, interval);
+}
+```
+
+### Manual Analytics
+
+```typescript
+async function getMessageStats(agentId: string) {
+  const sent = await cortex.memory.search(spaceId, "*", {
+    filters: { "source.type": "a2a", "source.sender": agentId },
+  });
+  
+  const received = await cortex.memory.search(spaceId, "*", {
+    filters: { "source.type": "a2a", "source.recipient": agentId },
+  });
+  
+  return {
+    sent: sent.length,
+    received: received.length,
+  };
+}
+```
+
+---
+
+## Related Features
+
+<QuickNav>
+  <QuickNavItem 
+    title="A2A Communication API" 
+    description="Current A2A capabilities" 
+    href="/api-reference/a2a-communication" 
+  />
+  <QuickNavItem 
+    title="Cloud Mode" 
+    description="Managed infrastructure" 
+    href="/roadmap/cloud-mode" 
+  />
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Multi-agent collaboration" 
+    href="/core-features/hive-mode" 
+  />
+</QuickNav>

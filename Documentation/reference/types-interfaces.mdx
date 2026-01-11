@@ -1,7 +1,7 @@
 # Types & Interfaces Reference
 
-> **Last Updated**: January 1, 2026
-> **SDK Version**: 0.27.0
+> **Last Updated**: January 9, 2026
+> **SDK Version**: 0.29.0
 > **Source**: `src/types/index.ts`
 
 ## Overview
@@ -17,9 +17,8 @@ import type {
   Message,
   MemoryEntry,
   UserProfile,
-  Context,
   Session,
-  Agent,
+  RegisteredAgent,
 
   // Facts
   FactRecord,
@@ -65,44 +64,40 @@ import type {
 
 - [RememberParams](#rememberparams) - remember() parameters
 - [RememberResult](#rememberresult) - remember() result
-- [RememberStreamParams](#rememberstreamparams) - rememberStream() parameters
-- [RememberStreamResult](#rememberstreamresult) - rememberStream() result
+- [RememberStreamParams](/api-reference/memory-operations#rememberstream) - rememberStream() parameters
 - [RecallParams](#recallparams) - recall() parameters
 - [RecallResult](#recallresult) - recall() result
-- [ForgetOptions](#forgetoptions) - forget() options
+- [ForgetOptions](/api-reference/memory-operations#forget) - forget() options
 
 ### Filter Types
 
-- [ListConversationsFilter](#listconversationsfilter)
-- [ListMemoriesFilter](#listmemoriesfilter)
-- [ListFactsFilter](#listfactsfilter)
-- [SearchMemoriesOptions](#searchmemoriesoptions)
-- [SearchFactsOptions](#searchfactsoptions)
+- [ListConversationsFilter](/api-reference/conversation-operations#list)
+- [ListMemoriesFilter](/api-reference/memory-operations#list)
+- [ListFactsFilter](/api-reference/facts-operations#factslist)
+- [SearchFactsOptions](/api-reference/facts-operations#factssearch)
 
 ### A2A Communication
 
-- [A2ASendParams](#a2asendparams)
-- [A2AMessage](#a2amessage)
-- [A2ARequestParams](#a2arequestparams)
-- [A2AResponse](#a2aresponse)
-- [A2ABroadcastParams](#a2abroadcastparams)
+- [A2ASendParams](/api-reference/a2a-communication#send)
+- [A2AMessage](/api-reference/a2a-communication#send)
+- [A2ARequestParams](/api-reference/a2a-communication#request)
+- [A2AResponse](/api-reference/a2a-communication#request)
+- [A2ABroadcastParams](/api-reference/a2a-communication#broadcast)
 
 ### Governance & Policies
 
 - [GovernancePolicy](#governancepolicy)
 - [SessionPolicy](#sessionpolicy)
-- [ComplianceMode](#compliancemode)
 
 ### Graph Integration
 
-- [GraphSyncOption](#graphsyncoption)
-- [RecallParams (with graph)](#recallparams)
+- [Graph Sync Options](/advanced-topics/graph-integration#automatic-synchronization)
 
 ### Observer Pattern
 
 - [OrchestrationObserver](#orchestrationobserver)
 - [LayerEvent](#layerevent)
-- [OrchestrationSummary](#orchestrationsummary)
+- [OrchestrationSummary](/advanced-topics/orchestration-observer#orchestrationsummary)
 
 ### Resilience Types
 
@@ -117,6 +112,7 @@ import type {
 - [ContentType](#contenttype)
 - [FactType](#facttype)
 - [SkippableLayer](#skippablelayer)
+- [DeduplicationStrategy](#deduplicationstrategy)
 
 ---
 
@@ -150,8 +146,8 @@ interface Conversation {
 
 **Used in:**
 
-- [Conversation Operations API](../03-api-reference/03-conversation-operations)
-- [Conversation History](../02-core-features/06-conversation-history)
+- [Conversation Operations API](/api-reference/conversation-operations)
+- [Conversation History](/core-features/conversation-history)
 
 **Related types:**
 
@@ -176,7 +172,7 @@ interface Message {
 **Used in:**
 
 - [Conversation](#conversation)
-- [Conversation Operations API](../03-api-reference/03-conversation-operations)
+- [Conversation Operations API](/api-reference/conversation-operations)
 
 ---
 
@@ -223,15 +219,15 @@ interface MemoryEntry {
 
 **Used in:**
 
-- [Memory Operations API](../03-api-reference/02-memory-operations)
-- [Semantic Search](../02-core-features/02-semantic-search)
+- [Memory Operations API](/api-reference/memory-operations)
+- [Semantic Search](/core-features/semantic-search)
 
 **Related types:**
 
 - [ContentType](#contenttype)
 - [SourceType](#sourcetype)
-- [ConversationRef](#conversationref)
-- [FactsRef](#factsref)
+- `ConversationRef`
+- `FactsRef`
 
 ---
 
@@ -288,9 +284,9 @@ interface FactRecord {
 
 **Used in:**
 
-- [Facts Operations API](../03-api-reference/12-facts-operations)
-- [Fact Extraction](../02-core-features/08-fact-extraction)
-- [Fact Integration](../02-core-features/11-fact-integration)
+- [Facts Operations API](/api-reference/facts-operations)
+- [Fact Extraction](/core-features/fact-extraction)
+- [Fact Integration](/advanced-topics/fact-integration)
 
 ---
 
@@ -309,8 +305,8 @@ interface UserProfile {
 
 **Used in:**
 
-- [User Operations API](../03-api-reference/04-user-operations)
-- [User Profiles](../02-core-features/03-user-profiles)
+- [User Operations API](/api-reference/user-operations)
+- [User Profiles](/core-features/user-profiles)
 
 ---
 
@@ -341,11 +337,11 @@ interface ImmutableRecord {
 
 **Used in:**
 
-- [Immutable Store API](../03-api-reference/07-immutable-store-api)
+- [Immutable Store API](/api-reference/immutable-store-api)
 
 **Related types:**
 
-- [ImmutableVersion](#immutableversion)
+- [ImmutableVersion](/api-reference/immutable-store-api#getversion)
 
 ---
 
@@ -369,7 +365,7 @@ interface MutableRecord {
 
 **Used in:**
 
-- [Mutable Store API](../03-api-reference/08-mutable-store-api)
+- [Mutable Store API](/api-reference/mutable-store-api)
 
 ---
 
@@ -396,8 +392,8 @@ interface MemorySpace {
 
 **Used in:**
 
-- [Memory Space Operations API](../03-api-reference/11-memory-space-operations)
-- [Memory Spaces](../02-core-features/01-memory-spaces)
+- [Memory Space Operations API](/api-reference/memory-space-operations)
+- [Memory Spaces](/core-features/memory-spaces)
 
 ---
 
@@ -421,11 +417,11 @@ interface RegisteredAgent {
 
 **Used in:**
 
-- [Agent Management API](../03-api-reference/09-agent-management)
+- [Agent Management API](/api-reference/agent-management)
 
 **Related types:**
 
-- [AgentStats](#agentstats)
+- [AgentStats](/api-reference/agent-management#get)
 
 ---
 
@@ -435,35 +431,40 @@ interface RegisteredAgent {
 type SessionStatus = "active" | "idle" | "ended";
 
 interface SessionMetadata {
-  ipAddress?: string;
+  device?: string;
+  browser?: string;
+  browserVersion?: string;
+  os?: string;
+  deviceType?: "desktop" | "mobile" | "tablet" | string;
+  ip?: string;
+  location?: string;
+  timezone?: string;
+  language?: string;
   userAgent?: string;
-  deviceType?: string;
-  sessionName?: string;
   [key: string]: unknown;
 }
 
 interface Session {
   _id: string;
   sessionId: string;
+  userId: string;
   tenantId?: string;
-  userId?: string;
-  participantId?: string;
   memorySpaceId?: string;
   status: SessionStatus;
   startedAt: number;
-  lastActivityAt: number;
+  lastActiveAt: number;
   endedAt?: number;
   expiresAt?: number;
   metadata?: SessionMetadata;
-  createdAt: number;
-  updatedAt: number;
+  messageCount: number;
+  memoryCount: number;
 }
 ```
 
 **Used in:**
 
-- [Sessions Operations API](../03-api-reference/14-sessions-operations)
-- [Sessions Management](../02-core-features/14-sessions-management)
+- [Sessions Operations API](/api-reference/sessions-operations)
+- [Sessions Management](/advanced-topics/sessions-management)
 
 ---
 
@@ -598,8 +599,8 @@ interface RememberParams {
 
 **Used in:**
 
-- [Memory Operations API](../03-api-reference/02-memory-operations.md#remember)
-- [Memory Orchestration](../02-core-features/00-memory-orchestration)
+- [Memory Operations API](/api-reference/memory-operations.md#remember)
+- [Memory Orchestration](/core-features/memory-orchestration)
 
 **Related types:**
 
@@ -641,7 +642,7 @@ interface RememberResult {
 
 **Used in:**
 
-- [Memory Operations API](../03-api-reference/02-memory-operations.md#remember)
+- [Memory Operations API](/api-reference/memory-operations.md#remember)
 
 **Related types:**
 
@@ -745,14 +746,14 @@ interface RecallParams {
 
 **Used in:**
 
-- [Memory Operations API](../03-api-reference/02-memory-operations.md#recall)
-- [Semantic Search](../02-core-features/02-semantic-search)
-- [Graph Integration](../02-core-features/16-graph-integration)
+- [Memory Operations API](/api-reference/memory-operations.md#recall)
+- [Semantic Search](/core-features/semantic-search)
+- [Graph Integration](/advanced-topics/graph-integration)
 
 **Related types:**
 
 - [RecallResult](#recallresult)
-- [RecallItem](#recallitem)
+- [RecallItem](/api-reference/memory-operations#recall)
 
 ---
 
@@ -785,8 +786,8 @@ interface RecallResult {
 
 **Related types:**
 
-- [RecallItem](#recallitem)
-- [RecallSourceBreakdown](#recallsourcebreakdown)
+- [RecallItem](/api-reference/memory-operations#recall)
+- `RecallSourceBreakdown` (inline type in RecallResult)
 
 ---
 
@@ -820,13 +821,13 @@ interface OrchestrationObserver {
 **Used in:**
 
 - [RememberParams](#rememberparams)
-- [RememberStreamParams](#rememberstreamparams)
-- [Memory Orchestration](../02-core-features/00-memory-orchestration)
+- [RememberStreamParams](/api-reference/memory-operations#rememberstream)
+- [Memory Orchestration](/core-features/memory-orchestration)
 
 **Related types:**
 
 - [LayerEvent](#layerevent)
-- [OrchestrationSummary](#orchestrationsummary)
+- [OrchestrationSummary](/advanced-topics/orchestration-observer#orchestrationsummary)
 
 ---
 
@@ -975,8 +976,8 @@ interface GovernancePolicy {
 
 **Used in:**
 
-- [Governance Policies API](../03-api-reference/10-governance-policies-api)
-- [Governance Policies](../02-core-features/15-governance-policies)
+- [Governance Policies API](/api-reference/governance-policies-api)
+- [Governance Policies](/architecture/governance-policies)
 
 **Related types:**
 
@@ -1082,7 +1083,7 @@ type CircuitState = "closed" | "open" | "half-open";
 
 **Used in:**
 
-- [Resilience Layer](../02-core-features/13-resilience-layer)
+- [Resilience Layer](/architecture/resilience-layer)
 
 ---
 
@@ -1121,7 +1122,7 @@ interface ResilienceConfig {
 
 **Used in:**
 
-- [Resilience Layer](../02-core-features/13-resilience-layer)
+- [Resilience Layer](/architecture/resilience-layer)
 
 ---
 
@@ -1138,7 +1139,7 @@ type ConversationType = "user-agent" | "agent-agent";
 ### SourceType
 
 ```typescript
-type SourceType = "conversation" | "system" | "tool" | "a2a";
+type SourceType = "conversation" | "system" | "tool" | "a2a" | "fact-extraction";
 ```
 
 ---
@@ -1146,7 +1147,7 @@ type SourceType = "conversation" | "system" | "tool" | "a2a";
 ### ContentType
 
 ```typescript
-type ContentType = "raw" | "summarized";
+type ContentType = "raw" | "summarized" | "fact";
 ```
 
 ---
@@ -1189,48 +1190,71 @@ type SkippableLayer =
 
 ---
 
+### DeduplicationStrategy
+
+```typescript
+type DeduplicationStrategy = "none" | "exact" | "structural" | "semantic";
+```
+
+**Fact deduplication strategies:**
+
+- `none` - Skip deduplication (fastest, no accuracy)
+- `exact` - Normalized text match (fast, low accuracy)
+- `structural` - Subject + predicate + object match (fast, medium accuracy)
+- `semantic` - Embedding similarity search (slower, highest accuracy)
+
+**Used in:**
+
+- [RememberParams](#rememberparams) - `factDeduplication` option
+- [Facts Operations API](/api-reference/facts-operations)
+
+---
+
 ## Type Index
 
-Quick alphabetical reference for all types:
+Quick alphabetical reference for all types (links to this page or external API docs):
 
 ### A
 
-- [A2ABroadcastParams](#a2abroadcastparams)
-- [A2AMessage](#a2amessage)
-- [A2ARequestParams](#a2arequestparams)
-- [A2AResponse](#a2aresponse)
-- [A2ASendParams](#a2asendparams)
-- [AgentStats](#agentstats)
+- [A2ABroadcastParams](/api-reference/a2a-communication#broadcast)
+- [A2AMessage](/api-reference/a2a-communication#send)
+- [A2ARequestParams](/api-reference/a2a-communication#request)
+- [A2AResponse](/api-reference/a2a-communication#request)
+- [A2ASendParams](/api-reference/a2a-communication#send)
+- [AgentStats](/api-reference/agent-management#get)
 
 ### C
 
 - [CircuitState](#circuitstate)
-- [ComplianceMode](#compliancemode)
 - [ContentType](#contenttype)
 - [Conversation](#conversation)
 - [ConversationType](#conversationtype)
+
+### D
+
+- [DeduplicationStrategy](#deduplicationstrategy)
 
 ### F
 
 - [FactRecord](#factrecord)
 - [FactType](#facttype)
-- [ForgetOptions](#forgetoptions)
+- [ForgetOptions](/api-reference/memory-operations#forget)
 
 ### G
 
 - [GovernancePolicy](#governancepolicy)
-- [GraphSyncOption](#graphsyncoption)
 
 ### I
 
 - [ImmutableRecord](#immutablerecord)
+- [ImmutableVersion](/api-reference/immutable-store-api#getversion)
 
 ### L
 
 - [LayerEvent](#layerevent)
-- [ListConversationsFilter](#listconversationsfilter)
-- [ListFactsFilter](#listfactsfilter)
-- [ListMemoriesFilter](#listmemoriesfilter)
+- [ListConversationsFilter](/api-reference/conversation-operations#list)
+- [ListFactsFilter](/api-reference/facts-operations#factslist)
+- [ListMemoriesFilter](/api-reference/memory-operations#list)
 
 ### M
 
@@ -1242,7 +1266,7 @@ Quick alphabetical reference for all types:
 ### O
 
 - [OrchestrationObserver](#orchestrationobserver)
-- [OrchestrationSummary](#orchestrationsummary)
+- [OrchestrationSummary](/advanced-topics/orchestration-observer#orchestrationsummary)
 
 ### P
 
@@ -1250,18 +1274,18 @@ Quick alphabetical reference for all types:
 
 ### R
 
+- [RecallItem](/api-reference/memory-operations#recall)
 - [RecallParams](#recallparams)
 - [RecallResult](#recallresult)
 - [RegisteredAgent](#registeredagent)
 - [RememberParams](#rememberparams)
 - [RememberResult](#rememberresult)
-- [RememberStreamParams](#rememberstreamparams)
-- [RememberStreamResult](#rememberstreamresult)
+- [RememberStreamParams](/api-reference/memory-operations#rememberstream)
 - [ResilienceConfig](#resilienceconfig)
 
 ### S
 
-- [SearchMemoriesOptions](#searchmemoriesoptions)
+- [SearchFactsOptions](/api-reference/facts-operations#factssearch)
 - [Session](#session)
 - [SessionPolicy](#sessionpolicy)
 - [SkippableLayer](#skippablelayer)
@@ -1275,7 +1299,7 @@ Quick alphabetical reference for all types:
 
 ## See Also
 
-- [API Reference](../03-api-reference/01-overview) - Method signatures using these types
+- [API Reference](/api-reference/overview) - Method signatures using these types
 - [Error Handling](./error-handling) - Error types and codes
-- [Core Concepts](../01-getting-started/04-core-concepts) - Understanding the type system
-- [Data Models](../04-architecture/02-data-models) - Architectural overview of types
+- [Core Concepts](/getting-started/core-concepts) - Understanding the type system
+- [Data Models](/architecture/data-models) - Architectural overview of types

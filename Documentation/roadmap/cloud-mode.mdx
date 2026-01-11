@@ -1,0 +1,431 @@
+---
+id: cloud-mode
+title: Cloud Mode
+sidebar_position: 3
+description: Managed Cortex services with auto-embeddings, GDPR compliance, and infrastructure (Planned)
+---
+
+# Cloud Mode
+
+<Callout type="warning" title="Planned Feature">
+  Cloud Mode is a planned managed service offering. Currently, Cortex operates in "Direct Mode" where you manage your own Convex instance, embedding generation, and infrastructure.
+</Callout>
+
+<Callout type="info" title="What is Cloud Mode?">
+  **Cloud Mode** is a managed service layer that sits between your application and your Convex instance. Your data still resides in your Convex account, but Cortex Cloud handles embeddings, GDPR compliance, pub/sub infrastructure, and automation.
+  
+  **Architecture:** Your App → Cortex Cloud API → Your Convex Instance
+</Callout>
+
+---
+
+## Overview
+
+Cloud Mode provides enterprise-ready managed services while keeping your data in your Convex instance. It eliminates operational complexity and provides legal/compliance guarantees.
+
+### Key Benefits
+
+- **Zero-config embeddings** - No API key management, automatic retries
+- **GDPR compliance** - Legal guarantees with certificates for cascade deletion
+- **Managed infrastructure** - Pub/sub, webhooks, analytics without setup
+- **Automatic optimization** - Model upgrades, performance tuning, cost optimization
+- **Enterprise support** - SLA guarantees, dedicated support, compliance certifications
+
+---
+
+## Planned Features
+
+### Auto-Embeddings
+
+Generate embeddings automatically without managing API keys or providers.
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  apiKey: "cortex_sk_...",
+  mode: "cloud",
+  autoEmbed: true, // Cloud Mode automatic embeddings
+});
+
+// Embeddings generated automatically
+await cortex.memory.store(spaceId, {
+  content: "User prefers dark mode",
+  metadata: { source: "preferences" },
+  // No need to provide embedding!
+});
+```
+
+**Features:**
+- Automatic embedding generation using OpenAI text-embedding-3-large (3072-dim)
+- Zero configuration - no API keys to manage
+- Automatic retries and error handling
+- Model upgrades over time (e.g., upgrading to newer/better models automatically)
+- Usage-based pricing (tracked per-agent or per-tenant)
+
+**Current Workaround:**
+Generate embeddings yourself in Direct Mode:
+
+```typescript
+import { embed } from "@cortexmemory/sdk";
+
+const embedding = await embed(content, {
+  provider: "openai",
+  apiKey: process.env.OPENAI_API_KEY!,
+});
+
+await cortex.memory.store(spaceId, {
+  content,
+  embedding,
+  metadata: { source: "preferences" },
+});
+```
+
+---
+
+### GDPR Cascade Deletion
+
+One-click deletion of all user data across all layers with legal guarantees.
+
+```typescript
+// Cloud Mode: Legal guarantee + certificate
+await cortex.users.delete("user-123", {
+  cascade: true,
+  auditReason: "User requested GDPR deletion",
+  granularControl: {
+    deleteFromConversations: true,
+    deleteFromImmutable: true,
+    deleteFromMutable: true,
+    deleteFromVector: true,
+  },
+});
+```
+
+**Cascade Deletion Scope:**
+Deletes from all data layers:
+- Conversations (ACID conversation logs)
+- Immutable Store (versioned key-value)
+- Mutable Store (latest key-value)
+- Vector Memories (semantic search)
+- Facts (extracted knowledge)
+- Sessions (user sessions)
+- Contexts (context chains)
+- Fact History (fact supersession chains)
+
+**Cloud Mode Benefits:**
+- Legal certificate of deletion for compliance
+- Audit trail for GDPR requests
+- Guaranteed completion with retry logic
+- Performance optimization (parallel deletion across tables)
+
+**Current Workaround:**
+Manual deletion in Direct Mode:
+
+```typescript
+// Manual cascade deletion (no legal guarantees)
+const user = await cortex.users.get("user-123");
+const spaces = await cortex.memorySpaces.list({ participantId: "user-123" });
+
+for (const space of spaces) {
+  const conversations = await cortex.conversations.list({ participantId: "user-123" });
+  for (const conv of conversations) await cortex.conversations.delete(space.id, conv.id);
+  
+  const memories = await cortex.memory.list({ memorySpaceId: space.id, participantId: "user-123" });
+  for (const mem of memories) await cortex.memory.delete(space.id, mem.id);
+  
+  const facts = await cortex.facts.list({ memorySpaceId: space.id, userId: "user-123" });
+  for (const fact of facts) await cortex.facts.delete(space.id, fact.id);
+}
+
+await cortex.users.delete("user-123");
+```
+
+---
+
+### Managed Pub/Sub Infrastructure
+
+Automatic real-time notifications and agent-to-agent communication without managing Redis/RabbitMQ/NATS.
+
+```typescript
+// Cloud Mode: Automatic pub/sub
+const cortex = new Cortex({
+  mode: "cloud",
+  apiKey: "cortex_sk_...",
+  pubsub: "managed", // Cloud Mode handles infrastructure
+});
+
+// Subscribe to inbox (real-time)
+cortex.a2a.subscribe("agent-123", (message) => {
+  console.log(`New message from ${message.from}: ${message.content}`);
+});
+
+// Send message (triggers subscriber immediately)
+await cortex.a2a.send({
+  from: "agent-456",
+  to: "agent-123",
+  content: "Task completed!",
+});
+```
+
+**Managed Services:**
+- Redis/NATS pub/sub infrastructure
+- Automatic subscription management
+- WebSocket connections
+- Agent webhooks/triggers
+- Automatic retries and dead-letter queues
+
+**Current Workaround:**
+Manual polling in Direct Mode:
+
+```typescript
+// Poll for new messages every 5 seconds
+setInterval(async () => {
+  const messages = await cortex.memory.search(spaceId, "*", {
+    filters: {
+      "source.type": "a2a",
+      "source.recipient": "agent-123",
+      unread: true,
+    },
+  });
+  
+  for (const msg of messages) {
+    console.log(`New message: ${msg.content}`);
+  }
+}, 5000);
+```
+
+---
+
+### Analytics Dashboard
+
+Visual dashboards for memory growth, search performance, and agent activity.
+
+**Agent Analytics:**
+- Memory growth over time
+- Conversation volume
+- User engagement metrics
+- Performance metrics (search latency, recall rate)
+- Cost attribution
+
+**Memory Space Analytics:**
+- Total memories, facts, conversations
+- Importance breakdown
+- Memory health (embedding coverage, ACID linkage)
+- Access patterns (hot/cold memories)
+- Storage costs
+
+**A2A Communication Analytics:**
+- Communication frequency
+- Response times
+- Bottleneck identification
+- Collaboration graphs
+- Topic clustering
+
+**Team Management:**
+- Team-level dashboards
+- Cross-agent analytics
+- Resource allocation
+- Collaboration patterns
+
+**Current Workaround:**
+DIY analytics using `getStats()`:
+
+```typescript
+const stats = await cortex.memorySpaces.getStats(spaceId);
+console.log(stats.totalMemories);
+console.log(stats.importanceBreakdown);
+console.log(stats.avgSearchTime);
+```
+
+---
+
+### Automatic Governance Enforcement
+
+Automatic policy enforcement on every storage operation without manual `enforce()` calls.
+
+```typescript
+// Cloud Mode: Automatic enforcement
+await cortex.governance.setPolicy(spaceId, {
+  vector: {
+    maxRecords: 10000,
+    purgeStrategy: "importance-based",
+  },
+  immutable: {
+    maxVersionsPerKey: 5,
+    purgeOldest: true,
+  },
+});
+
+// Automatic enforcement on store/update
+await cortex.memory.store(spaceId, {
+  content: "...",
+  metadata: { importance: 10 },
+});
+// If maxRecords exceeded, lowest-importance memories automatically purged
+```
+
+**Current Workaround:**
+Manual enforcement in Direct Mode:
+
+```typescript
+// Scheduled job or manual calls
+await cortex.governance.enforce(spaceId);
+```
+
+---
+
+### Agent Billing & Limits
+
+Usage tracking, billing, and per-agent resource limits for multi-tenant platforms.
+
+**Usage Tracking:**
+
+```typescript
+const billing = await cortex.analytics.getAgentBilling("agent-123", {
+  period: "monthly",
+});
+
+console.log(billing);
+// {
+//   agent: "agent-123",
+//   period: "2026-01",
+//   usage: {
+//     storageBytes: 25600000,      // 25.6 MB
+//     totalEmbeddings: 1543,
+//     embeddingTokens: 45000,
+//   },
+//   costs: {
+//     storage: 0.05,    // $0.002 per MB
+//     embeddings: 0.45,  // $0.01 per 1K tokens
+//     total: 0.50,
+//   },
+// }
+```
+
+**Agent Limits (Enterprise):**
+
+```typescript
+await cortex.agents.update("agent-123", {
+  limits: {
+    maxMemories: 50000,
+    maxStorageBytes: 100 * 1024 * 1024, // 100 MB
+  },
+});
+
+// Throws error when limits exceeded
+await cortex.memory.store(spaceId, { content: "..." });
+// Error: Agent limit exceeded (50,001 / 50,000 memories)
+```
+
+---
+
+### Cortex-Managed Functions
+
+Deploy Cortex functions to your Convex instance with one command.
+
+```typescript
+// Option 1: Use Cortex-hosted functions (Cloud Mode)
+const cortex = new Cortex({
+  mode: "cloud",
+  apiKey: "cortex_sk_...",
+});
+
+// Option 2: Deploy to your Convex instance
+// cortex deploy --convex-url https://your-project.convex.cloud
+```
+
+**Benefits:**
+- No manual Convex setup
+- Automatic function updates
+- Version management
+- Rollback capability
+
+---
+
+## Cloud Mode Architecture
+
+<ArchitectureDiagram title="Cloud Mode Architecture">
+  <ArchitectureLayer title="Your Application">
+    <ArchitectureBox title="App" description="Your Next.js, React, or Node.js application" />
+  </ArchitectureLayer>
+  <ArchitectureLayer title="Cortex Cloud API Layer">
+    <ArchitectureBox title="Auto-Embeddings" description="OpenAI text-embedding-3-large" />
+    <ArchitectureBox title="GDPR Cascade" description="Deletion orchestrator" />
+    <ArchitectureBox title="Pub/Sub" description="Redis infrastructure" />
+    <ArchitectureBox title="Analytics" description="Dashboard & metrics" />
+  </ArchitectureLayer>
+  <ArchitectureLayer title="Your Convex Instance">
+    <ArchitectureBox title="Data Storage" description="Your data stays in your account" />
+  </ArchitectureLayer>
+</ArchitectureDiagram>
+
+---
+
+## Pricing Model (Planned)
+
+Cloud Mode will use usage-based pricing:
+
+- **Storage:** Per GB per month
+- **Embeddings:** Per 1K tokens processed
+- **Pub/Sub:** Per message delivered
+- **API Calls:** Per 1K requests
+- **Analytics:** Included with Cloud Mode
+
+**Enterprise Features:**
+- SLA guarantees (99.9% uptime)
+- Dedicated support
+- Custom model fine-tuning
+- On-premise deployment options
+- Compliance certifications (SOC 2, HIPAA)
+
+---
+
+## Migration Path
+
+Migrating from Direct Mode to Cloud Mode will be seamless:
+
+```typescript
+// Before (Direct Mode)
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+});
+
+// After (Cloud Mode) - just add API key
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  apiKey: "cortex_sk_...",
+  mode: "cloud",
+});
+```
+
+**What Changes:**
+- Add `apiKey` and `mode: "cloud"`
+- Remove embedding generation code (optional - auto-embeddings)
+- Remove manual governance enforcement (optional - automatic)
+- Remove pub/sub infrastructure (optional - managed pub/sub)
+
+**What Stays the Same:**
+- All API methods work identically
+- Data remains in your Convex instance
+- No breaking changes to existing code
+
+---
+
+## Related Features
+
+<QuickNav>
+  <QuickNavItem 
+    title="Access Analytics" 
+    description="Memory usage analytics" 
+    href="/roadmap/access-analytics" 
+  />
+  <QuickNavItem 
+    title="MCP Server" 
+    description="Cross-application memory" 
+    href="/roadmap/mcp-server" 
+  />
+  <QuickNavItem 
+    title="Security" 
+    description="Current security features" 
+    href="/security" 
+  />
+</QuickNav>

@@ -107,7 +107,7 @@ export class VectorAPI {
   async store(
     memorySpaceId: string,
     input: StoreMemoryInput,
-    options?: StoreMemoryOptions,
+    _options?: StoreMemoryOptions,
   ): Promise<MemoryEntry> {
     // Client-side validation
     validateMemorySpaceId(memorySpaceId);
@@ -140,7 +140,7 @@ export class VectorAPI {
     );
 
     // Sync to graph if requested and configured
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         const nodeId = await syncMemoryToGraph(
           result as MemoryEntry,
@@ -251,7 +251,7 @@ export class VectorAPI {
   async delete(
     memorySpaceId: string,
     memoryId: string,
-    options?: DeleteMemoryOptions,
+    _options?: DeleteMemoryOptions,
   ): Promise<{ deleted: boolean; memoryId: string }> {
     // Client-side validation
     validateMemorySpaceId(memorySpaceId);
@@ -272,7 +272,7 @@ export class VectorAPI {
     }
 
     // Delete from graph with orphan cleanup
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         await deleteMemoryFromGraph(memoryId, this.graphAdapter, true);
       } catch (error) {

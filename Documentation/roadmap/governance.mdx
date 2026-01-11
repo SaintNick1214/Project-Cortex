@@ -1,0 +1,394 @@
+---
+id: governance-enhancements
+title: Governance & Automation
+sidebar_position: 7
+description: Automatic policy enforcement and sessions management (Planned)
+---
+
+# Governance & Automation Enhancements
+
+<Callout type="warning" title="Planned Features">
+  These governance enhancements are planned for future releases. Basic governance policies are fully implemented—see the [Governance Policies API](/api-reference/governance-policies-api) for current capabilities.
+</Callout>
+
+<Callout type="info" title="What is Governance?">
+  Governance policies automatically manage data retention, version limits, and storage quotas across memory layers (vector, immutable, mutable). Current features include policy configuration and manual enforcement via `enforce()`.
+</Callout>
+
+---
+
+## Current Capabilities
+
+Governance policies already support:
+- Vector memory retention (max records, importance-based purging)
+- Immutable store versioning (max versions per key)
+- Mutable store soft-deletion (with expiry)
+- Manual enforcement via `cortex.governance.enforce()`
+- Policy configuration per memory space
+
+---
+
+## Planned Enhancements
+
+### 1. Automatic Policy Enforcement
+
+Enforce policies automatically on every storage operation without manual `enforce()` calls.
+
+**Current Behavior:**
+```typescript
+// Set policy
+await cortex.governance.setPolicy(spaceId, {
+  vector: {
+    maxRecords: 10000,
+    purgeStrategy: "importance-based",
+  },
+});
+
+// Manual enforcement required
+await cortex.memory.store(spaceId, { content: "...", metadata: { importance: 10 } });
+await cortex.memory.store(spaceId, { content: "...", metadata: { importance: 15 } });
+// ... 20 more stores ...
+
+// Memory space now has 10,022 records (over limit)
+// Must manually enforce
+await cortex.governance.enforce(spaceId);
+// Now 10,000 records (lowest-importance purged)
+```
+
+**Planned Behavior:**
+```typescript
+// Set policy
+await cortex.governance.setPolicy(spaceId, {
+  vector: {
+    maxRecords: 10000,
+    purgeStrategy: "importance-based",
+    autoEnforce: true, // Automatic enforcement
+  },
+});
+
+// Automatic enforcement on every store()
+await cortex.memory.store(spaceId, { content: "...", metadata: { importance: 10 } });
+// If maxRecords exceeded, lowest-importance memory automatically purged
+// Memory space always stays at or below 10,000 records
+```
+
+**Benefits:**
+- No manual `enforce()` calls needed
+- Guaranteed compliance with policies
+- Predictable storage costs
+- Prevents out-of-memory errors
+
+---
+
+### 2. Automatic Version Purging
+
+Purge old versions based on retention rules without manual enforcement.
+
+**Current Behavior:**
+```typescript
+// Set policy
+await cortex.governance.setPolicy(spaceId, {
+  immutable: {
+    maxVersionsPerKey: 5,
+    purgeOldest: true,
+  },
+});
+
+// Store versions
+await cortex.immutable.store(spaceId, { key: "config", value: { v: 1 } });
+await cortex.immutable.store(spaceId, { key: "config", value: { v: 2 } });
+await cortex.immutable.store(spaceId, { key: "config", value: { v: 3 } });
+await cortex.immutable.store(spaceId, { key: "config", value: { v: 4 } });
+await cortex.immutable.store(spaceId, { key: "config", value: { v: 5 } });
+await cortex.immutable.store(spaceId, { key: "config", value: { v: 6 } });
+
+// Key "config" now has 6 versions (over limit of 5)
+// Manual enforcement required
+await cortex.governance.enforce(spaceId);
+// Now 5 versions (oldest version v1 purged)
+```
+
+**Planned Behavior:**
+```typescript
+// Set policy
+await cortex.governance.setPolicy(spaceId, {
+  immutable: {
+    maxVersionsPerKey: 5,
+    purgeOldest: true,
+    autoEnforce: true, // Automatic purging
+  },
+});
+
+// Automatic purging on every store()
+await cortex.immutable.store(spaceId, { key: "config", value: { v: 6 } });
+// Oldest version (v1) automatically purged
+// Key "config" always has ≤ 5 versions
+```
+
+---
+
+### 3. Sessions Policy Enforcement
+
+Automatic enforcement of session expiry and cleanup policies.
+
+**Current Status:**
+Sessions policy configuration exists but is **not enforced** by the governance backend.
+
+```typescript
+// Policy configuration exists but not enforced
+await cortex.governance.setPolicy(spaceId, {
+  sessions: {
+    maxIdleTimeMs: 30 * 60 * 1000,    // 30 minutes (NOT ENFORCED)
+    maxSessionDurationMs: 24 * 60 * 60 * 1000, // 24 hours (NOT ENFORCED)
+    autoExpire: true,                   // (NOT ENFORCED)
+  },
+});
+```
+
+**Planned Behavior:**
+```typescript
+// Policy enforcement activated
+await cortex.governance.setPolicy(spaceId, {
+  sessions: {
+    maxIdleTimeMs: 30 * 60 * 1000,    // 30 minutes
+    maxSessionDurationMs: 24 * 60 * 60 * 1000, // 24 hours
+    autoExpire: true,                   // Automatic expiry
+    autoCleanup: true,                  // Delete expired sessions
+  },
+});
+
+// Automatic expiry
+// - Sessions idle > 30 minutes automatically marked as expired
+// - Sessions open > 24 hours automatically marked as expired
+// - Expired sessions deleted if autoCleanup: true
+```
+
+**Current Workaround:**
+Manual session expiry:
+
+```typescript
+// Manual expiry required
+await cortex.sessions.expireIdle(spaceId, {
+  idleTimeoutMs: 30 * 60 * 1000,
+});
+
+await cortex.sessions.expireByDuration(spaceId, {
+  maxDurationMs: 24 * 60 * 60 * 1000,
+});
+```
+
+---
+
+### 4. Scheduled Enforcement Jobs
+
+Schedule automatic enforcement at regular intervals (Cloud Mode).
+
+**Planned Behavior:**
+```typescript
+// Cloud Mode: Scheduled enforcement
+await cortex.governance.setPolicy(spaceId, {
+  vector: {
+    maxRecords: 10000,
+    purgeStrategy: "importance-based",
+  },
+  enforcementSchedule: "0 2 * * *", // Cron: Daily at 2 AM UTC
+});
+
+// Automatic enforcement runs daily at 2 AM
+// - Purge low-importance memories if over limit
+// - Purge old versions if over limit
+// - Expire idle sessions
+// - Delete soft-deleted records past expiry
+```
+
+**Benefits:**
+- Low-priority enforcement (off-peak hours)
+- Predictable enforcement timing
+- Reduced overhead on write operations
+- Monitoring and alerting for enforcement failures
+
+---
+
+### 5. Enforcement Hooks
+
+Custom hooks for pre/post-enforcement logic.
+
+**Planned Behavior:**
+```typescript
+// Register enforcement hooks
+await cortex.governance.setPolicy(spaceId, {
+  vector: {
+    maxRecords: 10000,
+    purgeStrategy: "importance-based",
+    autoEnforce: true,
+  },
+  hooks: {
+    beforePurge: async (candidates) => {
+      // Log candidates before purging
+      console.log(`About to purge ${candidates.length} memories`);
+      
+      // Filter out protected memories
+      return candidates.filter(m => !m.metadata.protected);
+    },
+    afterPurge: async (purged) => {
+      // Log purged memories
+      console.log(`Purged ${purged.length} memories`);
+      
+      // Send notification
+      await sendAlert(`Purged ${purged.length} low-importance memories`);
+    },
+  },
+});
+```
+
+**Use Cases:**
+- Audit logging before purging
+- Notifications on enforcement
+- Custom filtering logic
+- Integration with external systems
+
+---
+
+### 6. Policy Validation
+
+Validate policy configurations before applying.
+
+**Planned Behavior:**
+```typescript
+// Validate policy before applying
+const validation = await cortex.governance.validatePolicy(spaceId, {
+  vector: {
+    maxRecords: -100, // Invalid (negative)
+    purgeStrategy: "invalid-strategy", // Invalid strategy
+  },
+});
+
+if (!validation.valid) {
+  console.log(validation.errors);
+  // [
+  //   { field: "vector.maxRecords", error: "Must be positive" },
+  //   { field: "vector.purgeStrategy", error: "Invalid strategy (must be 'importance-based', 'oldest-first', or 'least-accessed')" },
+  // ]
+}
+
+// Apply valid policy
+await cortex.governance.setPolicy(spaceId, validPolicy);
+```
+
+---
+
+### 7. Enforcement Metrics
+
+Track enforcement activity for monitoring and optimization.
+
+**Planned Behavior:**
+```typescript
+const metrics = await cortex.governance.getEnforcementMetrics(spaceId, {
+  period: "last-30-days",
+});
+
+console.log(metrics);
+// {
+//   totalEnforcements: 30,
+//   vectorPurges: {
+//     count: 25,
+//     recordsPurged: 5430,
+//     avgPurgeSize: 217,
+//   },
+//   immutablePurges: {
+//     count: 15,
+//     versionsPurged: 780,
+//     avgPurgeSize: 52,
+//   },
+//   sessionsExpired: {
+//     count: 20,
+//     sessionsExpired: 340,
+//   },
+//   avgEnforcementDuration: "1.2s",
+// }
+```
+
+**Use Cases:**
+- Monitor policy effectiveness
+- Optimize purge strategies
+- Identify storage growth trends
+- Cost optimization
+
+---
+
+## Implementation Priority
+
+These enhancements will be implemented in phases:
+
+**High Priority:**
+1. Automatic policy enforcement - Eliminates manual `enforce()` calls
+2. Automatic version purging - Prevents unbounded growth
+3. Sessions policy enforcement - Complete sessions management
+
+**Medium Priority:**
+4. Policy validation - Prevents configuration errors
+5. Enforcement metrics - Monitoring and optimization
+
+**Low Priority (Cloud Mode):**
+6. Scheduled enforcement jobs - Enterprise feature
+7. Enforcement hooks - Advanced customization
+
+---
+
+## Workarounds (Current Implementation)
+
+Until automatic enforcement is available, use these patterns:
+
+### Scheduled Manual Enforcement
+
+```typescript
+// Run every hour
+setInterval(async () => {
+  await cortex.governance.enforce(spaceId);
+}, 60 * 60 * 1000);
+```
+
+### Enforce After Batch Operations
+
+```typescript
+// Batch store
+for (const item of items) {
+  await cortex.memory.store(spaceId, item);
+}
+
+// Enforce after batch
+await cortex.governance.enforce(spaceId);
+```
+
+### Manual Session Cleanup
+
+```typescript
+// Run daily
+setInterval(async () => {
+  await cortex.sessions.expireIdle(spaceId, {
+    idleTimeoutMs: 30 * 60 * 1000,
+  });
+}, 24 * 60 * 60 * 1000);
+```
+
+---
+
+## Related Features
+
+<QuickNav>
+  <QuickNavItem 
+    title="Governance Policies API" 
+    description="Current governance capabilities" 
+    href="/api-reference/governance-policies-api" 
+  />
+  <QuickNavItem 
+    title="Sessions Operations" 
+    description="Session management API" 
+    href="/api-reference/sessions-operations" 
+  />
+  <QuickNavItem 
+    title="Cloud Mode" 
+    description="Managed governance services" 
+    href="/roadmap/cloud-mode" 
+  />
+</QuickNav>

@@ -1,7 +1,7 @@
 # Error Handling Reference
 
-> **Last Updated**: January 1, 2026
-> **SDK Version**: 0.27.0
+> **Last Updated**: January 9, 2026
+> **SDK Version**: 0.29.0
 > **Sources**: `src/resilience/types.ts`, `src/*/validators.ts`, `src/graph/types.ts`
 
 ## Overview
@@ -52,8 +52,7 @@ import {
 4. [Resilience Errors](#resilience-errors)
 5. [Graph Errors](#graph-errors)
 6. [Other Errors](#other-errors)
-7. [All Error Codes](#all-error-codes)
-8. [Troubleshooting Guide](#troubleshooting-guide)
+7. [Troubleshooting Guide](#troubleshooting-guide)
 
 ---
 
@@ -193,10 +192,11 @@ import {
   GraphQueryError,
 } from "@cortexmemory/sdk";
 
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 try {
   await cortex.memory.remember({
     // ... params
-    syncToGraph: true,
+    // No syncToGraph option needed - sync is automatic
   });
 } catch (error) {
   if (error instanceof GraphAuthenticationError) {
@@ -206,7 +206,7 @@ try {
     console.error("Check NEO4J_PASSWORD in .env");
   } else if (error instanceof GraphConnectionError) {
     console.error("Cannot connect to graph database");
-    // Fallback to non-graph mode
+    // App continues working - graph is optional
   } else if (error instanceof GraphQueryError) {
     console.error("Graph query failed");
     console.error(`Query: ${error.query}`);
@@ -563,19 +563,18 @@ class GraphConnectionError extends GraphDatabaseError {
 ```typescript
 import { GraphConnectionError } from "@cortexmemory/sdk";
 
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
+// Graph failures are non-fatal - the app continues working
 try {
   await cortex.memory.remember({
     // ... params
-    syncToGraph: true,
+    // Graph sync happens automatically if CORTEX_GRAPH_SYNC=true
   });
 } catch (error) {
   if (error instanceof GraphConnectionError) {
     console.error("Graph database unavailable");
-    // Fallback: disable graph sync
-    await cortex.memory.remember({
-      // ... params
-      syncToGraph: false,
-    });
+    // Graph failures are logged but don't block the operation
+    // The data is still stored in Convex (source of truth)
   }
 }
 ```
@@ -616,6 +615,7 @@ try {
     console.error(`  URI: ${error.uri}`);
     console.error(`  Username: ${error.username}`);
     console.error("Check NEO4J_PASSWORD in .env");
+    // Disable graph sync by unsetting CORTEX_GRAPH_SYNC or setting to false
   }
 }
 ```
@@ -694,17 +694,15 @@ class A2ATimeoutError extends Error {
 class CascadeDeletionError extends Error {
   constructor(
     message: string,
-    public readonly partial: boolean,
-    public readonly completed: string[],
-    public readonly failed: Array<{ layer: string; error: string }>,
+    public readonly cause?: unknown,
   );
 }
 ```
 
 **Recovery:**
 
-- Review failed layers
-- Retry deletion for failed layers
+- Check the `cause` property for underlying error details
+- Retry deletion operation
 - Check permissions
 
 ---
@@ -719,12 +717,16 @@ class CascadeDeletionError extends Error {
 class AgentCascadeDeletionError extends Error {
   constructor(
     message: string,
-    public readonly partial: boolean,
-    public readonly completed: string[],
-    public readonly failed: Array<{ layer: string; error: string }>,
+    public readonly cause?: unknown,
   );
 }
 ```
+
+**Recovery:**
+
+- Check the `cause` property for underlying error details
+- Retry deletion operation
+- Check permissions
 
 ---
 
@@ -737,16 +739,17 @@ class AgentCascadeDeletionError extends Error {
 ```typescript
 class ResumableStreamError extends Error {
   constructor(
-    message: string,
-    public readonly resumeContext: ResumeContext,
+    public readonly originalError: Error,
+    public readonly resumeToken: string,
   );
 }
 ```
 
 **Recovery:**
 
-- Use resumeContext to resume from failure point
+- Use `resumeToken` to resume from failure point
 - Retry with stored progress
+- Check `originalError` for underlying failure details
 
 ---
 
@@ -761,14 +764,14 @@ class ResumableStreamError extends Error {
 **Fix:**
 
 ```typescript
-// ❌ Wrong - no owner
+// Wrong - no owner
 await cortex.memory.remember({
   conversationId: "conv-123",
   userMessage: "Hello",
   agentResponse: "Hi",
 });
 
-// ✅ Correct - userId provided
+// Correct - userId provided
 await cortex.memory.remember({
   conversationId: "conv-123",
   userMessage: "Hello",
@@ -788,7 +791,7 @@ await cortex.memory.remember({
 **Fix:**
 
 ```typescript
-// ❌ Wrong - missing userName
+// Wrong - missing userName
 await cortex.memory.remember({
   conversationId: "conv-123",
   userMessage: "Hello",
@@ -797,7 +800,7 @@ await cortex.memory.remember({
   agentId: "assistant",
 });
 
-// ✅ Correct
+// Correct
 await cortex.memory.remember({
   conversationId: "conv-123",
   userMessage: "Hello",
@@ -817,13 +820,13 @@ await cortex.memory.remember({
 **Fix:**
 
 ```typescript
-// ❌ Wrong
+// Wrong
 await cortex.memory.remember({
   // ... other params
   importance: 150, // Out of range!
 });
 
-// ✅ Correct
+// Correct
 await cortex.memory.remember({
   // ... other params
   importance: 90, // 0-100
@@ -919,25 +922,30 @@ try {
 NEO4J_URI=neo4j://localhost:7687
 NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=your-password-here  # Check this!
+CORTEX_GRAPH_SYNC=true  # Enable graph sync
 ```
 
-2. Fallback without graph:
+2. Disable graph if credentials are unavailable:
+
+```bash
+# In .env.local - disable graph sync
+CORTEX_GRAPH_SYNC=false
+```
 
 ```typescript
 import { GraphAuthenticationError } from "@cortexmemory/sdk";
 
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
+// If graph auth fails, the operation still succeeds (graph is optional)
 try {
   await cortex.memory.remember({
     // ... params
-    syncToGraph: true,
+    // Graph sync happens automatically, failures are logged but non-fatal
   });
 } catch (error) {
   if (error instanceof GraphAuthenticationError) {
-    console.error("Graph auth failed, falling back to non-graph mode");
-    await cortex.memory.remember({
-      // ... params
-      syncToGraph: false,
-    });
+    console.error("Graph auth failed - check NEO4J_PASSWORD in .env");
+    // Data is still stored in Convex (source of truth)
   }
 }
 ```
@@ -951,13 +959,13 @@ try {
 **Fix:**
 
 ```typescript
-// ❌ Wrong
+// Wrong
 await cortex.facts.store({
   // ... params
   factType: "unknown", // Invalid!
 });
 
-// ✅ Correct - use valid fact type
+// Correct - use valid fact type
 await cortex.facts.store({
   // ... params
   factType: "preference", // Valid
@@ -1057,23 +1065,20 @@ await breaker.execute(() => cortex.memory.remember({...}));
 ```typescript
 import { GraphConnectionError, CircuitOpenError } from "@cortexmemory/sdk";
 
+// v0.29.0+: Graph sync is automatic when CORTEX_GRAPH_SYNC=true
+// Graph failures are non-fatal - data is still stored in Convex
 async function rememberWithFallback(params: RememberParams) {
   try {
-    // Try with full features
+    // Graph sync happens automatically if CORTEX_GRAPH_SYNC=true
     return await cortex.memory.remember({
       ...params,
-      syncToGraph: true,
       extractFacts: true,
     });
   } catch (error) {
     if (error instanceof GraphConnectionError) {
-      // Fallback: no graph sync
-      console.warn("Graph unavailable, continuing without graph sync");
-      return await cortex.memory.remember({
-        ...params,
-        syncToGraph: false,
-        extractFacts: true,
-      });
+      // Graph failures are logged but don't block the operation
+      console.warn("Graph unavailable - data still saved to Convex");
+      // The operation already succeeded for Convex
     }
 
     if (error instanceof CircuitOpenError) {
@@ -1095,6 +1100,6 @@ async function rememberWithFallback(params: RememberParams) {
 ## See Also
 
 - [Types & Interfaces](./types-interfaces) - Type definitions
-- [API Reference](../03-api-reference/01-overview) - API methods
-- [Resilience Layer](../02-core-features/13-resilience-layer) - Overload protection
-- [Core Concepts](../01-getting-started/04-core-concepts) - Understanding errors
+- [API Reference](/api-reference/overview) - API methods
+- [Resilience Layer](/architecture/resilience-layer) - Overload protection
+- [Core Concepts](/getting-started/core-concepts) - Understanding errors

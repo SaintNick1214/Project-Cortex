@@ -1,6 +1,8 @@
 # Facts vs Conversations: Storage Strategy Trade-offs
 
-> **Last Updated**: 2025-10-28
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
 
 Understand the trade-offs between storing raw conversations versus extracted facts, and when to use each approach.
 
@@ -44,21 +46,21 @@ await cortex.memory.remember({
 
 **Pros:**
 
-- ✅ **Zero information loss** - Everything preserved exactly
-- ✅ **No LLM processing** - Fast, no extraction cost
-- ✅ **Perfect audit trail** - Verbatim record for compliance
-- ✅ **Context richness** - Nuance, tone, phrasing preserved
-- ✅ **Debugging** - Can replay exact conversations
-- ✅ **Training data** - Raw data for fine-tuning models
-- ✅ **Simple** - No extraction pipeline to build/maintain
+- **Zero information loss** - Everything preserved exactly
+- **No LLM processing** - Fast, no extraction cost
+- **Perfect audit trail** - Verbatim record for compliance
+- **Context richness** - Nuance, tone, phrasing preserved
+- **Debugging** - Can replay exact conversations
+- **Training data** - Raw data for fine-tuning models
+- **Simple** - No extraction pipeline to build/maintain
 
 **Cons:**
 
-- ❌ **Large storage** - 5-10× more data than facts
-- ❌ **High token costs** - Expensive to include in LLM context
-- ❌ **Slower retrieval** - Searching verbose text less efficient
-- ❌ **Context limit** - Fills up LLM context window quickly
-- ❌ **Lower precision** - Search results may include irrelevant chatter
+- **Large storage** - 5-10× more data than facts
+- **High token costs** - Expensive to include in LLM context
+- **Slower retrieval** - Searching verbose text less efficient
+- **Context limit** - Fills up LLM context window quickly
+- **Lower precision** - Search results may include irrelevant chatter
 
 **Best for:**
 
@@ -99,27 +101,27 @@ await cortex.memory.remember({
 // 4. "User's role: Senior Engineer" - 5 tokens
 // 5. "User's office location: Canary Wharf" - 6 tokens
 // 6. "User's commute: 30 minutes" - 5 tokens
-// Total: 35 tokens (91% reduction!) ✅
+// Total: 35 tokens (91% reduction!)
 ```
 
 **Pros:**
 
-- ✅ **Massive storage savings** - 60-90% reduction
-- ✅ **Lower token costs** - Up to 90% fewer tokens in LLM context
-- ✅ **Faster retrieval** - Concise, focused results
-- ✅ **Better precision** - Facts are signal, not noise
-- ✅ **Longer memory** - Can store 10× more knowledge in same space
-- ✅ **Structured** - Facts can have categories, confidence scores
-- ✅ **Graph-ready** - Easy to extract entities/relationships
+- **Massive storage savings** - 60-90% reduction
+- **Lower token costs** - Up to 90% fewer tokens in LLM context
+- **Faster retrieval** - Concise, focused results
+- **Better precision** - Facts are signal, not noise
+- **Longer memory** - Can store 10× more knowledge in same space
+- **Structured** - Facts can have categories, confidence scores
+- **Graph-ready** - Easy to extract entities/relationships
 
 **Cons:**
 
-- ❌ **Information loss** - Nuance, tone, exact wording gone
-- ❌ **LLM cost** - Requires LLM call to extract ($0.001 per extraction)
-- ❌ **Extraction latency** - 500-2000ms to process
-- ❌ **Potential errors** - LLM might miss or misinterpret facts
-- ❌ **No verbatim record** - Can't quote exact user words
-- ❌ **Complexity** - Extraction pipeline to maintain
+- **Information loss** - Nuance, tone, exact wording gone
+- **LLM cost** - Requires LLM call to extract ($0.001 per extraction)
+- **Extraction latency** - 500-2000ms to process
+- **Potential errors** - LLM might miss or misinterpret facts
+- **No verbatim record** - Can't quote exact user words
+- **Complexity** - Extraction pipeline to maintain
 
 **Best for:**
 
@@ -153,24 +155,24 @@ await cortex.memory.remember({
 });
 
 // Result:
-// - ACID layer: Full conversation (402 tokens) → Audit trail ✅
-// - Vector layer: 6 facts (35 tokens) → Efficient search ✅
-// - Link between them: conversationRef → Traceability ✅
+// - ACID layer: Full conversation (402 tokens) → Audit trail
+// - Vector layer: 6 facts (35 tokens) → Efficient search
+// - Link between them: conversationRef → Traceability
 ```
 
 **Pros:**
 
-- ✅ **Complete audit trail** - Raw preserved in ACID
-- ✅ **Efficient retrieval** - Search facts in vector
-- ✅ **Compliance + Performance** - Both requirements met
-- ✅ **Flexible** - Use facts for speed, raw for accuracy
-- ✅ **Traceable** - Facts link to source conversations
-- ✅ **Cost-effective** - Search facts (cheap), retrieve raw when needed
+- **Complete audit trail** - Raw preserved in ACID
+- **Efficient retrieval** - Search facts in vector
+- **Compliance + Performance** - Both requirements met
+- **Flexible** - Use facts for speed, raw for accuracy
+- **Traceable** - Facts link to source conversations
+- **Cost-effective** - Search facts (cheap), retrieve raw when needed
 
 **Cons:**
 
-- ⚠️ **More storage** - Both layers consume space (but ACID is cheaper)
-- ⚠️ **Extraction cost** - Still need LLM for facts (but worthwhile)
+- **More storage** - Both layers consume space (but ACID is cheaper)
+- **Extraction cost** - Still need LLM for facts (but worthwhile)
 
 **Best for:**
 
@@ -387,7 +389,7 @@ const complexContext = await buildAdaptiveContext(
 
 **Extraction Cost (Facts/Hybrid):**
 
-- 1,000 conversations × $0.001 = $1/month (Cloud Mode)
+- 1,000 conversations × $0.001 = $1/month (Cloud Mode - planned)
 - Or DIY with your OpenAI key: ~$2-5/month
 
 **Winner:** Facts-only or Hybrid (**96-97% cost savings** vs raw)
@@ -541,7 +543,7 @@ Still fits in legacy 16K window, but growing fast
 
 At 20+ conversations: 8,000 tokens consumed just for context
 At 50+ conversations: Must use expensive high-context models
-At 100+ conversations: Even GPT-5's 1M window fills up! ❌
+At 100+ conversations: Even GPT-5's 1M window fills up!
 ```
 
 **Facts Strategy:**
@@ -552,7 +554,7 @@ Leaves: 15,760 tokens for prompt + response (even on legacy 16K model)
 
 User asks question needing 100 facts worth of context:
 100 × 8 = 800 tokens
-Fits easily with room to spare! ✅
+Fits easily with room to spare!
 
 Even 1,000 facts: 8,000 tokens (fits in any modern model)
 Unlimited history, constant token usage
@@ -614,8 +616,8 @@ if (needsExactQuote) {
 
 - Search latency: 40ms (facts) vs 130ms (raw) - **70% faster**
 - Token cost: $15/month (facts) vs $450/month (raw) - **97% savings**
-- Compliance: ✅ (raw in ACID)
-- Exact quotes: ✅ (fetch from ACID when needed)
+- Compliance: Yes (raw in ACID)
+- Exact quotes: Yes (fetch from ACID when needed)
 
 ### Case Study 2: Personal AI Assistant
 
@@ -657,7 +659,7 @@ const context = await cortex.memory.search("personal-assistant", query, {
 - Storage: ~60MB (vs 600MB raw)
 - Retrieval: ~35ms consistently fast
 - Context quality: High (distilled knowledge)
-- Privacy: ✅ (local Convex instance)
+- Privacy: Yes (local Convex instance)
 
 ### Case Study 3: Code Assistant
 
@@ -746,7 +748,7 @@ Storage:
 - Embeddings: 480K tokens × $0.13/1M = $0.06/month
 
 Extraction:
-- 10K extractions × $0.001 = $10/month (Cloud Mode)
+- 10K extractions × $0.001 = $10/month (Cloud Mode - planned)
 - Or DIY with GPT-4: ~$8/month
 
 Retrieval:
@@ -817,12 +819,12 @@ Total: 184MB = $0.09/month
 
 | Information Type      | Raw | Facts      | Hybrid       |
 | --------------------- | --- | ---------- | ------------ |
-| **Core facts**        | ✅  | ✅         | ✅           |
-| **Exact wording**     | ✅  | ❌         | ✅ (in ACID) |
-| **Tone/sentiment**    | ✅  | ❌         | ✅ (in ACID) |
-| **Timestamps**        | ✅  | ✅         | ✅           |
-| **Context flow**      | ✅  | ⚠️ Partial | ✅ (in ACID) |
-| **Meta-conversation** | ✅  | ❌         | ✅ (in ACID) |
+| **Core facts**        | Yes | Yes        | Yes          |
+| **Exact wording**     | Yes | No         | Yes (in ACID) |
+| **Tone/sentiment**    | Yes | No         | Yes (in ACID) |
+| **Timestamps**        | Yes | Yes        | Yes          |
+| **Context flow**      | Yes | Partial    | Yes (in ACID) |
+| **Meta-conversation** | Yes | No         | Yes (in ACID) |
 
 ### Retrieval Accuracy
 
@@ -966,7 +968,7 @@ for (const memory of rawMemories.memories) {
   }
 }
 
-// ACID layer still has raw conversations (compliance ✅)
+// ACID layer still has raw conversations (compliance preserved)
 ```
 
 ## Best Practices
@@ -1178,11 +1180,11 @@ if (metrics.factPerformance > metrics.rawPerformance * 1.5) {
 | **Search Speed**     | Slow (130ms)    | Fast (40ms)     | Fast (40ms)       |
 | **Precision**        | Medium (72%)    | High (89%)      | High (89%)        |
 | **Recall**           | High (85%)      | Medium (78%)    | High (85%)        |
-| **Compliance**       | ✅ Perfect      | ❌ Not verbatim | ✅ Perfect        |
-| **Exact Quotes**     | ✅ Always       | ❌ Never        | ✅ On demand      |
+| **Compliance**       | Perfect         | Not verbatim    | Perfect           |
+| **Exact Quotes**     | Always          | Never           | On demand         |
 | **Setup Complexity** | Low             | Medium          | Medium            |
 | **Best For**         | Compliance      | Efficiency      | Production        |
-| **Recommendation**   | ⭐⭐⭐          | ⭐⭐⭐⭐        | ⭐⭐⭐⭐⭐        |
+| **Recommendation**   | Good            | Better          | Best              |
 
 ## Conclusion
 
@@ -1202,17 +1204,17 @@ if (metrics.factPerformance > metrics.rawPerformance * 1.5) {
 1. Start with hybrid
 2. Measure performance and costs
 3. Optimize based on your specific needs
-4. Consider Cloud Mode auto-extraction for convenience
+4. Consider Cloud Mode auto-extraction for convenience (planned)
 
 **Remember:** Cortex's ACID layer means you always have raw conversations as backup, even if you only index facts in vector layer. This is a unique advantage - other memory systems typically discard raw data to save storage.
 
 ## Next Steps
 
-- **[Fact Extraction Guide](../02-core-features/08-fact-extraction)** - Implement fact extraction
-- **[Memory Operations](../03-api-reference/02-memory-operations)** - API reference
-- **[Semantic Search](../02-core-features/02-semantic-search)** - Search strategies
-- **[Governance Policies](../03-api-reference/10-governance-policies-api)** - Retention rules
+- **[Fact Extraction Guide](/core-features/fact-extraction)** - Implement fact extraction
+- **[Memory Operations](/api-reference/memory-operations)** - API reference
+- **[Semantic Search](/core-features/semantic-search)** - Search strategies
+- **[Governance Policies](/api-reference/governance-policies-api)** - Retention rules
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

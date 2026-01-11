@@ -263,12 +263,12 @@ class TestMemoryStreaming:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-metadata",
+                conversation_id=self.ctx.conversation_id("metadata"),
                 user_message="Important message",
                 response_stream=simple_stream(),
-                user_id="user-meta",
+                user_id=self.ctx.user_id("user-meta"),
                 user_name="MetaUser",
-                agent_id="test-agent",
+                agent_id=self.ctx.agent_id("test-agent"),
                 importance=80,
                 tags=["important", "weather"],
             )

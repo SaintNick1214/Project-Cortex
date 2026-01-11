@@ -1,48 +1,113 @@
 # Memory Spaces Guide
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 Multi-tenancy and isolation with Cortex Memory Spaces.
 
 ## Overview
 
-Memory Spaces provide isolated memory contexts for different users, teams, or projects.
+Memory Spaces provide isolated memory contexts for different users, teams, or projects. They are automatically created when you first use a `memorySpaceId` - no explicit registration is required for basic usage. Memory spaces provide complete data isolation, ensuring that all memories, conversations, facts, and contexts are scoped to a specific memory space.
 
 ## Use Cases
 
 ### 1. Per-User Isolation
 
 ```typescript
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: `user-${currentUser.id}`,
   userId: currentUser.id,
+  agentId: 'my-assistant',
 });
 ```
 
 ### 2. Team Workspaces
 
 ```typescript
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: `team-${currentTeam.id}`,
   userId: currentUser.id,
+  agentId: 'my-assistant',
 });
 ```
 
 ### 3. Project-Based
 
 ```typescript
+import { createCortexMemory } from "@cortexmemory/vercel-ai-provider";
+
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: `project-${projectId}`,
   userId: currentUser.id,
+  agentId: 'my-assistant',
 });
 ```
 
 ## Benefits
 
-- 🔒 Data isolation
-- 🏢 Multi-tenant SaaS ready
-- 👥 Team collaboration
-- 📊 Per-space analytics
+<FeatureGrid>
+  <FeatureCard
+    icon="lock"
+    title="Data Isolation"
+    description="Complete separation of data between memory spaces"
+    size="large"
+  />
+  <FeatureCard
+    icon="users"
+    title="Multi-Tenant SaaS"
+    description="Built-in support for SaaS multi-tenancy"
+    size="large"
+  />
+  <FeatureCard
+    icon="hive"
+    title="Team Collaboration"
+    description="Share memory within teams or organizations"
+    size="large"
+  />
+  <FeatureCard
+    icon="analytics"
+    title="Per-Space Analytics"
+    description="Track usage and performance per memory space"
+    size="large"
+  />
+</FeatureGrid>
 
-See examples/memory-spaces for complete multi-tenant application.
+## Managing Memory Spaces
+
+For advanced usage, you can explicitly manage memory spaces using the Cortex SDK. Memory spaces can be registered, queried, updated, and deleted through the [Memory Space Operations API](/api-reference/memory-space-operations). This includes capabilities like:
+
+- Explicitly registering memory spaces with metadata
+- Querying memory space details and statistics
+- Updating memory space configurations
+- Deleting memory spaces (with cascade options)
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Memory Space Operations" 
+    description="Full API reference" 
+    href="/api-reference/memory-space-operations" 
+  />
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Cross-application memory sharing" 
+    href="/integrations/vercel-ai-sdk/hive-mode" 
+  />
+  <QuickNavItem 
+    title="Getting Started" 
+    description="Vercel AI SDK setup guide" 
+    href="/integrations/vercel-ai-sdk/getting-started" 
+  />
+  <QuickNavItem 
+    title="Core Memory Spaces" 
+    description="Core feature documentation" 
+    href="/core-features/memory-spaces" 
+  />
+</QuickNav>

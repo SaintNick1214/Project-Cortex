@@ -139,7 +139,7 @@ const results = await cortex.memory.search(
 
 **That's it!** Your AI agent now has persistent memory.
 
-**Next steps:** [Getting Started Guide](./Documentation/01-getting-started/01-introduction.md) | [CLI Reference](./Documentation/06-tools/01-cli-reference.md)
+**Next steps:** [Getting Started Guide](/getting-started/introduction) | [CLI Reference](/tools/cli-reference)
 
 ---
 
@@ -197,7 +197,7 @@ Cortex provides a complete memory system for AI agents:
 - Rate limiting and circuit breakers
 - Priority queue for critical operations
 
-See [CHANGELOG.md](./CHANGELOG.md) for complete release history.
+See [What's New](/whats-new) for complete release history.
 
 ---
 
@@ -360,9 +360,9 @@ Cortex is designed with two deployment modes:
 ### Reference
 
 - [API Reference](https://docs.cortexmemory.dev/api-reference/overview) - Full API documentation
-- [CLI Reference](./Documentation/06-tools/01-cli-reference.md) - Complete command documentation
+- [CLI Reference](/tools/cli-reference) - Complete command documentation
 - [System Architecture](https://docs.cortexmemory.dev/architecture/system-overview) - How it works
-- [Local Documentation](./Documentation/00-README.md) - Repository documentation
+- [Local Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation) - Repository documentation
 
 ## 🤝 Get Involved
 
@@ -391,7 +391,7 @@ We're building Cortex in public and would love your input!
 5. **Improve Documentation** - Help us make the docs clearer and more comprehensive
 6. **Spread the Word** - Star the repo, share with others building AI agents
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
+See [CONTRIBUTING.md](/project/contributing) for detailed contribution guidelines.
 
 ## 🚦 Roadmap
 
@@ -445,12 +445,12 @@ Socket.dev may flag "network access" in this package. This is **expected and saf
 - The SDK requires network access to communicate with Convex (cloud database)
 - All network calls go to `*.convex.cloud` endpoints only
 - This is documented, audited, and necessary for core functionality
-- See [`.socket.dev.yml`](./.socket.dev.yml) for our security policy
+- See [`.socket.dev.yml`](https://github.com/SaintNick1214/Project-Cortex/blob/main/.socket.dev.yml) for our security policy
 
 **Report Security Issues:**
 
 - 🔒 Email: security@cortexmemory.dev
-- 🔐 See [SECURITY.md](./SECURITY.md) for our security policy
+- 🔐 See [SECURITY.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/SECURITY.md) for our security policy
 
 ## 📦 Publishing Releases
 
@@ -459,14 +459,14 @@ Cortex SDK uses **dual release workflows**:
 **🤖 Automated** (Production - recommended):
 
 - Bump version in `package.json` → Push to `main` → GitHub Action publishes automatically
-- Full details: [RELEASE-GUIDE.md](./RELEASE-GUIDE.md)
+- Full details: [RELEASE-GUIDE.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/RELEASE-GUIDE.md)
 
 **💻 Manual** (Beta/hotfix - full control):
 
 - Run `npm run release` for interactive publishing
-- See: [scripts/release.ps1](./scripts/release.ps1)
+- See: [scripts/release.ps1](https://github.com/SaintNick1214/Project-Cortex/blob/main/scripts/release.ps1)
 
-**Setup**: [.github/SETUP-AUTOMATED-RELEASES.md](.github/SETUP-AUTOMATED-RELEASES.md)
+**Setup**: [.github/SETUP-AUTOMATED-RELEASES.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/.github/SETUP-AUTOMATED-RELEASES.md)
 
 ## 📄 License
 
@@ -487,7 +487,7 @@ You may NOT use Cortex to create a competing commercial product or service that 
 **Future Apache 2.0:**
 Each version automatically becomes Apache 2.0 licensed two years after release.
 
-See [LICENSE.md](./LICENSE.md) for full details.
+See [LICENSE.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/LICENSE.md) for full details.
 
 **Cortex Cloud**: Commercial service (future)
 

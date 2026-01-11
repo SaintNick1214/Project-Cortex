@@ -38,12 +38,28 @@ export const CONFIG = {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 let cortexClient: Cortex | null = null;
+let initPromise: Promise<Cortex> | null = null;
 
 /**
- * Get or create a Cortex SDK client
+ * Initialize the Cortex SDK client (async)
+ *
+ * Uses Cortex.create() for automatic graph configuration from env vars.
+ * When CORTEX_GRAPH_SYNC=true and NEO4J_URI (or MEMGRAPH_URI) is set,
+ * the graph adapter is automatically created and connected.
+ *
+ * v0.29.0+: Graph sync is automatic when graphAdapter is configured.
+ * No need to pass syncToGraph option to remember() calls.
  */
-export function getCortex(): Cortex {
-  if (!cortexClient) {
+export async function initCortex(): Promise<Cortex> {
+  if (cortexClient) {
+    return cortexClient;
+  }
+
+  if (initPromise) {
+    return initPromise;
+  }
+
+  initPromise = (async () => {
     const convexUrl = process.env.CONVEX_URL;
     if (!convexUrl) {
       throw new Error(
@@ -65,9 +81,29 @@ export function getCortex(): Cortex {
       };
     }
 
-    cortexClient = new Cortex(config);
-  }
+    // Use Cortex.create() for async initialization with auto graph configuration
+    // This automatically:
+    // - Detects CORTEX_GRAPH_SYNC=true
+    // - Reads NEO4J_URI/MEMGRAPH_URI and credentials from env
+    // - Creates and connects the CypherGraphAdapter
+    cortexClient = await Cortex.create(config);
+    return cortexClient;
+  })();
 
+  return initPromise;
+}
+
+/**
+ * Get the Cortex SDK client (must call initCortex first)
+ *
+ * @throws Error if client hasn't been initialized
+ */
+export function getCortex(): Cortex {
+  if (!cortexClient) {
+    throw new Error(
+      "Cortex client not initialized. Call initCortex() first.",
+    );
+  }
   return cortexClient;
 }
 

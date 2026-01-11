@@ -19,7 +19,7 @@
  */
 
 import * as readline from "readline";
-import { closeCortex } from "./cortex.js";
+import { closeCortex, initCortex, CONFIG } from "./cortex.js";
 import {
   chat,
   recallMemories,
@@ -188,6 +188,22 @@ async function main(): Promise<void> {
 
   // Print welcome
   printWelcome("cli");
+
+  // Initialize Cortex client (async for graph support)
+  // v0.29.0+: Uses Cortex.create() for automatic graph configuration
+  try {
+    await initCortex();
+    // Check if graph is actually configured (flag + URI)
+    const hasGraphUri = !!(process.env.NEO4J_URI || process.env.MEMGRAPH_URI);
+    if (CONFIG.enableGraphMemory && hasGraphUri) {
+      printSuccess("Graph memory connected (auto-sync active)");
+    } else if (CONFIG.enableGraphMemory && !hasGraphUri) {
+      printInfo("Graph sync enabled but no database URI configured (NEO4J_URI or MEMGRAPH_URI)");
+    }
+  } catch (error) {
+    printError("Failed to initialize Cortex", error instanceof Error ? error : undefined);
+    process.exit(1);
+  }
 
   // Initialize conversation
   const convId = getConversationId();

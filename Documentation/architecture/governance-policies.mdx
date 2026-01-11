@@ -1,6 +1,13 @@
+---
+id: governance-policies
+title: Governance Policies
+sidebar_position: 9
+description: Centralized control over data retention, purging, and compliance rules across all Cortex storage layers
+---
+
 # Governance Policies
 
-> **Last Updated**: 2026-01-01
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
 Centralized control over data retention, purging, and compliance rules across all Cortex storage layers.
 
@@ -72,7 +79,7 @@ const gdprPolicy = await cortex.governance.getTemplate("GDPR");
 const hipaaPolicy = await cortex.governance.getTemplate("HIPAA");
 
 // Provides:
-// - 6-year retention minimum
+// - 6-year retention minimum (no archiveAfter - immediate deletion after 6 years)
 // - Unlimited audit logs
 // - No auto-deletion
 // - Strict access logging
@@ -102,10 +109,10 @@ const finraPolicy = await cortex.governance.getTemplate("FINRA");
 // - Unlimited versions for financial records
 // - No purgeOnUserRequest (regulatory override)
 // - No auto-deletion
-// - All importance levels require justification
+// - High/critical importance levels (80-100) require justification
 ```
 
-> **Note:** FINRA regulations require retention even when users request deletion. The template enforces regulatory compliance over individual requests.
+<Callout type="info">FINRA regulations require retention even when users request deletion. The template enforces regulatory compliance over individual requests.</Callout>
 
 ## Policy Configuration
 
@@ -141,17 +148,19 @@ await cortex.governance.setPolicy({
     },
     purging: {
       autoCleanupVersions: true,
+      purgeUnusedAfter: "90d", // Optional: Purge entities not referenced for this period
     },
   },
 
   // Mutable store lifecycle
   mutable: {
     retention: {
-      defaultTTL: null, // No expiration by default
+      // defaultTTL omitted (undefined = no expiration by default)
       purgeInactiveAfter: "2y",
     },
     purging: {
       autoDelete: false,
+      deleteUnaccessedAfter: "1y", // Optional: Delete keys not accessed for this period
     },
   },
 
@@ -166,7 +175,7 @@ await cortex.governance.setPolicy({
         { range: [71, 89], versions: 20 }, // High: 20 versions
         { range: [90, 100], versions: 30 }, // Critical: 30 versions
       ],
-      bySourceType: {
+      bySourceType: {  // Optional: override versions by source type
         conversation: 10,
         a2a: 15,
         system: 5,
@@ -228,6 +237,8 @@ await cortex.governance.setAgentOverride("temp-agent-space", {
 
 ## Session Policies
 
+> **Note**: Sessions policy configuration is currently not enforced by the governance backend. This feature is planned for a future release.
+
 Configure session lifecycle and limits:
 
 ```typescript
@@ -255,7 +266,7 @@ await cortex.governance.setPolicy({
 });
 ```
 
-See [Sessions Management](./sessions-management) for how these policies are enforced.
+See [Sessions Management](/advanced-topics/sessions-management) for how these policies are enforced.
 
 ## Policy Enforcement
 
@@ -285,7 +296,7 @@ const result = await cortex.governance.enforce({
 });
 ```
 
-> **Note:** Automatic enforcement on every storage operation is planned for a future release. Currently, use manual `enforce()` calls or scheduled jobs.
+<Callout type="info">Automatic enforcement on every storage operation is planned for a future release. Currently, use manual `enforce()` calls or scheduled jobs.</Callout>
 
 ## Policy Simulation
 
@@ -488,26 +499,94 @@ try {
 | Code                            | Description                              |
 | ------------------------------- | ---------------------------------------- |
 | `MISSING_SCOPE`                 | organizationId or memorySpaceId required |
-| `INVALID_PERIOD_FORMAT`         | Period must be "7d", "30d", "1y", etc.   |
+| `MISSING_POLICY`                | Policy object is null or undefined       |
+| `MISSING_REQUIRED_FIELD`        | Required field is missing from policy    |
+| `INVALID_SCOPE`                 | Scope object is invalid                  |
+| `INVALID_PERIOD_FORMAT`         | Period must match pattern `\d+[dmy]` (e.g., "7d", "30d", "1y") |
 | `INVALID_IMPORTANCE_RANGE`      | Range must be 0-100, min < max           |
 | `OVERLAPPING_IMPORTANCE_RANGES` | Ranges cannot overlap                    |
 | `INVALID_VERSIONS`              | Version count must be >= -1              |
+| `INVALID_LAYERS`                | Invalid layer names provided             |
+| `INVALID_RULES`                 | Invalid rule names provided              |
+
+**Period Format Details:**
+
+Periods must match the pattern `\d+[dmy]` where:
+- `\d+` = one or more digits
+- `[dmy]` = exactly one of: `d` (days), `m` (months), `y` (years)
+- Valid examples: `"7d"`, `"30d"`, `"1y"` (Good)
+- Invalid examples: `"7 days"`, `"30D"`, `"1year"` (Invalid)
 
 ## Summary
 
 **Governance Policies provide:**
 
-- ✅ Centralized retention rules across all layers
-- ✅ Pre-built compliance templates (GDPR, HIPAA, SOC2, FINRA)
-- ✅ Importance-based version management
-- ✅ Policy simulation before applying
-- ✅ Compliance reporting and audit trails
-- ✅ Memory space-specific overrides
-- ⏳ Automatic enforcement _(planned)_
+<FeatureGrid>
+  <FeatureCard
+    title="Centralized retention rules"
+    description="Manage retention policies across all storage layers from one place"
+    icon="settings"
+  />
+  <FeatureCard
+    title="Pre-built compliance templates"
+    description="GDPR, HIPAA, SOC2, and FINRA templates for quick compliance setup"
+    icon="shield"
+  />
+  <FeatureCard
+    title="Importance-based version management"
+    description="Automatically manage versions based on data importance levels"
+    icon="layers"
+  />
+  <FeatureCard
+    title="Policy simulation"
+    description="Test policy impact before applying to understand cost savings"
+    icon="analytics"
+  />
+  <FeatureCard
+    title="Compliance reporting"
+    description="Generate audit trails and compliance reports for regulatory requirements"
+    icon="file"
+  />
+  <FeatureCard
+    title="Memory space overrides"
+    description="Override organization policies for specific memory spaces"
+    icon="config"
+  />
+  <FeatureCard
+    title="Multi-tenant isolation"
+    description="Tenant-specific policies with complete data isolation"
+    icon="isolation"
+  />
+  <FeatureCard
+    title="Automatic enforcement"
+    description="Planned: Automatic policy enforcement on storage operations"
+    icon="fast"
+  />
+</FeatureGrid>
 
-## Related Features
+---
 
-- **[Sessions Management](./sessions-management)** - Session lifecycle policies
-- **[Memory Spaces](./memory-spaces)** - Space-specific policy overrides
-- **[User Profiles](./user-profiles)** - GDPR cascade deletion
-- **[Fact Integration](./fact-integration)** - Facts layer retention
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    href="/advanced-topics/sessions-management" 
+    title="Sessions Management"
+    description="Session lifecycle policies"
+  />
+  <QuickNavItem 
+    href="/core-features/memory-spaces" 
+    title="Memory Spaces"
+    description="Space-specific policy overrides"
+  />
+  <QuickNavItem 
+    href="/core-features/user-profiles" 
+    title="User Profiles"
+    description="GDPR cascade deletion"
+  />
+  <QuickNavItem 
+    href="/api-reference/governance-policies-api" 
+    title="API Reference"
+    description="Governance API documentation"
+  />
+</QuickNav>

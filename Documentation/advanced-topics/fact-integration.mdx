@@ -1,0 +1,255 @@
+---
+id: fact-integration
+title: Fact Integration
+sidebar_position: 12
+description: Advanced patterns for using extracted facts
+---
+
+# Fact Integration
+
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
+<Callout type="info" title="Facts Throughout the System">
+  Facts are automatically integrated into `recall()`, search results, and memory enrichment. This page covers advanced patterns for **working with** extracted facts.
+</Callout>
+
+<Callout type="tip" title="Looking for Extraction?">
+  See [Fact Extraction](/core-features/fact-extraction) for how to configure automatic or custom fact extraction from conversations.
+</Callout>
+
+---
+
+## Using Facts in Retrieval
+
+<Callout type="tip" title="recall() Includes Facts Automatically">
+  `recall()` searches facts as a primary source, not just enrichment. No extra configuration needed.
+</Callout>
+
+```typescript
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-space',
+  query: "What are the user's preferences?",
+  embedding: await embed("What are the user's preferences?"),
+});
+
+// Facts included automatically in sources
+console.log(`Found ${result.sources.facts?.items.length || 0} facts`);
+
+result.sources.facts?.items.forEach(fact => {
+  console.log(`- ${fact.fact} (${fact.confidence}% confidence)`);
+});
+
+// LLM-ready context includes facts
+console.log(result.context);
+// "## Known Facts
+//  - User prefers dark mode (95% confidence)
+//  - User likes TypeScript (88% confidence)
+//  
+//  ## Recent Memories
+//  ..."
+```
+
+### Filter Facts in recall()
+
+```typescript
+// Get only high-confidence facts
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-space',
+  query: 'user preferences',
+  sources: {
+    facts: {
+      minConfidence: 80,
+      factType: 'preference',
+      isSuperseded: false,  // Current beliefs only
+    },
+  },
+});
+```
+
+---
+
+## Direct Fact Operations
+
+<Tabs>
+  <TabItem value="store" label="Store">
+
+```typescript
+await cortex.facts.store({
+  memorySpaceId: 'user-space',
+  userId: 'user-123',
+  fact: 'User prefers TypeScript over JavaScript',
+  factType: 'preference',
+  subject: 'user-123',
+  predicate: 'language_preference',
+  object: 'TypeScript',
+  confidence: 90,
+  sourceType: 'conversation',
+  tags: ['coding', 'preferences'],
+});
+```
+
+  </TabItem>
+  <TabItem value="search" label="Search">
+
+```typescript
+const facts = await cortex.facts.search(
+  'user-space',
+  'language preferences',
+  {
+    factType: 'preference',
+    minConfidence: 70,
+    userId: 'user-123',
+  }
+);
+
+facts.forEach(f => console.log(`${f.fact} (${f.confidence}%)`));
+```
+
+  </TabItem>
+  <TabItem value="list" label="List by Type">
+
+```typescript
+// Get all preferences
+const prefs = await cortex.facts.list({
+  memorySpaceId: 'user-space',
+  factType: 'preference',
+  isSuperseded: false,  // Current only
+});
+
+// Get all identity facts
+const identity = await cortex.facts.list({
+  memorySpaceId: 'user-space',
+  factType: 'identity',
+});
+```
+
+  </TabItem>
+  <TabItem value="update" label="Update">
+
+```typescript
+// Update confidence after validation
+await cortex.facts.update('user-space', factId, {
+  confidence: 95,  // Increased confidence
+  tags: [...existingTags, 'verified'],
+});
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Fact Types
+
+<APITable parameters={[
+  { name: "preference", type: "FactType", description: "User likes/dislikes something (e.g., 'User prefers dark mode')" },
+  { name: "identity", type: "FactType", description: "Who someone is (e.g., 'User is a software engineer')" },
+  { name: "knowledge", type: "FactType", description: "Something the user knows (e.g., 'User knows Python')" },
+  { name: "relationship", type: "FactType", description: "Connection between entities (e.g., 'User works_at Google')" },
+  { name: "event", type: "FactType", description: "Something that happened (e.g., 'User joined on 2025-01-15')" },
+  { name: "observation", type: "FactType", description: "System-observed behavior (e.g., 'User logs in daily')" },
+]} />
+
+---
+
+## Fact Versioning
+
+<Callout type="info" title="Facts are Versioned">
+  When a fact is updated or superseded via belief revision, previous versions are preserved for audit trails.
+</Callout>
+
+```typescript
+// Get complete version history
+const history = await cortex.facts.getHistory('user-space', factId);
+
+history.forEach(version => {
+  console.log(`v${version.version}: ${version.fact}`);
+  console.log(`  Confidence: ${version.confidence}%`);
+  console.log(`  Updated: ${new Date(version.updatedAt).toISOString()}`);
+});
+
+// Get supersession chain (evolution of belief)
+const chain = await cortex.facts.getSupersessionChain(factId);
+// Returns: [oldest] -> [older] -> [current]
+
+chain.forEach((entry, i) => {
+  console.log(`${i + 1}. ${entry.fact}`);
+  if (entry.supersededBy) {
+    console.log(`   Superseded by: ${entry.supersededBy}`);
+  }
+});
+```
+
+---
+
+## Best Practices
+
+<Callout type="tip" title="Extract Atomic Facts">
+
+```typescript
+// Bad: Compound fact
+{ fact: 'User is 25 years old from California and likes hiking' }
+
+// Good: Atomic facts
+[
+  { fact: 'User is 25 years old', factType: 'identity' },
+  { fact: 'User is from California', factType: 'identity' },
+  { fact: 'User likes hiking', factType: 'preference' },
+]
+```
+
+</Callout>
+
+<Callout type="tip" title="Use Consistent Subject IDs">
+
+```typescript
+// Always use same format for subject
+extractFacts: async (userMsg, agentResp) => [{
+  fact: 'User prefers email notifications',
+  subject: userId,  // Consistent ID
+  confidence: 90,
+}],
+```
+
+</Callout>
+
+<Callout type="tip" title="Tag for Organization">
+
+```typescript
+{
+  fact: 'User speaks English and Spanish',
+  factType: 'knowledge',
+  tags: ['language', 'communication', 'multilingual'],
+}
+```
+
+</Callout>
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Facts API" 
+    description="Complete API reference" 
+    href="/api-reference/facts-operations" 
+  />
+  <QuickNavItem 
+    title="Fact Extraction" 
+    description="How facts are extracted" 
+    href="/core-features/fact-extraction" 
+  />
+  <QuickNavItem 
+    title="Semantic Search" 
+    description="Query facts via memory search" 
+    href="/core-features/semantic-search" 
+  />
+  <QuickNavItem 
+    title="Graph Integration" 
+    description="Facts in knowledge graphs" 
+    href="/advanced-topics/graph-integration" 
+  />
+</QuickNav>

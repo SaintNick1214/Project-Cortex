@@ -1,6 +1,6 @@
 # Vector Embeddings
 
-> **Last Updated**: 2026-01-01
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
 Embedding strategy, dimension choices, and integration with Convex vector search.
 
@@ -10,25 +10,32 @@ Cortex is **embedding-agnostic** - bring your own embeddings or use Cloud Mode f
 
 **Key Principle:** Cortex provides the storage and search infrastructure; you choose the embedding strategy.
 
-```
-┌─────────────────────────────────────────────────┐
-│         Direct Mode (You Manage)                │
-├─────────────────────────────────────────────────┤
-│ 1. Choose embedding model (OpenAI, Cohere, etc.)│
-│ 2. Generate embeddings in your code             │
-│ 3. Store with cortex.memory.store()             │
-│ 4. Cortex indexes in Convex vector search       │
-└─────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────┐
-│         Cloud Mode (Cortex Manages)             │
-├─────────────────────────────────────────────────┤
-│ 1. Set autoEmbed: true                          │
-│ 2. Cortex generates embeddings automatically    │
-│ 3. Cortex stores and indexes                    │
-│ 4. Automatic model upgrades over time           │
-└─────────────────────────────────────────────────┘
-```
+<FlowDiagram title="Embedding Modes" caption="Direct Mode and Cloud Mode provide different levels of embedding management">
+  <FlowNode title="Direct Mode (You Manage)" icon="code" variant="default">
+    Choose embedding model (OpenAI, Cohere, etc.)
+  </FlowNode>
+  <FlowNode title="Generate Embeddings" icon="code" variant="warning">
+    Generate embeddings in your code
+  </FlowNode>
+  <FlowNode title="Store with Cortex" icon="database" variant="success">
+    Store with cortex.memory.store()
+  </FlowNode>
+  <FlowNode title="Cortex Indexes" icon="search" variant="primary">
+    Cortex indexes in Convex vector search
+  </FlowNode>
+  <FlowNode title="Cloud Mode (Cortex Manages)" icon="cloud" variant="default">
+    Set autoEmbed: true (planned)
+  </FlowNode>
+  <FlowNode title="Automatic Generation" icon="code" variant="warning">
+    Cortex generates embeddings automatically (planned)
+  </FlowNode>
+  <FlowNode title="Automatic Storage" icon="database" variant="success">
+    Cortex stores and indexes (planned)
+  </FlowNode>
+  <FlowNode title="Model Upgrades" icon="cloud" variant="primary">
+    Automatic model upgrades over time (planned)
+  </FlowNode>
+</FlowDiagram>
 
 ---
 
@@ -52,10 +59,32 @@ Cortex supports **any embedding model** that produces float64 arrays:
 
 **Cortex is flexible:**
 
-- ✅ Any provider
-- ✅ Any dimension (1536, 3072, 384, etc.)
-- ✅ Mix models (per agent or per deployment)
-- ✅ Upgrade models anytime
+<FeatureGrid>
+  <FeatureCard
+    icon="layers"
+    title="Any Provider"
+    description="Support for OpenAI, Cohere, Voyage AI, Google, and local models"
+    size="large"
+  />
+  <FeatureCard
+    icon="settings"
+    title="Any Dimension"
+    description="Support for 1536, 3072, 384, 768, 1024 dimensions and more"
+    size="large"
+  />
+  <FeatureCard
+    icon="connect"
+    title="Mix Models"
+    description="Use different models per agent or per deployment"
+    size="large"
+  />
+  <FeatureCard
+    icon="rocket"
+    title="Upgrade Anytime"
+    description="Switch embedding models as better options become available"
+    size="large"
+  />
+</FeatureGrid>
 
 ---
 
@@ -155,6 +184,9 @@ await cortex.memory.store("user-123-personal", {
   content: "User prefers dark mode",
   contentType: "raw",
   embedding: await embed("User prefers dark mode"), // ← Your embedding
+  // Enrichment fields (for bullet-proof retrieval)
+  enrichedContent: "User prefers dark mode for UI", // Expanded searchable content
+  factCategory: "ui_preference", // Category for filtering and boosting
   source: { type: "system", timestamp: new Date() },
   metadata: { importance: 60, tags: ["preferences"] },
 });
@@ -192,8 +224,13 @@ async function embed(text: string): Promise<number[]> {
 // Use like OpenAI
 await cortex.memory.store('my-memory-space', {
   content: 'Important information',
+  contentType: 'raw',
   embedding: await embed('Important information'),
-  ...
+  // Optional: Add enrichment for better retrieval
+  enrichedContent: 'Important information about user preferences',
+  factCategory: 'user_preference',
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 70, tags: ['important'] },
 });
 ```
 
@@ -220,8 +257,10 @@ async function embed(text: string): Promise<number[]> {
 // Use with Cortex
 await cortex.memory.store('my-memory-space', {
   content: text,
+  contentType: 'raw',
   embedding: await embed(text),
-  ...
+  source: { type: 'system', timestamp: new Date() },
+  metadata: { importance: 50, tags: [] },
 });
 ```
 
@@ -229,38 +268,44 @@ await cortex.memory.store('my-memory-space', {
 
 ## Cloud Mode Integration
 
-### Auto-Embeddings
+<Callout type="info">Cloud Mode with automatic embedding generation (`autoEmbed: true`) is a planned feature. The `autoEmbed` parameter exists in the SDK types but requires Cloud Mode backend infrastructure to be fully operational.</Callout>
+
+### Auto-Embeddings (Planned Feature)
 
 ```typescript
 const cortex = new Cortex({
-  mode: "cloud",
-  apiKey: process.env.CORTEX_CLOUD_KEY,
+  convexUrl: process.env.CONVEX_URL,
+  // Cloud Mode configuration (when available)
+  // mode: "cloud",
+  // apiKey: process.env.CORTEX_CLOUD_KEY,
 });
 
-// Zero-config embeddings
-await cortex.memory.store("agent-1", {
-  content: "User prefers dark mode",
-  contentType: "raw",
-  autoEmbed: true, // ← Cortex Cloud generates embedding
-  source: { type: "system", timestamp: new Date() },
-  metadata: { importance: 60 },
-});
-// No API keys, no embedding code, automatic upgrades ✅
+// Planned: Zero-config embeddings
+// await cortex.memory.store("agent-1", {
+//   content: "User prefers dark mode",
+//   contentType: "raw",
+//   autoEmbed: true, // ← Cortex Cloud generates embedding (planned)
+//   source: { type: "system", timestamp: new Date() },
+//   metadata: { importance: 60 },
+// });
+// No API keys, no embedding code, automatic upgrades (planned)
 
-// Search (Cloud provides query embedding too)
-const results = await cortex.memory.search("agent-1", "user preferences", {
-  autoEmbed: true, // ← Cortex Cloud generates query embedding
-  limit: 10,
-});
+// Planned: Search with Cloud-provided query embedding
+// const results = await cortex.memory.search("agent-1", "user preferences", {
+//   autoEmbed: true, // ← Cortex Cloud generates query embedding (planned)
+//   limit: 10,
+// });
 ```
 
-**Cloud Mode handles:**
+**Planned Cloud Mode features:**
 
 - Embedding generation (OpenAI text-embedding-3-large)
 - Model selection and upgrades
 - Rate limiting and retries
 - Cost optimization
 - Dimension management
+
+**Current Status**: Use Direct Mode (bring your own embeddings) until Cloud Mode is fully available.
 
 ---
 
@@ -308,6 +353,54 @@ await cortex.memory.store("agent-1", {
 
 ---
 
+## Enrichment Fields (Bullet-Proof Retrieval)
+
+For improved search accuracy, Cortex supports enrichment fields that enhance semantic search:
+
+### `enrichedContent`
+
+Expanded searchable content that provides more context for embedding generation. Use this when the base `content` is too brief or needs additional context.
+
+```typescript
+await cortex.memory.store("agent-1", {
+  content: "Dark mode",
+  contentType: "raw",
+  enrichedContent: "User prefers dark mode for UI interface", // More context
+  embedding: await embed("User prefers dark mode for UI interface"), // Embed enriched content
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 60, tags: ["preferences"] },
+});
+```
+
+**Best Practice**: Generate embeddings from `enrichedContent` (if provided) rather than `content` for better search results.
+
+### `factCategory`
+
+Category identifier for filtering and score boosting. When searching with `queryCategory`, memories matching the category receive a +30% score boost.
+
+```typescript
+// Store with category
+await cortex.memory.store("agent-1", {
+  content: "User prefers dark mode",
+  contentType: "raw",
+  factCategory: "ui_preference", // Category identifier
+  embedding: await embed("User prefers dark mode"),
+  source: { type: "system", timestamp: new Date() },
+  metadata: { importance: 60, tags: ["preferences"] },
+});
+
+// Search with category boost
+const results = await cortex.memory.search("agent-1", "user preferences", {
+  embedding: await embed("user preferences"),
+  queryCategory: "ui_preference", // Boosts matching category results
+  limit: 10,
+});
+```
+
+**Common Categories**: `ui_preference`, `addressing_preference`, `communication_style`, `contact_info`, `personal_fact`, etc.
+
+---
+
 ## Search Behavior
 
 ### With Embeddings (Semantic Search)
@@ -323,12 +416,64 @@ const results = await cortex.memory.search("agent-1", "user password", {
 await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
-    q.similar("embedding", queryEmbedding, 10).eq("agentId", "agent-1"),
+    q.eq("memorySpaceId", "agent-1").similar("embedding", queryEmbedding, 10),
   )
   .collect();
 
 // Returns memories ranked by cosine similarity
 // Even if exact keywords don't match!
+```
+
+### Search Options
+
+Cortex provides several options to refine search results:
+
+#### `minScore` - Minimum Similarity Threshold
+
+Filter results by minimum cosine similarity score (0-1). Only memories with similarity scores above the threshold are returned.
+
+```typescript
+// Only return highly relevant results
+const results = await cortex.memory.search("agent-1", "user password", {
+  embedding: await embed("user password"),
+  minScore: 0.7, // Only return results with similarity >= 0.7
+  limit: 10,
+});
+```
+
+**Recommendations:**
+- `0.5-0.6`: Broad results, good for exploratory search
+- `0.7-0.8`: Balanced relevance (recommended default)
+- `0.8+`: Strict matching, only very similar results
+
+#### `queryCategory` - Category Score Boost
+
+Boost results that match a specific `factCategory`. Matching memories receive a +30% score boost.
+
+```typescript
+// Boost UI preference results
+const results = await cortex.memory.search("agent-1", "user preferences", {
+  embedding: await embed("user preferences"),
+  queryCategory: "ui_preference", // +30% score boost for matching category
+  limit: 10,
+});
+```
+
+**Use Cases:**
+- Finding specific types of facts (preferences, contact info, etc.)
+- Prioritizing categorized memories over general content
+- Improving retrieval for structured data
+
+#### Combining Options
+
+```typescript
+// High-quality, category-specific results
+const results = await cortex.memory.search("agent-1", "user preferences", {
+  embedding: await embed("user preferences"),
+  minScore: 0.7, // High relevance threshold
+  queryCategory: "ui_preference", // Boost matching category
+  limit: 10,
+});
 ```
 
 ### Without Embeddings (Keyword Search)
@@ -344,7 +489,7 @@ const results = await cortex.memory.search("agent-1", "user password", {
 await ctx.db
   .query("memories")
   .withSearchIndex("by_content", (q) =>
-    q.search("content", "user password").eq("agentId", "agent-1"),
+    q.eq("memorySpaceId", "agent-1").search("content", "user password"),
   )
   .collect();
 
@@ -352,21 +497,48 @@ await ctx.db
 // Requires actual words to match
 ```
 
-### Hybrid Search (Best of Both)
+### Hybrid Search (Manual Implementation)
+
+<Callout type="info">Automatic hybrid search is not currently implemented. To combine semantic and keyword search, you need to call both methods and merge the results manually.</Callout>
 
 ```typescript
-// Cortex can combine strategies
-const results = await cortex.memory.search("agent-1", "user password", {
-  embedding: await embed("user password"),
-  strategy: "auto", // Combines semantic + keyword
-  limit: 10,
-});
+// Manual hybrid search implementation
+async function hybridSearch(memorySpaceId: string, query: string) {
+  // 1. Semantic search (with embedding)
+  const semanticResults = await cortex.memory.search(memorySpaceId, query, {
+    embedding: await embed(query),
+    limit: 20,
+  });
 
-// Behind the scenes:
-// 1. Semantic search (top 20)
-// 2. Keyword search (top 20)
-// 3. Merge and re-rank by combined score
-// 4. Return top 10
+  // 2. Keyword search (without embedding)
+  const keywordResults = await cortex.memory.search(memorySpaceId, query, {
+    // No embedding - uses keyword search
+    limit: 20,
+  });
+
+  // 3. Merge and deduplicate by memory ID
+  const seen = new Set<string>();
+  const merged: typeof semanticResults.memories = [];
+
+  // Add semantic results first (higher priority)
+  for (const memory of semanticResults.memories) {
+    if (!seen.has(memory.id)) {
+      seen.add(memory.id);
+      merged.push(memory);
+    }
+  }
+
+  // Add keyword results that weren't in semantic results
+  for (const memory of keywordResults.memories) {
+    if (!seen.has(memory.id)) {
+      seen.add(memory.id);
+      merged.push(memory);
+    }
+  }
+
+  // 4. Return top 10
+  return merged.slice(0, 10);
+}
 ```
 
 ---
@@ -376,13 +548,13 @@ const results = await cortex.memory.search("agent-1", "user password", {
 ### 1. Consistent Dimensions
 
 ```typescript
-// ✅ Good: Same model throughout
+// Good: Same model throughout
 const EMBEDDING_MODEL = "text-embedding-3-large";
 const DIMENSIONS = 3072;
 
+// Note: Dimensions are configured in your Convex schema, not in the SDK config
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL,
-  embeddingDimensions: DIMENSIONS, // Enforced
 });
 
 async function embed(text: string) {
@@ -393,13 +565,13 @@ async function embed(text: string) {
   });
 }
 
-// ❌ Bad: Mixed dimensions
+// Bad: Mixed dimensions
 await cortex.memory.store("agent-1", {
   embedding: await embed1536(text), // 1536-dim
 });
 
 await cortex.memory.store("agent-1", {
-  embedding: await embed3072(text), // 3072-dim ❌ Error!
+  embedding: await embed3072(text), // 3072-dim Error!
 });
 ```
 
@@ -428,7 +600,7 @@ await cortex.memory.store('agent-1', {
 ### 3. Batch Embedding Generation
 
 ```typescript
-// ✅ Efficient: Batch embeddings
+// Efficient: Batch embeddings
 async function embedBatch(texts: string[]): Promise<number[][]> {
   const response = await openai.embeddings.create({
     model: 'text-embedding-3-large',
@@ -596,16 +768,16 @@ for (const memory of old) {
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 3072,
-  filterFields: ["agentId", "userId"],  // ← Pre-filter before similarity
+  filterFields: ["memorySpaceId", "userId"],  // ← Pre-filter before similarity
 })
 
 // Query with pre-filtering (fast!)
 await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
-    q.similar("embedding", queryVector, 10)
-     .eq("agentId", agentId)      // ← Filtered BEFORE similarity search
-     .eq("userId", userId)        // ← Much faster for large datasets
+    q.eq("memorySpaceId", memorySpaceId)  // ← Filtered BEFORE similarity search
+     .eq("userId", userId)                // ← Much faster for large datasets
+     .similar("embedding", queryVector, 10)
   )
   .collect();
 ```
@@ -625,12 +797,12 @@ memories: defineTable({ ... })
   .vectorIndex("by_embedding", {
     vectorField: "embedding",
     dimensions: 3072,
-    filterFields: ["agentId"],  // General search
+    filterFields: ["memorySpaceId"],  // General search
   })
   .vectorIndex("by_embedding_user", {
     vectorField: "embedding",
     dimensions: 3072,
-    filterFields: ["agentId", "userId"],  // User-specific search
+    filterFields: ["memorySpaceId", "userId"],  // User-specific search
   });
 
 // Use appropriate index
@@ -680,7 +852,7 @@ async function storeWithSelectiveEmbedding(
 ) {
   const shouldEmbed = data.metadata.importance >= 70;
 
-  await cortex.memory.store(agentId, {
+  await cortex.memory.store(memorySpaceId, {
     ...data,
     embedding: shouldEmbed ? await embed(data.content) : undefined,
   });
@@ -710,7 +882,7 @@ async function expandedSearch(memorySpaceId: string, query: string) {
   // Search with each variation
   const allResults = await Promise.all(
     embeddings.map((emb) =>
-      cortex.memory.search(agentId, query, {
+      cortex.memory.search(memorySpaceId, query, {
         embedding: emb,
         limit: 10,
       }),
@@ -746,7 +918,7 @@ async function semanticQuery(memorySpaceId: string, userQuery: string) {
   });
 
   // Search with improved query
-  return await cortex.memory.search(agentId, improved, {
+  return await cortex.memory.search(memorySpaceId, improved, {
     embedding: await embed(improved),
     limit: 10,
   });
@@ -790,7 +962,7 @@ async function semanticQuery(memorySpaceId: string, userQuery: string) {
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 3072,
-  filterFields: ["agentId"],  // ← Searches only agent's vectors
+  filterFields: ["memorySpaceId"],  // ← Searches only memory space's vectors
 })
 
 // 1M total vectors, 1K per agent
@@ -879,21 +1051,34 @@ const logs = await cortex.memory.search("agent-1", "started", {
 
 ---
 
-## Cloud Mode Embedding Pipeline
+## Cloud Mode Embedding Pipeline (Planned)
 
-### How Auto-Embed Works
+<Callout type="info">This section describes planned Cloud Mode functionality. Currently, you must use Direct Mode and provide your own embeddings.</Callout>
 
-```mermaid
-graph LR
-    A[SDK: autoEmbed=true] --> B[Cortex Cloud API]
-    B --> C[Generate Embedding]
-    C --> D[OpenAI API]
-    D --> C
-    C --> E[Store in Convex]
-    E --> F[Your Convex Instance]
-```
+### How Auto-Embed Will Work (Planned)
 
-**Process:**
+<FlowDiagram title="Cloud Mode Auto-Embed Pipeline" caption="Planned Cloud Mode embedding generation flow">
+  <FlowNode title="SDK: autoEmbed=true" icon="code" variant="default">
+    Developer calls cortex.memory.store() with autoEmbed: true
+  </FlowNode>
+  <FlowNode title="Cortex Cloud API" icon="cloud" variant="primary">
+    Request received by Cortex Cloud service
+  </FlowNode>
+  <FlowNode title="Generate Embedding" icon="code" variant="warning">
+    Embedding generation initiated
+  </FlowNode>
+  <FlowNode title="OpenAI API" icon="cloud" variant="warning">
+    Calls OpenAI text-embedding-3-large API
+  </FlowNode>
+  <FlowNode title="Store in Convex" icon="database" variant="success">
+    Embedding stored in your Convex instance
+  </FlowNode>
+  <FlowNode title="Your Convex Instance" icon="server" variant="success">
+    Memory available for search
+  </FlowNode>
+</FlowDiagram>
+
+**Planned Process:**
 
 1. Developer calls `cortex.memory.store({ autoEmbed: true })`
 2. Cortex Cloud receives request
@@ -901,12 +1086,14 @@ graph LR
 4. Stores in your Convex instance with embedding
 5. Returns memory ID to developer
 
-**Benefits:**
+**Planned Benefits:**
 
 - No API key management
 - Automatic retries and error handling
 - Model upgrades (when better models release)
 - Usage-based pricing ($0.02/1K tokens)
+
+**Current Status**: Use Direct Mode with your own embedding generation until Cloud Mode is available.
 
 ---
 
@@ -1116,9 +1303,9 @@ async function upgradeDimensions(memorySpaceId: string) {
 
 ## Next Steps
 
-- **[Search Strategy](./search-strategy)** - Multi-strategy search implementation
-- **[Performance](./performance)** - Optimization techniques
+- **[Search Strategy](/architecture/search-strategy)** - Multi-strategy search implementation
+- **[Performance](/architecture/performance)** - Optimization techniques
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

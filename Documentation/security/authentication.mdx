@@ -1,0 +1,307 @@
+---
+id: authentication
+title: Authentication
+sidebar_position: 1
+description: Understanding authentication context in Cortex for user tracking, multi-tenancy, and session management
+---
+
+# Authentication
+
+Understanding authentication context in Cortex for user tracking, multi-tenancy, and session management.
+
+## Overview
+
+<Callout type="info" title="Key Concept">
+  Auth context is **just data** — not a protocol or SDK. Extract it from your auth system (whatever that is) and pass it to Cortex.
+</Callout>
+
+<FlowDiagram 
+  title="Authentication Flow" 
+  caption="Your auth system → Cortex SDK → Auto-injected to all operations"
+>
+  <FlowNode 
+    title="Your Auth System" 
+    icon="shield" 
+    variant="primary"
+  >
+    Auth0 • Clerk • JWT • NextAuth • Custom
+  </FlowNode>
+  <FlowNode 
+    title="Extract & Create Context" 
+    icon="code" 
+    variant="warning"
+  >
+    userId • tenantId • sessionId • metadata
+  </FlowNode>
+  <FlowNode 
+    title="Cortex SDK" 
+    icon="package" 
+    variant="success"
+  >
+    Auto-injects auth to ALL operations
+  </FlowNode>
+</FlowDiagram>
+
+---
+
+## Why Authentication Matters
+
+<FeatureGrid>
+  <FeatureCard
+    title="User Tracking"
+    description="Link all data to users for personalization and context"
+    icon="user"
+    size="large"
+  />
+  <FeatureCard
+    title="Multi-Tenancy"
+    description="Complete data separation for SaaS platforms"
+    icon="shield"
+    size="large"
+  />
+  <FeatureCard
+    title="GDPR Compliance"
+    description="Enable cascade deletion across all layers"
+    icon="lock"
+    size="large"
+  />
+  <FeatureCard
+    title="Session Management"
+    description="Track user activity across devices"
+    icon="history"
+    size="large"
+  />
+</FeatureGrid>
+
+---
+
+## Quick Start
+
+<Steps>
+  <Step title="Extract Auth Information">
+
+From your auth system (JWT, session, OAuth token):
+
+```typescript
+import jwt from "jsonwebtoken";
+
+function extractAuth(token: string) {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+    sub: string;
+    tenant_id?: string;
+    session_id?: string;
+  };
+
+  return {
+    userId: decoded.sub,
+    tenantId: decoded.tenant_id,
+    sessionId: decoded.session_id,
+  };
+}
+```
+
+  </Step>
+  <Step title="Create Auth Context">
+
+```typescript
+import { createAuthContext } from "@cortexmemory/sdk";
+
+const auth = createAuthContext({
+  userId: extracted.userId,
+  tenantId: extracted.tenantId,
+  sessionId: extracted.sessionId,
+});
+```
+
+  </Step>
+  <Step title="Initialize Cortex">
+
+```typescript
+import { Cortex } from "@cortexmemory/sdk";
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  auth,
+});
+```
+
+  </Step>
+  <Step title="Use Cortex">
+
+All operations automatically include auth context:
+
+```typescript
+await cortex.memory.remember({
+  memorySpaceId: "user-space",
+  userMessage: "Hello",
+  agentResponse: "Hi!",
+  userName: "User",
+  // userId, tenantId auto-injected
+});
+```
+
+  </Step>
+</Steps>
+
+---
+
+## Auth Context Fields
+
+<APITable parameters={[
+  { name: "userId", type: "string", required: true, description: "Identifies the authenticated user. Auto-injected to all entities." },
+  { name: "tenantId", type: "string", required: false, description: "Multi-tenant SaaS isolation. Auto-filters ALL queries by tenant." },
+  { name: "sessionId", type: "string", required: false, description: "Track user sessions across devices." },
+  { name: "claims", type: "object", required: false, description: "Raw data from auth provider (email, iss, aud, etc.)" },
+  { name: "metadata", type: "object", required: false, description: "Your application data (role, plan, features, etc.)" },
+]} />
+
+### Example with All Fields
+
+```typescript
+const auth = createAuthContext({
+  userId: "user-123",           // Required
+  tenantId: "customer-acme",    // Multi-tenant isolation
+  sessionId: "session-xyz",     // Session tracking
+  claims: {
+    email: "user@example.com",
+    iss: "https://auth.myapp.com",
+  },
+  metadata: {
+    role: "admin",
+    plan: "enterprise",
+  },
+});
+```
+
+---
+
+## Common Patterns
+
+<Tabs groupId="auth-pattern">
+  <TabItem value="jwt" label="Web App (JWT)">
+
+```typescript
+// Middleware extracts auth
+app.use((req, res, next) => {
+  const token = req.headers.authorization?.replace("Bearer ", "");
+  if (!token) return res.status(401).send("Unauthorized");
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    req.auth = createAuthContext({
+      userId: decoded.sub,
+      tenantId: decoded.tenant_id,
+      sessionId: decoded.session_id,
+    });
+    next();
+  } catch (err) {
+    res.status(401).send("Invalid token");
+  }
+});
+
+// Route uses auth
+app.post("/chat", (req, res) => {
+  const cortex = new Cortex({ convexUrl, auth: req.auth });
+  // Use cortex...
+});
+```
+
+  </TabItem>
+  <TabItem value="cli" label="CLI Tool">
+
+```typescript
+// Single-user CLI tool — no tenants needed
+const auth = createAuthContext({
+  userId: "local-user",
+  metadata: { hostname: os.hostname() },
+});
+
+const cortex = new Cortex({ convexUrl, auth });
+```
+
+  </TabItem>
+  <TabItem value="service" label="Background Jobs">
+
+```typescript
+// Service account for automated tasks
+const serviceAuth = createAuthContext({
+  userId: "service-session-cleanup",
+  metadata: {
+    type: "service_account",
+    purpose: "cleanup",
+  },
+});
+
+const cortex = new Cortex({ convexUrl, auth: serviceAuth });
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Security Best Practices
+
+<Callout type="warning" title="Always Extract tenantId from Secure Token">
+
+```typescript
+// GOOD: From signed JWT
+const decoded = jwt.verify(token, secret);
+const auth = createAuthContext({
+  userId: decoded.sub,
+  tenantId: decoded.tenant_id, // From secure source
+});
+
+// BAD: From client input — user could change this!
+const auth = createAuthContext({
+  userId: decoded.sub,
+  tenantId: req.body.tenantId, // NEVER do this
+});
+```
+
+</Callout>
+
+<Callout type="tip" title="Validate Auth Context">
+
+```typescript
+async function validateAuth(auth: AuthContext) {
+  const user = await cortex.users.get(auth.userId);
+  if (!user) throw new Error("User not found");
+  return true;
+}
+```
+
+</Callout>
+
+<Callout type="tip" title="Rotate Sessions">
+
+```typescript
+// Expire old sessions periodically
+await cortex.sessions.expireIdle({
+  idleTimeout: 30 * 60 * 1000, // 30 minutes
+});
+```
+
+</Callout>
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Isolation Boundaries" 
+    description="Multi-layer isolation model" 
+    href="/security/isolation-boundaries" 
+  />
+  <QuickNavItem 
+    title="Auth Context API" 
+    description="Complete API reference" 
+    href="/api-reference/auth-context-api" 
+  />
+  <QuickNavItem 
+    title="Auth Providers" 
+    description="Integration guides" 
+    href="/integrations/auth-providers" 
+  />
+</QuickNav>

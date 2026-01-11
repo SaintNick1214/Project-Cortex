@@ -1,6 +1,15 @@
+---
+id: immutable-store-api
+title: Immutable Store API
+sidebar_position: 9
+description: Complete API reference for shared immutable data storage with automatic versioning. Layer 1b provides TRULY SHARED immutable data across ALL memory spaces with ACID guarantees, automatic versioning, and configurable retention.
+---
+
 # Immutable Store API
 
-> **Last Updated**: 2026-01-01
+<Callout type="info">
+**Last Updated**: 2026-01-09
+</Callout>
 
 Complete API reference for shared immutable data storage with automatic versioning.
 
@@ -10,20 +19,20 @@ The Immutable Store API (Layer 1b) provides methods for storing **TRULY SHARED**
 
 **Critical Distinction:**
 
-- ❌ **NO memorySpaceId parameter** - This layer is shared across ALL spaces
-- ✅ Accessible from any memory space
-- ✅ Perfect for: KB articles, policies, org docs, shared knowledge
+- **NO memorySpaceId parameter** - This layer is shared across ALL spaces
+- Accessible from any memory space
+- Perfect for: KB articles, policies, org docs, shared knowledge
 
 **Key Characteristics:**
 
-- ✅ **TRULY Shared** - ALL memory spaces can access
-- ✅ **NO Isolation** - Not scoped to memorySpace (unlike L1a, L2, L3)
-- ✅ **Immutable** - Can't edit once stored
-- ✅ **Versioned** - Automatic version tracking
-- ✅ **Append-only** - New versions append, old preserved
-- ✅ **Purgeable** - Can delete by policy or manually
-- ✅ **ACID** - All guarantees of Layer 1
-- ✅ **Multi-Tenant** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
+- **TRULY Shared** - ALL memory spaces can access
+- **NO Isolation** - Not scoped to memorySpace (unlike L1a, L2, L3)
+- **Immutable** - Can't edit once stored
+- **Versioned** - Automatic version tracking
+- **Append-only** - New versions append, old preserved
+- **Purgeable** - Can delete by policy or manually
+- **ACID** - All guarantees of Layer 1
+- **Multi-Tenant** - Optional `tenantId` for SaaS isolation (auto-injected from AuthContext)
 
 **Comparison to Other Stores:**
 
@@ -48,10 +57,13 @@ Store immutable data. Creates v1 or increments version if ID exists.
 
 ```typescript
 cortex.immutable.store(
-  entry: ImmutableEntry,
-  options?: StoreImmutableOptions
+  entry: ImmutableEntry
 ): Promise<ImmutableRecord>
 ```
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 
 **Parameters:**
 
@@ -69,9 +81,6 @@ interface ImmutableEntry {
   };
 }
 
-interface StoreImmutableOptions {
-  syncToGraph?: boolean; // Sync to graph database (if configured)
-}
 ```
 
 **userId Field:**
@@ -107,18 +116,15 @@ await cortex.immutable.store({
   },
 });
 
-// With graph sync (if graph adapter configured)
-await cortex.immutable.store(
-  {
-    type: "kb-article",
-    id: "product-guide",
-    data: {
-      title: "Product Guide",
-      content: "...",
-    },
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true
+await cortex.immutable.store({
+  type: "kb-article",
+  id: "product-guide",
+  data: {
+    title: "Product Guide",
+    content: "...",
   },
-  { syncToGraph: true },
-);
+});
 ```
 
 **Returns:**
@@ -206,7 +212,9 @@ console.log(v2.previousVersions.length); // 1 (contains v1)
 - `ImmutableValidationError('INVALID_METADATA')` - Metadata is not a valid object
 - `ImmutableValidationError('MISSING_REQUIRED_FIELD')` - Required field missing
 
-> **Note:** Validation errors throw `ImmutableValidationError` (exported from `@cortexso/sdk/immutable`). Backend errors are wrapped in standard `Error` objects.
+<Callout type="info">
+Validation errors throw `ImmutableValidationError` (exported from `@cortexso/sdk/immutable`). Backend errors are wrapped in standard `Error` objects.
+</Callout>
 
 ---
 
@@ -574,7 +582,9 @@ if (result.deleted) {
 - `ImmutableValidationError('INVALID_ID')` - ID is empty or invalid
 - `Error('IMMUTABLE_ENTRY_NOT_FOUND')` - Entry doesn't exist (from Convex backend)
 
-**Warning:** This deletes ALL versions. Vector memories with `immutableRef` will have broken references.
+<Callout type="warning">
+This deletes ALL versions. Vector memories with `immutableRef` will have broken references.
+</Callout>
 
 ---
 
@@ -599,7 +609,9 @@ interface PurgeManyFilter {
 }
 ```
 
-**Note:** At least one filter (type or userId) must be provided to prevent accidental deletion of all records.
+<Callout type="info">
+At least one filter (type or userId) must be provided to prevent accidental deletion of all records.
+</Callout>
 
 **Returns:**
 
@@ -852,13 +864,13 @@ if (results[0].immutableRef) {
 ### 1. Use Meaningful Types
 
 ```typescript
-// ✅ Good types
+// Good types
 "kb-article";
 "policy-refund";
 "audit-log-financial";
 "agent-reasoning";
 
-// ❌ Bad types
+// Avoid: Generic types
 "data";
 "item";
 "thing";
@@ -867,19 +879,19 @@ if (results[0].immutableRef) {
 ### 2. Version-Aware IDs
 
 ```typescript
-// ✅ Logical IDs that can be versioned
+// Good: Logical IDs that can be versioned
 "refund-policy"; // Same ID, multiple versions
 "guide-refunds";
 "config-max-users";
 
-// ❌ Timestamped IDs (defeats versioning)
+// Avoid: Timestamped IDs (defeats versioning)
 "refund-policy-2025-10-24"; // Each is separate, no version tracking
 ```
 
 ### 3. Store Complete Data
 
 ```typescript
-// ✅ Self-contained
+// Good: Self-contained
 await cortex.immutable.store({
   type: "kb-article",
   id: "guide-1",
@@ -892,7 +904,7 @@ await cortex.immutable.store({
   },
 });
 
-// ❌ Partial data requiring joins
+// Avoid: Partial data requiring joins
 await cortex.immutable.store({
   type: "kb-article",
   id: "guide-1",
@@ -1104,7 +1116,7 @@ if (fact?.data.conversationRef) {
 
 **Use Case:** Facts with entity relationships can be synced to graph databases for knowledge graph construction.
 
-**Learn more:** [Graph Database Integration](../07-advanced-topics/02-graph-database-integration)
+**Learn more:** [Graph Database Integration](/advanced-topics/graph-database-integration)
 
 ---
 
@@ -1112,12 +1124,12 @@ if (fact?.data.conversationRef) {
 
 **Immutable Store provides:**
 
-- ✅ Shared knowledge across all agents
-- ✅ Automatic versioning (no data loss)
-- ✅ Temporal queries (what was true when)
-- ✅ ACID guarantees
-- ✅ Configurable retention
-- ✅ Full audit trail
+- Shared knowledge across all agents
+- Automatic versioning (no data loss)
+- Temporal queries (what was true when)
+- ACID guarantees
+- Configurable retention
+- Full audit trail
 
 **Use for:**
 
@@ -1138,10 +1150,24 @@ if (fact?.data.conversationRef) {
 
 ## Next Steps
 
-- **[Mutable Store API](./mutable-store-api)** - Live shared data
-- **[Governance Policies API](./governance-policies-api)** - Multi-layer retention rules
-- **[Memory Operations API](./memory-operations)** - Vector layer operations
+<QuickNav>
+  <QuickNavItem
+    title="Mutable Store API"
+    description="Live shared data with ACID transaction guarantees"
+    href="/api-reference/mutable-store-api"
+  />
+  <QuickNavItem
+    title="Governance Policies API"
+    description="Multi-layer retention rules and compliance"
+    href="/api-reference/governance-policies-api"
+  />
+  <QuickNavItem
+    title="Memory Operations API"
+    description="Vector layer operations for semantic search"
+    href="/api-reference/memory-operations"
+  />
+</QuickNav>
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
