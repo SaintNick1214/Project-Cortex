@@ -6,7 +6,7 @@
  */
 
 import type { Cortex } from "../../../src";
-import type { FactRecord, RecallResult } from "../../../src/types";
+import type { FactRecord } from "../../../src/types";
 import { generateRealEmbedding } from "./chaos-generators";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -181,14 +181,14 @@ export async function verifyRecallAccuracy(
     minAccuracy?: number;
   },
 ): Promise<RecallAccuracyResult> {
-  const { userId, useEmbedding = true, minAccuracy = 0.8 } = options || {};
+  const { userId, useEmbedding = true, minAccuracy: _minAccuracy = 0.8 } = options || {};
 
   // Generate embedding if requested
   let embedding: number[] | undefined;
   if (useEmbedding) {
     try {
       embedding = await generateRealEmbedding(query);
-    } catch (error) {
+    } catch (_error) {
       console.warn("Failed to generate embedding, falling back to text search");
     }
   }
@@ -209,8 +209,8 @@ export async function verifyRecallAccuracy(
     .map((item) => item.fact!.fact);
 
   // Calculate matches
-  const foundSet = new Set(recalledFactContents);
-  const expectedSet = new Set(expectedFactContents);
+  const _foundSet = new Set(recalledFactContents);
+  const _expectedSet = new Set(expectedFactContents);
 
   const found = expectedFactContents.filter((f) => 
     recalledFactContents.some((r) => r.includes(f) || f.includes(r)),

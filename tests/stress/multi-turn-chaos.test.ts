@@ -17,10 +17,10 @@
  * @jest-environment node
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach, jest } from "@jest/globals";
+import { describe, it, expect, beforeAll, afterAll, jest } from "@jest/globals";
 import { Cortex } from "../../src";
 import { ConvexClient } from "convex/browser";
-import { createNamedTestRunContext, type TestRunContext } from "../helpers/isolation";
+import { createNamedTestRunContext } from "../helpers/isolation";
 import {
   generateForgetfulUserPattern,
   generateIndecisiveUserPattern,
@@ -28,22 +28,17 @@ import {
   generateCombinedChaos,
   generateParallelChaosPatterns,
   generateRealEmbedding,
-  createFactExtractor,
   TOPIC_CONFIGS,
   type ConversationTurn,
-  type ExtractedFact,
 } from "./helpers/chaos-generators";
 import {
-  verifyFactState,
   verifyExactFactState,
-  verifyRecallAccuracy,
   verifyRecallExcludesSuperseded,
   validateSupersessionChain,
   validateAllSupersessionChains,
   verifyUserIsolation,
   verifyRecallIsolation,
   verifyNoDuplicates,
-  runFullValidation,
 } from "./helpers/state-validators";
 import {
   MetricsCollector,
@@ -623,13 +618,13 @@ describeWithOpenAI("Stress Tests - Combined Chaos (100+ turn ultimate test)", ()
 
     // Handle the fact that generateCombinedChaos returns both turns and finalState
     let turns: ConversationTurn[];
-    let expectedFinalState: Record<string, string> = {};
+    let _expectedFinalState: Record<string, string> = {};
 
     if (Array.isArray(chaosResult)) {
       turns = chaosResult;
     } else {
       turns = (chaosResult as any).turns;
-      expectedFinalState = (chaosResult as any).finalState || {};
+      _expectedFinalState = (chaosResult as any).finalState || {};
     }
 
     console.log(`\n📝 Starting Combined Chaos test with ${turns.length} turns\n`);

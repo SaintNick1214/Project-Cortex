@@ -53,6 +53,10 @@ describe("State Transition Testing", () => {
   // Use ctx-generated IDs for proper isolation
   const getSpaceId = (suffix: string) => ctx.memorySpaceId(suffix);
 
+  // Helper to ensure Convex consistency for sequential operations
+  const waitForConsistency = () =>
+    new Promise((resolve) => setTimeout(resolve, 100));
+
   beforeAll(() => {
     console.log(`\n🧪 State Transition Tests - Run ID: ${ctx.runId}\n`);
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
@@ -86,6 +90,9 @@ describe("State Transition Testing", () => {
 
           expect(testCtx.status).toBe(fromStatus);
           expect(testCtx.contextId).toBeDefined();
+
+          // Wait for Convex consistency before subsequent operations
+          await waitForConsistency();
 
           // Verify in list with initial status
           const beforeList = await cortex.contexts.list({
@@ -145,6 +152,9 @@ describe("State Transition Testing", () => {
             status: fromStatus,
           });
 
+          // Wait for Convex consistency before update
+          await waitForConsistency();
+
           await cortex.contexts.update(testCtx.contextId, { status: toStatus });
 
           // Get final counts
@@ -182,6 +192,9 @@ describe("State Transition Testing", () => {
         data: originalData,
       });
 
+      // Wait for Convex consistency before transitions
+      await waitForConsistency();
+
       // Transition through multiple states
       await cortex.contexts.update(testCtx.contextId, { status: "blocked" });
       const blocked = await cortex.contexts.get(testCtx.contextId);
@@ -209,6 +222,9 @@ describe("State Transition Testing", () => {
 
       expect(testCtx.completedAt).toBeUndefined();
 
+      // Wait for Convex consistency before update
+      await waitForConsistency();
+
       // Transition to completed
       const completed = await cortex.contexts.update(testCtx.contextId, {
         status: "completed",
@@ -229,6 +245,9 @@ describe("State Transition Testing", () => {
         status: "active",
       });
 
+      // Wait for Convex consistency before creating child with parent reference
+      await waitForConsistency();
+
       const child = await cortex.contexts.create({
         memorySpaceId: spaceId,
         userId,
@@ -236,6 +255,9 @@ describe("State Transition Testing", () => {
         status: "active",
         parentId: parent.contextId,
       });
+
+      // Wait for Convex consistency before update
+      await waitForConsistency();
 
       // Transition parent
       await cortex.contexts.update(parent.contextId, { status: "completed" });
@@ -255,6 +277,9 @@ describe("State Transition Testing", () => {
         purpose: "Rapid transition test",
         status: "active",
       });
+
+      // Wait for Convex consistency before rapid transitions
+      await waitForConsistency();
 
       // Rapid transitions
       await cortex.contexts.update(testCtx.contextId, { status: "blocked" });
@@ -283,6 +308,9 @@ describe("State Transition Testing", () => {
           }),
         ),
       );
+
+      // Wait for Convex consistency after batch create
+      await waitForConsistency();
 
       // Verify each in correct status list
       for (let i = 0; i < transitionableStatuses.length; i++) {

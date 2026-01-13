@@ -647,7 +647,7 @@ export function randomDelay(minMs: number = 100, maxMs: number = 500): Promise<v
  */
 export function extractFinalState(
   turns: ConversationTurn[],
-  userId: string,
+  _userId: string,
 ): Record<string, string> {
   const state: Record<string, string> = {};
 
