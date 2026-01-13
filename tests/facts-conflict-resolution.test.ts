@@ -453,11 +453,15 @@ describe("Conflict Resolution", () => {
       expect(decision.targetFactId).toBe("fact-001");
     });
 
-    it("should ADD for low similarity facts", () => {
+    it("should ADD for low similarity facts with different predicates", () => {
+      // To get ADD, facts must have:
+      // 1. Low text similarity (< 0.5)
+      // 2. Different subjects OR unrelated predicates
       const newFact: ConflictCandidate = {
         fact: "User enjoys hiking",
         confidence: 80,
         subject: "user",
+        predicate: "hobby", // Explicit predicate for "enjoys hiking"
       };
       const existingFacts = [
         createMockFact({
@@ -465,9 +469,11 @@ describe("Conflict Resolution", () => {
           fact: "User works at Google",
           confidence: 80,
           subject: "user",
+          predicate: "employment", // Explicit predicate for "works at"
         }),
       ];
       const decision = getDefaultDecision(newFact, existingFacts);
+      // Different predicates (hobby vs employment) should result in ADD
       expect(decision.action).toBe("ADD");
       expect(decision.targetFactId).toBeNull();
     });
