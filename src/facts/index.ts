@@ -16,6 +16,7 @@ import type {
   QueryByRelationshipFilter,
   QueryBySubjectFilter,
   SearchFactsOptions,
+  SemanticSearchFactsOptions,
   StoreFactOptions,
   StoreFactParams,
   UpdateFactInput,
@@ -216,7 +217,7 @@ export class FactsAPI {
    */
   async store(
     params: StoreFactParams,
-    options?: StoreFactOptions,
+    _options?: StoreFactOptions,
   ): Promise<FactRecord> {
     // Validate required fields
     validateMemorySpaceId(params.memorySpaceId);
@@ -264,28 +265,30 @@ export class FactsAPI {
           semanticContext: params.semanticContext,
           entities: params.entities,
           relations: params.relations,
+          // Embedding for semantic search (v0.30.0+)
+          embedding: params.embedding,
         }),
       "facts:store",
     );
 
-    // Sync to graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    const factRecord = result as FactRecord;
+
+    // Sync to graph automatically when graph adapter is configured
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
+    if (this.graphAdapter) {
       try {
         const nodeId = await syncFactToGraph(
-          result as FactRecord,
+          factRecord,
           this.graphAdapter,
+          this.authContext?.tenantId,
         );
-        await syncFactRelationships(
-          result as FactRecord,
-          nodeId,
-          this.graphAdapter,
-        );
+        await syncFactRelationships(factRecord, nodeId, this.graphAdapter);
       } catch (error) {
-        console.warn("Failed to sync fact to graph:", error);
+        console.warn("[Cortex] Failed to sync fact to graph:", error);
       }
     }
 
-    return result as FactRecord;
+    return factRecord;
   }
 
   /**
@@ -381,7 +384,6 @@ export class FactsAPI {
               ? [...new Set([...existing.tags, ...params.tags])]
               : undefined,
           },
-          { syncToGraph: options?.syncToGraph },
         );
 
         return {
@@ -736,6 +738,78 @@ export class FactsAPI {
   }
 
   /**
+   * Semantic search for facts using vector embeddings (v0.30.0+)
+   *
+   * Uses cosine similarity to find semantically related facts,
+   * unlike text search which requires keyword matching.
+   *
+   * @param memorySpaceId - The memory space to search in
+   * @param embedding - The query embedding vector
+   * @param options - Search options (filters, limits, etc.)
+   * @returns Array of matching fact records
+   *
+   * @example
+   * ```typescript
+   * const embedding = await generateEmbedding('user preferences');
+   * const facts = await cortex.facts.semanticSearch('space-1', embedding, {
+   *   minConfidence: 80,
+   *   limit: 10,
+   * });
+   * ```
+   */
+  async semanticSearch(
+    memorySpaceId: string,
+    embedding: number[],
+    options?: SemanticSearchFactsOptions,
+  ): Promise<FactRecord[]> {
+    validateMemorySpaceId(memorySpaceId);
+
+    if (!embedding || embedding.length === 0) {
+      throw new Error("Embedding vector is required for semantic search");
+    }
+
+    if (options) {
+      if (options.minConfidence !== undefined) {
+        validateConfidence(options.minConfidence, "minConfidence");
+      }
+      if (options.tags !== undefined) {
+        validateStringArray(options.tags, "tags", true);
+      }
+      if (options.limit !== undefined) {
+        validateNonNegativeInteger(options.limit, "limit");
+      }
+      if (options.createdBefore && options.createdAfter) {
+        validateDateRange(
+          options.createdAfter,
+          options.createdBefore,
+          "createdAfter",
+          "createdBefore",
+        );
+      }
+    }
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.semanticSearch, {
+          memorySpaceId,
+          embedding,
+          tenantId: options?.tenantId ?? this.authContext?.tenantId,
+          userId: options?.userId,
+          minConfidence: options?.minConfidence,
+          includeSuperseded: options?.includeSuperseded,
+          minScore: options?.minScore,
+          limit: options?.limit,
+          tags: options?.tags,
+          createdAfter: options?.createdAfter?.getTime(),
+          createdBefore: options?.createdBefore?.getTime(),
+        }),
+      "facts:semanticSearch",
+    );
+
+    return result as FactRecord[];
+  }
+
+  /**
    * Update fact (creates new version)
    *
    * @example
@@ -750,7 +824,7 @@ export class FactsAPI {
     memorySpaceId: string,
     factId: string,
     updates: UpdateFactInput,
-    options?: UpdateFactOptions,
+    _options?: UpdateFactOptions,
   ): Promise<FactRecord> {
     validateMemorySpaceId(memorySpaceId);
     validateRequiredString(factId, "factId");
@@ -785,6 +859,8 @@ export class FactsAPI {
             semanticContext: updates.semanticContext,
             entities: updates.entities,
             relations: updates.relations,
+            // Embedding for semantic search (v0.30.0+)
+            embedding: updates.embedding,
           }),
         "facts:update",
       );
@@ -792,8 +868,11 @@ export class FactsAPI {
       this.handleConvexError(error);
     }
 
-    // Update in graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    const factRecord = result as FactRecord;
+
+    // Sync to graph automatically when graph adapter is configured
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
+    if (this.graphAdapter) {
       try {
         const nodes = await this.graphAdapter.findNodes("Fact", { factId }, 1);
         if (nodes.length > 0) {
@@ -803,11 +882,11 @@ export class FactsAPI {
           );
         }
       } catch (error) {
-        console.warn("Failed to update fact in graph:", error);
+        console.warn("[Cortex] Failed to update fact in graph:", error);
       }
     }
 
-    return result as FactRecord;
+    return factRecord;
   }
 
   /**
@@ -821,7 +900,7 @@ export class FactsAPI {
   async delete(
     memorySpaceId: string,
     factId: string,
-    options?: DeleteFactOptions,
+    _options?: DeleteFactOptions,
   ): Promise<{ deleted: boolean; factId: string }> {
     validateMemorySpaceId(memorySpaceId);
     validateRequiredString(factId, "factId");
@@ -841,12 +920,13 @@ export class FactsAPI {
       this.handleConvexError(error);
     }
 
-    // Delete from graph with Entity orphan cleanup
-    if (options?.syncToGraph && this.graphAdapter) {
+    // Delete from graph automatically with Entity orphan cleanup
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
+    if (this.graphAdapter) {
       try {
         await deleteFactFromGraph(factId, this.graphAdapter, true);
       } catch (error) {
-        console.warn("Failed to delete fact from graph:", error);
+        console.warn("[Cortex] Failed to delete fact from graph:", error);
       }
     }
 

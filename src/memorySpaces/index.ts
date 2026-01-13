@@ -97,7 +97,7 @@ export class MemorySpacesAPI {
    */
   async register(
     params: RegisterMemorySpaceParams,
-    options?: RegisterMemorySpaceOptions,
+    _options?: RegisterMemorySpaceOptions,
   ): Promise<MemorySpace> {
     // Validate required fields
     validateMemorySpaceId(params.memorySpaceId);
@@ -146,7 +146,7 @@ export class MemorySpacesAPI {
     }
 
     // Sync to graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         await syncMemorySpaceToGraph(result as MemorySpace, this.graphAdapter);
       } catch (error) {
@@ -301,7 +301,7 @@ export class MemorySpacesAPI {
       metadata?: Record<string, unknown>;
       status?: "active" | "archived";
     },
-    options?: UpdateMemorySpaceOptions,
+    _options?: UpdateMemorySpaceOptions,
   ): Promise<MemorySpace> {
     validateMemorySpaceId(memorySpaceId);
     validateUpdateParams(updates);
@@ -330,7 +330,7 @@ export class MemorySpacesAPI {
     }
 
     // Sync to graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         await syncMemorySpaceToGraph(result as MemorySpace, this.graphAdapter);
       } catch (error) {

@@ -99,7 +99,7 @@ import {
   type RevisionAction,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import type { LLMConfig } from "../index";
+import type { LLMConfig, EmbeddingConfig } from "../index";
 import { createLLMClient, type ExtractedFact, type LLMClient } from "../llm";
 import {
   MemoryValidationError,
@@ -152,6 +152,8 @@ export interface MemoryAPIDependencies {
   agents: AgentsAPI;
   /** LLM config for auto fact extraction */
   llm?: LLMConfig;
+  /** Embedding config for automatic semantic search (v0.30.0+) */
+  embedding?: EmbeddingConfig;
   /** Auth context for tenant isolation */
   authContext?: AuthContext;
 }
@@ -169,8 +171,12 @@ export class MemoryAPI {
   private readonly usersAPI?: UsersAPI;
   private readonly agentsAPI?: AgentsAPI;
   private readonly llmConfig?: LLMConfig;
+  private readonly embeddingConfig?: EmbeddingConfig;
   private readonly authContext?: AuthContext;
   private llmClient?: LLMClient | null;
+
+  // Cached embedding generator function (created from config)
+  private embeddingGenerator?: (text: string) => Promise<number[] | null>;
 
   constructor(
     client: ConvexClient,
@@ -187,7 +193,13 @@ export class MemoryAPI {
     this.usersAPI = dependencies?.users;
     this.agentsAPI = dependencies?.agents;
     this.llmConfig = dependencies?.llm;
+    this.embeddingConfig = dependencies?.embedding;
     this.authContext = dependencies?.authContext;
+
+    // Create embedding generator from config (v0.30.0+)
+    if (this.embeddingConfig) {
+      this.embeddingGenerator = this.createEmbeddingGenerator(this.embeddingConfig);
+    }
 
     // Pass resilience layer to sub-APIs (with authContext for tenant isolation)
     this.conversations = new ConversationsAPI(
@@ -220,6 +232,67 @@ export class MemoryAPI {
   }
 
   /**
+   * Create an embedding generator function from config (v0.30.0+)
+   *
+   * Enables batteries-included semantic search by auto-generating embeddings.
+   */
+  private createEmbeddingGenerator(
+    config: EmbeddingConfig,
+  ): (text: string) => Promise<number[] | null> {
+    if (config.provider === "custom" && config.generate) {
+      // Use custom embedding function
+      return async (text: string) => {
+        try {
+          return await config.generate!(text);
+        } catch (error) {
+          console.warn("[Cortex] Custom embedding generation failed:", error);
+          return null;
+        }
+      };
+    }
+
+    if (config.provider === "openai" && config.apiKey) {
+      // Use OpenAI embeddings API
+      const apiKey = config.apiKey;
+      const model = config.model || "text-embedding-3-small";
+
+      return async (text: string) => {
+        try {
+          const response = await fetch("https://api.openai.com/v1/embeddings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              model,
+              input: text,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.warn("[Cortex] OpenAI embedding API error:", errorText);
+            return null;
+          }
+
+          const data = (await response.json()) as {
+            data?: Array<{ embedding?: number[] }>;
+          };
+          return data.data?.[0]?.embedding || null;
+        } catch (error) {
+          console.warn("[Cortex] OpenAI embedding generation failed:", error);
+          return null;
+        }
+      };
+    }
+
+    // No valid config
+    console.warn("[Cortex] Invalid embedding config, no embedding generation available");
+    return async () => null;
+  }
+
+  /**
    * Execute an operation through the resilience layer (if available)
    */
   private async executeWithResilience<T>(
@@ -238,12 +311,12 @@ export class MemoryAPI {
 
   /**
    * Helper: Find and cascade delete facts linked to a memory
+   * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
   private async cascadeDeleteFacts(
     memorySpaceId: string,
     memoryId: string,
     conversationId?: string,
-    syncToGraph?: boolean,
   ): Promise<{ count: number; factIds: string[] }> {
     const allFacts = await this.facts.list({
       memorySpaceId,
@@ -259,7 +332,7 @@ export class MemoryAPI {
     const deletedFactIds: string[] = [];
     for (const fact of factsToDelete) {
       try {
-        await this.facts.delete(memorySpaceId, fact.factId, { syncToGraph });
+        await this.facts.delete(memorySpaceId, fact.factId);
         deletedFactIds.push(fact.factId);
       } catch (error) {
         console.warn("Failed to delete linked fact:", error);
@@ -271,12 +344,12 @@ export class MemoryAPI {
 
   /**
    * Helper: Archive facts (mark as expired)
+   * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
   private async archiveFacts(
     memorySpaceId: string,
     memoryId: string,
     conversationId?: string,
-    syncToGraph?: boolean,
   ): Promise<{ count: number; factIds: string[] }> {
     const allFacts = await this.facts.list({
       memorySpaceId,
@@ -292,15 +365,10 @@ export class MemoryAPI {
     const archivedFactIds: string[] = [];
     for (const fact of factsToArchive) {
       try {
-        await this.facts.update(
-          memorySpaceId,
-          fact.factId,
-          {
-            validUntil: Date.now(),
-            tags: [...fact.tags, "archived"],
-          },
-          { syncToGraph },
-        );
+        await this.facts.update(memorySpaceId, fact.factId, {
+          validUntil: Date.now(),
+          tags: [...fact.tags, "archived"],
+        });
         archivedFactIds.push(fact.factId);
       } catch (error) {
         console.warn("Failed to archive linked fact:", error);
@@ -448,7 +516,8 @@ export class MemoryAPI {
    * Build deduplication config from remember params
    *
    * Defaults to 'semantic' strategy for maximum effectiveness (convenience layer).
-   * Falls back to 'structural' if no generateEmbedding function is available.
+   * BATTERIES INCLUDED (v0.30.0+): Falls back to this.embeddingGenerator if available,
+   * then to 'structural' if no embedding function is available.
    * Returns undefined if deduplication is explicitly disabled.
    */
   private buildDeduplicationConfig(
@@ -462,13 +531,16 @@ export class MemoryAPI {
     // Determine the strategy - default to 'semantic'
     const strategy = params.factDeduplication ?? "semantic";
 
+    // BATTERIES INCLUDED: Use params.generateEmbedding, fall back to configured generator
+    const effectiveGenerator = params.generateEmbedding || this.embeddingGenerator;
+
     // Build the config
     const config: DeduplicationConfig = {
       strategy,
       similarityThreshold: 0.85,
-      generateEmbedding: params.generateEmbedding
+      generateEmbedding: effectiveGenerator
         ? async (text: string) => {
-            const result = await params.generateEmbedding!(text);
+            const result = await effectiveGenerator(text);
             if (!result) {
               throw new Error("generateEmbedding returned null");
             }
@@ -573,11 +645,9 @@ export class MemoryAPI {
 
   /**
    * Ensure memory space exists, auto-register if not
+   * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
    */
-  private async ensureMemorySpaceExists(
-    memorySpaceId: string,
-    syncToGraph: boolean,
-  ): Promise<void> {
+  private async ensureMemorySpaceExists(memorySpaceId: string): Promise<void> {
     if (!this.memorySpacesAPI) {
       // No memorySpaces API available - skip auto-registration
       return;
@@ -585,14 +655,11 @@ export class MemoryAPI {
 
     const existingSpace = await this.memorySpacesAPI.get(memorySpaceId);
     if (!existingSpace) {
-      await this.memorySpacesAPI.register(
-        {
-          memorySpaceId,
-          type: "custom",
-          name: memorySpaceId,
-        },
-        { syncToGraph },
-      );
+      await this.memorySpacesAPI.register({
+        memorySpaceId,
+        type: "custom",
+        name: memorySpaceId,
+      });
     }
   }
 
@@ -808,9 +875,9 @@ export class MemoryAPI {
       this.notifyOrchestrationStart(observer, orchestrationId);
     }
 
-    // Determine if we should sync to graph (default: true if configured)
+    // Determine if we should sync to graph (automatic when graphAdapter is configured)
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
     const shouldSyncToGraph =
-      options?.syncToGraph !== false &&
       this.graphAdapter !== undefined &&
       !this.shouldSkipLayer("graph", skipLayers);
 
@@ -829,7 +896,7 @@ export class MemoryAPI {
     }
 
     try {
-      await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
+      await this.ensureMemorySpaceExists(memorySpaceId);
       if (observer && !isPartialOrchestration) {
         const event = this.createLayerEvent(
           "memorySpace",
@@ -1184,15 +1251,17 @@ export class MemoryAPI {
           }
         }
 
-        // Generate embeddings (if provided)
+        // Generate embeddings - BATTERIES INCLUDED (v0.30.0+)
+        // Use params.generateEmbedding, fall back to configured embedding generator
         let userEmbedding: number[] | undefined;
         let agentEmbedding: number[] | undefined;
 
-        if (params.generateEmbedding) {
+        const effectiveEmbeddingFn = params.generateEmbedding || this.embeddingGenerator;
+        if (effectiveEmbeddingFn) {
           userEmbedding =
-            (await params.generateEmbedding(userContent)) || undefined;
+            (await effectiveEmbeddingFn(userContent)) || undefined;
           agentEmbedding =
-            (await params.generateEmbedding(agentContent)) || undefined;
+            (await effectiveEmbeddingFn(agentContent)) || undefined;
         }
 
         // Store user message in Vector with conversationRef
@@ -1364,6 +1433,24 @@ export class MemoryAPI {
 
             for (const factData of factsToStore) {
               try {
+                // Generate embedding for the fact - BATTERIES INCLUDED (v0.30.0+)
+                // Use params.generateEmbedding, fall back to configured embedding generator
+                // This enables semantic search for facts during recall()
+                let factEmbedding: number[] | undefined;
+                const factEmbeddingFn = params.generateEmbedding || this.embeddingGenerator;
+                if (factEmbeddingFn && factData.fact) {
+                  try {
+                    const embeddingResult = await factEmbeddingFn(factData.fact);
+                    // Convert null to undefined for type compatibility
+                    factEmbedding = embeddingResult ?? undefined;
+                  } catch (embeddingError) {
+                    console.warn(
+                      "[Cortex] Failed to generate fact embedding, continuing without:",
+                      embeddingError,
+                    );
+                  }
+                }
+
                 if (useBeliefRevision) {
                   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                   // BELIEF REVISION PATH (intelligent fact management)
@@ -1391,6 +1478,8 @@ export class MemoryAPI {
                       object: factData.object,
                       confidence: factData.confidence,
                       tags: factData.tags || params.tags || [],
+                      // Embedding for semantic search (v0.30.0+)
+                      embedding: factEmbedding,
                     },
                   });
 
@@ -1434,23 +1523,21 @@ export class MemoryAPI {
                       memoryId: storedMemories[0]?.memoryId,
                     },
                     tags: factData.tags || params.tags || [],
+                    // Embedding for semantic search (v0.30.0+)
+                    embedding: factEmbedding,
                   };
 
                   // Use storeWithDedup if deduplication is enabled
+                  // Graph sync is automatic when graphAdapter is configured
                   if (dedupConfig) {
                     const result = await this.facts.storeWithDedup(
                       storeParams,
-                      {
-                        syncToGraph: shouldSyncToGraph,
-                        deduplication: dedupConfig,
-                      },
+                      { deduplication: dedupConfig },
                     );
                     extractedFacts.push(result.fact);
                   } else {
                     // Deduplication disabled - use regular store
-                    const storedFact = await this.facts.store(storeParams, {
-                      syncToGraph: shouldSyncToGraph,
-                    });
+                    const storedFact = await this.facts.store(storeParams);
                     extractedFacts.push(storedFact);
                   }
                 }
@@ -1525,9 +1612,9 @@ export class MemoryAPI {
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // STEP 7: GRAPH (handled via syncToGraph in previous steps)
+    // STEP 7: GRAPH (automatic when CORTEX_GRAPH_SYNC=true)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Graph sync is handled inline with each layer via the syncToGraph option
+    // Graph sync is handled automatically by each layer when graphAdapter is configured
     // We just need to notify the observer of the status
     if (observer) {
       if (shouldSyncToGraph) {
@@ -1737,9 +1824,9 @@ export class MemoryAPI {
       "./streaming/ProgressiveGraphSync"
     );
 
-    // Determine if we should sync to graph (default: true if configured)
+    // Determine if we should sync to graph (automatic when graphAdapter is configured)
+    // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
     const shouldSyncToGraph =
-      options?.syncToGraph !== false &&
       this.graphAdapter !== undefined &&
       !this.shouldSkipLayer("graph", skipLayers);
 
@@ -1769,7 +1856,7 @@ export class MemoryAPI {
     }
 
     try {
-      await this.ensureMemorySpaceExists(memorySpaceId, shouldSyncToGraph);
+      await this.ensureMemorySpaceExists(memorySpaceId);
       if (observer) {
         const event = this.createLayerEvent(
           "memorySpace",
@@ -2084,12 +2171,14 @@ export class MemoryAPI {
         throw new Error("Response stream completed but produced no content.");
       }
 
-      // Step 6: Finalize storage
+      // Step 6: Finalize storage - BATTERIES INCLUDED (v0.30.0+)
+      // Use params.generateEmbedding, fall back to configured embedding generator
       if (storageHandler && storageHandler.isReady()) {
+        const streamEmbeddingFn = params.generateEmbedding || this.embeddingGenerator;
         await storageHandler.finalizeMemory(
           fullResponse,
-          params.generateEmbedding
-            ? (await params.generateEmbedding(fullResponse)) || undefined
+          streamEmbeddingFn
+            ? (await streamEmbeddingFn(fullResponse)) || undefined
             : undefined,
         );
       }
@@ -2142,7 +2231,6 @@ export class MemoryAPI {
           ],
         },
         {
-          syncToGraph: options?.syncToGraph,
           // Translate streaming beliefRevision (boolean) to remember() format
           // true → { enabled: true }, false → false, undefined → undefined
           beliefRevision:
@@ -2277,21 +2365,17 @@ export class MemoryAPI {
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    // Determine if we should sync to graph (default: true if configured)
-    const shouldSyncToGraph =
-      options?.syncToGraph !== false && this.graphAdapter !== undefined;
+    // Graph sync is automatic when graphAdapter is configured
+    // (controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization)
 
-    // Delete from vector (with graph cascade)
-    await this.vector.delete(memorySpaceId, memoryId, {
-      syncToGraph: shouldSyncToGraph,
-    });
+    // Delete from vector (graph sync handled automatically)
+    await this.vector.delete(memorySpaceId, memoryId);
 
-    // Cascade delete associated facts
+    // Cascade delete associated facts (graph sync handled automatically)
     const { count: factsDeleted, factIds } = await this.cascadeDeleteFacts(
       memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
-      shouldSyncToGraph,
     );
 
     let conversationDeleted = false;
@@ -2307,10 +2391,10 @@ export class MemoryAPI {
 
         messagesDeleted = conv?.messageCount || 0;
 
-        // Delete entire conversation (with graph cascade)
-        await this.conversations.delete(memory.conversationRef.conversationId, {
-          syncToGraph: shouldSyncToGraph,
-        });
+        // Delete entire conversation (graph sync handled automatically)
+        await this.conversations.delete(
+          memory.conversationRef.conversationId,
+        );
         conversationDeleted = true;
       } else {
         // Delete specific messages (not implemented in Layer 1a yet)
@@ -2427,9 +2511,20 @@ export class MemoryAPI {
       validateSearchOptions(options);
     }
 
+    // BATTERIES INCLUDED (v0.30.0+): Auto-generate embedding if not provided
+    let effectiveEmbedding = options?.embedding;
+    if (!effectiveEmbedding && this.embeddingGenerator && query) {
+      try {
+        effectiveEmbedding = (await this.embeddingGenerator(query)) ?? undefined;
+      } catch (error) {
+        // Embedding generation failed - fall back to text search
+        console.warn("[Cortex] Auto-embedding generation failed in search(), falling back to text search:", error);
+      }
+    }
+
     // Search vector
     const memories = await this.vector.search(memorySpaceId, query, {
-      embedding: options?.embedding,
+      embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding
       userId: options?.userId,
       tags: options?.tags,
       sourceType: options?.sourceType,
@@ -2599,15 +2694,31 @@ export class MemoryAPI {
     const formatForLLMFlag = params.formatForLLM !== false;
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // STEP 2: PARALLEL SEARCH - Vector + Facts
+    // STEP 2: PARALLEL SEARCH - Vector + Facts (Semantic when embedding available)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     const effectiveTenantId = params.tenantId ?? this.authContext?.tenantId;
 
+    // BATTERIES INCLUDED (v0.30.0+): Auto-generate embedding if not provided
+    // When embedding config is set, we automatically generate embeddings from the query
+    let effectiveEmbedding = params.embedding;
+    if (!effectiveEmbedding && this.embeddingGenerator && params.query) {
+      try {
+        effectiveEmbedding = (await this.embeddingGenerator(params.query)) ?? undefined;
+      } catch (error) {
+        // Embedding generation failed - fall back to text search
+        console.warn("[Cortex] Auto-embedding generation failed, falling back to text search:", error);
+      }
+    }
+
+    // Use semantic search for facts when embedding is available (v0.30.0+)
+    const hasEmbedding =
+      effectiveEmbedding && Array.isArray(effectiveEmbedding) && effectiveEmbedding.length > 0;
+
     const [rawVectorMemories, rawDirectFacts] = await Promise.all([
-      // Vector search
+      // Vector search (uses embedding for semantic matching)
       sources.vector
         ? this.vector.search(params.memorySpaceId, params.query, {
-            embedding: params.embedding,
+            embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding
             userId: params.userId,
             tags: params.tags,
             minImportance: params.minImportance,
@@ -2616,16 +2727,29 @@ export class MemoryAPI {
           })
         : Promise.resolve([]),
 
-      // Facts search
+      // Facts search - USE SEMANTIC when embedding available, TEXT otherwise
       sources.facts
-        ? this.facts.search(params.memorySpaceId, params.query, {
-            userId: params.userId,
-            minConfidence: params.minConfidence,
-            tags: params.tags,
-            createdAfter: params.createdAfter,
-            createdBefore: params.createdBefore,
-            limit: limit * 4, // Fetch extra for tenant filtering and dedup
-          })
+        ? hasEmbedding
+          ? // Semantic search for facts (v0.30.0+) - finds semantically related facts
+            this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding!, {
+              userId: params.userId,
+              tenantId: effectiveTenantId,
+              minConfidence: params.minConfidence,
+              tags: params.tags,
+              createdAfter: params.createdAfter,
+              createdBefore: params.createdBefore,
+              limit: limit * 4, // Fetch extra for tenant filtering and dedup
+              minScore: 0.3, // Reasonable threshold
+            })
+          : // Fallback to text search when no embedding provided
+            this.facts.search(params.memorySpaceId, params.query, {
+              userId: params.userId,
+              minConfidence: params.minConfidence,
+              tags: params.tags,
+              createdAfter: params.createdAfter,
+              createdBefore: params.createdBefore,
+              limit: limit * 4, // Fetch extra for tenant filtering and dedup
+            })
         : Promise.resolve([]),
     ]);
 
@@ -2784,30 +2908,29 @@ export class MemoryAPI {
       if (factsToStore && factsToStore.length > 0) {
         for (const factData of factsToStore) {
           try {
-            const storedFact = await this.facts.store(
-              {
-                memorySpaceId: memorySpaceId,
-                participantId: input.participantId,
-                userId: input.userId, // ← BUG FIX: Add userId to facts!
-                fact: factData.fact,
-                factType: factData.factType,
-                subject: factData.subject || input.userId,
-                predicate: factData.predicate,
-                object: factData.object,
-                confidence: factData.confidence,
-                sourceType: input.source.type,
-                sourceRef: {
-                  conversationId: input.conversationRef?.conversationId,
-                  messageIds: input.conversationRef?.messageIds,
-                  memoryId: memory.memoryId,
-                },
-                tags:
-                  factData.tags && factData.tags.length > 0
-                    ? factData.tags
-                    : input.metadata.tags,
+            // Store fact (graph sync handled automatically)
+            const storedFact = await this.facts.store({
+              memorySpaceId: memorySpaceId,
+              participantId: input.participantId,
+              userId: input.userId, // ← BUG FIX: Add userId to facts!
+              fact: factData.fact,
+              factType: factData.factType,
+              subject: factData.subject || input.userId,
+              predicate: factData.predicate,
+              object: factData.object,
+              confidence: factData.confidence,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              sourceType: input.source.type as any,
+              sourceRef: {
+                conversationId: input.conversationRef?.conversationId,
+                messageIds: input.conversationRef?.messageIds,
+                memoryId: memory.memoryId,
               },
-              { syncToGraph: true },
-            );
+              tags:
+                factData.tags && factData.tags.length > 0
+                  ? factData.tags
+                  : input.metadata.tags,
+            });
 
             extractedFacts.push(storedFact);
           } catch (error) {
@@ -2870,13 +2993,8 @@ export class MemoryAPI {
 
     // Re-extract facts if content changed and reextract requested
     if (options?.reextractFacts && updates.content && options.extractFacts) {
-      // Delete old facts first
-      await this.cascadeDeleteFacts(
-        memorySpaceId,
-        memoryId,
-        undefined,
-        options.syncToGraph,
-      );
+      // Delete old facts first (graph sync handled automatically)
+      await this.cascadeDeleteFacts(memorySpaceId, memoryId, undefined);
 
       // Extract new facts
       const factsToStore = await options.extractFacts(updates.content);
@@ -2884,30 +3002,29 @@ export class MemoryAPI {
       if (factsToStore && factsToStore.length > 0) {
         for (const factData of factsToStore) {
           try {
-            const storedFact = await this.facts.store(
-              {
-                memorySpaceId: memorySpaceId,
-                participantId: updatedMemory.participantId, // ← BUG FIX: Add participantId
-                userId: updatedMemory.userId, // ← BUG FIX: Add userId to facts!
-                fact: factData.fact,
-                factType: factData.factType,
-                subject: factData.subject || updatedMemory.userId,
-                predicate: factData.predicate,
-                object: factData.object,
-                confidence: factData.confidence,
-                sourceType: updatedMemory.sourceType,
-                sourceRef: {
-                  conversationId: updatedMemory.conversationRef?.conversationId,
-                  messageIds: updatedMemory.conversationRef?.messageIds,
-                  memoryId: updatedMemory.memoryId,
-                },
-                tags:
-                  factData.tags && factData.tags.length > 0
-                    ? factData.tags
-                    : updatedMemory.tags,
+            // Store new fact (graph sync handled automatically)
+            const storedFact = await this.facts.store({
+              memorySpaceId: memorySpaceId,
+              participantId: updatedMemory.participantId, // ← BUG FIX: Add participantId
+              userId: updatedMemory.userId, // ← BUG FIX: Add userId to facts!
+              fact: factData.fact,
+              factType: factData.factType,
+              subject: factData.subject || updatedMemory.userId,
+              predicate: factData.predicate,
+              object: factData.object,
+              confidence: factData.confidence,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              sourceType: updatedMemory.sourceType as any,
+              sourceRef: {
+                conversationId: updatedMemory.conversationRef?.conversationId,
+                messageIds: updatedMemory.conversationRef?.messageIds,
+                memoryId: updatedMemory.memoryId,
               },
-              { syncToGraph: options.syncToGraph },
-            );
+              tags:
+                factData.tags && factData.tags.length > 0
+                  ? factData.tags
+                  : updatedMemory.tags,
+            });
 
             factsReextracted.push(storedFact);
           } catch (error) {
@@ -2953,11 +3070,11 @@ export class MemoryAPI {
       throw new Error("MEMORY_NOT_FOUND");
     }
 
-    const shouldSyncToGraph =
-      options?.syncToGraph !== false && this.graphAdapter !== undefined;
+    // Graph sync is automatic when graphAdapter is configured
+    // (controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization)
     const shouldCascade = options?.cascadeDeleteFacts !== false; // Default: true
 
-    // Delete facts if cascade enabled
+    // Delete facts if cascade enabled (graph sync handled automatically)
     let factsDeleted = 0;
     let factIds: string[] = [];
 
@@ -2966,16 +3083,13 @@ export class MemoryAPI {
         memorySpaceId,
         memoryId,
         memory.conversationRef?.conversationId,
-        shouldSyncToGraph,
       );
       factsDeleted = result.count;
       factIds = result.factIds;
     }
 
-    // Delete from vector
-    await this.vector.delete(memorySpaceId, memoryId, {
-      syncToGraph: shouldSyncToGraph,
-    });
+    // Delete from vector (graph sync handled automatically)
+    await this.vector.delete(memorySpaceId, memoryId);
 
     return {
       deleted: true,
@@ -3079,7 +3193,8 @@ export class MemoryAPI {
       validateSourceType(filter.sourceType);
     }
 
-    const result = await this.vector.updateMany(filter, updates);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await this.vector.updateMany(filter as any, updates);
 
     // Count facts that reference updated memories
     const allFacts = await this.facts.list({
@@ -3123,20 +3238,20 @@ export class MemoryAPI {
     let totalFactsDeleted = 0;
     const allFactIds: string[] = [];
 
-    // Cascade delete facts for each memory
+    // Cascade delete facts for each memory (graph sync handled automatically)
     for (const memory of memories) {
       const { count, factIds } = await this.cascadeDeleteFacts(
         filter.memorySpaceId,
         memory.memoryId,
         memory.conversationRef?.conversationId,
-        true,
       );
       totalFactsDeleted += count;
       allFactIds.push(...factIds);
     }
 
     // Delete memories
-    const result = await this.vector.deleteMany(filter);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = await this.vector.deleteMany(filter as any);
 
     return {
       ...result,
@@ -3229,11 +3344,11 @@ export class MemoryAPI {
     }
 
     // Archive facts (mark as expired, not deleted)
+    // Graph sync handled automatically
     const { count: factsArchived, factIds } = await this.archiveFacts(
       memorySpaceId,
       memoryId,
       memory.conversationRef?.conversationId,
-      true,
     );
 
     // Archive memory

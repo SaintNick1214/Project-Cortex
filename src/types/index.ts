@@ -344,8 +344,8 @@ export interface PurgeManyFilter {
 // Vector Memory (Layer 2)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export type SourceType = "conversation" | "system" | "tool" | "a2a";
-export type ContentType = "raw" | "summarized";
+export type SourceType = "conversation" | "system" | "tool" | "a2a" | "fact-extraction";
+export type ContentType = "raw" | "summarized" | "fact";
 
 export interface ConversationRef {
   conversationId: string;
@@ -983,6 +983,9 @@ export interface FactRecord {
   supersedes?: string; // factId of previous version
   createdAt: number;
   updatedAt: number;
+
+  // Embedding for semantic search (v0.30.0+)
+  embedding?: number[];
 }
 
 export interface StoreFactParams {
@@ -1021,6 +1024,9 @@ export interface StoreFactParams {
 
   validFrom?: number;
   validUntil?: number;
+
+  // Embedding for semantic search (v0.30.0+)
+  embedding?: number[];
 }
 
 export interface ListFactsFilter {
@@ -1258,6 +1264,44 @@ export interface UpdateFactInput {
   semanticContext?: string; // Usage context sentence
   entities?: EnrichedEntity[]; // Extracted entities with types
   relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+
+  // Embedding for semantic search (v0.30.0+)
+  embedding?: number[];
+}
+
+/**
+ * Options for semantic search on facts (v0.30.0+)
+ *
+ * Uses vector embeddings to find semantically related facts,
+ * unlike text search which requires keyword matching.
+ */
+export interface SemanticSearchFactsOptions {
+  /** Multi-tenancy filter */
+  tenantId?: string;
+
+  /** Filter by user who created the fact */
+  userId?: string;
+
+  /** Minimum confidence threshold (0-100) */
+  minConfidence?: number;
+
+  /** Include superseded facts (default: false) */
+  includeSuperseded?: boolean;
+
+  /** Minimum similarity score (0-1, default: 0.3) */
+  minScore?: number;
+
+  /** Maximum results to return (default: 20) */
+  limit?: number;
+
+  /** Filter by tags (any match) */
+  tags?: string[];
+
+  /** Filter facts created after this date */
+  createdAfter?: Date;
+
+  /** Filter facts created before this date */
+  createdBefore?: Date;
 }
 
 export interface DeleteManyFactsParams {
@@ -1372,7 +1416,6 @@ export interface DeleteMemorySpaceOptions {
   cascade: boolean; // Required: Must be true to proceed
   reason: string; // Required: Why deleting (audit trail)
   confirmId?: string; // Optional: Safety check (must match memorySpaceId)
-  syncToGraph?: boolean; // Delete from graph database
 }
 
 export interface DeleteMemorySpaceResult {
@@ -1393,9 +1436,7 @@ export interface GetMemorySpaceStatsOptions {
   includeParticipants?: boolean;
 }
 
-export interface UpdateMemorySpaceOptions {
-  syncToGraph?: boolean;
-}
+export interface UpdateMemorySpaceOptions {}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Coordination: Agents Registry API (Optional Metadata)
@@ -2193,17 +2234,20 @@ export interface EnforcementStats {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Graph Integration Options (syncToGraph pattern across all APIs)
+// Graph Integration Options (automatic sync via CORTEX_GRAPH_SYNC env var)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /**
- * Standard graph sync option
- * Follows existing SDK pattern (autoEmbed, deleteConversation, etc.)
+ * Graph sync option placeholder for backward compatibility.
+ *
+ * As of v0.29.0, graph sync is automatic when CORTEX_GRAPH_SYNC=true is set.
+ * The syncToGraph option has been removed - graph sync is now controlled
+ * entirely by the environment variable and graphAdapter configuration.
+ *
+ * @deprecated The syncToGraph option is no longer used. Graph sync is automatic
+ * when CORTEX_GRAPH_SYNC=true and graph credentials are configured.
  */
-export interface GraphSyncOption {
-  /** Sync this operation to graph database (if graph configured) */
-  syncToGraph?: boolean;
-}
+export interface GraphSyncOption {}
 
 // ────────────────────────────────────────────────────────────────────────────
 // Layer 1a: Conversations API Options
@@ -2294,7 +2338,7 @@ export interface UnregisterMemorySpaceOptions extends GraphSyncOption {}
 
 /**
  * Options for memory.remember() convenience method
- * Defaults to syncToGraph: true if graph is configured
+ * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
  */
 export interface RememberOptions extends GraphSyncOption {
   /** Extract facts from conversation (default: false) */
@@ -2334,8 +2378,8 @@ export interface RememberOptions extends GraphSyncOption {
 }
 
 /**
- * Extended forget options with graph sync
- * Defaults to syncToGraph: true if graph is configured
+ * Extended forget options
+ * Graph sync is automatic when CORTEX_GRAPH_SYNC=true and graphAdapter is configured
  */
 export interface ExtendedForgetOptions extends ForgetOptions, GraphSyncOption {}
 

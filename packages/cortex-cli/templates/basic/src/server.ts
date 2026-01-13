@@ -19,14 +19,14 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { closeCortex, CONFIG } from "./cortex.js";
+import { closeCortex, initCortex, CONFIG } from "./cortex.js";
 import {
   chat,
   recallMemories,
   listFacts,
   generateConversationId,
 } from "./chat.js";
-import { printWelcome, printInfo, printError } from "./display.js";
+import { printWelcome, printInfo, printError, printSuccess } from "./display.js";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Server Setup
@@ -236,6 +236,22 @@ async function main(): Promise<void> {
 
   // Print welcome
   printWelcome("server");
+
+  // Initialize Cortex client (async for graph support)
+  // v0.29.0+: Uses Cortex.create() for automatic graph configuration
+  try {
+    await initCortex();
+    // Check if graph is actually configured (flag + URI)
+    const hasGraphUri = !!(process.env.NEO4J_URI || process.env.MEMGRAPH_URI);
+    if (CONFIG.enableGraphMemory && hasGraphUri) {
+      printSuccess("Graph memory connected (auto-sync active)");
+    } else if (CONFIG.enableGraphMemory && !hasGraphUri) {
+      printInfo("Graph sync enabled but no database URI configured (NEO4J_URI or MEMGRAPH_URI)");
+    }
+  } catch (error) {
+    printError("Failed to initialize Cortex", error instanceof Error ? error : undefined);
+    process.exit(1);
+  }
 
   // Start server
   console.log(`🚀 Server starting on http://localhost:${PORT}`);

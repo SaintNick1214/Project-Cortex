@@ -1,6 +1,15 @@
+---
+id: context-operations
+title: Context Operations API
+sidebar_position: 5
+description: Complete API reference for context chain management and multi-agent workflow coordination in Cortex Memory.
+---
+
 # Context Operations API
 
-> **Last Updated**: 2025-12-27
+<Callout type="info">
+**Last Updated**: 2026-01-09
+</Callout>
 
 Complete API reference for context chain management and multi-agent workflow coordination.
 
@@ -10,29 +19,31 @@ The Context Operations API (`cortex.contexts.*`) provides methods for managing h
 
 **Key Characteristics:**
 
-- ✅ **Hierarchical** - Parent-child relationships for task decomposition
-- ✅ **Shared** - All agents in the workflow can access the chain
-- ✅ **Versioned** - Automatic status/data change tracking
-- ✅ **Conversation-linked** - Optional links to originating ACID conversations
-- ✅ **GDPR-enabled** - Optional `userId` for cascade deletion
-- ✅ **Multi-Tenant** - Automatic `tenantId` isolation for SaaS platforms (auto-injected from AuthContext)
+- **Hierarchical** - Parent-child relationships for task decomposition
+- **Shared** - All agents in the workflow can access the chain
+- **Versioned** - Automatic status/data change tracking
+- **Conversation-linked** - Optional links to originating ACID conversations
+- **GDPR-enabled** - Optional `userId` for cascade deletion
+- **Multi-Tenant** - Automatic `tenantId` isolation for SaaS platforms (auto-injected from AuthContext)
 
 **Relationship to Layers:**
 
 Context chains are a **separate coordination entity** that can reference all layers:
 
-```
-Layer 1: ACID Stores
-├── conversations.* ← Contexts can reference via conversationRef
-├── immutable.*
-└── mutable.*
-
-Layer 2: Vector Index
-└── vector.* ← Memories can reference contexts via metadata.contextId
-
-Coordination:
-└── contexts.* ← Workflow/task hierarchy (links to conversations, used by memories)
-```
+<FlowDiagram title="Context API Layer Relationships">
+  <FlowNode title="Layer 1: ACID Stores" icon="database" variant="primary">
+    conversations.*, immutable.*, mutable.* — Contexts reference via conversationRef
+  </FlowNode>
+  <FlowNode title="Layer 2: Vector Index" icon="search" variant="secondary">
+    vector.* — Memories can reference contexts via metadata.contextId
+  </FlowNode>
+  <FlowNode title="Layer 3: Facts Store" icon="brain" variant="warning">
+    facts.* — Facts can be linked to contexts for workflow knowledge
+  </FlowNode>
+  <FlowNode title="Coordination Layer" icon="layers" variant="success">
+    contexts.* — Workflow/task hierarchy (links to conversations, used by memories)
+  </FlowNode>
+</FlowDiagram>
 
 **Use Cases:**
 
@@ -55,44 +66,29 @@ Create a new context (root or child).
 
 ```typescript
 cortex.contexts.create(
-  params: CreateContextParams,
-  options?: CreateContextOptions
+  params: CreateContextParams
 ): Promise<Context>
 ```
 
-**New in v0.7.0**: `options` parameter with `syncToGraph` support for graph database integration.
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 
 **Parameters:**
 
-```typescript
-interface CreateContextParams {
-  purpose: string; // What this context is for (REQUIRED)
-  memorySpaceId: string; // Memory space creating this context (REQUIRED)
+<APITable
+  parameters={[
+    { name: "purpose", type: "string", required: true, description: "What this context is for" },
+    { name: "memorySpaceId", type: "string", required: true, description: "Memory space creating this context" },
+    { name: "parentId", type: "string", required: false, description: "Parent context (omit for root)" },
+    { name: "userId", type: "string", required: false, description: "User this relates to (GDPR-enabled)" },
+    { name: "conversationRef", type: "object", required: false, description: "Conversation link with conversationId and optional messageIds" },
+    { name: "data", type: "Record<string, unknown>", required: false, description: "Flexible key-value storage" },
+    { name: "status", type: "string", required: false, default: "'active'", description: "One of: 'active', 'completed', 'cancelled', 'blocked'" },
+    { name: "description", type: "string", required: false, description: "Detailed description" },
+  ]}
+/>
 
-  // Hierarchy
-  parentId?: string; // Parent context (omit for root)
-
-  // User association
-  userId?: string; // User this relates to (GDPR-enabled)
-
-  // Conversation link (optional)
-  conversationRef?: {
-    conversationId: string; // Originating conversation
-    messageIds?: string[]; // Triggering message(s) (optional)
-  };
-
-  // Data - flexible key-value storage
-  data?: Record<string, unknown>;
-
-  // Status
-  status?: "active" | "completed" | "cancelled" | "blocked"; // Default: 'active'
-  description?: string; // Detailed description
-}
-
-interface CreateContextOptions {
-  syncToGraph?: boolean; // Sync to graph database (default: false)
-}
-```
 
 **Returns:**
 
@@ -195,27 +191,25 @@ console.log(root.depth); // 0 (root)
 console.log(root.rootId); // 'ctx-1234567890-abc123' (self)
 ```
 
-**Example 1b: Create with graph sync (v0.7.0+)**
+**Example 1b: Graph sync is automatic**
 
 ```typescript
-// Same as above, but sync to graph database
-const root = await cortex.contexts.create(
-  {
-    purpose: "Process customer refund request",
-    memorySpaceId: "supervisor-agent-space",
-    userId: "user-123",
-    conversationRef: {
-      conversationId: "conv-456",
-      messageIds: [msg.id],
-    },
-    data: {
-      importance: 85,
-      tags: ["refund", "customer-service", "ticket-456"],
-    },
+// Graph sync happens automatically when CORTEX_GRAPH_SYNC=true
+const root = await cortex.contexts.create({
+  purpose: "Process customer refund request",
+  memorySpaceId: "supervisor-agent-space",
+  userId: "user-123",
+  conversationRef: {
+    conversationId: "conv-456",
+    messageIds: [msg.id],
   },
-  { syncToGraph: true },
-); // ← Syncs to graph!
+  data: {
+    importance: 85,
+    tags: ["refund", "customer-service", "ticket-456"],
+  },
+});
 
+// Context is automatically synced to graph if CORTEX_GRAPH_SYNC=true
 // Now queryable via graph for multi-hop queries
 ```
 
@@ -251,7 +245,7 @@ console.log(child.parentId); // root.contextId
 
 **See Also:**
 
-- [Context Chains Guide](../02-core-features/04-context-chains.md#creating-a-root-context)
+- [Context Chains Guide](/advanced-topics/context-chains)
 
 ---
 
@@ -270,12 +264,20 @@ cortex.contexts.get(
 
 **Parameters:**
 
-```typescript
-interface GetOptions {
-  includeChain?: boolean; // Include parent/children/siblings (default: false)
-  includeConversation?: boolean; // Fetch ACID conversation (default: false)
-}
-```
+<APITable
+  parameters={[
+    { name: "contextId", type: "string", required: true, description: "The context ID to retrieve" },
+  ]}
+/>
+
+**Options:**
+
+<APITable
+  parameters={[
+    { name: "includeChain", type: "boolean", required: false, default: "false", description: "Include parent/children/siblings" },
+    { name: "includeConversation", type: "boolean", required: false, default: "false", description: "Fetch ACID conversation" },
+  ]}
+/>
 
 **Returns:**
 
@@ -369,23 +371,25 @@ Update a context (status, data, etc.). Creates new version automatically.
 ```typescript
 cortex.contexts.update(
   contextId: string,
-  updates: ContextUpdate,
-  options?: UpdateContextOptions
+  updates: ContextUpdate
 ): Promise<Context>
 ```
 
-**New in v0.7.0**: `options` parameter with `syncToGraph` support.
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 
 **Parameters:**
 
-```typescript
-interface UpdateContextParams {
-  status?: "active" | "completed" | "cancelled" | "blocked";
-  data?: Record<string, unknown>; // Merges with existing
-  description?: string;
-  completedAt?: number; // Unix timestamp (ms) - auto-set when status='completed'
-}
-```
+<APITable
+  parameters={[
+    { name: "contextId", type: "string", required: true, description: "The context ID to update" },
+    { name: "status", type: "string", required: false, description: "One of: 'active', 'completed', 'cancelled', 'blocked'" },
+    { name: "data", type: "Record<string, unknown>", required: false, description: "Merges with existing data" },
+    { name: "description", type: "string", required: false, description: "Updated description" },
+    { name: "completedAt", type: "number", required: false, description: "Unix timestamp (ms) - auto-set when status='completed'" },
+  ]}
+/>
 
 **Returns:**
 
@@ -435,7 +439,7 @@ ctx.previousVersions.forEach((v) => {
 
 **See Also:**
 
-- [Updating Context](../02-core-features/04-context-chains.md#updating-context)
+- [Updating Context](/advanced-topics/context-chains)
 
 ---
 
@@ -454,15 +458,24 @@ cortex.contexts.delete(
 
 **Parameters:**
 
-```typescript
-interface DeleteContextOptions {
-  cascadeChildren?: boolean; // Delete all descendants (default: false)
-  orphanChildren?: boolean; // If false and has children, error (default: false)
-  syncToGraph?: boolean; // Delete from graph with orphan cleanup (default: false)
-}
-```
+<APITable
+  parameters={[
+    { name: "contextId", type: "string", required: true, description: "The context ID to delete" },
+  ]}
+/>
 
-**New in v0.7.0**: `syncToGraph` option enables graph deletion with sophisticated orphan cleanup.
+**Options:**
+
+<APITable
+  parameters={[
+    { name: "cascadeChildren", type: "boolean", required: false, default: "false", description: "Delete all descendants" },
+    { name: "orphanChildren", type: "boolean", required: false, default: "false", description: "If false and has children, error" },
+  ]}
+/>
+
+<Callout type="info">
+**v0.29.0+**: Graph deletion with orphan cleanup is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 
 **Returns:**
 
@@ -519,17 +532,17 @@ cortex.contexts.search(
 
 **Parameters:**
 
-```typescript
-interface ListContextsFilter {
-  memorySpaceId?: string; // Filter by memory space
-  userId?: string; // Filter by user
-  status?: "active" | "completed" | "cancelled" | "blocked";
-  parentId?: string; // Filter by parent context
-  rootId?: string; // Filter by root context
-  depth?: number; // Filter by hierarchy depth (0 = root)
-  limit?: number; // Default: 100, max: 1000
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: false, description: "Filter by memory space" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "status", type: "string", required: false, description: "One of: 'active', 'completed', 'cancelled', 'blocked'" },
+    { name: "parentId", type: "string", required: false, description: "Filter by parent context" },
+    { name: "rootId", type: "string", required: false, description: "Filter by root context" },
+    { name: "depth", type: "number", required: false, description: "Filter by hierarchy depth (0 = root)" },
+    { name: "limit", type: "number", required: false, default: "100", description: "Max results (max: 1000)" },
+  ]}
+/>
 
 **Returns:**
 
@@ -561,7 +574,7 @@ const roots = await cortex.contexts.search({
 
 **See Also:**
 
-- [Querying Contexts](../02-core-features/04-context-chains.md#querying-contexts)
+- [Querying Contexts](/advanced-topics/context-chains)
 
 ---
 
@@ -579,17 +592,17 @@ cortex.contexts.list(
 
 **Parameters:**
 
-```typescript
-interface ListContextsFilter {
-  memorySpaceId?: string; // Filter by memory space
-  userId?: string; // Filter by user
-  status?: "active" | "completed" | "cancelled" | "blocked";
-  parentId?: string; // Filter by parent context
-  rootId?: string; // Filter by root context
-  depth?: number; // Filter by hierarchy depth (0 = root)
-  limit?: number; // Default: 100, max: 1000
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: false, description: "Filter by memory space" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "status", type: "string", required: false, description: "One of: 'active', 'completed', 'cancelled', 'blocked'" },
+    { name: "parentId", type: "string", required: false, description: "Filter by parent context" },
+    { name: "rootId", type: "string", required: false, description: "Filter by root context" },
+    { name: "depth", type: "number", required: false, description: "Filter by hierarchy depth (0 = root)" },
+    { name: "limit", type: "number", required: false, default: "100", description: "Max results (max: 1000)" },
+  ]}
+/>
 
 **Returns:**
 
@@ -634,13 +647,13 @@ cortex.contexts.count(
 
 **Parameters:**
 
-```typescript
-interface CountContextsFilter {
-  memorySpaceId?: string;
-  userId?: string;
-  status?: "active" | "completed" | "cancelled" | "blocked";
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: false, description: "Filter by memory space" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "status", type: "string", required: false, description: "One of: 'active', 'completed', 'cancelled', 'blocked'" },
+  ]}
+/>
 
 **Example:**
 
@@ -679,32 +692,43 @@ cortex.contexts.updateMany(
 ): Promise<UpdateManyResult>
 ```
 
-**Parameters:**
+**Filter Parameters:**
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: false, description: "Filter by memory space" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "status", type: "string", required: false, description: "One of: 'active', 'completed', 'cancelled', 'blocked'" },
+    { name: "parentId", type: "string", required: false, description: "Filter by parent context" },
+    { name: "rootId", type: "string", required: false, description: "Filter by root context" },
+  ]}
+/>
+
+**Update Parameters:**
+
+<APITable
+  parameters={[
+    { name: "status", type: "string", required: false, description: "New status value" },
+    { name: "data", type: "Record<string, unknown>", required: false, description: "Data to merge" },
+  ]}
+/>
+
+**Returns:**
 
 ```typescript
-interface UpdateManyFilters {
-  memorySpaceId?: string;
-  userId?: string;
-  status?: "active" | "completed" | "cancelled" | "blocked";
-  parentId?: string;
-  rootId?: string;
-}
-
-interface UpdateManyUpdates {
-  status?: "active" | "completed" | "cancelled" | "blocked";
-  data?: Record<string, unknown>;
-}
-
 interface UpdateManyResult {
   updated: number;
   contextIds: string[];
 }
 ```
 
-> **🔮 Planned Features**: The following options are planned for a future release:
->
-> - `dryRun?: boolean` - Preview what would be updated without making changes
-> - `wouldUpdate?: number` - Return field showing count for dryRun mode
+<Callout type="note" title="Planned Features">
+
+The following options are planned for a future release:
+- `dryRun?: boolean` - Preview what would be updated without making changes
+- `wouldUpdate?: number` - Return field showing count for dryRun mode
+
+</Callout>
 
 **Example:**
 
@@ -746,33 +770,44 @@ cortex.contexts.deleteMany(
 ): Promise<DeleteManyResult>
 ```
 
-**Parameters:**
+**Filter Parameters:**
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: false, description: "Filter by memory space" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "status", type: "string", required: false, description: "One of: 'active', 'completed', 'cancelled', 'blocked'" },
+    { name: "completedBefore", type: "number", required: false, description: "Unix timestamp (ms)" },
+  ]}
+/>
+
+**Options:**
+
+<APITable
+  parameters={[
+    { name: "cascadeChildren", type: "boolean", required: false, default: "false", description: "Delete descendants" },
+  ]}
+/>
+
+**Returns:**
 
 ```typescript
-interface DeleteManyFilters {
-  memorySpaceId?: string;
-  userId?: string;
-  status?: "active" | "completed" | "cancelled" | "blocked";
-  completedBefore?: number; // Unix timestamp (ms)
-}
-
-interface DeleteManyOptions {
-  cascadeChildren?: boolean; // Delete descendants (default: false)
-}
-
 interface DeleteManyResult {
   deleted: number;
   contextIds: string[];
 }
 ```
 
-> **🔮 Planned Features**: The following options are planned for a future release:
->
-> - `dryRun?: boolean` - Preview what would be deleted without making changes
-> - `requireConfirmation?: boolean` - Require explicit confirmation for large deletions
-> - `confirmationThreshold?: number` - Auto-confirm if below this count
-> - `descendantsDeleted?: number` - Return field for cascade deletion count
-> - `wouldDelete?: number` - Return field for dryRun mode
+<Callout type="note" title="Planned Features">
+
+The following options are planned for a future release:
+- `dryRun?: boolean` - Preview what would be deleted without making changes
+- `requireConfirmation?: boolean` - Require explicit confirmation for large deletions
+- `confirmationThreshold?: number` - Auto-confirm if below this count
+- `descendantsDeleted?: number` - Return field for cascade deletion count
+- `wouldDelete?: number` - Return field for dryRun mode
+
+</Callout>
 
 **Example:**
 
@@ -807,21 +842,29 @@ cortex.contexts.export(
 ): Promise<ExportResult>
 ```
 
-**Parameters:**
+**Filter Parameters:**
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: false, description: "Filter by memory space" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "status", type: "string", required: false, description: "One of: 'active', 'completed', 'cancelled', 'blocked'" },
+  ]}
+/>
+
+**Options:**
+
+<APITable
+  parameters={[
+    { name: "format", type: "string", required: true, description: "One of: 'json', 'csv'" },
+    { name: "includeChain", type: "boolean", required: false, description: "Include full hierarchy in JSON" },
+    { name: "includeVersionHistory", type: "boolean", required: false, description: "Include version history" },
+  ]}
+/>
+
+**Returns:**
 
 ```typescript
-interface ExportFilters {
-  memorySpaceId?: string;
-  userId?: string;
-  status?: "active" | "completed" | "cancelled" | "blocked";
-}
-
-interface ExportOptions {
-  format: "json" | "csv";
-  includeChain?: boolean; // Include full hierarchy in JSON
-  includeVersionHistory?: boolean; // Include version history
-}
-
 interface ExportResult {
   format: string;
   data: string; // JSON string or CSV content
@@ -830,10 +873,13 @@ interface ExportResult {
 }
 ```
 
-> **🔮 Planned Features**: The following options are planned for a future release:
->
-> - `outputPath?: string` - Write directly to file (currently returns data string)
-> - `includeConversations?: boolean` - Include linked ACID conversations
+<Callout type="note" title="Planned Features">
+
+The following options are planned for a future release:
+- `outputPath?: string` - Write directly to file (currently returns data string)
+- `includeConversations?: boolean` - Include linked ACID conversations
+
+</Callout>
 
 **Example:**
 
@@ -948,12 +994,20 @@ cortex.contexts.getChildren(
 
 **Parameters:**
 
-```typescript
-interface ChildrenOptions {
-  status?: "active" | "completed" | "cancelled" | "blocked";
-  recursive?: boolean; // Get all descendants (default: false)
-}
-```
+<APITable
+  parameters={[
+    { name: "contextId", type: "string", required: true, description: "The parent context ID" },
+  ]}
+/>
+
+**Options:**
+
+<APITable
+  parameters={[
+    { name: "status", type: "string", required: false, description: "Filter by status" },
+    { name: "recursive", type: "boolean", required: false, default: "false", description: "Get all descendants" },
+  ]}
+/>
 
 **Example:**
 
@@ -1053,11 +1107,13 @@ cortex.contexts.grantAccess(
 
 **Parameters:**
 
-| Parameter             | Type     | Description                                              |
-| --------------------- | -------- | -------------------------------------------------------- |
-| `contextId`           | `string` | The context to grant access to                           |
-| `targetMemorySpaceId` | `string` | Memory space to grant access to                          |
-| `scope`               | `string` | Access scope (e.g., 'read-only', 'context-only', 'full') |
+<APITable
+  parameters={[
+    { name: "contextId", type: "string", required: true, description: "The context to grant access to" },
+    { name: "targetMemorySpaceId", type: "string", required: true, description: "Memory space to grant access to" },
+    { name: "scope", type: "string", required: true, description: "Access scope (e.g., 'read-only', 'context-only', 'full')" },
+  ]}
+/>
 
 **Returns:**
 
@@ -1088,11 +1144,13 @@ console.log("Granted access:", ctx.grantedAccess);
 
 **Access Scopes:**
 
-| Scope          | Description                                        |
-| -------------- | -------------------------------------------------- |
-| `read-only`    | Can read context data but not modify               |
-| `context-only` | Can read/write context data but not child contexts |
-| `full`         | Full access including creating child contexts      |
+<APITable
+  parameters={[
+    { name: "read-only", type: "scope", required: false, description: "Can read context data but not modify" },
+    { name: "context-only", type: "scope", required: false, description: "Can read/write context data but not child contexts" },
+    { name: "full", type: "scope", required: false, description: "Full access including creating child contexts" },
+  ]}
+/>
 
 **Use Cases:**
 
@@ -1229,10 +1287,12 @@ cortex.contexts.getAtTimestamp(
 
 **Parameters:**
 
-| Parameter   | Type     | Description                |
-| ----------- | -------- | -------------------------- |
-| `contextId` | `string` | The context ID             |
-| `timestamp` | `Date`   | The point in time to query |
+<APITable
+  parameters={[
+    { name: "contextId", type: "string", required: true, description: "The context ID" },
+    { name: "timestamp", type: "Date", required: true, description: "The point in time to query" },
+  ]}
+/>
 
 **Returns:**
 
@@ -1313,9 +1373,13 @@ interface ExportFilters {
 }
 ```
 
-### 🔮 Planned Filter Enhancements
+### Planned Filter Enhancements
+
+<Callout type="note" title="Planned Features">
 
 The following filters are planned for a future release to provide more powerful querying:
+
+</Callout>
 
 ```typescript
 // Planned additions to ContextFilters
@@ -1353,14 +1417,16 @@ interface RangeQuery {
 
 **Operations and their filter support:**
 
-| Operation      | memorySpaceId | userId | status | parentId | rootId | depth | completedBefore | limit |
-| -------------- | :-----------: | :----: | :----: | :------: | :----: | :---: | :-------------: | :---: |
-| `list()`       |      ✅       |   ✅   |   ✅   |    ✅    |   ✅   |  ✅   |       ❌        |  ✅   |
-| `search()`     |      ✅       |   ✅   |   ✅   |    ✅    |   ✅   |  ✅   |       ❌        |  ✅   |
-| `count()`      |      ✅       |   ✅   |   ✅   |    ❌    |   ❌   |  ❌   |       ❌        |  ❌   |
-| `updateMany()` |      ✅       |   ✅   |   ✅   |    ✅    |   ✅   |  ❌   |       ❌        |  ❌   |
-| `deleteMany()` |      ✅       |   ✅   |   ✅   |    ❌    |   ❌   |  ❌   |       ✅        |  ❌   |
-| `export()`     |      ✅       |   ✅   |   ✅   |    ❌    |   ❌   |  ❌   |       ❌        |  ❌   |
+<APITable
+  parameters={[
+    { name: "list()", type: "operation", required: false, description: "memorySpaceId, userId, status, parentId, rootId, depth, limit" },
+    { name: "search()", type: "operation", required: false, description: "memorySpaceId, userId, status, parentId, rootId, depth, limit" },
+    { name: "count()", type: "operation", required: false, description: "memorySpaceId, userId, status" },
+    { name: "updateMany()", type: "operation", required: false, description: "memorySpaceId, userId, status, parentId, rootId" },
+    { name: "deleteMany()", type: "operation", required: false, description: "memorySpaceId, userId, status, completedBefore" },
+    { name: "export()", type: "operation", required: false, description: "memorySpaceId, userId, status" },
+  ]}
+/>
 
 ---
 
@@ -1449,17 +1515,13 @@ async function checkWorkflowComplete(rootContextId: string) {
 Link memories to contexts for workflow knowledge:
 
 ```typescript
-// Store memory with context reference in tags/metadata
-const memory = await cortex.vector.store({
+// Store memory with context reference using Layer 4 API (recommended)
+await cortex.memory.remember({
   memorySpaceId: "finance-agent-space",
-  content: "Approved $500 refund for defective product",
-  contentType: "raw",
   userId: "user-123",
-  source: { type: "tool", timestamp: Date.now() },
-  conversationRef: {
-    conversationId: "conv-456",
-    messageIds: ["msg-089"],
-  },
+  agentId: "finance-agent",
+  userMessage: "Please process the refund",
+  agentResponse: "Approved $500 refund for defective product",
   metadata: {
     importance: 85,
     tags: ["refund", "approval", "finance"],
@@ -1468,15 +1530,16 @@ const memory = await cortex.vector.store({
 });
 
 // Later: Search memories (contextId tracking is application-level)
-const results = await cortex.vector.search({
+const results = await cortex.memory.recall({
   memorySpaceId: "finance-agent-space",
+  userId: "user-123",
   query: "refund approval",
-  limit: 10,
 });
 ```
 
-> **Note**: Context tracking in memories is an application-level pattern.
-> Store the `contextId` in memory metadata and filter/search as needed.
+<Callout type="info" title="Note">
+Context tracking in memories is an application-level pattern. Store the `contextId` in memory metadata and filter/search as needed.
+</Callout>
 
 ### Pattern 4: Multi-Agent Coordination
 
@@ -1514,12 +1577,12 @@ console.log("Team:", ctx.participants);
 ### 1. Descriptive Purposes
 
 ```typescript
-// ❌ Vague
+// Avoid: Vague
 await cortex.contexts.create({
   purpose: "Process request",
 });
 
-// ✅ Specific
+// Better: Specific
 await cortex.contexts.create({
   purpose: "Process $500 refund for defective product (ticket #456)",
   data: {
@@ -1532,7 +1595,7 @@ await cortex.contexts.create({
 ### 2. Link to Originating Conversations
 
 ```typescript
-// ✅ Always link when context comes from user conversation
+// Always link when context comes from user conversation
 await cortex.contexts.create({
   purpose: "Handle support ticket",
   conversationRef: {
@@ -1556,11 +1619,9 @@ await cortex.contexts.create({
   data: { importance: 100 }, // Maximum priority
 });
 
-// Find urgent work
-const urgent = await cortex.contexts.search({
-  data: { importance: { $gte: 90 } },
-  status: "active",
-});
+// Find active contexts and filter by importance (application-level)
+const active = await cortex.contexts.search({ status: "active" });
+const urgent = active.filter((ctx) => (ctx.data?.importance ?? 0) >= 90);
 ```
 
 ### 4. Update Status Promptly
@@ -1588,21 +1649,16 @@ await cortex.contexts.update(contextId, {
 ### 5. Clean Up Old Contexts
 
 ```typescript
-// Archive completed workflows after 90 days
+// Archive completed contexts (filter by status, then update)
 await cortex.contexts.updateMany(
-  {
-    status: "completed",
-    completedBefore: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-  },
-  {
-    data: { archived: true },
-  },
+  { status: "completed" },
+  { data: { archived: true } },
 );
 
-// Delete cancelled after 180 days
+// Delete old cancelled contexts (completedBefore supported by deleteMany)
 await cortex.contexts.deleteMany({
   status: "cancelled",
-  updatedBefore: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000),
+  completedBefore: Date.now() - 180 * 24 * 60 * 60 * 1000,
 });
 ```
 
@@ -1676,7 +1732,7 @@ const workflowsFromConvo = await cortex.contexts.search({
 - Entire workflow tree: 100-300ms for <50 contexts
 - Deep hierarchies (>10 levels): Consider graph database for <100ms queries
 
-**Learn more:** [Graph Capabilities](../07-advanced-topics/01-graph-capabilities)
+**Learn more:** [Graph Capabilities](/advanced-topics/graph-capabilities)
 
 ---
 
@@ -1686,44 +1742,48 @@ const workflowsFromConvo = await cortex.contexts.search({
 
 These errors are thrown by the SDK before the request reaches the backend:
 
-| Error Code                       | Description                    | Cause                                          |
-| -------------------------------- | ------------------------------ | ---------------------------------------------- |
-| `MISSING_REQUIRED_FIELD`         | Required field is missing      | Field is null, undefined, or empty string      |
-| `WHITESPACE_ONLY`                | Field contains only whitespace | Purpose has no actual content                  |
-| `INVALID_CONTEXT_ID_FORMAT`      | Context ID format is invalid   | Must match `ctx-{timestamp}-{random}`          |
-| `INVALID_CONVERSATION_ID_FORMAT` | Conversation ID format invalid | Must start with `conv-`                        |
-| `INVALID_STATUS`                 | Status value is invalid        | Not one of: active/completed/cancelled/blocked |
-| `INVALID_FORMAT`                 | Export format is invalid       | Not one of: json/csv                           |
-| `INVALID_RANGE`                  | Numeric value out of range     | depth < 0, limit <= 0 or > 1000, version < 1   |
-| `INVALID_TYPE`                   | Type is incorrect              | data is not an object, etc.                    |
-| `INVALID_DATE`                   | Date is invalid                | Not a valid Date object                        |
-| `EMPTY_UPDATES`                  | Updates object is empty        | Must include at least one field to update      |
-| `EMPTY_FILTERS`                  | Filters object is empty        | Must include at least one filter               |
-| `EMPTY_ARRAY`                    | Array is empty                 | Required array has no elements                 |
+<APITable
+  parameters={[
+    { name: "MISSING_REQUIRED_FIELD", type: "error", required: false, description: "Required field is missing (null, undefined, or empty string)" },
+    { name: "WHITESPACE_ONLY", type: "error", required: false, description: "Field contains only whitespace (purpose has no actual content)" },
+    { name: "INVALID_CONTEXT_ID_FORMAT", type: "error", required: false, description: "Context ID format is invalid (must match ctx-{timestamp}-{random})" },
+    { name: "INVALID_CONVERSATION_ID_FORMAT", type: "error", required: false, description: "Conversation ID format invalid (must start with conv-)" },
+    { name: "INVALID_STATUS", type: "error", required: false, description: "Status value is invalid (not one of: active/completed/cancelled/blocked)" },
+    { name: "INVALID_FORMAT", type: "error", required: false, description: "Export format is invalid (not one of: json/csv)" },
+    { name: "INVALID_RANGE", type: "error", required: false, description: "Numeric value out of range (depth < 0, limit <= 0 or > 1000, version < 1)" },
+    { name: "INVALID_TYPE", type: "error", required: false, description: "Type is incorrect (data is not an object, etc.)" },
+    { name: "INVALID_DATE", type: "error", required: false, description: "Date is invalid (not a valid Date object)" },
+    { name: "EMPTY_UPDATES", type: "error", required: false, description: "Updates object is empty (must include at least one field to update)" },
+    { name: "EMPTY_FILTERS", type: "error", required: false, description: "Filters object is empty (must include at least one filter)" },
+    { name: "EMPTY_ARRAY", type: "error", required: false, description: "Array is empty (required array has no elements)" },
+  ]}
+/>
 
 ### Backend Errors (ConvexError)
 
 These errors are returned from the Convex backend:
 
-| Error Code          | Description                  | Cause                               |
-| ------------------- | ---------------------------- | ----------------------------------- |
-| `CONTEXT_NOT_FOUND` | Context doesn't exist        | Invalid or non-existent contextId   |
-| `PARENT_NOT_FOUND`  | Parent context doesn't exist | Invalid parentId in create()        |
-| `HAS_CHILDREN`      | Context has children         | Can't delete without cascade/orphan |
+<APITable
+  parameters={[
+    { name: "CONTEXT_NOT_FOUND", type: "error", required: false, description: "Context doesn't exist (invalid or non-existent contextId)" },
+    { name: "PARENT_NOT_FOUND", type: "error", required: false, description: "Parent context doesn't exist (invalid parentId in create())" },
+    { name: "HAS_CHILDREN", type: "error", required: false, description: "Context has children (can't delete without cascade/orphan)" },
+  ]}
+/>
 
 **See Also:**
 
-- [Error Handling Guide](../05-reference/02-error-handling)
+- [Error Handling Guide](/reference/error-handling)
 
 ---
 
-## Graph Integration (v0.7.0+)
+## Graph Integration
 
 Context chains integrate with graph databases for advanced queries:
 
 ```typescript
-// Create context with graph sync
-await cortex.contexts.create(params, { syncToGraph: true });
+// Create context (graph sync is automatic when CORTEX_GRAPH_SYNC=true)
+await cortex.contexts.create(params);
 
 // Query via graph for multi-hop traversal
 const hierarchy = await graphAdapter.query(
@@ -1739,20 +1799,46 @@ const hierarchy = await graphAdapter.query(
 // Result: Entire hierarchy in single query (<10ms)!
 ```
 
-**Performance**: 3.8x faster for deep hierarchies (7+ levels)
+<Callout type="tip" title="Performance">
 
-See **[Graph Operations API](./graph-operations)** for complete graph integration reference.
+Graph integration provides 3.8x faster queries for deep hierarchies (7+ levels).
+
+</Callout>
+
+See **[Graph Operations API](/api-reference/graph-operations)** for complete graph integration reference.
 
 ---
 
 ## Next Steps
 
-- **[Graph Operations API](./graph-operations)** - Graph database integration (NEW in v0.7.0)
-- **[Facts Operations API](./facts-operations)** - Structured knowledge extraction
-- **[Memory Space Operations API](./memory-space-operations)** - Hive/Collaboration Mode
-- **[A2A Communication API](./a2a-communication)** - Agent-to-agent messaging
-- **[Types & Interfaces](../05-reference/01-types-interfaces)** - Complete TypeScript definitions
+<QuickNav>
+  <QuickNavItem
+    title="Graph Operations API"
+    description="Graph database integration"
+    href="/api-reference/graph-operations"
+  />
+  <QuickNavItem
+    title="Facts Operations API"
+    description="Structured knowledge extraction"
+    href="/api-reference/facts-operations"
+  />
+  <QuickNavItem
+    title="Memory Space Operations API"
+    description="Hive/Collaboration Mode"
+    href="/api-reference/memory-space-operations"
+  />
+  <QuickNavItem
+    title="A2A Communication API"
+    description="Agent-to-agent messaging"
+    href="/api-reference/a2a-communication"
+  />
+  <QuickNavItem
+    title="Types & Interfaces"
+    description="Complete TypeScript definitions"
+    href="/reference/types-interfaces"
+  />
+</QuickNav>
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

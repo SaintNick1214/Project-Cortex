@@ -1,0 +1,398 @@
+---
+id: patterns-and-practices
+title: Patterns & Best Practices
+sidebar_position: 3
+description: Common implementation patterns and best practices for building with Cortex
+---
+
+# Patterns & Best Practices
+
+This guide covers proven patterns for common use cases and best practices to follow when building with Cortex.
+
+---
+
+## Common Patterns
+
+### Pattern 1: Simple Chatbot (Hive Mode)
+
+The most common pattern - a single chatbot with persistent memory per user.
+
+```typescript
+// User sends message - use shared memory space
+const memorySpaceId = `user-${req.user.id}-personal`; // Hive space
+
+const conversation = await cortex.conversations.getOrCreate({
+  type: "user-agent",
+  memorySpaceId,
+  participants: { userId: req.user.id, participantId: "chatbot" },
+});
+
+// Store exchange
+await cortex.memory.remember({
+  memorySpaceId,
+  participantId: "chatbot", // Track who stored it
+  conversationId: conversation.conversationId,
+  userMessage: req.body.message,
+  agentResponse: response,
+  userId: req.user.id,
+  userName: req.user.name,
+});
+
+// Search for context (infinite context pattern)
+const context = await cortex.memory.search(memorySpaceId, req.body.message, {
+  embedding: await embed(req.body.message),
+  userId: req.user.id,
+  limit: 10, // Top 10 most relevant from ALL history
+});
+```
+
+<Callout type="tip">
+**Hive Mode** allows multiple AI tools (Cursor, Claude Desktop, custom bots) to share the same memory space with zero duplication.
+</Callout>
+
+---
+
+### Pattern 2: Multi-Agent Workflow (Collaboration Mode)
+
+For systems where specialized agents work together on complex tasks.
+
+```typescript
+// Supervisor agent creates context in its own space
+const context = await cortex.contexts.create({
+  purpose: "Process refund request",
+  memorySpaceId: "supervisor-agent-space", // Separate space
+  userId: "user-123",
+});
+
+// Delegate via A2A (dual-write to both spaces)
+await cortex.a2a.send({
+  from: "supervisor-agent",
+  to: "finance-agent",
+  message: "Approve $500 refund",
+  userId: "user-123",
+  contextId: context.id,
+  importance: 85,
+});
+// Stored in BOTH supervisor-agent-space AND finance-agent-space
+
+// Finance agent accesses context (cross-space via context chain)
+const ctx = await cortex.contexts.get(context.id, {
+  includeChain: true,
+});
+```
+
+<Callout type="info">
+**Collaboration Mode** gives each agent its own memory space with explicit message passing via A2A communication.
+</Callout>
+
+---
+
+### Pattern 3: Knowledge Base
+
+Store shared, versioned knowledge that agents can reference.
+
+```typescript
+// Store KB article (shared, versioned)
+await cortex.immutable.store({
+  type: "kb-article",
+  id: "refund-policy",
+  data: {
+    title: "Refund Policy",
+    content: "Refunds available within 30 days...",
+  },
+  metadata: {
+    importance: 90,
+    tags: ["policy", "refunds"],
+  },
+});
+
+// Index for search (optional) - in a memory space
+await cortex.vector.store("support-bot-space", {
+  content: "Refund Policy: Refunds available within 30 days...",
+  contentType: "fact",
+  embedding: await embed("Refund Policy: Refunds available within 30 days..."),
+  source: { type: "system" },
+  metadata: { importance: 90, tags: ["policy"] },
+  immutableRef: {
+    type: "kb-article",
+    id: "refund-policy",
+  },
+});
+
+// Search within memory space
+const results = await cortex.memory.search(
+  "support-bot-space",
+  "refund policy",
+);
+```
+
+---
+
+### Pattern 4: Live Inventory / Configuration
+
+Use the Mutable Store for real-time data that changes frequently.
+
+```typescript
+// Set inventory (mutable, no versioning)
+await cortex.mutable.set("inventory", "widget-qty", 100);
+
+// Customer orders (atomic decrement)
+await cortex.mutable.update("inventory", "widget-qty", (qty) => {
+  if (qty < 10) throw new Error("Out of stock");
+  return qty - 10;
+});
+
+// Check availability
+const qty = await cortex.mutable.get("inventory", "widget-qty");
+console.log(`${qty} available`);
+```
+
+<Callout type="warning">
+**Mutable Store** does not preserve history. Use **Immutable Store** if you need version tracking.
+</Callout>
+
+---
+
+### Pattern 5: Fact-Based Knowledge (Infinite Context)
+
+Extract structured facts for 60-90% token savings on context retrieval.
+
+```typescript
+// Extract and store facts (60-90% token savings for infinite context)
+await cortex.memory.remember({
+  memorySpaceId: "user-123-personal",
+  participantId: "personal-assistant",
+  conversationId: "conv-123",
+  userMessage: "I work at Acme Corp in San Francisco as a senior engineer",
+  agentResponse: "Thanks for sharing!",
+  userId: "user-123",
+  userName: "Alice",
+  extractFacts: true, // Extract facts (Layer 3)
+  storeRaw: true, // Also keep raw (Layer 1a, hybrid approach)
+});
+
+// Facts extracted and stored in Layer 3:
+// 1. "User works at Acme Corp"
+// 2. "User located in San Francisco"
+// 3. "User's role: Senior Engineer"
+
+// Search facts (fast, precise, unlimited history)
+const facts = await cortex.memory.search(
+  "user-123-personal",
+  "user employment",
+  {
+    userId: "user-123",
+    contentType: "fact", // Only facts from Layer 3
+    limit: 5,
+  },
+);
+// Retrieves from ALL past conversations (infinite context!)
+```
+
+---
+
+<Callout type="info">
+**Coming Soon**: MCP Server integration is planned for Q1 2026. This pattern describes future functionality that is not yet available.
+</Callout>
+
+### Pattern 6: Cross-Application Memory (MCP)
+
+Share memory across multiple AI tools using Model Context Protocol.
+
+```typescript
+// Run MCP server
+// $ cortex-mcp-server --convex-url=$CONVEX_URL
+
+// Now Cursor, Claude Desktop, etc. all share memory
+
+// In Cursor: "I prefer TypeScript"
+// → Stored via MCP
+
+// In Claude: "What language does user prefer?"
+// → Claude queries MCP
+// → Retrieves "User prefers TypeScript"
+// → Personalizes response
+
+// Your memory follows you across all AI tools!
+```
+
+<Callout type="tip">
+**MCP Integration** means your preferences, context, and knowledge travel with you across any MCP-compatible AI tool.
+</Callout>
+
+---
+
+### Pattern 7: Graph Traversal (Advanced)
+
+Navigate relationships between entities for complex queries.
+
+```typescript
+// Graph-Lite (built-in): Context hierarchy
+const chain = await cortex.contexts.get(contextId, {
+  includeChain: true, // Multi-hop graph walk
+});
+
+console.log("Ancestors:", chain.ancestors.length); // Walk up
+console.log("Descendants:", chain.descendants.length); // Walk down
+
+// Native Graph DB (planned): Complex queries
+// Note: cortex.graph.traverse() is planned for a future release.
+// Currently, use the low-level graph adapter directly:
+// import { CypherGraphAdapter } from "@cortexmemory/sdk/graph";
+// const graphAdapter = new CypherGraphAdapter();
+// await graphAdapter.connect({ uri, username, password });
+// const related = await graphAdapter.traverse({
+//   startId: "user-123",
+//   relationshipTypes: ["CREATED", "TRIGGERED", "HANDLED_BY"],
+//   maxDepth: 10,
+// });
+// See src/graph/README.md for current graph integration status.
+```
+
+---
+
+## Best Practices
+
+### 1. Start with Layer 4
+
+Use `cortex.memory.*` for most operations - it handles the complexity for you:
+
+```typescript
+// Recommended: Layer 4 (handles L1a + L2 + L3)
+await cortex.memory.remember({ ... });
+
+// Advanced: Manual Layer 1 + Layer 2 + Layer 3
+const msg = await cortex.conversations.addMessage(...);
+await cortex.vector.store(...);
+await cortex.facts.store(...);
+```
+
+<Callout type="tip">
+Layer 4's `remember()` and `recall()` automatically orchestrate conversations, vector storage, and fact extraction.
+</Callout>
+
+---
+
+### 2. Always Link to ACID
+
+Link Vector memories to their conversation source for full audit trails:
+
+```typescript
+// Good: With conversationRef
+await cortex.vector.store('user-123-personal', {
+  content: 'User prefers dark mode',
+  contentType: 'fact',
+  embedding: await embed('User prefers dark mode'),
+  source: { type: 'conversation' },
+  conversationRef: {
+    conversationId: 'conv-123',
+    messageIds: ['msg-456'],
+  },
+  metadata: { importance: 75 },
+});
+
+// Only omit for non-conversation sources (system data, imports)
+```
+
+---
+
+### 3. Use Universal Filters
+
+Define filters once, reuse everywhere for consistency:
+
+```typescript
+const oldDebugLogs = {
+  tags: ["debug"],
+  importance: { $lte: 10 },
+  createdBefore: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+};
+
+// Preview
+const count = await cortex.memory.count("user-123-personal", oldDebugLogs);
+
+// Export
+await cortex.memory.export("user-123-personal", {
+  ...oldDebugLogs,
+  format: "json",
+});
+
+// Delete
+await cortex.memory.deleteMany("user-123-personal", oldDebugLogs);
+```
+
+---
+
+### 4. Handle Errors Properly
+
+Always catch and handle errors with type information:
+
+```typescript
+import { MemoryValidationError, CircuitOpenError } from '@cortexmemory/sdk';
+
+try {
+  await cortex.memory.store("user-123-personal", data);
+} catch (error) {
+  if (error instanceof MemoryValidationError) {
+    console.error(`Validation error: ${error.message}`);
+  } else if (error instanceof CircuitOpenError) {
+    console.error(`Service temporarily unavailable`);
+  }
+}
+```
+
+See [Error Handling](/reference/error-handling) for the complete error code reference.
+
+---
+
+### 5. Set userId for GDPR
+
+Link user-related data for compliance and cascade deletion:
+
+```typescript
+// With userId (GDPR-enabled)
+await cortex.memory.store('user-123-personal', {
+  userId: 'user-123',  // ← Critical for GDPR
+  ...
+});
+
+await cortex.immutable.store({
+  type: 'feedback',
+  userId: 'user-123',  // ← Enables cascade deletion
+  ...
+});
+
+// When user requests deletion
+await cortex.users.delete('user-123', { cascade: true });
+// Deletes from ALL stores automatically
+```
+
+<Callout type="warning">
+Without `userId`, you cannot perform cascade deletion for GDPR compliance.
+</Callout>
+
+---
+
+## Related Resources
+
+<QuickNav>
+  <QuickNavItem
+    title="Cheat Sheet"
+    description="Quick reference for common operations"
+    href="/reference/cheat-sheet"
+  />
+  <QuickNavItem
+    title="Memory Operations"
+    description="Complete API reference"
+    href="/api-reference/memory-operations"
+  />
+  <QuickNavItem
+    title="Core Concepts"
+    description="Understanding Cortex fundamentals"
+    href="/getting-started/core-concepts"
+  />
+  <QuickNavItem
+    title="Error Handling"
+    description="Error codes and debugging"
+    href="/reference/error-handling"
+  />
+</QuickNav>

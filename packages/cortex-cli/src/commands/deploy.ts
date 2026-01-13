@@ -572,10 +572,34 @@ export function registerDeployCommands(
           const targetSdkVersion = isDevMode
             ? "dev"
             : (options.sdkVersion ?? latestSdkVersion);
+
+          // Check for convex patch update
+          const parseVersion = (v: string) => {
+            const match = v.match(/^(\d+)\.(\d+)\.(\d+)/);
+            if (!match) return null;
+            return {
+              major: parseInt(match[1]),
+              minor: parseInt(match[2]),
+              patch: parseInt(match[3]),
+            };
+          };
+
+          const currentConvex = parseVersion(currentConvexVersion);
+          const latestConvex = parseVersion(latestConvexVersion);
+
+          let convexPatchAvailable = false;
+          if (currentConvex && latestConvex) {
+            convexPatchAvailable =
+              currentConvex.major === latestConvex.major &&
+              currentConvex.minor === latestConvex.minor &&
+              currentConvex.patch < latestConvex.patch;
+          }
+
           const needsUpdate = isDevMode
-            ? !isDevLinked // Dev mode: needs update if not already dev-linked
+            ? true // Dev mode: always refresh to pick up source changes (npm install will also update convex if needed)
             : currentSdkVersion !== targetSdkVersion ||
-              currentSdkVersion === "not installed";
+              currentSdkVersion === "not installed" ||
+              convexPatchAvailable;
 
           // Check template sync status if --sync-template is enabled
           let templateFilesToUpdate = 0;
@@ -633,6 +657,21 @@ export function registerDeployCommands(
       }
       console.log();
 
+      // Helper to format version with update arrow
+      const formatVersion = (
+        current: string,
+        latest: string,
+        label: string,
+      ): string => {
+        if (current === "not installed") {
+          return `      ${label}: ${pc.dim("not installed")}`;
+        }
+        if (current === latest) {
+          return `      ${label}: ${pc.green(current)}`;
+        }
+        return `      ${label}: ${pc.yellow(current)} ${pc.cyan("→")} ${pc.green(latest)}`;
+      };
+
       // Show deployment status
       if (deploymentInfos.length > 0) {
         printSection("Deployments", {});
@@ -645,23 +684,19 @@ export function registerDeployCommands(
 
           console.log(`  ${statusIcon} ${pc.bold(info.name)}${defaultBadge}`);
           console.log(pc.dim(`      Path: ${info.projectPath}`));
-          console.log(
-            `      SDK: ${info.currentSdkVersion === latestSdkVersion ? pc.green(info.currentSdkVersion) : pc.yellow(info.currentSdkVersion)}`,
-          );
+          console.log(formatVersion(info.currentSdkVersion, latestSdkVersion, "SDK"));
           // Only show provider and AI if they're installed (frontend packages)
           if (info.currentProviderVersion !== "not installed") {
             console.log(
-              `      Provider: ${info.currentProviderVersion === latestProviderVersion ? pc.green(info.currentProviderVersion) : pc.yellow(info.currentProviderVersion)}`,
+              formatVersion(info.currentProviderVersion, latestProviderVersion, "Provider"),
             );
           }
           if (info.currentAiVersion !== "not installed") {
             console.log(
-              `      Vercel AI: ${info.currentAiVersion === latestAiVersion ? pc.green(info.currentAiVersion) : pc.yellow(info.currentAiVersion)}`,
+              formatVersion(info.currentAiVersion, latestAiVersion, "Vercel AI"),
             );
           }
-          console.log(
-            `      Convex: ${info.currentConvexVersion === latestConvexVersion ? pc.green(info.currentConvexVersion) : pc.yellow(info.currentConvexVersion)}`,
-          );
+          console.log(formatVersion(info.currentConvexVersion, latestConvexVersion, "Convex"));
           console.log();
         }
       }
@@ -671,6 +706,25 @@ export function registerDeployCommands(
         printSection("Apps", {});
         console.log();
 
+        // Helper to format app version with update arrow (handles dev-linked case)
+        const formatAppVersion = (
+          current: string,
+          latest: string,
+          label: string,
+          isDevLinked: boolean,
+        ): string => {
+          if (isDevLinked) {
+            return `      ${label}: ${pc.magenta("file:... (dev linked)")}`;
+          }
+          if (current === "not installed") {
+            return `      ${label}: ${pc.dim("not installed")}`;
+          }
+          if (current === latest) {
+            return `      ${label}: ${pc.green(current)}`;
+          }
+          return `      ${label}: ${pc.yellow(current)} ${pc.cyan("→")} ${pc.green(latest)}`;
+        };
+
         for (const info of appInfos) {
           const devBadge = info.isDevLinked ? pc.magenta(" [DEV]") : "";
           const needsAnyUpdate = info.needsUpdate || info.needsTemplateSync;
@@ -679,16 +733,16 @@ export function registerDeployCommands(
           console.log(`  ${statusIcon} ${pc.bold(info.name)}${devBadge}`);
           console.log(pc.dim(`      Path: ${info.appPath}`));
           console.log(
-            `      SDK: ${info.isDevLinked ? pc.magenta("file:...") : info.currentSdkVersion === latestSdkVersion ? pc.green(info.currentSdkVersion) : pc.yellow(info.currentSdkVersion)}`,
+            formatAppVersion(info.currentSdkVersion, latestSdkVersion, "SDK", info.isDevLinked),
           );
           console.log(
-            `      Provider: ${info.isDevLinked ? pc.magenta("file:...") : info.currentProviderVersion === latestProviderVersion ? pc.green(info.currentProviderVersion) : pc.yellow(info.currentProviderVersion)}`,
+            formatAppVersion(info.currentProviderVersion, latestProviderVersion, "Provider", info.isDevLinked),
           );
           console.log(
-            `      Vercel AI: ${info.currentAiVersion === latestAiVersion ? pc.green(info.currentAiVersion) : pc.yellow(info.currentAiVersion)}`,
+            formatAppVersion(info.currentAiVersion, latestAiVersion, "Vercel AI", false),
           );
           console.log(
-            `      Convex: ${info.currentConvexVersion === latestConvexVersion ? pc.green(info.currentConvexVersion) : pc.yellow(info.currentConvexVersion)}`,
+            formatAppVersion(info.currentConvexVersion, latestConvexVersion, "Convex", false),
           );
           // Show template sync status if --sync-template is enabled
           if (options.syncTemplate) {
@@ -913,19 +967,27 @@ async function updateDeployment(
       "Project Path": projectPath,
     });
 
+    // Helper to format version with update arrow
+    const formatVersionLine = (
+      current: string,
+      latest: string,
+    ): string => {
+      if (current === "not installed") {
+        return pc.dim("not installed");
+      }
+      if (current === latest) {
+        return pc.green(current);
+      }
+      return `${pc.yellow(current)} ${pc.cyan("→")} ${pc.green(latest)}`;
+    };
+
     console.log();
     console.log(pc.bold("  @cortexmemory/sdk"));
-    console.log(
-      `    Current: ${currentSdkVersion === latestSdkVersion ? pc.green(currentSdkVersion) : pc.yellow(currentSdkVersion)}`,
-    );
-    console.log(`    Latest:  ${latestSdkVersion}`);
+    console.log(`    ${formatVersionLine(currentSdkVersion, latestSdkVersion)}`);
 
     console.log();
     console.log(pc.bold("  convex"));
-    console.log(
-      `    Current: ${currentConvexVersion === latestConvexVersion ? pc.green(currentConvexVersion) : pc.yellow(currentConvexVersion)}`,
-    );
-    console.log(`    Latest:  ${latestConvexVersion}`);
+    console.log(`    ${formatVersionLine(currentConvexVersion, latestConvexVersion)}`);
     if (sdkConvexPeerDep !== "unknown") {
       console.log(`    SDK requires: ${pc.dim(sdkConvexPeerDep)}`);
     }
@@ -1235,53 +1297,76 @@ async function updateApp(
       console.log(pc.dim(`  Will link to: ${options.devPath}`));
     }
 
-    // Use "Source" label in dev mode to indicate local package.json version
-    const cortexVersionLabel = isDevMode ? "Source" : "Latest";
+    // Helper to format version with update arrow for app updates
+    const formatAppVersionLine = (
+      current: string,
+      latest: string,
+      devLinked: boolean = false,
+    ): string => {
+      if (devLinked) {
+        return pc.magenta("file:... (dev linked)");
+      }
+      if (current === "not installed") {
+        return pc.dim("not installed");
+      }
+      if (current === latest) {
+        return pc.green(current);
+      }
+      return `${pc.yellow(current)} ${pc.cyan("→")} ${pc.green(latest)}`;
+    };
 
     console.log();
     console.log(pc.bold("  @cortexmemory/sdk"));
-    if (isDevLinked) {
-      console.log(`    Current: ${pc.magenta("file:... (dev linked)")}`);
-    } else {
-      console.log(
-        `    Current: ${currentSdkVersion === latestSdkVersion ? pc.green(currentSdkVersion) : pc.yellow(currentSdkVersion)}`,
-      );
-    }
-    console.log(`    ${cortexVersionLabel}:  ${latestSdkVersion}`);
+    console.log(`    ${formatAppVersionLine(currentSdkVersion, latestSdkVersion, isDevLinked)}`);
 
     console.log();
     console.log(pc.bold("  @cortexmemory/vercel-ai-provider"));
-    if (isDevLinked) {
-      console.log(`    Current: ${pc.magenta("file:... (dev linked)")}`);
-    } else {
-      console.log(
-        `    Current: ${currentProviderVersion === latestProviderVersion ? pc.green(currentProviderVersion) : pc.yellow(currentProviderVersion)}`,
-      );
-    }
-    console.log(`    ${cortexVersionLabel}:  ${latestProviderVersion}`);
+    console.log(`    ${formatAppVersionLine(currentProviderVersion, latestProviderVersion, isDevLinked)}`);
 
     console.log();
     console.log(pc.bold("  convex"));
-    console.log(
-      `    Current: ${currentConvexVersion === latestConvexVersion ? pc.green(currentConvexVersion) : pc.yellow(currentConvexVersion)}`,
-    );
-    console.log(`    Latest:  ${latestConvexVersion}`);
+    console.log(`    ${formatAppVersionLine(currentConvexVersion, latestConvexVersion)}`);
 
     console.log();
     console.log(pc.bold("  ai (Vercel AI SDK)"));
-    console.log(
-      `    Current: ${currentAiVersion === latestAiVersion ? pc.green(currentAiVersion) : pc.yellow(currentAiVersion)}`,
-    );
-    console.log(`    Latest:  ${latestAiVersion}`);
+    console.log(`    ${formatAppVersionLine(currentAiVersion, latestAiVersion)}`);
     console.log();
+
+    // Check for Convex patch update (same logic as deployments)
+    const parseVersion = (v: string) => {
+      const match = v.match(/^(\d+)\.(\d+)\.(\d+)/);
+      if (!match) return null;
+      return {
+        major: parseInt(match[1]),
+        minor: parseInt(match[2]),
+        patch: parseInt(match[3]),
+      };
+    };
+
+    const currentConvex = parseVersion(currentConvexVersion);
+    const latestConvex = parseVersion(latestConvexVersion);
+
+    let convexPatchAvailable = false;
+    if (currentConvex && latestConvex) {
+      // Patch update = same major.minor, higher patch
+      convexPatchAvailable =
+        currentConvex.major === latestConvex.major &&
+        currentConvex.minor === latestConvex.minor &&
+        currentConvex.patch < latestConvex.patch;
+    }
+
+    const targetConvexVersion =
+      options.convexVersion ??
+      (convexPatchAvailable ? latestConvexVersion : null);
+    const convexNeedsUpdate =
+      targetConvexVersion && currentConvexVersion !== targetConvexVersion;
 
     // Determine update strategy
     if (isDevMode) {
-      // Dev mode: update package.json with file: references
+      // Dev mode: always refresh file: links to pick up SDK source changes
+      console.log(pc.magenta("   Dev mode: forcing SDK/provider refresh"));
       if (isDevLinked) {
-        printSuccess(
-          "App is already dev-linked. Running npm install to refresh...",
-        );
+        printInfo("Refreshing dev-linked packages...");
       } else {
         printInfo("Switching to dev mode with local SDK...");
       }
@@ -1299,8 +1384,22 @@ async function updateApp(
       pkg.dependencies["@cortexmemory/vercel-ai-provider"] =
         `file:${devProviderPath}`;
 
+      // Also update convex if a patch is available
+      if (convexNeedsUpdate && targetConvexVersion) {
+        pkg.dependencies["convex"] = `^${targetConvexVersion}`;
+      }
+
       await fs.writeJson(packageJsonPath, pkg, { spaces: 2 });
-      console.log(pc.cyan("   Updated package.json with file: references"));
+
+      if (convexNeedsUpdate && targetConvexVersion) {
+        console.log(
+          pc.cyan(
+            `   Updated package.json: SDK/provider (file:) + convex@^${targetConvexVersion}`,
+          ),
+        );
+      } else {
+        console.log(pc.cyan("   Updated package.json with file: references"));
+      }
 
       // Run npm install
       console.log();
@@ -1318,6 +1417,21 @@ async function updateApp(
         printSuccess("Dev mode linking complete!");
         console.log(pc.dim(`   SDK linked to: ${devSdkPath}`));
         console.log(pc.dim(`   Provider linked to: ${devProviderPath}`));
+        if (convexNeedsUpdate && targetConvexVersion) {
+          console.log(pc.dim(`   Convex updated to: ${targetConvexVersion}`));
+        }
+
+        // In dev mode, also sync convex schema files from the local SDK
+        console.log();
+        printInfo("Syncing Convex schema from local SDK...");
+        const { syncConvexSchema, printSyncResult } = await import(
+          "../utils/schema-sync.js"
+        );
+        const syncResult = await syncConvexSchema(appPath);
+        printSyncResult(syncResult);
+        if (syncResult.error) {
+          printWarning("Schema sync failed, but packages were updated");
+        }
       } else {
         printError("npm install failed");
         throw new Error("npm install failed");
@@ -1346,8 +1460,8 @@ async function updateApp(
       const providerNeedsUpdate =
         currentProviderVersion !== targetProviderVersion || isDevLinked;
 
-      // Nothing to update
-      if (!sdkNeedsUpdate && !providerNeedsUpdate) {
+      // Nothing to update (including convex)
+      if (!sdkNeedsUpdate && !providerNeedsUpdate && !convexNeedsUpdate) {
         printSuccess("All packages are up to date!");
         return;
       }
@@ -1362,6 +1476,9 @@ async function updateApp(
         packagesToInstall.push(
           `@cortexmemory/vercel-ai-provider@${targetProviderVersion}`,
         );
+      }
+      if (convexNeedsUpdate && targetConvexVersion) {
+        packagesToInstall.push(`convex@${targetConvexVersion}`);
       }
 
       if (packagesToInstall.length > 0) {
@@ -1393,8 +1510,16 @@ async function updateApp(
       printSection("Template Sync", {});
       console.log();
 
+      // In dev mode, force sync all template files regardless of hash match
+      if (isDevMode) {
+        console.log(pc.magenta("   Dev mode: forcing template sync"));
+      }
+
       try {
-        const templateResult = await syncAppTemplate(app, { dryRun: false });
+        const templateResult = await syncAppTemplate(app, {
+          dryRun: false,
+          force: isDevMode, // Force sync in dev mode to pick up local template changes
+        });
 
         if (templateResult.error) {
           printWarning(`Template sync skipped: ${templateResult.error}`);

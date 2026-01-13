@@ -1,6 +1,6 @@
 # Convex Integration
 
-> **Last Updated**: 2026-01-01
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
 How Cortex leverages Convex features for persistent memory, vector search, and real-time updates.
 
@@ -38,11 +38,6 @@ export const get = query({
     if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return null;
     }
-
-    // Update access tracking (read-only in query, so we schedule mutation)
-    await ctx.scheduler.runAfter(0, "memories:updateAccessCount", {
-      memoryId: args.memoryId,
-    });
 
     return memory;
   },
@@ -88,10 +83,10 @@ export const search = query({
 
 **Characteristics:**
 
-- ✅ Read-only (cannot modify database)
-- ✅ Reactive (auto-update on data changes)
-- ✅ Cacheable (Convex caches results)
-- ✅ Fast (optimized by Convex)
+- Read-only (cannot modify database)
+- Reactive (auto-update on data changes)
+- Cacheable (Convex caches results)
+- Fast (optimized by Convex)
 
 ### Mutations (Write Operations)
 
@@ -136,8 +131,8 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const memory = await ctx.db.get(args.memoryId);
 
-    if (!memory || memory.agentId !== args.agentId) {
-      throw new Error("MEMORY_NOT_FOUND");
+    if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     // Create new version (preserve old)
@@ -170,23 +165,14 @@ export const update = mutation({
   },
 });
 
-export const updateAccessCount = mutation({
-  args: { memoryId: v.id("memories") },
-  handler: async (ctx, args) => {
-    await ctx.db.patch(args.memoryId, {
-      accessCount: (await ctx.db.get(args.memoryId))!.accessCount + 1,
-      lastAccessed: Date.now(),
-    });
-  },
-});
 ```
 
 **Characteristics:**
 
-- ✅ Atomic (all-or-nothing)
-- ✅ Consistent (sees latest data)
-- ✅ Isolated (no race conditions)
-- ✅ Durable (persisted immediately)
+- Atomic (all-or-nothing)
+- Consistent (sees latest data)
+- Isolated (no race conditions)
+- Durable (persisted immediately)
 
 ### Actions (External Calls)
 
@@ -240,7 +226,7 @@ export const publishA2ANotification = action({
     const redis = await connectRedis(process.env.REDIS_URL);
 
     await redis.publish(
-      `agent:${args.agentId}:inbox`,
+      `memorySpace:${args.memorySpaceId}:inbox`,
       JSON.stringify(args.notification),
     );
 
@@ -251,10 +237,10 @@ export const publishA2ANotification = action({
 
 **Characteristics:**
 
-- ✅ Can call external APIs
-- ✅ Can call mutations/queries
-- ✅ Non-deterministic allowed
-- ✅ Used for embeddings, pub/sub, webhooks
+- Can call external APIs
+- Can call mutations/queries
+- Non-deterministic allowed
+- Used for embeddings, pub/sub, webhooks
 
 ---
 
@@ -333,13 +319,13 @@ Actions handle non-deterministic operations:
 const embedding = await openai.embeddings.create({ ... });
 await cortex.memory.store('agent-1', { content, embedding });
 
-// Cloud Mode: Cortex action calls embedding API
+// Cloud Mode (planned): Cortex action calls embedding API
 await cortex.memory.store('agent-1', {
   content,
   autoEmbed: true,  // ← Triggers action
 });
 
-// Convex action (Cloud Mode backend)
+// Convex action (Cloud Mode backend - planned)
 export const storeWithAutoEmbed = action({
   args: { memorySpaceId: v.string(), content: v.string(), ... },
   handler: async (ctx, args) => {
@@ -357,9 +343,9 @@ export const storeWithAutoEmbed = action({
 
 **Cortex actions:**
 
-- `memories.storeWithAutoEmbed` - Cloud Mode auto-embeddings
+- `memories.storeWithAutoEmbed` - Cloud Mode auto-embeddings (planned)
 - `a2a.publishNotification` - Pub/sub integration
-- `users.cascadeDelete` - Cloud Mode GDPR cascade
+- `users.cascadeDelete` - Cloud Mode GDPR cascade (planned)
 - `governance.enforceRetention` - Cleanup jobs
 
 ---
@@ -529,7 +515,6 @@ export const addMessage = mutation({
       messages: [...conversation.messages, args.message],
       messageCount: conversation.messageCount + 1,
       updatedAt: Date.now(),
-      lastMessageAt: Date.now(),
     });
   },
 });
@@ -555,7 +540,7 @@ export const remember = mutation({
       ...
     });
 
-    // If any step fails, ALL steps roll back ✅
+    // If any step fails, ALL steps roll back
     return { userMsgId, agentMsgId, memoryId };
   },
 });
@@ -576,9 +561,16 @@ export const atomicUpdate = mutation({
       )
       .unique();
 
-    // Apply update function
-    const updaterFn = eval(args.updater); // Simplified
-    const newValue = updaterFn(record.value);
+    // Apply update operation (using union of operation types)
+    let newValue = record.value;
+    if (args.operation === "increment") {
+      newValue = record.value + args.amount;
+    } else if (args.operation === "decrement") {
+      newValue = record.value - args.amount;
+    } else if (args.operation === "append") {
+      newValue = [...record.value, ...args.items];
+    }
+    // Additional operations handled via operation union type
 
     // Atomic update
     await ctx.db.patch(record._id, {
@@ -586,7 +578,7 @@ export const atomicUpdate = mutation({
       updatedAt: Date.now(),
     });
 
-    // No race conditions - Convex handles concurrency ✅
+    // No race conditions - Convex handles concurrency
   },
 });
 ```
@@ -609,10 +601,10 @@ export const atomicUpdate = mutation({
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 
-function AgentMemoryList({ agentId }) {
+function AgentMemoryList({ memorySpaceId }) {
   // Reactive query - auto-updates!
   const memories = useQuery(api.memories.list, {
-    agentId,
+    memorySpaceId,
     filters: { minImportance: 50 },
   });
 
@@ -624,7 +616,7 @@ function AgentMemoryList({ agentId }) {
         <div key={m._id}>{m.content}</div>
       ))}
 
-      <button onClick={() => storeMemory({ agentId, content: "New memory" })}>
+      <button onClick={() => storeMemory({ memorySpaceId, content: "New memory" })}>
         Add Memory
       </button>
     </div>
@@ -650,7 +642,7 @@ client.onUpdate(api.memories.list, { memorySpaceId: "agent-1" }, (memories) => {
 
 **Cortex usage:**
 
-- Real-time dashboards (Cloud Mode)
+- Real-time dashboards (Cloud Mode - planned)
 - Live collaboration features
 - Agent activity monitoring
 
@@ -658,9 +650,9 @@ client.onUpdate(api.memories.list, { memorySpaceId: "agent-1" }, (memories) => {
 
 ## Compound Operations (Layer 3)
 
-### remember() - Multi-Layer Mutation
+### remember() - SDK Orchestration Method
 
-The `remember()` helper coordinates multiple mutations across all layers:
+The `remember()` helper is an **SDK method** that orchestrates multiple Convex mutations across all layers. It's not a single Convex mutation, but rather a convenience method that coordinates multiple backend calls:
 
 ```typescript
 // SDK call
@@ -675,94 +667,83 @@ await cortex.memory.remember({
   extractFacts: true,  // NEW: Auto-extract facts
 });
 
-// Becomes coordinated mutations
-export const remember = mutation({
-  args: { ... },
-  handler: async (ctx, args) => {
-    // 1. Add user message to conversation (Layer 1a)
-    const userMsgId = await ctx.runMutation("conversations:addMessage", {
-      conversationId: args.conversationId,
-      message: {
-        id: generateId(),
-        role: "user",
-        content: args.userMessage,
-        userId: args.userId,
-        participantId: args.participantId,
-        timestamp: Date.now(),
-      },
-    });
-
-    // 2. Add agent message to conversation (Layer 1a)
-    const agentMsgId = await ctx.runMutation("conversations:addMessage", {
-      conversationId: args.conversationId,
-      message: {
-        id: generateId(),
-        role: "agent",
-        content: args.agentResponse,
-        participantId: args.participantId,
-        timestamp: Date.now(),
-      },
-    });
-
-    // 3. Create vector memory (Layer 2)
-    const memoryId = await ctx.db.insert("memories", {
-      memoryId: generateId(),
-      memorySpaceId: args.memorySpaceId,
-      participantId: args.participantId,
-      tenantId: args.tenantId,
-      userId: args.userId,
-      content: `${args.userName}: ${args.userMessage}\nAgent: ${args.agentResponse}`,
-      contentType: "summarized",
-      sourceType: "conversation",
-      sourceUserId: args.userId,
-      sourceUserName: args.userName,
-      sourceTimestamp: Date.now(),
-      messageRole: "user",
-      conversationRef: {
-        conversationId: args.conversationId,
-        messageIds: [userMsgId, agentMsgId],  // ← Links to Layer 1a
-      },
-      importance: args.importance || 50,
-      tags: args.tags || [],
-      version: 1,
-      previousVersions: [],
-      accessCount: 0,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-
-    // 4. Extract and store facts (Layer 3) if configured
-    let factIds = [];
-    if (args.extractFacts && ctx.llm) {
-      const facts = await extractFactsFromExchange(
-        args.userMessage,
-        args.agentResponse
-      );
-
-      for (const fact of facts) {
-        const factId = await ctx.runMutation("facts:store", {
-          ...fact,
-          memorySpaceId: args.memorySpaceId,
-          participantId: args.participantId,
-          userId: args.userId,
-          sourceRef: {
-            conversationId: args.conversationId,
-            messageIds: [userMsgId, agentMsgId],
-          },
-        });
-
-        factIds.push(factId);
-      }
-    }
-
-    // All steps are atomic (Convex transaction)
-    return {
-      conversation: { messageIds: [userMsgId, agentMsgId] },
-      memories: [memoryId],
-      facts: factIds,  // NEW: Facts extracted
-    };
+// SDK implementation orchestrates multiple Convex calls:
+// 1. Call conversations.addMessage mutation (Layer 1a)
+const userMsgId = await client.mutation(api.conversations.addMessage, {
+  conversationId: args.conversationId,
+  message: {
+    id: generateId(),
+    role: "user",
+    content: args.userMessage,
+    userId: args.userId,
+    participantId: args.participantId,
+    timestamp: Date.now(),
   },
 });
+
+// 2. Call conversations.addMessage mutation again (Layer 1a)
+const agentMsgId = await client.mutation(api.conversations.addMessage, {
+  conversationId: args.conversationId,
+  message: {
+    id: generateId(),
+    role: "agent",
+    content: args.agentResponse,
+    participantId: args.participantId,
+    timestamp: Date.now(),
+  },
+});
+
+// 3. Call memories.store mutation (Layer 2)
+const memoryId = await client.mutation(api.memories.store, {
+  memorySpaceId: args.memorySpaceId,
+  participantId: args.participantId,
+  tenantId: args.tenantId,
+  userId: args.userId,
+  content: `${args.userName}: ${args.userMessage}\nAgent: ${args.agentResponse}`,
+  contentType: "summarized",
+  sourceType: "conversation",
+  sourceUserId: args.userId,
+  sourceUserName: args.userName,
+  sourceTimestamp: Date.now(),
+  messageRole: "user",
+  conversationRef: {
+    conversationId: args.conversationId,
+    messageIds: [userMsgId, agentMsgId],  // ← Links to Layer 1a
+  },
+  importance: args.importance || 50,
+  tags: args.tags || [],
+});
+
+// 4. Optionally extract and store facts (Layer 3) if configured
+let factIds = [];
+if (args.extractFacts) {
+  const facts = await extractFactsFromExchange(
+    args.userMessage,
+    args.agentResponse
+  );
+
+  for (const fact of facts) {
+    const factId = await client.mutation(api.facts.store, {
+      ...fact,
+      memorySpaceId: args.memorySpaceId,
+      participantId: args.participantId,
+      userId: args.userId,
+      sourceRef: {
+        conversationId: args.conversationId,
+        messageIds: [userMsgId, agentMsgId],
+      },
+    });
+
+    factIds.push(factId);
+  }
+}
+
+// Return combined result
+return {
+  conversation: { messageIds: [userMsgId, agentMsgId] },
+  memories: [memoryId],
+  facts: factIds,  // NEW: Facts extracted
+};
 ```
 
 **Transaction guarantee:** All inserts succeed or all fail (no partial state).  
@@ -785,7 +766,7 @@ const memories = await ctx.db
     q.eq("memorySpaceId", memorySpaceId).eq("userId", userId)
   )
   .collect();
-// Uses compound index ✅ O(log n)
+// Uses compound index - O(log n)
 ```
 
 ### Multi-Tenancy
@@ -905,15 +886,15 @@ export const update = mutation({
 
 ```typescript
 // React component with real-time updates
-function AgentDashboard({ agentId }) {
+function AgentDashboard({ memorySpaceId }) {
   // Query auto-updates when data changes
-  const stats = useQuery(api.agents.getStats, { agentId });
+  const stats = useQuery(api.memorySpaces.getStats, { memorySpaceId });
   const recentMemories = useQuery(api.memories.list, {
-    agentId,
+    memorySpaceId,
     limit: 10,
   });
   const activeContexts = useQuery(api.contexts.list, {
-    agentId,
+    memorySpaceId,
     status: "active",
   });
 
@@ -954,8 +935,8 @@ client.onUpdate(
 
       // Respond
       await client.mutation(api.a2a.send, {
-        from: "hr-agent",
-        to: request.source.fromAgent,
+        fromMemorySpace: "hr-agent",
+        toMemorySpace: request.source.fromMemorySpace,
         message: answer,
       });
     }
@@ -979,7 +960,7 @@ export const list = query({
   handler: async (ctx, args) => {
     const memories = await ctx.db
       .query("memories")
-      .withIndex("by_agent", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
       .order("desc") // Most recent first
       .skip(args.offset)
       .take(args.limit)
@@ -987,7 +968,7 @@ export const list = query({
 
     const total = await ctx.db
       .query("memories")
-      .withIndex("by_agent", (q) => q.eq("agentId", args.agentId))
+      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.memorySpaceId))
       .count();
 
     return {
@@ -1009,12 +990,17 @@ export const getConversationMeta = query({
     const conversation = await ctx.db.get(args.conversationId);
 
     // Return metadata only (no messages)
+    // Note: lastMessageAt is computed from messages array, not stored
+    const lastMessageAt = conversation.messages.length > 0
+      ? conversation.messages[conversation.messages.length - 1].timestamp
+      : conversation.createdAt;
+
     return {
       conversationId: conversation._id,
       type: conversation.type,
       participants: conversation.participants,
       messageCount: conversation.messageCount,
-      lastMessageAt: conversation.lastMessageAt,
+      lastMessageAt,
     };
   },
 });
@@ -1038,19 +1024,19 @@ export const getMessages = query({
 ### Filter Before Sort
 
 ```typescript
-// ✅ Efficient: Use index, then filter, then sort
+// Efficient: Use index, then filter, then sort
 const memories = await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .filter((q) => q.gte(q.field("metadata.importance"), 70))
   .order("desc") // Sort by createdAt
   .take(20)
   .collect();
 
-// ❌ Inefficient: Filter without index
+// Inefficient: Filter without index
 const all = await ctx.db.query("memories").collect();
 const filtered = all.filter(
-  (m) => m.agentId === agentId && m.metadata.importance >= 70,
+  (m) => m.memorySpaceId === memorySpaceId && m.metadata.importance >= 70,
 );
 ```
 
@@ -1073,7 +1059,7 @@ const memory: Doc<"memories"> = await client.query(api.memories.get, {
 
 // Type errors caught at compile-time
 await client.query(api.memories.get, {
-  memorySpaceId: 123, // ❌ TypeScript error: number not assignable to string
+  memorySpaceId: 123, // TypeScript error: number not assignable to string
   memoryId: "mem_abc",
 });
 ```
@@ -1091,7 +1077,7 @@ class CortexSDK {
     memoryId: string,
   ): Promise<MemoryEntry | null> {
     const doc = await this.client.query(api.memories.get, {
-      agentId,
+      memorySpaceId,
       memoryId: memoryId as Id<"memories">,
     });
 
@@ -1102,7 +1088,7 @@ class CortexSDK {
   private toMemoryEntry(doc: Doc<"memories">): MemoryEntry {
     return {
       id: doc._id,
-      memorySpaceId: doc.agentId,
+      memorySpaceId: doc.memorySpaceId,
       userId: doc.userId,
       content: doc.content,
       contentType: doc.contentType,
@@ -1123,37 +1109,7 @@ class CortexSDK {
 
 ---
 
-## Scheduler for Background Tasks
-
-### Access Count Updates
-
-```typescript
-// Query schedules mutation (queries are read-only)
-export const get = query({
-  handler: async (ctx, args) => {
-    const memory = await ctx.db.get(args.memoryId);
-
-    // Schedule access count update (runs after query completes)
-    await ctx.scheduler.runAfter(0, api.memories.updateAccessCount, {
-      memoryId: args.memoryId,
-    });
-
-    return memory;
-  },
-});
-
-// Scheduled mutation
-export const updateAccessCount = mutation({
-  args: { memoryId: v.id("memories") },
-  handler: async (ctx, args) => {
-    const memory = await ctx.db.get(args.memoryId);
-    await ctx.db.patch(args.memoryId, {
-      accessCount: memory.accessCount + 1,
-      lastAccessed: Date.now(),
-    });
-  },
-});
-```
+## Background Tasks
 
 ### Retention Cleanup
 
@@ -1195,41 +1151,28 @@ export const store = mutation({
   handler: async (ctx, args) => {
     // Validation
     if (!args.content || args.content.length === 0) {
-      throw new ConvexError({
-        code: "INVALID_CONTENT",
-        message: "Content cannot be empty",
-      });
+      throw new ConvexError("INVALID_CONTENT: Content cannot be empty");
     }
 
     if (args.metadata.importance < 0 || args.metadata.importance > 100) {
-      throw new ConvexError({
-        code: "INVALID_IMPORTANCE",
-        message: "Importance must be 0-100",
-      });
+      throw new ConvexError("INVALID_IMPORTANCE: Importance must be 0-100");
     }
 
     // Permission check
-    const agent = await ctx.db
-      .query("agents")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
+    const memorySpace = await ctx.db
+      .query("memorySpaces")
+      .withIndex("by_memorySpaceId", (q) => q.eq("memorySpaceId", args.memorySpaceId))
       .first();
 
-    if (!agent) {
-      throw new ConvexError({
-        code: "INVALID_AGENT_ID",
-        message: "Agent not found",
-      });
+    if (!memorySpace) {
+      throw new ConvexError("INVALID_MEMORY_SPACE_ID: Memory space not found");
     }
 
     // Insert
     try {
       return await ctx.db.insert("memories", args);
     } catch (error) {
-      throw new ConvexError({
-        code: "CONVEX_ERROR",
-        message: "Database insert failed",
-        details: error,
-      });
+      throw new ConvexError(`CONVEX_ERROR: Database insert failed - ${error}`);
     }
   },
 });
@@ -1280,19 +1223,19 @@ const cortex = new Cortex({
 });
 ```
 
-### Cloud Mode (Cortex-Managed Functions)
+### Cloud Mode (Cortex-Managed Functions) - Planned
 
 ```typescript
 // Your Convex instance (just storage)
 // No custom functions needed - Cortex Cloud provides them
 
-// Your app
+// Your app (planned)
 const cortex = new Cortex({
   mode: "cloud",
   apiKey: process.env.CORTEX_CLOUD_KEY,
 });
 
-// Cortex Cloud API:
+// Cortex Cloud API (planned):
 // - Deploys functions to your Convex
 // - OR uses Cortex-hosted functions
 // - Manages credentials securely
@@ -1302,11 +1245,11 @@ const cortex = new Cortex({
 
 ## Next Steps
 
-- **[Vector Embeddings](./vector-embeddings)** - Embedding strategy and dimensions
-- **[Search Strategy](./search-strategy)** - Multi-strategy search implementation
-- **[Performance](./performance)** - Optimization techniques
-- **[Security & Privacy](./security-privacy)** - Data protection
+- **[Vector Embeddings](/architecture/vector-embeddings)** - Embedding strategy and dimensions
+- **[Search Strategy](/architecture/search-strategy)** - Multi-strategy search implementation
+- **[Performance](/architecture/performance)** - Optimization techniques
+- **[Security & Privacy](/architecture/security-privacy)** - Data protection
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

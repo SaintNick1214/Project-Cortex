@@ -38,13 +38,13 @@ const memories = await cortex.memory.search(
 ## Two Operating Modes
 
 <ComparisonTable
-  headers={["Aspect", "Hive Mode", "Collaboration Mode"]}
-  rows={[
-    ["Memory Spaces", "Shared (multiple tools → one space)", "Separate (one per agent)"],
-    ["Best For", "Personal AI, MCP, team tools", "Autonomous agents, enterprise"],
-    ["Communication", "Direct read/write to shared space", "A2A messaging (dual-write)"],
-    ["Isolation", "Participant tracking (who stored what)", "Complete isolation"],
-    ["Use Case", "Cursor + Claude + Notion AI sharing", "Finance agent ↔ HR agent workflows"],
+  headers={["Hive Mode", "Collaboration Mode"]}
+  items={[
+    { feature: "Memory Spaces", values: ["Shared (multiple tools → one space)", "Separate (one per agent)"] },
+    { feature: "Best For", values: ["Personal AI, MCP, team tools", "Autonomous agents, enterprise"] },
+    { feature: "Communication", values: ["Direct read/write to shared space", "A2A messaging (dual-write)"] },
+    { feature: "Isolation", values: ["Participant tracking (who stored what)", "Complete isolation"] },
+    { feature: "Use Case", values: ["Cursor + Claude + Notion AI sharing", "Finance agent ↔ HR agent workflows"] },
   ]}
 />
 
@@ -103,7 +103,7 @@ await cortex.a2a.send({
 
 **Perfect for:** Autonomous agents, enterprise workflows, compliance
 
-**Learn more:** [A2A Communication](/core-features/a2a-communication)
+**Learn more:** [A2A Communication](/advanced-topics/a2a-communication)
 
   </TabItem>
 </Tabs>
@@ -335,7 +335,7 @@ const context = await cortex.contexts.create({
 // NOT all of supervisor-space - only context-referenced data
 ```
 
-**Learn more:** [Context Chains](/core-features/context-chains)
+**Learn more:** [Context Chains](/advanced-topics/context-chains)
 
 ---
 
@@ -471,12 +471,12 @@ Cascade automatically deletes: user profile, conversations, vector memories, fac
   <QuickNavItem 
     title="A2A Communication" 
     description="Agent-to-agent messaging" 
-    href="/core-features/a2a-communication" 
+    href="/advanced-topics/a2a-communication" 
   />
   <QuickNavItem 
     title="Context Chains" 
     description="Cross-space delegation" 
-    href="/core-features/context-chains" 
+    href="/advanced-topics/context-chains" 
   />
   <QuickNavItem 
     title="Memory Space API" 

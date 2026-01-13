@@ -17,7 +17,7 @@
  * Coordination:
  * - contexts - Hierarchical context chains (memorySpace-scoped, cross-space support)
  * - memorySpaces - Memory space registry (Hive/Collaboration modes)
- * - agents - DEPRECATED: Use memorySpaces instead
+ * - agents - Optional agent metadata registry (analytics, discovery, team organization)
  */
 
 import { defineSchema, defineTable } from "convex/server";
@@ -347,6 +347,7 @@ export default defineSchema({
       v.literal("tool"),
       v.literal("manual"),
       v.literal("a2a"),
+      v.literal("fact-extraction"), // For fact-extracted content
     ),
     sourceRef: v.optional(
       v.object({
@@ -397,6 +398,9 @@ export default defineSchema({
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
+
+    // Embedding for semantic search (v0.30.0+)
+    embedding: v.optional(v.array(v.float64())),
   })
     .index("by_factId", ["factId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
@@ -408,6 +412,11 @@ export default defineSchema({
     .searchIndex("by_content", {
       searchField: "fact",
       filterFields: ["memorySpaceId", "tenantId", "factType"],
+    })
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536, // OpenAI text-embedding-3-small / ada-002
+      filterFields: ["memorySpaceId", "tenantId"],
     }),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

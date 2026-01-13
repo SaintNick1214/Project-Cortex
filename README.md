@@ -2,28 +2,28 @@
 
 > **Plug'n'play persistent memory for AI agents, powered by Convex**
 
-[![License: FSL-1.1-Apache-2.0](https://img.shields.io/badge/License-FSL--1.1--Apache--2.0-blue.svg)](https://fsl.software/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
-[![Convex](https://img.shields.io/badge/Powered%20by-Convex-purple.svg)](https://convex.dev)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-green.svg)](https://github.com/SaintNick1214/cortex/discussions)
+[License: FSL-1.1-Apache-2.0](https://fsl.software/)
+[TypeScript](https://www.typescriptlang.org/)
+[Convex](https://convex.dev)
+[Status](https://github.com/SaintNick1214/cortex/discussions)
 
 ### 🔒 Security Scanning
 
-[![CodeQL](https://img.shields.io/badge/CodeQL-Passing-brightgreen?logo=github)](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning)
-[![Semgrep](https://img.shields.io/badge/Semgrep-OWASP%20Top%2010-brightgreen?logo=semgrep)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
-[![Trivy](https://img.shields.io/badge/Trivy-Dependencies-brightgreen?logo=aquasecurity)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
-[![Gitleaks](https://img.shields.io/badge/Gitleaks-No%20Secrets-brightgreen?logo=git)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
-[![Bandit](https://img.shields.io/badge/Bandit-Python-brightgreen?logo=python)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/SaintNick1214/Project-Cortex/badge)](https://scorecard.dev/viewer/?uri=github.com/SaintNick1214/Project-Cortex)
+[CodeQL](https://github.com/SaintNick1214/Project-Cortex/security/code-scanning)
+[Semgrep](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
+[Trivy](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
+[Gitleaks](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
+[Bandit](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
+[OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/SaintNick1214/Project-Cortex)
 
 ### ✅ Build & Tests
 
-[![TypeScript SDK](https://img.shields.io/badge/TypeScript%20SDK-Passing-brightgreen?logo=typescript)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
-[![Python SDK](https://img.shields.io/badge/Python%20SDK-Passing-brightgreen?logo=python)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
-[![Vercel AI Provider](https://img.shields.io/badge/Vercel%20AI%20Provider-Passing-brightgreen?logo=vercel)](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
-[![Socket.dev](https://badge.socket.dev/npm/package/@cortexmemory/sdk/0.27.0)](https://socket.dev/npm/package/@cortexmemory/sdk)
+[TypeScript SDK](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
+[Python SDK](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
+[Vercel AI Provider](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
+[Socket.dev](https://socket.dev/npm/package/@cortexmemory/sdk)
 
-**🌐 [cortexmemory.dev](https://cortexmemory.dev) | 📚 [docs.cortexmemory.dev](https://docs.cortexmemory.dev)**
+**🌐 [cortexmemory.dev](https://cortexmemory.dev) | 📚 [docs.cortexmemory.dev**](https://docs.cortexmemory.dev)
 
 ## 🚀 Status: Production Ready
 
@@ -139,7 +139,7 @@ const results = await cortex.memory.search(
 
 **That's it!** Your AI agent now has persistent memory.
 
-**Next steps:** [Getting Started Guide](./Documentation/01-getting-started/01-introduction.md) | [CLI Reference](./Documentation/06-tools/01-cli-reference.md)
+**Next steps:** [Getting Started Guide](/getting-started/introduction) | [CLI Reference](/tools/cli-reference)
 
 ---
 
@@ -197,7 +197,7 @@ Cortex provides a complete memory system for AI agents:
 - Rate limiting and circuit breakers
 - Priority queue for critical operations
 
-See [CHANGELOG.md](./CHANGELOG.md) for complete release history.
+See [What's New](/whats-new) for complete release history.
 
 ---
 
@@ -329,40 +329,42 @@ Cortex is designed with two deployment modes:
 
 ## 📊 How Cortex Compares
 
+
 | Feature           | Cortex | Pinecone | Weaviate | Redis |
 | ----------------- | ------ | -------- | -------- | ----- |
-| Vector Search     | ✅     | ✅       | ✅       | ❌    |
-| ACID Transactions | ✅     | ❌       | ❌       | ❌    |
-| Facts Extraction  | ✅     | ❌       | ❌       | ❌    |
-| Graph Integration | ✅     | ❌       | ❌       | ❌    |
-| Real-time Updates | ✅     | ❌       | ❌       | ✅    |
-| Versioning        | ✅     | ❌       | ❌       | ❌    |
-| Temporal Queries  | ✅     | ❌       | ❌       | ❌    |
-| Serverless        | ✅     | ✅       | ❌       | ❌    |
-| Context Chains    | ✅     | ❌       | ❌       | ❌    |
-| Agent Management  | ✅     | ❌       | ❌       | ❌    |
-| User Profiles     | ✅     | ❌       | ❌       | ❌    |
-| Open Source Core  | ✅     | ❌       | ✅       | ✅    |
-| Self-Hostable     | ✅     | ❌       | ✅       | ✅    |
-| All-in-One        | ✅     | ❌       | ❌       | ❌    |
+| Vector Search     | ✅      | ✅        | ✅        | ❌     |
+| ACID Transactions | ✅      | ❌        | ❌        | ❌     |
+| Facts Extraction  | ✅      | ❌        | ❌        | ❌     |
+| Graph Integration | ✅      | ❌        | ❌        | ❌     |
+| Real-time Updates | ✅      | ❌        | ❌        | ✅     |
+| Versioning        | ✅      | ❌        | ❌        | ❌     |
+| Temporal Queries  | ✅      | ❌        | ❌        | ❌     |
+| Serverless        | ✅      | ✅        | ❌        | ❌     |
+| Context Chains    | ✅      | ❌        | ❌        | ❌     |
+| Agent Management  | ✅      | ❌        | ❌        | ❌     |
+| User Profiles     | ✅      | ❌        | ❌        | ❌     |
+| Open Source Core  | ✅      | ❌        | ✅        | ✅     |
+| Self-Hostable     | ✅      | ❌        | ✅        | ✅     |
+| All-in-One        | ✅      | ❌        | ❌        | ❌     |
+
 
 ## 📖 Documentation
 
-**📚 [docs.cortexmemory.dev](https://docs.cortexmemory.dev)** - Complete documentation, guides, and API reference
+**📚 [docs.cortexmemory.dev**](https://docs.cortexmemory.dev) - Complete documentation, guides, and API reference
 
 ### Getting Started
 
 - [Installation Guide](https://docs.cortexmemory.dev/getting-started/installation) - Multiple installation methods
-- [Five-Minute Quickstart](https://docs.cortexmemory.dev/getting-started/quickstart) - Build your first agent
+- [Five-Minute Quickstart](https://docs.cortexmemory.dev/getting-started/five-minute-quickstart) - Build your first agent
 - [Core Concepts](https://docs.cortexmemory.dev/getting-started/core-concepts) - Understand the fundamentals
 - [Configuration](https://docs.cortexmemory.dev/getting-started/configuration) - Customize Cortex
 
 ### Reference
 
 - [API Reference](https://docs.cortexmemory.dev/api-reference/overview) - Full API documentation
-- [CLI Reference](./Documentation/06-tools/01-cli-reference.md) - Complete command documentation
+- [CLI Reference](/tools/cli-reference) - Complete command documentation
 - [System Architecture](https://docs.cortexmemory.dev/architecture/system-overview) - How it works
-- [Local Documentation](./Documentation/00-README.md) - Repository documentation
+- [Local Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation) - Repository documentation
 
 ## 🤝 Get Involved
 
@@ -375,7 +377,6 @@ We're building Cortex in public and would love your input!
   - 🤔 Asking questions about architecture decisions
   - 📣 Providing feedback on the API design
   - 🎯 Discussing roadmap priorities
-
 - **[GitHub Issues](https://github.com/SaintNick1214/cortex/issues)** - Best for:
   - 🐛 Reporting bugs
   - ✨ Requesting specific features
@@ -391,7 +392,7 @@ We're building Cortex in public and would love your input!
 5. **Improve Documentation** - Help us make the docs clearer and more comprehensive
 6. **Spread the Word** - Star the repo, share with others building AI agents
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
+See [CONTRIBUTING.md](/project/contributing) for detailed contribution guidelines.
 
 ## 🚦 Roadmap
 
@@ -445,12 +446,12 @@ Socket.dev may flag "network access" in this package. This is **expected and saf
 - The SDK requires network access to communicate with Convex (cloud database)
 - All network calls go to `*.convex.cloud` endpoints only
 - This is documented, audited, and necessary for core functionality
-- See [`.socket.dev.yml`](./.socket.dev.yml) for our security policy
+- See `[.socket.dev.yml](https://github.com/SaintNick1214/Project-Cortex/blob/main/.socket.dev.yml)` for our security policy
 
 **Report Security Issues:**
 
-- 🔒 Email: security@cortexmemory.dev
-- 🔐 See [SECURITY.md](./SECURITY.md) for our security policy
+- 🔒 Email: [security@cortexmemory.dev](mailto:security@cortexmemory.dev)
+- 🔐 See [SECURITY.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/SECURITY.md) for our security policy
 
 ## 📦 Publishing Releases
 
@@ -459,14 +460,14 @@ Cortex SDK uses **dual release workflows**:
 **🤖 Automated** (Production - recommended):
 
 - Bump version in `package.json` → Push to `main` → GitHub Action publishes automatically
-- Full details: [RELEASE-GUIDE.md](./RELEASE-GUIDE.md)
+- Full details: [RELEASE-GUIDE.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/RELEASE-GUIDE.md)
 
 **💻 Manual** (Beta/hotfix - full control):
 
 - Run `npm run release` for interactive publishing
-- See: [scripts/release.ps1](./scripts/release.ps1)
+- See: [scripts/release.ps1](https://github.com/SaintNick1214/Project-Cortex/blob/main/scripts/release.ps1)
 
-**Setup**: [.github/SETUP-AUTOMATED-RELEASES.md](.github/SETUP-AUTOMATED-RELEASES.md)
+**Setup**: [.github/SETUP-AUTOMATED-RELEASES.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/.github/SETUP-AUTOMATED-RELEASES.md)
 
 ## 📄 License
 
@@ -487,7 +488,7 @@ You may NOT use Cortex to create a competing commercial product or service that 
 **Future Apache 2.0:**
 Each version automatically becomes Apache 2.0 licensed two years after release.
 
-See [LICENSE.md](./LICENSE.md) for full details.
+See [LICENSE.md](https://github.com/SaintNick1214/Project-Cortex/blob/main/LICENSE.md) for full details.
 
 **Cortex Cloud**: Commercial service (future)
 
@@ -518,19 +519,15 @@ Cortex was born out of building [Project Constellation](https://github.com/Saint
 
 - 🌐 Website: [cortexmemory.dev](https://cortexmemory.dev)
 - 📚 Documentation: [docs.cortexmemory.dev](https://docs.cortexmemory.dev)
-- 📧 Email: support@cortexmemory.dev
+- 📧 Email: [support@cortexmemory.dev](mailto:support@cortexmemory.dev)
 - 💬 Discussions: [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions)
 - 🐛 Issues: [GitHub Issues](https://github.com/SaintNick1214/cortex/issues)
 - 🐦 Twitter: [@cortexmemory](https://twitter.com/cortexmemory) (coming soon)
 
 ---
 
-<div align="center">
-
 **⭐ Star this repo if you're building AI agents with persistent memory ⭐**
 
 Built with ❤️ for the AI agent community by [Nicholas Geil](https://github.com/SaintNick1214) / [Saint Nick LLC](https://saintnick.ai)
 
-_Cortex is production-ready. Join [Discussions](https://github.com/SaintNick1214/cortex/discussions) to share your use case and help shape the future of AI agent memory._
-
-</div>
+*Cortex is production-ready. Join [Discussions](https://github.com/SaintNick1214/cortex/discussions) to share your use case and help shape the future of AI agent memory.*

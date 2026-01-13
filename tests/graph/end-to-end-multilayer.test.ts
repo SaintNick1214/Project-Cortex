@@ -111,9 +111,8 @@ What specific aspects would you like to dive deeper into?
     await graphAdapter.clearDatabase();
     await initializeGraphSchema(graphAdapter);
 
-    // Setup Cortex WITH GRAPH (manual sync for E2E test)
-    // Note: autoSync would require Convex API generation which isn't in test environment
-    // Manual sync with syncToGraph: true proves the same functionality
+    // Setup Cortex WITH GRAPH
+    // Graph sync is automatic when graphAdapter is configured (v0.29.0+)
     cortex = new Cortex({
       convexUrl: CONVEX_URL,
       graph: {
@@ -123,30 +122,24 @@ What specific aspects would you like to dive deeper into?
       },
     });
 
-    // Register memory space
-    await cortex.memorySpaces.register(
-      {
-        memorySpaceId,
-        name: "E2E Test Space",
-        type: "personal",
-      },
-      { syncToGraph: true },
-    );
+    // Register memory space (graph sync is automatic when adapter is configured)
+    await cortex.memorySpaces.register({
+      memorySpaceId,
+      name: "E2E Test Space",
+      type: "personal",
+    });
 
-    // Create conversation
-    await cortex.conversations.create(
-      {
-        memorySpaceId,
-        conversationId,
-        type: "user-agent",
-        participants: {
-          userId: "dr-sarah-chen",
-          agentId: "ai-assistant",
-          participantId: "ai-assistant",
-        },
+    // Create conversation (graph sync is automatic when adapter is configured)
+    await cortex.conversations.create({
+      memorySpaceId,
+      conversationId,
+      type: "user-agent",
+      participants: {
+        userId: "dr-sarah-chen",
+        agentId: "ai-assistant",
+        participantId: "ai-assistant",
       },
-      { syncToGraph: true },
-    );
+    });
 
     // Give worker time to process initial setup
     await new Promise((resolve) => setTimeout(resolve, 500));
@@ -246,9 +239,8 @@ What specific aspects would you like to dive deeper into?
             messageIds: rememberResult.conversation.messageIds,
           },
           tags: ["identity", "employment"],
-        },
-        { syncToGraph: true },
-      );
+        });
+      // Graph sync is automatic when graphAdapter is configured
 
       extractedFacts.push(fact1);
 
@@ -268,9 +260,8 @@ What specific aspects would you like to dive deeper into?
             messageIds: rememberResult.conversation.messageIds,
           },
           tags: ["location"],
-        },
-        { syncToGraph: true },
-      );
+        });
+      // Graph sync is automatic when graphAdapter is configured
 
       extractedFacts.push(fact2);
 
@@ -290,9 +281,8 @@ What specific aspects would you like to dive deeper into?
             messageIds: rememberResult.conversation.messageIds,
           },
           tags: ["technology"],
-        },
-        { syncToGraph: true },
-      );
+        });
+      // Graph sync is automatic when graphAdapter is configured
 
       extractedFacts.push(fact3);
 
@@ -312,9 +302,8 @@ What specific aspects would you like to dive deeper into?
             messageIds: rememberResult.conversation.messageIds,
           },
           tags: ["team", "employment"],
-        },
-        { syncToGraph: true },
-      );
+        });
+      // Graph sync is automatic when graphAdapter is configured
 
       extractedFacts.push(fact4);
 
@@ -334,9 +323,8 @@ What specific aspects would you like to dive deeper into?
             messageIds: rememberResult.conversation.messageIds,
           },
           tags: ["technology", "preference"],
-        },
-        { syncToGraph: true },
-      );
+        });
+      // Graph sync is automatic when graphAdapter is configured
 
       extractedFacts.push(fact5);
 
@@ -362,9 +350,8 @@ What specific aspects would you like to dive deeper into?
             conversationId,
             messageIds: rememberResult.conversation.messageIds,
           },
-        },
-        { syncToGraph: true },
-      );
+        });
+      // Graph sync is automatic when graphAdapter is configured
 
       // Create child context for specific topic
       const childContext = await cortex.contexts.create(
@@ -373,9 +360,8 @@ What specific aspects would you like to dive deeper into?
           memorySpaceId,
           parentId: rootContext.contextId,
           userId: "dr-sarah-chen",
-        },
-        { syncToGraph: true },
-      );
+        });
+      // Graph sync is automatic when graphAdapter is configured
 
       // CHECKPOINT 5: L4 storage validated
       expect(rootContext.contextId).toBeDefined();
@@ -384,10 +370,9 @@ What specific aspects would you like to dive deeper into?
       expect(childContext.parentId).toBe(rootContext.contextId);
     });
 
-    it("should have synced ALL layers to graph (via manual sync)", async () => {
-      // Note: This test uses manual sync (syncToGraph: true option)
+    it("should have synced ALL layers to graph (via automatic sync)", async () => {
+      // Note: Graph sync is automatic when graphAdapter is configured (v0.29.0+)
       // Real-time worker is tested separately in graphSyncWorker.test.ts
-      // Manual sync proves the same sync functionality
 
       // CHECKPOINT 6: Graph contains all entities
       const memorySpaceCount = await graphAdapter.countNodes("MemorySpace");

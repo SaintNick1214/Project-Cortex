@@ -1,6 +1,6 @@
 # Search Strategy
 
-> **Last Updated**: 2026-01-01
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
 Multi-strategy search implementation: semantic, keyword, facts, temporal, and hybrid approaches.
 
@@ -15,30 +15,21 @@ Cortex provides **four primary search strategies** that can be used independentl
 
 The `recall()` method (v0.24.0+) automatically combines strategies for optimal results.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              Search Strategy Selection                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  recall() call ───────────────┐                             │
-│                                │                             │
-│  ┌────────────────────────────┼────────────────┐            │
-│  │                            │                │            │
-│  ↓                            ↓                ↓            │
-│  Facts Search           Vector Search    Recent Search      │
-│  (Layer 3)              (Layer 2)        (Layer 2)          │
-│                                                             │
-│  ↓                            ↓                ↓            │
-│  └────────────────────────────┼────────────────┘            │
-│                                │                             │
-│  ┌────────────────────────────┼────────────────┐            │
-│  │      Merge + Deduplicate + Rank              │            │
-│  │  (Multi-signal scoring algorithm)            │            │
-│  └──────────────────────────────────────────────┘            │
-│                                                             │
-│  Optional: Boost by recency, importance, access             │
-└─────────────────────────────────────────────────────────────┘
-```
+<FlowDiagram title="Search Strategy Selection" caption="recall() automatically combines multiple search strategies for optimal results">
+  <FlowNode title="recall() call" icon="search" variant="primary" />
+  <FlowNode title="Facts Search" icon="brain" variant="success">
+    Layer 3 - Most token-efficient
+  </FlowNode>
+  <FlowNode title="Vector Search" icon="brain" variant="default">
+    Layer 2 - Semantic similarity
+  </FlowNode>
+  <FlowNode title="Recent Search" icon="time" variant="default">
+    Layer 2 - Time-based retrieval
+  </FlowNode>
+  <FlowNode title="Merge + Deduplicate + Rank" icon="layers" variant="warning">
+    Multi-signal scoring algorithm
+  </FlowNode>
+</FlowDiagram>
 
 ---
 
@@ -55,35 +46,31 @@ const query = "What is the user's preferred communication method?";
 // Generate query embedding
 const queryEmbedding = await embed(query);
 
-// Convex vector search
-const results = await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q
-      .similar("embedding", queryEmbedding, 20)
-      .eq("memorySpaceId", memorySpaceId),
-  )
-  .collect();
+// SDK vector search
+const results = await cortex.vector.search(memorySpaceId, query, {
+  embedding: queryEmbedding,
+  limit: 20,
+});
 
 // Returns:
-// 1. "User prefers email over phone" (0.92 similarity)
-// 2. "Email is best way to reach user" (0.88 similarity)
-// 3. "User doesn't like phone calls" (0.85 similarity)
-// Even though exact words don't match! ✅
+// 1. "User prefers email over phone" (score: 0.92)
+// 2. "Email is best way to reach user" (score: 0.88)
+// 3. "User doesn't like phone calls" (score: 0.85)
+// Even though exact words don't match!
 ```
 
 **Strengths:**
 
-- ✅ Finds meaning, not just words
-- ✅ Handles synonyms ("car" matches "vehicle")
-- ✅ Understands context
-- ✅ Works across languages (with multilingual models)
+- Finds meaning, not just words
+- Handles synonyms ("car" matches "vehicle")
+- Understands context
+- Works across languages (with multilingual models)
 
 **Weaknesses:**
 
-- ❌ Requires embeddings (cost + latency)
-- ❌ Can miss exact matches
-- ❌ Less predictable than keywords
+- Requires embeddings (cost + latency)
+- Can miss exact matches
+- Less predictable than keywords
 
 **Best for:**
 
@@ -92,9 +79,37 @@ const results = await ctx.db
 - Cross-language search
 - Fuzzy matching
 
-### Implementation
+### SDK Usage
 
 ```typescript
+// Using the Cortex SDK
+const query = "What is the user's preferred communication method?";
+const embedding = await embed(query);
+
+const results = await cortex.vector.search(memorySpaceId, query, {
+  embedding,
+  userId: "user-123",
+  limit: 20,
+});
+
+// Results include score field (0-1 similarity)
+results.forEach((result) => {
+  console.log(`${result.content} (score: ${result.score})`);
+});
+```
+
+<Callout type="info" title="Tenant Isolation">
+All searches are automatically filtered by `tenantId` for multi-tenant isolation. This is handled at the database level via `filterFields` configuration.
+</Callout>
+
+### Conceptual Example: Internal Implementation
+
+<Callout type="warning" title="Conceptual Example">
+The following shows how semantic search works internally. Use `cortex.vector.search()` or `cortex.memory.recall()` in your application code.
+</Callout>
+
+```typescript
+// Internal Convex query implementation (conceptual)
 export const semanticSearch = query({
   args: {
     memorySpaceId: v.string(),
@@ -107,7 +122,7 @@ export const semanticSearch = query({
         .similar("embedding", args.embedding, args.filters.limit || 20)
         .eq("memorySpaceId", args.memorySpaceId);
 
-      // Apply tenantId filter (pre-filtered via filterFields)
+      // Tenant isolation (pre-filtered via filterFields)
       if (args.filters.tenantId) {
         search = search.eq("tenantId", args.filters.tenantId);
       }
@@ -140,7 +155,7 @@ export const semanticSearch = query({
 
 ---
 
-## Strategy 2: Facts Search (Layer 3) ✨
+## Strategy 2: Facts Search (Layer 3)
 
 ### How It Works
 
@@ -150,34 +165,31 @@ Searches structured facts from Layer 3 - the most token-efficient strategy:
 // User query
 const query = "What is the user's communication preference?";
 
-// Facts search
-const results = await ctx.db
-  .query("facts")
-  .withSearchIndex("by_content", (q) =>
-    q.search("fact", query).eq("memorySpaceId", memorySpaceId),
-  )
-  .collect();
+// SDK facts search
+const facts = await cortex.facts.search(memorySpaceId, query, {
+  limit: 20,
+});
 
 // Returns:
-// 1. "User prefers email for communication" (fact)
-// 2. "User dislikes phone calls" (fact)
-// 3. "User checks email twice daily" (fact)
+// 1. "User prefers email for communication" (confidence: 95%)
+// 2. "User dislikes phone calls" (confidence: 88%)
+// 3. "User checks email twice daily" (confidence: 82%)
 // Each fact is ~8 tokens vs 50+ tokens for raw conversation
 ```
 
 **Strengths:**
 
-- ✅ Most token-efficient (60-90% savings)
-- ✅ Structured knowledge (subject-predicate-object)
-- ✅ High confidence (LLM-extracted)
-- ✅ Deduplication via Belief Revision System
-- ✅ Enables infinite context capability
+- Most token-efficient (60-90% savings)
+- Structured knowledge (subject-predicate-object)
+- High confidence (LLM-extracted)
+- Deduplication via Belief Revision System
+- Enables infinite context capability
 
 **Weaknesses:**
 
-- ❌ Requires LLM for extraction (initial cost)
-- ❌ May miss nuance from raw conversation
-- ❌ Confidence scoring needed
+- Requires LLM for extraction (initial cost)
+- May miss nuance from raw conversation
+- Confidence scoring needed
 
 **Best for:**
 
@@ -186,9 +198,35 @@ const results = await ctx.db
 - Knowledge retrieval across sessions
 - Token-constrained environments
 
-### Implementation
+### SDK Usage
 
 ```typescript
+// Using the Cortex SDK
+const facts = await cortex.facts.search(
+  memorySpaceId,
+  "What is the user's communication preference?",
+  {
+    userId: "user-123",
+    factType: "preference",
+    minConfidence: 70,
+    limit: 20,
+  }
+);
+
+// Results include confidence scores
+facts.forEach((fact) => {
+  console.log(`${fact.fact} (confidence: ${fact.confidence}%)`);
+});
+```
+
+### Conceptual Example: Internal Implementation
+
+<Callout type="warning" title="Conceptual Example">
+The following shows how facts search works internally. Use `cortex.facts.search()` or `cortex.memory.recall()` in your application code.
+</Callout>
+
+```typescript
+// Internal Convex query implementation (conceptual)
 export const factsSearch = query({
   args: {
     memorySpaceId: v.string(),
@@ -230,25 +268,18 @@ export const factsSearch = query({
 
 ### Facts by Subject (Entity-Centric)
 
+<Callout type="warning" title="Conceptual Example">
+The following shows entity-centric fact retrieval. Use `cortex.facts.search()` with subject filters or `cortex.memory.recall()` for orchestrated search.
+</Callout>
+
 ```typescript
-// Query facts about a specific entity
-export const factsAboutSubject = query({
-  args: {
-    memorySpaceId: v.string(),
-    subject: v.string(),
-  },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace_subject", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId).eq("subject", args.subject),
-      )
-      .collect();
-  },
+// Conceptual: Query facts about a specific entity
+// In practice, use cortex.facts.search() with subject filters
+const userFacts = await cortex.facts.search(memorySpaceId, "*", {
+  subject: "user-123",
+  limit: 100,
 });
 
-// Get all facts about user-123
-const userFacts = await factsAboutSubject(memorySpaceId, "user-123");
 // Returns: All preferences, identities, relationships for user-123
 ```
 
@@ -264,33 +295,30 @@ Uses Convex full-text search indexes:
 // User query
 const query = "password Blue";
 
-// Convex keyword search
-const results = await ctx.db
-  .query("memories")
-  .withSearchIndex("by_content", (q) =>
-    q.search("content", query).eq("memorySpaceId", memorySpaceId),
-  )
-  .collect();
+// SDK vector search (uses keyword matching when no embedding provided)
+const results = await cortex.vector.search(memorySpaceId, query, {
+  limit: 20,
+});
 
 // Returns:
 // 1. "The password is Blue" (exact match)
 // 2. "User's password: Blue123" (contains words)
 // 3. "Blue is the password color" (contains both)
-// Only returns if words actually appear ✅
+// Only returns if words actually appear
 ```
 
 **Strengths:**
 
-- ✅ Exact word matching
-- ✅ Fast (no embedding needed)
-- ✅ Predictable results
-- ✅ No API costs
+- Exact word matching
+- Fast (no embedding needed)
+- Predictable results
+- No API costs
 
 **Weaknesses:**
 
-- ❌ Misses synonyms
-- ❌ Order matters somewhat
-- ❌ Doesn't understand meaning
+- Misses synonyms
+- Order matters somewhat
+- Doesn't understand meaning
 
 **Best for:**
 
@@ -299,9 +327,29 @@ const results = await ctx.db
 - IDs, codes, names
 - When embeddings unavailable
 
-### Implementation
+### SDK Usage
 
 ```typescript
+// Using the Cortex SDK
+const results = await cortex.vector.search(memorySpaceId, "password Blue", {
+  userId: "user-123",
+  limit: 20,
+});
+
+// Results are relevance-ranked by Convex search index
+results.forEach((result) => {
+  console.log(`${result.content} (score: ${result.score})`);
+});
+```
+
+### Conceptual Example: Internal Implementation
+
+<Callout type="warning" title="Conceptual Example">
+The following shows how keyword search works internally. Use `cortex.vector.search()` or `cortex.memory.recall()` in your application code.
+</Callout>
+
+```typescript
+// Internal Convex query implementation (conceptual)
 export const keywordSearch = query({
   args: {
     memorySpaceId: v.string(),
@@ -337,30 +385,32 @@ export const keywordSearch = query({
 Prioritizes recent or time-relevant memories:
 
 ```typescript
-// Get recent memories
-const results = await ctx.db
-  .query("memories")
-  .withIndex("by_memorySpace_created", (q) =>
-    q.eq("memorySpaceId", memorySpaceId),
-  )
-  .order("desc") // Most recent first
-  .take(20)
-  .collect();
+// Get recent memories using recall()
+const result = await cortex.memory.recall({
+  memorySpaceId,
+  query: "*", // Empty query for recent-only
+  sources: {
+    vector: { limit: 0 }, // Disable vector search
+    facts: { limit: 0 }, // Disable facts search
+  },
+  limit: 20,
+});
 
 // Returns most recent memories, regardless of content
+// Results are automatically sorted by recency
 ```
 
 **Strengths:**
 
-- ✅ Always relevant (recent = relevant)
-- ✅ Very fast (simple index)
-- ✅ No embeddings needed
-- ✅ Great for conversations
+- Always relevant (recent = relevant)
+- Very fast (simple index)
+- No embeddings needed
+- Great for conversations
 
 **Weaknesses:**
 
-- ❌ Ignores content relevance
-- ❌ May miss important old information
+- Ignores content relevance
+- May miss important old information
 
 **Best for:**
 
@@ -369,9 +419,34 @@ const results = await ctx.db
 - Time-sensitive information
 - When recency matters more than content
 
-### Implementation
+### SDK Usage
 
 ```typescript
+// Using cortex.memory.recall() for recent memories
+const result = await cortex.memory.recall({
+  memorySpaceId: memorySpaceId,
+  query: "*", // Empty query for recent-only
+  sources: {
+    vector: { limit: 0 }, // Disable vector search
+    facts: { limit: 0 }, // Disable facts search
+  },
+  limit: 20,
+});
+
+// Results sorted by recency
+result.items.forEach((item) => {
+  console.log(`${item.content} (created: ${new Date(item.memory?.createdAt || 0)})`);
+});
+```
+
+### Conceptual Example: Internal Implementation
+
+<Callout type="warning" title="Conceptual Example">
+The following shows how temporal search works internally. Use `cortex.memory.recall()` in your application code.
+</Callout>
+
+```typescript
+// Internal Convex query implementation (conceptual)
 export const recentSearch = query({
   args: {
     memorySpaceId: v.string(),
@@ -417,214 +492,145 @@ export const recentSearch = query({
 
 ---
 
-## Strategy 4: Auto (Hybrid)
+## Strategy 5: Orchestrated Search (recall())
 
-### Intelligent Strategy Selection
+### Using recall() for Multi-Strategy Search
+
+The `cortex.memory.recall()` method automatically combines multiple search strategies:
 
 ```typescript
-export const autoSearch = query({
-  args: {
-    memorySpaceId: v.string(),
-    query: v.string(),
-    embedding: v.optional(v.array(v.float64())),
-    filters: v.any(),
-  },
-  handler: async (ctx, args) => {
-    // Decision tree
-    if (args.embedding) {
-      // Has embedding: Use semantic
-      return await ctx.runQuery("memories:semanticSearch", args);
-    } else if (args.query && args.query.length > 0) {
-      // Has query: Use keyword
-      return await ctx.runQuery("memories:keywordSearch", {
-        memorySpaceId: args.agentId,
-        keywords: args.query,
-        filters: args.filters,
-      });
-    } else {
-      // No query: Use recent
-      return await ctx.runQuery("memories:recentSearch", args);
-    }
-  },
+// Automatic multi-strategy search
+const result = await cortex.memory.recall({
+  memorySpaceId: memorySpaceId,
+  query: "What are the user's preferences?",
+  embedding: await embed("What are the user's preferences?"),
+  userId: "user-123",
+  limit: 10,
+});
+
+// Results include items from multiple sources
+console.log(`Found ${result.items.length} items`);
+console.log(`- ${result.sources.vector?.count || 0} from vector search`);
+console.log(`- ${result.sources.facts?.count || 0} from facts search`);
+console.log(`- ${result.sources.graph?.count || 0} from graph expansion`);
+
+// Items are ranked using multi-signal scoring
+result.items.forEach((item) => {
+  console.log(`${item.content} (score: ${item.score})`);
 });
 ```
 
-### Hybrid Combination
+**What `recall()` does automatically:**
 
-Combine multiple strategies for best results:
+1. Searches facts (Layer 3) for structured knowledge
+2. Searches vectors (Layer 2) for semantic matches
+3. Expands via graph connections for related context
+4. Merges and deduplicates results
+5. Ranks using multi-signal scoring algorithm
+6. Returns LLM-ready context string
+
+### Conceptual Example: Internal Hybrid Logic
+
+<Callout type="warning" title="Conceptual Example">
+The following shows how `recall()` combines strategies internally. Use `cortex.memory.recall()` directly in your application code.
+</Callout>
 
 ```typescript
-export const hybridSearch = query({
-  args: {
-    memorySpaceId: v.string(),
-    query: v.string(),
-    embedding: v.array(v.float64()),
-    filters: v.any(),
-  },
-  handler: async (ctx, args) => {
-    // 1. Semantic search (top 20)
-    const semantic = await ctx.runQuery("memories:semanticSearch", {
-      memorySpaceId: args.agentId,
-      embedding: args.embedding,
-      filters: { limit: 20 },
-    });
+// Conceptual: How recall() combines strategies internally
+// In practice, use cortex.memory.recall() which handles this automatically
 
-    // 2. Keyword search (top 20)
-    const keyword = await ctx.runQuery("memories:keywordSearch", {
-      memorySpaceId: args.agentId,
-      keywords: args.query,
-      filters: { limit: 20 },
-    });
-
-    // 3. Merge and re-rank
-    const combined = mergeResults(semantic, keyword);
-
-    // 4. Apply boosting (importance, recency, access)
-    if (args.filters.boostImportance) {
-      applyImportanceBoost(combined);
-    }
-
-    if (args.filters.boostRecent) {
-      applyRecencyBoost(combined);
-    }
-
-    // 5. Sort by combined score
-    combined.sort((a, b) => b.score - a.score);
-
-    // 6. Return top N
-    return combined.slice(0, args.filters.limit || 10);
-  },
+// 1. Search facts (most token-efficient)
+const facts = await cortex.facts.search(memorySpaceId, query, {
+  minConfidence: 70,
+  limit: 20,
 });
 
-function mergeResults(semantic: any[], keyword: any[]) {
-  const map = new Map();
+// 2. Search vectors (semantic similarity)
+const vectors = await cortex.vector.search(memorySpaceId, query, {
+  embedding,
+  limit: 20,
+});
 
-  // Add semantic results
-  semantic.forEach((r, i) => {
-    map.set(r._id, {
-      ...r,
-      semanticScore: r.score,
-      semanticRank: i,
-      keywordScore: 0,
-      keywordRank: Infinity,
-    });
-  });
-
-  // Add keyword results
-  keyword.forEach((r, i) => {
-    if (map.has(r._id)) {
-      const existing = map.get(r._id);
-      existing.keywordScore = r.score;
-      existing.keywordRank = i;
-    } else {
-      map.set(r._id, {
-        ...r,
-        semanticScore: 0,
-        semanticRank: Infinity,
-        keywordScore: r.score,
-        keywordRank: i,
-      });
-    }
-  });
-
-  // Calculate combined score
-  return Array.from(map.values()).map((r) => ({
-    ...r,
-    score: r.semanticScore * 0.7 + r.keywordScore * 0.3,
-  }));
-}
+// 3. recall() merges, deduplicates, and ranks automatically
+const result = await cortex.memory.recall({
+  memorySpaceId,
+  query,
+  embedding,
+});
 ```
 
 ---
 
-## Boosting Strategies
+## Ranking and Scoring Algorithm
 
-### Importance Boosting
+The `recall()` method uses a **multi-signal scoring algorithm** with the following weights (from `resultProcessor.ts`):
+
+| Signal | Weight | Description |
+|--------|--------|-------------|
+| Semantic similarity | 0.35 | Vector similarity score (0-1) |
+| Confidence | 0.20 | Fact confidence (0-100 → 0-1) |
+| Importance | 0.15 | Memory importance (0-100 → 0-1) |
+| Recency | 0.15 | Time decay (exponential, 30-day half-life) |
+| Graph connectivity | 0.15 | Number of connected entities (logarithmic) |
+
+**Additional boosts:**
+- Highly connected items (>3 entities): ×1.2 multiplier
+- User messages: ×1.1 multiplier (more likely to contain preferences)
+
+### Conceptual Example: Scoring Implementation
+
+<Callout type="warning" title="Conceptual Example">
+The following shows how scoring works internally. `cortex.memory.recall()` applies this automatically.
+</Callout>
 
 ```typescript
-function applyImportanceBoost(results: any[]) {
-  results.forEach((r) => {
-    const importanceBoost = r.metadata.importance / 100; // 0-1
-    r.score = r.score * 0.7 + importanceBoost * 0.3;
-  });
+// Conceptual: Multi-signal scoring algorithm (from resultProcessor.ts)
+const RANKING_WEIGHTS = {
+  semantic: 0.35,      // Vector similarity
+  confidence: 0.20,    // Fact confidence
+  importance: 0.15,    // Memory importance
+  recency: 0.15,       // Time decay
+  graphConnectivity: 0.15, // Graph connections
+};
+
+function calculateScore(item: RecallItem): number {
+  let score = 0;
+
+  // Base semantic score
+  score += (item.score || 0.5) * RANKING_WEIGHTS.semantic;
+
+  // Confidence (facts) or default (memories)
+  const confidence = item.type === "fact" 
+    ? item.fact!.confidence / 100 
+    : 0.8;
+  score += confidence * RANKING_WEIGHTS.confidence;
+
+  // Importance
+  const importance = item.type === "memory"
+    ? item.memory!.importance / 100
+    : item.fact!.confidence / 100; // Use confidence as proxy for facts
+  score += importance * RANKING_WEIGHTS.importance;
+
+  // Recency (exponential decay, 30-day half-life)
+  const age = Date.now() - (item.memory?.createdAt || item.fact?.createdAt || Date.now());
+  const recencyScore = Math.pow(2, -age / (30 * 24 * 60 * 60 * 1000));
+  score += recencyScore * RANKING_WEIGHTS.recency;
+
+  // Graph connectivity (logarithmic scale)
+  const connectedEntities = item.graphContext?.connectedEntities || [];
+  const connectivityScore = Math.min(1.0, Math.log2(connectedEntities.length + 1) / Math.log2(11));
+  score += connectivityScore * RANKING_WEIGHTS.graphConnectivity;
+
+  // Boosts
+  if (connectedEntities.length > 3) {
+    score *= 1.2; // Highly connected boost
+  }
+  if (item.type === "memory" && item.memory?.messageRole === "user") {
+    score *= 1.1; // User message boost
+  }
+
+  return Math.min(1.0, Math.max(0, score));
 }
-
-// Critical information ranks higher
-// importance=100: +0.30 to score
-// importance=50: +0.15 to score
-// importance=0: +0.00 to score
-```
-
-### Recency Boosting
-
-```typescript
-function applyRecencyBoost(results: any[]) {
-  const now = Date.now();
-  const oneWeek = 7 * 24 * 60 * 60 * 1000;
-
-  results.forEach((r) => {
-    const age = now - r.createdAt;
-    const recencyBoost = Math.max(0, 1 - age / oneWeek); // 0-1
-
-    r.score = r.score * 0.8 + recencyBoost * 0.2;
-  });
-}
-
-// Recent memories rank higher
-// < 1 day old: +0.20 to score
-// 3 days old: +0.10 to score
-// > 7 days old: +0.00 to score
-```
-
-### Access Frequency Boosting
-
-```typescript
-function applyPopularityBoost(results: any[]) {
-  // Find max access count
-  const maxAccess = Math.max(...results.map((r) => r.accessCount));
-
-  results.forEach((r) => {
-    const popularityBoost = maxAccess > 0 ? r.accessCount / maxAccess : 0;
-    r.score = r.score * 0.9 + popularityBoost * 0.1;
-  });
-}
-
-// Frequently accessed memories rank higher
-```
-
-### Combined Boosting
-
-```typescript
-export const search = query({
-  args: {
-    memorySpaceId: v.string(),
-    query: v.string(),
-    embedding: v.optional(v.array(v.float64())),
-    filters: v.any(),
-  },
-  handler: async (ctx, args) => {
-    // Get base results
-    const results = await getBaseResults(ctx, args);
-
-    // Apply boosting (configurable)
-    if (args.filters.boostImportance) {
-      applyImportanceBoost(results);
-    }
-
-    if (args.filters.boostRecent) {
-      applyRecencyBoost(results);
-    }
-
-    if (args.filters.boostPopular) {
-      applyPopularityBoost(results);
-    }
-
-    // Re-sort by adjusted scores
-    results.sort((a, b) => b.score - a.score);
-
-    return results.slice(0, args.filters.limit || 10);
-  },
-});
 ```
 
 ---
@@ -633,10 +639,10 @@ export const search = query({
 
 ### Pre-Filtering (Convex Index)
 
-Applied BEFORE search for efficiency:
+Applied BEFORE search for efficiency. Tenant isolation is automatically handled:
 
 ```typescript
-// ✅ Pre-filtered (fast)
+// Pre-filtered (fast) - Conceptual example
 await ctx.db
   .query("memories")
   .withIndex(
@@ -644,39 +650,44 @@ await ctx.db
     (q) =>
       q
         .similar("embedding", vector, 20)
-        .eq("agentId", agentId) // ← Pre-filter
+        .eq("memorySpaceId", memorySpaceId) // ← Pre-filter
+        .eq("tenantId", tenantId) // ← Automatic tenant isolation
         .eq("userId", userId), // ← Pre-filter
   )
   .collect();
 
-// Only searches vectors for this agent+user
-// filterFields: ["agentId", "userId"] enables this
+// Only searches vectors for this memorySpace+tenant+user
+// filterFields: ["memorySpaceId", "tenantId", "userId"] enables this
 ```
+
+<Callout type="info" title="Tenant Isolation">
+All searches automatically filter by `tenantId` at the database level. This ensures complete data isolation between tenants. The SDK handles this transparently - you don't need to pass `tenantId` explicitly.
+</Callout>
 
 ### Post-Filtering (Application Logic)
 
-Applied AFTER search for complex logic:
+Applied AFTER search for complex logic that can't be expressed in indexes:
 
 ```typescript
-// Post-filter (after vector search)
+// Post-filter (after vector search) - Conceptual example
 const results = await ctx.db
   .query("memories")
   .withIndex("by_embedding", (q) =>
     q
       .similar("embedding", vector, 50) // Get more results
-      .eq("agentId", agentId),
+      .eq("memorySpaceId", memorySpaceId),
   )
   .collect();
 
 // Complex filters in code
 const filtered = results.filter((memory) => {
   // Importance range
-  if (memory.metadata.importance < 50 || memory.metadata.importance > 90) {
+  if (memory.importance < 50 || memory.importance > 90) {
     return false;
   }
 
   // Tag matching (AND logic)
-  if (!memory.metadata.tags.includes("password")) {
+  if (!memory.metadata?.tags?.includes("password")) {
     return false;
   }
 
@@ -686,7 +697,7 @@ const filtered = results.filter((memory) => {
   }
 
   // Custom logic
-  if (memory.metadata.customField !== "value") {
+  if (memory.metadata?.customField !== "value") {
     return false;
   }
 
@@ -696,7 +707,7 @@ const filtered = results.filter((memory) => {
 return filtered.slice(0, 10);
 ```
 
-**Rule:** Use pre-filtering when possible, post-filtering for complex logic.
+**Rule:** Use pre-filtering when possible, post-filtering for complex logic. The SDK automatically applies tenant isolation via pre-filtering.
 
 ---
 
@@ -805,7 +816,12 @@ function cosineSimilarity(a: number[], b: number[]): number {
 
 ### Multi-Factor Ranking
 
+<Callout type="warning" title="Conceptual Example">
+The following shows simplified scoring logic. The actual implementation in `resultProcessor.ts` uses the weights shown in the Ranking and Scoring Algorithm section above.
+</Callout>
+
 ```typescript
+// Conceptual: Simplified scoring (actual weights differ)
 function calculateFinalScore(
   memory: MemoryEntry,
   baseScore: number,
@@ -813,25 +829,22 @@ function calculateFinalScore(
 ): number {
   let score = baseScore;
 
-  // Factor 1: Importance (weight: 0.2)
+  // Factor 1: Importance (weight: 0.15 in actual implementation)
   if (options.boostImportance) {
-    const importanceFactor = memory.metadata.importance / 100;
-    score = score * 0.8 + importanceFactor * 0.2;
+    const importanceFactor = memory.importance / 100;
+    score = score * 0.85 + importanceFactor * 0.15;
   }
 
-  // Factor 2: Recency (weight: 0.15)
+  // Factor 2: Recency (weight: 0.15, exponential decay)
   if (options.boostRecent) {
     const age = Date.now() - memory.createdAt;
-    const oneMonth = 30 * 24 * 60 * 60 * 1000;
-    const recencyFactor = Math.max(0, 1 - age / oneMonth);
+    const halfLife = 30 * 24 * 60 * 60 * 1000; // 30 days
+    const recencyFactor = Math.pow(2, -age / halfLife);
     score = score * 0.85 + recencyFactor * 0.15;
   }
 
-  // Factor 3: Access frequency (weight: 0.1)
-  if (options.boostPopular) {
-    const popularityFactor = Math.min(1, memory.accessCount / 100);
-    score = score * 0.9 + popularityFactor * 0.1;
-  }
+  // Factor 3: Graph connectivity (weight: 0.15 in actual implementation)
+  // This is handled automatically by recall() when graph expansion is enabled
 
   return score;
 }
@@ -841,47 +854,58 @@ function calculateFinalScore(
 
 ## Strategy Selection Logic
 
-### Automatic Strategy
+### Using recall() for Automatic Strategy Selection
+
+The `cortex.memory.recall()` method automatically selects and combines strategies:
 
 ```typescript
-export const search = query({
-  args: {
-    memorySpaceId: v.string(),
-    query: v.string(),
-    embedding: v.optional(v.array(v.float64())),
-    filters: v.any(),
-  },
-  handler: async (ctx, args) => {
-    // Auto-select strategy
-    let strategy = args.filters.strategy || "auto";
-
-    if (strategy === "auto") {
-      // Decide based on available inputs
-      if (args.embedding) {
-        strategy = "semantic";
-      } else if (args.query && args.query.length > 0) {
-        strategy = "keyword";
-      } else {
-        strategy = "recent";
-      }
-    }
-
-    // Execute chosen strategy
-    switch (strategy) {
-      case "semantic":
-        return await semanticSearch(ctx, args);
-
-      case "keyword":
-        return await keywordSearch(ctx, args);
-
-      case "recent":
-        return await recentSearch(ctx, args);
-
-      default:
-        throw new Error(`Unknown strategy: ${strategy}`);
-    }
-  },
+// Automatic strategy selection via recall()
+const result = await cortex.memory.recall({
+  memorySpaceId: memorySpaceId,
+  query: "user preferences",
+  embedding: await embed("user preferences"), // Optional: enables semantic search
+  userId: "user-123",
+  limit: 10,
 });
+
+// recall() automatically:
+// 1. Searches facts (always, most efficient)
+// 2. Searches vectors (if embedding provided)
+// 3. Expands via graph (if enabled)
+// 4. Merges, deduplicates, and ranks results
+```
+
+### Conceptual Example: Strategy Selection Logic
+
+<Callout type="warning" title="Conceptual Example">
+The following shows how strategy selection works internally. Use `cortex.memory.recall()` directly.
+</Callout>
+
+```typescript
+// Conceptual: How recall() selects strategies internally
+// In practice, use cortex.memory.recall() which handles this automatically
+
+async function recall(memorySpaceId: string, query: string, options: any) {
+  const results: RecallItem[] = [];
+
+  // Always search facts (most token-efficient)
+  const facts = await cortex.facts.search(memorySpaceId, query, options);
+  results.push(...facts.map(f => factToRecallItem(f, "facts")));
+
+  // Search vectors if embedding provided
+  if (options.embedding) {
+    const vectors = await cortex.vector.search(memorySpaceId, query, options);
+    results.push(...vectors.map(v => memoryToRecallItem(v, "vector")));
+  }
+
+  // Graph expansion (if enabled)
+  if (options.enableGraph) {
+    // ... graph expansion logic
+  }
+
+  // Merge, deduplicate, and rank
+  return processRecallResults(results);
+}
 ```
 
 ---
@@ -890,35 +914,39 @@ export const search = query({
 
 ### 1. Limit Before Filter
 
+<Callout type="warning" title="Conceptual Example">
+The following shows optimization techniques. The SDK handles these optimizations automatically.
+</Callout>
+
 ```typescript
-// ❌ Slow: Filter all, then limit
+// Slow: Filter all, then limit (conceptual)
 const all = await ctx.db.query("memories").collect();
-const filtered = all.filter((m) => m.metadata.importance >= 80);
+const filtered = all.filter((m) => m.importance >= 80);
 const limited = filtered.slice(0, 10);
 
-// ✅ Fast: Limit during query
+// Fast: Limit during query (conceptual)
 const results = await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
-  .filter((q) => q.gte(q.field("metadata.importance"), 80))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
+  .filter((q) => q.gte(q.field("importance"), 80))
   .take(10); // ← Stop after 10 matches
 ```
 
 ### 2. Use Specific Indexes
 
 ```typescript
-// ❌ Generic index
+// Generic index (conceptual)
 await ctx.db
   .query("memories")
-  .withIndex("by_agent", (q) => q.eq("agentId", agentId))
+  .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", memorySpaceId))
   .filter((q) => q.eq(q.field("source.type"), "a2a"))
   .collect();
 
-// ✅ Specific compound index
+// Specific compound index (conceptual)
 await ctx.db
   .query("memories")
-  .withIndex("by_agent_source", (q) =>
-    q.eq("agentId", agentId).eq("source.type", "a2a"),
+  .withIndex("by_memorySpace_source", (q) =>
+    q.eq("memorySpaceId", memorySpaceId).eq("source.type", "a2a"),
   )
   .collect();
 ```
@@ -967,14 +995,16 @@ async function getConversationContext(
 ) {
   const embedding = await embed(currentMessage);
 
-  return await cortex.memory.search(agentId, currentMessage, {
+  const result = await cortex.memory.recall({
+    memorySpaceId,
+    query: currentMessage,
     embedding,
     userId, // User-specific
-    minImportance: 50, // Skip trivial
+    importance: { $gte: 50 }, // Skip trivial
     limit: 5,
-    boostRecent: true, // Prioritize recent
-    strategy: "semantic",
   });
+
+  return result.items;
 }
 ```
 
@@ -982,17 +1012,19 @@ async function getConversationContext(
 
 ```typescript
 // Find best answer from knowledge base
-async function findAnswer(query: string) {
+async function findAnswer(memorySpaceId: string, query: string) {
   const embedding = await embed(query);
 
-  return await cortex.memory.search("kb-agent", query, {
+  const result = await cortex.memory.recall({
+    memorySpaceId,
+    query,
     embedding,
-    minImportance: 70, // Only important articles
+    importance: { $gte: 70 }, // Only important articles
     tags: ["kb-article"],
     limit: 3,
-    boostImportance: true, // Trust high-importance content
-    strategy: "semantic",
   });
+
+  return result.items;
 }
 ```
 
@@ -1003,7 +1035,9 @@ async function findAnswer(query: string) {
 async function advancedSearch(memorySpaceId: string, criteria: any) {
   const embedding = await embed(criteria.query);
 
-  const results = await cortex.memory.search(agentId, criteria.query, {
+  const result = await cortex.memory.recall({
+    memorySpaceId,
+    query: criteria.query,
     embedding,
     userId: criteria.userId,
     tags: criteria.tags,
@@ -1012,12 +1046,9 @@ async function advancedSearch(memorySpaceId: string, criteria: any) {
     createdAfter: criteria.since,
     "source.type": criteria.sourceType,
     limit: criteria.limit,
-    boostImportance: true,
-    boostRecent: true,
-    strategy: "auto",
   });
 
-  return results;
+  return result.items;
 }
 ```
 
@@ -1034,35 +1065,32 @@ async function searchWithFallback(
   embedding?: number[],
 ) {
   try {
-    // Try semantic first
-    if (embedding) {
-      const semantic = await cortex.memory.search(agentId, query, {
-        embedding,
-        limit: 10,
-        strategy: "semantic",
-      });
-
-      if (semantic.length > 0) {
-        return semantic;
-      }
-    }
-
-    // Fall back to keyword
-    const keyword = await cortex.memory.search(agentId, query, {
+    // Use recall() which automatically combines strategies
+    const result = await cortex.memory.recall({
+      memorySpaceId,
+      query: query || "*", // Empty query falls back to recent
+      embedding, // Optional: enables semantic search if provided
       limit: 10,
-      strategy: "keyword",
+      importance: { $gte: 50 },
     });
 
-    if (keyword.length > 0) {
-      return keyword;
+    if (result.items.length > 0) {
+      return result.items;
     }
 
-    // Fall back to recent
-    return await cortex.memory.search(agentId, "*", {
+    // Fall back to recent only
+    const recentResult = await cortex.memory.recall({
+      memorySpaceId,
+      query: "*",
+      sources: {
+        vector: { limit: 0 }, // Disable vector search
+        facts: { limit: 0 }, // Disable facts search
+      },
       limit: 10,
-      strategy: "recent",
-      minImportance: 50,
+      importance: { $gte: 50 },
     });
+
+    return recentResult.items;
   } catch (error) {
     console.error("All search strategies failed:", error);
     return [];
@@ -1101,10 +1129,10 @@ async function searchWithFallback(
 
 ## Next Steps
 
-- **[Context Chain Design](./context-chain-design)** - Context propagation architecture
-- **[Performance](./performance)** - Optimization techniques
-- **[Semantic Search Guide](../02-core-features/02-semantic-search)** - Usage patterns
+- **[Context Chain Design](/architecture/context-chain-design)** - Context propagation architecture
+- **[Performance](/architecture/performance)** - Optimization techniques
+- **[Semantic Search Guide](/core-features/semantic-search)** - Usage patterns
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

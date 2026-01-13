@@ -371,6 +371,10 @@ describe("Operation Sequence Validation", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Contexts: Full Lifecycle Sequence", () => {
+    // Helper to ensure Convex consistency for sequential operations
+    const waitForConsistency = () =>
+      new Promise((resolve) => setTimeout(resolve, 100));
+
     it("create→get→update→get→complete→get→delete→get", async () => {
       const spaceId = `${ctx.runId}-ctx-lifecycle`;
       const userId = "lifecycle-user";
@@ -386,6 +390,9 @@ describe("Operation Sequence Validation", () => {
 
       expect(created.contextId).toBeDefined();
       expect(created.status).toBe("active");
+
+      // Wait for Convex consistency before subsequent operations
+      await waitForConsistency();
 
       // STEP 2: Get (validate create)
       const afterCreate = await cortex.contexts.get(created.contextId);
@@ -437,6 +444,9 @@ describe("Operation Sequence Validation", () => {
         purpose: "Parent",
         status: "active",
       });
+
+      // Wait for Convex consistency before creating child with parent reference
+      await waitForConsistency();
 
       // Create child
       const child = await cortex.contexts.create({

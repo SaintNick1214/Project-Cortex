@@ -1,8 +1,17 @@
+---
+id: cli-reference
+title: CLI Reference
+sidebar_position: 1
+description: Command-line tool for managing Cortex Memory deployments
+---
+
 # Cortex CLI Reference
 
-> **Last Updated**: January 1, 2026  
-> **CLI Version**: 0.27.4  
-> **Package**: `@cortexmemory/cli`
+<Callout type="info">
+
+**Last Updated**: 2026-01-08 | **CLI Version**: 0.27.4 | **Package**: `@cortexmemory/cli`
+
+</Callout>
 
 ## What is Cortex CLI?
 
@@ -17,16 +26,21 @@ The Cortex CLI is a command-line tool for managing Cortex Memory deployments, pe
 
 ## Installation
 
-```bash
-# Install globally
-npm install -g @cortexmemory/cli
+Install via Homebrew (Recommended):
 
-# Or use with npx (no installation needed)
-npx @cortexmemory/cli <command>
+<Terminal>brew install cortex-memory/tap/cli</Terminal>
 
-# Or install as dev dependency in your project
-npm install --save-dev @cortexmemory/cli
-```
+Or install globally via npm:
+
+<Terminal>npm install -g @cortexmemory/cli</Terminal>
+
+Or use with npx (no installation needed):
+
+<Terminal>npx @cortexmemory/cli &lt;command&gt;</Terminal>
+
+Or install as dev dependency in your project:
+
+<Terminal>npm install --save-dev @cortexmemory/cli</Terminal>
 
 **Requirements**: Node.js >= 20
 
@@ -34,28 +48,29 @@ npm install --save-dev @cortexmemory/cli
 
 The most common workflow for getting started:
 
-```bash
-# 1. Initialize a new Cortex project
-cortex init my-cortex-app
-
-# 2. Start development services
-cortex start
-
-# 3. Check status
-cortex status
-
-# 4. View database statistics
-cortex db stats
-
-# 5. List memory spaces
-cortex spaces list
-```
+<Steps>
+  <Step title="Initialize a new Cortex project">
+    <Terminal>cortex init my-cortex-app</Terminal>
+  </Step>
+  <Step title="Start development services">
+    <Terminal>cortex start</Terminal>
+  </Step>
+  <Step title="Check status">
+    <Terminal>cortex status</Terminal>
+  </Step>
+  <Step title="View database statistics">
+    <Terminal>cortex db stats</Terminal>
+  </Step>
+  <Step title="List memory spaces">
+    <Terminal>cortex spaces list</Terminal>
+  </Step>
+</Steps>
 
 ---
 
 ## Command Categories
 
-### 🚀 Project Lifecycle
+### Project Lifecycle
 
 Commands for managing your Cortex project lifecycle:
 
@@ -65,14 +80,14 @@ Commands for managing your Cortex project lifecycle:
 - [`cortex dev`](#cortex-dev) - Interactive development mode (Expo-style)
 - [`cortex status`](#cortex-status) - Show status dashboard
 
-### ⚙️ Configuration
+### Configuration
 
 Commands for managing CLI configuration:
 
 - [`cortex config`](#cortex-config) - Configuration management
 - [`cortex use`](#cortex-use) - Switch deployment context
 
-### 💾 Data Operations
+### Data Operations
 
 Commands for managing data:
 
@@ -80,9 +95,9 @@ Commands for managing data:
 - [`cortex users`](#cortex-users) - User management with GDPR support
 - [`cortex spaces`](#cortex-spaces) - Memory space operations
 - [`cortex facts`](#cortex-facts) - Facts operations
-- [`cortex conversations`](#cortex-conversations) - Conversation operations
+- [`cortex conversations`](#cortex-conversations-alias-convs) - Conversation operations
 
-### 🗄️ Database
+### Database
 
 Commands for database-wide operations:
 
@@ -92,7 +107,7 @@ Commands for database-wide operations:
 - [`cortex db restore`](#cortex-db-restore) - Restore from backup
 - [`cortex db export`](#cortex-db-export) - Export all data
 
-### 📦 Deployment
+### Deployment
 
 Commands for deploying and updating:
 
@@ -182,8 +197,8 @@ cortex init my-app --skip-graph
 
 **Related:**
 
-- [Getting Started: Installation](../01-getting-started/02-installation)
-- [Getting Started: Five Minute Quickstart](../01-getting-started/03-five-minute-quickstart)
+- [Getting Started: Installation](/getting-started/installation)
+- [Getting Started: Five Minute Quickstart](/getting-started/five-minute-quickstart)
 
 ---
 
@@ -340,12 +355,12 @@ cortex dev --local
 
 **Features:**
 
-- ✅ Multi-deployment support
-- ✅ Live status updates
-- ✅ Aggregated streaming logs
-- ✅ Keyboard shortcuts
-- ✅ Automatic schema sync
-- ✅ Graph database management
+- Multi-deployment support
+- Live status updates
+- Aggregated streaming logs
+- Keyboard shortcuts
+- Automatic schema sync
+- Graph database management
 
 **Related:**
 
@@ -729,7 +744,9 @@ cortex config reset [options]
 cortex config reset
 ```
 
-⚠️ **Warning:** This cannot be undone.
+<Callout type="warning">
+This cannot be undone.
+</Callout>
 
 ---
 
@@ -807,8 +824,8 @@ cortex memory list --space agent-1 --limit 100
 
 **Related:**
 
-- [Core Features: Semantic Search](../02-core-features/02-semantic-search)
-- [API Reference: Memory Operations](../03-api-reference/02-memory-operations)
+- [Core Features: Semantic Search](/core-features/semantic-search)
+- [API Reference: Memory Operations](/api-reference/memory-operations)
 
 ---
 
@@ -901,7 +918,9 @@ cortex memory delete mem-123 --space agent-1
 cortex memory delete mem-123 --space agent-1 --cascade
 ```
 
-⚠️ **Warning:** Deletion is permanent and cannot be undone.
+<Callout type="warning">
+Deletion is permanent and cannot be undone.
+</Callout>
 
 ---
 
@@ -936,7 +955,9 @@ cortex memory clear --space agent-1 --user user-123
 cortex memory clear --space agent-1 --source conversation
 ```
 
-⚠️ **Warning:** This operation is permanent and cannot be undone.
+<Callout type="warning">
+This operation is permanent and cannot be undone.
+</Callout>
 
 ---
 
@@ -1091,8 +1112,8 @@ cortex users list --limit 100
 
 **Related:**
 
-- [Core Features: User Profiles](../02-core-features/03-user-profiles)
-- [API Reference: User Operations](../03-api-reference/04-user-operations)
+- [Core Features: User Profiles](/core-features/user-profiles)
+- [API Reference: User Operations](/api-reference/user-operations)
 
 ---
 
@@ -1155,7 +1176,9 @@ cortex users delete user-123 --cascade
 cortex users delete user-123 --cascade --dry-run
 ```
 
-⚠️ **Warning:** Cascade deletion permanently removes ALL user data:
+<Callout type="warning">
+Cascade deletion permanently removes ALL user data:
+</Callout>
 
 - User profile
 - Conversations and messages
@@ -1378,8 +1401,8 @@ cortex spaces list --status active
 
 **Related:**
 
-- [Core Features: Memory Spaces](../02-core-features/01-memory-spaces)
-- [API Reference: Memory Space Operations](../03-api-reference/11-memory-space-operations)
+- [Core Features: Memory Spaces](/core-features/memory-spaces)
+- [API Reference: Memory Space Operations](/api-reference/memory-space-operations)
 
 ---
 
@@ -1466,7 +1489,9 @@ cortex spaces delete team-alpha
 cortex spaces delete team-alpha --cascade --reason "Project completed"
 ```
 
-⚠️ **Warning:** Cascade deletion permanently removes:
+<Callout type="warning">
+Cascade deletion permanently removes:
+</Callout>
 
 - All memories
 - All facts
@@ -1754,8 +1779,8 @@ cortex facts list --space agent-1 --user user-123
 
 **Related:**
 
-- [Core Features: Fact Extraction](../02-core-features/08-fact-extraction)
-- [API Reference: Facts Operations](../03-api-reference/12-facts-operations)
+- [Core Features: Fact Extraction](/core-features/fact-extraction)
+- [API Reference: Facts Operations](/api-reference/facts-operations)
 
 ---
 
@@ -1927,7 +1952,9 @@ cortex facts clear --space agent-1
 cortex facts clear --space agent-1 --type preference
 ```
 
-⚠️ **Warning:** This operation is permanent and cannot be undone.
+<Callout type="warning">
+This operation is permanent and cannot be undone.
+</Callout>
 
 ---
 
@@ -1974,8 +2001,8 @@ cortex conversations list --type user-agent
 
 **Related:**
 
-- [Core Features: Conversation History](../02-core-features/06-conversation-history)
-- [API Reference: Conversation Operations](../03-api-reference/03-conversation-operations)
+- [Core Features: Conversation History](/core-features/conversation-history)
+- [API Reference: Conversation Operations](/api-reference/conversation-operations)
 
 ---
 
@@ -2121,7 +2148,9 @@ cortex conversations clear --space agent-1
 cortex conversations clear --space agent-1 --user user-123
 ```
 
-⚠️ **Warning:** This operation is permanent and cannot be undone.
+<Callout type="warning">
+This operation is permanent and cannot be undone.
+</Callout>
 
 ---
 
@@ -2216,7 +2245,9 @@ cortex db clear
 cortex db clear --yes
 ```
 
-⚠️ **DANGER:** This permanently deletes:
+<Callout type="warning" title="DANGER">
+This permanently deletes:
+</Callout>
 
 - All memory spaces and memories
 - All conversations and messages
@@ -2287,7 +2318,9 @@ cortex db restore --input backup.json --dry-run
 cortex db restore --input backup.json
 ```
 
-⚠️ **Warning:** Existing data may be overwritten.
+<Callout type="warning">
+Existing data may be overwritten.
+</Callout>
 
 ---
 
@@ -2745,43 +2778,35 @@ The CLI provides GDPR-compliant data management features.
 
 When deleting users with the `--cascade` flag, ALL user data is permanently removed:
 
-```bash
-cortex users delete user-123 --cascade
-```
+<Terminal>cortex users delete user-123 --cascade</Terminal>
 
 **What Gets Deleted:**
 
-- ✅ User profile (all versions)
-- ✅ Conversations (all messages)
-- ✅ Memories (vector store)
-- ✅ Facts
-- ✅ Immutable records
-- ✅ Mutable records
-- ✅ Graph nodes (if configured)
+- User profile (all versions)
+- Conversations (all messages)
+- Memories (vector store)
+- Facts
+- Immutable records
+- Mutable records
+- Graph nodes (if configured)
 
 **Verification:**
 
 Use `--verify` (enabled by default) to check deletion completeness:
 
-```bash
-cortex users delete user-123 --cascade --verify
-```
+<Terminal>cortex users delete user-123 --cascade --verify</Terminal>
 
 **Dry Run:**
 
 Preview what would be deleted without actually deleting:
 
-```bash
-cortex users delete user-123 --cascade --dry-run
-```
+<Terminal>cortex users delete user-123 --cascade --dry-run</Terminal>
 
 ### Data Portability
 
 Export all user data in machine-readable format:
 
-```bash
-cortex users export user-123 --output user-data.json
-```
+<Terminal>cortex users export user-123 --output user-data.json</Terminal>
 
 **Related:**
 
@@ -2798,47 +2823,41 @@ The CLI includes multiple safety features for dangerous operations:
 
 Dangerous operations require explicit confirmation:
 
-```bash
-cortex db clear
-# → Prompts: "Clear ALL data from local?"
-```
+<Terminal>cortex db clear</Terminal>
+
+This prompts: "Clear ALL data from local?"
 
 Bypass with `--yes` flag (use carefully):
 
-```bash
-cortex db clear --yes
-```
+<Terminal>cortex db clear --yes</Terminal>
 
 ### Dry Run Mode
 
 Preview what would happen without executing:
 
-```bash
-# Preview user deletion
-cortex users delete user-123 --cascade --dry-run
+Preview user deletion:
 
-# Preview database restore
-cortex db restore --input backup.json --dry-run
-```
+<Terminal>cortex users delete user-123 --cascade --dry-run</Terminal>
+
+Preview database restore:
+
+<Terminal>cortex db restore --input backup.json --dry-run</Terminal>
 
 ### Exact Confirmation
 
 For cascade deletions, you must type the exact ID:
 
-```bash
-cortex users delete user-123 --cascade
-# → Prompts: Type "user-123" to confirm cascade deletion
-```
+<Terminal>cortex users delete user-123 --cascade</Terminal>
+
+This prompts: Type "user-123" to confirm cascade deletion.
 
 ### Verification
 
 Automatic verification after cascade deletions:
 
-```bash
-cortex users delete user-123 --cascade --verify
-# → Verifies all user data was deleted
-# → Reports any potential issues
-```
+<Terminal>cortex users delete user-123 --cascade --verify</Terminal>
+
+This verifies all user data was deleted and reports any potential issues.
 
 ---
 
@@ -2848,43 +2867,47 @@ cortex users delete user-123 --cascade --verify
 
 #### Command Not Found
 
-```bash
+```
 cortex: command not found
 ```
 
 **Solution:**
 
-```bash
-# Install globally
-npm install -g @cortexmemory/cli
+Install via Homebrew (Recommended):
 
-# Or use npx
-npx @cortexmemory/cli <command>
-```
+<Terminal>brew install cortex-memory/tap/cli</Terminal>
+
+Or install globally via npm:
+
+<Terminal>npm install -g @cortexmemory/cli</Terminal>
+
+Or use npx:
+
+<Terminal>npx @cortexmemory/cli &lt;command&gt;</Terminal>
 
 ---
 
 #### No Deployments Configured
 
-```bash
+```
 No deployments configured
 ```
 
 **Solution:**
 
-```bash
-# Initialize a new project
-cortex init
+Initialize a new project:
 
-# Or add existing deployment
-cortex config add-deployment
-```
+<Terminal>cortex init</Terminal>
+
+Or add existing deployment:
+
+<Terminal>cortex config add-deployment</Terminal>
 
 ---
 
 #### Connection Failed
 
-```bash
+```
 Connection failed: ECONNREFUSED
 ```
 
@@ -2899,7 +2922,7 @@ Connection failed: ECONNREFUSED
 
 #### PID File Stale
 
-```bash
+```
 Convex was already stopped
 ```
 
@@ -2907,39 +2930,37 @@ Convex was already stopped
 
 **Solution:**
 
-```bash
-# Clean up PID files
-rm .convex-dev.pid
-rm .quickstart-app.pid
+Clean up PID files:
 
-# Or stop by port
-cortex dev
-# Press 'k' to kill processes by port
-```
+<Terminal>rm .convex-dev.pid .quickstart-app.pid</Terminal>
+
+Or use dev mode and press 'k' to kill processes by port:
+
+<Terminal>cortex dev</Terminal>
 
 ---
 
 #### Schema Sync Failed
 
-```bash
+```
 Schema sync failed: SDK not found
 ```
 
 **Solutions:**
 
-```bash
-# Install SDK
-npm install @cortexmemory/sdk
+Install SDK:
 
-# Skip schema sync
-cortex deploy --skip-sync
-```
+<Terminal>npm install @cortexmemory/sdk</Terminal>
+
+Or skip schema sync:
+
+<Terminal>cortex deploy --skip-sync</Terminal>
 
 ---
 
 #### Graph Database Not Starting
 
-```bash
+```
 Graph database configured but Docker not available
 ```
 
@@ -2955,13 +2976,13 @@ Graph database configured but Docker not available
 
 Enable debug output for troubleshooting:
 
-```bash
-# Via flag
-cortex <command> --debug
+Via flag:
 
-# Via environment variable
-DEBUG=1 cortex <command>
-```
+<Terminal>cortex &lt;command&gt; --debug</Terminal>
+
+Via environment variable:
+
+<Terminal>DEBUG=1 cortex &lt;command&gt;</Terminal>
 
 **Debug Output Includes:**
 
@@ -2975,16 +2996,17 @@ DEBUG=1 cortex <command>
 
 ### Getting Help
 
-```bash
-# General help
-cortex --help
+General help:
 
-# Command help
-cortex <command> --help
+<Terminal>cortex --help</Terminal>
 
-# Subcommand help
-cortex <command> <subcommand> --help
-```
+Command help:
+
+<Terminal>cortex &lt;command&gt; --help</Terminal>
+
+Subcommand help:
+
+<Terminal>cortex &lt;command&gt; &lt;subcommand&gt; --help</Terminal>
 
 ---
 
@@ -2992,146 +3014,145 @@ cortex <command> <subcommand> --help
 
 ### Workflow 1: New Project Setup
 
-```bash
-# 1. Create new project with local Convex
-cortex init my-app --local
-
-# 2. Navigate to project
-cd my-app
-
-# 3. Start development services
-cortex start
-
-# 4. Check status
-cortex status
-
-# 5. View database statistics
-cortex db stats
-```
+<Steps>
+  <Step title="Create new project with local Convex">
+    <Terminal>cortex init my-app --local</Terminal>
+  </Step>
+  <Step title="Navigate to project">
+    <Terminal>cd my-app</Terminal>
+  </Step>
+  <Step title="Start development services">
+    <Terminal>cortex start</Terminal>
+  </Step>
+  <Step title="Check status">
+    <Terminal>cortex status</Terminal>
+  </Step>
+  <Step title="View database statistics">
+    <Terminal>cortex db stats</Terminal>
+  </Step>
+</Steps>
 
 ---
 
 ### Workflow 2: Multi-Environment Setup
 
-```bash
-# 1. Add deployments
-cortex config add-deployment local \
-  --url http://127.0.0.1:3210
-
-cortex config add-deployment staging \
-  --url https://staging.convex.cloud \
-  --key "staging|..."
-
-cortex config add-deployment production \
-  --url https://prod.convex.cloud \
-  --key "prod|..."
-
-# 2. Set project paths
-cortex config set-path local /path/to/project
-cortex config set-path staging /path/to/project
-cortex config set-path production /path/to/project
-
-# 3. Enable only local for auto-start
-cortex config enable local
-cortex config disable staging
-cortex config disable production
-
-# 4. Deploy to production
-cortex deploy --deployment production
-
-# 5. View all deployments
-cortex config list
-```
+<Steps>
+  <Step title="Add deployments">
+    <Terminal>cortex config add-deployment local --url http://127.0.0.1:3210</Terminal>
+    <Terminal>cortex config add-deployment staging --url https://staging.convex.cloud --key "staging|..."</Terminal>
+    <Terminal>cortex config add-deployment production --url https://prod.convex.cloud --key "prod|..."</Terminal>
+  </Step>
+  <Step title="Set project paths">
+    <Terminal>cortex config set-path local /path/to/project</Terminal>
+    <Terminal>cortex config set-path staging /path/to/project</Terminal>
+    <Terminal>cortex config set-path production /path/to/project</Terminal>
+  </Step>
+  <Step title="Enable only local for auto-start">
+    <Terminal>cortex config enable local</Terminal>
+    <Terminal>cortex config disable staging</Terminal>
+    <Terminal>cortex config disable production</Terminal>
+  </Step>
+  <Step title="Deploy to production">
+    <Terminal>cortex deploy --deployment production</Terminal>
+  </Step>
+  <Step title="View all deployments">
+    <Terminal>cortex config list</Terminal>
+  </Step>
+</Steps>
 
 ---
 
 ### Workflow 3: GDPR Data Export & Deletion
 
-```bash
-# 1. Search for user
-cortex users list | grep john@example.com
-
-# 2. View user data
-cortex users stats user-123
-
-# 3. Export user data (GDPR portability)
-cortex users export user-123 --output user-123-export.json
-
-# 4. Preview deletion
-cortex users delete user-123 --cascade --dry-run
-
-# 5. Delete user data (GDPR right to erasure)
-cortex users delete user-123 --cascade --verify
-```
+<Steps>
+  <Step title="Search for user">
+    <Terminal>cortex users list | grep john@example.com</Terminal>
+  </Step>
+  <Step title="View user data">
+    <Terminal>cortex users stats user-123</Terminal>
+  </Step>
+  <Step title="Export user data (GDPR portability)">
+    <Terminal>cortex users export user-123 --output user-123-export.json</Terminal>
+  </Step>
+  <Step title="Preview deletion">
+    <Terminal>cortex users delete user-123 --cascade --dry-run</Terminal>
+  </Step>
+  <Step title="Delete user data (GDPR right to erasure)">
+    <Terminal>cortex users delete user-123 --cascade --verify</Terminal>
+  </Step>
+</Steps>
 
 ---
 
 ### Workflow 4: Interactive Development
 
-```bash
-# 1. Start interactive dev mode
-cortex dev
-
-# Keyboard shortcuts:
-# - 'c' to clear screen
-# - 's' to show status
-# - 'r' to restart services
-# - 'g' to toggle graph database
-# - 'k' to kill stuck processes
-# - 'q' to quit
-
-# 2. Watch logs in real-time
-# (automatically displayed)
-
-# 3. Make code changes
-# (Convex auto-reloads)
-
-# 4. Toggle graph database
-# Press 'g' key
-
-# 5. Quit gracefully
-# Press 'q' key
-```
+<Steps>
+  <Step title="Start interactive dev mode">
+    <Terminal>cortex dev</Terminal>
+    
+    **Keyboard shortcuts:**
+    - `c` - clear screen
+    - `s` - show status
+    - `r` - restart services
+    - `g` - toggle graph database
+    - `k` - kill stuck processes
+    - `q` - quit
+  </Step>
+  <Step title="Watch logs in real-time">
+    Logs are automatically displayed in the terminal.
+  </Step>
+  <Step title="Make code changes">
+    Convex auto-reloads when you save files.
+  </Step>
+  <Step title="Toggle graph database">
+    Press `g` key.
+  </Step>
+  <Step title="Quit gracefully">
+    Press `q` key.
+  </Step>
+</Steps>
 
 ---
 
 ### Workflow 5: Database Backup & Restore
 
-```bash
-# 1. Backup database
-cortex db backup --include-all --output backup-2026-01-01.json
-
-# 2. Verify backup
-ls -lh backup-2026-01-01.json
-
-# 3. Clear database for testing
-cortex db clear --deployment local
-
-# 4. Restore from backup
-cortex db restore --input backup-2026-01-01.json --deployment local
-```
+<Steps>
+  <Step title="Backup database">
+    <Terminal>cortex db backup --include-all --output backup-2026-01-01.json</Terminal>
+  </Step>
+  <Step title="Verify backup">
+    <Terminal>ls -lh backup-2026-01-01.json</Terminal>
+  </Step>
+  <Step title="Clear database for testing">
+    <Terminal>cortex db clear --deployment local</Terminal>
+  </Step>
+  <Step title="Restore from backup">
+    <Terminal>cortex db restore --input backup-2026-01-01.json --deployment local</Terminal>
+  </Step>
+</Steps>
 
 ---
 
 ### Workflow 6: Package Updates
 
-```bash
-# 1. Check current versions
-cortex update
-
-# 2. Update specific deployment
-cortex update --deployment production
-
-# 3. Update all with specific version
-cortex update --sdk-version 0.27.4 --yes
-
-# 4. Update app with template sync
-cortex update --app quickstart --sync-template
-
-# 5. Dev mode (link to local SDK)
-export CORTEX_SDK_DEV_PATH=/path/to/Project-Cortex
-cortex update --dev --app quickstart
-```
+<Steps>
+  <Step title="Check current versions">
+    <Terminal>cortex update</Terminal>
+  </Step>
+  <Step title="Update specific deployment">
+    <Terminal>cortex update --deployment production</Terminal>
+  </Step>
+  <Step title="Update all with specific version">
+    <Terminal>cortex update --sdk-version 0.27.4 --yes</Terminal>
+  </Step>
+  <Step title="Update app with template sync">
+    <Terminal>cortex update --app quickstart --sync-template</Terminal>
+  </Step>
+  <Step title="Dev mode (link to local SDK)">
+    <Terminal>export CORTEX_SDK_DEV_PATH=/path/to/Project-Cortex</Terminal>
+    <Terminal>cortex update --dev --app quickstart</Terminal>
+  </Step>
+</Steps>
 
 ---
 
@@ -3139,77 +3160,79 @@ cortex update --dev --app quickstart
 
 ### Example 1: Search and Clear Memories
 
-```bash
-# Search for sensitive data
-cortex memory search "password" --space agent-1
+Search for sensitive data:
 
-# Review results and delete specific memory
-cortex memory delete mem-456 --space agent-1
+<Terminal>cortex memory search "password" --space agent-1</Terminal>
 
-# Or clear all for a user
-cortex memory clear --space agent-1 --user user-123
-```
+Review results and delete specific memory:
+
+<Terminal>cortex memory delete mem-456 --space agent-1</Terminal>
+
+Or clear all for a user:
+
+<Terminal>cortex memory clear --space agent-1 --user user-123</Terminal>
 
 ---
 
 ### Example 2: Manage Memory Spaces
 
-```bash
-# Create team space
-cortex spaces create team-alpha \
-  --type team \
-  --name "Team Alpha"
+Create team space:
 
-# Add participants
-cortex spaces add-participant team-alpha --id user-123 --type user
-cortex spaces add-participant team-alpha --id agent-1 --type ai-agent
+<Terminal>cortex spaces create team-alpha --type team --name "Team Alpha"</Terminal>
 
-# View statistics
-cortex spaces stats team-alpha
+Add participants:
 
-# List participants
-cortex spaces participants team-alpha
+<Terminal>cortex spaces add-participant team-alpha --id user-123 --type user</Terminal>
+<Terminal>cortex spaces add-participant team-alpha --id agent-1 --type ai-agent</Terminal>
 
-# Archive when done
-cortex spaces archive team-alpha --reason "Project completed"
-```
+View statistics:
+
+<Terminal>cortex spaces stats team-alpha</Terminal>
+
+List participants:
+
+<Terminal>cortex spaces participants team-alpha</Terminal>
+
+Archive when done:
+
+<Terminal>cortex spaces archive team-alpha --reason "Project completed"</Terminal>
 
 ---
 
 ### Example 3: Export Conversations
 
-```bash
-# List conversations
-cortex conversations list --space agent-1 --user user-123
+List conversations:
 
-# Get specific conversation
-cortex conversations get conv-789
+<Terminal>cortex conversations list --space agent-1 --user user-123</Terminal>
 
-# Export to file
-cortex conversations export conv-789 --format txt --output conv.txt
+Get specific conversation:
 
-# Share with user
-cat conv.txt
-```
+<Terminal>cortex conversations get conv-789</Terminal>
+
+Export to file:
+
+<Terminal>cortex conversations export conv-789 --format txt --output conv.txt</Terminal>
 
 ---
 
 ### Example 4: Database Statistics
 
-```bash
-# View overall stats
-cortex db stats
+View overall stats:
 
-# View space-specific stats
-cortex spaces stats agent-1
-cortex memory stats --space agent-1
+<Terminal>cortex db stats</Terminal>
 
-# View user-specific stats
-cortex users stats user-123
+View space-specific stats:
 
-# Export to JSON for analysis
-cortex db stats --format json > db-stats.json
-```
+<Terminal>cortex spaces stats agent-1</Terminal>
+<Terminal>cortex memory stats --space agent-1</Terminal>
+
+View user-specific stats:
+
+<Terminal>cortex users stats user-123</Terminal>
+
+Export to JSON for analysis:
+
+<Terminal>cortex db stats --format json &gt; db-stats.json</Terminal>
 
 ---
 
@@ -3237,31 +3260,53 @@ cortex db stats --format json > db-stats.json
 
 ### Documentation
 
-- [Getting Started: Installation](../01-getting-started/02-installation)
-- [Getting Started: Five Minute Quickstart](../01-getting-started/03-five-minute-quickstart)
-- [Getting Started: Configuration](../01-getting-started/05-configuration)
+- [Getting Started: Installation](/getting-started/installation)
+- [Getting Started: Five Minute Quickstart](/getting-started/five-minute-quickstart)
+- [Getting Started: Configuration](/getting-started/configuration)
 
 ### Core Features
 
-- [Memory Spaces](../02-core-features/01-memory-spaces)
-- [Semantic Search](../02-core-features/02-semantic-search)
-- [User Profiles](../02-core-features/03-user-profiles)
-- [Conversation History](../02-core-features/06-conversation-history)
-- [Fact Extraction](../02-core-features/08-fact-extraction)
+- [Memory Spaces](/core-features/memory-spaces)
+- [Semantic Search](/core-features/semantic-search)
+- [User Profiles](/core-features/user-profiles)
+- [Conversation History](/core-features/conversation-history)
+- [Fact Extraction](/core-features/fact-extraction)
 
 ### API Reference
 
-- [Memory Operations](../03-api-reference/02-memory-operations)
-- [Conversation Operations](../03-api-reference/03-conversation-operations)
-- [User Operations](../03-api-reference/04-user-operations)
-- [Memory Space Operations](../03-api-reference/11-memory-space-operations)
-- [Facts Operations](../03-api-reference/12-facts-operations)
+- [Memory Operations](/api-reference/memory-operations)
+- [Conversation Operations](/api-reference/conversation-operations)
+- [User Operations](/api-reference/user-operations)
+- [Memory Space Operations](/api-reference/memory-space-operations)
+- [Facts Operations](/api-reference/facts-operations)
 
 ### Repository
 
 - [GitHub Repository](https://github.com/SaintNick1214/Project-Cortex)
 - [npm Package](https://www.npmjs.com/package/@cortexmemory/cli)
 - [Report Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Installation" 
+    description="Install and configure Cortex" 
+    href="/getting-started/installation" 
+  />
+  <QuickNavItem 
+    title="Five Minute Quickstart" 
+    description="Get started quickly" 
+    href="/getting-started/five-minute-quickstart" 
+  />
+  <QuickNavItem 
+    title="Configuration" 
+    description="Configure your deployment" 
+    href="/getting-started/configuration" 
+  />
+</QuickNav>
 
 ---
 

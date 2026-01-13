@@ -1,6 +1,8 @@
 # Sessions Management
 
-> **Last Updated**: 2026-01-01
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
 
 Native session lifecycle management for user-facing agentic platforms with multi-device support, activity tracking, and configurable timeouts.
 
@@ -44,19 +46,11 @@ await cortex.sessions.end(session.sessionId);
 
 Sessions follow a three-state lifecycle:
 
-```
-┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│   ACTIVE    │──────│    IDLE     │──────│   ENDED     │
-│             │      │             │      │             │
-│ User active │      │ No activity │      │ Terminated  │
-│ < 30min     │      │ < 24h       │      │             │
-└─────────────┘      └─────────────┘      └─────────────┘
-       │                    │                    ▲
-       │    touch()         │    expireIdle()    │
-       └────────────────────┼────────────────────┘
-                            │
-                    After 24h idle
-```
+<FlowDiagram title="Session State Transitions" direction="horizontal">
+  <FlowNode title="ACTIVE" icon="user" variant="success">User active (< 30min since last touch)</FlowNode>
+  <FlowNode title="IDLE" icon="time" variant="warning">No activity (< 24h) — touch() returns to ACTIVE</FlowNode>
+  <FlowNode title="ENDED" icon="shield" variant="primary">Terminated — expireIdle() after 24h idle</FlowNode>
+</FlowDiagram>
 
 **Default Timeouts:**
 
@@ -65,7 +59,7 @@ Sessions follow a three-state lifecycle:
 | Active | 30m     | No activity moves session to idle |
 | Idle   | 24h     | After 24h idle, session is ended  |
 
-Timeouts are configurable via the [Governance Policies](./governance-policies).
+Timeouts are configurable via the [Governance Policies](/architecture/governance-policies).
 
 ## Core Operations
 
@@ -322,12 +316,12 @@ Sessions are included in GDPR cascade deletion:
 await cortex.users.delete("user-123", { cascade: true });
 
 // Cascade includes:
-// ✅ User profile
-// ✅ All sessions for user
-// ✅ All conversations
-// ✅ All memories
-// ✅ All facts
-// ✅ Graph nodes (if configured)
+// - User profile
+// - All sessions for user
+// - All conversations
+// - All memories
+// - All facts
+// - Graph nodes (if configured)
 ```
 
 ## Error Handling
@@ -361,7 +355,7 @@ try {
 
 ## Related Features
 
-- **[User Profiles](./user-profiles)** - User management and GDPR deletion
-- **[Governance Policies](./governance-policies)** - Configure session lifecycle policies
-- **[Memory Spaces](./memory-spaces)** - Associate sessions with memory spaces
-- **[Resilience Layer](./resilience-layer)** - Built-in protection for session operations
+- **[User Profiles](/core-features/user-profiles)** - User management and GDPR deletion
+- **[Governance Policies](/architecture/governance-policies)** - Configure session lifecycle policies
+- **[Memory Spaces](/core-features/memory-spaces)** - Associate sessions with memory spaces
+- **[Resilience Layer](/architecture/resilience-layer)** - Built-in protection for session operations

@@ -1,0 +1,244 @@
+---
+id: roadmap-overview
+title: Roadmap Overview
+sidebar_position: 0
+description: Overview of planned features and enhancements for Cortex
+---
+
+# Roadmap Overview
+
+This section documents planned features and enhancements for Cortex. These pages help you understand future capabilities and plan your integrations accordingly.
+
+<Callout type="info" title="Disclaimer">
+  All features listed in this roadmap are **planned** but not yet implemented. Availability, specifications, and timelines are subject to change. We recommend using current features (see [Core Features](/core-features)) for production applications.
+</Callout>
+
+---
+
+## Planned Features by Category
+
+### Infrastructure & Services
+
+<FeatureGrid>
+  <FeatureCard
+    title="Cloud Mode"
+    description="Managed services with auto-embeddings, GDPR compliance, and infrastructure"
+    href="/roadmap/cloud-mode"
+    icon="cloud"
+    size="large"
+  />
+  <FeatureCard
+    title="MCP Server"
+    description="Cross-application memory via Model Context Protocol"
+    href="/roadmap/mcp-server"
+    icon="layers"
+    size="large"
+  />
+</FeatureGrid>
+
+**Cloud Mode** provides enterprise-ready managed services including automatic embeddings, GDPR-compliant cascade deletion, managed pub/sub infrastructure, analytics dashboards, and automatic governance enforcement. Your data stays in your Convex instance while Cortex Cloud handles operational complexity.
+
+**MCP Server** enables memory sharing across AI tools like Cursor, Claude Desktop, and custom applications. Tell one tool something, all tools remember it.
+
+---
+
+### Core Capabilities
+
+<FeatureGrid>
+  <FeatureCard
+    title="Context Chains"
+    description="Advanced workflow management capabilities"
+    href="/roadmap/context-chains-enhancements"
+    icon="chain"
+  />
+  <FeatureCard
+    title="A2A Communication"
+    description="Real-time subscriptions and smart routing"
+    href="/roadmap/a2a-communication-enhancements"
+    icon="message"
+  />
+  <FeatureCard
+    title="Infinite Context"
+    description="Advanced retrieval strategies"
+    href="/roadmap/infinite-context-enhancements"
+    icon="infinite"
+  />
+</FeatureGrid>
+
+**Context Chains** enhancements include status transition validation, auto-complete parent contexts, automatic data inheritance, chain-wide participant propagation, and depth limit enforcement.
+
+**A2A Communication** enhancements include real-time subscriptions via WebSocket, convenience inbox methods (`getInbox()`, `getSent()`, `markRead()`), Cloud Mode managed pub/sub, automated agent execution via webhooks, analytics dashboards, smart routing, and automated summarization.
+
+**Infinite Context** enhancements include predictive pre-fetching, hierarchical retrieval (coarse-grained then fine-grained), cross-MemorySpace retrieval, adaptive fact extraction, automatic hybrid search, and content summarization.
+
+---
+
+### Platform & APIs
+
+<FeatureGrid>
+  <FeatureCard
+    title="API Enhancements"
+    description="Bulk operations, filtering, and exports"
+    href="/roadmap/api-enhancements"
+    icon="code"
+  />
+  <FeatureCard
+    title="Governance"
+    description="Automatic policy enforcement"
+    href="/roadmap/governance-enhancements"
+    icon="shield"
+  />
+  <FeatureCard
+    title="Access Analytics"
+    description="Memory usage and performance analytics"
+    href="/roadmap/access-analytics"
+    icon="analytics"
+  />
+</FeatureGrid>
+
+**API Enhancements** include dry-run modes for bulk operations, confirmation thresholds, advanced filtering (text search, nested queries, range operators), enhanced export capabilities (direct file writing, version history, linked conversations), multi-tenancy filters, and sessions API improvements.
+
+**Governance** enhancements include automatic policy enforcement on every storage operation, automatic version purging, sessions policy enforcement, scheduled enforcement jobs, enforcement hooks, policy validation, and enforcement metrics.
+
+**Access Analytics** provides the full `cortex.analytics.*` API with visual dashboards for memory growth, search performance, access heat maps, predictive analytics, cost tracking, and automated alerts.
+
+---
+
+## Feature Categories
+
+### High Priority
+
+Features that significantly improve developer experience or eliminate operational complexity:
+
+- **Automatic Policy Enforcement** (Governance) - No more manual `enforce()` calls
+- **Convenience Inbox Methods** (A2A) - `getInbox()`, `getSent()`, `markRead()`
+- **Dry Run Mode** (API) - Preview bulk operations before executing
+- **Status Transition Validation** (Context Chains) - Prevent invalid state changes
+- **Automatic Hybrid Search** (Infinite Context) - Simplified semantic + keyword search
+
+### Medium Priority
+
+Features that add flexibility and power for advanced use cases:
+
+- **Hierarchical Retrieval** (Infinite Context) - Scalability for large memory spaces
+- **Smart Routing** (A2A) - AI-powered agent selection
+- **Advanced Filtering** (API) - Nested queries, range operators
+- **Automatic Data Inheritance** (Context Chains) - Simplified context chain data management
+
+### Cloud Mode (Enterprise)
+
+Enterprise features requiring managed infrastructure:
+
+- **Auto-Embeddings** - Zero-config embedding generation
+- **GDPR Cascade Deletion** - One-click compliance with legal guarantees
+- **Managed Pub/Sub** - Real-time A2A without managing Redis/NATS
+- **Analytics Dashboards** - Visual insights for memory, agents, and communication
+- **Agent Billing & Limits** - Usage tracking and resource limits
+
+---
+
+## Migration Path
+
+All planned features are designed to be **backward compatible**. Existing code will continue to work unchanged when new features are released.
+
+### Example: Enabling Cloud Mode
+
+```typescript
+// Before (Direct Mode)
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+});
+
+// After (Cloud Mode) - just add API key
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  apiKey: "cortex_sk_...",
+  mode: "cloud",
+  autoEmbed: true, // Optional: automatic embeddings
+});
+```
+
+### Example: Opting Into New Features
+
+```typescript
+// Existing code (works unchanged)
+await cortex.contexts.update(spaceId, contextId, {
+  status: "completed",
+});
+
+// New features (opt-in)
+await cortex.contexts.update(spaceId, contextId, {
+  status: "completed",
+  validateTransition: true, // Opt-in to status validation
+});
+```
+
+---
+
+## Current vs. Planned
+
+| Feature | Current Status | Planned Enhancement |
+|---------|---------------|---------------------|
+| **Embeddings** | Manual generation required | Auto-embeddings (Cloud Mode) |
+| **GDPR Deletion** | Manual cascade deletion | One-click with legal guarantees (Cloud Mode) |
+| **A2A Messaging** | Manual polling or manual pub/sub | Real-time subscriptions (Cloud Mode) |
+| **Governance** | Manual `enforce()` calls | Automatic enforcement |
+| **Bulk Operations** | Direct execution | Dry-run mode, confirmation thresholds |
+| **Filtering** | Basic filters | Nested queries, range operators, text search |
+| **Context Chains** | Manual status management | Automatic validation, inheritance, completion |
+| **Search** | Semantic or keyword (separate) | Automatic hybrid search |
+| **Analytics** | Basic stats via `getStats()` | Full analytics dashboard (Cloud Mode) |
+
+---
+
+## Workarounds
+
+Until planned features are available, current workarounds are documented in each roadmap page:
+
+- [Cloud Mode](/roadmap/cloud-mode)
+- [Context Chains Enhancements](/roadmap/context-chains-enhancements)
+- [A2A Communication Enhancements](/roadmap/a2a-communication-enhancements)
+- [Governance Enhancements](/roadmap/governance-enhancements)
+- [API Enhancements](/roadmap/api-enhancements)
+- [Infinite Context Enhancements](/roadmap/infinite-context-enhancements)
+
+---
+
+## Stay Updated
+
+For the latest updates on feature development:
+
+- **What's New:** [View recent releases](/whats-new)
+- **GitHub:** [github.com/CortexMind/Project-Cortex](https://github.com/CortexMind/Project-Cortex)
+- **Documentation:** This roadmap section is updated as features are planned/implemented
+
+---
+
+## Feedback
+
+Have ideas for features not listed here? We'd love to hear from you:
+
+- **GitHub Discussions:** Share feature ideas and vote on proposals
+- **GitHub Issues:** Report bugs or request specific enhancements
+
+---
+
+## Related Sections
+
+<QuickNav>
+  <QuickNavItem 
+    title="Core Features" 
+    description="Currently available features" 
+    href="/core-features" 
+  />
+  <QuickNavItem 
+    title="Architecture" 
+    description="System architecture and design" 
+    href="/architecture/system-overview" 
+  />
+  <QuickNavItem 
+    title="API Reference" 
+    description="Complete API documentation" 
+    href="/api-reference/overview" 
+  />
+</QuickNav>

@@ -1,0 +1,426 @@
+---
+id: a2a-communication
+title: A2A Communication
+sidebar_position: 6
+description: Agent-to-agent messaging for Collaboration Mode
+---
+
+# A2A Communication
+
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
+<Callout type="info" title="What is A2A Communication?">
+  A2A (Agent-to-Agent) enables agents in **separate memory spaces** to communicate via dual-write messaging. Messages are stored in BOTH sender and receiver spaces—complete isolation with coordination.
+</Callout>
+
+---
+
+## Quick Start
+
+```typescript
+// Send message (stored in BOTH agents' spaces)
+await cortex.a2a.send({
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "Budget approved for Q4 hiring",
+  importance: 85,
+});
+
+// HR agent receives it in their memory
+// Note: getInbox() is planned - see /roadmap/a2a-communication-enhancements
+// Current workaround: use memory.search() with filters
+const inbox = await cortex.memory.search("hr-agent", "*", {
+  source: { type: "a2a", recipient: "hr-agent" },
+  limit: 10,
+});
+```
+
+---
+
+## How Dual-Write Works
+
+<ArchitectureDiagram title="Dual-Write Message Storage" caption="Messages are stored in BOTH sender and receiver memory spaces">
+  <ArchitectureLayer title="Sender" variant="primary" showArrow={false}>
+    <ArchitectureBox title="Finance Agent" subtitle="(finance-space)" variant="primary">Sends: "Budget approved"</ArchitectureBox>
+  </ArchitectureLayer>
+  <ArchitectureLayer title="Message Written to Both Spaces" variant="secondary" showArrow={false}>
+    <ArchitectureBox title="Message in finance-space" footer="Sender's copy">Outbox record with metadata</ArchitectureBox>
+    <ArchitectureBox title="Message in hr-space" footer="Receiver's copy">Inbox record with metadata</ArchitectureBox>
+  </ArchitectureLayer>
+  <ArchitectureLayer title="Receiver" variant="tertiary" showArrow={false}>
+    <ArchitectureBox title="HR Agent" subtitle="(hr-space)" variant="success">Receives in inbox</ArchitectureBox>
+  </ArchitectureLayer>
+</ArchitectureDiagram>
+
+<Callout type="tip" title="Why Dual-Write?">
+  Each agent maintains complete isolation while still being able to coordinate. No shared state—just message passing.
+</Callout>
+
+---
+
+## A2A vs Hive Mode
+
+<ComparisonTable
+  headers={["A2A (Collaboration Mode)", "Hive Mode"]}
+  items={[
+    { feature: "Memory Spaces", values: ["Separate (one per agent)", "Shared (multiple agents → one space)"] },
+    { feature: "Communication", values: ["Explicit messaging", "Direct read/write"] },
+    { feature: "Isolation", values: ["Complete isolation", "Participant tracking"] },
+    { feature: "Use Case", values: ["Autonomous agents, enterprise", "Personal AI, MCP tools"] },
+    { feature: "Best For", values: ["Finance ↔ HR workflows", "Cursor + Claude sharing"] },
+  ]}
+/>
+
+<Callout type="tip" title="When to Use Which">
+  - **A2A**: Autonomous agents needing complete isolation (enterprise, compliance)
+  - **Hive Mode**: Multiple tools sharing user context (personal AI, MCP)
+</Callout>
+
+---
+
+## Communication Patterns
+
+<Tabs>
+  <TabItem value="send" label="send() - Direct">
+
+One-to-one messaging:
+
+```typescript
+const result = await cortex.a2a.send({
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "What is the Q4 headcount budget?",
+  importance: 85,
+  userId: "user-123",      // Optional: if about a user
+  contextId: "ctx-456",    // Optional: link to workflow
+  metadata: {
+    tags: ["budget", "q4"],
+    priority: "urgent",
+  },
+});
+
+console.log(result.messageId);  // "a2a-msg-123"
+```
+
+  </TabItem>
+  <TabItem value="request" label="request() - Sync">
+
+Send and wait for response:
+
+```typescript
+const response = await cortex.a2a.request({
+  from: "finance-agent",
+  to: "hr-agent",
+  message: "What is the Q4 budget?",
+  timeout: 30000,  // 30 seconds
+  retries: 2,
+});
+
+console.log(response.response);     // "5 new hires approved"
+console.log(response.responseTime); // 2453ms
+```
+
+  </TabItem>
+  <TabItem value="broadcast" label="broadcast() - Multi">
+
+One-to-many messaging:
+
+```typescript
+const result = await cortex.a2a.broadcast({
+  from: "manager-agent",
+  to: ["finance-agent", "hr-agent", "ops-agent"],
+  message: "Sprint review Friday at 2 PM",
+  importance: 70,
+});
+
+console.log(`Sent to ${result.recipients.length} agents`);
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Message Parameters
+
+<APITable parameters={[
+  { name: "from", type: "string", required: true, description: "Sender agent/space ID" },
+  { name: "to", type: "string | string[]", required: true, description: "Recipient agent/space ID(s)" },
+  { name: "message", type: "string", required: true, description: "Message content" },
+  { name: "importance", type: "number", required: false, default: "60", description: "Importance (0-100)" },
+  { name: "userId", type: "string", required: false, description: "User this message relates to" },
+  { name: "contextId", type: "string", required: false, description: "Link to context chain workflow" },
+  { name: "metadata", type: "object", required: false, description: "Custom data (tags, priority, etc.)" },
+  { name: "replyTo", type: "string", required: false, description: "Message ID being replied to" },
+]} />
+
+---
+
+## Reading Messages
+
+<Tabs>
+  <TabItem value="inbox" label="Inbox">
+
+<Callout type="info" title="Convenience Methods Planned">
+  The convenience methods `getInbox()`, `getSent()`, and `markRead()` are planned for a future release. See [A2A Communication Enhancements](/roadmap/a2a-communication-enhancements) for details. Use the workaround below for now.
+</Callout>
+
+```typescript
+// Get received messages (workaround using memory.search)
+const inbox = await cortex.memory.search("hr-agent", "*", {
+  source: { type: "a2a", recipient: "hr-agent" },
+  limit: 20,
+  // Filter unread messages if needed (check metadata.unread or similar)
+});
+
+inbox.forEach(msg => {
+  console.log(`From: ${msg.metadata?.fromAgent || msg.source?.sender}`);
+  console.log(`Message: ${msg.content}`);
+  console.log(`Importance: ${msg.importance}`);
+});
+
+// Note: markRead() is planned - for now, you can track read status
+// in your application or update message metadata if needed
+```
+
+  </TabItem>
+  <TabItem value="sent" label="Sent">
+
+<Callout type="info" title="Convenience Methods Planned">
+  The convenience method `getSent()` is planned for a future release. See [A2A Communication Enhancements](/roadmap/a2a-communication-enhancements) for details. Use the workaround below for now.
+</Callout>
+
+```typescript
+// Get sent messages (workaround using memory.search)
+const sent = await cortex.memory.search("finance-agent", "*", {
+  source: { type: "a2a", sender: "finance-agent" },
+  limit: 20,
+});
+
+sent.forEach(msg => {
+  console.log(`To: ${msg.metadata?.toAgent || msg.source?.recipient}`);
+  console.log(`Message: ${msg.content}`);
+});
+```
+
+  </TabItem>
+  <TabItem value="conversation" label="Conversation">
+
+```typescript
+// Get conversation between two agents
+const convo = await cortex.a2a.getConversation(
+  "finance-agent",
+  "hr-agent",
+  {
+    since: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    minImportance: 50,
+    limit: 100,
+  }
+);
+
+convo.messages.forEach(msg => {
+  console.log(`[${msg.from}]: ${msg.message}`);
+});
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Common Patterns
+
+### Delegation with Context
+
+```typescript
+// Create workflow context
+const context = await cortex.contexts.create({
+  purpose: "Process refund for order #789",
+  memorySpaceId: "supervisor-space",
+  userId: "customer-abc",
+});
+
+// Delegate via A2A with context link
+await cortex.a2a.send({
+  from: "supervisor-agent",
+  to: "specialist-agent",
+  message: "Please handle the customer refund",
+  importance: 85,
+  userId: "customer-abc",
+  contextId: context.id,  // Links to workflow
+});
+
+// Specialist can access full context
+const ctx = await cortex.contexts.get(context.id, { includeChain: true });
+```
+
+### Team Announcements
+
+```typescript
+await cortex.a2a.broadcast({
+  from: "manager-agent",
+  to: ["agent-1", "agent-2", "agent-3"],
+  message: "New policy: Refunds over $1000 require approval",
+  importance: 90,
+  metadata: {
+    tags: ["policy", "announcement"],
+    policyId: "POL-789",
+  },
+});
+```
+
+### Request-Response
+
+```typescript
+// Responder handles incoming requests
+async function handleRequests(agentId: string) {
+  // Workaround: use memory.search() instead of getInbox()
+  const requests = await cortex.memory.search(agentId, "*", {
+    source: { type: "a2a", recipient: agentId },
+    metadata: { 
+      requiresResponse: true, 
+      responded: false 
+    },
+  });
+
+  for (const req of requests) {
+    const answer = await processRequest(req.content);
+    const fromAgent = req.metadata?.fromAgent || req.source?.sender;
+    
+    await cortex.a2a.send({
+      from: agentId,
+      to: fromAgent,
+      message: answer,
+      replyTo: req.id,
+    });
+  }
+}
+```
+
+---
+
+## Querying A2A Messages
+
+Use standard memory search with `source.type = 'a2a'`:
+
+```typescript
+// All A2A for an agent
+const allA2A = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
+});
+
+// Messages from specific agent
+const fromFinance = await cortex.memory.search("hr-agent", "*", {
+  source: { type: "a2a" },
+  metadata: { fromAgent: "finance-agent" },
+});
+
+// High-importance A2A
+const urgent = await cortex.memory.search("agent-1", "*", {
+  source: { type: "a2a" },
+  minImportance: 85,
+});
+
+// Semantic search across A2A
+const budgetMsgs = await cortex.memory.search("agent-1", "budget approval", {
+  embedding: await embed("budget approval"),
+  source: { type: "a2a" },
+});
+```
+
+---
+
+## Best Practices
+
+<Callout type="tip" title="Set Appropriate Importance">
+
+```typescript
+const IMPORTANCE = {
+  CRITICAL: 95,    // Major decisions, approvals
+  URGENT: 85,      // Time-sensitive requests
+  IMPORTANT: 75,   // Key information
+  STANDARD: 60,    // Regular collaboration (default)
+  FYI: 40,         // Nice-to-know
+  NOTIFICATION: 30 // Low-priority
+};
+```
+
+</Callout>
+
+<Callout type="tip" title="Tag Messages Well">
+
+```typescript
+await cortex.a2a.send({
+  from: "agent-1",
+  to: "agent-2",
+  message: "Approved budget increase",
+  metadata: {
+    tags: ["approval", "budget", "finance", "urgent"],
+    approvalType: "budget",
+    amount: 50000,
+  },
+});
+```
+
+</Callout>
+
+<Callout type="tip" title="Link to Context Chains">
+
+```typescript
+// Always link A2A to context when part of workflow
+await cortex.a2a.send({
+  from: "supervisor",
+  to: "specialist",
+  message: "Handle this request",
+  contextId: context.id,  // Enables full traceability
+});
+```
+
+</Callout>
+
+---
+
+## Architecture
+
+<Callout type="info" title="Under the Hood">
+  A2A is a convenience layer on top of agent memory. Every A2A message is stored as a memory with `source.type = 'a2a'`. You can always query using the standard memory API.
+</Callout>
+
+**What `cortex.a2a.send()` does:**
+
+1. Creates/finds A2A conversation in ACID store
+2. Adds message to conversation (immutable)
+3. Stores in sender's vector memory (outbound)
+4. Stores in receiver's vector memory (inbound)
+5. Links both to ACID via `conversationRef`
+
+This is ~50 lines of code reduced to 7 lines with the helper.
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="A2A API Reference" 
+    description="Complete API documentation" 
+    href="/api-reference/a2a-communication" 
+  />
+  <QuickNavItem 
+    title="Memory Spaces" 
+    description="Understand Collaboration Mode" 
+    href="/core-features/memory-spaces" 
+  />
+  <QuickNavItem 
+    title="Context Chains" 
+    description="Link A2A to workflows" 
+    href="/advanced-topics/context-chains" 
+  />
+  <QuickNavItem 
+    title="Hive Mode" 
+    description="Alternative: shared memory" 
+    href="/core-features/hive-mode" 
+  />
+</QuickNav>

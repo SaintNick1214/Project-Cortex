@@ -1,8 +1,15 @@
+---
+id: graph-operations
+title: Graph Operations API
+sidebar_position: 6
+description: Complete API reference for graph database integration, multi-hop queries, and knowledge graph operations in Cortex.
+---
+
 # Graph Operations API
 
-> **Last Updated**: 2026-01-01
-> **Version**: v0.24.0
-> **Status**: Production Ready
+<Callout type="info">
+  **Last Updated**: 2026-01-08 | **Version**: v0.24.0 | **Status**: Production Ready
+</Callout>
 
 Complete API reference for graph database integration, multi-hop queries, and knowledge graph operations.
 
@@ -12,13 +19,13 @@ The Graph Operations API (`@cortexmemory/sdk/graph`) provides advanced graph dat
 
 **Key Characteristics:**
 
-- ✅ **Optional** - Graph integration is completely optional
-- ✅ **Multi-Database** - Works with Neo4j, Memgraph (single codebase)
-- ✅ **Real-Time Sync** - Reactive worker for automatic synchronization
-- ✅ **Orphan-Safe** - Sophisticated deletion with circular reference protection
-- ✅ **Cross-Layer** - Connects L1a, L2, L3, L4 via relationships
-- ✅ **Backward Compatible** - Existing code works unchanged
-- ✅ **Multi-Tenant** - Full `tenantId` support for SaaS isolation (NEW)
+- **Optional** - Graph integration is completely optional
+- **Multi-Database** - Works with Neo4j, Memgraph (single codebase)
+- **Real-Time Sync** - Reactive worker for automatic synchronization
+- **Orphan-Safe** - Sophisticated deletion with circular reference protection
+- **Cross-Layer** - Connects L1a, L2, L3, L4 via relationships
+- **Backward Compatible** - Existing code works unchanged
+- **Multi-Tenant** - Full `tenantId` support for SaaS isolation (NEW)
 
 **When to Use Graph:**
 
@@ -35,6 +42,8 @@ The Graph Operations API (`@cortexmemory/sdk/graph`) provides advanced graph dat
 
 ### Installation
 
+<Terminal>
+
 ```bash
 # Install Neo4j driver
 npm install neo4j-driver
@@ -43,7 +52,9 @@ npm install neo4j-driver
 docker-compose -f docker-compose.graph.yml up -d neo4j
 ```
 
-See [Graph Database Integration Guide](../07-advanced-topics/02-graph-database-integration) for complete setup.
+</Terminal>
+
+See [Graph Database Integration Guide](/advanced-topics/graph-database-integration) for complete setup.
 
 ### Configuration
 
@@ -385,58 +396,71 @@ console.log(`References: ${references}, Mentions: ${mentions}`);
 
 Clear all data from the database.
 
+<Callout type="danger">
+  This operation deletes ALL nodes and relationships. Use only for testing or complete reset.
+</Callout>
+
 ```typescript
-// ⚠️ WARNING: Deletes ALL nodes and relationships!
 await adapter.clearDatabase();
-// Use only for testing or complete reset
 ```
 
 ---
 
 ## Sync Operations
 
-### syncToGraph Option
+### Automatic Graph Sync (v0.29.0+)
 
-All Cortex APIs now support optional graph synchronization.
+**Important:** As of v0.29.0, graph synchronization is **automatic** when `CORTEX_GRAPH_SYNC=true` is set in your environment variables.
 
-#### Convenience APIs (Auto-Sync)
+The `syncToGraph` option has been removed from all APIs. Graph sync is now controlled entirely by:
+1. Setting `CORTEX_GRAPH_SYNC=true` in your environment
+2. Providing valid graph credentials (e.g., `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`)
+
+#### Automatic Sync Behavior
 
 ```typescript
-// memory.remember() auto-syncs by default if graph configured
-await cortex.memory.remember({
+// All operations auto-sync to graph when CORTEX_GRAPH_SYNC=true
+
+// Facts are automatically synced including Entity nodes
+await cortex.facts.store({
   memorySpaceId: "agent-1",
-  conversationId: "conv-123",
-  userMessage: "Alice works at Acme Corp",
-  agentResponse: "Got it!",
-  userId: "alice",
-  userName: "Alice",
+  fact: "Alice works at Acme Corp",
+  factType: "relationship",
+  subject: "Alice",
+  predicate: "works_at",
+  object: "Acme Corp",
+  entities: [
+    { name: "Alice", type: "person" },
+    { name: "Acme Corp", type: "organization" },
+  ],
 });
-// ✅ Automatically synced to graph!
+// ✅ Fact node + Entity nodes + MENTIONS relationships created automatically!
 
-// Disable if needed
-await cortex.memory.remember(params, { syncToGraph: false });
+// Memories are automatically synced
+await cortex.vector.store(memorySpaceId, data);
+// ✅ Memory node synced automatically!
+
+// Conversations are automatically synced
+await cortex.conversations.create(input);
+// ✅ Conversation node synced automatically!
 ```
 
-#### Low-Level APIs (Manual Sync)
+#### Disabling Graph Sync
 
-```typescript
-// Explicit opt-in via syncToGraph option
-await cortex.vector.store(memorySpaceId, data, {
-  syncToGraph: true,
-});
+To disable graph sync, simply don't set `CORTEX_GRAPH_SYNC` or set it to `false`:
 
-await cortex.facts.store(params, {
-  syncToGraph: true,
-});
+```bash
+# Disable graph sync (default)
+CORTEX_GRAPH_SYNC=false
 
-await cortex.contexts.create(params, {
-  syncToGraph: true,
-});
-
-await cortex.conversations.create(input, {
-  syncToGraph: true,
-});
+# Or simply don't set the variable
+# CORTEX_GRAPH_SYNC=...
 ```
+
+<Note>
+The `syncToGraph` option was removed in v0.29.0 as part of simplifying the API. 
+Graph sync is now a deployment-time decision controlled by environment variables.
+</Note>
 
 ### Manual Sync Functions
 
@@ -848,9 +872,9 @@ All delete operations support sophisticated orphan cleanup:
 
 ```typescript
 // Delete memory - checks if conversation becomes orphaned
+// Graph cleanup is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 await cortex.memory.forget("agent-1", "mem-123", {
   deleteConversation: true,
-  syncToGraph: true, // Enables orphan cleanup
 });
 
 // What happens:
@@ -933,8 +957,11 @@ const result = await deleteConversationFromGraph(
 
 Delete a memory space node (use with caution).
 
+<Callout type="warning">
+  Does NOT cascade to memories/contexts in that space. Use with caution.
+</Callout>
+
 ```typescript
-// ⚠️ WARNING: Does NOT cascade to memories/contexts in that space
 const result = await deleteMemorySpaceFromGraph(
   "space-123", // memorySpaceId
   adapter,
@@ -999,25 +1026,36 @@ const result = await deleteMutableFromGraph(
 
 **Handles complex scenarios**:
 
+<Tabs>
+  <TabItem value="circular" label="Circular References">
+
 ```typescript
 // Scenario: Circular references
-Entity A → KNOWS → Entity B
-Entity B → KNOWS → Entity A
-Fact F1 → MENTIONS → Entity A
+// Entity A → KNOWS → Entity B
+// Entity B → KNOWS → Entity A
+// Fact F1 → MENTIONS → Entity A
 
 // Delete F1:
 // - A and B reference each other (circular!)
 // - But no external references remain (F1 was only anchor)
-// - Algorithm: Detects orphan island, deletes both A and B ✅
+// - Algorithm: Detects orphan island, deletes both A and B
+```
 
+  </TabItem>
+  <TabItem value="still-referenced" label="Still Referenced">
+
+```typescript
 // Scenario: Still referenced
-Memory M1 → Conversation C1
-Memory M2 → Conversation C1
+// Memory M1 → Conversation C1
+// Memory M2 → Conversation C1
 
 // Delete M1:
 // - C1 still referenced by M2
-// - Algorithm: Keeps C1 (not orphaned) ✅
+// - Algorithm: Keeps C1 (not orphaned)
 ```
+
+  </TabItem>
+</Tabs>
 
 **Orphan Rules**:
 
@@ -1131,7 +1169,9 @@ if (canRun) {
 
 ## Belief Revision (Fact Supersession)
 
-> **Added in v0.24.0**
+<Callout type="info">
+  Added in v0.24.0
+</Callout>
 
 Functions for managing fact versioning and supersession in the graph database. These functions sync belief revision actions to maintain fact lineage and provenance.
 
@@ -1354,11 +1394,14 @@ interface VerifySchemaResult {
 
 Remove all constraints and indexes (testing/reset).
 
+<Callout type="danger">
+  Removes all schema constraints and indexes. Use only for testing or reset scenarios.
+</Callout>
+
 ```typescript
 import { dropGraphSchema } from "@cortexmemory/sdk/graph";
 
 await dropGraphSchema(adapter);
-// ⚠️ WARNING: Removes all schema constraints and indexes!
 ```
 
 ---
@@ -1467,7 +1510,7 @@ console.log("Fact provenance:");
 console.log("  Conversation:", provenance.records[0].conversation);
 console.log("  Context:", provenance.records[0].context);
 console.log("  User:", provenance.records[0].user);
-// Complete audit trail! ✅
+// Complete audit trail!
 ```
 
 ---
@@ -1642,65 +1685,70 @@ const query = `
 
 ---
 
-## syncToGraph Option Reference
+## Automatic Graph Sync Reference (v0.29.0+)
 
-All Cortex APIs support the `syncToGraph` option:
+<Note>
+**Breaking Change in v0.29.0:** The `syncToGraph` option has been removed from all APIs.
+Graph synchronization is now automatic when `CORTEX_GRAPH_SYNC=true` is set.
+</Note>
+
+All Cortex APIs automatically sync to the graph database when:
+1. `CORTEX_GRAPH_SYNC=true` is set in environment variables
+2. Valid graph credentials are configured
 
 ### Conversations API
 
 ```typescript
-await cortex.conversations.create(input, { syncToGraph: true });
-await cortex.conversations.addMessage(input, { syncToGraph: true });
-await cortex.conversations.delete(id, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.conversations.create(input);
+await cortex.conversations.addMessage(input);
+await cortex.conversations.delete(id);
 ```
 
 ### Vector API
 
 ```typescript
-await cortex.vector.store(memorySpaceId, input, { syncToGraph: true });
-await cortex.vector.update(memorySpaceId, memoryId, updates, {
-  syncToGraph: true,
-});
-await cortex.vector.delete(memorySpaceId, memoryId, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.vector.store(memorySpaceId, input);
+await cortex.vector.update(memorySpaceId, memoryId, updates);
+await cortex.vector.delete(memorySpaceId, memoryId);
 ```
 
 ### Facts API
 
 ```typescript
-await cortex.facts.store(params, { syncToGraph: true });
-await cortex.facts.update(memorySpaceId, factId, updates, {
-  syncToGraph: true,
-});
-await cortex.facts.delete(memorySpaceId, factId, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+// Includes Entity nodes and MENTIONS relationships
+await cortex.facts.store(params);
+await cortex.facts.update(memorySpaceId, factId, updates);
+await cortex.facts.delete(memorySpaceId, factId);
 ```
 
 ### Contexts API
 
 ```typescript
-await cortex.contexts.create(params, { syncToGraph: true });
-await cortex.contexts.update(contextId, updates, { syncToGraph: true });
-await cortex.contexts.delete(contextId, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.contexts.create(params);
+await cortex.contexts.update(contextId, updates);
+await cortex.contexts.delete(contextId);
 ```
 
 ### Memory Spaces API
 
 ```typescript
-await cortex.memorySpaces.register(params, { syncToGraph: true });
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.memorySpaces.register(params);
 ```
 
 ### Memory API (Convenience)
 
 ```typescript
-// Auto-syncs by default if graph configured
-await cortex.memory.remember(params); // syncToGraph: true by default
+// Automatically syncs when CORTEX_GRAPH_SYNC=true
+await cortex.memory.remember(params);
 
-// Explicit control
-await cortex.memory.remember(params, { syncToGraph: false });
-
-// Forget with cascade
+// Forget with cascade (graph orphan cleanup is automatic)
 await cortex.memory.forget(memorySpaceId, memoryId, {
   deleteConversation: true,
-  syncToGraph: true, // Orphan cleanup enabled
 });
 ```
 
@@ -1779,8 +1827,9 @@ try {
 ### Sync Failures
 
 ```typescript
-// Sync failures log warnings but don't throw
-await cortex.vector.store(data, { syncToGraph: true });
+// Sync failures log warnings but don't throw (v0.29.0+)
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true
+await cortex.vector.store(data);
 // If graph sync fails: Logs warning, continues
 // Convex remains source of truth
 ```
@@ -1804,18 +1853,19 @@ try {
 ### 1. Convex as Source of Truth
 
 ```typescript
-// ✅ Always write to Convex first
-await cortex.memory.remember(params, { syncToGraph: true });
-// Convex write succeeds → then sync to graph
+// Recommended: Always write to Convex first (v0.29.0+)
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true
+await cortex.memory.remember(params);
+// Convex write succeeds → then auto-syncs to graph
 
-// ❌ Don't write to graph first
+// Avoid: Writing to graph first
 await adapter.createNode({ ... }); // Graph could succeed but Convex fail
 ```
 
 ### 2. Use Auto-Sync for Simplicity
 
 ```typescript
-// ✅ Enable auto-sync, use convenience APIs
+// Recommended: Enable auto-sync, use convenience APIs
 const cortex = new Cortex({
   convexUrl: "...",
   graph: { adapter, autoSync: true },
@@ -1846,13 +1896,13 @@ if (worker) {
 ### 4. Use Graph for Discovery, Not Storage
 
 ```typescript
-// ✅ Query graph for relationships
+// Good: Query graph for relationships
 const related = await adapter.query(`
   MATCH (m:Memory)-[:REFERENCES]->(conv:Conversation)<-[:EXTRACTED_FROM]-(f:Fact)
   RETURN f
 `);
 
-// ✅ But fetch full data from Convex
+// Good: Fetch full data from Convex
 for (const record of related.records) {
   const fullFact = await cortex.facts.get(
     memorySpaceId,
@@ -2337,9 +2387,9 @@ Complete examples in:
 
 ### Memgraph Compatibility
 
-- ✅ Basic operations: 100%
-- ✅ Traversal: 100%
-- ⚠️ shortestPath: Not supported (use traversal instead)
+- Basic operations: 100% compatible
+- Traversal: 100% compatible
+- shortestPath: Not supported (use traversal instead)
 - Overall: ~80% compatible
 
 ### Real-Time Sync
@@ -2353,8 +2403,30 @@ Complete examples in:
 
 ## Next Steps
 
-- **[Graph Database Integration](../07-advanced-topics/02-graph-database-integration)** - Complete integration guide (setup, selection, and patterns)
+- **[Graph Database Integration](/advanced-topics/graph-database-integration)** - Complete integration guide (setup, selection, and patterns)
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
+
+<QuickNav>
+
+<QuickNavItem
+  title="Memory Operations API"
+  href="/api-reference/memory-operations"
+  description="Vector storage and similarity search operations"
+/>
+
+<QuickNavItem
+  title="Facts Operations API"
+  href="/api-reference/facts-operations"
+  description="Structured fact storage and retrieval"
+/>
+
+<QuickNavItem
+  title="Graph Database Integration"
+  href="/advanced-topics/graph-database-integration"
+  description="Complete setup and configuration guide"
+/>
+
+</QuickNav>

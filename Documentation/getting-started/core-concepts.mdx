@@ -39,7 +39,7 @@ Understanding these core concepts will help you make the most of Cortex. This gu
     icon="chain"
     title="Context Chains"
     description="Hierarchical context for multi-agent systems"
-    href="/core-features/context-chains"
+    href="/advanced-topics/context-chains"
     size="small"
   />
   <FeatureCard
@@ -52,8 +52,8 @@ Understanding these core concepts will help you make the most of Cortex. This gu
   <FeatureCard
     icon="analytics"
     title="Analytics"
-    description="Track memory usage, access patterns, and performance"
-    href="/core-features/access-analytics"
+    description="Track memory usage, access patterns, and performance (Planned)"
+    href="/roadmap/access-analytics"
     size="small"
   />
 </FeatureGrid>
@@ -170,9 +170,9 @@ await cortex.memorySpaces.register({
   },
 });
 
-// Now you get enhanced analytics
-const stats = await cortex.analytics.getMemorySpaceStats("user-123-personal");
-// { memoriesStored: 543, agents: 3, avgAccessTime: '12ms', ... }
+// Now you can get memory space statistics
+const stats = await cortex.memorySpaces.getStats("user-123-personal");
+// { totalMemories: 543, agents: 3, ... }
 ```
 
 </TabItem>
@@ -937,24 +937,18 @@ const fullContext = await cortex.contexts.get(financeContext.id, {
 ## Analytics
 
 <Callout type="note" title="Enhanced Analytics Coming Soon">
-  Advanced analytics dashboards are planned for Cortex Cloud. The SDK provides basic usage tracking and memory statistics today.
+  Advanced analytics dashboards with `cortex.analytics.*` APIs are planned for Cortex Cloud. The SDK provides basic memory space statistics today via `cortex.memorySpaces.getStats()`.
 </Callout>
 
 ```typescript title="analytics.ts"
-const stats = await cortex.analytics.getMemorySpaceStats("user-123-personal");
+// Get memory space statistics
+const stats = await cortex.memorySpaces.getStats("user-123-personal");
 
 console.log(stats);
 // {
 //   totalMemories: 15432,
-//   memoriesThisWeek: 234,
-//   avgSearchTime: '23ms',
 //   agents: ['cursor', 'claude', 'custom-bot'],
-//   topTags: ['preferences', 'support', 'product-info'],
-//   accessPatterns: {
-//     mostAccessed: [{ id: 'mem_123', count: 45 }, ...],
-//     leastAccessed: [{ id: 'mem_789', count: 1 }, ...],
-//   },
-//   importanceBreakdown: { high: 234, medium: 12043, low: 3155 }
+//   ...
 // }
 ```
 
@@ -974,18 +968,23 @@ console.log({
 </TabItem>
 <TabItem value="insights" label="Usage Insights">
 
+<Callout type="info" title="Planned Feature">
+  Advanced analytics methods like `cortex.analytics.findUnusedMemories()` and `cortex.analytics.findHotMemories()` are planned for Cortex Cloud. See [Access Analytics roadmap](/roadmap/access-analytics) for details.
+</Callout>
+
 ```typescript
-// Find unused memories (potential cleanup)
-const unused = await cortex.analytics.findUnusedMemories("user-123-personal", {
-  olderThan: "30d",
-  maxAccessCount: 1,
+// For now, you can query memories manually:
+const memories = await cortex.memory.search("user-123-personal", "", {
+  limit: 1000,
 });
 
-// Find hot memories (frequently accessed)
-const hot = await cortex.analytics.findHotMemories("user-123-personal", {
-  minAccessCount: 10,
-  timeWindow: "7d",
-});
+// Filter by access patterns
+const unused = memories.filter(m => 
+  m.accessCount <= 1 && 
+  Date.now() - m.createdAt.getTime() > 30 * 24 * 60 * 60 * 1000
+);
+
+const hot = memories.filter(m => m.accessCount >= 10);
 ```
 
 </TabItem>
@@ -1000,7 +999,7 @@ const hot = await cortex.analytics.findHotMemories("user-123-personal", {
 </TabItem>
 </Tabs>
 
-**Learn more:** [Access Analytics Guide](/core-features/access-analytics)
+**Learn more:** [Access Analytics Guide](/roadmap/access-analytics) (Planned)
 
 ---
 
@@ -1185,7 +1184,7 @@ const provenance = await graphAdapter.query(`
   Graph is for **discovery and traversal**. Always write to Convex first, then sync to graph. Cortex works perfectly without graph—add it when you need multi-hop reasoning or knowledge graphs.
 </Callout>
 
-**Learn more:** [Graph Integration Guide](/core-features/graph-integration) • [Graph Operations API](/api-reference/graph-operations)
+**Learn more:** [Graph Integration Guide](/advanced-topics/graph-integration) • [Graph Operations API](/api-reference/graph-operations)
 
 ---
 

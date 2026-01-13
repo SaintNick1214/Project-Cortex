@@ -1,6 +1,8 @@
 # Graph Database Integration Guide
 
-> **Last Updated**: 2026-01-01
+<Callout type="info">
+**Last Updated**: 2026-01-09 | **Version**: v0.29.0+
+</Callout>
 
 Comprehensive guide for integrating a graph database with Cortex for advanced relationship queries.
 
@@ -49,32 +51,36 @@ See **[Graph Capabilities](./graph-capabilities)** for built-in graph features w
 
 ### Performance Comparison
 
-```
-Query: "Find all agents connected to user-123 through any workflow"
+<Tabs>
+  <TabItem value="graph-lite" label="Graph-Lite (Convex)">
 
-Graph-Lite (Convex):
-- Multiple sequential queries
-- 5 hops = ~500-800ms
-- 10 hops = impractical (2000ms+)
+| Depth | Latency | Notes |
+|-------|---------|-------|
+| 5 hops | ~500-800ms | Multiple sequential queries |
+| 10 hops | 2000ms+ | Impractical for real-time |
 
-Native Graph (Neo4j):
-- Single Cypher query
-- 5 hops = ~30ms
-- 10 hops = ~50ms
-- 20× faster! ✅
-```
+  </TabItem>
+  <TabItem value="native" label="Native Graph (Neo4j)">
+
+| Depth | Latency | Notes |
+|-------|---------|-------|
+| 5 hops | ~30ms | Single Cypher query |
+| 10 hops | ~50ms | 20× faster than Graph-Lite |
+
+  </TabItem>
+</Tabs>
 
 ### Decision Matrix
 
 | Your Need                      | Graph-Lite      | Native Graph DB |
 | ------------------------------ | --------------- | --------------- |
-| Context hierarchies (depth <5) | ✅ Perfect      | ⚠️ Overkill     |
-| Audit trails (known paths)     | ✅ Perfect      | ⚠️ Overkill     |
-| Agent collaboration (1-3 hops) | ✅ Good         | Better          |
-| Deep traversals (6+ hops)      | ❌ Too slow     | ✅ Required     |
-| Pattern matching               | ❌ Very hard    | ✅ Required     |
-| Graph algorithms               | ❌ Not feasible | ✅ Required     |
-| Dense relationship networks    | ⚠️ Slow         | ✅ Best         |
+| Context hierarchies (depth <5) | Perfect         | Overkill        |
+| Audit trails (known paths)     | Perfect         | Overkill        |
+| Agent collaboration (1-3 hops) | Good            | Better          |
+| Deep traversals (6+ hops)      | Too slow        | Required        |
+| Pattern matching               | Very hard       | Required        |
+| Graph algorithms               | Not feasible    | Required        |
+| Dense relationship networks    | Slow            | Best            |
 
 ---
 
@@ -88,11 +94,11 @@ Native Graph (Neo4j):
 
 ### Comparison Matrix
 
-| Database            | License | Local Deploy      | TypeScript Support   | Query Language      | Performance            | Community | Recommendation              |
-| ------------------- | ------- | ----------------- | -------------------- | ------------------- | ---------------------- | --------- | --------------------------- |
-| **Neo4j Community** | GPL v3  | ✅ Docker/Install | ⭐⭐⭐⭐⭐ Excellent | Cypher (native)     | ⭐⭐⭐⭐⭐             | Large     | ⭐⭐⭐⭐⭐ Best overall     |
-| **Memgraph**        | BSL     | ✅ Docker         | ⭐⭐⭐⭐⭐ Excellent | Cypher (compatible) | ⭐⭐⭐⭐⭐ (in-memory) | Growing   | ⭐⭐⭐⭐⭐ Best performance |
-| **Kùzu**            | MIT     | ✅ Embedded       | ⭐⭐ Limited         | Cypher (compatible) | ⭐⭐⭐⭐ Good          | Small     | ⭐⭐⭐ Experimental         |
+| Database            | License | Local Deploy  | TypeScript Support | Query Language      | Performance | Community | Recommendation    |
+| ------------------- | ------- | ------------- | ------------------ | ------------------- | ----------- | --------- | ----------------- |
+| **Neo4j Community** | GPL v3  | Docker/Install | Excellent          | Cypher (native)     | Excellent   | Large     | Best overall      |
+| **Memgraph**        | BSL     | Docker        | Excellent          | Cypher (compatible) | Excellent   | Growing   | Best performance  |
+| **Kùzu**            | MIT     | Embedded      | Limited            | Cypher (compatible) | Good        | Small     | Experimental      |
 
 ### Neo4j Community Edition
 
@@ -382,7 +388,7 @@ await cortex.memory.remember({
   userId: "user-123",
   userName: "User",
 });
-// Automatically synced to graph! ✅
+// Automatically synced to graph!
 ```
 
 ### Strategy 2: Manual Sync Functions
@@ -712,7 +718,7 @@ CREATE INDEX entity_name FOR (e:Entity) ON (e.name);
 ### Query Optimization
 
 ```typescript
-// ✅ Good: Use parameters (query plan cached)
+// Good: Use parameters (query plan cached)
 await session.run(
   `
   MATCH (c:Context {contextId: $contextId})
@@ -721,18 +727,18 @@ await session.run(
   { contextId },
 );
 
-// ❌ Bad: String concatenation (new plan each time)
+// Avoid: String concatenation (new plan each time)
 await session.run(`
   MATCH (c:Context {contextId: '${contextId}'})
   RETURN c
 `);
 
-// ✅ Good: Limit results
+// Good: Limit results
 MATCH (c:Context)-[:CHILD_OF*1..3]-(related)
 RETURN related
 LIMIT 100
 
-// ✅ Good: Use DISTINCT
+// Good: Use DISTINCT
 MATCH (c:Context)-[:CHILD_OF*1..3]-(related:Context)
 RETURN DISTINCT related
 ```
@@ -742,18 +748,18 @@ RETURN DISTINCT related
 #### 1. Convex is Source of Truth
 
 ```typescript
-// ✅ Always write to Convex first
+// Recommended: Always write to Convex first
 await cortex.contexts.create({ ... });
 await syncContextToGraph(context);  // Then sync
 
-// ❌ Don't write to graph first
+// Avoid: Writing to graph first
 await graphAdapter.createNode({ ... });  // Graph could succeed but Convex fail
 ```
 
 #### 2. Handle Sync Failures Gracefully
 
 ```typescript
-// ✅ App continues working if graph sync fails
+// Good: App continues working if graph sync fails
 try {
   await syncToGraph(entity);
 } catch (error) {
@@ -784,13 +790,13 @@ async function rebuildGraphFromConvex() {
 #### 4. Use Graph for Discovery, Not Storage
 
 ```typescript
-// ✅ Query graph for relationships
+// Good: Query graph for relationships
 const related = await graphAdapter.query(`
   MATCH (m:Memory)-[:REFERENCES]->(c:Conversation)
   RETURN c.conversationId
 `);
 
-// ✅ But fetch full data from Convex
+// Good: Fetch full data from Convex
 for (const record of related.records) {
   const conversation = await cortex.conversations.get(record.conversationId);
   // Full data from authoritative source
@@ -849,10 +855,10 @@ CREATE INDEX IF NOT EXISTS FOR (c:Context) ON (c.contextId);
 2. **Limit depth:**
 
 ```cypher
--- ❌ Slow: Unlimited depth
+-- Slow: Unlimited depth
 MATCH (a)-[*]-(b) RETURN b
 
--- ✅ Fast: Limited depth
+-- Fast: Limited depth
 MATCH (a)-[*1..5]-(b) RETURN b
 ```
 
@@ -883,10 +889,10 @@ async function testGraphConnection() {
     await session.run("RETURN 1");
     await session.close();
 
-    console.log("✅ Graph DB connected successfully");
+    console.log("Graph DB connected successfully");
     return true;
   } catch (error) {
-    console.error("❌ Graph DB connection failed:", error.message);
+    console.error("Graph DB connection failed:", error.message);
     console.error("Check: URI, username, password, network access");
     return false;
   }
@@ -968,9 +974,9 @@ console.log(
 ## Next Steps
 
 - **[Graph Capabilities](./graph-capabilities)** - Built-in graph features (Graph-Lite)
-- **[Graph Operations API](../03-api-reference/13-graph-operations)** - Complete API reference
-- **[Context Chains](../02-core-features/04-context-chains)** - Hierarchical coordination
+- **[Graph Operations API](/api-reference/graph-operations)** - Complete API reference
+- **[Context Chains](/advanced-topics/context-chains)** - Hierarchical coordination
 
 ---
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

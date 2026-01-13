@@ -1,12 +1,23 @@
+---
+id: memory-operations
+title: Memory Operations API
+sidebar_position: 2
+description: Complete API reference for memory operations across memory spaces, including remember, recall, search, and versioning.
+---
+
 # Memory Operations API
 
-> **Last Updated**: 2026-01-01
+<Callout type="note">
+**Last Updated**: 2026-01-13
+</Callout>
 
 Complete API reference for memory operations across memory spaces.
 
-> **Enhanced in v0.15.0**: `memory.rememberStream()` with progressive storage, streaming hooks, and comprehensive metrics
->
-> **New in v0.15.0**: Enriched fact extraction with `enrichedContent` and `factCategory` for bullet-proof semantic search
+<Callout type="info">
+**Enhanced in v0.15.0**: `memory.rememberStream()` with progressive storage, streaming hooks, and comprehensive metrics
+
+**New in v0.15.0**: Enriched fact extraction with `enrichedContent` and `factCategory` for bullet-proof semantic search
+</Callout>
 
 ## Important: Timestamp Convention
 
@@ -37,7 +48,9 @@ await cortex.vector.getAtTimestamp(
 );
 ```
 
-> **Why Unix milliseconds?** Convex (the backend) stores timestamps as `number`. Using consistent types avoids serialization issues and timezone bugs.
+<Callout type="info">
+**Why Unix milliseconds?** Convex (the backend) stores timestamps as `number`. Using consistent types avoids serialization issues and timezone bugs.
+</Callout>
 
 ## Overview
 
@@ -57,7 +70,7 @@ cortex.mutable.*         // Layer 1c: Shared mutable (NO memorySpace - TRULY sha
 cortex.vector.*          // Vector memory operations (memorySpace-scoped)
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Layer 3: Facts Store (memorySpace-scoped, Versioned) ✨ NEW
+// Layer 3: Facts Store (memorySpace-scoped, Versioned) - NEW
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 cortex.facts.*           // LLM-extracted facts (memorySpace-scoped)
 
@@ -79,78 +92,80 @@ cortex.graph.*           // Graph database integration
 
 **Complete Architecture:**
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Layer 1: ACID Stores                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐  │
-│  │ Conversations   │  │  Immutable      │  │  Mutable    │  │
-│  │ (memSpace)      │  │  (SHARED)       │  │  (SHARED)   │  │
-│  │                 │  │                 │  │             │  │
-│  │ User↔Agent      │  │ KB Articles     │  │ Inventory   │  │
-│  │ Agent↔Agent     │  │ Policies        │  │ Config      │  │
-│  │ Hive/Collab     │  │ Audit Logs      │  │ Counters    │  │
-│  │ Versioned       │  │ Versioned       │  │ Live Data   │  │
-│  └─────────────────┘  └─────────────────┘  └─────────────┘  │
-│  memorySpace-scoped   NO memorySpace       NO memorySpace   │
-│  Purgeable            Purgeable            Mutable          │
-└───────────┬───────────────────┬─────────────────┬───────────┘
-            │                   │                 │
-            │ conversationRef   │ immutableRef    │ mutableRef
-            │                   │                 │
-            └───────────────────┴─────────────────┘
-                                │
-                                ↓
-┌─────────────────────────────────────────────────────────────┐
-│       Layer 2: Vector Index (memorySpace-scoped)            │
-├─────────────────────────────────────────────────────────────┤
-│  Embedded memories for semantic search                      │
-│  References Layer 1 stores via Ref fields                   │
-│  Versioned with retention rules                             │
-│  Optimized for semantic search within memory space          │
-└───────────────────────────┬─────────────────────────────────┘
-                            │ factsRef
-                            ↓
-┌─────────────────────────────────────────────────────────────┐
-│    Layer 3: Facts Store (memorySpace-scoped, Versioned) ✨  │
-├─────────────────────────────────────────────────────────────┤
-│  LLM-extracted facts (60-90% token savings)                 │
-│  cortex.facts.* for fact operations                         │
-│  Enables infinite context capability                        │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ↓
-┌─────────────────────────────────────────────────────────────┐
-│       Layer 4: Convenience API (Recommended Interface)      │
-├─────────────────────────────────────────────────────────────┤
-│  cortex.memory.remember() → L1a + L2 + L3 + graph (store)   │
-│  cortex.memory.recall() → L2 + L3 + graph + merge/rank      │
-│  cortex.memory.search() → L2 + optional enrichment          │
-│  Full orchestration for conversation workflows              │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ↓ (Sync)
-┌─────────────────────────────────────────────────────────────┐
-│        Graph Database (Optional - Neo4j/Memgraph)           │
-├─────────────────────────────────────────────────────────────┤
-│  Entities extracted from memories, facts, contexts          │
-│  Enables multi-hop traversal and complex relationships      │
-└─────────────────────────────────────────────────────────────┘
-```
+<ArchitectureDiagram title="Cortex Four-Layer Architecture" caption="Data flows from Layer 1 (source of truth) through Layer 4 (convenience API)">
+
+<ArchitectureLayer 
+  title="Layer 1: ACID Stores" 
+  variant="primary"
+  connectionLabels={["conversationRef", "immutableRef", "mutableRef"]}
+>
+  <ArchitectureBox title="Conversations" subtitle="(memSpace-scoped)" footer="Purgeable • Versioned">
+    User↔Agent • Agent↔Agent • Hive/Collab
+  </ArchitectureBox>
+  <ArchitectureBox title="Immutable" subtitle="(SHARED)" footer="NO memorySpace • Purgeable">
+    KB Articles • Policies • Audit Logs
+  </ArchitectureBox>
+  <ArchitectureBox title="Mutable" subtitle="(SHARED)" footer="NO memorySpace • Live Data">
+    Inventory • Config • Counters
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Layer 2: Vector Index (memorySpace-scoped)" 
+  variant="secondary"
+  connectionLabels={["factsRef"]}
+>
+  <ArchitectureBox title="Embedded Memories">
+    Semantic search • References L1 via Ref fields • Versioned with retention rules
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Layer 3: Facts Store (memorySpace-scoped, Versioned)" 
+  variant="tertiary"
+>
+  <ArchitectureBox title="LLM-Extracted Facts">
+    60-90% token savings • cortex.facts.* • Enables infinite context
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Layer 4: Convenience API (Recommended)" 
+  variant="quaternary"
+  connectionLabels={["Sync"]}
+>
+  <ArchitectureBox title="cortex.memory.*">
+    remember() → L1a + L2 + L3 + graph • recall() → L2 + L3 + graph • search() → L2 + enrichment
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+<ArchitectureLayer 
+  title="Graph Database (Optional - Neo4j/Memgraph)" 
+  showArrow={false}
+>
+  <ArchitectureBox title="Knowledge Graph" variant="muted">
+    Entities from memories, facts, contexts • Multi-hop traversal • Complex relationships
+  </ArchitectureBox>
+</ArchitectureLayer>
+
+</ArchitectureDiagram>
 
 **Which layer/API to use:**
 
-- 🚀 **`cortex.memory.*` (Layer 4 - START HERE)** - Recommended for most use cases
-  - `remember()` / `recall()` - Full orchestration for storing and retrieving conversations
-  - `search()` / `get()` - Quick retrieval with optional enrichment
-- 💬 **`cortex.conversations.*`** (Layer 1a) - Direct ACID conversation access
-- 🔢 **`cortex.vector.*`** (Layer 2) - Direct vector index control
-- 🧠 **`cortex.facts.*`** (Layer 3) - Direct fact operations
-- 📚 **`cortex.immutable.*`** (Layer 1b) - Shared knowledge (NO memorySpace - TRULY shared)
-- 📊 **`cortex.mutable.*`** (Layer 1c) - Live mutable data (NO memorySpace - TRULY shared)
-- 👤 **`cortex.users.*`** - User profiles (shared across ALL memory spaces + GDPR cascade)
-- 🏛️ **`cortex.governance.*`** - Retention policies for all layers
+<Callout type="tip" title="Start Here">
+**`cortex.memory.*` (Layer 4)** - Recommended for most use cases. Provides `remember()` / `recall()` for full orchestration, and `search()` / `get()` for quick retrieval.
+</Callout>
+
+| Namespace | Layer | Description |
+|-----------|-------|-------------|
+| `cortex.memory.*` | Layer 4 | **START HERE** - Full orchestration (recommended) |
+| `cortex.conversations.*` | Layer 1a | Direct ACID conversation access |
+| `cortex.vector.*` | Layer 2 | Direct vector index control |
+| `cortex.facts.*` | Layer 3 | Direct fact operations |
+| `cortex.immutable.*` | Layer 1b | Shared knowledge (NO memorySpace - TRULY shared) |
+| `cortex.mutable.*` | Layer 1c | Live mutable data (NO memorySpace - TRULY shared) |
+| `cortex.users.*` | — | User profiles (shared across ALL spaces + GDPR cascade) |
+| `cortex.governance.*` | — | Retention policies for all layers |
 
 **GDPR Compliance:**
 
@@ -195,7 +210,7 @@ const memories = await cortex.memory.search('user-space', 'query');
 // Only returns data from 'tenant-acme'
 ```
 
-See [Auth Integration](../08-integrations/auth-providers) for complete multi-tenancy documentation.
+See [Auth Integration](/integrations/auth-providers) for complete multi-tenancy documentation.
 
 ## Three-Namespace Architecture
 
@@ -233,29 +248,29 @@ await cortex.memory.search(memorySpaceId, query, { enrichConversation: true });
 
 ### Storage Flow Comparison
 
-**Manual (Layer 1 + Layer 2):**
+<Tabs groupId="storage-flow">
+  <TabItem value="manual" label="Manual (Layer 1 + Layer 2)">
 
-```
-┌─────────────────────────────────────────────┐
-│ Layer 1: cortex.conversations.addMessage()  │
-│ Returns: msg.id                              │
-└────────────┬────────────────────────────────┘
-             │ Use msg.id in conversationRef
-             ↓
-┌─────────────────────────────────────────────┐
-│ Layer 2: cortex.vector.store()              │
-│ Provide conversationRef manually             │
-└─────────────────────────────────────────────┘
-```
+<FlowDiagram title="Manual Flow" caption="You manage the linking between layers">
+  <FlowNode title="Layer 1: cortex.conversations.addMessage()" icon="database" variant="primary">
+    Returns: msg.id
+  </FlowNode>
+  <FlowNode title="Layer 2: cortex.vector.store()" icon="search" variant="warning">
+    Provide conversationRef manually (use msg.id from Step 1)
+  </FlowNode>
+</FlowDiagram>
 
-**Automatic (Layer 4):**
+  </TabItem>
+  <TabItem value="automatic" label="Automatic (Layer 4) ✓ Recommended">
 
-```
-┌─────────────────────────────────────────────┐
-│ Layer 4: cortex.memory.remember()           │
-│ Handles both layers + linking automatically  │
-└─────────────────────────────────────────────┘
-```
+<FlowDiagram title="Automatic Flow" caption="Single call handles everything">
+  <FlowNode title="Layer 4: cortex.memory.remember()" icon="layers" variant="success">
+    Handles L1a + L2 + L3 + graph linking automatically
+  </FlowNode>
+</FlowDiagram>
+
+  </TabItem>
+</Tabs>
 
 ### Manual Flow (Layer 1 + Layer 2)
 
@@ -380,7 +395,7 @@ const memory = await cortex.memory.store("user-123-personal", {
 | `export(filters, options)`            | Export conversations    | JSON/CSV       |
 | `delete(conversationId)`              | Delete conversation     | DeletionResult |
 
-**See:** [Conversation Operations API](./conversation-operations)
+**See:** [Conversation Operations API](/api-reference/conversation-operations)
 
 ### Layer 2: cortex.vector.\* Operations
 
@@ -402,7 +417,9 @@ const memory = await cortex.memory.store("user-123-personal", {
 | `getHistory(memorySpaceId, memoryId)`                | Get version history             | MemoryVersion[]                                                       |
 | `getAtTimestamp(memorySpaceId, memoryId, timestamp)` | Temporal query                  | MemoryVersion \| null                                                 |
 
-> **Note:** All methods use the resilience layer (if configured) for automatic retries and circuit breaking.
+<Callout type="note">
+All methods use the resilience layer (if configured) for automatic retries and circuit breaking.
+</Callout>
 
 ### Layer 4: cortex.memory.\* Operations (Convenience API)
 
@@ -422,11 +439,11 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 | Operation              | Layer 2 (cortex.vector.\*) | Layer 4 (cortex.memory.\*)                  |
 | ---------------------- | -------------------------- | ------------------------------------------- |
-| `remember()`           | N/A                        | ✨ Unique - stores in both layers           |
+| `remember()`           | N/A                        | **Unique** - stores in both layers          |
 | `get()`                | Vector only                | Can include ACID (`includeConversation`)    |
 | `search()`             | Vector only                | Can enrich with ACID (`enrichConversation`) |
 | `delete()`             | Vector only                | Same (preserves ACID)                       |
-| `forget()`             | N/A                        | ✨ Unique - deletes from both layers        |
+| `forget()`             | N/A                        | **Unique** - deletes from both layers       |
 | `store()`              | Manual conversationRef     | Smart - detects layer from source.type      |
 | `update()`             | Direct                     | Delegates to Layer 2                        |
 | `updateMany()`         | Direct (filter, updates)   | Delegates to Layer 2                        |
@@ -456,13 +473,17 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 ## Core Operations (Layer 4: cortex.memory.\*)
 
-> Note: Layer 4 operations are convenience wrappers that orchestrate across all layers. For direct control, use Layer 1 (`cortex.conversations.*`), Layer 2 (`cortex.vector.*`), and Layer 3 (`cortex.facts.*`) separately.
+<Callout type="note">
+Layer 4 operations are convenience wrappers that orchestrate across all layers. For direct control, use Layer 1 (`cortex.conversations.*`), Layer 2 (`cortex.vector.*`), and Layer 3 (`cortex.facts.*`) separately.
+</Callout>
 
 ### remember()
 
 **RECOMMENDED HELPER** - Full orchestration across all memory layers.
 
-> **Enhanced in v0.17.0**: Full multi-layer orchestration with auto-registration of memory spaces, users, and agents. Use `skipLayers` for explicit opt-out.
+<Callout type="info">
+**Enhanced in v0.17.0**: Full multi-layer orchestration with auto-registration of memory spaces, users, and agents. Use `skipLayers` for explicit opt-out.
+</Callout>
 
 **Signature:**
 
@@ -477,59 +498,33 @@ cortex.memory.remember(
 
 When calling `remember()`, the following layers are orchestrated by default:
 
-```
-cortex.memory.remember({...})
-        │
-        ▼
-┌───────────────────────────────────────────┐
-│ 1. VALIDATION (Cannot be skipped)          │
-│    ├─ memorySpaceId: if missing → 'default'│
-│    │    + emit warning (non-breaking)      │
-│    └─ userId OR agentId: REQUIRED          │
-│       (ownership - at least one)           │
-└───────────────────────────────────────────┘
-        │
-        ▼
-┌───────────────────────────────────────────┐
-│ 2. MEMORYSPACE (Cannot be skipped)         │
-│    └─ Auto-register/upsert memorySpace    │
-└───────────────────────────────────────────┘
-        │
-        ▼
-┌───────────────────────────────────────────┐
-│ 3. OWNER PROFILES (skip: 'users'/'agents')│
-│    ├─ userId → auto-create user profile   │
-│    └─ agentId → auto-register agent       │
-└───────────────────────────────────────────┘
-        │
-        ▼
-┌───────────────────────────────────────────┐
-│ 4. CONVERSATION (skip: 'conversations')    │
-│    └─ Layer 1a: Add messages to ACID      │
-│    (default: ON)                           │
-└───────────────────────────────────────────┘
-        │
-        ▼
-┌───────────────────────────────────────────┐
-│ 5. VECTOR MEMORY (skip: 'vector')          │
-│    └─ Layer 2: Create searchable memory   │
-│    (default: ON)                           │
-└───────────────────────────────────────────┘
-        │
-        ▼
-┌───────────────────────────────────────────┐
-│ 6. FACTS (skip: 'facts')                   │
-│    └─ Layer 3: Auto-extract if LLM config │
-│    (default: ON if LLM configured)         │
-└───────────────────────────────────────────┘
-        │
-        ▼
-┌───────────────────────────────────────────┐
-│ 7. GRAPH (skip: 'graph')                   │
-│    └─ Sync all entities if adapter config │
-│    (default: ON if graph configured)       │
-└───────────────────────────────────────────┘
-```
+<FlowDiagram title="remember() Orchestration Pipeline">
+  <FlowNode title="1. Validation" icon="shield" variant="primary">
+    **Cannot be skipped** — memorySpaceId defaults to 'default' with warning; userId OR agentId required
+  </FlowNode>
+  <FlowNode title="2. Memory Space" icon="database" variant="primary">
+    **Cannot be skipped** — Auto-register/upsert memorySpace
+  </FlowNode>
+  <FlowNode title="3. Owner Profiles" icon="user" variant="secondary">
+    **skip: 'users' / 'agents'** — Auto-create user profile or register agent
+  </FlowNode>
+  <FlowNode title="4. Conversation (Layer 1a)" icon="message" variant="success">
+    **skip: 'conversations'** — Add messages to ACID store (default: ON)
+  </FlowNode>
+  <FlowNode title="5. Vector Memory (Layer 2)" icon="search" variant="success">
+    **skip: 'vector'** — Create searchable memory with embeddings (default: ON)
+  </FlowNode>
+  <FlowNode title="6. Facts (Layer 3)" icon="brain" variant="warning">
+    **skip: 'facts'** — Auto-extract if LLM configured (default: ON if LLM)
+  </FlowNode>
+  <FlowNode title="7. Graph Sync" icon="network" variant="warning">
+    **skip: 'graph'** — Sync entities if adapter configured (default: ON if graph)
+  </FlowNode>
+</FlowDiagram>
+
+<Callout type="tip" title="Skipping Layers">
+Use `skipLayers: ['facts', 'graph']` to disable specific steps. Steps 1-2 cannot be skipped.
+</Callout>
 
 **Parameters:**
 
@@ -569,7 +564,7 @@ interface RememberParams {
     agentResponse: string,
   ) => Promise<string | null>;
 
-  // Optional embedding
+  // Optional embedding override (v0.30.0+: auto-generated when embedding config set)
   generateEmbedding?: (content: string) => Promise<number[] | null>;
 
   // Optional fact extraction (overrides LLM config)
@@ -603,18 +598,22 @@ interface RememberParams {
 }
 
 interface RememberOptions {
-  syncToGraph?: boolean; // Sync to graph database (default: true if configured)
-
   // NEW in v0.24.0: Belief Revision control
   beliefRevision?: boolean; // Enable/disable belief revision
   // - undefined/true: Use belief revision if LLM is configured (batteries-included default)
   // - false: Force deduplication-only mode (skip belief revision)
 }
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true` is set in your environment. The `syncToGraph` option has been removed from all APIs.
+</Callout>
 ```
 
 ### Automatic Fact Revision in `remember()` (v0.24.0+)
 
-> **New in v0.24.0**: When belief revision is configured, extracted facts automatically go through the revision pipeline.
+<Callout type="info">
+**New in v0.24.0**: When belief revision is configured, extracted facts automatically go through the revision pipeline.
+</Callout>
 
 When you call `remember()` with fact extraction enabled and belief revision configured, the SDK automatically:
 
@@ -625,11 +624,23 @@ When you call `remember()` with fact extraction enabled and belief revision conf
 
 **How it works:**
 
-```
-remember() → extractFacts() → [Fact 1] → Belief Revision → ADD (new fact)
-                            → [Fact 2] → Belief Revision → SUPERSEDE (replaces old fact)
-                            → [Fact 3] → Belief Revision → NONE (duplicate skipped)
-```
+<FlowDiagram title="Belief Revision Pipeline" direction="horizontal">
+  <FlowNode title="remember()" icon="brain" variant="primary">
+    Calls extractFacts()
+  </FlowNode>
+  <FlowNode title="Belief Revision" icon="bot" variant="warning">
+    Check conflicts for each fact
+  </FlowNode>
+  <FlowNode title="Action" icon="layers" variant="success">
+    ADD • SUPERSEDE • UPDATE • NONE
+  </FlowNode>
+</FlowDiagram>
+
+Each extracted fact goes through the pipeline independently:
+- **ADD** — New fact with no conflicts
+- **SUPERSEDE** — Replaces older conflicting fact
+- **UPDATE** — Merges with existing fact
+- **NONE** — Duplicate skipped
 
 **Example with belief revision:**
 
@@ -689,7 +700,9 @@ await cortex.memory.remember(
 # )
 ```
 
-> **Note:** Fine-grained control over individual pipeline stages (slot matching, LLM resolution) is available through the `cortex.facts.revise()` API directly. The `remember()` integration uses a batteries-included approach - full pipeline when enabled, deduplication-only when disabled.
+<Callout type="note">
+Fine-grained control over individual pipeline stages (slot matching, LLM resolution) is available through the `cortex.facts.revise()` API directly. The `remember()` integration uses a batteries-included approach - full pipeline when enabled, deduplication-only when disabled.
+</Callout>
 
 **Return value changes with belief revision:**
 
@@ -807,22 +820,22 @@ CortexError(
 
 **Why use `remember()`:**
 
-- ✅ Full multi-layer orchestration in one call
-- ✅ Auto-registers memory spaces, users, and agents
-- ✅ Automatic conversationRef linking
-- ✅ Auto-extracts facts if LLM configured
-- ✅ Auto-syncs to graph if configured
-- ✅ Explicit opt-out via `skipLayers`
-- ✅ Ensures consistency across all layers
-- ✅ **This is the main way to store conversation memories**
+- Full multi-layer orchestration in one call
+- Auto-registers memory spaces, users, and agents
+- Automatic conversationRef linking
+- Auto-extracts facts if LLM configured
+- Auto-syncs to graph if configured
+- Explicit opt-out via `skipLayers`
+- Ensures consistency across all layers
+- **This is the main way to store conversation memories**
 
 **See Also:**
 
-- [Helper Functions](../02-core-features/01-memory-spaces.md#helper-store-from-conversation-recommended)
-- [Conversation Operations](./conversation-operations) - Managing ACID conversations
-- [Memory Space Operations](./memory-space-operations) - Managing memory spaces
-- [User Operations](./user-operations) - User profile management
-- [Agent Management](./agent-management) - Agent registration
+- [Helper Functions](/core-features/memory-spaces)
+- [Conversation Operations](/api-reference/conversation-operations) - Managing ACID conversations
+- [Memory Space Operations](/api-reference/memory-space-operations) - Managing memory spaces
+- [User Operations](/api-reference/user-operations) - User profile management
+- [Agent Management](/api-reference/agent-management) - Agent registration
 
 ---
 
@@ -830,7 +843,13 @@ CortexError(
 
 **NEW in v0.24.0** - Unified orchestrated retrieval across all memory layers.
 
-> **Design Philosophy**: `recall()` is the retrieval counterpart to `remember()`. It provides **total and complete orchestrated context retrieval** by default - batteries included.
+<Callout type="info">
+**Design Philosophy**: `recall()` is the retrieval counterpart to `remember()`. It provides **total and complete orchestrated context retrieval** by default - batteries included.
+</Callout>
+
+<Callout type="tip" icon="sparkles">
+**v0.30.0**: Facts are now searched using **semantic vector matching**. When `embedding` config is set on the SDK, embeddings are auto-generated from the query. No manual embedding code needed!
+</Callout>
 
 **Signature:**
 
@@ -843,7 +862,7 @@ cortex.memory.recall(
 **What it does:**
 
 1. **Searches vector memories** (Layer 2) - Semantic search with optional embedding
-2. **Searches facts directly** (Layer 3) - Facts as a primary source, not just enrichment
+2. **Searches facts semantically** (Layer 3, v0.30.0+) - When embedding provided, uses vector similarity; falls back to text search otherwise
 3. **Queries graph relationships** (Layer 4) - Discover related context via entity connections
 4. **Merges, deduplicates, and ranks** results from all sources
 5. **Returns unified context** ready for LLM injection
@@ -853,7 +872,8 @@ cortex.memory.recall(
 | Feature                 | Default                 | Description                              |
 | ----------------------- | ----------------------- | ---------------------------------------- |
 | Vector Search           | Enabled                 | Searches Layer 2 vector memories         |
-| Facts Search            | Enabled                 | Searches Layer 3 facts directly          |
+| Facts Semantic Search   | Enabled (v0.30.0+)      | Semantic search when embedding provided  |
+| Facts Text Search       | Enabled                 | Fallback when no embedding provided      |
 | Graph Expansion         | Enabled (if configured) | Discovers related context via graph      |
 | LLM Context Formatting  | Enabled                 | Generates ready-to-inject context string |
 | Conversation Enrichment | Enabled                 | Includes ACID conversation data          |
@@ -970,13 +990,14 @@ const response = await llm.chat({
 });
 ```
 
-**Example 2: With Semantic Search (Recommended)**
+**Example 2: With Semantic Search (Batteries-Included)**
 
 ```typescript
+// v0.30.0+: Embeddings auto-generated when embedding config is set at SDK init
 const result = await cortex.memory.recall({
   memorySpaceId: "user-123-space",
   query: "user preferences",
-  embedding: await embed("user preferences"), // Better relevance
+  // No manual embedding needed! Auto-generated from query.
   userId: "user-123", // Scope to user
 });
 
@@ -985,6 +1006,10 @@ const result = await cortex.memory.recall({
 // result.sources shows what came from where
 ```
 
+<Callout type="tip">
+**v0.30.0+**: When `embedding` is configured at SDK init (or `CORTEX_EMBEDDING=true`), embeddings are automatically generated from the `query`. Manual embedding is still supported for override.
+</Callout>
+
 **Example 3: Multi-Agent Context Sharing (A2A)**
 
 ```typescript
@@ -992,7 +1017,7 @@ const result = await cortex.memory.recall({
 const sharedContext = await cortex.memory.recall({
   memorySpaceId: "team-hive-space",
   query: "project requirements and deadlines",
-  embedding: await embed("project requirements and deadlines"),
+  // Embedding auto-generated!
 });
 
 // Send context to collaborating agent
@@ -1010,7 +1035,7 @@ await cortex.a2a.send({
 const result = await cortex.memory.recall({
   memorySpaceId: "knowledge-base",
   query: "who does Alice work with",
-  embedding: await embed("who does Alice work with"),
+  // Embedding auto-generated!
   graphExpansion: {
     maxDepth: 3, // Go deeper than default
     relationshipTypes: ["WORKS_AT", "KNOWS", "COLLABORATES_WITH"],
@@ -1041,7 +1066,7 @@ const result = await cortex.memory.recall({
 
 **Symmetric API Design:**
 
-`remember()` and `recall()` form a symmetric pair - the two primary orchestration APIs:
+`remember()` and `recall()` form a symmetric pair — the two primary orchestration APIs:
 
 | Aspect  | remember()                       | recall()                         |
 | ------- | -------------------------------- | -------------------------------- |
@@ -1051,40 +1076,41 @@ const result = await cortex.memory.recall({
 | Graph   | Auto-syncs entities              | Auto-expands via relationships   |
 | Output  | `RememberResult`                 | `RecallResult` with LLM context  |
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    Cortex Memory Lifecycle                          │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│   STORE (remember)                  RETRIEVE (recall)               │
-│   ─────                              ────────                       │
-│       │                                  │                          │
-│       ▼                                  ▼                          │
-│   ┌─────────┐                       ┌─────────┐                     │
-│   │ Vector  │ ◄─────────────────────│ Vector  │                     │
-│   │ (L2)    │                       │ Search  │                     │
-│   └─────────┘                       └─────────┘                     │
-│       │                                  │                          │
-│       ▼                                  ▼                          │
-│   ┌─────────┐                       ┌─────────┐                     │
-│   │ Facts   │ ◄─────────────────────│ Facts   │                     │
-│   │ (L3)    │                       │ Search  │                     │
-│   └─────────┘                       └─────────┘                     │
-│       │                                  │                          │
-│       ▼                                  ▼                          │
-│   ┌─────────┐                       ┌─────────┐                     │
-│   │ Graph   │ ◄─────────────────────│ Graph   │                     │
-│   │ Sync    │                       │ Expand  │                     │
-│   └─────────┘                       └─────────┘                     │
-│                                          │                          │
-│                                          ▼                          │
-│                                     ┌─────────┐                     │
-│                                     │ Format  │                     │
-│                                     │ for LLM │                     │
-│                                     └─────────┘                     │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
+<Tabs groupId="lifecycle">
+  <TabItem value="store" label="STORE (remember)">
+
+<FlowDiagram title="remember() Pipeline">
+  <FlowNode title="Vector (L2)" icon="search" variant="primary">
+    Create searchable memory with embeddings
+  </FlowNode>
+  <FlowNode title="Facts (L3)" icon="brain" variant="secondary">
+    Auto-extract facts if LLM configured
+  </FlowNode>
+  <FlowNode title="Graph Sync" icon="network" variant="warning">
+    Sync entities to Neo4j/Memgraph
+  </FlowNode>
+</FlowDiagram>
+
+  </TabItem>
+  <TabItem value="retrieve" label="RETRIEVE (recall)">
+
+<FlowDiagram title="recall() Pipeline">
+  <FlowNode title="Vector Search" icon="search" variant="primary">
+    Semantic similarity search
+  </FlowNode>
+  <FlowNode title="Facts Search" icon="brain" variant="secondary">
+    Retrieve relevant extracted facts
+  </FlowNode>
+  <FlowNode title="Graph Expand" icon="network" variant="warning">
+    Multi-hop relationship expansion
+  </FlowNode>
+  <FlowNode title="Format for LLM" icon="bot" variant="success">
+    Combine and rank results for context
+  </FlowNode>
+</FlowDiagram>
+
+  </TabItem>
+</Tabs>
 
 **Ranking Algorithm:**
 
@@ -1142,9 +1168,9 @@ When `formatForLLM: true` (default), the context string is structured as:
 **See Also:**
 
 - [remember()](#remember) - The storage counterpart
-- [Semantic Search Guide](../02-core-features/02-semantic-search)
-- [Graph Operations](./graph-operations)
-- [Facts Operations](./facts-operations)
+- [Semantic Search Guide](/core-features/semantic-search)
+- [Graph Operations](/api-reference/graph-operations)
+- [Facts Operations](/api-reference/facts-operations)
 
 ---
 
@@ -1194,7 +1220,7 @@ interface RememberStreamParams {
     agentResp: string,
   ) => Promise<string | null>;
 
-  // Optional - Embeddings
+  // Optional - Embeddings override (v0.30.0+: auto-generated when embedding config set)
   generateEmbedding?: (content: string) => Promise<number[] | null>;
 
   // Optional - Fact extraction
@@ -1213,8 +1239,7 @@ interface RememberStreamParams {
 }
 
 interface StreamingOptions {
-  // Graph sync
-  syncToGraph?: boolean;
+  // Graph sync (v0.29.0+): Automatic when CORTEX_GRAPH_SYNC=true
   progressiveGraphSync?: boolean; // Sync during streaming
   graphSyncInterval?: number; // How often to sync (ms)
 
@@ -1412,9 +1437,17 @@ const result = await cortex.memory.rememberStream({
 });
 ```
 
-**Example 4: With Embeddings and Facts**
+**Example 4: With Embeddings and Facts (Batteries-Included)**
 
 ```typescript
+// Configure Cortex with embedding + LLM at init (v0.30.0+)
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  embedding: { provider: 'openai', apiKey: process.env.OPENAI_API_KEY },
+  llm: { provider: 'openai', apiKey: process.env.OPENAI_API_KEY },
+});
+
+// Embeddings + facts are now automatic!
 const result = await cortex.memory.rememberStream({
   memorySpaceId: "smart-bot",
   conversationId: "conv-999",
@@ -1422,34 +1455,17 @@ const result = await cortex.memory.rememberStream({
   responseStream: stream,
   userId: "user-789",
   userName: "Charlie",
-
-  // Generate embeddings
-  generateEmbedding: async (text) => {
-    const { embedding } = await embed({
-      model: openai.embedding("text-embedding-3-small"),
-      value: text,
-    });
-    return embedding;
-  },
-
-  // Extract facts
-  extractFacts: async (userMsg, agentResp) => {
-    return [
-      {
-        fact: "User's favorite color is blue",
-        factType: "preference",
-        confidence: 95,
-        subject: "user",
-        predicate: "favoriteColor",
-        object: "blue",
-      },
-    ];
-  },
+  // No generateEmbedding needed - auto-generated!
+  // No extractFacts needed - LLM extracts automatically!
 });
 
 console.log("Response:", result.fullResponse);
-console.log("Facts:", result.facts); // Extracted facts
+console.log("Facts:", result.facts); // Auto-extracted facts with embeddings
 ```
+
+<Callout type="tip">
+**v0.30.0+**: When `embedding` is configured at SDK init, embeddings are automatically generated for all `remember()` and `rememberStream()` calls. The `generateEmbedding` callback is still supported for manual override.
+</Callout>
 
 **Example 5: Error Recovery with Resume**
 
@@ -1509,30 +1525,30 @@ export async function POST(req: Request) {
 
 **Key Features (v0.15.0+):**
 
-- ✅ **Progressive Storage** - Store partial memories during streaming (resumable)
-- ✅ **Streaming Hooks** - Real-time callbacks for monitoring and UI updates
-- ✅ **Comprehensive Metrics** - Track latency, throughput, tokens, costs
-- ✅ **Progressive Facts** - Extract facts incrementally with deduplication
-- ✅ **Error Recovery** - Resume interrupted streams with checkpoints
-- ✅ **Graph Sync** - Progressively update Neo4j/Memgraph during streaming
-- ✅ **Adaptive Processing** - Auto-optimize based on stream characteristics
-- ✅ **Complete Parity** - All `remember()` features (embeddings, facts, graph sync)
-- ✅ **Type Safe** - Full TypeScript support with comprehensive types
+- **Progressive Storage** — Store partial memories during streaming (resumable)
+- **Streaming Hooks** — Real-time callbacks for monitoring and UI updates
+- **Comprehensive Metrics** — Track latency, throughput, tokens, costs
+- **Progressive Facts** — Extract facts incrementally with deduplication
+- **Error Recovery** — Resume interrupted streams with checkpoints
+- **Graph Sync** — Progressively update Neo4j/Memgraph during streaming
+- **Adaptive Processing** — Auto-optimize based on stream characteristics
+- **Complete Parity** — All `remember()` features (embeddings, facts, graph sync)
+- **Type Safe** — Full TypeScript support with comprehensive types
 
-**When to Use:**
+<Callout type="tip" title="When to Use">
+- Streaming LLM responses (OpenAI, Anthropic, Vercel AI SDK, etc.)
+- Long-running agent responses (> 5 seconds)
+- Real-time chat applications with live updates
+- Edge runtime functions (Vercel, Cloudflare Workers)
+- When you need resumability (long streams that might fail)
+- When monitoring performance is critical
+- When you want real-time fact extraction
+</Callout>
 
-- ✅ Streaming LLM responses (OpenAI, Anthropic, Vercel AI SDK, etc.)
-- ✅ Long-running agent responses (> 5 seconds)
-- ✅ Real-time chat applications with live updates
-- ✅ Edge runtime functions (Vercel, Cloudflare Workers)
-- ✅ When you need resumability (long streams that might fail)
-- ✅ When monitoring performance is critical
-- ✅ When you want real-time fact extraction
-
-**When NOT to Use:**
-
-- ❌ Already have complete response (use `remember()` - simpler and faster)
-- ❌ Very short responses (< 50 chars) where overhead isn't worth it
+<Callout type="warning" title="When NOT to Use">
+- Already have complete response — use `remember()` instead (simpler and faster)
+- Very short responses (< 50 chars) where overhead isn't worth it
+</Callout>
 
 **Error Handling:**
 
@@ -1553,8 +1569,8 @@ export async function POST(req: Request) {
 
 **See Also:**
 
-- [Streaming Support Guide](../02-core-features/12-streaming-support) - Complete streaming documentation
-- [Conversation History](../02-core-features/06-conversation-history.md#streaming-support) - Streaming in context
+- [Streaming Support Guide](/core-features/streaming-support) - Complete streaming documentation
+- [Conversation History](/core-features/conversation-history#streaming-support) - Streaming in context
 - [remember()](#remember) - Non-streaming variant
 
 ---
@@ -1647,14 +1663,15 @@ interface SearchResult extends MemoryEntry {
 }
 ```
 
-**Example 1: Default (Vector only - fast)**
+**Example 1: Default (Vector only - Batteries-Included)**
 
 ```typescript
+// v0.30.0+: Embeddings auto-generated when embedding config is set
 const memories = await cortex.memory.search(
   "user-123-personal",
   "user preferences",
   {
-    embedding: await embed("user preferences"),
+    // No manual embedding needed! Auto-generated from query.
     userId: "user-123",
     tags: ["preferences"],
     minImportance: 50,
@@ -1675,7 +1692,7 @@ const enriched = await cortex.memory.search(
   "user-123-personal",
   "user preferences",
   {
-    embedding: await embed("user preferences"),
+    // Embedding auto-generated!
     userId: "user-123",
     enrichConversation: true, // Fetch ACID conversations too
   },
@@ -1726,8 +1743,8 @@ const enriched = await cortex.memory.search("user-123-personal", query, {
 
 **See Also:**
 
-- [Semantic Search Guide](../02-core-features/02-semantic-search)
-- [Universal Filters](../02-core-features/01-memory-spaces.md#core-api-principle-universal-filters)
+- [Semantic Search Guide](/core-features/semantic-search)
+- [Universal Filters](/core-features/memory-spaces)
 
 ---
 
@@ -1828,7 +1845,7 @@ const enriched = await cortex.memory.get("user-123-personal", "mem_abc123", {
 
 **See Also:**
 
-- [Retrieving Memories](../02-core-features/01-memory-spaces.md#retrieving-specific-memories)
+- [Retrieving Memories](/core-features/memory-spaces)
 
 ---
 
@@ -1945,7 +1962,9 @@ interface MemoryEntry {
 }
 ```
 
-> **Note:** All timestamps (`createdAt`, `updatedAt`, `lastAccessed`, `sourceTimestamp`) are Unix timestamps in **milliseconds** (not JavaScript `Date` objects).
+<Callout type="note">
+All timestamps (`createdAt`, `updatedAt`, `lastAccessed`, `sourceTimestamp`) are Unix timestamps in **milliseconds** (not JavaScript `Date` objects).
+</Callout>
 
 **Example 1: Conversation Memory (conversationRef required)**
 
@@ -1987,7 +2006,9 @@ console.log(memory.importance); // 100 (flattened from input)
 console.log(memory.tags); // ["password", "security"]
 ```
 
-> **Note:** When storing, you provide `metadata.importance` and `metadata.tags` in the input. The returned `MemoryEntry` has these as top-level fields: `importance` and `tags`.
+<Callout type="note">
+When storing, you provide `metadata.importance` and `metadata.tags` in the input. The returned `MemoryEntry` has these as top-level fields: `importance` and `tags`.
+</Callout>
 
 **Example 2: System Memory (no conversationRef)**
 
@@ -2040,8 +2061,8 @@ const result = await cortex.memory.remember({
 
 **See Also:**
 
-- [Agent Memory Guide](../02-core-features/01-memory-spaces.md#storing-memories)
-- [Store vs Update Decision](../02-core-features/01-memory-spaces.md#store-vs-update-decision)
+- [Agent Memory Guide](/core-features/memory-spaces)
+- [Store vs Update Decision](/core-features/memory-spaces)
 
 ---
 
@@ -2071,11 +2092,13 @@ interface MemoryUpdate {
 }
 
 interface UpdateMemoryOptions {
-  syncToGraph?: boolean; // Sync to graph database (default: true if configured)
+  // Note: syncToGraph option removed in v0.29.0+ - sync is automatic when CORTEX_GRAPH_SYNC=true
 }
 ```
 
-> **Note:** Unlike the nested `metadata` structure shown in `store()` input, updates use **flattened** fields for `importance` and `tags`.
+<Callout type="note">
+Unlike the nested `metadata` structure shown in `store()` input, updates use **flattened** fields for `importance` and `tags`.
+</Callout>
 
 **Returns:**
 
@@ -2119,7 +2142,9 @@ if (result.factsReextracted?.length) {
 }
 ```
 
-> **Note:** The `update()` method does NOT support updating `conversationRef`. To link to a new ACID conversation, use `store()` to create a new memory.
+<Callout type="note">
+The `update()` method does NOT support updating `conversationRef`. To link to a new ACID conversation, use `store()` to create a new memory.
+</Callout>
 
 **Errors:**
 
@@ -2129,8 +2154,8 @@ if (result.factsReextracted?.length) {
 
 **See Also:**
 
-- [Updating Memories](../02-core-features/01-memory-spaces.md#updating-memories)
-- [Memory Versioning](../02-core-features/01-memory-spaces.md#memory-versioning-automatic)
+- [Updating Memories](/core-features/memory-spaces)
+- [Memory Versioning](/core-features/memory-spaces)
 
 ---
 
@@ -2203,7 +2228,7 @@ await cortex.memory.updateMany(
 
 **See Also:**
 
-- [Bulk Operations](../02-core-features/01-memory-spaces.md#update-many-memories-bulk)
+- [Bulk Operations](/core-features/memory-spaces)
 
 ---
 
@@ -2228,7 +2253,7 @@ cortex.memory.delete(
 
 ```typescript
 interface DeleteMemoryOptions {
-  syncToGraph?: boolean; // Sync deletion to graph database (default: true if configured)
+  // Note: syncToGraph option removed in v0.29.0+ - graph cleanup is automatic when CORTEX_GRAPH_SYNC=true
 }
 ```
 
@@ -2288,7 +2313,7 @@ await cortex.memory.forget("user-123-personal", "mem_abc123", {
 
 **See Also:**
 
-- [Deleting Memories](../02-core-features/01-memory-spaces.md#deleting-memories)
+- [Deleting Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2351,7 +2376,7 @@ console.log(`Restorable: ${result.restorable}`); // false - gone from both layer
 
 **See Also:**
 
-- [GDPR Compliance](../02-core-features/01-memory-spaces.md#pattern-5-user-data-deletion-gdpr)
+- [GDPR Compliance](/core-features/memory-spaces)
 
 ---
 
@@ -2379,11 +2404,13 @@ interface DeleteManyFilter {
 }
 ```
 
-> **Planned Features (Not Yet Implemented):**
->
-> - `dryRun` - Preview what would be deleted without actually deleting
-> - `requireConfirmation` - Prompt when deletion count exceeds threshold
-> - `confirmationThreshold` - Threshold for auto-confirmation (default: 10)
+<Callout type="warning">
+**Planned Features (Not Yet Implemented):**
+
+- `dryRun` - Preview what would be deleted without actually deleting
+- `requireConfirmation` - Prompt when deletion count exceeds threshold
+- `confirmationThreshold` - Threshold for auto-confirmation (default: 10)
+</Callout>
 
 **Returns:**
 
@@ -2394,7 +2421,9 @@ interface DeleteManyResult {
 }
 ```
 
-> **Note:** The Layer 4 `memory.deleteMany()` API includes additional return fields (`restorable`, `affectedUsers`, `wouldDelete`, `memories`) that are not present in the Layer 2 `vector.deleteMany()` API.
+<Callout type="note">
+The Layer 4 `memory.deleteMany()` API includes additional return fields (`restorable`, `affectedUsers`, `wouldDelete`, `memories`) that are not present in the Layer 2 `vector.deleteMany()` API.
+</Callout>
 
 **Example:**
 
@@ -2432,8 +2461,8 @@ if (preview.wouldDelete < 100) {
 
 **See Also:**
 
-- [Bulk Deletion](../02-core-features/01-memory-spaces.md#delete-by-user-gdpr-compliance)
-- [Deletion Best Practices](../02-core-features/01-memory-spaces.md#deletion-best-practices)
+- [Bulk Deletion](/core-features/memory-spaces)
+- [Deletion Best Practices](/core-features/memory-spaces)
 
 ---
 
@@ -2459,10 +2488,12 @@ interface CountMemoriesFilter {
 }
 ```
 
-> **Planned Features (Not Yet Functional):**
->
-> - `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
-> - `participantId` - Hive Mode filter (defined in type but not passed to backend)
+<Callout type="warning">
+**Planned Features (Not Yet Functional):**
+
+- `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
+- `participantId` - Hive Mode filter (defined in type but not passed to backend)
+</Callout>
 
 **Returns:**
 
@@ -2500,7 +2531,7 @@ console.log(`Found ${oldUnused} old, unused, low-importance memories`);
 
 **See Also:**
 
-- [Counting Memories](../02-core-features/01-memory-spaces.md#counting-memories)
+- [Counting Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2528,10 +2559,12 @@ interface ListMemoriesFilter {
 }
 ```
 
-> **Planned Features (Not Yet Functional):**
->
-> - `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
-> - `participantId` - Hive Mode filter (defined in type but not passed to backend)
+<Callout type="warning">
+**Planned Features (Not Yet Functional):**
+
+- `tenantId` - Multi-tenancy filter (defined in type but not passed to backend)
+- `participantId` - Hive Mode filter (defined in type but not passed to backend)
+</Callout>
 
 **Returns:**
 
@@ -2539,7 +2572,9 @@ interface ListMemoriesFilter {
 MemoryEntry[] | EnrichedMemory[]  // Array of memory entries
 ```
 
-> **Note:** Returns `EnrichedMemory[]` when `enrichFacts: true` is specified, otherwise returns `MemoryEntry[]`.
+<Callout type="note">
+Returns `EnrichedMemory[]` when `enrichFacts: true` is specified, otherwise returns `MemoryEntry[]`.
+</Callout>
 
 **Example:**
 
@@ -2586,7 +2621,7 @@ enrichedMemories.forEach((m) => {
 
 **See Also:**
 
-- [Listing Memories](../02-core-features/01-memory-spaces.md#listing-memories)
+- [Listing Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2614,11 +2649,13 @@ interface ExportOptions {
 }
 ```
 
-> **Planned Features (Not Yet Implemented):**
->
-> - `outputPath` - Write directly to file path
-> - `includeVersionHistory` - Include previousVersions array
-> - `includeConversationContext` - Fetch and include ACID conversations
+<Callout type="warning">
+**Planned Features (Not Yet Implemented):**
+
+- `outputPath` - Write directly to file path
+- `includeVersionHistory` - Include previousVersions array
+- `includeConversationContext` - Fetch and include ACID conversations
+</Callout>
 
 **Returns:**
 
@@ -2659,7 +2696,7 @@ console.log(`Exported to ${criticalBackup}`);
 
 **See Also:**
 
-- [Exporting Memories](../02-core-features/01-memory-spaces.md#exporting-memories)
+- [Exporting Memories](/core-features/memory-spaces)
 
 ---
 
@@ -2698,7 +2735,9 @@ interface MemoryArchiveResult extends VectorArchiveResult {
 }
 ```
 
-> **Note:** The `factsArchived` and `factIds` fields are only returned by the Layer 4 `memory.archive()` API, not the Layer 2 `vector.archive()` API.
+<Callout type="note">
+The `factsArchived` and `factIds` fields are only returned by the Layer 4 `memory.archive()` API, not the Layer 2 `vector.archive()` API.
+</Callout>
 
 **Example:**
 
@@ -2724,7 +2763,7 @@ const restored = await cortex.memory.restoreFromArchive(
 
 **See Also:**
 
-- [Soft Delete](../02-core-features/01-memory-spaces.md#soft-delete-archive)
+- [Soft Delete](/core-features/memory-spaces)
 
 ---
 
@@ -2780,7 +2819,7 @@ if (result.restored) {
 **See Also:**
 
 - [archive()](#archive) - Archive memories (soft delete)
-- [Soft Delete](../02-core-features/01-memory-spaces.md#soft-delete-archive)
+- [Soft Delete](/core-features/memory-spaces)
 
 ---
 
@@ -2837,7 +2876,7 @@ if (v1) {
 
 **See Also:**
 
-- [Accessing Historical Versions](../02-core-features/01-memory-spaces.md#accessing-historical-versions)
+- [Accessing Historical Versions](/core-features/memory-spaces)
 
 ---
 
@@ -2889,7 +2928,7 @@ history.forEach((v) => {
 
 **See Also:**
 
-- [Version History](../02-core-features/01-memory-spaces.md#memory-versioning-automatic)
+- [Version History](/core-features/memory-spaces)
 
 ---
 
@@ -2953,8 +2992,8 @@ if (historicalMemory) {
 
 **See Also:**
 
-- [Temporal Queries](../02-core-features/01-memory-spaces.md#temporal-queries)
-- [Conflict Resolution](../02-core-features/01-memory-spaces.md#conflict-resolution-example)
+- [Temporal Queries](/core-features/memory-spaces)
+- [Conflict Resolution](/core-features/memory-spaces)
 
 ---
 
@@ -3019,7 +3058,7 @@ interface UniversalFilters {
 
 **See Also:**
 
-- [Universal Filters](../02-core-features/01-memory-spaces.md#core-api-principle-universal-filters)
+- [Universal Filters](/core-features/memory-spaces)
 
 ---
 
@@ -3048,7 +3087,7 @@ await cortex.agents.configure("temp-agent", {
 
 **See Also:**
 
-- [Version Retention](../02-core-features/01-memory-spaces.md#version-retention-configuration)
+- [Version Retention](/core-features/memory-spaces)
 
 ---
 
@@ -3097,7 +3136,7 @@ for (const agent of agents) {
 - 1-2 hop queries: 10-50ms (direct lookups)
 - 3-5 hop queries: 50-200ms (sequential queries)
 
-**Learn more:** [Graph Capabilities Guide](../07-advanced-topics/01-graph-capabilities)
+**Learn more:** [Graph Capabilities Guide](/advanced-topics/graph-capabilities)
 
 ## Error Reference
 
@@ -3157,18 +3196,38 @@ try {
 
 **See Also:**
 
-- [Error Handling Guide](../05-reference/02-error-handling)
+- [Error Handling Guide](/reference/error-handling)
 
 ---
 
 ## Next Steps
 
-- **[Agent Management API](./agent-management)** - Agent registry operations
-- **[User Operations API](./user-operations)** - User profile API
-- **[Context Operations API](./context-operations)** - Context chain API
-- **[Graph Operations API](./graph-operations)** - Graph database integration
-- **[Types & Interfaces](../05-reference/01-types-interfaces)** - Complete TypeScript definitions
+**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).
 
----
+<QuickNav>
 
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+<QuickNavItem
+  title="Memory Spaces"
+  description="Managing memory space lifecycle and configuration"
+  href="/api-reference/memory-space-operations"
+/>
+
+<QuickNavItem
+  title="Conversation Operations"
+  description="Managing ACID conversations and message threads"
+  href="/api-reference/conversation-operations"
+/>
+
+<QuickNavItem
+  title="Facts Operations"
+  description="LLM-extracted facts and belief revision"
+  href="/api-reference/facts-operations"
+/>
+
+<QuickNavItem
+  title="Graph Operations"
+  description="Graph database integration and entity relationships"
+  href="/api-reference/graph-operations"
+/>
+
+</QuickNav>

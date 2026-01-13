@@ -201,9 +201,11 @@ Control which deployments start with `cortex start`:
 
 ### Testing Configuration
 
-<Terminal>cortex config test</Terminal>
+You can verify your configuration by checking the connection:
 
-<Terminal>cortex config test --deployment production</Terminal>
+<Terminal>cortex config show</Terminal>
+
+<Terminal>cortex db stats</Terminal>
 
 ---
 
@@ -229,7 +231,7 @@ Control which deployments start with `cortex start`:
   { name: "MEMGRAPH_URI", type: "string", required: false, description: "Memgraph connection URI" },
   { name: "MEMGRAPH_USERNAME", type: "string", required: false, description: "Memgraph username" },
   { name: "MEMGRAPH_PASSWORD", type: "string", required: false, description: "Memgraph password" },
-  { name: "CORTEX_GRAPH_SYNC", type: "string", required: false, description: "Enable graph sync ('true'/'false')" },
+  { name: "CORTEX_GRAPH_SYNC", type: "string", required: false, description: "Enable automatic graph sync for all operations ('true'/'false'). When true, all facts, entities, and relationships are automatically synced to the graph database (v0.29.0+)" },
 ]} />
 
 ### Other Configuration
@@ -512,9 +514,9 @@ Enable verbose logging:
   </AccordionItem>
   <AccordionItem title="Connection Failed">
 
-<Terminal>cortex config test</Terminal>
-
 <Terminal>cortex config show</Terminal>
+
+<Terminal>cortex db stats</Terminal>
 
 <Terminal>cortex status && cortex start</Terminal>
 

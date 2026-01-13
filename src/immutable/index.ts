@@ -90,7 +90,7 @@ export class ImmutableAPI {
    */
   async store(
     entry: ImmutableEntry,
-    options?: StoreImmutableOptions,
+    _options?: StoreImmutableOptions,
   ): Promise<ImmutableRecord> {
     // CLIENT-SIDE VALIDATION
     validateImmutableEntry(entry);
@@ -109,7 +109,7 @@ export class ImmutableAPI {
     );
 
     // Sync to graph if requested (facts are handled specially in FactsAPI)
-    if (options?.syncToGraph && this.graphAdapter && entry.type !== "fact") {
+    if (this.graphAdapter && entry.type !== "fact") {
       try {
         await this.graphAdapter.createNode({
           label: "Immutable",

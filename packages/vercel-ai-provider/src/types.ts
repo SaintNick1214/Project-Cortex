@@ -382,7 +382,10 @@ export interface ManualRememberOptions {
     }>
   >;
 
-  /** Sync to graph (if configured) */
+  /**
+   * @deprecated Removed in v0.29.0+ - graph sync is now automatic when graphAdapter is configured
+   * This option is ignored. Configure graph via enableGraphMemory and graphConfig instead.
+   */
   syncToGraph?: boolean;
 }
 

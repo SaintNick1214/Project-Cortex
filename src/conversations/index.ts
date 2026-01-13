@@ -111,7 +111,7 @@ export class ConversationsAPI {
    */
   async create(
     input: CreateConversationInput,
-    options?: CreateConversationOptions,
+    _options?: CreateConversationOptions,
   ): Promise<Conversation> {
     // Validate required fields
     validateRequiredString(input.memorySpaceId, "memorySpaceId");
@@ -150,7 +150,7 @@ export class ConversationsAPI {
     );
 
     // Sync to graph if requested
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         const nodeId = await syncConversationToGraph(
           result as Conversation,
@@ -223,7 +223,7 @@ export class ConversationsAPI {
    */
   async addMessage(
     input: AddMessageInput,
-    options?: AddMessageOptions,
+    _options?: AddMessageOptions,
   ): Promise<Conversation> {
     validateRequiredString(input.conversationId, "conversationId");
     validateRequiredString(input.message.content, "message.content");
@@ -256,7 +256,7 @@ export class ConversationsAPI {
     }
 
     // Update in graph if requested (conversation already synced, just update properties)
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         const nodes = await this.graphAdapter.findNodes(
           "Conversation",
@@ -402,7 +402,7 @@ export class ConversationsAPI {
    */
   async delete(
     conversationId: string,
-    options?: DeleteConversationOptions,
+    _options?: DeleteConversationOptions,
   ): Promise<ConversationDeletionResult> {
     validateRequiredString(conversationId, "conversationId");
 
@@ -420,7 +420,7 @@ export class ConversationsAPI {
     }
 
     // Delete from graph
-    if (options?.syncToGraph && this.graphAdapter) {
+    if (this.graphAdapter) {
       try {
         await deleteConversationFromGraph(
           conversationId,

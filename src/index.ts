@@ -112,6 +112,48 @@ export interface LLMConfig {
 }
 
 /**
+ * Embedding provider configuration for automatic embedding generation.
+ *
+ * When configured, enables batteries-included semantic search:
+ * - recall() automatically generates embeddings for queries
+ * - remember() automatically generates embeddings for facts
+ * - No manual embedding handling required
+ */
+export interface EmbeddingConfig {
+  /**
+   * Embedding provider type.
+   * - 'openai': Use OpenAI embeddings API
+   * - 'custom': Use a custom embedding function
+   */
+  provider: "openai" | "custom";
+
+  /**
+   * API key for the provider (required for 'openai' provider)
+   */
+  apiKey?: string;
+
+  /**
+   * Model to use for embeddings.
+   * Default: 'text-embedding-3-small' for OpenAI
+   */
+  model?: string;
+
+  /**
+   * Custom embedding function (required for 'custom' provider).
+   * Takes text input and returns embedding vector.
+   *
+   * @example
+   * ```typescript
+   * generate: async (text) => {
+   *   const response = await myEmbeddingAPI.embed(text);
+   *   return response.embedding;
+   * }
+   * ```
+   */
+  generate?: (text: string) => Promise<number[]>;
+}
+
+/**
  * Cortex SDK configuration
  */
 export interface CortexConfig {
@@ -137,6 +179,31 @@ export interface CortexConfig {
    * ```
    */
   llm?: LLMConfig;
+
+  /**
+   * Optional embedding configuration for automatic semantic search.
+   *
+   * When configured, enables batteries-included semantic search:
+   * - recall() automatically generates embeddings for queries
+   * - remember() automatically generates embeddings for extracted facts
+   *
+   * @example
+   * ```typescript
+   * // OpenAI embeddings (recommended)
+   * embedding: {
+   *   provider: 'openai',
+   *   apiKey: process.env.OPENAI_API_KEY,
+   *   model: 'text-embedding-3-small',
+   * }
+   *
+   * // Custom embedding function
+   * embedding: {
+   *   provider: 'custom',
+   *   generate: async (text) => myEmbedFunction(text),
+   * }
+   * ```
+   */
+  embedding?: EmbeddingConfig;
 
   /**
    * Optional authentication context for multi-tenant applications.
@@ -187,7 +254,44 @@ export class Cortex {
   private syncWorker?: GraphSyncWorker;
   private readonly resilienceLayer: ResilienceLayer;
   private readonly llmConfig?: LLMConfig;
+  private readonly embeddingConfig?: EmbeddingConfig;
   private readonly authContext?: AuthContext;
+
+  /**
+   * Auto-configure embedding from environment variables.
+   *
+   * Uses a two-gate approach:
+   * - Gate 1: An API key must be present (OPENAI_API_KEY)
+   * - Gate 2: CORTEX_EMBEDDING must be explicitly set to 'true'
+   *
+   * This prevents accidental API costs - users must explicitly opt-in.
+   *
+   * @returns EmbeddingConfig if both gates pass, undefined otherwise
+   */
+  private static autoConfigureEmbedding(): EmbeddingConfig | undefined {
+    const embeddingEnabled = process.env.CORTEX_EMBEDDING === "true";
+
+    if (!embeddingEnabled) {
+      return undefined;
+    }
+
+    // Check for OpenAI API key
+    if (process.env.OPENAI_API_KEY) {
+      return {
+        provider: "openai",
+        apiKey: process.env.OPENAI_API_KEY,
+        model: "text-embedding-3-small",
+      };
+    }
+
+    // CORTEX_EMBEDDING=true but no API key found - warn user
+    console.warn(
+      "[Cortex] CORTEX_EMBEDDING=true but no API key found. " +
+        "Set OPENAI_API_KEY to enable automatic embedding generation.",
+    );
+
+    return undefined;
+  }
 
   /**
    * Auto-configure LLM from environment variables.
@@ -381,6 +485,10 @@ export class Cortex {
     // Use explicit config if provided, otherwise auto-configure from environment
     this.llmConfig = config.llm ?? Cortex.autoConfigureLLM();
 
+    // Store embedding config for automatic semantic search
+    // Use explicit config if provided, otherwise auto-configure from environment
+    this.embeddingConfig = config.embedding ?? Cortex.autoConfigureEmbedding();
+
     // Store auth context for auto-injection
     this.authContext = config.auth;
 
@@ -468,6 +576,7 @@ export class Cortex {
         users: this.users,
         agents: this.agents,
         llm: this.llmConfig,
+        embedding: this.embeddingConfig, // Pass embedding config for auto semantic search
         authContext: this.authContext, // Pass authContext for tenant isolation
       },
     );

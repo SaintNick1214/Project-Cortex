@@ -1,25 +1,26 @@
 # Authentication Integration Guide
 
-> **Last Updated**: 2026-01-01  
-> **Status**: 🔧 DIY Integration Guide (No Provider Packages)
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
 
-⚠️ **IMPORTANT: This is NOT a Drop-In Auth Integration**
+**Status**: DIY Integration Guide (No Provider Packages)
 
-**Cortex does NOT include pre-built authentication provider integrations.** There is no `npm install @cortexmemory/auth-clerk` or automatic Auth0 setup. This guide provides **generic patterns** for integrating Cortex with your existing authentication system.
+<Callout type="warning">
+**This is NOT a Drop-In Auth Integration.** Cortex does NOT include pre-built authentication provider integrations. There is no `npm install @cortexmemory/auth-clerk` or automatic Auth0 setup. This guide provides **generic patterns** for integrating Cortex with your existing authentication system.
+</Callout>
 
 ## What This Guide Is
 
-✅ **Generic integration patterns** that work with any auth provider  
-✅ **AuthContext API documentation** - framework-agnostic interface  
-✅ **Example adapters** showing how to extract auth data (as templates)  
-✅ **DIY implementation guidance** for common scenarios
+- **Generic integration patterns** that work with any auth provider  
+- **AuthContext API documentation** - framework-agnostic interface  
+- **Example adapters** showing how to extract auth data (as templates)  
+- **DIY implementation guidance** for common scenarios
 
 ## What This Guide Is NOT
 
-❌ **Not a packaged auth integration** - No npm packages for specific providers  
-❌ **Not automatic setup** - You write the adapter code  
-❌ **Not provider-specific** - Examples are templates, not official integrations  
-❌ **Not plug-and-play** - Requires custom implementation
+- **Not a packaged auth integration** - No npm packages for specific providers  
+- **Not automatic setup** - You write the adapter code  
+- **Not provider-specific** - Examples are templates, not official integrations  
+- **Not plug-and-play** - Requires custom implementation
 
 ## What Cortex Provides
 
@@ -38,10 +39,10 @@ interface AuthContext {
 
 ## What You Need to Provide
 
-- ✅ Your auth system (Auth0, Clerk, NextAuth, custom JWT, etc.)
-- ✅ Code to extract userId/tenantId from your auth tokens/sessions
-- ✅ User validation and authorization logic
-- ✅ Integration with your middleware/routes
+- Your auth system (Auth0, Clerk, NextAuth, custom JWT, etc.)
+- Code to extract userId/tenantId from your auth tokens/sessions
+- User validation and authorization logic
+- Integration with your middleware/routes
 
 ---
 
@@ -73,7 +74,7 @@ await cortex.memory.remember({...});
 
 - Validates required fields (userId)
 - Returns typed AuthContext object
-- See [Auth Context API](../03-api-reference/15-auth-context-api)
+- See [Auth Context API](/api-reference/auth-context-api)
 
 **Auto-Injection:**
 
@@ -91,29 +92,26 @@ await cortex.memory.remember({...});
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Your Application                          │
-├─────────────────────────────────────────────────────────────────┤
-│  Auth Provider (Auth0, Clerk, NextAuth, Firebase, etc.)         │
-│                           ↓                                      │
-│  ┌─────────────────────────────────────────────────────────────┐│
-│  │                    Auth Context                              ││
-│  │  ┌──────────────┐ ┌──────────────┐ ┌───────────────────────┐││
-│  │  │   userId     │ │  tenantId    │ │  claims / metadata    │││
-│  │  │  (required)  │ │  (optional)  │ │   (fully extensible)  │││
-│  │  └──────────────┘ └──────────────┘ └───────────────────────┘││
-│  └─────────────────────────────────────────────────────────────┘│
-│                           ↓                                      │
-│  ┌─────────────────────────────────────────────────────────────┐│
-│  │                     Cortex SDK                               ││
-│  │  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌────────┐││
-│  │  │ Memory  │ │ Sessions│ │  Users  │ │  Facts  │ │ Graph  │││
-│  │  │ API     │ │ API     │ │  API    │ │  API    │ │  API   │││
-│  │  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └────────┘││
-│  └─────────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────────┘
-```
+<FlowDiagram title="Auth Integration Flow">
+  <FlowNode 
+    id="auth-provider" 
+    icon="shield" 
+    title="Auth Provider" 
+    description="Auth0, Clerk, NextAuth, Firebase, etc."
+  />
+  <FlowNode 
+    id="auth-context" 
+    icon="user" 
+    title="Auth Context" 
+    description="userId (required), tenantId, claims/metadata"
+  />
+  <FlowNode 
+    id="cortex-sdk" 
+    icon="package" 
+    title="Cortex SDK" 
+    description="Memory, Sessions, Users, Facts, Graph APIs"
+  />
+</FlowDiagram>
 
 ---
 
@@ -152,7 +150,7 @@ interface AuthContext {
 ### Basic Setup
 
 ```typescript
-import { Cortex, createAuthContext } from "@cortex-platform/sdk";
+import { Cortex, createAuthContext } from "@cortexmemory/sdk";
 
 // Create auth context from your auth provider
 const auth = createAuthContext({
@@ -170,7 +168,9 @@ const cortex = new Cortex({
 
 // All operations now include auth context
 await cortex.memory.remember({
-  content: "User prefers dark mode",
+  conversationId: "conv-123", // Required
+  userMessage: "User prefers dark mode",
+  agentResponse: "I'll remember that.",
   memorySpaceId: "user-123-personal",
   // userId is automatically set from auth context
 });
@@ -180,7 +180,9 @@ await cortex.memory.remember({
 
 ## Generic Integration Pattern
 
-> **This is a template** - adapt it to your auth system.
+<Callout type="tip">
+This is a template - adapt it to your auth system.
+</Callout>
 
 ### Step 1: Extract Auth Data
 
@@ -240,6 +242,7 @@ const cortex = new Cortex({
 ```typescript
 // All operations automatically include auth context
 await cortex.memory.remember({
+  conversationId: "conv-123", // Required
   memorySpaceId: "user-space",
   userMessage: "Hello",
   agentResponse: "Hi!",
@@ -310,6 +313,7 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
 
   // Use cortex with auth context
   await cortex.memory.remember({
+    conversationId: req.body.conversationId || "conv-default", // Required
     memorySpaceId: `user-${req.authContext.userId}-personal`,
     userMessage: req.body.message,
     agentResponse: await generateResponse(req.body.message),
@@ -373,44 +377,48 @@ app.post("/api/chat", requireAuth, async (req, res) => {
 
 ### Request Flow
 
-```
-1. User authenticates with your auth provider
-   └─→ Receive token/session from provider
-
-2. Extract auth context from token/session
-   └─→ createAuthContext({ userId, tenantId, ... })
-
-3. Initialize Cortex with auth context
-   └─→ new Cortex({ auth, ... })
-
-4. Auth context flows through all operations
-   └─→ cortex.memory.remember() ← userId auto-set
-   └─→ cortex.sessions.create() ← tenantId auto-set
-   └─→ cortex.users.update()    ← validated against userId
-```
+<Steps>
+  <Step>
+    **User authenticates with your auth provider** → Receive token/session from provider
+  </Step>
+  <Step>
+    **Extract auth context from token/session** → `createAuthContext({ userId, tenantId, ... })`
+  </Step>
+  <Step>
+    **Initialize Cortex with auth context** → `new Cortex({ auth, ... })`
+  </Step>
+  <Step>
+    **Auth context flows through all operations** → userId/tenantId auto-set on all SDK calls
+  </Step>
+</Steps>
 
 ### Storage Flow
 
-```
-┌────────────────────────────────────────────────────────────────┐
-│                        Auth Context                             │
-│  { userId: 'u-123', tenantId: 't-abc', sessionId: 's-xyz' }    │
-└────────────────────────────────────────────────────────────────┘
-                              ↓
-    ┌───────────────────────────────────────────────────────┐
-    │                    Cortex SDK                          │
-    │  Automatically attaches to all operations:             │
-    │  - userId → all records for GDPR cascade              │
-    │  - tenantId → all records for isolation               │
-    │  - sessionId → session activity tracking              │
-    └───────────────────────────────────────────────────────┘
-                              ↓
-    ┌─────────┬─────────┬─────────┬─────────┬─────────────────┐
-    │ Memory  │  Facts  │ Convos  │ Sessions │  Graph Nodes   │
-    │ +userId │ +userId │ +userId │ +userId  │  +userId       │
-    │+tenantId│+tenantId│+tenantId│+tenantId │ +tenantId      │
-    └─────────┴─────────┴─────────┴──────────┴────────────────┘
-```
+<FlowDiagram>
+  <FlowNode 
+    id="auth-context" 
+    icon="shield" 
+    title="Auth Context" 
+    description="userId, tenantId, sessionId"
+  />
+  <FlowNode 
+    id="cortex-sdk" 
+    icon="package" 
+    title="Cortex SDK" 
+    description="Auto-attaches userId/tenantId to all operations"
+  />
+  <FlowNode 
+    id="storage" 
+    icon="database" 
+    title="Data Storage" 
+    description="Memory, Facts, Convos, Sessions, Graph Nodes"
+  />
+</FlowDiagram>
+
+All records automatically include:
+- **userId** → Enables GDPR cascade deletion
+- **tenantId** → Enables multi-tenant isolation
+- **sessionId** → Enables session activity tracking
 
 ---
 
@@ -430,17 +438,22 @@ const cortex = new Cortex({ convexUrl, auth });
 
 // All operations are tenant-scoped
 await cortex.memory.remember({
-  content: "Team meeting notes...",
+  conversationId: "conv-123", // Required
+  userMessage: "Team meeting notes...",
+  agentResponse: "I've noted that.",
   memorySpaceId: "acme-shared",
   // tenantId: 'customer-acme' is automatically set
 });
 
 // Queries respect tenant isolation
-const memories = await cortex.vector.search({
-  memorySpaceId: "acme-shared",
-  query: "meeting notes",
-  // Only returns memories from tenant 'customer-acme'
-});
+const memories = await cortex.memory.search(
+  "acme-shared", // memorySpaceId as first parameter
+  "meeting notes", // query as second parameter
+  {
+    // options object
+  }
+);
+// Only returns memories from tenant 'customer-acme'
 ```
 
 ### Cross-Tenant Queries (Admin)
@@ -490,7 +503,9 @@ const session = await cortex.sessions.getOrCreate("user-123", {
 
 // Memory operations track session
 await cortex.memory.remember({
-  content: "User said hello",
+  conversationId: "conv-123", // Required
+  userMessage: "User said hello",
+  agentResponse: "Hello!",
   memorySpaceId: "user-123-personal",
   // sessionId: 'session-xyz' tracked implicitly
 });
@@ -655,7 +670,9 @@ const auth = createAuthContext({
 
 ## Framework Examples
 
-> **Generic patterns** - adapt to your specific auth provider.
+<Callout type="tip">
+Generic patterns - adapt to your specific auth provider.
+</Callout>
 
 ### Next.js API Route
 
@@ -684,6 +701,7 @@ export async function POST(req: Request) {
   const { message } = await req.json();
 
   await cortex.memory.remember({
+    conversationId: "conv-123", // Required
     memorySpaceId: `user-${yourAuthData.userId}-personal`,
     userMessage: message,
     agentResponse: "Processing...",
@@ -825,7 +843,7 @@ app.post("/api/memory", async (req, res) => {
 ### 1. Never Store Sensitive Tokens
 
 ```typescript
-// ❌ BAD: Storing sensitive tokens
+// BAD: Storing sensitive tokens
 const auth = createAuthContext({
   userId: "user-123",
   claims: {
@@ -834,7 +852,7 @@ const auth = createAuthContext({
   },
 });
 
-// ✅ GOOD: Store only public claims
+// GOOD: Store only public claims
 const auth = createAuthContext({
   userId: decoded.sub,
   claims: {
@@ -849,14 +867,14 @@ const auth = createAuthContext({
 ### 2. Validate tenantId from Token
 
 ```typescript
-// ✅ GOOD: Extract tenantId from secure token
+// GOOD: Extract tenantId from secure token
 const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 const auth = createAuthContext({
   userId: decoded.sub,
   tenantId: decoded.tenant_id, // From signed token
 });
 
-// ❌ BAD: Trust client-provided tenantId
+// BAD: Trust client-provided tenantId
 const auth = createAuthContext({
   userId: decoded.sub,
   tenantId: req.body.tenantId, // User could lie!
@@ -914,7 +932,7 @@ app.post("/api/chat", async (req, res) => {
   res.json({ success: true });
 });
 
-// ✅ Benefits:
+// Benefits:
 // - Proper tenant isolation
 // - No cross-request pollution
 // - Clean auth context per request
@@ -938,7 +956,7 @@ const cortex = new Cortex({ convexUrl, auth });
 await cortex.memory.remember({...});
 await cortex.memory.search(...);
 
-// ✅ Benefits:
+// Benefits:
 // - Simpler code
 // - Better performance (connection reuse)
 // - Suitable for CLI, desktop apps
@@ -977,7 +995,7 @@ await cortex.users.getOrCreate("user-123", {
 **Solution:**
 
 ```typescript
-// ✅ Always extract tenantId from secure source
+// Always extract tenantId from secure source
 const decoded = jwt.verify(token, secret);
 const auth = createAuthContext({
   userId: decoded.sub,
@@ -1022,12 +1040,12 @@ await cortex.users.delete("user-to-delete", {
 });
 
 // Deletes:
-// ✅ All data with userId="user-to-delete"
-// ✅ Only within tenantId="customer-acme" (if set)
-// ✅ Conversations, memories, facts, sessions, graph nodes
+// - All data with userId="user-to-delete"
+// - Only within tenantId="customer-acme" (if set)
+// - Conversations, memories, facts, sessions, graph nodes
 ```
 
-See [User Operations - GDPR Cascade](../03-api-reference/04-user-operations.md#delete) for complete details.
+See [User Operations - GDPR Cascade](/api-reference/user-operations) for complete details.
 
 ---
 
@@ -1167,24 +1185,25 @@ const auth = createAuthContext({
 
 ## Next Steps
 
-### Understanding Auth Context
-
-- **[Auth Context API](../03-api-reference/15-auth-context-api)** - Complete API reference
-- **[Authentication](../02-core-features/18-authentication)** - Core concepts guide
-
-### Related Features
-
-- **[Isolation Boundaries](../02-core-features/17-isolation-boundaries)** - Multi-layer isolation model
-- **[Sessions Management](../02-core-features/14-sessions-management)** - Session lifecycle
-- **[User Profiles](../02-core-features/03-user-profiles)** - User management + GDPR
-- **[Memory Spaces](../02-core-features/01-memory-spaces)** - Space isolation
-
-### API Reference
-
-- **[Sessions Operations API](../03-api-reference/14-sessions-operations)** - Session API
-- **[User Operations API](../03-api-reference/04-user-operations)** - User API
-- **[Memory Space Operations API](../03-api-reference/11-memory-space-operations)** - Space API
-
----
-
-**Questions?** Ask in [GitHub Discussions](https://github.com/SaintNick1214/cortex/discussions).
+<QuickNav>
+  <QuickNavItem 
+    title="Auth Context API" 
+    description="Complete API reference" 
+    href="/api-reference/auth-context-api" 
+  />
+  <QuickNavItem 
+    title="Sessions Operations" 
+    description="Session tracking API" 
+    href="/api-reference/sessions-operations" 
+  />
+  <QuickNavItem 
+    title="User Operations" 
+    description="User management API" 
+    href="/api-reference/user-operations" 
+  />
+  <QuickNavItem 
+    title="Memory Spaces" 
+    description="Space isolation guide" 
+    href="/core-features/memory-spaces" 
+  />
+</QuickNav>

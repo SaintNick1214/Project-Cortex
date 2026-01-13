@@ -277,7 +277,6 @@ describe("ProgressiveFactExtractor", () => {
         "test-space",
         expect.any(String),
         expect.objectContaining({ confidence: 95 }),
-        expect.any(Object),
       );
     });
 
@@ -348,25 +347,8 @@ describe("ProgressiveFactExtractor", () => {
       );
     });
 
-    it("should handle syncToGraph option", async () => {
-      const extractFacts = createMockExtractFacts([
-        { fact: "Test fact", factType: "knowledge", confidence: 90 },
-      ]);
-
-      await extractor.extractFromChunk(
-        "Test content",
-        1,
-        extractFacts,
-        "user message",
-        "conv-1",
-        true, // syncToGraph
-      );
-
-      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.objectContaining({ syncToGraph: true }),
-      );
-    });
+    // Note: syncToGraph option was removed in v0.29.0
+    // Graph sync is now automatic when graphAdapter is configured
 
     it("should handle fact storage errors gracefully", async () => {
       const failingStoreWithDedup = jest.fn<() => Promise<any>>();
@@ -609,26 +591,8 @@ describe("ProgressiveFactExtractor", () => {
       );
     });
 
-    it("should pass syncToGraph option", async () => {
-      const extractFacts = createMockExtractFacts([
-        { fact: "New fact", factType: "knowledge", confidence: 90 },
-      ]);
-
-      await extractor.finalizeExtraction(
-        "user message",
-        "full response",
-        extractFacts,
-        "conv-1",
-        "mem-1",
-        ["msg-1"],
-        true, // syncToGraph
-      );
-
-      expect(mockFactsAPI.storeWithDedup).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.objectContaining({ syncToGraph: true }),
-      );
-    });
+    // Note: syncToGraph option was removed in v0.29.0
+    // Graph sync is now automatic when graphAdapter is configured
   });
 
   describe("getExtractedFacts()", () => {

@@ -1,6 +1,15 @@
+---
+id: memory-space-operations
+title: Memory Space Operations API
+sidebar_position: 3
+description: Complete API reference for cortex.memorySpaces.* namespace - managing memory spaces, participants, and access control.
+---
+
 # Memory Space Operations API
 
-> **Last Updated**: 2026-01-01
+<Callout type="info">
+**Last Updated**: 2026-01-09 | **Version**: v0.29.0+
+</Callout>
 
 This document covers the `cortex.memorySpaces.*` namespace for managing memory spaces, participants, and access control.
 
@@ -10,18 +19,18 @@ This document covers the `cortex.memorySpaces.*` namespace for managing memory s
 
 **When to use this API:**
 
-- ✅ Production deployments (explicit registration)
-- ✅ Analytics and observability needs
-- ✅ Hive Mode with participant tracking
-- ✅ Memory space lifecycle management
-- ✅ Access control and permissions
-- ✅ Multi-tenant SaaS (automatic `tenantId` isolation via AuthContext)
+- Production deployments (explicit registration)
+- Analytics and observability needs
+- Hive Mode with participant tracking
+- Memory space lifecycle management
+- Access control and permissions
+- Multi-tenant SaaS (automatic `tenantId` isolation via AuthContext)
 
 **When you don't need it:**
 
-- ⚠️ Quick prototypes (use implicit creation)
-- ⚠️ Simple single-agent apps
-- ⚠️ When you just want memory to "just work"
+- Quick prototypes (use implicit creation)
+- Simple single-agent apps
+- When you just want memory to "just work"
 
 ---
 
@@ -52,27 +61,26 @@ Register a memory space with metadata and participant tracking.
 
 ```typescript
 cortex.memorySpaces.register(
-  params: RegisterMemorySpaceParams,
-  options?: { syncToGraph?: boolean }
+  params: RegisterMemorySpaceParams
 ): Promise<MemorySpace>
 ```
 
 ### Parameters
 
-```typescript
-interface RegisterMemorySpaceParams {
-  memorySpaceId: string; // Memory space ID (e.g., "user-123-personal")
-  tenantId?: string; // Multi-tenancy isolation (auto-injected from AuthContext)
-  name?: string; // Human-readable name
-  type: "personal" | "team" | "project" | "custom"; // Organization type
-  participants?: Array<{
-    // For Hive Mode tracking
-    id: string; // Participant identifier
-    type: string; // "user", "agent", "tool", etc.
-  }>;
-  metadata?: Record<string, unknown>; // Custom metadata
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "Memory space ID (e.g., \"user-123-personal\")" },
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenancy isolation (auto-injected from AuthContext)" },
+    { name: "name", type: "string", required: false, description: "Human-readable name" },
+    { name: "type", type: "\"personal\" | \"team\" | \"project\" | \"custom\"", required: true, description: "Organization type" },
+    { name: "participants", type: "Array<{ id: string; type: string }>", required: false, description: "For Hive Mode tracking - participant identifier and type (\"user\", \"agent\", \"tool\", etc.)" },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Custom metadata" },
+  ]}
+/>
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true`. The `syncToGraph` option has been removed.
+</Callout>
 
 ### Returns
 
@@ -97,7 +105,8 @@ interface MemorySpace {
 
 ### Examples
 
-**Personal AI Memory:**
+<Tabs>
+<TabItem value="personal" label="Personal AI Memory">
 
 ```typescript
 // Register user's personal memory space
@@ -117,7 +126,8 @@ await cortex.memorySpaces.register({
 });
 ```
 
-**Team Workspace:**
+</TabItem>
+<TabItem value="team" label="Team Workspace">
 
 ```typescript
 // Register team workspace
@@ -137,7 +147,8 @@ await cortex.memorySpaces.register({
 });
 ```
 
-**With Graph Sync:**
+</TabItem>
+<TabItem value="graph-sync" label="With Graph Sync">
 
 ```typescript
 // Register and sync to graph database
@@ -148,9 +159,12 @@ await cortex.memorySpaces.register(
     type: "custom",
     participants: [{ id: "finance-agent", type: "agent" }],
   },
-  { syncToGraph: true },
 );
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 ```
+
+</TabItem>
+</Tabs>
 
 ### Error Handling
 
@@ -180,9 +194,18 @@ Retrieve memory space details and metadata.
 cortex.memorySpaces.get(memorySpaceId: string): Promise<MemorySpace | null>
 ```
 
+### Parameters
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID to retrieve" },
+  ]}
+/>
+
 ### Examples
 
-**Basic Get:**
+<Tabs>
+<TabItem value="basic" label="Basic Get">
 
 ```typescript
 const space = await cortex.memorySpaces.get("user-123-personal");
@@ -194,7 +217,8 @@ if (space) {
 }
 ```
 
-**Check if Exists:**
+</TabItem>
+<TabItem value="exists" label="Check if Exists">
 
 ```typescript
 const space = await cortex.memorySpaces.get("unknown-space");
@@ -208,6 +232,9 @@ if (space === null) {
   });
 }
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 
@@ -223,18 +250,18 @@ cortex.memorySpaces.list(filters?: ListMemorySpacesFilter): Promise<ListMemorySp
 
 ### Parameters
 
-```typescript
-interface ListMemorySpacesFilter {
-  type?: "personal" | "team" | "project" | "custom";
-  status?: "active" | "archived";
-  tenantId?: string; // Multi-tenancy filter (auto-injected from AuthContext)
-  participant?: string; // Filter by participant ID
-  limit?: number; // Default: 100
-  offset?: number; // Default: 0
-  sortBy?: "createdAt" | "updatedAt" | "name";
-  sortOrder?: "asc" | "desc"; // Default: "desc"
-}
-```
+<APITable
+  parameters={[
+    { name: "type", type: "\"personal\" | \"team\" | \"project\" | \"custom\"", required: false, description: "Filter by memory space type" },
+    { name: "status", type: "\"active\" | \"archived\"", required: false, description: "Filter by status" },
+    { name: "tenantId", type: "string", required: false, description: "Multi-tenancy filter (auto-injected from AuthContext)" },
+    { name: "participant", type: "string", required: false, description: "Filter by participant ID" },
+    { name: "limit", type: "number", required: false, default: "100", description: "Maximum number of results" },
+    { name: "offset", type: "number", required: false, default: "0", description: "Pagination offset" },
+    { name: "sortBy", type: "\"createdAt\" | \"updatedAt\" | \"name\"", required: false, description: "Sort field" },
+    { name: "sortOrder", type: "\"asc\" | \"desc\"", required: false, default: "\"desc\"", description: "Sort direction" },
+  ]}
+/>
 
 ### Returns
 
@@ -249,7 +276,8 @@ interface ListMemorySpacesResult {
 
 ### Examples
 
-**List All Spaces:**
+<Tabs>
+<TabItem value="all" label="List All">
 
 ```typescript
 const result = await cortex.memorySpaces.list();
@@ -260,7 +288,8 @@ result.spaces.forEach((space) => {
 });
 ```
 
-**Filter by Type:**
+</TabItem>
+<TabItem value="filter" label="Filter by Type">
 
 ```typescript
 // Get all personal spaces
@@ -275,7 +304,8 @@ const teams = await cortex.memorySpaces.list({
 });
 ```
 
-**Filter by Participant (Hive Mode):**
+</TabItem>
+<TabItem value="participant" label="Filter by Participant">
 
 ```typescript
 // Find all spaces where Cursor participates
@@ -286,7 +316,8 @@ const cursorSpaces = await cortex.memorySpaces.list({
 console.log(`Cursor operates in ${cursorSpaces.total} memory spaces`);
 ```
 
-**Pagination:**
+</TabItem>
+<TabItem value="pagination" label="Pagination">
 
 ```typescript
 // Get first 20
@@ -298,7 +329,8 @@ if (page1.hasMore) {
 }
 ```
 
-**Sorting:**
+</TabItem>
+<TabItem value="sorting" label="Sorting">
 
 ```typescript
 // Sort by name ascending
@@ -314,6 +346,9 @@ const recent = await cortex.memorySpaces.list({
 });
 ```
 
+</TabItem>
+</Tabs>
+
 ---
 
 ## count()
@@ -328,6 +363,15 @@ cortex.memorySpaces.count(filter?: {
   status?: "active" | "archived";
 }): Promise<number>
 ```
+
+### Parameters
+
+<APITable
+  parameters={[
+    { name: "type", type: "\"personal\" | \"team\" | \"project\" | \"custom\"", required: false, description: "Filter by memory space type" },
+    { name: "status", type: "\"active\" | \"archived\"", required: false, description: "Filter by status" },
+  ]}
+/>
 
 ### Examples
 
@@ -358,17 +402,19 @@ cortex.memorySpaces.search(query: string, options?: SearchOptions): Promise<Memo
 
 ### Parameters
 
-```typescript
-interface SearchOptions {
-  type?: "personal" | "team" | "project" | "custom";
-  status?: "active" | "archived";
-  limit?: number;
-}
-```
+<APITable
+  parameters={[
+    { name: "query", type: "string", required: true, description: "Search query string" },
+    { name: "type", type: "\"personal\" | \"team\" | \"project\" | \"custom\"", required: false, description: "Filter by memory space type" },
+    { name: "status", type: "\"active\" | \"archived\"", required: false, description: "Filter by status" },
+    { name: "limit", type: "number", required: false, description: "Maximum number of results" },
+  ]}
+/>
 
 ### Examples
 
-**Search by Name:**
+<Tabs>
+<TabItem value="name" label="Search by Name">
 
 ```typescript
 const results = await cortex.memorySpaces.search("engineering");
@@ -380,7 +426,8 @@ const results = await cortex.memorySpaces.search("engineering");
 // ]
 ```
 
-**Search with Filters:**
+</TabItem>
+<TabItem value="filters" label="Search with Filters">
 
 ```typescript
 const results = await cortex.memorySpaces.search("alice", {
@@ -389,6 +436,9 @@ const results = await cortex.memorySpaces.search("alice", {
   limit: 5,
 });
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 
@@ -401,24 +451,32 @@ Update memory space metadata (not participants - use updateParticipants()).
 ```typescript
 cortex.memorySpaces.update(
   memorySpaceId: string,
-  updates: MemorySpaceUpdates,
-  options?: { syncToGraph?: boolean }
+  updates: MemorySpaceUpdates
 ): Promise<MemorySpace>
+// Note: syncToGraph option removed in v0.29.0+ - sync is automatic
 ```
 
 ### Parameters
 
-```typescript
-interface MemorySpaceUpdates {
-  name?: string;
-  metadata?: Record<string, unknown>; // Merged with existing
-  status?: "active" | "archived";
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID to update" },
+    { name: "name", type: "string", required: false, description: "New human-readable name" },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Metadata to merge with existing" },
+    { name: "status", type: "\"active\" | \"archived\"", required: false, description: "New status" },
+  ]}
+/>
+
+**Options:**
+
+<Callout type="info">
+**v0.29.0+**: Graph sync is now automatic when `CORTEX_GRAPH_SYNC=true`. No options parameter needed.
+</Callout>
 
 ### Examples
 
-**Update Name:**
+<Tabs>
+<TabItem value="name" label="Update Name">
 
 ```typescript
 await cortex.memorySpaces.update("user-123-personal", {
@@ -426,7 +484,8 @@ await cortex.memorySpaces.update("user-123-personal", {
 });
 ```
 
-**Update Metadata:**
+</TabItem>
+<TabItem value="metadata" label="Update Metadata">
 
 ```typescript
 await cortex.memorySpaces.update("team-engineering-workspace", {
@@ -437,15 +496,19 @@ await cortex.memorySpaces.update("team-engineering-workspace", {
 });
 ```
 
-**With Graph Sync:**
+</TabItem>
+<TabItem value="graph" label="With Graph Sync">
 
 ```typescript
 await cortex.memorySpaces.update(
   "team-engineering-workspace",
   { name: "Updated Team Space" },
-  { syncToGraph: true },
 );
+// Graph sync is automatic when CORTEX_GRAPH_SYNC=true (v0.29.0+)
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 
@@ -461,6 +524,17 @@ cortex.memorySpaces.addParticipant(
   participant: { id: string; type: string; joinedAt: number }
 ): Promise<MemorySpace>
 ```
+
+### Parameters
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID" },
+    { name: "participant.id", type: "string", required: true, description: "Participant identifier" },
+    { name: "participant.type", type: "string", required: true, description: "Participant type (\"user\", \"agent\", \"tool\", etc.)" },
+    { name: "participant.joinedAt", type: "number", required: true, description: "Timestamp when participant joined" },
+  ]}
+/>
 
 ### Examples
 
@@ -488,6 +562,15 @@ cortex.memorySpaces.removeParticipant(
 ): Promise<MemorySpace>
 ```
 
+### Parameters
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID" },
+    { name: "participantId", type: "string", required: true, description: "ID of the participant to remove" },
+  ]}
+/>
+
 ### Examples
 
 ```typescript
@@ -497,6 +580,12 @@ await cortex.memorySpaces.removeParticipant("user-123-personal", "old-tool");
 // Note: Participant's existing memories remain (audit trail)
 // But space no longer lists it as active participant
 ```
+
+<Callout type="info">
+
+Removing a participant does not delete their existing memories. The memories remain for audit trail purposes, but the space no longer lists them as an active participant.
+
+</Callout>
 
 ---
 
@@ -515,16 +604,18 @@ cortex.memorySpaces.updateParticipants(
 
 ### Parameters
 
-```typescript
-interface ParticipantUpdates {
-  add?: Array<{ id: string; type: string; joinedAt: number }>; // Add participants
-  remove?: string[]; // Remove participant IDs
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID" },
+    { name: "add", type: "Array<{ id: string; type: string; joinedAt: number }>", required: false, description: "Participants to add" },
+    { name: "remove", type: "string[]", required: false, description: "Participant IDs to remove" },
+  ]}
+/>
 
 ### Examples
 
-**Add Participants:**
+<Tabs>
+<TabItem value="add" label="Add Participants">
 
 ```typescript
 // User installs new AI tools
@@ -536,7 +627,8 @@ await cortex.memorySpaces.updateParticipants("user-123-personal", {
 });
 ```
 
-**Remove Participants:**
+</TabItem>
+<TabItem value="remove" label="Remove Participants">
 
 ```typescript
 // User uninstalls tools
@@ -545,7 +637,8 @@ await cortex.memorySpaces.updateParticipants("user-123-personal", {
 });
 ```
 
-**Replace Participants:**
+</TabItem>
+<TabItem value="replace" label="Replace Participants">
 
 ```typescript
 // Set exact participant list
@@ -558,6 +651,9 @@ await cortex.memorySpaces.updateParticipants("team-workspace", {
 });
 ```
 
+</TabItem>
+</Tabs>
+
 ---
 
 ## findByParticipant()
@@ -569,6 +665,14 @@ Find all memory spaces where a participant is active.
 ```typescript
 cortex.memorySpaces.findByParticipant(participantId: string): Promise<MemorySpace[]>
 ```
+
+### Parameters
+
+<APITable
+  parameters={[
+    { name: "participantId", type: "string", required: true, description: "The participant ID to search for" },
+  ]}
+/>
 
 ### Examples
 
@@ -596,16 +700,18 @@ cortex.memorySpaces.archive(memorySpaceId: string, options?: ArchiveOptions): Pr
 
 ### Parameters
 
-```typescript
-interface ArchiveOptions {
-  reason?: string; // Why archived
-  metadata?: Record<string, unknown>; // Archive metadata
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID to archive" },
+    { name: "reason", type: "string", required: false, description: "Why the space is being archived" },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Additional archive metadata" },
+  ]}
+/>
 
 ### Examples
 
-**Archive Project:**
+<Tabs>
+<TabItem value="project" label="Archive Project">
 
 ```typescript
 // Project complete, archive its memory space
@@ -622,7 +728,8 @@ const space = await cortex.memorySpaces.get("project-apollo");
 console.log(space.status); // 'archived'
 ```
 
-**Archive Inactive User:**
+</TabItem>
+<TabItem value="inactive" label="Archive Inactive User">
 
 ```typescript
 // User hasn't logged in for 90 days
@@ -633,6 +740,9 @@ await cortex.memorySpaces.archive(`user-${userId}-personal`, {
   },
 });
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 
@@ -645,6 +755,14 @@ Reactivate an archived memory space.
 ```typescript
 cortex.memorySpaces.reactivate(memorySpaceId: string): Promise<MemorySpace>
 ```
+
+### Parameters
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The archived memory space ID to reactivate" },
+  ]}
+/>
 
 ### Examples
 
@@ -660,7 +778,11 @@ console.log(space.status); // 'active'
 
 ## delete()
 
-**⚠️ DESTRUCTIVE:** Delete memory space and ALL associated data.
+<Callout type="danger">
+
+**DESTRUCTIVE:** This operation permanently deletes the memory space and ALL associated data. This cannot be undone.
+
+</Callout>
 
 ### Signature
 
@@ -673,14 +795,16 @@ cortex.memorySpaces.delete(
 
 ### Parameters
 
-```typescript
-interface DeleteMemorySpaceOptions {
-  cascade: boolean; // REQUIRED: Must be true to proceed
-  reason: string; // REQUIRED: Why deleting (audit trail)
-  confirmId?: string; // Optional: Safety check (must match memorySpaceId)
-  syncToGraph?: boolean; // Delete from graph database
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID to delete" },
+    { name: "cascade", type: "boolean", required: true, description: "Must be true to proceed with deletion" },
+    { name: "reason", type: "string", required: true, description: "Why deleting (for audit trail)" },
+    { name: "confirmId", type: "string", required: false, description: "Safety check - must match memorySpaceId" },
+  ]}
+/>
+
+{/* Note: syncToGraph removed in v0.29.0+ - graph cleanup is automatic when CORTEX_GRAPH_SYNC=true */}
 
 ### Returns
 
@@ -701,7 +825,8 @@ interface DeleteMemorySpaceResult {
 
 ### Examples
 
-**GDPR Deletion:**
+<Tabs>
+<TabItem value="gdpr" label="GDPR Deletion">
 
 ```typescript
 // User requests data deletion
@@ -716,7 +841,8 @@ console.log(`Deleted ${result.cascade.conversationsDeleted} conversations`);
 console.log(`Deleted ${result.cascade.factsDeleted} facts`);
 ```
 
-**Project Cleanup:**
+</TabItem>
+<TabItem value="cleanup" label="Project Cleanup">
 
 ```typescript
 // Project archived, delete after retention period
@@ -726,7 +852,8 @@ await cortex.memorySpaces.delete("project-old-2023", {
 });
 ```
 
-**Safety Checks:**
+</TabItem>
+<TabItem value="safety" label="Safety Checks">
 
 ```typescript
 // Without cascade - ERROR
@@ -747,6 +874,9 @@ await cortex.memorySpaces.delete("production-space", {
 });
 ```
 
+</TabItem>
+</Tabs>
+
 ---
 
 ## getStats()
@@ -764,12 +894,13 @@ cortex.memorySpaces.getStats(
 
 ### Parameters
 
-```typescript
-interface GetMemorySpaceStatsOptions {
-  timeWindow?: "24h" | "7d" | "30d" | "90d" | "all"; // Default: "all"
-  includeParticipants?: boolean; // Participant activity (Hive Mode)
-}
-```
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "The memory space ID" },
+    { name: "timeWindow", type: "\"24h\" | \"7d\" | \"30d\" | \"90d\" | \"all\"", required: false, default: "\"all\"", description: "Time window for activity metrics" },
+    { name: "includeParticipants", type: "boolean", required: false, default: "false", description: "Include participant activity breakdown (Hive Mode)" },
+  ]}
+/>
 
 ### Returns
 
@@ -824,7 +955,8 @@ interface MemorySpaceStats {
 
 ### Examples
 
-**Basic Stats:**
+<Tabs>
+<TabItem value="basic" label="Basic Stats">
 
 ```typescript
 const stats = await cortex.memorySpaces.getStats("user-123-personal");
@@ -836,7 +968,8 @@ console.log(
 console.log(`Top tags: ${stats.topTags.join(", ")}`);
 ```
 
-**With Time Window:**
+</TabItem>
+<TabItem value="window" label="With Time Window">
 
 ```typescript
 // Last 7 days
@@ -848,7 +981,8 @@ console.log(`Activity this week: ${weekStats.memoriesThisWindow} memories`);
 console.log(`Conversations this week: ${weekStats.conversationsThisWindow}`);
 ```
 
-**With Participant Breakdown (Hive Mode):**
+</TabItem>
+<TabItem value="participants" label="With Participant Breakdown">
 
 ```typescript
 const stats = await cortex.memorySpaces.getStats("team-engineering-workspace", {
@@ -866,6 +1000,9 @@ stats.participants?.forEach((p) => {
   console.log(`  - Avg importance: ${p.avgImportance}`);
 });
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 
@@ -1002,12 +1139,12 @@ console.table(dashboard);
 ### 1. Use Structured IDs
 
 ```typescript
-// ✅ GOOD: Structured, searchable
+// Good: Structured, searchable
 "user-{userId}-personal";
 "team-{teamId}-workspace";
 "project-{projectId}-memory";
 
-// ❌ BAD: Random, opaque
+// Avoid: Random, opaque
 "abc123";
 "temp";
 "space1";
@@ -1031,7 +1168,7 @@ await cortex.memorySpaces.register({
 ### 3. Track Participants in Hive Mode
 
 ```typescript
-// ✅ GOOD: Clear participant list with types
+// Good: Clear participant list with types
 await cortex.memorySpaces.register({
   memorySpaceId: "user-123-personal",
   participants: [
@@ -1061,8 +1198,14 @@ await cortex.memorySpaces.register({
 
 ### 5. Archive Before Delete
 
+<Callout type="tip">
+
+Always archive a memory space before deleting it. This provides a grace period for recovery and maintains data integrity during the retention period.
+
+</Callout>
+
 ```typescript
-// ✅ GOOD: Archive first, delete later
+// Recommended: Archive first, delete later
 await cortex.memorySpaces.archive(memorySpaceId, { reason: "Inactive" });
 
 // Wait for retention period...
@@ -1073,7 +1216,7 @@ await cortex.memorySpaces.delete(memorySpaceId, {
   reason: "Retention period expired",
 });
 
-// ❌ BAD: Direct deletion without archival period
+// Avoid: Direct deletion without archival period
 ```
 
 ---
@@ -1148,21 +1291,46 @@ The Memory Space Operations API provides explicit control over memory space life
 
 **Key Takeaways:**
 
-- ✅ Registration is optional (implicit creation works)
-- ✅ Register in production for analytics and tracking
-- ✅ Use participants for Hive Mode tracking
-- ✅ Archive before delete (safer)
-- ✅ Monitor with getStats() for observability
+- Registration is optional (implicit creation works)
+- Register in production for analytics and tracking
+- Use participants for Hive Mode tracking
+- Archive before delete (safer)
+- Monitor with getStats() for observability
+
+<Callout type="info">
 
 **Most important:** memorySpaceId is the fundamental isolation boundary. Everything else builds on this.
 
+</Callout>
+
 ---
 
-**Related Documentation:**
+<QuickNav>
 
-- [Memory Operations API](./memory-operations) - Using memory spaces
-- [Hive Mode Guide](../02-core-features/10-hive-mode) - Multi-tool memory sharing
-- [Memory Spaces Guide](../02-core-features/01-memory-spaces) - Core concepts
-- [A2A Communication](./a2a-communication) - Collaboration Mode
+<QuickNavItem
+  title="Memory Operations API"
+  description="Using memory spaces"
+  href="/api-reference/memory-operations"
+/>
+
+<QuickNavItem
+  title="Hive Mode Guide"
+  description="Multi-tool memory sharing"
+  href="/core-features/hive-mode"
+/>
+
+<QuickNavItem
+  title="Memory Spaces Guide"
+  description="Core concepts"
+  href="/core-features/memory-spaces"
+/>
+
+<QuickNavItem
+  title="A2A Communication"
+  description="Collaboration Mode"
+  href="/api-reference/a2a-communication"
+/>
+
+</QuickNav>
 
 **Questions?** Ask in [Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions).

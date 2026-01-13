@@ -1,30 +1,36 @@
 # Troubleshooting
 
+<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+
 Common issues and solutions for Cortex Memory Provider with SDK v0.21.0+.
 
 ## SDK v0.17.0+ Breaking Changes
 
-### ❌ "agentId is required"
+### "agentId is required"
 
 **Error:**
 
 ```
-Error: agentId is required. User-agent conversations require both a user and an agent participant.
+Error: agentId is required. User-agent conversations require both a user and an agent participant. Provide agentId in your configuration, e.g., agentId: 'my-assistant'
 ```
+
+<Callout type="info">
+The actual error message includes additional configuration help text to guide users.
+</Callout>
 
 **Cause:** Since SDK v0.17.0, all conversations require an `agentId` to identify the AI agent participant.
 
 **Solution:** Add `agentId` to your configuration:
 
 ```typescript
-// ❌ Old way (throws error)
+// Old way (throws error)
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
   userId: "user-123",
 });
 
-// ✅ New way (v0.17.0+)
+// New way (v0.17.0+)
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
   memorySpaceId: "my-chatbot",
@@ -33,7 +39,7 @@ const cortexMemory = createCortexMemory({
 });
 ```
 
-### ❌ "agentId must be a non-empty string"
+### "agentId must be a non-empty string"
 
 **Cause:** You provided an empty string or invalid value for `agentId`.
 
@@ -50,17 +56,21 @@ const cortexMemory = createCortexMemory({
 
 ### "Cannot find module '@cortexmemory/sdk'"
 
-```bash
+<Terminal>
 npm install @cortexmemory/sdk@latest
-```
+</Terminal>
 
 ### "Peer dependency warnings"
 
 Ensure compatible versions:
 
-```bash
-npm install ai@^4.0.0 convex@^1.17.0
-```
+<Terminal>
+npm install ai@^4.0.0 convex@^1.28.2
+</Terminal>
+
+<Callout type="info">
+The AI SDK supports versions 3, 4, 5, and 6 (`^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0`).
+</Callout>
 
 ## Connection Issues
 
@@ -96,6 +106,11 @@ Common causes:
 **Solution:**
 
 ```typescript
+import { embed } from 'ai';
+import { createOpenAI } from '@ai-sdk/openai';
+
+const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 // Add embeddings for better search
 const cortexMemory = createCortexMemory({
   convexUrl: process.env.CONVEX_URL!,
@@ -219,9 +234,9 @@ factExtractionConfig: {
 
 **Solution:**
 
-```bash
+<Terminal>
 npm update ai @ai-sdk/openai @cortexmemory/vercel-ai-provider
-```
+</Terminal>
 
 ### "Property 'agentId' does not exist"
 
@@ -229,9 +244,9 @@ npm update ai @ai-sdk/openai @cortexmemory/vercel-ai-provider
 
 **Solution:** Update to latest version:
 
-```bash
+<Terminal>
 npm update @cortexmemory/vercel-ai-provider
-```
+</Terminal>
 
 ## Edge Runtime Issues
 
@@ -290,10 +305,10 @@ const cortexMemory = createCortexMemory({
 
 ```typescript
 streamingOptions: {
-  partialFailureHandling: 'store-partial',
-  maxRetries: 3,
-  generateResumeToken: true,
-  streamTimeout: 60000, // Increase timeout
+  partialFailureHandling: 'store-partial', // Optional
+  maxRetries: 3, // Default: 3
+  generateResumeToken: true, // Default: false
+  streamTimeout: 60000, // Default: 30000, increasing for reliability
 }
 ```
 
@@ -344,4 +359,29 @@ const cortexMemory = createCortexMemory({
 - [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues) - Bug reports
 - [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions) - Questions
 - [Quickstart Demo](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart) - Working example
-- [Getting Started Guide](./getting-started) - Setup tutorial
+- [Getting Started Guide](/integrations/vercel-ai-sdk/getting-started) - Setup tutorial
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Getting Started" 
+    description="Setup tutorial" 
+    href="/integrations/vercel-ai-sdk/getting-started" 
+  />
+  <QuickNavItem 
+    title="API Reference" 
+    description="Complete API documentation" 
+    href="/integrations/vercel-ai-sdk/api-reference" 
+  />
+  <QuickNavItem 
+    title="Advanced Usage" 
+    description="Custom patterns" 
+    href="/integrations/vercel-ai-sdk/advanced-usage" 
+  />
+  <QuickNavItem 
+    title="Memory Operations" 
+    description="Core SDK operations" 
+    href="/api-reference/memory-operations" 
+  />
+</QuickNav>

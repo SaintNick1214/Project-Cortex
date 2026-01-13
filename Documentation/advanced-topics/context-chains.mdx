@@ -1,0 +1,419 @@
+---
+id: context-chains
+title: Context Chains
+sidebar_position: 5
+description: Hierarchical context sharing for multi-agent coordination
+---
+
+# Context Chains
+
+<Callout type="info">
+**Last Updated**: 2026-01-08
+</Callout>
+
+<Callout type="info" title="What are Context Chains?">
+  Context Chains enable **hierarchical context sharing** between agents. A supervisor can delegate tasks to specialists while sharing relevant context—without giving full access to its memory space.
+</Callout>
+
+---
+
+## Quick Start
+
+```typescript
+// Supervisor creates a context chain
+const context = await cortex.contexts.create({
+  purpose: "Process refund request #12345",
+  memorySpaceId: "supervisor-space",
+  userId: "user-123",
+  data: { amount: 500, reason: "defective product" },
+});
+
+// Delegate to specialist
+const childContext = await cortex.contexts.create({
+  purpose: "Approve $500 refund",
+  memorySpaceId: "finance-space",
+  parentId: context.id,
+  userId: "user-123",
+});
+
+// Specialist accesses full chain
+const fullContext = await cortex.contexts.get(childContext.id, {
+  includeChain: true,
+});
+// Sees: parent purpose, data, and full hierarchy
+```
+
+---
+
+## The Problem Context Chains Solve
+
+<Tabs>
+  <TabItem value="traditional" label="Traditional (Fragile)">
+
+<FlowDiagram title="Traditional Delegation" caption="Information gets lost at each delegation level">
+  <FlowNode title="User Request" icon="user" variant="primary">"Create a marketing campaign for Q4"</FlowNode>
+  <FlowNode title="CEO Agent" icon="bot" variant="secondary">"Let me delegate..."</FlowNode>
+  <FlowNode title="Marketing Agent" icon="bot" variant="warning">Gets: "Create campaign" — Misses: Q4 timeframe, budget, audience</FlowNode>
+  <FlowNode title="Finance Agent" icon="bot" variant="warning">Gets: "Review budget" — Misses: What the campaign is for</FlowNode>
+</FlowDiagram>
+
+  </TabItem>
+  <TabItem value="context-chains" label="Context Chains (Robust)">
+
+<FlowDiagram title="Context Chain Delegation" caption="Everyone has the full picture via the chain">
+  <FlowNode title="User Request" icon="user" variant="primary">"Create a marketing campaign for Q4"</FlowNode>
+  <FlowNode title="CEO Agent" icon="bot" variant="secondary">Creates context: CTX-001</FlowNode>
+  <FlowNode title="Marketing Agent" icon="bot" variant="success">Accesses CTX-001 — Sees: Complete request, budget, timeline</FlowNode>
+  <FlowNode title="Finance Agent" icon="bot" variant="success">Accesses CTX-001 — Sees: Same complete context</FlowNode>
+</FlowDiagram>
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Context Chains vs A2A Communication
+
+<ComparisonTable
+  headers={["Context Chains", "A2A Communication"]}
+  items={[
+    { feature: "Direction", values: ["Parent → Child (delegation)", "Peer-to-peer (messaging)"] },
+    { feature: "Access Model", values: ["Read-only context sharing", "Dual-write messages"] },
+    { feature: "Use Case", values: ["Task delegation, workflows", "Agent collaboration"] },
+    { feature: "Data Flow", values: ["Hierarchical (tree)", "Bidirectional"] },
+    { feature: "Best For", values: ["Supervisor → Specialist", "Equals exchanging info"] },
+  ]}
+/>
+
+---
+
+## Creating a Context Chain
+
+<Steps>
+  <Step title="Create root context">
+
+```typescript
+const context = await cortex.contexts.create({
+  purpose: "Process customer refund request",
+  memorySpaceId: "supervisor-space",
+  userId: "user-123",
+  data: {
+    importance: 85,
+    tags: ["refund", "customer-service"],
+    ticketId: "TICKET-456",
+    amount: 500,
+  },
+});
+```
+
+  </Step>
+  <Step title="Create child contexts (delegate)">
+
+```typescript
+// Delegate to finance
+const financeCtx = await cortex.contexts.create({
+  purpose: "Approve and process $500 refund",
+  memorySpaceId: "finance-space",
+  parentId: context.id,
+  userId: "user-123",
+});
+
+// Delegate to customer relations
+const customerCtx = await cortex.contexts.create({
+  purpose: "Send apology email",
+  memorySpaceId: "customer-space",
+  parentId: context.id,
+  userId: "user-123",
+});
+```
+
+  </Step>
+  <Step title="Specialist accesses full chain">
+
+```typescript
+const fullContext = await cortex.contexts.get(financeCtx.id, {
+  includeChain: true,
+});
+
+console.log(fullContext.parent.purpose);  // "Process customer refund..."
+console.log(fullContext.parent.data);     // { amount: 500, ... }
+console.log(fullContext.siblings);        // [customerCtx]
+```
+
+  </Step>
+</Steps>
+
+---
+
+## Security Model
+
+<Callout type="warning" title="Read-Only by Default">
+  Cross-space access via Context Chains is **read-only**. Specialists can read parent context but cannot modify supervisor data.
+</Callout>
+
+<Callout type="tip" title="Audit Trail">
+  All cross-space context reads are logged. Use `includeChain: true` queries to trace who accessed what.
+</Callout>
+
+---
+
+## Context Structure
+
+<APITable parameters={[
+  { name: "id", type: "string", required: true, description: "Unique context ID" },
+  { name: "purpose", type: "string", required: true, description: "What this context is for" },
+  { name: "memorySpaceId", type: "string", required: true, description: "Owning memory space" },
+  { name: "parentId", type: "string", required: false, description: "Parent context (if child)" },
+  { name: "rootId", type: "string", required: false, description: "Root of the chain" },
+  { name: "userId", type: "string", required: false, description: "User this relates to" },
+  { name: "depth", type: "number", required: false, description: "Hierarchy depth (0 = root)" },
+  { name: "childIds", type: "string[]", required: false, description: "Direct children IDs" },
+  { name: "status", type: "string", required: false, default: "active", description: "'active', 'completed', 'cancelled', 'blocked'" },
+  { name: "data", type: "object", required: false, description: "Context-specific data (importance, tags, etc.)" },
+]} />
+
+---
+
+## Context Operations
+
+<Tabs>
+  <TabItem value="get" label="Get Context">
+
+```typescript
+// Get single context
+const ctx = await cortex.contexts.get(contextId);
+
+// Get with full chain
+const fullCtx = await cortex.contexts.get(contextId, {
+  includeChain: true,
+});
+// Returns: current, parent, root, siblings, children, depth
+```
+
+  </TabItem>
+  <TabItem value="update" label="Update Status">
+
+```typescript
+// Update status (auto-versioned)
+await cortex.contexts.update(contextId, {
+  status: "completed",
+  completedAt: Date.now(),
+  data: { result: "approved", approvedBy: "finance-agent" },
+});
+
+// Check version history
+const ctx = await cortex.contexts.get(contextId);
+console.log(`v${ctx.version}: ${ctx.status}`);
+```
+
+  </TabItem>
+  <TabItem value="search" label="Search">
+
+```typescript
+// Find active contexts for an agent
+const active = await cortex.contexts.search({
+  memorySpaceId: "finance-space",
+  status: "active",
+});
+
+// Find high-priority contexts
+const urgent = await cortex.contexts.search({
+  data: { importance: { $gte: 80 } },
+  status: "active",
+});
+
+// Find user's contexts
+const userCtx = await cortex.contexts.search({
+  userId: "user-123",
+  sortBy: "createdAt",
+  sortOrder: "desc",
+});
+```
+
+  </TabItem>
+  <TabItem value="delete" label="Delete">
+
+```typescript
+// Delete single context
+await cortex.contexts.delete(contextId);
+
+// Bulk delete old cancelled contexts
+await cortex.contexts.deleteMany({
+  status: "cancelled",
+  updatedBefore: Date.now() - 90 * 24 * 60 * 60 * 1000,
+});
+```
+
+  </TabItem>
+</Tabs>
+
+---
+
+## Common Patterns
+
+### Task Decomposition
+
+```typescript
+// Break complex task into subtasks
+const root = await cortex.contexts.create({
+  purpose: "Build Q4 financial report",
+  memorySpaceId: "ceo-space",
+  data: { quarter: "Q4", deadline: "2025-12-31" },
+});
+
+await Promise.all([
+  cortex.contexts.create({
+    purpose: "Gather revenue data",
+    memorySpaceId: "finance-space",
+    parentId: root.id,
+  }),
+  cortex.contexts.create({
+    purpose: "Compile expense reports",
+    memorySpaceId: "accounting-space",
+    parentId: root.id,
+  }),
+  cortex.contexts.create({
+    purpose: "Create visualizations",
+    memorySpaceId: "analytics-space",
+    parentId: root.id,
+  }),
+]);
+```
+
+### Approval Workflows
+
+```typescript
+// Multi-step approval chain
+const request = await cortex.contexts.create({
+  purpose: "Approve $10K budget increase",
+  memorySpaceId: "requestor-space",
+  data: { amount: 10000, department: "engineering" },
+});
+
+const managerReview = await cortex.contexts.create({
+  purpose: "Manager review",
+  memorySpaceId: "manager-space",
+  parentId: request.id,
+});
+
+const financeApproval = await cortex.contexts.create({
+  purpose: "Finance approval",
+  memorySpaceId: "finance-space",
+  parentId: managerReview.id,
+});
+
+// Trace full approval chain
+const chain = await cortex.contexts.get(financeApproval.id, {
+  includeChain: true,
+});
+```
+
+### Link to Conversations
+
+```typescript
+// Context originated from user conversation
+const context = await cortex.contexts.create({
+  purpose: "Process refund request",
+  memorySpaceId: "supervisor-space",
+  userId: "user-123",
+  conversationRef: {
+    conversationId: "conv-456",
+    messageIds: ["msg-089"],  // Original request
+  },
+  data: { amount: 500 },
+});
+
+// Trace back to source
+if (context.conversationRef) {
+  const conv = await cortex.conversations.get(
+    context.conversationRef.conversationId
+  );
+}
+```
+
+---
+
+## Best Practices
+
+<Callout type="tip" title="Descriptive Purposes">
+
+```typescript
+// Vague - hard to trace
+await cortex.contexts.create({ purpose: "Process request" });
+
+// Clear - full audit trail
+await cortex.contexts.create({
+  purpose: "Process $500 refund for defective product (ticket #456)",
+  data: { importance: 85, tags: ["refund", "urgent"] },
+});
+```
+
+</Callout>
+
+<Callout type="tip" title="Keep Status Current">
+
+```typescript
+// Update as work progresses
+await cortex.contexts.update(id, { status: "active" });
+// ... do work ...
+await cortex.contexts.update(id, { 
+  status: "completed",
+  completedAt: Date.now(),
+});
+```
+
+</Callout>
+
+<Callout type="warning" title="Clean Up Old Contexts">
+
+```typescript
+// Archive completed contexts after 90 days
+await cortex.contexts.deleteMany({
+  status: "completed",
+  completedBefore: Date.now() - 90 * 24 * 60 * 60 * 1000,
+});
+```
+
+</Callout>
+
+---
+
+## Graph Visualization
+
+<FlowDiagram title="Context Hierarchy Example">
+  <FlowNode title="Root Context (ctx-001)" icon="layers" variant="primary">Purpose: "Process customer refund" | Status: active | Depth: 0</FlowNode>
+  <FlowNode title="Child ctx-002" icon="bot" variant="success">Purpose: "Approve refund" | Agent: finance-space | Status: completed</FlowNode>
+  <FlowNode title="Child ctx-003" icon="bot" variant="success">Purpose: "Send apology" | Agent: customer-space | Status: completed</FlowNode>
+  <FlowNode title="Child ctx-004" icon="bot" variant="secondary">Purpose: "Update CRM" | Agent: crm-space | Status: active</FlowNode>
+</FlowDiagram>
+
+<Callout type="info" title="Graph Integration">
+  For deep hierarchies (7+ levels), sync contexts to a graph database for faster queries. See [Graph Integration](/advanced-topics/graph-integration).
+</Callout>
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem 
+    title="Context Operations API" 
+    description="Complete API reference" 
+    href="/api-reference/context-operations" 
+  />
+  <QuickNavItem 
+    title="A2A Communication" 
+    description="Agent-to-agent messaging" 
+    href="/advanced-topics/a2a-communication" 
+  />
+  <QuickNavItem 
+    title="Memory Spaces" 
+    description="Understanding isolation" 
+    href="/core-features/memory-spaces" 
+  />
+  <QuickNavItem 
+    title="Graph Integration" 
+    description="Advanced graph capabilities" 
+    href="/advanced-topics/graph-integration" 
+  />
+</QuickNav>
