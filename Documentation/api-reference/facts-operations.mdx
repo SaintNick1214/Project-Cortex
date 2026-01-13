@@ -12,7 +12,7 @@ description: Complete API reference for the Facts layer (Layer 3) - structured k
   icon="clock"
 >
 
-**Last Updated**: 2026-01-09 | **Version**: v0.7.0+ (Belief Revision: v0.24.0+, Auto Graph Sync: v0.29.0+)
+**Last Updated**: 2026-01-13 | **Version**: v0.7.0+ (Belief Revision: v0.24.0+, Auto Graph Sync: v0.29.0+, Semantic Search: v0.30.0+)
 
 </Callout>
 
@@ -114,6 +114,9 @@ interface StoreFactParams {
   semanticContext?: string; // Usage context sentence
   entities?: EnrichedEntity[]; // Extracted entities with types
   relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+
+  // Semantic search (v0.30.0+)
+  embedding?: number[]; // Vector embedding for semantic search (1536 dimensions)
 }
 
 // Enriched entity structure
@@ -1225,6 +1228,107 @@ const complexSearch = await cortex.facts.search("agent-1", "important facts", {
 });
 ```
 
+### `facts.semanticSearch()` (v0.30.0+)
+
+<Callout
+  type="tip"
+  icon="sparkles"
+>
+
+**New in v0.30.0**: Vector-based semantic search for facts using embeddings.
+
+</Callout>
+
+Search facts using vector similarity instead of text matching. This enables finding semantically related facts even when they don't contain the exact query keywords.
+
+**Signature:**
+
+```typescript
+async semanticSearch(
+  memorySpaceId: string,
+  embedding: number[],
+  options?: SemanticSearchFactsOptions
+): Promise<FactRecord[]>
+```
+
+**Parameters:**
+
+```typescript
+interface SemanticSearchFactsOptions {
+  /** Multi-tenancy filter */
+  tenantId?: string;
+  /** Filter by user who created the fact */
+  userId?: string;
+  /** Minimum confidence threshold (0-100) */
+  minConfidence?: number;
+  /** Include superseded facts (default: false) */
+  includeSuperseded?: boolean;
+  /** Minimum similarity score (0-1, default: 0.3) */
+  minScore?: number;
+  /** Maximum results to return (default: 20) */
+  limit?: number;
+  /** Filter by tags (any match) */
+  tags?: string[];
+  /** Filter facts created after this date */
+  createdAfter?: Date;
+  /** Filter facts created before this date */
+  createdBefore?: Date;
+}
+```
+
+**Example:**
+
+```typescript
+// Generate embedding for query
+const embedding = await generateEmbedding("What colors does the user like?");
+
+// Search facts by semantic similarity
+const facts = await cortex.facts.semanticSearch("agent-1", embedding, {
+  userId: "user-123",
+  minConfidence: 80,
+  minScore: 0.5,  // Only return facts with >50% similarity
+  limit: 10,
+});
+
+facts.forEach((fact) => {
+  console.log(`${fact.fact} (${fact.confidence}% confidence)`);
+});
+
+// Example: Find all preference-related facts semantically
+const preferenceEmbedding = await generateEmbedding("user preferences and likes");
+const preferences = await cortex.facts.semanticSearch("agent-1", preferenceEmbedding, {
+  minConfidence: 70,
+  includeSuperseded: false,  // Only current facts
+});
+```
+
+<Callout type="info">
+
+**When to use `semanticSearch()` vs `search()`:**
+
+- Use `semanticSearch()` when you have an embedding and want meaning-based retrieval
+- Use `search()` for keyword-based text matching (faster, no embedding required)
+- `recall()` automatically chooses the best method based on whether an embedding is provided
+
+</Callout>
+
+**Integration with `recall()`:**
+
+`recall()` automatically uses `semanticSearch()` for facts when an embedding is provided:
+
+```typescript
+// recall() with embedding - uses semantic fact search automatically
+const result = await cortex.memory.recall({
+  memorySpaceId: "agent-1",
+  query: "What colors does the user like?",
+  embedding: await generateEmbedding("What colors does the user like?"),
+  userId: "user-123",
+});
+
+// Facts are retrieved by semantic similarity
+// Falls back to text search if no embedding provided
+```
+
 ### `facts.update()`
 
 Update a fact (creates new version).
@@ -2062,6 +2166,9 @@ interface FactRecord {
   semanticContext?: string; // Usage context sentence
   entities?: EnrichedEntity[]; // Extracted entities with types
   relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+
+  // Semantic search (v0.30.0+)
+  embedding?: number[]; // Vector embedding for semantic search
 }
 ```
 

@@ -20,6 +20,148 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### TypeScript SDK v0.30.0 · Jan 13, 2026
+
+**Semantic Search for Facts + True Batteries-Included Embeddings**
+
+🔍 Native vector/embedding search directly on the facts table  
+🔋 **NEW**: Configure `embedding` once at SDK init - auto-generates everywhere!  
+🧠 Automatic embedding generation during `remember()` and `recall()`  
+🧪 New extreme multi-turn conversation stress tests
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Batteries-Included Embedding Configuration (v0.30.0+)**
+
+Configure embedding provider once - SDK auto-generates embeddings for `recall()` queries and `remember()` facts:
+
+```typescript
+// Configure once at SDK init
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  embedding: {
+    provider: 'openai',
+    apiKey: process.env.OPENAI_API_KEY,
+  },
+});
+
+// recall() auto-generates embeddings - no manual code!
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-space",
+  query: "What colors does the user like?",
+  // Embedding is auto-generated from query!
+});
+
+// remember() auto-generates embeddings for facts - no manual code!
+await cortex.memory.remember({
+  memorySpaceId: "user-space",
+  userMessage: "My favorite color is purple",
+  agentResponse: "Got it!",
+  // Facts are auto-embedded!
+});
+```
+
+Or use environment variables for zero-config:
+
+```bash
+export CORTEX_EMBEDDING=true
+export OPENAI_API_KEY=sk-...
+```
+
+**Semantic Fact Search**
+
+Facts now support native vector search via embeddings:
+
+```typescript
+// Direct: Use semanticSearch() for facts
+const facts = await cortex.facts.semanticSearch(memorySpaceId, embedding, {
+  minConfidence: 80,
+  limit: 20,
+});
+```
+
+**Extreme Stress Tests**
+
+New comprehensive stress test suite (`tests/stress/multi-turn-chaos.test.ts`):
+
+- **Forgetful User**: 50+ repeated questions testing deduplication
+- **Indecisive User**: 30+ preference changes testing supersession chains
+- **Topic Flooder**: 100+ similar memories testing semantic search precision
+- **Combined Chaos**: 100+ turn ultimate stress test
+- **Parallel Chaos**: 5 concurrent users testing isolation
+
+#### Technical Details
+
+**Schema Changes**
+- Added `embedding` field to facts table (optional, `float64[]`)
+- Added `by_embedding` vector index with 1536 dimensions (OpenAI-compatible)
+
+**API Changes**
+- `StoreFactParams.embedding` - optional embedding for fact storage
+- `UpdateFactInput.embedding` - optional embedding for fact updates
+- `facts.semanticSearch()` - new method for vector-based fact retrieval
+- `recall()` - automatically uses semantic fact search when embedding available
+
+**Integration**
+- Vercel AI provider automatically benefits from semantic fact search
+- No changes required to quickstart template
+
+</details>
+
+---
+
+### TypeScript SDK v0.29.1 · Jan 10, 2026
+
+**Belief Revision Heuristic Improvements**
+
+🧠 Improved decision accuracy when LLM is not configured  
+🎯 Same subject + same object now correctly returns UPDATE/NONE  
+🔄 Same subject + different object + related predicate returns SUPERSEDE  
+➕ Different predicate classes correctly return ADD (no false supersessions)
+
+<details>
+<summary>Show full details</summary>
+
+#### Fixed
+
+**Belief Revision Default Heuristics**
+
+When no LLM is configured, the `getDefaultDecision()` heuristic now correctly handles all 4 decision types:
+
+| Scenario | Decision | Description |
+|----------|----------|-------------|
+| Empty memory space | ADD | No conflicts to check |
+| Different subject + low similarity | ADD | Unrelated facts |
+| Different predicate class | ADD | Independent facts (e.g., "favorite color" vs "favorite food") |
+| High similarity + higher confidence | UPDATE | Refine existing fact |
+| Same subject + same object + higher confidence | UPDATE | Confirm/strengthen existing |
+| Same subject + same object + same/lower confidence | NONE | Already captured |
+| Exact duplicate | NONE | Skip redundant storage |
+| Same subject + different object + related predicate | SUPERSEDE | Preference changed (e.g., blue → purple) |
+
+**Key Improvements:**
+
+1. **Predicate similarity check** - Facts with different predicate classes (e.g., "favorite color" vs "favorite food") no longer incorrectly supersede each other, even when they share the same subject.
+
+2. **Object comparison for same-subject facts** - When subject matches:
+   - Same object → UPDATE (higher confidence) or NONE (same/lower confidence)
+   - Different object + related predicate → SUPERSEDE
+
+3. **Comprehensive test coverage** - 27 integration tests now verify all decision paths explicitly.
+
+#### Technical Details
+
+- Added `arePredicatesRelated()` helper function to check predicate similarity
+- Enhanced `getDefaultDecision()` to consider subject, object, AND predicate relationships
+- New test file: `tests/facts-revision-decisions.test.ts` with exhaustive edge case coverage
+
+</details>
+
+---
+
 ### TypeScript SDK v0.29.0 · Jan 9, 2026
 
 **Automatic Fact and Entity Graph Sync**
@@ -133,7 +275,7 @@ APIs affected:
 - **Update command version display** - `cortex update` now shows version transitions clearly:
   - Up-to-date packages shown in green: `1.0.0`
   - Outdated packages show transition: `1.0.0 → 1.1.0` (yellow → green)
-  - Not installed packages show: `not installed → 1.1.0`
+  - Not installed packages shown dimmed (update only affects installed packages)
   - Applies to all package types: SDK, Provider, Convex, Vercel AI
   - Works in both multi-deployment dashboard and single deployment/app views
 
@@ -143,6 +285,11 @@ APIs affected:
   - Graph sync is automatic on `remember()` calls (no `syncToGraph` option needed)
 
 #### Fixed
+
+- **Dev-linked apps now refresh on update** - In dev mode, apps with `file:...` references are no longer skipped:
+  - Previously, dev-linked apps showed "Everything is up to date!" even when source changed
+  - Now always runs `npm install` to pick up local SDK source changes
+  - Fixes scenario: bump local SDK version → `cortex update --dev` → changes reflected
 
 - **Accurate graph status messages** - Template now checks for both flag AND URI:
   - Shows `✓ Graph memory connected (auto-sync active)` when fully configured

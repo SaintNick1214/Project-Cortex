@@ -16,6 +16,7 @@ import type {
   QueryByRelationshipFilter,
   QueryBySubjectFilter,
   SearchFactsOptions,
+  SemanticSearchFactsOptions,
   StoreFactOptions,
   StoreFactParams,
   UpdateFactInput,
@@ -264,6 +265,8 @@ export class FactsAPI {
           semanticContext: params.semanticContext,
           entities: params.entities,
           relations: params.relations,
+          // Embedding for semantic search (v0.30.0+)
+          embedding: params.embedding,
         }),
       "facts:store",
     );
@@ -735,6 +738,78 @@ export class FactsAPI {
   }
 
   /**
+   * Semantic search for facts using vector embeddings (v0.30.0+)
+   *
+   * Uses cosine similarity to find semantically related facts,
+   * unlike text search which requires keyword matching.
+   *
+   * @param memorySpaceId - The memory space to search in
+   * @param embedding - The query embedding vector
+   * @param options - Search options (filters, limits, etc.)
+   * @returns Array of matching fact records
+   *
+   * @example
+   * ```typescript
+   * const embedding = await generateEmbedding('user preferences');
+   * const facts = await cortex.facts.semanticSearch('space-1', embedding, {
+   *   minConfidence: 80,
+   *   limit: 10,
+   * });
+   * ```
+   */
+  async semanticSearch(
+    memorySpaceId: string,
+    embedding: number[],
+    options?: SemanticSearchFactsOptions,
+  ): Promise<FactRecord[]> {
+    validateMemorySpaceId(memorySpaceId);
+
+    if (!embedding || embedding.length === 0) {
+      throw new Error("Embedding vector is required for semantic search");
+    }
+
+    if (options) {
+      if (options.minConfidence !== undefined) {
+        validateConfidence(options.minConfidence, "minConfidence");
+      }
+      if (options.tags !== undefined) {
+        validateStringArray(options.tags, "tags", true);
+      }
+      if (options.limit !== undefined) {
+        validateNonNegativeInteger(options.limit, "limit");
+      }
+      if (options.createdBefore && options.createdAfter) {
+        validateDateRange(
+          options.createdAfter,
+          options.createdBefore,
+          "createdAfter",
+          "createdBefore",
+        );
+      }
+    }
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.facts.semanticSearch, {
+          memorySpaceId,
+          embedding,
+          tenantId: options?.tenantId ?? this.authContext?.tenantId,
+          userId: options?.userId,
+          minConfidence: options?.minConfidence,
+          includeSuperseded: options?.includeSuperseded,
+          minScore: options?.minScore,
+          limit: options?.limit,
+          tags: options?.tags,
+          createdAfter: options?.createdAfter?.getTime(),
+          createdBefore: options?.createdBefore?.getTime(),
+        }),
+      "facts:semanticSearch",
+    );
+
+    return result as FactRecord[];
+  }
+
+  /**
    * Update fact (creates new version)
    *
    * @example
@@ -784,6 +859,8 @@ export class FactsAPI {
             semanticContext: updates.semanticContext,
             entities: updates.entities,
             relations: updates.relations,
+            // Embedding for semantic search (v0.30.0+)
+            embedding: updates.embedding,
           }),
         "facts:update",
       );

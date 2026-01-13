@@ -8,7 +8,7 @@ description: Complete API reference for memory operations across memory spaces, 
 # Memory Operations API
 
 <Callout type="note">
-**Last Updated**: 2026-01-09
+**Last Updated**: 2026-01-13
 </Callout>
 
 Complete API reference for memory operations across memory spaces.
@@ -564,7 +564,7 @@ interface RememberParams {
     agentResponse: string,
   ) => Promise<string | null>;
 
-  // Optional embedding
+  // Optional embedding override (v0.30.0+: auto-generated when embedding config set)
   generateEmbedding?: (content: string) => Promise<number[] | null>;
 
   // Optional fact extraction (overrides LLM config)
@@ -847,6 +847,10 @@ CortexError(
 **Design Philosophy**: `recall()` is the retrieval counterpart to `remember()`. It provides **total and complete orchestrated context retrieval** by default - batteries included.
 </Callout>
 
+<Callout type="tip" icon="sparkles">
+**v0.30.0**: Facts are now searched using **semantic vector matching**. When `embedding` config is set on the SDK, embeddings are auto-generated from the query. No manual embedding code needed!
+</Callout>
+
 **Signature:**
 
 ```typescript
@@ -858,7 +862,7 @@ cortex.memory.recall(
 **What it does:**
 
 1. **Searches vector memories** (Layer 2) - Semantic search with optional embedding
-2. **Searches facts directly** (Layer 3) - Facts as a primary source, not just enrichment
+2. **Searches facts semantically** (Layer 3, v0.30.0+) - When embedding provided, uses vector similarity; falls back to text search otherwise
 3. **Queries graph relationships** (Layer 4) - Discover related context via entity connections
 4. **Merges, deduplicates, and ranks** results from all sources
 5. **Returns unified context** ready for LLM injection
@@ -868,7 +872,8 @@ cortex.memory.recall(
 | Feature                 | Default                 | Description                              |
 | ----------------------- | ----------------------- | ---------------------------------------- |
 | Vector Search           | Enabled                 | Searches Layer 2 vector memories         |
-| Facts Search            | Enabled                 | Searches Layer 3 facts directly          |
+| Facts Semantic Search   | Enabled (v0.30.0+)      | Semantic search when embedding provided  |
+| Facts Text Search       | Enabled                 | Fallback when no embedding provided      |
 | Graph Expansion         | Enabled (if configured) | Discovers related context via graph      |
 | LLM Context Formatting  | Enabled                 | Generates ready-to-inject context string |
 | Conversation Enrichment | Enabled                 | Includes ACID conversation data          |
@@ -985,13 +990,14 @@ const response = await llm.chat({
 });
 ```
 
-**Example 2: With Semantic Search (Recommended)**
+**Example 2: With Semantic Search (Batteries-Included)**
 
 ```typescript
+// v0.30.0+: Embeddings auto-generated when embedding config is set at SDK init
 const result = await cortex.memory.recall({
   memorySpaceId: "user-123-space",
   query: "user preferences",
-  embedding: await embed("user preferences"), // Better relevance
+  // No manual embedding needed! Auto-generated from query.
   userId: "user-123", // Scope to user
 });
 
@@ -1000,6 +1006,10 @@ const result = await cortex.memory.recall({
 // result.sources shows what came from where
 ```
 
+<Callout type="tip">
+**v0.30.0+**: When `embedding` is configured at SDK init (or `CORTEX_EMBEDDING=true`), embeddings are automatically generated from the `query`. Manual embedding is still supported for override.
+</Callout>
+
 **Example 3: Multi-Agent Context Sharing (A2A)**
 
 ```typescript
@@ -1007,7 +1017,7 @@ const result = await cortex.memory.recall({
 const sharedContext = await cortex.memory.recall({
   memorySpaceId: "team-hive-space",
   query: "project requirements and deadlines",
-  embedding: await embed("project requirements and deadlines"),
+  // Embedding auto-generated!
 });
 
 // Send context to collaborating agent
@@ -1025,7 +1035,7 @@ await cortex.a2a.send({
 const result = await cortex.memory.recall({
   memorySpaceId: "knowledge-base",
   query: "who does Alice work with",
-  embedding: await embed("who does Alice work with"),
+  // Embedding auto-generated!
   graphExpansion: {
     maxDepth: 3, // Go deeper than default
     relationshipTypes: ["WORKS_AT", "KNOWS", "COLLABORATES_WITH"],
@@ -1210,7 +1220,7 @@ interface RememberStreamParams {
     agentResp: string,
   ) => Promise<string | null>;
 
-  // Optional - Embeddings
+  // Optional - Embeddings override (v0.30.0+: auto-generated when embedding config set)
   generateEmbedding?: (content: string) => Promise<number[] | null>;
 
   // Optional - Fact extraction
@@ -1427,9 +1437,17 @@ const result = await cortex.memory.rememberStream({
 });
 ```
 
-**Example 4: With Embeddings and Facts**
+**Example 4: With Embeddings and Facts (Batteries-Included)**
 
 ```typescript
+// Configure Cortex with embedding + LLM at init (v0.30.0+)
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  embedding: { provider: 'openai', apiKey: process.env.OPENAI_API_KEY },
+  llm: { provider: 'openai', apiKey: process.env.OPENAI_API_KEY },
+});
+
+// Embeddings + facts are now automatic!
 const result = await cortex.memory.rememberStream({
   memorySpaceId: "smart-bot",
   conversationId: "conv-999",
@@ -1437,34 +1455,17 @@ const result = await cortex.memory.rememberStream({
   responseStream: stream,
   userId: "user-789",
   userName: "Charlie",
-
-  // Generate embeddings
-  generateEmbedding: async (text) => {
-    const { embedding } = await embed({
-      model: openai.embedding("text-embedding-3-small"),
-      value: text,
-    });
-    return embedding;
-  },
-
-  // Extract facts
-  extractFacts: async (userMsg, agentResp) => {
-    return [
-      {
-        fact: "User's favorite color is blue",
-        factType: "preference",
-        confidence: 95,
-        subject: "user",
-        predicate: "favoriteColor",
-        object: "blue",
-      },
-    ];
-  },
+  // No generateEmbedding needed - auto-generated!
+  // No extractFacts needed - LLM extracts automatically!
 });
 
 console.log("Response:", result.fullResponse);
-console.log("Facts:", result.facts); // Extracted facts
+console.log("Facts:", result.facts); // Auto-extracted facts with embeddings
 ```
+
+<Callout type="tip">
+**v0.30.0+**: When `embedding` is configured at SDK init, embeddings are automatically generated for all `remember()` and `rememberStream()` calls. The `generateEmbedding` callback is still supported for manual override.
+</Callout>
 
 **Example 5: Error Recovery with Resume**
 
@@ -1662,14 +1663,15 @@ interface SearchResult extends MemoryEntry {
 }
 ```
 
-**Example 1: Default (Vector only - fast)**
+**Example 1: Default (Vector only - Batteries-Included)**
 
 ```typescript
+// v0.30.0+: Embeddings auto-generated when embedding config is set
 const memories = await cortex.memory.search(
   "user-123-personal",
   "user preferences",
   {
-    embedding: await embed("user preferences"),
+    // No manual embedding needed! Auto-generated from query.
     userId: "user-123",
     tags: ["preferences"],
     minImportance: 50,
@@ -1690,7 +1692,7 @@ const enriched = await cortex.memory.search(
   "user-123-personal",
   "user preferences",
   {
-    embedding: await embed("user preferences"),
+    // Embedding auto-generated!
     userId: "user-123",
     enrichConversation: true, // Fetch ACID conversations too
   },

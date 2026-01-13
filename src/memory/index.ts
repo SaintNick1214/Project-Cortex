@@ -99,7 +99,7 @@ import {
   type RevisionAction,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import type { LLMConfig } from "../index";
+import type { LLMConfig, EmbeddingConfig } from "../index";
 import { createLLMClient, type ExtractedFact, type LLMClient } from "../llm";
 import {
   MemoryValidationError,
@@ -152,6 +152,8 @@ export interface MemoryAPIDependencies {
   agents: AgentsAPI;
   /** LLM config for auto fact extraction */
   llm?: LLMConfig;
+  /** Embedding config for automatic semantic search (v0.30.0+) */
+  embedding?: EmbeddingConfig;
   /** Auth context for tenant isolation */
   authContext?: AuthContext;
 }
@@ -169,8 +171,12 @@ export class MemoryAPI {
   private readonly usersAPI?: UsersAPI;
   private readonly agentsAPI?: AgentsAPI;
   private readonly llmConfig?: LLMConfig;
+  private readonly embeddingConfig?: EmbeddingConfig;
   private readonly authContext?: AuthContext;
   private llmClient?: LLMClient | null;
+
+  // Cached embedding generator function (created from config)
+  private embeddingGenerator?: (text: string) => Promise<number[] | null>;
 
   constructor(
     client: ConvexClient,
@@ -187,7 +193,13 @@ export class MemoryAPI {
     this.usersAPI = dependencies?.users;
     this.agentsAPI = dependencies?.agents;
     this.llmConfig = dependencies?.llm;
+    this.embeddingConfig = dependencies?.embedding;
     this.authContext = dependencies?.authContext;
+
+    // Create embedding generator from config (v0.30.0+)
+    if (this.embeddingConfig) {
+      this.embeddingGenerator = this.createEmbeddingGenerator(this.embeddingConfig);
+    }
 
     // Pass resilience layer to sub-APIs (with authContext for tenant isolation)
     this.conversations = new ConversationsAPI(
@@ -217,6 +229,67 @@ export class MemoryAPI {
       this.authContext,
       beliefRevisionLLMClient,
     );
+  }
+
+  /**
+   * Create an embedding generator function from config (v0.30.0+)
+   *
+   * Enables batteries-included semantic search by auto-generating embeddings.
+   */
+  private createEmbeddingGenerator(
+    config: EmbeddingConfig,
+  ): (text: string) => Promise<number[] | null> {
+    if (config.provider === "custom" && config.generate) {
+      // Use custom embedding function
+      return async (text: string) => {
+        try {
+          return await config.generate!(text);
+        } catch (error) {
+          console.warn("[Cortex] Custom embedding generation failed:", error);
+          return null;
+        }
+      };
+    }
+
+    if (config.provider === "openai" && config.apiKey) {
+      // Use OpenAI embeddings API
+      const apiKey = config.apiKey;
+      const model = config.model || "text-embedding-3-small";
+
+      return async (text: string) => {
+        try {
+          const response = await fetch("https://api.openai.com/v1/embeddings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+              model,
+              input: text,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.warn("[Cortex] OpenAI embedding API error:", errorText);
+            return null;
+          }
+
+          const data = (await response.json()) as {
+            data?: Array<{ embedding?: number[] }>;
+          };
+          return data.data?.[0]?.embedding || null;
+        } catch (error) {
+          console.warn("[Cortex] OpenAI embedding generation failed:", error);
+          return null;
+        }
+      };
+    }
+
+    // No valid config
+    console.warn("[Cortex] Invalid embedding config, no embedding generation available");
+    return async () => null;
   }
 
   /**
@@ -443,7 +516,8 @@ export class MemoryAPI {
    * Build deduplication config from remember params
    *
    * Defaults to 'semantic' strategy for maximum effectiveness (convenience layer).
-   * Falls back to 'structural' if no generateEmbedding function is available.
+   * BATTERIES INCLUDED (v0.30.0+): Falls back to this.embeddingGenerator if available,
+   * then to 'structural' if no embedding function is available.
    * Returns undefined if deduplication is explicitly disabled.
    */
   private buildDeduplicationConfig(
@@ -457,13 +531,16 @@ export class MemoryAPI {
     // Determine the strategy - default to 'semantic'
     const strategy = params.factDeduplication ?? "semantic";
 
+    // BATTERIES INCLUDED: Use params.generateEmbedding, fall back to configured generator
+    const effectiveGenerator = params.generateEmbedding || this.embeddingGenerator;
+
     // Build the config
     const config: DeduplicationConfig = {
       strategy,
       similarityThreshold: 0.85,
-      generateEmbedding: params.generateEmbedding
+      generateEmbedding: effectiveGenerator
         ? async (text: string) => {
-            const result = await params.generateEmbedding!(text);
+            const result = await effectiveGenerator(text);
             if (!result) {
               throw new Error("generateEmbedding returned null");
             }
@@ -1174,15 +1251,17 @@ export class MemoryAPI {
           }
         }
 
-        // Generate embeddings (if provided)
+        // Generate embeddings - BATTERIES INCLUDED (v0.30.0+)
+        // Use params.generateEmbedding, fall back to configured embedding generator
         let userEmbedding: number[] | undefined;
         let agentEmbedding: number[] | undefined;
 
-        if (params.generateEmbedding) {
+        const effectiveEmbeddingFn = params.generateEmbedding || this.embeddingGenerator;
+        if (effectiveEmbeddingFn) {
           userEmbedding =
-            (await params.generateEmbedding(userContent)) || undefined;
+            (await effectiveEmbeddingFn(userContent)) || undefined;
           agentEmbedding =
-            (await params.generateEmbedding(agentContent)) || undefined;
+            (await effectiveEmbeddingFn(agentContent)) || undefined;
         }
 
         // Store user message in Vector with conversationRef
@@ -1354,6 +1433,24 @@ export class MemoryAPI {
 
             for (const factData of factsToStore) {
               try {
+                // Generate embedding for the fact - BATTERIES INCLUDED (v0.30.0+)
+                // Use params.generateEmbedding, fall back to configured embedding generator
+                // This enables semantic search for facts during recall()
+                let factEmbedding: number[] | undefined;
+                const factEmbeddingFn = params.generateEmbedding || this.embeddingGenerator;
+                if (factEmbeddingFn && factData.fact) {
+                  try {
+                    const embeddingResult = await factEmbeddingFn(factData.fact);
+                    // Convert null to undefined for type compatibility
+                    factEmbedding = embeddingResult ?? undefined;
+                  } catch (embeddingError) {
+                    console.warn(
+                      "[Cortex] Failed to generate fact embedding, continuing without:",
+                      embeddingError,
+                    );
+                  }
+                }
+
                 if (useBeliefRevision) {
                   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                   // BELIEF REVISION PATH (intelligent fact management)
@@ -1381,6 +1478,8 @@ export class MemoryAPI {
                       object: factData.object,
                       confidence: factData.confidence,
                       tags: factData.tags || params.tags || [],
+                      // Embedding for semantic search (v0.30.0+)
+                      embedding: factEmbedding,
                     },
                   });
 
@@ -1424,6 +1523,8 @@ export class MemoryAPI {
                       memoryId: storedMemories[0]?.memoryId,
                     },
                     tags: factData.tags || params.tags || [],
+                    // Embedding for semantic search (v0.30.0+)
+                    embedding: factEmbedding,
                   };
 
                   // Use storeWithDedup if deduplication is enabled
@@ -2070,12 +2171,14 @@ export class MemoryAPI {
         throw new Error("Response stream completed but produced no content.");
       }
 
-      // Step 6: Finalize storage
+      // Step 6: Finalize storage - BATTERIES INCLUDED (v0.30.0+)
+      // Use params.generateEmbedding, fall back to configured embedding generator
       if (storageHandler && storageHandler.isReady()) {
+        const streamEmbeddingFn = params.generateEmbedding || this.embeddingGenerator;
         await storageHandler.finalizeMemory(
           fullResponse,
-          params.generateEmbedding
-            ? (await params.generateEmbedding(fullResponse)) || undefined
+          streamEmbeddingFn
+            ? (await streamEmbeddingFn(fullResponse)) || undefined
             : undefined,
         );
       }
@@ -2408,9 +2511,20 @@ export class MemoryAPI {
       validateSearchOptions(options);
     }
 
+    // BATTERIES INCLUDED (v0.30.0+): Auto-generate embedding if not provided
+    let effectiveEmbedding = options?.embedding;
+    if (!effectiveEmbedding && this.embeddingGenerator && query) {
+      try {
+        effectiveEmbedding = (await this.embeddingGenerator(query)) ?? undefined;
+      } catch (error) {
+        // Embedding generation failed - fall back to text search
+        console.warn("[Cortex] Auto-embedding generation failed in search(), falling back to text search:", error);
+      }
+    }
+
     // Search vector
     const memories = await this.vector.search(memorySpaceId, query, {
-      embedding: options?.embedding,
+      embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding
       userId: options?.userId,
       tags: options?.tags,
       sourceType: options?.sourceType,
@@ -2580,15 +2694,31 @@ export class MemoryAPI {
     const formatForLLMFlag = params.formatForLLM !== false;
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // STEP 2: PARALLEL SEARCH - Vector + Facts
+    // STEP 2: PARALLEL SEARCH - Vector + Facts (Semantic when embedding available)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     const effectiveTenantId = params.tenantId ?? this.authContext?.tenantId;
 
+    // BATTERIES INCLUDED (v0.30.0+): Auto-generate embedding if not provided
+    // When embedding config is set, we automatically generate embeddings from the query
+    let effectiveEmbedding = params.embedding;
+    if (!effectiveEmbedding && this.embeddingGenerator && params.query) {
+      try {
+        effectiveEmbedding = (await this.embeddingGenerator(params.query)) ?? undefined;
+      } catch (error) {
+        // Embedding generation failed - fall back to text search
+        console.warn("[Cortex] Auto-embedding generation failed, falling back to text search:", error);
+      }
+    }
+
+    // Use semantic search for facts when embedding is available (v0.30.0+)
+    const hasEmbedding =
+      effectiveEmbedding && Array.isArray(effectiveEmbedding) && effectiveEmbedding.length > 0;
+
     const [rawVectorMemories, rawDirectFacts] = await Promise.all([
-      // Vector search
+      // Vector search (uses embedding for semantic matching)
       sources.vector
         ? this.vector.search(params.memorySpaceId, params.query, {
-            embedding: params.embedding,
+            embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding
             userId: params.userId,
             tags: params.tags,
             minImportance: params.minImportance,
@@ -2597,16 +2727,29 @@ export class MemoryAPI {
           })
         : Promise.resolve([]),
 
-      // Facts search
+      // Facts search - USE SEMANTIC when embedding available, TEXT otherwise
       sources.facts
-        ? this.facts.search(params.memorySpaceId, params.query, {
-            userId: params.userId,
-            minConfidence: params.minConfidence,
-            tags: params.tags,
-            createdAfter: params.createdAfter,
-            createdBefore: params.createdBefore,
-            limit: limit * 4, // Fetch extra for tenant filtering and dedup
-          })
+        ? hasEmbedding
+          ? // Semantic search for facts (v0.30.0+) - finds semantically related facts
+            this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding!, {
+              userId: params.userId,
+              tenantId: effectiveTenantId,
+              minConfidence: params.minConfidence,
+              tags: params.tags,
+              createdAfter: params.createdAfter,
+              createdBefore: params.createdBefore,
+              limit: limit * 4, // Fetch extra for tenant filtering and dedup
+              minScore: 0.3, // Reasonable threshold
+            })
+          : // Fallback to text search when no embedding provided
+            this.facts.search(params.memorySpaceId, params.query, {
+              userId: params.userId,
+              minConfidence: params.minConfidence,
+              tags: params.tags,
+              createdAfter: params.createdAfter,
+              createdBefore: params.createdBefore,
+              limit: limit * 4, // Fetch extra for tenant filtering and dedup
+            })
         : Promise.resolve([]),
     ]);
 

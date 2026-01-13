@@ -983,6 +983,9 @@ export interface FactRecord {
   supersedes?: string; // factId of previous version
   createdAt: number;
   updatedAt: number;
+
+  // Embedding for semantic search (v0.30.0+)
+  embedding?: number[];
 }
 
 export interface StoreFactParams {
@@ -1021,6 +1024,9 @@ export interface StoreFactParams {
 
   validFrom?: number;
   validUntil?: number;
+
+  // Embedding for semantic search (v0.30.0+)
+  embedding?: number[];
 }
 
 export interface ListFactsFilter {
@@ -1258,6 +1264,44 @@ export interface UpdateFactInput {
   semanticContext?: string; // Usage context sentence
   entities?: EnrichedEntity[]; // Extracted entities with types
   relations?: EnrichedRelation[]; // Subject-predicate-object triples for graph
+
+  // Embedding for semantic search (v0.30.0+)
+  embedding?: number[];
+}
+
+/**
+ * Options for semantic search on facts (v0.30.0+)
+ *
+ * Uses vector embeddings to find semantically related facts,
+ * unlike text search which requires keyword matching.
+ */
+export interface SemanticSearchFactsOptions {
+  /** Multi-tenancy filter */
+  tenantId?: string;
+
+  /** Filter by user who created the fact */
+  userId?: string;
+
+  /** Minimum confidence threshold (0-100) */
+  minConfidence?: number;
+
+  /** Include superseded facts (default: false) */
+  includeSuperseded?: boolean;
+
+  /** Minimum similarity score (0-1, default: 0.3) */
+  minScore?: number;
+
+  /** Maximum results to return (default: 20) */
+  limit?: number;
+
+  /** Filter by tags (any match) */
+  tags?: string[];
+
+  /** Filter facts created after this date */
+  createdAfter?: Date;
+
+  /** Filter facts created before this date */
+  createdBefore?: Date;
 }
 
 export interface DeleteManyFactsParams {

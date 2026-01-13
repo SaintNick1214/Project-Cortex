@@ -76,6 +76,8 @@ export const store = mutation({
         }),
       ),
     ), // Subject-predicate-object triples for graph
+    // Embedding for semantic search (v0.30.0+)
+    embedding: v.optional(v.array(v.float64())),
   },
   handler: async (ctx, args) => {
     const now = Date.now();
@@ -105,6 +107,8 @@ export const store = mutation({
       semanticContext: args.semanticContext,
       entities: args.entities,
       relations: args.relations,
+      // Embedding for semantic search
+      embedding: args.embedding,
       version: 1,
       supersededBy: undefined,
       supersedes: undefined,
@@ -150,6 +154,8 @@ export const update = mutation({
         }),
       ),
     ),
+    // Embedding for semantic search (v0.30.0+)
+    embedding: v.optional(v.array(v.float64())),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -203,6 +209,9 @@ export const update = mutation({
       entities: args.entities !== undefined ? args.entities : existing.entities,
       relations:
         args.relations !== undefined ? args.relations : existing.relations,
+      // Embedding - use new if provided, else preserve existing
+      embedding:
+        args.embedding !== undefined ? args.embedding : existing.embedding,
       version: existing.version + 1,
       supersedes: existing.factId, // Link to previous
       supersededBy: undefined,
@@ -966,6 +975,123 @@ export const search = query({
         : filtered.slice(offset);
 
     return filtered;
+  },
+});
+
+/**
+ * Semantic search for facts using vector embeddings (v0.30.0+)
+ *
+ * Uses cosine similarity to find semantically related facts.
+ * Falls back to manual similarity calculation in local dev (no vector index).
+ */
+export const semanticSearch = query({
+  args: {
+    memorySpaceId: v.string(),
+    embedding: v.array(v.float64()),
+    tenantId: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    minConfidence: v.optional(v.number()),
+    includeSuperseded: v.optional(v.boolean()),
+    minScore: v.optional(v.number()),
+    limit: v.optional(v.number()),
+    tags: v.optional(v.array(v.string())),
+    createdAfter: v.optional(v.number()),
+    createdBefore: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit || 20;
+    const minScore = args.minScore || 0.3;
+    let results: any[] = [];
+
+    if (args.embedding && args.embedding.length > 0) {
+      // Try vector index first (production), fallback to manual similarity (local dev)
+      try {
+        // Note: .similar() API is only available in managed Convex, not local dev
+        results = await ctx.db
+          .query("facts")
+          .withIndex("by_embedding" as any, (q: any) =>
+            q
+              .similar("embedding", args.embedding, limit * 2) // Fetch extra for filtering
+              .eq("memorySpaceId", args.memorySpaceId),
+          )
+          .collect();
+      } catch (error: any) {
+        // Fallback for local Convex (no vector index support)
+        if (error.message?.includes("similar is not a function")) {
+          const allFacts = await ctx.db
+            .query("facts")
+            .withIndex("by_memorySpace", (q) =>
+              q.eq("memorySpaceId", args.memorySpaceId),
+            )
+            .collect();
+
+          // Calculate cosine similarity for each fact with embedding
+          const withScores = allFacts
+            .filter((f) => f.embedding && f.embedding.length > 0)
+            .map((f) => {
+              // Validate dimension matching
+              if (f.embedding!.length !== args.embedding.length) {
+                return { ...f, _score: -1 };
+              }
+
+              // Cosine similarity calculation
+              let dotProduct = 0;
+              let normA = 0;
+              let normB = 0;
+
+              for (let i = 0; i < args.embedding.length; i++) {
+                dotProduct += args.embedding[i] * f.embedding![i];
+                normA += args.embedding[i] * args.embedding[i];
+                normB += f.embedding![i] * f.embedding![i];
+              }
+
+              const denominator = Math.sqrt(normA) * Math.sqrt(normB);
+              const similarity = denominator > 0 ? dotProduct / denominator : 0;
+
+              return { ...f, _score: similarity };
+            })
+            .filter((f) => !isNaN(f._score) && f._score >= minScore)
+            .sort((a, b) => b._score - a._score)
+            .slice(0, limit * 2);
+
+          results = withScores;
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    // Filter superseded unless explicitly requested
+    let filtered = args.includeSuperseded
+      ? results
+      : results.filter((f) => f.supersededBy === undefined);
+
+    // Tenant isolation filter
+    if (args.tenantId) {
+      filtered = filtered.filter((f) => f.tenantId === args.tenantId);
+    }
+
+    // Apply additional filters
+    if (args.userId !== undefined) {
+      filtered = filtered.filter((f) => f.userId === args.userId);
+    }
+    if (args.minConfidence !== undefined) {
+      filtered = filtered.filter((f) => f.confidence >= args.minConfidence!);
+    }
+    if (args.tags && args.tags.length > 0) {
+      filtered = filtered.filter((f) =>
+        args.tags!.some((tag) => f.tags.includes(tag)),
+      );
+    }
+    if (args.createdAfter !== undefined) {
+      filtered = filtered.filter((f) => f.createdAt >= args.createdAfter!);
+    }
+    if (args.createdBefore !== undefined) {
+      filtered = filtered.filter((f) => f.createdAt <= args.createdBefore!);
+    }
+
+    // Apply final limit
+    return filtered.slice(0, limit);
   },
 });
 

@@ -43,6 +43,8 @@ export interface ConflictCandidate {
   object?: string;
   confidence: number;
   tags?: string[];
+  /** Embedding for semantic search (v0.30.0+) */
+  embedding?: number[];
 }
 
 /**
@@ -78,13 +80,33 @@ Your task is to determine the correct action when a new fact is added that may c
 
 4. **ADD**: The new fact is genuinely new information not covered by existing facts. Create a new fact record.
 
+## Understanding Temporal Metadata
+
+Each existing fact includes temporal metadata that you MUST consider:
+
+- **Created/Updated timestamps**: When the fact was recorded and last modified
+- **Status**: Shows the fact's current state:
+  - "Active" = Current, valid fact
+  - "⚠️ SUPERSEDED by [factId]" = This fact has been REPLACED by a newer fact - treat as historical
+  - "Replaced: [factId]" = This fact replaced an older one - it is the current truth
+  - "EXPIRED" = This fact is no longer valid
+
+## Critical Rules for Temporal Reasoning
+
+1. **NEVER merge superseded facts with current facts** - If an existing fact shows "⚠️ SUPERSEDED", it has already been replaced. Do not combine old and new values (e.g., do NOT create "user likes both blue and purple" if blue was superseded by purple).
+
+2. **Supersession chains indicate preference CHANGES** - When you see a fact that "Replaced" another, the user explicitly changed their preference/information. The old value is historical, not additive.
+
+3. **The "Object" field is the key value** - For preference facts, the Object field contains the actual value (e.g., "blue", "purple", "New York"). Different Objects with the same Subject+Predicate = conflict requiring SUPERSEDE.
+
+4. **Timestamps matter** - When in doubt, newer information (higher Updated timestamp) is more likely to be accurate.
+
 ## Decision Guidelines
 
-- Prefer UPDATE when the new fact adds detail to an existing fact
-- Use SUPERSEDE when facts are mutually exclusive (e.g., "lives in NYC" vs "lives in LA")
-- Use NONE when the new fact doesn't add value
-- Use ADD when facts can coexist (different aspects of the same topic)
-- Consider temporal context - newer information typically supersedes older
+- Prefer UPDATE when the new fact adds detail to an existing fact (same Object, more specificity)
+- Use SUPERSEDE when facts are mutually exclusive (same Subject+Predicate, different Object)
+- Use NONE when the new fact doesn't add value or is less specific than existing
+- Use ADD when facts can coexist (different predicate categories, different aspects)
 - Consider confidence levels - higher confidence facts take precedence
 
 ## Output Format
@@ -209,7 +231,38 @@ export function buildSystemPrompt(options?: PromptOptions): string {
 }
 
 /**
+ * Format temporal status for a fact
+ */
+function formatTemporalStatus(fact: FactRecord): string {
+  const statusParts: string[] = [];
+
+  // Supersession chain info - CRITICAL for understanding fact currency
+  if (fact.supersededBy) {
+    statusParts.push(`⚠️ SUPERSEDED by ${fact.supersededBy}`);
+  }
+  if (fact.supersedes) {
+    statusParts.push(`Replaced: ${fact.supersedes}`);
+  }
+
+  // Validity window
+  if (fact.validFrom) {
+    statusParts.push(`Valid from: ${new Date(fact.validFrom).toISOString()}`);
+  }
+  if (fact.validUntil) {
+    const isExpired = fact.validUntil < Date.now();
+    statusParts.push(
+      `Valid until: ${new Date(fact.validUntil).toISOString()}${isExpired ? " (EXPIRED)" : ""}`,
+    );
+  }
+
+  return statusParts.length > 0 ? statusParts.join(" | ") : "Active";
+}
+
+/**
  * Build the user prompt with the new fact and existing facts
+ *
+ * Includes full temporal and supersession metadata to enable
+ * accurate conflict resolution decisions.
  */
 export function buildUserPrompt(
   newFact: ConflictCandidate,
@@ -236,7 +289,21 @@ Tags: ${newFact.tags?.join(", ") || "none"}
   if (factsToInclude.length === 0) {
     prompt += "No existing facts found.\n";
   } else {
+    // Check if any facts have supersession relationships
+    const hasSupersessionChain = factsToInclude.some(
+      (f) => f.supersedes || f.supersededBy,
+    );
+
+    if (hasSupersessionChain) {
+      prompt += `NOTE: Some facts have supersession relationships. Facts marked "⚠️ SUPERSEDED" 
+have been replaced by newer facts and should be considered outdated.
+Facts with "Replaced:" indicate they superseded an older fact.
+
+`;
+    }
+
     factsToInclude.forEach((fact, index) => {
+      const temporalStatus = formatTemporalStatus(fact);
       prompt += `${index + 1}. [ID: ${fact.factId}] "${fact.fact}"
    Type: ${fact.factType}
    Subject: ${fact.subject || "unknown"}
@@ -244,6 +311,8 @@ Tags: ${newFact.tags?.join(", ") || "none"}
    Object: ${fact.object || "unknown"}
    Confidence: ${fact.confidence}
    Created: ${new Date(fact.createdAt).toISOString()}
+   Updated: ${new Date(fact.updatedAt).toISOString()}
+   Status: ${temporalStatus}
 
 `;
     });
@@ -252,6 +321,11 @@ Tags: ${newFact.tags?.join(", ") || "none"}
   prompt += `## Your Task
 
 Analyze the new fact against the existing facts and determine the appropriate action.
+IMPORTANT: 
+- If an existing fact is marked "⚠️ SUPERSEDED", it has already been replaced and should not be considered current.
+- Pay attention to the temporal relationships between facts.
+- The "Object" field often contains the specific value (e.g., "blue", "purple") that determines if facts conflict.
+
 Return ONLY a valid JSON object with your decision.`;
 
   return prompt;
@@ -373,6 +447,108 @@ export function validateConflictDecision(
 }
 
 /**
+ * Check if two predicates are related (likely in the same semantic slot)
+ *
+ * This helps avoid superseding unrelated facts like "favorite color" vs "favorite food"
+ * when they share the same subject but are about different aspects.
+ */
+function arePredicatesRelated(
+  predicate1: string | undefined,
+  predicate2: string | undefined,
+): boolean {
+  // If either predicate is missing, assume they might be related (conservative)
+  if (!predicate1 || !predicate2) {
+    return true;
+  }
+
+  const p1 = predicate1.toLowerCase().trim();
+  const p2 = predicate2.toLowerCase().trim();
+
+  // Exact match
+  if (p1 === p2) {
+    return true;
+  }
+
+  // Extract key words from predicates
+  const words1 = new Set(p1.split(/\s+/).filter((w) => w.length > 2));
+  const words2 = new Set(p2.split(/\s+/).filter((w) => w.length > 2));
+
+  // Check for significant word overlap
+  const intersection = [...words1].filter((w) => words2.has(w));
+
+  // If predicates share key words, they're related
+  // e.g., "favorite color" and "favorite colour" share "favorite"
+  // but "favorite color" and "favorite food" share "favorite" - not enough
+  if (intersection.length > 0) {
+    // Check if the distinguishing words are similar
+    // "color" vs "colour" = related, "color" vs "food" = not related
+    const uniqueWords1 = [...words1].filter((w) => !words2.has(w));
+    const uniqueWords2 = [...words2].filter((w) => !words1.has(w));
+
+    // If one predicate is a subset of the other, they're related
+    if (uniqueWords1.length === 0 || uniqueWords2.length === 0) {
+      return true;
+    }
+
+    // Check if unique words are similar (e.g., "color" vs "colour")
+    for (const w1 of uniqueWords1) {
+      for (const w2 of uniqueWords2) {
+        if (wordsSimilar(w1, w2)) {
+          return true;
+        }
+      }
+    }
+
+    // If predicates share "favorite"/"preferred" but have different distinguishing words
+    // like "color" vs "food", they're NOT related
+    return false;
+  }
+
+  // No word overlap - check character-level similarity for typos
+  const similarity = stringSimilarity(p1, p2);
+  return similarity > 0.7;
+}
+
+/**
+ * Check if two words are similar (handles typos, British/American spelling)
+ */
+function wordsSimilar(w1: string, w2: string): boolean {
+  if (w1 === w2) return true;
+
+  // Common spelling variations
+  const variations: Record<string, string[]> = {
+    color: ["colour"],
+    favorite: ["favourite"],
+    neighbor: ["neighbour"],
+    organize: ["organise"],
+  };
+
+  for (const [base, alts] of Object.entries(variations)) {
+    if ((w1 === base && alts.includes(w2)) || (w2 === base && alts.includes(w1))) {
+      return true;
+    }
+  }
+
+  // Check edit distance for typos
+  return stringSimilarity(w1, w2) > 0.8;
+}
+
+/**
+ * Simple string similarity based on character overlap
+ */
+function stringSimilarity(s1: string, s2: string): number {
+  if (s1 === s2) return 1;
+  if (s1.length === 0 || s2.length === 0) return 0;
+
+  const chars1 = new Set(s1.split(""));
+  const chars2 = new Set(s2.split(""));
+  const intersection = [...chars1].filter((c) => chars2.has(c));
+  const union = new Set([...chars1, ...chars2]);
+
+  return intersection.length / union.size;
+}
+
+/**
  * Get a default decision when LLM is unavailable
  *
  * Falls back to simple heuristics based on similarity
@@ -434,26 +610,77 @@ export function getDefaultDecision(
     };
   }
 
-  // Medium similarity - might be a supersession
-  if (bestMatch && bestMatch.similarity > 0.5) {
-    // Check if same subject - might be supersession
-    if (
-      newFact.subject &&
-      bestMatch.fact.subject &&
-      newFact.subject.toLowerCase() === bestMatch.fact.subject.toLowerCase()
-    ) {
+  // Check if same subject - candidates already passed slot/semantic matching,
+  // so same subject indicates facts about the same entity in the same semantic slot
+  const sameSubject =
+    newFact.subject &&
+    bestMatch?.fact.subject &&
+    newFact.subject.toLowerCase() === bestMatch.fact.subject.toLowerCase();
+
+  // Check if objects are the same (e.g., both about "blue" color)
+  const sameObject =
+    newFact.object &&
+    bestMatch?.fact.object &&
+    newFact.object.toLowerCase().trim() ===
+      bestMatch.fact.object.toLowerCase().trim();
+
+  // Check if predicates are related (to avoid superseding unrelated facts)
+  // e.g., "favorite color" and "favorite food" should NOT supersede each other
+  const predicatesRelated = arePredicatesRelated(
+    newFact.predicate,
+    bestMatch?.fact.predicate,
+  );
+
+  if (bestMatch && sameSubject && predicatesRelated) {
+    // Same subject + related predicates - need to determine if this is a duplicate, refinement, or change
+    if (sameObject) {
+      // Same subject + same object = likely duplicate or refinement
+      // Even with low text similarity, if the object is the same, it's the same preference
+      if (newFact.confidence > bestMatch.fact.confidence) {
+        return {
+          action: "UPDATE",
+          targetFactId: bestMatch.fact.factId,
+          reason:
+            "Same subject and object with higher confidence - refining existing fact",
+          mergedFact: newFact.fact,
+          confidence: 75,
+        };
+      }
+      return {
+        action: "NONE",
+        targetFactId: bestMatch.fact.factId,
+        reason:
+          "Same subject and object - existing fact already captures this",
+        mergedFact: null,
+        confidence: 75,
+      };
+    } else {
+      // Same subject + related predicate + different object = preference/fact has changed (e.g., blue → purple)
+      // The fact that we have candidates means slot/semantic matching found a conflict
       return {
         action: "SUPERSEDE",
         targetFactId: bestMatch.fact.factId,
         reason:
-          "Same subject with different content - possible update to existing knowledge",
+          "Same subject with different value - preference or fact has changed",
         mergedFact: null,
-        confidence: 60,
+        confidence: 70,
       };
     }
   }
 
-  // Low similarity - new fact
+  // Medium similarity without same subject - might still be related
+  if (bestMatch && bestMatch.similarity > 0.5) {
+    return {
+      action: "SUPERSEDE",
+      targetFactId: bestMatch.fact.factId,
+      reason:
+        "Medium similarity suggests related content - possible update to existing knowledge",
+      mergedFact: null,
+      confidence: 60,
+    };
+  }
+
+  // Low similarity and different subject - new fact
   return {
     action: "ADD",
     targetFactId: null,

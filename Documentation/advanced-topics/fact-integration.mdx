@@ -5,15 +5,133 @@ sidebar_position: 12
 description: Advanced patterns for using extracted facts
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Fact Integration
 
 <Callout type="info">
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-13
 </Callout>
 
 <Callout type="info" title="Facts Throughout the System">
   Facts are automatically integrated into `recall()`, search results, and memory enrichment. This page covers advanced patterns for **working with** extracted facts.
 </Callout>
+
+<Callout type="tip" icon="sparkles">
+**v0.30.0**: Facts now support **semantic search** via embeddings. When an embedding is available in `recall()`, facts are searched by semantic similarity, not just keywords.
+</Callout>
+
+### How Embeddings Work in Batteries-Included Mode
+
+<Tabs>
+  <TabItem value="vercel" label="Vercel AI Provider (Automatic)">
+
+When using the Vercel AI Provider, embeddings are **generated automatically** if you configure an `embeddingProvider`:
+
+```typescript
+import { createCortexMemoryAsync } from '@cortex-platform/vercel-ai-provider';
+import { openai } from '@ai-sdk/openai';
+
+const cortexMemory = await createCortexMemoryAsync({
+  memorySpaceId: 'user-space',
+  // Configure embedding provider - recall() gets embeddings automatically
+  embeddingProvider: openai.embedding('text-embedding-3-small'),
+});
+
+// Now every recall() automatically:
+// 1. Generates an embedding for the query
+// 2. Uses semantic search for both memories AND facts
+// No manual embedding code needed!
+```
+
+  </TabItem>
+  <TabItem value="direct-auto" label="Direct SDK (Automatic)" default>
+
+**v0.30.0+**: Configure `embedding` once at SDK initialization for batteries-included semantic search:
+
+```typescript
+import { Cortex } from '@cortexmemory/sdk';
+
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  // Configure embedding provider - batteries included!
+  embedding: {
+    provider: 'openai',
+    apiKey: process.env.OPENAI_API_KEY,
+    model: 'text-embedding-3-small',  // optional, this is the default
+  },
+});
+
+// Now every recall() automatically:
+// 1. Generates an embedding for the query
+// 2. Uses semantic search for both memories AND facts
+// No manual embedding code needed!
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-space',
+  query: "What are the user's preferences?",
+  // Embedding is auto-generated from the query!
+});
+
+// remember() also auto-generates embeddings for facts
+await cortex.memory.remember({
+  memorySpaceId: 'user-space',
+  userMessage: "I prefer dark mode",
+  agentResponse: "Got it!",
+  // Facts extracted are automatically given embeddings
+});
+```
+
+You can also use environment variables for zero-config setup:
+
+```bash
+# Set these env vars
+export CORTEX_EMBEDDING=true
+export OPENAI_API_KEY=sk-...
+```
+
+```typescript
+// SDK auto-configures embedding from env vars!
+const cortex = await Cortex.create({
+  convexUrl: process.env.CONVEX_URL!,
+});
+```
+
+  </TabItem>
+  <TabItem value="direct-manual" label="Direct SDK (Manual Override)">
+
+You can still pass embeddings manually for full control:
+
+```typescript
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-space',
+  query: "What are the user's preferences?",
+  // Override: provide your own embedding
+  embedding: await myCustomEmbeddingFn("What are the user's preferences?"),
+});
+```
+
+This is useful when:
+- You want to use a different embedding model per-query
+- You have pre-computed embeddings
+- You need custom embedding logic
+
+  </TabItem>
+  <TabItem value="fallback" label="No Embedding (Keyword Only)">
+
+Without embedding configuration, `recall()` still works but uses **keyword-based text search** for facts:
+
+```typescript
+// This works, but facts are searched by keywords only
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-space',
+  query: "What colors does the user like?",
+  // No embedding config - falls back to text search
+});
+```
+
+  </TabItem>
+</Tabs>
 
 <Callout type="tip" title="Looking for Extraction?">
   See [Fact Extraction](/core-features/fact-extraction) for how to configure automatic or custom fact extraction from conversations.
@@ -28,10 +146,11 @@ description: Advanced patterns for using extracted facts
 </Callout>
 
 ```typescript
+// With embedding - uses semantic search for facts (recommended)
 const result = await cortex.memory.recall({
   memorySpaceId: 'user-space',
   query: "What are the user's preferences?",
-  embedding: await embed("What are the user's preferences?"),
+  embedding: await embed("What are the user's preferences?"), // Enables semantic fact search
 });
 
 // Facts included automatically in sources
@@ -50,6 +169,10 @@ console.log(result.context);
 //  ## Recent Memories
 //  ..."
 ```
+
+<Callout type="info">
+**v0.30.0+**: When `embedding` is provided, facts are searched semantically—meaning "What colors does the user like?" can find "User prefers purple" even without the word "color" in the fact.
+</Callout>
 
 ### Filter Facts in recall()
 

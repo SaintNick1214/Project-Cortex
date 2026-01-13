@@ -45,6 +45,20 @@ export interface Fact {
   subject?: string;
 }
 
+/**
+ * Transform SDK FactRecord to local Fact interface
+ * SDK uses 'fact' field, local interface uses 'content'
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function transformFacts(sdkFacts: any[]): Fact[] {
+  return sdkFacts.map((f) => ({
+    content: f.fact || f.content || "", // SDK uses 'fact', fallback to 'content'
+    factType: f.factType,
+    confidence: f.confidence,
+    subject: f.subject,
+  }));
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Conversation State
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -122,7 +136,9 @@ export async function chat(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = recallResult as any;
     memories = (result.sources?.vector?.items || result.memories || []) as Memory[];
-    facts = (result.sources?.facts?.items || result.facts || []) as Fact[];
+    // Transform facts: SDK FactRecord uses 'fact' field, local Fact uses 'content'
+    const rawFacts = result.sources?.facts?.items || result.facts || [];
+    facts = transformFacts(rawFacts);
 
     stopSpinner(true, `Found ${memories.length} memories, ${facts.length} facts`);
 
@@ -207,7 +223,9 @@ export async function recallMemories(query: string): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = recallResult as any;
     const memories = (result.sources?.vector?.items || result.memories || []) as Memory[];
-    const facts = (result.sources?.facts?.items || result.facts || []) as Fact[];
+    // Transform facts: SDK FactRecord uses 'fact' field, local Fact uses 'content'
+    const rawFacts = result.sources?.facts?.items || result.facts || [];
+    const facts = transformFacts(rawFacts);
 
     stopSpinner(true, `Found ${memories.length} memories, ${facts.length} facts`);
     printRecallResults(memories, facts);
@@ -231,7 +249,10 @@ export async function listFacts(): Promise<void> {
       limit: 20,
     });
 
-    const facts = (result.facts || result || []) as Fact[];
+    // Transform facts: SDK returns FactRecord[] directly with 'fact' field
+    // Local Fact interface uses 'content'
+    const rawFacts = Array.isArray(result) ? result : [];
+    const facts = transformFacts(rawFacts);
 
     stopSpinner(true, `Found ${facts.length} facts`);
     printRecallResults([], facts);

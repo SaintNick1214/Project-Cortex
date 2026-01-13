@@ -15,6 +15,10 @@ description: LLM-powered fact extraction for 60-90% token savings
   - **Better retrieval** - Structured facts are more searchable
 </Callout>
 
+<Callout type="tip" icon="sparkles">
+**v0.30.0**: Facts now support **semantic search** via embeddings. Configure `embedding` once at SDK init (or set `CORTEX_EMBEDDING=true`) and embeddings are auto-generated for all `remember()` and `recall()` calls - no manual embedding code needed!
+</Callout>
+
 ---
 
 ## Quick Example
@@ -129,6 +133,53 @@ await cortex.facts.store({
 ```
 
   </TabItem>
+  <TabItem value="semantic" label="With Embeddings (v0.30.0+)">
+
+**Batteries-Included**: Configure `embedding` once at SDK init and all `remember()` and `recall()` calls automatically get embeddings:
+
+```typescript
+import { Cortex } from '@cortexmemory/sdk';
+
+// Configure embedding once - batteries included!
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  llm: { provider: 'openai', apiKey: process.env.OPENAI_API_KEY },
+  embedding: { provider: 'openai', apiKey: process.env.OPENAI_API_KEY },
+});
+
+// Embeddings auto-generated for facts - no callback needed!
+await cortex.memory.remember({
+  memorySpaceId: 'user-123-space',
+  conversationId: 'conv-123',
+  userMessage: 'My favorite color is blue',
+  agentResponse: 'Got it!',
+  userId: 'user-123',
+  userName: 'Alice',
+  // Facts extracted + embeddings generated automatically!
+});
+
+// Embeddings auto-generated for queries too!
+const result = await cortex.memory.recall({
+  memorySpaceId: 'user-123-space',
+  query: 'What colors does the user like?',
+  // No manual embedding needed - auto-generated from query!
+});
+// Finds "User prefers blue color" even without keyword match
+```
+
+Or use environment variables for zero-config:
+
+```bash
+export OPENAI_API_KEY=sk-...
+export CORTEX_EMBEDDING=true
+export CORTEX_FACT_EXTRACTION=true
+```
+
+<Callout type="info">
+  When `embedding` is configured at SDK init, embeddings are automatically generated for each extracted fact during `remember()` and for queries during `recall()`. This enables semantic search with zero per-call embedding code.
+</Callout>
+
+  </TabItem>
 </Tabs>
 
 ---
@@ -210,9 +261,9 @@ if (conflicts.hasConflicts) {
 // Search facts directly
 const facts = await cortex.facts.search(spaceId, 'color preference');
 
-// Or semantic search via memory API
+// Or semantic search via memory API (embedding auto-generated!)
 const memories = await cortex.memory.search(spaceId, 'what colors?', {
-  embedding: await embed('what colors?'),
+  // No manual embedding needed - auto-generated from query!
   contentType: 'fact',
   limit: 5,
 });
@@ -222,11 +273,11 @@ const memories = await cortex.memory.search(spaceId, 'what colors?', {
   <TabItem value="recall" label="Via recall()">
 
 ```typescript
-// recall() automatically includes facts
+// recall() automatically includes facts (embedding auto-generated!)
 const result = await cortex.memory.recall({
   memorySpaceId: spaceId,
   query: 'What colors does the user like?',
-  embedding: await embed('What colors does the user like?'),
+  // No manual embedding needed - auto-generated from query!
   sources: { facts: true },
 });
 

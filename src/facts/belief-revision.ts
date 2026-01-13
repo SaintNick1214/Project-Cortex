@@ -590,6 +590,8 @@ export class BeliefRevisionService {
             sourceType: params.sourceType || "conversation",
             sourceRef: params.sourceRef,
             tags: params.fact.tags || [],
+            // Embedding for semantic search (v0.30.0+)
+            embedding: params.fact.embedding,
           });
           const createdFact = newFact as FactRecord;
 
@@ -631,6 +633,8 @@ export class BeliefRevisionService {
           sourceType: params.sourceType || "conversation",
           sourceRef: params.sourceRef,
           tags: params.fact.tags || [],
+          // Embedding for semantic search (v0.30.0+)
+          embedding: params.fact.embedding,
         });
         const createdFact = newFact as FactRecord;
 
@@ -657,6 +661,8 @@ export class BeliefRevisionService {
       sourceType: params.sourceType || "conversation",
       sourceRef: params.sourceRef,
       tags: params.fact.tags || [],
+      // Embedding for semantic search (v0.30.0+)
+      embedding: params.fact.embedding,
     });
     const createdFact = newFact as FactRecord;
 

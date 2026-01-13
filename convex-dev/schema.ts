@@ -398,6 +398,9 @@ export default defineSchema({
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
+
+    // Embedding for semantic search (v0.30.0+)
+    embedding: v.optional(v.array(v.float64())),
   })
     .index("by_factId", ["factId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
@@ -409,6 +412,11 @@ export default defineSchema({
     .searchIndex("by_content", {
       searchField: "fact",
       filterFields: ["memorySpaceId", "tenantId", "factType"],
+    })
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536, // OpenAI text-embedding-3-small / ada-002
+      filterFields: ["memorySpaceId", "tenantId"],
     }),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

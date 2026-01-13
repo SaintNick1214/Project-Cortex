@@ -315,15 +315,92 @@ export function rankResults(items: RecallItem[]): RecallItem[] {
 }
 
 /**
+ * Format a timestamp as a relative time string for LLM context
+ */
+function formatRelativeTime(timestamp: number): string {
+  const now = Date.now();
+  const diffMs = now - timestamp;
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffDays > 30) {
+    return new Date(timestamp).toLocaleDateString();
+  } else if (diffDays > 0) {
+    return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+  } else if (diffHours > 0) {
+    return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  } else if (diffMins > 0) {
+    return `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`;
+  } else {
+    return "just now";
+  }
+}
+
+/**
+ * Format a single fact with temporal and supersession metadata for LLM context
+ */
+function formatFactForLLM(item: RecallItem): string {
+  const fact = item.fact;
+  if (!fact) {
+    return `- ${item.content}`;
+  }
+
+  const parts: string[] = [];
+
+  // Core fact content
+  parts.push(`- ${item.content}`);
+
+  // Metadata in parentheses
+  const metadata: string[] = [];
+
+  // Confidence
+  metadata.push(`confidence: ${fact.confidence}%`);
+
+  // Temporal info - when was this fact established
+  if (fact.validFrom) {
+    metadata.push(`established: ${formatRelativeTime(fact.validFrom)}`);
+  } else if (fact.createdAt) {
+    metadata.push(`recorded: ${formatRelativeTime(fact.createdAt)}`);
+  }
+
+  // Supersession status - CRITICAL for temporal reasoning
+  if (fact.supersededBy) {
+    // This fact has been replaced - should rarely appear but mark it clearly
+    metadata.push("⚠️ SUPERSEDED - this information may be outdated");
+  } else if (fact.supersedes) {
+    // This fact replaced an older one - mark as current/updated
+    metadata.push("✓ CURRENT - replaced previous value");
+  }
+
+  // Validity window
+  if (fact.validUntil) {
+    const now = Date.now();
+    if (fact.validUntil < now) {
+      metadata.push("⚠️ EXPIRED");
+    } else {
+      metadata.push(`valid until: ${formatRelativeTime(fact.validUntil)}`);
+    }
+  }
+
+  return `${parts.join("")} (${metadata.join(", ")})`;
+}
+
+/**
  * Generate LLM-ready context string from ranked items.
  *
  * Output format:
  * ```
  * ## Relevant Context
  *
+ * IMPORTANT: Facts marked with "✓ CURRENT" are the latest known values.
+ * Facts marked with "⚠️ SUPERSEDED" have been replaced by newer information.
+ * Always prefer CURRENT facts over SUPERSEDED ones.
+ *
  * ### Known Facts
- * - User prefers dark mode (confidence: 95%)
- * - User works at Acme Corp (confidence: 88%)
+ * - User prefers purple (confidence: 95%, established: 2 hours ago, ✓ CURRENT - replaced previous value)
+ * - User works at Acme Corp (confidence: 88%, recorded: 3 days ago)
  *
  * ### Conversation History
  * [user]: I prefer dark mode
@@ -336,13 +413,22 @@ export function formatForLLM(items: RecallItem[]): string {
 
   const sections: string[] = [];
 
-  // Facts section
+  // Facts section with temporal context instructions
   if (facts.length > 0) {
-    const factLines = facts.map((item) => {
-      const confidence = item.fact?.confidence || 0;
-      return `- ${item.content} (confidence: ${confidence}%)`;
-    });
-    sections.push(`### Known Facts\n${factLines.join("\n")}`);
+    // Check if any facts have supersession info
+    const hasSupersessionInfo = facts.some(
+      (item) => item.fact?.supersedes || item.fact?.supersededBy,
+    );
+
+    let factsHeader = "### Known Facts";
+    if (hasSupersessionInfo) {
+      factsHeader += `
+NOTE: Facts marked "✓ CURRENT" are the latest values and should be trusted.
+Facts marked "⚠️ SUPERSEDED" have been replaced - do not use outdated information.`;
+    }
+
+    const factLines = facts.map(formatFactForLLM);
+    sections.push(`${factsHeader}\n${factLines.join("\n")}`);
   }
 
   // Memories/conversation section

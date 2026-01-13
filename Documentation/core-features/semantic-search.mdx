@@ -11,21 +11,28 @@ description: AI-powered memory retrieval using vector embeddings
   Semantic search understands **meaning**, not just keywords. Search for "what's the user's favorite color?" and find memories about color preferences—even if they don't contain the exact words.
 </Callout>
 
+<Callout type="tip" icon="sparkles">
+**v0.30.0**: Facts now support native semantic search. Configure `embedding` in your SDK config and embeddings are auto-generated for `recall()` queries - no manual embedding code needed!
+</Callout>
+
 ---
 
 ## Quick Start
 
 ```typescript
-// Search with semantic understanding
-const memories = await cortex.memory.search(
-  "user-123-space",
-  "what are the user's dietary preferences?",
-  {
-    embedding: await embed("what are the user's dietary preferences?"),
-    userId: "user-123",
-    limit: 5,
-  }
-);
+// Configure embedding once at SDK init (v0.30.0+)
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL!,
+  embedding: { provider: 'openai', apiKey: process.env.OPENAI_API_KEY },
+});
+
+// Search with semantic understanding - embeddings auto-generated!
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "what are the user's dietary preferences?",
+  userId: "user-123",
+  limit: 5,
+});
 ```
 
 ---

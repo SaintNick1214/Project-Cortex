@@ -572,10 +572,34 @@ export function registerDeployCommands(
           const targetSdkVersion = isDevMode
             ? "dev"
             : (options.sdkVersion ?? latestSdkVersion);
+
+          // Check for convex patch update
+          const parseVersion = (v: string) => {
+            const match = v.match(/^(\d+)\.(\d+)\.(\d+)/);
+            if (!match) return null;
+            return {
+              major: parseInt(match[1]),
+              minor: parseInt(match[2]),
+              patch: parseInt(match[3]),
+            };
+          };
+
+          const currentConvex = parseVersion(currentConvexVersion);
+          const latestConvex = parseVersion(latestConvexVersion);
+
+          let convexPatchAvailable = false;
+          if (currentConvex && latestConvex) {
+            convexPatchAvailable =
+              currentConvex.major === latestConvex.major &&
+              currentConvex.minor === latestConvex.minor &&
+              currentConvex.patch < latestConvex.patch;
+          }
+
           const needsUpdate = isDevMode
-            ? !isDevLinked // Dev mode: needs update if not already dev-linked
+            ? true // Dev mode: always refresh to pick up source changes (npm install will also update convex if needed)
             : currentSdkVersion !== targetSdkVersion ||
-              currentSdkVersion === "not installed";
+              currentSdkVersion === "not installed" ||
+              convexPatchAvailable;
 
           // Check template sync status if --sync-template is enabled
           let templateFilesToUpdate = 0;
@@ -640,7 +664,7 @@ export function registerDeployCommands(
         label: string,
       ): string => {
         if (current === "not installed") {
-          return `      ${label}: ${pc.yellow("not installed")} ${pc.cyan("→")} ${pc.green(latest)}`;
+          return `      ${label}: ${pc.dim("not installed")}`;
         }
         if (current === latest) {
           return `      ${label}: ${pc.green(current)}`;
@@ -693,7 +717,7 @@ export function registerDeployCommands(
             return `      ${label}: ${pc.magenta("file:... (dev linked)")}`;
           }
           if (current === "not installed") {
-            return `      ${label}: ${pc.yellow("not installed")} ${pc.cyan("→")} ${pc.green(latest)}`;
+            return `      ${label}: ${pc.dim("not installed")}`;
           }
           if (current === latest) {
             return `      ${label}: ${pc.green(current)}`;
@@ -949,7 +973,7 @@ async function updateDeployment(
       latest: string,
     ): string => {
       if (current === "not installed") {
-        return `${pc.yellow("not installed")} ${pc.cyan("→")} ${pc.green(latest)}`;
+        return pc.dim("not installed");
       }
       if (current === latest) {
         return pc.green(current);
@@ -1283,7 +1307,7 @@ async function updateApp(
         return pc.magenta("file:... (dev linked)");
       }
       if (current === "not installed") {
-        return `${pc.yellow("not installed")} ${pc.cyan("→")} ${pc.green(latest)}`;
+        return pc.dim("not installed");
       }
       if (current === latest) {
         return pc.green(current);
@@ -1308,13 +1332,41 @@ async function updateApp(
     console.log(`    ${formatAppVersionLine(currentAiVersion, latestAiVersion)}`);
     console.log();
 
+    // Check for Convex patch update (same logic as deployments)
+    const parseVersion = (v: string) => {
+      const match = v.match(/^(\d+)\.(\d+)\.(\d+)/);
+      if (!match) return null;
+      return {
+        major: parseInt(match[1]),
+        minor: parseInt(match[2]),
+        patch: parseInt(match[3]),
+      };
+    };
+
+    const currentConvex = parseVersion(currentConvexVersion);
+    const latestConvex = parseVersion(latestConvexVersion);
+
+    let convexPatchAvailable = false;
+    if (currentConvex && latestConvex) {
+      // Patch update = same major.minor, higher patch
+      convexPatchAvailable =
+        currentConvex.major === latestConvex.major &&
+        currentConvex.minor === latestConvex.minor &&
+        currentConvex.patch < latestConvex.patch;
+    }
+
+    const targetConvexVersion =
+      options.convexVersion ??
+      (convexPatchAvailable ? latestConvexVersion : null);
+    const convexNeedsUpdate =
+      targetConvexVersion && currentConvexVersion !== targetConvexVersion;
+
     // Determine update strategy
     if (isDevMode) {
-      // Dev mode: update package.json with file: references
+      // Dev mode: always refresh file: links to pick up SDK source changes
+      console.log(pc.magenta("   Dev mode: forcing SDK/provider refresh"));
       if (isDevLinked) {
-        printSuccess(
-          "App is already dev-linked. Running npm install to refresh...",
-        );
+        printInfo("Refreshing dev-linked packages...");
       } else {
         printInfo("Switching to dev mode with local SDK...");
       }
@@ -1332,8 +1384,22 @@ async function updateApp(
       pkg.dependencies["@cortexmemory/vercel-ai-provider"] =
         `file:${devProviderPath}`;
 
+      // Also update convex if a patch is available
+      if (convexNeedsUpdate && targetConvexVersion) {
+        pkg.dependencies["convex"] = `^${targetConvexVersion}`;
+      }
+
       await fs.writeJson(packageJsonPath, pkg, { spaces: 2 });
-      console.log(pc.cyan("   Updated package.json with file: references"));
+
+      if (convexNeedsUpdate && targetConvexVersion) {
+        console.log(
+          pc.cyan(
+            `   Updated package.json: SDK/provider (file:) + convex@^${targetConvexVersion}`,
+          ),
+        );
+      } else {
+        console.log(pc.cyan("   Updated package.json with file: references"));
+      }
 
       // Run npm install
       console.log();
@@ -1351,6 +1417,21 @@ async function updateApp(
         printSuccess("Dev mode linking complete!");
         console.log(pc.dim(`   SDK linked to: ${devSdkPath}`));
         console.log(pc.dim(`   Provider linked to: ${devProviderPath}`));
+        if (convexNeedsUpdate && targetConvexVersion) {
+          console.log(pc.dim(`   Convex updated to: ${targetConvexVersion}`));
+        }
+
+        // In dev mode, also sync convex schema files from the local SDK
+        console.log();
+        printInfo("Syncing Convex schema from local SDK...");
+        const { syncConvexSchema, printSyncResult } = await import(
+          "../utils/schema-sync.js"
+        );
+        const syncResult = await syncConvexSchema(appPath);
+        printSyncResult(syncResult);
+        if (syncResult.error) {
+          printWarning("Schema sync failed, but packages were updated");
+        }
       } else {
         printError("npm install failed");
         throw new Error("npm install failed");
@@ -1379,8 +1460,8 @@ async function updateApp(
       const providerNeedsUpdate =
         currentProviderVersion !== targetProviderVersion || isDevLinked;
 
-      // Nothing to update
-      if (!sdkNeedsUpdate && !providerNeedsUpdate) {
+      // Nothing to update (including convex)
+      if (!sdkNeedsUpdate && !providerNeedsUpdate && !convexNeedsUpdate) {
         printSuccess("All packages are up to date!");
         return;
       }
@@ -1395,6 +1476,9 @@ async function updateApp(
         packagesToInstall.push(
           `@cortexmemory/vercel-ai-provider@${targetProviderVersion}`,
         );
+      }
+      if (convexNeedsUpdate && targetConvexVersion) {
+        packagesToInstall.push(`convex@${targetConvexVersion}`);
       }
 
       if (packagesToInstall.length > 0) {
@@ -1426,8 +1510,16 @@ async function updateApp(
       printSection("Template Sync", {});
       console.log();
 
+      // In dev mode, force sync all template files regardless of hash match
+      if (isDevMode) {
+        console.log(pc.magenta("   Dev mode: forcing template sync"));
+      }
+
       try {
-        const templateResult = await syncAppTemplate(app, { dryRun: false });
+        const templateResult = await syncAppTemplate(app, {
+          dryRun: false,
+          force: isDevMode, // Force sync in dev mode to pick up local template changes
+        });
 
         if (templateResult.error) {
           printWarning(`Template sync skipped: ${templateResult.error}`);
