@@ -5,9 +5,6 @@ sidebar_position: 12
 description: Advanced patterns for using extracted facts
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # Fact Integration
 
 <Callout type="info">
@@ -111,10 +108,7 @@ const result = await cortex.memory.recall({
 });
 ```
 
-This is useful when:
-- You want to use a different embedding model per-query
-- You have pre-computed embeddings
-- You need custom embedding logic
+This is useful when you want to use a different embedding model per-query, have pre-computed embeddings, or need custom embedding logic.
 
   </TabItem>
   <TabItem value="fallback" label="No Embedding (Keyword Only)">
