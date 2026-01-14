@@ -408,12 +408,13 @@ class OpenAIClient implements LLMClient {
           messages,
         });
       } else if (isGpt5Model) {
-        // GPT-5 models use max_completion_tokens, only support temperature=1,
-        // and may not support response_format - rely on prompt instruction for JSON
+        // GPT-5 base models (gpt-5, gpt-5-nano) have issues with max_completion_tokens
+        // but work reliably with response_format: json_object
+        // gpt-5.1+ work with all params but we use consistent handling
         response = await client.chat.completions.create({
           model,
           messages,
-          max_completion_tokens: this.config.maxTokens ?? 1000,
+          response_format: { type: "json_object" },
         });
       } else {
         response = await client.chat.completions.create({
@@ -490,13 +491,16 @@ class OpenAIClient implements LLMClient {
         messages,
       });
     } else if (isGpt5Model) {
-      // GPT-5 models use max_completion_tokens and only support temperature=1
-      // May not support response_format - rely on prompt instruction for JSON
+      // GPT-5 base models have issues with max_completion_tokens alone
+      // Use response_format for reliable JSON output
       const requestOptions: Record<string, unknown> = {
         model,
         messages,
-        max_completion_tokens: this.config.maxTokens ?? 2000,
       };
+
+      if (options.responseFormat === "json") {
+        requestOptions.response_format = { type: "json_object" };
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       response = await client.chat.completions.create(requestOptions);
