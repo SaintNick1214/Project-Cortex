@@ -93,6 +93,100 @@ export function extractEntitiesFromResults(
 }
 
 /**
+ * Extract potential entity names from a query string by looking them up
+ * in the graph database.
+ *
+ * This enables graph expansion even when initial search results don't
+ * contain facts with entities. The query text is tokenized and each
+ * significant word/phrase is checked against Entity nodes in the graph.
+ *
+ * Strategy:
+ * 1. Tokenize query into words and n-grams (2-3 word phrases)
+ * 2. Query the graph for Entity nodes matching each candidate
+ * 3. Return matched entity names for graph traversal
+ */
+export async function extractEntitiesFromQuery(
+  query: string,
+  graphAdapter: GraphAdapter | undefined,
+): Promise<string[]> {
+  if (!graphAdapter || !query || query.trim().length === 0) {
+    return [];
+  }
+
+  try {
+    // Check if graph is connected
+    const isConnected = await graphAdapter.isConnected();
+    if (!isConnected) {
+      return [];
+    }
+
+    const matchedEntities: string[] = [];
+
+    // Tokenize query: split on spaces and common punctuation
+    const words = query
+      .toLowerCase()
+      .replace(/[^\w\s'-]/g, " ")
+      .split(/\s+/)
+      .filter((w) => w.length > 2); // Skip very short words
+
+    // Generate candidate phrases: single words and n-grams
+    const candidates = new Set<string>();
+
+    // Add individual words (capitalized - common for names)
+    for (const word of words) {
+      // Capitalize first letter (entity names are often proper nouns)
+      const capitalized = word.charAt(0).toUpperCase() + word.slice(1);
+      candidates.add(capitalized);
+      candidates.add(word); // Also try lowercase
+    }
+
+    // Add 2-word phrases (for names like "Planet Granite", "Sarah Chen")
+    for (let i = 0; i < words.length - 1; i++) {
+      const phrase = words
+        .slice(i, i + 2)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+      candidates.add(phrase);
+    }
+
+    // Add 3-word phrases (for longer entity names)
+    for (let i = 0; i < words.length - 2; i++) {
+      const phrase = words
+        .slice(i, i + 3)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+      candidates.add(phrase);
+    }
+
+    // Query graph for each candidate (limit to avoid performance issues)
+    const candidateArray = Array.from(candidates).slice(0, 20);
+
+    for (const candidate of candidateArray) {
+      try {
+        // Look for exact match on entity name
+        const entityNodes = await graphAdapter.findNodes(
+          "Entity",
+          { name: candidate },
+          1,
+        );
+
+        if (entityNodes.length > 0) {
+          matchedEntities.push(candidate);
+        }
+      } catch {
+        // Individual lookup failure - continue with others
+        continue;
+      }
+    }
+
+    return matchedEntities;
+  } catch {
+    // Query entity extraction failed - return empty (graceful degradation)
+    return [];
+  }
+}
+
+/**
  * Discover connected entities via graph traversal.
  *
  * Uses the GraphAdapter's traverse() method to find entities
@@ -303,9 +397,19 @@ export async function fetchRelatedFacts(
 /**
  * Full graph expansion pipeline.
  *
- * 1. Extract entities from initial results
- * 2. Traverse graph to discover connected entities
- * 3. Fetch related memories and facts
+ * 1. Extract entities from query text (NEW: enables expansion without facts)
+ * 2. Extract entities from initial search results
+ * 3. Combine and traverse graph to discover connected entities
+ * 4. Fetch related memories and facts
+ *
+ * @param initialMemories - Memories from initial vector search
+ * @param initialFacts - Facts from initial facts search
+ * @param memorySpaceId - The memory space to search
+ * @param graphAdapter - Graph database adapter
+ * @param vectorAPI - Vector search API
+ * @param factsAPI - Facts search API
+ * @param config - Expansion configuration
+ * @param queryText - Optional query text for entity extraction (NEW)
  */
 export async function performGraphExpansion(
   initialMemories: MemoryEntry[],
@@ -315,6 +419,7 @@ export async function performGraphExpansion(
   vectorAPI: VectorAPI,
   factsAPI: FactsAPI,
   config: GraphExpansionConfig,
+  queryText?: string,
 ): Promise<GraphExpansionResult> {
   const processedIds = new Set<string>();
 
@@ -336,13 +441,24 @@ export async function performGraphExpansion(
     };
   }
 
-  // Step 1: Extract entities from initial results
-  const initialEntities = extractEntitiesFromResults(
+  // Step 1: Extract entities from QUERY TEXT (NEW - enables expansion without facts)
+  // This allows graph expansion even when initial search results don't contain facts
+  const queryEntities = queryText
+    ? await extractEntitiesFromQuery(queryText, graphAdapter)
+    : [];
+
+  // Step 2: Extract entities from initial results (existing behavior)
+  const resultEntities = extractEntitiesFromResults(
     initialMemories,
     initialFacts,
   );
 
-  if (initialEntities.length === 0) {
+  // Step 3: Combine all entities (deduplicated)
+  const allEntities = Array.from(
+    new Set([...queryEntities, ...resultEntities]),
+  );
+
+  if (allEntities.length === 0) {
     return {
       discoveredEntities: [],
       relatedMemories: [],
@@ -351,14 +467,19 @@ export async function performGraphExpansion(
     };
   }
 
-  // Step 2: Expand via graph
+  // Step 4: Expand via graph traversal
   const discoveredEntities = await expandViaGraph(
-    initialEntities,
+    allEntities,
     graphAdapter,
     config,
   );
 
-  if (discoveredEntities.length === 0) {
+  // Even if no NEW entities discovered, if we have initial entities from query,
+  // we should still fetch related content for those entities
+  const entitiesToFetch =
+    discoveredEntities.length > 0 ? discoveredEntities : allEntities;
+
+  if (entitiesToFetch.length === 0) {
     return {
       discoveredEntities: [],
       relatedMemories: [],
@@ -367,11 +488,11 @@ export async function performGraphExpansion(
     };
   }
 
-  // Step 3: Fetch related data in parallel
+  // Step 5: Fetch related data in parallel
   const [relatedMemories, relatedFacts] = await Promise.all([
     config.expandFromMemories
       ? fetchRelatedMemories(
-          discoveredEntities,
+          entitiesToFetch,
           memorySpaceId,
           vectorAPI,
           processedIds,
@@ -380,7 +501,7 @@ export async function performGraphExpansion(
       : Promise.resolve([]),
     config.expandFromFacts
       ? fetchRelatedFacts(
-          discoveredEntities,
+          entitiesToFetch,
           memorySpaceId,
           factsAPI,
           processedIds,
@@ -390,7 +511,7 @@ export async function performGraphExpansion(
   ]);
 
   return {
-    discoveredEntities,
+    discoveredEntities: entitiesToFetch,
     relatedMemories,
     relatedFacts,
     processedIds,

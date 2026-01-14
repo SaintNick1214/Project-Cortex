@@ -7,6 +7,7 @@
 // Graph enhancement utilities
 export {
   extractEntitiesFromResults,
+  extractEntitiesFromQuery,
   expandViaGraph,
   fetchRelatedMemories,
   fetchRelatedFacts,

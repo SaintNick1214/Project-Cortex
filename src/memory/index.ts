@@ -2796,6 +2796,7 @@ export class MemoryAPI {
           this.vector,
           this.facts,
           graphExpansionConfig,
+          params.query, // NEW: Pass query text for entity extraction
         );
 
         graphExpandedMemories = expansion.relatedMemories;
