@@ -177,15 +177,15 @@ Return ONLY a JSON object with a "facts" array. Each fact should have:
 - fact: The fact statement (clear, third-person, present tense)
 - factType: One of "preference", "identity", "knowledge", "relationship", "event", "observation", "custom"
 - confidence: Your confidence this is meaningful (0.5-1.0)
-- subject: (optional) The entity the fact is about
-- predicate: (optional) The relationship or action
-- object: (optional) The target of the relationship
-- tags: (optional) Array of relevant tags
-- entities: (optional) Array of named entities mentioned, each with:
+- subject: The entity the fact is about (REQUIRED - use "User" if about the user)
+- predicate: The relationship or action (REQUIRED - use snake_case like "prefers", "is_named", "works_at")
+- object: The target of the relationship (REQUIRED - the value or entity)
+- tags: Array of relevant tags (can be empty [])
+- entities: Array of ALL named entities mentioned in this fact (REQUIRED, can be empty []), each with:
   - name: Entity name as mentioned
   - type: One of "person", "organization", "place", "product", "concept", "other"
-  - fullValue: (optional) Full name if abbreviated
-- relations: (optional) Array of entity relationships, each with:
+  - fullValue: Full name if abbreviated (omit if not abbreviated)
+- relations: Array of entity relationships extracted from this fact (REQUIRED, can be empty []), each with:
   - subject: Subject entity name
   - predicate: Relationship type in snake_case (e.g., "works_at", "located_in")
   - object: Object entity name
