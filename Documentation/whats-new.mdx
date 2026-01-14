@@ -17,6 +17,104 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### TypeScript SDK v0.31.0 · Jan 14, 2026
+
+**Configurable Recall Limits - Prevent 16MB Read Errors**
+
+⚙️ New `RecallLimits` interface for granular control over recall operations  
+🔧 Environment variable configuration with per-call overrides  
+📊 Per-source limits for memories, facts, and graph traversal  
+🛡️ Eliminates Convex "Too many bytes read" errors in large memory spaces
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Configurable Recall Limits**
+
+The `recall()` API now accepts granular limits to control data retrieval across all sources:
+
+```typescript
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
+  limits: {
+    memories: 20,           // Max vector memories to fetch
+    facts: 15,              // Max facts to fetch
+    graphHops: 2,           // Max graph traversal depth
+    graphEntitiesPerHop: 5, // Entities to expand per hop
+    graphResultsPerEntity: 3, // Results per entity from graph
+    total: 30,              // Final result cap after merge/rank
+  },
+});
+```
+
+**Configuration Hierarchy**
+
+Limits can be configured at three levels (highest priority first):
+
+1. **Per-call overrides** - `RecallParams.limits`
+2. **Environment variables** - `CORTEX_RECALL_*`
+3. **SDK defaults** - Hardcoded sensible defaults
+
+**New Environment Variables**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CORTEX_RECALL_LIMIT_MEMORIES` | 20 | Max vector memories per recall |
+| `CORTEX_RECALL_LIMIT_FACTS` | 15 | Max facts per recall |
+| `CORTEX_RECALL_GRAPH_HOPS` | 2 | Graph traversal depth |
+| `CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP` | 5 | Entities expanded per hop |
+| `CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY` | 3 | Results fetched per entity |
+| `CORTEX_RECALL_LIMIT_TOTAL` | 30 | Final result cap |
+
+**Backward Compatibility**
+
+The legacy `limit` parameter is still supported as an alias for `limits.total`:
+
+```typescript
+// Legacy (still works)
+await cortex.memory.recall({ ..., limit: 25 });
+
+// New (recommended)
+await cortex.memory.recall({ ..., limits: { total: 25 } });
+```
+
+#### Technical Details
+
+**New Types in `src/types/index.ts`:**
+
+```typescript
+export interface RecallLimits {
+  memories?: number;
+  facts?: number;
+  graphHops?: number;
+  graphEntitiesPerHop?: number;
+  graphResultsPerEntity?: number;
+  total?: number;
+}
+
+export interface RecallParams {
+  // ... existing fields ...
+  limits?: RecallLimits;
+  limit?: number; // Legacy alias for limits.total
+}
+```
+
+**New Config Module `src/config.ts`:**
+
+- `RECALL_DEFAULTS` - Centralized defaults with env var support
+- `resolveRecallLimits()` - Merges per-call, env, and defaults
+
+**Bug Fix:**
+
+Removed dangerous `.collect()` fallback in Convex queries that could fetch unlimited data. All queries now properly respect limits.
+
+</details>
+
+---
+
 ### TypeScript SDK v0.30.1 · Jan 14, 2026
 
 **Enriched Entity Extraction & Bidirectional Graph Traceability**
@@ -1427,6 +1525,12 @@ const cortexMemory = createCortexMemory({
 <TabItem value="ts-sdk" label="TypeScript SDK">
 
 ## January 2026
+
+### v0.31.0 · Jan 14, 2026 - Configurable Recall Limits
+
+⚙️ `RecallLimits` interface for granular control  
+🔧 Environment variable + per-call configuration  
+🛡️ Prevents Convex 16MB read limit errors
 
 ### v0.30.1 · Jan 14, 2026 - Enriched Entity Extraction
 

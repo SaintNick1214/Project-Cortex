@@ -129,6 +129,7 @@ import {
   enrichWithConversations,
   type GraphExpansionConfig,
 } from "./recall";
+import { resolveRecallLimits } from "../config";
 import type { ResilienceLayer } from "../resilience";
 
 /** Default memory space ID used when none is provided */
@@ -2695,18 +2696,25 @@ export class MemoryAPI {
       graph: params.sources?.graph !== false && this.graphAdapter !== undefined,
     };
 
+    // Resolve limits from defaults + env vars + per-call overrides
+    const limits = resolveRecallLimits(params.limits, params.limit);
+
+    // Check if graph expansion should be enabled based on limits
     const graphExpansionEnabled =
       params.graphExpansion?.enabled !== false &&
-      this.graphAdapter !== undefined;
+      this.graphAdapter !== undefined &&
+      limits.graphHops > 0; // Disable if graphHops is 0
 
     const graphExpansionConfig: GraphExpansionConfig = {
-      maxDepth: params.graphExpansion?.maxDepth ?? 2,
+      maxDepth: params.graphExpansion?.maxDepth ?? limits.graphHops,
       relationshipTypes: params.graphExpansion?.relationshipTypes ?? [],
       expandFromFacts: params.graphExpansion?.expandFromFacts !== false,
       expandFromMemories: params.graphExpansion?.expandFromMemories !== false,
+      // New: Pass entity limits to graph expansion
+      entitiesPerHop: limits.graphEntitiesPerHop,
+      resultsPerEntity: limits.graphResultsPerEntity,
     };
 
-    const limit = params.limit ?? 20;
     const includeConversation = params.includeConversation !== false;
     const formatForLLMFlag = params.formatForLLM !== false;
 
@@ -2739,7 +2747,7 @@ export class MemoryAPI {
             userId: params.userId,
             tags: params.tags,
             minImportance: params.minImportance,
-            limit: limit * 4, // Fetch extra for tenant filtering and dedup
+            limit: limits.memories, // Use configured per-source limit
             minScore: 0.3, // Reasonable threshold
           })
         : Promise.resolve([]),
@@ -2755,7 +2763,7 @@ export class MemoryAPI {
               tags: params.tags,
               createdAfter: params.createdAfter,
               createdBefore: params.createdBefore,
-              limit: limit * 4, // Fetch extra for tenant filtering and dedup
+              limit: limits.facts, // Use configured per-source limit
               minScore: 0.3, // Reasonable threshold
             })
           : // Fallback to text search when no embedding provided
@@ -2765,7 +2773,7 @@ export class MemoryAPI {
               tags: params.tags,
               createdAfter: params.createdAfter,
               createdBefore: params.createdBefore,
-              limit: limit * 4, // Fetch extra for tenant filtering and dedup
+              limit: limits.facts, // Use configured per-source limit
             })
         : Promise.resolve([]),
     ]);
@@ -2821,7 +2829,7 @@ export class MemoryAPI {
       graphExpandedFacts,
       discoveredEntities,
       {
-        limit,
+        limit: limits.total, // Use aggregate limit from resolved limits
         formatForLLM: formatForLLMFlag,
       },
     );

@@ -319,71 +319,17 @@ export const search = query({
     let results = [];
 
     if (args.embedding && args.embedding.length > 0) {
-      // Semantic search with vector similarity
-      // Try vector index first (production), fallback to manual similarity (local dev)
-      try {
-        // Note: .similar() API is only available in managed Convex, not local dev
-        // TypeScript doesn't recognize it, so we use type assertion
-        results = await ctx.db
-          .query("memories")
-          .withIndex("by_embedding" as any, (q: any) =>
-            q
-              .similar("embedding", args.embedding, args.limit || 20)
-              .eq("memorySpaceId", args.memorySpaceId),
-          )
-          .collect();
-      } catch (error: any) {
-        // Fallback for local Convex (no vector index support)
-        if (error.message?.includes("similar is not a function")) {
-          const vectorResults = await ctx.db
-            .query("memories")
-            .withIndex("by_memorySpace", (q) =>
-              q.eq("memorySpaceId", args.memorySpaceId),
-            )
-            .collect();
-
-          // Calculate cosine similarity for each result
-          const withScores = vectorResults
-            .filter((m) => m.embedding && m.embedding.length > 0)
-            .map((m) => {
-              // Validate dimension matching (critical for correct similarity)
-              if (m.embedding!.length !== args.embedding!.length) {
-                // Skip embeddings with mismatched dimensions
-                return {
-                  ...m,
-                  _score: -1, // Will be filtered out
-                };
-              }
-
-              // Cosine similarity calculation
-              let dotProduct = 0;
-              let normA = 0;
-              let normB = 0;
-
-              for (let i = 0; i < args.embedding!.length; i++) {
-                dotProduct += args.embedding![i] * m.embedding![i];
-                normA += args.embedding![i] * args.embedding![i];
-                normB += m.embedding![i] * m.embedding![i];
-              }
-
-              // Handle edge cases (zero vectors)
-              const denominator = Math.sqrt(normA) * Math.sqrt(normB);
-              const similarity = denominator > 0 ? dotProduct / denominator : 0;
-
-              return {
-                ...m,
-                _score: similarity,
-              };
-            })
-            .filter((m) => !isNaN(m._score) && m._score >= 0) // Filter out NaN and dimension mismatches
-            .sort((a, b) => b._score - a._score) // Sort by similarity (highest first)
-            .slice(0, args.limit || 20);
-
-          results = withScores;
-        } else {
-          throw error;
-        }
-      }
+      // Semantic search with vector similarity (requires managed Convex)
+      // Note: .similar() API is only available in managed Convex
+      // TypeScript doesn't recognize it, so we use type assertion
+      results = await ctx.db
+        .query("memories")
+        .withIndex("by_embedding" as any, (q: any) =>
+          q
+            .similar("embedding", args.embedding, args.limit || 20)
+            .eq("memorySpaceId", args.memorySpaceId),
+        )
+        .collect();
     } else {
       // Keyword search
       results = await ctx.db

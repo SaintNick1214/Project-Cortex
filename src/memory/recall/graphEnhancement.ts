@@ -19,7 +19,7 @@ import type { VectorAPI } from "../../vector";
  * Configuration for graph expansion
  */
 export interface GraphExpansionConfig {
-  /** Maximum traversal depth. Default: 2 */
+  /** Maximum traversal depth (graph hops). Default: 2. Set to 0 to disable. */
   maxDepth: number;
   /** Relationship types to follow. Empty = all types */
   relationshipTypes: string[];
@@ -27,6 +27,10 @@ export interface GraphExpansionConfig {
   expandFromFacts: boolean;
   /** Expand from discovered memories */
   expandFromMemories: boolean;
+  /** Maximum entities to expand per graph hop. Default: 5 */
+  entitiesPerHop?: number;
+  /** Maximum results (memories/facts) to fetch per discovered entity. Default: 3 */
+  resultsPerEntity?: number;
 }
 
 /**
@@ -211,8 +215,8 @@ export async function expandViaGraph(
     }
 
     // For each initial entity, traverse the graph
-    for (const entityName of initialEntities.slice(0, 10)) {
-      // Limit to first 10 to avoid performance issues
+    const maxEntities = config.entitiesPerHop ?? 5;
+    for (const entityName of initialEntities.slice(0, maxEntities)) {
       try {
         // Find the entity node
         const entityNodes = await graphAdapter.findNodes(
@@ -476,8 +480,11 @@ export async function performGraphExpansion(
 
   // Even if no NEW entities discovered, if we have initial entities from query,
   // we should still fetch related content for those entities
-  const entitiesToFetch =
+  const maxEntities = config.entitiesPerHop ?? 5;
+  const rawEntitiesToFetch =
     discoveredEntities.length > 0 ? discoveredEntities : allEntities;
+  // Limit entities to fetch based on config
+  const entitiesToFetch = rawEntitiesToFetch.slice(0, maxEntities);
 
   if (entitiesToFetch.length === 0) {
     return {
@@ -488,6 +495,10 @@ export async function performGraphExpansion(
     };
   }
 
+  // Calculate total results limit: entities * resultsPerEntity
+  const resultsPerEntity = config.resultsPerEntity ?? 3;
+  const totalResultsLimit = entitiesToFetch.length * resultsPerEntity;
+
   // Step 5: Fetch related data in parallel
   const [relatedMemories, relatedFacts] = await Promise.all([
     config.expandFromMemories
@@ -496,7 +507,7 @@ export async function performGraphExpansion(
           memorySpaceId,
           vectorAPI,
           processedIds,
-          10,
+          totalResultsLimit,
         )
       : Promise.resolve([]),
     config.expandFromFacts
@@ -505,7 +516,7 @@ export async function performGraphExpansion(
           memorySpaceId,
           factsAPI,
           processedIds,
-          10,
+          totalResultsLimit,
         )
       : Promise.resolve([]),
   ]);
