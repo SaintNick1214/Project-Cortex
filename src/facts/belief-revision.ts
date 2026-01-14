@@ -592,6 +592,9 @@ export class BeliefRevisionService {
             tags: params.fact.tags || [],
             // Embedding for semantic search (v0.30.0+)
             embedding: params.fact.embedding,
+            // Enriched entity/relation extraction for graph sync (v0.30.1+)
+            entities: params.fact.entities,
+            relations: params.fact.relations,
           });
           const createdFact = newFact as FactRecord;
 
@@ -635,6 +638,9 @@ export class BeliefRevisionService {
           tags: params.fact.tags || [],
           // Embedding for semantic search (v0.30.0+)
           embedding: params.fact.embedding,
+          // Enriched entity/relation extraction for graph sync (v0.30.1+)
+          entities: params.fact.entities,
+          relations: params.fact.relations,
         });
         const createdFact = newFact as FactRecord;
 
@@ -663,6 +669,9 @@ export class BeliefRevisionService {
       tags: params.fact.tags || [],
       // Embedding for semantic search (v0.30.0+)
       embedding: params.fact.embedding,
+      // Enriched entity/relation extraction for graph sync (v0.30.1+)
+      entities: params.fact.entities,
+      relations: params.fact.relations,
     });
     const createdFact = newFact as FactRecord;
 

@@ -386,8 +386,10 @@ class OpenAIClient implements LLMClient {
         DEFAULT_MODELS.openai;
 
       // Build request options - some models don't support all parameters
-      // o1 and o1-mini don't support temperature, max_tokens, or response_format
+      // o1 models don't support temperature, max_tokens, or response_format
+      // gpt-5 models use max_completion_tokens instead of max_tokens
       const isO1Model = model.startsWith("o1");
+      const isGpt5Model = model.startsWith("gpt-5");
 
       const messages = [
         { role: "system", content: EXTRACTION_SYSTEM_PROMPT },
@@ -404,6 +406,14 @@ class OpenAIClient implements LLMClient {
         response = await client.chat.completions.create({
           model,
           messages,
+        });
+      } else if (isGpt5Model) {
+        // GPT-5 models use max_completion_tokens, only support temperature=1,
+        // and may not support response_format - rely on prompt instruction for JSON
+        response = await client.chat.completions.create({
+          model,
+          messages,
+          max_completion_tokens: this.config.maxTokens ?? 1000,
         });
       } else {
         response = await client.chat.completions.create({
@@ -460,7 +470,10 @@ class OpenAIClient implements LLMClient {
       DEFAULT_MODELS.openai;
 
     // Build request options - some models don't support all parameters
+    // o1 models don't support temperature, max_tokens, or response_format
+    // gpt-5 models use max_completion_tokens instead of max_tokens
     const isO1Model = model.startsWith("o1");
+    const isGpt5Model = model.startsWith("gpt-5");
 
     const messages = [
       { role: "system", content: options.system },
@@ -476,6 +489,17 @@ class OpenAIClient implements LLMClient {
         model,
         messages,
       });
+    } else if (isGpt5Model) {
+      // GPT-5 models use max_completion_tokens and only support temperature=1
+      // May not support response_format - rely on prompt instruction for JSON
+      const requestOptions: Record<string, unknown> = {
+        model,
+        messages,
+        max_completion_tokens: this.config.maxTokens ?? 2000,
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      response = await client.chat.completions.create(requestOptions);
     } else {
       const requestOptions: Record<string, unknown> = {
         model,
