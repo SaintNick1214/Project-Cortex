@@ -19,6 +19,10 @@ description: LLM-powered fact extraction for 60-90% token savings
 **v0.30.0**: Facts now support **semantic search** via embeddings. Configure `embedding` once at SDK init (or set `CORTEX_EMBEDDING=true`) and embeddings are auto-generated for all `remember()` and `recall()` calls - no manual embedding code needed!
 </Callout>
 
+<Callout type="tip" icon="sparkles">
+**v0.30.1**: LLM extraction now returns **enriched entities** with semantic types (person, organization, place, product, concept) and **relation triples** that sync to the graph as typed edges (e.g., `WORKS_AT`, `LOCATED_IN`). A new `EXTRACTED_WITH` edge links Facts to their source Memory for bidirectional traceability.
+</Callout>
+
 ---
 
 ## Quick Example

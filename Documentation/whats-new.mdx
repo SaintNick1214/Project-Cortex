@@ -17,6 +17,83 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### TypeScript SDK v0.30.1 · Jan 14, 2026
+
+**Enriched Entity Extraction & Bidirectional Graph Traceability**
+
+🏷️ LLM extraction now returns typed entities (person, organization, place, product, concept)  
+🔗 New `EXTRACTED_WITH` edge links Facts to source Memory for full bidirectional traversal  
+📊 Entity relations (subject-predicate-object triples) sync to graph as typed edges  
+🔋 Batteries-included: all entity/relation enrichment automatic when graph sync is enabled
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Enriched Entity Extraction**
+
+The LLM fact extraction prompt now extracts named entities with semantic types:
+
+```typescript
+// Example extracted fact with enriched entities
+{
+  fact: "Sarah works at Acme Corp in San Francisco",
+  factType: "knowledge",
+  confidence: 0.95,
+  entities: [
+    { name: "Sarah", type: "person" },
+    { name: "Acme Corp", type: "organization" },
+    { name: "San Francisco", type: "place" }
+  ],
+  relations: [
+    { subject: "Sarah", predicate: "works_at", object: "Acme Corp" },
+    { subject: "Acme Corp", predicate: "located_in", object: "San Francisco" }
+  ]
+}
+```
+
+**Bidirectional Fact-Memory Traceability**
+
+New `EXTRACTED_WITH` edge enables traversing from Facts back to their source Memory:
+
+```
+Memory ──[REFERENCES]──► Conversation
+   ▲
+   │ EXTRACTED_WITH (NEW)
+   │
+Fact ──[EXTRACTED_FROM]──► Conversation
+  │
+  └──[MENTIONS]──► Entity ──[works_at]──► Entity
+```
+
+This enables queries like "find all facts extracted from memories about topic X".
+
+#### Technical Details
+
+**New Types in `src/llm/index.ts`:**
+
+- `ExtractedEntity` - Entity with name, type, and optional fullValue
+- `ExtractedRelation` - Subject-predicate-object triple for graph edges
+- `ExtractedFact.entities` - Array of extracted entities
+- `ExtractedFact.relations` - Array of relation triples
+
+**Graph Sync Changes:**
+
+- `syncFactRelationships()` now creates `EXTRACTED_WITH` edge to Memory node
+- Entity nodes created with semantic `type` property
+- Relation predicates become typed graph edges (e.g., `WORKS_AT`, `LOCATED_IN`)
+
+**API Changes:**
+
+- `ConflictCandidate` interface updated to include entities/relations
+- `StoreFactParams` already supports entities/relations (no change needed)
+- No breaking changes to public API
+
+</details>
+
+---
+
 ### TypeScript SDK v0.30.0 · Jan 13, 2026
 
 **Semantic Search for Facts + True Batteries-Included Embeddings**
@@ -1350,6 +1427,27 @@ const cortexMemory = createCortexMemory({
 <TabItem value="ts-sdk" label="TypeScript SDK">
 
 ## January 2026
+
+### v0.30.1 · Jan 14, 2026 - Enriched Entity Extraction
+
+🏷️ LLM extraction returns typed entities  
+🔗 `EXTRACTED_WITH` edge for bidirectional traversal  
+📊 Entity relations sync to graph as typed edges
+
+### v0.30.0 · Jan 13, 2026 - Semantic Fact Search
+
+🔍 Native vector search on facts table  
+🔋 Batteries-included embeddings  
+🧪 Extreme multi-turn stress tests
+
+### v0.29.1 · Jan 10, 2026 - Belief Revision Heuristics
+
+🧠 Improved decision accuracy without LLM
+
+### v0.29.0 · Jan 9, 2026 - Automatic Graph Sync
+
+🔗 Graph sync automatic with `CORTEX_GRAPH_SYNC=true`  
+⚠️ Breaking: `syncToGraph` option removed
 
 ### v0.28.0 · Jan 5, 2026 - Basic Template & Query Fixes
 

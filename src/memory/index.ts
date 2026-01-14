@@ -722,6 +722,17 @@ export class MemoryAPI {
         object?: string;
         confidence: number;
         tags?: string[];
+        // Enriched entity/relation extraction for graph sync (v0.31.0+)
+        entities?: Array<{
+          name: string;
+          type: "person" | "organization" | "place" | "product" | "concept" | "other";
+          fullValue?: string;
+        }>;
+        relations?: Array<{
+          subject: string;
+          predicate: string;
+          object: string;
+        }>;
       }> | null>)
     | null {
     // 1. Use provided extractor if available
@@ -1480,6 +1491,9 @@ export class MemoryAPI {
                       tags: factData.tags || params.tags || [],
                       // Embedding for semantic search (v0.30.0+)
                       embedding: factEmbedding,
+                      // Enriched entity/relation extraction for graph sync (v0.31.0+)
+                      entities: factData.entities,
+                      relations: factData.relations,
                     },
                   });
 
@@ -1525,6 +1539,9 @@ export class MemoryAPI {
                     tags: factData.tags || params.tags || [],
                     // Embedding for semantic search (v0.30.0+)
                     embedding: factEmbedding,
+                    // Enriched entity/relation extraction for graph sync (v0.31.0+)
+                    entities: factData.entities,
+                    relations: factData.relations,
                   };
 
                   // Use storeWithDedup if deduplication is enabled

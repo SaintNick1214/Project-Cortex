@@ -49,6 +49,30 @@ async function loadAnthropic(): Promise<any> {
 }
 
 /**
+ * Entity extracted from conversation for graph knowledge base
+ */
+export interface ExtractedEntity {
+  /** Entity name as mentioned in text */
+  name: string;
+  /** Semantic entity type */
+  type: "person" | "organization" | "place" | "product" | "concept" | "other";
+  /** Full/formal name if abbreviated (e.g., "San Francisco" for "SF") */
+  fullValue?: string;
+}
+
+/**
+ * Relation triple for knowledge graph edges
+ */
+export interface ExtractedRelation {
+  /** Subject entity name */
+  subject: string;
+  /** Relationship predicate (e.g., "works_at", "located_in") */
+  predicate: string;
+  /** Object entity name */
+  object: string;
+}
+
+/**
  * Extracted fact structure from LLM response
  */
 export interface ExtractedFact {
@@ -66,6 +90,10 @@ export interface ExtractedFact {
   object?: string;
   confidence: number;
   tags?: string[];
+  /** Named entities mentioned in the fact (for graph sync) */
+  entities?: ExtractedEntity[];
+  /** Subject-predicate-object relations (for graph edges) */
+  relations?: ExtractedRelation[];
 }
 
 /**
@@ -103,7 +131,7 @@ const DEFAULT_MODELS = {
 /**
  * Fact extraction system prompt
  */
-const EXTRACTION_SYSTEM_PROMPT = `You are a fact extraction assistant. Extract key facts from conversations that should be remembered long-term.
+const EXTRACTION_SYSTEM_PROMPT = `You are a fact and entity extraction assistant. Extract key facts from conversations that should be remembered long-term, along with the named entities mentioned.
 
 Guidelines:
 - Focus on user preferences, attributes, decisions, events, and relationships
@@ -121,7 +149,17 @@ For each fact, determine the type:
 - relationship: Connections to people, organizations, projects
 - event: Things that happened, milestones, decisions made
 - observation: General observations about user behavior
-- custom: Other important facts`;
+- custom: Other important facts
+
+Entity Extraction:
+- Extract all named entities mentioned (people, organizations, places, products)
+- Classify each entity by type: person, organization, place, product, concept, other
+- If an entity is abbreviated, provide the full value (e.g., "SF" → fullValue: "San Francisco")
+
+Relation Extraction:
+- Extract subject-predicate-object triples that describe relationships between entities
+- Use snake_case for predicates (e.g., "works_at", "located_in", "prefers")
+- Each relation should connect two entities mentioned in the conversation`;
 
 /**
  * Build the user prompt for fact extraction
@@ -130,7 +168,7 @@ function buildExtractionPrompt(
   userMessage: string,
   agentResponse: string,
 ): string {
-  return `Extract facts from this conversation:
+  return `Extract facts and entities from this conversation:
 
 User: ${userMessage}
 Agent: ${agentResponse}
@@ -143,23 +181,92 @@ Return ONLY a JSON object with a "facts" array. Each fact should have:
 - predicate: (optional) The relationship or action
 - object: (optional) The target of the relationship
 - tags: (optional) Array of relevant tags
+- entities: (optional) Array of named entities mentioned, each with:
+  - name: Entity name as mentioned
+  - type: One of "person", "organization", "place", "product", "concept", "other"
+  - fullValue: (optional) Full name if abbreviated
+- relations: (optional) Array of entity relationships, each with:
+  - subject: Subject entity name
+  - predicate: Relationship type in snake_case (e.g., "works_at", "located_in")
+  - object: Object entity name
 
 Example response:
 {
   "facts": [
     {
-      "fact": "User prefers TypeScript for backend development",
-      "factType": "preference",
+      "fact": "Sarah works at Planet Granite in San Francisco",
+      "factType": "knowledge",
       "confidence": 0.95,
-      "subject": "User",
-      "predicate": "prefers",
-      "object": "TypeScript for backend",
-      "tags": ["programming", "backend"]
+      "subject": "Sarah",
+      "predicate": "works_at",
+      "object": "Planet Granite",
+      "tags": ["work", "location"],
+      "entities": [
+        { "name": "Sarah", "type": "person" },
+        { "name": "Planet Granite", "type": "organization" },
+        { "name": "San Francisco", "type": "place" }
+      ],
+      "relations": [
+        { "subject": "Sarah", "predicate": "works_at", "object": "Planet Granite" },
+        { "subject": "Planet Granite", "predicate": "located_in", "object": "San Francisco" }
+      ]
     }
   ]
 }
 
 If no meaningful facts can be extracted, return: {"facts": []}`;
+}
+
+/**
+ * Parse and validate entity from LLM response
+ */
+function parseEntity(e: unknown): ExtractedEntity | null {
+  if (typeof e !== "object" || e === null) return null;
+  const entity = e as Record<string, unknown>;
+
+  if (typeof entity.name !== "string" || !entity.name.trim()) return null;
+
+  const validTypes = [
+    "person",
+    "organization",
+    "place",
+    "product",
+    "concept",
+    "other",
+  ];
+  const entityType =
+    typeof entity.type === "string" && validTypes.includes(entity.type)
+      ? (entity.type as ExtractedEntity["type"])
+      : "other";
+
+  return {
+    name: entity.name.trim(),
+    type: entityType,
+    fullValue:
+      typeof entity.fullValue === "string" ? entity.fullValue : undefined,
+  };
+}
+
+/**
+ * Parse and validate relation from LLM response
+ */
+function parseRelation(r: unknown): ExtractedRelation | null {
+  if (typeof r !== "object" || r === null) return null;
+  const relation = r as Record<string, unknown>;
+
+  if (
+    typeof relation.subject !== "string" ||
+    typeof relation.predicate !== "string" ||
+    typeof relation.object !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    subject: relation.subject.trim(),
+    predicate: relation.predicate.trim().toLowerCase().replace(/\s+/g, "_"),
+    object: relation.object.trim(),
+  };
 }
 
 /**
@@ -192,20 +299,42 @@ function parseFactsResponse(content: string): ExtractedFact[] | null {
           typeof fact.fact === "string" && typeof fact.factType === "string"
         );
       })
-      .map((f: Record<string, unknown>) => ({
-        fact: f.fact as string,
-        factType: normalizeFactType(f.factType as string),
-        confidence:
-          typeof f.confidence === "number"
-            ? Math.min(1, Math.max(0, f.confidence))
-            : 0.7,
-        subject: typeof f.subject === "string" ? f.subject : undefined,
-        predicate: typeof f.predicate === "string" ? f.predicate : undefined,
-        object: typeof f.object === "string" ? f.object : undefined,
-        tags: Array.isArray(f.tags)
-          ? f.tags.filter((t): t is string => typeof t === "string")
-          : undefined,
-      }));
+      .map((f: Record<string, unknown>) => {
+        // Parse entities array if present
+        const entities: ExtractedEntity[] | undefined = Array.isArray(
+          f.entities,
+        )
+          ? (f.entities
+              .map(parseEntity)
+              .filter((e): e is ExtractedEntity => e !== null) as ExtractedEntity[])
+          : undefined;
+
+        // Parse relations array if present
+        const relations: ExtractedRelation[] | undefined = Array.isArray(
+          f.relations,
+        )
+          ? (f.relations
+              .map(parseRelation)
+              .filter((r): r is ExtractedRelation => r !== null) as ExtractedRelation[])
+          : undefined;
+
+        return {
+          fact: f.fact as string,
+          factType: normalizeFactType(f.factType as string),
+          confidence:
+            typeof f.confidence === "number"
+              ? Math.min(1, Math.max(0, f.confidence))
+              : 0.7,
+          subject: typeof f.subject === "string" ? f.subject : undefined,
+          predicate: typeof f.predicate === "string" ? f.predicate : undefined,
+          object: typeof f.object === "string" ? f.object : undefined,
+          tags: Array.isArray(f.tags)
+            ? f.tags.filter((t): t is string => typeof t === "string")
+            : undefined,
+          entities: entities && entities.length > 0 ? entities : undefined,
+          relations: relations && relations.length > 0 ? relations : undefined,
+        };
+      });
   } catch (error) {
     console.warn("[Cortex LLM] Failed to parse facts response:", error);
     return null;

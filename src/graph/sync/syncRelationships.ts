@@ -500,7 +500,7 @@ export async function syncFactRelationships(
     }
   }
 
-  // sourceRef → EXTRACTED_FROM edge
+  // sourceRef → EXTRACTED_FROM edge (to Conversation)
   if (fact.sourceRef?.conversationId) {
     const conversationNodeId = await findGraphNodeId(
       "Conversation",
@@ -515,6 +515,26 @@ export async function syncFactRelationships(
         to: conversationNodeId,
         properties: {
           messageIds: fact.sourceRef.messageIds || [],
+          createdAt: fact.createdAt,
+        },
+      });
+    }
+  }
+
+  // sourceRef → EXTRACTED_WITH edge (to Memory for bidirectional traceability)
+  if (fact.sourceRef?.memoryId) {
+    const memoryNodeId = await findGraphNodeId(
+      "Memory",
+      fact.sourceRef.memoryId,
+      adapter,
+    );
+
+    if (memoryNodeId) {
+      await adapter.createEdge({
+        type: "EXTRACTED_WITH",
+        from: factNodeId,
+        to: memoryNodeId,
+        properties: {
           createdAt: fact.createdAt,
         },
       });
