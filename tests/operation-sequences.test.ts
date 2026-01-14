@@ -1119,6 +1119,18 @@ describe("Operation Sequence Validation", () => {
         data: { factId: fact.factId },
       });
 
+      // Wait for Convex consistency - poll until context is queryable
+      const ctxReady = await waitForCondition(
+        async () => {
+          const result = await cortex.contexts.get(testCtx.contextId);
+          return result !== null;
+        },
+        ctx,
+        5000,
+        100,
+      );
+      expect(ctxReady).toBe(true);
+
       // VALIDATE: Complete chain retrievable
       const convCheck = await cortex.conversations.get(conv.conversationId);
       const memCheck = await cortex.vector.get(spaceId, mem.memoryId);
