@@ -129,7 +129,7 @@ import {
   enrichWithConversations,
   type GraphExpansionConfig,
 } from "./recall";
-import { resolveRecallLimits } from "../config";
+import { resolveRecallLimits, resolveEmbeddingModel } from "../config";
 import type { ResilienceLayer } from "../resilience";
 
 /** Default memory space ID used when none is provided */
@@ -255,7 +255,8 @@ export class MemoryAPI {
     if (config.provider === "openai" && config.apiKey) {
       // Use OpenAI embeddings API
       const apiKey = config.apiKey;
-      const model = config.model || "text-embedding-3-small";
+      // Use centralized model resolution with env var fallback
+      const model = resolveEmbeddingModel(config.model);
 
       return async (text: string) => {
         try {

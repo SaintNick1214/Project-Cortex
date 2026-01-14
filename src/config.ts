@@ -7,6 +7,99 @@
 
 import type { RecallLimits } from "./types";
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// LLM Model Configuration
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Default models by usage area.
+ *
+ * Based on benchmarks from Documentation/core-features/fact-extraction.mdx:
+ * - gpt-4o-2024-11-20: Best balance (13 facts, 11.6s latency)
+ * - gpt-4o-mini: Budget option (11 facts, 16s latency)
+ * - gpt-5-mini: Best quality but 5x latency cost
+ */
+export const MODEL_DEFAULTS = {
+  factExtraction: {
+    openai: "gpt-4o-2024-11-20",
+    anthropic: "claude-3-haiku-20240307",
+  },
+  conflictResolution: {
+    openai: "gpt-4o-2024-11-20",
+    anthropic: "claude-3-haiku-20240307",
+  },
+  embedding: "text-embedding-3-small",
+} as const;
+
+/**
+ * Resolve model for fact extraction.
+ *
+ * Priority order:
+ * 1. configModel (programmatic config)
+ * 2. CORTEX_FACT_EXTRACTION_MODEL env var
+ * 3. Provider-specific default
+ *
+ * @param configModel - Model from LLMConfig.model
+ * @param provider - LLM provider ("openai" or "anthropic")
+ * @returns Resolved model name
+ */
+export function resolveFactExtractionModel(
+  configModel?: string,
+  provider: "openai" | "anthropic" = "openai",
+): string {
+  return (
+    configModel ||
+    process.env.CORTEX_FACT_EXTRACTION_MODEL ||
+    MODEL_DEFAULTS.factExtraction[provider]
+  );
+}
+
+/**
+ * Resolve model for conflict resolution (belief revision).
+ *
+ * Priority order:
+ * 1. configModel (per-call or programmatic config)
+ * 2. CORTEX_CONFLICT_RESOLUTION_MODEL env var
+ * 3. CORTEX_FACT_EXTRACTION_MODEL env var (fallback)
+ * 4. Provider-specific default
+ *
+ * @param configModel - Model from BeliefRevisionConfig.llmResolution.model
+ * @param provider - LLM provider ("openai" or "anthropic")
+ * @returns Resolved model name
+ */
+export function resolveConflictResolutionModel(
+  configModel?: string,
+  provider: "openai" | "anthropic" = "openai",
+): string {
+  return (
+    configModel ||
+    process.env.CORTEX_CONFLICT_RESOLUTION_MODEL ||
+    process.env.CORTEX_FACT_EXTRACTION_MODEL ||
+    MODEL_DEFAULTS.conflictResolution[provider]
+  );
+}
+
+/**
+ * Resolve model for embedding generation.
+ *
+ * Priority order:
+ * 1. configModel (programmatic config)
+ * 2. CORTEX_EMBEDDING_MODEL env var
+ * 3. Default model
+ *
+ * @param configModel - Model from EmbeddingConfig.model
+ * @returns Resolved model name
+ */
+export function resolveEmbeddingModel(configModel?: string): string {
+  return (
+    configModel || process.env.CORTEX_EMBEDDING_MODEL || MODEL_DEFAULTS.embedding
+  );
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Recall Limits Configuration
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 /**
  * Parse an environment variable as an integer with a default value.
  * Returns the default if the env var is not set or is not a valid number.

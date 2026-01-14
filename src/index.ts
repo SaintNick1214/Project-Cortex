@@ -69,28 +69,10 @@ export interface LLMConfig {
   apiKey: string;
 
   /**
-   * General model to use (fallback for all LLM operations).
-   * Default: 'gpt-4o-2024-11-20' for OpenAI, 'claude-3-haiku-20240307' for Anthropic
-   *
-   * Can be overridden by area-specific model fields below.
+   * Model to use for fact extraction.
+   * Default: 'gpt-4o-mini' for OpenAI, 'claude-3-haiku-20240307' for Anthropic
    */
   model?: string;
-
-  /**
-   * Model for fact extraction specifically.
-   * Takes precedence over `model` for extraction operations.
-   * Can be set via CORTEX_FACT_EXTRACTION_MODEL env var.
-   * Default: 'gpt-4o-2024-11-20' (best balance of quality and speed)
-   */
-  factExtractionModel?: string;
-
-  /**
-   * Model for belief revision conflict resolution specifically.
-   * Takes precedence over `model` for conflict resolution operations.
-   * Can be set via CORTEX_BELIEF_REVISION_MODEL env var.
-   * Falls back to CORTEX_FACT_EXTRACTION_MODEL if not set.
-   */
-  conflictResolutionModel?: string;
 
   /**
    * Custom extraction function (for 'custom' provider or to override default behavior).
@@ -320,10 +302,6 @@ export class Cortex {
    *
    * This prevents accidental API costs - users must explicitly opt-in.
    *
-   * Area-specific model env vars (these act as defaults, API overrides take precedence):
-   * - CORTEX_FACT_EXTRACTION_MODEL: Model for fact extraction
-   * - CORTEX_BELIEF_REVISION_MODEL: Model for belief revision conflict resolution
-   *
    * @returns LLMConfig if both gates pass, undefined otherwise
    */
   private static autoConfigureLLM(): LLMConfig | undefined {
@@ -333,17 +311,11 @@ export class Cortex {
       return undefined;
     }
 
-    // Read area-specific model env vars (these act as defaults only)
-    const factExtractionModel = process.env.CORTEX_FACT_EXTRACTION_MODEL;
-    const conflictResolutionModel = process.env.CORTEX_BELIEF_REVISION_MODEL;
-
     // Check providers in priority order
     if (process.env.OPENAI_API_KEY) {
       return {
         provider: "openai",
         apiKey: process.env.OPENAI_API_KEY,
-        factExtractionModel,
-        conflictResolutionModel,
       };
     }
 
@@ -351,8 +323,6 @@ export class Cortex {
       return {
         provider: "anthropic",
         apiKey: process.env.ANTHROPIC_API_KEY,
-        factExtractionModel,
-        conflictResolutionModel,
       };
     }
 

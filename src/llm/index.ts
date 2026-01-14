@@ -7,6 +7,10 @@
  */
 
 import type { LLMConfig } from "../index.js";
+import {
+  resolveFactExtractionModel,
+  resolveConflictResolutionModel,
+} from "../config.js";
 
 /**
  * Helper to load OpenAI SDK in both CJS and ESM environments.
@@ -120,15 +124,8 @@ export interface LLMClient {
   }): Promise<string>;
 }
 
-/**
- * Default models for each provider
- * OpenAI: gpt-4o-2024-11-20 offers best balance of quality (13 facts) and speed (11.6s)
- * See Documentation/core-features/fact-extraction.mdx for benchmarks
- */
-const DEFAULT_MODELS = {
-  openai: "gpt-4o-2024-11-20",
-  anthropic: "claude-3-haiku-20240307",
-} as const;
+// Default models are now centralized in src/config.ts
+// Use resolveFactExtractionModel() and resolveConflictResolutionModel()
 
 /**
  * Fact extraction system prompt
@@ -382,12 +379,8 @@ class OpenAIClient implements LLMClient {
 
       const client = new OpenAI({ apiKey: this.config.apiKey });
 
-      // Model resolution order: config.factExtractionModel > config.model > env var > default
-      const model =
-        this.config.factExtractionModel ||
-        this.config.model ||
-        process.env.CORTEX_FACT_EXTRACTION_MODEL ||
-        DEFAULT_MODELS.openai;
+      // Use centralized model resolution with proper fallback chain
+      const model = resolveFactExtractionModel(this.config.model, "openai");
 
       // Build request options - some models don't support all parameters
       // o1 models don't support temperature, max_tokens, or response_format
@@ -468,15 +461,9 @@ class OpenAIClient implements LLMClient {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new OpenAI({ apiKey: this.config.apiKey });
 
-    // Model resolution order: options.model > config.conflictResolutionModel > config.model >
-    // CORTEX_BELIEF_REVISION_MODEL env var > CORTEX_FACT_EXTRACTION_MODEL env var > default
-    const model =
-      options.model ||
-      this.config.conflictResolutionModel ||
-      this.config.model ||
-      process.env.CORTEX_BELIEF_REVISION_MODEL ||
-      process.env.CORTEX_FACT_EXTRACTION_MODEL ||
-      DEFAULT_MODELS.openai;
+    // Use centralized model resolution for conflict resolution
+    // options.model takes priority (per-call override), then falls back to config/env/default
+    const model = options.model || resolveConflictResolutionModel(this.config.model, "openai");
 
     // Build request options - some models don't support all parameters
     // o1 models don't support temperature, max_tokens, or response_format
@@ -559,12 +546,8 @@ class AnthropicClient implements LLMClient {
 
       const client = new Anthropic({ apiKey: this.config.apiKey });
 
-      // Model resolution order: config.factExtractionModel > config.model > env var > default
-      const model =
-        this.config.factExtractionModel ||
-        this.config.model ||
-        process.env.CORTEX_FACT_EXTRACTION_MODEL ||
-        DEFAULT_MODELS.anthropic;
+      // Use centralized model resolution with proper fallback chain
+      const model = resolveFactExtractionModel(this.config.model, "anthropic");
 
       // Anthropic uses tool_use for structured JSON output
       const response = await client.messages.create({
@@ -624,15 +607,9 @@ class AnthropicClient implements LLMClient {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new Anthropic({ apiKey: this.config.apiKey });
 
-    // Model resolution order: options.model > config.conflictResolutionModel > config.model >
-    // CORTEX_BELIEF_REVISION_MODEL env var > CORTEX_FACT_EXTRACTION_MODEL env var > default
-    const model =
-      options.model ||
-      this.config.conflictResolutionModel ||
-      this.config.model ||
-      process.env.CORTEX_BELIEF_REVISION_MODEL ||
-      process.env.CORTEX_FACT_EXTRACTION_MODEL ||
-      DEFAULT_MODELS.anthropic;
+    // Use centralized model resolution for conflict resolution
+    // options.model takes priority (per-call override), then falls back to config/env/default
+    const model = options.model || resolveConflictResolutionModel(this.config.model, "anthropic");
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const response = await client.messages.create({
