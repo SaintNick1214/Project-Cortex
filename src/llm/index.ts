@@ -122,9 +122,11 @@ export interface LLMClient {
 
 /**
  * Default models for each provider
+ * OpenAI: gpt-4o-2024-11-20 offers best balance of quality (13 facts) and speed (11.6s)
+ * See Documentation/core-features/fact-extraction.mdx for benchmarks
  */
 const DEFAULT_MODELS = {
-  openai: "gpt-4o-mini",
+  openai: "gpt-4o-2024-11-20",
   anthropic: "claude-3-haiku-20240307",
 } as const;
 
@@ -380,7 +382,9 @@ class OpenAIClient implements LLMClient {
 
       const client = new OpenAI({ apiKey: this.config.apiKey });
 
+      // Model resolution order: config.factExtractionModel > config.model > env var > default
       const model =
+        this.config.factExtractionModel ||
         this.config.model ||
         process.env.CORTEX_FACT_EXTRACTION_MODEL ||
         DEFAULT_MODELS.openai;
@@ -464,9 +468,13 @@ class OpenAIClient implements LLMClient {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new OpenAI({ apiKey: this.config.apiKey });
 
+    // Model resolution order: options.model > config.conflictResolutionModel > config.model >
+    // CORTEX_BELIEF_REVISION_MODEL env var > CORTEX_FACT_EXTRACTION_MODEL env var > default
     const model =
       options.model ||
+      this.config.conflictResolutionModel ||
       this.config.model ||
+      process.env.CORTEX_BELIEF_REVISION_MODEL ||
       process.env.CORTEX_FACT_EXTRACTION_MODEL ||
       DEFAULT_MODELS.openai;
 
@@ -551,7 +559,9 @@ class AnthropicClient implements LLMClient {
 
       const client = new Anthropic({ apiKey: this.config.apiKey });
 
+      // Model resolution order: config.factExtractionModel > config.model > env var > default
       const model =
+        this.config.factExtractionModel ||
         this.config.model ||
         process.env.CORTEX_FACT_EXTRACTION_MODEL ||
         DEFAULT_MODELS.anthropic;
@@ -614,9 +624,13 @@ class AnthropicClient implements LLMClient {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const client = new Anthropic({ apiKey: this.config.apiKey });
 
+    // Model resolution order: options.model > config.conflictResolutionModel > config.model >
+    // CORTEX_BELIEF_REVISION_MODEL env var > CORTEX_FACT_EXTRACTION_MODEL env var > default
     const model =
       options.model ||
+      this.config.conflictResolutionModel ||
       this.config.model ||
+      process.env.CORTEX_BELIEF_REVISION_MODEL ||
       process.env.CORTEX_FACT_EXTRACTION_MODEL ||
       DEFAULT_MODELS.anthropic;
 

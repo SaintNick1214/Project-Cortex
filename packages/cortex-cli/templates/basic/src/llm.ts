@@ -118,8 +118,10 @@ async function generateLLMResponse(
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const openai = client as any;
+    // Use CORTEX_CONVERSATION_MODEL env var for model selection, default to gpt-4o-mini
+    const model = process.env.CORTEX_CONVERSATION_MODEL || "gpt-4o-mini";
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model,
       messages,
       max_tokens: 500,
       temperature: 0.7,
