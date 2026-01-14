@@ -1044,6 +1044,18 @@ export const semanticSearch = query({
       filtered = filtered.filter((f) => f.createdAt <= args.createdBefore!);
     }
 
+    // Filter by minimum score (for semantic search)
+    // The Convex .similar() API returns results with _score field
+    if (args.minScore !== undefined) {
+      filtered = filtered.filter((f: any) => {
+        // Only filter if _score exists (semantic search results)
+        if (f._score !== undefined) {
+          return f._score >= args.minScore!;
+        }
+        return true; // Keep all results without scores
+      });
+    }
+
     // Apply final limit
     return filtered.slice(0, limit);
   },

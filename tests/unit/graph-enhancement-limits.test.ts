@@ -18,11 +18,13 @@ import {
   type GraphExpansionConfig,
 } from "../../src/memory/recall/graphEnhancement";
 
-// Mock implementations
-const createMockGraphAdapter = (): jest.Mocked<GraphAdapter> => ({
-  isConnected: jest.fn().mockResolvedValue(true),
-  findNodes: jest.fn().mockResolvedValue([{ id: "node-1", label: "Entity", properties: { name: "TestEntity" } }]),
-  traverse: jest.fn().mockResolvedValue([
+// Mock implementations with explicit type casting for Jest compatibility
+const createMockGraphAdapter = () => ({
+  isConnected: jest.fn<() => Promise<boolean>>().mockResolvedValue(true),
+  findNodes: jest.fn<GraphAdapter["findNodes"]>().mockResolvedValue([
+    { id: "node-1", label: "Entity", properties: { name: "TestEntity" } },
+  ]),
+  traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([
     { id: "node-2", label: "Entity", properties: { name: "RelatedEntity1" } },
     { id: "node-3", label: "Entity", properties: { name: "RelatedEntity2" } },
     { id: "node-4", label: "Entity", properties: { name: "RelatedEntity3" } },
@@ -36,28 +38,28 @@ const createMockGraphAdapter = (): jest.Mocked<GraphAdapter> => ({
   deleteRelationship: jest.fn(),
   query: jest.fn(),
   close: jest.fn(),
-});
+}) as unknown as jest.Mocked<GraphAdapter>;
 
-const createMockVectorAPI = (): jest.Mocked<Pick<VectorAPI, "search">> => ({
-  search: jest.fn().mockResolvedValue([
+const createMockVectorAPI = () => ({
+  search: jest.fn<VectorAPI["search"]>().mockResolvedValue([
     { memoryId: "mem-1", content: "Memory 1" } as MemoryEntry,
     { memoryId: "mem-2", content: "Memory 2" } as MemoryEntry,
     { memoryId: "mem-3", content: "Memory 3" } as MemoryEntry,
     { memoryId: "mem-4", content: "Memory 4" } as MemoryEntry,
     { memoryId: "mem-5", content: "Memory 5" } as MemoryEntry,
   ]),
-});
+}) as unknown as jest.Mocked<Pick<VectorAPI, "search">>;
 
-const createMockFactsAPI = (): jest.Mocked<Pick<FactsAPI, "queryBySubject" | "search">> => ({
-  queryBySubject: jest.fn().mockResolvedValue([
+const createMockFactsAPI = () => ({
+  queryBySubject: jest.fn<FactsAPI["queryBySubject"]>().mockResolvedValue([
     { factId: "fact-1", fact: "Fact 1" } as FactRecord,
     { factId: "fact-2", fact: "Fact 2" } as FactRecord,
   ]),
-  search: jest.fn().mockResolvedValue([
+  search: jest.fn<FactsAPI["search"]>().mockResolvedValue([
     { factId: "fact-3", fact: "Fact 3" } as FactRecord,
     { factId: "fact-4", fact: "Fact 4" } as FactRecord,
   ]),
-});
+}) as unknown as jest.Mocked<Pick<FactsAPI, "queryBySubject" | "search">>;
 
 describe("Graph Enhancement Limits", () => {
   describe("expandViaGraph", () => {
