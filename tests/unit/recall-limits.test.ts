@@ -8,7 +8,14 @@
  * 3. Per-call overrides
  */
 
-import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  jest,
+} from "@jest/globals";
 
 // We need to test the config module with different env var states
 // So we'll dynamically import it after setting env vars

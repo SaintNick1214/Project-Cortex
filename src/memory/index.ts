@@ -2742,7 +2742,8 @@ export class MemoryAPI {
 
     const [rawVectorMemories, rawDirectFacts] = await Promise.all([
       // Vector search (uses embedding for semantic matching)
-      sources.vector
+      // Skip search when limits.memories is 0 to gracefully return empty results
+      sources.vector && limits.memories > 0
         ? this.vector.search(params.memorySpaceId, params.query, {
             embedding: effectiveEmbedding, // BATTERIES INCLUDED: use auto-generated or provided embedding
             userId: params.userId,
@@ -2754,7 +2755,8 @@ export class MemoryAPI {
         : Promise.resolve([]),
 
       // Facts search - USE SEMANTIC when embedding available, TEXT otherwise
-      sources.facts
+      // Skip search when limits.facts is 0 to gracefully return empty results
+      sources.facts && limits.facts > 0
         ? hasEmbedding
           ? // Semantic search for facts (v0.30.0+) - finds semantically related facts
             this.facts.semanticSearch(params.memorySpaceId, effectiveEmbedding!, {
