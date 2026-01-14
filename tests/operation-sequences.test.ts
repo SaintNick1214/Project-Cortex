@@ -10,7 +10,7 @@
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../src/index";
-import { createNamedTestRunContext } from "./helpers";
+import { createNamedTestRunContext, waitForCondition } from "./helpers";
 
 describe("Operation Sequence Validation", () => {
   // Create unique test run context for parallel-safe execution
@@ -371,10 +371,6 @@ describe("Operation Sequence Validation", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Contexts: Full Lifecycle Sequence", () => {
-    // Helper to ensure Convex consistency for sequential operations
-    const waitForConsistency = () =>
-      new Promise((resolve) => setTimeout(resolve, 100));
-
     it("create→get→update→get→complete→get→delete→get", async () => {
       const spaceId = `${ctx.runId}-ctx-lifecycle`;
       const userId = "lifecycle-user";
@@ -391,8 +387,17 @@ describe("Operation Sequence Validation", () => {
       expect(created.contextId).toBeDefined();
       expect(created.status).toBe("active");
 
-      // Wait for Convex consistency before subsequent operations
-      await waitForConsistency();
+      // Wait for Convex consistency - poll until context is queryable
+      const contextReady = await waitForCondition(
+        async () => {
+          const result = await cortex.contexts.get(created.contextId);
+          return result !== null;
+        },
+        ctx,
+        5000, // 5 second timeout
+        100, // 100ms polling interval
+      );
+      expect(contextReady).toBe(true);
 
       // STEP 2: Get (validate create)
       const afterCreate = await cortex.contexts.get(created.contextId);
@@ -445,8 +450,18 @@ describe("Operation Sequence Validation", () => {
         status: "active",
       });
 
-      // Wait for Convex consistency before creating child with parent reference
-      await waitForConsistency();
+      // Wait for Convex consistency - poll until parent is queryable
+      // This is critical because the child creation validates parentId exists
+      const parentReady = await waitForCondition(
+        async () => {
+          const result = await cortex.contexts.get(parent.contextId);
+          return result !== null;
+        },
+        ctx,
+        5000, // 5 second timeout
+        100, // 100ms polling interval
+      );
+      expect(parentReady).toBe(true);
 
       // Create child
       const child = await cortex.contexts.create({
