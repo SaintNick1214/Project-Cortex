@@ -353,10 +353,8 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
             ) => {
               let hasMore = true;
               let batchSizeIndex = 0; // Start with largest batch size
-              let batchNum = 0;
 
               while (hasMore) {
-                batchNum++;
                 const batchLimit = BATCH_SIZE_SEQUENCE[batchSizeIndex];
                 spinner.text = `Clearing ${tableName}... (${deleted[counter]} deleted)`;
                 try {
