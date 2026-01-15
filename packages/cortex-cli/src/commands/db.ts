@@ -33,7 +33,10 @@ import { writeFile, readFile } from "fs/promises";
 import pc from "picocolors";
 import prompts from "prompts";
 
-const MAX_LIMIT = 1000;
+const MAX_LIMIT = 10000;
+// Batch size reduction sequence for handling Convex 16MB read limit
+// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50
+const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50] as const;
 
 /**
  * Register database commands
@@ -343,24 +346,52 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
             const rawClient = client.getClient();
 
             // Helper to clear a table using the admin:clearTable mutation
+            // Uses adaptive batch sizing: starts at 1000, reduces on "Too many bytes" errors
             const clearTableDirect = async (
               tableName: string,
               counter: keyof typeof deleted,
             ) => {
               let hasMore = true;
+              let batchSizeIndex = 0; // Start with largest batch size
+              let batchNum = 0;
+
               while (hasMore) {
+                batchNum++;
+                const batchLimit = BATCH_SIZE_SEQUENCE[batchSizeIndex];
                 spinner.text = `Clearing ${tableName}... (${deleted[counter]} deleted)`;
                 try {
-                  const result = await rawClient.mutation(
-                    "admin:clearTable" as unknown as Parameters<
-                      typeof rawClient.mutation
-                    >[0],
-                    { table: tableName, limit: MAX_LIMIT },
-                  );
+                  // Suppress Convex SDK's console.error during mutation (we handle errors ourselves)
+                  const originalConsoleError = console.error;
+                  console.error = () => {};
+                  let result: { deleted: number; hasMore: boolean };
+                  try {
+                    result = await rawClient.mutation(
+                      "admin:clearTable" as unknown as Parameters<
+                        typeof rawClient.mutation
+                      >[0],
+                      { table: tableName, limit: batchLimit },
+                    );
+                  } finally {
+                    console.error = originalConsoleError;
+                  }
                   deleted[counter] += result.deleted;
                   hasMore = result.hasMore;
-                } catch {
-                  hasMore = false;
+                } catch (err) {
+                  const errorMsg = err instanceof Error ? err.message : String(err);
+                  // Check for byte limit error - Convex wraps errors, so check for:
+                  // 1. Direct "Too many bytes" message (if propagated)
+                  // 2. Generic "Server Error" from Convex client (common wrapper)
+                  const isByteLimitError =
+                    errorMsg.includes("Too many bytes") ||
+                    errorMsg.includes("Server Error");
+
+                  if (isByteLimitError && batchSizeIndex < BATCH_SIZE_SEQUENCE.length - 1) {
+                    // Reduce batch size and retry
+                    batchSizeIndex++;
+                  } else {
+                    // Either not a retryable error or we've exhausted all batch sizes
+                    hasMore = false;
+                  }
                 }
               }
             };

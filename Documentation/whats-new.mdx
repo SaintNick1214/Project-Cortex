@@ -17,6 +17,45 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### CLI v0.31.0 · Jan 15, 2026
+
+**Adaptive Batch Sizing for `cortex db clear`**
+
+🔄 Automatic batch size reduction on Convex 16MB read limit errors  
+📉 Starts at 10,000 records, reduces to 500 → 250 → 50 on failures  
+🧹 Suppresses Convex SDK error noise during retry operations  
+✅ Reliably clears tables with large embeddings (memories, facts)
+
+<details>
+<summary>Show full details</summary>
+
+#### Bug Fix
+
+**`cortex db clear` fails on tables with embeddings**
+
+The `cortex db clear` command would fail with "Too many bytes read in a single function execution (limit: 16777216 bytes)" when clearing tables containing records with vector embeddings (memories and facts tables).
+
+**Root Cause:** Each memory/fact record can contain a 1536-dimension float64 embedding (~12KB per record). With a batch size of 1000 records, this alone approaches the 16MB Convex read limit before accounting for content, metadata, and previousVersions.
+
+**Solution:** Implemented adaptive batch sizing that:
+
+1. Starts optimistically with 10,000 records per batch
+2. On Convex "Server Error" (wraps byte limit error), automatically reduces batch size
+3. Retry sequence: 10,000 → 500 → 250 → 50
+4. Continues clearing with smaller batches until complete
+5. Suppresses Convex SDK console.error output during retries for clean CLI output
+
+```typescript
+// New batch size sequence
+const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50] as const;
+```
+
+The fix is resilient to varying record sizes and automatically adapts without requiring manual configuration.
+
+</details>
+
+---
+
 ### TypeScript SDK v0.31.0 · Jan 14, 2026
 
 **Configurable Recall Limits - Prevent 16MB Read Errors**
