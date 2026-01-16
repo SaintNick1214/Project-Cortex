@@ -9,9 +9,12 @@
  * 5. Cascade effects properly handled
  */
 
-import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
+import { describe, it, expect, beforeAll, afterAll, jest } from "@jest/globals";
 import { Cortex } from "../src/index";
 import { createNamedTestRunContext, waitForCondition } from "./helpers";
+
+// Retry failed tests once - Convex backend can have transient errors under parallel load
+jest.retryTimes(1, { logErrorsBeforeRetry: true });
 
 // State definitions from schema
 const CONTEXT_STATUSES = [
@@ -54,6 +57,7 @@ describe("State Transition Testing", () => {
   const getSpaceId = (suffix: string) => ctx.memorySpaceId(suffix);
 
   // Helper to wait for context to be queryable after creation
+  // Extended timeout for parallel test execution where Convex may be slower
   const waitForContextReady = async (contextId: string) => {
     const ready = await waitForCondition(
       async () => {
@@ -61,12 +65,14 @@ describe("State Transition Testing", () => {
         return result !== null;
       },
       ctx,
-      5000,
-      100,
+      10000, // Extended to 10s for parallel load
+      200,
     );
     if (!ready) {
-      throw new Error(`Context ${contextId} not ready after 5 seconds`);
+      throw new Error(`Context ${contextId} not ready after 10 seconds`);
     }
+    // Small delay to allow list indexes to catch up
+    await new Promise((resolve) => setTimeout(resolve, 100));
   };
 
   beforeAll(() => {

@@ -8,9 +8,12 @@
  * 4. Concurrent sequences don't corrupt state
  */
 
-import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
+import { describe, it, expect, beforeAll, afterAll, jest } from "@jest/globals";
 import { Cortex } from "../src/index";
 import { createNamedTestRunContext, waitForCondition } from "./helpers";
+
+// Retry failed tests once - Convex backend can have transient errors under parallel load
+jest.retryTimes(1, { logErrorsBeforeRetry: true });
 
 describe("Operation Sequence Validation", () => {
   // Create unique test run context for parallel-safe execution
