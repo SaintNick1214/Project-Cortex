@@ -67,6 +67,9 @@ const aggregateMetrics = new AggregateMetricsCollector();
 // Test timeout for long-running tests (15 minutes)
 jest.setTimeout(900000);
 
+// Retry failed tests once - Convex backend can have transient errors under stress
+jest.retryTimes(1, { logErrorsBeforeRetry: true });
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mock LLM Client for Fact Extraction
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -8,7 +8,7 @@
  * 3. Provider-specific defaults
  */
 
-import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
+import { describe, it, expect, beforeEach, afterEach, jest } from "@jest/globals";
 
 describe("Model Resolution Configuration", () => {
   // Store original env vars to restore after tests

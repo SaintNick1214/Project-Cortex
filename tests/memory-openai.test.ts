@@ -318,7 +318,7 @@ describe("Memory OpenAI Integration", () => {
             `  ✓ Direct result: "${enriched.content.substring(0, 40)}..."`,
           );
         }
-      }, 30000);
+      }, 60000); // Extended for OpenAI API + Convex query
 
       it("validates summarization quality", async () => {
         // Skip if storedMemories wasn't populated (e.g., previous test failed)
@@ -386,7 +386,7 @@ describe("Memory OpenAI Integration", () => {
             `  ✓ Memory "${result.content.substring(0, 30)}..." score: ${score.toFixed(4)}`,
           );
         });
-      }, 30000);
+      }, 60000); // Extended for OpenAI API + Convex query
     });
   });
 });
