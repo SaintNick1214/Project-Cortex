@@ -313,7 +313,7 @@ describe("Memory OpenAI Integration", () => {
             `  ✓ Query: "${search.query}" → Found "${search.expectInContent}" at position ${matchIndex + 1}`,
           );
         }
-      }, 60000); // 60s timeout for API calls
+      }, 180000); // 3 min timeout: 5 searches × (OpenAI embedding + Convex search with retries)
 
       it("enriches search results with full conversation context", async () => {
         // Use retry helper to handle transient Convex server errors under parallel load
@@ -362,7 +362,7 @@ describe("Memory OpenAI Integration", () => {
             `  ✓ Direct result: "${enriched.content.substring(0, 40)}..."`,
           );
         }
-      }, 60000); // Extended for OpenAI API + Convex query
+      }, 120000); // 2 min: OpenAI embedding + Convex search with retries
 
       it("validates summarization quality", async () => {
         // Skip if storedMemories wasn't populated (e.g., previous test failed)
@@ -436,7 +436,7 @@ describe("Memory OpenAI Integration", () => {
             `  ✓ Memory "${result.content.substring(0, 30)}..." score: ${score.toFixed(4)}`,
           );
         });
-      }, 60000); // Extended for OpenAI API + Convex query
+      }, 120000); // 2 min: OpenAI embedding + Convex search with retries
     });
   });
 });
