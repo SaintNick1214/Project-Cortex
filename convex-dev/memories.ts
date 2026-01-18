@@ -6,7 +6,9 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { action, internalQuery, mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
+import { Doc, Id } from "./_generated/dataModel";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -292,11 +294,50 @@ export const get = query({
 });
 
 /**
- * Search memories (semantic with vector, keyword with text, or hybrid)
+ * Internal query to fetch memories by their IDs (used by search action)
  */
-export const search = query({
+export const fetchMemoriesByIds = internalQuery({
+  args: { ids: v.array(v.id("memories")) },
+  handler: async (ctx, { ids }): Promise<Doc<"memories">[]> => {
+    const results: Doc<"memories">[] = [];
+    for (const id of ids) {
+      const doc = await ctx.db.get(id);
+      if (doc !== null) {
+        results.push(doc);
+      }
+    }
+    return results;
+  },
+});
+
+/**
+ * Internal query for keyword search (used by search action)
+ */
+export const keywordSearchMemories = internalQuery({
   args: {
-    memorySpaceId: v.string(), // Updated
+    memorySpaceId: v.string(),
+    query: v.string(),
+    limit: v.number(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("memories")
+      .withSearchIndex("by_content", (q) =>
+        q.search("content", args.query).eq("memorySpaceId", args.memorySpaceId),
+      )
+      .take(args.limit);
+  },
+});
+
+/**
+ * Search memories (semantic with vector, keyword with text, or hybrid)
+ *
+ * Note: Vector search requires using ctx.vectorSearch() which is only
+ * available in actions, so this is implemented as an action.
+ */
+export const search = action({
+  args: {
+    memorySpaceId: v.string(),
     query: v.string(),
     embedding: v.optional(v.array(v.float64())),
     userId: v.optional(v.string()),
@@ -307,44 +348,55 @@ export const search = query({
         v.literal("system"),
         v.literal("tool"),
         v.literal("a2a"),
-        v.literal("fact-extraction"), // For fact-extracted memories
+        v.literal("fact-extraction"),
       ),
     ),
     minImportance: v.optional(v.number()),
-    minScore: v.optional(v.number()), // NEW: Minimum similarity score (0-1)
-    queryCategory: v.optional(v.string()), // NEW: Category to boost (for bullet-proof retrieval)
+    minScore: v.optional(v.number()),
+    queryCategory: v.optional(v.string()),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let results = [];
+    const limit = args.limit || 20;
+    let results: any[] = [];
 
     if (args.embedding && args.embedding.length > 0) {
-      // Semantic search with vector similarity (requires managed Convex)
-      // Note: .similar() API is only available in managed Convex
-      // TypeScript doesn't recognize it, so we use type assertion
-      results = await ctx.db
-        .query("memories")
-        .withIndex("by_embedding" as any, (q: any) =>
-          q
-            .similar("embedding", args.embedding, args.limit || 20)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
+      // Semantic search with vector similarity using ctx.vectorSearch()
+      // This is the correct Convex API for vector search (only available in actions)
+      const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+        vector: args.embedding,
+        limit: Math.min(limit * 2, 256), // Fetch more for post-filtering, max 256
+        filter: (q) => q.eq("memorySpaceId", args.memorySpaceId),
+      });
+
+      // Fetch full documents using internal query
+      const ids = vectorResults.map((r) => r._id);
+      const docs = await ctx.runQuery(internal.memories.fetchMemoriesByIds, {
+        ids,
+      });
+
+      // Merge scores with documents (preserve order from vector search)
+      const scoreMap = new Map(
+        vectorResults.map((r) => [r._id.toString(), r._score]),
+      );
+      results = docs.map((doc) => ({
+        ...doc,
+        _score: scoreMap.get(doc._id.toString()) ?? 0,
+      }));
+
+      // Sort by score (should already be sorted, but ensure consistency)
+      results.sort((a, b) => (b._score ?? 0) - (a._score ?? 0));
     } else {
-      // Keyword search
-      results = await ctx.db
-        .query("memories")
-        .withSearchIndex("by_content", (q) =>
-          q
-            .search("content", args.query)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .take(args.limit || 20);
+      // Keyword search using internal query
+      results = await ctx.runQuery(internal.memories.keywordSearchMemories, {
+        memorySpaceId: args.memorySpaceId,
+        query: args.query,
+        limit,
+      });
     }
 
     // Apply filters
     if (args.userId) {
-      // Filter by sourceUserId (who the memory is about)
       results = results.filter(
         (m) => m.sourceUserId === args.userId || m.userId === args.userId,
       );
@@ -364,21 +416,15 @@ export const search = query({
       results = results.filter((m) => m.importance >= args.minImportance!);
     }
 
-    // Apply role-based and category-based weighting for semantic search (BEFORE filtering by minScore)
-    // This helps user messages (facts about the user) rank higher than agent responses
-    // And category-matched facts rank higher for bullet-proof retrieval
+    // Apply role-based and category-based weighting for semantic search
     if (args.embedding && args.embedding.length > 0) {
       results = results.map((m: any) => {
         let score = m._score ?? 0;
 
-        // Role-based weighting for semantic search
-        // User messages contain facts ABOUT the user (names, preferences, etc.)
-        // Agent responses are typically acknowledgments, not facts worth searching
+        // Role-based weighting
         if (m.messageRole === "user") {
-          score *= 1.25; // 25% boost for user messages
+          score *= 1.25;
         } else if (m.messageRole === "agent") {
-          // Agent acknowledgments like "I've noted your email" are noise
-          // Only penalize if content looks like an acknowledgment (short, no real facts)
           const content = (m.content || "").toLowerCase();
           const isAcknowledgment =
             content.length < 60 &&
@@ -390,47 +436,38 @@ export const search = query({
               content.includes("i'll set") ||
               content.includes("i'll call"));
           if (isAcknowledgment) {
-            score *= 0.5; // 50% penalty for pure acknowledgments
+            score *= 0.5;
           }
         }
 
-        // Category-based boosting for bullet-proof retrieval
-        // Boost facts that match the query's category
+        // Category-based boosting
         if (args.queryCategory && m.factCategory === args.queryCategory) {
-          score *= 1.3; // 30% boost for matching category
+          score *= 1.3;
         }
 
-        // Additional boost for enriched content (facts with semantic context)
+        // Enriched content boost
         if (m.enrichedContent) {
-          score *= 1.1; // 10% boost for enriched facts
+          score *= 1.1;
         }
 
-        return {
-          ...m,
-          _score: score,
-        };
+        return { ...m, _score: score };
       });
 
       // Re-sort after applying weights
-      results.sort((a: any, b: any) => {
-        const scoreA = a._score ?? 0;
-        const scoreB = b._score ?? 0;
-        return scoreB - scoreA;
-      });
+      results.sort((a: any, b: any) => (b._score ?? 0) - (a._score ?? 0));
     }
 
-    // Filter by minimum score (for semantic search)
+    // Filter by minimum score
     if (args.minScore !== undefined) {
       results = results.filter((m: any) => {
-        // Only filter if _score exists (semantic search results)
         if (m._score !== undefined) {
           return m._score >= args.minScore!;
         }
-        return true; // Keep all results without scores
+        return true;
       });
     }
 
-    return results.slice(0, args.limit || 20);
+    return results.slice(0, limit);
   },
 });
 

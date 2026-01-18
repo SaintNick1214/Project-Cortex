@@ -788,9 +788,11 @@ export class FactsAPI {
       }
     }
 
+    // Note: facts.semanticSearch is an action (not a query) because vector search
+    // requires ctx.vectorSearch() which is only available in Convex actions
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.semanticSearch, {
+        this.client.action(api.facts.semanticSearch, {
           memorySpaceId,
           embedding,
           tenantId: options?.tenantId ?? this.authContext?.tenantId,

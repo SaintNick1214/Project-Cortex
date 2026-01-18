@@ -219,7 +219,7 @@ async def _sync_contexts(
                     on_progress("Contexts", i + 1, len(contexts))
             except Exception as e:
                 stats.failed += 1
-                context_id = context.context_id if hasattr(context, 'context_id') else str(context)
+                context_id = context.id if hasattr(context, 'id') else str(context)
                 errors.append(BatchSyncError(
                     entity_type="Context",
                     entity_id=context_id,

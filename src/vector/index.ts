@@ -215,9 +215,11 @@ export class VectorAPI {
     validateMemorySpaceId(memorySpaceId);
     validateSearchOptions(options);
 
+    // Note: memories.search is an action (not a query) because vector search
+    // requires ctx.vectorSearch() which is only available in Convex actions
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.search, {
+        this.client.action(api.memories.search, {
           memorySpaceId,
           query,
           embedding: options?.embedding,
