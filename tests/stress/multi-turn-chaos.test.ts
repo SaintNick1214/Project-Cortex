@@ -70,6 +70,47 @@ jest.setTimeout(900000);
 // Retry failed tests once - Convex backend can have transient errors under stress
 jest.retryTimes(1, { logErrorsBeforeRetry: true });
 
+/**
+ * Stress-test-optimized resilience config
+ *
+ * More retries with longer delays to handle heavy CI parallel load.
+ * Total retry window: ~30+ seconds instead of default ~3.5s
+ */
+const STRESS_TEST_RESILIENCE = {
+  enabled: true,
+  rateLimiter: {
+    bucketSize: 100,
+    refillRate: 50,
+  },
+  concurrency: {
+    maxConcurrent: 16,
+    queueSize: 1000,
+    timeout: 60000, // 60s timeout for stress tests
+  },
+  circuitBreaker: {
+    failureThreshold: 10, // Higher threshold for stress tests
+    successThreshold: 2,
+    timeout: 60000, // 60s before recovery
+    halfOpenMax: 3,
+  },
+  queue: {
+    maxSize: {
+      critical: 100,
+      high: 500,
+      normal: 1000,
+      low: 2000,
+      background: 5000,
+    },
+  },
+  retry: {
+    maxRetries: 5, // 5 retries instead of 3
+    baseDelayMs: 1000, // Start with 1s delay instead of 0.5s
+    maxDelayMs: 30000, // Cap at 30s instead of 10s
+    exponentialBase: 2.0,
+    jitter: true,
+  },
+};
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mock LLM Client for Fact Extraction
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -219,7 +260,10 @@ describeWithOpenAI("Stress Tests - Forgetful User (50+ turns)", () => {
 
   beforeAll(async () => {
     client = new ConvexClient(CONVEX_URL);
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    cortex = new Cortex({
+      convexUrl: CONVEX_URL,
+      resilience: STRESS_TEST_RESILIENCE,
+    });
 
     // Configure belief revision
     cortex.facts.configureBeliefRevision(createMockLLMClient());
@@ -337,7 +381,10 @@ describeWithOpenAI("Stress Tests - Indecisive User (30+ preference changes)", ()
 
   beforeAll(async () => {
     client = new ConvexClient(CONVEX_URL);
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    cortex = new Cortex({
+      convexUrl: CONVEX_URL,
+      resilience: STRESS_TEST_RESILIENCE,
+    });
     cortex.facts.configureBeliefRevision(createMockLLMClient());
 
     await cortex.memorySpaces.register({
@@ -473,7 +520,10 @@ describeWithOpenAI("Stress Tests - Topic Flooder (100+ similar memories)", () =>
 
   beforeAll(async () => {
     client = new ConvexClient(CONVEX_URL);
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    cortex = new Cortex({
+      convexUrl: CONVEX_URL,
+      resilience: STRESS_TEST_RESILIENCE,
+    });
     cortex.facts.configureBeliefRevision(createMockLLMClient());
 
     await cortex.memorySpaces.register({
@@ -594,7 +644,10 @@ describeWithOpenAI("Stress Tests - Combined Chaos (100+ turn ultimate test)", ()
 
   beforeAll(async () => {
     client = new ConvexClient(CONVEX_URL);
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    cortex = new Cortex({
+      convexUrl: CONVEX_URL,
+      resilience: STRESS_TEST_RESILIENCE,
+    });
     cortex.facts.configureBeliefRevision(createMockLLMClient());
 
     await cortex.memorySpaces.register({
@@ -734,7 +787,10 @@ describeWithOpenAI("Stress Tests - Parallel Chaos (5 concurrent users)", () => {
 
   beforeAll(async () => {
     client = new ConvexClient(CONVEX_URL);
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    cortex = new Cortex({
+      convexUrl: CONVEX_URL,
+      resilience: STRESS_TEST_RESILIENCE,
+    });
     cortex.facts.configureBeliefRevision(createMockLLMClient());
 
     await cortex.memorySpaces.register({

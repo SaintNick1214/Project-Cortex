@@ -60,6 +60,45 @@ const openai = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null;
 
+/**
+ * Resilience config optimized for parallel CI load.
+ * More retries with longer delays to handle backend congestion.
+ */
+const CI_RESILIENCE_CONFIG = {
+  enabled: true,
+  rateLimiter: {
+    bucketSize: 100,
+    refillRate: 50,
+  },
+  concurrency: {
+    maxConcurrent: 16,
+    queueSize: 1000,
+    timeout: 60000,
+  },
+  circuitBreaker: {
+    failureThreshold: 10,
+    successThreshold: 2,
+    timeout: 60000,
+    halfOpenMax: 3,
+  },
+  queue: {
+    maxSize: {
+      critical: 100,
+      high: 500,
+      normal: 1000,
+      low: 2000,
+      background: 5000,
+    },
+  },
+  retry: {
+    maxRetries: 5, // More retries for CI parallel load
+    baseDelayMs: 1000, // Longer base delay
+    maxDelayMs: 30000, // Higher cap
+    exponentialBase: 2.0,
+    jitter: true,
+  },
+};
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // OpenAI Helper Functions (for advanced embedding tests)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -116,7 +155,10 @@ describe("Memory OpenAI Integration", () => {
   const TEST_AGENT_ID = ctx.agentId("openai");
 
   beforeAll(async () => {
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    cortex = new Cortex({
+      convexUrl: CONVEX_URL,
+      resilience: CI_RESILIENCE_CONFIG,
+    });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
 
