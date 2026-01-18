@@ -354,6 +354,88 @@ def validate_name(name: Optional[str]) -> None:
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Offset Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+def validate_offset(offset: int) -> None:
+    """
+    Validates offset parameter.
+
+    Args:
+        offset: Offset to validate
+
+    Raises:
+        MemorySpaceValidationError: If validation fails
+    """
+    if not isinstance(offset, int):
+        raise MemorySpaceValidationError(
+            "offset must be a number", "INVALID_OFFSET", "offset"
+        )
+
+    if offset < 0:
+        raise MemorySpaceValidationError(
+            f"offset must be at least 0, got {offset}", "INVALID_OFFSET", "offset"
+        )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Sort Validation
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VALID_SORT_BY = ["createdAt", "updatedAt", "name"]
+VALID_SORT_ORDER = ["asc", "desc"]
+
+
+def validate_sort_by(sort_by: str) -> None:
+    """
+    Validates sortBy parameter.
+
+    Args:
+        sort_by: Sort field to validate
+
+    Raises:
+        MemorySpaceValidationError: If validation fails
+    """
+    if not sort_by or not isinstance(sort_by, str):
+        raise MemorySpaceValidationError(
+            "sortBy is required and must be a string", "INVALID_SORT_BY", "sortBy"
+        )
+
+    if sort_by not in VALID_SORT_BY:
+        raise MemorySpaceValidationError(
+            f'Invalid sortBy "{sort_by}". Valid values: {", ".join(VALID_SORT_BY)}',
+            "INVALID_SORT_BY",
+            "sortBy",
+        )
+
+
+def validate_sort_order(sort_order: str) -> None:
+    """
+    Validates sortOrder parameter.
+
+    Args:
+        sort_order: Sort order to validate
+
+    Raises:
+        MemorySpaceValidationError: If validation fails
+    """
+    if not sort_order or not isinstance(sort_order, str):
+        raise MemorySpaceValidationError(
+            "sortOrder is required and must be a string",
+            "INVALID_SORT_ORDER",
+            "sortOrder",
+        )
+
+    if sort_order not in VALID_SORT_ORDER:
+        raise MemorySpaceValidationError(
+            f'Invalid sortOrder "{sort_order}". Valid values: {", ".join(VALID_SORT_ORDER)}',
+            "INVALID_SORT_ORDER",
+            "sortOrder",
+        )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Update Validation
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

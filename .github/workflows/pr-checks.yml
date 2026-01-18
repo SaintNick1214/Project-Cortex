@@ -246,10 +246,10 @@ jobs:
           ruff check cortex/
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # STAGE 3: TypeScript SDK Tests (sharded across 3 parallel runners)
+  # STAGE 3: TypeScript SDK Tests (sharded across 5 parallel runners)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-typescript:
-    name: Test TypeScript SDK (Shard ${{ matrix.shard }}/3)
+    name: Test TypeScript SDK (Shard ${{ matrix.shard }}/5)
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if TypeScript SDK or Convex backend changed OR if PR is targeting main branch
@@ -269,8 +269,8 @@ jobs:
 
     strategy:
       matrix:
-        shard: [1, 2, 3]
-      max-parallel: 3 # Run all shards simultaneously (parallel-safe via TestRunContext)
+        shard: [1, 2, 3, 4, 5]
+      max-parallel: 5 # Run all shards simultaneously (parallel-safe via TestRunContext)
       fail-fast: false # Continue other shards even if one fails
 
     steps:
@@ -295,21 +295,19 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       # Stagger shard starts to reduce concurrent load on shared Convex backend.
-      # 3-second increments allow each runner to begin its test subset
+      # 2-second increments allow each runner to begin its test subset
       # before the next starts, avoiding thundering herd on database operations.
       - name: Stagger shard start
         run: |
-          case "${{ matrix.shard }}" in
-            1) sleep 0 ;;
-            2) sleep 3 ;;
-            3) sleep 6 ;;
-          esac
+          DELAY=$(( (${{ matrix.shard }} - 1) * 2 ))
+          echo "Staggering shard ${{ matrix.shard }} start by ${DELAY}s"
+          sleep $DELAY
 
-      - name: Run tests (shard ${{ matrix.shard }}/3)
+      - name: Run tests (shard ${{ matrix.shard }}/5)
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
             --testPathIgnorePatterns=debug \
-            --shard=${{ matrix.shard }}/3 \
+            --shard=${{ matrix.shard }}/5 \
             --maxWorkers=75%
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
@@ -323,12 +321,12 @@ jobs:
         run: npm run build
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # STAGE 3: Python SDK Tests (parallel with other test jobs, matrix across versions)
+  # STAGE 3: Python SDK Tests (sharded across 5 shards × 5 Python versions = 25 parallel jobs)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-python:
-    name: Test Python SDK
+    name: Test Python SDK (Py${{ matrix.python-version }} Shard ${{ matrix.shard }}/5)
     runs-on: ubuntu-latest
-    timeout-minutes: 20 # Job-level timeout as safety net (pytest-timeout handles per-test)
+    timeout-minutes: 15 # Reduced timeout since each shard runs fewer tests
     needs: [detect-changes, setup-and-purge]
     # Run if Python SDK changed OR if PR is targeting main branch
     # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
@@ -347,7 +345,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
-      max-parallel: 5 # Run all Python versions in parallel (parallel-safe)
+        shard: [1, 2, 3, 4, 5]
+      max-parallel: 25 # Run all 25 jobs in parallel (5 versions × 5 shards)
       fail-fast: false
 
     steps:
@@ -369,22 +368,29 @@ jobs:
           pip install -e ".[dev]"
 
       # Stagger test starts to reduce concurrent load on shared Convex backend.
-      # 5-second increments allow each runner to spin up and begin its test suite
-      # before the next starts, avoiding thundering herd on database operations.
+      # With 25 jobs (5 versions × 5 shards), use 1-second increments to spread load.
+      # Job index = (version_index * 5) + (shard - 1), giving 0-24 range.
       - name: Stagger test start
         run: |
+          # Map python version to index (0-4)
           case "${{ matrix.python-version }}" in
-            "3.10") sleep 0 ;;
-            "3.11") sleep 5 ;;
-            "3.12") sleep 10 ;;
-            "3.13") sleep 15 ;;
-            "3.14") sleep 20 ;;
+            "3.10") VERSION_IDX=0 ;;
+            "3.11") VERSION_IDX=1 ;;
+            "3.12") VERSION_IDX=2 ;;
+            "3.13") VERSION_IDX=3 ;;
+            "3.14") VERSION_IDX=4 ;;
           esac
+          # Calculate unique delay: (version_index * 5 + shard - 1) seconds
+          SHARD=${{ matrix.shard }}
+          DELAY=$((VERSION_IDX * 5 + SHARD - 1))
+          echo "Staggering start by ${DELAY}s (version_idx=${VERSION_IDX}, shard=${SHARD})"
+          sleep $DELAY
 
-      - name: Run tests
+      - name: Run tests (shard ${{ matrix.shard }}/5)
         run: |
           cd cortex-sdk-python
-          pytest tests/ -v --cov=cortex --cov-report=term-missing
+          pytest tests/ -v --cov=cortex --cov-report=term-missing \
+            --splits 5 --group ${{ matrix.shard }}
         env:
           CONVEX_URL_PY: ${{ secrets.CONVEX_URL_PY }}
           CONVEX_URL: ${{ secrets.CONVEX_URL_PY }}
@@ -392,7 +398,9 @@ jobs:
           CONVEX_TEST_MODE: managed
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
+      # Only verify version on shard 1 to avoid redundant checks
       - name: Verify Python SDK version matches pyproject.toml
+        if: matrix.shard == 1
         run: |
           cd cortex-sdk-python
           echo "🔍 Verifying Python SDK version synchronization..."

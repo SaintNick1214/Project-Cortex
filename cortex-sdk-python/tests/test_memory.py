@@ -12,6 +12,7 @@ import time
 import pytest
 
 from cortex import ForgetOptions, RememberParams, SearchOptions
+from tests.helpers import retry_async
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -86,10 +87,13 @@ async def test_search(cortex_client, test_memory_space_id, test_conversation_id,
     )
 
     # Search for it
-    results = await cortex_client.memory.search(
-        test_memory_space_id,
-        "dark mode",
-        SearchOptions(user_id=test_user_id, limit=10),
+    results = await retry_async(
+        lambda: cortex_client.memory.search(
+            test_memory_space_id,
+            "dark mode",
+            SearchOptions(user_id=test_user_id, limit=10),
+        ),
+        max_retries=3,
     )
 
     assert len(results) > 0
@@ -448,14 +452,17 @@ async def test_search_with_strategy(cortex_client, test_memory_space_id, test_co
     )
 
     # Search with keyword strategy
-    results = await cortex_client.memory.search(
-        test_memory_space_id,
-        "recent",
-        SearchOptions(
-            user_id=test_user_id,
-            strategy="keyword",
-            limit=10,
+    results = await retry_async(
+        lambda: cortex_client.memory.search(
+            test_memory_space_id,
+            "recent",
+            SearchOptions(
+                user_id=test_user_id,
+                strategy="keyword",
+                limit=10,
+            ),
         ),
+        max_retries=3,
     )
 
     assert len(results) >= 0  # May or may not find results

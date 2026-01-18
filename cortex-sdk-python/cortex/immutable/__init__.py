@@ -138,6 +138,7 @@ class ImmutableAPI:
                     "id": entry.id,
                     "data": entry.data,
                     "userId": entry.user_id,
+                    "tenantId": self._tenant_id,  # Inject tenantId from auth context
                     "metadata": entry.metadata,
                 }),
             ),
@@ -146,8 +147,9 @@ class ImmutableAPI:
 
         record = ImmutableRecord(**convert_convex_response(result))
 
-        # Sync to graph if requested (facts are handled specially in FactsAPI)
-        if options and options.sync_to_graph and self.graph_adapter and entry.type != "fact":
+        # Sync to graph automatically when graph_adapter is configured
+        # (facts are handled specially in FactsAPI)
+        if self.graph_adapter and entry.type != "fact":
             try:
                 await self.graph_adapter.create_node({
                     "label": "Immutable",
@@ -188,7 +190,14 @@ class ImmutableAPI:
         validate_id(id, "id")
 
         result = await self._execute_with_resilience(
-            lambda: self.client.query("immutable:get", filter_none_values({"type": type, "id": id})),
+            lambda: self.client.query(
+                "immutable:get",
+                filter_none_values({
+                    "type": type,
+                    "id": id,
+                    "tenantId": self._tenant_id,  # Multi-tenancy filter
+                }),
+            ),
             "immutable:get",
         )
 
@@ -221,7 +230,13 @@ class ImmutableAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "immutable:getVersion", filter_none_values({"type": type, "id": id, "version": version})
+                "immutable:getVersion",
+                filter_none_values({
+                    "type": type,
+                    "id": id,
+                    "version": version,
+                    "tenantId": self._tenant_id,  # Multi-tenancy filter
+                }),
             ),
             "immutable:getVersion",
         )
@@ -347,7 +362,7 @@ class ImmutableAPI:
         List immutable records with filtering.
 
         Args:
-            filter: Optional filter with type, user_id, and limit
+            filter: Optional filter with type, user_id, tenant_id, and limit
 
         Returns:
             List of immutable records
@@ -361,6 +376,8 @@ class ImmutableAPI:
         type_val = filter.type if filter else None
         user_id = filter.user_id if filter else None
         limit = filter.limit if filter else None
+        # Use filter tenant_id if provided, otherwise fall back to auth_context
+        tenant_id = (filter.tenant_id if filter and filter.tenant_id else None) or self._tenant_id
 
         # CLIENT-SIDE VALIDATION
         if type_val is not None:
@@ -372,7 +389,13 @@ class ImmutableAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "immutable:list", filter_none_values({"type": type_val, "userId": user_id, "limit": limit})
+                "immutable:list",
+                filter_none_values({
+                    "type": type_val,
+                    "userId": user_id,
+                    "tenantId": tenant_id,  # Multi-tenancy filter
+                    "limit": limit,
+                }),
             ),
             "immutable:list",
         )
@@ -446,7 +469,7 @@ class ImmutableAPI:
         Count immutable records.
 
         Args:
-            filter: Optional filter with type and user_id
+            filter: Optional filter with type, user_id, and tenant_id
 
         Returns:
             Count of matching records
@@ -459,6 +482,8 @@ class ImmutableAPI:
         # Extract filter values
         type_val = filter.type if filter else None
         user_id = filter.user_id if filter else None
+        # Use filter tenant_id if provided, otherwise fall back to auth_context
+        tenant_id = (filter.tenant_id if filter and filter.tenant_id else None) or self._tenant_id
 
         # CLIENT-SIDE VALIDATION
         if type_val is not None:
@@ -468,7 +493,7 @@ class ImmutableAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "immutable:count", filter_none_values({"type": type_val, "userId": user_id})
+                "immutable:count", filter_none_values({"type": type_val, "userId": user_id, "tenantId": tenant_id})
             ),
             "immutable:count",
         )

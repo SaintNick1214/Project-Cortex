@@ -6,7 +6,9 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { action, internalQuery, mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
+import { Doc } from "./_generated/dataModel";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -979,12 +981,32 @@ export const search = query({
 });
 
 /**
+ * Internal query to fetch facts by their IDs (used by semanticSearch action)
+ */
+export const fetchFactsByIds = internalQuery({
+  args: { ids: v.array(v.id("facts")) },
+  handler: async (ctx, { ids }): Promise<Doc<"facts">[]> => {
+    const results: Doc<"facts">[] = [];
+    for (const id of ids) {
+      const doc = await ctx.db.get(id);
+      if (doc !== null) {
+        results.push(doc);
+      }
+    }
+    return results;
+  },
+});
+
+/**
  * Semantic search for facts using vector embeddings (v0.30.0+)
  *
  * Uses cosine similarity to find semantically related facts.
- * Falls back to manual similarity calculation in local dev (no vector index).
+ * Requires managed Convex with vector index support.
+ *
+ * Note: Vector search requires using ctx.vectorSearch() which is only
+ * available in actions, so this is implemented as an action.
  */
-export const semanticSearch = query({
+export const semanticSearch = action({
   args: {
     memorySpaceId: v.string(),
     embedding: v.array(v.float64()),
@@ -1000,65 +1022,32 @@ export const semanticSearch = query({
   },
   handler: async (ctx, args) => {
     const limit = args.limit || 20;
-    const minScore = args.minScore || 0.3;
     let results: any[] = [];
 
     if (args.embedding && args.embedding.length > 0) {
-      // Try vector index first (production), fallback to manual similarity (local dev)
-      try {
-        // Note: .similar() API is only available in managed Convex, not local dev
-        results = await ctx.db
-          .query("facts")
-          .withIndex("by_embedding" as any, (q: any) =>
-            q
-              .similar("embedding", args.embedding, limit * 2) // Fetch extra for filtering
-              .eq("memorySpaceId", args.memorySpaceId),
-          )
-          .collect();
-      } catch (error: any) {
-        // Fallback for local Convex (no vector index support)
-        if (error.message?.includes("similar is not a function")) {
-          const allFacts = await ctx.db
-            .query("facts")
-            .withIndex("by_memorySpace", (q) =>
-              q.eq("memorySpaceId", args.memorySpaceId),
-            )
-            .collect();
+      // Semantic search with vector similarity using ctx.vectorSearch()
+      // This is the correct Convex API for vector search (only available in actions)
+      const vectorResults = await ctx.vectorSearch("facts", "by_embedding", {
+        vector: args.embedding,
+        limit: Math.min(limit * 2, 256), // Fetch more for post-filtering, max 256
+        filter: (q) => q.eq("memorySpaceId", args.memorySpaceId),
+      });
 
-          // Calculate cosine similarity for each fact with embedding
-          const withScores = allFacts
-            .filter((f) => f.embedding && f.embedding.length > 0)
-            .map((f) => {
-              // Validate dimension matching
-              if (f.embedding!.length !== args.embedding.length) {
-                return { ...f, _score: -1 };
-              }
+      // Fetch full documents using internal query
+      const ids = vectorResults.map((r) => r._id);
+      const docs = await ctx.runQuery(internal.facts.fetchFactsByIds, { ids });
 
-              // Cosine similarity calculation
-              let dotProduct = 0;
-              let normA = 0;
-              let normB = 0;
+      // Merge scores with documents (preserve order from vector search)
+      const scoreMap = new Map(
+        vectorResults.map((r) => [r._id.toString(), r._score]),
+      );
+      results = docs.map((doc) => ({
+        ...doc,
+        _score: scoreMap.get(doc._id.toString()) ?? 0,
+      }));
 
-              for (let i = 0; i < args.embedding.length; i++) {
-                dotProduct += args.embedding[i] * f.embedding![i];
-                normA += args.embedding[i] * args.embedding[i];
-                normB += f.embedding![i] * f.embedding![i];
-              }
-
-              const denominator = Math.sqrt(normA) * Math.sqrt(normB);
-              const similarity = denominator > 0 ? dotProduct / denominator : 0;
-
-              return { ...f, _score: similarity };
-            })
-            .filter((f) => !isNaN(f._score) && f._score >= minScore)
-            .sort((a, b) => b._score - a._score)
-            .slice(0, limit * 2);
-
-          results = withScores;
-        } else {
-          throw error;
-        }
-      }
+      // Sort by score (should already be sorted, but ensure consistency)
+      results.sort((a, b) => (b._score ?? 0) - (a._score ?? 0));
     }
 
     // Filter superseded unless explicitly requested
@@ -1088,6 +1077,16 @@ export const semanticSearch = query({
     }
     if (args.createdBefore !== undefined) {
       filtered = filtered.filter((f) => f.createdAt <= args.createdBefore!);
+    }
+
+    // Filter by minimum score
+    if (args.minScore !== undefined) {
+      filtered = filtered.filter((f: any) => {
+        if (f._score !== undefined) {
+          return f._score >= args.minScore!;
+        }
+        return true;
+      });
     }
 
     // Apply final limit

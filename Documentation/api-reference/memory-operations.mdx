@@ -898,6 +898,12 @@ interface RecallParams {
   embedding?: number[]; // Pre-computed embedding (recommended)
   userId?: string; // Filter by user (common in H2A)
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // NEW in v0.31.0: Configurable limits
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  limits?: RecallLimits; // Granular per-source limits (see below)
+  limit?: number; // Legacy alias for limits.total (backward compatible)
+
   // Source selection - ALL ENABLED BY DEFAULT
   // Only specify to DISABLE sources
   sources?: {
@@ -923,11 +929,26 @@ interface RecallParams {
   createdBefore?: Date; // Only include before this date
 
   // Result options
-  limit?: number; // Default: 20
   includeConversation?: boolean; // Default: true
   formatForLLM?: boolean; // Default: true
 }
+
+// NEW in v0.31.0: Granular limit configuration
+interface RecallLimits {
+  memories?: number;           // Max vector memories to fetch (default: 20)
+  facts?: number;              // Max facts to fetch (default: 15)
+  graphHops?: number;          // Graph traversal depth, 0 to disable (default: 2)
+  graphEntitiesPerHop?: number; // Entities to expand per hop (default: 5)
+  graphResultsPerEntity?: number; // Results per entity from graph (default: 3)
+  total?: number;              // Final result cap after merge/rank (default: 30)
+}
 ```
+
+<Callout type="tip" title="Configurable Limits (v0.31.0+)">
+Limits follow a configuration hierarchy: **per-call overrides > environment variables > SDK defaults**.
+
+Set `CORTEX_RECALL_LIMIT_MEMORIES`, `CORTEX_RECALL_LIMIT_FACTS`, etc. in your environment for project-wide defaults. See [Configuration](/getting-started/configuration#recall-limits-configuration) for all environment variables.
+</Callout>
 
 **Returns:**
 

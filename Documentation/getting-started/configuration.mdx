@@ -234,6 +234,21 @@ You can verify your configuration by checking the connection:
   { name: "CORTEX_GRAPH_SYNC", type: "string", required: false, description: "Enable automatic graph sync for all operations ('true'/'false'). When true, all facts, entities, and relationships are automatically synced to the graph database (v0.29.0+)" },
 ]} />
 
+### Recall Limits Configuration
+
+<Callout type="info" title="New in v0.31.0">
+Configure default limits for `recall()` operations to prevent Convex read limit errors in large memory spaces.
+</Callout>
+
+<APITable parameters={[
+  { name: "CORTEX_RECALL_LIMIT_MEMORIES", type: "number", required: false, default: "20", description: "Max vector memories to fetch per recall" },
+  { name: "CORTEX_RECALL_LIMIT_FACTS", type: "number", required: false, default: "15", description: "Max facts to fetch per recall" },
+  { name: "CORTEX_RECALL_GRAPH_HOPS", type: "number", required: false, default: "2", description: "Max graph traversal depth (0 to disable graph)" },
+  { name: "CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP", type: "number", required: false, default: "5", description: "Entities to expand per graph hop" },
+  { name: "CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY", type: "number", required: false, default: "3", description: "Results fetched per entity from graph" },
+  { name: "CORTEX_RECALL_LIMIT_TOTAL", type: "number", required: false, default: "30", description: "Final result cap after merge/rank" },
+]} />
+
 ### Other Configuration
 
 <APITable parameters={[

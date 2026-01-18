@@ -43,7 +43,8 @@ export const get = query({
   },
 });
 
-export const search = query({
+// Search is an action (not query) because vector search requires ctx.vectorSearch()
+export const search = action({
   args: {
     memorySpaceId: v.string(),
     query: v.string(),
@@ -54,25 +55,24 @@ export const search = query({
     let results;
 
     if (args.embedding) {
-      // Semantic search
-      results = await ctx.db
-        .query("memories")
-        .withIndex("by_embedding", (q) =>
-          q
-            .similar("embedding", args.embedding, args.filters.limit || 20)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
+      // Semantic search using ctx.vectorSearch() (only available in actions)
+      const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+        vector: args.embedding,
+        limit: args.filters.limit || 20,
+        filter: (q) => q.eq("memorySpaceId", args.memorySpaceId),
+      });
+
+      // Fetch full documents
+      results = await ctx.runQuery(internal.memories.fetchByIds, {
+        ids: vectorResults.map(r => r._id),
+      });
     } else {
-      // Keyword search
-      results = await ctx.db
-        .query("memories")
-        .withSearchIndex("by_content", (q) =>
-          q
-            .search("content", args.query)
-            .eq("memorySpaceId", args.memorySpaceId),
-        )
-        .collect();
+      // Keyword search (can be a query)
+      results = await ctx.runQuery(internal.memories.keywordSearch, {
+        memorySpaceId: args.memorySpaceId,
+        query: args.query,
+        limit: args.filters.limit || 20,
+      });
     }
 
     // Apply filters (importance, tags, dates, participantId, etc.)
@@ -83,10 +83,10 @@ export const search = query({
 
 **Characteristics:**
 
-- Read-only (cannot modify database)
-- Reactive (auto-update on data changes)
-- Cacheable (Convex caches results)
-- Fast (optimized by Convex)
+- Actions can call external APIs and use ctx.vectorSearch()
+- Not reactive (must be explicitly called)
+- Good for vector search operations
+- Can call internal queries for database access
 
 ### Mutations (Write Operations)
 
@@ -377,11 +377,12 @@ memories: defineTable({
 });
 ```
 
-### Vector Search Query
+### Vector Search Action
 
 ```typescript
 // convex/memories.ts
-export const semanticSearch = query({
+// Vector search must be an action (ctx.vectorSearch only available in actions)
+export const semanticSearch = action({
   args: {
     memorySpaceId: v.string(),
     embedding: v.array(v.float64()),
@@ -391,28 +392,33 @@ export const semanticSearch = query({
     limit: v.number(),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db
-      .query("memories")
-      .withIndex("by_embedding", (q) =>
-        q
-          .similar("embedding", args.embedding, args.limit)
-          .eq("memorySpaceId", args.memorySpaceId),
-      );
+    // Build filter based on available fields
+    // Note: tenantId, userId, participantId should be in filterFields for efficiency
+    let filter = (q: any) => q.eq("memorySpaceId", args.memorySpaceId);
 
-    // Optional filters (pre-filtered before similarity via filterFields)
     if (args.tenantId) {
-      q = q.filter((q) => q.eq(q.field("tenantId"), args.tenantId));
+      const prevFilter = filter;
+      filter = (q: any) => prevFilter(q).eq("tenantId", args.tenantId);
     }
 
-    if (args.userId) {
-      q = q.filter((q) => q.eq(q.field("userId"), args.userId));
-    }
+    // Vector search returns { _id, _score }[]
+    const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+      vector: args.embedding,
+      limit: args.limit,
+      filter,
+    });
 
-    if (args.participantId) {
-      q = q.filter((q) => q.eq(q.field("participantId"), args.participantId));
-    }
+    // Fetch full documents using internal query
+    const results = await ctx.runQuery(internal.memories.fetchByIds, {
+      ids: vectorResults.map(r => r._id),
+    });
 
-    return await q.collect();
+    // Post-filter for fields not in filterFields (userId, participantId)
+    return results.filter(r => {
+      if (args.userId && r.userId !== args.userId) return false;
+      if (args.participantId && r.participantId !== args.participantId) return false;
+      return true;
+    });
   },
 });
 ```
@@ -423,6 +429,7 @@ export const semanticSearch = query({
 - Pre-filtering before similarity (filterFields)
 - Multiple dimensions supported (1536, 3072, etc.)
 - Sub-100ms for millions of vectors
+- Must be called from actions (not queries)
 
 ---
 

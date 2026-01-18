@@ -245,6 +245,8 @@ async def test_create_user_profile(cortex_client, test_user_id):
     assert user.id == test_user_id
     assert user.data["displayName"] == "Test User"
     assert user.version == 1
+    # Verify tenant_id field exists (v0.31.0)
+    assert hasattr(user, "tenant_id")
 
 
 @pytest.mark.asyncio
@@ -258,6 +260,8 @@ async def test_get_user_profile(cortex_client, test_user_id):
 
     assert user is not None
     assert user.id == test_user_id
+    # Verify tenant_id field exists (can be None for backward compatibility)
+    assert hasattr(user, "tenant_id")
 
 
 @pytest.mark.asyncio
@@ -298,12 +302,14 @@ async def test_get_or_create_user(cortex_client, test_user_id):
 
     assert user1.id == test_user_id
     assert user1.version == 1
+    assert hasattr(user1, "tenant_id")
 
     # Second call gets existing
     user2 = await cortex_client.users.get_or_create(test_user_id)
 
     assert user2.id == test_user_id
     assert user2.version == 1  # Same version
+    assert hasattr(user2, "tenant_id")
 
 
 @pytest.mark.asyncio
@@ -322,6 +328,7 @@ async def test_merge_user_profile(cortex_client, test_user_id):
     assert merged.data["displayName"] == "User"  # Preserved
     assert merged.data["preferences"]["theme"] == "dark"  # Preserved
     assert merged.data["preferences"]["notifications"] is True  # Added
+    assert hasattr(merged, "tenant_id")
 
 
 @pytest.mark.asyncio
@@ -446,6 +453,10 @@ async def test_search_users(cortex_client, test_user_id, cleanup_helper):
     found = any(r.id == test_user_id for r in results)
     assert found
 
+    # Verify all results have tenant_id field (can be None)
+    for user in results:
+        assert hasattr(user, "tenant_id")
+
     # Cleanup
     await cortex_client.users.delete(test_user_id)
 
@@ -465,6 +476,10 @@ async def test_list_users(cortex_client, cleanup_helper):
     assert hasattr(result, "total")
     assert hasattr(result, "has_more")
     assert isinstance(result.users, list)
+
+    # Verify all users have tenant_id field (can be None)
+    for user in result.users:
+        assert hasattr(user, "tenant_id")
 
     # No cleanup needed - just listing
 
@@ -599,6 +614,98 @@ async def test_get_at_timestamp(cortex_client, test_user_id, cleanup_helper):
 
     # Cleanup
     await cortex_client.users.delete(test_user_id)
+
+
+# ============================================================================
+# Multi-Tenancy Tests (v0.31.0)
+# ============================================================================
+
+
+class TestMultiTenancy:
+    """Test multi-tenancy features for Users API (v0.31.0)."""
+
+    @pytest.mark.asyncio
+    async def test_user_profile_has_tenant_id_field(self, cortex_client, test_user_id):
+        """Verify UserProfile includes tenant_id field (can be None for backward compatibility)."""
+        # Create user
+        user = await cortex_client.users.update(
+            test_user_id,
+            {"displayName": "Test User"},
+        )
+
+        # Verify tenant_id field exists
+        assert hasattr(user, "tenant_id")
+        # tenant_id can be None for users created without auth context (backward compatibility)
+        assert user.tenant_id is None or isinstance(user.tenant_id, str)
+
+        # Cleanup
+        await cortex_client.users.delete(test_user_id)
+
+    @pytest.mark.asyncio
+    async def test_list_users_filter_tenant_id(self, cortex_client, cleanup_helper):
+        """Test ListUsersFilter.tenant_id parameter (v0.31.0)."""
+        # List users with tenant_id filter (None should work for backward compatibility)
+        result = await cortex_client.users.list(
+            ListUsersFilter(limit=10, tenant_id=None)
+        )
+
+        # Should return results
+        assert isinstance(result.users, list)
+        assert hasattr(result, "total")
+
+        # Verify all users have tenant_id field
+        for user in result.users:
+            assert hasattr(user, "tenant_id")
+
+    @pytest.mark.asyncio
+    async def test_search_users_filter_tenant_id(self, cortex_client, test_user_id, cleanup_helper):
+        """Test search with tenant_id filter (v0.31.0)."""
+        # Create user
+        await cortex_client.users.update(
+            test_user_id,
+            {"displayName": "Search Test"},
+        )
+
+        # Search with tenant_id filter (None for backward compatibility)
+        results = await cortex_client.users.search(
+            ListUsersFilter(limit=100, tenant_id=None)
+        )
+
+        # Should find the user
+        found = any(r.id == test_user_id for r in results)
+        assert found
+
+        # Verify all results have tenant_id field
+        for user in results:
+            assert hasattr(user, "tenant_id")
+
+        # Cleanup
+        await cortex_client.users.delete(test_user_id)
+
+    @pytest.mark.asyncio
+    async def test_backward_compatibility_no_tenant_id(self, cortex_client, test_user_id, cleanup_helper):
+        """Verify backward compatibility: users without tenant_id still work."""
+        # Create user (without tenant_id - legacy behavior)
+        user = await cortex_client.users.update(
+            test_user_id,
+            {"displayName": "Legacy User"},
+        )
+
+        # tenant_id should be None or not set (backward compatibility)
+        assert user.tenant_id is None or isinstance(user.tenant_id, str)
+
+        # Get user back
+        retrieved = await cortex_client.users.get(test_user_id)
+        assert retrieved is not None
+        assert retrieved.id == test_user_id
+
+        # List should include the user
+        result = await cortex_client.users.list(ListUsersFilter(limit=100))
+        found = any(u.id == test_user_id for u in result.users)
+        assert found
+
+        # Cleanup
+        await cortex_client.users.delete(test_user_id)
 
 
 # ============================================================================

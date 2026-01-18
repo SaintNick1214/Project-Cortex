@@ -10,7 +10,7 @@ import os
 import pytest
 
 from cortex import RememberParams, SearchOptions
-from tests.helpers import embeddings_available
+from tests.helpers import embeddings_available, retry_async
 
 
 @pytest.mark.asyncio
@@ -161,14 +161,20 @@ async def test_openai_recalls_facts_using_semantic_search(
     ]
 
     for search in searches:
-        results = await cortex_client.memory.search(
-            test_memory_space_id,
-            search["query"],
-            SearchOptions(
-                embedding=await generate_embedding(search["query"]),
-                user_id=test_user_id,
-                limit=10,  # Get more results to handle edge cases in similarity scoring
+        # Generate embedding before retry wrapper (can't await in lambda)
+        query_embedding = await generate_embedding(search["query"])
+        # Wrap search with retry logic to handle server errors during parallel execution
+        results = await retry_async(
+            lambda q=search["query"], emb=query_embedding: cortex_client.memory.search(
+                test_memory_space_id,
+                q,
+                SearchOptions(
+                    embedding=emb,
+                    user_id=test_user_id,
+                    limit=10,  # Get more results to handle edge cases in similarity scoring
+                ),
             ),
+            max_retries=3,
         )
 
         # Should find the relevant fact (semantic match, not keyword)
@@ -240,14 +246,20 @@ async def test_openai_enriches_search_results_with_conversation_context(
         )
     )
 
-    results = await cortex_client.memory.search(
-        test_memory_space_id,
-        "password",
-        SearchOptions(
-            embedding=await generate_embedding("password credentials"),
-            enrich_conversation=True,
-            user_id=test_user_id,
+    # Generate embedding before retry wrapper (can't await in lambda)
+    password_embedding = await generate_embedding("password credentials")
+    # Wrap search with retry logic to handle server errors during parallel execution
+    results = await retry_async(
+        lambda emb=password_embedding: cortex_client.memory.search(
+            test_memory_space_id,
+            "password",
+            SearchOptions(
+                embedding=emb,
+                enrich_conversation=True,
+                user_id=test_user_id,
+            ),
         ),
+        max_retries=3,
     )
 
     assert len(results) > 0
@@ -386,14 +398,19 @@ async def test_openai_similarity_scores_are_realistic(
             )
         )
 
-    # Search with embedding
-    results = await cortex_client.memory.search(
-        test_memory_space_id,
-        "API password for production environment",
-        SearchOptions(
-            embedding=await generate_embedding("API password for production environment"),
-            user_id=test_user_id,
+    # Generate embedding before retry wrapper (can't await in lambda)
+    query_embedding = await generate_embedding("API password for production environment")
+    # Search with embedding (with retry logic to handle server errors during parallel execution)
+    results = await retry_async(
+        lambda emb=query_embedding: cortex_client.memory.search(
+            test_memory_space_id,
+            "API password for production environment",
+            SearchOptions(
+                embedding=emb,
+                user_id=test_user_id,
+            ),
         ),
+        max_retries=3,
     )
 
     assert len(results) > 0

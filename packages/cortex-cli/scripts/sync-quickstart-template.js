@@ -77,7 +77,7 @@ function sync() {
 
   // Remove existing destination
   if (fs.existsSync(DEST)) {
-    fs.rmSync(DEST, { recursive: true, force: true });
+    fs.rmSync(DEST, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
   }
 
   // Copy files

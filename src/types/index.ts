@@ -2402,6 +2402,88 @@ export interface RecallOptions extends GraphSyncOption {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /**
+ * Configurable limits for recall() operations.
+ *
+ * Controls how many results to fetch from each source and how deep
+ * to traverse the knowledge graph. All fields are optional and default
+ * to environment variables or sensible hardcoded defaults.
+ *
+ * Configuration hierarchy (highest priority first):
+ * 1. Per-call override (this interface)
+ * 2. Environment variables (CORTEX_RECALL_*)
+ * 3. SDK defaults
+ *
+ * @example
+ * ```typescript
+ * // Override specific limits
+ * const result = await cortex.memory.recall({
+ *   memorySpaceId: 'space-1',
+ *   query: 'user preferences',
+ *   limits: {
+ *     memories: 50,      // More memories
+ *     facts: 5,          // Fewer facts
+ *     graphHops: 1,      // Shallow graph traversal
+ *   }
+ * });
+ *
+ * // Disable graph entirely for fast lookups
+ * const result = await cortex.memory.recall({
+ *   memorySpaceId: 'space-1',
+ *   query: 'quick lookup',
+ *   limits: { graphHops: 0 }
+ * });
+ * ```
+ */
+export interface RecallLimits {
+  /**
+   * Maximum memories to fetch from vector search.
+   * Env: CORTEX_RECALL_LIMIT_MEMORIES
+   * Default: 20
+   */
+  memories?: number;
+
+  /**
+   * Maximum facts to fetch from semantic/text search.
+   * Env: CORTEX_RECALL_LIMIT_FACTS
+   * Default: 15
+   */
+  facts?: number;
+
+  /**
+   * Graph traversal depth.
+   * - 0: Disabled (no graph expansion)
+   * - 1: Immediate relationships only
+   * - 2: Two-hop traversal (default)
+   * Env: CORTEX_RECALL_GRAPH_HOPS
+   * Default: 2
+   */
+  graphHops?: number;
+
+  /**
+   * Maximum entities to expand per graph hop.
+   * Controls the branching factor of graph traversal.
+   * Env: CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP
+   * Default: 5
+   */
+  graphEntitiesPerHop?: number;
+
+  /**
+   * Maximum memories/facts to fetch per discovered entity.
+   * Env: CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY
+   * Default: 3
+   */
+  graphResultsPerEntity?: number;
+
+  /**
+   * Final aggregate limit on total results returned.
+   * Applied after merge, dedupe, and ranking.
+   * Env: CORTEX_RECALL_LIMIT_TOTAL
+   * Default: 30
+   */
+  total?: number;
+}
+
+/**
  * Parameters for the recall() orchestration API.
  *
  * Batteries included by default - just provide memorySpaceId and query
@@ -2501,7 +2583,19 @@ export interface RecallParams {
   // RESULT OPTIONS - OPTIMIZED FOR LLM INJECTION BY DEFAULT
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /** Maximum number of results. Default: 20 */
+  /**
+   * Structured limits for per-source control.
+   * See RecallLimits interface for detailed options.
+   * Defaults come from environment variables or SDK defaults.
+   */
+  limits?: RecallLimits;
+
+  /**
+   * Maximum number of results (backward compatibility).
+   * Alias for limits.total - if both provided, limits.total takes precedence.
+   * @deprecated Use limits.total instead for clarity
+   * Default: 30
+   */
   limit?: number;
 
   /** Enrich with ACID conversation data. Default: true */

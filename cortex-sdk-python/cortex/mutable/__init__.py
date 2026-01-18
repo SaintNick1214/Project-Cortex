@@ -131,6 +131,7 @@ class MutableAPI:
                     "key": key,
                     "value": value,
                     "userId": user_id,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                     "metadata": metadata,
                 }),
             ),
@@ -178,7 +179,12 @@ class MutableAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "mutable:get", filter_none_values({"namespace": namespace, "key": key})
+                "mutable:get",
+                filter_none_values({
+                    "namespace": namespace,
+                    "key": key,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
+                }),
             ),
             "mutable:get",
         )
@@ -228,6 +234,7 @@ class MutableAPI:
                     "key": key,
                     "operation": "custom",
                     "operand": new_value,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                 }),
             ),
             "mutable:update",
@@ -267,6 +274,7 @@ class MutableAPI:
                     "key": key,
                     "operation": "increment",
                     "operand": amount,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                 }),
             ),
             "mutable:increment",
@@ -306,6 +314,7 @@ class MutableAPI:
                     "key": key,
                     "operation": "decrement",
                     "operand": amount,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
                 }),
             ),
             "mutable:decrement",
@@ -335,7 +344,12 @@ class MutableAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "mutable:get", filter_none_values({"namespace": namespace, "key": key})
+                "mutable:get",
+                filter_none_values({
+                    "namespace": namespace,
+                    "key": key,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
+                }),
             ),
             "mutable:get",
         )
@@ -373,7 +387,12 @@ class MutableAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "mutable:deleteKey", filter_none_values({"namespace": namespace, "key": key})
+                "mutable:deleteKey",
+                filter_none_values({
+                    "namespace": namespace,
+                    "key": key,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
+                }),
             ),
             "mutable:delete",
         )
@@ -455,6 +474,7 @@ class MutableAPI:
                     "namespace": filter.namespace,
                     "keyPrefix": filter.key_prefix,
                     "userId": filter.user_id,
+                    "tenantId": filter.tenant_id if filter.tenant_id else self._tenant_id,  # Support explicit or auth context
                     "limit": filter.limit,
                     "offset": filter.offset,
                     "updatedAfter": filter.updated_after,
@@ -499,6 +519,7 @@ class MutableAPI:
                 filter_none_values({
                     "namespace": filter.namespace,
                     "userId": filter.user_id,
+                    "tenantId": filter.tenant_id if filter.tenant_id else self._tenant_id,  # Support explicit or auth context
                     "keyPrefix": filter.key_prefix,
                     "updatedAfter": filter.updated_after,
                     "updatedBefore": filter.updated_before,
@@ -532,7 +553,12 @@ class MutableAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "mutable:exists", filter_none_values({"namespace": namespace, "key": key})
+                "mutable:exists",
+                filter_none_values({
+                    "namespace": namespace,
+                    "key": key,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
+                }),
             ),
             "mutable:exists",
         )
@@ -579,6 +605,7 @@ class MutableAPI:
                 filter_none_values({
                     "namespace": namespace,
                     "dryRun": options.dry_run if options else None,
+                    "tenantId": (options.tenant_id if options and options.tenant_id else self._tenant_id),  # Support explicit or auth context
                 }),
             ),
             "mutable:purgeNamespace",
@@ -596,7 +623,7 @@ class MutableAPI:
                 - key_prefix: Filter by key prefix
                 - user_id: Filter by user
                 - updated_before: Delete keys updated before this timestamp
-                - last_accessed_before: Delete keys last accessed before this timestamp
+                - tenant_id: Tenant ID for multi-tenancy (auto-injected from AuthContext)
 
         Returns:
             Result with deleted count, namespace, and deleted keys
@@ -615,10 +642,10 @@ class MutableAPI:
             ...     updated_before=thirty_days_ago_timestamp,
             ... ))
             >>>
-            >>> # Delete inactive keys
+            >>> # Delete by user (GDPR compliance)
             >>> await cortex.mutable.purge_many(PurgeManyMutableFilter(
             ...     namespace='sessions',
-            ...     last_accessed_before=seven_days_ago_timestamp,
+            ...     user_id='user-123',
             ... ))
         """
         # Client-side validation
@@ -632,7 +659,7 @@ class MutableAPI:
                     "keyPrefix": filter.key_prefix,
                     "userId": filter.user_id,
                     "updatedBefore": filter.updated_before,
-                    "lastAccessedBefore": filter.last_accessed_before,
+                    "tenantId": filter.tenant_id if filter.tenant_id else self._tenant_id,  # Support explicit or auth context
                 }),
             ),
             "mutable:purgeMany",
@@ -686,7 +713,10 @@ class MutableAPI:
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "mutable:transaction",
-                {"operations": ops_for_backend},
+                filter_none_values({
+                    "operations": ops_for_backend,
+                    "tenantId": self._tenant_id,  # Inject tenantId for tenant isolation
+                }),
             ),
             "mutable:transaction",
         )

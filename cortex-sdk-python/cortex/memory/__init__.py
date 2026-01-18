@@ -1965,6 +1965,7 @@ class MemoryAPI:
             ...     )
             ... )
         """
+        from ..config import resolve_recall_limits
         from ..types import SearchFactsOptions
         from .recall import (
             GraphExpansionConfig,
@@ -1978,11 +1979,18 @@ class MemoryAPI:
         # Client-side validation
         validate_recall_params(params)
 
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 0: RESOLVE LIMITS (v0.31.0+ - configurable per-source limits)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # Resolve limits from defaults + env vars + per-call overrides
+        limits = resolve_recall_limits(params.limits, params.limit)
+
         # Extract params with defaults
         memory_space_id = params.memory_space_id
         query = params.query
         embedding = params.embedding
         user_id = params.user_id
+        tenant_id = params.tenant_id  # Multi-tenancy support (v0.31.0+)
 
         # Source configuration (all enabled by default)
         sources = params.sources or RecallSourceConfig()
@@ -1990,47 +1998,52 @@ class MemoryAPI:
         search_facts = sources.facts if sources.facts is not None else True
         search_graph = sources.graph if sources.graph is not None else (self.graph_adapter is not None)
 
-        # Graph expansion configuration
+        # Graph expansion configuration - check limits.graph_hops to determine if enabled
         graph_exp = params.graph_expansion or RecallGraphExpansionConfig()
-        graph_enabled = (
+        graph_expansion_enabled = (
             graph_exp.enabled if graph_exp.enabled is not None
             else (self.graph_adapter is not None)
-        )
+        ) and limits.graph_hops > 0  # Disable if graph_hops is 0
 
         # Result options
-        limit = params.limit or 20
         include_conversation = params.include_conversation if params.include_conversation is not None else True
         format_for_llm_flag = params.format_for_llm if params.format_for_llm is not None else True
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        # STEP 1: PARALLEL SEARCH (vector, facts)
+        # STEP 1: PARALLEL SEARCH (vector, facts) - with per-source limits
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         vector_memories: List[MemoryEntry] = []
         direct_facts: List[Any] = []
 
-        # Build vector search options (using proper typed SearchOptions)
+        # Build vector search options (using per-source limit)
         vector_search_opts = SearchOptions(
-            limit=limit,
+            limit=limits.memories,  # Use per-source limit
             embedding=embedding,
             user_id=user_id,
             min_importance=params.min_importance,
             tags=params.tags,
         )
 
-        # Vector search
-        if search_vector:
+        # Vector search - skip if limits.memories is 0
+        if search_vector and limits.memories > 0:
             try:
                 vector_memories = await self.vector.search(
                     memory_space_id, query, vector_search_opts
                 )
+                # Apply tenant isolation filter if tenant_id is configured
+                if tenant_id:
+                    vector_memories = [
+                        m for m in vector_memories
+                        if getattr(m, 'tenant_id', None) == tenant_id
+                    ]
             except Exception as e:
                 print(f"[Cortex] Vector search failed: {e}")
 
-        # Facts search
-        if search_facts:
+        # Facts search - skip if limits.facts is 0
+        if search_facts and limits.facts > 0:
             try:
                 facts_search_opts = SearchFactsOptions(
-                    limit=limit,
+                    limit=limits.facts,  # Use per-source limit
                     min_confidence=params.min_confidence,
                     user_id=user_id,
                 )
@@ -2038,26 +2051,37 @@ class MemoryAPI:
                 direct_facts = await self.facts.search(
                     memory_space_id, query, facts_search_opts
                 )
+                # Apply tenant isolation filter if tenant_id is configured
+                if tenant_id:
+                    direct_facts = [
+                        f for f in direct_facts
+                        if getattr(f, 'tenant_id', None) == tenant_id
+                    ]
             except Exception as e:
                 print(f"[Cortex] Facts search failed: {e}")
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        # STEP 2: GRAPH EXPANSION (if enabled)
+        # STEP 2: GRAPH EXPANSION (if enabled and graph_hops > 0)
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         graph_expanded_memories: List[MemoryEntry] = []
         graph_expanded_facts: List[Any] = []
         discovered_entities: List[str] = []
         graph_expansion_applied = False
 
-        if graph_enabled and search_graph and self.graph_adapter:
+        if graph_expansion_enabled and search_graph and self.graph_adapter:
             try:
+                # Build expansion config with per-source limits
                 expansion_config = GraphExpansionConfig(
-                    max_depth=graph_exp.max_depth or 2,
+                    max_depth=graph_exp.max_depth if graph_exp.max_depth else limits.graph_hops,
                     relationship_types=graph_exp.relationship_types or [],
                     expand_from_facts=graph_exp.expand_from_facts if graph_exp.expand_from_facts is not None else True,
                     expand_from_memories=graph_exp.expand_from_memories if graph_exp.expand_from_memories is not None else True,
+                    # NEW: Pass entity limits to graph expansion (v0.31.0+)
+                    entities_per_hop=graph_exp.entities_per_hop if graph_exp.entities_per_hop else limits.graph_entities_per_hop,
+                    results_per_entity=graph_exp.results_per_entity if graph_exp.results_per_entity else limits.graph_results_per_entity,
                 )
 
+                # NEW: Pass query text for entity extraction (v0.31.0+)
                 expansion_result = await perform_graph_expansion(
                     vector_memories,
                     direct_facts,
@@ -2066,6 +2090,7 @@ class MemoryAPI:
                     self.vector,
                     self.facts,
                     expansion_config,
+                    query_text=query,  # NEW: enables graph expansion without facts
                 )
 
                 discovered_entities = expansion_result.discovered_entities
@@ -2077,7 +2102,7 @@ class MemoryAPI:
                 print(f"[Cortex] Graph expansion failed: {e}")
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        # STEP 3: MERGE, DEDUPE, RANK, FORMAT
+        # STEP 3: MERGE, DEDUPE, RANK, FORMAT - with aggregate limit
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         processed = process_recall_results(
             vector_memories,
@@ -2086,7 +2111,7 @@ class MemoryAPI:
             graph_expanded_facts,
             discovered_entities,
             {
-                "limit": limit,
+                "limit": limits.total,  # Use aggregate limit
                 "format_for_llm": format_for_llm_flag,
             },
         )

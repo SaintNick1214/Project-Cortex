@@ -214,6 +214,7 @@ class ListConversationsFilter:
     """Comprehensive filter for listing conversations (v0.21.0+)."""
     type: Optional[ConversationType] = None
     user_id: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
     memory_space_id: Optional[str] = None
     participant_id: Optional[str] = None  # Hive Mode tracking
     created_before: Optional[int] = None
@@ -247,6 +248,7 @@ class CountConversationsFilter:
     """Filter for counting conversations."""
     type: Optional[ConversationType] = None
     user_id: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
     memory_space_id: Optional[str] = None
 
 
@@ -348,6 +350,7 @@ class ImmutableRecord:
     previous_versions: List[ImmutableVersion]
     created_at: int
     updated_at: int
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
     user_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
 
@@ -383,6 +386,7 @@ class ListImmutableFilter:
     """Filter for listing immutable entries."""
     type: Optional[str] = None
     user_id: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
     limit: Optional[int] = None
 
 
@@ -408,6 +412,7 @@ class CountImmutableFilter:
     """Filter for counting immutable entries."""
     type: Optional[str] = None
     user_id: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
 
 
 @dataclass
@@ -460,6 +465,7 @@ class MutableRecord:
     value: Any
     created_at: int
     updated_at: int
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
     user_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
     access_count: Optional[int] = None
@@ -471,6 +477,7 @@ class ListMutableFilter:
     """Filter for listing mutable records."""
     namespace: str
     key_prefix: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
     user_id: Optional[str] = None
     limit: Optional[int] = None
     offset: Optional[int] = None
@@ -484,6 +491,7 @@ class ListMutableFilter:
 class CountMutableFilter:
     """Filter for counting mutable records."""
     namespace: str
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
     user_id: Optional[str] = None
     key_prefix: Optional[str] = None
     updated_after: Optional[int] = None
@@ -497,13 +505,14 @@ class PurgeManyMutableFilter:
     key_prefix: Optional[str] = None
     user_id: Optional[str] = None
     updated_before: Optional[int] = None
-    last_accessed_before: Optional[int] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter (auto-injected from AuthContext)
 
 
 @dataclass
 class PurgeNamespaceOptions:
     """Options for purging a mutable namespace."""
     dry_run: Optional[bool] = None
+    tenant_id: Optional[str] = None  # Override tenant ID (defaults to authContext.tenantId)
 
 
 @dataclass
@@ -611,6 +620,7 @@ class MemoryEntry:
     agent_id: Optional[str] = None  # For agent-owned memories
     embedding: Optional[List[float]] = None
     source_user_id: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy support (v0.31.0)
     source_user_name: Optional[str] = None
     message_role: Optional[Literal["user", "agent", "system"]] = None  # For semantic search weighting
     conversation_ref: Optional[ConversationRef] = None
@@ -642,6 +652,7 @@ class StoreMemoryInput:
     content_type: ContentType
     source: MemorySource
     metadata: MemoryMetadata
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
     participant_id: Optional[str] = None  # Hive Mode tracking
     embedding: Optional[List[float]] = None
     user_id: Optional[str] = None  # For user-owned memories
@@ -654,6 +665,28 @@ class StoreMemoryInput:
     # Enrichment fields (for bullet-proof retrieval)
     enriched_content: Optional[str] = None  # Concatenated searchable content for embedding
     fact_category: Optional[str] = None  # Category for filtering (e.g., "addressing_preference")
+
+
+@dataclass
+class ListMemoriesFilter:
+    """Filter options for listing memories (matches TypeScript SDK)."""
+    memory_space_id: str
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
+    user_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Filter by participant (Hive Mode)
+    source_type: Optional[SourceType] = None
+    limit: Optional[int] = None
+    enrich_facts: bool = False  # Include facts in results
+
+
+@dataclass
+class CountMemoriesFilter:
+    """Filter options for counting memories (matches TypeScript SDK)."""
+    memory_space_id: str
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
+    user_id: Optional[str] = None
+    participant_id: Optional[str] = None  # Filter by participant (Hive Mode)
+    source_type: Optional[SourceType] = None
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -715,6 +748,10 @@ class FactRecord:
     semantic_context: Optional[str] = None  # Usage context sentence
     entities: Optional[List[EnrichedEntity]] = None  # Extracted entities with types
     relations: Optional[List[EnrichedRelation]] = None  # Subject-predicate-object triples for graph
+    # Vector embedding for semantic search (v0.30.0+)
+    embedding: Optional[List[float]] = None
+    # Similarity score from semantic search (v0.31.0+)
+    _score: Optional[float] = None
 
 
 @dataclass
@@ -741,6 +778,8 @@ class StoreFactParams:
     semantic_context: Optional[str] = None  # Usage context sentence
     entities: Optional[List[EnrichedEntity]] = None  # Extracted entities with types
     relations: Optional[List[EnrichedRelation]] = None  # Subject-predicate-object triples for graph
+    # Vector embedding for semantic search (v0.30.0+)
+    embedding: Optional[List[float]] = None
 
 
 @dataclass
@@ -757,6 +796,8 @@ class UpdateFactInput:
     semantic_context: Optional[str] = None  # Usage context sentence
     entities: Optional[List[EnrichedEntity]] = None  # Extracted entities with types
     relations: Optional[List[EnrichedRelation]] = None  # Subject-predicate-object triples
+    # Vector embedding for semantic search (v0.30.0+)
+    embedding: Optional[List[float]] = None
 
 
 @dataclass
@@ -862,6 +903,42 @@ class SearchFactsOptions:
     offset: Optional[int] = None
     sort_by: Optional[Literal["confidence", "createdAt", "updatedAt"]] = None  # Note: search doesn't return scores
     sort_order: Optional[Literal["asc", "desc"]] = None
+
+
+@dataclass
+class SemanticSearchFactsOptions:
+    """Options for semantic (vector) search on facts (v0.30.0+).
+
+    Performs similarity search using embeddings stored on facts.
+    Requires facts to have been stored with embedding vectors.
+
+    Example:
+        >>> results = await cortex.facts.semantic_search(
+        ...     memory_space_id="ms_xxx",
+        ...     embedding=query_embedding,  # Your query vector
+        ...     options=SemanticSearchFactsOptions(
+        ...         min_confidence=50,
+        ...         limit=10,
+        ...         min_score=0.7,
+        ...     )
+        ... )
+    """
+    # Tenant/user context
+    tenant_id: Optional[str] = None
+    user_id: Optional[str] = None
+
+    # Filtering
+    min_confidence: Optional[int] = None
+    include_superseded: Optional[bool] = None
+    tags: Optional[List[str]] = None
+    created_after: Optional[datetime] = None
+    created_before: Optional[datetime] = None
+
+    # Similarity thresholds
+    min_score: Optional[float] = None  # Minimum cosine similarity (0.0 - 1.0)
+
+    # Result limits
+    limit: Optional[int] = None  # Max results to return
 
 
 @dataclass
@@ -1137,6 +1214,92 @@ class ForgetResult:
 
 
 @dataclass
+class RecallLimits:
+    """
+    Configurable limits for recall() operations.
+
+    Controls how many results to fetch from each source and how deep
+    to traverse the knowledge graph. All fields are optional and default
+    to environment variables or sensible hardcoded defaults.
+
+    Configuration hierarchy (highest priority first):
+    1. Per-call override (this dataclass)
+    2. Environment variables (CORTEX_RECALL_*)
+    3. SDK defaults
+
+    Example:
+        >>> # Override specific limits
+        >>> result = await cortex.memory.recall(
+        ...     RecallParams(
+        ...         memory_space_id='space-1',
+        ...         query='user preferences',
+        ...         limits=RecallLimits(
+        ...             memories=50,      # More memories
+        ...             facts=5,          # Fewer facts
+        ...             graph_hops=1,     # Shallow graph traversal
+        ...         )
+        ...     )
+        ... )
+        >>>
+        >>> # Disable graph entirely for fast lookups
+        >>> result = await cortex.memory.recall(
+        ...     RecallParams(
+        ...         memory_space_id='space-1',
+        ...         query='quick lookup',
+        ...         limits=RecallLimits(graph_hops=0)
+        ...     )
+        ... )
+    """
+
+    memories: Optional[int] = None
+    """
+    Maximum memories to fetch from vector search.
+    Env: CORTEX_RECALL_LIMIT_MEMORIES
+    Default: 20
+    """
+
+    facts: Optional[int] = None
+    """
+    Maximum facts to fetch from semantic/text search.
+    Env: CORTEX_RECALL_LIMIT_FACTS
+    Default: 15
+    """
+
+    graph_hops: Optional[int] = None
+    """
+    Graph traversal depth.
+    - 0: Disabled (no graph expansion)
+    - 1: Immediate relationships only
+    - 2: Two-hop traversal (default)
+    Env: CORTEX_RECALL_GRAPH_HOPS
+    Default: 2
+    """
+
+    graph_entities_per_hop: Optional[int] = None
+    """
+    Maximum entities to expand per graph hop.
+    Controls the branching factor of graph traversal.
+    Env: CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP
+    Default: 5
+    """
+
+    graph_results_per_entity: Optional[int] = None
+    """
+    Maximum memories/facts to fetch per discovered entity.
+    Env: CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY
+    Default: 3
+    """
+
+    total: Optional[int] = None
+    """
+    Final aggregate limit on total results returned.
+    Applied after merge, dedupe, and ranking.
+    Env: CORTEX_RECALL_LIMIT_TOTAL
+    Default: 30
+    """
+
+
+@dataclass
 class RecallSourceConfig:
     """Configuration for which sources to search in recall()."""
     vector: bool = True  # Search vector memories (Layer 2)
@@ -1152,6 +1315,8 @@ class RecallGraphExpansionConfig:
     relationship_types: Optional[List[str]] = None  # Types to follow (None = all)
     expand_from_facts: bool = True     # Expand from discovered facts
     expand_from_memories: bool = True  # Expand from discovered memories
+    entities_per_hop: Optional[int] = None  # Max entities to expand per hop (default: 5)
+    results_per_entity: Optional[int] = None  # Max results per entity (default: 3)
 
 
 @dataclass
@@ -1186,6 +1351,7 @@ class RecallParams:
     # Optional - All have sensible defaults for AI chatbot use cases
     embedding: Optional[List[float]] = None  # Pre-computed embedding for semantic search
     user_id: Optional[str] = None            # Filter by user ID (common in H2A chatbots)
+    tenant_id: Optional[str] = None          # Multi-tenancy: SaaS platform isolation
 
     # Source selection - ALL ENABLED BY DEFAULT
     sources: Optional[RecallSourceConfig] = None
@@ -1201,7 +1367,8 @@ class RecallParams:
     created_before: Optional[datetime] = None  # Only items created before this date
 
     # Result options - OPTIMIZED FOR LLM INJECTION BY DEFAULT
-    limit: Optional[int] = None              # Maximum results (default: 20)
+    limits: Optional["RecallLimits"] = None  # Structured limits for per-source control (v0.31.0+)
+    limit: Optional[int] = None              # Legacy: Maximum results (use limits.total instead)
     include_conversation: Optional[bool] = None  # Enrich with ACID conversation (default: True)
     format_for_llm: Optional[bool] = None    # Generate LLM-ready context (default: True)
 
@@ -1293,6 +1460,7 @@ class Context:
     updated_at: int
     version: int
     root_id: str
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
     parent_id: Optional[str] = None
     user_id: Optional[str] = None
     conversation_ref: Optional[ConversationRef] = None
@@ -1300,6 +1468,7 @@ class Context:
     completed_at: Optional[int] = None
     previous_versions: Optional[List[ContextVersion]] = None
     granted_access: Optional[List[Dict[str, Any]]] = None
+    metadata: Optional[Dict[str, Any]] = None
 
 
 @dataclass
@@ -1307,6 +1476,7 @@ class ContextInput:
     """Input for creating a context."""
     purpose: str
     memory_space_id: str
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
     parent_id: Optional[str] = None
     user_id: Optional[str] = None
     conversation_ref: Optional[ConversationRef] = None
@@ -1331,6 +1501,69 @@ class ContextWithChain:
     trigger_messages: Optional[List[Message]] = None
 
 
+@dataclass
+class ListContextsFilter:
+    """Filter for listing contexts (matches TypeScript ListContextsFilter)."""
+    memory_space_id: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
+    user_id: Optional[str] = None
+    status: Optional[ContextStatus] = None
+    parent_id: Optional[str] = None
+    root_id: Optional[str] = None
+    depth: Optional[int] = None
+    limit: Optional[int] = None
+
+
+@dataclass
+class CountContextsFilter:
+    """Filter for counting contexts (matches TypeScript CountContextsFilter)."""
+    memory_space_id: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
+    user_id: Optional[str] = None
+    status: Optional[ContextStatus] = None
+
+
+@dataclass
+class UpdateContextParams:
+    """Parameters for updating a context (matches TypeScript UpdateContextParams)."""
+    status: Optional[ContextStatus] = None
+    description: Optional[str] = None
+    data: Optional[Dict[str, Any]] = None
+    completed_at: Optional[int] = None
+
+
+@dataclass
+class DeleteContextResult:
+    """Result from deleting a context."""
+    deleted: bool
+    context_id: str
+    descendants_deleted: int
+    orphaned_children: Optional[List[str]] = None
+
+
+@dataclass
+class UpdateManyContextsResult:
+    """Result from update_many operation."""
+    updated: int
+    context_ids: List[str]
+
+
+@dataclass
+class DeleteManyContextsResult:
+    """Result from delete_many operation."""
+    deleted: int
+    context_ids: List[str]
+
+
+@dataclass
+class ExportContextsResult:
+    """Result from export operation."""
+    format: str
+    data: str
+    count: int
+    exported_at: int
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Coordination: Users
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1351,6 +1584,8 @@ class UserProfile:
     version: int
     created_at: int
     updated_at: int
+    tenant_id: Optional[str] = None
+    """Multi-tenancy: SaaS platform isolation"""
 
 
 @dataclass
@@ -1393,6 +1628,7 @@ class ListUsersFilter:
     and client-side text filtering for displayName and email.
 
     Attributes:
+        tenant_id: Filter by tenant ID for multi-tenant isolation
         limit: Maximum results to return (default: 50, max: 1000)
         offset: Skip first N results for pagination (default: 0)
         created_after: Filter by createdAt > timestamp (Unix ms)
@@ -1404,6 +1640,8 @@ class ListUsersFilter:
         display_name: Filter by displayName (client-side, contains match)
         email: Filter by email (client-side, contains match)
     """
+    tenant_id: Optional[str] = None
+    """Filter by tenant ID for multi-tenant isolation"""
     limit: Optional[int] = None
     offset: Optional[int] = None
     created_after: Optional[int] = None
@@ -1476,6 +1714,7 @@ class RegisteredAgent:
     updated_at: int
     metadata: Dict[str, Any]
     config: Dict[str, Any]
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
     description: Optional[str] = None
     last_active: Optional[int] = None
     stats: Optional[AgentStats] = None
@@ -1486,6 +1725,7 @@ class AgentRegistration:
     """Input for registering an agent."""
     id: str
     name: str
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
     description: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
     config: Optional[Dict[str, Any]] = None
@@ -1527,18 +1767,24 @@ class AgentFilters:
     """Filter options for listing/searching agents.
 
     Matches TypeScript SDK AgentFilters interface for full parity.
+
+    Note: Pagination Limitation - The `offset` and `limit` filters are applied at the
+    database level BEFORE client-side filters (metadata, name, capabilities,
+    last_active_after, last_active_before). Combining offset with these filters may
+    produce unexpected results. See TypeScript SDK documentation for details.
     """
-    metadata: Optional[Dict[str, Any]] = None
-    name: Optional[str] = None  # Search in agent name (case-insensitive contains)
-    capabilities: Optional[List[str]] = None  # Filter by capabilities in metadata.capabilities
+    tenant_id: Optional[str] = None  # Multi-tenancy: Filter by tenant ID (database-level)
+    metadata: Optional[Dict[str, Any]] = None  # Client-side filter
+    name: Optional[str] = None  # Search in agent name (case-insensitive contains, client-side)
+    capabilities: Optional[List[str]] = None  # Filter by capabilities in metadata.capabilities (client-side)
     capabilities_match: Optional[Literal["any", "all"]] = None  # "any" (default) or "all"
-    status: Optional[Literal["active", "inactive", "archived"]] = None
+    status: Optional[Literal["active", "inactive", "archived"]] = None  # Database-level filter
     registered_after: Optional[int] = None  # Unix timestamp in milliseconds
     registered_before: Optional[int] = None  # Unix timestamp in milliseconds
-    last_active_after: Optional[int] = None  # Filter agents last active after timestamp
-    last_active_before: Optional[int] = None  # Filter agents last active before timestamp
+    last_active_after: Optional[int] = None  # Filter agents last active after timestamp (client-side)
+    last_active_before: Optional[int] = None  # Filter agents last active before timestamp (client-side)
     limit: Optional[int] = None  # Max results (1-1000, default 100)
-    offset: Optional[int] = None  # Pagination offset
+    offset: Optional[int] = None  # Pagination offset (applied before client-side filters)
     sort_by: Optional[Literal["name", "registeredAt", "lastActive"]] = None
     sort_order: Optional[Literal["asc", "desc"]] = None
 
@@ -1591,6 +1837,7 @@ class MemorySpace:
     created_at: int
     updated_at: int
     name: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
 
 
 @dataclass
@@ -1599,6 +1846,7 @@ class RegisterMemorySpaceParams:
     memory_space_id: str
     type: MemorySpaceType
     name: Optional[str] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy: SaaS platform isolation
     participants: Optional[List[Dict[str, str]]] = None
     metadata: Optional[Dict[str, Any]] = None
 
@@ -1625,6 +1873,7 @@ class ListMemorySpacesFilter:
     """Filter options for listing memory spaces."""
     type: Optional[MemorySpaceType] = None
     status: Optional[MemorySpaceStatus] = None
+    tenant_id: Optional[str] = None  # Multi-tenancy filter
     participant: Optional[str] = None
     limit: Optional[int] = None
     offset: Optional[int] = None
@@ -1780,6 +2029,7 @@ class A2AConversationFilters:
     user_id: Optional[str] = None  # Filter A2A about specific user
     limit: int = 100  # Maximum messages to return
     offset: int = 0  # Pagination offset
+    format: Optional[Literal["chronological"]] = None  # Output format
 
 
 @dataclass
@@ -1803,6 +2053,16 @@ class A2AConversationMessage:
 
 
 @dataclass
+class A2AConversationPeriod:
+    """Time period covered by an A2A conversation.
+
+    Matches TypeScript SDK's period object structure.
+    """
+    start: int  # Start timestamp (Unix ms)
+    end: int  # End timestamp (Unix ms)
+
+
+@dataclass
 class A2AConversation:
     """A2A conversation result.
 
@@ -1817,6 +2077,11 @@ class A2AConversation:
     can_retrieve_full_history: bool  # True if ACID conversation exists
     conversation_id: Optional[str] = None  # ACID conversation ID (if exists)
     tags: Optional[List[str]] = None  # Tags found in messages
+
+    @property
+    def period(self) -> A2AConversationPeriod:
+        """Get period as an object matching TypeScript SDK structure."""
+        return A2AConversationPeriod(start=self.period_start, end=self.period_end)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1981,6 +2246,9 @@ class QueryStatistics:
     relationships_deleted: int = 0
     properties_set: int = 0
     labels_added: int = 0
+    labels_removed: int = 0
+    indexes_added: int = 0
+    constraints_added: int = 0
 
 
 @dataclass
@@ -2031,6 +2299,9 @@ class GraphDeleteResult:
 @dataclass
 class BatchSyncLimits:
     """Limits for batch sync operations per entity type."""
+    memory_spaces: int = 1000
+    contexts: int = 1000
+    conversations: int = 10000
     memories: int = 10000
     facts: int = 10000
     users: int = 1000
@@ -2056,6 +2327,9 @@ class BatchSyncError:
 @dataclass
 class BatchSyncResult:
     """Full result from batch graph sync."""
+    memory_spaces: BatchSyncStats = field(default_factory=BatchSyncStats)
+    contexts: BatchSyncStats = field(default_factory=BatchSyncStats)
+    conversations: BatchSyncStats = field(default_factory=BatchSyncStats)
     memories: BatchSyncStats = field(default_factory=BatchSyncStats)
     facts: BatchSyncStats = field(default_factory=BatchSyncStats)
     users: BatchSyncStats = field(default_factory=BatchSyncStats)
@@ -3358,28 +3632,43 @@ class EndSessionsResult:
 
 @dataclass
 class SessionLifecyclePolicy:
-    """Session lifecycle policy settings."""
+    """
+    Session lifecycle policy configuration.
+
+    Controls session timeout, auto-extension, and cleanup behavior.
+    Configurable per-tenant or per-organization via GovernancePolicy.
+    """
+
     idle_timeout: str = "30m"
-    """Idle timeout (e.g., "30m", "1h")"""
+    """
+    Idle timeout before session becomes idle/expires.
+    Format: duration string ('30m', '1h', '24h')
+    """
 
-    absolute_timeout: str = "24h"
-    """Absolute timeout regardless of activity"""
+    max_duration: str = "24h"
+    """
+    Maximum session duration regardless of activity.
+    Format: duration string ('12h', '24h', '7d')
+    """
 
-    max_sessions_per_user: Optional[int] = None
-    """Maximum concurrent sessions per user"""
+    auto_extend: bool = True
+    """Automatically extend session on activity."""
 
-    auto_extend_on_activity: bool = True
-    """Auto-extend session on user activity"""
+    warn_before_expiry: Optional[str] = None
+    """
+    Warn user before session expires.
+    Format: duration string ('5m', '15m')
+    """
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for Convex."""
         result: Dict[str, Any] = {
             "idleTimeout": self.idle_timeout,
-            "absoluteTimeout": self.absolute_timeout,
-            "autoExtendOnActivity": self.auto_extend_on_activity,
+            "maxDuration": self.max_duration,
+            "autoExtend": self.auto_extend,
         }
-        if self.max_sessions_per_user is not None:
-            result["maxSessionsPerUser"] = self.max_sessions_per_user
+        if self.warn_before_expiry is not None:
+            result["warnBeforeExpiry"] = self.warn_before_expiry
         return result
 
     @classmethod
@@ -3387,27 +3676,120 @@ class SessionLifecyclePolicy:
         """Create from dictionary (Convex response)."""
         return cls(
             idle_timeout=data.get("idleTimeout", "30m"),
-            absolute_timeout=data.get("absoluteTimeout", "24h"),
-            max_sessions_per_user=data.get("maxSessionsPerUser"),
-            auto_extend_on_activity=data.get("autoExtendOnActivity", True),
+            max_duration=data.get("maxDuration", "24h"),
+            auto_extend=data.get("autoExtend", True),
+            warn_before_expiry=data.get("warnBeforeExpiry"),
+        )
+
+
+@dataclass
+class SessionCleanupPolicy:
+    """
+    Session cleanup policy configuration.
+
+    Controls automatic session expiration and cleanup behavior.
+    """
+
+    auto_expire_idle: bool = True
+    """Automatically expire idle sessions."""
+
+    delete_ended_after: Optional[str] = None
+    """
+    Delete ended sessions after this duration.
+    Format: duration string ('7d', '30d', '90d')
+    """
+
+    archive_after: Optional[str] = None
+    """
+    Archive sessions before deletion.
+    Format: duration string
+    """
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {
+            "autoExpireIdle": self.auto_expire_idle,
+        }
+        if self.delete_ended_after is not None:
+            result["deleteEndedAfter"] = self.delete_ended_after
+        if self.archive_after is not None:
+            result["archiveAfter"] = self.archive_after
+        return result
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "SessionCleanupPolicy":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            auto_expire_idle=data.get("autoExpireIdle", True),
+            delete_ended_after=data.get("deleteEndedAfter"),
+            archive_after=data.get("archiveAfter"),
+        )
+
+
+@dataclass
+class SessionLimitsPolicy:
+    """
+    Session limits policy configuration.
+
+    Controls maximum concurrent sessions per user or device.
+    """
+
+    max_active_sessions: Optional[int] = None
+    """Maximum concurrent active sessions per user."""
+
+    max_sessions_per_device: Optional[int] = None
+    """Maximum sessions per device type."""
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for Convex."""
+        result: Dict[str, Any] = {}
+        if self.max_active_sessions is not None:
+            result["maxActiveSessions"] = self.max_active_sessions
+        if self.max_sessions_per_device is not None:
+            result["maxSessionsPerDevice"] = self.max_sessions_per_device
+        return result
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "SessionLimitsPolicy":
+        """Create from dictionary (Convex response)."""
+        return cls(
+            max_active_sessions=data.get("maxActiveSessions"),
+            max_sessions_per_device=data.get("maxSessionsPerDevice"),
         )
 
 
 @dataclass
 class SessionPolicy:
-    """Session governance policy."""
+    """
+    Complete session policy configuration for GovernancePolicy.
+
+    Includes lifecycle, cleanup, and limits configuration.
+    """
+
     lifecycle: SessionLifecyclePolicy = field(default_factory=SessionLifecyclePolicy)
-    """Session lifecycle settings"""
+    """Session lifecycle settings (timeout, auto-extend)"""
+
+    cleanup: SessionCleanupPolicy = field(default_factory=SessionCleanupPolicy)
+    """Session cleanup settings (expiration, deletion)"""
+
+    limits: Optional[SessionLimitsPolicy] = None
+    """Session limits settings (max sessions)"""
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for Convex."""
-        return {
+        result: Dict[str, Any] = {
             "lifecycle": self.lifecycle.to_dict(),
+            "cleanup": self.cleanup.to_dict(),
         }
+        if self.limits is not None:
+            result["limits"] = self.limits.to_dict()
+        return result
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "SessionPolicy":
         """Create from dictionary (Convex response)."""
         return cls(
             lifecycle=SessionLifecyclePolicy.from_dict(data.get("lifecycle", {})),
+            cleanup=SessionCleanupPolicy.from_dict(data.get("cleanup", {})),
+            limits=SessionLimitsPolicy.from_dict(data["limits"]) if data.get("limits") else None,
         )

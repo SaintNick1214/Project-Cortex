@@ -10,6 +10,7 @@ from .graph_enhancement import (
     GraphExpansionConfig,
     GraphExpansionResult,
     expand_via_graph,
+    extract_entities_from_query,
     extract_entities_from_results,
     fetch_related_facts,
     fetch_related_memories,
@@ -33,6 +34,7 @@ __all__ = [
     # Graph enhancement
     "GraphExpansionConfig",
     "GraphExpansionResult",
+    "extract_entities_from_query",
     "extract_entities_from_results",
     "expand_via_graph",
     "fetch_related_memories",

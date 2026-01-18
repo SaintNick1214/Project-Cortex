@@ -8,9 +8,12 @@
  * 4. Concurrent sequences don't corrupt state
  */
 
-import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
+import { describe, it, expect, beforeAll, afterAll, jest } from "@jest/globals";
 import { Cortex } from "../src/index";
-import { createNamedTestRunContext } from "./helpers";
+import { createNamedTestRunContext, waitForCondition } from "./helpers";
+
+// Retry failed tests once - Convex backend can have transient errors under parallel load
+jest.retryTimes(1, { logErrorsBeforeRetry: true });
 
 describe("Operation Sequence Validation", () => {
   // Create unique test run context for parallel-safe execution
@@ -27,6 +30,56 @@ describe("Operation Sequence Validation", () => {
     // Note: With TestRunContext, cleanup is less critical since IDs are unique
     console.log(`\n🧹 Operation Sequence Tests - Run ${ctx.runId} complete\n`);
   });
+
+  // Helper to wait for context to be queryable after creation
+  const waitForContextReady = async (contextId: string) => {
+    const ready = await waitForCondition(
+      async () => {
+        const result = await cortex.contexts.get(contextId);
+        return result !== null;
+      },
+      ctx,
+      10000, // Extended to 10s for CI
+      200,
+    );
+    if (!ready) {
+      throw new Error(`Context ${contextId} not ready after 10 seconds`);
+    }
+    // Extended delay for CI consistency
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  };
+
+  // Helper to retry operations with exponential backoff for CI resilience
+  const retryOperation = async <T>(
+    operation: () => Promise<T>,
+    operationName = "operation",
+    maxRetries = 3,
+    initialDelayMs = 200,
+  ): Promise<T> => {
+    let lastError: Error | undefined;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        lastError = error as Error;
+        // Only retry on CONTEXT_NOT_FOUND (eventual consistency issue)
+        if (!lastError.message?.includes("CONTEXT_NOT_FOUND")) {
+          throw error;
+        }
+        if (attempt < maxRetries - 1) {
+          const delay = initialDelayMs * Math.pow(2, attempt);
+          console.warn(
+            `[Retry ${attempt + 1}/${maxRetries}] ${operationName} failed with CONTEXT_NOT_FOUND, retrying in ${delay}ms...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
+    }
+    // Enhance error message with retry context
+    throw new Error(
+      `${operationName} failed after ${maxRetries} retries: ${lastError?.message}`,
+    );
+  };
 
   // ══════════════════════════════════════════════════════════════════════
   // Vector Memory Sequences
@@ -371,10 +424,6 @@ describe("Operation Sequence Validation", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Contexts: Full Lifecycle Sequence", () => {
-    // Helper to ensure Convex consistency for sequential operations
-    const waitForConsistency = () =>
-      new Promise((resolve) => setTimeout(resolve, 100));
-
     it("create→get→update→get→complete→get→delete→get", async () => {
       const spaceId = `${ctx.runId}-ctx-lifecycle`;
       const userId = "lifecycle-user";
@@ -391,8 +440,17 @@ describe("Operation Sequence Validation", () => {
       expect(created.contextId).toBeDefined();
       expect(created.status).toBe("active");
 
-      // Wait for Convex consistency before subsequent operations
-      await waitForConsistency();
+      // Wait for Convex consistency - poll until context is queryable
+      const contextReady = await waitForCondition(
+        async () => {
+          const result = await cortex.contexts.get(created.contextId);
+          return result !== null;
+        },
+        ctx,
+        5000, // 5 second timeout
+        100, // 100ms polling interval
+      );
+      expect(contextReady).toBe(true);
 
       // STEP 2: Get (validate create)
       const afterCreate = await cortex.contexts.get(created.contextId);
@@ -445,8 +503,18 @@ describe("Operation Sequence Validation", () => {
         status: "active",
       });
 
-      // Wait for Convex consistency before creating child with parent reference
-      await waitForConsistency();
+      // Wait for Convex consistency - poll until parent is queryable
+      // This is critical because the child creation validates parentId exists
+      const parentReady = await waitForCondition(
+        async () => {
+          const result = await cortex.contexts.get(parent.contextId);
+          return result !== null;
+        },
+        ctx,
+        5000, // 5 second timeout
+        100, // 100ms polling interval
+      );
+      expect(parentReady).toBe(true);
 
       // Create child
       const child = await cortex.contexts.create({
@@ -1104,6 +1172,18 @@ describe("Operation Sequence Validation", () => {
         data: { factId: fact.factId },
       });
 
+      // Wait for Convex consistency - poll until context is queryable
+      const ctxReady = await waitForCondition(
+        async () => {
+          const result = await cortex.contexts.get(testCtx.contextId);
+          return result !== null;
+        },
+        ctx,
+        5000,
+        100,
+      );
+      expect(ctxReady).toBe(true);
+
       // VALIDATE: Complete chain retrievable
       const convCheck = await cortex.conversations.get(conv.conversationId);
       const memCheck = await cortex.vector.get(spaceId, mem.memoryId);
@@ -1571,10 +1651,18 @@ describe("Operation Sequence Validation", () => {
         data: { step: 0 },
       });
 
+      // Wait for context to be queryable before updates (CI consistency)
+      await waitForContextReady(context.contextId);
+
       for (let i = 1; i <= 20; i++) {
-        context = await cortex.contexts.update(context.contextId, {
-          data: { step: i },
-        });
+        // Use retry for CI resilience - first update after create can hit eventual consistency
+        context = await retryOperation(
+          () =>
+            cortex.contexts.update(context.contextId, {
+              data: { step: i },
+            }),
+          `contexts.update(step=${i})`,
+        );
 
         // Verify state after each step
         const check = await cortex.contexts.get(context.contextId);

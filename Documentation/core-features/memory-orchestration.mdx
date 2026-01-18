@@ -256,7 +256,13 @@ const result = await cortex.memory.recall({
 
   // Optional: Filter options
   userId: "user-123",
-  limit: 10,
+
+  // NEW in v0.31.0: Configurable limits (or use env vars)
+  limits: {
+    memories: 20,  // Max vector memories
+    facts: 15,     // Max facts
+    total: 30,     // Final result cap
+  },
 });
 
 // Result includes unified context from all layers
@@ -315,6 +321,26 @@ Both `remember()` and `recall()` work out-of-the-box with sensible defaults:
 | LLM Context | Generated | Ready-to-inject string |
 | Deduplication | Enabled | Removes duplicates |
 | Ranking | Enabled | Multi-signal scoring |
+| Configurable Limits | v0.31.0+ | Per-source data caps |
+
+<Callout type="info" title="New in v0.31.0: Configurable Limits">
+Control how much data `recall()` fetches from each source to prevent Convex read limit errors:
+
+```typescript
+await cortex.memory.recall({
+  memorySpaceId: "user-space",
+  query: "preferences",
+  limits: {
+    memories: 20,  // Vector memories
+    facts: 15,     // Facts
+    graphHops: 2,  // Graph traversal depth
+    total: 30,     // Final result cap
+  },
+});
+```
+
+Configure defaults via environment variables (`CORTEX_RECALL_LIMIT_*`) or override per-call. See [Configuration](/getting-started/configuration#recall-limits-configuration).
+</Callout>
 
 ---
 

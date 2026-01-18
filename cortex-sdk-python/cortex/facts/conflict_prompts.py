@@ -42,6 +42,22 @@ class ConflictDecision:
 
 
 @dataclass
+class EnrichedEntityCandidate:
+    """Entity extracted from enriched fact extraction."""
+    name: str
+    type: str
+    full_value: Optional[str] = None
+
+
+@dataclass
+class EnrichedRelationCandidate:
+    """Relation extracted from enriched fact extraction."""
+    subject: str
+    predicate: str
+    object: str
+
+
+@dataclass
 class ConflictCandidate:
     """Candidate fact for conflict resolution."""
 
@@ -65,6 +81,15 @@ class ConflictCandidate:
 
     tags: Optional[List[str]] = None
     """Tags for categorization"""
+
+    embedding: Optional[List[float]] = None
+    """Embedding for semantic search (v0.30.0+)"""
+
+    entities: Optional[List[EnrichedEntityCandidate]] = None
+    """Named entities mentioned in the fact (v0.31.0+)"""
+
+    relations: Optional[List[EnrichedRelationCandidate]] = None
+    """Subject-predicate-object relations (v0.31.0+)"""
 
 
 @dataclass
@@ -574,6 +599,8 @@ __all__ = [
     "ConflictAction",
     "ConflictDecision",
     "ConflictCandidate",
+    "EnrichedEntityCandidate",
+    "EnrichedRelationCandidate",
     "PromptOptions",
     "ConflictResolutionPrompt",
     "ValidationResult",

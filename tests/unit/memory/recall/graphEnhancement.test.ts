@@ -345,13 +345,13 @@ describe("Graph Enhancement", () => {
         traverse: jest.fn<GraphAdapter["traverse"]>().mockResolvedValue([]),
       });
 
-      // Create 20 initial entities (more than the limit of 10)
+      // Create 20 initial entities (more than the default limit of 5)
       const manyEntities = Array.from({ length: 20 }, (_, i) => `Entity${i}`);
 
       await expandViaGraph(manyEntities, mockAdapter, defaultConfig);
 
-      // Should only process first 10
-      expect(mockAdapter.findNodes).toHaveBeenCalledTimes(10);
+      // Should only process first 5 (default entitiesPerHop from config)
+      expect(mockAdapter.findNodes).toHaveBeenCalledTimes(5);
     });
 
     it("handles graph errors gracefully", async () => {

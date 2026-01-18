@@ -75,10 +75,9 @@ class TestContextStateTransitions:
         assert ctx.id is not None
 
         # Verify in list with initial status
-        before_list_result = await cortex_client.contexts.list(
+        before_list = await cortex_client.contexts.list(
             memory_space_id=space_id, status=from_status
         )
-        before_list = before_list_result.get("contexts", [])
         assert any(c.id == ctx.id for c in before_list)
 
         # Transition to new status
@@ -88,17 +87,15 @@ class TestContextStateTransitions:
         assert updated.id == ctx.id
 
         # Verify in list with new status
-        after_list_result = await cortex_client.contexts.list(
+        after_list = await cortex_client.contexts.list(
             memory_space_id=space_id, status=to_status
         )
-        after_list = after_list_result.get("contexts", [])
         assert any(c.id == ctx.id for c in after_list)
 
         # Verify NOT in list with old status
-        old_status_list_result = await cortex_client.contexts.list(
+        old_status_list = await cortex_client.contexts.list(
             memory_space_id=space_id, status=from_status
         )
-        old_status_list = old_status_list_result.get("contexts", [])
         assert not any(c.id == ctx.id for c in old_status_list)
 
     @pytest.mark.parametrize("from_status,to_status", CONTEXT_TRANSITIONS)
@@ -281,9 +278,7 @@ class TestContextStateTransitions:
 
         # Verify each in correct status list
         for ctx, status in contexts:
-            status_list_result = await cortex_client.contexts.list(memory_space_id=space_id, status=status)
-
-            status_list = status_list_result.get("contexts", [])
+            status_list = await cortex_client.contexts.list(memory_space_id=space_id, status=status)
             assert any(c.id == ctx.id for c in status_list)
 
         # Transition each to different status
@@ -686,16 +681,13 @@ class TestCrossEntityStateEffects:
         )
 
         # Verify each in correct status list
-        active_list_result = await cortex_client.contexts.list(
+        active_list = await cortex_client.contexts.list(
             memory_space_id=space_id, status="active"
         )
-        active_list = active_list_result.get("contexts", [])
-        completed_list_result = await cortex_client.contexts.list(
+        completed_list = await cortex_client.contexts.list(
             memory_space_id=space_id, status="completed"
         )
-        completed_list = completed_list_result.get("contexts", [])
-        blocked_list_result = await cortex_client.contexts.list(memory_space_id=space_id, status="blocked")
-        blocked_list = blocked_list_result.get("contexts", [])
+        blocked_list = await cortex_client.contexts.list(memory_space_id=space_id, status="blocked")
 
         assert any(c.id == active.id for c in active_list)
         assert any(c.id == completed.id for c in completed_list)
@@ -731,10 +723,9 @@ class TestStateTransitionEdgeCases:
         assert final.status == "completed"
 
         # Should only appear once in completed list
-        completed_list_result = await cortex_client.contexts.list(
+        completed_list = await cortex_client.contexts.list(
             memory_space_id=space_id, status="completed"
         )
-        completed_list = completed_list_result.get("contexts", [])
         matches = [c for c in completed_list if c.id == ctx.id]
         assert len(matches) == 1
 
@@ -823,9 +814,7 @@ class TestStateTransitionEdgeCases:
             assert retrieved.status == status
 
             # Verify in correct status list
-            status_list_result = await cortex_client.contexts.list(memory_space_id=space_id, status=status)
-
-            status_list = status_list_result.get("contexts", [])
+            status_list = await cortex_client.contexts.list(memory_space_id=space_id, status=status)
             assert any(c.id == ctx.id for c in status_list)
 
     async def test_archived_space_with_data_reactivatable(

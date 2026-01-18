@@ -223,19 +223,19 @@ const memories = await ctx.db
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 1536,
-  // No filterFields
+  // No filterFields - must filter after search (slow)
 })
 
-// Query searches ALL vectors (slow at scale)
-const results = await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q.similar("embedding", vector, 10)
-  )
-  .filter((q) => q.eq(q.field("memorySpaceId"), memorySpaceId))  // ← Filter AFTER search
-  .collect();
+// Query searches ALL vectors, then filters (slow at scale)
+// Note: ctx.vectorSearch() must be called from an action
+const results = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: vector,
+  limit: 10,
+  // No filter possible without filterFields
+});
+// Must manually filter results afterward
 
-// With filterFields: Pre-filter before search
+// With filterFields: Pre-filter before search (fast!)
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 1536,  // Default
@@ -243,14 +243,12 @@ const results = await ctx.db
 })
 
 // Query searches only relevant subset (fast!)
-const results = await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q.similar("embedding", vector, 10)
-     .eq("memorySpaceId", memorySpaceId)  // ← Pre-filtered BEFORE search
-     .eq("tenantId", tenantId)            // ← Multi-tenant isolation
-  )
-  .collect();
+const results = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: vector,
+  limit: 10,
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId)  // ← Pre-filtered BEFORE search
+                  .eq("tenantId", tenantId),           // ← Multi-tenant isolation
+});
 ```
 
 **Impact:**
@@ -789,8 +787,8 @@ const totalTokens = avgTokensPerMemory * memoriesPerMonth; // 1M tokens
 ### Query Performance Tracking
 
 ```typescript
-// Track query latency
-export const search = query({
+// Track query latency - must be an action for vector search
+export const search = action({
   args: {
     memorySpaceId: v.string(),
     agentId: v.optional(v.string()),
@@ -799,17 +797,23 @@ export const search = query({
   handler: async (ctx, args) => {
     const startTime = Date.now();
 
-    const results = await ctx.db
-      .query("memories")
-      .withIndex("by_embedding", (q) => {
-        let query = q.similar("embedding", args.embedding, 10)
-          .eq("memorySpaceId", args.memorySpaceId);
-        if (args.agentId) {
-          query = query.eq("agentId", args.agentId);
-        }
-        return query;
-      })
-      .collect();
+    // Build filter based on available fields
+    const filter = args.agentId
+      ? (q: any) => q.eq("memorySpaceId", args.memorySpaceId)
+                     .eq("agentId", args.agentId)
+      : (q: any) => q.eq("memorySpaceId", args.memorySpaceId);
+
+    // Vector search returns { _id, _score }[]
+    const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+      vector: args.embedding,
+      limit: 10,
+      filter,
+    });
+
+    // Fetch full documents
+    const results = await ctx.runQuery(internal.memories.fetchByIds, {
+      ids: vectorResults.map(r => r._id),
+    });
 
     const latency = Date.now() - startTime;
 

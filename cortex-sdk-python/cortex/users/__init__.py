@@ -151,15 +151,27 @@ class UsersAPI:
         validate_user_id(user_id)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.query("immutable:get", filter_none_values({"type": "user", "id": user_id})),
+            lambda: self.client.query("immutable:get", filter_none_values({
+                "type": "user",
+                "id": user_id,
+                "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
+            })),
             "immutable:get",
         )
 
         if not result:
             return None
 
+        # Enforce tenant isolation: only deny if both have tenantId and they don't match
+        # Users without tenantId (legacy) are accessible to all (backwards compatibility)
+        result_tenant = result.get("tenantId")
+        if result_tenant and self._tenant_id:
+            if result_tenant != self._tenant_id:
+                return None  # User belongs to a different tenant
+
         return UserProfile(
             id=result["id"],
+            tenant_id=result.get("tenantId"),  # Include tenantId in response
             data=result["data"],
             version=result["version"],
             created_at=result["createdAt"],
@@ -193,7 +205,12 @@ class UsersAPI:
 
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "immutable:store", {"type": "user", "id": user_id, "data": data}
+                "immutable:store", filter_none_values({
+                    "type": "user",
+                    "id": user_id,
+                    "data": data,
+                    "tenantId": self._tenant_id,  # Inject tenantId from auth context
+                })
             ),
             "immutable:store",
         )
@@ -205,6 +222,7 @@ class UsersAPI:
 
         return UserProfile(
             id=result["id"],
+            tenant_id=result.get("tenantId"),  # Include tenantId in response
             data=result["data"],
             version=result["version"],
             created_at=result["createdAt"],
@@ -253,7 +271,11 @@ class UsersAPI:
             # Simple deletion - just the user profile
             try:
                 await self._execute_with_resilience(
-                    lambda: self.client.mutation("immutable:purge", {"type": "user", "id": user_id}),
+                    lambda: self.client.mutation("immutable:purge", filter_none_values({
+                        "type": "user",
+                        "id": user_id,
+                        "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
+                    })),
                     "immutable:purge",
                 )
                 total_deleted = 1
@@ -376,6 +398,9 @@ class UsersAPI:
         # Extract filter values with defaults
         limit = filters.limit if filters and filters.limit else 50
 
+        # Determine tenant_id: use filter if provided, otherwise use auth context
+        tenant_id = (filters.tenant_id if filters and filters.tenant_id else None) or self._tenant_id
+
         # Query using immutable:list with type='user' (like TS SDK)
         result = await self._execute_with_resilience(
             lambda: self.client.query(
@@ -390,6 +415,7 @@ class UsersAPI:
                     "updatedBefore": filters.updated_before if filters else None,
                     "sortBy": filters.sort_by if filters else None,
                     "sortOrder": filters.sort_order if filters else None,
+                    "tenantId": tenant_id,  # Multi-tenancy: scope to tenant
                 }),
             ),
             "users:search",
@@ -401,10 +427,11 @@ class UsersAPI:
         else:
             entries = result if isinstance(result, list) else []
 
-        # Map to UserProfile
+        # Map to UserProfile (including tenantId for multi-tenancy)
         users = [
             UserProfile(
                 id=u["id"],
+                tenant_id=u.get("tenantId"),  # Include tenantId for multi-tenancy
                 data=u.get("data", {}),
                 version=u.get("version", 1),
                 created_at=u.get("createdAt", 0),
@@ -462,14 +489,24 @@ class UsersAPI:
         # Extract filter values with defaults
         limit = filters.limit if filters and filters.limit else 50
 
+        # Determine tenant_id: use filter if provided, otherwise use auth context
+        tenant_id = (filters.tenant_id if filters and filters.tenant_id else None) or self._tenant_id
+
         # Query using immutable:list with type='user' (like TS SDK)
-        # Note: immutable:list only supports limit, type, and userId - not offset or date filters
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "immutable:list",
                 filter_none_values({
                     "type": "user",
                     "limit": limit,
+                    "offset": filters.offset if filters else None,
+                    "createdAfter": filters.created_after if filters else None,
+                    "createdBefore": filters.created_before if filters else None,
+                    "updatedAfter": filters.updated_after if filters else None,
+                    "updatedBefore": filters.updated_before if filters else None,
+                    "sortBy": filters.sort_by if filters else None,
+                    "sortOrder": filters.sort_order if filters else None,
+                    "tenantId": tenant_id,  # Inject tenantId for tenant isolation
                 }),
             ),
             "users:list",
@@ -486,10 +523,11 @@ class UsersAPI:
             total = len(entries)
             has_more = False
 
-        # Map to UserProfile
+        # Map to UserProfile (including tenantId for multi-tenancy)
         users = [
             UserProfile(
                 id=u["id"],
+                tenant_id=u.get("tenantId"),  # Include tenantId for multi-tenancy
                 data=u.get("data", {}),
                 version=u.get("version", 1),
                 created_at=u.get("createdAt", 0),
@@ -682,7 +720,11 @@ class UsersAPI:
         # Collect immutable records
         immutable = await self._execute_with_resilience(
             lambda: self.client.query(
-                "immutable:list", filter_none_values({"userId": user_id, "limit": 10000})
+                "immutable:list", filter_none_values({
+                    "userId": user_id,
+                    "limit": 10000,
+                    "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
+                })
             ),
             "immutable:list",
         )
@@ -853,7 +895,11 @@ class UsersAPI:
             try:
                 await self.client.mutation(
                     "immutable:purge",
-                    {"type": record["type"], "id": record["id"]},
+                    filter_none_values({
+                        "type": record["type"],
+                        "id": record["id"],
+                        "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
+                    }),
                 )
                 immutable_deleted += 1
             except Exception as e:
@@ -894,7 +940,11 @@ class UsersAPI:
 
         # 6. Delete user profile - STRICT: raise on error (except not-found)
         try:
-            await self.client.mutation("immutable:purge", {"type": "user", "id": user_id})
+            await self.client.mutation("immutable:purge", filter_none_values({
+                "type": "user",
+                "id": user_id,
+                "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
+            }))
             deleted_layers.append("user-profile")
         except Exception as e:
             if not _is_user_not_found_error(e):
@@ -1074,11 +1124,12 @@ class UsersAPI:
             try:
                 await self.client.mutation(
                     "immutable:store",
-                    {
+                    filter_none_values({
                         "type": record["type"],
                         "id": record["id"],
                         "data": record.get("data", {}),
-                    },
+                        "tenantId": self._tenant_id,  # Multi-tenancy: scope to tenant
+                    }),
                 )
                 rollback_stats["immutable_restored"] += 1
             except Exception as e:

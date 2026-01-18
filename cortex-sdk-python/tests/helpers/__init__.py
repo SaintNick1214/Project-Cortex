@@ -30,6 +30,7 @@ from .assertions import (
     list_memory_spaces,
     list_mutable,
     list_users,
+    retry_async,
     wait_for_condition,
     wait_for_count,
 )
@@ -122,5 +123,6 @@ __all__ = [
     "assert_condition",
     "wait_for_condition",
     "wait_for_count",
+    "retry_async",
 ]
 

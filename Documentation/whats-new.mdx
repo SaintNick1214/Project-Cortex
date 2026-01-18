@@ -4,21 +4,232 @@ description: Latest updates and improvements across all Cortex packages
 sidebar_position: 1
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # What's New
 
 Track the latest features, improvements, and fixes across the entire Cortex ecosystem.
 
-:::info Single Source of Truth
+<Callout type="info" title="Single Source of Truth">
 This is the complete changelog for all Cortex packages. Individual package CHANGELOG.md files have been consolidated here for easier tracking.
-:::
+</Callout>
 
 <Tabs groupId="package-filter">
 <TabItem value="all" label="All Packages" default>
 
 ## January 2026
+
+### CLI v0.31.0 · Jan 15, 2026
+
+**Adaptive Batch Sizing for `cortex db clear`**
+
+🔄 Automatic batch size reduction on Convex 16MB read limit errors  
+📉 Starts at 10,000 records, reduces to 500 → 250 → 50 on failures  
+🧹 Suppresses Convex SDK error noise during retry operations  
+✅ Reliably clears tables with large embeddings (memories, facts)
+
+<details>
+<summary>Show full details</summary>
+
+#### Bug Fix
+
+**`cortex db clear` fails on tables with embeddings**
+
+The `cortex db clear` command would fail with "Too many bytes read in a single function execution (limit: 16777216 bytes)" when clearing tables containing records with vector embeddings (memories and facts tables).
+
+**Root Cause:** Each memory/fact record can contain a 1536-dimension float64 embedding (~12KB per record). With a batch size of 1000 records, this alone approaches the 16MB Convex read limit before accounting for content, metadata, and previousVersions.
+
+**Solution:** Implemented adaptive batch sizing that:
+
+1. Starts optimistically with 10,000 records per batch
+2. On Convex "Server Error" (wraps byte limit error), automatically reduces batch size
+3. Retry sequence: 10,000 → 500 → 250 → 50
+4. Continues clearing with smaller batches until complete
+5. Suppresses Convex SDK console.error output during retries for clean CLI output
+
+```typescript
+// New batch size sequence
+const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50] as const;
+```
+
+The fix is resilient to varying record sizes and automatically adapts without requiring manual configuration.
+
+</details>
+
+---
+
+### TypeScript SDK v0.31.0 · Jan 14, 2026
+
+**Configurable Recall Limits - Prevent 16MB Read Errors**
+
+⚙️ New `RecallLimits` interface for granular control over recall operations  
+🔧 Environment variable configuration with per-call overrides  
+📊 Per-source limits for memories, facts, and graph traversal  
+🛡️ Eliminates Convex "Too many bytes read" errors in large memory spaces
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Configurable Recall Limits**
+
+The `recall()` API now accepts granular limits to control data retrieval across all sources:
+
+```typescript
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
+  limits: {
+    memories: 20,           // Max vector memories to fetch
+    facts: 15,              // Max facts to fetch
+    graphHops: 2,           // Max graph traversal depth
+    graphEntitiesPerHop: 5, // Entities to expand per hop
+    graphResultsPerEntity: 3, // Results per entity from graph
+    total: 30,              // Final result cap after merge/rank
+  },
+});
+```
+
+**Configuration Hierarchy**
+
+Limits can be configured at three levels (highest priority first):
+
+1. **Per-call overrides** - `RecallParams.limits`
+2. **Environment variables** - `CORTEX_RECALL_*`
+3. **SDK defaults** - Hardcoded sensible defaults
+
+**New Environment Variables**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CORTEX_RECALL_LIMIT_MEMORIES` | 20 | Max vector memories per recall |
+| `CORTEX_RECALL_LIMIT_FACTS` | 15 | Max facts per recall |
+| `CORTEX_RECALL_GRAPH_HOPS` | 2 | Graph traversal depth |
+| `CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP` | 5 | Entities expanded per hop |
+| `CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY` | 3 | Results fetched per entity |
+| `CORTEX_RECALL_LIMIT_TOTAL` | 30 | Final result cap |
+
+**Backward Compatibility**
+
+The legacy `limit` parameter is still supported as an alias for `limits.total`:
+
+```typescript
+// Legacy (still works)
+await cortex.memory.recall({ ..., limit: 25 });
+
+// New (recommended)
+await cortex.memory.recall({ ..., limits: { total: 25 } });
+```
+
+#### Technical Details
+
+**New Types in `src/types/index.ts`:**
+
+```typescript
+export interface RecallLimits {
+  memories?: number;
+  facts?: number;
+  graphHops?: number;
+  graphEntitiesPerHop?: number;
+  graphResultsPerEntity?: number;
+  total?: number;
+}
+
+export interface RecallParams {
+  // ... existing fields ...
+  limits?: RecallLimits;
+  limit?: number; // Legacy alias for limits.total
+}
+```
+
+**New Config Module `src/config.ts`:**
+
+- `RECALL_DEFAULTS` - Centralized defaults with env var support
+- `resolveRecallLimits()` - Merges per-call, env, and defaults
+
+**Bug Fix:**
+
+Removed dangerous `.collect()` fallback in Convex queries that could fetch unlimited data. All queries now properly respect limits.
+
+</details>
+
+---
+
+### TypeScript SDK v0.30.1 · Jan 14, 2026
+
+**Enriched Entity Extraction & Bidirectional Graph Traceability**
+
+🏷️ LLM extraction now returns typed entities (person, organization, place, product, concept)  
+🔗 New `EXTRACTED_WITH` edge links Facts to source Memory for full bidirectional traversal  
+📊 Entity relations (subject-predicate-object triples) sync to graph as typed edges  
+🔋 Batteries-included: all entity/relation enrichment automatic when graph sync is enabled
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Enriched Entity Extraction**
+
+The LLM fact extraction prompt now extracts named entities with semantic types:
+
+```typescript
+// Example extracted fact with enriched entities
+{
+  fact: "Sarah works at Acme Corp in San Francisco",
+  factType: "knowledge",
+  confidence: 0.95,
+  entities: [
+    { name: "Sarah", type: "person" },
+    { name: "Acme Corp", type: "organization" },
+    { name: "San Francisco", type: "place" }
+  ],
+  relations: [
+    { subject: "Sarah", predicate: "works_at", object: "Acme Corp" },
+    { subject: "Acme Corp", predicate: "located_in", object: "San Francisco" }
+  ]
+}
+```
+
+**Bidirectional Fact-Memory Traceability**
+
+New `EXTRACTED_WITH` edge enables traversing from Facts back to their source Memory:
+
+```
+Memory ──[REFERENCES]──► Conversation
+   ▲
+   │ EXTRACTED_WITH (NEW)
+   │
+Fact ──[EXTRACTED_FROM]──► Conversation
+  │
+  └──[MENTIONS]──► Entity ──[works_at]──► Entity
+```
+
+This enables queries like "find all facts extracted from memories about topic X".
+
+#### Technical Details
+
+**New Types in `src/llm/index.ts`:**
+
+- `ExtractedEntity` - Entity with name, type, and optional fullValue
+- `ExtractedRelation` - Subject-predicate-object triple for graph edges
+- `ExtractedFact.entities` - Array of extracted entities
+- `ExtractedFact.relations` - Array of relation triples
+
+**Graph Sync Changes:**
+
+- `syncFactRelationships()` now creates `EXTRACTED_WITH` edge to Memory node
+- Entity nodes created with semantic `type` property
+- Relation predicates become typed graph edges (e.g., `WORKS_AT`, `LOCATED_IN`)
+
+**API Changes:**
+
+- `ConflictCandidate` interface updated to include entities/relations
+- `StoreFactParams` already supports entities/relations (no change needed)
+- No breaking changes to public API
+
+</details>
+
+---
 
 ### TypeScript SDK v0.30.0 · Jan 13, 2026
 
@@ -1353,6 +1564,33 @@ const cortexMemory = createCortexMemory({
 <TabItem value="ts-sdk" label="TypeScript SDK">
 
 ## January 2026
+
+### v0.31.0 · Jan 14, 2026 - Configurable Recall Limits
+
+⚙️ `RecallLimits` interface for granular control  
+🔧 Environment variable + per-call configuration  
+🛡️ Prevents Convex 16MB read limit errors
+
+### v0.30.1 · Jan 14, 2026 - Enriched Entity Extraction
+
+🏷️ LLM extraction returns typed entities  
+🔗 `EXTRACTED_WITH` edge for bidirectional traversal  
+📊 Entity relations sync to graph as typed edges
+
+### v0.30.0 · Jan 13, 2026 - Semantic Fact Search
+
+🔍 Native vector search on facts table  
+🔋 Batteries-included embeddings  
+🧪 Extreme multi-turn stress tests
+
+### v0.29.1 · Jan 10, 2026 - Belief Revision Heuristics
+
+🧠 Improved decision accuracy without LLM
+
+### v0.29.0 · Jan 9, 2026 - Automatic Graph Sync
+
+🔗 Graph sync automatic with `CORTEX_GRAPH_SYNC=true`  
+⚠️ Breaking: `syncToGraph` option removed
 
 ### v0.28.0 · Jan 5, 2026 - Basic Template & Query Fixes
 

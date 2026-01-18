@@ -27,6 +27,9 @@ class CortexError(Exception):
 class A2ATimeoutError(Exception):
     """Exception raised when A2A request times out."""
 
+    # Match TypeScript SDK's readonly name property
+    name: str = "A2ATimeoutError"
+
     def __init__(self, message: str, message_id: str, timeout: int) -> None:
         """
         Initialize A2A timeout error.

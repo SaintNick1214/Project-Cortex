@@ -12,7 +12,7 @@ description: Complete API reference for the Facts layer (Layer 3) - structured k
   icon="clock"
 >
 
-**Last Updated**: 2026-01-13 | **Version**: v0.7.0+ (Belief Revision: v0.24.0+, Auto Graph Sync: v0.29.0+, Semantic Search: v0.30.0+)
+**Last Updated**: 2026-01-14 | **Version**: v0.7.0+ (Belief Revision: v0.24.0+, Auto Graph Sync: v0.29.0+, Semantic Search: v0.30.0+, Entity Extraction: v0.30.1+)
 
 </Callout>
 
@@ -119,18 +119,18 @@ interface StoreFactParams {
   embedding?: number[]; // Vector embedding for semantic search (1536 dimensions)
 }
 
-// Enriched entity structure
+// Enriched entity structure (v0.30.1+: semantic types)
 interface EnrichedEntity {
-  name: string; // Entity name (e.g., "Alex")
-  type: string; // Entity type (e.g., "preferred_name", "full_name")
-  fullValue?: string; // Full value if applicable (e.g., "Alexander Johnson")
+  name: string; // Entity name (e.g., "Alex", "Acme Corp")
+  type: "person" | "organization" | "place" | "product" | "concept" | "other"; // Semantic entity type
+  fullValue?: string; // Full value if abbreviated (e.g., "San Francisco" for "SF")
 }
 
-// Enriched relation structure
+// Enriched relation structure (v0.30.1+: graph edges)
 interface EnrichedRelation {
-  subject: string; // Subject entity (e.g., "user")
-  predicate: string; // Relationship type (e.g., "prefers_to_be_called")
-  object: string; // Object entity (e.g., "Alex")
+  subject: string; // Subject entity (e.g., "Sarah")
+  predicate: string; // Relationship type in snake_case (e.g., "works_at", "located_in")
+  object: string; // Object entity (e.g., "Acme Corp")
 }
 
 // StoreFactOptions is now empty (v0.29.0+)
@@ -2295,20 +2295,30 @@ Return ONLY a valid JSON array.
 When `CORTEX_GRAPH_SYNC=true` is set in your environment, enriched facts automatically:
 
 1. Create **Fact nodes** in the graph with all fact properties
-2. Create **Entity nodes** for each item in `entities[]`
-3. Create **relationship edges** (MENTIONS) linking facts to entities
-4. Create **predicate-based relationships** from `relations[]`
+2. Create **Entity nodes** for each item in `entities[]` with semantic types (person, organization, place, etc.)
+3. Create **MENTIONS** relationships linking facts to entities
+4. Create **predicate-based relationships** from `relations[]` (e.g., `WORKS_AT`, `LOCATED_IN`)
 5. Create **EXTRACTED_FROM** relationships linking facts to source conversations
-6. Create **SUPERSEDES** relationships when belief revision supersedes facts
+6. Create **EXTRACTED_WITH** relationships linking facts to source memories (v0.30.1+, bidirectional traceability)
+7. Create **SUPERSEDES** relationships when belief revision supersedes facts
 
 ```typescript
-// Entities become graph nodes
-{name: "Alex", type: "preferred_name", fullValue: "Alexander Johnson"}
-// → Entity node: {name: "Alex", entityType: "preferred_name", fullValue: "Alexander Johnson"}
+// Entities become graph nodes with semantic types (v0.30.1+)
+{name: "Sarah", type: "person"}
+// → Entity node: {name: "Sarah", entityType: "person"}
 
-// Relations become graph edges
-{subject: "user", predicate: "prefers_to_be_called", object: "Alex"}
-// → Edge: (user)-[PREFERS_TO_BE_CALLED]->(Alex)
+{name: "Acme Corp", type: "organization"}
+// → Entity node: {name: "Acme Corp", entityType: "organization"}
+
+{name: "SF", type: "place", fullValue: "San Francisco"}
+// → Entity node: {name: "SF", entityType: "place", fullValue: "San Francisco"}
+
+// Relations become typed graph edges
+{subject: "Sarah", predicate: "works_at", object: "Acme Corp"}
+// → Edge: (Sarah)-[WORKS_AT]->(Acme Corp)
+
+{subject: "Acme Corp", predicate: "located_in", object: "SF"}
+// → Edge: (Acme Corp)-[LOCATED_IN]->(SF)
 ```
 
 ### Search Boosting Logic

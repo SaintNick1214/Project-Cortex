@@ -116,6 +116,41 @@ class AsyncConvexClient:
                 details={"original_exception": type(e).__name__, "mutation": name}
             ) from e
 
+    async def action(self, name: str, args: Dict[str, Any]) -> Any:
+        """
+        Execute an action (async wrapper).
+
+        Actions are Convex functions that can have side effects and use
+        ctx.vectorSearch() for vector similarity searches.
+
+        Args:
+            name: Action name (e.g., "memories:search")
+            args: Action arguments
+
+        Returns:
+            Action result
+
+        Raises:
+            CortexError: All Convex exceptions are wrapped as CortexError for consistent error handling
+        """
+        loop = asyncio.get_event_loop()
+        try:
+            return await loop.run_in_executor(
+                None,
+                lambda: self._sync_client.action(name, args)
+            )
+        except Exception as e:
+            # Extract error data from ConvexError for enhanced message
+            # ConvexError has a `data` field with the actual error code/message
+            error_data = _extract_convex_error_data(e)
+            # Always wrap as CortexError for consistent error handling
+            # This ensures callers can rely on catching CortexError type
+            raise CortexError(
+                code=ErrorCode.CONVEX_ERROR,
+                message=error_data,
+                details={"original_exception": type(e).__name__, "action": name}
+            ) from e
+
     async def close(self) -> None:
         """
         Close the Convex client connection.

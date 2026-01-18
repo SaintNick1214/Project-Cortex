@@ -107,11 +107,15 @@ class AgentsAPI:
         if agent.config:
             validate_config(agent.config)
 
+        # Use tenant_id from registration or auth context
+        tenant_id = agent.tenant_id or self._tenant_id
+
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "agents:register",
                 filter_none_values({
                     "agentId": agent.id,
+                    "tenantId": tenant_id,
                     "name": agent.name,
                     "description": agent.description,
                     "metadata": agent.metadata or {},
@@ -151,6 +155,7 @@ class AgentsAPI:
             updated_at=result.get("updatedAt"),
             metadata=result.get("metadata", {}),
             config=result.get("config", {}),
+            tenant_id=result.get("tenantId"),
             description=result.get("description"),
             last_active=result.get("lastActive"),
         )
@@ -188,6 +193,7 @@ class AgentsAPI:
             updated_at=result.get("updatedAt"),
             metadata=result.get("metadata", {}),
             config=result.get("config", {}),
+            tenant_id=result.get("tenantId"),
             description=result.get("description"),
             last_active=result.get("lastActive"),
         )
@@ -376,6 +382,7 @@ class AgentsAPI:
             updated_at=result.get("updatedAt"),
             metadata=result.get("metadata", {}),
             config=result.get("config", {}),
+            tenant_id=result.get("tenantId"),
             description=result.get("description"),
             last_active=result.get("lastActive"),
         )
@@ -866,16 +873,47 @@ class AgentsAPI:
 
         This helper method applies all AgentFilters criteria including
         metadata, name, capabilities matching (like TypeScript SDK).
+
+        Note: Pagination Limitation - The `offset` and `limit` filters are applied at the
+        database level BEFORE client-side filters (metadata, name, capabilities,
+        last_active_after, last_active_before). Combining offset with these filters may
+        produce unexpected results.
         """
-        # Get agents from backend with basic filters (status, limit, offset)
+        # Warn about pagination limitation when combining offset with client-side filters
+        has_client_side_filters = (
+            filters and (
+                filters.metadata or
+                filters.name or
+                filters.capabilities or
+                filters.last_active_after is not None or
+                filters.last_active_before is not None
+            )
+        )
+
+        if filters and filters.offset is not None and has_client_side_filters:
+            import warnings
+            warnings.warn(
+                "[Cortex SDK] Warning: Using 'offset' with client-side filters (metadata, name, "
+                "capabilities, last_active_after, last_active_before) may produce unexpected results. "
+                "The offset is applied at the database level before client-side filtering. "
+                "See documentation for safe pagination patterns.",
+                UserWarning,
+                stacklevel=2,
+            )
+
+        # Use tenant_id from filters or auth context
+        tenant_id = (filters.tenant_id if filters and filters.tenant_id else None) or self._tenant_id
+
+        # Get agents from backend with basic filters (status, limit, offset, tenantId)
         results = await self._execute_with_resilience(
             lambda: self.client.query(
                 "agents:list",
                 filter_none_values({
                     "status": filters.status if filters else None,
+                    "tenantId": tenant_id,
                     "limit": filters.limit if filters else 100,
                     "offset": filters.offset if filters else 0,
-                }) if filters else {},
+                }) if filters else {"tenantId": tenant_id} if tenant_id else {},
             ),
             "agents:list",
         )
@@ -938,6 +976,7 @@ class AgentsAPI:
                 updated_at=r.get("updatedAt", 0),
                 metadata=r.get("metadata", {}),
                 config=r.get("config", {}),
+                tenant_id=r.get("tenantId"),
                 description=r.get("description"),
                 last_active=r.get("lastActive"),
             )

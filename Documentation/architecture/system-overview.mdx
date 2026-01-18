@@ -1212,22 +1212,26 @@ All records with the specified `userId` are deleted across ALL layers, including
 ### Vector Search (Native)
 
 ```typescript
-// Convex provides native vector search
+// Convex provides native vector search via vectorIndex
 .vectorIndex("by_embedding", {
   vectorField: "embedding",
   dimensions: 1536,  // Default: text-embedding-3-small
   filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
 });
 
-// Query with vector similarity
-const results = await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q.similar("embedding", queryVector, 10)
-     .eq("memorySpaceId", memorySpaceId)  // Pre-filter by space
-     .eq("tenantId", tenantId)            // Pre-filter by tenant
-  )
-  .collect();
+// Query with vector similarity using ctx.vectorSearch() (must be in an action)
+// Returns array of { _id, _score } - fetch full documents separately
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: queryVector,
+  limit: 10,
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId)
+                  .eq("tenantId", tenantId),  // Pre-filter by tenant
+});
+
+// Fetch full documents using the returned IDs
+const docs = await ctx.runQuery(internal.memories.fetchByIds, {
+  ids: vectorResults.map(r => r._id)
+});
 ```
 
 **Our usage:**

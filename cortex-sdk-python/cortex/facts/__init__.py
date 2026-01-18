@@ -22,6 +22,7 @@ from ..types import (
     QueryByRelationshipFilter,
     QueryBySubjectFilter,
     SearchFactsOptions,
+    SemanticSearchFactsOptions,
     StoreFactOptions,
     StoreFactParams,
     UpdateFactInput,
@@ -244,6 +245,8 @@ class FactsAPI:
                         if params.relations
                         else None
                     ),
+                    # Vector embedding for semantic search (v0.30.0+)
+                    "embedding": params.embedding,
                 }),
             ),
             "facts:store",
@@ -633,6 +636,89 @@ class FactsAPI:
 
         return [FactRecord(**convert_convex_response(fact)) for fact in result]
 
+    async def semantic_search(
+        self,
+        memory_space_id: str,
+        embedding: List[float],
+        options: Optional["SemanticSearchFactsOptions"] = None,
+    ) -> List[FactRecord]:
+        """
+        Semantic (vector) search on facts using embeddings (v0.30.0+).
+
+        Performs similarity search using the provided embedding vector against
+        facts that have stored embedding vectors. Returns facts ranked by
+        cosine similarity score.
+
+        Args:
+            memory_space_id: Memory space ID
+            embedding: Query embedding vector (must match dimension of stored embeddings)
+            options: Optional search options (filtering, thresholds, limits)
+
+        Returns:
+            List of matching facts ordered by similarity score
+
+        Example:
+            >>> from cortex.types import SemanticSearchFactsOptions
+            >>> # Get embedding for your query (using your embedding model)
+            >>> query_embedding = await get_embedding("user preferences")
+            >>> results = await cortex.facts.semantic_search(
+            ...     'agent-1',
+            ...     query_embedding,
+            ...     SemanticSearchFactsOptions(
+            ...         min_confidence=50,
+            ...         limit=10,
+            ...         min_score=0.7,
+            ...     )
+            ... )
+            >>> for fact in results:
+            ...     print(f"{fact.fact} (confidence: {fact.confidence})")
+        """
+        validate_memory_space_id(memory_space_id)
+
+        if not embedding or len(embedding) == 0:
+            raise FactsValidationError(
+                "Embedding vector is required for semantic search",
+                code="INVALID_EMBEDDING",
+                field="embedding",
+            )
+
+        if options:
+            if options.min_confidence is not None:
+                validate_confidence(options.min_confidence, "min_confidence")
+            if options.tags is not None:
+                validate_string_array(options.tags, "tags", True)
+            if options.limit is not None:
+                validate_non_negative_integer(options.limit, "limit")
+            if options.created_before and options.created_after:
+                validate_datetime_range(
+                    options.created_after,
+                    options.created_before,
+                    "created_after",
+                    "created_before",
+                )
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.action(
+                "facts:semanticSearch",
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "embedding": embedding,
+                    "tenantId": options.tenant_id if options else (self._auth_context.tenant_id if self._auth_context else None),
+                    "userId": options.user_id if options else None,
+                    "minConfidence": options.min_confidence if options else None,
+                    "includeSuperseded": options.include_superseded if options else None,
+                    "minScore": options.min_score if options else None,
+                    "limit": options.limit if options else None,
+                    "tags": options.tags if options else None,
+                    "createdAfter": int(options.created_after.timestamp() * 1000) if options and options.created_after else None,
+                    "createdBefore": int(options.created_before.timestamp() * 1000) if options and options.created_before else None,
+                }),
+            ),
+            "facts:semanticSearch",
+        )
+
+        return [FactRecord(**convert_convex_response(fact)) for fact in result]
+
     async def update(
         self,
         memory_space_id: str,
@@ -676,6 +762,7 @@ class FactsAPI:
                 "semanticContext": updates.semantic_context,
                 "entities": updates.entities,
                 "relations": updates.relations,
+                "embedding": updates.embedding,
             }
         else:
             updates_dict = updates
@@ -715,6 +802,8 @@ class FactsAPI:
                     if updates.relations
                     else None
                 ),
+                # Vector embedding for semantic search (v0.30.0+)
+                "embedding": updates.embedding,
             })
         else:
             # Legacy dict support - assume keys are already in camelCase or snake_case
@@ -732,6 +821,8 @@ class FactsAPI:
                 "semanticContext": updates.get("semanticContext") or updates.get("semantic_context"),
                 "entities": updates.get("entities"),
                 "relations": updates.get("relations"),
+                # Vector embedding for semantic search (v0.30.0+)
+                "embedding": updates.get("embedding"),
             })
 
         result = await self._execute_with_resilience(
@@ -1573,6 +1664,8 @@ class FactsAPI:
 __all__ = [
     "FactsAPI",
     "FactsValidationError",
+    # Type re-exports for convenience
+    "SemanticSearchFactsOptions",
     # Deduplication exports
     "DeduplicationConfig",
     "DeduplicationStrategy",

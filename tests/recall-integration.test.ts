@@ -388,6 +388,118 @@ describe("recall() Integration", () => {
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Configurable Limits Tests
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("configurable limits", () => {
+    it("respects limits.total parameter", async () => {
+      const result = await cortex.memory.recall({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        query: "test",
+        limits: {
+          total: 5,
+        },
+      });
+
+      expect(result.items.length).toBeLessThanOrEqual(5);
+    });
+
+    it("backward compatible: limit param maps to limits.total", async () => {
+      const result = await cortex.memory.recall({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        query: "test",
+        limit: 2,
+      });
+
+      expect(result.items.length).toBeLessThanOrEqual(2);
+    });
+
+    it("limits.total takes precedence over legacy limit", async () => {
+      const result = await cortex.memory.recall({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        query: "test",
+        limit: 10, // Legacy param
+        limits: {
+          total: 2, // Should take precedence
+        },
+      });
+
+      expect(result.items.length).toBeLessThanOrEqual(2);
+    });
+
+    it("respects limits.memories for vector search", async () => {
+      const result = await cortex.memory.recall({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        query: "test",
+        limits: {
+          memories: 3,
+          total: 50, // High total to not interfere
+        },
+        sources: {
+          vector: true,
+          facts: false,
+          graph: false,
+        },
+      });
+
+      // Vector source count should be capped at limits.memories
+      expect(result.sources.vector.count).toBeLessThanOrEqual(3);
+    });
+
+    it("respects limits.facts for facts search", async () => {
+      const result = await cortex.memory.recall({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        query: "test",
+        limits: {
+          facts: 3,
+          total: 50, // High total to not interfere
+        },
+        sources: {
+          vector: false,
+          facts: true,
+          graph: false,
+        },
+      });
+
+      // Facts source count should be capped at limits.facts
+      expect(result.sources.facts.count).toBeLessThanOrEqual(3);
+    });
+
+    it("disables graph expansion when graphHops is 0", async () => {
+      const result = await cortex.memory.recall({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        query: "test",
+        limits: {
+          graphHops: 0,
+        },
+      });
+
+      // Graph expansion should be disabled
+      expect(result.graphExpansionApplied).toBe(false);
+      expect(result.sources.graph.count).toBe(0);
+    });
+
+    it("accepts all limit parameters without error", async () => {
+      // Test that all limit parameters are accepted and don't cause errors
+      const result = await cortex.memory.recall({
+        memorySpaceId: TEST_MEMSPACE_ID,
+        query: "test",
+        limits: {
+          memories: 10,
+          facts: 8,
+          graphHops: 1,
+          graphEntitiesPerHop: 3,
+          graphResultsPerEntity: 2,
+          total: 15,
+        },
+      });
+
+      expect(result).toBeDefined();
+      expect(result.items.length).toBeLessThanOrEqual(15);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Edge Cases
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

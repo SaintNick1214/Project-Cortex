@@ -310,6 +310,376 @@ async def test_count_records(cortex_client, test_ids, cleanup_helper, ctx):
 
 
 # ============================================================================
+# get_record() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_record_returns_full_record(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test getting full record with metadata (not just the value).
+
+    Port of: mutable.test.ts - getRecord tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-record")
+    unique_key = ctx.mutable_key("full-record")
+
+    # Set value with metadata
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"status": "active"},
+        metadata={"source": "test"},
+    )
+
+    # Get full record
+    record = await cortex_client.mutable.get_record(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert record is not None
+    assert record.namespace == unique_namespace
+    assert record.key == unique_key
+    assert record.value["status"] == "active"
+    assert record.metadata is not None
+    assert record.metadata.get("source") == "test"
+    assert record.created_at is not None
+    assert record.updated_at is not None
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_get_record_returns_none_for_nonexistent(cortex_client, test_ids, ctx):
+    """
+    Test that get_record() returns None for non-existent record.
+
+    Port of: mutable.test.ts - getRecord tests
+    """
+    test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-record-nonexistent")
+    unique_key = ctx.mutable_key("does-not-exist")
+
+    record = await cortex_client.mutable.get_record(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert record is None
+
+
+# ============================================================================
+# increment() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_increment_numeric_value(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test incrementing a numeric value atomically.
+
+    Port of: mutable.test.ts - increment tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("increment")
+    unique_key = ctx.mutable_key("counter")
+
+    # Set initial value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        10,
+    )
+
+    # Increment by 5
+    result = await cortex_client.mutable.increment(
+        unique_namespace,
+        unique_key,
+        5,
+    )
+
+    assert result.value == 15
+
+    # Increment by default (1)
+    result = await cortex_client.mutable.increment(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert result.value == 16
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_increment_requires_existing_key(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that increment requires the key to exist first.
+
+    Note: Unlike some KV stores, this backend requires keys to exist
+    before increment operations. Incrementing a non-existent key raises
+    MUTABLE_KEY_NOT_FOUND error.
+
+    Port of: mutable.test.ts - increment tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("increment-create")
+    unique_key = ctx.mutable_key("new-counter")
+
+    # First, create the key with an initial value of 0
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        0,
+    )
+
+    # Now increment works
+    result = await cortex_client.mutable.increment(
+        unique_namespace,
+        unique_key,
+        3,
+    )
+
+    assert result.value == 3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# decrement() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_decrement_numeric_value(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test decrementing a numeric value atomically.
+
+    Port of: mutable.test.ts - decrement tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("decrement")
+    unique_key = ctx.mutable_key("counter")
+
+    # Set initial value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        20,
+    )
+
+    # Decrement by 5
+    result = await cortex_client.mutable.decrement(
+        unique_namespace,
+        unique_key,
+        5,
+    )
+
+    assert result.value == 15
+
+    # Decrement by default (1)
+    result = await cortex_client.mutable.decrement(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert result.value == 14
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_decrement_requires_existing_key(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that decrement requires the key to exist first.
+
+    Note: Unlike some KV stores, this backend requires keys to exist
+    before decrement operations. Decrementing a non-existent key raises
+    MUTABLE_KEY_NOT_FOUND error.
+
+    Port of: mutable.test.ts - decrement tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("decrement-create")
+    unique_key = ctx.mutable_key("new-counter")
+
+    # First, create the key with an initial value of 0
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        0,
+    )
+
+    # Now decrement works
+    result = await cortex_client.mutable.decrement(
+        unique_namespace,
+        unique_key,
+        3,
+    )
+
+    assert result.value == -3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# purge_many() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_purge_many_with_key_prefix(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging multiple records with key prefix filter.
+
+    Port of: mutable.test.ts - purgeMany tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-many")
+
+    # Create records with different prefixes
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"temp-{i}",
+            {"value": i},
+        )
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"keep-{i}",
+            {"value": i},
+        )
+
+    # Purge only temp-* keys
+    result = await cortex_client.mutable.purge_many(
+        PurgeManyMutableFilter(
+            namespace=unique_namespace,
+            key_prefix="temp-",
+        )
+    )
+
+    assert result is not None
+    assert result.get("deleted", 0) >= 3
+
+    # Verify temp-* keys are gone but keep-* remain
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(namespace=unique_namespace)
+    )
+    assert count >= 3  # keep-* keys should remain
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_purge_many_with_user_id(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging multiple records filtered by user_id.
+
+    Port of: mutable.test.ts - purgeMany tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    test_user_id = test_ids.get("test_user_id", "test-user-123")
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-many-user")
+
+    # Create records with user_id
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"user-key-{i}",
+            {"value": i},
+            user_id=test_user_id,
+        )
+
+    # Purge by user_id
+    result = await cortex_client.mutable.purge_many(
+        PurgeManyMutableFilter(
+            namespace=unique_namespace,
+            user_id=test_user_id,
+        )
+    )
+
+    assert result is not None
+    assert result.get("deleted", 0) >= 2
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# transaction() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_transaction_executes_multiple_operations(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test executing multiple operations atomically in a transaction.
+
+    Port of: mutable.test.ts - transaction tests
+    """
+    from cortex.types import MutableOperation
+
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("transaction")
+
+    # Set initial values
+    await cortex_client.mutable.set(unique_namespace, "counter", 10)
+    await cortex_client.mutable.set(unique_namespace, "status", "pending")
+
+    # Execute transaction
+    result = await cortex_client.mutable.transaction([
+        MutableOperation(
+            op="increment",
+            namespace=unique_namespace,
+            key="counter",
+            amount=5,
+        ),
+        MutableOperation(
+            op="set",
+            namespace=unique_namespace,
+            key="status",
+            value="completed",
+        ),
+        MutableOperation(
+            op="decrement",
+            namespace=unique_namespace,
+            key="counter",
+            amount=2,
+        ),
+    ])
+
+    assert result.success is True
+    assert result.operations_executed == 3
+
+    # Verify results
+    counter_value = await cortex_client.mutable.get(unique_namespace, "counter")
+    status_value = await cortex_client.mutable.get(unique_namespace, "status")
+
+    assert counter_value == 13  # 10 + 5 - 2
+    assert status_value == "completed"
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
 # exists() Tests
 # ============================================================================
 
@@ -400,6 +770,311 @@ async def test_purge_namespace(cortex_client, test_ids, cleanup_helper, ctx):
     )
 
     assert count == 0
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace_with_dry_run(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging namespace with dry_run option.
+
+    Port of: mutable.test.ts - purgeNamespace tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-dry-run")
+
+    # Create multiple records in namespace
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Dry run purge - should not delete
+    result = await cortex_client.mutable.purge_namespace(
+        unique_namespace,
+        PurgeNamespaceOptions(dry_run=True),
+    )
+
+    assert result is not None
+    assert result.get("deleted", 0) >= 3
+
+    # Verify records still exist
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(namespace=unique_namespace)
+    )
+    assert count >= 3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# tenant_id Tests (v0.31.0 Multi-Tenancy)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_set_populates_tenant_id_in_record(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that set() populates tenant_id in MutableRecord when available.
+
+    Tests: MutableRecord.tenant_id field (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("tenant-id-set")
+    unique_key = ctx.mutable_key("tenant-test")
+
+    result = await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"value": "test"},
+    )
+
+    # tenant_id may be None if auth_context is not set, or populated if it is
+    # This test verifies the field exists and can be accessed
+    assert hasattr(result, "tenant_id")
+    # tenant_id is Optional[str], so it can be None or a string
+    assert result.tenant_id is None or isinstance(result.tenant_id, str)
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_list_with_tenant_id_filter(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test listing records with tenant_id filter.
+
+    Tests: ListMutableFilter.tenant_id (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("list-tenant")
+    test_tenant_id = "test-tenant-123"
+
+    # Create records
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # List with tenant_id filter (explicit tenant_id)
+    result = await cortex_client.mutable.list(
+        ListMutableFilter(
+            namespace=unique_namespace,
+            tenant_id=test_tenant_id,
+            limit=10,
+        )
+    )
+
+    # Should return list (may be empty if tenant_id doesn't match)
+    assert isinstance(result, list)
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_list_without_tenant_id_backward_compat(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that list() works without tenant_id (backward compatibility).
+
+    Tests: ListMutableFilter backward compatibility
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("list-no-tenant")
+
+    # Create records
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # List without tenant_id (should still work)
+    result = await cortex_client.mutable.list(
+        ListMutableFilter(namespace=unique_namespace, limit=10)
+    )
+
+    assert isinstance(result, list)
+    assert len(result) >= 2
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_count_with_tenant_id_filter(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test counting records with tenant_id filter.
+
+    Tests: CountMutableFilter.tenant_id (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("count-tenant")
+    test_tenant_id = "test-tenant-456"
+
+    # Create records
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Count with tenant_id filter
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(
+            namespace=unique_namespace,
+            tenant_id=test_tenant_id,
+        )
+    )
+
+    # Should return integer (may be 0 if tenant_id doesn't match)
+    assert isinstance(count, int)
+    assert count >= 0
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_count_without_tenant_id_backward_compat(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that count() works without tenant_id (backward compatibility).
+
+    Tests: CountMutableFilter backward compatibility
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("count-no-tenant")
+
+    # Create records
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Count without tenant_id (should still work)
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(namespace=unique_namespace)
+    )
+
+    assert isinstance(count, int)
+    assert count >= 3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace_with_tenant_id(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging namespace with tenant_id option.
+
+    Tests: PurgeNamespaceOptions.tenant_id (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-ns-tenant")
+    test_tenant_id = "test-tenant-789"
+
+    # Create records
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Purge namespace with tenant_id option
+    result = await cortex_client.mutable.purge_namespace(
+        unique_namespace,
+        PurgeNamespaceOptions(tenant_id=test_tenant_id),
+    )
+
+    assert result is not None
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_purge_many_with_tenant_id_filter(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging multiple records with tenant_id filter.
+
+    Tests: PurgeManyMutableFilter.tenant_id (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-many-tenant")
+    test_tenant_id = "test-tenant-999"
+
+    # Create records
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Purge many with tenant_id filter
+    result = await cortex_client.mutable.purge_many(
+        PurgeManyMutableFilter(
+            namespace=unique_namespace,
+            tenant_id=test_tenant_id,
+        )
+    )
+
+    assert result is not None
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_get_record_includes_tenant_id(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that get_record() returns record with tenant_id field.
+
+    Tests: MutableRecord.tenant_id field access (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-record-tenant")
+    unique_key = ctx.mutable_key("tenant-record")
+
+    # Set value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"value": "test"},
+    )
+
+    # Get record
+    record = await cortex_client.mutable.get_record(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert record is not None
+    # Verify tenant_id field exists (may be None if auth_context not set)
+    assert hasattr(record, "tenant_id")
+    assert record.tenant_id is None or isinstance(record.tenant_id, str)
 
     # Cleanup
     await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)

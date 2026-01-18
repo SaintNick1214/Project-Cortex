@@ -11,14 +11,24 @@ Tests validate:
 - Versioning
 """
 
+import asyncio
 import time
 
 import pytest
 
-from cortex import ConversationRef, MemoryMetadata, MemorySource, StoreMemoryInput
+from cortex import (
+    ConversationRef,
+    CountMemoriesFilter,
+    ListMemoriesFilter,
+    MemoryMetadata,
+    MemorySource,
+    SearchOptions,
+    StoreMemoryInput,
+)
 from tests.helpers import (
     create_test_memory_input,
     generate_embedding,
+    retry_async,
     validate_memory_storage,
 )
 
@@ -168,6 +178,69 @@ async def test_store_memory_with_user_id_for_gdpr(cortex_client, test_ids, clean
     await cleanup_helper.purge_memory_space(memory_space_id)
 
 
+@pytest.mark.asyncio
+async def test_store_memory_with_tenant_id(cortex_client, test_ids, cleanup_helper):
+    """
+    Test storing memory with tenant_id for multi-tenancy (v0.31.0).
+
+    Ensures tenant_id field is properly stored and can be used for isolation.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    tenant_id = "tenant-abc123"
+
+    result = await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="Tenant-specific memory",
+            content_type="raw",
+            tenant_id=tenant_id,
+            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(
+                importance=60,
+                tags=["multi-tenant"],
+            ),
+        ),
+    )
+
+    # Validate result - tenant_id should be stored
+    # Note: tenant_id may not be returned in MemoryEntry, but should be sent to backend
+    assert result.memory_id.startswith("mem-")
+    assert result.content == "Tenant-specific memory"
+
+    # Cleanup
+    await cleanup_helper.purge_memory_space(memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_store_memory_backward_compatible_without_tenant_id(cortex_client, test_ids, cleanup_helper):
+    """
+    Test that store() works without tenant_id (backward compatibility).
+
+    Ensures existing code without tenant_id continues to work.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    result = await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="Memory without tenant_id",
+            content_type="raw",
+            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(
+                importance=50,
+                tags=["backward-compat"],
+            ),
+        ),
+    )
+
+    # Should work without tenant_id
+    assert result.memory_id.startswith("mem-")
+    assert result.content == "Memory without tenant_id"
+
+    # Cleanup
+    await cleanup_helper.purge_memory_space(memory_space_id)
+
+
 # ============================================================================
 # get() Tests
 # ============================================================================
@@ -273,8 +346,11 @@ async def test_search_keyword(cortex_client, test_ids, cleanup_helper):
         ),
     )
 
-    # Search for "password"
-    results = await cortex_client.vector.search(memory_space_id, "password")
+    # Search for "password" with retry (handles indexing delays and server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(memory_space_id, "password"),
+        max_retries=3,
+    )
 
     # Should find at least one memory with "password" in content
     assert len(results) > 0
@@ -315,12 +391,14 @@ async def test_search_filter_by_user_id(cortex_client, test_ids, cleanup_helper)
         ),
     )
 
-    # Search with userId filter
-    from cortex import SearchOptions
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "mode",
-        SearchOptions(user_id=user_id),
+    # Search with userId filter (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "mode",
+            SearchOptions(user_id=user_id),
+        ),
+        max_retries=3,
     )
 
     # All results should be from user_id
@@ -362,12 +440,14 @@ async def test_search_filter_by_tags(cortex_client, test_ids, cleanup_helper):
         ),
     )
 
-    # Search with tags filter
-    from cortex import SearchOptions
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "system",
-        SearchOptions(tags=["system"]),
+    # Search with tags filter (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "system",
+            SearchOptions(tags=["system"]),
+        ),
+        max_retries=3,
     )
 
     # All results should have "system" tag
@@ -409,12 +489,14 @@ async def test_search_filter_by_min_importance(cortex_client, test_ids, cleanup_
         ),
     )
 
-    # Search with minImportance filter
-    from cortex import SearchOptions
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "password",
-        SearchOptions(min_importance=90),
+    # Search with minImportance filter (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "password",
+            SearchOptions(min_importance=90),
+        ),
+        max_retries=3,
     )
 
     # All results should have importance >= 90
@@ -441,12 +523,14 @@ async def test_search_respects_limit(cortex_client, test_ids, cleanup_helper):
             create_test_memory_input(content=f"Test memory {i}"),
         )
 
-    # Search with limit=1
-    from cortex import SearchOptions
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "test",
-        SearchOptions(limit=1),
+    # Search with limit=1 (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "test",
+            SearchOptions(limit=1),
+        ),
+        max_retries=3,
     )
 
     # Should return at most 1 result
@@ -869,10 +953,315 @@ async def test_store_memory_with_long_content(cortex_client, test_ids, cleanup_h
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Multi-Tenancy Tests (v0.31.0)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@pytest.mark.asyncio
+async def test_list_memories_filter_with_tenant_id(cortex_client, test_ids, cleanup_helper):
+    """
+    Test ListMemoriesFilter dataclass with tenant_id (v0.31.0).
+
+    Note: The API currently uses flat parameters, but the filter type exists
+    for future use and validation.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    tenant_id = "tenant-test-123"
+
+    # Create memory with tenant_id
+    await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="Tenant memory for filtering",
+            content_type="raw",
+            tenant_id=tenant_id,
+            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(importance=50, tags=["test"]),
+        ),
+    )
+
+    # Test ListMemoriesFilter type creation (validation)
+    filter_obj = ListMemoriesFilter(
+        memory_space_id=memory_space_id,
+        tenant_id=tenant_id,
+        limit=10,
+    )
+
+    # Validate filter structure
+    assert filter_obj.memory_space_id == memory_space_id
+    assert filter_obj.tenant_id == tenant_id
+    assert filter_obj.limit == 10
+
+    # Cleanup
+    await cleanup_helper.purge_memory_space(memory_space_id)
+
+
+@pytest.mark.asyncio
+async def test_count_memories_filter_with_tenant_id(cortex_client, test_ids, cleanup_helper):
+    """
+    Test CountMemoriesFilter dataclass with tenant_id (v0.31.0).
+
+    Note: The API currently uses flat parameters, but the filter type exists
+    for future use and validation.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    tenant_id = "tenant-count-test"
+
+    # Create memories
+    await cortex_client.vector.store(
+        memory_space_id,
+        StoreMemoryInput(
+            content="Memory 1",
+            content_type="raw",
+            tenant_id=tenant_id,
+            source=MemorySource(type="system", timestamp=int(time.time() * 1000)),
+            metadata=MemoryMetadata(importance=50, tags=["test"]),
+        ),
+    )
+
+    # Test CountMemoriesFilter type creation (validation)
+    filter_obj = CountMemoriesFilter(
+        memory_space_id=memory_space_id,
+        tenant_id=tenant_id,
+        source_type="system",
+    )
+
+    # Validate filter structure
+    assert filter_obj.memory_space_id == memory_space_id
+    assert filter_obj.tenant_id == tenant_id
+    assert filter_obj.source_type == "system"
+
+    # Cleanup
+    await cleanup_helper.purge_memory_space(memory_space_id)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# New Validator Tests (v0.31.0)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@pytest.mark.asyncio
+async def test_validate_list_filter_success(cortex_client, test_ids):
+    """Test validate_list_filter() with valid filter."""
+    from cortex.vector.validators import validate_list_filter
+
+    filter_obj = ListMemoriesFilter(
+        memory_space_id=test_ids["memory_space_id"],
+        tenant_id="tenant-123",
+        limit=10,
+    )
+
+    # Should not raise
+    validate_list_filter(filter_obj)
+
+
+@pytest.mark.asyncio
+async def test_validate_list_filter_missing_memory_space_id(cortex_client):
+    """Test validate_list_filter() raises on missing memory_space_id."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_list_filter
+
+    # Create filter without memory_space_id
+    class InvalidFilter:
+        tenant_id = "tenant-123"
+        limit = 10
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_list_filter(InvalidFilter())
+    assert "memory_space_id is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_validate_list_filter_invalid_source_type(cortex_client, test_ids):
+    """Test validate_list_filter() raises on invalid source_type."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_list_filter
+
+    filter_obj = ListMemoriesFilter(
+        memory_space_id=test_ids["memory_space_id"],
+        source_type="invalid_type",  # type: ignore
+    )
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_list_filter(filter_obj)
+    assert "Invalid source_type" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_validate_count_filter_success(cortex_client, test_ids):
+    """Test validate_count_filter() with valid filter."""
+    from cortex.vector.validators import validate_count_filter
+
+    filter_obj = CountMemoriesFilter(
+        memory_space_id=test_ids["memory_space_id"],
+        tenant_id="tenant-123",
+    )
+
+    # Should not raise
+    validate_count_filter(filter_obj)
+
+
+@pytest.mark.asyncio
+async def test_validate_count_filter_missing_memory_space_id(cortex_client):
+    """Test validate_count_filter() raises on missing memory_space_id."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_count_filter
+
+    # Create filter without memory_space_id
+    class InvalidFilter:
+        tenant_id = "tenant-123"
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_count_filter(InvalidFilter())
+    assert "memory_space_id is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_validate_export_options_success(cortex_client, test_ids):
+    """Test validate_export_options() with valid options."""
+    from cortex.vector.validators import validate_export_options
+
+    # Create options dict-like object
+    class ExportOptions:
+        def __init__(self):
+            self.memory_space_id = test_ids["memory_space_id"]
+            self.format = "json"
+
+    options = ExportOptions()
+
+    # Should not raise
+    validate_export_options(options)
+
+
+@pytest.mark.asyncio
+async def test_validate_export_options_missing_memory_space_id(cortex_client):
+    """Test validate_export_options() raises on missing memory_space_id."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_export_options
+
+    class InvalidOptions:
+        format = "json"
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_export_options(InvalidOptions())
+    assert "memory_space_id is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_validate_export_options_invalid_format(cortex_client, test_ids):
+    """Test validate_export_options() raises on invalid format."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_export_options
+
+    class InvalidOptions:
+        memory_space_id = test_ids["memory_space_id"]
+        format = "xml"  # Invalid format
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_export_options(InvalidOptions())
+    assert "Invalid format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_validate_delete_many_filter_success(cortex_client, test_ids):
+    """Test validate_delete_many_filter() with valid filter."""
+    from cortex.vector.validators import validate_delete_many_filter
+
+    class DeleteManyFilter:
+        def __init__(self):
+            self.memory_space_id = test_ids["memory_space_id"]
+            self.source_type = "system"
+
+    filter_obj = DeleteManyFilter()
+
+    # Should not raise
+    validate_delete_many_filter(filter_obj)
+
+
+@pytest.mark.asyncio
+async def test_validate_delete_many_filter_missing_memory_space_id(cortex_client):
+    """Test validate_delete_many_filter() raises on missing memory_space_id."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_delete_many_filter
+
+    class InvalidFilter:
+        source_type = "system"
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_delete_many_filter(InvalidFilter())
+    assert "memory_space_id is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_validate_update_many_inputs_success(cortex_client, test_ids):
+    """Test validate_update_many_inputs() with valid inputs."""
+    from cortex.vector.validators import validate_update_many_inputs
+
+    class Filter:
+        def __init__(self):
+            self.memory_space_id = test_ids["memory_space_id"]
+            self.source_type = "system"
+
+    class Updates:
+        def __init__(self):
+            self.importance = 80
+
+    filter_obj = Filter()
+    updates_obj = Updates()
+
+    # Should not raise
+    validate_update_many_inputs(filter_obj, updates_obj)
+
+
+@pytest.mark.asyncio
+async def test_validate_update_many_inputs_missing_filter(cortex_client):
+    """Test validate_update_many_inputs() raises on missing filter."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_update_many_inputs
+
+    class Updates:
+        importance = 80
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_update_many_inputs(None, Updates())
+    assert "filter is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_validate_update_many_inputs_missing_updates(cortex_client, test_ids):
+    """Test validate_update_many_inputs() raises on missing updates."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_update_many_inputs
+
+    class Filter:
+        memory_space_id = test_ids["memory_space_id"]
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_update_many_inputs(Filter(), None)
+    assert "updates is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_validate_update_many_inputs_invalid_importance(cortex_client, test_ids):
+    """Test validate_update_many_inputs() raises on invalid importance."""
+    from cortex.vector import VectorValidationError
+    from cortex.vector.validators import validate_update_many_inputs
+
+    class Filter:
+        memory_space_id = test_ids["memory_space_id"]
+
+    class Updates:
+        importance = 150  # Invalid: > 100
+
+    with pytest.raises(VectorValidationError) as exc_info:
+        validate_update_many_inputs(Filter(), Updates())
+    assert "importance must be between 0 and 100" in str(exc_info.value)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Client-Side Validation Tests
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-from cortex import SearchOptions
 from cortex.vector import VectorValidationError
 
 # store() validation tests
@@ -1512,11 +1901,14 @@ async def test_search_with_query_category(cortex_client, test_ids, cleanup_helpe
         ),
     )
 
-    # Search with query_category
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "what should I call the user",
-        SearchOptions(query_category="addressing_preference"),
+    # Search with query_category (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "what should I call the user",
+            SearchOptions(query_category="addressing_preference"),
+        ),
+        max_retries=3,
     )
 
     # Should return results (category boosting is backend feature)

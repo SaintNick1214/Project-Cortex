@@ -155,13 +155,16 @@ class ConversationsAPI:
         # Auto-generate conversation ID if not provided
         conversation_id = input.conversation_id or self._generate_conversation_id()
 
+        # Support explicit tenant_id from input, fallback to auth context
+        tenant_id = (input.tenant_id if hasattr(input, "tenant_id") and input.tenant_id else None) or self._tenant_id
+
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "conversations:create",
                 filter_none_values({
                     "conversationId": conversation_id,
                     "memorySpaceId": input.memory_space_id,
-                    "tenantId": self._tenant_id,  # Multi-tenancy support
+                    "tenantId": tenant_id,  # Multi-tenancy support (explicit or auth context)
                     "participantId": input.participant_id,
                     "type": input.type,
                     "participants": filter_none_values({
@@ -310,6 +313,7 @@ class ConversationsAPI:
         *,
         memory_space_id: Optional[str] = None,
         user_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
         type: Optional[ConversationType] = None,
         limit: Optional[int] = None,
         offset: Optional[int] = None,
@@ -322,6 +326,7 @@ class ConversationsAPI:
                    pagination, and sorting options
             memory_space_id: Memory space ID to filter by (convenience kwarg)
             user_id: User ID to filter by (convenience kwarg)
+            tenant_id: Tenant ID for multi-tenancy filter (convenience kwarg)
             type: Conversation type to filter by (convenience kwarg)
             limit: Max results to return (convenience kwarg)
             offset: Pagination offset (convenience kwarg)
@@ -352,12 +357,16 @@ class ConversationsAPI:
             >>> recent = await cortex.conversations.list(ListConversationsFilter(
             ...     created_after=int(time.time() * 1000) - 7 * 24 * 60 * 60 * 1000,
             ... ))
+
+            >>> # Multi-tenant filtering
+            >>> tenant_convs = await cortex.conversations.list(tenant_id='tenant-abc')
         """
         # Build filter from kwargs if no filter object provided
-        if filter is None and any([memory_space_id, user_id, type, limit, offset]):
+        if filter is None and any([memory_space_id, user_id, tenant_id, type, limit, offset]):
             filter = ListConversationsFilter(
                 memory_space_id=memory_space_id,
                 user_id=user_id,
+                tenant_id=tenant_id,
                 type=type,
                 limit=limit,
                 offset=offset,
@@ -384,11 +393,14 @@ class ConversationsAPI:
                 message_count_min = filter.message_count_min
                 message_count_max = filter.message_count_max
 
+        # Support explicit tenant_id override from filter, fallback to auth context
+        tenant_id = (filter.tenant_id if filter and filter.tenant_id else None) or self._tenant_id
+
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "conversations:list",
                 filter_none_values({
-                    "tenantId": self._tenant_id,  # Multi-tenancy support
+                    "tenantId": tenant_id,  # Multi-tenancy support (explicit or auth context)
                     "type": filter.type if filter else None,
                     "userId": filter.user_id if filter else None,
                     "memorySpaceId": filter.memory_space_id if filter else None,
@@ -432,6 +444,7 @@ class ConversationsAPI:
         *,
         memory_space_id: Optional[str] = None,
         user_id: Optional[str] = None,
+        tenant_id: Optional[str] = None,
         type: Optional[ConversationType] = None,
     ) -> int:
         """
@@ -441,6 +454,7 @@ class ConversationsAPI:
             filter: Optional filter with type, user_id, memory_space_id
             memory_space_id: Memory space ID to filter by (convenience kwarg)
             user_id: User ID to filter by (convenience kwarg)
+            tenant_id: Tenant ID for multi-tenancy filter (convenience kwarg)
             type: Conversation type to filter by (convenience kwarg)
 
         Returns:
@@ -455,10 +469,11 @@ class ConversationsAPI:
             >>> count = await cortex.conversations.count(memory_space_id='space-123')
         """
         # Build filter from kwargs if no filter object provided
-        if filter is None and any([memory_space_id, user_id, type]):
+        if filter is None and any([memory_space_id, user_id, tenant_id, type]):
             filter = CountConversationsFilter(
                 memory_space_id=memory_space_id,
                 user_id=user_id,
+                tenant_id=tenant_id,
                 type=type,
             )
 
@@ -912,6 +927,7 @@ class ConversationsAPI:
         self,
         format: Literal["json", "csv"],
         user_id: Optional[str] = None,
+        participant_id: Optional[str] = None,
         memory_space_id: Optional[str] = None,
         conversation_ids: Optional[List[str]] = None,
         type: Optional[ConversationType] = None,
@@ -925,6 +941,7 @@ class ConversationsAPI:
         Args:
             format: Export format ('json' or 'csv')
             user_id: Filter by user ID
+            participant_id: Filter by participant ID (Hive Mode)
             memory_space_id: Filter by memory space
             conversation_ids: Specific conversation IDs to export
             type: Filter by conversation type
@@ -958,6 +975,7 @@ class ConversationsAPI:
                 "conversations:exportConversations",
                 filter_none_values({
                     "userId": user_id,
+                    "participantId": participant_id,
                     "memorySpaceId": memory_space_id,
                     "conversationIds": conversation_ids,
                     "type": type,

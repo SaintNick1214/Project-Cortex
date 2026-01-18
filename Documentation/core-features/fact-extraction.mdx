@@ -19,6 +19,10 @@ description: LLM-powered fact extraction for 60-90% token savings
 **v0.30.0**: Facts now support **semantic search** via embeddings. Configure `embedding` once at SDK init (or set `CORTEX_EMBEDDING=true`) and embeddings are auto-generated for all `remember()` and `recall()` calls - no manual embedding code needed!
 </Callout>
 
+<Callout type="tip" icon="sparkles">
+**v0.30.1**: LLM extraction now returns **enriched entities** with semantic types (person, organization, place, product, concept) and **relation triples** that sync to the graph as typed edges (e.g., `WORKS_AT`, `LOCATED_IN`). A new `EXTRACTED_WITH` edge links Facts to their source Memory for bidirectional traceability.
+</Callout>
+
 ---
 
 ## Quick Example
@@ -356,6 +360,69 @@ const chain = await cortex.facts.getSupersessionChain('fact-123');
 const versions = await cortex.facts.getHistory(spaceId, 'fact-123');
 versions.forEach(v => console.log(`v${v.version}: ${v.fact}`));
 ```
+
+---
+
+## LLM Model Benchmarks
+
+<Callout type="info" title="Benchmark Methodology">
+  All models tested under identical conditions using Cortex's standard extraction prompt with structured JSON output. Metrics include extracted facts, enriched entities, relation triples, and end-to-end latency. Results may vary based on conversation complexity and model updates.
+</Callout>
+
+Cortex supports multiple OpenAI models for fact extraction. Here are the performance characteristics:
+
+<DataTable
+  headers={["Model", "Facts", "Entities", "Relations", "Avg Latency"]}
+  rows={[
+    { values: ["gpt-4o-2024-11-20", "13", "15", "6", "11.6s"], highlight: "best" },
+    { values: ["gpt-5-mini", "13", "23", "17", "56.9s"], highlight: "recommended" },
+    { values: ["gpt-5.1", "12", "15", "13", "18.6s"] },
+    { values: ["gpt-5.2", "12", "18", "14", "20.3s"] },
+    { values: ["gpt-5-mini-2025-08-07", "12", "26", "19", "50.1s"] },
+    { values: ["gpt-5-nano", "12", "22", "14", "100.5s"] },
+    { values: ["gpt-4o", "11", "10", "1", "13.0s"], highlight: "fastest" },
+    { values: ["gpt-4o-mini-2024-07-18", "11", "13", "0", "15.8s"] },
+    { values: ["gpt-4o-mini", "11", "15", "0", "16.0s"] },
+    { values: ["gpt-5", "9", "18", "11", "82.7s"] },
+  ]}
+  numericColumns={[1, 2, 3]}
+  caption="OpenAI model comparison for fact extraction (January 2026)"
+/>
+
+### Recommendations
+
+<FeatureGrid>
+  <FeatureCard
+    icon="speed"
+    title="Best Balance"
+    description="gpt-4o-2024-11-20 offers top-tier quality (13 facts) with fastest latency (11.6s)"
+    size="large"
+  />
+  <FeatureCard
+    icon="brain"
+    title="Best Quality"
+    description="gpt-5-mini extracts more entities/relations but at 5x latency cost"
+    size="large"
+  />
+  <FeatureCard
+    icon="fast"
+    title="Budget Option"
+    description="gpt-4o-mini provides good extraction at lower cost, but extracts fewer relations"
+    size="medium"
+  />
+  <FeatureCard
+    icon="chart"
+    title="Production Tip"
+    description="Use faster models for high-volume workloads; premium models for complex extraction"
+    size="medium"
+  />
+  <FeatureCard
+    icon="scale"
+    title="GPT-5 Series"
+    description="gpt-5.1 and gpt-5.2 offer good balance between quality and speed for mid-tier workloads"
+    size="medium"
+  />
+</FeatureGrid>
 
 ---
 

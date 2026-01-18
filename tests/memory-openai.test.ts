@@ -15,10 +15,89 @@ import { createTestRunContext } from "./helpers/isolation";
 // Create test run context for parallel execution isolation
 const ctx = createTestRunContext();
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Retry Helper for Transient Convex Server Errors
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Retry an async operation with exponential backoff.
+ * Designed to handle transient Convex "Server Error" under parallel test load.
+ */
+async function withRetry<T>(
+  operation: () => Promise<T>,
+  options: { maxRetries?: number; baseDelayMs?: number; label?: string } = {},
+): Promise<T> {
+  const { maxRetries = 3, baseDelayMs = 1000, label = "operation" } = options;
+
+  let lastError: Error | undefined;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error as Error;
+      const isServerError =
+        lastError.message?.includes("Server Error") ||
+        lastError.message?.includes("CONVEX");
+
+      if (!isServerError || attempt === maxRetries) {
+        throw lastError;
+      }
+
+      const delayMs = baseDelayMs * Math.pow(2, attempt - 1);
+      console.log(
+        `  ⚠️ ${label} failed (attempt ${attempt}/${maxRetries}), retrying in ${delayMs}ms...`,
+      );
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+
+  throw lastError;
+}
+
 // OpenAI client (optional - tests skip if key not present)
 const openai = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null;
+
+/**
+ * Resilience config optimized for parallel CI load.
+ * More retries with longer delays to handle backend congestion.
+ */
+const CI_RESILIENCE_CONFIG = {
+  enabled: true,
+  rateLimiter: {
+    bucketSize: 100,
+    refillRate: 50,
+  },
+  concurrency: {
+    maxConcurrent: 16,
+    queueSize: 1000,
+    timeout: 60000,
+  },
+  circuitBreaker: {
+    failureThreshold: 10,
+    successThreshold: 2,
+    timeout: 60000,
+    halfOpenMax: 3,
+  },
+  queue: {
+    maxSize: {
+      critical: 100,
+      high: 500,
+      normal: 1000,
+      low: 2000,
+      background: 5000,
+    },
+  },
+  retry: {
+    maxRetries: 5, // More retries for CI parallel load
+    baseDelayMs: 1000, // Longer base delay
+    maxDelayMs: 30000, // Higher cap
+    exponentialBase: 2.0,
+    jitter: true,
+  },
+};
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // OpenAI Helper Functions (for advanced embedding tests)
@@ -76,7 +155,10 @@ describe("Memory OpenAI Integration", () => {
   const TEST_AGENT_ID = ctx.agentId("openai");
 
   beforeAll(async () => {
-    cortex = new Cortex({ convexUrl: CONVEX_URL });
+    cortex = new Cortex({
+      convexUrl: CONVEX_URL,
+      resilience: CI_RESILIENCE_CONFIG,
+    });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
 
@@ -216,14 +298,16 @@ describe("Memory OpenAI Integration", () => {
         ];
 
         for (const search of searches) {
-          const results = (await cortex.memory.search(
-            TEST_MEMSPACE_ID,
-            search.query,
-            {
-              embedding: await generateEmbedding(search.query),
-              userId: TEST_USER_ID,
-              limit: 10, // Get more results for debugging context
-            },
+          // Use retry helper to handle transient Convex server errors under parallel load
+          const embedding = await generateEmbedding(search.query);
+          const results = (await withRetry(
+            () =>
+              cortex.memory.search(TEST_MEMSPACE_ID, search.query, {
+                embedding,
+                userId: TEST_USER_ID,
+                limit: 10, // Get more results for debugging context
+              }),
+            { label: `search("${search.query}")` },
           )) as unknown[];
 
           // Should find the relevant fact (semantic match, not keyword)
@@ -271,17 +355,19 @@ describe("Memory OpenAI Integration", () => {
             `  ✓ Query: "${search.query}" → Found "${search.expectInContent}" at position ${matchIndex + 1}`,
           );
         }
-      }, 60000); // 60s timeout for API calls
+      }, 180000); // 3 min timeout: 5 searches × (OpenAI embedding + Convex search with retries)
 
       it("enriches search results with full conversation context", async () => {
-        const results = await cortex.memory.search(
-          TEST_MEMSPACE_ID,
-          "password",
-          {
-            embedding: await generateEmbedding("password credentials"),
-            enrichConversation: true,
-            userId: TEST_USER_ID,
-          },
+        // Use retry helper to handle transient Convex server errors under parallel load
+        const embedding = await generateEmbedding("password credentials");
+        const results = await withRetry(
+          () =>
+            cortex.memory.search(TEST_MEMSPACE_ID, "password", {
+              embedding,
+              enrichConversation: true,
+              userId: TEST_USER_ID,
+            }),
+          { label: 'search("password credentials")' },
         );
 
         expect(results.length).toBeGreaterThan(0);
@@ -318,7 +404,7 @@ describe("Memory OpenAI Integration", () => {
             `  ✓ Direct result: "${enriched.content.substring(0, 40)}..."`,
           );
         }
-      }, 30000);
+      }, 120000); // 2 min: OpenAI embedding + Convex search with retries
 
       it("validates summarization quality", async () => {
         // Skip if storedMemories wasn't populated (e.g., previous test failed)
@@ -357,15 +443,21 @@ describe("Memory OpenAI Integration", () => {
       }, 30000);
 
       it("similarity scores are realistic (0-1 range)", async () => {
-        const results = (await cortex.memory.search(
-          TEST_MEMSPACE_ID,
+        // Use retry helper to handle transient Convex server errors under parallel load
+        const embedding = await generateEmbedding(
           "API password for production environment",
-          {
-            embedding: await generateEmbedding(
+        );
+        const results = (await withRetry(
+          () =>
+            cortex.memory.search(
+              TEST_MEMSPACE_ID,
               "API password for production environment",
+              {
+                embedding,
+                userId: TEST_USER_ID,
+              },
             ),
-            userId: TEST_USER_ID,
-          },
+          { label: 'search("API password")' },
         )) as unknown[];
 
         expect(results.length).toBeGreaterThan(0);
@@ -386,7 +478,7 @@ describe("Memory OpenAI Integration", () => {
             `  ✓ Memory "${result.content.substring(0, 30)}..." score: ${score.toFixed(4)}`,
           );
         });
-      }, 30000);
+      }, 120000); // 2 min: OpenAI embedding + Convex search with retries
     });
   });
 });

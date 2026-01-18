@@ -43,17 +43,21 @@ export default {
 
   extensionsToTreatAsEsm: [".ts"],
   transform: {
-    "^.+\\.tsx?$": [
+    // Transform TypeScript and JavaScript files (allowJs needed for convex-dev generated files)
+    "^.+\\.(ts|tsx|js)$": [
       "ts-jest",
       {
         useESM: true,
         tsconfig: {
+          allowJs: true,
           module: "ESNext",
           moduleResolution: "node",
         },
       },
     ],
   },
-  transformIgnorePatterns: ["node_modules/(?!convex)"],
+  transformIgnorePatterns: [
+    "node_modules/(?!(convex|openai))",
+  ],
   reporters: ["default", "<rootDir>/tests/test-timing-reporter.cjs"],
 };

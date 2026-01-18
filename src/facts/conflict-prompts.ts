@@ -45,6 +45,18 @@ export interface ConflictCandidate {
   tags?: string[];
   /** Embedding for semantic search (v0.30.0+) */
   embedding?: number[];
+  /** Named entities mentioned in the fact (v0.31.0+) */
+  entities?: Array<{
+    name: string;
+    type: string;
+    fullValue?: string;
+  }>;
+  /** Subject-predicate-object relations (v0.31.0+) */
+  relations?: Array<{
+    subject: string;
+    predicate: string;
+    object: string;
+  }>;
 }
 
 /**
