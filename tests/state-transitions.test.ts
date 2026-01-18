@@ -127,11 +127,9 @@ describe("State Transition Testing", () => {
       }
     }
     // Enhance error message with retry context
-    const enhancedError = new Error(
+    throw new Error(
       `${operationName} failed after ${maxRetries} retries: ${lastError?.message}`,
     );
-    enhancedError.cause = lastError;
-    throw enhancedError;
   };
 
   beforeAll(() => {
