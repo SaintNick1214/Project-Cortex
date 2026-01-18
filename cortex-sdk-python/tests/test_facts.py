@@ -13,6 +13,7 @@ Tests validate:
 import pytest
 
 from cortex import FactSourceRef, StoreFactParams
+from tests.helpers import retry_async
 
 # ============================================================================
 # store() Tests
@@ -472,13 +473,16 @@ async def test_semantic_search_facts(cortex_client, test_ids, cleanup_helper):
 
     # Search using embedding similar to fact1 (should find fact1 and fact2, not fact3)
     query_embedding = generate_mock_embedding("dark mode UI preferences")
-    results = await cortex_client.facts.semantic_search(
-        memory_space_id,
-        query_embedding,
-        SemanticSearchFactsOptions(
-            min_confidence=80,
-            limit=10,
+    results = await retry_async(
+        lambda: cortex_client.facts.semantic_search(
+            memory_space_id,
+            query_embedding,
+            SemanticSearchFactsOptions(
+                min_confidence=80,
+                limit=10,
+            ),
         ),
+        max_retries=3,
     )
 
     # Should return results (may include fact1 and fact2)
@@ -521,15 +525,18 @@ async def test_semantic_search_with_filters(cortex_client, test_ids, cleanup_hel
 
     # Search with filters
     query_embedding = generate_mock_embedding("UI preferences")
-    results = await cortex_client.facts.semantic_search(
-        memory_space_id,
-        query_embedding,
-        SemanticSearchFactsOptions(
-            min_confidence=80,
-            tags=["ui"],
-            limit=5,
-            min_score=0.0,  # Low threshold to ensure results
+    results = await retry_async(
+        lambda: cortex_client.facts.semantic_search(
+            memory_space_id,
+            query_embedding,
+            SemanticSearchFactsOptions(
+                min_confidence=80,
+                tags=["ui"],
+                limit=5,
+                min_score=0.0,  # Low threshold to ensure results
+            ),
         ),
+        max_retries=3,
     )
 
     assert isinstance(results, list)

@@ -28,6 +28,7 @@ from cortex.types import (
     StoreFactParams,
     StoreMemoryInput,
 )
+from tests.helpers import retry_async
 
 
 # Module-scoped fixture for setting up hive space
@@ -874,10 +875,13 @@ async def test_can_distinguish_memories_by_participant_in_search(cortex_client, 
     )
 
     from cortex.types import SearchOptions
-    results = await cortex_client.vector.search(
-        hive_space,
-        "DISTINGUISH_TEST",
-        SearchOptions(limit=10),
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            hive_space,
+            "DISTINGUISH_TEST",
+            SearchOptions(limit=10),
+        ),
+        max_retries=3,
     )
 
     distinguish_results = [

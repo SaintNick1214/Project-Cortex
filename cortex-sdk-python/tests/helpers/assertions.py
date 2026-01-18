@@ -554,3 +554,56 @@ async def wait_for_count(
         return count == expected
 
     return await wait_for_condition(check_count, ctx, timeout)
+
+
+async def retry_async(
+    operation: Callable[[], Awaitable[T]],
+    max_retries: int = 3,
+    base_delay: float = 1.0,
+    retryable_errors: tuple = ("Server Error", "rate limit", "timeout", "ECONNRESET"),
+) -> T:
+    """
+    Retry an async operation with exponential backoff.
+
+    Useful for handling transient server errors during parallel test execution.
+
+    Args:
+        operation: Async function to retry
+        max_retries: Maximum number of retry attempts (default: 3)
+        base_delay: Base delay between retries in seconds (default: 1.0)
+        retryable_errors: Error messages that should trigger a retry
+
+    Returns:
+        Result of the operation
+
+    Raises:
+        Last exception if all retries failed
+
+    Example:
+        result = await retry_async(
+            lambda: cortex.vector.search(space_id, query="test"),
+            max_retries=3,
+        )
+    """
+    last_error = None
+
+    for attempt in range(max_retries + 1):
+        try:
+            return await operation()
+        except Exception as e:
+            error_msg = str(e).lower()
+            is_retryable = any(err.lower() in error_msg for err in retryable_errors)
+
+            if is_retryable and attempt < max_retries:
+                delay = base_delay * (2 ** attempt)
+                print(f"  [retry {attempt + 1}/{max_retries}] {type(e).__name__}: {e}")
+                print(f"  [retry] Waiting {delay:.1f}s before retry...")
+                await asyncio.sleep(delay)
+                last_error = e
+            else:
+                raise
+
+    # Should not reach here, but raise last error if we do
+    if last_error:
+        raise last_error
+    raise RuntimeError("Retry logic error")

@@ -58,7 +58,11 @@ describe("State Transition Testing", () => {
 
   // Helper to wait for context to be queryable after creation
   // Extended timeout for parallel test execution where Convex may be slower
-  const waitForContextReady = async (contextId: string) => {
+  const waitForContextReady = async (
+    contextId: string,
+    spaceId?: string,
+    status?: string,
+  ) => {
     const ready = await waitForCondition(
       async () => {
         const result = await cortex.contexts.get(contextId);
@@ -71,8 +75,28 @@ describe("State Transition Testing", () => {
     if (!ready) {
       throw new Error(`Context ${contextId} not ready after 10 seconds`);
     }
-    // Small delay to allow list indexes to catch up
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    // If spaceId and status provided, also wait for list to reflect the context
+    if (spaceId && status) {
+      const listReady = await waitForCondition(
+        async () => {
+          const list = await cortex.contexts.list({
+            memorySpaceId: spaceId,
+            status: status as "active" | "completed" | "cancelled" | "blocked",
+          });
+          return list.some((c: any) => c.contextId === contextId);
+        },
+        ctx,
+        5000, // Additional 5s for list index propagation
+        200,
+      );
+      if (!listReady) {
+        console.warn(
+          `Context ${contextId} visible via get() but not in list after 5s`,
+        );
+      }
+    }
+    // Extended delay to allow all indexes to catch up in CI
+    await new Promise((resolve) => setTimeout(resolve, 300));
   };
 
   beforeAll(() => {
@@ -109,8 +133,8 @@ describe("State Transition Testing", () => {
           expect(testCtx.status).toBe(fromStatus);
           expect(testCtx.contextId).toBeDefined();
 
-          // Wait for Convex consistency - poll until context is queryable
-          await waitForContextReady(testCtx.contextId);
+          // Wait for Convex consistency - poll until context is queryable AND in list
+          await waitForContextReady(testCtx.contextId, spaceId, fromStatus);
 
           // Verify in list with initial status
           const beforeList = await cortex.contexts.list({
@@ -327,8 +351,12 @@ describe("State Transition Testing", () => {
         ),
       );
 
-      // Wait for Convex consistency - poll until all contexts are queryable
-      await Promise.all(contexts.map((c) => waitForContextReady(c.contextId)));
+      // Wait for Convex consistency - poll until all contexts are queryable AND in list
+      await Promise.all(
+        contexts.map((c, i) =>
+          waitForContextReady(c.contextId, spaceId, transitionableStatuses[i]),
+        ),
+      );
 
       // Verify each in correct status list
       for (let i = 0; i < transitionableStatuses.length; i++) {

@@ -9,6 +9,8 @@ import time
 
 import pytest
 
+from tests.helpers import retry_async
+
 from cortex import (
     A2ABroadcastParams,
     A2AConversation,
@@ -900,8 +902,11 @@ class TestA2AIntegration:
         # Search for A2A messages using tags (all A2A messages have "a2a" tag)
         from cortex import SearchOptions
 
-        search_results = await cortex_client.vector.search(
-            agent1, "budget", SearchOptions(tags=["a2a"])
+        search_results = await retry_async(
+            lambda: cortex_client.vector.search(
+                agent1, "budget", SearchOptions(tags=["a2a"])
+            ),
+            max_retries=3,
         )
 
         assert len(search_results) > 0

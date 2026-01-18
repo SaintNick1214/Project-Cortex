@@ -31,6 +31,24 @@ describe("Operation Sequence Validation", () => {
     console.log(`\n🧹 Operation Sequence Tests - Run ${ctx.runId} complete\n`);
   });
 
+  // Helper to wait for context to be queryable after creation
+  const waitForContextReady = async (contextId: string) => {
+    const ready = await waitForCondition(
+      async () => {
+        const result = await cortex.contexts.get(contextId);
+        return result !== null;
+      },
+      ctx,
+      10000, // Extended to 10s for CI
+      200,
+    );
+    if (!ready) {
+      throw new Error(`Context ${contextId} not ready after 10 seconds`);
+    }
+    // Extended delay for CI consistency
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  };
+
   // ══════════════════════════════════════════════════════════════════════
   // Vector Memory Sequences
   // ══════════════════════════════════════════════════════════════════════
@@ -1600,6 +1618,9 @@ describe("Operation Sequence Validation", () => {
         status: "active",
         data: { step: 0 },
       });
+
+      // Wait for context to be queryable before updates (CI consistency)
+      await waitForContextReady(context.contextId);
 
       for (let i = 1; i <= 20; i++) {
         context = await cortex.contexts.update(context.contextId, {

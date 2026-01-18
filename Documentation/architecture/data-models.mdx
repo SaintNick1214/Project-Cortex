@@ -1147,27 +1147,21 @@ await ctx.db
 **Query Patterns:**
 
 ```typescript
-// Semantic search (memorySpace-scoped)
-await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q
-      .similar("embedding", queryVector, 10)
-      .eq("memorySpaceId", memorySpaceId)
-      .eq("tenantId", tenantId),
-  )
-  .collect();
+// Semantic search (memorySpace-scoped) - must be in an action
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: queryVector,
+  limit: 10,
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId)
+                  .eq("tenantId", tenantId),
+});
 
-// Semantic search (user-specific within space)
-await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q
-      .similar("embedding", queryVector, 10)
-      .eq("memorySpaceId", memorySpaceId)
-      .eq("userId", userId),
-  )
-  .collect();
+// Semantic search (user-specific within space) - must be in an action
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: queryVector,
+  limit: 10,
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId)
+                  .eq("userId", userId),
+});
 
 // Keyword search
 await ctx.db
@@ -2027,16 +2021,14 @@ await ctx.db
   filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
 });
 
-// Query with pre-filter (fast)
-await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q.similar("embedding", vector, 10)
-     .eq("memorySpaceId", memorySpaceId)  // ← Filtered BEFORE similarity
-     .eq("tenantId", tenantId)            // ← Filtered BEFORE similarity
-     .eq("userId", userId)                // ← Filtered BEFORE similarity
-  )
-  .collect();
+// Query with pre-filter (fast) - must be in an action
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: vector,
+  limit: 10,
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId)  // ← Filtered BEFORE similarity
+                  .eq("tenantId", tenantId)            // ← Filtered BEFORE similarity
+                  .eq("userId", userId),               // ← Filtered BEFORE similarity
+});
 // Only searches vectors for this space+tenant+user
 ```
 
@@ -2342,15 +2334,13 @@ await ctx.db
   filterFields: ["memorySpaceId", "tenantId", "userId", "agentId", "participantId"],
 });
 
-// Query only searches relevant subset
-await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q.similar("embedding", vector, 10)
-     .eq("memorySpaceId", memorySpaceId)  // ← Filters BEFORE similarity
-     .eq("tenantId", tenantId)            // ← Multi-tenant isolation
-  )
-  .collect();
+// Query only searches relevant subset - must be in an action
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: vector,
+  limit: 10,
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId)  // ← Filters BEFORE similarity
+                  .eq("tenantId", tenantId),           // ← Multi-tenant isolation
+});
 ```
 
 ---

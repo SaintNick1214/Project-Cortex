@@ -424,7 +424,7 @@ class ContextsAPI:
         *,
         memory_space_id: Optional[str] = None,
         user_id: Optional[str] = None,
-        status: Optional[str] = None,
+        status: Optional[ContextStatus] = None,
         parent_id: Optional[str] = None,
         root_id: Optional[str] = None,
         depth: Optional[int] = None,
@@ -551,7 +551,7 @@ class ContextsAPI:
         *,
         memory_space_id: Optional[str] = None,
         user_id: Optional[str] = None,
-        status: Optional[str] = None,
+        status: Optional[ContextStatus] = None,
         tenant_id: Optional[str] = None,
     ) -> int:
         """

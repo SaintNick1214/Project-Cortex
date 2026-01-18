@@ -10,6 +10,7 @@ import pytest
 
 from cortex import Cortex, CortexConfig, RememberStreamParams
 from cortex.types import RegisterMemorySpaceParams
+from tests.helpers import retry_async
 
 
 # Helper to create async generator for testing
@@ -360,10 +361,13 @@ class TestMemoryStreaming:
         content = agent_message.get("content") if isinstance(agent_message, dict) else agent_message.content
         assert content == "The weather is sunny today."
 
-        # Verify we can search for the memory
-        memories = await self.cortex.memory.search(
-            self.test_space_id,
-            "weather sunny",
+        # Verify we can search for the memory (with retry for parallel execution)
+        memories = await retry_async(
+            lambda: self.cortex.memory.search(
+                self.test_space_id,
+                "weather sunny",
+            ),
+            max_retries=3,
         )
         assert len(memories) > 0
 

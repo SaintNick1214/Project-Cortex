@@ -5,6 +5,7 @@ Tests prove that anything stored with remember() can be correctly
 retrieved with recall(), even in complex scenarios.
 """
 
+import asyncio
 import uuid
 import pytest
 
@@ -15,6 +16,29 @@ from cortex import (
     RecallGraphExpansionConfig,
     RememberParams,
 )
+
+
+async def retry_recall(cortex_client, params, max_retries=5, base_delay=1.0):
+    """Retry recall with backoff to handle indexing delays and server errors."""
+    last_error = None
+    for attempt in range(max_retries):
+        try:
+            result = await cortex_client.memory.recall(params)
+            # Also retry if no results (indexing may not be complete)
+            if result.items or attempt >= max_retries - 1:
+                return result
+            await asyncio.sleep(base_delay * (attempt + 1))
+        except Exception as e:
+            error_msg = str(e).lower()
+            if "server error" in error_msg or "rate limit" in error_msg:
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(base_delay * (2 ** attempt))
+                    last_error = e
+                    continue
+            raise
+    if last_error:
+        raise last_error
+    return result
 
 
 def create_test_id(prefix: str) -> str:
@@ -47,12 +71,13 @@ async def test_recall_simple_message(
         )
     )
 
-    # Recall
-    result = await cortex_client.memory.recall(
+    # Recall with retry (indexing may take time)
+    result = await retry_recall(
+        cortex_client,
         RecallParams(
             memory_space_id=test_memory_space_id,
             query="favorite color",
-        )
+        ),
     )
 
     # Assert - should find the stored content

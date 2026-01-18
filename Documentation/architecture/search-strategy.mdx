@@ -109,25 +109,30 @@ The following shows how semantic search works internally. Use `cortex.vector.sea
 </Callout>
 
 ```typescript
-// Internal Convex query implementation (conceptual)
-export const semanticSearch = query({
+// Internal Convex action implementation (vector search requires action)
+export const semanticSearch = action({
   args: {
     memorySpaceId: v.string(),
     embedding: v.array(v.float64()),
     filters: v.any(),
   },
   handler: async (ctx, args) => {
-    let q = ctx.db.query("memories").withIndex("by_embedding", (q) => {
-      let search = q
-        .similar("embedding", args.embedding, args.filters.limit || 20)
-        .eq("memorySpaceId", args.memorySpaceId);
+    // Build filter based on provided options
+    const filter = args.filters.tenantId
+      ? (q: any) => q.eq("memorySpaceId", args.memorySpaceId)
+                     .eq("tenantId", args.filters.tenantId)
+      : (q: any) => q.eq("memorySpaceId", args.memorySpaceId);
 
-      // Tenant isolation (pre-filtered via filterFields)
-      if (args.filters.tenantId) {
-        search = search.eq("tenantId", args.filters.tenantId);
-      }
+    // Vector search returns { _id, _score }[]
+    const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+      vector: args.embedding,
+      limit: args.filters.limit || 20,
+      filter,
+    });
 
-      return search;
+    // Fetch full documents using internal query
+    const docs = await ctx.runQuery(internal.memories.fetchByIds, {
+      ids: vectorResults.map(r => r._id),
     });
 
     // Apply additional filters
@@ -642,19 +647,14 @@ function calculateScore(item: RecallItem): number {
 Applied BEFORE search for efficiency. Tenant isolation is automatically handled:
 
 ```typescript
-// Pre-filtered (fast) - Conceptual example
-await ctx.db
-  .query("memories")
-  .withIndex(
-    "by_embedding",
-    (q) =>
-      q
-        .similar("embedding", vector, 20)
-        .eq("memorySpaceId", memorySpaceId) // ← Pre-filter
-        .eq("tenantId", tenantId) // ← Automatic tenant isolation
-        .eq("userId", userId), // ← Pre-filter
-  )
-  .collect();
+// Pre-filtered (fast) - must be in an action
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: vector,
+  limit: 20,
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId)  // ← Pre-filter
+                  .eq("tenantId", tenantId)            // ← Automatic tenant isolation
+                  .eq("userId", userId),               // ← Pre-filter
+});
 
 // Only searches vectors for this memorySpace+tenant+user
 // filterFields: ["memorySpaceId", "tenantId", "userId"] enables this
@@ -669,15 +669,17 @@ All searches automatically filter by `tenantId` at the database level. This ensu
 Applied AFTER search for complex logic that can't be expressed in indexes:
 
 ```typescript
-// Post-filter (after vector search) - Conceptual example
-const results = await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q
-      .similar("embedding", vector, 50) // Get more results
-      .eq("memorySpaceId", memorySpaceId),
-  )
-  .collect();
+// Post-filter (after vector search) - must be in an action
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: vector,
+  limit: 50,  // Get more results for post-filtering
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId),
+});
+
+// Fetch full documents
+const results = await ctx.runQuery(internal.memories.fetchByIds, {
+  ids: vectorResults.map(r => r._id),
+});
 
 // Complex filters in code
 const filtered = results.filter((memory) => {

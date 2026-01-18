@@ -406,19 +406,19 @@ const results = await cortex.memory.search("agent-1", "user preferences", {
 ### With Embeddings (Semantic Search)
 
 ```typescript
-// Query with embedding
+// Query with embedding (SDK handles the vector search internally)
 const results = await cortex.memory.search("agent-1", "user password", {
   embedding: await embed("user password"),
   limit: 10,
 });
 
-// Convex vector search
-await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q.eq("memorySpaceId", "agent-1").similar("embedding", queryEmbedding, 10),
-  )
-  .collect();
+// Internal Convex vector search (must be in an action)
+// ctx.vectorSearch() returns { _id, _score }[] - fetch full docs separately
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: queryEmbedding,
+  limit: 10,
+  filter: (q) => q.eq("memorySpaceId", "agent-1"),
+});
 
 // Returns memories ranked by cosine similarity
 // Even if exact keywords don't match!
@@ -771,15 +771,13 @@ for (const memory of old) {
   filterFields: ["memorySpaceId", "userId"],  // ← Pre-filter before similarity
 })
 
-// Query with pre-filtering (fast!)
-await ctx.db
-  .query("memories")
-  .withIndex("by_embedding", (q) =>
-    q.eq("memorySpaceId", memorySpaceId)  // ← Filtered BEFORE similarity search
-     .eq("userId", userId)                // ← Much faster for large datasets
-     .similar("embedding", queryVector, 10)
-  )
-  .collect();
+// Query with pre-filtering (fast!) - must be in an action
+const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
+  vector: queryVector,
+  limit: 10,
+  filter: (q) => q.eq("memorySpaceId", memorySpaceId)  // ← Filtered BEFORE similarity search
+                  .eq("userId", userId),               // ← Much faster for large datasets
+});
 ```
 
 **Why filterFields matter:**

@@ -13,6 +13,8 @@ Note: Python port of comprehensive TypeScript cross-space boundary tests.
 
 import pytest
 
+from tests.helpers import retry_async
+
 from cortex.types import (
     CreateConversationInput,
     ListConversationsFilter,
@@ -98,7 +100,10 @@ class TestVectorMemoryIsolation:
         )
 
         # Search in space B
-        results = await cortex_client.vector.search(space_b, "UNIQUE_SEARCH_MARKER")
+        results = await retry_async(
+            lambda: cortex_client.vector.search(space_b, "UNIQUE_SEARCH_MARKER"),
+            max_retries=3,
+        )
 
         # Should not return space A data
         for mem in results:

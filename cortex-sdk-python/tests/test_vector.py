@@ -11,6 +11,7 @@ Tests validate:
 - Versioning
 """
 
+import asyncio
 import time
 
 import pytest
@@ -27,6 +28,7 @@ from cortex import (
 from tests.helpers import (
     create_test_memory_input,
     generate_embedding,
+    retry_async,
     validate_memory_storage,
 )
 
@@ -344,8 +346,11 @@ async def test_search_keyword(cortex_client, test_ids, cleanup_helper):
         ),
     )
 
-    # Search for "password"
-    results = await cortex_client.vector.search(memory_space_id, "password")
+    # Search for "password" with retry (handles indexing delays and server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(memory_space_id, "password"),
+        max_retries=3,
+    )
 
     # Should find at least one memory with "password" in content
     assert len(results) > 0
@@ -386,11 +391,14 @@ async def test_search_filter_by_user_id(cortex_client, test_ids, cleanup_helper)
         ),
     )
 
-    # Search with userId filter
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "mode",
-        SearchOptions(user_id=user_id),
+    # Search with userId filter (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "mode",
+            SearchOptions(user_id=user_id),
+        ),
+        max_retries=3,
     )
 
     # All results should be from user_id
@@ -432,11 +440,14 @@ async def test_search_filter_by_tags(cortex_client, test_ids, cleanup_helper):
         ),
     )
 
-    # Search with tags filter
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "system",
-        SearchOptions(tags=["system"]),
+    # Search with tags filter (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "system",
+            SearchOptions(tags=["system"]),
+        ),
+        max_retries=3,
     )
 
     # All results should have "system" tag
@@ -478,11 +489,14 @@ async def test_search_filter_by_min_importance(cortex_client, test_ids, cleanup_
         ),
     )
 
-    # Search with minImportance filter
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "password",
-        SearchOptions(min_importance=90),
+    # Search with minImportance filter (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "password",
+            SearchOptions(min_importance=90),
+        ),
+        max_retries=3,
     )
 
     # All results should have importance >= 90
@@ -509,11 +523,14 @@ async def test_search_respects_limit(cortex_client, test_ids, cleanup_helper):
             create_test_memory_input(content=f"Test memory {i}"),
         )
 
-    # Search with limit=1
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "test",
-        SearchOptions(limit=1),
+    # Search with limit=1 (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "test",
+            SearchOptions(limit=1),
+        ),
+        max_retries=3,
     )
 
     # Should return at most 1 result
@@ -1884,11 +1901,14 @@ async def test_search_with_query_category(cortex_client, test_ids, cleanup_helpe
         ),
     )
 
-    # Search with query_category
-    results = await cortex_client.vector.search(
-        memory_space_id,
-        "what should I call the user",
-        SearchOptions(query_category="addressing_preference"),
+    # Search with query_category (with retry for server errors)
+    results = await retry_async(
+        lambda: cortex_client.vector.search(
+            memory_space_id,
+            "what should I call the user",
+            SearchOptions(query_category="addressing_preference"),
+        ),
+        max_retries=3,
     )
 
     # Should return results (category boosting is backend feature)
