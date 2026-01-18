@@ -1250,8 +1250,30 @@ async def test_set_agent_override_with_sessions(cortex_client: Cortex):
     )
     await cortex_client.governance.set_policy(org_policy)
 
-    # Set override with session policy
+    # Set override with session policy (include all required fields)
     override = GovernancePolicy(
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
         sessions=SessionPolicy(
             lifecycle=SessionLifecyclePolicy(
                 idle_timeout="15m",

@@ -11,22 +11,22 @@ from typing import Optional
 
 from .types import RecallLimits
 
-
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # LLM Model Configuration
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-MODEL_DEFAULTS = {
-    "fact_extraction": {
-        "openai": "gpt-4o-2024-11-20",
-        "anthropic": "claude-3-haiku-20240307",
-    },
-    "conflict_resolution": {
-        "openai": "gpt-4o-2024-11-20",
-        "anthropic": "claude-3-haiku-20240307",
-    },
-    "embedding": "text-embedding-3-small",
+# Provider-specific model defaults for LLM tasks
+_FACT_EXTRACTION_MODELS: dict[str, str] = {
+    "openai": "gpt-4o-2024-11-20",
+    "anthropic": "claude-3-haiku-20240307",
 }
+
+_CONFLICT_RESOLUTION_MODELS: dict[str, str] = {
+    "openai": "gpt-4o-2024-11-20",
+    "anthropic": "claude-3-haiku-20240307",
+}
+
+_DEFAULT_EMBEDDING_MODEL: str = "text-embedding-3-small"
 
 
 def resolve_fact_extraction_model(
@@ -53,7 +53,7 @@ def resolve_fact_extraction_model(
     env_model = os.environ.get("CORTEX_FACT_EXTRACTION_MODEL")
     if env_model:
         return env_model
-    return MODEL_DEFAULTS["fact_extraction"].get(provider, MODEL_DEFAULTS["fact_extraction"]["openai"])
+    return _FACT_EXTRACTION_MODELS.get(provider, _FACT_EXTRACTION_MODELS["openai"])
 
 
 def resolve_conflict_resolution_model(
@@ -84,8 +84,8 @@ def resolve_conflict_resolution_model(
     env_model = os.environ.get("CORTEX_FACT_EXTRACTION_MODEL")
     if env_model:
         return env_model
-    return MODEL_DEFAULTS["conflict_resolution"].get(
-        provider, MODEL_DEFAULTS["conflict_resolution"]["openai"]
+    return _CONFLICT_RESOLUTION_MODELS.get(
+        provider, _CONFLICT_RESOLUTION_MODELS["openai"]
     )
 
 
@@ -109,7 +109,7 @@ def resolve_embedding_model(config_model: Optional[str] = None) -> str:
     env_model = os.environ.get("CORTEX_EMBEDDING_MODEL")
     if env_model:
         return env_model
-    return MODEL_DEFAULTS["embedding"]
+    return _DEFAULT_EMBEDDING_MODEL
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

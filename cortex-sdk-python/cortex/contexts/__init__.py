@@ -421,24 +421,60 @@ class ContextsAPI:
     async def list(
         self,
         filter: Optional[ListContextsFilter] = None,
+        *,
+        memory_space_id: Optional[str] = None,
+        user_id: Optional[str] = None,
+        status: Optional[str] = None,
+        parent_id: Optional[str] = None,
+        root_id: Optional[str] = None,
+        depth: Optional[int] = None,
+        limit: Optional[int] = None,
+        tenant_id: Optional[str] = None,
     ) -> List[Context]:
         """
         List contexts with filters.
 
         Args:
             filter: Optional filter criteria (ListContextsFilter)
+            memory_space_id: Filter by memory space (convenience kwarg)
+            user_id: Filter by user (convenience kwarg)
+            status: Filter by status (convenience kwarg)
+            parent_id: Filter by parent context (convenience kwarg)
+            root_id: Filter by root context (convenience kwarg)
+            depth: Filter by depth (convenience kwarg)
+            limit: Max results (convenience kwarg)
+            tenant_id: Filter by tenant (convenience kwarg)
 
         Returns:
             List of contexts matching the filter
 
         Example:
+            >>> # Using filter object
             >>> contexts = await cortex.contexts.list(
             ...     ListContextsFilter(
             ...         memory_space_id='finance-space',
             ...         status='active',
             ...     )
             ... )
+            >>> # Using convenience kwargs
+            >>> contexts = await cortex.contexts.list(
+            ...     memory_space_id='finance-space',
+            ...     status='active',
+            ... )
         """
+        # Build filter from kwargs if not provided
+        if filter is None and any([memory_space_id, user_id, status, parent_id, root_id, depth, limit, tenant_id]):
+            filter = ListContextsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                status=status,
+                parent_id=parent_id,
+                root_id=root_id,
+                depth=depth,
+                limit=limit,
+                tenant_id=tenant_id,
+            )
+
         # Client-side validation
         if filter:
             if filter.memory_space_id is not None:
@@ -512,24 +548,48 @@ class ContextsAPI:
     async def count(
         self,
         filter: Optional[CountContextsFilter] = None,
+        *,
+        memory_space_id: Optional[str] = None,
+        user_id: Optional[str] = None,
+        status: Optional[str] = None,
+        tenant_id: Optional[str] = None,
     ) -> int:
         """
         Count contexts matching filters.
 
         Args:
             filter: Optional filter criteria (CountContextsFilter)
+            memory_space_id: Filter by memory space (convenience kwarg)
+            user_id: Filter by user (convenience kwarg)
+            status: Filter by status (convenience kwarg)
+            tenant_id: Filter by tenant (convenience kwarg)
 
         Returns:
             Count of matching contexts
 
         Example:
+            >>> # Using filter object
             >>> total = await cortex.contexts.count(
             ...     CountContextsFilter(
             ...         memory_space_id='supervisor-space',
             ...         status='active',
             ...     )
             ... )
+            >>> # Using convenience kwargs
+            >>> total = await cortex.contexts.count(
+            ...     memory_space_id='supervisor-space',
+            ...     status='active',
+            ... )
         """
+        # Build filter from kwargs if not provided
+        if filter is None and any([memory_space_id, user_id, status, tenant_id]):
+            filter = CountContextsFilter(
+                memory_space_id=memory_space_id,
+                user_id=user_id,
+                status=status,
+                tenant_id=tenant_id,
+            )
+
         # Client-side validation
         if filter:
             if filter.memory_space_id is not None:
@@ -1207,4 +1267,13 @@ class ContextsAPI:
         return cast(Optional[Dict[str, Any]], result)
 
 
-__all__ = ["ContextsAPI", "ContextsValidationError"]
+__all__ = [
+    "ContextsAPI",
+    "ContextsValidationError",
+    # Re-exported types
+    "DeleteContextResult",
+    "DeleteManyContextsResult",
+    "ExportContextsResult",
+    "UpdateContextParams",
+    "UpdateManyContextsResult",
+]

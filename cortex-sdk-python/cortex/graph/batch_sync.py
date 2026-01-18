@@ -15,6 +15,7 @@ from ..types import (
     BatchSyncResult,
     BatchSyncStats,
     GraphAdapter,
+    ListContextsFilter,
     ListMemorySpacesFilter,
     ListUsersFilter,
 )
@@ -200,7 +201,7 @@ async def _sync_contexts(
     try:
         # List all contexts (API max limit is 1000)
         effective_limit = min(limit, 1000)
-        contexts = await cortex.contexts.list(limit=effective_limit)
+        contexts = await cortex.contexts.list(ListContextsFilter(limit=effective_limit))
 
         for i, context in enumerate(contexts):
             try:

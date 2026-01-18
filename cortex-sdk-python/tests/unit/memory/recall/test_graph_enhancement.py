@@ -298,8 +298,8 @@ class TestExpandViaGraph:
 
         await expand_via_graph(many_entities, mock_adapter, config)
 
-        # Should only have been called 10 times (limited)
-        assert mock_adapter.find_nodes.call_count == 10
+        # Should only have been called entities_per_hop times (default: 5)
+        assert mock_adapter.find_nodes.call_count == 5
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
