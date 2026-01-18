@@ -86,17 +86,52 @@ describe("State Transition Testing", () => {
           return list.some((c: any) => c.contextId === contextId);
         },
         ctx,
-        5000, // Additional 5s for list index propagation
+        10000, // Extended to 10s for list index propagation in CI
         200,
       );
       if (!listReady) {
-        console.warn(
-          `Context ${contextId} visible via get() but not in list after 5s`,
+        // Throw instead of warn - the test explicitly needs list to work
+        throw new Error(
+          `Context ${contextId} visible via get() but not in list after 10s`,
         );
       }
     }
     // Extended delay to allow all indexes to catch up in CI
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  };
+
+  // Helper to retry operations with exponential backoff for CI resilience
+  const retryOperation = async <T>(
+    operation: () => Promise<T>,
+    operationName = "operation",
+    maxRetries = 3,
+    initialDelayMs = 200,
+  ): Promise<T> => {
+    let lastError: Error | undefined;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        lastError = error as Error;
+        // Only retry on CONTEXT_NOT_FOUND (eventual consistency issue)
+        if (!lastError.message?.includes("CONTEXT_NOT_FOUND")) {
+          throw error;
+        }
+        if (attempt < maxRetries - 1) {
+          const delay = initialDelayMs * Math.pow(2, attempt);
+          console.warn(
+            `[Retry ${attempt + 1}/${maxRetries}] ${operationName} failed with CONTEXT_NOT_FOUND, retrying in ${delay}ms...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
+    }
+    // Enhance error message with retry context
+    const enhancedError = new Error(
+      `${operationName} failed after ${maxRetries} retries: ${lastError?.message}`,
+    );
+    enhancedError.cause = lastError;
+    throw enhancedError;
   };
 
   beforeAll(() => {
@@ -145,10 +180,14 @@ describe("State Transition Testing", () => {
             beforeList.some((c: any) => c.contextId === testCtx.contextId),
           ).toBe(true);
 
-          // Transition to new status
-          const updated = await cortex.contexts.update(testCtx.contextId, {
-            status: toStatus,
-          });
+          // Transition to new status - use retry for CI resilience
+          const updated = await retryOperation(
+            () =>
+              cortex.contexts.update(testCtx.contextId, {
+                status: toStatus,
+              }),
+            `contexts.update(${fromStatus}→${toStatus})`,
+          );
 
           // expect(updated.status).toBe(toStatus); // Skipped - updateStatus not in API
           expect(updated.contextId).toBe(testCtx.contextId);
@@ -194,10 +233,15 @@ describe("State Transition Testing", () => {
             status: fromStatus,
           });
 
-          // Wait for Convex consistency - poll until context is queryable
-          await waitForContextReady(testCtx.contextId);
+          // Wait for Convex consistency - poll until context is queryable AND in list
+          await waitForContextReady(testCtx.contextId, spaceId, fromStatus);
 
-          await cortex.contexts.update(testCtx.contextId, { status: toStatus });
+          // Use retry for CI resilience against eventual consistency
+          await retryOperation(
+            () =>
+              cortex.contexts.update(testCtx.contextId, { status: toStatus }),
+            `contexts.update(count:${fromStatus}→${toStatus})`,
+          );
 
           // Get final counts
           const afterFromCount = await cortex.contexts.count({

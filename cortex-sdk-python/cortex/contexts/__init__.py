@@ -599,11 +599,15 @@ class ContextsAPI:
             if filter.status is not None:
                 validate_status(filter.status)
 
+        # Multi-tenancy: use provided tenant_id or inject from auth context
+        resolved_tenant_id = (filter.tenant_id if filter and filter.tenant_id else None) or self._tenant_id
+
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "contexts:count",
                 filter_none_values({
                     "memorySpaceId": filter.memory_space_id if filter else None,
+                    "tenantId": resolved_tenant_id,  # Multi-tenancy
                     "userId": filter.user_id if filter else None,
                     "status": filter.status if filter else None,
                 }),

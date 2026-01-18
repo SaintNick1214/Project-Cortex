@@ -49,6 +49,40 @@ describe("Operation Sequence Validation", () => {
     await new Promise((resolve) => setTimeout(resolve, 300));
   };
 
+  // Helper to retry operations with exponential backoff for CI resilience
+  const retryOperation = async <T>(
+    operation: () => Promise<T>,
+    operationName = "operation",
+    maxRetries = 3,
+    initialDelayMs = 200,
+  ): Promise<T> => {
+    let lastError: Error | undefined;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        lastError = error as Error;
+        // Only retry on CONTEXT_NOT_FOUND (eventual consistency issue)
+        if (!lastError.message?.includes("CONTEXT_NOT_FOUND")) {
+          throw error;
+        }
+        if (attempt < maxRetries - 1) {
+          const delay = initialDelayMs * Math.pow(2, attempt);
+          console.warn(
+            `[Retry ${attempt + 1}/${maxRetries}] ${operationName} failed with CONTEXT_NOT_FOUND, retrying in ${delay}ms...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
+    }
+    // Enhance error message with retry context
+    const enhancedError = new Error(
+      `${operationName} failed after ${maxRetries} retries: ${lastError?.message}`,
+    );
+    enhancedError.cause = lastError;
+    throw enhancedError;
+  };
+
   // ══════════════════════════════════════════════════════════════════════
   // Vector Memory Sequences
   // ══════════════════════════════════════════════════════════════════════
@@ -1623,9 +1657,14 @@ describe("Operation Sequence Validation", () => {
       await waitForContextReady(context.contextId);
 
       for (let i = 1; i <= 20; i++) {
-        context = await cortex.contexts.update(context.contextId, {
-          data: { step: i },
-        });
+        // Use retry for CI resilience - first update after create can hit eventual consistency
+        context = await retryOperation(
+          () =>
+            cortex.contexts.update(context.contextId, {
+              data: { step: i },
+            }),
+          `contexts.update(step=${i})`,
+        );
 
         // Verify state after each step
         const check = await cortex.contexts.get(context.contextId);

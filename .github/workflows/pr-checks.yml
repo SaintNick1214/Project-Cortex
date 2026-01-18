@@ -246,10 +246,10 @@ jobs:
           ruff check cortex/
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # STAGE 3: TypeScript SDK Tests (sharded across 3 parallel runners)
+  # STAGE 3: TypeScript SDK Tests (sharded across 5 parallel runners)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-typescript:
-    name: Test TypeScript SDK (Shard ${{ matrix.shard }}/3)
+    name: Test TypeScript SDK (Shard ${{ matrix.shard }}/5)
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
     # Run if TypeScript SDK or Convex backend changed OR if PR is targeting main branch
@@ -269,8 +269,8 @@ jobs:
 
     strategy:
       matrix:
-        shard: [1, 2, 3]
-      max-parallel: 3 # Run all shards simultaneously (parallel-safe via TestRunContext)
+        shard: [1, 2, 3, 4, 5]
+      max-parallel: 5 # Run all shards simultaneously (parallel-safe via TestRunContext)
       fail-fast: false # Continue other shards even if one fails
 
     steps:
@@ -295,21 +295,19 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
       # Stagger shard starts to reduce concurrent load on shared Convex backend.
-      # 3-second increments allow each runner to begin its test subset
+      # 2-second increments allow each runner to begin its test subset
       # before the next starts, avoiding thundering herd on database operations.
       - name: Stagger shard start
         run: |
-          case "${{ matrix.shard }}" in
-            1) sleep 0 ;;
-            2) sleep 3 ;;
-            3) sleep 6 ;;
-          esac
+          DELAY=$(( (${{ matrix.shard }} - 1) * 2 ))
+          echo "Staggering shard ${{ matrix.shard }} start by ${DELAY}s"
+          sleep $DELAY
 
-      - name: Run tests (shard ${{ matrix.shard }}/3)
+      - name: Run tests (shard ${{ matrix.shard }}/5)
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
             --testPathIgnorePatterns=debug \
-            --shard=${{ matrix.shard }}/3 \
+            --shard=${{ matrix.shard }}/5 \
             --maxWorkers=75%
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
