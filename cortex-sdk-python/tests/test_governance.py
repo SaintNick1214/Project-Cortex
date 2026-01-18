@@ -27,6 +27,10 @@ from cortex import (
     MutablePurging,
     MutableRetention,
     PolicyScope,
+    SessionCleanupPolicy,
+    SessionLifecyclePolicy,
+    SessionLimitsPolicy,
+    SessionPolicy,
     SimulationOptions,
     VectorPolicy,
     VectorPurging,
@@ -884,3 +888,612 @@ async def test_gdpr_compliance_workflow(cortex_client: Cortex):
         )
     )
     assert report.conversations is not None
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Session Policy Tests (v0.31.0)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@pytest.mark.asyncio
+async def test_set_policy_with_session_lifecycle(cortex_client: Cortex):
+    """Should set policy with session lifecycle configuration."""
+    policy = GovernancePolicy(
+        organization_id="test-org-session-lifecycle",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(
+                idle_timeout="30m",
+                max_duration="24h",
+                auto_extend=True,
+                warn_before_expiry="5m",
+            ),
+            cleanup=SessionCleanupPolicy(
+                auto_expire_idle=True,
+                delete_ended_after="7d",
+                archive_after="30d",
+            ),
+            limits=SessionLimitsPolicy(
+                max_active_sessions=5,
+                max_sessions_per_device=2,
+            ),
+        ),
+    )
+
+    result = await cortex_client.governance.set_policy(policy)
+
+    assert result.success is True
+
+    # Retrieve and verify
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-session-lifecycle")
+    )
+
+    assert retrieved.sessions is not None
+    assert retrieved.sessions.lifecycle.idle_timeout == "30m"
+    assert retrieved.sessions.lifecycle.max_duration == "24h"
+    assert retrieved.sessions.lifecycle.auto_extend is True
+    assert retrieved.sessions.lifecycle.warn_before_expiry == "5m"
+    assert retrieved.sessions.cleanup.auto_expire_idle is True
+    assert retrieved.sessions.cleanup.delete_ended_after == "7d"
+    assert retrieved.sessions.cleanup.archive_after == "30d"
+    assert retrieved.sessions.limits is not None
+    assert retrieved.sessions.limits.max_active_sessions == 5
+    assert retrieved.sessions.limits.max_sessions_per_device == 2
+
+
+@pytest.mark.asyncio
+async def test_set_policy_with_session_lifecycle_only(cortex_client: Cortex):
+    """Should set policy with only session lifecycle (no cleanup or limits)."""
+    policy = GovernancePolicy(
+        organization_id="test-org-session-lifecycle-only",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(
+                idle_timeout="1h",
+                max_duration="12h",
+                auto_extend=False,
+            ),
+            cleanup=SessionCleanupPolicy(),  # Defaults
+        ),
+    )
+
+    result = await cortex_client.governance.set_policy(policy)
+
+    assert result.success is True
+
+    # Retrieve and verify
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-session-lifecycle-only")
+    )
+
+    assert retrieved.sessions is not None
+    assert retrieved.sessions.lifecycle.idle_timeout == "1h"
+    assert retrieved.sessions.lifecycle.max_duration == "12h"
+    assert retrieved.sessions.lifecycle.auto_extend is False
+    assert retrieved.sessions.lifecycle.warn_before_expiry is None
+    assert retrieved.sessions.limits is None  # Optional limits not set
+
+
+@pytest.mark.asyncio
+async def test_set_policy_with_session_cleanup_only(cortex_client: Cortex):
+    """Should set policy with session cleanup configuration."""
+    policy = GovernancePolicy(
+        organization_id="test-org-session-cleanup",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(),  # Defaults
+            cleanup=SessionCleanupPolicy(
+                auto_expire_idle=False,
+                delete_ended_after="90d",
+                archive_after="60d",
+            ),
+        ),
+    )
+
+    result = await cortex_client.governance.set_policy(policy)
+
+    assert result.success is True
+
+    # Retrieve and verify
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-session-cleanup")
+    )
+
+    assert retrieved.sessions is not None
+    assert retrieved.sessions.cleanup.auto_expire_idle is False
+    assert retrieved.sessions.cleanup.delete_ended_after == "90d"
+    assert retrieved.sessions.cleanup.archive_after == "60d"
+
+
+@pytest.mark.asyncio
+async def test_set_policy_with_session_limits_only(cortex_client: Cortex):
+    """Should set policy with session limits configuration."""
+    policy = GovernancePolicy(
+        organization_id="test-org-session-limits",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(),  # Defaults
+            cleanup=SessionCleanupPolicy(),  # Defaults
+            limits=SessionLimitsPolicy(
+                max_active_sessions=10,
+                max_sessions_per_device=3,
+            ),
+        ),
+    )
+
+    result = await cortex_client.governance.set_policy(policy)
+
+    assert result.success is True
+
+    # Retrieve and verify
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-session-limits")
+    )
+
+    assert retrieved.sessions is not None
+    assert retrieved.sessions.limits is not None
+    assert retrieved.sessions.limits.max_active_sessions == 10
+    assert retrieved.sessions.limits.max_sessions_per_device == 3
+
+
+@pytest.mark.asyncio
+async def test_set_policy_with_partial_session_limits(cortex_client: Cortex):
+    """Should set policy with partial session limits (only max_active_sessions)."""
+    policy = GovernancePolicy(
+        organization_id="test-org-session-limits-partial",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(),
+            cleanup=SessionCleanupPolicy(),
+            limits=SessionLimitsPolicy(
+                max_active_sessions=8,
+                max_sessions_per_device=None,  # Only set one limit
+            ),
+        ),
+    )
+
+    result = await cortex_client.governance.set_policy(policy)
+
+    assert result.success is True
+
+    # Retrieve and verify
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-session-limits-partial")
+    )
+
+    assert retrieved.sessions is not None
+    assert retrieved.sessions.limits is not None
+    assert retrieved.sessions.limits.max_active_sessions == 8
+    assert retrieved.sessions.limits.max_sessions_per_device is None
+
+
+@pytest.mark.asyncio
+async def test_get_policy_without_sessions(cortex_client: Cortex):
+    """Should get policy without sessions (backward compatibility)."""
+    # Set policy without sessions
+    policy = GovernancePolicy(
+        organization_id="test-org-no-sessions",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        # sessions=None (not set)
+    )
+
+    await cortex_client.governance.set_policy(policy)
+
+    # Retrieve and verify sessions is None
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-no-sessions")
+    )
+
+    # Sessions should be None or have defaults (depending on backend)
+    # Backend may return defaults even if not explicitly set
+    if retrieved.sessions is not None:
+        # If backend returns defaults, verify they're valid
+        assert retrieved.sessions.lifecycle is not None
+        assert retrieved.sessions.cleanup is not None
+
+
+@pytest.mark.asyncio
+async def test_set_agent_override_with_sessions(cortex_client: Cortex):
+    """Should set agent override with session policy."""
+    # First set org policy
+    org_policy = GovernancePolicy(
+        organization_id="test-org-override-base",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+    )
+    await cortex_client.governance.set_policy(org_policy)
+
+    # Set override with session policy
+    override = GovernancePolicy(
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(
+                idle_timeout="15m",
+                max_duration="8h",
+                auto_extend=True,
+                warn_before_expiry="10m",
+            ),
+            cleanup=SessionCleanupPolicy(
+                auto_expire_idle=True,
+                delete_ended_after="14d",
+            ),
+        ),
+    )
+
+    await cortex_client.governance.set_agent_override("test-space-override-sessions", override)
+
+    # Verify override
+    space_policy = await cortex_client.governance.get_policy(
+        PolicyScope(memory_space_id="test-space-override-sessions")
+    )
+
+    assert space_policy.sessions is not None
+    assert space_policy.sessions.lifecycle.idle_timeout == "15m"
+    assert space_policy.sessions.lifecycle.max_duration == "8h"
+    assert space_policy.sessions.cleanup.delete_ended_after == "14d"
+
+
+@pytest.mark.asyncio
+async def test_session_lifecycle_policy_serialization(cortex_client: Cortex):
+    """Should correctly serialize/deserialize SessionLifecyclePolicy."""
+    policy = GovernancePolicy(
+        organization_id="test-org-session-serialization",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(
+                idle_timeout="45m",
+                max_duration="48h",
+                auto_extend=False,
+                warn_before_expiry="15m",
+            ),
+            cleanup=SessionCleanupPolicy(),
+        ),
+    )
+
+    # Test to_dict serialization
+    policy_dict = policy.to_dict()
+    assert "sessions" in policy_dict
+    assert policy_dict["sessions"]["lifecycle"]["idleTimeout"] == "45m"
+    assert policy_dict["sessions"]["lifecycle"]["maxDuration"] == "48h"
+    assert policy_dict["sessions"]["lifecycle"]["autoExtend"] is False
+    assert policy_dict["sessions"]["lifecycle"]["warnBeforeExpiry"] == "15m"
+
+    # Set policy and verify round-trip
+    await cortex_client.governance.set_policy(policy)
+
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-session-serialization")
+    )
+
+    assert retrieved.sessions.lifecycle.idle_timeout == "45m"
+    assert retrieved.sessions.lifecycle.max_duration == "48h"
+    assert retrieved.sessions.lifecycle.auto_extend is False
+    assert retrieved.sessions.lifecycle.warn_before_expiry == "15m"
+
+
+@pytest.mark.asyncio
+async def test_session_cleanup_policy_serialization(cortex_client: Cortex):
+    """Should correctly serialize/deserialize SessionCleanupPolicy."""
+    policy = GovernancePolicy(
+        organization_id="test-org-cleanup-serialization",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(),
+            cleanup=SessionCleanupPolicy(
+                auto_expire_idle=False,
+                delete_ended_after="30d",
+                archive_after="15d",
+            ),
+        ),
+    )
+
+    # Test to_dict serialization
+    policy_dict = policy.to_dict()
+    assert "sessions" in policy_dict
+    assert policy_dict["sessions"]["cleanup"]["autoExpireIdle"] is False
+    assert policy_dict["sessions"]["cleanup"]["deleteEndedAfter"] == "30d"
+    assert policy_dict["sessions"]["cleanup"]["archiveAfter"] == "15d"
+
+    # Set policy and verify round-trip
+    await cortex_client.governance.set_policy(policy)
+
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-cleanup-serialization")
+    )
+
+    assert retrieved.sessions.cleanup.auto_expire_idle is False
+    assert retrieved.sessions.cleanup.delete_ended_after == "30d"
+    assert retrieved.sessions.cleanup.archive_after == "15d"
+
+
+@pytest.mark.asyncio
+async def test_session_limits_policy_serialization(cortex_client: Cortex):
+    """Should correctly serialize/deserialize SessionLimitsPolicy."""
+    policy = GovernancePolicy(
+        organization_id="test-org-limits-serialization",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(),
+            cleanup=SessionCleanupPolicy(),
+            limits=SessionLimitsPolicy(
+                max_active_sessions=15,
+                max_sessions_per_device=4,
+            ),
+        ),
+    )
+
+    # Test to_dict serialization
+    policy_dict = policy.to_dict()
+    assert "sessions" in policy_dict
+    assert "limits" in policy_dict["sessions"]
+    assert policy_dict["sessions"]["limits"]["maxActiveSessions"] == 15
+    assert policy_dict["sessions"]["limits"]["maxSessionsPerDevice"] == 4
+
+    # Set policy and verify round-trip
+    await cortex_client.governance.set_policy(policy)
+
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-limits-serialization")
+    )
+
+    assert retrieved.sessions.limits is not None
+    assert retrieved.sessions.limits.max_active_sessions == 15
+    assert retrieved.sessions.limits.max_sessions_per_device == 4
+
+
+@pytest.mark.asyncio
+async def test_session_policy_optional_limits(cortex_client: Cortex):
+    """Should handle optional limits field (None vs not set)."""
+    # Policy without limits
+    policy_no_limits = GovernancePolicy(
+        organization_id="test-org-no-limits",
+        conversations=ConversationsPolicy(
+            retention=ConversationsRetention(delete_after="7y", purge_on_user_request=True),
+            purging=ConversationsPurging(auto_delete=True),
+        ),
+        immutable=ImmutablePolicy(
+            retention=ImmutableRetention(default_versions=10),
+            purging=ImmutablePurging(auto_cleanup_versions=True),
+        ),
+        mutable=MutablePolicy(
+            retention=MutableRetention(),
+            purging=MutablePurging(auto_delete=False),
+        ),
+        vector=VectorPolicy(
+            retention=VectorRetention(default_versions=5, by_importance=[]),
+            purging=VectorPurging(auto_cleanup_versions=True, delete_orphaned=True),
+        ),
+        compliance=ComplianceSettings(
+            mode="GDPR",
+            data_retention_years=7,
+            require_justification=[],
+            audit_logging=True,
+        ),
+        sessions=SessionPolicy(
+            lifecycle=SessionLifecyclePolicy(),
+            cleanup=SessionCleanupPolicy(),
+            # limits=None (not set)
+        ),
+    )
+
+    await cortex_client.governance.set_policy(policy_no_limits)
+
+    retrieved = await cortex_client.governance.get_policy(
+        PolicyScope(organization_id="test-org-no-limits")
+    )
+
+    # Limits should be None when not set
+    assert retrieved.sessions is not None
+    # Backend may return None or omit the field
+    if hasattr(retrieved.sessions, "limits"):
+        # If limits exists, it should be None
+        assert retrieved.sessions.limits is None or retrieved.sessions.limits is None

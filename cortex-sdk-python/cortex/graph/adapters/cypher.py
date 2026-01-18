@@ -22,6 +22,7 @@ from ...types import (
     TraversalConfig,
 )
 from ..errors import (
+    GraphAuthenticationError,
     GraphConnectionError,
     GraphDatabaseError,
     GraphNotFoundError,
@@ -89,6 +90,7 @@ class CypherGraphAdapter:
 
         Raises:
             GraphConnectionError: If connection fails
+            GraphAuthenticationError: If authentication fails
         """
         try:
             self._config = config
@@ -101,17 +103,110 @@ class CypherGraphAdapter:
                 connection_acquisition_timeout=config.connection_timeout or 60,
             )
 
-            # Verify connection
+            # Verify connection (just checks server reachability)
             await self._driver.verify_connectivity()
+
+            # Verify authentication with an actual query
+            # verifyConnectivity() only checks reachability, not auth
+            await self._verify_authentication()
 
             # Detect database type (Neo4j uses elementId(), Memgraph uses id())
             await self._detect_database_type()
 
         except Exception as e:
-            raise GraphConnectionError(
-                f"Failed to connect to graph database: {e}",
-                cause=e if isinstance(e, Exception) else None,
+            # Parse error for better diagnostics
+            error_message = str(e)
+            error_code = getattr(e, "code", None)
+
+            # Throw specific error type based on diagnosis
+            raise self._create_connection_error(
+                error_message, error_code, config, e if isinstance(e, Exception) else None
             )
+
+    async def _verify_authentication(self) -> None:
+        """
+        Verify authentication by running a simple query.
+
+        verifyConnectivity() only checks if the server is reachable, not
+        if credentials are valid. This method runs a simple query to
+        verify authentication works, failing fast with a clear error
+        if credentials are invalid.
+        """
+        session = self._get_session()
+        try:
+            # Run a minimal query that requires authentication
+            result = await session.run("RETURN 1 as test")
+            await result.consume()
+        finally:
+            await session.close()
+
+    def _create_connection_error(
+        self,
+        error_message: str,
+        error_code: Optional[str],
+        config: GraphConnectionConfig,
+        cause: Optional[Exception] = None,
+    ) -> GraphConnectionError:
+        """Create appropriate error type based on connection failure diagnosis."""
+        lower_message = error_message.lower()
+
+        # Authentication failure detection - throw specific GraphAuthenticationError
+        if (
+            "authentication" in lower_message
+            or "unauthorized" in lower_message
+            or "credentials" in lower_message
+            or (error_code and "Security.Unauthorized" in str(error_code))
+            or (error_code and "Security.Authentication" in str(error_code))
+        ):
+            message = (
+                f"Graph database authentication failed at {config.uri}. "
+                f"Check that NEO4J_USERNAME and NEO4J_PASSWORD environment variables are correct. "
+                f"Current username: '{config.username}'. "
+                f"Original error: {error_message}"
+            )
+            return GraphAuthenticationError(message, config.uri, config.username, cause)
+
+        # Connection refused detection
+        if (
+            "econnrefused" in lower_message
+            or "connection refused" in lower_message
+            or "failed to connect" in lower_message
+        ):
+            message = (
+                f"Cannot connect to graph database at {config.uri}. "
+                f"Ensure Neo4j/Memgraph is running and accessible. "
+                f"For Docker: 'docker compose -f docker-compose.graph.yml up -d'. "
+                f"Original error: {error_message}"
+            )
+            return GraphConnectionError(message, cause)
+
+        # DNS/host resolution failure
+        if (
+            "enotfound" in lower_message
+            or "getaddrinfo" in lower_message
+            or "name or service not known" in lower_message
+        ):
+            message = (
+                f"Cannot resolve graph database host in {config.uri}. "
+                f"Check that NEO4J_URI is correctly configured. "
+                f"Original error: {error_message}"
+            )
+            return GraphConnectionError(message, cause)
+
+        # Timeout detection
+        if "timeout" in lower_message or "timed out" in lower_message:
+            message = (
+                f"Connection to graph database timed out at {config.uri}. "
+                f"The database may be starting up, overloaded, or unreachable. "
+                f"Original error: {error_message}"
+            )
+            return GraphConnectionError(message, cause)
+
+        # Generic fallback with context
+        return GraphConnectionError(
+            f"Failed to connect to graph database at {config.uri}: {error_message}",
+            cause,
+        )
 
     async def disconnect(self) -> None:
         """Disconnect from the graph database."""

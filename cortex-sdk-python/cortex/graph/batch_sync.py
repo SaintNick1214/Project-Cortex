@@ -20,9 +20,14 @@ from ..types import (
 )
 from . import (
     sync_a2a_relationships,
+    sync_context_relationships,
+    sync_context_to_graph,
+    sync_conversation_relationships,
+    sync_conversation_to_graph,
     sync_fact_relationships,
     sync_fact_to_graph,
     sync_memory_relationships,
+    sync_memory_space_to_graph,
     sync_memory_to_graph,
 )
 
@@ -73,30 +78,54 @@ async def initial_graph_sync(
     sync_rels = opts.sync_relationships
 
     try:
-        # Phase 1: Sync Memories
-        print("📦 Phase 1: Syncing Memories...")
+        # Phase 1: Sync Memory Spaces
+        print("📦 Phase 1: Syncing Memory Spaces...")
+        memory_spaces_result = await _sync_memory_spaces(
+            cortex, adapter, limits.memory_spaces, opts.on_progress
+        )
+        result.memory_spaces = memory_spaces_result["stats"]
+        result.errors.extend(memory_spaces_result["errors"])
+
+        # Phase 2: Sync Contexts
+        print("📦 Phase 2: Syncing Contexts...")
+        contexts_result = await _sync_contexts(
+            cortex, adapter, sync_rels, limits.contexts, opts.on_progress
+        )
+        result.contexts = contexts_result["stats"]
+        result.errors.extend(contexts_result["errors"])
+
+        # Phase 3: Sync Conversations
+        print("📦 Phase 3: Syncing Conversations...")
+        conversations_result = await _sync_conversations(
+            cortex, adapter, sync_rels, limits.conversations, opts.on_progress
+        )
+        result.conversations = conversations_result["stats"]
+        result.errors.extend(conversations_result["errors"])
+
+        # Phase 4: Sync Memories
+        print("📦 Phase 4: Syncing Memories...")
         memories_result = await _sync_memories(
             cortex, adapter, sync_rels, limits.memories, opts.on_progress
         )
         result.memories = memories_result["stats"]
         result.errors.extend(memories_result["errors"])
 
-        # Phase 2: Sync Facts
-        print("📦 Phase 2: Syncing Facts...")
+        # Phase 5: Sync Facts
+        print("📦 Phase 5: Syncing Facts...")
         facts_result = await _sync_facts(
             cortex, adapter, sync_rels, limits.facts, opts.on_progress
         )
         result.facts = facts_result["stats"]
         result.errors.extend(facts_result["errors"])
 
-        # Phase 3: Sync Users (placeholder)
-        print("📦 Phase 3: Syncing Users...")
+        # Phase 6: Sync Users
+        print("📦 Phase 6: Syncing Users...")
         users_result = await _sync_users(cortex, adapter, limits.users, opts.on_progress)
         result.users = users_result["stats"]
         result.errors.extend(users_result["errors"])
 
-        # Phase 4: Sync Agents (placeholder)
-        print("📦 Phase 4: Syncing Agents...")
+        # Phase 7: Sync Agents
+        print("📦 Phase 7: Syncing Agents...")
         agents_result = await _sync_agents(cortex, adapter, limits.agents, opts.on_progress)
         result.agents = agents_result["stats"]
         result.errors.extend(agents_result["errors"])
@@ -114,6 +143,140 @@ async def initial_graph_sync(
 # ============================================================================
 # Internal Sync Functions
 # ============================================================================
+
+
+async def _sync_memory_spaces(
+    cortex: "Cortex",
+    adapter: GraphAdapter,
+    limit: int,
+    on_progress: Optional[Callable[[str, int, int], None]],
+) -> Dict[str, Any]:
+    """Sync memory spaces to graph."""
+    stats = BatchSyncStats()
+    errors: List[BatchSyncError] = []
+
+    try:
+        # List all memory spaces (API max limit is 1000)
+        effective_limit = min(limit, 1000)
+        memory_spaces_result = await cortex.memory_spaces.list(
+            ListMemorySpacesFilter(limit=effective_limit)
+        )
+        memory_spaces = memory_spaces_result.spaces
+
+        for i, memory_space in enumerate(memory_spaces):
+            try:
+                # Convert dataclass to dict for sync function
+                memory_space_dict = asdict(memory_space)
+                await sync_memory_space_to_graph(memory_space_dict, adapter)
+                stats.synced += 1
+
+                if on_progress:
+                    on_progress("MemorySpaces", i + 1, len(memory_spaces))
+            except Exception as e:
+                stats.failed += 1
+                errors.append(BatchSyncError(
+                    entity_type="MemorySpace",
+                    entity_id=memory_space.memory_space_id,
+                    error=str(e),
+                ))
+
+    except Exception as e:
+        print(f"Failed to list memory spaces: {e}")
+
+    return {"stats": stats, "errors": errors}
+
+
+async def _sync_contexts(
+    cortex: "Cortex",
+    adapter: GraphAdapter,
+    sync_rels: bool,
+    limit: int,
+    on_progress: Optional[Callable[[str, int, int], None]],
+) -> Dict[str, Any]:
+    """Sync contexts to graph."""
+    stats = BatchSyncStats()
+    errors: List[BatchSyncError] = []
+
+    try:
+        # List all contexts (API max limit is 1000)
+        effective_limit = min(limit, 1000)
+        contexts = await cortex.contexts.list(limit=effective_limit)
+
+        for i, context in enumerate(contexts):
+            try:
+                # Convert dataclass to dict for sync function
+                context_dict = asdict(context)
+                # Sync node
+                node_id = await sync_context_to_graph(context_dict, adapter)
+                stats.synced += 1
+
+                # Sync relationships
+                if sync_rels:
+                    await sync_context_relationships(context_dict, node_id, adapter)
+
+                if on_progress:
+                    on_progress("Contexts", i + 1, len(contexts))
+            except Exception as e:
+                stats.failed += 1
+                context_id = context.context_id if hasattr(context, 'context_id') else str(context)
+                errors.append(BatchSyncError(
+                    entity_type="Context",
+                    entity_id=context_id,
+                    error=str(e),
+                ))
+
+    except Exception as e:
+        print(f"Failed to list contexts: {e}")
+
+    return {"stats": stats, "errors": errors}
+
+
+async def _sync_conversations(
+    cortex: "Cortex",
+    adapter: GraphAdapter,
+    sync_rels: bool,
+    limit: int,
+    on_progress: Optional[Callable[[str, int, int], None]],
+) -> Dict[str, Any]:
+    """Sync conversations to graph."""
+    stats = BatchSyncStats()
+    errors: List[BatchSyncError] = []
+
+    try:
+        # List all conversations (API limit is 1000)
+        from ..types import ListConversationsFilter
+        conversations_result = await cortex.conversations.list(
+            ListConversationsFilter(limit=min(limit, 1000))
+        )
+        conversations = conversations_result.conversations
+
+        for i, conversation in enumerate(conversations):
+            try:
+                # Convert dataclass to dict for sync function
+                conversation_dict = asdict(conversation)
+                # Sync node
+                node_id = await sync_conversation_to_graph(conversation_dict, adapter)
+                stats.synced += 1
+
+                # Sync relationships
+                if sync_rels:
+                    await sync_conversation_relationships(conversation_dict, node_id, adapter)
+
+                if on_progress:
+                    on_progress("Conversations", i + 1, len(conversations))
+            except Exception as e:
+                stats.failed += 1
+                conv_id = conversation.conversation_id if hasattr(conversation, 'conversation_id') else str(conversation)
+                errors.append(BatchSyncError(
+                    entity_type="Conversation",
+                    entity_id=conv_id,
+                    error=str(e),
+                ))
+
+    except Exception as e:
+        print(f"Failed to list conversations: {e}")
+
+    return {"stats": stats, "errors": errors}
 
 
 async def _sync_memories(

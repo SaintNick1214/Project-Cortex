@@ -25,7 +25,11 @@ from cortex import (
     PurgeManyImmutableResult,
     PurgeVersionsResult,
     StoreImmutableOptions,
+    Cortex,
+    CortexConfig,
+    AuthContext,
 )
+from cortex.auth import create_auth_context
 from cortex.immutable import ImmutableValidationError
 
 # ============================================================================

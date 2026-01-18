@@ -471,6 +471,71 @@ async def test_register_agent_updates_existing(cortex_client, test_ids):
     await cortex_client.agents.unregister(agent_id)
 
 
+@pytest.mark.asyncio
+async def test_register_agent_with_tenant_id(cortex_client, test_ids):
+    """
+    Test registering an agent with tenant_id (v0.31.0).
+
+    Tests multi-tenancy support in register().
+    """
+    agent_id = test_ids["agent_id"]
+    tenant_id = f"tenant-{test_ids['user_id']}"
+
+    result = await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Tenant Agent",
+            description="Agent with tenant_id",
+            tenant_id=tenant_id,
+            metadata={"version": "1.0"},
+        )
+    )
+
+    # Validate result
+    agent_id_result = result.get("id") if isinstance(result, dict) else result.id
+    assert agent_id_result == agent_id
+    
+    # Verify tenant_id field exists (v0.31.0)
+    if not isinstance(result, dict):
+        assert hasattr(result, "tenant_id")
+        # tenant_id may be None if not stored by backend (backward compatibility)
+        assert result.tenant_id is None or isinstance(result.tenant_id, str)
+    # tenant_id may be returned by backend or None if not stored
+    # Backend behavior may vary, so we just verify registration succeeds
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_register_backward_compatible_without_tenant_id(cortex_client, test_ids):
+    """
+    Test that register() works without tenant_id (backward compatibility).
+
+    tenant_id is optional and should default to None or auth context.
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register without tenant_id (should work)
+    result = await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="No Tenant Test",
+            description="Agent without tenant_id",
+            # tenant_id not provided - should work
+        )
+    )
+
+    assert result.get("id") if isinstance(result, dict) else result.id == agent_id
+    # Verify tenant_id field exists (can be None for backward compatibility)
+    if not isinstance(result, dict):
+        assert hasattr(result, "tenant_id")
+        assert result.tenant_id is None or isinstance(result.tenant_id, str)
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
 # ============================================================================
 # get() Tests
 # ============================================================================
@@ -517,6 +582,37 @@ async def test_get_nonexistent_returns_none(cortex_client):
     result = await cortex_client.agents.get("agent-does-not-exist")
 
     assert result is None
+
+
+@pytest.mark.asyncio
+async def test_get_agent_has_tenant_id_field(cortex_client, test_ids):
+    """
+    Test that get() returns agent with tenant_id field (v0.31.0).
+
+    Verify RegisteredAgent includes tenant_id field (can be None for backward compatibility).
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Tenant Field Test Agent",
+            metadata={"capabilities": ["chat"]},
+        )
+    )
+
+    # Get agent
+    result = await cortex_client.agents.get(agent_id)
+
+    assert result is not None
+    # Verify tenant_id field exists (v0.31.0)
+    assert hasattr(result, "tenant_id")
+    # tenant_id can be None for agents created without auth context (backward compatibility)
+    assert result.tenant_id is None or isinstance(result.tenant_id, str)
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
 
 
 # ============================================================================

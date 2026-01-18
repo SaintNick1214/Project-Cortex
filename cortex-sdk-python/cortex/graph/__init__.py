@@ -11,6 +11,7 @@ from ..types import GraphAdapter, GraphDeleteResult, GraphEdge, GraphNode
 
 # Re-export error classes
 from .errors import (
+    GraphAuthenticationError,
     GraphConnectionError,
     GraphDatabaseError,
     GraphNotFoundError,
@@ -79,7 +80,9 @@ async def find_graph_node_id(
     return nodes[0].id if nodes else None
 
 
-async def ensure_user_node(user_id: str, adapter: GraphAdapter) -> str:
+async def ensure_user_node(
+    user_id: str, adapter: GraphAdapter, tenant_id: Optional[str] = None
+) -> str:
     """
     Ensure a User node exists in the graph.
 
@@ -88,6 +91,7 @@ async def ensure_user_node(user_id: str, adapter: GraphAdapter) -> str:
     Args:
         user_id: User ID
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Graph node ID
@@ -100,6 +104,7 @@ async def ensure_user_node(user_id: str, adapter: GraphAdapter) -> str:
             label="User",
             properties={
                 "userId": user_id,
+                "tenantId": tenant_id,
                 "createdAt": int(time.time() * 1000),
             },
         ),
@@ -107,7 +112,9 @@ async def ensure_user_node(user_id: str, adapter: GraphAdapter) -> str:
     )
 
 
-async def ensure_agent_node(agent_id: str, adapter: GraphAdapter) -> str:
+async def ensure_agent_node(
+    agent_id: str, adapter: GraphAdapter, tenant_id: Optional[str] = None
+) -> str:
     """
     Ensure an Agent node exists in the graph.
 
@@ -116,6 +123,7 @@ async def ensure_agent_node(agent_id: str, adapter: GraphAdapter) -> str:
     Args:
         agent_id: Agent ID
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Graph node ID
@@ -128,6 +136,7 @@ async def ensure_agent_node(agent_id: str, adapter: GraphAdapter) -> str:
             label="Agent",
             properties={
                 "agentId": agent_id,
+                "tenantId": tenant_id,
                 "createdAt": int(time.time() * 1000),
             },
         ),
@@ -135,7 +144,9 @@ async def ensure_agent_node(agent_id: str, adapter: GraphAdapter) -> str:
     )
 
 
-async def ensure_participant_node(participant_id: str, adapter: GraphAdapter) -> str:
+async def ensure_participant_node(
+    participant_id: str, adapter: GraphAdapter, tenant_id: Optional[str] = None
+) -> str:
     """
     Ensure a Participant node exists in the graph (Hive Mode).
 
@@ -144,6 +155,7 @@ async def ensure_participant_node(participant_id: str, adapter: GraphAdapter) ->
     Args:
         participant_id: Participant ID
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Graph node ID
@@ -156,6 +168,7 @@ async def ensure_participant_node(participant_id: str, adapter: GraphAdapter) ->
             label="Participant",
             properties={
                 "participantId": participant_id,
+                "tenantId": tenant_id,
                 "createdAt": int(time.time() * 1000),
             },
         ),
@@ -167,6 +180,7 @@ async def ensure_entity_node(
     entity_name: str,
     entity_type: str,
     adapter: GraphAdapter,
+    tenant_id: Optional[str] = None,
 ) -> str:
     """
     Ensure an Entity node exists in the graph.
@@ -178,6 +192,7 @@ async def ensure_entity_node(
         entity_name: Entity name
         entity_type: Entity type (e.g., 'subject', 'object')
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Graph node ID
@@ -191,6 +206,7 @@ async def ensure_entity_node(
             properties={
                 "name": entity_name,
                 "type": entity_type,
+                "tenantId": tenant_id,
                 "createdAt": int(time.time() * 1000),
             },
         ),
@@ -203,6 +219,7 @@ async def ensure_enriched_entity_node(
     entity_type: str,
     full_value: Optional[str],
     adapter: GraphAdapter,
+    tenant_id: Optional[str] = None,
 ) -> str:
     """
     Ensure an enriched Entity node exists in the graph.
@@ -218,6 +235,7 @@ async def ensure_enriched_entity_node(
         entity_type: Specific entity type
         full_value: Full value if available
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Graph node ID
@@ -234,6 +252,7 @@ async def ensure_enriched_entity_node(
             properties={
                 "name": entity_name,
                 "type": entity_type,
+                "tenantId": tenant_id,
                 "entityType": entity_type,
                 "fullValue": full_value,
                 "createdAt": now,
@@ -249,7 +268,9 @@ async def ensure_enriched_entity_node(
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-async def sync_memory_to_graph(memory: Dict[str, Any], adapter: GraphAdapter) -> str:
+async def sync_memory_to_graph(
+    memory: Dict[str, Any], adapter: GraphAdapter, tenant_id: Optional[str] = None
+) -> str:
     """
     Sync a memory to the graph database.
 
@@ -258,6 +279,7 @@ async def sync_memory_to_graph(memory: Dict[str, Any], adapter: GraphAdapter) ->
     Args:
         memory: Memory entry to sync
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Node ID in graph
@@ -270,6 +292,7 @@ async def sync_memory_to_graph(memory: Dict[str, Any], adapter: GraphAdapter) ->
         properties={
             "memoryId": memory["memoryId"],
             "memorySpaceId": memory["memorySpaceId"],
+            "tenantId": tenant_id or memory.get("tenantId"),
             "participantId": memory.get("participantId"),
             "userId": memory.get("userId"),
             "agentId": memory.get("agentId"),
@@ -468,7 +491,7 @@ async def delete_memory_from_graph(
 
 
 async def sync_conversation_to_graph(
-    conversation: Dict[str, Any], adapter: GraphAdapter
+    conversation: Dict[str, Any], adapter: GraphAdapter, tenant_id: Optional[str] = None
 ) -> str:
     """
     Sync conversation to graph.
@@ -478,6 +501,7 @@ async def sync_conversation_to_graph(
     Args:
         conversation: Conversation data
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Node ID in graph
@@ -488,6 +512,7 @@ async def sync_conversation_to_graph(
         properties={
             "conversationId": conversation["conversationId"],
             "memorySpaceId": conversation["memorySpaceId"],
+            "tenantId": tenant_id or conversation.get("tenantId"),
             "participantId": conversation.get("participantId"),
             "type": conversation["type"],
             "userId": participants.get("userId"),
@@ -636,7 +661,9 @@ async def delete_conversation_from_graph(
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-async def sync_fact_to_graph(fact: Dict[str, Any], adapter: GraphAdapter) -> str:
+async def sync_fact_to_graph(
+    fact: Dict[str, Any], adapter: GraphAdapter, tenant_id: Optional[str] = None
+) -> str:
     """
     Sync fact to graph.
 
@@ -645,6 +672,7 @@ async def sync_fact_to_graph(fact: Dict[str, Any], adapter: GraphAdapter) -> str
     Args:
         fact: Fact data
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Node ID in graph
@@ -654,6 +682,7 @@ async def sync_fact_to_graph(fact: Dict[str, Any], adapter: GraphAdapter) -> str
         properties={
             "factId": fact["factId"],
             "memorySpaceId": fact["memorySpaceId"],
+            "tenantId": tenant_id or fact.get("tenantId"),
             "participantId": fact.get("participantId"),
             "fact": fact["fact"],
             "factType": fact["factType"],
@@ -837,7 +866,7 @@ async def sync_fact_relationships(
         except Exception:
             pass
 
-    # sourceRef → EXTRACTED_FROM edge
+    # sourceRef → EXTRACTED_FROM edge (to Conversation)
     source_ref = fact.get("sourceRef") or {}
     if source_ref.get("conversationId"):
         try:
@@ -852,6 +881,26 @@ async def sync_fact_relationships(
                         to_node=conv_node_id,
                         properties={
                             "messageIds": source_ref.get("messageIds", []),
+                            "createdAt": fact.get("createdAt", now),
+                        },
+                    )
+                )
+        except Exception:
+            pass
+
+    # sourceRef → EXTRACTED_WITH edge (to Memory for bidirectional traceability)
+    if source_ref.get("memoryId"):
+        try:
+            memory_node_id = await find_graph_node_id(
+                "Memory", source_ref["memoryId"], adapter
+            )
+            if memory_node_id:
+                await adapter.create_edge(
+                    GraphEdge(
+                        type="EXTRACTED_WITH",
+                        from_node=node_id,
+                        to_node=memory_node_id,
+                        properties={
                             "createdAt": fact.get("createdAt", now),
                         },
                     )
@@ -1155,12 +1204,208 @@ async def remove_fact_supersession_relationships(
         return 0
 
 
+async def update_fact_graph_status(
+    fact_id: str,
+    status: str,
+    adapter: GraphAdapter,
+) -> None:
+    """
+    Update fact status in graph database.
+
+    Updates the status property of a Fact node to reflect
+    its current state (active, superseded, deleted).
+
+    Args:
+        fact_id: The fact ID
+        status: New status ('active', 'superseded', 'deleted')
+        adapter: Graph database adapter
+
+    Example:
+        >>> await update_fact_graph_status("fact-123", "superseded", adapter)
+    """
+    node_id = await find_graph_node_id("Fact", fact_id, adapter)
+
+    if node_id:
+        # Update the node properties
+        await adapter.merge_node(
+            GraphNode(
+                label="Fact",
+                properties={
+                    "factId": fact_id,
+                    "status": status,
+                    "statusUpdatedAt": int(time.time() * 1000),
+                },
+            ),
+            {"factId": fact_id},
+        )
+
+
+async def sync_fact_update_in_place(
+    fact: Dict[str, Any],
+    adapter: GraphAdapter,
+    tenant_id: Optional[str] = None,
+) -> str:
+    """
+    Sync fact update in place to graph database.
+
+    Updates an existing Fact node with new content.
+    Used for UPDATE action in belief revision.
+
+    Args:
+        fact: The fact data
+        adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy
+
+    Returns:
+        Node ID in graph
+
+    Example:
+        >>> node_id = await sync_fact_update_in_place(fact, adapter)
+    """
+    return await adapter.merge_node(
+        GraphNode(
+            label="Fact",
+            properties={
+                "factId": fact["factId"],
+                "memorySpaceId": fact["memorySpaceId"],
+                "tenantId": tenant_id or fact.get("tenantId"),
+                "participantId": fact.get("participantId"),
+                "fact": fact["fact"],
+                "factType": fact["factType"],
+                "subject": fact.get("subject"),
+                "predicate": fact.get("predicate"),
+                "object": fact.get("object"),
+                "confidence": fact["confidence"],
+                "sourceType": fact.get("sourceType"),
+                "tags": fact.get("tags", []),
+                "version": fact.get("version", 1),
+                "supersededBy": fact.get("supersededBy"),
+                "supersedes": fact.get("supersedes"),
+                "status": "active",
+                "updatedAt": fact.get("updatedAt", int(time.time() * 1000)),
+            },
+        ),
+        {"factId": fact["factId"]},
+    )
+
+
+async def sync_fact_full_supersession(
+    old_fact: Dict[str, Any],
+    new_fact: Dict[str, Any],
+    adapter: GraphAdapter,
+    reason: Optional[str] = None,
+    tenant_id: Optional[str] = None,
+) -> Dict[str, str]:
+    """
+    Sync fact supersession to graph database.
+
+    Creates a SUPERSEDES relationship from new fact to old fact.
+    Also marks the old fact as superseded.
+
+    Args:
+        old_fact: The fact being superseded
+        new_fact: The fact that supersedes
+        adapter: Graph database adapter
+        reason: Optional reason for supersession
+        tenant_id: Optional tenant ID for multi-tenancy
+
+    Returns:
+        Dict with old_node_id, new_node_id, and relationship_id
+
+    Example:
+        >>> result = await sync_fact_full_supersession(old_fact, new_fact, adapter, "Updated info")
+        >>> print(f"Created supersession: {result['relationship_id']}")
+    """
+    # Ensure both facts exist in graph with supersession refs
+    old_fact_updated = {**old_fact, "supersededBy": new_fact["factId"]}
+    new_fact_updated = {**new_fact, "supersedes": old_fact["factId"]}
+
+    old_node_id = await sync_fact_to_graph(old_fact_updated, adapter, tenant_id)
+    new_node_id = await sync_fact_to_graph(new_fact_updated, adapter, tenant_id)
+
+    # Create SUPERSEDES relationship
+    now = int(time.time() * 1000)
+    relationship_id = await adapter.create_edge(
+        GraphEdge(
+            type="SUPERSEDES",
+            from_node=new_node_id,
+            to_node=old_node_id,
+            properties={
+                "reason": reason,
+                "timestamp": now,
+            },
+        )
+    )
+
+    # Mark old fact as inactive/superseded in graph
+    await update_fact_graph_status(old_fact["factId"], "superseded", adapter)
+
+    return {
+        "old_node_id": old_node_id,
+        "new_node_id": new_node_id,
+        "relationship_id": relationship_id,
+    }
+
+
+async def sync_fact_revision_relationship(
+    original_fact: Dict[str, Any],
+    revised_fact: Dict[str, Any],
+    adapter: GraphAdapter,
+    reason: Optional[str] = None,
+    tenant_id: Optional[str] = None,
+) -> Dict[str, str]:
+    """
+    Create a REVISED_FROM relationship between facts.
+
+    Used when a fact is updated (refined) rather than superseded.
+    The relationship shows evolution without invalidation.
+
+    Args:
+        original_fact: The original fact
+        revised_fact: The revised fact
+        adapter: Graph database adapter
+        reason: Optional reason for revision
+        tenant_id: Optional tenant ID for multi-tenancy
+
+    Returns:
+        Dict with original_node_id, revised_node_id, and relationship_id
+
+    Example:
+        >>> result = await sync_fact_revision_relationship(orig, revised, adapter)
+    """
+    # Ensure both facts exist in graph
+    original_node_id = await sync_fact_to_graph(original_fact, adapter, tenant_id)
+    revised_node_id = await sync_fact_to_graph(revised_fact, adapter, tenant_id)
+
+    # Create REVISED_FROM relationship
+    now = int(time.time() * 1000)
+    relationship_id = await adapter.create_edge(
+        GraphEdge(
+            type="REVISED_FROM",
+            from_node=revised_node_id,
+            to_node=original_node_id,
+            properties={
+                "reason": reason or "Content refinement",
+                "timestamp": now,
+            },
+        )
+    )
+
+    return {
+        "original_node_id": original_node_id,
+        "revised_node_id": revised_node_id,
+        "relationship_id": relationship_id,
+    }
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Sync Functions - Context to Graph
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 
-async def sync_context_to_graph(context: Dict[str, Any], adapter: GraphAdapter) -> str:
+async def sync_context_to_graph(
+    context: Dict[str, Any], adapter: GraphAdapter, tenant_id: Optional[str] = None
+) -> str:
     """
     Sync context to graph.
 
@@ -1169,6 +1414,7 @@ async def sync_context_to_graph(context: Dict[str, Any], adapter: GraphAdapter) 
     Args:
         context: Context data
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Node ID in graph
@@ -1180,6 +1426,7 @@ async def sync_context_to_graph(context: Dict[str, Any], adapter: GraphAdapter) 
         properties={
             "contextId": context_id,
             "memorySpaceId": context["memorySpaceId"],
+            "tenantId": tenant_id or context.get("tenantId"),
             "purpose": context["purpose"],
             "status": context["status"],
             "depth": context["depth"],
@@ -1366,7 +1613,7 @@ async def delete_context_from_graph(
 
 
 async def sync_memory_space_to_graph(
-    memory_space: Dict[str, Any], adapter: GraphAdapter
+    memory_space: Dict[str, Any], adapter: GraphAdapter, tenant_id: Optional[str] = None
 ) -> str:
     """
     Sync memory space to graph.
@@ -1376,6 +1623,7 @@ async def sync_memory_space_to_graph(
     Args:
         memory_space: Memory space data
         adapter: Graph database adapter
+        tenant_id: Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
 
     Returns:
         Node ID in graph
@@ -1385,6 +1633,7 @@ async def sync_memory_space_to_graph(
         label="MemorySpace",
         properties={
             "memorySpaceId": memory_space["memorySpaceId"],
+            "tenantId": tenant_id or memory_space.get("tenantId"),
             "name": memory_space.get("name"),
             "type": memory_space["type"],
             "status": memory_space["status"],
@@ -1647,6 +1896,7 @@ __all__ = [
     # Error classes
     "GraphDatabaseError",
     "GraphConnectionError",
+    "GraphAuthenticationError",
     "GraphQueryError",
     "GraphNotFoundError",
     "GraphSchemaError",
@@ -1685,6 +1935,10 @@ __all__ = [
     "sync_fact_revision",
     "get_fact_supersession_chain_from_graph",
     "remove_fact_supersession_relationships",
+    "update_fact_graph_status",
+    "sync_fact_update_in_place",
+    "sync_fact_full_supersession",
+    "sync_fact_revision_relationship",
     # Sync functions - Context
     "sync_context_to_graph",
     "sync_context_relationships",

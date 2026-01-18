@@ -121,6 +121,9 @@ class MemorySpacesAPI:
         if params.participants is not None:
             validate_participants(params.participants)
 
+        # Determine tenant_id: explicit param > auth context
+        tenant_id = params.tenant_id if params.tenant_id else self._tenant_id
+
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "memorySpaces:register",
@@ -128,6 +131,7 @@ class MemorySpacesAPI:
                     "memorySpaceId": params.memory_space_id,
                     "name": params.name,
                     "type": params.type,
+                    "tenantId": tenant_id,  # Multi-tenancy: associate space with tenant
                     "participants": params.participants,
                     "metadata": params.metadata or {},
                 }),
@@ -164,7 +168,10 @@ class MemorySpacesAPI:
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "memorySpaces:get",
-                {"memorySpaceId": memory_space_id},
+                filter_none_values({
+                    "memorySpaceId": memory_space_id,
+                    "tenantId": self._tenant_id,  # Multi-tenancy: find space within tenant
+                }),
             ),
             "memorySpaces:get",
         )
@@ -210,6 +217,7 @@ class MemorySpacesAPI:
         # Support both filter object and keyword arguments
         f_type = filter.type if filter else type
         f_status = filter.status if filter else status
+        f_tenant_id = filter.tenant_id if filter and filter.tenant_id else self._tenant_id
         f_participant = filter.participant if filter else participant
         f_limit = filter.limit if filter else limit
         f_offset = filter.offset if filter else offset
@@ -236,6 +244,7 @@ class MemorySpacesAPI:
                 filter_none_values({
                     "type": f_type,
                     "status": f_status,
+                    "tenantId": f_tenant_id,  # Multi-tenancy: filter by tenant
                     "participant": f_participant,
                     "limit": f_limit,
                     "offset": f_offset,
@@ -657,6 +666,7 @@ class MemorySpacesAPI:
                 "memorySpaces:deleteSpace",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": self._tenant_id,  # Multi-tenancy: ensure delete is tenant-scoped
                     "cascade": d_cascade,
                     "reason": d_reason,
                     "confirmId": d_confirm_id,

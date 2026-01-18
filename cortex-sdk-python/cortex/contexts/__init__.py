@@ -14,9 +14,16 @@ from ..types import (
     ContextInput,
     ContextStatus,
     ContextWithChain,
+    CountContextsFilter,
     CreateContextOptions,
     DeleteContextOptions,
+    DeleteContextResult,
+    DeleteManyContextsResult,
+    ExportContextsResult,
+    ListContextsFilter,
     UpdateContextOptions,
+    UpdateContextParams,
+    UpdateManyContextsResult,
 )
 from .validators import (
     ContextsValidationError,
@@ -24,6 +31,7 @@ from .validators import (
     validate_conversation_id_format,
     validate_conversation_ref,
     validate_data_object,
+    validate_depth,
     validate_export_format,
     validate_has_filters,
     validate_limit,
@@ -125,12 +133,17 @@ class ContextsAPI:
         if params.data is not None:
             validate_data_object(params.data)
 
+        # Multi-tenancy: use provided tenant_id or inject from auth context
+        tenant_id = params.tenant_id if hasattr(params, 'tenant_id') and params.tenant_id else self._tenant_id
+
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "contexts:create",
                 filter_none_values({
                     "purpose": params.purpose,
                     "memorySpaceId": params.memory_space_id,
+                    "tenantId": tenant_id,  # Multi-tenancy
+                    "description": params.description,
                     "parentId": params.parent_id,
                     "userId": params.user_id,
                     "conversationRef": (
@@ -143,7 +156,6 @@ class ContextsAPI:
                     ),
                     "data": params.data,
                     "status": params.status,
-                    # Note: description not supported by backend - put in data instead
                 }),
             ),
             "contexts:create",
@@ -173,11 +185,14 @@ class ContextsAPI:
             updated_at=result.get("updatedAt"),
             version=result.get("version", 1),
             root_id=result.get("rootId"),
+            tenant_id=result.get("tenantId"),  # Multi-tenancy
             parent_id=result.get("parentId"),
             user_id=result.get("userId"),
+            description=result.get("description"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
+            metadata=result.get("metadata"),
         )
 
     async def get(
@@ -212,8 +227,9 @@ class ContextsAPI:
                 "contexts:get",
                 filter_none_values({
                     "contextId": context_id,
+                    "tenantId": self._tenant_id,  # Multi-tenancy
                     "includeChain": include_chain,
-                    # Note: includeConversation not supported by backend yet
+                    "includeConversation": include_conversation,
                 }),
             ),
             "contexts:get",
@@ -239,11 +255,14 @@ class ContextsAPI:
             updated_at=result.get("updatedAt"),
             version=result.get("version", 1),
             root_id=result.get("rootId"),
+            tenant_id=result.get("tenantId"),  # Multi-tenancy
             parent_id=result.get("parentId"),
             user_id=result.get("userId"),
+            description=result.get("description"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
+            metadata=result.get("metadata"),
         )
 
     async def update(
@@ -285,7 +304,11 @@ class ContextsAPI:
         # Flatten updates into top-level parameters
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "contexts:update", filter_none_values({"contextId": context_id, **updates})
+                "contexts:update", filter_none_values({
+                    "contextId": context_id,
+                    "tenantId": self._tenant_id,  # Multi-tenancy
+                    **updates
+                })
             ),
             "contexts:update",
         )
@@ -313,11 +336,14 @@ class ContextsAPI:
             updated_at=result.get("updatedAt"),
             version=result.get("version", 1),
             root_id=result.get("rootId"),
+            tenant_id=result.get("tenantId"),  # Multi-tenancy
             parent_id=result.get("parentId"),
             user_id=result.get("userId"),
+            description=result.get("description"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
+            metadata=result.get("metadata"),
         )
 
     async def delete(
@@ -350,8 +376,9 @@ class ContextsAPI:
                 "contexts:deleteContext",
                 filter_none_values({
                     "contextId": context_id,
+                    "tenantId": self._tenant_id,  # Multi-tenancy
                     "cascadeChildren": opts.cascade_children,
-                    # Note: orphanChildren not supported by backend
+                    "orphanChildren": opts.orphan_children,
                 }),
             ),
             "contexts:deleteContext",
@@ -370,59 +397,90 @@ class ContextsAPI:
 
     async def search(
         self,
-        memory_space_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        status: Optional[ContextStatus] = None,
-        limit: int = 50,
-        include_chain: bool = False,
-    ) -> List[Union[Context, ContextWithChain]]:
+        filter: Optional[ListContextsFilter] = None,
+    ) -> List[Context]:
         """
-        Search contexts with filters.
+        Search contexts with filters (alias for list).
 
         Args:
-            memory_space_id: Filter by memory space
-            user_id: Filter by user ID
-            status: Filter by status
-            limit: Maximum results
-            include_chain: Return ContextWithChain instead of Context
+            filter: Optional filter criteria (ListContextsFilter)
 
         Returns:
-            List of contexts
+            List of contexts matching the filter
 
         Example:
             >>> active = await cortex.contexts.search(
-            ...     memory_space_id='finance-agent-space',
-            ...     status='active'
+            ...     ListContextsFilter(
+            ...         user_id='user-123',
+            ...         status='active',
+            ...     )
+            ... )
+        """
+        return await self.list(filter)
+
+    async def list(
+        self,
+        filter: Optional[ListContextsFilter] = None,
+    ) -> List[Context]:
+        """
+        List contexts with filters.
+
+        Args:
+            filter: Optional filter criteria (ListContextsFilter)
+
+        Returns:
+            List of contexts matching the filter
+
+        Example:
+            >>> contexts = await cortex.contexts.list(
+            ...     ListContextsFilter(
+            ...         memory_space_id='finance-space',
+            ...         status='active',
+            ...     )
             ... )
         """
         # Client-side validation
-        if memory_space_id is not None:
-            validate_required_string(memory_space_id, "memory_space_id")
+        if filter:
+            if filter.memory_space_id is not None:
+                validate_required_string(filter.memory_space_id, "memory_space_id")
+            if filter.user_id is not None:
+                validate_required_string(filter.user_id, "user_id")
+            if filter.status is not None:
+                validate_status(filter.status)
+            if filter.parent_id is not None:
+                validate_context_id_format(filter.parent_id)
+            if filter.root_id is not None:
+                validate_context_id_format(filter.root_id)
+            if filter.depth is not None:
+                validate_depth(filter.depth)
+            if filter.limit is not None:
+                validate_limit(filter.limit)
 
-        if user_id is not None:
-            validate_required_string(user_id, "user_id")
-
-        if status is not None:
-            validate_status(status)
-
-        validate_limit(limit)
+        # Multi-tenancy: use provided tenant_id or inject from auth context
+        tenant_id = (filter.tenant_id if filter and filter.tenant_id else None) or self._tenant_id
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "contexts:search",
+                "contexts:list",
                 filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "userId": user_id,
-                    "status": status,
-                    "limit": limit,
-                    # Note: includeChain not supported by backend
+                    "memorySpaceId": filter.memory_space_id if filter else None,
+                    "tenantId": tenant_id,  # Multi-tenancy
+                    "userId": filter.user_id if filter else None,
+                    "status": filter.status if filter else None,
+                    "parentId": filter.parent_id if filter else None,
+                    "rootId": filter.root_id if filter else None,
+                    "depth": filter.depth if filter else None,
+                    "limit": filter.limit if filter else None,
                 }),
             ),
-            "contexts:search",
+            "contexts:list",
         )
 
-        if include_chain:
-            return [ContextWithChain(**ctx) for ctx in result]
+        # Handle list or dict response
+        if isinstance(result, list):
+            contexts_list = result
+        else:
+            contexts_list = result.get("contexts", result)
 
         # Manually construct contexts
         return [
@@ -439,140 +497,55 @@ class ContextsAPI:
                 updated_at=ctx.get("updatedAt"),
                 version=ctx.get("version", 1),
                 root_id=ctx.get("rootId"),
+                tenant_id=ctx.get("tenantId"),  # Multi-tenancy
                 parent_id=ctx.get("parentId"),
                 user_id=ctx.get("userId"),
+                description=ctx.get("description"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
                 granted_access=ctx.get("grantedAccess"),
-            )
-            for ctx in result
-        ]
-
-    async def list(
-        self,
-        memory_space_id: Optional[str] = None,
-        status: Optional[ContextStatus] = None,
-        limit: int = 50,
-        offset: int = 0,
-    ) -> Dict[str, Any]:
-        """
-        List contexts with pagination.
-
-        Args:
-            memory_space_id: Filter by memory space
-            status: Filter by status
-            limit: Maximum results
-            offset: Number of results to skip
-
-        Returns:
-            List result with pagination info
-
-        Example:
-            >>> page1 = await cortex.contexts.list(limit=50, offset=0)
-        """
-        # Client-side validation
-        if memory_space_id is not None:
-            validate_required_string(memory_space_id, "memory_space_id")
-
-        if status is not None:
-            validate_status(status)
-
-        validate_limit(limit)
-
-        if offset < 0:
-            raise ContextsValidationError(
-                f"offset must be >= 0, got {offset}",
-                "INVALID_RANGE",
-                "offset",
-            )
-
-        result = await self._execute_with_resilience(
-            lambda: self.client.query(
-                "contexts:list",
-                filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "status": status,
-                    "limit": limit,
-                    # Note: offset not supported by backend yet
-                }),
-            ),
-            "contexts:list",
-        )
-
-        # Handle list or dict response
-        if isinstance(result, list):
-            contexts_list = result
-        else:
-            contexts_list = result.get("contexts", [])
-
-        # Manually construct contexts
-        contexts = [
-            Context(
-                id=ctx.get("contextId"),
-                memory_space_id=ctx.get("memorySpaceId"),
-                purpose=ctx.get("purpose"),
-                status=ctx.get("status"),
-                depth=ctx.get("depth", 0),
-                child_ids=ctx.get("childIds", []),
-                participants=ctx.get("participants", []),
-                data=ctx.get("data", {}),
-                created_at=ctx.get("createdAt"),
-                updated_at=ctx.get("updatedAt"),
-                version=ctx.get("version", 1),
-                root_id=ctx.get("rootId"),
-                parent_id=ctx.get("parentId"),
-                user_id=ctx.get("userId"),
-                conversation_ref=ctx.get("conversationRef"),
-                completed_at=ctx.get("completedAt"),
-                granted_access=ctx.get("grantedAccess"),
+                metadata=ctx.get("metadata"),
             )
             for ctx in contexts_list
         ]
 
-        # Return in expected format
-        if isinstance(result, list):
-            return {"contexts": contexts}
-        else:
-            result["contexts"] = contexts
-            return cast(Dict[str, Any], result)
-
     async def count(
         self,
-        memory_space_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        status: Optional[ContextStatus] = None,
+        filter: Optional[CountContextsFilter] = None,
     ) -> int:
         """
         Count contexts matching filters.
 
         Args:
-            memory_space_id: Filter by memory space
-            user_id: Filter by user ID
-            status: Filter by status
+            filter: Optional filter criteria (CountContextsFilter)
 
         Returns:
             Count of matching contexts
 
         Example:
-            >>> total = await cortex.contexts.count()
+            >>> total = await cortex.contexts.count(
+            ...     CountContextsFilter(
+            ...         memory_space_id='supervisor-space',
+            ...         status='active',
+            ...     )
+            ... )
         """
         # Client-side validation
-        if memory_space_id is not None:
-            validate_required_string(memory_space_id, "memory_space_id")
-
-        if user_id is not None:
-            validate_required_string(user_id, "user_id")
-
-        if status is not None:
-            validate_status(status)
+        if filter:
+            if filter.memory_space_id is not None:
+                validate_required_string(filter.memory_space_id, "memory_space_id")
+            if filter.user_id is not None:
+                validate_required_string(filter.user_id, "user_id")
+            if filter.status is not None:
+                validate_status(filter.status)
 
         result = await self._execute_with_resilience(
             lambda: self.client.query(
                 "contexts:count",
                 filter_none_values({
-                    "memorySpaceId": memory_space_id,
-                    "userId": user_id,
-                    "status": status,
+                    "memorySpaceId": filter.memory_space_id if filter else None,
+                    "userId": filter.user_id if filter else None,
+                    "status": filter.status if filter else None,
                 }),
             ),
             "contexts:count",
@@ -657,11 +630,14 @@ class ContextsAPI:
             updated_at=result.get("updatedAt"),
             version=result.get("version", 1),
             root_id=result.get("rootId"),
+            tenant_id=result.get("tenantId"),  # Multi-tenancy
             parent_id=result.get("parentId"),
             user_id=result.get("userId"),
+            description=result.get("description"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
+            metadata=result.get("metadata"),
         )
 
     async def get_root(self, context_id: str) -> Context:
@@ -700,11 +676,14 @@ class ContextsAPI:
             updated_at=result.get("updatedAt"),
             version=result.get("version", 1),
             root_id=result.get("rootId"),
+            tenant_id=result.get("tenantId"),  # Multi-tenancy
             parent_id=result.get("parentId"),
             user_id=result.get("userId"),
+            description=result.get("description"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
+            metadata=result.get("metadata"),
         )
 
     async def get_children(
@@ -757,11 +736,14 @@ class ContextsAPI:
                 updated_at=ctx.get("updatedAt"),
                 version=ctx.get("version", 1),
                 root_id=ctx.get("rootId"),
+                tenant_id=ctx.get("tenantId"),  # Multi-tenancy
                 parent_id=ctx.get("parentId"),
                 user_id=ctx.get("userId"),
+                description=ctx.get("description"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
                 granted_access=ctx.get("grantedAccess"),
+                metadata=ctx.get("metadata"),
             )
             for ctx in result
         ]
@@ -796,11 +778,14 @@ class ContextsAPI:
                 updated_at=ctx.get("updatedAt"),
                 version=ctx.get("version", 1),
                 root_id=ctx.get("rootId"),
+                tenant_id=ctx.get("tenantId"),  # Multi-tenancy
                 parent_id=ctx.get("parentId"),
                 user_id=ctx.get("userId"),
+                description=ctx.get("description"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
                 granted_access=ctx.get("grantedAccess"),
+                metadata=ctx.get("metadata"),
             )
             for ctx in result
         ]
@@ -846,11 +831,14 @@ class ContextsAPI:
             updated_at=result.get("updatedAt"),
             version=result.get("version", 1),
             root_id=result.get("rootId"),
+            tenant_id=result.get("tenantId"),  # Multi-tenancy
             parent_id=result.get("parentId"),
             user_id=result.get("userId"),
+            description=result.get("description"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
+            metadata=result.get("metadata"),
         )
 
     async def remove_participant(self, context_id: str, participant_id: str) -> Context:
@@ -894,11 +882,14 @@ class ContextsAPI:
             updated_at=result.get("updatedAt"),
             version=result.get("version", 1),
             root_id=result.get("rootId"),
+            tenant_id=result.get("tenantId"),  # Multi-tenancy
             parent_id=result.get("parentId"),
             user_id=result.get("userId"),
+            description=result.get("description"),
             conversation_ref=result.get("conversationRef"),
             completed_at=result.get("completedAt"),
             granted_access=result.get("grantedAccess"),
+            metadata=result.get("metadata"),
         )
 
     async def get_by_conversation(self, conversation_id: str) -> List[Context]:
@@ -940,11 +931,14 @@ class ContextsAPI:
                 updated_at=ctx.get("updatedAt"),
                 version=ctx.get("version", 1),
                 root_id=ctx.get("rootId"),
+                tenant_id=ctx.get("tenantId"),  # Multi-tenancy
                 parent_id=ctx.get("parentId"),
                 user_id=ctx.get("userId"),
+                description=ctx.get("description"),
                 conversation_ref=ctx.get("conversationRef"),
                 completed_at=ctx.get("completedAt"),
                 granted_access=ctx.get("grantedAccess"),
+                metadata=ctx.get("metadata"),
             )
             for ctx in result
         ]

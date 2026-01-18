@@ -56,6 +56,37 @@ class GraphConnectionError(GraphDatabaseError):
         super().__init__(message, "CONNECTION_ERROR", cause)
 
 
+class GraphAuthenticationError(GraphConnectionError):
+    """
+    Error thrown when graph database authentication fails.
+
+    This is a specific subclass of GraphConnectionError for auth failures,
+    allowing consumers to catch and handle authentication issues specifically.
+
+    Attributes:
+        uri: The database URI that failed authentication
+        username: The username that was attempted
+
+    Example:
+        >>> try:
+        ...     await adapter.connect(config)
+        ... except GraphAuthenticationError as e:
+        ...     print(f"Check your credentials for {e.uri}")
+        ...     print(f"Username: {e.username}")
+    """
+
+    def __init__(
+        self,
+        message: str,
+        uri: str,
+        username: str,
+        cause: Optional[Exception] = None,
+    ):
+        super().__init__(message, cause)
+        self.uri = uri
+        self.username = username
+
+
 class GraphQueryError(GraphDatabaseError):
     """
     Error thrown when a graph query fails.
@@ -177,6 +208,7 @@ class GraphSyncError(GraphDatabaseError):
 __all__ = [
     "GraphDatabaseError",
     "GraphConnectionError",
+    "GraphAuthenticationError",
     "GraphQueryError",
     "GraphNotFoundError",
     "GraphSchemaError",

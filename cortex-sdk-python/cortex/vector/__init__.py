@@ -10,7 +10,9 @@ from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
     AuthContext,
+    CountMemoriesFilter,
     DeleteMemoryOptions,
+    ListMemoriesFilter,
     MemoryEntry,
     SearchOptions,
     SourceType,
@@ -20,14 +22,19 @@ from ..types import (
 from .validators import (
     VectorValidationError,
     validate_content,
+    validate_count_filter,
+    validate_delete_many_filter,
     validate_export_format,
+    validate_export_options,
     validate_limit,
+    validate_list_filter,
     validate_memory_id,
     validate_memory_space_id,
     validate_search_options,
     validate_source_type,
     validate_store_memory_input,
     validate_timestamp,
+    validate_update_many_inputs,
     validate_update_options,
     validate_user_id,
     validate_version,
@@ -112,6 +119,7 @@ class VectorAPI:
                 "memories:store",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,
+                    "tenantId": getattr(input, "tenant_id", None),  # Multi-tenancy: SaaS platform isolation
                     "participantId": input.participant_id,
                     "content": input.content,
                     "contentType": input.content_type,
@@ -800,5 +808,17 @@ class VectorAPI:
         return cast(Optional[Dict[str, Any]], result)
 
 
-__all__ = ["VectorAPI", "VectorValidationError"]
+__all__ = [
+    "VectorAPI",
+    "VectorValidationError",
+    # Types for TypeScript-style API
+    "CountMemoriesFilter",
+    "ListMemoriesFilter",
+    # Validators for custom usage
+    "validate_count_filter",
+    "validate_delete_many_filter",
+    "validate_export_options",
+    "validate_list_filter",
+    "validate_update_many_inputs",
+]
 

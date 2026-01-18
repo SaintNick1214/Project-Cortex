@@ -540,3 +540,198 @@ def validate_update_options(updates: Dict[str, Any]) -> None:
 
     if "tags" in updates:
         validate_tags(updates["tags"])
+
+
+def validate_list_filter(filter: Any) -> None:
+    """
+    Validates ListMemoriesFilter (matches TypeScript validateListFilter).
+
+    Args:
+        filter: ListMemoriesFilter to validate
+
+    Raises:
+        VectorValidationError: If filter is invalid
+    """
+    if filter is None:
+        raise VectorValidationError(
+            "filter is required", "MISSING_REQUIRED_FIELD", "filter"
+        )
+
+    # Validate memory_space_id (required)
+    memory_space_id = getattr(filter, "memory_space_id", None)
+    if memory_space_id is None:
+        raise VectorValidationError(
+            "memory_space_id is required", "MISSING_REQUIRED_FIELD", "memory_space_id"
+        )
+    validate_memory_space_id(memory_space_id)
+
+    # Validate optional source_type
+    source_type = getattr(filter, "source_type", None)
+    if source_type is not None:
+        validate_source_type(source_type)
+
+    # Validate optional limit
+    limit = getattr(filter, "limit", None)
+    if limit is not None:
+        validate_limit(limit)
+
+
+def validate_count_filter(filter: Any) -> None:
+    """
+    Validates CountMemoriesFilter (matches TypeScript validateCountFilter).
+
+    Args:
+        filter: CountMemoriesFilter to validate
+
+    Raises:
+        VectorValidationError: If filter is invalid
+    """
+    if filter is None:
+        raise VectorValidationError(
+            "filter is required", "MISSING_REQUIRED_FIELD", "filter"
+        )
+
+    # Validate memory_space_id (required)
+    memory_space_id = getattr(filter, "memory_space_id", None)
+    if memory_space_id is None:
+        raise VectorValidationError(
+            "memory_space_id is required", "MISSING_REQUIRED_FIELD", "memory_space_id"
+        )
+    validate_memory_space_id(memory_space_id)
+
+    # Validate optional source_type
+    source_type = getattr(filter, "source_type", None)
+    if source_type is not None:
+        validate_source_type(source_type)
+
+
+def validate_export_options(options: Any) -> None:
+    """
+    Validates export options (matches TypeScript validateExportOptions).
+
+    Args:
+        options: Export options to validate
+
+    Raises:
+        VectorValidationError: If options are invalid
+    """
+    if options is None:
+        raise VectorValidationError(
+            "options is required", "MISSING_REQUIRED_FIELD", "options"
+        )
+
+    # If it's a dict-like object, extract values accordingly
+    if isinstance(options, dict):
+        memory_space_id = options.get("memory_space_id")
+        format_val = options.get("format")
+    else:
+        memory_space_id = getattr(options, "memory_space_id", None)
+        format_val = getattr(options, "format", None)
+
+    # Validate memory_space_id (required)
+    if memory_space_id is None:
+        raise VectorValidationError(
+            "memory_space_id is required", "MISSING_REQUIRED_FIELD", "memory_space_id"
+        )
+    validate_memory_space_id(memory_space_id)
+
+    # Validate format (required)
+    if format_val is None:
+        raise VectorValidationError(
+            "format is required", "MISSING_REQUIRED_FIELD", "format"
+        )
+    validate_export_format(format_val)
+
+
+def validate_delete_many_filter(filter: Any) -> None:
+    """
+    Validates deleteMany filter (matches TypeScript validateDeleteManyFilter).
+
+    Args:
+        filter: Delete many filter to validate
+
+    Raises:
+        VectorValidationError: If filter is invalid
+    """
+    if filter is None:
+        raise VectorValidationError(
+            "filter is required", "MISSING_REQUIRED_FIELD", "filter"
+        )
+
+    # If it's a dict-like object, extract values accordingly
+    if isinstance(filter, dict):
+        memory_space_id = filter.get("memory_space_id")
+        source_type = filter.get("source_type")
+    else:
+        memory_space_id = getattr(filter, "memory_space_id", None)
+        source_type = getattr(filter, "source_type", None)
+
+    # Validate memory_space_id (required)
+    if memory_space_id is None:
+        raise VectorValidationError(
+            "memory_space_id is required", "MISSING_REQUIRED_FIELD", "memory_space_id"
+        )
+    validate_memory_space_id(memory_space_id)
+
+    # Validate optional source_type
+    if source_type is not None:
+        validate_source_type(source_type)
+
+
+def validate_update_many_inputs(filter: Any, updates: Any) -> None:
+    """
+    Validates updateMany inputs (matches TypeScript validateUpdateManyInputs).
+
+    Args:
+        filter: Filter for which memories to update
+        updates: Update values to apply
+
+    Raises:
+        VectorValidationError: If inputs are invalid
+    """
+    # Validate filter
+    if filter is None:
+        raise VectorValidationError(
+            "filter is required", "MISSING_REQUIRED_FIELD", "filter"
+        )
+
+    # If it's a dict-like object, extract values accordingly
+    if isinstance(filter, dict):
+        memory_space_id = filter.get("memory_space_id")
+        source_type = filter.get("source_type")
+    else:
+        memory_space_id = getattr(filter, "memory_space_id", None)
+        source_type = getattr(filter, "source_type", None)
+
+    # Validate memory_space_id (required)
+    if memory_space_id is None:
+        raise VectorValidationError(
+            "memory_space_id is required", "MISSING_REQUIRED_FIELD", "memory_space_id"
+        )
+    validate_memory_space_id(memory_space_id)
+
+    # Validate optional source_type
+    if source_type is not None:
+        validate_source_type(source_type)
+
+    # Validate updates
+    if updates is None:
+        raise VectorValidationError(
+            "updates is required", "MISSING_REQUIRED_FIELD", "updates"
+        )
+
+    # If it's a dict-like object, extract values accordingly
+    if isinstance(updates, dict):
+        importance = updates.get("importance")
+        tags = updates.get("tags")
+    else:
+        importance = getattr(updates, "importance", None)
+        tags = getattr(updates, "tags", None)
+
+    # Validate optional importance
+    if importance is not None:
+        validate_importance(importance)
+
+    # Validate optional tags
+    if tags is not None:
+        validate_tags(tags)

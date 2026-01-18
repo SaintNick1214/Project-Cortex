@@ -176,16 +176,10 @@ class SessionsAPI:
         """
         validate_session_id(session_id)
 
-        # Pass tenant_id to backend for proper isolation
-        tenant_id = self._auth_context.tenant_id if self._auth_context else None
-
         result = await self._execute_with_resilience(
             lambda: self._client.query(
                 "sessions:get",
-                filter_none_values({
-                    "sessionId": session_id,
-                    "tenantId": tenant_id,
-                }),
+                {"sessionId": session_id},
             ),
             "sessions:get",
         )
@@ -193,7 +187,16 @@ class SessionsAPI:
         if not result:
             return None
 
-        return Session.from_dict(result)
+        session = Session.from_dict(result)
+
+        # Enforce tenant isolation: only deny if both have tenantId and they don't match
+        # Sessions without tenantId (legacy) are accessible to all (backwards compatibility)
+        if session.tenant_id and self._auth_context and self._auth_context.tenant_id:
+            if session.tenant_id != self._auth_context.tenant_id:
+                # Session belongs to a different tenant - return None to prevent cross-tenant access
+                return None
+
+        return session
 
     async def get_or_create(
         self,
@@ -248,16 +251,10 @@ class SessionsAPI:
         """
         validate_session_id(session_id)
 
-        # Pass tenant_id to backend for proper isolation
-        tenant_id = self._auth_context.tenant_id if self._auth_context else None
-
         await self._execute_with_resilience(
             lambda: self._client.mutation(
                 "sessions:touch",
-                filter_none_values({
-                    "sessionId": session_id,
-                    "tenantId": tenant_id,
-                }),
+                {"sessionId": session_id},
             ),
             "sessions:touch",
         )
@@ -269,21 +266,26 @@ class SessionsAPI:
         Args:
             session_id: Session ID to end
 
+        Raises:
+            Exception: If session not found or belongs to another tenant
+
         Example:
             >>> await cortex.sessions.end('sess-123')
         """
         validate_session_id(session_id)
 
-        # Pass tenant_id to backend for proper isolation
-        tenant_id = self._auth_context.tenant_id if self._auth_context else None
+        # Enforce tenant isolation: verify the session belongs to this tenant before ending
+        if self._auth_context and self._auth_context.tenant_id:
+            session = await self.get(session_id)
+            if not session:
+                # Session doesn't exist or belongs to another tenant
+                raise Exception(f"Session not found: {session_id}")
+            # Note: get() already filters by tenantId, so if we reach here, the session is ours
 
         await self._execute_with_resilience(
             lambda: self._client.mutation(
                 "sessions:end",
-                filter_none_values({
-                    "sessionId": session_id,
-                    "tenantId": tenant_id,
-                }),
+                {"sessionId": session_id},
             ),
             "sessions:end",
         )

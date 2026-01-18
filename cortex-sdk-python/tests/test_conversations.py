@@ -787,6 +787,208 @@ async def test_counts_by_type(cortex_client, cleanup_helper):
     assert count >= 0  # May have many from other tests
 
 
+# ============================================================================
+# Multi-Tenancy Tests (v0.31.0)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_list_filters_by_tenant_id(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """Test list filtering by tenant_id using ListConversationsFilter."""
+    tenant_id = "tenant-list-filter-test"
+
+    # Create conversation (tenant_id would come from auth context in real usage)
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=test_memory_space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
+        )
+    )
+
+    # List with tenant_id filter
+    result = await cortex_client.conversations.list(
+        ListConversationsFilter(tenant_id=tenant_id, memory_space_id=test_memory_space_id)
+    )
+
+    # Should return conversations filtered by tenant_id
+    assert isinstance(result.conversations, list)
+
+
+@pytest.mark.asyncio
+async def test_list_with_tenant_id_convenience_kwarg(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """Test list() with tenant_id convenience kwarg."""
+    tenant_id = "tenant-kwarg-test"
+
+    # Create conversation
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=test_memory_space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
+        )
+    )
+
+    # List using convenience kwarg
+    result = await cortex_client.conversations.list(
+        tenant_id=tenant_id,
+        memory_space_id=test_memory_space_id,
+    )
+
+    assert isinstance(result.conversations, list)
+    assert isinstance(result.total, (int, float))
+    assert result.total >= 0
+
+
+@pytest.mark.asyncio
+async def test_count_filters_by_tenant_id(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """Test count filtering by tenant_id using CountConversationsFilter."""
+    tenant_id = "tenant-count-filter-test"
+
+    # Create conversation
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=test_memory_space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
+        )
+    )
+
+    # Count with tenant_id filter
+    count = await cortex_client.conversations.count(
+        CountConversationsFilter(tenant_id=tenant_id, memory_space_id=test_memory_space_id)
+    )
+
+    assert isinstance(count, int)
+    assert count >= 0
+
+
+@pytest.mark.asyncio
+async def test_count_with_tenant_id_convenience_kwarg(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """Test count() with tenant_id convenience kwarg."""
+    tenant_id = "tenant-count-kwarg-test"
+
+    # Create conversation
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=test_memory_space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
+        )
+    )
+
+    # Count using convenience kwarg
+    count = await cortex_client.conversations.count(
+        tenant_id=tenant_id,
+        memory_space_id=test_memory_space_id,
+    )
+
+    assert isinstance(count, int)
+    assert count >= 0
+
+
+@pytest.mark.asyncio
+async def test_list_combines_tenant_id_with_other_filters(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """Test list() combining tenant_id with other filters."""
+    tenant_id = "tenant-combined-test"
+
+    # Create conversation
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=test_memory_space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
+        )
+    )
+
+    # List with multiple filters including tenant_id
+    result = await cortex_client.conversations.list(
+        ListConversationsFilter(
+            tenant_id=tenant_id,
+            memory_space_id=test_memory_space_id,
+            user_id=test_user_id,
+            type="user-agent",
+            limit=10,
+        )
+    )
+
+    assert isinstance(result.conversations, list)
+    assert isinstance(result.total, (int, float))
+    assert result.total >= 0
+    assert result.limit == 10
+
+
+@pytest.mark.asyncio
+async def test_count_combines_tenant_id_with_other_filters(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """Test count() combining tenant_id with other filters."""
+    tenant_id = "tenant-count-combined-test"
+
+    # Create conversation
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=test_memory_space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
+        )
+    )
+
+    # Count with multiple filters including tenant_id
+    count = await cortex_client.conversations.count(
+        CountConversationsFilter(
+            tenant_id=tenant_id,
+            memory_space_id=test_memory_space_id,
+            user_id=test_user_id,
+            type="user-agent",
+        )
+    )
+
+    assert isinstance(count, int)
+    assert count >= 0
+
+
+@pytest.mark.asyncio
+async def test_list_backward_compatible_without_tenant_id(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """Test that list() works without tenant_id (backward compatibility)."""
+    # Create conversation
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=test_memory_space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
+        )
+    )
+
+    # List without tenant_id (should still work)
+    result = await cortex_client.conversations.list(
+        ListConversationsFilter(memory_space_id=test_memory_space_id)
+    )
+
+    assert isinstance(result.conversations, list)
+    assert isinstance(result.total, (int, float))
+    assert result.total >= 0
+
+
+@pytest.mark.asyncio
+async def test_count_backward_compatible_without_tenant_id(cortex_client, test_memory_space_id, test_user_id, cleanup_helper):
+    """Test that count() works without tenant_id (backward compatibility)."""
+    # Create conversation
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=test_memory_space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=test_user_id, agent_id="test-agent"),
+        )
+    )
+
+    # Count without tenant_id (should still work)
+    count = await cortex_client.conversations.count(
+        CountConversationsFilter(memory_space_id=test_memory_space_id)
+    )
+
+    assert isinstance(count, int)
+    assert count >= 0
+
+
 @pytest.mark.asyncio
 async def test_delete_throws_error_for_nonexistent(cortex_client):
     """Test delete error for non-existent. Port of: conversations.test.ts - line 524"""

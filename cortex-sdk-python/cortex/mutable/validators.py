@@ -633,10 +633,6 @@ def validate_purge_filter(filter_obj: Any) -> None:
     if updated_before is not None:
         validate_timestamp(updated_before, "filter.updated_before")
 
-    last_accessed_before = getattr(filter_obj, "last_accessed_before", None)
-    if last_accessed_before is not None:
-        validate_timestamp(last_accessed_before, "filter.last_accessed_before")
-
 
 def validate_purge_namespace_options(options: Any) -> None:
     """

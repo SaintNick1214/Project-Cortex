@@ -14,8 +14,10 @@ from cortex import (
     A2AConversation,
     A2AConversationFilters,
     A2AConversationMessage,
+    A2AConversationPeriod,
     A2ARequestParams,
     A2ASendParams,
+    A2ATimeoutError,
     A2AValidationError,
     AddMessageInput,
     ConversationParticipants,
@@ -353,6 +355,36 @@ class TestA2ACoreGetConversation:
             assert msg.importance >= 70
 
     @pytest.mark.asyncio
+    async def test_get_conversation_with_format_field(
+        self, cortex_client, test_ids, cleanup_helper
+    ):
+        """Should accept format field in A2AConversationFilters."""
+        prefix = f"a2a-format-{int(time.time() * 1000)}"
+        agent1 = f"{prefix}-agent-1"
+        agent2 = f"{prefix}-agent-2"
+
+        # Send a message
+        await cortex_client.a2a.send(
+            A2ASendParams(
+                from_agent=agent1,
+                to_agent=agent2,
+                message="Format test message",
+                importance=75,
+            )
+        )
+
+        # Use filters object with format field
+        filters = A2AConversationFilters(
+            min_importance=70,
+            limit=50,
+            format="chronological",
+        )
+        convo = await cortex_client.a2a.get_conversation(agent1, agent2, filters=filters)
+
+        assert isinstance(convo, A2AConversation)
+        assert convo.message_count > 0
+
+    @pytest.mark.asyncio
     async def test_get_conversation_applies_importance_filters(
         self, cortex_client, test_ids, cleanup_helper
     ):
@@ -434,6 +466,37 @@ class TestA2ACoreGetConversation:
         assert convo.period_end > 0
         assert convo.period_end >= convo.period_start
 
+    @pytest.mark.asyncio
+    async def test_get_conversation_period_property(
+        self, cortex_client, test_ids, cleanup_helper
+    ):
+        """Should provide period property returning A2AConversationPeriod."""
+        prefix = f"a2a-period-prop-{int(time.time() * 1000)}"
+        agent1 = f"{prefix}-agent-1"
+        agent2 = f"{prefix}-agent-2"
+
+        # Send a message
+        await cortex_client.a2a.send(
+            A2ASendParams(
+                from_agent=agent1,
+                to_agent=agent2,
+                message="Period property test message",
+                importance=70,
+            )
+        )
+
+        convo = await cortex_client.a2a.get_conversation(agent1, agent2)
+
+        assert isinstance(convo, A2AConversation)
+        # Test period property returns A2AConversationPeriod
+        period = convo.period
+        assert isinstance(period, A2AConversationPeriod)
+        assert period.start == convo.period_start
+        assert period.end == convo.period_end
+        assert period.start > 0
+        assert period.end > 0
+        assert period.end >= period.start
+
 
 class TestA2ACoreRequest:
     """Tests for A2A request() operation."""
@@ -442,8 +505,8 @@ class TestA2ACoreRequest:
     async def test_request_throws_explaining_pubsub_requirement(
         self, cortex_client, test_ids, cleanup_helper
     ):
-        """Should throw explaining pub/sub requirement."""
-        with pytest.raises(Exception) as exc_info:
+        """Should throw A2ATimeoutError explaining pub/sub requirement."""
+        with pytest.raises(A2ATimeoutError) as exc_info:
             await cortex_client.a2a.request(
                 A2ARequestParams(
                     from_agent="test-requester",
@@ -453,6 +516,8 @@ class TestA2ACoreRequest:
                 )
             )
 
+        # Verify A2ATimeoutError.name attribute is set correctly
+        assert exc_info.value.name == "A2ATimeoutError"
         # Should mention pub/sub in some way
         assert "pub" in str(exc_info.value).lower() or "sub" in str(
             exc_info.value

@@ -11,7 +11,7 @@ The graph expansion strategy:
 """
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, List, Set
+from typing import TYPE_CHECKING, Any, List, Optional, Set
 
 if TYPE_CHECKING:
     from ...facts import FactsAPI
@@ -26,6 +26,8 @@ class GraphExpansionConfig:
     relationship_types: List[str] = field(default_factory=list)
     expand_from_facts: bool = True
     expand_from_memories: bool = True
+    entities_per_hop: int = 5  # Max entities to expand per graph hop
+    results_per_entity: int = 3  # Max results per discovered entity
 
 
 @dataclass
@@ -90,6 +92,98 @@ def extract_entities_from_results(
     ]
 
 
+async def extract_entities_from_query(
+    query: str,
+    graph_adapter: Any,
+) -> List[str]:
+    """
+    Extract potential entity names from a query string by looking them up
+    in the graph database.
+
+    This enables graph expansion even when initial search results don't
+    contain facts with entities. The query text is tokenized and each
+    significant word/phrase is checked against Entity nodes in the graph.
+
+    Strategy:
+    1. Tokenize query into words and n-grams (2-3 word phrases)
+    2. Query the graph for Entity nodes matching each candidate
+    3. Return matched entity names for graph traversal
+
+    Args:
+        query: Query string to extract entities from
+        graph_adapter: Graph database adapter (can be None)
+
+    Returns:
+        List of matched entity names from the graph
+    """
+    import re
+
+    if not graph_adapter or not query or not query.strip():
+        return []
+
+    try:
+        # Check if graph is connected
+        is_connected = await graph_adapter.is_connected()
+        if not is_connected:
+            return []
+
+        matched_entities: List[str] = []
+
+        # Tokenize query: split on spaces and common punctuation
+        words = re.sub(r"[^\w\s'-]", " ", query.lower()).split()
+        words = [w for w in words if len(w) > 2]  # Skip very short words
+
+        # Generate candidate phrases: single words and n-grams
+        candidates: Set[str] = set()
+
+        # Add individual words (capitalized - common for names)
+        for word in words:
+            # Capitalize first letter (entity names are often proper nouns)
+            capitalized = word[0].upper() + word[1:] if word else word
+            candidates.add(capitalized)
+            candidates.add(word)  # Also try lowercase
+
+        # Add 2-word phrases (for names like "Planet Granite", "Sarah Chen")
+        for i in range(len(words) - 1):
+            phrase = " ".join(
+                w[0].upper() + w[1:] if w else w
+                for w in words[i:i + 2]
+            )
+            candidates.add(phrase)
+
+        # Add 3-word phrases (for longer entity names)
+        for i in range(len(words) - 2):
+            phrase = " ".join(
+                w[0].upper() + w[1:] if w else w
+                for w in words[i:i + 3]
+            )
+            candidates.add(phrase)
+
+        # Query graph for each candidate (limit to avoid performance issues)
+        candidate_list = list(candidates)[:20]
+
+        for candidate in candidate_list:
+            try:
+                # Look for exact match on entity name
+                entity_nodes = await graph_adapter.find_nodes(
+                    "Entity",
+                    {"name": candidate},
+                    1,
+                )
+
+                if entity_nodes:
+                    matched_entities.append(candidate)
+            except Exception:
+                # Individual lookup failure - continue with others
+                continue
+
+        return matched_entities
+
+    except Exception:
+        # Query entity extraction failed - return empty (graceful degradation)
+        return []
+
+
 async def expand_via_graph(
     initial_entities: List[str],
     graph_adapter: Any,
@@ -121,8 +215,9 @@ async def expand_via_graph(
             return []
 
         # For each initial entity, traverse the graph
-        # Limit to first 10 to avoid performance issues
-        for entity_name in initial_entities[:10]:
+        # Use entities_per_hop from config (default: 5)
+        max_entities = config.entities_per_hop if hasattr(config, 'entities_per_hop') else 5
+        for entity_name in initial_entities[:max_entities]:
             try:
                 # Find the entity node
                 entity_nodes = await graph_adapter.find_nodes(
@@ -348,13 +443,15 @@ async def perform_graph_expansion(
     vector_api: "VectorAPI",
     facts_api: "FactsAPI",
     config: GraphExpansionConfig,
+    query_text: Optional[str] = None,
 ) -> GraphExpansionResult:
     """
     Full graph expansion pipeline.
 
-    1. Extract entities from initial results
-    2. Traverse graph to discover connected entities
-    3. Fetch related memories and facts
+    1. Extract entities from QUERY TEXT (NEW - enables expansion without facts)
+    2. Extract entities from initial results (existing behavior)
+    3. Combine and traverse graph to discover connected entities
+    4. Fetch related memories and facts
 
     Args:
         initial_memories: Memories from initial search
@@ -364,6 +461,7 @@ async def perform_graph_expansion(
         vector_api: Vector API instance
         facts_api: Facts API instance
         config: Expansion configuration
+        query_text: Optional query text for entity extraction (v0.31.0+)
 
     Returns:
         GraphExpansionResult with discovered entities and related data
@@ -382,47 +480,70 @@ async def perform_graph_expansion(
     if not graph_adapter or not config.expand_from_facts or not config.expand_from_memories:
         return GraphExpansionResult(processed_ids=processed_ids)
 
-    # Step 1: Extract entities from initial results
-    initial_entities = extract_entities_from_results(initial_memories, initial_facts)
+    # Step 1: Extract entities from QUERY TEXT (NEW - enables expansion without facts)
+    # This allows graph expansion even when initial search results don't contain facts
+    query_entities: List[str] = []
+    if query_text:
+        query_entities = await extract_entities_from_query(query_text, graph_adapter)
 
-    if not initial_entities:
+    # Step 2: Extract entities from initial results (existing behavior)
+    result_entities = extract_entities_from_results(initial_memories, initial_facts)
+
+    # Step 3: Combine all entities (deduplicated)
+    all_entities = list(set(query_entities + result_entities))
+
+    if not all_entities:
         return GraphExpansionResult(processed_ids=processed_ids)
 
-    # Step 2: Expand via graph
+    # Step 4: Expand via graph traversal
     discovered_entities = await expand_via_graph(
-        initial_entities,
+        all_entities,
         graph_adapter,
         config,
     )
 
-    if not discovered_entities:
+    # Even if no NEW entities discovered, if we have initial entities from query,
+    # we should still fetch related content for those entities
+    max_entities = config.entities_per_hop if hasattr(config, 'entities_per_hop') else 5
+    entities_to_fetch_raw = discovered_entities if discovered_entities else all_entities
+    # Limit entities to fetch based on config
+    entities_to_fetch = entities_to_fetch_raw[:max_entities]
+
+    if not entities_to_fetch:
         return GraphExpansionResult(processed_ids=processed_ids)
 
-    # Step 3: Fetch related data in parallel
+    # Calculate total results limit: entities * results_per_entity
+    results_per_entity = config.results_per_entity if hasattr(config, 'results_per_entity') else 3
+    total_results_limit = len(entities_to_fetch) * results_per_entity
+
+    # Step 5: Fetch related data in parallel
     import asyncio
+
+    async def empty_list() -> List:
+        return []
 
     related_memories_task = (
         fetch_related_memories(
-            discovered_entities,
+            entities_to_fetch,
             memory_space_id,
             vector_api,
             processed_ids,
-            10,
+            total_results_limit,
         )
         if config.expand_from_memories
-        else asyncio.coroutine(lambda: [])()
+        else empty_list()
     )
 
     related_facts_task = (
         fetch_related_facts(
-            discovered_entities,
+            entities_to_fetch,
             memory_space_id,
             facts_api,
             processed_ids,
-            10,
+            total_results_limit,
         )
         if config.expand_from_facts
-        else asyncio.coroutine(lambda: [])()
+        else empty_list()
     )
 
     related_memories, related_facts = await asyncio.gather(
@@ -431,7 +552,7 @@ async def perform_graph_expansion(
     )
 
     return GraphExpansionResult(
-        discovered_entities=discovered_entities,
+        discovered_entities=entities_to_fetch,
         related_memories=related_memories,
         related_facts=related_facts,
         processed_ids=processed_ids,
