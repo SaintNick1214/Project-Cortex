@@ -434,15 +434,15 @@ await cortex.facts.store({
     { name: "Acme Corp", type: "organization" },
   ],
 });
-// ✅ Fact node + Entity nodes + MENTIONS relationships created automatically!
+// Fact node + Entity nodes + MENTIONS relationships created automatically!
 
 // Memories are automatically synced
 await cortex.vector.store(memorySpaceId, data);
-// ✅ Memory node synced automatically!
+// Memory node synced automatically!
 
 // Conversations are automatically synced
 await cortex.conversations.create(input);
-// ✅ Conversation node synced automatically!
+// Conversation node synced automatically!
 ```
 
 #### Disabling Graph Sync
