@@ -698,7 +698,7 @@ class FactsAPI:
                 )
 
         result = await self._execute_with_resilience(
-            lambda: self.client.query(
+            lambda: self.client.action(
                 "facts:semanticSearch",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,

@@ -245,7 +245,7 @@ class VectorAPI:
             validate_search_options(options)
 
         result = await self._execute_with_resilience(
-            lambda: self.client.query(
+            lambda: self.client.action(
                 "memories:search",
                 filter_none_values({
                     "memorySpaceId": memory_space_id,

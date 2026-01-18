@@ -750,6 +750,8 @@ class FactRecord:
     relations: Optional[List[EnrichedRelation]] = None  # Subject-predicate-object triples for graph
     # Vector embedding for semantic search (v0.30.0+)
     embedding: Optional[List[float]] = None
+    # Similarity score from semantic search (v0.31.0+)
+    _score: Optional[float] = None
 
 
 @dataclass
