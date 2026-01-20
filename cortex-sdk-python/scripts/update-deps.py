@@ -105,6 +105,11 @@ def update_requirements_file(filepath: Path) -> list[tuple[str, str, str]]:
             new_lines.append(line)
             continue
         
+        # Skip git URL dependencies (not on PyPI)
+        if '@ git+' in line or '@git+' in line:
+            new_lines.append(line)
+            continue
+        
         package = extract_package_name(line)
         if not package:
             new_lines.append(line)
