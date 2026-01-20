@@ -36,10 +36,12 @@ import type {
  *
  * This interface matches the write method signature from the AI SDK's
  * createUIMessageStream, allowing layer events to be sent to the client.
+ *
+ * The type field uses a template literal to match the AI SDK's expected format.
  */
 export interface StreamWriter {
   write(part: {
-    type: string;
+    type: `data-${string}`;
     data: unknown;
     transient?: boolean;
   }): void;

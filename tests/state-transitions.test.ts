@@ -960,11 +960,18 @@ describe("State Transition Testing", () => {
         data: { progress: 0 },
       });
 
-      // Update both status and data
-      const updated = await cortex.contexts.update(testCtx.contextId, {
-        status: "completed",
-        data: { progress: 100, completedBy: "agent-1" },
-      });
+      // Wait for Convex consistency - poll until context is queryable
+      await waitForContextReady(testCtx.contextId);
+
+      // Update both status and data - use retry for CI resilience
+      const updated = await retryOperation(
+        () =>
+          cortex.contexts.update(testCtx.contextId, {
+            status: "completed",
+            data: { progress: 100, completedBy: "agent-1" },
+          }),
+        "contexts.update(combined status+data)",
+      );
 
       expect(updated.status).toBe("completed");
       expect(updated.data?.progress).toBe(100);
@@ -985,6 +992,9 @@ describe("State Transition Testing", () => {
         });
 
         expect(testCtx.status).toBe(status);
+
+        // Wait for Convex consistency - poll until context is queryable AND in list
+        await waitForContextReady(testCtx.contextId, spaceId, status);
 
         // Verify retrievable
         const retrieved = await cortex.contexts.get(testCtx.contextId);

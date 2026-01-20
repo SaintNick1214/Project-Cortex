@@ -3,14 +3,14 @@
   "version": "0.32.0",
   "description": "Cortex Memory Provider for Vercel AI SDK - Add persistent memory with enhanced streaming capabilities to any AI application",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/src/index.cjs",
+  "module": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js",
+      "require": "./dist/src/index.cjs"
     },
     "./react": {
       "types": "./dist/react/index.d.ts",

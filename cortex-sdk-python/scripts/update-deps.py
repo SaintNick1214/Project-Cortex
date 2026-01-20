@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-Update Python dependencies to latest versions in pyproject.toml and requirements files.
+Update Python dependencies to latest versions in pyproject.toml, setup.py, and requirements files.
 Equivalent to `npm run update-deps` for the TypeScript SDK.
+
+Keeps all three dependency files in sync:
+- pyproject.toml (primary, PEP 517/518)
+- setup.py (legacy compatibility)
+- requirements*.txt (pip install -r compatibility)
 """
 
 import re
@@ -125,6 +130,49 @@ def update_requirements_file(filepath: Path) -> list[tuple[str, str, str]]:
     return updates
 
 
+def update_setup_py(filepath: Path) -> list[tuple[str, str, str]]:
+    """Update setup.py dependencies. Returns list of (package, old, new) tuples."""
+    if not filepath.exists():
+        return []
+    
+    content = filepath.read_text()
+    updates = []
+    
+    # Find all dependencies with version constraints in setup.py
+    # Matches patterns like: "package>=1.0", 'package>=1.0'
+    pattern = r'["\']([a-zA-Z0-9_-]+)(?:\[[^\]]+\])?([><=!~]+)([\d.]+)["\']'
+    
+    for match in re.finditer(pattern, content):
+        package = match.group(1)
+        operator = match.group(2)
+        old_version = match.group(3)
+        
+        # Skip packages we don't want to auto-update
+        if package in ('setuptools', 'wheel'):
+            continue
+        
+        new_version = get_latest_version(package)
+        if new_version and new_version != old_version:
+            updates.append((package, old_version, new_version))
+            # Replace this specific occurrence - be careful to match the exact pattern
+            old_str = f'"{package}{operator}{old_version}"'
+            new_str = f'"{package}{operator}{new_version}"'
+            content = content.replace(old_str, new_str, 1)
+            
+            # Also try single quotes
+            old_str_sq = f"'{package}{operator}{old_version}'"
+            new_str_sq = f"'{package}{operator}{new_version}'"
+            content = content.replace(old_str_sq, new_str_sq, 1)
+            
+            # Handle packages with extras like [dev]
+            old_pattern = f'"{package}\\[[^\\]]+\\]{re.escape(operator)}{re.escape(old_version)}"'
+            new_replacement = lambda m: m.group(0).replace(old_version, new_version)
+            content = re.sub(old_pattern, new_replacement, content)
+    
+    filepath.write_text(content)
+    return updates
+
+
 def main():
     script_dir = Path(__file__).parent
     sdk_root = script_dir.parent
@@ -159,6 +207,15 @@ def main():
             if pkg not in all_updates:
                 all_updates[pkg] = (old, new)
     
+    # Update setup.py (legacy compatibility)
+    setup_py = sdk_root / "setup.py"
+    if setup_py.exists():
+        print(f"📦 Updating {setup_py.name}...")
+        updates = update_setup_py(setup_py)
+        for pkg, old, new in updates:
+            if pkg not in all_updates:
+                all_updates[pkg] = (old, new)
+    
     # Print summary
     print("\n" + "=" * 50)
     if all_updates:
@@ -166,7 +223,7 @@ def main():
         for pkg in sorted(all_updates.keys()):
             old, new = all_updates[pkg]
             print(f"  {pkg}: {old} → {new}")
-        print("\n💡 Run 'make update-deps' to install the new versions")
+        print("\n💡 Run 'make install-deps' to install the new versions")
     else:
         print("✅ All dependencies are already at latest versions!")
     
