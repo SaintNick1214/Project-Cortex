@@ -17,6 +17,90 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### Vercel AI Provider v0.32.0 · Jan 20, 2026
+
+**Reasoning Panel Nativity - Memory Layer Visualization**
+
+🧠 New `createLayerStreamObserver()` helper reduces API route boilerplate from ~40 lines to ~5 lines  
+⚛️ New `useLayerTracking` React hook for client-side layer state management  
+📦 New `/react` subpath export for React-specific utilities
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Server-Side: `createLayerStreamObserver()`**
+
+A helper function that creates an `OrchestrationObserver` pre-wired to emit layer events to a Vercel AI SDK stream writer:
+
+```typescript
+import { createLayerStreamObserver, createCortexMemoryAsync } from '@cortexmemory/vercel-ai-provider';
+import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
+
+export async function POST(req: Request) {
+  const { observer, emitTo } = createLayerStreamObserver();
+
+  return createUIMessageStreamResponse({
+    stream: createUIMessageStream({
+      execute: async ({ writer }) => {
+        emitTo(writer);
+        const cortexMemory = await createCortexMemoryAsync({
+          layerObserver: observer,
+          // ...config
+        });
+        // Stream response...
+      },
+    }),
+  });
+}
+```
+
+**Client-Side: `useLayerTracking` Hook**
+
+A React hook that manages layer tracking state and provides a `handleDataPart` callback for `useChat`:
+
+```typescript
+import { useLayerTracking } from '@cortexmemory/vercel-ai-provider/react';
+import { useChat } from '@ai-sdk/react';
+
+function ChatComponent() {
+  const { layers, isOrchestrating, handleDataPart } = useLayerTracking();
+
+  const { messages, sendMessage } = useChat({
+    onData: handleDataPart,
+  });
+
+  return (
+    <>
+      {isOrchestrating && <MemoryLoadingIndicator />}
+      <LayerVisualization layers={layers} />
+      <Messages messages={messages} />
+    </>
+  );
+}
+```
+
+**Event Types**
+
+Three transient stream events are emitted during memory orchestration:
+- `data-orchestration-start` - When orchestration begins
+- `data-layer-update` - For each layer status change (pending → in_progress → complete)
+- `data-orchestration-complete` - When all layers finish
+
+**Reduction in Boilerplate**
+
+| Component | Before | After |
+|-----------|--------|-------|
+| API Route layer observer setup | ~40 lines | ~5 lines |
+| Client-side data parsing | ~30 lines | 1 line (`handleDataPart`) |
+| Layer state management | ~100 lines | 0 (included in hook) |
+| **Total** | **~170 lines** | **~6 lines** |
+
+</details>
+
+---
+
 ### All Packages v0.31.1 · Jan 20, 2026
 
 **Dependency Updates**
@@ -1802,6 +1886,13 @@ const cortexMemory = createCortexMemory({
 <TabItem value="vercel" label="Vercel AI">
 
 ## January 2026
+
+### v0.32.0 · Jan 20, 2026 - Reasoning Panel Nativity
+
+🧠 New `createLayerStreamObserver()` helper for server-side layer streaming  
+⚛️ New `useLayerTracking` React hook for client-side state management  
+📦 New `/react` subpath export: `@cortexmemory/vercel-ai-provider/react`  
+📉 Reduces memory visualization boilerplate from ~170 lines to ~6 lines
 
 ### v0.29.1 · Jan 20, 2026 - Dependency Updates
 

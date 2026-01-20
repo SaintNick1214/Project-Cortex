@@ -10,7 +10,7 @@
 const baseConfig = {
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "node",
-  extensionsToTreatAsEsm: [".ts"],
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
@@ -26,9 +26,13 @@ const baseConfig = {
   setupFilesAfterEnv: ["<rootDir>/tests/helpers/setup.ts"],
   collectCoverageFrom: [
     "src/**/*.ts",
+    "react/**/*.ts",
+    "react/**/*.tsx",
     "!src/**/*.test.ts",
     "!src/**/*.spec.ts",
     "!src/**/__tests__/**",
+    "!react/**/*.test.ts",
+    "!react/**/*.test.tsx",
   ],
 };
 
@@ -43,6 +47,16 @@ export default {
       testTimeout: 10000,
       testEnvironmentOptions: {
         JEST_PROJECT: "unit",
+      },
+    },
+    {
+      ...baseConfig,
+      displayName: "unit-react",
+      testEnvironment: "jsdom",
+      testMatch: ["<rootDir>/tests/unit/**/*.test.tsx"],
+      testTimeout: 10000,
+      testEnvironmentOptions: {
+        JEST_PROJECT: "unit-react",
       },
     },
     {

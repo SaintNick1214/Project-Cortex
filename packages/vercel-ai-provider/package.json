@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/vercel-ai-provider",
-  "version": "0.29.1",
+  "version": "0.32.0",
   "description": "Cortex Memory Provider for Vercel AI SDK - Add persistent memory with enhanced streaming capabilities to any AI application",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -11,6 +11,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.cjs"
     }
   },
   "files": [
@@ -29,6 +34,8 @@
     "self-hosted",
     "convex",
     "nextjs",
+    "react",
+    "hooks",
     "llm",
     "openai",
     "anthropic",
@@ -58,8 +65,8 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
-    "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "build": "tsup src/index.ts react/index.ts --format cjs,esm --dts --clean",
+    "build:watch": "tsup src/index.ts react/index.ts --format cjs,esm --dts --watch",
     "clean": "rimraf dist",
     "test": "jest",
     "test:unit": "jest --selectProjects unit",
@@ -72,7 +79,13 @@
   },
   "peerDependencies": {
     "ai": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0",
-    "convex": "^1.28.2"
+    "convex": "^1.28.2",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@cortexmemory/sdk": "*"
@@ -80,13 +93,18 @@
   "devDependencies": {
     "@ai-sdk/openai": "^3.0.12",
     "@ai-sdk/anthropic": "^3.0.15",
+    "@testing-library/react": "^16.3.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.9",
+    "@types/react": "^19.2.8",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "rimraf": "^6.1.2",
     "ts-jest": "^29.4.6",
     "tsup": "^8.5.1",

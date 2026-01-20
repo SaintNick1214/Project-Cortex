@@ -458,6 +458,23 @@ export type {
 export { CortexMemoryProvider } from "./provider";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Streaming Helpers for Layer Visualization
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export {
+  createLayerStreamObserver,
+  LAYER_STREAM_EVENTS,
+} from "./streaming-helpers";
+
+export type {
+  StreamWriter,
+  LayerStreamObserverResult,
+  OrchestrationStartData,
+  LayerUpdateData,
+  OrchestrationCompleteData,
+} from "./streaming-helpers";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // AI SDK v6 Compatibility
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
