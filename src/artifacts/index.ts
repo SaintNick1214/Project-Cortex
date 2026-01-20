@@ -1,7 +1,7 @@
 /**
  * Cortex SDK - Artifacts API
  *
- * Layer 5: Versioned artifact management with full undo/redo support
+ * Versioned artifact management with full undo/redo support
  *
  * Artifacts are versioned, content-addressable documents that support:
  * - Multiple content types (text, code, sheet, image, diagram, html, custom)

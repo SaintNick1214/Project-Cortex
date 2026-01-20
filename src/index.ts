@@ -478,7 +478,7 @@ export class Cortex {
   // Sessions: Native Session Management
   public sessions: SessionsAPI;
 
-  // Layer 5: Artifacts - Versioned Document Management
+  // Artifacts - Versioned Document Management
   public artifacts: ArtifactsAPI;
 
   constructor(config: CortexConfig) {

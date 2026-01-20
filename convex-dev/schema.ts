@@ -14,7 +14,7 @@
  *
  * Layer 4: Convenience APIs (SDK only, no schema)
  *
- * Layer 5: Artifacts
+ * Artifacts
  * - artifacts - Interactive versioned documents (memorySpace-scoped, streaming support)
  *
  * Coordination:
@@ -772,7 +772,7 @@ export default defineSchema({
     .index("by_created", ["createdAt"]), // Chronological
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Layer 5: Artifacts (Interactive Versioned Documents, memorySpace-scoped)
+  // Artifacts (Interactive Versioned Documents, memorySpace-scoped)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   artifacts: defineTable({
     // Identity

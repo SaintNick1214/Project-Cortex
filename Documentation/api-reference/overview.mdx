@@ -17,7 +17,7 @@ Cortex is a **persistent memory system for AI agents** built on Convex. It provi
   <FeatureCard
     icon="layers"
     title="Four-Layer Architecture"
-    description="ACID stores + Vector index + Facts store + Convenience API"
+    description="ACID stores + Vector index + Facts store + Memory API"
     size="medium"
   />
   <FeatureCard
@@ -150,6 +150,11 @@ The API Reference is organized by architectural layers:
   - Belief Revision System (v0.24.0+): `revise()`, `checkConflicts()`, `supersede()`
   - Enriched extraction (v0.15.0+): `searchAliases`, `semanticContext`, `entities`, `relations`
   - `store()`, `get()`, `update()`, `delete()`, `search()`, `queryBySubject()`, `history()`
+- **[Artifacts Operations](/api-reference/artifacts-operations)** - Versioned Documents (v0.33.0+)
+  - Interactive, versioned documents for AI-generated content
+  - Full undo/redo with version history
+  - Streaming support with pause/resume capabilities
+  - `create()`, `update()`, `delete()`, `undo()`, `redo()`, `startStreaming()`, `finalizeStreaming()`
 
 ### Platform & Governance
 
@@ -210,6 +215,9 @@ The API Reference is organized by architectural layers:
 **Store and query facts:**
 → [Facts Operations](/api-reference/facts-operations) - `cortex.facts.*`
 
+**Create versioned documents (artifacts):**
+→ [Artifacts Operations](/api-reference/artifacts-operations) - `cortex.artifacts.*`
+
 **Integrate graph database:**
 → [Graph Operations](/api-reference/graph-operations) - GraphAdapter and GraphSyncWorker
 
@@ -238,6 +246,9 @@ The API Reference is organized by architectural layers:
 
 **Layer 4 (Convenience API):**
 → [Memory Operations](/api-reference/memory-operations) - `cortex.memory.*`
+
+**Artifacts:**
+→ [Artifacts Operations](/api-reference/artifacts-operations) - `cortex.artifacts.*`
 
 **Sessions:**
 → [Sessions Operations](/api-reference/sessions-operations) - `cortex.sessions.*`
