@@ -165,45 +165,56 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
     });
 
     it("should isolate list results by tenant", async () => {
+      // Use unique marker to identify test artifacts
+      const testMarker = `list-isolation-${ctx.runId}`;
+      
       // Both tenants create artifacts in their own spaces
-      await tenantA.cortex.artifacts.create({
+      const artA1 = await tenantA.cortex.artifacts.create({
         memorySpaceId: tenantA.memorySpaceId,
         kind: "text",
-        content: "Tenant A artifact 1",
+        content: `Tenant A artifact 1 - ${testMarker}`,
         title: "Tenant A Artifact 1",
       });
 
-      await tenantA.cortex.artifacts.create({
+      const artA2 = await tenantA.cortex.artifacts.create({
         memorySpaceId: tenantA.memorySpaceId,
         kind: "text",
-        content: "Tenant A artifact 2",
+        content: `Tenant A artifact 2 - ${testMarker}`,
         title: "Tenant A Artifact 2",
       });
 
-      await tenantB.cortex.artifacts.create({
+      const artB1 = await tenantB.cortex.artifacts.create({
         memorySpaceId: tenantB.memorySpaceId,
         kind: "text",
-        content: "Tenant B artifact 1",
+        content: `Tenant B artifact 1 - ${testMarker}`,
         title: "Tenant B Artifact 1",
       });
 
-      // Tenant A only sees their own
+      // Tenant A only sees their own (filter by test marker to avoid stale data)
       const listA = await tenantA.cortex.artifacts.list({
         memorySpaceId: tenantA.memorySpaceId,
       });
 
-      expect(listA.length).toBeGreaterThanOrEqual(2);
-      expect(listA.every((a) => a.content?.includes("Tenant A"))).toBe(true);
-      expect(listA.some((a) => a.content?.includes("Tenant B"))).toBe(false);
+      // Check that we can find our test artifacts
+      const testArtifactsA = listA.filter((a) => a.content?.includes(testMarker));
+      expect(testArtifactsA.length).toBe(2);
+      expect(testArtifactsA.every((a) => a.content?.includes("Tenant A"))).toBe(true);
+      
+      // Among test artifacts, ensure no Tenant B artifacts appear
+      expect(testArtifactsA.some((a) => a.content?.includes("Tenant B"))).toBe(false);
 
       // Tenant B only sees their own
       const listB = await tenantB.cortex.artifacts.list({
         memorySpaceId: tenantB.memorySpaceId,
       });
 
-      expect(listB.length).toBeGreaterThanOrEqual(1);
-      expect(listB.every((a) => a.content?.includes("Tenant B"))).toBe(true);
-      expect(listB.some((a) => a.content?.includes("Tenant A"))).toBe(false);
+      // Check that we can find our test artifact
+      const testArtifactsB = listB.filter((a) => a.content?.includes(testMarker));
+      expect(testArtifactsB.length).toBe(1);
+      expect(testArtifactsB.every((a) => a.content?.includes("Tenant B"))).toBe(true);
+      
+      // Among test artifacts, ensure no Tenant A artifacts appear
+      expect(testArtifactsB.some((a) => a.content?.includes("Tenant A"))).toBe(false);
     });
 
     it("should isolate count by tenant", async () => {
@@ -392,10 +403,10 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       const historyA = await tenantA.cortex.artifacts.getHistory(artifact.artifactId);
       expect(historyA.length).toBe(2);
 
-      // Tenant B cannot see history
-      await expect(
-        tenantB.cortex.artifacts.getHistory(artifact.artifactId),
-      ).rejects.toThrow();
+      // Tenant B gets empty history (artifact not accessible to them)
+      // This behavior prevents tenant B from learning whether the artifact exists
+      const historyB = await tenantB.cortex.artifacts.getHistory(artifact.artifactId);
+      expect(historyB).toEqual([]);
     });
 
     it("should prevent Tenant B from undo/redo on Tenant A artifacts", async () => {

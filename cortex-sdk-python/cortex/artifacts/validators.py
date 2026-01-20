@@ -47,8 +47,8 @@ VALID_KINDS: List[ArtifactKind] = ["text", "code", "sheet", "image", "diagram", 
 # Valid streaming state values (from unified specification)
 VALID_STREAMING_STATES: List[StreamingState] = ["draft", "streaming", "paused", "final", "error"]
 
-# Valid sort fields
-VALID_SORT_BY = ["createdAt", "updatedAt", "title"]
+# Valid sort fields (must match backend - see convex-dev/artifacts.ts list())
+VALID_SORT_BY = ["createdAt", "updatedAt"]
 VALID_SORT_ORDER = ["asc", "desc"]
 
 # Regex patterns

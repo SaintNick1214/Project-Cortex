@@ -52,6 +52,7 @@ def convert_convex_response(data: Any) -> Any:
 
     - Converts camelCase to snake_case
     - Removes Convex internal fields (_creationTime, etc., except _id)
+    - Converts timestamp floats to ints
     - Recursively processes nested dicts and lists
 
     Args:
@@ -73,6 +74,21 @@ def convert_convex_response(data: Any) -> Any:
             "memory_space_id": "space-1"
         }
     """
+    # Timestamp field names that should be converted from float to int
+    timestamp_fields = {
+        "createdAt", "created_at",
+        "updatedAt", "updated_at",
+        "deletedAt", "deleted_at",
+        "timestamp",
+        "startedAt", "started_at",
+        "pausedAt", "paused_at",
+        "resumedAt", "resumed_at",
+        "cancelledAt", "cancelled_at",
+        "finalizedAt", "finalized_at",
+        "lastAccessedAt", "last_accessed_at",
+        "lastChunkAt", "last_chunk_at",
+    }
+
     if isinstance(data, dict):
         converted = {}
         for key, value in data.items():
@@ -84,8 +100,12 @@ def convert_convex_response(data: Any) -> Any:
             # Convert key to snake_case
             new_key = camel_to_snake(key)
 
-            # Recursively convert nested structures
-            converted[new_key] = convert_convex_response(value)
+            # Convert timestamp floats to ints
+            if (key in timestamp_fields or new_key in timestamp_fields) and isinstance(value, float):
+                converted[new_key] = int(value)
+            else:
+                # Recursively convert nested structures
+                converted[new_key] = convert_convex_response(value)
 
         return converted
 

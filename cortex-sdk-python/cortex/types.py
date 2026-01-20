@@ -626,19 +626,23 @@ class ArtifactVersion:
         content: Content at this version
         timestamp: Unix timestamp when this version was created
         change_type: Type of change (create, update, undo, redo)
+        artifact_id: The artifact this version belongs to
         changed_by: Agent or user who made the change (optional)
         title: Title at this version (optional)
         metadata: Metadata at this version (optional)
         change_summary: Description of the change (optional)
+        is_current: Whether this version is the current pointer
     """
     version: int
     content: str
     timestamp: int
     change_type: VersionChangeType
+    artifact_id: Optional[str] = None
     changed_by: Optional[str] = None
     title: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
     change_summary: Optional[str] = None
+    is_current: Optional[bool] = None
 
 
 @dataclass
@@ -767,7 +771,7 @@ class ListArtifactsFilter:
         search_query: Full-text search in title and content (optional)
         limit: Max results (default: 100, max: 1000)
         offset: Pagination offset (default: 0)
-        sort_by: Sort field ("createdAt", "updatedAt", "title")
+        sort_by: Sort field ("createdAt" or "updatedAt")
         sort_order: Sort direction ("asc", "desc")
         tenant_id: Explicit tenant filter (auto-injected from AuthContext)
     """
@@ -783,7 +787,7 @@ class ListArtifactsFilter:
     search_query: Optional[str] = None
     limit: Optional[int] = None
     offset: Optional[int] = None
-    sort_by: Optional[Literal["createdAt", "updatedAt", "title"]] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt"]] = None
     sort_order: Optional[Literal["asc", "desc"]] = None
     tenant_id: Optional[str] = None
 
@@ -828,10 +832,18 @@ class StartStreamingResult:
 
     Attributes:
         session_id: The streaming session ID for subsequent operations
-        artifact: The artifact in streaming state
+        success: Whether the operation was successful
+        artifact_id: The artifact being streamed
+        started_at: Unix timestamp when streaming started
+        previous_state: Previous streaming state
+        current_state: Current streaming state (should be 'streaming')
     """
     session_id: str
-    artifact: Optional[Artifact] = None
+    success: bool = True
+    artifact_id: Optional[str] = None
+    started_at: Optional[int] = None
+    previous_state: Optional[str] = None
+    current_state: Optional[str] = None
 
 
 @dataclass
@@ -900,6 +912,118 @@ class AppendContentResult:
     total_bytes_received: int
     content_length: int
     timestamp: int
+
+
+@dataclass
+class PauseStreamingResult:
+    """Result from pausing a streaming session.
+
+    Attributes:
+        success: Whether the operation succeeded
+        artifact_id: The artifact's unique identifier
+        session_id: The streaming session ID
+        paused_at: Timestamp when paused
+        previous_state: State before pausing
+        current_state: Current state (should be 'paused')
+        bytes_received: Total bytes received before pause
+        content_preserved: Whether content was preserved
+    """
+    success: bool
+    artifact_id: str
+    session_id: str
+    paused_at: int
+    previous_state: str
+    current_state: str
+    bytes_received: int
+    content_preserved: bool
+
+
+@dataclass
+class ResumeStreamingResult:
+    """Result from resuming a paused streaming session.
+
+    Attributes:
+        success: Whether the operation succeeded
+        artifact_id: The artifact's unique identifier
+        session_id: The streaming session ID
+        resumed_at: Timestamp when resumed
+        previous_state: State before resuming
+        current_state: Current state (should be 'streaming')
+        bytes_received: Total bytes received so far
+    """
+    success: bool
+    artifact_id: str
+    session_id: str
+    resumed_at: int
+    previous_state: str
+    current_state: str
+    bytes_received: int
+
+
+@dataclass
+class CancelStreamingResult:
+    """Result from cancelling a streaming session.
+
+    Attributes:
+        success: Whether the operation succeeded
+        artifact_id: The artifact's unique identifier
+        session_id: The streaming session ID
+        cancelled_at: Timestamp when cancelled
+        previous_state: State before cancelling
+        current_state: Current state (should be 'draft')
+        content_preserved: Whether partial content was preserved
+        bytes_discarded: Bytes discarded (if content not preserved)
+    """
+    success: bool
+    artifact_id: str
+    session_id: str
+    cancelled_at: int
+    previous_state: str
+    current_state: str
+    content_preserved: bool
+    bytes_discarded: Optional[int] = None
+
+
+@dataclass
+class FinalizeStreamingResult:
+    """Result from finalizing a streaming session.
+
+    Attributes:
+        success: Whether the operation succeeded
+        artifact_id: The artifact's unique identifier
+        session_id: The streaming session ID
+        finalized_at: Timestamp when finalized
+        previous_state: State before finalizing
+        current_state: Current state (should be 'final')
+        final_content_length: Length of finalized content
+        version: New version number after finalization
+    """
+    success: bool
+    artifact_id: str
+    session_id: str
+    finalized_at: int
+    previous_state: str
+    current_state: str
+    final_content_length: int
+    version: int
+
+
+@dataclass
+class SetStreamingStateResult:
+    """Result from manually setting streaming state.
+
+    Attributes:
+        success: Whether the operation succeeded
+        artifact_id: The artifact's unique identifier
+        previous_state: State before the change
+        current_state: Current state after the change
+        updated_at: Timestamp of the update
+    """
+    success: bool
+    artifact_id: str
+    previous_state: str
+    current_state: str
+    updated_at: int
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

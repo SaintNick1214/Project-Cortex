@@ -14,11 +14,16 @@ from ..types import (
     Artifact,
     ArtifactVersion,
     AuthContext,
+    CancelStreamingResult,
     CountArtifactsFilter,
     CreateArtifactOptions,
     FileReference,
     FinalizeStreamingParams,
+    FinalizeStreamingResult,
     ListArtifactsFilter,
+    PauseStreamingResult,
+    ResumeStreamingResult,
+    SetStreamingStateResult,
     StartStreamingParams,
     StartStreamingResult,
     StreamingState,
@@ -275,7 +280,6 @@ class ArtifactsAPI:
                     "title": options.title if options else None,
                     "metadata": options.metadata if options else None,
                     "tags": options.tags if options else None,
-                    "changedBy": options.changed_by if options else None,
                     "tenantId": self._tenant_id,
                 }),
             ),
@@ -420,7 +424,7 @@ class ArtifactsAPI:
                     "streamingState": filter.streaming_state,
                     "userId": filter.user_id,
                     "memorySpaceId": filter.memory_space_id,
-                    "tags": filter.tags,
+                    # Note: tags filter not supported by backend count endpoint
                     "createdAfter": filter.created_after,
                     "createdBefore": filter.created_before,
                     "tenantId": filter.tenant_id if filter.tenant_id else self._tenant_id,
@@ -666,7 +670,9 @@ class ArtifactsAPI:
 
         return AppendContentResult(**convert_convex_response(result))
 
-    async def pause_streaming(self, artifact_id: str, session_id: str) -> Artifact:
+    async def pause_streaming(
+        self, artifact_id: str, session_id: str
+    ) -> PauseStreamingResult:
         """
         Pause an active streaming session.
 
@@ -677,13 +683,13 @@ class ArtifactsAPI:
             session_id: The streaming session ID
 
         Returns:
-            The Artifact in 'paused' state
+            PauseStreamingResult with operation status and state info
 
         Example:
-            >>> artifact = await cortex.artifacts.pause_streaming(
+            >>> result = await cortex.artifacts.pause_streaming(
             ...     "code-gen-001", "sess-abc123"
             ... )
-            >>> print(f"Paused - state: {artifact.streaming_state}")
+            >>> print(f"Paused - state: {result.current_state}")
         """
         # Client-side validation
         validate_artifact_id(artifact_id)
@@ -702,9 +708,21 @@ class ArtifactsAPI:
             "artifacts:pauseStreaming",
         )
 
-        return Artifact(**convert_convex_response(result))
+        data = convert_convex_response(result)
+        return PauseStreamingResult(
+            success=data.get("success", True),
+            artifact_id=data.get("artifact_id", artifact_id),
+            session_id=data.get("session_id", session_id),
+            paused_at=data.get("paused_at", 0),
+            previous_state=data.get("previous_state", "streaming"),
+            current_state=data.get("current_state", "paused"),
+            bytes_received=data.get("bytes_received", 0),
+            content_preserved=data.get("content_preserved", True),
+        )
 
-    async def resume_streaming(self, artifact_id: str, session_id: str) -> Artifact:
+    async def resume_streaming(
+        self, artifact_id: str, session_id: str
+    ) -> ResumeStreamingResult:
         """
         Resume a paused streaming session.
 
@@ -713,13 +731,13 @@ class ArtifactsAPI:
             session_id: The streaming session ID
 
         Returns:
-            The Artifact back in 'streaming' state
+            ResumeStreamingResult with operation status and state info
 
         Example:
-            >>> artifact = await cortex.artifacts.resume_streaming(
+            >>> result = await cortex.artifacts.resume_streaming(
             ...     "code-gen-001", "sess-abc123"
             ... )
-            >>> print(f"Resumed - state: {artifact.streaming_state}")
+            >>> print(f"Resumed - state: {result.current_state}")
         """
         # Client-side validation
         validate_artifact_id(artifact_id)
@@ -738,27 +756,38 @@ class ArtifactsAPI:
             "artifacts:resumeStreaming",
         )
 
-        return Artifact(**convert_convex_response(result))
+        data = convert_convex_response(result)
+        return ResumeStreamingResult(
+            success=data.get("success", True),
+            artifact_id=data.get("artifact_id", artifact_id),
+            session_id=data.get("session_id", session_id),
+            resumed_at=data.get("resumed_at", 0),
+            previous_state=data.get("previous_state", "paused"),
+            current_state=data.get("current_state", "streaming"),
+            bytes_received=data.get("bytes_received", 0),
+        )
 
-    async def cancel_streaming(self, artifact_id: str, session_id: str) -> Artifact:
+    async def cancel_streaming(
+        self, artifact_id: str, session_id: str
+    ) -> CancelStreamingResult:
         """
         Cancel an active streaming session.
 
-        This reverts the artifact back to 'draft' state, discarding any
-        streamed content from this session.
+        This reverts the artifact back to 'draft' state. Partial content
+        is preserved by default.
 
         Args:
             artifact_id: The artifact's unique identifier
             session_id: The streaming session ID
 
         Returns:
-            The Artifact reverted to 'draft' state
+            CancelStreamingResult with operation status and state info
 
         Example:
-            >>> artifact = await cortex.artifacts.cancel_streaming(
+            >>> result = await cortex.artifacts.cancel_streaming(
             ...     "code-gen-001", "sess-abc123"
             ... )
-            >>> print(f"Cancelled - state: {artifact.streaming_state}")
+            >>> print(f"Cancelled - state: {result.current_state}")
         """
         # Client-side validation
         validate_artifact_id(artifact_id)
@@ -777,9 +806,21 @@ class ArtifactsAPI:
             "artifacts:cancelStreaming",
         )
 
-        return Artifact(**convert_convex_response(result))
+        data = convert_convex_response(result)
+        return CancelStreamingResult(
+            success=data.get("success", True),
+            artifact_id=data.get("artifact_id", artifact_id),
+            session_id=data.get("session_id", session_id),
+            cancelled_at=data.get("cancelled_at", 0),
+            previous_state=data.get("previous_state", "streaming"),
+            current_state=data.get("current_state", "draft"),
+            content_preserved=data.get("content_preserved", True),
+            bytes_discarded=data.get("bytes_discarded"),
+        )
 
-    async def finalize_streaming(self, params: FinalizeStreamingParams) -> Artifact:
+    async def finalize_streaming(
+        self, params: FinalizeStreamingParams
+    ) -> FinalizeStreamingResult:
         """
         Finalize a streaming session, marking content as complete.
 
@@ -789,17 +830,17 @@ class ArtifactsAPI:
             params: Finalization parameters including artifact_id and session_id
 
         Returns:
-            The Artifact in 'final' state with new version
+            FinalizeStreamingResult with operation status and new version info
 
         Example:
             >>> from cortex.types import FinalizeStreamingParams
-            >>> artifact = await cortex.artifacts.finalize_streaming(
+            >>> result = await cortex.artifacts.finalize_streaming(
             ...     FinalizeStreamingParams(
             ...         artifact_id="code-gen-001",
             ...         session_id="sess-abc123",
             ...     )
             ... )
-            >>> print(f"Finalized v{artifact.version} - state: {artifact.streaming_state}")
+            >>> print(f"Finalized v{result.version} - state: {result.current_state}")
         """
         # Client-side validation
         validate_artifact_id(params.artifact_id)
@@ -818,21 +859,21 @@ class ArtifactsAPI:
             "artifacts:finalizeStreaming",
         )
 
-        artifact = Artifact(**convert_convex_response(result))
-
-        # Sync to graph if adapter present
-        if self.graph_adapter:
-            try:
-                await self.graph_adapter.sync_artifact(artifact)
-            except Exception as e:
-                import warnings
-                warnings.warn(f"Failed to sync finalized artifact to graph: {e}")
-
-        return artifact
+        data = convert_convex_response(result)
+        return FinalizeStreamingResult(
+            success=data.get("success", True),
+            artifact_id=data.get("artifact_id", params.artifact_id),
+            session_id=data.get("session_id", params.session_id),
+            finalized_at=data.get("finalized_at", 0),
+            previous_state=data.get("previous_state", "streaming"),
+            current_state=data.get("current_state", "final"),
+            final_content_length=data.get("content_length", 0),
+            version=data.get("version", 1),
+        )
 
     async def set_streaming_state(
         self, artifact_id: str, streaming_state: StreamingState
-    ) -> Artifact:
+    ) -> SetStreamingStateResult:
         """
         Set the streaming state of an artifact.
 
@@ -844,7 +885,7 @@ class ArtifactsAPI:
             streaming_state: New state ("draft", "streaming", "paused", "final", "error")
 
         Returns:
-            The Artifact with updated streaming state
+            SetStreamingStateResult with operation status and state info
 
         Raises:
             ArtifactsValidationError: If streaming_state value is invalid
@@ -852,9 +893,10 @@ class ArtifactsAPI:
 
         Example:
             >>> # Mark an artifact as having an error
-            >>> artifact = await cortex.artifacts.set_streaming_state(
+            >>> result = await cortex.artifacts.set_streaming_state(
             ...     "code-gen-001", "error"
             ... )
+            >>> print(f"Changed from {result.previous_state} to {result.current_state}")
         """
         # Client-side validation
         validate_artifact_id(artifact_id)
@@ -873,7 +915,14 @@ class ArtifactsAPI:
             "artifacts:setStreamingState",
         )
 
-        return Artifact(**convert_convex_response(result))
+        data = convert_convex_response(result)
+        return SetStreamingStateResult(
+            success=data.get("success", True),
+            artifact_id=data.get("artifact_id", artifact_id),
+            previous_state=data.get("previous_state", ""),
+            current_state=data.get("current_state", streaming_state),
+            updated_at=data.get("updated_at", 0),
+        )
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     # File Operations
@@ -889,66 +938,42 @@ class ArtifactsAPI:
         """
         Upload a file and attach it to an artifact.
 
+        NOTE: This method is not yet implemented. File uploads in Convex require
+        a two-step process:
+        1. Use generate_upload_url() to get a signed upload URL
+        2. Upload the file to that URL using HTTP
+        3. Use complete_artifact_upload() to attach the file to the artifact
+
+        For now, use the set_file_ref() method directly after uploading to
+        Convex storage via the HTTP upload API.
+
         Args:
             artifact_id: The artifact's unique identifier
             file_data: The file content as bytes
             filename: Original filename
             mime_type: MIME type of the file
 
-        Returns:
-            The Artifact with the file attached
+        Raises:
+            NotImplementedError: This method is not yet implemented
 
         Example:
-            >>> with open("screenshot.png", "rb") as f:
-            ...     artifact = await cortex.artifacts.upload_file(
-            ...         "meeting-notes-2024",
-            ...         f.read(),
-            ...         "screenshot.png",
-            ...         "image/png",
-            ...     )
-            >>> print(f"Uploaded file to artifact")
+            >>> # Instead of upload_file, use the two-step process:
+            >>> # 1. Get upload URL
+            >>> upload_info = await cortex.artifacts.generate_upload_url(
+            ...     "meeting-notes-2024", "image/png", "screenshot.png"
+            ... )
+            >>> # 2. Upload file to URL (using httpx, requests, etc.)
+            >>> import httpx
+            >>> async with httpx.AsyncClient() as client:
+            ...     await client.post(upload_info["upload_url"], content=file_data)
+            >>> # 3. Complete the upload
+            >>> artifact = await cortex.artifacts.complete_artifact_upload(...)
         """
-        # Client-side validation
-        validate_artifact_id(artifact_id)
-
-        if not isinstance(file_data, bytes):
-            raise ArtifactsValidationError(
-                f"file_data must be bytes, got {type(file_data).__name__}",
-                "INVALID_FILE_DATA_TYPE",
-                "file_data",
-            )
-
-        if not filename or not isinstance(filename, str):
-            raise ArtifactsValidationError(
-                "filename is required and must be a string",
-                "INVALID_FILENAME",
-                "filename",
-            )
-
-        if not mime_type or not isinstance(mime_type, str):
-            raise ArtifactsValidationError(
-                "mime_type is required and must be a string",
-                "INVALID_MIME_TYPE",
-                "mime_type",
-            )
-
-        # First, upload the file to Convex storage
-        # Backend retrieves artifact by ID - no need for memory_space_id
-        upload_result = await self._execute_with_resilience(
-            lambda: self.client.action(
-                "artifacts.storage:uploadFile",
-                filter_none_values({
-                    "artifactId": artifact_id,
-                    "fileData": list(file_data),  # Convert bytes to list for JSON
-                    "filename": filename,
-                    "mimeType": mime_type,
-                    "tenantId": self._tenant_id,
-                }),
-            ),
-            "artifacts.storage:uploadFile",
+        raise NotImplementedError(
+            "upload_file is not yet implemented. "
+            "Use generate_upload_url() and complete_artifact_upload() for file uploads, "
+            "or use set_file_ref() directly after uploading to Convex storage."
         )
-
-        return Artifact(**convert_convex_response(upload_result))
 
     async def get_file_url(self, artifact_id: str) -> Optional[str]:
         """
@@ -971,16 +996,24 @@ class ArtifactsAPI:
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
             lambda: self.client.query(
-                "artifacts.storage:getArtifactFileUrl",
+                "artifacts:getArtifactFileUrl",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "tenantId": self._tenant_id,
                 }),
             ),
-            "artifacts.storage:getArtifactFileUrl",
+            "artifacts:getArtifactFileUrl",
         )
 
-        return result if result else None
+        # Backend returns {url, mimeType, size, originalFilename, expiresAt} or null, or a direct URL string
+        if not result:
+            return None
+        if isinstance(result, str):
+            return result
+        if isinstance(result, dict):
+            url = result.get("url")
+            return str(url) if url else None
+        return None
 
     async def set_file_ref(
         self, artifact_id: str, file_ref: FileReference

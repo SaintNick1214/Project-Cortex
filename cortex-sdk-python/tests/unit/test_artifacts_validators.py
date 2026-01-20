@@ -436,7 +436,7 @@ class TestValidateSortBy:
         """Should accept valid sort fields."""
         validate_sort_by("createdAt")  # Should not raise
         validate_sort_by("updatedAt")  # Should not raise
-        validate_sort_by("title")  # Should not raise
+        # Note: "title" is not supported by backend, only createdAt and updatedAt
 
     def test_accepts_none(self) -> None:
         """Should accept None (optional)."""

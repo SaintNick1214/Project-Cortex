@@ -424,7 +424,7 @@ class TestStreamingParity:
         )
 
         assert result.session_id is not None
-        assert result.artifact.streaming_state == "streaming"
+        assert result.current_state == "streaming"
 
         session_id = result.session_id
 
@@ -446,13 +446,19 @@ class TestStreamingParity:
             assert append_result.total_bytes_received == total_bytes
 
         # Finalize (parity with TS)
-        finalized = await cortex_client.artifacts.finalize_streaming(
+        finalize_result = await cortex_client.artifacts.finalize_streaming(
             FinalizeStreamingParams(
                 artifact_id=artifact.artifact_id,
                 session_id=session_id,
             )
         )
 
+        assert finalize_result.success is True
+        assert finalize_result.current_state == "final"
+
+        # Get updated artifact to verify content
+        finalized = await cortex_client.artifacts.get(artifact.artifact_id)
+        assert finalized is not None
         assert finalized.streaming_state == "final"
         assert finalized.content == 'def hello():\n    return "Hello"'
 
@@ -495,13 +501,13 @@ class TestStreamingParity:
         paused = await cortex_client.artifacts.pause_streaming(
             artifact.artifact_id, session_id
         )
-        assert paused.streaming_state == "paused"
+        assert paused.current_state == "paused"
 
         # Resume (parity with TS)
         resumed = await cortex_client.artifacts.resume_streaming(
             artifact.artifact_id, session_id
         )
-        assert resumed.streaming_state == "streaming"
+        assert resumed.current_state == "streaming"
 
         # Continue and finalize
         await cortex_client.artifacts.append_content(
@@ -512,13 +518,19 @@ class TestStreamingParity:
             )
         )
 
-        finalized = await cortex_client.artifacts.finalize_streaming(
+        finalize_result = await cortex_client.artifacts.finalize_streaming(
             FinalizeStreamingParams(
                 artifact_id=artifact.artifact_id,
                 session_id=session_id,
             )
         )
 
+        assert finalize_result.success is True
+        assert finalize_result.current_state == "final"
+
+        # Get updated artifact to verify content
+        finalized = await cortex_client.artifacts.get(artifact.artifact_id)
+        assert finalized is not None
         assert finalized.content == "First part. Second part."
 
 
@@ -583,25 +595,25 @@ class TestListCountParity:
         """
         Test count operation (parity with TypeScript).
         """
-        # Create test artifacts
+        # Create test artifacts with specific kind for counting
         for i in range(5):
             artifact = await cortex_client.artifacts.create(
                 CreateArtifactOptions(
                     memory_space_id=setup_memory_space,
                     title=f"Count Test {i}",
                     content=f"Content {i}",
-                    kind="text",
+                    kind="text",  # Use kind for filtering since count doesn't support tags
                     streaming_state="final",
-                    tags=["count-test"],
                 )
             )
             test_context.artifact_ids.append(artifact.artifact_id)
 
         # Count (parity with TS)
+        # Note: Backend count doesn't support tags filter, use kind instead
         count = await cortex_client.artifacts.count(
             CountArtifactsFilter(
                 memory_space_id=setup_memory_space,
-                tags=["count-test"],
+                kind="text",
             )
         )
 

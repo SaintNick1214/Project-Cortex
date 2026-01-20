@@ -621,14 +621,19 @@ export const purgeVersions = mutation({
 
     // Calculate how many to remove (from oldest, excluding v1)
     const versionsToKeep = args.keepLatest;
-    const versionsToRemove = totalVersions - versionsToKeep;
 
-    // Keep latest N versions, but always preserve version at versionPointer
-    // Strategy: Keep version 1, keep versions from (total - keepLatest + 1) to total
-    const cutoffIndex = versionsToRemove;
+    // Keep latest N versions, but ALWAYS preserve version 1 (initial creation)
+    // and the version at versionPointer
+    const latestVersions = artifact.versionHistory.slice(-versionsToKeep);
+    const version1 = artifact.versionHistory.find((v) => v.version === 1);
 
-    // Preserve first version and recent versions
-    let prunedHistory = artifact.versionHistory.slice(cutoffIndex);
+    // Start with latest versions
+    let prunedHistory = [...latestVersions];
+
+    // Always preserve version 1 if not already included
+    if (version1 && !prunedHistory.some((v) => v.version === 1)) {
+      prunedHistory = [version1, ...prunedHistory];
+    }
 
     // Ensure version at versionPointer is preserved
     const pointerVersionExists = prunedHistory.some(
@@ -639,9 +644,20 @@ export const purgeVersions = mutation({
         (v) => v.version === artifact.versionPointer,
       );
       if (pointerVersion) {
-        prunedHistory = [pointerVersion, ...prunedHistory];
+        // Insert pointer version in correct position (after v1 if present)
+        const insertIdx = prunedHistory.findIndex(
+          (v) => v.version > artifact.versionPointer,
+        );
+        if (insertIdx === -1) {
+          prunedHistory.push(pointerVersion);
+        } else {
+          prunedHistory.splice(insertIdx, 0, pointerVersion);
+        }
       }
     }
+
+    // Calculate actual versions purged
+    const versionsToRemove = totalVersions - prunedHistory.length;
 
     await ctx.db.patch(artifact._id, {
       versionHistory: prunedHistory,
@@ -877,9 +893,11 @@ export const list = query({
     if (!args.includeDeleted) {
       artifacts = artifacts.filter((a) => !a.isDeleted);
     }
-    if (args.kind && !args.memorySpaceId) {
+    // Always filter by kind if provided (not just when memorySpaceId is absent)
+    if (args.kind) {
       artifacts = artifacts.filter((a) => a.kind === args.kind);
     }
+    // Filter by streamingState if provided and not already indexed by it
     if (args.streamingState && !(args.memorySpaceId && args.streamingState)) {
       artifacts = artifacts.filter(
         (a) => a.streamingState === args.streamingState,

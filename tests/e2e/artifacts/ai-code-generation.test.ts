@@ -119,7 +119,8 @@ describeWithConvex("E2E: AI Code Generation Flow", () => {
       const sessionId = startResult.sessionId;
 
       // Step 3: Stream content in chunks (simulating AI token generation)
-      const chunks = aiGeneratedCode.match(/.{1,50}/g) || [];
+      // Use 's' flag to make . match newlines (dotall mode)
+      const chunks = aiGeneratedCode.match(/.{1,50}/gs) || [];
 
       for (const chunk of chunks) {
         const chunkResult = await cortex.artifacts.appendContent({
@@ -424,18 +425,18 @@ describeWithConvex("E2E: AI Code Generation Flow", () => {
 
   describe("Scenario 5: Streaming Cancellation", () => {
     it("should cancel streaming and revert to draft", async () => {
-      // Create artifact
+      // Create artifact in draft state (required to start streaming)
       const artifact = await cortex.artifacts.create({
         memorySpaceId: testMemorySpaceId,
         title: "Cancellable Stream",
         content: "Initial content",
         kind: "code",
-        streamingState: "final",
+        streamingState: "draft", // Must be draft to start streaming
       });
 
       createdArtifactIds.push(artifact.artifactId);
 
-      // Start streaming (this would create a new version being streamed)
+      // Start streaming
       const { sessionId } = await cortex.artifacts.startStreaming({
         artifactId: artifact.artifactId,
       });

@@ -516,8 +516,12 @@ class TestArtifactsAPIStreaming:
     ) -> None:
         """Should start streaming session."""
         mock_client.mutation.return_value = {
+            "success": True,
             "sessionId": "stream-abc123",
-            "artifact": mock_artifact_response,
+            "artifactId": "art-abc123",
+            "startedAt": 1234567890,
+            "previousState": "draft",
+            "currentState": "streaming",
         }
 
         result = await artifacts_api.start_streaming(
@@ -525,6 +529,8 @@ class TestArtifactsAPIStreaming:
         )
 
         assert result.session_id == "stream-abc123"
+        assert result.success is True
+        assert result.current_state == "streaming"
 
     @pytest.mark.asyncio
     async def test_start_streaming_validation_error(
@@ -594,7 +600,7 @@ class TestArtifactsAPIStreaming:
 
         result = await artifacts_api.pause_streaming("art-abc123", "stream-abc123")
 
-        assert result.streaming_state == "paused"
+        assert result.current_state == "paused"
 
     @pytest.mark.asyncio
     async def test_resume_streaming(
@@ -609,7 +615,7 @@ class TestArtifactsAPIStreaming:
 
         result = await artifacts_api.resume_streaming("art-abc123", "stream-abc123")
 
-        assert result.streaming_state == "streaming"
+        assert result.current_state == "streaming"
 
     @pytest.mark.asyncio
     async def test_cancel_streaming(
@@ -624,7 +630,7 @@ class TestArtifactsAPIStreaming:
 
         result = await artifacts_api.cancel_streaming("art-abc123", "stream-abc123")
 
-        assert result.streaming_state == "draft"
+        assert result.current_state == "draft"
 
     @pytest.mark.asyncio
     async def test_finalize_streaming(
@@ -634,13 +640,15 @@ class TestArtifactsAPIStreaming:
         mock_graph_adapter: MagicMock,
         mock_artifact_response: Dict[str, Any],
     ) -> None:
-        """Should finalize streaming and sync to graph."""
-        finalized_artifact = {
-            **mock_artifact_response,
-            "streamingState": "final",
+        """Should finalize streaming and return status."""
+        # Backend returns status object, not full artifact
+        mock_client.mutation.return_value = {
+            "success": True,
+            "artifactId": "art-abc123",
+            "sessionId": "stream-abc123",
+            "currentState": "final",
             "version": 2,
         }
-        mock_client.mutation.return_value = finalized_artifact
 
         result = await artifacts_api.finalize_streaming(
             FinalizeStreamingParams(
@@ -649,8 +657,8 @@ class TestArtifactsAPIStreaming:
             )
         )
 
-        assert result.streaming_state == "final"
-        mock_graph_adapter.sync_artifact.assert_called_once()
+        assert result.current_state == "final"
+        assert result.success is True
 
 
 class TestArtifactsAPISetStreamingState:
@@ -669,7 +677,7 @@ class TestArtifactsAPISetStreamingState:
 
         result = await artifacts_api.set_streaming_state("art-abc123", "error")
 
-        assert result.streaming_state == "error"
+        assert result.current_state == "error"
 
     @pytest.mark.asyncio
     async def test_set_streaming_state_validation_error(
