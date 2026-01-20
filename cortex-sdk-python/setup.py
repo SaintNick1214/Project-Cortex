@@ -50,8 +50,6 @@ setup(
             "black>=24.0",
             "mypy>=1.0",
             "ruff>=0.1",
-            "sphinx>=7.0",
-            "sphinx-rtd-theme>=2.0",
             "openai>=1.0",  # Required for OpenAI integration tests
         ],
     },
