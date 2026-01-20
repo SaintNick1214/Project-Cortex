@@ -102,7 +102,7 @@ This provider now supports all SDK v0.21.0 capabilities:
 1. **Deploy Cortex Backend to Convex:**
 
 ```bash
-npx create-cortex-memories
+npx @cortexmemory/cli init
 # Follow the wizard to set up Convex backend
 ```
 

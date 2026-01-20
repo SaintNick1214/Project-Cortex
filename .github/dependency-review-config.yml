@@ -33,12 +33,10 @@ allow-dependencies-licenses:
   - "pkg:npm/@cortexmemory/sdk"
   - "pkg:npm/@cortexmemory/cli"
   - "pkg:npm/@cortexmemory/vercel-ai-provider"
-  - "pkg:npm/create-cortex-memories"
   - "pkg:npm/@cortexmemory/vercel-ai-quickstart"
   # Internal packages by workspace path (scanner sometimes uses lockfile paths)
   - "pkg:npm/packages/cortex-cli"
   - "pkg:npm/packages/vercel-ai-provider"
-  - "pkg:npm/packages/create-cortex-memories"
   # Vercel AI SDK packages - Apache-2.0 licensed but scanner can't always
   # resolve licenses from nested lockfiles or transitive dependencies.
   - "pkg:npm/@ai-sdk/openai"
