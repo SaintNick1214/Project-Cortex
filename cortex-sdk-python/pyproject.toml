@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cortex-memory"
-version = "0.31.0"
+version = "0.31.1"
 description = "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management"
 readme = "README.md"
 authors = [{name = "Saint Nick LLC", email = "support@cortexmemory.dev"}]
@@ -62,7 +62,7 @@ dev = [
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "pytest-xdist>=3.8.0",  # Parallel test execution within suites
-    # pytest-split installed separately via Makefile (stale metadata conflicts with pytest 9)
+    "pytest-split @ git+https://github.com/Cortex-Memory/pytest-split.git",  # Cortex-maintained fork with pytest 9+ support
     "pytest-cov>=7.0.0",
     "pytest-timeout>=2.4.0",  # Per-test timeout to prevent hangs
     "black>=26.1.0",  # CVE-2024-21503: Require 24.3.0+ to avoid ReDoS vulnerability

@@ -47,11 +47,9 @@ update-deps:
 install-deps:
 	@if [ -d ".venv" ]; then \
 		echo "📦 Using .venv environment..."; \
-		.venv/bin/pip install --upgrade --no-deps pytest-split; \
 		.venv/bin/pip install --upgrade -e ".[dev,all]"; \
 	else \
 		echo "⚠️  No .venv found, using current Python environment"; \
-		pip install --upgrade --no-deps pytest-split; \
 		pip install --upgrade -e ".[dev,all]"; \
 	fi
 	@echo "✅ Dependencies installed"
