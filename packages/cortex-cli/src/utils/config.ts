@@ -10,7 +10,7 @@
 
 import { cosmiconfig } from "cosmiconfig";
 import { readFile, writeFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
+import { existsSync, readdirSync, readFileSync } from "fs";
 import { homedir } from "os";
 import { join, dirname } from "path";
 import type {
@@ -320,4 +320,231 @@ export function listApps(config: CLIConfig): Array<{
     enabled: app.enabled,
     port: app.port,
   }));
+}
+
+/**
+ * Discovered app that's not yet registered
+ */
+export interface DiscoveredApp {
+  /** Suggested name for the app */
+  name: string;
+  /** Detected app type */
+  type: "basic" | "vercel-ai-quickstart";
+  /** Relative path from deployment root */
+  path: string;
+  /** Absolute path to deployment root */
+  projectPath: string;
+  /** Full path to the app directory */
+  fullPath: string;
+  /** Associated deployment name (if any) */
+  deploymentName?: string;
+}
+
+/**
+ * Detect app type from a directory by examining package.json
+ */
+function detectAppType(
+  appPath: string,
+): "basic" | "vercel-ai-quickstart" | null {
+  const packageJsonPath = join(appPath, "package.json");
+
+  if (!existsSync(packageJsonPath)) {
+    return null;
+  }
+
+  try {
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+    const deps = {
+      ...packageJson.dependencies,
+      ...packageJson.devDependencies,
+    };
+
+    // Check for vercel-ai-quickstart pattern
+    if (
+      deps["@cortexmemory/vercel-ai-provider"] &&
+      (deps["next"] || deps["@ai-sdk/react"])
+    ) {
+      return "vercel-ai-quickstart";
+    }
+
+    // Check for basic app pattern
+    if (deps["@cortexmemory/sdk"] && !deps["next"]) {
+      return "basic";
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Discover unregistered apps in deployment directories
+ *
+ * Scans all deployment directories for known app patterns that aren't
+ * yet registered in the config's apps section.
+ *
+ * Patterns detected:
+ * - quickstart/ folder with Next.js + @cortexmemory/vercel-ai-provider
+ * - Any folder with @cortexmemory/sdk (basic app)
+ *
+ * @param config - Current CLI configuration
+ * @returns Array of discovered apps not yet registered
+ */
+export function discoverUnregisteredApps(config: CLIConfig): DiscoveredApp[] {
+  const discovered: DiscoveredApp[] = [];
+  const registeredPaths = new Set<string>();
+
+  // Build set of already-registered app paths
+  if (config.apps) {
+    for (const app of Object.values(config.apps)) {
+      const fullPath = join(app.projectPath, app.path);
+      registeredPaths.add(fullPath);
+    }
+  }
+
+  // Scan each deployment directory
+  for (const [deploymentName, deployment] of Object.entries(
+    config.deployments,
+  )) {
+    if (!deployment.projectPath || !existsSync(deployment.projectPath)) {
+      continue;
+    }
+
+    const projectPath = deployment.projectPath;
+
+    // Check common app locations within deployment
+    const appLocations = [
+      { path: "quickstart", defaultName: `${deploymentName}-quickstart` },
+      { path: "app", defaultName: `${deploymentName}-app` },
+      { path: ".", defaultName: deploymentName }, // App in root
+    ];
+
+    for (const location of appLocations) {
+      const appPath = join(projectPath, location.path);
+
+      // Skip if already registered
+      if (registeredPaths.has(appPath)) {
+        continue;
+      }
+
+      // Skip if doesn't exist
+      if (!existsSync(appPath)) {
+        continue;
+      }
+
+      // Detect app type
+      const appType = detectAppType(appPath);
+      if (!appType) {
+        continue;
+      }
+
+      // Generate unique name
+      let name = location.defaultName;
+      let counter = 1;
+      while (config.apps?.[name] || discovered.some((d) => d.name === name)) {
+        name = `${location.defaultName}-${counter}`;
+        counter++;
+      }
+
+      discovered.push({
+        name,
+        type: appType,
+        path: location.path,
+        projectPath,
+        fullPath: appPath,
+        deploymentName,
+      });
+    }
+
+    // Also scan for subdirectories that might be apps
+    try {
+      const entries = readdirSync(projectPath, { withFileTypes: true });
+      for (const entry of entries) {
+        if (!entry.isDirectory()) continue;
+
+        // Skip common non-app directories
+        if (
+          [
+            "node_modules",
+            ".next",
+            ".git",
+            "convex",
+            "dist",
+            "build",
+            "src",
+          ].includes(entry.name)
+        ) {
+          continue;
+        }
+
+        // Skip already checked locations
+        if (appLocations.some((l) => l.path === entry.name)) {
+          continue;
+        }
+
+        const appPath = join(projectPath, entry.name);
+
+        // Skip if already registered
+        if (registeredPaths.has(appPath)) {
+          continue;
+        }
+
+        // Detect app type
+        const appType = detectAppType(appPath);
+        if (!appType) {
+          continue;
+        }
+
+        // Generate unique name
+        let name = `${deploymentName}-${entry.name}`;
+        let counter = 1;
+        while (config.apps?.[name] || discovered.some((d) => d.name === name)) {
+          name = `${deploymentName}-${entry.name}-${counter}`;
+          counter++;
+        }
+
+        discovered.push({
+          name,
+          type: appType,
+          path: entry.name,
+          projectPath,
+          fullPath: appPath,
+          deploymentName,
+        });
+      }
+    } catch {
+      // Can't read directory, skip
+    }
+  }
+
+  return discovered;
+}
+
+/**
+ * Register a discovered app in the config
+ */
+export async function registerApp(
+  app: DiscoveredApp,
+  options?: {
+    enabled?: boolean;
+    port?: number;
+  },
+): Promise<CLIConfig> {
+  const config = await loadConfig();
+
+  if (!config.apps) {
+    config.apps = {};
+  }
+
+  config.apps[app.name] = {
+    type: app.type,
+    path: app.path,
+    projectPath: app.projectPath,
+    enabled: options?.enabled ?? true,
+    port: options?.port ?? (app.type === "vercel-ai-quickstart" ? 3000 : 3001),
+  };
+
+  await saveUserConfig(config);
+  return config;
 }

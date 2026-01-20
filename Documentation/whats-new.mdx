@@ -97,6 +97,51 @@ Three transient stream events are emitted during memory orchestration:
 | Layer state management | ~100 lines | 0 (included in hook) |
 | **Total** | **~170 lines** | **~6 lines** |
 
+**Quickstart Template Updated**
+
+The Vercel AI Quickstart template now uses these new helpers out of the box:
+- `app/api/chat-v6/route.ts` uses `createLayerStreamObserver()` 
+- `lib/layer-tracking.ts` re-exports from `@cortexmemory/vercel-ai-provider/react`
+
+Run `cortex update --sync-template` to get the updated quickstart files.
+
+</details>
+
+---
+
+### CLI v0.32.0 · Jan 20, 2026
+
+**Auto-Discovery of Unregistered Apps**
+
+🔍 `cortex update` now auto-discovers apps in deployment directories  
+📝 Prompts to register discovered apps for template sync  
+🚀 Apps created before the registration system are now detected
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Auto-Discovery**
+
+The `update` command now scans deployment directories for Cortex apps that aren't registered in `~/.cortexrc`. This helps users who created apps before the `.cortex` registration system was introduced.
+
+Detected patterns:
+- `quickstart/` folders with Next.js + `@cortexmemory/vercel-ai-provider`
+- Any subdirectory with `@cortexmemory/sdk` dependencies
+
+```bash
+$ cortex update --sync-template
+
+   Found 1 unregistered app(s) in deployment directories:
+     • my-deployment-quickstart (vercel-ai-quickstart) at /path/to/quickstart
+
+? Register these apps for template sync? › (Y/n)
+     ✓ Registered my-deployment-quickstart (vercel-ai-quickstart)
+```
+
+Once registered, apps receive template updates via `--sync-template`.
+
 </details>
 
 ---
@@ -1818,6 +1863,12 @@ const cortexMemory = createCortexMemory({
 
 ## January 2026
 
+### v0.32.0 · Jan 20, 2026 - Auto-Discovery of Apps
+
+🔍 `cortex update` auto-discovers unregistered apps in deployment directories  
+📝 Prompts to register discovered apps for template sync  
+🚀 Apps created before the registration system are now detected
+
 ### v0.31.1 · Jan 20, 2026 - Dependency Updates
 
 📦 Updated all dependencies to latest versions
@@ -1892,7 +1943,8 @@ const cortexMemory = createCortexMemory({
 🧠 New `createLayerStreamObserver()` helper for server-side layer streaming  
 ⚛️ New `useLayerTracking` React hook for client-side state management  
 📦 New `/react` subpath export: `@cortexmemory/vercel-ai-provider/react`  
-📉 Reduces memory visualization boilerplate from ~170 lines to ~6 lines
+📉 Reduces memory visualization boilerplate from ~170 lines to ~6 lines  
+🚀 Quickstart template updated to use new helpers (`cortex update --sync-template`)
 
 ### v0.29.1 · Jan 20, 2026 - Dependency Updates
 

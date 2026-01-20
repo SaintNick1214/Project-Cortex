@@ -11,7 +11,13 @@ import ora from "ora";
 import path from "path";
 import fs from "fs-extra";
 import type { CLIConfig, DeploymentConfig, AppConfig } from "../types.js";
-import { resolveConfig, loadConfig } from "../utils/config.js";
+import {
+  resolveConfig,
+  loadConfig,
+  discoverUnregisteredApps,
+  registerApp,
+  saveUserConfig,
+} from "../utils/config.js";
 import {
   selectDeployment,
   getEnabledDeployments,
@@ -236,6 +242,46 @@ export function registerDeployCommands(
           pc.dim("   export CORTEX_SDK_DEV_PATH=/path/to/Project-Cortex\n"),
         );
         return;
+      }
+
+      // Auto-discover unregistered apps in deployment directories
+      const discoveredApps = discoverUnregisteredApps(currentConfig);
+      if (discoveredApps.length > 0 && !options.deploymentsOnly) {
+        console.log(
+          pc.cyan(
+            `\n   Found ${discoveredApps.length} unregistered app(s) in deployment directories:`,
+          ),
+        );
+        for (const app of discoveredApps) {
+          console.log(
+            pc.dim(
+              `     • ${app.name} (${app.type}) at ${app.fullPath}`,
+            ),
+          );
+        }
+
+        const { default: prompts } = await import("prompts");
+        const { registerAll } = await prompts({
+          type: "confirm",
+          name: "registerAll",
+          message: "Register these apps for template sync?",
+          initial: true,
+        });
+
+        if (registerAll) {
+          for (const app of discoveredApps) {
+            const updatedConfig = await registerApp(app, { enabled: true });
+            // Update local reference to include newly registered apps
+            if (!currentConfig.apps) {
+              currentConfig.apps = {};
+            }
+            currentConfig.apps[app.name] = updatedConfig.apps![app.name];
+            console.log(
+              pc.green(`     ✓ Registered ${app.name} (${app.type})`),
+            );
+          }
+          console.log("");
+        }
       }
 
       // If -a flag is provided, use single app mode
