@@ -13,11 +13,11 @@
  * infrastructure is identical to ensure feature parity.
  */
 
-import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
-import type {
-  LayerObserver,
-  CortexMemoryConfig,
+import {
+  createCortexMemoryAsync,
+  createLayerStreamObserver,
 } from "@cortexmemory/vercel-ai-provider";
+import type { CortexMemoryConfig } from "@cortexmemory/vercel-ai-provider";
 import { openai, createOpenAI } from "@ai-sdk/openai";
 import {
   streamText,
@@ -52,8 +52,7 @@ function getCortexMemoryConfig(
   memorySpaceId: string,
   userId: string,
   conversationId: string,
-  layerObserver?: LayerObserver,
-): CortexMemoryConfig {
+): Omit<CortexMemoryConfig, "layerObserver"> {
   return {
     convexUrl: process.env.CONVEX_URL!,
     memorySpaceId,
@@ -102,9 +101,6 @@ function getCortexMemoryConfig(
 
     // Memory recall configuration
     memorySearchLimit: 20,
-
-    // Real-time layer tracking
-    layerObserver,
 
     // Debug in development
     debug: process.env.NODE_ENV === "development",
@@ -233,54 +229,23 @@ export async function POST(req: Request) {
     return createUIMessageStreamResponse({
       stream: createUIMessageStream({
         execute: async ({ writer }) => {
-          // Create layer observer for real-time UI updates
-          const layerObserver: LayerObserver = {
-            onOrchestrationStart: (orchestrationId) => {
-              writer.write({
-                type: "data-orchestration-start",
-                data: { orchestrationId },
-                transient: true,
-              });
-            },
-            onLayerUpdate: (event) => {
-              writer.write({
-                type: "data-layer-update",
-                data: {
-                  layer: event.layer,
-                  status: event.status,
-                  timestamp: event.timestamp,
-                  latencyMs: event.latencyMs,
-                  data: event.data,
-                  error: event.error,
-                  revisionAction: event.revisionAction,
-                  supersededFacts: event.supersededFacts,
-                },
-                transient: true,
-              });
-            },
-            onOrchestrationComplete: (summary) => {
-              writer.write({
-                type: "data-orchestration-complete",
-                data: {
-                  orchestrationId: summary.orchestrationId,
-                  totalLatencyMs: summary.totalLatencyMs,
-                  createdIds: summary.createdIds,
-                },
-                transient: true,
-              });
-            },
-          };
+          // Create layer observer using the streaming helper
+          // This replaces ~35 lines of manual observer setup with 2 lines!
+          const { observer, emitTo } = createLayerStreamObserver();
+          emitTo(writer);
 
           // Build config with observer
           const config = getCortexMemoryConfig(
             memorySpaceId,
             userId,
             conversationId,
-            layerObserver,
           );
 
           // Create memory-augmented model - THIS handles both recall AND storage!
-          const cortexMemory = await createCortexMemoryAsync(config);
+          const cortexMemory = await createCortexMemoryAsync({
+            ...config,
+            layerObserver: observer,
+          });
 
           // Stream response with automatic memory integration
           const result = streamText({

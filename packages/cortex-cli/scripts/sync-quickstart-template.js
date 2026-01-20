@@ -59,6 +59,25 @@ function copyDir(src, dest) {
 }
 
 /**
+ * Recursively remove directory with retries
+ * More robust than fs.rmSync for directories with many files
+ */
+function removeDir(dir) {
+  if (!fs.existsSync(dir)) return;
+
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      removeDir(fullPath);
+    } else {
+      fs.unlinkSync(fullPath);
+    }
+  }
+  fs.rmdirSync(dir);
+}
+
+/**
  * Main sync function
  */
 function sync() {
@@ -75,9 +94,9 @@ function sync() {
   console.log(`  From: ${SOURCE}`);
   console.log(`  To:   ${DEST}`);
 
-  // Remove existing destination
+  // Remove existing destination using recursive helper
   if (fs.existsSync(DEST)) {
-    fs.rmSync(DEST, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+    removeDir(DEST);
   }
 
   // Copy files

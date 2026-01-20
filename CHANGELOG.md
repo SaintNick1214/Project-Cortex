@@ -10,7 +10,6 @@ All releases across the Cortex ecosystem are now unified in one easy-to-browse t
 - **Python SDK** (`cortex-sdk-python`)
 - **CLI** (`@cortexmemory/cli`)
 - **Vercel AI Provider** (`@cortexmemory/vercel-ai-provider`)
-- **Create Wizard** (`create-cortex-memories`)
 
 The new changelog features:
 

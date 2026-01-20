@@ -190,6 +190,40 @@ export function isNonSystemFailure(error: unknown): boolean {
 export const isIdempotentNotFoundError = isNonSystemFailure;
 
 /**
+ * Check if an error is an eventual consistency "not found" error.
+ *
+ * In Convex's eventually consistent model, there's a brief window after
+ * create() where an entity exists but indexes haven't propagated to all
+ * replicas. During this window, update/get operations may fail with
+ * "not found" errors that will succeed on retry.
+ *
+ * These errors should be retried with a short delay (unlike true "not found"
+ * errors for entities that genuinely don't exist).
+ *
+ * @param error The error to check
+ * @returns True if this is likely an eventual consistency issue
+ */
+export function isEventualConsistencyError(error: unknown): boolean {
+  const errorStr = String(error);
+
+  // Patterns that indicate potential eventual consistency issues
+  // These are "not found" errors that could be transient after create()
+  const eventualConsistencyPatterns = [
+    "CONTEXT_NOT_FOUND",
+    "MEMORY_NOT_FOUND",
+    "FACT_NOT_FOUND",
+    "CONVERSATION_NOT_FOUND",
+    "MEMORY_SPACE_NOT_FOUND",
+    "MEMORYSPACE_NOT_FOUND",
+    "AGENT_NOT_FOUND",
+  ];
+
+  return eventualConsistencyPatterns.some((pattern) =>
+    errorStr.includes(pattern),
+  );
+}
+
+/**
  * Check if an error is retryable (transient error that may succeed on retry).
  *
  * Retryable errors include:
@@ -197,10 +231,11 @@ export const isIdempotentNotFoundError = isNonSystemFailure;
  * - Rate limiting errors
  * - Timeout errors
  * - Network/connection errors
+ * - Eventual consistency "not found" errors (entity just created, indexes catching up)
  *
  * Non-retryable errors (won't succeed on retry):
  * - Validation errors (client bugs)
- * - Not found errors (data doesn't exist)
+ * - True "not found" errors (user/immutable entries that genuinely don't exist)
  * - Permission errors (auth issues)
  * - Business logic errors (constraints)
  *
@@ -208,7 +243,13 @@ export const isIdempotentNotFoundError = isNonSystemFailure;
  * @returns True if the error is retryable
  */
 export function isRetryableError(error: unknown): boolean {
-  // Non-system failures should NOT be retried - they indicate
+  // Check for eventual consistency errors FIRST - these are retryable
+  // even though they're classified as "non-system failures" for circuit breaker purposes
+  if (isEventualConsistencyError(error)) {
+    return true;
+  }
+
+  // Other non-system failures should NOT be retried - they indicate
   // the request is invalid and will fail every time
   if (isNonSystemFailure(error)) {
     return false;

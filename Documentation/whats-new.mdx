@@ -17,6 +17,170 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### Vercel AI Provider v0.32.0 · Jan 20, 2026
+
+**Reasoning Panel Nativity - Memory Layer Visualization**
+
+🧠 New `createLayerStreamObserver()` helper reduces API route boilerplate from ~40 lines to ~5 lines  
+⚛️ New `useLayerTracking` React hook for client-side layer state management  
+📦 New `/react` subpath export for React-specific utilities
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Server-Side: `createLayerStreamObserver()`**
+
+A helper function that creates an `OrchestrationObserver` pre-wired to emit layer events to a Vercel AI SDK stream writer:
+
+```typescript
+import { createLayerStreamObserver, createCortexMemoryAsync } from '@cortexmemory/vercel-ai-provider';
+import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
+
+export async function POST(req: Request) {
+  const { observer, emitTo } = createLayerStreamObserver();
+
+  return createUIMessageStreamResponse({
+    stream: createUIMessageStream({
+      execute: async ({ writer }) => {
+        emitTo(writer);
+        const cortexMemory = await createCortexMemoryAsync({
+          layerObserver: observer,
+          // ...config
+        });
+        // Stream response...
+      },
+    }),
+  });
+}
+```
+
+**Client-Side: `useLayerTracking` Hook**
+
+A React hook that manages layer tracking state and provides a `handleDataPart` callback for `useChat`:
+
+```typescript
+import { useLayerTracking } from '@cortexmemory/vercel-ai-provider/react';
+import { useChat } from '@ai-sdk/react';
+
+function ChatComponent() {
+  const { layers, isOrchestrating, handleDataPart } = useLayerTracking();
+
+  const { messages, sendMessage } = useChat({
+    onData: handleDataPart,
+  });
+
+  return (
+    <>
+      {isOrchestrating && <MemoryLoadingIndicator />}
+      <LayerVisualization layers={layers} />
+      <Messages messages={messages} />
+    </>
+  );
+}
+```
+
+**Event Types**
+
+Three transient stream events are emitted during memory orchestration:
+- `data-orchestration-start` - When orchestration begins
+- `data-layer-update` - For each layer status change (pending → in_progress → complete)
+- `data-orchestration-complete` - When all layers finish
+
+**Reduction in Boilerplate**
+
+| Component | Before | After |
+|-----------|--------|-------|
+| API Route layer observer setup | ~40 lines | ~5 lines |
+| Client-side data parsing | ~30 lines | 1 line (`handleDataPart`) |
+| Layer state management | ~100 lines | 0 (included in hook) |
+| **Total** | **~170 lines** | **~6 lines** |
+
+**Quickstart Template Updated**
+
+The Vercel AI Quickstart template now uses these new helpers out of the box:
+- `app/api/chat-v6/route.ts` uses `createLayerStreamObserver()` 
+- `lib/layer-tracking.ts` re-exports from `@cortexmemory/vercel-ai-provider/react`
+
+Run `cortex update --sync-template` to get the updated quickstart files.
+
+</details>
+
+---
+
+### CLI v0.32.0 · Jan 20, 2026
+
+**Auto-Discovery of Unregistered Apps**
+
+🔍 `cortex update` now auto-discovers apps in deployment directories  
+📝 Prompts to register discovered apps for template sync  
+🚀 Apps created before the registration system are now detected
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Auto-Discovery**
+
+The `update` command now scans deployment directories for Cortex apps that aren't registered in `~/.cortexrc`. This helps users who created apps before the `.cortex` registration system was introduced.
+
+Detected patterns:
+- `quickstart/` folders with Next.js + `@cortexmemory/vercel-ai-provider`
+- Any subdirectory with `@cortexmemory/sdk` dependencies
+
+```bash
+$ cortex update --sync-template
+
+   Found 1 unregistered app(s) in deployment directories:
+     • my-deployment-quickstart (vercel-ai-quickstart) at /path/to/quickstart
+
+? Register these apps for template sync? › (Y/n)
+     ✓ Registered my-deployment-quickstart (vercel-ai-quickstart)
+```
+
+Once registered, apps receive template updates via `--sync-template`.
+
+</details>
+
+---
+
+### All Packages v0.31.1 · Jan 20, 2026
+
+**Dependency Updates**
+
+📦 Updated all dependencies to latest versions across the monorepo  
+🔄 TypeScript SDK, CLI, Vercel AI Provider, and Python SDK
+
+<details>
+<summary>Show full details</summary>
+
+#### Changes
+
+**npm packages updated:**
+- `@types/node` ^25.0.7 → ^25.0.9
+- `@typescript-eslint/eslint-plugin` ^8.53.0 → ^8.53.1
+- `@typescript-eslint/parser` ^8.53.0 → ^8.53.1
+- `convex` ^1.31.4 → ^1.31.5
+- `@ai-sdk/openai` ^3.0.9 → ^3.0.12
+- `@ai-sdk/anthropic` ^3.0.12 → ^3.0.15
+- `@ai-sdk/react` ^3.0.32 → ^3.0.44
+- `ai` ^6.0.30 → ^6.0.42
+- `@hono/node-server` ^1.19.8 → ^1.19.9
+- `framer-motion` ^12.26.1 → ^12.27.1
+- `next` ^16.1.1 → ^16.1.4
+
+**Version bumps:**
+- `@cortexmemory/sdk` 0.31.0 → 0.31.1
+- `@cortexmemory/cli` 0.31.0 → 0.31.1
+- `@cortexmemory/vercel-ai-provider` 0.29.0 → 0.29.1
+- `cortex-memory` (Python) 0.31.0 → 0.31.1
+
+</details>
+
+---
+
 ### CLI v0.31.0 · Jan 15, 2026
 
 **Adaptive Batch Sizing for `cortex db clear`**
@@ -1505,6 +1669,10 @@ const cortexMemory = createCortexMemory({
 
 ### Create v0.1.0 · Nov 2, 2025
 
+<Callout type="warning">
+**Deprecated**: The `create-cortex-memories` package has been superseded by `@cortexmemory/cli`. Use `npx @cortexmemory/cli init` instead.
+</Callout>
+
 **Initial Release**
 
 🎉 Interactive CLI wizard for Cortex project setup  
@@ -1516,7 +1684,7 @@ const cortexMemory = createCortexMemory({
 
 #### Features
 
-- `npm create cortex-memories` - Zero-config project creation
+- ~~`npm create cortex-memories`~~ → Use `npx @cortexmemory/cli init`
 - Three Convex setup modes (local/new cloud/existing)
 - Optional graph database integration (Neo4j/Memgraph)
 - Docker detection with platform-specific instructions
@@ -1564,6 +1732,10 @@ const cortexMemory = createCortexMemory({
 <TabItem value="ts-sdk" label="TypeScript SDK">
 
 ## January 2026
+
+### v0.31.1 · Jan 20, 2026 - Dependency Updates
+
+📦 Updated all dependencies to latest versions
 
 ### v0.31.0 · Jan 14, 2026 - Configurable Recall Limits
 
@@ -1646,6 +1818,15 @@ const cortexMemory = createCortexMemory({
 
 <TabItem value="py-sdk" label="Python SDK">
 
+## January 2026
+
+### v0.31.1 · Jan 20, 2026 - Dependency Updates
+
+📦 Updated all dependencies to latest versions  
+🔄 Version sync with TypeScript SDK
+
+---
+
 ## December 2025
 
 ### v0.27.0 · Dec 28 - Multi-Tenancy & Auth Context
@@ -1681,6 +1862,16 @@ const cortexMemory = createCortexMemory({
 <TabItem value="cli" label="CLI">
 
 ## January 2026
+
+### v0.32.0 · Jan 20, 2026 - Auto-Discovery of Apps
+
+🔍 `cortex update` auto-discovers unregistered apps in deployment directories  
+📝 Prompts to register discovered apps for template sync  
+🚀 Apps created before the registration system are now detected
+
+### v0.31.1 · Jan 20, 2026 - Dependency Updates
+
+📦 Updated all dependencies to latest versions
 
 ### v0.29.0 · Jan 10 - Enhanced Update Display & Graph Template
 
@@ -1746,6 +1937,18 @@ const cortexMemory = createCortexMemory({
 <TabItem value="vercel" label="Vercel AI">
 
 ## January 2026
+
+### v0.32.0 · Jan 20, 2026 - Reasoning Panel Nativity
+
+🧠 New `createLayerStreamObserver()` helper for server-side layer streaming  
+⚛️ New `useLayerTracking` React hook for client-side state management  
+📦 New `/react` subpath export: `@cortexmemory/vercel-ai-provider/react`  
+📉 Reduces memory visualization boilerplate from ~170 lines to ~6 lines  
+🚀 Quickstart template updated to use new helpers (`cortex update --sync-template`)
+
+### v0.29.1 · Jan 20, 2026 - Dependency Updates
+
+📦 Updated all dependencies to latest versions
 
 ### v0.29.0 · Jan 10 - Automatic Graph Sync
 

@@ -1,4 +1,4 @@
-.PHONY: test test-local test-managed test-both test-stress install dev clean
+.PHONY: test test-local test-managed test-both test-stress install install-deps dev clean update-deps check-deps
 
 # Default test target - auto-detects and runs appropriate suite(s)
 # Mirrors TypeScript SDK's "npm test" behavior
@@ -38,6 +38,30 @@ clean:
 	rm -rf build/ dist/ *.egg-info .pytest_cache/ .coverage htmlcov/
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 
+# Update source files (pyproject.toml, requirements*.txt) to latest PyPI versions
+# Mirrors `npm run update-deps` behavior
+update-deps:
+	@python3 scripts/update-deps.py
+
+# Install/upgrade packages in venv to match source file versions
+install-deps:
+	@if [ -d ".venv" ]; then \
+		echo "📦 Using .venv environment..."; \
+		.venv/bin/pip install --upgrade -e ".[dev,all]"; \
+	else \
+		echo "⚠️  No .venv found, using current Python environment"; \
+		pip install --upgrade -e ".[dev,all]"; \
+	fi
+	@echo "✅ Dependencies installed"
+
+# Show outdated packages vs what's installed
+check-deps:
+	@if [ -d ".venv" ]; then \
+		.venv/bin/pip list --outdated; \
+	else \
+		pip list --outdated; \
+	fi
+
 # Help
 help:
 	@echo "Python SDK Test Commands (mirrors TypeScript SDK)"
@@ -50,6 +74,9 @@ help:
 	@echo ""
 	@echo "  make install       - Install package in development mode"
 	@echo "  make dev           - Create venv and install (first-time setup)"
+	@echo "  make update-deps   - Update pyproject.toml & requirements to latest (like npm run update-deps)"
+	@echo "  make install-deps  - Install updated deps into venv"
+	@echo "  make check-deps    - Show outdated packages vs installed"
 	@echo "  make clean         - Remove build artifacts"
 	@echo ""
 	@echo "Direct pytest (runs single suite based on CONVEX_TEST_MODE):"

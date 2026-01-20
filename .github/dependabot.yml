@@ -51,23 +51,6 @@ updates:
     commit-message:
       prefix: "chore(vercel-ai)"
 
-  # Create Cortex Memories wizard
-  - package-ecosystem: "npm"
-    directory: "/packages/create-cortex-memories"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Los_Angeles"
-    open-pull-requests-limit: 5
-    reviewers:
-      - "SaintNick1214"
-    labels:
-      - "dependencies"
-      - "wizard"
-    commit-message:
-      prefix: "chore(wizard)"
-
   # Python SDK
   - package-ecosystem: "pip"
     directory: "/cortex-sdk-python"

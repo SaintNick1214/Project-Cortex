@@ -10,7 +10,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="cortex-memory",
-    version="0.27.0",
+    version="0.32.0",
     author="Saint Nick LLC",
     author_email="support@cortexmemory.dev",
     description="AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
@@ -35,24 +35,29 @@ setup(
     ],
     python_requires=">=3.10",
     install_requires=[
-        "convex>=0.5.0",
-        "pydantic>=2.4.0",  # CVE-2024-3772: Require 2.4.0+ to avoid ReDoS vulnerability
-        "typing-extensions>=4.0",
+        "convex>=0.7.0",
+        "pydantic>=2.12.5",  # CVE-2024-3772: Require 2.4.0+ to avoid ReDoS vulnerability
+        "typing-extensions>=4.15.0",
     ],
     extras_require={
-        "graph": ["neo4j>=5.0"],
-        "a2a": ["redis>=5.0"],
-        "all": ["neo4j>=5.0", "redis>=5.0"],
+        "graph": ["neo4j>=6.1.0"],
+        "a2a": ["redis>=7.1.0"],
+        "llm": ["openai>=2.15.0", "anthropic>=0.76.0"],
+        "openai": ["openai>=2.15.0"],
+        "anthropic": ["anthropic>=0.76.0"],
+        "all": ["neo4j>=6.1.0", "redis>=7.1.0", "openai>=2.15.0", "anthropic>=0.76.0"],
         "dev": [
-            "pytest>=8.0",
-            "pytest-asyncio>=0.23",
-            "pytest-cov>=4.0",
-            "black>=24.0",
-            "mypy>=1.0",
-            "ruff>=0.1",
-            "sphinx>=7.0",
-            "sphinx-rtd-theme>=2.0",
-            "openai>=1.0",  # Required for OpenAI integration tests
+            "pytest>=9.0.2",
+            "pytest-asyncio>=1.3.0",
+            "pytest-xdist>=3.8.0",
+            "pytest-split @ git+https://github.com/Cortex-Memory/pytest-split.git",
+            "pytest-cov>=7.0.0",
+            "pytest-timeout>=2.4.0",
+            "black>=26.1.0",
+            "mypy>=1.19.1",
+            "ruff>=0.14.13",
+            "openai>=2.15.0",  # Required for OpenAI integration tests
+            "anthropic>=0.76.0",  # Required for Anthropic integration tests
         ],
     },
     keywords=[
