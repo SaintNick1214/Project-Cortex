@@ -29,17 +29,16 @@ def get_latest_version(package_name: str) -> str | None:
 def update_version_in_line(line: str, new_version: str) -> str:
     """Update a version constraint in a dependency line."""
     # Match patterns like: package>=1.0, package>=1.0.0, package[extra]>=1.0
-    # Preserves extras like [dev], [all], etc.
-    pattern = r'^(\s*["\']?)([a-zA-Z0-9_-]+(?:\[[^\]]+\])?)([><=!~]+)[\d.]+'
+    # Captures: prefix, package (with optional extras), operator, version, and rest (comments only)
+    pattern = r'^(\s*["\']?)([a-zA-Z0-9_-]+(?:\[[^\]]+\])?)([><=!~]+)([\d.]+)(\s*#.*)?$'
     match = re.match(pattern, line)
     if match:
         prefix = match.group(1)
         package_with_extras = match.group(2)
         operator = match.group(3)
-        # Keep everything after the version (comments, trailing comma/quote)
-        rest_match = re.search(r'[\d.]+(.*)$', line)
-        rest = rest_match.group(1) if rest_match else ''
-        return f"{prefix}{package_with_extras}{operator}{new_version}{rest}"
+        # old_version = match.group(4)  # Not needed, we replace it
+        comment = match.group(5) or ''
+        return f"{prefix}{package_with_extras}{operator}{new_version}{comment}"
     return line
 
 
