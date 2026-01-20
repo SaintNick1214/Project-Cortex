@@ -14,6 +14,7 @@ from convex import ConvexClient
 from ._convex_async import AsyncConvexClient
 from .a2a import A2AAPI
 from .agents import AgentsAPI
+from .artifacts import ArtifactsAPI
 from .contexts import ContextsAPI
 from .conversations import ConversationsAPI
 from .facts import FactsAPI
@@ -296,6 +297,9 @@ class Cortex:
             self.client, self.graph_adapter, self._resilience, self._auth_context
         )
         self.sessions = SessionsAPI(
+            self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
+        self.artifacts = ArtifactsAPI(
             self.client, self.graph_adapter, self._resilience, self._auth_context
         )
 

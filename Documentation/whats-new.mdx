@@ -17,6 +17,85 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### All Packages v0.33.0 · Jan 19, 2026
+
+**Artifacts API - Interactive Document Management**
+
+📦 New Artifacts API for managing interactive, versioned documents  
+🔄 Full streaming support with pause/resume capabilities  
+⏪ Version history with undo/redo functionality  
+🐍 Full Python SDK parity
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Artifacts API**
+
+A complete system for managing interactive, versioned digital documents that AI agents can create, modify, and share:
+
+- **Core CRUD Operations**: Create, read, update, delete artifacts with full type safety
+- **Version History**: Track changes with `undo()`, `redo()`, `getHistory()`, and `getVersion()`
+- **Streaming Support**: Real-time content streaming with state management (draft → streaming → paused → final)
+- **Multi-tenancy**: Built-in tenant isolation for SaaS applications
+- **File Storage**: Support for binary artifacts with Convex storage integration
+
+**TypeScript SDK**
+
+```typescript
+// Create an artifact
+const artifact = await cortex.artifacts.create({
+  memorySpaceId: 'user-123-space',
+  title: 'Code Snippet',
+  content: 'function hello() { return "world"; }',
+  kind: 'code',
+  tags: ['javascript'],
+});
+
+// Version control
+await cortex.artifacts.undo(artifact.artifactId);
+const history = await cortex.artifacts.getHistory(artifact.artifactId);
+```
+
+**Python SDK**
+
+```python
+# Create an artifact
+artifact = await cortex.artifacts.create(
+    CreateArtifactOptions(
+        memory_space_id="user-123-space",
+        title="Meeting Notes",
+        content="# Standup Notes\n\n- Discussed roadmap...",
+        kind="text",
+    )
+)
+
+# Streaming
+await cortex.artifacts.start_streaming(
+    StartStreamingParams(artifact_id=artifact.artifact_id)
+)
+```
+
+**Vercel AI SDK Integration**
+
+New AI tools for artifact management within chat interfaces:
+- `createArtifact` - Create artifacts via AI
+- `updateArtifact` - Modify existing artifacts
+- `appendToArtifact` - Stream content to artifacts
+- React hooks: `useArtifacts()` and `useArtifact()`
+
+#### Changes
+
+- Updated `@ai-sdk/openai` to ^3.0.13
+- Updated `@ai-sdk/anthropic` to ^3.0.16
+- Updated `@types/react` to ^19.2.9
+- Updated `framer-motion` to ^12.27.5
+
+</details>
+
+---
+
 ### Vercel AI Provider v0.32.0 · Jan 20, 2026
 
 **Reasoning Panel Nativity - Memory Layer Visualization**

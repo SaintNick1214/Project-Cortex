@@ -2948,3 +2948,509 @@ export interface OrchestrationObserver {
     summary: OrchestrationSummary,
   ) => void | Promise<void>;
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Artifacts API (Layer 5) - Versioned Document Management
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Artifact kind representing the content type
+ * See 00-unified-specification.md for canonical values
+ */
+export type ArtifactKind =
+  | "text" // Plain text, markdown, prose documents
+  | "code" // Source code with syntax highlighting
+  | "sheet" // Tabular/spreadsheet data (JSON array format)
+  | "image" // Generated/edited images (stored in file storage)
+  | "diagram" // Mermaid, SVG, or structured diagrams
+  | "html" // Interactive HTML/React components
+  | "custom"; // User-defined types (requires kindConfig.customKind)
+
+/**
+ * Streaming state representing the artifact lifecycle
+ * See 00-unified-specification.md for state transitions
+ */
+export type StreamingState =
+  | "draft" // Initial creation, content may be incomplete
+  | "streaming" // Actively receiving content from AI generation
+  | "paused" // Streaming temporarily halted (can resume)
+  | "final" // Content is complete and stable
+  | "error"; // Generation failed
+
+/**
+ * Reference to an attached file
+ */
+export interface FileReference {
+  /** Unique file identifier */
+  fileId: string;
+  /** Original filename */
+  filename: string;
+  /** MIME type of the file */
+  mimeType: string;
+  /** File size in bytes */
+  sizeBytes: number;
+  /** URL to access the file (signed URL or permanent) */
+  url: string;
+  /** When the URL expires (for signed URLs) */
+  urlExpiresAt?: number;
+  /** File metadata */
+  metadata?: Record<string, unknown>;
+  /** When the file was attached */
+  attachedAt: number;
+}
+
+/**
+ * Reference to file stored in Convex storage
+ */
+export interface ArtifactFileRef {
+  /** Convex storage ID */
+  storageId: string;
+  /** Content MIME type */
+  mimeType: string;
+  /** Size in bytes */
+  size: number;
+  /** SHA-256 checksum */
+  checksum?: string;
+  /** Original filename */
+  originalFilename?: string;
+}
+
+/**
+ * Individual version entry in artifact history
+ * See 00-unified-specification.md for canonical structure
+ */
+export interface ArtifactVersion {
+  /** Version number (1-based, auto-incremented) */
+  version: number;
+  /** Content at this version (if inline) */
+  content?: string;
+  /** File reference at this version (if stored in file storage) */
+  fileRef?: ArtifactFileRef;
+  /** Title at this version */
+  title?: string;
+  /** When this version was created */
+  timestamp: number;
+  /** Who made this change (agentId or userId) */
+  changedBy?: string;
+  /** Type of change */
+  changeType: "create" | "update" | "undo" | "redo";
+  /** Brief description of changes */
+  changeSummary?: string;
+}
+
+/**
+ * Kind-specific configuration for artifacts
+ */
+export interface ArtifactKindConfig {
+  /** Name for "custom" kind */
+  customKind?: string;
+  /** MIME type (e.g., "text/markdown") */
+  mimeType?: string;
+  /** For code: programming language */
+  language?: string;
+  /** For html: framework used */
+  framework?: string;
+  /** For sheet/custom: data schema */
+  schema?: unknown;
+}
+
+/**
+ * Streaming session metadata
+ */
+export interface StreamingMetadata {
+  /** Active streaming session ID */
+  sessionId?: string;
+  /** When streaming began */
+  startedAt?: number;
+  /** Last chunk timestamp */
+  lastChunkAt?: number;
+  /** Progress tracking */
+  bytesReceived?: number;
+  /** Estimated total bytes */
+  estimatedTotal?: number;
+  /** Error details if state is "error" */
+  errorMessage?: string;
+  /** Programmatic error code */
+  errorCode?: string;
+}
+
+/**
+ * Collaborator entry for shared artifacts
+ */
+export interface ArtifactCollaborator {
+  /** User or agent ID */
+  id: string;
+  /** Type of collaborator */
+  type: "user" | "agent";
+  /** Access role */
+  role: "owner" | "editor" | "viewer";
+  /** When added */
+  addedAt: number;
+  /** Last edit timestamp */
+  lastEditAt?: number;
+}
+
+/**
+ * Artifact statistics
+ */
+export interface ArtifactStats {
+  /** Character count */
+  characterCount?: number;
+  /** Word count */
+  wordCount?: number;
+  /** Line count */
+  lineCount?: number;
+  /** Token count (for LLM context) */
+  tokenCount?: number;
+}
+
+/**
+ * Reference to source memory
+ */
+export interface ArtifactMemoryRef {
+  /** Memory ID */
+  memoryId: string;
+  /** Relevance score (0-100) */
+  relevance?: number;
+}
+
+/**
+ * Main Artifact record
+ */
+export interface Artifact {
+  /** Convex document ID */
+  _id: string;
+  /** Public artifact identifier */
+  artifactId: string;
+  /** Memory space this artifact belongs to */
+  memorySpaceId: string;
+  /** Multi-tenancy: SaaS platform isolation */
+  tenantId?: string;
+  /** User who owns this artifact */
+  userId?: string;
+  /** Agent who owns this artifact */
+  agentId?: string;
+  /** Participant ID for Hive Mode tracking */
+  participantId?: string;
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Artifact Type
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Artifact kind for content type */
+  kind: ArtifactKind;
+  /** Kind-specific configuration */
+  kindConfig?: ArtifactKindConfig;
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Content Storage (mutually exclusive)
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Inline content (<1MB) */
+  content?: string;
+  /** File reference for large content (>1MB) */
+  fileRef?: ArtifactFileRef;
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Display Metadata
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Display title */
+  title: string;
+  /** Brief description */
+  description?: string;
+  /** Tags for categorization */
+  tags: string[];
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Streaming State
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Streaming lifecycle state */
+  streamingState: StreamingState;
+  /** Streaming session metadata */
+  streamingMetadata?: StreamingMetadata;
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Versioning & History
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Current version number */
+  version: number;
+  /** Active version pointer for undo/redo navigation */
+  versionPointer: number;
+  /** Version history for undo/redo */
+  versionHistory: ArtifactVersion[];
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Attachments
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Currently attached files */
+  attachedFiles?: FileReference[];
+
+  // ─────────────────────────────────────────────────────────────────────
+  // References
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Reference to source conversation */
+  conversationRef?: {
+    conversationId: string;
+    messageId?: string;
+    turnIndex?: number;
+  };
+  /** References to source memories */
+  memoryRefs?: ArtifactMemoryRef[];
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Collaboration
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Collaborators for shared artifacts */
+  collaborators?: ArtifactCollaborator[];
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Statistics
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Content statistics */
+  stats?: ArtifactStats;
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Flexible Metadata
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Custom metadata */
+  metadata?: Record<string, unknown>;
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Timestamps
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** When the artifact was created */
+  createdAt: number;
+  /** When the artifact was last updated */
+  updatedAt: number;
+  /** When the artifact was last accessed */
+  lastAccessedAt?: number;
+  /** Total access count */
+  accessCount?: number;
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Soft Delete
+  // ─────────────────────────────────────────────────────────────────────
+
+  /** Whether the artifact is deleted */
+  isDeleted?: boolean;
+  /** When the artifact was deleted */
+  deletedAt?: number;
+  /** Who deleted the artifact */
+  deletedBy?: string;
+}
+
+/**
+ * Options for creating a new artifact
+ */
+export interface CreateArtifactOptions {
+  /** Memory space ID (required) */
+  memorySpaceId: string;
+  /** Artifact title (required) */
+  title: string;
+  /** Initial content (required) */
+  content: string;
+  /** Artifact kind (default: "text") */
+  kind?: ArtifactKind;
+  /** Kind-specific configuration */
+  kindConfig?: ArtifactKindConfig;
+  /** Initial streaming state (default: "draft") */
+  streamingState?: StreamingState;
+  /** Custom artifact ID (auto-generated if not provided) */
+  artifactId?: string;
+  /** Multi-tenancy: SaaS platform isolation */
+  tenantId?: string;
+  /** User who owns this artifact */
+  userId?: string;
+  /** Agent who owns this artifact */
+  agentId?: string;
+  /** Participant ID for Hive Mode tracking */
+  participantId?: string;
+  /** Brief description */
+  description?: string;
+  /** Custom metadata */
+  metadata?: Record<string, unknown>;
+  /** Initial tags */
+  tags?: string[];
+  /** Reference to source conversation */
+  conversationRef?: {
+    conversationId: string;
+    messageId?: string;
+    turnIndex?: number;
+  };
+  /** References to source memories */
+  memoryRefs?: ArtifactMemoryRef[];
+}
+
+/**
+ * Options for updating an artifact's content
+ */
+export interface UpdateArtifactOptions {
+  /** Optional new title */
+  title?: string;
+  /** Optional new kind */
+  kind?: ArtifactKind;
+  /** Optional metadata updates (merged with existing) */
+  metadata?: Record<string, unknown>;
+  /** Optional tag updates (replaces existing) */
+  tags?: string[];
+  /** Brief description of changes for version history */
+  changeSummary?: string;
+  /** User or agent who made this change */
+  changedBy?: string;
+}
+
+/**
+ * Filter for listing artifacts
+ */
+export interface ListArtifactsFilter {
+  /** Memory space ID (required) */
+  memorySpaceId: string;
+  /** Filter by tenant ID */
+  tenantId?: string;
+  /** Filter by user ID */
+  userId?: string;
+  /** Filter by agent ID */
+  agentId?: string;
+  /** Filter by participant ID */
+  participantId?: string;
+  /** Filter by kind */
+  kind?: ArtifactKind;
+  /** Filter by streaming state */
+  streamingState?: StreamingState;
+  /** Filter by tags (any match) */
+  tags?: string[];
+  /** Tag match mode */
+  tagMatch?: "any" | "all";
+  /** Title search (contains, case-insensitive) */
+  titleContains?: string;
+  /** Filter by creation date */
+  createdAfter?: number;
+  createdBefore?: number;
+  /** Filter by update date */
+  updatedAfter?: number;
+  updatedBefore?: number;
+  /** Result limit (default: 50, max: 1000) */
+  limit?: number;
+  /** Pagination offset */
+  offset?: number;
+  /** Sort field */
+  sortBy?: "createdAt" | "updatedAt";
+  /** Sort direction */
+  sortOrder?: "asc" | "desc";
+  /** Include soft-deleted artifacts */
+  includeDeleted?: boolean;
+}
+
+/**
+ * Filter for counting artifacts
+ */
+export interface CountArtifactsFilter {
+  /** Memory space ID (required) */
+  memorySpaceId: string;
+  /** Filter by tenant ID */
+  tenantId?: string;
+  /** Filter by user ID */
+  userId?: string;
+  /** Filter by kind */
+  kind?: ArtifactKind;
+  /** Filter by streaming state */
+  streamingState?: StreamingState;
+  /** Include soft-deleted artifacts */
+  includeDeleted?: boolean;
+  /** Filter by creation time (after) */
+  createdAfter?: number;
+  /** Filter by creation time (before) */
+  createdBefore?: number;
+}
+
+/**
+ * Options for artifact history retrieval
+ */
+export interface GetArtifactHistoryOptions {
+  /** Limit number of versions returned */
+  limit?: number;
+  /** Pagination offset */
+  offset?: number;
+  /** Sort order (asc = oldest first, desc = newest first) */
+  sortOrder?: "asc" | "desc";
+}
+
+/**
+ * Result from artifact deletion
+ */
+export interface DeleteArtifactResult {
+  /** Whether the artifact was deleted */
+  deleted: boolean;
+  /** ID of the deleted artifact */
+  artifactId: string;
+  /** Number of versions purged (hard delete only) */
+  versionsPurged?: number;
+  /** Number of files detached (hard delete only) */
+  filesDetached?: number;
+}
+
+/**
+ * Result from bulk artifact operations
+ */
+export interface BulkArtifactResult {
+  /** Number of artifacts affected */
+  affected: number;
+  /** IDs of affected artifacts */
+  artifactIds: string[];
+  /** Any errors encountered */
+  errors?: Array<{
+    artifactId: string;
+    error: string;
+  }>;
+}
+
+/**
+ * Parameters for starting a streaming session
+ */
+export interface StartStreamingParams {
+  /** Artifact ID to stream to */
+  artifactId: string;
+}
+
+/**
+ * Parameters for appending content during streaming
+ */
+export interface AppendContentParams {
+  /** Artifact ID */
+  artifactId: string;
+  /** Session ID from startStreaming */
+  sessionId: string;
+  /** Content chunk to append */
+  chunk: string;
+}
+
+/**
+ * Parameters for streaming session operations (pause/resume/cancel)
+ */
+export interface StreamingSessionParams {
+  /** Artifact ID */
+  artifactId: string;
+  /** Session ID from startStreaming */
+  sessionId: string;
+}
+
+/**
+ * Parameters for finalizing a streaming session
+ */
+export interface FinalizeStreamingParams {
+  /** Artifact ID */
+  artifactId: string;
+  /** Session ID from startStreaming */
+  sessionId: string;
+  /** Summary of the streaming session for version history */
+  changeSummary?: string;
+}

@@ -21,6 +21,11 @@ MessageRole = Literal["user", "agent", "system"]
 MemorySpaceType = Literal["personal", "team", "project", "custom"]
 MemorySpaceStatus = Literal["active", "archived"]
 
+# Artifact types (from unified specification)
+ArtifactKind = Literal["text", "code", "sheet", "image", "diagram", "html", "custom"]
+StreamingState = Literal["draft", "streaming", "paused", "final", "error"]
+VersionChangeType = Literal["create", "update", "undo", "redo"]
+
 # Skippable layers for memory orchestration
 # - 'users': Don't auto-create user profile
 # - 'agents': Don't auto-register agent
@@ -543,6 +548,318 @@ class TransactionResult:
     success: bool
     operations_executed: int
     results: List[Any] = field(default_factory=list)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Layer 1d: Artifacts
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@dataclass
+class FileReference:
+    """Reference to an attached file.
+
+    Attributes:
+        file_id: Unique identifier for the file
+        filename: Original filename
+        mime_type: MIME type of the file
+        size_bytes: File size in bytes
+        storage_url: URL or storage key for retrieval
+        uploaded_at: Unix timestamp of upload
+        metadata: Additional file metadata (optional)
+    """
+    file_id: str
+    filename: str
+    mime_type: str
+    size_bytes: int
+    storage_url: str
+    uploaded_at: int
+    metadata: Optional[Dict[str, Any]] = None
+
+
+@dataclass
+class KindConfig:
+    """Configuration options for artifact kind.
+
+    Attributes:
+        custom_kind: Name for "custom" kind
+        mime_type: e.g., "text/markdown"
+        language: For code: "typescript", "python"
+        framework: For html: "react", "vanilla"
+        schema: For sheet/custom: data schema
+    """
+    custom_kind: Optional[str] = None
+    mime_type: Optional[str] = None
+    language: Optional[str] = None
+    framework: Optional[str] = None
+    schema: Optional[Any] = None
+
+
+@dataclass
+class StreamingMetadata:
+    """Metadata for streaming operations.
+
+    Attributes:
+        session_id: Active streaming session ID
+        started_at: When streaming began
+        last_chunk_at: Last chunk timestamp
+        bytes_received: Progress tracking
+        estimated_total: Estimated total bytes
+        error_message: Error details if state is "error"
+        error_code: Programmatic error code
+    """
+    session_id: Optional[str] = None
+    started_at: Optional[int] = None
+    last_chunk_at: Optional[int] = None
+    bytes_received: Optional[int] = None
+    estimated_total: Optional[int] = None
+    error_message: Optional[str] = None
+    error_code: Optional[str] = None
+
+
+@dataclass
+class ArtifactVersion:
+    """A historical version of an artifact.
+
+    Used to track changes over time and support undo/redo operations.
+
+    Attributes:
+        version: Version number (1-indexed)
+        content: Content at this version
+        timestamp: Unix timestamp when this version was created
+        changed_by: Agent or user who made the change
+        change_type: Type of change (create, update, undo, redo)
+        title: Title at this version (optional)
+        metadata: Metadata at this version (optional)
+        change_summary: Description of the change (optional)
+    """
+    version: int
+    content: str
+    timestamp: int
+    changed_by: str
+    change_type: VersionChangeType
+    title: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+    change_summary: Optional[str] = None
+
+
+@dataclass
+class Artifact:
+    """An artifact with versioned content and metadata.
+
+    Artifacts are versioned content objects that support undo/redo operations,
+    streaming support, and file attachments.
+
+    Attributes:
+        _id: Internal Convex document ID
+        artifact_id: User-facing unique identifier
+        memory_space_id: Memory space isolation (required)
+        title: Human-readable artifact title
+        content: The artifact's content (text, code, etc.)
+        kind: Artifact kind (text, code, sheet, image, diagram, html, custom)
+        streaming_state: Streaming state (draft, streaming, paused, final, error)
+        version: Current version number (1-indexed)
+        version_pointer: Active version for undo/redo navigation
+        tags: List of tags for categorization
+        created_at: Unix timestamp of creation
+        updated_at: Unix timestamp of last update
+        tenant_id: Multi-tenancy isolation ID (optional)
+        user_id: Associated user ID for GDPR compliance (optional)
+        agent_id: Agent that created this (optional)
+        participant_id: Hive Mode tracking (optional)
+        kind_config: Configuration for the artifact kind (optional)
+        streaming_metadata: Streaming operation metadata (optional)
+        description: Brief description (optional)
+        metadata: Additional metadata dictionary (optional)
+        file_ref: Attached file reference (optional)
+        version_history: List of version snapshots (optional)
+        is_deleted: Soft delete flag (optional)
+        deleted_at: Timestamp when deleted (optional)
+        deleted_by: Who deleted this (optional)
+        last_accessed_at: Last read timestamp (optional)
+        access_count: Total access count (optional)
+    """
+    _id: str
+    artifact_id: str
+    memory_space_id: str
+    title: str
+    content: str
+    kind: ArtifactKind
+    streaming_state: StreamingState
+    version: int
+    version_pointer: int
+    tags: List[str]
+    created_at: int
+    updated_at: int
+    tenant_id: Optional[str] = None
+    user_id: Optional[str] = None
+    agent_id: Optional[str] = None
+    participant_id: Optional[str] = None
+    kind_config: Optional[KindConfig] = None
+    streaming_metadata: Optional[StreamingMetadata] = None
+    description: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+    file_ref: Optional[FileReference] = None
+    version_history: Optional[List[ArtifactVersion]] = None
+    is_deleted: Optional[bool] = None
+    deleted_at: Optional[int] = None
+    deleted_by: Optional[str] = None
+    last_accessed_at: Optional[int] = None
+    access_count: Optional[int] = None
+
+
+@dataclass
+class CreateArtifactOptions:
+    """Options for creating a new artifact.
+
+    Attributes:
+        title: Human-readable title (required)
+        content: Initial content (required)
+        kind: Artifact kind (default: "text")
+        artifact_id: Custom ID (auto-generated if not provided)
+        streaming_state: Initial streaming state (default: "draft")
+        user_id: Associated user for GDPR (optional)
+        memory_space_id: Associated memory space (optional)
+        metadata: Additional metadata (optional)
+        tags: Tags for categorization (optional)
+        created_by: Creator identifier (optional, uses agent ID if not provided)
+    """
+    title: str
+    content: str
+    kind: ArtifactKind = "text"
+    artifact_id: Optional[str] = None
+    streaming_state: StreamingState = "draft"
+    user_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+    tags: Optional[List[str]] = None
+    created_by: Optional[str] = None
+
+
+@dataclass
+class UpdateArtifactOptions:
+    """Options for updating an artifact.
+
+    Attributes:
+        title: New title (optional)
+        metadata: New metadata to merge (optional)
+        tags: New tags (replaces existing, optional)
+        changed_by: Who made the change (optional)
+    """
+    title: Optional[str] = None
+    metadata: Optional[Dict[str, Any]] = None
+    tags: Optional[List[str]] = None
+    changed_by: Optional[str] = None
+
+
+@dataclass
+class ListArtifactsFilter:
+    """Filter for listing artifacts.
+
+    Attributes:
+        kind: Filter by artifact kind (optional)
+        streaming_state: Filter by streaming state (optional)
+        user_id: Filter by associated user (optional)
+        memory_space_id: Filter by memory space (optional)
+        tags: Filter by tags (artifacts must have ALL specified tags)
+        created_after: Filter by creation time (optional)
+        created_before: Filter by creation time (optional)
+        updated_after: Filter by update time (optional)
+        updated_before: Filter by update time (optional)
+        search_query: Full-text search in title and content (optional)
+        limit: Max results (default: 100, max: 1000)
+        offset: Pagination offset (default: 0)
+        sort_by: Sort field ("createdAt", "updatedAt", "title")
+        sort_order: Sort direction ("asc", "desc")
+        tenant_id: Explicit tenant filter (auto-injected from AuthContext)
+    """
+    kind: Optional[ArtifactKind] = None
+    streaming_state: Optional[StreamingState] = None
+    user_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    tags: Optional[List[str]] = None
+    created_after: Optional[int] = None
+    created_before: Optional[int] = None
+    updated_after: Optional[int] = None
+    updated_before: Optional[int] = None
+    search_query: Optional[str] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt", "title"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+    tenant_id: Optional[str] = None
+
+
+@dataclass
+class CountArtifactsFilter:
+    """Filter for counting artifacts.
+
+    Attributes:
+        kind: Filter by artifact kind (optional)
+        streaming_state: Filter by streaming state (optional)
+        user_id: Filter by associated user (optional)
+        memory_space_id: Filter by memory space (optional)
+        tags: Filter by tags (optional)
+        created_after: Filter by creation time (optional)
+        created_before: Filter by creation time (optional)
+        tenant_id: Explicit tenant filter (auto-injected from AuthContext)
+    """
+    kind: Optional[ArtifactKind] = None
+    streaming_state: Optional[StreamingState] = None
+    user_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+    tags: Optional[List[str]] = None
+    created_after: Optional[int] = None
+    created_before: Optional[int] = None
+    tenant_id: Optional[str] = None
+
+
+@dataclass
+class StartStreamingParams:
+    """Parameters for starting a streaming session.
+
+    Attributes:
+        artifact_id: The artifact's unique identifier
+    """
+    artifact_id: str
+
+
+@dataclass
+class StartStreamingResult:
+    """Result from starting a streaming session.
+
+    Attributes:
+        session_id: The streaming session ID for subsequent operations
+        artifact: The artifact in streaming state
+    """
+    session_id: str
+    artifact: Optional[Artifact] = None
+
+
+@dataclass
+class AppendContentParams:
+    """Parameters for appending content during streaming.
+
+    Attributes:
+        artifact_id: The artifact's unique identifier
+        session_id: The streaming session ID
+        chunk: Content chunk to append
+    """
+    artifact_id: str
+    session_id: str
+    chunk: str
+
+
+@dataclass
+class FinalizeStreamingParams:
+    """Parameters for finalizing a streaming session.
+
+    Attributes:
+        artifact_id: The artifact's unique identifier
+        session_id: The streaming session ID
+    """
+    artifact_id: str
+    session_id: str
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
