@@ -766,11 +766,27 @@ class TestFileOperations:
         mock_artifact_response: Dict[str, Any],
     ) -> None:
         """Should detach file from artifact."""
-        mock_client.mutation.return_value = mock_artifact_response
+        # Backend returns status object, not full artifact
+        mock_client.mutation.return_value = {
+            "success": True,
+            "artifactId": "art-abc123",
+            "previousFileRef": {
+                "storageId": "storage-123",
+                "mimeType": "image/png",
+                "size": 1024,
+                "originalFilename": "file.png",
+            },
+            "fileDeleted": False,
+            "version": 2,
+            "updatedAt": 1234567890,
+        }
 
         result = await artifacts_api.detach_file("art-abc123")
 
         assert result is not None
+        assert result.success is True
+        assert result.artifact_id == "art-abc123"
+        assert result.file_deleted is False
         mock_client.mutation.assert_called_once()
 
     @pytest.mark.asyncio
@@ -781,11 +797,26 @@ class TestFileOperations:
         mock_artifact_response: Dict[str, Any],
     ) -> None:
         """Should detach file and delete from storage."""
-        mock_client.mutation.return_value = mock_artifact_response
+        # Backend returns status object, not full artifact
+        mock_client.mutation.return_value = {
+            "success": True,
+            "artifactId": "art-abc123",
+            "previousFileRef": {
+                "storageId": "storage-123",
+                "mimeType": "image/png",
+                "size": 1024,
+                "originalFilename": "file.png",
+            },
+            "fileDeleted": True,
+            "version": 2,
+            "updatedAt": 1234567890,
+        }
 
         result = await artifacts_api.detach_file("art-abc123", delete_file=True)
 
         assert result is not None
+        assert result.success is True
+        assert result.file_deleted is True
         mock_client.mutation.assert_called_once()
 
     @pytest.mark.asyncio

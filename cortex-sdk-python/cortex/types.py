@@ -623,7 +623,7 @@ class ArtifactVersion:
 
     Attributes:
         version: Version number (1-indexed)
-        content: Content at this version
+        content: Content at this version (optional for file-based versions)
         timestamp: Unix timestamp when this version was created
         change_type: Type of change (create, update, undo, redo)
         artifact_id: The artifact this version belongs to
@@ -634,9 +634,9 @@ class ArtifactVersion:
         is_current: Whether this version is the current pointer
     """
     version: int
-    content: str
     timestamp: int
     change_type: VersionChangeType
+    content: Optional[str] = None  # Optional for file-based versions
     artifact_id: Optional[str] = None
     changed_by: Optional[str] = None
     title: Optional[str] = None
@@ -1024,6 +1024,26 @@ class SetStreamingStateResult:
     previous_state: str
     current_state: str
     updated_at: int
+
+
+@dataclass
+class DetachFileResult:
+    """Result from detaching a file from an artifact.
+
+    Attributes:
+        success: Whether the operation succeeded
+        artifact_id: The artifact's unique identifier
+        previous_file_ref: Information about the detached file
+        file_deleted: Whether the file was deleted from storage
+        version: New version number after detachment
+        updated_at: Timestamp of the update
+    """
+    success: bool
+    artifact_id: str
+    file_deleted: bool
+    version: int
+    updated_at: int
+    previous_file_ref: Optional[Dict[str, Any]] = None
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

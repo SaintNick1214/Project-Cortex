@@ -17,6 +17,7 @@ from ..types import (
     CancelStreamingResult,
     CountArtifactsFilter,
     CreateArtifactOptions,
+    DetachFileResult,
     FileReference,
     FinalizeStreamingParams,
     FinalizeStreamingResult,
@@ -1072,7 +1073,7 @@ class ArtifactsAPI:
 
     async def detach_file(
         self, artifact_id: str, delete_file: bool = False
-    ) -> Artifact:
+    ) -> DetachFileResult:
         """
         Detach the file reference from an artifact.
 
@@ -1085,16 +1086,18 @@ class ArtifactsAPI:
                         Default is False (keep file in storage).
 
         Returns:
-            The Artifact with the file reference removed
+            DetachFileResult with status, previous file info, and new version
 
         Example:
             >>> # Detach file but keep in storage
-            >>> artifact = await cortex.artifacts.detach_file("meeting-notes-2024")
+            >>> result = await cortex.artifacts.detach_file("meeting-notes-2024")
+            >>> print(f"Detached file: {result.previous_file_ref}")
             >>>
             >>> # Detach and delete the file
-            >>> artifact = await cortex.artifacts.detach_file(
+            >>> result = await cortex.artifacts.detach_file(
             ...     "meeting-notes-2024", delete_file=True
             ... )
+            >>> print(f"File deleted: {result.file_deleted}")
         """
         # Client-side validation
         validate_artifact_id(artifact_id)
@@ -1112,4 +1115,5 @@ class ArtifactsAPI:
             "artifacts:detachFile",
         )
 
-        return Artifact(**convert_convex_response(result))
+        # Backend returns {success, artifactId, previousFileRef, fileDeleted, version, updatedAt}
+        return DetachFileResult(**convert_convex_response(result))
