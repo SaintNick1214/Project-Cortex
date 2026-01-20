@@ -64,8 +64,9 @@ def update_pyproject_toml(filepath: Path) -> list[tuple[str, str, str]]:
         package = match.group(1)
         old_version = match.group(2)
         
-        # Skip build system packages
-        if package in ('setuptools', 'wheel'):
+        # Skip build system packages and packages with stale metadata
+        # pytest-split hasn't updated its metadata for pytest 9, installed separately
+        if package in ('setuptools', 'wheel', 'pytest-split'):
             continue
             
         new_version = get_latest_version(package)
@@ -102,6 +103,11 @@ def update_requirements_file(filepath: Path) -> list[tuple[str, str, str]]:
         
         package = extract_package_name(line)
         if not package:
+            new_lines.append(line)
+            continue
+        
+        # Skip packages with stale metadata (installed separately)
+        if package in ('pytest-split',):
             new_lines.append(line)
             continue
         
@@ -166,7 +172,7 @@ def main():
         for pkg in sorted(all_updates.keys()):
             old, new = all_updates[pkg]
             print(f"  {pkg}: {old} → {new}")
-        print("\n💡 Run 'make update-deps' to install the new versions")
+        print("\n💡 Run 'make install-deps' to install the new versions")
     else:
         print("✅ All dependencies are already at latest versions!")
     
