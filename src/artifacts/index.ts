@@ -208,6 +208,7 @@ export class ArtifactsAPI {
           tenantId: options.tenantId ?? this.authContext?.tenantId,
           userId: options.userId,
           participantId: options.participantId,
+          description: options.description,
           metadata: options.metadata,
           tags: options.tags ?? [],
           conversationRef: options.conversationRef,

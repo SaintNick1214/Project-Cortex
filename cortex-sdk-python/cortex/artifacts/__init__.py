@@ -10,6 +10,7 @@ from .._utils import convert_convex_response, filter_none_values
 from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
     AppendContentParams,
+    AppendContentResult,
     Artifact,
     ArtifactVersion,
     AuthContext,
@@ -21,6 +22,7 @@ from ..types import (
     StartStreamingParams,
     StartStreamingResult,
     StreamingState,
+    UndoRedoResult,
     UpdateArtifactOptions,
 )
 from .validators import (
@@ -386,7 +388,9 @@ class ArtifactsAPI:
             "artifacts:list",
         )
 
-        return [Artifact(**convert_convex_response(item)) for item in result]
+        # Backend returns {artifacts: [...], total, limit, offset, hasMore}
+        artifacts_list = result.get("artifacts", []) if isinstance(result, dict) else result
+        return [Artifact(**convert_convex_response(item)) for item in artifacts_list]
 
     async def count(self, filter: CountArtifactsFilter) -> int:
         """
@@ -431,7 +435,7 @@ class ArtifactsAPI:
     # Version History Operations
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    async def undo(self, artifact_id: str) -> Artifact:
+    async def undo(self, artifact_id: str) -> UndoRedoResult:
         """
         Undo the last change (revert to previous version).
 
@@ -439,15 +443,16 @@ class ArtifactsAPI:
             artifact_id: The artifact's unique identifier
 
         Returns:
-            The Artifact reverted to the previous version
+            UndoRedoResult with version info and undo/redo availability
 
         Raises:
             CortexError: If no previous version exists or undo fails
 
         Example:
             >>> # Revert to previous version
-            >>> artifact = await cortex.artifacts.undo("meeting-notes-2024")
-            >>> print(f"Reverted to v{artifact.version}")
+            >>> result = await cortex.artifacts.undo("meeting-notes-2024")
+            >>> print(f"Reverted from v{result.previous_version} to v{result.current_version}")
+            >>> print(f"Can undo: {result.can_undo}, Can redo: {result.can_redo}")
         """
         # Client-side validation
         validate_artifact_id(artifact_id)
@@ -464,9 +469,9 @@ class ArtifactsAPI:
             "artifacts:undo",
         )
 
-        return Artifact(**convert_convex_response(result))
+        return UndoRedoResult(**convert_convex_response(result))
 
-    async def redo(self, artifact_id: str) -> Artifact:
+    async def redo(self, artifact_id: str) -> UndoRedoResult:
         """
         Redo a previously undone change.
 
@@ -474,15 +479,16 @@ class ArtifactsAPI:
             artifact_id: The artifact's unique identifier
 
         Returns:
-            The Artifact with the redo applied
+            UndoRedoResult with version info and undo/redo availability
 
         Raises:
             CortexError: If no redo available or redo fails
 
         Example:
             >>> # Redo after an undo
-            >>> artifact = await cortex.artifacts.redo("meeting-notes-2024")
-            >>> print(f"Restored to v{artifact.version}")
+            >>> result = await cortex.artifacts.redo("meeting-notes-2024")
+            >>> print(f"Restored from v{result.previous_version} to v{result.current_version}")
+            >>> print(f"Can undo: {result.can_undo}, Can redo: {result.can_redo}")
         """
         # Client-side validation
         validate_artifact_id(artifact_id)
@@ -499,7 +505,7 @@ class ArtifactsAPI:
             "artifacts:redo",
         )
 
-        return Artifact(**convert_convex_response(result))
+        return UndoRedoResult(**convert_convex_response(result))
 
     async def get_history(self, artifact_id: str) -> List[ArtifactVersion]:
         """
@@ -609,18 +615,18 @@ class ArtifactsAPI:
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "artifacts.streaming:startStreaming",
+                "artifacts:startStreaming",
                 filter_none_values({
                     "artifactId": params.artifact_id,
                     "tenantId": self._tenant_id,
                 }),
             ),
-            "artifacts.streaming:startStreaming",
+            "artifacts:startStreaming",
         )
 
         return StartStreamingResult(**convert_convex_response(result))
 
-    async def append_content(self, params: AppendContentParams) -> Artifact:
+    async def append_content(self, params: AppendContentParams) -> AppendContentResult:
         """
         Append content chunk to a streaming artifact.
 
@@ -628,17 +634,18 @@ class ArtifactsAPI:
             params: Parameters including artifact_id, session_id, and chunk
 
         Returns:
-            The updated Artifact with appended content
+            AppendContentResult with chunk status and progress info
 
         Example:
             >>> from cortex.types import AppendContentParams
-            >>> artifact = await cortex.artifacts.append_content(
+            >>> result = await cortex.artifacts.append_content(
             ...     AppendContentParams(
             ...         artifact_id="code-gen-001",
             ...         session_id="sess-abc123",
             ...         chunk="def hello():\\n    ",
             ...     )
             ... )
+            >>> print(f"Total bytes received: {result.total_bytes_received}")
         """
         # Client-side validation
         validate_append_content_params(params)
@@ -646,7 +653,7 @@ class ArtifactsAPI:
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "artifacts.streaming:appendContent",
+                "artifacts:appendContent",
                 filter_none_values({
                     "artifactId": params.artifact_id,
                     "sessionId": params.session_id,
@@ -654,10 +661,10 @@ class ArtifactsAPI:
                     "tenantId": self._tenant_id,
                 }),
             ),
-            "artifacts.streaming:appendContent",
+            "artifacts:appendContent",
         )
 
-        return Artifact(**convert_convex_response(result))
+        return AppendContentResult(**convert_convex_response(result))
 
     async def pause_streaming(self, artifact_id: str, session_id: str) -> Artifact:
         """
@@ -685,14 +692,14 @@ class ArtifactsAPI:
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "artifacts.streaming:pauseStreaming",
+                "artifacts:pauseStreaming",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "sessionId": session_id,
                     "tenantId": self._tenant_id,
                 }),
             ),
-            "artifacts.streaming:pauseStreaming",
+            "artifacts:pauseStreaming",
         )
 
         return Artifact(**convert_convex_response(result))
@@ -721,14 +728,14 @@ class ArtifactsAPI:
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "artifacts.streaming:resumeStreaming",
+                "artifacts:resumeStreaming",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "sessionId": session_id,
                     "tenantId": self._tenant_id,
                 }),
             ),
-            "artifacts.streaming:resumeStreaming",
+            "artifacts:resumeStreaming",
         )
 
         return Artifact(**convert_convex_response(result))
@@ -760,14 +767,14 @@ class ArtifactsAPI:
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "artifacts.streaming:cancelStreaming",
+                "artifacts:cancelStreaming",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "sessionId": session_id,
                     "tenantId": self._tenant_id,
                 }),
             ),
-            "artifacts.streaming:cancelStreaming",
+            "artifacts:cancelStreaming",
         )
 
         return Artifact(**convert_convex_response(result))
@@ -801,14 +808,14 @@ class ArtifactsAPI:
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "artifacts.streaming:finalizeStreaming",
+                "artifacts:finalizeStreaming",
                 filter_none_values({
                     "artifactId": params.artifact_id,
                     "sessionId": params.session_id,
                     "tenantId": self._tenant_id,
                 }),
             ),
-            "artifacts.streaming:finalizeStreaming",
+            "artifacts:finalizeStreaming",
         )
 
         artifact = Artifact(**convert_convex_response(result))
@@ -975,35 +982,33 @@ class ArtifactsAPI:
 
         return result if result else None
 
-    async def attach_file(
+    async def set_file_ref(
         self, artifact_id: str, file_ref: FileReference
     ) -> Artifact:
         """
-        Attach a file reference to an artifact.
+        Set a file reference on an artifact.
 
-        Use this when you already have a file uploaded to storage and want
-        to attach it to an artifact.
+        Use this after uploading a file to Convex storage to attach it
+        to an artifact. The file must already be uploaded.
 
         Args:
             artifact_id: The artifact's unique identifier
-            file_ref: File reference with storage details
+            file_ref: File reference with Convex storage details
 
         Returns:
-            The Artifact with the file attached
+            The Artifact with the file reference set
 
         Example:
             >>> from cortex.types import FileReference
-            >>> import time
             >>>
+            >>> # After uploading a file to Convex storage:
             >>> file_ref = FileReference(
-            ...     file_id="file-001",
-            ...     filename="screenshot.png",
+            ...     storage_id="kg2abc123def",  # Convex storage ID from upload
             ...     mime_type="image/png",
-            ...     size_bytes=102400,
-            ...     storage_url="storage://bucket/screenshot.png",
-            ...     uploaded_at=int(time.time() * 1000),
+            ...     size=102400,
+            ...     original_filename="screenshot.png",
             ... )
-            >>> artifact = await cortex.artifacts.attach_file(
+            >>> artifact = await cortex.artifacts.set_file_ref(
             ...     "meeting-notes-2024", file_ref
             ... )
         """
@@ -1014,51 +1019,52 @@ class ArtifactsAPI:
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
-                "artifacts:attachFile",
+                "artifacts:setFileRef",
                 filter_none_values({
                     "artifactId": artifact_id,
                     "fileRef": {
-                        "fileId": file_ref.file_id,
-                        "filename": file_ref.filename,
+                        "storageId": file_ref.storage_id,
                         "mimeType": file_ref.mime_type,
-                        "sizeBytes": file_ref.size_bytes,
-                        "storageUrl": file_ref.storage_url,
-                        "uploadedAt": file_ref.uploaded_at,
-                        "metadata": file_ref.metadata,
+                        "size": file_ref.size,
+                        "checksum": file_ref.checksum,
+                        "originalFilename": file_ref.original_filename,
                     },
                     "tenantId": self._tenant_id,
                 }),
             ),
-            "artifacts:attachFile",
+            "artifacts:setFileRef",
         )
 
         return Artifact(**convert_convex_response(result))
 
-    async def detach_file(self, artifact_id: str, file_id: str) -> Artifact:
+    async def detach_file(
+        self, artifact_id: str, delete_file: bool = False
+    ) -> Artifact:
         """
-        Detach a file from an artifact.
+        Detach the file reference from an artifact.
+
+        This removes the file reference from the artifact. Optionally,
+        the underlying file can be deleted from Convex storage.
 
         Args:
             artifact_id: The artifact's unique identifier
-            file_id: The file ID to detach
+            delete_file: If True, also delete the file from Convex storage.
+                        Default is False (keep file in storage).
 
         Returns:
-            The Artifact with the file detached
+            The Artifact with the file reference removed
 
         Example:
+            >>> # Detach file but keep in storage
+            >>> artifact = await cortex.artifacts.detach_file("meeting-notes-2024")
+            >>>
+            >>> # Detach and delete the file
             >>> artifact = await cortex.artifacts.detach_file(
-            ...     "meeting-notes-2024", "file-001"
+            ...     "meeting-notes-2024", delete_file=True
             ... )
         """
         # Client-side validation
         validate_artifact_id(artifact_id)
-
-        if not file_id or not isinstance(file_id, str):
-            raise ArtifactsValidationError(
-                "file_id is required and must be a string",
-                "INVALID_FILE_ID",
-                "file_id",
-            )
 
         # Backend retrieves artifact by ID - no need for memory_space_id
         result = await self._execute_with_resilience(
@@ -1066,7 +1072,7 @@ class ArtifactsAPI:
                 "artifacts:detachFile",
                 filter_none_values({
                     "artifactId": artifact_id,
-                    "fileId": file_id,
+                    "deleteFile": delete_file,
                     "tenantId": self._tenant_id,
                 }),
             ),

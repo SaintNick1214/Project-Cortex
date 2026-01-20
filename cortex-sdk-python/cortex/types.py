@@ -559,22 +559,20 @@ class TransactionResult:
 class FileReference:
     """Reference to an attached file.
 
+    Matches the Convex backend's fileRef schema for artifacts.
+
     Attributes:
-        file_id: Unique identifier for the file
-        filename: Original filename
+        storage_id: Convex storage ID (from file upload)
         mime_type: MIME type of the file
-        size_bytes: File size in bytes
-        storage_url: URL or storage key for retrieval
-        uploaded_at: Unix timestamp of upload
-        metadata: Additional file metadata (optional)
+        size: File size in bytes
+        checksum: Optional checksum for integrity verification
+        original_filename: Original filename (optional)
     """
-    file_id: str
-    filename: str
+    storage_id: str
     mime_type: str
-    size_bytes: int
-    storage_url: str
-    uploaded_at: int
-    metadata: Optional[Dict[str, Any]] = None
+    size: int
+    checksum: Optional[str] = None
+    original_filename: Optional[str] = None
 
 
 @dataclass
@@ -627,8 +625,8 @@ class ArtifactVersion:
         version: Version number (1-indexed)
         content: Content at this version
         timestamp: Unix timestamp when this version was created
-        changed_by: Agent or user who made the change
         change_type: Type of change (create, update, undo, redo)
+        changed_by: Agent or user who made the change (optional)
         title: Title at this version (optional)
         metadata: Metadata at this version (optional)
         change_summary: Description of the change (optional)
@@ -636,8 +634,8 @@ class ArtifactVersion:
     version: int
     content: str
     timestamp: int
-    changed_by: str
     change_type: VersionChangeType
+    changed_by: Optional[str] = None
     title: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
     change_summary: Optional[str] = None
@@ -860,6 +858,48 @@ class FinalizeStreamingParams:
     """
     artifact_id: str
     session_id: str
+
+
+@dataclass
+class UndoRedoResult:
+    """Result from an undo or redo operation.
+
+    Attributes:
+        success: Whether the operation succeeded
+        artifact_id: The artifact's unique identifier
+        previous_version: Version before the operation
+        current_version: Version after the operation
+        can_undo: Whether undo is now available
+        can_redo: Whether redo is now available
+    """
+    success: bool
+    artifact_id: str
+    previous_version: int
+    current_version: int
+    can_undo: bool
+    can_redo: bool
+
+
+@dataclass
+class AppendContentResult:
+    """Result from appending content during streaming.
+
+    Attributes:
+        success: Whether the operation succeeded
+        artifact_id: The artifact's unique identifier
+        session_id: The streaming session ID
+        chunk_bytes: Size of the appended chunk
+        total_bytes_received: Total bytes received so far
+        content_length: Current total content length
+        timestamp: Server timestamp of this append
+    """
+    success: bool
+    artifact_id: str
+    session_id: str
+    chunk_bytes: int
+    total_bytes_received: int
+    content_length: int
+    timestamp: int
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

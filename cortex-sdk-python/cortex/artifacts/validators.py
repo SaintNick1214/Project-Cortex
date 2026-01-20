@@ -324,7 +324,7 @@ def validate_tags(tags: Any) -> None:
 
 def validate_file_reference(file_ref: Any, field_name: str = "file_ref") -> None:
     """
-    Validates file_ref has required fields.
+    Validates file_ref has required fields matching Convex backend schema.
 
     Args:
         file_ref: Value to validate
@@ -340,8 +340,8 @@ def validate_file_reference(file_ref: Any, field_name: str = "file_ref") -> None
             field_name,
         )
 
-    # Check required fields
-    required_fields = ["file_id", "filename", "mime_type", "size_bytes", "storage_url"]
+    # Check required fields (matches Convex backend setFileRef schema)
+    required_fields = ["storage_id", "mime_type", "size"]
     for req_field in required_fields:
         if not hasattr(file_ref, req_field) or getattr(file_ref, req_field) is None:
             raise ArtifactsValidationError(
@@ -349,6 +349,14 @@ def validate_file_reference(file_ref: Any, field_name: str = "file_ref") -> None
                 "MISSING_FILE_REF_FIELD",
                 f"{field_name}.{req_field}",
             )
+
+    # Validate size is positive
+    if hasattr(file_ref, "size") and file_ref.size <= 0:
+        raise ArtifactsValidationError(
+            f'{field_name}.size must be positive',
+            "INVALID_FILE_SIZE",
+            f"{field_name}.size",
+        )
 
 
 def validate_version(version: Any, field_name: str = "version") -> None:

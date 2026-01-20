@@ -23,10 +23,11 @@ import pytest
 from cortex import Cortex, CortexConfig
 from cortex.types import (
     AppendContentParams,
-    CreateArtifactOptions,
     CountArtifactsFilter,
+    CreateArtifactOptions,
     FinalizeStreamingParams,
     ListArtifactsFilter,
+    RegisterMemorySpaceParams,
     StartStreamingParams,
     UpdateArtifactOptions,
 )
@@ -87,9 +88,11 @@ def test_context(memory_space_id):
 async def setup_memory_space(cortex_client, memory_space_id, test_run_id):
     """Set up memory space for tests."""
     await cortex_client.memory_spaces.register(
-        memory_space_id=memory_space_id,
-        name=f"Python Artifacts E2E Test Space {test_run_id}",
-        type="custom",
+        RegisterMemorySpaceParams(
+            memory_space_id=memory_space_id,
+            name=f"Python Artifacts E2E Test Space {test_run_id}",
+            type="custom",
+        )
     )
     yield memory_space_id
     # Cleanup
@@ -286,17 +289,30 @@ class TestVersionHistoryParity:
 
         # Verify at v2
         current = await cortex_client.artifacts.get(artifact.artifact_id)
+        assert current is not None
         assert current.version_pointer == 2
         assert current.content == "Version 2"
 
-        # Undo to v1
-        undone = await cortex_client.artifacts.undo(artifact.artifact_id)
-        assert undone.version_pointer == 1
+        # Undo to v1 - returns UndoRedoResult, not Artifact
+        undo_result = await cortex_client.artifacts.undo(artifact.artifact_id)
+        assert undo_result.success is True
+        assert undo_result.current_version == 1
+        assert undo_result.previous_version == 2
+
+        # Fetch to verify content
+        undone = await cortex_client.artifacts.get(artifact.artifact_id)
+        assert undone is not None
         assert undone.content == "Version 1"
 
-        # Redo to v2
-        redone = await cortex_client.artifacts.redo(artifact.artifact_id)
-        assert redone.version_pointer == 2
+        # Redo to v2 - returns UndoRedoResult, not Artifact
+        redo_result = await cortex_client.artifacts.redo(artifact.artifact_id)
+        assert redo_result.success is True
+        assert redo_result.current_version == 2
+        assert redo_result.previous_version == 1
+
+        # Fetch to verify content
+        redone = await cortex_client.artifacts.get(artifact.artifact_id)
+        assert redone is not None
         assert redone.content == "Version 2"
 
     async def test_get_history_returns_all_versions(
@@ -413,20 +429,21 @@ class TestStreamingParity:
         session_id = result.session_id
 
         # Append content chunks (parity with TS)
+        # Note: append_content returns AppendContentResult with status, not Artifact
         chunks = ["def hello():", "\n    ", 'return "Hello"']
-        accumulated = ""
+        total_bytes = 0
 
         for chunk in chunks:
-            accumulated += chunk
-            updated = await cortex_client.artifacts.append_content(
+            total_bytes += len(chunk.encode('utf-8'))
+            append_result = await cortex_client.artifacts.append_content(
                 AppendContentParams(
                     artifact_id=artifact.artifact_id,
                     session_id=session_id,
                     chunk=chunk,
                 )
             )
-            assert updated.content == accumulated
-            assert updated.streaming_state == "streaming"
+            assert append_result.success is True
+            assert append_result.total_bytes_received == total_bytes
 
         # Finalize (parity with TS)
         finalized = await cortex_client.artifacts.finalize_streaming(

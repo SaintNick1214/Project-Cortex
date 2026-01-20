@@ -369,12 +369,22 @@ class TestArtifactsAPIUndo:
         mock_artifact_response: Dict[str, Any],
     ) -> None:
         """Should undo successfully."""
-        undone_artifact = {**mock_artifact_response, "versionPointer": 1}
-        mock_client.mutation.return_value = undone_artifact
+        # Backend returns status object, not artifact
+        mock_client.mutation.return_value = {
+            "success": True,
+            "artifactId": "art-abc123",
+            "previousVersion": 2,
+            "currentVersion": 1,
+            "canUndo": False,
+            "canRedo": True,
+        }
 
         result = await artifacts_api.undo("art-abc123")
 
-        assert result.version_pointer == 1
+        assert result.success is True
+        assert result.current_version == 1
+        assert result.previous_version == 2
+        assert result.can_redo is True
 
     @pytest.mark.asyncio
     async def test_undo_validation_error(
@@ -396,12 +406,22 @@ class TestArtifactsAPIRedo:
         mock_artifact_response: Dict[str, Any],
     ) -> None:
         """Should redo successfully."""
-        redone_artifact = {**mock_artifact_response, "versionPointer": 2}
-        mock_client.mutation.return_value = redone_artifact
+        # Backend returns status object, not artifact
+        mock_client.mutation.return_value = {
+            "success": True,
+            "artifactId": "art-abc123",
+            "previousVersion": 1,
+            "currentVersion": 2,
+            "canUndo": True,
+            "canRedo": False,
+        }
 
         result = await artifacts_api.redo("art-abc123")
 
-        assert result.version_pointer == 2
+        assert result.success is True
+        assert result.current_version == 2
+        assert result.previous_version == 1
+        assert result.can_undo is True
 
 
 class TestArtifactsAPIGetHistory:
@@ -524,11 +544,16 @@ class TestArtifactsAPIStreaming:
         mock_artifact_response: Dict[str, Any],
     ) -> None:
         """Should append content chunk."""
-        updated_artifact = {
-            **mock_artifact_response,
-            "content": "Test content + chunk",
+        # Backend returns status object with streaming info
+        mock_client.mutation.return_value = {
+            "success": True,
+            "artifactId": "art-abc123",
+            "sessionId": "stream-abc123",
+            "chunkBytes": 8,
+            "totalBytesReceived": 20,
+            "contentLength": 20,
+            "timestamp": 1234567890000,
         }
-        mock_client.mutation.return_value = updated_artifact
 
         result = await artifacts_api.append_content(
             AppendContentParams(
@@ -538,7 +563,9 @@ class TestArtifactsAPIStreaming:
             )
         )
 
-        assert result.content == "Test content + chunk"
+        assert result.success is True
+        assert result.chunk_bytes == 8
+        assert result.total_bytes_received == 20
 
     @pytest.mark.asyncio
     async def test_append_content_validation_error(
@@ -733,7 +760,22 @@ class TestFileOperations:
         """Should detach file from artifact."""
         mock_client.mutation.return_value = mock_artifact_response
 
-        result = await artifacts_api.detach_file("art-abc123", "file-xyz")
+        result = await artifacts_api.detach_file("art-abc123")
+
+        assert result is not None
+        mock_client.mutation.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_detach_file_with_delete(
+        self,
+        artifacts_api: ArtifactsAPI,
+        mock_client: AsyncMock,
+        mock_artifact_response: Dict[str, Any],
+    ) -> None:
+        """Should detach file and delete from storage."""
+        mock_client.mutation.return_value = mock_artifact_response
+
+        result = await artifacts_api.detach_file("art-abc123", delete_file=True)
 
         assert result is not None
         mock_client.mutation.assert_called_once()
@@ -742,6 +784,6 @@ class TestFileOperations:
     async def test_detach_file_validation_error(
         self, artifacts_api: ArtifactsAPI
     ) -> None:
-        """Should throw validation error for empty fileId."""
-        with pytest.raises(ArtifactsValidationError, match="file_id"):
-            await artifacts_api.detach_file("art-abc123", "")
+        """Should throw validation error for empty artifact_id."""
+        with pytest.raises(ArtifactsValidationError):
+            await artifacts_api.detach_file("")

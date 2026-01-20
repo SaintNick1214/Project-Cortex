@@ -836,6 +836,7 @@ export default defineSchema({
         estimatedTotal: v.optional(v.number()),
         errorMessage: v.optional(v.string()),
         errorCode: v.optional(v.string()),
+        errorAt: v.optional(v.number()),
       }),
     ),
 

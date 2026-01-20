@@ -71,6 +71,9 @@ export const create = mutation({
       }),
     ),
 
+    // Display
+    description: v.optional(v.string()),
+
     // Metadata & tags
     metadata: v.optional(v.any()),
     tags: v.optional(v.array(v.string())),
@@ -130,6 +133,7 @@ export const create = mutation({
       kindConfig,
       streamingState: args.streamingState || "draft",
       title: args.title || "Untitled", // Required field - provide default
+      description: args.description,
       content: args.content,
       conversationRef: args.conversationRef,
       version: 1,
@@ -299,7 +303,7 @@ export const deleteArtifact = mutation({
         artifactId: args.artifactId,
         deletedAt: Date.now(),
         permanent: true,
-        versionsDeleted: artifact.version,
+        versionsPurged: artifact.versionHistory?.length ?? artifact.version,
       };
     }
 
@@ -1176,7 +1180,7 @@ function generateSessionId(): string {
  */
 const VALID_STREAMING_TRANSITIONS: Record<string, string[]> = {
   draft: ["streaming", "error"],
-  streaming: ["paused", "final", "error"],
+  streaming: ["paused", "final", "error", "draft"], // draft via cancel
   paused: ["streaming", "draft", "error"],
   final: ["draft"], // New version via update
   error: ["draft"], // Retry
