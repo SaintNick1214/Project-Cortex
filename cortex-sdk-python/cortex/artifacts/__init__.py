@@ -244,7 +244,7 @@ class ArtifactsAPI:
         Args:
             artifact_id: The artifact's unique identifier
             content: New content for the artifact
-            options: Optional update settings (title, metadata, tags)
+            options: Optional update settings (title, metadata, tags, change_summary)
 
         Returns:
             The updated Artifact with incremented version
@@ -261,6 +261,7 @@ class ArtifactsAPI:
             ...     UpdateArtifactOptions(
             ...         title="Meeting Notes - Updated",
             ...         metadata={"reviewed": True},
+            ...         change_summary="Added new action items from review",
             ...     )
             ... )
             >>> print(f"Updated to v{artifact.version}")
@@ -280,6 +281,7 @@ class ArtifactsAPI:
                     "title": options.title if options else None,
                     "metadata": options.metadata if options else None,
                     "tags": options.tags if options else None,
+                    "changeSummary": options.change_summary if options else None,
                     "tenantId": self._tenant_id,
                 }),
             ),

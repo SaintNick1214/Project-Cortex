@@ -43,9 +43,10 @@ console.log(`\n🧹 Cleaning up test data from: ${convexUrl}\n`);
 const client = new ConvexClient(convexUrl);
 
 // Batch size reduction sequence for handling Convex 16MB read limit
-// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50
+// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50 -> 10 -> 1
+// Extended to handle large records (e.g., artifacts with version history)
 // (Same adaptive sizing as CLI's `cortex db clear` command)
-const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50] as const;
+const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50, 10, 1] as const;
 
 /**
  * Clear a table using admin:clearTable mutation (same as CLI)

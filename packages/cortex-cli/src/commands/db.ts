@@ -35,8 +35,9 @@ import prompts from "prompts";
 
 const MAX_LIMIT = 10000;
 // Batch size reduction sequence for handling Convex 16MB read limit
-// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50
-const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50] as const;
+// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50 -> 10 -> 1
+// Extended to handle large records (e.g., artifacts with version history)
+const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50, 10, 1] as const;
 
 /**
  * Register database commands

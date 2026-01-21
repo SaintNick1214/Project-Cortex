@@ -745,11 +745,13 @@ class UpdateArtifactOptions:
         metadata: New metadata to merge (optional)
         tags: New tags (replaces existing, optional)
         changed_by: Who made the change (optional)
+        change_summary: Description of the change for version history (optional)
     """
     title: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
     tags: Optional[List[str]] = None
     changed_by: Optional[str] = None
+    change_summary: Optional[str] = None
 
 
 @dataclass

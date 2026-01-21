@@ -22,6 +22,7 @@ export const listTable = query({
   args: {
     table: v.union(
       v.literal("agents"),
+      v.literal("artifacts"),
       v.literal("contexts"),
       v.literal("conversations"),
       v.literal("factHistory"),
@@ -57,6 +58,7 @@ export const deleteRecord = mutation({
   args: {
     table: v.union(
       v.literal("agents"),
+      v.literal("artifacts"),
       v.literal("contexts"),
       v.literal("conversations"),
       v.literal("factHistory"),
@@ -73,6 +75,7 @@ export const deleteRecord = mutation({
     // Accept any valid Convex ID - table routing is handled by the ID itself
     id: v.union(
       v.id("agents"),
+      v.id("artifacts"),
       v.id("contexts"),
       v.id("conversations"),
       v.id("factHistory"),
@@ -103,6 +106,7 @@ export const clearTable = mutation({
   args: {
     table: v.union(
       v.literal("agents"),
+      v.literal("artifacts"),
       v.literal("contexts"),
       v.literal("conversations"),
       v.literal("factHistory"),
@@ -151,6 +155,7 @@ export const countTable = query({
   args: {
     table: v.union(
       v.literal("agents"),
+      v.literal("artifacts"),
       v.literal("contexts"),
       v.literal("conversations"),
       v.literal("factHistory"),
@@ -182,6 +187,7 @@ export const getAllCounts = query({
   handler: async (ctx) => {
     const tables = [
       "agents",
+      "artifacts",
       "contexts",
       "conversations",
       "factHistory",
