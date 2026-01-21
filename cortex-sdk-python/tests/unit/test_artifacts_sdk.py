@@ -107,6 +107,7 @@ class TestArtifactsAPICreate:
 
         result = await artifacts_api.create(
             CreateArtifactOptions(
+                memory_space_id="space-123",
                 title="Test Artifact",
                 content="Test content",
                 kind="text",
@@ -125,6 +126,7 @@ class TestArtifactsAPICreate:
         with pytest.raises(ArtifactsValidationError, match="cannot be empty"):
             await artifacts_api.create(
                 CreateArtifactOptions(
+                    memory_space_id="space-123",
                     title="",
                     content="content",
                 )
@@ -138,6 +140,7 @@ class TestArtifactsAPICreate:
         with pytest.raises(ArtifactsValidationError, match="title is required"):
             await artifacts_api.create(
                 CreateArtifactOptions(
+                    memory_space_id="space-123",
                     title=None,  # type: ignore
                     content="content",
                 )
@@ -156,6 +159,7 @@ class TestArtifactsAPICreate:
 
         await artifacts_api.create(
             CreateArtifactOptions(
+                memory_space_id="space-123",
                 title="Test",
                 content="content",
             )
@@ -718,6 +722,7 @@ class TestSnakeCaseConversion:
 
         result = await artifacts_api.create(
             CreateArtifactOptions(
+                memory_space_id="space-1",
                 title="Test",
                 content="Content",
             )

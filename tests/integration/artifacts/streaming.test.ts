@@ -455,14 +455,16 @@ describeWithConvex("Artifacts Streaming Lifecycle Integration", () => {
       ).rejects.toThrow();
     });
 
-    it("should reject finalizeStreaming on paused artifact", async () => {
-      const spaceId = await setupTestSpace("invalid-paused-finalize");
+    it("should allow finalizeStreaming on paused artifact (complete partial content)", async () => {
+      // State machine allows: paused → final to "complete partial content"
+      // This is intentional - user may decide partial content is acceptable
+      const spaceId = await setupTestSpace("paused-finalize");
 
       const artifact = await cortex.artifacts.create({
         memorySpaceId: spaceId,
         kind: "text",
         content: "",
-        title: "Invalid Paused Finalize Test",
+        title: "Paused Finalize Test",
         streamingState: "draft",
       });
 
@@ -470,18 +472,32 @@ describeWithConvex("Artifacts Streaming Lifecycle Integration", () => {
         artifactId: artifact.artifactId,
       });
 
+      // Add some content before pausing
+      await cortex.artifacts.appendContent({
+        artifactId: artifact.artifactId,
+        sessionId,
+        chunk: "Partial content before pause",
+      });
+
       await cortex.artifacts.pauseStreaming({
         artifactId: artifact.artifactId,
         sessionId,
       });
 
-      // Cannot finalize from paused state
-      await expect(
-        cortex.artifacts.finalizeStreaming({
-          artifactId: artifact.artifactId,
-          sessionId,
-        }),
-      ).rejects.toThrow();
+      // Finalize from paused state should succeed (per state machine)
+      const result = await cortex.artifacts.finalizeStreaming({
+        artifactId: artifact.artifactId,
+        sessionId,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.previousState).toBe("paused");
+      expect(result.currentState).toBe("final");
+
+      // Verify artifact is finalized with partial content
+      const finalized = await cortex.artifacts.get(artifact.artifactId);
+      expect(finalized?.streamingState).toBe("final");
+      expect(finalized?.content).toContain("Partial content before pause");
     });
 
     it("should reject appendContent on non-streaming artifact", async () => {
