@@ -359,22 +359,18 @@ export const undo = mutation({
       throw new ConvexError("ARTIFACT_NOT_FOUND");
     }
 
-    // Check if undo is possible
-    if (artifact.versionPointer <= 1) {
+    // Find the nearest previous version (handles gaps from purgeVersions)
+    // Sort versions below current pointer in descending order and take the first
+    const previousVersions = artifact.versionHistory
+      .filter((v) => v.version < artifact.versionPointer)
+      .sort((a, b) => b.version - a.version);
+
+    if (previousVersions.length === 0) {
       throw new ConvexError("UNDO_NOT_AVAILABLE");
     }
 
-    // Move pointer back one version
-    const newPointer = artifact.versionPointer - 1;
-
-    // Find the version at new pointer position
-    const targetVersion = artifact.versionHistory.find(
-      (v) => v.version === newPointer,
-    );
-
-    if (!targetVersion) {
-      throw new ConvexError("VERSION_NOT_FOUND");
-    }
+    const targetVersion = previousVersions[0];
+    const newPointer = targetVersion.version;
 
     // Update artifact to reflect undone state
     // Restore content, title, and fileRef from the target version
@@ -429,22 +425,18 @@ export const redo = mutation({
       throw new ConvexError("ARTIFACT_NOT_FOUND");
     }
 
-    // Check if redo is possible
-    if (artifact.versionPointer >= artifact.version) {
+    // Find the nearest next version (handles gaps from purgeVersions)
+    // Sort versions above current pointer in ascending order and take the first
+    const nextVersions = artifact.versionHistory
+      .filter((v) => v.version > artifact.versionPointer)
+      .sort((a, b) => a.version - b.version);
+
+    if (nextVersions.length === 0) {
       throw new ConvexError("REDO_NOT_AVAILABLE");
     }
 
-    // Move pointer forward one version
-    const newPointer = artifact.versionPointer + 1;
-
-    // Find the version at new pointer position
-    const targetVersion = artifact.versionHistory.find(
-      (v) => v.version === newPointer,
-    );
-
-    if (!targetVersion) {
-      throw new ConvexError("VERSION_NOT_FOUND");
-    }
+    const targetVersion = nextVersions[0];
+    const newPointer = targetVersion.version;
 
     // Update artifact to reflect redone state
     // Restore content, title, and fileRef from the target version
@@ -685,20 +677,27 @@ export const purgeAll = mutation({
   },
   handler: async (ctx, args) => {
     // Safety check: Only allow in test/dev environments
+    // IMPORTANT: Do NOT use broad patterns like "convex.cloud" which match ALL deployments
     const siteUrl = process.env.CONVEX_SITE_URL || "";
     const isLocal =
       siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
+    // Check for specific dev/preview deployment indicators in the URL
+    // Production deployments should NOT match these patterns
     const isDevDeployment =
-      siteUrl.includes(".convex.site") ||
-      siteUrl.includes("dev-") ||
-      siteUrl.includes("convex.cloud");
+      siteUrl.includes(".convex.site") || // Convex preview sites
+      siteUrl.includes("dev-") || // dev- prefix convention
+      siteUrl.includes("-dev") || // -dev suffix convention
+      siteUrl.includes("preview") || // preview deployments
+      siteUrl.includes("staging"); // staging deployments
     const isTestEnv =
       process.env.NODE_ENV === "test" ||
-      process.env.CONVEX_ENVIRONMENT === "test";
+      process.env.CONVEX_ENVIRONMENT === "test" ||
+      process.env.CONVEX_ENVIRONMENT === "development";
 
     if (!isLocal && !isDevDeployment && !isTestEnv) {
       throw new Error(
-        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.",
+        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments. " +
+          "Set CONVEX_ENVIRONMENT=test or use a deployment with dev-/preview/staging in its name.",
       );
     }
 
