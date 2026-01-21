@@ -174,7 +174,6 @@ class ArtifactsAPI:
                     "tenantId": self._tenant_id,
                     "metadata": options.metadata,
                     "tags": options.tags,
-                    "createdBy": options.created_by,
                 }),
             ),
             "artifacts:create",

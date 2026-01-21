@@ -715,27 +715,25 @@ class CreateArtifactOptions:
     """Options for creating a new artifact.
 
     Attributes:
+        memory_space_id: Memory space for isolation (required)
         title: Human-readable title (required)
         content: Initial content (required)
         kind: Artifact kind (default: "text")
         artifact_id: Custom ID (auto-generated if not provided)
         streaming_state: Initial streaming state (default: "draft")
         user_id: Associated user for GDPR (optional)
-        memory_space_id: Associated memory space (optional)
         metadata: Additional metadata (optional)
         tags: Tags for categorization (optional)
-        created_by: Creator identifier (optional, uses agent ID if not provided)
     """
+    memory_space_id: str  # Required - memory space isolation
     title: str
     content: str
     kind: ArtifactKind = "text"
     artifact_id: Optional[str] = None
     streaming_state: StreamingState = "draft"
     user_id: Optional[str] = None
-    memory_space_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
     tags: Optional[List[str]] = None
-    created_by: Optional[str] = None
 
 
 @dataclass

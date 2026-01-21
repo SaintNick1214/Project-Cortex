@@ -34,6 +34,8 @@ class ArtifactsValidationError(Exception):
 
 ARTIFACT_ID_MIN_LENGTH = 1
 ARTIFACT_ID_MAX_LENGTH = 100
+MEMORY_SPACE_ID_MIN_LENGTH = 1
+MEMORY_SPACE_ID_MAX_LENGTH = 200
 TITLE_MIN_LENGTH = 1
 TITLE_MAX_LENGTH = 500
 CONTENT_MAX_SIZE = 10485760  # 10MB in bytes
@@ -54,6 +56,8 @@ VALID_SORT_ORDER = ["asc", "desc"]
 # Regex patterns
 # 1-100 chars, alphanumeric + `-_.:` per unified specification
 ARTIFACT_ID_PATTERN = re.compile(r"^[a-zA-Z0-9\-_.:]+$")
+# Memory space IDs: alphanumeric + `-_` (more restrictive than artifact IDs)
+MEMORY_SPACE_ID_PATTERN = re.compile(r"^[a-zA-Z0-9\-_]+$")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -112,6 +116,62 @@ def validate_artifact_id(artifact_id: Any, field_name: str = "artifact_id") -> N
             f'Invalid {field_name} format "{artifact_id}". Must contain only alphanumeric characters, hyphens, underscores, dots, and colons',
             "INVALID_ARTIFACT_ID_FORMAT",
             field_name,
+        )
+
+
+def validate_memory_space_id(memory_space_id: Any, required: bool = True) -> None:
+    """
+    Validates memory_space_id is a non-empty string with valid format.
+
+    Args:
+        memory_space_id: Value to validate
+        required: Whether the field is required
+
+    Raises:
+        ArtifactsValidationError: If memory_space_id is invalid
+    """
+    if memory_space_id is None:
+        if required:
+            raise ArtifactsValidationError(
+                "memory_space_id is required",
+                "MISSING_MEMORY_SPACE_ID",
+                "memory_space_id",
+            )
+        return  # Optional and not provided
+
+    if not isinstance(memory_space_id, str):
+        raise ArtifactsValidationError(
+            f"memory_space_id must be a string, got {type(memory_space_id).__name__}",
+            "INVALID_MEMORY_SPACE_ID_TYPE",
+            "memory_space_id",
+        )
+
+    if not memory_space_id.strip():
+        raise ArtifactsValidationError(
+            "memory_space_id cannot be empty",
+            "EMPTY_MEMORY_SPACE_ID",
+            "memory_space_id",
+        )
+
+    if len(memory_space_id) < MEMORY_SPACE_ID_MIN_LENGTH:
+        raise ArtifactsValidationError(
+            f"memory_space_id must be at least {MEMORY_SPACE_ID_MIN_LENGTH} character(s)",
+            "MEMORY_SPACE_ID_TOO_SHORT",
+            "memory_space_id",
+        )
+
+    if len(memory_space_id) > MEMORY_SPACE_ID_MAX_LENGTH:
+        raise ArtifactsValidationError(
+            f"memory_space_id exceeds maximum length of {MEMORY_SPACE_ID_MAX_LENGTH} characters (got {len(memory_space_id)})",
+            "MEMORY_SPACE_ID_TOO_LONG",
+            "memory_space_id",
+        )
+
+    if not MEMORY_SPACE_ID_PATTERN.match(memory_space_id):
+        raise ArtifactsValidationError(
+            f'Invalid memory_space_id format "{memory_space_id}". Must contain only alphanumeric characters, hyphens, and underscores',
+            "INVALID_MEMORY_SPACE_ID_FORMAT",
+            "memory_space_id",
         )
 
 
@@ -601,6 +661,7 @@ def validate_create_options(options: Any) -> None:
         )
 
     # Required fields
+    validate_memory_space_id(getattr(options, "memory_space_id", None), required=True)
     validate_title(getattr(options, "title", None), required=True)
     validate_content(getattr(options, "content", None), required=True)
 
