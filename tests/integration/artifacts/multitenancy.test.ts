@@ -169,21 +169,21 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       const testMarker = `list-isolation-${ctx.runId}`;
       
       // Both tenants create artifacts in their own spaces
-      const artA1 = await tenantA.cortex.artifacts.create({
+      const _artA1 = await tenantA.cortex.artifacts.create({
         memorySpaceId: tenantA.memorySpaceId,
         kind: "text",
         content: `Tenant A artifact 1 - ${testMarker}`,
         title: "Tenant A Artifact 1",
       });
 
-      const artA2 = await tenantA.cortex.artifacts.create({
+      const _artA2 = await tenantA.cortex.artifacts.create({
         memorySpaceId: tenantA.memorySpaceId,
         kind: "text",
         content: `Tenant A artifact 2 - ${testMarker}`,
         title: "Tenant A Artifact 2",
       });
 
-      const artB1 = await tenantB.cortex.artifacts.create({
+      const _artB1 = await tenantB.cortex.artifacts.create({
         memorySpaceId: tenantB.memorySpaceId,
         kind: "text",
         content: `Tenant B artifact 1 - ${testMarker}`,
