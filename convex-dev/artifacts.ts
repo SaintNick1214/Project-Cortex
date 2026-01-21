@@ -55,7 +55,7 @@ export const create = mutation({
     userId: v.optional(v.string()), // GDPR linkage
 
     // Content (see 00-unified-specification.md for canonical kinds)
-    kind: artifactKindValidator,
+    kind: v.optional(artifactKindValidator), // Default: "text"
     title: v.optional(v.string()),
     content: v.string(),
     language: v.optional(v.string()),
@@ -130,7 +130,7 @@ export const create = mutation({
       participantId: args.participantId,
       tenantId: args.tenantId,
       userId: args.userId,
-      kind: args.kind,
+      kind: args.kind ?? "text", // Default to "text" if not provided
       kindConfig,
       streamingState: args.streamingState || "draft",
       title: args.title || "Untitled", // Required field - provide default
@@ -1472,8 +1472,10 @@ export const resumeStreaming = mutation({
       throw new ConvexError("ARTIFACT_IS_DELETED");
     }
 
-    // Validate state transition: paused → streaming
-    if (!isValidTransition(artifact.streamingState, "streaming")) {
+    // Validate state: only paused can be resumed
+    // Note: We explicitly check for paused rather than using isValidTransition because
+    // draft → streaming is valid for startStreaming, not resumeStreaming
+    if (artifact.streamingState !== "paused") {
       throw new ConvexError({
         code: "INVALID_STATE_TRANSITION",
         message: `Cannot resume: artifact is in '${artifact.streamingState}' state. Expected 'paused'.`,
