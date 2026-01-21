@@ -787,9 +787,12 @@ export const getByConversation = query({
       )
       .collect();
 
-    // Tenant filtering
+    // Tenant filtering - Security: match tenant or global records only
     if (args.tenantId) {
       artifacts = artifacts.filter((a) => a.tenantId === args.tenantId);
+    } else {
+      // Security: Only match global records (no tenantId) to prevent cross-tenant access
+      artifacts = artifacts.filter((a) => !a.tenantId);
     }
 
     // Status filtering
@@ -1208,7 +1211,7 @@ function generateSessionId(): string {
 const VALID_STREAMING_TRANSITIONS: Record<string, string[]> = {
   draft: ["streaming", "error"],
   streaming: ["paused", "final", "error", "draft"], // draft via cancel
-  paused: ["streaming", "draft", "error"],
+  paused: ["streaming", "final", "draft", "error"], // final to complete partial content
   final: ["draft"], // New version via update
   error: ["draft"], // Retry
 };
