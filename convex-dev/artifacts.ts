@@ -13,6 +13,7 @@
  * - Soft/hard delete
  */
 
+import { randomBytes } from "crypto";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -377,9 +378,11 @@ export const undo = mutation({
     }
 
     // Update artifact to reflect undone state
+    // Restore content, title, and fileRef from the target version
     await ctx.db.patch(artifact._id, {
       content: targetVersion.content,
       title: targetVersion.title,
+      fileRef: targetVersion.fileRef,
       versionPointer: newPointer,
       updatedAt: Date.now(),
     });
@@ -445,9 +448,11 @@ export const redo = mutation({
     }
 
     // Update artifact to reflect redone state
+    // Restore content, title, and fileRef from the target version
     await ctx.db.patch(artifact._id, {
       content: targetVersion.content,
       title: targetVersion.title,
+      fileRef: targetVersion.fileRef,
       versionPointer: newPointer,
       updatedAt: Date.now(),
     });
@@ -1192,7 +1197,7 @@ async function lookupArtifact(
  */
 function generateSessionId(): string {
   const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 11);
+  const random = randomBytes(8).toString("hex");
   return `stream-${timestamp}-${random}`;
 }
 
@@ -1532,8 +1537,10 @@ export const cancelStreaming = mutation({
       throw new ConvexError("ARTIFACT_IS_DELETED");
     }
 
-    // Validate state transition: streaming|paused → draft
-    if (!isValidTransition(artifact.streamingState, "draft")) {
+    // Validate state: only streaming or paused can be cancelled
+    // Note: We explicitly check states rather than using isValidTransition because
+    // final → draft is valid for update operations, but not for cancel operations
+    if (artifact.streamingState !== "streaming" && artifact.streamingState !== "paused") {
       throw new ConvexError({
         code: "INVALID_STATE_TRANSITION",
         message: `Cannot cancel: artifact is in '${artifact.streamingState}' state. Expected 'streaming' or 'paused'.`,
@@ -1542,9 +1549,15 @@ export const cancelStreaming = mutation({
       });
     }
 
-    // Verify sessionId matches (if one exists)
+    // Verify sessionId matches - required for active streaming sessions
     const currentSessionId = artifact.streamingMetadata?.sessionId;
-    if (currentSessionId && currentSessionId !== args.sessionId) {
+    if (!currentSessionId) {
+      throw new ConvexError({
+        code: "STREAMING_SESSION_INVALID",
+        message: "No active streaming session to cancel.",
+      });
+    }
+    if (currentSessionId !== args.sessionId) {
       throw new ConvexError({
         code: "STREAMING_SESSION_INVALID",
         message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
