@@ -232,6 +232,8 @@ jobs:
           cd cortex-sdk-python
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
+          # Install additional dev deps from requirements-dev.txt (git URL deps can't be in pyproject.toml for PyPI)
+          pip install -r requirements-dev.txt
 
       - name: Type check with mypy (Python)
         if: needs.detect-changes.outputs.python == 'true' || github.event.pull_request.base.ref == 'main'
@@ -366,6 +368,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install python-dotenv
           pip install -e ".[dev]"
+          # Install pytest-split from requirements-dev.txt (git URL deps can't be in pyproject.toml for PyPI)
+          pip install -r requirements-dev.txt
 
       # Stagger test starts to reduce concurrent load on shared Convex backend.
       # With 25 jobs (5 versions × 5 shards), use 1-second increments to spread load.

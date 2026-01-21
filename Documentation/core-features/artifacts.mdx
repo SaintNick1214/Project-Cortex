@@ -1,0 +1,378 @@
+---
+id: artifacts
+title: Artifacts
+sidebar_position: 10
+description: Interactive, versioned documents that AI agents can create, modify, and share with full undo/redo support.
+---
+
+# Artifacts
+
+Artifacts are **interactive, versioned documents** that AI agents can create, modify, and share. They enable rich AI experiences beyond simple chat by producing persistent outputs like code, documents, diagrams, and data visualizations.
+
+<Callout type="info" title="New in v0.33.0">
+
+The Artifacts API was introduced in v0.33.0. For complete API documentation, see [Artifacts Operations](/api-reference/artifacts-operations).
+
+</Callout>
+
+## What Are Artifacts?
+
+Artifacts differ from memories in a fundamental way:
+
+- **Memories** store *conversation context* and *facts* for retrieval
+- **Artifacts** store *interactive documents* for display and collaboration
+
+Think of artifacts as the "canvas" where AI agents produce their creative outputs:
+
+<FeatureGrid>
+  <FeatureCard
+    icon="code"
+    title="Code Files"
+    description="Source code with syntax highlighting and streaming generation"
+    size="medium"
+  />
+  <FeatureCard
+    icon="book"
+    title="Documents"
+    description="Markdown, prose, and formatted text content"
+    size="medium"
+  />
+  <FeatureCard
+    icon="layers"
+    title="Data Sheets"
+    description="Tabular data in JSON array format"
+    size="medium"
+  />
+</FeatureGrid>
+
+<FeatureGrid>
+  <FeatureCard
+    icon="graph"
+    title="Diagrams"
+    description="Mermaid, SVG, and visual diagrams"
+    size="medium"
+  />
+  <FeatureCard
+    icon="app"
+    title="HTML/React"
+    description="Interactive previews and components"
+    size="medium"
+  />
+  <FeatureCard
+    icon="package"
+    title="Custom Types"
+    description="Define your own artifact kinds"
+    size="medium"
+  />
+</FeatureGrid>
+
+---
+
+## Key Capabilities
+
+### Version Control with Undo/Redo
+
+Every change to an artifact creates a new version. Users can navigate through history just like a document editor:
+
+```typescript
+// Make changes
+await cortex.artifacts.update(artifactId, "version 2 content");
+await cortex.artifacts.update(artifactId, "version 3 content");
+
+// Undo to previous version
+const undone = await cortex.artifacts.undo(artifactId);
+console.log(undone.currentVersion); // 2
+
+// Redo to restore
+const redone = await cortex.artifacts.redo(artifactId);
+console.log(redone.currentVersion); // 3
+
+// Get full history
+const history = await cortex.artifacts.getHistory(artifactId);
+// [{ version: 1, content: "...", timestamp: ... }, ...]
+```
+
+### Streaming Content Generation
+
+Artifacts support real-time streaming for AI-generated content. This is essential for code generation, document writing, and any content that takes time to produce:
+
+<FlowDiagram
+  title="Streaming State Lifecycle"
+  caption="Artifacts move through well-defined states during streaming"
+>
+  <FlowNode
+    title="Draft"
+    icon="book"
+    variant="default"
+  >
+    Initial state when created
+  </FlowNode>
+  <FlowNode
+    title="Streaming"
+    icon="cloud"
+    variant="warning"
+  >
+    Receiving content chunks from AI
+  </FlowNode>
+  <FlowNode
+    title="Paused"
+    icon="time"
+    variant="primary"
+  >
+    Temporarily stopped (resumable)
+  </FlowNode>
+  <FlowNode
+    title="Final"
+    icon="shield"
+    variant="success"
+  >
+    Completed and versioned
+  </FlowNode>
+</FlowDiagram>
+
+```typescript
+// Start streaming session
+const { sessionId } = await cortex.artifacts.startStreaming({
+  artifactId: artifact.artifactId,
+});
+
+// Append content chunks
+for await (const chunk of aiGeneratedContent) {
+  await cortex.artifacts.appendContent({
+    artifactId: artifact.artifactId,
+    sessionId,
+    chunk,
+  });
+}
+
+// Finalize when done
+await cortex.artifacts.finalizeStreaming({
+  artifactId: artifact.artifactId,
+  sessionId,
+  changeSummary: "AI-generated code completion",
+});
+```
+
+### Multi-Tenancy Support
+
+Like all Cortex APIs, artifacts support multi-tenant isolation out of the box:
+
+```typescript
+// Artifacts are isolated by tenant
+const artifact = await cortex.artifacts.create({
+  memorySpaceId: "user-123-workspace",
+  title: "Customer Report",
+  content: "# Q4 Report\n...",
+  kind: "text",
+  // tenantId is auto-injected from auth context
+});
+```
+
+### File Attachments
+
+Artifacts can have binary files attached via Convex storage:
+
+```typescript
+// Upload a file
+const result = await cortex.artifacts.uploadFile({
+  artifactId: artifact.artifactId,
+  file: imageBlob,
+  filename: "diagram.png",
+  mimeType: "image/png",
+});
+
+// Get file URL for display
+const url = await cortex.artifacts.getFileUrl(artifact.artifactId);
+```
+
+---
+
+## Artifact Kinds
+
+Each artifact has a `kind` that determines how it should be rendered and edited:
+
+| Kind | Description | Use Case |
+|------|-------------|----------|
+| `text` | Plain text, markdown, prose | Documents, notes, reports |
+| `code` | Source code with language | Code generation, snippets |
+| `sheet` | Tabular data (JSON array) | Spreadsheets, data tables |
+| `image` | Image reference | Generated images, diagrams |
+| `diagram` | Mermaid, SVG, or similar | Architecture diagrams, flowcharts |
+| `html` | HTML/React for preview | Interactive components |
+| `custom` | User-defined types | Domain-specific artifacts |
+
+```typescript
+// Code artifact with language config
+const codeArtifact = await cortex.artifacts.create({
+  memorySpaceId: "workspace",
+  title: "API Handler",
+  content: "export function handler(req, res) { ... }",
+  kind: "code",
+  kindConfig: { language: "typescript" },
+  tags: ["api", "handler"],
+});
+
+// Sheet artifact
+const sheetArtifact = await cortex.artifacts.create({
+  memorySpaceId: "workspace",
+  title: "User Data",
+  content: JSON.stringify([
+    { name: "Alice", role: "Admin" },
+    { name: "Bob", role: "User" },
+  ]),
+  kind: "sheet",
+});
+```
+
+---
+
+## TypeScript SDK
+
+```typescript
+import { Cortex } from "@cortexmemory/sdk";
+
+const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+
+// Create an artifact
+const artifact = await cortex.artifacts.create({
+  memorySpaceId: "user-workspace",
+  title: "Meeting Notes",
+  content: "# Team Standup\n\n- Discussed roadmap...",
+  kind: "text",
+  tags: ["meetings", "team"],
+});
+
+// Update content (creates new version)
+await cortex.artifacts.update(artifact.artifactId, "# Updated Notes\n...", {
+  changeSummary: "Added action items",
+});
+
+// List artifacts
+const artifacts = await cortex.artifacts.list({
+  memorySpaceId: "user-workspace",
+  kind: "text",
+  sortBy: "updatedAt",
+  sortOrder: "desc",
+});
+```
+
+---
+
+## Python SDK
+
+```python
+from cortex import Cortex, CreateArtifactOptions
+
+cortex = Cortex(convex_url=os.environ["CONVEX_URL"])
+
+# Create an artifact
+artifact = await cortex.artifacts.create(
+    CreateArtifactOptions(
+        memory_space_id="user-workspace",
+        title="Data Analysis",
+        content="# Results\n\nThe analysis shows...",
+        kind="text",
+        tags=["analysis", "q4"],
+    )
+)
+
+# Streaming example
+result = await cortex.artifacts.start_streaming(
+    StartStreamingParams(artifact_id=artifact.artifact_id)
+)
+
+for chunk in ai_generated_content:
+    await cortex.artifacts.append_content(
+        AppendContentParams(
+            artifact_id=artifact.artifact_id,
+            session_id=result.session_id,
+            chunk=chunk,
+        )
+    )
+
+await cortex.artifacts.finalize_streaming(
+    FinalizeStreamingParams(
+        artifact_id=artifact.artifact_id,
+        session_id=result.session_id,
+    )
+)
+```
+
+---
+
+## Vercel AI SDK Integration
+
+The Vercel AI Provider includes tools for AI-driven artifact management:
+
+```typescript
+import { createArtifactTools } from "@cortexmemory/vercel-ai-provider";
+import { streamText } from "ai";
+
+// Create tools for AI to use
+const artifactTools = createArtifactTools({
+  storage: cortex.artifacts,
+  writer: dataStreamWriter,
+});
+
+// Use with streamText
+const result = streamText({
+  model: openai("gpt-4o"),
+  messages,
+  tools: {
+    ...artifactTools,
+  },
+});
+```
+
+React hooks for artifact state management:
+
+```tsx
+import { useArtifacts, useArtifact } from "@cortexmemory/vercel-ai-provider/react";
+
+function ArtifactPanel() {
+  const { artifactList, activeArtifact, handleDataPart } = useArtifacts();
+
+  return (
+    <div>
+      {artifactList.map((artifact) => (
+        <ArtifactCard key={artifact.artifactId} artifact={artifact} />
+      ))}
+      {activeArtifact && <ArtifactEditor artifact={activeArtifact} />}
+    </div>
+  );
+}
+```
+
+---
+
+## When to Use Artifacts vs Memories
+
+| Use Artifacts When | Use Memories When |
+|--------------------|-------------------|
+| User needs to see/edit the content | Content is context for AI |
+| Content is a "deliverable" (code, docs) | Content is conversation history |
+| Undo/redo is needed | Semantic search is needed |
+| Streaming generation is required | Fact extraction is needed |
+| Binary files are involved | Long-term recall is the goal |
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem
+    title="Artifacts Operations API"
+    description="Complete API reference with all methods"
+    href="/api-reference/artifacts-operations"
+  />
+  <QuickNavItem
+    title="Streaming Support"
+    description="Learn about streaming patterns in Cortex"
+    href="/core-features/streaming-support"
+  />
+  <QuickNavItem
+    title="Memory Orchestration"
+    description="How artifacts relate to memories"
+    href="/core-features/memory-orchestration"
+  />
+</QuickNav>

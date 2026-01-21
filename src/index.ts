@@ -19,6 +19,7 @@ import { AgentsAPI } from "./agents";
 import { GovernanceAPI } from "./governance";
 import { A2AAPI } from "./a2a";
 import { SessionsAPI } from "./sessions";
+import { ArtifactsAPI } from "./artifacts";
 import type { AuthContext } from "./auth/types";
 import type { GraphAdapter } from "./graph/types";
 import { CypherGraphAdapter } from "./graph";
@@ -477,6 +478,9 @@ export class Cortex {
   // Sessions: Native Session Management
   public sessions: SessionsAPI;
 
+  // Artifacts - Versioned Document Management
+  public artifacts: ArtifactsAPI;
+
   constructor(config: CortexConfig) {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
@@ -560,6 +564,12 @@ export class Cortex {
     );
     this.a2a = new A2AAPI(this.client, graphAdapter, this.resilienceLayer);
     this.sessions = new SessionsAPI(
+      this.client,
+      graphAdapter,
+      this.resilienceLayer,
+      this.authContext,
+    );
+    this.artifacts = new ArtifactsAPI(
       this.client,
       graphAdapter,
       this.resilienceLayer,
@@ -724,6 +734,7 @@ export { GovernanceValidationError } from "./governance";
 export { A2AValidationError } from "./a2a";
 export { SessionValidationError } from "./sessions";
 export { AuthValidationError } from "./auth";
+export { ArtifactValidationError } from "./artifacts";
 
 // Re-export auth module
 export { createAuthContext, validateAuthContext } from "./auth";

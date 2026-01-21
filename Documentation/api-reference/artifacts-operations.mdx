@@ -1,0 +1,1093 @@
+---
+id: artifacts-operations
+title: Artifacts Operations API
+sidebar_position: 16
+description: Complete API reference for versioned artifact management with streaming support, undo/redo, and file attachments.
+---
+
+# Artifacts Operations API
+
+<Callout type="info">
+
+**Added in v0.33.0** - Interactive, versioned document management for AI agents.
+
+</Callout>
+
+Complete API reference for the Artifacts API (`cortex.artifacts.*`), providing versioned document management with streaming support, undo/redo, and file attachments.
+
+## Overview
+
+The Artifacts API manages interactive documents that AI agents produce. Unlike memories (which store context for retrieval), artifacts store *deliverables* like code, documents, and visualizations.
+
+**Key Features:**
+
+- **Versioned Documents**: Every update creates a version; full undo/redo support
+- **Streaming Generation**: Real-time content streaming with pause/resume
+- **Multiple Kinds**: Code, text, sheets, diagrams, images, HTML, custom
+- **File Attachments**: Binary file storage via Convex
+- **Multi-Tenancy**: Built-in tenant isolation
+- **Graph Integration**: Optional sync to Neo4j/Memgraph
+
+---
+
+## Artifact Type
+
+```typescript
+interface Artifact {
+  _id: string;                    // Convex document ID
+  artifactId: string;             // Unique artifact identifier (art-*)
+  memorySpaceId: string;          // Memory space isolation
+  tenantId?: string;              // Multi-tenancy isolation
+
+  // Core content (content and fileRef are mutually exclusive)
+  title: string;
+  content?: string;               // Text content (undefined for file-based artifacts)
+  kind: ArtifactKind;             // text | code | sheet | image | diagram | html | custom
+  kindConfig?: ArtifactKindConfig;
+  description?: string;
+  tags: string[];
+
+  // Version control
+  version: number;                // Current version (1-based)
+  versionPointer: number;         // Points to active version (for undo/redo)
+  versionHistory: ArtifactVersion[];
+
+  // Streaming
+  streamingState: StreamingState; // draft | streaming | paused | final | error
+  streamingMetadata?: StreamingMetadata;
+
+  // Ownership
+  userId?: string;
+  agentId?: string;
+  participantId?: string;         // Hive Mode tracking
+
+  // File storage (content and fileRef are mutually exclusive)
+  fileRef?: ArtifactFileRef;      // Attached file (content is undefined when set)
+
+  // References
+  conversationRef?: {
+    conversationId: string;
+    messageId?: string;
+    turnIndex?: number;
+  };
+  memoryRefs?: ArtifactMemoryRef[];
+
+  // Timestamps
+  createdAt: number;
+  updatedAt: number;
+  lastAccessedAt?: number;
+  accessCount?: number;
+
+  // Soft delete
+  isDeleted?: boolean;
+  deletedAt?: number;
+  deletedBy?: string;
+
+  // Custom data
+  metadata?: Record<string, unknown>;
+}
+```
+
+<Callout type="info">
+  **Content vs File Attachments**: The `content` and `fileRef` fields are mutually exclusive.
+  When you attach a file using `uploadFile()`, the artifact's `content` is set to `undefined`.
+  Text-based artifacts store data in `content`, while file-based artifacts use `fileRef`.
+</Callout>
+
+### Artifact Kinds
+
+| Kind | Description | `kindConfig` Fields |
+|------|-------------|---------------------|
+| `text` | Plain text, markdown, prose | - |
+| `code` | Source code with highlighting | `language` |
+| `sheet` | Tabular data (JSON array) | `columns` |
+| `image` | Image reference | `mimeType`, `dimensions` |
+| `diagram` | Mermaid, SVG, visual | `diagramType` |
+| `html` | HTML/React for preview | `framework` |
+| `custom` | User-defined | `customName` |
+
+### Streaming States
+
+| State | Description | Allowed Transitions |
+|-------|-------------|---------------------|
+| `draft` | Initial creation, editable | `streaming` |
+| `streaming` | Receiving content from AI | `paused`, `final`, `error`, `draft` |
+| `paused` | Temporarily halted | `streaming`, `final`, `draft` |
+| `final` | Completed and versioned | `draft` (for new edits) |
+| `error` | Error during streaming | `draft` |
+
+---
+
+## Core CRUD Operations
+
+### create()
+
+Create a new artifact.
+
+```typescript
+const artifact = await cortex.artifacts.create(options: CreateArtifactOptions): Promise<Artifact>;
+```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "Memory space for isolation" },
+    { name: "title", type: "string", required: true, description: "Artifact title" },
+    { name: "content", type: "string", required: true, description: "Initial content" },
+    { name: "kind", type: "ArtifactKind", required: false, description: "Content type (default: 'text')" },
+    { name: "kindConfig", type: "ArtifactKindConfig", required: false, description: "Kind-specific settings" },
+    { name: "streamingState", type: "StreamingState", required: false, description: "Initial state (default: 'draft')" },
+    { name: "artifactId", type: "string", required: false, description: "Custom ID (auto-generated if omitted)" },
+    { name: "tenantId", type: "string", required: false, description: "Tenant ID (from auth context)" },
+    { name: "userId", type: "string", required: false, description: "Owner user ID" },
+    { name: "agentId", type: "string", required: false, description: "Owner agent ID" },
+    { name: "participantId", type: "string", required: false, description: "Hive Mode participant" },
+    { name: "description", type: "string", required: false, description: "Brief description" },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Custom metadata" },
+    { name: "tags", type: "string[]", required: false, description: "Tags for filtering" },
+    { name: "conversationRef", type: "object", required: false, description: "Source conversation reference" },
+    { name: "memoryRefs", type: "ArtifactMemoryRef[]", required: false, description: "Source memory references" },
+  ]}
+/>
+
+<Tabs>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+const artifact = await cortex.artifacts.create({
+  memorySpaceId: "user-123-workspace",
+  title: "API Handler",
+  content: `export async function handler(req, res) {
+  const data = await fetchData();
+  res.json(data);
+}`,
+  kind: "code",
+  kindConfig: { language: "typescript" },
+  tags: ["api", "backend"],
+  description: "REST endpoint handler",
+});
+
+console.log(artifact.artifactId); // "art-abc123def456"
+console.log(artifact.version);    // 1
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from cortex import CreateArtifactOptions
+
+artifact = await cortex.artifacts.create(
+    CreateArtifactOptions(
+        memory_space_id="user-123-workspace",
+        title="API Handler",
+        content='export async function handler(req, res) { ... }',
+        kind="code",
+        kind_config={"language": "typescript"},
+        tags=["api", "backend"],
+    )
+)
+
+print(artifact.artifact_id)  # "art-abc123def456"
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+### get()
+
+Retrieve an artifact by ID.
+
+```typescript
+const artifact = await cortex.artifacts.get(artifactId: string): Promise<Artifact | null>;
+```
+
+<Tabs>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+const artifact = await cortex.artifacts.get("art-abc123def456");
+
+if (artifact) {
+  console.log(artifact.title);         // "API Handler"
+  console.log(artifact.content);       // The code content
+  console.log(artifact.version);       // Current version number
+  console.log(artifact.streamingState); // "draft" | "final" | ...
+}
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+artifact = await cortex.artifacts.get("art-abc123def456")
+
+if artifact:
+    print(artifact.title)
+    print(artifact.content)
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+### update()
+
+Update an artifact's content. Creates a new version in history.
+
+```typescript
+const artifact = await cortex.artifacts.update(
+  artifactId: string,
+  content: string,
+  options?: UpdateArtifactOptions
+): Promise<Artifact>;
+```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "artifactId", type: "string", required: true, description: "Artifact ID to update" },
+    { name: "content", type: "string", required: true, description: "New content" },
+    { name: "options.title", type: "string", required: false, description: "New title" },
+    { name: "options.metadata", type: "Record<string, unknown>", required: false, description: "Metadata updates (merged)" },
+    { name: "options.tags", type: "string[]", required: false, description: "New tags (replaces existing)" },
+    { name: "options.changeSummary", type: "string", required: false, description: "Description for version history" },
+    { name: "options.changedBy", type: "string", required: false, description: "User/agent who made the change" },
+  ]}
+/>
+
+<Tabs>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+const updated = await cortex.artifacts.update(
+  "art-abc123def456",
+  `export async function handler(req, res) {
+  // Added error handling
+  try {
+    const data = await fetchData();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}`,
+  {
+    changeSummary: "Added error handling",
+    changedBy: "user-123",
+  }
+);
+
+console.log(updated.version); // 2
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from cortex import UpdateArtifactOptions
+
+updated = await cortex.artifacts.update(
+    "art-abc123def456",
+    "# Updated content...",
+    UpdateArtifactOptions(
+        change_summary="Added error handling",
+    )
+)
+
+print(updated.version)  # 2
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+### delete()
+
+Delete an artifact. Supports soft delete (default) or hard delete.
+
+```typescript
+const result = await cortex.artifacts.delete(
+  artifactId: string,
+  hard?: boolean  // Default: false (soft delete)
+): Promise<DeleteArtifactResult>;
+```
+
+**Returns:**
+
+```typescript
+interface DeleteArtifactResult {
+  deleted: boolean;
+  artifactId: string;
+  versionsPurged?: number;   // Hard delete only
+  filesDetached?: number;    // Hard delete only
+}
+```
+
+<Tabs>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+// Soft delete (recoverable)
+const result = await cortex.artifacts.delete("art-abc123def456");
+console.log(result.deleted); // true
+
+// Hard delete (permanent)
+const hardResult = await cortex.artifacts.delete("art-abc123def456", true);
+console.log(hardResult.versionsPurged); // 5
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+# Soft delete
+result = await cortex.artifacts.delete("art-abc123def456")
+
+# Hard delete
+result = await cortex.artifacts.delete("art-abc123def456", hard=True)
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+### list()
+
+List artifacts with filtering and pagination.
+
+```typescript
+const artifacts = await cortex.artifacts.list(filter: ListArtifactsFilter): Promise<Artifact[]>;
+```
+
+**Filter Parameters:**
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "Memory space to search" },
+    { name: "tenantId", type: "string", required: false, description: "Filter by tenant" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "kind", type: "ArtifactKind", required: false, description: "Filter by kind" },
+    { name: "streamingState", type: "StreamingState", required: false, description: "Filter by state" },
+    { name: "tags", type: "string[]", required: false, description: "Filter by tags (any match)" },
+    { name: "tagMatch", type: "'any' | 'all'", required: false, description: "Tag matching mode" },
+    { name: "titleContains", type: "string", required: false, description: "Title search (case-insensitive)" },
+    { name: "createdAfter", type: "number", required: false, description: "Filter by creation date" },
+    { name: "createdBefore", type: "number", required: false, description: "Filter by creation date" },
+    { name: "updatedAfter", type: "number", required: false, description: "Filter by update date" },
+    { name: "updatedBefore", type: "number", required: false, description: "Filter by update date" },
+    { name: "limit", type: "number", required: false, description: "Max results (default: 50, max: 1000)" },
+    { name: "offset", type: "number", required: false, description: "Pagination offset" },
+    { name: "sortBy", type: "'createdAt' | 'updatedAt'", required: false, description: "Sort field" },
+    { name: "sortOrder", type: "'asc' | 'desc'", required: false, description: "Sort direction" },
+    { name: "includeDeleted", type: "boolean", required: false, description: "Include soft-deleted artifacts" },
+  ]}
+/>
+
+<Tabs>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+const codeArtifacts = await cortex.artifacts.list({
+  memorySpaceId: "user-123-workspace",
+  kind: "code",
+  streamingState: "final",
+  tags: ["api"],
+  sortBy: "updatedAt",
+  sortOrder: "desc",
+  limit: 20,
+});
+
+console.log(`Found ${codeArtifacts.length} code artifacts`);
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from cortex import ListArtifactsFilter
+
+artifacts = await cortex.artifacts.list(
+    ListArtifactsFilter(
+        memory_space_id="user-123-workspace",
+        kind="code",
+        streaming_state="final",
+        sort_by="updatedAt",
+        sort_order="desc",
+    )
+)
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+### count()
+
+Count artifacts matching a filter.
+
+```typescript
+const count = await cortex.artifacts.count(filter: CountArtifactsFilter): Promise<number>;
+```
+
+```typescript
+const count = await cortex.artifacts.count({
+  memorySpaceId: "user-123-workspace",
+  kind: "code",
+  streamingState: "final",
+});
+
+console.log(`${count} finalized code artifacts`);
+```
+
+---
+
+## Undo/Redo Operations
+
+### undo()
+
+Undo the last change. Moves the version pointer backward without deleting history.
+
+```typescript
+const result = await cortex.artifacts.undo(artifactId: string): Promise<{
+  success: boolean;
+  artifactId: string;
+  previousVersion: number;
+  currentVersion: number;
+  canUndo: boolean;
+  canRedo: boolean;
+}>;
+```
+
+<Tabs>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+const result = await cortex.artifacts.undo("art-abc123def456");
+
+console.log(result.previousVersion); // 3
+console.log(result.currentVersion);  // 2
+console.log(result.canUndo);         // true (can undo more)
+console.log(result.canRedo);         // true (can redo)
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+result = await cortex.artifacts.undo("art-abc123def456")
+
+print(result.current_version)  # 2
+print(result.can_undo)         # True
+print(result.can_redo)         # True
+```
+
+</TabItem>
+</Tabs>
+
+<Callout type="warning" title="Error: UNDO_NOT_AVAILABLE">
+
+Thrown when at version 1 (no previous version exists).
+
+</Callout>
+
+---
+
+### redo()
+
+Redo a previously undone change. Moves the version pointer forward.
+
+```typescript
+const result = await cortex.artifacts.redo(artifactId: string): Promise<{
+  success: boolean;
+  artifactId: string;
+  previousVersion: number;
+  currentVersion: number;
+  canUndo: boolean;
+  canRedo: boolean;
+}>;
+```
+
+```typescript
+const result = await cortex.artifacts.redo("art-abc123def456");
+
+console.log(result.currentVersion); // 3 (back to latest)
+console.log(result.canRedo);        // false (at latest)
+```
+
+<Callout type="warning" title="Error: REDO_NOT_AVAILABLE">
+
+Thrown when already at the latest version.
+
+</Callout>
+
+---
+
+### getHistory()
+
+Get the version history of an artifact.
+
+```typescript
+const history = await cortex.artifacts.getHistory(
+  artifactId: string,
+  options?: GetArtifactHistoryOptions
+): Promise<ArtifactVersion[]>;
+```
+
+**Options:**
+
+<APITable
+  parameters={[
+    { name: "limit", type: "number", required: false, description: "Max versions to return" },
+    { name: "offset", type: "number", required: false, description: "Pagination offset" },
+    { name: "sortOrder", type: "'asc' | 'desc'", required: false, description: "Order by version (default: 'desc')" },
+  ]}
+/>
+
+```typescript
+const history = await cortex.artifacts.getHistory("art-abc123def456", {
+  limit: 10,
+  sortOrder: "desc",
+});
+
+for (const version of history) {
+  console.log(`v${version.version}: ${version.changeSummary || "No note"}`);
+  console.log(`  Changed by: ${version.changedBy || "unknown"}`);
+  console.log(`  At: ${new Date(version.timestamp)}`);
+}
+```
+
+---
+
+### getVersion()
+
+Get a specific version of an artifact.
+
+```typescript
+const version = await cortex.artifacts.getVersion(
+  artifactId: string,
+  version: number
+): Promise<ArtifactVersion | null>;
+```
+
+```typescript
+const v2 = await cortex.artifacts.getVersion("art-abc123def456", 2);
+
+if (v2) {
+  console.log(v2.content);        // Content at version 2
+  console.log(v2.timestamp);      // When v2 was created
+  console.log(v2.changeSummary);  // "Added error handling"
+}
+```
+
+---
+
+## Streaming Operations
+
+### startStreaming()
+
+Start a streaming session for an artifact. Transitions to `streaming` state.
+
+```typescript
+const result = await cortex.artifacts.startStreaming(
+  params: StartStreamingParams
+): Promise<{
+  success: boolean;
+  sessionId: string;
+  artifactId: string;
+  startedAt: number;
+  previousState: StreamingState;
+  currentState: StreamingState;
+}>;
+```
+
+<Tabs>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+const { sessionId, artifactId } = await cortex.artifacts.startStreaming({
+  artifactId: "art-abc123def456",
+});
+
+console.log(`Streaming session: ${sessionId}`);
+// Now append content chunks...
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from cortex import StartStreamingParams
+
+result = await cortex.artifacts.start_streaming(
+    StartStreamingParams(artifact_id="art-abc123def456")
+)
+
+print(result.session_id)
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+### appendContent()
+
+Append a content chunk during streaming.
+
+```typescript
+const result = await cortex.artifacts.appendContent(
+  params: AppendContentParams
+): Promise<{
+  success: boolean;
+  artifactId: string;
+  sessionId: string;
+  chunkIndex?: number;
+  chunkBytes: number;
+  totalBytesReceived: number;
+  contentLength: number;
+  progress?: number;
+  timestamp: number;
+}>;
+```
+
+<APITable
+  parameters={[
+    { name: "artifactId", type: "string", required: true, description: "Artifact ID" },
+    { name: "sessionId", type: "string", required: true, description: "Session ID from startStreaming" },
+    { name: "chunk", type: "string", required: true, description: "Content chunk to append" },
+  ]}
+/>
+
+```typescript
+// Stream AI-generated content
+for await (const chunk of aiStream) {
+  const result = await cortex.artifacts.appendContent({
+    artifactId: "art-abc123def456",
+    sessionId,
+    chunk: chunk.text,
+  });
+
+  console.log(`Progress: ${result.progress}%`);
+}
+```
+
+---
+
+### pauseStreaming()
+
+Pause an active streaming session. Preserves current content.
+
+```typescript
+const result = await cortex.artifacts.pauseStreaming(
+  params: StreamingSessionParams
+): Promise<{
+  success: boolean;
+  artifactId: string;
+  sessionId: string;
+  pausedAt: number;
+  previousState: string;
+  currentState: string;
+  bytesReceived: number;
+  contentPreserved: boolean;
+}>;
+```
+
+```typescript
+const paused = await cortex.artifacts.pauseStreaming({
+  artifactId: "art-abc123def456",
+  sessionId,
+});
+
+console.log(`Paused with ${paused.bytesReceived} bytes received`);
+```
+
+---
+
+### resumeStreaming()
+
+Resume a paused streaming session.
+
+```typescript
+const result = await cortex.artifacts.resumeStreaming(
+  params: StreamingSessionParams
+): Promise<{
+  success: boolean;
+  artifactId: string;
+  sessionId: string;
+  resumedAt: number;
+  previousState: string;
+  currentState: string;
+  bytesReceived: number;
+}>;
+```
+
+```typescript
+const resumed = await cortex.artifacts.resumeStreaming({
+  artifactId: "art-abc123def456",
+  sessionId,
+});
+
+// Continue appending content...
+```
+
+---
+
+### cancelStreaming()
+
+Cancel an active streaming session. Returns to `draft` state.
+
+```typescript
+const result = await cortex.artifacts.cancelStreaming(
+  params: StreamingSessionParams
+): Promise<{
+  success: boolean;
+  artifactId: string;
+  sessionId: string;
+  cancelledAt: number;
+  previousState: StreamingState;
+  currentState: string;
+  contentPreserved: boolean;
+  bytesReceived: number;
+  contentLength: number;
+}>;
+```
+
+```typescript
+const cancelled = await cortex.artifacts.cancelStreaming({
+  artifactId: "art-abc123def456",
+  sessionId,
+});
+
+console.log(`Cancelled. Content preserved: ${cancelled.contentPreserved}`);
+```
+
+---
+
+### finalizeStreaming()
+
+Complete a streaming session. Creates a new version and transitions to `final`.
+
+```typescript
+const result = await cortex.artifacts.finalizeStreaming(
+  params: FinalizeStreamingParams
+): Promise<{
+  success: boolean;
+  artifactId: string;
+  sessionId: string;
+  finalizedAt: number;
+  previousState: string;
+  currentState: string;
+  contentLength: number;
+  bytesReceived: number;
+  totalDurationMs: number;
+  versionCreated: boolean;
+  version: number;
+}>;
+```
+
+<APITable
+  parameters={[
+    { name: "artifactId", type: "string", required: true, description: "Artifact ID" },
+    { name: "sessionId", type: "string", required: true, description: "Session ID" },
+    { name: "changeSummary", type: "string", required: false, description: "Summary for version history" },
+  ]}
+/>
+
+<Tabs>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+const final = await cortex.artifacts.finalizeStreaming({
+  artifactId: "art-abc123def456",
+  sessionId,
+  changeSummary: "AI-generated implementation",
+});
+
+console.log(`Finalized as version ${final.version}`);
+console.log(`Total duration: ${final.totalDurationMs}ms`);
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+from cortex import FinalizeStreamingParams
+
+final = await cortex.artifacts.finalize_streaming(
+    FinalizeStreamingParams(
+        artifact_id="art-abc123def456",
+        session_id=session_id,
+        change_summary="AI-generated implementation",
+    )
+)
+
+print(f"Finalized as version {final.version}")
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## Status Management
+
+### setStreamingState()
+
+Directly set the streaming state. Use with caution - prefer streaming methods for proper transitions.
+
+```typescript
+const result = await cortex.artifacts.setStreamingState(
+  artifactId: string,
+  streamingState: StreamingState
+): Promise<{
+  success: boolean;
+  artifactId: string;
+  previousState: StreamingState;
+  currentState: StreamingState;
+  updatedAt: number;
+}>;
+```
+
+```typescript
+// Mark as error state
+await cortex.artifacts.setStreamingState("art-abc123def456", "error");
+
+// Reset to draft for editing
+await cortex.artifacts.setStreamingState("art-abc123def456", "draft");
+```
+
+---
+
+## File Operations
+
+### uploadFile()
+
+Upload a file and attach it to an artifact.
+
+```typescript
+const result = await cortex.artifacts.uploadFile(params: {
+  artifactId: string;
+  file: Blob;
+  filename: string;
+  mimeType: string;
+  metadata?: Record<string, unknown>;
+}): Promise<{
+  success: boolean;
+  artifactId: string;
+  fileRef: {
+    storageId: string;
+    mimeType: string;
+    size: number;
+    checksum?: string;
+    originalFilename?: string;
+  };
+  version: number;
+  updatedAt: number;
+}>;
+```
+
+```typescript
+const imageBlob = await fetchImageBlob();
+
+const result = await cortex.artifacts.uploadFile({
+  artifactId: "art-abc123def456",
+  file: imageBlob,
+  filename: "diagram.png",
+  mimeType: "image/png",
+});
+
+console.log(`Uploaded: ${result.fileRef.storageId}`);
+console.log(`Size: ${result.fileRef.size} bytes`);
+```
+
+<Callout type="warning">
+  Uploading a file sets the artifact's `content` to `undefined`. The `content` and `fileRef`
+  fields are mutually exclusive—an artifact contains either inline text content or a file
+  reference, not both.
+</Callout>
+
+---
+
+### getFileUrl()
+
+Get a signed URL for the artifact's attached file.
+
+```typescript
+const url = await cortex.artifacts.getFileUrl(
+  artifactId: string
+): Promise<string | null>;
+```
+
+```typescript
+const url = await cortex.artifacts.getFileUrl("art-abc123def456");
+
+if (url) {
+  // Display image or download file
+  window.open(url);
+}
+```
+
+---
+
+### detachFile()
+
+Detach the file from an artifact. Optionally delete from storage.
+
+```typescript
+const result = await cortex.artifacts.detachFile(
+  artifactId: string,
+  deleteFile?: boolean  // Default: false
+): Promise<{
+  success: boolean;
+  artifactId: string;
+  previousFileRef: ArtifactFileRef;
+  fileDeleted: boolean;
+  version: number;
+  updatedAt: number;
+}>;
+```
+
+```typescript
+// Detach but keep file in storage
+const result = await cortex.artifacts.detachFile("art-abc123def456");
+
+// Detach and delete file
+const result = await cortex.artifacts.detachFile("art-abc123def456", true);
+console.log(`File deleted: ${result.fileDeleted}`);
+```
+
+---
+
+## Error Codes
+
+| Code | Description |
+|------|-------------|
+| `ARTIFACT_NOT_FOUND` | Artifact with given ID does not exist |
+| `ARTIFACT_ALREADY_EXISTS` | Artifact with given ID already exists |
+| `ARTIFACT_IS_DELETED` | Attempting to modify a deleted artifact |
+| `INVALID_ARTIFACT_ID` | Artifact ID format is invalid |
+| `INVALID_ARTIFACT_KIND` | Invalid kind value |
+| `INVALID_STREAMING_STATE` | Invalid streaming state value |
+| `INVALID_STATE_TRANSITION` | Cannot transition between these states |
+| `UNDO_NOT_AVAILABLE` | Already at version 1 |
+| `REDO_NOT_AVAILABLE` | Already at latest version |
+| `ARTIFACT_VERSION_NOT_FOUND` | Requested version does not exist |
+| `ARTIFACT_CONTENT_TOO_LARGE` | Content exceeds size limit |
+| `STREAMING_SESSION_INVALID` | Session ID is invalid or expired |
+| `ARTIFACT_QUOTA_EXCEEDED` | Tenant artifact quota exceeded |
+
+---
+
+## Complete Streaming Example
+
+```typescript
+import { Cortex } from "@cortexmemory/sdk";
+
+const cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+
+async function generateCodeArtifact(prompt: string, memorySpaceId: string) {
+  // 1. Create artifact in draft state
+  const artifact = await cortex.artifacts.create({
+    memorySpaceId,
+    title: "Generated Code",
+    content: "",
+    kind: "code",
+    kindConfig: { language: "typescript" },
+    streamingState: "draft",
+  });
+
+  // 2. Start streaming session
+  const { sessionId } = await cortex.artifacts.startStreaming({
+    artifactId: artifact.artifactId,
+  });
+
+  try {
+    // 3. Stream content from AI
+    const aiStream = await generateWithAI(prompt);
+
+    for await (const chunk of aiStream) {
+      await cortex.artifacts.appendContent({
+        artifactId: artifact.artifactId,
+        sessionId,
+        chunk: chunk.text,
+      });
+    }
+
+    // 4. Finalize successfully
+    const result = await cortex.artifacts.finalizeStreaming({
+      artifactId: artifact.artifactId,
+      sessionId,
+      changeSummary: `Generated from: ${prompt}`,
+    });
+
+    return await cortex.artifacts.get(artifact.artifactId);
+  } catch (error) {
+    // Cancel on error
+    await cortex.artifacts.cancelStreaming({
+      artifactId: artifact.artifactId,
+      sessionId,
+    });
+    throw error;
+  }
+}
+```
+
+---
+
+## Vercel AI SDK Integration
+
+The Vercel AI Provider exports tools and hooks for artifact management:
+
+```typescript
+import {
+  createArtifactTools,
+  useArtifacts,
+  ARTIFACT_STREAM_EVENTS,
+} from "@cortexmemory/vercel-ai-provider";
+
+// Create AI tools
+const tools = createArtifactTools({
+  storage: cortex.artifacts,
+  writer: dataStreamWriter,
+});
+
+// React hook for state management
+const { artifactList, activeArtifact, handleDataPart } = useArtifacts();
+```
+
+See [Vercel AI SDK Integration](/integrations/vercel-ai-sdk) for complete documentation.
+
+---
+
+## Next Steps
+
+<QuickNav>
+  <QuickNavItem
+    title="Artifacts Overview"
+    description="Conceptual guide to artifacts"
+    href="/core-features/artifacts"
+  />
+  <QuickNavItem
+    title="Streaming Support"
+    description="Learn about streaming patterns"
+    href="/core-features/streaming-support"
+  />
+  <QuickNavItem
+    title="Memory Operations"
+    description="How artifacts relate to memories"
+    href="/api-reference/memory-operations"
+  />
+  <QuickNavItem
+    title="Types & Interfaces"
+    description="Complete TypeScript reference"
+    href="/reference/types-interfaces"
+  />
+</QuickNav>

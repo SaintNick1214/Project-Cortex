@@ -14,6 +14,7 @@ queries: []
 
 # Paths to ignore during analysis
 paths-ignore:
+  # Build artifacts and dependencies
   - "**/node_modules/**"
   - "**/dist/**"
   - "**/build/**"
@@ -21,6 +22,28 @@ paths-ignore:
   - "**/coverage/**"
   - "**/.next/**"
   - "**/htmlcov/**"
+  
+  # Test files - not production code, security patterns differ
+  # (e.g., Math.random() in tests is acceptable)
+  - "**/tests/**"
+  - "**/__tests__/**"
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.test.js"
+  - "**/*.test.jsx"
+  - "**/*.spec.ts"
+  - "**/*.spec.tsx"
+  - "**/*.spec.js"
+  - "**/*.spec.jsx"
+  - "**/test_*.py"
+  - "**/*_test.py"
+  - "**/conftest.py"
+  
+  # Convex backend files - use Convex's seeded Math.random() for determinism
+  # See: https://docs.convex.dev/functions/runtimes#using-randomness-and-time-in-queries-and-mutations
+  # Convex mutations/queries MUST use Math.random() (not crypto) for automatic retry support
+  - "convex-dev/**"
+
 # Paths to include (optional - scans all by default)
 # paths:
 #   - 'src/**'

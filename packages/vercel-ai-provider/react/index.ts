@@ -6,14 +6,21 @@
  *
  * @example
  * ```typescript
- * import { useLayerTracking } from '@cortexmemory/vercel-ai-provider/react';
+ * import { useLayerTracking, useArtifacts } from '@cortexmemory/vercel-ai-provider/react';
  * import { useChat } from '@ai-sdk/react';
  *
  * function ChatComponent() {
- *   const { layers, isOrchestrating, handleDataPart } = useLayerTracking();
+ *   const { layers, isOrchestrating, handleDataPart: handleLayerData } = useLayerTracking();
+ *   const { artifactList, activeArtifact, handleDataPart: handleArtifactData } = useArtifacts();
+ *
+ *   // Combined handler for both layer and artifact events
+ *   const handleData = (dataPart: unknown) => {
+ *     handleLayerData(dataPart);
+ *     handleArtifactData(dataPart);
+ *   };
  *
  *   const { messages, sendMessage } = useChat({
- *     onData: handleDataPart,
+ *     onData: handleData,
  *   });
  *
  *   return (
@@ -21,6 +28,7 @@
  *       {isOrchestrating && <MemoryLoadingIndicator />}
  *       <LayerVisualization layers={layers} />
  *       <Messages messages={messages} />
+ *       <ArtifactPanel artifacts={artifactList} active={activeArtifact} />
  *     </>
  *   );
  * }
@@ -29,10 +37,12 @@
  * @packageDocumentation
  */
 
-// Hook exports
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Layer Tracking Hook Exports
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 export { useLayerTracking, generateSampleLayerData, ALL_LAYERS } from "./useLayerTracking";
 
-// Type exports
 export type {
   LayerState,
   LayerTrackingState,
@@ -51,3 +61,31 @@ export type {
 } from "../src/streaming-helpers";
 
 export { LAYER_STREAM_EVENTS } from "../src/streaming-helpers";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Artifact Hook Exports
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export {
+  useArtifacts,
+  useArtifact,
+  createCombinedDataHandler,
+} from "./useArtifacts";
+
+export type {
+  // State types
+  ArtifactState,
+  // useArtifacts types
+  UseArtifactsOptions,
+  UseArtifactsResult,
+  // useArtifact types
+  UseArtifactOptions,
+  UseArtifactResult,
+  // Re-exported from artifacts module
+  CortexArtifact,
+  StreamingState,
+  ArtifactKind,
+} from "./useArtifacts";
+
+// Re-export artifact stream event constants
+export { ARTIFACT_STREAM_EVENTS } from "../src/artifacts";

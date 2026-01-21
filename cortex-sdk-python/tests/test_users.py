@@ -485,19 +485,22 @@ async def test_list_users(cortex_client, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_update_many_users(cortex_client, cleanup_helper):
+async def test_update_many_users(cortex_client, ctx, cleanup_helper):
     """
     Test bulk updating users (client-side implementation).
 
     Port of: users.test.ts - updateMany tests
+    
+    PARALLEL-SAFE: Uses ctx for isolated test data.
     """
-    from tests.helpers import generate_test_user_id
+    # Create test users with ctx for parallelism safety
+    user_ids = [ctx.user_id(f"update-many-{i}") for i in range(3)]
 
-    # Create test users
-    user_ids = [generate_test_user_id() for _ in range(3)]
-
+    # Create users and verify each creation succeeded
     for uid in user_ids:
-        await cortex_client.users.update(uid, {"status": "active"})
+        user = await cortex_client.users.update(uid, {"status": "active"})
+        assert user is not None, f"Failed to create user {uid}"
+        assert user.id == uid
 
     # Update many (client-side) - now requires {'data': ...} format
     result = await cortex_client.users.update_many(
@@ -515,19 +518,21 @@ async def test_update_many_users(cortex_client, cleanup_helper):
 
 
 @pytest.mark.asyncio
-async def test_delete_many_users(cortex_client, cleanup_helper):
+async def test_delete_many_users(cortex_client, ctx, cleanup_helper):
     """
     Test bulk deleting users (client-side implementation).
 
     Port of: users.test.ts - deleteMany tests
+    
+    PARALLEL-SAFE: Uses ctx for isolated test data.
     """
-    from tests.helpers import generate_test_user_id
+    # Create test users with ctx for parallelism safety
+    user_ids = [ctx.user_id(f"delete-many-{i}") for i in range(3)]
 
-    # Create test users
-    user_ids = [generate_test_user_id() for _ in range(3)]
-
+    # Create users and verify each creation succeeded
     for uid in user_ids:
-        await cortex_client.users.update(uid, {"displayName": f"User {uid}"})
+        user = await cortex_client.users.update(uid, {"displayName": f"User {uid}"})
+        assert user is not None, f"Failed to create user {uid}"
 
     # Delete many (client-side)
     result = await cortex_client.users.delete_many(user_ids)
@@ -767,15 +772,15 @@ class TestBulkOperationsWithFilters:
         assert "updates.data is required" in str(exc_info.value)
 
     @pytest.mark.asyncio
-    async def test_delete_many_dry_run(self, cortex_client):
+    async def test_delete_many_dry_run(self, cortex_client, ctx):
         """Test dry run for delete_many returns user_ids without deleting."""
-        from tests.helpers import generate_test_user_id
+        # Use ctx for parallelism safety
+        user_ids = [ctx.user_id(f"delete-dry-{i}") for i in range(2)]
 
-        user_ids = [generate_test_user_id() for _ in range(2)]
-
-        # Create test users
+        # Create test users and verify
         for uid in user_ids:
-            await cortex_client.users.update(uid, {"displayName": f"User {uid}"})
+            user = await cortex_client.users.update(uid, {"displayName": f"User {uid}"})
+            assert user is not None, f"Failed to create user {uid}"
 
         # Dry run should return user_ids but not delete
         result = await cortex_client.users.delete_many(user_ids, {"dry_run": True})
@@ -793,15 +798,15 @@ class TestBulkOperationsWithFilters:
         await cortex_client.users.delete_many(user_ids)
 
     @pytest.mark.asyncio
-    async def test_update_many_dry_run(self, cortex_client):
+    async def test_update_many_dry_run(self, cortex_client, ctx):
         """Test dry run for update_many returns user_ids without updating."""
-        from tests.helpers import generate_test_user_id
+        # Use ctx for parallelism safety
+        user_ids = [ctx.user_id(f"update-dry-{i}") for i in range(2)]
 
-        user_ids = [generate_test_user_id() for _ in range(2)]
-
-        # Create test users
+        # Create test users and verify
         for uid in user_ids:
-            await cortex_client.users.update(uid, {"status": "active"})
+            user = await cortex_client.users.update(uid, {"status": "active"})
+            assert user is not None, f"Failed to create user {uid}"
 
         # Dry run should return user_ids but not update
         result = await cortex_client.users.update_many(
@@ -828,11 +833,10 @@ class TestMergeCreatesUser:
     """Test that merge() creates user if not found."""
 
     @pytest.mark.asyncio
-    async def test_merge_creates_new_user(self, cortex_client):
+    async def test_merge_creates_new_user(self, cortex_client, ctx):
         """merge() should create user if they don't exist."""
-        from tests.helpers import generate_test_user_id
-
-        new_user_id = generate_test_user_id()
+        # Use ctx for parallelism safety
+        new_user_id = ctx.user_id("merge-create")
 
         # User should not exist
         existing = await cortex_client.users.get(new_user_id)

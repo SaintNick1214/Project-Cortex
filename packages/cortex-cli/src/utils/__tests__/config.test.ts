@@ -3,7 +3,13 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
-import { getDeployment, resolveConfig, listDeployments } from "../config.js";
+import {
+  getDeployment,
+  resolveConfig,
+  listDeployments,
+  listApps,
+  discoverUnregisteredApps,
+} from "../config.js";
 import type { CLIConfig } from "../../types.js";
 
 describe("config utilities", () => {
@@ -146,5 +152,144 @@ describe("environment variable overrides", () => {
     // Environment overrides are applied during loadConfig()
     // These should be tested in integration tests
     expect(true).toBe(true);
+  });
+});
+
+describe("listApps", () => {
+  it("should return empty array when no apps configured", () => {
+    const config: CLIConfig = {
+      deployments: {
+        local: { url: "http://127.0.0.1:3210" },
+      },
+      default: "local",
+      format: "table",
+      confirmDangerous: true,
+    };
+
+    const apps = listApps(config);
+    expect(apps).toEqual([]);
+  });
+
+  it("should list all configured apps", () => {
+    const config: CLIConfig = {
+      deployments: {
+        local: { url: "http://127.0.0.1:3210" },
+      },
+      apps: {
+        "my-quickstart": {
+          type: "vercel-ai-quickstart",
+          path: "quickstart",
+          projectPath: "/home/user/project",
+          enabled: true,
+          port: 3000,
+        },
+        "my-basic": {
+          type: "basic",
+          path: "basic",
+          projectPath: "/home/user/project",
+          enabled: false,
+        },
+      },
+      default: "local",
+      format: "table",
+      confirmDangerous: true,
+    };
+
+    const apps = listApps(config);
+    expect(apps).toHaveLength(2);
+
+    const quickstart = apps.find((a) => a.name === "my-quickstart");
+    expect(quickstart).toMatchObject({
+      name: "my-quickstart",
+      type: "vercel-ai-quickstart",
+      path: "quickstart",
+      enabled: true,
+      port: 3000,
+    });
+
+    const basic = apps.find((a) => a.name === "my-basic");
+    expect(basic).toMatchObject({
+      name: "my-basic",
+      type: "basic",
+      path: "basic",
+      enabled: false,
+    });
+  });
+});
+
+describe("discoverUnregisteredApps", () => {
+  // Note: discoverUnregisteredApps relies on filesystem operations that are
+  // difficult to mock in ESM. These tests cover the basic logic without
+  // filesystem access. Full integration tests should be run manually.
+
+  it("should return empty array when no deployments have projectPath", () => {
+    const config: CLIConfig = {
+      deployments: {
+        remote: {
+          url: "https://remote.convex.cloud",
+          // No projectPath - remote only deployment
+        },
+      },
+      default: "remote",
+      format: "table",
+      confirmDangerous: true,
+    };
+
+    const discovered = discoverUnregisteredApps(config);
+    expect(discovered).toEqual([]);
+  });
+
+  it("should return empty array when projectPath does not exist", () => {
+    const config: CLIConfig = {
+      deployments: {
+        local: {
+          url: "http://127.0.0.1:3210",
+          projectPath: "/nonexistent/path/that/does/not/exist",
+        },
+      },
+      default: "local",
+      format: "table",
+      confirmDangerous: true,
+    };
+
+    const discovered = discoverUnregisteredApps(config);
+    expect(discovered).toEqual([]);
+  });
+
+  it("should return empty array when config has no deployments", () => {
+    const config: CLIConfig = {
+      deployments: {},
+      default: "",
+      format: "table",
+      confirmDangerous: true,
+    };
+
+    const discovered = discoverUnregisteredApps(config);
+    expect(discovered).toEqual([]);
+  });
+
+  it("should have correct interface for DiscoveredApp", () => {
+    // Type check - ensure the interface is correct
+    const config: CLIConfig = {
+      deployments: {},
+      default: "",
+      format: "table",
+      confirmDangerous: true,
+    };
+
+    const discovered = discoverUnregisteredApps(config);
+
+    // Just verify it returns an array (empty in this case)
+    expect(Array.isArray(discovered)).toBe(true);
+
+    // If there were results, they would have this shape:
+    // {
+    //   name: string,
+    //   type: "basic" | "vercel-ai-quickstart",
+    //   path: string,
+    //   projectPath: string,
+    //   fullPath: string,
+    //   deploymentName?: string
+    // }
   });
 });

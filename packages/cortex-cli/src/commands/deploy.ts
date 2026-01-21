@@ -16,7 +16,6 @@ import {
   loadConfig,
   discoverUnregisteredApps,
   registerApp,
-  saveUserConfig,
 } from "../utils/config.js";
 import {
   selectDeployment,

@@ -29,6 +29,8 @@ from importlib.metadata import version as _get_version
 # Validation Errors
 from .a2a.validators import A2AValidationError
 from .agents.validators import AgentValidationError
+from .artifacts import ArtifactsAPI
+from .artifacts.validators import ArtifactsValidationError
 from .auth import (
     AuthValidationError,
     create_auth_context,
@@ -93,8 +95,13 @@ from .types import (
     AgentFilters,
     AgentRegistration,
     AgentStats,
+    # Artifacts Types
+    AppendContentParams,
     # Memory API Result Types
     ArchiveResult,
+    Artifact,
+    ArtifactKind,
+    ArtifactVersion,
     # Auth Types
     AuthContext,
     AuthContextParams,
@@ -127,6 +134,7 @@ from .types import (
     ConversationsRetention,
     ConversationType,
     CortexConfig,
+    CountArtifactsFilter,
     CountContextsFilter,
     CountConversationsFilter,
     CountFactsFilter,
@@ -135,6 +143,7 @@ from .types import (
     CountMemoriesFilter,
     # Mutable
     CountMutableFilter,
+    CreateArtifactOptions,
     CreateConversationInput,
     CreateSessionParams,
     DeleteContextResult,
@@ -172,6 +181,8 @@ from .types import (
     FactSourceRef,
     FactsRef,
     FactType,
+    FileReference,
+    FinalizeStreamingParams,
     ForgetOptions,
     ForgetResult,
     GetConversationOptions,
@@ -200,11 +211,13 @@ from .types import (
     ImmutableVersion,
     ImmutableVersionExpanded,
     ImportanceRange,
+    KindConfig,
     # Orchestration Observer Types (v0.25.0+)
     LayerEvent,
     LayerEventData,
     LayerEventError,
     LayerStatus,
+    ListArtifactsFilter,
     ListContextsFilter,
     ListConversationsFilter,
     ListConversationsResult,
@@ -291,15 +304,20 @@ from .types import (
     SimulationOptions,
     SimulationResult,
     SourceType,
+    StartStreamingParams,
+    StartStreamingResult,
     StoreFactParams,
     StoreImmutableOptions,
     StoreMemoryInput,
     StoreMemoryResult,
+    StreamingMetadata,
+    StreamingState,
     SyncHealthMetrics,
     TransactionResult,
     TraversalConfig,
     UnregisterAgentOptions,
     UnregisterAgentResult,
+    UpdateArtifactOptions,
     UpdateManyContextsResult,
     UpdateManyResult,
     UpdateMemoryResult,
@@ -312,6 +330,7 @@ from .types import (
     VectorPurging,
     VectorRetention,
     VerificationResult,
+    VersionChangeType,
 )
 from .users.validators import UserValidationError
 from .vector.validators import VectorValidationError
@@ -416,6 +435,25 @@ __all__ = [
     "PurgeNamespaceOptions",
     "SetMutableOptions",
     "TransactionResult",
+    # Layer 1 Types - Artifacts
+    "ArtifactsAPI",
+    "ArtifactsValidationError",
+    "Artifact",
+    "ArtifactKind",
+    "ArtifactVersion",
+    "AppendContentParams",
+    "CountArtifactsFilter",
+    "CreateArtifactOptions",
+    "FileReference",
+    "FinalizeStreamingParams",
+    "KindConfig",
+    "ListArtifactsFilter",
+    "StartStreamingParams",
+    "StartStreamingResult",
+    "StreamingMetadata",
+    "StreamingState",
+    "UpdateArtifactOptions",
+    "VersionChangeType",
     # Layer 2 Types
     "MemoryEntry",
     "MemoryMetadata",

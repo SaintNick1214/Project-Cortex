@@ -498,3 +498,57 @@ export type {
   MemoryInjectionConfig,
   CortexAgentStreamOptions,
 } from "./v6-compat";
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Artifacts Support
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export {
+  // Zod Schemas
+  ArtifactKindSchema,
+  StreamingStateSchema,
+  CortexArtifactSchema,
+  CreateArtifactInputSchema,
+  UpdateArtifactInputSchema,
+  AppendToArtifactInputSchema,
+  GetArtifactInputSchema,
+  ListArtifactsInputSchema,
+  // Constants
+  ARTIFACT_STREAM_EVENTS,
+  // Tools
+  createArtifactTools,
+  // Streamer
+  ArtifactStreamer,
+  createArtifactStreamer,
+} from "./artifacts";
+
+export type {
+  // Canonical types
+  ArtifactKind,
+  StreamingState,
+  KindConfig,
+  CortexArtifact,
+  // Input types
+  CreateArtifactInput,
+  UpdateArtifactInput,
+  AppendToArtifactInput,
+  GetArtifactInput,
+  ListArtifactsInput,
+  // Event types
+  ArtifactStreamEvent,
+  ArtifactStreamEventType,
+  // Config types
+  ArtifactConfig,
+  ArtifactKindHandler,
+  // Tool result types
+  CreateArtifactResult,
+  UpdateArtifactResult,
+  AppendToArtifactResult,
+  GetArtifactResult,
+  ListArtifactsResult,
+  // Tool context types
+  ArtifactStorageInterface,
+  ArtifactToolsContext,
+  CreateArtifactToolsOptions,
+  ArtifactTools,
+} from "./artifacts";

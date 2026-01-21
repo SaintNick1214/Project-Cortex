@@ -50,7 +50,7 @@ setup(
             "pytest>=9.0.2",
             "pytest-asyncio>=1.3.0",
             "pytest-xdist>=3.8.0",
-            "pytest-split @ git+https://github.com/Cortex-Memory/pytest-split.git",
+            # pytest-split: install via requirements-dev.txt (PyPI doesn't allow git URL deps)
             "pytest-cov>=7.0.0",
             "pytest-timeout>=2.4.0",
             "black>=26.1.0",

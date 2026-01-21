@@ -35,8 +35,9 @@ import prompts from "prompts";
 
 const MAX_LIMIT = 10000;
 // Batch size reduction sequence for handling Convex 16MB read limit
-// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50
-const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50] as const;
+// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50 -> 10 -> 1
+// Extended to handle large records (e.g., artifacts with version history)
+const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50, 10, 1] as const;
 
 /**
  * Register database commands
@@ -93,6 +94,7 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
               // Fall back to individual counts if admin function not available
               tableCounts = {
                 agents: 0,
+                artifacts: 0,
                 contexts: 0,
                 conversations: 0,
                 factHistory: 0,
@@ -149,6 +151,7 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
                   {
                     ...stats,
                     agents: tableCounts.agents ?? 0,
+                    artifacts: tableCounts.artifacts ?? 0,
                     messages: totalMessages,
                     governancePolicies: tableCounts.governancePolicies ?? 0,
                     governanceEnforcement:
@@ -214,6 +217,9 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
               );
               console.log(
                 `    Mutable:          ${pc.yellow(String(stats.mutableRecords))}`,
+              );
+              console.log(
+                `    Artifacts:        ${pc.yellow(String(tableCounts.artifacts ?? 0))}`,
               );
               console.log();
 
@@ -326,6 +332,7 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
           async (client) => {
             const deleted = {
               agents: 0,
+              artifacts: 0,
               contexts: 0,
               conversations: 0,
               factHistory: 0,
@@ -423,30 +430,34 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
             // 8. Clear mutable (direct table clear)
             await clearTableDirect("mutable", "mutable");
 
-            // 9. Users - no table to clear (virtual layer derived from participantId in other tables)
-            // All user data is already cleared by clearing conversations, memories, facts, immutable, mutable
+            // 9. Clear artifacts (versioned artifact store)
+            spinner.text = `Clearing artifacts...`;
+            await clearTableDirect("artifacts", "artifacts");
 
-            // 10. Clear governance policies
+            // 10. Users - no table to clear (virtual layer derived from participantId in other tables)
+            // All user data is already cleared by clearing conversations, memories, facts, immutable, mutable, artifacts
+
+            // 11. Clear governance policies
             await clearTableDirect("governancePolicies", "governancePolicies");
 
-            // 11. Clear governance enforcement logs
+            // 12. Clear governance enforcement logs
             await clearTableDirect(
               "governanceEnforcement",
               "governanceEnforcement",
             );
 
-            // 12. Clear graph sync queue
+            // 13. Clear graph sync queue
             await clearTableDirect("graphSyncQueue", "graphSyncQueue");
 
-            // 13. Clear sessions
+            // 14. Clear sessions
             spinner.text = `Clearing sessions...`;
             await clearTableDirect("sessions", "sessions");
 
-            // 14. Clear fact history (belief revision audit trail)
+            // 15. Clear fact history (belief revision audit trail)
             spinner.text = `Clearing factHistory...`;
             await clearTableDirect("factHistory", "factHistory");
 
-            // 15. Clear graph database if graph sync is enabled
+            // 16. Clear graph database if graph sync is enabled
             // Check both explicit flag and auto-detection (same logic as Cortex.create())
             const neo4jUri = process.env.NEO4J_URI;
             const memgraphUri = process.env.MEMGRAPH_URI;
@@ -537,6 +548,7 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
             const sharedStores = {
               Immutable: deleted.immutable,
               Mutable: deleted.mutable,
+              Artifacts: deleted.artifacts,
             };
             const systemTables = {
               "Governance Policies": deleted.governancePolicies,

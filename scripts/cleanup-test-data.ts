@@ -12,12 +12,13 @@
  *   5. memorySpaces - memory space registry
  *   6. immutable - versioned immutable records
  *   7. mutable - operational data
- *   8. agents - agent registry
- *   9. graphSyncQueue - graph sync queue
- *  10. governancePolicies - governance policies
- *  11. governanceEnforcement - enforcement logs
- *  12. sessions - session management
- *  13. factHistory - belief revision audit trail
+ *   8. artifacts - versioned artifact store
+ *   9. agents - agent registry
+ *  10. graphSyncQueue - graph sync queue
+ *  11. governancePolicies - governance policies
+ *  12. governanceEnforcement - enforcement logs
+ *  13. sessions - session management
+ *  14. factHistory - belief revision audit trail
  */
 
 import { ConvexClient } from "convex/browser";
@@ -41,11 +42,15 @@ console.log(`\n🧹 Cleaning up test data from: ${convexUrl}\n`);
 
 const client = new ConvexClient(convexUrl);
 
-// Maximum records to delete per mutation (Convex limit)
-const MAX_LIMIT = 1000;
+// Batch size reduction sequence for handling Convex 16MB read limit
+// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50 -> 10 -> 1
+// Extended to handle large records (e.g., artifacts with version history)
+// (Same adaptive sizing as CLI's `cortex db clear` command)
+const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50, 10, 1] as const;
 
 /**
  * Clear a table using admin:clearTable mutation (same as CLI)
+ * Uses adaptive batch sizing: starts at 10000, reduces on "Too many bytes" errors
  * Loops until all records are deleted
  */
 async function clearTable(
@@ -54,18 +59,45 @@ async function clearTable(
 ): Promise<number> {
   let totalDeleted = 0;
   let hasMore = true;
+  let batchSizeIndex = 0; // Start with largest batch size
 
   while (hasMore) {
+    const batchLimit = BATCH_SIZE_SEQUENCE[batchSizeIndex];
     try {
-      const result = (await client.mutation(
-        "admin:clearTable" as Parameters<typeof client.mutation>[0],
-        { table: tableName, limit: MAX_LIMIT },
-      )) as { deleted: number; hasMore: boolean };
+      // Suppress Convex SDK's console.error during mutation (we handle errors ourselves)
+      const originalConsoleError = console.error;
+      console.error = () => {};
+      let result: { deleted: number; hasMore: boolean };
+      try {
+        result = (await client.mutation(
+          "admin:clearTable" as Parameters<typeof client.mutation>[0],
+          { table: tableName, limit: batchLimit },
+        )) as { deleted: number; hasMore: boolean };
+      } finally {
+        console.error = originalConsoleError;
+      }
       totalDeleted += result.deleted;
       hasMore = result.hasMore;
-    } catch {
-      // Table might not exist or be empty
-      hasMore = false;
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      // Check for byte limit error - Convex wraps errors, so check for:
+      // 1. Direct "Too many bytes" message (if propagated)
+      // 2. Generic "Server Error" from Convex client (common wrapper)
+      const isByteLimitError =
+        errorMsg.includes("Too many bytes") ||
+        errorMsg.includes("Server Error");
+
+      if (isByteLimitError && batchSizeIndex < BATCH_SIZE_SEQUENCE.length - 1) {
+        // Reduce batch size and retry
+        batchSizeIndex++;
+        console.log(
+          `   ⚠️  Reducing batch size to ${BATCH_SIZE_SEQUENCE[batchSizeIndex]} for ${tableName}`,
+        );
+      } else {
+        // Either not a retryable error or we've exhausted all batch sizes
+        // Table might not exist or be empty
+        hasMore = false;
+      }
     }
   }
 
@@ -87,6 +119,7 @@ async function cleanup() {
       memorySpaces: 0,
       immutable: 0,
       mutable: 0,
+      artifacts: 0,
       agents: 0,
       graphSyncQueue: 0,
       governancePolicies: 0,
@@ -118,6 +151,9 @@ async function cleanup() {
 
     console.log("⚡ Clearing mutable store...");
     stats.mutable = await clearTable("mutable", "mutable entries");
+
+    console.log("📦 Clearing artifacts store...");
+    stats.artifacts = await clearTable("artifacts", "artifacts");
 
     console.log("👤 Clearing agents registry...");
     stats.agents = await clearTable("agents", "agents");
@@ -157,6 +193,7 @@ async function cleanup() {
       stats.memorySpaces +
       stats.immutable +
       stats.mutable +
+      stats.artifacts +
       stats.agents +
       stats.graphSyncQueue +
       stats.governancePolicies +
@@ -188,6 +225,9 @@ async function cleanup() {
     );
     console.log(
       `   Mutable:               ${stats.mutable.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Artifacts:             ${stats.artifacts.toString().padStart(6)}`,
     );
     console.log(
       `   Agents:                ${stats.agents.toString().padStart(6)}`,

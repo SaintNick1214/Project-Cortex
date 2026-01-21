@@ -14,6 +14,9 @@
  *
  * Layer 4: Convenience APIs (SDK only, no schema)
  *
+ * Artifacts
+ * - artifacts - Interactive versioned documents (memorySpace-scoped, streaming support)
+ *
  * Coordination:
  * - contexts - Hierarchical context chains (memorySpace-scoped, cross-space support)
  * - memorySpaces - Memory space registry (Hive/Collaboration modes)
@@ -767,4 +770,226 @@ export default defineSchema({
     .index("by_table_entity", ["table", "entityId"]) // Unique lookup
     .index("by_priority", ["priority", "synced"]) // Priority-based processing
     .index("by_created", ["createdAt"]), // Chronological
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Artifacts (Interactive Versioned Documents, memorySpace-scoped)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  artifacts: defineTable({
+    // Identity
+    artifactId: v.string(),
+    memorySpaceId: v.string(),
+    participantId: v.optional(v.string()),
+
+    // Multi-tenancy
+    tenantId: v.optional(v.string()),
+
+    // Ownership
+    userId: v.optional(v.string()),
+    agentId: v.optional(v.string()),
+
+    // Kind
+    kind: v.union(
+      v.literal("text"),
+      v.literal("code"),
+      v.literal("sheet"),
+      v.literal("image"),
+      v.literal("diagram"),
+      v.literal("html"),
+      v.literal("custom"),
+    ),
+    kindConfig: v.optional(
+      v.object({
+        customKind: v.optional(v.string()),
+        mimeType: v.optional(v.string()),
+        language: v.optional(v.string()),
+        framework: v.optional(v.string()),
+        schema: v.optional(v.any()),
+      }),
+    ),
+
+    // Content (mutually exclusive)
+    content: v.optional(v.string()),
+    fileRef: v.optional(
+      v.object({
+        storageId: v.id("_storage"),
+        mimeType: v.string(),
+        size: v.number(),
+        checksum: v.optional(v.string()),
+        originalFilename: v.optional(v.string()),
+      }),
+    ),
+
+    // Streaming
+    streamingState: v.union(
+      v.literal("draft"),
+      v.literal("streaming"),
+      v.literal("paused"),
+      v.literal("final"),
+      v.literal("error"),
+    ),
+    streamingMetadata: v.optional(
+      v.object({
+        sessionId: v.optional(v.string()),
+        startedAt: v.optional(v.number()),
+        lastChunkAt: v.optional(v.number()),
+        bytesReceived: v.optional(v.number()),
+        estimatedTotal: v.optional(v.number()),
+        errorMessage: v.optional(v.string()),
+        errorCode: v.optional(v.string()),
+        errorAt: v.optional(v.number()),
+      }),
+    ),
+
+    // Display
+    title: v.string(),
+    description: v.optional(v.string()),
+    tags: v.array(v.string()),
+
+    // References
+    conversationRef: v.optional(
+      v.object({
+        conversationId: v.string(),
+        messageId: v.optional(v.string()),
+        turnIndex: v.optional(v.number()),
+      }),
+    ),
+    memoryRefs: v.optional(
+      v.array(
+        v.object({
+          memoryId: v.string(),
+          relevance: v.optional(v.number()),
+        }),
+      ),
+    ),
+
+    // Versioning (Undo/Redo)
+    version: v.number(),
+    versionPointer: v.number(),
+    versionHistory: v.array(
+      v.object({
+        version: v.number(),
+        content: v.optional(v.string()),
+        fileRef: v.optional(
+          v.object({
+            storageId: v.id("_storage"),
+            mimeType: v.string(),
+            size: v.number(),
+            checksum: v.optional(v.string()),
+            originalFilename: v.optional(v.string()),
+          }),
+        ),
+        title: v.optional(v.string()),
+        timestamp: v.number(),
+        changedBy: v.optional(v.string()),
+        changeType: v.union(
+          v.literal("create"),
+          v.literal("update"),
+          v.literal("undo"),
+          v.literal("redo"),
+        ),
+        changeSummary: v.optional(v.string()),
+      }),
+    ),
+
+    // Collaboration
+    collaborators: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          type: v.union(v.literal("user"), v.literal("agent")),
+          role: v.union(
+            v.literal("owner"),
+            v.literal("editor"),
+            v.literal("viewer"),
+          ),
+          addedAt: v.number(),
+          lastEditAt: v.optional(v.number()),
+        }),
+      ),
+    ),
+
+    // Stats
+    stats: v.optional(
+      v.object({
+        characterCount: v.optional(v.number()),
+        wordCount: v.optional(v.number()),
+        lineCount: v.optional(v.number()),
+        tokenCount: v.optional(v.number()),
+      }),
+    ),
+
+    // Metadata
+    metadata: v.optional(v.any()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    lastAccessedAt: v.optional(v.number()),
+    accessCount: v.optional(v.number()),
+
+    // Soft Delete
+    isDeleted: v.optional(v.boolean()),
+    deletedAt: v.optional(v.number()),
+    deletedBy: v.optional(v.string()),
+  })
+    // Unique lookups
+    .index("by_artifactId", ["artifactId"])
+
+    // Memory space isolation
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_memorySpace_created", ["memorySpaceId", "createdAt"])
+    .index("by_memorySpace_updated", ["memorySpaceId", "updatedAt"])
+    .index("by_memorySpace_kind", ["memorySpaceId", "kind"])
+    .index("by_memorySpace_state", ["memorySpaceId", "streamingState"])
+
+    // Multi-tenancy
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"])
+    .index("by_tenant_artifactId", ["tenantId", "artifactId"])
+    .index("by_tenant_space_kind", ["tenantId", "memorySpaceId", "kind"])
+
+    // Conversation association
+    .index("by_conversation", ["conversationRef.conversationId"])
+    .index("by_memorySpace_conversation", [
+      "memorySpaceId",
+      "conversationRef.conversationId",
+    ])
+
+    // Ownership (GDPR, attribution)
+    .index("by_userId", ["userId"])
+    .index("by_agentId", ["agentId"])
+    .index("by_memorySpace_user", ["memorySpaceId", "userId"])
+    .index("by_memorySpace_agent", ["memorySpaceId", "agentId"])
+    .index("by_participantId", ["participantId"])
+
+    // Streaming queries
+    .index("by_streamingState", ["streamingState"])
+    .index("by_memorySpace_streaming", [
+      "memorySpaceId",
+      "streamingState",
+      "updatedAt",
+    ])
+
+    // Chronological
+    .index("by_created", ["createdAt"])
+    .index("by_updated", ["updatedAt"])
+    .index("by_lastAccessed", ["lastAccessedAt"])
+
+    // Full-text search
+    .searchIndex("by_content", {
+      searchField: "content",
+      filterFields: [
+        "memorySpaceId",
+        "tenantId",
+        "kind",
+        "userId",
+        "agentId",
+        "participantId",
+        "streamingState",
+      ],
+    })
+    .searchIndex("by_title", {
+      searchField: "title",
+      filterFields: ["memorySpaceId", "tenantId", "kind"],
+    }),
 });

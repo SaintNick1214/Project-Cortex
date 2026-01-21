@@ -379,23 +379,26 @@ describe("GDPR: Cascade Deletion", () => {
 
   describe("Context Chain Deletion", () => {
     it("deleting root context cascades to children", async () => {
+      // Use unique userId for test isolation
+      const testUserId = ctx.userId("ctx-cascade-root");
+      
       const root = await cortex.contexts.create({
         purpose: "Root for cascade",
         memorySpaceId: TEST_MEMSPACE_ID,
-        userId: "test-user",
+        userId: testUserId,
       });
 
       const child1 = await cortex.contexts.create({
         purpose: "Child 1",
         memorySpaceId: TEST_MEMSPACE_ID,
-        userId: "test-user",
+        userId: testUserId,
         parentId: root.contextId,
       });
 
       const child2 = await cortex.contexts.create({
         purpose: "Child 2",
         memorySpaceId: TEST_MEMSPACE_ID,
-        userId: "test-user",
+        userId: testUserId,
         parentId: root.contextId,
       });
 
@@ -414,16 +417,23 @@ describe("GDPR: Cascade Deletion", () => {
     });
 
     it("deleting child context doesn't affect parent", async () => {
+      // Use unique userId for test isolation - different from other tests
+      const testUserId = ctx.userId("ctx-child-delete");
+      
       const parent = await cortex.contexts.create({
         purpose: "Parent context",
         memorySpaceId: TEST_MEMSPACE_ID,
-        userId: "test-user",
+        userId: testUserId,
       });
+
+      // Verify parent was created before creating child
+      const parentVerify = await cortex.contexts.get(parent.contextId);
+      expect(parentVerify).not.toBeNull();
 
       const child = await cortex.contexts.create({
         purpose: "Child context",
         memorySpaceId: TEST_MEMSPACE_ID,
-        userId: "test-user",
+        userId: testUserId,
         parentId: parent.contextId,
       });
 
@@ -437,6 +447,9 @@ describe("GDPR: Cascade Deletion", () => {
       // Validate: Child deleted
       const childCheck = await cortex.contexts.get(child.contextId);
       expect(childCheck).toBeNull();
+      
+      // Cleanup: delete parent
+      await cortex.contexts.delete(parent.contextId);
     });
   });
 

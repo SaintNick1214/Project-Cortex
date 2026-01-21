@@ -575,14 +575,14 @@ describe("Complex Integration Tests", () => {
   describe("Scenario 4: GDPR Cascade Deletion", () => {
     it("deletes user data across all layers", async () => {
       const GDPR_SPACE = ctx.memorySpaceId("gdpr-test-space");
+      // Use ctx for unique userId to prevent parallel test interference
+      const TARGET_USER = ctx.userId("gdpr-delete");
 
       await cortex.memorySpaces.register({
         memorySpaceId: GDPR_SPACE,
         type: "personal",
-        participants: [{ id: "user-gdpr", type: "user" }],
+        participants: [{ id: TARGET_USER, type: "user" }],
       });
-
-      const TARGET_USER = "user-gdpr-delete";
 
       // Layer 1: Create conversations
       const conv = await cortex.conversations.create({
@@ -621,11 +621,15 @@ describe("Complex Integration Tests", () => {
       });
 
       // Layer 4: Create context
-      const _context = await cortex.contexts.create({
+      const testContext = await cortex.contexts.create({
         purpose: "Handle user request",
         memorySpaceId: GDPR_SPACE,
         userId: TARGET_USER,
       });
+
+      // Verify context was created before proceeding
+      const contextVerify = await cortex.contexts.get(testContext.contextId);
+      expect(contextVerify).not.toBeNull();
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // GDPR DELETE: Simulate cascade deletion
@@ -715,21 +719,23 @@ describe("Complex Integration Tests", () => {
   describe("Scenario 6: Cross-Layer Search & Retrieval", () => {
     it("searches across all layers for comprehensive results", async () => {
       const SEARCH_SPACE = ctx.memorySpaceId("search-test-space");
+      // Use ctx for unique userId to prevent parallel test interference
+      const SEARCH_USER = ctx.userId("search-test");
 
       await cortex.memorySpaces.register({
         memorySpaceId: SEARCH_SPACE,
         type: "personal",
-        participants: [],
+        participants: [{ id: SEARCH_USER, type: "user" }],
       });
 
-      const keyword = "UNIQUE_SEARCH_TERM_XYZ";
+      const keyword = `SEARCH_${ctx.runId.slice(0, 8)}`;
 
       // Store in conversation
       const conv = await cortex.conversations.create({
         memorySpaceId: SEARCH_SPACE,
         type: "user-agent",
         participants: {
-          userId: "user-search",
+          userId: SEARCH_USER,
           agentId: "agent-search-main",
           participantId: "agent-search",
         },
@@ -745,6 +751,7 @@ describe("Complex Integration Tests", () => {
         content: `Memory with ${keyword}`,
         contentType: "raw",
         source: { type: "system" },
+        userId: SEARCH_USER,
         metadata: { importance: 80, tags: ["search-test"] },
       });
 
@@ -758,11 +765,16 @@ describe("Complex Integration Tests", () => {
         tags: ["search-test"],
       });
 
-      // Store in context
-      const _context = await cortex.contexts.create({
+      // Store in context with userId for proper isolation
+      const searchContext = await cortex.contexts.create({
         purpose: `Context with ${keyword}`,
         memorySpaceId: SEARCH_SPACE,
+        userId: SEARCH_USER,
       });
+
+      // Verify context was created before searching
+      const contextVerify = await cortex.contexts.get(searchContext.contextId);
+      expect(contextVerify).not.toBeNull();
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // SEARCH: Find across all layers
