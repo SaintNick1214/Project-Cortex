@@ -657,7 +657,6 @@ class Artifact:
         artifact_id: User-facing unique identifier
         memory_space_id: Memory space isolation (required)
         title: Human-readable artifact title
-        content: The artifact's content (text, code, etc.)
         kind: Artifact kind (text, code, sheet, image, diagram, html, custom)
         streaming_state: Streaming state (draft, streaming, paused, final, error)
         version: Current version number (1-indexed)
@@ -665,6 +664,7 @@ class Artifact:
         tags: List of tags for categorization
         created_at: Unix timestamp of creation
         updated_at: Unix timestamp of last update
+        content: The artifact's content (optional for file-based artifacts)
         tenant_id: Multi-tenancy isolation ID (optional)
         user_id: Associated user ID for GDPR compliance (optional)
         agent_id: Agent that created this (optional)
@@ -685,7 +685,6 @@ class Artifact:
     artifact_id: str
     memory_space_id: str
     title: str
-    content: str
     kind: ArtifactKind
     streaming_state: StreamingState
     version: int
@@ -693,6 +692,7 @@ class Artifact:
     tags: List[str]
     created_at: int
     updated_at: int
+    content: Optional[str] = None  # Optional for file-based artifacts
     tenant_id: Optional[str] = None
     user_id: Optional[str] = None
     agent_id: Optional[str] = None

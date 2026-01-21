@@ -870,6 +870,8 @@ export const list = query({
         )
         .collect();
       streamingStateIndexed = true;
+      // Security: Only match global records when no tenantId provided
+      artifacts = artifacts.filter((a) => !a.tenantId);
     } else if (args.memorySpaceId && args.kind) {
       artifacts = await ctx.db
         .query("artifacts")
@@ -877,6 +879,8 @@ export const list = query({
           q.eq("memorySpaceId", args.memorySpaceId!).eq("kind", args.kind!),
         )
         .collect();
+      // Security: Only match global records when no tenantId provided
+      artifacts = artifacts.filter((a) => !a.tenantId);
     } else if (args.memorySpaceId) {
       artifacts = await ctx.db
         .query("artifacts")
@@ -884,11 +888,15 @@ export const list = query({
           q.eq("memorySpaceId", args.memorySpaceId!),
         )
         .collect();
+      // Security: Only match global records when no tenantId provided
+      artifacts = artifacts.filter((a) => !a.tenantId);
     } else if (args.userId) {
       artifacts = await ctx.db
         .query("artifacts")
         .withIndex("by_userId", (q) => q.eq("userId", args.userId!))
         .collect();
+      // Security: Only match global records when no tenantId provided
+      artifacts = artifacts.filter((a) => !a.tenantId);
     } else if (args.streamingState) {
       artifacts = await ctx.db
         .query("artifacts")
@@ -897,8 +905,12 @@ export const list = query({
         )
         .collect();
       streamingStateIndexed = true;
+      // Security: Only match global records when no tenantId provided
+      artifacts = artifacts.filter((a) => !a.tenantId);
     } else {
-      artifacts = await ctx.db.query("artifacts").collect();
+      // Security: Only match global records (no tenantId) to prevent cross-tenant access
+      const allArtifacts = await ctx.db.query("artifacts").collect();
+      artifacts = allArtifacts.filter((a) => !a.tenantId);
     }
 
     // Apply post-filters
@@ -1008,13 +1020,17 @@ export const count = query({
           q.eq("memorySpaceId", args.memorySpaceId!),
         )
         .collect();
+      // Security: Only match global records when no tenantId provided
+      artifacts = artifacts.filter((a) => !a.tenantId);
     } else if (args.tenantId) {
       artifacts = await ctx.db
         .query("artifacts")
         .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
         .collect();
     } else {
-      artifacts = await ctx.db.query("artifacts").collect();
+      // Security: Only match global records (no tenantId) to prevent cross-tenant access
+      const allArtifacts = await ctx.db.query("artifacts").collect();
+      artifacts = allArtifacts.filter((a) => !a.tenantId);
     }
 
     // Apply filters

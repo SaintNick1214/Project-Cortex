@@ -39,9 +39,9 @@ interface Artifact {
   memorySpaceId: string;          // Memory space isolation
   tenantId?: string;              // Multi-tenancy isolation
 
-  // Core content
+  // Core content (content and fileRef are mutually exclusive)
   title: string;
-  content?: string;               // Text content (if inline)
+  content?: string;               // Text content (undefined for file-based artifacts)
   kind: ArtifactKind;             // text | code | sheet | image | diagram | html | custom
   kindConfig?: ArtifactKindConfig;
   description?: string;
@@ -61,8 +61,8 @@ interface Artifact {
   agentId?: string;
   participantId?: string;         // Hive Mode tracking
 
-  // File storage
-  fileRef?: ArtifactFileRef;      // Attached file reference
+  // File storage (content and fileRef are mutually exclusive)
+  fileRef?: ArtifactFileRef;      // Attached file (content is undefined when set)
 
   // References
   conversationRef?: {
@@ -87,6 +87,12 @@ interface Artifact {
   metadata?: Record<string, unknown>;
 }
 ```
+
+<Callout type="info">
+  **Content vs File Attachments**: The `content` and `fileRef` fields are mutually exclusive.
+  When you attach a file using `uploadFile()`, the artifact's `content` is set to `undefined`.
+  Text-based artifacts store data in `content`, while file-based artifacts use `fileRef`.
+</Callout>
 
 ### Artifact Kinds
 
@@ -901,6 +907,12 @@ const result = await cortex.artifacts.uploadFile({
 console.log(`Uploaded: ${result.fileRef.storageId}`);
 console.log(`Size: ${result.fileRef.size} bytes`);
 ```
+
+<Callout type="warning">
+  Uploading a file sets the artifact's `content` to `undefined`. The `content` and `fileRef`
+  fields are mutually exclusive—an artifact contains either inline text content or a file
+  reference, not both.
+</Callout>
 
 ---
 

@@ -540,8 +540,14 @@ class ArtifactsAPI:
             "artifacts:getHistory",
         )
 
-        # Backend returns { history: [...], ... } - extract history array
+        # Backend returns null if artifact not found, { history: [...] } otherwise
+        if result is None:
+            return []
+
+        # Extract history array from result
         history = result.get("history", []) if isinstance(result, dict) else result
+        if history is None:
+            return []
         return [ArtifactVersion(**convert_convex_response(v)) for v in history]
 
     async def get_version(self, artifact_id: str, version: int) -> Optional[ArtifactVersion]:
