@@ -13,7 +13,6 @@
  * - Soft/hard delete
  */
 
-import { randomBytes } from "crypto";
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
@@ -392,8 +391,8 @@ export const undo = mutation({
       artifactId: args.artifactId,
       previousVersion: artifact.versionPointer,
       currentVersion: newPointer,
-      canUndo: newPointer > 1,
-      canRedo: true,
+      canUndo: canUndoTo(artifact.versionHistory, newPointer),
+      canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),
     };
   },
 });
@@ -462,8 +461,8 @@ export const redo = mutation({
       artifactId: args.artifactId,
       previousVersion: artifact.versionPointer,
       currentVersion: newPointer,
-      canUndo: true,
-      canRedo: newPointer < artifact.version,
+      canUndo: canUndoTo(artifact.versionHistory, newPointer),
+      canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),
     };
   },
 });
@@ -1213,11 +1212,39 @@ async function lookupArtifact(
 
 /**
  * Helper to generate unique session ID
+ * Uses the same pattern as artifactId generation (line 86) for consistency
  */
 function generateSessionId(): string {
   const timestamp = Date.now().toString(36);
-  const random = randomBytes(8).toString("hex");
+  const random = Math.random().toString(36).substring(2, 11);
   return `stream-${timestamp}-${random}`;
+}
+
+/**
+ * Helper to check if undo is possible by verifying the previous version exists
+ * Accounts for version gaps created by purgeVersions
+ */
+function canUndoTo(
+  versionHistory: { version: number }[],
+  currentPointer: number,
+): boolean {
+  if (currentPointer <= 1) return false;
+  // Check if any version exists with version < currentPointer
+  return versionHistory.some((v) => v.version < currentPointer);
+}
+
+/**
+ * Helper to check if redo is possible by verifying the next version exists
+ * Accounts for version gaps created by purgeVersions
+ */
+function canRedoTo(
+  versionHistory: { version: number }[],
+  currentPointer: number,
+  maxVersion: number,
+): boolean {
+  if (currentPointer >= maxVersion) return false;
+  // Check if any version exists with version > currentPointer
+  return versionHistory.some((v) => v.version > currentPointer);
 }
 
 /**
