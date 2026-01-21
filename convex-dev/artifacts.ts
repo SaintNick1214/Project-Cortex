@@ -834,7 +834,9 @@ export const list = query({
     const offset = args.offset || 0;
 
     // Select optimal index based on provided filters
+    // Track which fields were already filtered by the index
     let artifacts;
+    let streamingStateIndexed = false;
 
     if (args.tenantId && args.memorySpaceId) {
       artifacts = await ctx.db
@@ -859,6 +861,7 @@ export const list = query({
             .eq("streamingState", args.streamingState!),
         )
         .collect();
+      streamingStateIndexed = true;
     } else if (args.memorySpaceId && args.kind) {
       artifacts = await ctx.db
         .query("artifacts")
@@ -885,6 +888,7 @@ export const list = query({
           q.eq("streamingState", args.streamingState!),
         )
         .collect();
+      streamingStateIndexed = true;
     } else {
       artifacts = await ctx.db.query("artifacts").collect();
     }
@@ -898,7 +902,7 @@ export const list = query({
       artifacts = artifacts.filter((a) => a.kind === args.kind);
     }
     // Filter by streamingState if provided and not already indexed by it
-    if (args.streamingState && !(args.memorySpaceId && args.streamingState)) {
+    if (args.streamingState && !streamingStateIndexed) {
       artifacts = artifacts.filter(
         (a) => a.streamingState === args.streamingState,
       );
