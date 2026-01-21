@@ -1254,8 +1254,10 @@ export const startStreaming = mutation({
       throw new ConvexError("ARTIFACT_IS_DELETED");
     }
 
-    // Validate state transition: draft → streaming
-    if (!isValidTransition(artifact.streamingState, "streaming")) {
+    // Validate state: only draft can start streaming
+    // Note: We explicitly check for draft rather than using isValidTransition because
+    // paused → streaming is valid for resumeStreaming, not startStreaming
+    if (artifact.streamingState !== "draft") {
       throw new ConvexError({
         code: "INVALID_STATE_TRANSITION",
         message: `Cannot start streaming: artifact is in '${artifact.streamingState}' state. Expected 'draft'.`,
@@ -1991,9 +1993,6 @@ export const completeArtifactUpload = mutation({
       originalFilename: args.originalFilename,
     };
 
-    // Create version history entry for file attachment
-    const newVersion = artifact.version + 1;
-
     // If versionPointer is not at the end, truncate future versions (branch)
     let versionHistory = [...artifact.versionHistory];
     if (artifact.versionPointer < artifact.version) {
@@ -2001,6 +2000,10 @@ export const completeArtifactUpload = mutation({
         (v) => v.version <= artifact.versionPointer,
       );
     }
+
+    // Create version history entry for file attachment
+    // Use versionPointer + 1 to maintain version continuity after undo
+    const newVersion = artifact.versionPointer + 1;
 
     const newVersionEntry = {
       version: newVersion,
@@ -2179,9 +2182,6 @@ export const detachFile = mutation({
       }
     }
 
-    // Create version history entry for detachment
-    const newVersion = artifact.version + 1;
-
     // If versionPointer is not at the end, truncate future versions (branch)
     let versionHistory = [...artifact.versionHistory];
     if (artifact.versionPointer < artifact.version) {
@@ -2189,6 +2189,10 @@ export const detachFile = mutation({
         (v) => v.version <= artifact.versionPointer,
       );
     }
+
+    // Create version history entry for detachment
+    // Use versionPointer + 1 to maintain version continuity after undo
+    const newVersion = artifact.versionPointer + 1;
 
     const newVersionEntry = {
       version: newVersion,
