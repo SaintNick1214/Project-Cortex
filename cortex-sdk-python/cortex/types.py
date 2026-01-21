@@ -766,7 +766,6 @@ class ListArtifactsFilter:
         created_before: Filter by creation time (optional)
         updated_after: Filter by update time (optional)
         updated_before: Filter by update time (optional)
-        search_query: Full-text search in title and content (optional)
         limit: Max results (default: 100, max: 1000)
         offset: Pagination offset (default: 0)
         sort_by: Sort field ("createdAt" or "updatedAt")
@@ -782,7 +781,6 @@ class ListArtifactsFilter:
     created_before: Optional[int] = None
     updated_after: Optional[int] = None
     updated_before: Optional[int] = None
-    search_query: Optional[str] = None
     limit: Optional[int] = None
     offset: Optional[int] = None
     sort_by: Optional[Literal["createdAt", "updatedAt"]] = None

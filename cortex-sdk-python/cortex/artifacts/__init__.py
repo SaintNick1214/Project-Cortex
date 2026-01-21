@@ -381,7 +381,6 @@ class ArtifactsAPI:
                     "createdBefore": filter.created_before,
                     "updatedAfter": filter.updated_after,
                     "updatedBefore": filter.updated_before,
-                    "searchQuery": filter.search_query,
                     "limit": filter.limit,
                     "offset": filter.offset,
                     "sortBy": filter.sort_by,
