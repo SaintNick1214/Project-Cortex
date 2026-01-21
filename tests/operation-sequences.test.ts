@@ -1109,7 +1109,8 @@ describe("Operation Sequence Validation", () => {
   describe("Cross-Layer Operation Sequences", () => {
     it("conversation→memory→fact→context sequence", async () => {
       const spaceId = `${ctx.runId}-cross-layer`;
-      const userId = "cross-user";
+      // Use ctx for unique userId to prevent parallel test interference
+      const userId = ctx.userId("cross-layer");
 
       // STEP 1: Create conversation
       const conv = await cortex.conversations.create({
@@ -1198,14 +1199,17 @@ describe("Operation Sequence Validation", () => {
 
     it("remember→get→forget sequence cleans all layers", async () => {
       const spaceId = `${ctx.runId}-remember-forget`;
+      // Use ctx for unique IDs to prevent parallel test interference
+      const userId = ctx.userId("remember-forget");
+      const conversationId = ctx.conversationId("remember-forget");
 
       // Remember
       const result = await cortex.memory.remember({
         memorySpaceId: spaceId,
-        conversationId: `conv-rf-${Date.now()}`,
+        conversationId,
         userMessage: "Test message",
         agentResponse: "Test response",
-        userId: "test-user",
+        userId,
         userName: "Test User",
         agentId: TEST_AGENT_ID,
       });

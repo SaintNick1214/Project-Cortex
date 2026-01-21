@@ -12,12 +12,13 @@
  *   5. memorySpaces - memory space registry
  *   6. immutable - versioned immutable records
  *   7. mutable - operational data
- *   8. agents - agent registry
- *   9. graphSyncQueue - graph sync queue
- *  10. governancePolicies - governance policies
- *  11. governanceEnforcement - enforcement logs
- *  12. sessions - session management
- *  13. factHistory - belief revision audit trail
+ *   8. artifacts - versioned artifact store
+ *   9. agents - agent registry
+ *  10. graphSyncQueue - graph sync queue
+ *  11. governancePolicies - governance policies
+ *  12. governanceEnforcement - enforcement logs
+ *  13. sessions - session management
+ *  14. factHistory - belief revision audit trail
  */
 
 import { ConvexClient } from "convex/browser";
@@ -117,6 +118,7 @@ async function cleanup() {
       memorySpaces: 0,
       immutable: 0,
       mutable: 0,
+      artifacts: 0,
       agents: 0,
       graphSyncQueue: 0,
       governancePolicies: 0,
@@ -148,6 +150,9 @@ async function cleanup() {
 
     console.log("⚡ Clearing mutable store...");
     stats.mutable = await clearTable("mutable", "mutable entries");
+
+    console.log("📦 Clearing artifacts store...");
+    stats.artifacts = await clearTable("artifacts", "artifacts");
 
     console.log("👤 Clearing agents registry...");
     stats.agents = await clearTable("agents", "agents");
@@ -187,6 +192,7 @@ async function cleanup() {
       stats.memorySpaces +
       stats.immutable +
       stats.mutable +
+      stats.artifacts +
       stats.agents +
       stats.graphSyncQueue +
       stats.governancePolicies +
@@ -218,6 +224,9 @@ async function cleanup() {
     );
     console.log(
       `   Mutable:               ${stats.mutable.toString().padStart(6)}`,
+    );
+    console.log(
+      `   Artifacts:             ${stats.artifacts.toString().padStart(6)}`,
     );
     console.log(
       `   Agents:                ${stats.agents.toString().padStart(6)}`,
