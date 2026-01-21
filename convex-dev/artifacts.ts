@@ -1729,7 +1729,7 @@ export const finalizeStreaming = mutation({
       artifactId: args.artifactId,
       sessionId: args.sessionId,
       finalizedAt: now,
-      previousState: "streaming",
+      previousState: artifact.streamingState,
       currentState: "final",
       contentLength: finalContent.length,
       bytesReceived,
