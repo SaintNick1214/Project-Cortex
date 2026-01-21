@@ -168,12 +168,12 @@ class TestMemoryStreaming:
             await self.cortex.memory.remember_stream(
                 RememberStreamParams(
                     memory_space_id=self.test_space_id,
-                    conversation_id="stream-conv-empty",
+                    conversation_id=self.ctx.conversation_id("empty"),
                     user_message="Empty test",
                     response_stream=empty_stream(),
-                    user_id="user-empty",
+                    user_id=self.ctx.user_id("user-empty"),
                     user_name="EmptyUser",
-                    agent_id="test-agent",
+                    agent_id=self.ctx.agent_id("test-agent"),
                 )
             )
 
@@ -185,12 +185,12 @@ class TestMemoryStreaming:
             await self.cortex.memory.remember_stream(
                 RememberStreamParams(
                     memory_space_id=self.test_space_id,
-                    conversation_id="stream-conv-whitespace",
+                    conversation_id=self.ctx.conversation_id("whitespace"),
                     user_message="Whitespace test",
                     response_stream=whitespace_stream(),
-                    user_id="user-whitespace",
+                    user_id=self.ctx.user_id("user-whitespace"),
                     user_name="WhitespaceUser",
-                    agent_id="test-agent",
+                    agent_id=self.ctx.agent_id("test-agent"),
                 )
             )
 
@@ -204,12 +204,12 @@ class TestMemoryStreaming:
             await self.cortex.memory.remember_stream(
                 RememberStreamParams(
                     memory_space_id=self.test_space_id,
-                    conversation_id="stream-conv-invalid",
+                    conversation_id=self.ctx.conversation_id("invalid"),
                     user_message="Invalid test",
                     response_stream="not a stream",  # Invalid
-                    user_id="user-invalid",
+                    user_id=self.ctx.user_id("user-invalid"),
                     user_name="InvalidUser",
-                    agent_id="test-agent",
+                    agent_id=self.ctx.agent_id("test-agent"),
                 )
             )
 
@@ -244,12 +244,12 @@ class TestMemoryStreaming:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-facts",
+                conversation_id=self.ctx.conversation_id("facts"),
                 user_message="My favorite color is blue",
                 response_stream=color_stream(),
-                user_id="user-facts",
+                user_id=self.ctx.user_id("user-facts"),
                 user_name="FactUser",
-                agent_id="test-agent",
+                agent_id=self.ctx.agent_id("test-agent"),
                 extract_facts=fact_extractor,
             )
         )
@@ -285,16 +285,17 @@ class TestMemoryStreaming:
 
     async def test_stream_with_participant_id(self):
         """Test streaming with participant_id for Hive Mode."""
+        participant = self.ctx.agent_id("agent-alpha")
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-hive",
+                conversation_id=self.ctx.conversation_id("hive"),
                 user_message="Hive test",
                 response_stream=simple_stream(),
-                user_id="user-hive",
+                user_id=self.ctx.user_id("user-hive"),
                 user_name="HiveUser",
-                agent_id="test-agent",
-                participant_id="agent-alpha",
+                agent_id=self.ctx.agent_id("test-agent"),
+                participant_id=participant,
             )
         )
 
@@ -302,19 +303,19 @@ class TestMemoryStreaming:
         assert len(result.memories) == 2
         # Both memories should have the participant_id
         for memory in result.memories:
-            assert memory.participant_id == "agent-alpha"
+            assert memory.participant_id == participant
 
     async def test_stream_result_structure(self):
         """Test that result has all expected fields."""
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-conv-structure",
+                conversation_id=self.ctx.conversation_id("structure"),
                 user_message="Structure test",
                 response_stream=simple_stream(),
-                user_id="user-structure",
+                user_id=self.ctx.user_id("user-structure"),
                 user_name="StructUser",
-                agent_id="test-agent",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 
@@ -377,16 +378,17 @@ class TestMemoryStreamingEdgeCases:
     """Test edge cases and error conditions."""
 
     @pytest.fixture(autouse=True)
-    async def setup(self):
+    async def setup(self, test_run_context, request):
         """Set up test environment."""
         import os
         import random
-        import time
         # Use environment CONVEX_URL (set by conftest.py for LOCAL/MANAGED mode)
         self.convex_url = os.getenv("CONVEX_URL", "http://127.0.0.1:3210")
         self.cortex = Cortex(CortexConfig(convex_url=self.convex_url))
-        # Use unique ID per test to avoid conflicts
-        self.test_space_id = f"test-streaming-edge-{int(time.time() * 1000)}-{random.randint(1000, 9999)}"
+        # Use ctx for unique ID generation + test name for uniqueness per method
+        self.ctx = test_run_context
+        test_name = request.node.name.replace("test_", "")
+        self.test_space_id = f"{self.ctx.run_id}-edge-{test_name}-{random.randint(1000, 9999)}"
 
         await self.cortex.memory_spaces.register(
             RegisterMemorySpaceParams(
@@ -415,12 +417,12 @@ class TestMemoryStreamingEdgeCases:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-unicode",
+                conversation_id=self.ctx.conversation_id("unicode"),
                 user_message="Unicode test",
                 response_stream=unicode_stream(),
-                user_id="user-unicode",
+                user_id=self.ctx.user_id("user-unicode"),
                 user_name="UnicodeUser",
-                agent_id="test-agent",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 
@@ -438,12 +440,12 @@ class TestMemoryStreamingEdgeCases:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-large",
+                conversation_id=self.ctx.conversation_id("large"),
                 user_message="Large stream test",
                 response_stream=large_stream(),
-                user_id="user-large",
+                user_id=self.ctx.user_id("user-large"),
                 user_name="LargeUser",
-                agent_id="test-agent",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 
@@ -465,12 +467,12 @@ class TestMemoryStreamingEdgeCases:
         result = await self.cortex.memory.remember_stream(
             RememberStreamParams(
                 memory_space_id=self.test_space_id,
-                conversation_id="stream-none",
+                conversation_id=self.ctx.conversation_id("none"),
                 user_message="None chunks test",
                 response_stream=none_chunk_stream(),
-                user_id="user-none",
+                user_id=self.ctx.user_id("user-none"),
                 user_name="NoneUser",
-                agent_id="test-agent",
+                agent_id=self.ctx.agent_id("test-agent"),
             )
         )
 

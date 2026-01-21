@@ -41,11 +41,14 @@ console.log(`\n🧹 Cleaning up test data from: ${convexUrl}\n`);
 
 const client = new ConvexClient(convexUrl);
 
-// Maximum records to delete per mutation (Convex limit)
-const MAX_LIMIT = 1000;
+// Batch size reduction sequence for handling Convex 16MB read limit
+// Starts at 10000, reduces on "Server Error": 10000 -> 500 -> 250 -> 50
+// (Same adaptive sizing as CLI's `cortex db clear` command)
+const BATCH_SIZE_SEQUENCE = [10000, 500, 250, 50] as const;
 
 /**
  * Clear a table using admin:clearTable mutation (same as CLI)
+ * Uses adaptive batch sizing: starts at 10000, reduces on "Too many bytes" errors
  * Loops until all records are deleted
  */
 async function clearTable(
@@ -54,18 +57,45 @@ async function clearTable(
 ): Promise<number> {
   let totalDeleted = 0;
   let hasMore = true;
+  let batchSizeIndex = 0; // Start with largest batch size
 
   while (hasMore) {
+    const batchLimit = BATCH_SIZE_SEQUENCE[batchSizeIndex];
     try {
-      const result = (await client.mutation(
-        "admin:clearTable" as Parameters<typeof client.mutation>[0],
-        { table: tableName, limit: MAX_LIMIT },
-      )) as { deleted: number; hasMore: boolean };
+      // Suppress Convex SDK's console.error during mutation (we handle errors ourselves)
+      const originalConsoleError = console.error;
+      console.error = () => {};
+      let result: { deleted: number; hasMore: boolean };
+      try {
+        result = (await client.mutation(
+          "admin:clearTable" as Parameters<typeof client.mutation>[0],
+          { table: tableName, limit: batchLimit },
+        )) as { deleted: number; hasMore: boolean };
+      } finally {
+        console.error = originalConsoleError;
+      }
       totalDeleted += result.deleted;
       hasMore = result.hasMore;
-    } catch {
-      // Table might not exist or be empty
-      hasMore = false;
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      // Check for byte limit error - Convex wraps errors, so check for:
+      // 1. Direct "Too many bytes" message (if propagated)
+      // 2. Generic "Server Error" from Convex client (common wrapper)
+      const isByteLimitError =
+        errorMsg.includes("Too many bytes") ||
+        errorMsg.includes("Server Error");
+
+      if (isByteLimitError && batchSizeIndex < BATCH_SIZE_SEQUENCE.length - 1) {
+        // Reduce batch size and retry
+        batchSizeIndex++;
+        console.log(
+          `   ⚠️  Reducing batch size to ${BATCH_SIZE_SEQUENCE[batchSizeIndex]} for ${tableName}`,
+        );
+      } else {
+        // Either not a retryable error or we've exhausted all batch sizes
+        // Table might not exist or be empty
+        hasMore = false;
+      }
     }
   }
 
