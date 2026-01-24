@@ -822,7 +822,7 @@ class ArtifactsAPI:
             previous_state=data.get("previous_state", "streaming"),
             current_state=data.get("current_state", "draft"),
             content_preserved=data.get("content_preserved", True),
-            bytes_discarded=data.get("bytes_discarded"),
+            bytes_received=data.get("bytes_received"),
         )
 
     async def finalize_streaming(

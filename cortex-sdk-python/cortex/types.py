@@ -970,7 +970,7 @@ class CancelStreamingResult:
         previous_state: State before cancelling
         current_state: Current state (should be 'draft')
         content_preserved: Whether partial content was preserved
-        bytes_discarded: Bytes discarded (if content not preserved)
+        bytes_received: Total bytes received during the streaming session
     """
     success: bool
     artifact_id: str
@@ -979,7 +979,7 @@ class CancelStreamingResult:
     previous_state: str
     current_state: str
     content_preserved: bool
-    bytes_discarded: Optional[int] = None
+    bytes_received: Optional[int] = None
 
 
 @dataclass
