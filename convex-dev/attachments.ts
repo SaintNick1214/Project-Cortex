@@ -92,9 +92,14 @@ async function lookupAttachment(
  * ```
  */
 export const generateUploadUrl = mutation({
-  args: {},
+  args: {
+    // Multi-tenancy (optional - passed by SDKs for consistency/auditing)
+    tenantId: v.optional(v.string()),
+  },
   handler: async (ctx) => {
     // Generate upload URL (expires in 1 hour per Convex docs)
+    // Note: tenantId is accepted for SDK consistency but not used here
+    // since Convex storage is global; tenant isolation happens at attach()
     const uploadUrl = await ctx.storage.generateUploadUrl();
 
     return {
@@ -444,7 +449,7 @@ export const list = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
-    const limit = Math.min(args.limit || 50, 100); // Max 100
+    const limit = Math.min(args.limit || 50, 1000); // Max 1000 (matches SDK validators)
 
     // Select optimal index based on provided filters
     let attachments;
