@@ -31,6 +31,8 @@ from .a2a.validators import A2AValidationError
 from .agents.validators import AgentValidationError
 from .artifacts import ArtifactsAPI
 from .artifacts.validators import ArtifactsValidationError
+from .attachments import AttachmentsAPI
+from .attachments.validators import AttachmentValidationError
 from .auth import (
     AuthValidationError,
     create_auth_context,
@@ -102,6 +104,15 @@ from .types import (
     Artifact,
     ArtifactKind,
     ArtifactVersion,
+    # Attachments Types
+    Attachment,
+    AttachmentDimensions,
+    AttachmentType,
+    AttachParams,
+    DeleteManyAttachmentsResult,
+    ListAttachmentsFilter,
+    ListAttachmentsResult,
+    UploadUrlResult,
     # Auth Types
     AuthContext,
     AuthContextParams,
@@ -454,6 +465,17 @@ __all__ = [
     "StreamingState",
     "UpdateArtifactOptions",
     "VersionChangeType",
+    # Layer 1 Types - Attachments
+    "AttachmentsAPI",
+    "AttachmentValidationError",
+    "Attachment",
+    "AttachmentDimensions",
+    "AttachmentType",
+    "AttachParams",
+    "DeleteManyAttachmentsResult",
+    "ListAttachmentsFilter",
+    "ListAttachmentsResult",
+    "UploadUrlResult",
     # Layer 2 Types
     "MemoryEntry",
     "MemoryMetadata",

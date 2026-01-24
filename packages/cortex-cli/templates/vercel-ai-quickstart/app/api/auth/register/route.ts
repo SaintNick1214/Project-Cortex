@@ -21,16 +21,16 @@ export async function POST(req: Request) {
       return Response.json({ error: "Password is required" }, { status: 400 });
     }
 
-    if (username.length < 2) {
+    if (username.length < 2 || username.length > 256) {
       return Response.json(
-        { error: "Username must be at least 2 characters" },
+        { error: "Username must be between 2 and 256 characters" },
         { status: 400 },
       );
     }
 
-    if (password.length < 4) {
+    if (password.length < 4 || password.length > 1024) {
       return Response.json(
-        { error: "Password must be at least 4 characters" },
+        { error: "Password must be between 4 and 1024 characters" },
         { status: 400 },
       );
     }

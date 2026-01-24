@@ -17,6 +17,9 @@
  * Artifacts
  * - artifacts - Interactive versioned documents (memorySpace-scoped, streaming support)
  *
+ * Attachments (Multi-modal)
+ * - attachments - Multi-modal file storage (images, PDFs, audio, video, files)
+ *
  * Coordination:
  * - contexts - Hierarchical context chains (memorySpace-scoped, cross-space support)
  * - memorySpaces - Memory space registry (Hive/Collaboration modes)
@@ -72,6 +75,7 @@ export default defineSchema({
         // Optional fields
         participantId: v.optional(v.string()), // Which participant sent this (Hive Mode)
         metadata: v.optional(v.any()), // Flexible metadata
+        attachmentIds: v.optional(v.array(v.string())), // Multi-modal attachment references
       }),
     ),
 
@@ -991,5 +995,93 @@ export default defineSchema({
     .searchIndex("by_title", {
       searchField: "title",
       filterFields: ["memorySpaceId", "tenantId", "kind"],
+    }),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Attachments (Multi-modal File Storage, memorySpace-scoped)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  attachments: defineTable({
+    // Identity
+    attachmentId: v.string(), // Unique attachment ID
+    memorySpaceId: v.string(), // Memory space isolation
+
+    // Multi-tenancy
+    tenantId: v.optional(v.string()), // Tenant ID for SaaS isolation
+
+    // Ownership
+    userId: v.string(), // User who uploaded this attachment
+    conversationId: v.optional(v.string()), // Linked conversation
+    messageId: v.optional(v.string()), // Linked message
+    memoryId: v.optional(v.string()), // Linked memory
+    artifactId: v.optional(v.string()), // Linked artifact
+
+    // File storage (Convex native)
+    storageId: v.id("_storage"), // Convex file storage reference
+
+    // File metadata
+    type: v.union(
+      v.literal("image"),
+      v.literal("audio"),
+      v.literal("video"),
+      v.literal("file"),
+      v.literal("pdf"),
+    ),
+    mimeType: v.string(), // MIME type (e.g., "image/png")
+    filename: v.string(), // Original filename
+    size: v.number(), // File size in bytes
+
+    // Extracted content (for future search/RAG - Phase 2+)
+    extractedText: v.optional(v.string()), // OCR/PDF text extraction
+    transcript: v.optional(v.string()), // Audio/video transcription
+    embedding: v.optional(v.array(v.float64())), // Semantic search embedding
+
+    // Type-specific metadata
+    dimensions: v.optional(
+      v.object({
+        width: v.number(),
+        height: v.number(),
+      }),
+    ), // Image/video dimensions
+    duration: v.optional(v.number()), // Audio/video duration in seconds
+
+    // Generic metadata
+    metadata: v.optional(v.any()),
+
+    // Timestamps
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    // Unique lookups
+    .index("by_attachmentId", ["attachmentId"])
+
+    // Memory space isolation
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_memorySpace_type", ["memorySpaceId", "type"])
+    .index("by_memorySpace_created", ["memorySpaceId", "createdAt"])
+
+    // Multi-tenancy
+    .index("by_tenantId", ["tenantId"])
+    .index("by_tenant_space", ["tenantId", "memorySpaceId"])
+    .index("by_tenant_attachmentId", ["tenantId", "attachmentId"])
+
+    // Relationship lookups
+    .index("by_conversation", ["conversationId"])
+    .index("by_message", ["messageId"])
+    .index("by_memory", ["memoryId"])
+    .index("by_artifact", ["artifactId"])
+
+    // Ownership (GDPR cascade)
+    .index("by_userId", ["userId"])
+    .index("by_memorySpace_user", ["memorySpaceId", "userId"])
+
+    // Chronological
+    .index("by_created", ["createdAt"])
+    .index("by_updated", ["updatedAt"])
+
+    // Vector search for semantic content (Phase 3+)
+    .vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536, // OpenAI text-embedding-3-small / ada-002
+      filterFields: ["memorySpaceId", "tenantId", "type"],
     }),
 });

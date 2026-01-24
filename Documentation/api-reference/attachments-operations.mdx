@@ -1,0 +1,618 @@
+---
+id: attachments-operations
+title: Attachments Operations API
+sidebar_position: 17
+description: Complete API reference for multi-modal file storage with images, PDFs, audio, video, and generic files.
+---
+
+# Attachments Operations API
+
+<Callout type="info">
+
+**Added in v0.35.0** - Multi-modal file storage for AI agents and applications.
+
+</Callout>
+
+Complete API reference for the Attachments API (`cortex.attachments.*`), providing multi-modal file storage with memory space isolation and multi-tenancy support.
+
+## Overview
+
+The Attachments API manages binary files that AI agents and applications need to process or reference. Unlike artifacts (which store versioned documents), attachments store raw files like images, PDFs, audio, and video.
+
+**Key Features:**
+
+- **Convex Native Storage**: Direct integration with Convex file storage
+- **Signed URLs**: Secure upload and download URLs
+- **Multi-Modal Support**: Images, PDFs, audio, video, and generic files
+- **Memory Space Isolation**: Files scoped to memory spaces
+- **Multi-Tenancy**: Built-in tenant isolation
+- **Linkage**: Connect attachments to conversations, messages, memories, or artifacts
+
+---
+
+## Attachment Type
+
+```typescript
+interface Attachment {
+  _id: string;                    // Convex document ID
+  attachmentId: string;           // Unique attachment identifier
+  memorySpaceId: string;          // Memory space isolation
+  tenantId?: string;              // Multi-tenancy isolation
+  
+  // Ownership
+  userId: string;                 // User who uploaded this attachment
+  conversationId?: string;        // Linked conversation
+  messageId?: string;             // Linked message
+  memoryId?: string;              // Linked memory
+  artifactId?: string;            // Linked artifact
+  
+  // File metadata
+  storageId: string;              // Convex storage ID
+  type: AttachmentType;           // image | audio | video | file | pdf
+  mimeType: string;               // MIME type (e.g., "image/png")
+  filename: string;               // Original filename
+  size: number;                   // File size in bytes
+  
+  // Type-specific metadata
+  dimensions?: {                  // For images/videos
+    width: number;
+    height: number;
+  };
+  duration?: number;              // For audio/video (seconds)
+  
+  // Future: Content extraction (Phase 2+)
+  extractedText?: string;         // OCR/PDF text extraction
+  transcript?: string;            // Audio/video transcription
+  embedding?: number[];           // Semantic search embedding
+  
+  // Custom data
+  metadata?: Record<string, unknown>;
+  
+  // Timestamps
+  createdAt: number;
+  updatedAt: number;
+}
+```
+
+### Attachment Types
+
+| Type | Description | Use Cases |
+|------|-------------|-----------|
+| `image` | Image files (PNG, JPEG, GIF, WebP) | Screenshots, photos, diagrams |
+| `pdf` | PDF documents | Reports, contracts, manuals |
+| `audio` | Audio files (MP3, WAV, etc.) | Voice messages, recordings |
+| `video` | Video files (MP4, WebM, etc.) | Clips, screen recordings |
+| `file` | Generic files | Any other file type |
+
+---
+
+## Upload Workflow
+
+Uploading attachments is a two-step process:
+
+1. **Generate Upload URL**: Get a pre-signed URL for direct upload
+2. **Attach**: Register the uploaded file with metadata
+
+```typescript
+// Step 1: Generate upload URL
+const { uploadUrl } = await cortex.attachments.generateUploadUrl();
+
+// Step 2: Upload file directly to Convex storage
+const response = await fetch(uploadUrl, {
+  method: 'POST',
+  headers: { 'Content-Type': file.type },
+  body: file,
+});
+const { storageId } = await response.json();
+
+// Step 3: Register the attachment
+const attachment = await cortex.attachments.attach({
+  storageId,
+  memorySpaceId: 'user-123-space',
+  userId: 'user-123',
+  type: 'image',
+  mimeType: file.type,
+  filename: file.name,
+  size: file.size,
+  conversationId: 'conv-456', // Optional linkage
+});
+```
+
+---
+
+## Core Operations
+
+### generateUploadUrl()
+
+Generate a pre-signed upload URL for direct file upload to Convex storage.
+
+```typescript
+const result = await cortex.attachments.generateUploadUrl(): Promise<UploadUrlResult>;
+```
+
+**Returns:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `uploadUrl` | `string` | Pre-signed URL for POST upload |
+
+**Example:**
+
+```typescript
+const { uploadUrl } = await cortex.attachments.generateUploadUrl();
+
+// Upload file
+const response = await fetch(uploadUrl, {
+  method: 'POST',
+  headers: { 'Content-Type': 'image/png' },
+  body: imageFile,
+});
+
+const { storageId } = await response.json();
+```
+
+---
+
+### attach()
+
+Register an uploaded file as an attachment with metadata.
+
+```typescript
+const attachment = await cortex.attachments.attach(params: AttachParams): Promise<Attachment>;
+```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "storageId", type: "string", required: true, description: "Convex storage ID from upload" },
+    { name: "memorySpaceId", type: "string", required: true, description: "Memory space for isolation" },
+    { name: "userId", type: "string", required: true, description: "Owner user ID" },
+    { name: "type", type: "AttachmentType", required: true, description: "File type (image, audio, video, file, pdf)" },
+    { name: "mimeType", type: "string", required: true, description: "MIME type (e.g., 'image/png')" },
+    { name: "filename", type: "string", required: true, description: "Original filename" },
+    { name: "size", type: "number", required: true, description: "File size in bytes" },
+    { name: "conversationId", type: "string", required: false, description: "Link to conversation" },
+    { name: "messageId", type: "string", required: false, description: "Link to message" },
+    { name: "memoryId", type: "string", required: false, description: "Link to memory" },
+    { name: "artifactId", type: "string", required: false, description: "Link to artifact" },
+    { name: "dimensions", type: "object", required: false, description: "Image/video dimensions { width, height }" },
+    { name: "duration", type: "number", required: false, description: "Audio/video duration in seconds" },
+    { name: "metadata", type: "Record<string, unknown>", required: false, description: "Custom metadata" },
+    { name: "tenantId", type: "string", required: false, description: "Tenant ID (from auth context)" },
+  ]}
+/>
+
+**Example:**
+
+```typescript
+const attachment = await cortex.attachments.attach({
+  storageId: 'kg2abc123xyz',
+  memorySpaceId: 'user-123-space',
+  userId: 'user-123',
+  type: 'image',
+  mimeType: 'image/png',
+  filename: 'screenshot.png',
+  size: 1024000,
+  dimensions: { width: 1920, height: 1080 },
+  conversationId: 'conv-456',
+  metadata: { caption: 'Dashboard screenshot' },
+});
+```
+
+---
+
+### get()
+
+Retrieve an attachment by ID.
+
+```typescript
+const attachment = await cortex.attachments.get(attachmentId: string): Promise<Attachment | null>;
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `attachmentId` | `string` | Yes | The attachment ID |
+
+**Returns:** `Attachment | null`
+
+**Example:**
+
+```typescript
+const attachment = await cortex.attachments.get('attach-abc123');
+if (attachment) {
+  console.log(`File: ${attachment.filename} (${attachment.size} bytes)`);
+}
+```
+
+---
+
+### getUrl()
+
+Get a signed download URL for an attachment.
+
+```typescript
+const url = await cortex.attachments.getUrl(attachmentId: string): Promise<string | null>;
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `attachmentId` | `string` | Yes | The attachment ID |
+
+**Returns:** Signed download URL or `null` if not found
+
+<Callout type="warning">
+
+**URL Expiration**: Download URLs are temporary and will expire. Fetch the URL immediately before use and don't cache it for long periods.
+
+</Callout>
+
+**Example:**
+
+```typescript
+const url = await cortex.attachments.getUrl('attach-abc123');
+if (url) {
+  // Display image
+  document.getElementById('preview').src = url;
+  
+  // Or download
+  const response = await fetch(url);
+  const blob = await response.blob();
+}
+```
+
+---
+
+### list()
+
+List attachments with filtering and pagination.
+
+```typescript
+const result = await cortex.attachments.list(filter: ListAttachmentsFilter): Promise<ListAttachmentsResult>;
+```
+
+**Parameters:**
+
+<APITable
+  parameters={[
+    { name: "memorySpaceId", type: "string", required: true, description: "Memory space to list from" },
+    { name: "conversationId", type: "string", required: false, description: "Filter by conversation" },
+    { name: "messageId", type: "string", required: false, description: "Filter by message" },
+    { name: "memoryId", type: "string", required: false, description: "Filter by memory" },
+    { name: "artifactId", type: "string", required: false, description: "Filter by artifact" },
+    { name: "userId", type: "string", required: false, description: "Filter by user" },
+    { name: "type", type: "AttachmentType", required: false, description: "Filter by type" },
+    { name: "limit", type: "number", required: false, description: "Max results (1-1000, default 50)" },
+    { name: "cursor", type: "string", required: false, description: "Pagination cursor" },
+    { name: "sortBy", type: "string", required: false, description: "'createdAt' or 'updatedAt'" },
+    { name: "sortOrder", type: "string", required: false, description: "'asc' or 'desc'" },
+    { name: "tenantId", type: "string", required: false, description: "Tenant ID filter" },
+  ]}
+/>
+
+**Returns:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `attachments` | `Attachment[]` | Array of attachments |
+| `total` | `number` | Total count matching filter |
+| `cursor` | `string?` | Next page cursor |
+| `hasMore` | `boolean` | Whether more results exist |
+
+**Example:**
+
+```typescript
+// List all images in a conversation
+const result = await cortex.attachments.list({
+  memorySpaceId: 'user-123-space',
+  conversationId: 'conv-456',
+  type: 'image',
+  limit: 20,
+  sortBy: 'createdAt',
+  sortOrder: 'desc',
+});
+
+for (const attachment of result.attachments) {
+  console.log(`${attachment.filename}: ${attachment.mimeType}`);
+}
+
+// Pagination
+if (result.hasMore) {
+  const nextPage = await cortex.attachments.list({
+    memorySpaceId: 'user-123-space',
+    cursor: result.cursor,
+  });
+}
+```
+
+---
+
+### getByConversation()
+
+Get all attachments for a specific conversation.
+
+```typescript
+const attachments = await cortex.attachments.getByConversation(
+  conversationId: string,
+  type?: AttachmentType,
+  limit?: number
+): Promise<Attachment[]>;
+```
+
+**Example:**
+
+```typescript
+// Get all attachments in a conversation
+const attachments = await cortex.attachments.getByConversation('conv-456');
+
+// Get only images
+const images = await cortex.attachments.getByConversation('conv-456', 'image');
+```
+
+---
+
+### getByMessage()
+
+Get all attachments for a specific message.
+
+```typescript
+const attachments = await cortex.attachments.getByMessage(messageId: string): Promise<Attachment[]>;
+```
+
+**Example:**
+
+```typescript
+const attachments = await cortex.attachments.getByMessage('msg-789');
+for (const att of attachments) {
+  console.log(`Message attachment: ${att.filename}`);
+}
+```
+
+---
+
+### count()
+
+Count attachments matching filters.
+
+```typescript
+const count = await cortex.attachments.count(
+  memorySpaceId: string,
+  conversationId?: string,
+  messageId?: string,
+  userId?: string,
+  type?: AttachmentType
+): Promise<number>;
+```
+
+**Example:**
+
+```typescript
+// Count all attachments in a memory space
+const total = await cortex.attachments.count('user-123-space');
+
+// Count images in a conversation
+const imageCount = await cortex.attachments.count(
+  'user-123-space',
+  'conv-456',
+  undefined,
+  undefined,
+  'image'
+);
+```
+
+---
+
+### delete()
+
+Delete an attachment and its file from storage.
+
+```typescript
+const success = await cortex.attachments.delete(attachmentId: string): Promise<boolean>;
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `attachmentId` | `string` | Yes | The attachment ID to delete |
+
+**Returns:** `true` if deleted successfully
+
+<Callout type="warning">
+
+**Permanent Deletion**: This operation permanently deletes both the attachment record and the file from Convex storage. This cannot be undone.
+
+</Callout>
+
+**Example:**
+
+```typescript
+const deleted = await cortex.attachments.delete('attach-abc123');
+if (deleted) {
+  console.log('Attachment deleted');
+}
+```
+
+---
+
+### deleteMany()
+
+Bulk delete multiple attachments.
+
+```typescript
+const result = await cortex.attachments.deleteMany(attachmentIds: string[]): Promise<DeleteManyAttachmentsResult>;
+```
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `attachmentIds` | `string[]` | Yes | Array of attachment IDs |
+
+**Returns:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `deleted` | `number` | Count of successfully deleted attachments |
+| `total` | `number` | Total attachments requested |
+| `errors` | `Array<{ attachmentId, error }>?` | Any errors encountered |
+
+**Example:**
+
+```typescript
+const result = await cortex.attachments.deleteMany([
+  'attach-abc123',
+  'attach-def456',
+]);
+
+console.log(`Deleted ${result.deleted} of ${result.total} attachments`);
+```
+
+---
+
+## Python SDK
+
+The Python SDK provides the same functionality with Pythonic naming conventions:
+
+```python
+from cortex import Cortex, CortexConfig
+from cortex.types import AttachParams, ListAttachmentsFilter
+
+cortex = Cortex(CortexConfig(convex_url=os.getenv("CONVEX_URL")))
+
+# Generate upload URL
+result = await cortex.attachments.generate_upload_url()
+
+# Attach file
+attachment = await cortex.attachments.attach(AttachParams(
+    storage_id="kg2abc123",
+    memory_space_id="user-123-space",
+    user_id="user-123",
+    type="image",
+    mime_type="image/png",
+    filename="photo.png",
+    size=1024000,
+))
+
+# Get attachment
+attachment = await cortex.attachments.get("attach-abc123")
+
+# Get download URL
+url = await cortex.attachments.get_url("attach-abc123")
+
+# List attachments
+result = await cortex.attachments.list(ListAttachmentsFilter(
+    memory_space_id="user-123-space",
+    type="image",
+    limit=20,
+))
+
+# Delete
+deleted = await cortex.attachments.delete("attach-abc123")
+```
+
+---
+
+## Error Handling
+
+The Attachments API throws `AttachmentValidationError` for client-side validation failures:
+
+```typescript
+import { AttachmentValidationError } from '@cortex-memory/core';
+
+try {
+  await cortex.attachments.attach({
+    storageId: '',  // Invalid: empty
+    // ...
+  });
+} catch (error) {
+  if (error instanceof AttachmentValidationError) {
+    console.error(`Validation failed: ${error.message}`);
+    console.error(`Field: ${error.field}, Code: ${error.code}`);
+  }
+}
+```
+
+### Error Codes
+
+| Code | Description |
+|------|-------------|
+| `MISSING_STORAGE_ID` | Storage ID is required |
+| `MISSING_MEMORY_SPACE_ID` | Memory space ID is required |
+| `MISSING_USER_ID` | User ID is required |
+| `MISSING_TYPE` | Attachment type is required |
+| `INVALID_TYPE_VALUE` | Type must be image, audio, video, file, or pdf |
+| `MISSING_MIME_TYPE` | MIME type is required |
+| `INVALID_MIME_TYPE` | Invalid MIME type format |
+| `MISSING_FILENAME` | Filename is required |
+| `FILENAME_TOO_LONG` | Filename exceeds 255 characters |
+| `MISSING_SIZE` | File size is required |
+| `INVALID_SIZE` | Size must be a positive number |
+| `ATTACHMENT_NOT_FOUND` | Attachment not found |
+
+---
+
+## Multi-Tenancy
+
+When configured with an auth context, tenant ID is automatically injected:
+
+```typescript
+const cortex = new Cortex({
+  convexUrl: process.env.CONVEX_URL,
+  auth: createAuthContext({
+    userId: 'user-123',
+    tenantId: 'tenant-abc',
+  }),
+});
+
+// Tenant ID is automatically added
+const attachment = await cortex.attachments.attach({
+  storageId: 'kg2abc123',
+  memorySpaceId: 'space-123',
+  userId: 'user-123',
+  type: 'image',
+  mimeType: 'image/png',
+  filename: 'photo.png',
+  size: 1024,
+  // tenantId: 'tenant-abc' // Auto-injected
+});
+
+// Queries are automatically scoped to tenant
+const result = await cortex.attachments.list({
+  memorySpaceId: 'space-123',
+  // tenantId: 'tenant-abc' // Auto-injected
+});
+```
+
+---
+
+## Best Practices
+
+### File Size Limits
+
+- Check file sizes before upload
+- Consider compressing images client-side
+- Use appropriate file types for the use case
+
+### URL Handling
+
+- Don't cache download URLs for extended periods
+- Fetch URLs immediately before displaying/downloading
+- Handle expired URL errors gracefully
+
+### Cleanup
+
+- Delete attachments when conversations/memories are deleted
+- Implement GDPR cascade deletion for user data
+- Use `deleteMany()` for bulk cleanup operations
+
+### Type Selection
+
+- Use specific types (`image`, `pdf`, `audio`, `video`) when applicable
+- Fall back to `file` for generic files
+- Include dimensions for images/videos
+- Include duration for audio/video
