@@ -10,6 +10,7 @@
  * - file (generic)
  */
 
+import { describe, it, expect, beforeEach, jest } from "@jest/globals";
 import { AttachmentsAPI } from "../../../src/attachments";
 import type {
   Attachment,
@@ -22,10 +23,11 @@ import type {
 // Mock Setup
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-interface MockConvexClient {
-  mutation: jest.Mock;
-  query: jest.Mock;
-}
+// Mock types - use ReturnType to avoid typing issues
+type MockConvexClient = {
+  mutation: ReturnType<typeof jest.fn>;
+  query: ReturnType<typeof jest.fn>;
+};
 
 function createMockClient(): MockConvexClient {
   return {
@@ -34,9 +36,9 @@ function createMockClient(): MockConvexClient {
   };
 }
 
-interface MockResilienceLayer {
-  execute: jest.Mock;
-}
+type MockResilienceLayer = {
+  execute: ReturnType<typeof jest.fn>;
+};
 
 function createMockResilience(): MockResilienceLayer {
   return {

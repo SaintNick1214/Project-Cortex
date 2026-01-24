@@ -5,7 +5,7 @@ Multi-modal file storage for images, PDFs, audio, video, and generic files.
 Memory space-scoped with multi-tenancy support.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 from .._utils import convert_convex_response, filter_none_values
 from ..types import (
@@ -150,9 +150,12 @@ class AttachmentsAPI:
             args = filter_none_values({
                 "tenantId": self._tenant_id,
             })
-            return await self._client.mutation(
-                "attachments:generateUploadUrl",
-                args,
+            return cast(
+                Dict[str, Any],
+                await self._client.mutation(
+                    "attachments:generateUploadUrl",
+                    args,
+                ),
             )
 
         result = await self._execute_with_resilience(_op, "attachments:generateUploadUrl")
@@ -215,7 +218,10 @@ class AttachmentsAPI:
                 "metadata": params.metadata,
                 "tenantId": params.tenant_id or self._tenant_id,
             })
-            return await self._client.mutation("attachments:attach", args)
+            return cast(
+                Dict[str, Any],
+                await self._client.mutation("attachments:attach", args),
+            )
 
         result = await self._execute_with_resilience(_op, "attachments:attach")
         return _to_attachment(result)
@@ -250,7 +256,10 @@ class AttachmentsAPI:
                 "attachmentId": attachment_id,
                 "tenantId": self._tenant_id,
             })
-            return await self._client.query("attachments:get", args)
+            return cast(
+                Optional[Dict[str, Any]],
+                await self._client.query("attachments:get", args),
+            )
 
         result = await self._execute_with_resilience(_op, "attachments:get")
         if result is None:
@@ -287,12 +296,15 @@ class AttachmentsAPI:
                 "attachmentId": attachment_id,
                 "tenantId": self._tenant_id,
             })
-            return await self._client.query("attachments:getUrl", args)
+            return cast(
+                Optional[Dict[str, Any]],
+                await self._client.query("attachments:getUrl", args),
+            )
 
         result = await self._execute_with_resilience(_op, "attachments:getUrl")
         if result is None:
             return None
-        return result.get("url")
+        return cast(Optional[str], result.get("url"))
 
     async def list(self, filter: ListAttachmentsFilter) -> ListAttachmentsResult:
         """
@@ -337,7 +349,10 @@ class AttachmentsAPI:
                 "sortBy": filter.sort_by,
                 "sortOrder": filter.sort_order,
             })
-            return await self._client.query("attachments:list", args)
+            return cast(
+                Dict[str, Any],
+                await self._client.query("attachments:list", args),
+            )
 
         result = await self._execute_with_resilience(_op, "attachments:list")
 
@@ -381,7 +396,10 @@ class AttachmentsAPI:
                 "type": type,
                 "limit": limit,
             })
-            return await self._client.query("attachments:getByConversation", args)
+            return cast(
+                List[Dict[str, Any]],
+                await self._client.query("attachments:getByConversation", args),
+            )
 
         result = await self._execute_with_resilience(_op, "attachments:getByConversation")
         return [_to_attachment(a) for a in result]
@@ -406,7 +424,10 @@ class AttachmentsAPI:
                 "messageId": message_id,
                 "tenantId": self._tenant_id,
             })
-            return await self._client.query("attachments:getByMessage", args)
+            return cast(
+                List[Dict[str, Any]],
+                await self._client.query("attachments:getByMessage", args),
+            )
 
         result = await self._execute_with_resilience(_op, "attachments:getByMessage")
         return [_to_attachment(a) for a in result]
@@ -448,9 +469,9 @@ class AttachmentsAPI:
                 "userId": user_id,
                 "type": type,
             })
-            return await self._client.query("attachments:count", args)
+            return cast(int, await self._client.query("attachments:count", args))
 
-        return await self._execute_with_resilience(_op, "attachments:count")
+        return cast(int, await self._execute_with_resilience(_op, "attachments:count"))
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     # Delete Operations
@@ -485,10 +506,13 @@ class AttachmentsAPI:
                 "attachmentId": attachment_id,
                 "tenantId": self._tenant_id,
             })
-            return await self._client.mutation("attachments:remove", args)
+            return cast(
+                Dict[str, Any],
+                await self._client.mutation("attachments:remove", args),
+            )
 
         result = await self._execute_with_resilience(_op, "attachments:delete")
-        return result.get("deleted", False)
+        return cast(bool, result.get("deleted", False))
 
     async def delete_many(self, attachment_ids: List[str]) -> DeleteManyAttachmentsResult:
         """
@@ -520,7 +544,10 @@ class AttachmentsAPI:
                 "attachmentIds": attachment_ids,
                 "tenantId": self._tenant_id,
             })
-            return await self._client.mutation("attachments:removeMany", args)
+            return cast(
+                Dict[str, Any],
+                await self._client.mutation("attachments:removeMany", args),
+            )
 
         result = await self._execute_with_resilience(_op, "attachments:deleteMany")
         return DeleteManyAttachmentsResult(
