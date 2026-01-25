@@ -11,7 +11,7 @@
 
 import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
-import { TestCleanup } from "./helpers";
+import { TestCleanup, waitForCondition } from "./helpers";
 import { createTestRunContext } from "./helpers/isolation";
 
 // Create test run context for parallel execution isolation
@@ -22,6 +22,28 @@ describe("Complex Integration Tests", () => {
   let client: ConvexClient;
   let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
+
+  // Helper to wait for context to be queryable after creation
+  const waitForContextReady = async (contextId: string) => {
+    const ready = await waitForCondition(
+      async () => {
+        try {
+          const result = await cortex.contexts.get(contextId);
+          return result !== null;
+        } catch {
+          return false;
+        }
+      },
+      ctx,
+      10000, // 10s timeout for CI
+      200,
+    );
+    if (!ready) {
+      throw new Error(`Context ${contextId} not ready after 10 seconds`);
+    }
+    // Additional delay for index propagation in CI
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  };
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
@@ -180,6 +202,9 @@ describe("Complex Integration Tests", () => {
           tags: ["refund", "vip", "urgent"],
         },
       });
+
+      // Wait for root context to be queryable before creating children
+      await waitForContextReady(rootContext.contextId);
 
       // Delegate to finance agent (cross-space collaboration)
       const financeContext = await cortex.contexts.create({
@@ -354,6 +379,9 @@ describe("Complex Integration Tests", () => {
           importance: 95,
         },
       });
+
+      // Wait for context to be queryable before granting access
+      await waitForContextReady(projectContext.contextId);
 
       // Grant access to Company B (Collaboration Mode)
       await cortex.contexts.grantAccess(

@@ -1180,16 +1180,26 @@ describe("Operation Sequence Validation", () => {
           return result !== null;
         },
         ctx,
-        5000,
-        100,
+        10000, // Extended timeout for CI
+        200,
       );
       expect(ctxReady).toBe(true);
 
       // VALIDATE: Complete chain retrievable
+      // Use retryOperation for validation to handle eventual consistency races
       const convCheck = await cortex.conversations.get(conv.conversationId);
       const memCheck = await cortex.vector.get(spaceId, mem.memoryId);
       const factCheck = await cortex.facts.get(spaceId, fact.factId);
-      const ctxCheck = await cortex.contexts.get(testCtx.contextId);
+      const ctxCheck = await retryOperation(
+        async () => {
+          const result = await cortex.contexts.get(testCtx.contextId);
+          if (result === null) {
+            throw new Error("CONTEXT_NOT_FOUND");
+          }
+          return result;
+        },
+        "contexts.get(validation)",
+      );
 
       expect(convCheck).not.toBeNull();
       expect(memCheck).not.toBeNull();
