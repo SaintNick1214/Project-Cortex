@@ -22,6 +22,41 @@ import { mutation, query } from "./_generated/server";
  * 2. participants.userId (traditional single-user ownership)
  * 3. First user in participants.userIds (implicit owner for collaborative)
  */
+/**
+ * Get the owner userId for a conversation, following the ownership hierarchy:
+ * 1. Explicit collaborativeSettings.ownerUserId
+ * 2. Traditional single-user participants.userId
+ * 3. First user in participants.userIds (implicit owner for collaborative)
+ */
+function getOwnerUserId(
+  conversation: {
+    participants: {
+      userId?: string;
+      userIds?: string[];
+    };
+    collaborativeSettings?: {
+      ownerUserId?: string;
+    };
+  }
+): string | undefined {
+  // Check explicit collaborative owner first
+  if (conversation.collaborativeSettings?.ownerUserId) {
+    return conversation.collaborativeSettings.ownerUserId;
+  }
+  
+  // Check traditional single-user ownership
+  if (conversation.participants.userId) {
+    return conversation.participants.userId;
+  }
+  
+  // Check collaborative userIds (first user is implicit owner)
+  if (conversation.participants.userIds && conversation.participants.userIds.length > 0) {
+    return conversation.participants.userIds[0];
+  }
+  
+  return undefined;
+}
+
 function isConversationOwner(
   conversation: {
     participants: {
@@ -35,23 +70,7 @@ function isConversationOwner(
   userId: string | undefined
 ): boolean {
   if (!userId) return false;
-  
-  // Check explicit collaborative owner first
-  if (conversation.collaborativeSettings?.ownerUserId) {
-    return conversation.collaborativeSettings.ownerUserId === userId;
-  }
-  
-  // Check traditional single-user ownership
-  if (conversation.participants.userId) {
-    return conversation.participants.userId === userId;
-  }
-  
-  // Check collaborative userIds (first user is implicit owner)
-  if (conversation.participants.userIds && conversation.participants.userIds.length > 0) {
-    return conversation.participants.userIds[0] === userId;
-  }
-  
-  return false;
+  return getOwnerUserId(conversation) === userId;
 }
 
 /**
@@ -334,7 +353,8 @@ export const addMessage = mutation({
     
     if (settings?.requireApproval && args.message.role === "user") {
       const participantId = args.message.participantId;
-      const ownerUserId = settings.ownerUserId || conversation.participants.userId;
+      // Use helper to correctly determine owner (handles userIds[0] as implicit owner)
+      const ownerUserId = getOwnerUserId(conversation);
       const approvedParticipants = settings.approvedParticipants || [];
       
       // Check if participant is owner or pre-approved
@@ -387,9 +407,8 @@ export const approveMessage = mutation({
       throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
-    // Verify approver is the owner
-    const settings = conversation.collaborativeSettings;
-    const ownerUserId = settings?.ownerUserId || conversation.participants.userId;
+    // Verify approver is the owner (use helper to handle userIds[0] as implicit owner)
+    const ownerUserId = getOwnerUserId(conversation);
     
     if (args.approverId !== ownerUserId) {
       throw new ConvexError("APPROVE_NOT_AUTHORIZED");
@@ -448,9 +467,8 @@ export const rejectMessage = mutation({
       throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
-    // Verify rejecter is the owner
-    const settings = conversation.collaborativeSettings;
-    const ownerUserId = settings?.ownerUserId || conversation.participants.userId;
+    // Verify rejecter is the owner (use helper to handle userIds[0] as implicit owner)
+    const ownerUserId = getOwnerUserId(conversation);
     
     if (args.rejecterId !== ownerUserId) {
       throw new ConvexError("REJECT_NOT_AUTHORIZED");
@@ -729,15 +747,24 @@ export const getOrCreate = mutation({
     participantId: v.optional(v.string()), // NEW: Hive Mode
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     participants: v.object({
-      userId: v.optional(v.string()),
+      userId: v.optional(v.string()), // The human user in the conversation
       agentId: v.optional(v.string()), // v0.17.0: Required for user-agent conversations
-      participantId: v.optional(v.string()),
-      memorySpaceIds: v.optional(v.array(v.string())),
+      userIds: v.optional(v.array(v.string())), // Collaborative: multiple human users (Phase 4)
+      participantId: v.optional(v.string()), // Hive Mode: who created this
+      memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space
     }),
     metadata: v.optional(v.any()),
     // Visibility for shareable chats (Phase 1)
     visibility: v.optional(
       v.union(v.literal("private"), v.literal("space"), v.literal("public")),
+    ),
+    // Collaborative settings (Phase 4)
+    collaborativeSettings: v.optional(
+      v.object({
+        requireApproval: v.boolean(),
+        ownerUserId: v.optional(v.string()),
+        approvedParticipants: v.optional(v.array(v.string())),
+      }),
     ),
   },
   handler: async (ctx, args) => {
@@ -745,15 +772,22 @@ export const getOrCreate = mutation({
     let existing = null;
 
     if (args.type === "user-agent") {
-      if (!args.participants.userId) {
-        throw new ConvexError("user-agent conversations require userId");
+      // Check for collaborative (userIds) OR single user (userId)
+      const hasUsers = args.participants.userIds && args.participants.userIds.length > 0;
+      const hasSingleUser = !!args.participants.userId;
+      
+      if (!hasUsers && !hasSingleUser) {
+        throw new ConvexError("user-agent conversations require userId or userIds");
       }
-      // v0.17.0: User-agent conversations require both userId AND agentId
+      // v0.17.0: User-agent conversations require agentId
       if (!args.participants.agentId) {
         throw new ConvexError(
-          "agentId is required when userId is provided. User-agent conversations require both a user and an agent participant.",
+          "agentId is required. User-agent conversations require both a user and an agent participant.",
         );
       }
+
+      // For collaborative conversations with userIds, use the first user for lookup
+      const primaryUserId = args.participants.userId || args.participants.userIds?.[0];
 
       // Look for existing in this memory space with this user AND agent
       // v0.17.0: Must match agentId to support multiple agents per user/space
@@ -762,7 +796,7 @@ export const getOrCreate = mutation({
         .withIndex("by_memorySpace_user", (q) =>
           q
             .eq("memorySpaceId", args.memorySpaceId!)
-            .eq("participants.userId", args.participants.userId),
+            .eq("participants.userId", primaryUserId),
         )
         .filter((q) =>
           q.and(
@@ -823,6 +857,7 @@ export const getOrCreate = mutation({
       createdAt: now,
       updatedAt: now,
       visibility: args.visibility, // Default undefined = 'private'
+      collaborativeSettings: args.collaborativeSettings, // Phase 4: collaborative conversations
     });
 
     return await ctx.db.get(_id);
