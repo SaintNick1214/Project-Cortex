@@ -36,14 +36,17 @@ The Immutable Store API (Layer 1b) provides methods for storing **TRULY SHARED**
 
 **Comparison to Other Stores:**
 
-| Feature    | Conversations (1a) | Immutable (1b)   | Mutable (1c)     | Vector (2)       | Facts (3)        |
-| ---------- | ------------------ | ---------------- | ---------------- | ---------------- | ---------------- |
-| Scoping    | memorySpace        | **NO scoping**   | **NO scoping**   | memorySpace      | memorySpace      |
-| Privacy    | Private to space   | **TRULY Shared** | **TRULY Shared** | Private to space | Private to space |
-| Mutability | Immutable          | Immutable        | Mutable          | Mutable          | Immutable        |
-| Versioning | N/A (append)       | Auto             | No               | Auto             | Auto             |
-| Retention  | 7 years            | 20 versions      | N/A              | 10 versions      | Unlimited        |
-| Use Case   | Chats              | KB, policies     | Live data        | Search index     | Extracted facts  |
+<ComparisonTable
+  headers={["Feature", "Conversations (1a)", "Immutable (1b)", "Mutable (1c)", "Vector (2)", "Facts (3)"]}
+  items={[
+    { feature: "Scoping", values: ["memorySpace", "**NO scoping**", "**NO scoping**", "memorySpace", "memorySpace"] },
+    { feature: "Privacy", values: ["Private to space", "**TRULY Shared**", "**TRULY Shared**", "Private to space", "Private to space"] },
+    { feature: "Mutability", values: ["Immutable", "Immutable", "Mutable", "Mutable", "Immutable"] },
+    { feature: "Versioning", values: ["N/A (append)", "Auto", "No", "Auto", "Auto"] },
+    { feature: "Retention", values: ["7 years", "20 versions", "N/A", "10 versions", "Unlimited"] },
+    { feature: "Use Case", values: ["Chats", "KB, policies", "Live data", "Search index", "Extracted facts"] }
+  ]}
+/>
 
 ---
 

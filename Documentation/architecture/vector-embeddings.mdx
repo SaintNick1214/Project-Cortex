@@ -45,17 +45,20 @@ Cortex is **embedding-agnostic** - bring your own embeddings or use Cloud Mode f
 
 Cortex supports **any embedding model** that produces float64 arrays:
 
-| Provider  | Model                   | Dimensions | Max Tokens | Quality   | Cost         |
-| --------- | ----------------------- | ---------- | ---------- | --------- | ------------ |
-| OpenAI    | text-embedding-3-large  | 3072       | 8191       | Excellent | $0.13/1M     |
-| OpenAI    | text-embedding-3-small  | 1536       | 8191       | Good      | $0.02/1M     |
-| OpenAI    | text-embedding-ada-002  | 1536       | 8191       | Good      | $0.10/1M     |
-| Cohere    | embed-english-v3.0      | 1024       | 512        | Excellent | $0.10/1M     |
-| Cohere    | embed-multilingual-v3.0 | 1024       | 512        | Excellent | $0.10/1M     |
-| Voyage AI | voyage-2                | 1024       | 16000      | Excellent | $0.12/1M     |
-| Google    | text-embedding-004      | 768        | 2048       | Good      | Free (quota) |
-| Local     | sentence-transformers   | 384-1024   | Varies     | Good      | Free         |
-| Local     | instructor-xl           | 768        | 512        | Good      | Free         |
+<DataTable
+  headers={["Provider", "Model", "Dimensions", "Max Tokens", "Quality", "Cost"]}
+  rows={[
+    ["OpenAI", "text-embedding-3-large", "3072", "8191", "Excellent", "$0.13/1M"],
+    ["OpenAI", "text-embedding-3-small", "1536", "8191", "Good", "$0.02/1M"],
+    ["OpenAI", "text-embedding-ada-002", "1536", "8191", "Good", "$0.10/1M"],
+    ["Cohere", "embed-english-v3.0", "1024", "512", "Excellent", "$0.10/1M"],
+    ["Cohere", "embed-multilingual-v3.0", "1024", "512", "Excellent", "$0.10/1M"],
+    ["Voyage AI", "voyage-2", "1024", "16000", "Excellent", "$0.12/1M"],
+    ["Google", "text-embedding-004", "768", "2048", "Good", "Free (quota)"],
+    ["Local", "sentence-transformers", "384-1024", "Varies", "Good", "Free"],
+    ["Local", "instructor-xl", "768", "512", "Good", "Free"],
+  ]}
+/>
 
 **Cortex is flexible:**
 
@@ -94,13 +97,16 @@ Cortex supports **any embedding model** that produces float64 arrays:
 
 **Trade-offs:**
 
-| Dimensions | Storage per Vector | Search Speed | Quality   | Use Case                    |
-| ---------- | ------------------ | ------------ | --------- | --------------------------- |
-| 384        | ~3KB               | Fastest      | Good      | High-volume, cost-sensitive |
-| 768        | ~6KB               | Fast         | Good      | Balanced                    |
-| 1024       | ~8KB               | Fast         | Excellent | Cohere, Voyage              |
-| 1536       | ~12KB              | Medium       | Good      | OpenAI standard (DEFAULT)   |
-| 3072       | ~24KB              | Medium       | Excellent | OpenAI large, best quality  |
+<ComparisonTable
+  headers={["Dimensions", "Storage per Vector", "Search Speed", "Quality", "Use Case"]}
+  items={[
+    { feature: "384", values: ["~3KB", "Fastest", "Good", "High-volume, cost-sensitive"] },
+    { feature: "768", values: ["~6KB", "Fast", "Good", "Balanced"] },
+    { feature: "1024", values: ["~8KB", "Fast", "Excellent", "Cohere, Voyage"] },
+    { feature: "1536", values: ["~12KB", "Medium", "Good", "OpenAI standard (DEFAULT)"] },
+    { feature: "3072", values: ["~24KB", "Medium", "Excellent", "OpenAI large, best quality"] },
+  ]}
+/>
 
 **Recommendations:**
 

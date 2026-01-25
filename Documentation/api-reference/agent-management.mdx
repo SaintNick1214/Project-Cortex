@@ -27,16 +27,19 @@ The Agent Management API provides **optional metadata registration** for agent d
 
 ### Agents vs Memory Spaces: Complementary Systems
 
-| Feature | Memory Spaces | Agent Registry |
-|---------|---------------|----------------|
-| **Purpose** | Isolation boundary | Metadata & analytics |
-| **Status** | Active, required concept | Active, optional feature |
-| **When to use** | Define data scope | Track agent info |
-| **Hive Mode** | Required | Not required |
-| **Registration** | Optional | Optional |
-| **Analytics** | Manual queries | Auto-computed stats |
-| **Discovery** | By type/participants | By capabilities/team |
-| **Cascade deletion** | By memorySpaceId | By participantId |
+<ComparisonTable
+  headers={["Feature", "Memory Spaces", "Agent Registry"]}
+  items={[
+    { feature: "Purpose", values: ["Isolation boundary", "Metadata & analytics"] },
+    { feature: "Status", values: ["Active, required concept", "Active, optional feature"] },
+    { feature: "When to use", values: ["Define data scope", "Track agent info"] },
+    { feature: "Hive Mode", values: ["Required", "Not required"] },
+    { feature: "Registration", values: ["Optional", "Optional"] },
+    { feature: "Analytics", values: ["Manual queries", "Auto-computed stats"] },
+    { feature: "Discovery", values: ["By type/participants", "By capabilities/team"] },
+    { feature: "Cascade deletion", values: ["By memorySpaceId", "By participantId"] },
+  ]}
+/>
 
 **Both can be used together** for complete agent management.
 
@@ -849,16 +852,19 @@ console.log(
 
 **Cascade Deletion: Users vs Agents**
 
-| Feature              | cortex.users.delete()         | cortex.agents.unregister()     |
-| -------------------- | ----------------------------- | ------------------------------ |
-| **Filter key**       | userId                        | participantId                  |
-| **Scope**            | Across all layers             | Across all memory spaces       |
-| **Purpose**          | GDPR compliance               | Convenience (cleanup)          |
-| **Required**         | Legal requirement             | Optional feature               |
-| **Registration**     | Works even if no user profile | Works even if never registered |
-| **Query logic**      | `WHERE userId = X`            | `WHERE participantId = X`      |
-| **Orphan detection** | Included                      | Included                       |
-| **Rollback**         | Transaction-like              | Transaction-like               |
+<ComparisonTable
+  headers={["Feature", "cortex.users.delete()", "cortex.agents.unregister()"]}
+  items={[
+    { feature: "Filter key", values: ["userId", "participantId"] },
+    { feature: "Scope", values: ["Across all layers", "Across all memory spaces"] },
+    { feature: "Purpose", values: ["GDPR compliance", "Convenience (cleanup)"] },
+    { feature: "Required", values: ["Legal requirement", "Optional feature"] },
+    { feature: "Registration", values: ["Works even if no user profile", "Works even if never registered"] },
+    { feature: "Query logic", values: ["WHERE userId = X", "WHERE participantId = X"] },
+    { feature: "Orphan detection", values: ["Included", "Included"] },
+    { feature: "Rollback", values: ["Transaction-like", "Transaction-like"] },
+  ]}
+/>
 
 **Why both exist:**
 

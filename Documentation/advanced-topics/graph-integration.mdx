@@ -366,22 +366,28 @@ await cortex.memory.forget("agent-1", "mem-123", {
 
 **Orphan Rules:**
 
-| Node Type    | When Deleted                              |
-| ------------ | ----------------------------------------- |
-| Conversation | When no Memory/Fact/Context references it |
-| Entity       | When no Fact mentions it                  |
-| User         | Never auto-deleted                        |
-| MemorySpace  | Never auto-deleted                        |
+<DataTable
+  headers={["Node Type", "When Deleted"]}
+  rows={[
+    ["Conversation", "When no Memory/Fact/Context references it"],
+    ["Entity", "When no Fact mentions it"],
+    ["User", "Never auto-deleted"],
+    ["MemorySpace", "Never auto-deleted"],
+  ]}
+/>
 
 ## Performance Characteristics
 
-| Query Type       | Without Graph     | With Graph |
-| ---------------- | ----------------- | ---------- |
-| 1-hop lookup     | 3-10ms            | 10-25ms    |
-| 3-hop traversal  | 10-50ms (limited) | 4-10ms     |
-| 7-hop traversal  | Not feasible      | 4-15ms     |
-| Pattern matching | Not feasible      | 10-100ms   |
-| Entity networks  | Not feasible      | 20-50ms    |
+<ComparisonTable
+  headers={["Query Type", "Without Graph", "With Graph"]}
+  items={[
+    { feature: "1-hop lookup", values: ["3-10ms", "10-25ms"] },
+    { feature: "3-hop traversal", values: ["10-50ms (limited)", "4-10ms"] },
+    { feature: "7-hop traversal", values: ["Not feasible", "4-15ms"] },
+    { feature: "Pattern matching", values: ["Not feasible", "10-100ms"] },
+    { feature: "Entity networks", values: ["Not feasible", "20-50ms"] },
+  ]}
+/>
 
 **Sync Performance:**
 
@@ -412,15 +418,18 @@ const result = await graphAdapter.query(
 
 ### Node Types
 
-| Type           | Description             | Key Properties                            |
-| -------------- | ----------------------- | ----------------------------------------- |
-| `MemorySpace`  | Isolation boundary      | memorySpaceId, name, type                 |
-| `Memory`       | Vector memory entry     | memoryId, content (truncated), importance |
-| `Fact`         | Structured knowledge    | factId, fact, subject, predicate, object  |
-| `Entity`       | Subject/object of facts | name, type                                |
-| `Context`      | Hierarchical context    | contextId, purpose, depth                 |
-| `Conversation` | ACID conversation       | conversationId, messageCount              |
-| `User`         | User identity           | userId                                    |
+<DataTable
+  headers={["Type", "Description", "Key Properties"]}
+  rows={[
+    ["`MemorySpace`", "Isolation boundary", "memorySpaceId, name, type"],
+    ["`Memory`", "Vector memory entry", "memoryId, content (truncated), importance"],
+    ["`Fact`", "Structured knowledge", "factId, fact, subject, predicate, object"],
+    ["`Entity`", "Subject/object of facts", "name, type"],
+    ["`Context`", "Hierarchical context", "contextId, purpose, depth"],
+    ["`Conversation`", "ACID conversation", "conversationId, messageCount"],
+    ["`User`", "User identity", "userId"],
+  ]}
+/>
 
 ### Relationship Types
 

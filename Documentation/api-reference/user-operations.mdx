@@ -205,15 +205,18 @@ The `users.update()` method accepts data fields directly (not wrapped in a `data
 
 **User Profiles vs Other Stores:**
 
-| Feature          | cortex.users.\*         | cortex.immutable.\*         | cortex.mutable.\*          | cortex.vector.\*                    |
-| ---------------- | ----------------------- | --------------------------- | -------------------------- | ----------------------------------- |
-| **Storage**      | immutable (type='user') | immutable                   | mutable                    | vector index                        |
-| **Shared**       | All agents              | All agents                  | All agents                 | Per-agent (memorySpace)             |
-| **Versioning**   | Auto (unlimited)        | Auto (20 versions)          | None                       | Auto (10 versions)                  |
-| **userId**       | N/A (IS the user)       | Optional                    | Optional                   | Optional                            |
-| **GDPR Cascade** | **ALL stores**          | No                          | No                         | No                                  |
-| **API**          | `users.get(id)`         | `immutable.get('user', id)` | `mutable.get('users', id)` | `vector.search(memorySpaceId, ...)` |
-| **Use Case**     | User profiles           | User feedback, submissions  | User sessions, cache       | Memory space memories               |
+<ComparisonTable
+  headers={["Feature", "cortex.users.*", "cortex.immutable.*", "cortex.mutable.*", "cortex.vector.*"]}
+  items={[
+    { feature: "Storage", values: ["immutable (type='user')", "immutable", "mutable", "vector index"] },
+    { feature: "Shared", values: ["All agents", "All agents", "All agents", "Per-agent (memorySpace)"] },
+    { feature: "Versioning", values: ["Auto (unlimited)", "Auto (20 versions)", "None", "Auto (10 versions)"] },
+    { feature: "userId", values: ["N/A (IS the user)", "Optional", "Optional", "Optional"] },
+    { feature: "GDPR Cascade", values: ["ALL stores", "No", "No", "No"] },
+    { feature: "API", values: ["users.get(id)", "immutable.get('user', id)", "mutable.get('users', id)", "vector.search(memorySpaceId, ...)"] },
+    { feature: "Use Case", values: ["User profiles", "User feedback, submissions", "User sessions, cache", "Memory space memories"] },
+  ]}
+/>
 
 **Key Differences:**
 

@@ -214,10 +214,13 @@ Adds convenient npm scripts:
 
 The **basic template** is always installed—it includes a full CLI and HTTP API for testing Cortex. The Vercel AI Quickstart is an **optional addition** that gives you a web-based chat UI.
 
-| Template | Installed | What You Get |
-|----------|-----------|--------------|
-| **Basic Template** | Always | Interactive CLI + HTTP API server |
-| **Vercel AI Quickstart** | Optional | Next.js ChatGPT-style web app |
+<ComparisonTable
+  headers={["Template", "Installed", "What You Get"]}
+  items={[
+    { feature: "Basic Template", values: ["Always", "Interactive CLI + HTTP API server"] },
+    { feature: "Vercel AI Quickstart", values: ["Optional", "Next.js ChatGPT-style web app"] },
+  ]}
+/>
 
 <Callout type="info" title="Both Templates Are Fully Functional">
   Either template lets you immediately start chatting and see Cortex memory in action. Choose based on whether you prefer terminal or browser.
@@ -312,14 +315,17 @@ You: Hi, I'm Alex. I work as a software engineer.
 
 **CLI Commands:**
 
-| Command | Description |
-|---------|-------------|
-| `/recall <query>` | Search memories without storing |
-| `/facts` | List all extracted facts |
-| `/history` | Show conversation history |
-| `/new` | Start a new conversation |
-| `/config` | Show current configuration |
-| `/exit` | Exit the demo |
+<DataTable
+  headers={["Command", "Description"]}
+  rows={[
+    ["/recall <query>", "Search memories without storing"],
+    ["/facts", "List all extracted facts"],
+    ["/history", "Show conversation history"],
+    ["/new", "Start a new conversation"],
+    ["/config", "Show current configuration"],
+    ["/exit", "Exit the demo"],
+  ]}
+/>
 
 ### Or Use the HTTP API
 
@@ -335,13 +341,16 @@ curl -X POST http://localhost:3001/chat \
 
 **API Endpoints:**
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/chat` | POST | Chat and store memory |
-| `/recall?query=...` | GET | Search memories |
-| `/facts` | GET | List extracted facts |
-| `/history/:id` | GET | Get conversation history |
-| `/health` | GET | Health check |
+<DataTable
+  headers={["Endpoint", "Method", "Description"]}
+  rows={[
+    ["/chat", "POST", "Chat and store memory"],
+    ["/recall?query=...", "GET", "Search memories"],
+    ["/facts", "GET", "List extracted facts"],
+    ["/history/:id", "GET", "Get conversation history"],
+    ["/health", "GET", "Health check"],
+  ]}
+/>
 
   </TabItem>
   <TabItem value="vercel" label="Vercel AI Quickstart">
@@ -381,14 +390,17 @@ Skip the wizard with flags:
 
 <Terminal>cortex init my-agent --local --skip-graph -y</Terminal>
 
-| Flag | Description |
-|------|-------------|
-| `--local` | Use local Convex (no prompts) |
-| `--cloud` | Use cloud Convex (no prompts) |
-| `--skip-graph` | Skip graph database setup |
-| `-t, --template <name>` | Template to use (default: `basic`) |
-| `-y, --yes` | Skip all confirmation prompts |
-| `--start` | Start services after setup |
+<DataTable
+  headers={["Flag", "Description"]}
+  rows={[
+    ["--local", "Use local Convex (no prompts)"],
+    ["--cloud", "Use cloud Convex (no prompts)"],
+    ["--skip-graph", "Skip graph database setup"],
+    ["-t, --template <name>", "Template to use (default: basic)"],
+    ["-y, --yes", "Skip all confirmation prompts"],
+    ["--start", "Start services after setup"],
+  ]}
+/>
 
 ---
 
@@ -400,13 +412,16 @@ Skip the wizard with flags:
 
 Opens the correct dashboard for your deployment (local or cloud).
 
-| Table | Description |
-|-------|-------------|
-| `conversations` | All conversation threads |
-| `memories` | Searchable memory index |
-| `immutable` | Versioned message history |
-| `users` | User profiles |
-| `memorySpaces` | Memory space registry |
+<DataTable
+  headers={["Table", "Description"]}
+  rows={[
+    ["conversations", "All conversation threads"],
+    ["memories", "Searchable memory index"],
+    ["immutable", "Versioned message history"],
+    ["users", "User profiles"],
+    ["memorySpaces", "Memory space registry"],
+  ]}
+/>
 
 ### CLI Commands
 

@@ -18,37 +18,37 @@ function createCortexMemory(config: CortexMemoryConfig): CortexMemoryModel;
 
 #### CortexMemoryConfig
 
-| Property                   | Type                                    | Required | Default        | Description                      |
-| -------------------------- | --------------------------------------- | -------- | -------------- | -------------------------------- |
-| `convexUrl`                | string                                  | Yes      | -              | Convex deployment URL            |
-| `memorySpaceId`            | string                                  | Yes      | -              | Memory space for isolation       |
-| `userId`                   | string \| () => string\|Promise<string> | Yes      | -              | User ID (static or function)     |
-| `agentId`                  | string                                  | Yes      | -              | Agent ID (required v0.17.0+)     |
-| `userName`                 | string                                  | No       | 'User'         | Display name for user            |
-| `agentName`                | string                                  | No       | agentId        | Display name for agent           |
-| `conversationId`           | string \| () => string                  | No       | auto-generated | Conversation ID                  |
-| `embeddingProvider`        | object                                  | No       | undefined      | Custom embedding provider        |
-| `memorySearchLimit`        | number                                  | No       | 5              | Max memories to retrieve         |
-| `minMemoryRelevance`       | number                                  | No       | 0.7            | Min relevance score (0-1)        |
-| `enableMemorySearch`       | boolean                                 | No       | true           | Auto-search before generation    |
-| `enableMemoryStorage`      | boolean                                 | No       | true           | Auto-store after generation      |
-| `contextInjectionStrategy` | 'system'\|'user'\|'custom'              | No       | 'system'       | Where to inject context          |
-| `customContextBuilder`     | function                                | No       | undefined      | Custom context formatter         |
-| `enableFactExtraction`     | boolean                                 | No       | false          | Extract facts from conversations |
-| `factExtractionConfig`     | object                                  | No       | undefined      | Fact extraction configuration    |
-| `extractFacts`             | function                                | No       | undefined      | Custom fact extraction           |
-| `enableGraphMemory`        | boolean                                 | No       | false          | Sync to graph database           |
-| `graphConfig`              | object                                  | No       | undefined      | Graph database configuration     |
-| `hiveMode`                 | object                                  | No       | undefined      | Cross-app memory config          |
-| `defaultImportance`        | number                                  | No       | 50             | Default importance (0-100)       |
-| `defaultTags`              | string[]                                | No       | []             | Default tags                     |
-| `streamingOptions`         | object                                  | No       | undefined      | Streaming enhancement options    |
-| `streamingHooks`           | object                                  | No       | undefined      | Real-time streaming callbacks    |
-| `beliefRevision`          | object \| false                         | No       | undefined      | Belief revision configuration    |
-| `enableStreamMetrics`     | boolean                                 | No       | true           | Enable streaming metrics         |
-| `layerObserver`            | object                                  | No       | undefined      | Layer orchestration observer     |
-| `debug`                    | boolean                                 | No       | false          | Enable debug logging             |
-| `logger`                   | object                                  | No       | console        | Custom logger                    |
+<APITable parameters={[
+  { name: "convexUrl", type: "string", required: true, description: "Convex deployment URL" },
+  { name: "memorySpaceId", type: "string", required: true, description: "Memory space for isolation" },
+  { name: "userId", type: "string | () => string | Promise<string>", required: true, description: "User ID (static or function)" },
+  { name: "agentId", type: "string", required: true, description: "Agent ID (required v0.17.0+)" },
+  { name: "userName", type: "string", required: false, description: "Display name for user. Default: 'User'" },
+  { name: "agentName", type: "string", required: false, description: "Display name for agent. Default: agentId" },
+  { name: "conversationId", type: "string | () => string", required: false, description: "Conversation ID. Default: auto-generated" },
+  { name: "embeddingProvider", type: "object", required: false, description: "Custom embedding provider" },
+  { name: "memorySearchLimit", type: "number", required: false, description: "Max memories to retrieve. Default: 5" },
+  { name: "minMemoryRelevance", type: "number", required: false, description: "Min relevance score (0-1). Default: 0.7" },
+  { name: "enableMemorySearch", type: "boolean", required: false, description: "Auto-search before generation. Default: true" },
+  { name: "enableMemoryStorage", type: "boolean", required: false, description: "Auto-store after generation. Default: true" },
+  { name: "contextInjectionStrategy", type: "'system' | 'user' | 'custom'", required: false, description: "Where to inject context. Default: 'system'" },
+  { name: "customContextBuilder", type: "function", required: false, description: "Custom context formatter" },
+  { name: "enableFactExtraction", type: "boolean", required: false, description: "Extract facts from conversations. Default: false" },
+  { name: "factExtractionConfig", type: "object", required: false, description: "Fact extraction configuration" },
+  { name: "extractFacts", type: "function", required: false, description: "Custom fact extraction" },
+  { name: "enableGraphMemory", type: "boolean", required: false, description: "Sync to graph database. Default: false" },
+  { name: "graphConfig", type: "object", required: false, description: "Graph database configuration" },
+  { name: "hiveMode", type: "object", required: false, description: "Cross-app memory config" },
+  { name: "defaultImportance", type: "number", required: false, description: "Default importance (0-100). Default: 50" },
+  { name: "defaultTags", type: "string[]", required: false, description: "Default tags. Default: []" },
+  { name: "streamingOptions", type: "object", required: false, description: "Streaming enhancement options" },
+  { name: "streamingHooks", type: "object", required: false, description: "Real-time streaming callbacks" },
+  { name: "beliefRevision", type: "object | false", required: false, description: "Belief revision configuration" },
+  { name: "enableStreamMetrics", type: "boolean", required: false, description: "Enable streaming metrics. Default: true" },
+  { name: "layerObserver", type: "object", required: false, description: "Layer orchestration observer" },
+  { name: "debug", type: "boolean", required: false, description: "Enable debug logging. Default: false" },
+  { name: "logger", type: "object", required: false, description: "Custom logger. Default: console" },
+]} />
 
 #### factExtractionConfig
 

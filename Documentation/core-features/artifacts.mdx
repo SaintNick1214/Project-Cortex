@@ -191,15 +191,18 @@ const url = await cortex.artifacts.getFileUrl(artifact.artifactId);
 
 Each artifact has a `kind` that determines how it should be rendered and edited:
 
-| Kind | Description | Use Case |
-|------|-------------|----------|
-| `text` | Plain text, markdown, prose | Documents, notes, reports |
-| `code` | Source code with language | Code generation, snippets |
-| `sheet` | Tabular data (JSON array) | Spreadsheets, data tables |
-| `image` | Image reference | Generated images, diagrams |
-| `diagram` | Mermaid, SVG, or similar | Architecture diagrams, flowcharts |
-| `html` | HTML/React for preview | Interactive components |
-| `custom` | User-defined types | Domain-specific artifacts |
+<DataTable
+  headers={["Kind", "Description", "Use Case"]}
+  rows={[
+    ["`text`", "Plain text, markdown, prose", "Documents, notes, reports"],
+    ["`code`", "Source code with language", "Code generation, snippets"],
+    ["`sheet`", "Tabular data (JSON array)", "Spreadsheets, data tables"],
+    ["`image`", "Image reference", "Generated images, diagrams"],
+    ["`diagram`", "Mermaid, SVG, or similar", "Architecture diagrams, flowcharts"],
+    ["`html`", "HTML/React for preview", "Interactive components"],
+    ["`custom`", "User-defined types", "Domain-specific artifacts"],
+  ]}
+/>
 
 ```typescript
 // Code artifact with language config
@@ -347,13 +350,16 @@ function ArtifactPanel() {
 
 ## When to Use Artifacts vs Memories
 
-| Use Artifacts When | Use Memories When |
-|--------------------|-------------------|
-| User needs to see/edit the content | Content is context for AI |
-| Content is a "deliverable" (code, docs) | Content is conversation history |
-| Undo/redo is needed | Semantic search is needed |
-| Streaming generation is required | Fact extraction is needed |
-| Binary files are involved | Long-term recall is the goal |
+<ComparisonTable
+  headers={["Scenario", "Use Artifacts", "Use Memories"]}
+  items={[
+    { feature: "Content visibility", values: ["User needs to see/edit the content", "Content is context for AI"] },
+    { feature: "Content type", values: ["Content is a \"deliverable\" (code, docs)", "Content is conversation history"] },
+    { feature: "Version control", values: ["Undo/redo is needed", "Semantic search is needed"] },
+    { feature: "Generation pattern", values: ["Streaming generation is required", "Fact extraction is needed"] },
+    { feature: "File handling", values: ["Binary files are involved", "Long-term recall is the goal"] },
+  ]}
+/>
 
 ---
 

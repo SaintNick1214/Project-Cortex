@@ -96,25 +96,31 @@ interface Artifact {
 
 ### Artifact Kinds
 
-| Kind | Description | `kindConfig` Fields |
-|------|-------------|---------------------|
-| `text` | Plain text, markdown, prose | - |
-| `code` | Source code with highlighting | `language` |
-| `sheet` | Tabular data (JSON array) | `columns` |
-| `image` | Image reference | `mimeType`, `dimensions` |
-| `diagram` | Mermaid, SVG, visual | `diagramType` |
-| `html` | HTML/React for preview | `framework` |
-| `custom` | User-defined | `customName` |
+<DataTable
+  headers={["Kind", "Description", "kindConfig Fields"]}
+  rows={[
+    ["`text`", "Plain text, markdown, prose", "-"],
+    ["`code`", "Source code with highlighting", "`language`"],
+    ["`sheet`", "Tabular data (JSON array)", "`columns`"],
+    ["`image`", "Image reference", "`mimeType`, `dimensions`"],
+    ["`diagram`", "Mermaid, SVG, visual", "`diagramType`"],
+    ["`html`", "HTML/React for preview", "`framework`"],
+    ["`custom`", "User-defined", "`customName`"],
+  ]}
+/>
 
 ### Streaming States
 
-| State | Description | Allowed Transitions |
-|-------|-------------|---------------------|
-| `draft` | Initial creation, editable | `streaming` |
-| `streaming` | Receiving content from AI | `paused`, `final`, `error`, `draft` |
-| `paused` | Temporarily halted | `streaming`, `final`, `draft` |
-| `final` | Completed and versioned | `draft` (for new edits) |
-| `error` | Error during streaming | `draft` |
+<DataTable
+  headers={["State", "Description", "Allowed Transitions"]}
+  rows={[
+    ["`draft`", "Initial creation, editable", "`streaming`"],
+    ["`streaming`", "Receiving content from AI", "`paused`, `final`, `error`, `draft`"],
+    ["`paused`", "Temporarily halted", "`streaming`, `final`, `draft`"],
+    ["`final`", "Completed and versioned", "`draft` (for new edits)"],
+    ["`error`", "Error during streaming", "`draft`"],
+  ]}
+/>
 
 ---
 
@@ -968,21 +974,24 @@ console.log(`File deleted: ${result.fileDeleted}`);
 
 ## Error Codes
 
-| Code | Description |
-|------|-------------|
-| `ARTIFACT_NOT_FOUND` | Artifact with given ID does not exist |
-| `ARTIFACT_ALREADY_EXISTS` | Artifact with given ID already exists |
-| `ARTIFACT_IS_DELETED` | Attempting to modify a deleted artifact |
-| `INVALID_ARTIFACT_ID` | Artifact ID format is invalid |
-| `INVALID_ARTIFACT_KIND` | Invalid kind value |
-| `INVALID_STREAMING_STATE` | Invalid streaming state value |
-| `INVALID_STATE_TRANSITION` | Cannot transition between these states |
-| `UNDO_NOT_AVAILABLE` | Already at version 1 |
-| `REDO_NOT_AVAILABLE` | Already at latest version |
-| `ARTIFACT_VERSION_NOT_FOUND` | Requested version does not exist |
-| `ARTIFACT_CONTENT_TOO_LARGE` | Content exceeds size limit |
-| `STREAMING_SESSION_INVALID` | Session ID is invalid or expired |
-| `ARTIFACT_QUOTA_EXCEEDED` | Tenant artifact quota exceeded |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["`ARTIFACT_NOT_FOUND`", "Artifact with given ID does not exist"],
+    ["`ARTIFACT_ALREADY_EXISTS`", "Artifact with given ID already exists"],
+    ["`ARTIFACT_IS_DELETED`", "Attempting to modify a deleted artifact"],
+    ["`INVALID_ARTIFACT_ID`", "Artifact ID format is invalid"],
+    ["`INVALID_ARTIFACT_KIND`", "Invalid kind value"],
+    ["`INVALID_STREAMING_STATE`", "Invalid streaming state value"],
+    ["`INVALID_STATE_TRANSITION`", "Cannot transition between these states"],
+    ["`UNDO_NOT_AVAILABLE`", "Already at version 1"],
+    ["`REDO_NOT_AVAILABLE`", "Already at latest version"],
+    ["`ARTIFACT_VERSION_NOT_FOUND`", "Requested version does not exist"],
+    ["`ARTIFACT_CONTENT_TOO_LARGE`", "Content exceeds size limit"],
+    ["`STREAMING_SESSION_INVALID`", "Session ID is invalid or expired"],
+    ["`ARTIFACT_QUOTA_EXCEEDED`", "Tenant artifact quota exceeded"],
+  ]}
+/>
 
 ---
 

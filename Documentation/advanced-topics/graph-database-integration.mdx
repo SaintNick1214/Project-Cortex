@@ -54,33 +54,42 @@ See **[Graph Capabilities](./graph-capabilities)** for built-in graph features w
 <Tabs>
   <TabItem value="graph-lite" label="Graph-Lite (Convex)">
 
-| Depth | Latency | Notes |
-|-------|---------|-------|
-| 5 hops | ~500-800ms | Multiple sequential queries |
-| 10 hops | 2000ms+ | Impractical for real-time |
+<DataTable
+  headers={["Depth", "Latency", "Notes"]}
+  rows={[
+    ["5 hops", "~500-800ms", "Multiple sequential queries"],
+    ["10 hops", "2000ms+", "Impractical for real-time"],
+  ]}
+/>
 
   </TabItem>
   <TabItem value="native" label="Native Graph (Neo4j)">
 
-| Depth | Latency | Notes |
-|-------|---------|-------|
-| 5 hops | ~30ms | Single Cypher query |
-| 10 hops | ~50ms | 20× faster than Graph-Lite |
+<DataTable
+  headers={["Depth", "Latency", "Notes"]}
+  rows={[
+    ["5 hops", "~30ms", "Single Cypher query"],
+    ["10 hops", "~50ms", "20× faster than Graph-Lite"],
+  ]}
+/>
 
   </TabItem>
 </Tabs>
 
 ### Decision Matrix
 
-| Your Need                      | Graph-Lite      | Native Graph DB |
-| ------------------------------ | --------------- | --------------- |
-| Context hierarchies (depth <5) | Perfect         | Overkill        |
-| Audit trails (known paths)     | Perfect         | Overkill        |
-| Agent collaboration (1-3 hops) | Good            | Better          |
-| Deep traversals (6+ hops)      | Too slow        | Required        |
-| Pattern matching               | Very hard       | Required        |
-| Graph algorithms               | Not feasible    | Required        |
-| Dense relationship networks    | Slow            | Best            |
+<ComparisonTable
+  headers={["Your Need", "Graph-Lite", "Native Graph DB"]}
+  items={[
+    { feature: "Context hierarchies (depth <5)", values: ["Perfect", "Overkill"] },
+    { feature: "Audit trails (known paths)", values: ["Perfect", "Overkill"] },
+    { feature: "Agent collaboration (1-3 hops)", values: ["Good", "Better"] },
+    { feature: "Deep traversals (6+ hops)", values: ["Too slow", "Required"] },
+    { feature: "Pattern matching", values: ["Very hard", "Required"] },
+    { feature: "Graph algorithms", values: ["Not feasible", "Required"] },
+    { feature: "Dense relationship networks", values: ["Slow", "Best"] },
+  ]}
+/>
 
 ---
 
@@ -94,11 +103,14 @@ See **[Graph Capabilities](./graph-capabilities)** for built-in graph features w
 
 ### Comparison Matrix
 
-| Database            | License | Local Deploy  | TypeScript Support | Query Language      | Performance | Community | Recommendation    |
-| ------------------- | ------- | ------------- | ------------------ | ------------------- | ----------- | --------- | ----------------- |
-| **Neo4j Community** | GPL v3  | Docker/Install | Excellent          | Cypher (native)     | Excellent   | Large     | Best overall      |
-| **Memgraph**        | BSL     | Docker        | Excellent          | Cypher (compatible) | Excellent   | Growing   | Best performance  |
-| **Kùzu**            | MIT     | Embedded      | Limited            | Cypher (compatible) | Good        | Small     | Experimental      |
+<DataTable
+  headers={["Database", "License", "Local Deploy", "TypeScript Support", "Query Language", "Performance", "Community", "Recommendation"]}
+  rows={[
+    ["**Neo4j Community**", "GPL v3", "Docker/Install", "Excellent", "Cypher (native)", "Excellent", "Large", "Best overall"],
+    ["**Memgraph**", "BSL", "Docker", "Excellent", "Cypher (compatible)", "Excellent", "Growing", "Best performance"],
+    ["**Kùzu**", "MIT", "Embedded", "Limited", "Cypher (compatible)", "Good", "Small", "Experimental"],
+  ]}
+/>
 
 ### Neo4j Community Edition
 

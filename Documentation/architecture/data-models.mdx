@@ -8,21 +8,24 @@ Detailed Convex schema definitions, indexes, and data structures for all Cortex 
 
 Cortex uses **12+ Convex tables** to implement the 4-layer architecture plus coordination and governance:
 
-| Table                   | Layer | Purpose                      | Scoped By     | Versioned   | Retention                  |
-| ----------------------- | ----- | ---------------------------- | ------------- | ----------- | -------------------------- |
-| `conversations`         | 1a    | ACID message threads         | memorySpaceId | Append-only | Forever                    |
-| `immutable`             | 1b    | Shared versioned data        | NOT scoped    | Auto        | Configurable (20 versions) |
-| `mutable`               | 1c    | Shared live data             | NOT scoped    | No          | N/A (overwrites)           |
-| `memories`              | 2     | Vector index                 | memorySpaceId | Auto        | Configurable (10 versions) |
-| `facts`                 | 3     | Structured knowledge         | memorySpaceId | Auto        | Configurable (10 versions) |
-| `factHistory`           | 3     | Belief Revision audit        | memorySpaceId | No          | Configurable               |
-| `memorySpaces`          | Coord | Memory space registry        | memorySpaceId | No          | Until archived             |
-| `contexts`              | Coord | Workflow coordination        | memorySpaceId | Auto        | Configurable               |
-| `sessions`              | Coord | Session lifecycle (v0.27.0+) | userId        | No          | Timeout-based              |
-| `agents`                | Coord | Agent metadata (optional)    | agentId       | No          | Until unregistered         |
-| `governancePolicies`    | Gov   | Retention rules              | org/space     | No          | Until removed              |
-| `governanceEnforcement` | Gov   | Enforcement audit            | org/space     | No          | Configurable               |
-| `graphSyncQueue`        | Graph | Real-time sync queue         | NOT scoped    | No          | Cleared after sync         |
+<DataTable
+  headers={["Table", "Layer", "Purpose", "Scoped By", "Versioned", "Retention"]}
+  rows={[
+    ["`conversations`", "1a", "ACID message threads", "memorySpaceId", "Append-only", "Forever"],
+    ["`immutable`", "1b", "Shared versioned data", "NOT scoped", "Auto", "Configurable (20 versions)"],
+    ["`mutable`", "1c", "Shared live data", "NOT scoped", "No", "N/A (overwrites)"],
+    ["`memories`", "2", "Vector index", "memorySpaceId", "Auto", "Configurable (10 versions)"],
+    ["`facts`", "3", "Structured knowledge", "memorySpaceId", "Auto", "Configurable (10 versions)"],
+    ["`factHistory`", "3", "Belief Revision audit", "memorySpaceId", "No", "Configurable"],
+    ["`memorySpaces`", "Coord", "Memory space registry", "memorySpaceId", "No", "Until archived"],
+    ["`contexts`", "Coord", "Workflow coordination", "memorySpaceId", "Auto", "Configurable"],
+    ["`sessions`", "Coord", "Session lifecycle (v0.27.0+)", "userId", "No", "Timeout-based"],
+    ["`agents`", "Coord", "Agent metadata (optional)", "agentId", "No", "Until unregistered"],
+    ["`governancePolicies`", "Gov", "Retention rules", "org/space", "No", "Until removed"],
+    ["`governanceEnforcement`", "Gov", "Enforcement audit", "org/space", "No", "Configurable"],
+    ["`graphSyncQueue`", "Graph", "Real-time sync queue", "NOT scoped", "No", "Cleared after sync"],
+  ]}
+/>
 
 **Note:** All tables support optional `tenantId` for multi-tenancy (v0.26.0+)
 
@@ -1914,21 +1917,24 @@ await ctx.db
 
 ### Size Per Document
 
-| Table                   | Typical Size | Max Size | Notes                  |
-| ----------------------- | ------------ | -------- | ---------------------- |
-| `conversations`         | 5-50KB       | 1MB      | Grows with messages    |
-| `immutable`             | 1-10KB       | 100KB    | Data payload size      |
-| `mutable`               | 100B-5KB     | 1MB      | Usually small          |
-| `memories`              | 2-8KB        | 50KB     | Includes embedding     |
-| `facts`                 | 500B-2KB     | 10KB     | Compact facts          |
-| `factHistory`           | 200B-1KB     | 5KB      | Event records          |
-| `memorySpaces`          | 500B-2KB     | 10KB     | Metadata only          |
-| `contexts`              | 500B-2KB     | 10KB     | Usually small          |
-| `sessions`              | 300B-1KB     | 5KB      | Metadata only          |
-| `agents`                | 500B         | 5KB      | Optional metadata      |
-| `governancePolicies`    | 1-5KB        | 50KB     | Policy definitions     |
-| `governanceEnforcement` | 500B         | 5KB      | Audit records          |
-| `graphSyncQueue`        | 1-10KB       | 100KB    | Entity snapshot + meta |
+<DataTable
+  headers={["Table", "Typical Size", "Max Size", "Notes"]}
+  rows={[
+    ["`conversations`", "5-50KB", "1MB", "Grows with messages"],
+    ["`immutable`", "1-10KB", "100KB", "Data payload size"],
+    ["`mutable`", "100B-5KB", "1MB", "Usually small"],
+    ["`memories`", "2-8KB", "50KB", "Includes embedding"],
+    ["`facts`", "500B-2KB", "10KB", "Compact facts"],
+    ["`factHistory`", "200B-1KB", "5KB", "Event records"],
+    ["`memorySpaces`", "500B-2KB", "10KB", "Metadata only"],
+    ["`contexts`", "500B-2KB", "10KB", "Usually small"],
+    ["`sessions`", "300B-1KB", "5KB", "Metadata only"],
+    ["`agents`", "500B", "5KB", "Optional metadata"],
+    ["`governancePolicies`", "1-5KB", "50KB", "Policy definitions"],
+    ["`governanceEnforcement`", "500B", "5KB", "Audit records"],
+    ["`graphSyncQueue`", "1-10KB", "100KB", "Entity snapshot + meta"],
+  ]}
+/>
 
 **Embedding sizes:**
 

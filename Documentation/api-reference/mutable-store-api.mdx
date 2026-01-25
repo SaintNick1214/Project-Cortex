@@ -36,13 +36,16 @@ The Mutable Store API (Layer 1c) provides methods for storing **TRULY SHARED** m
 
 **Comparison to Other Stores:**
 
-| Feature    | Conversations (1a) | Immutable (1b)   | Mutable (1c)     | Vector (2)       | Facts (3)        |
-| ---------- | ------------------ | ---------------- | ---------------- | ---------------- | ---------------- |
-| Scoping    | memorySpace        | **NO scoping**   | **NO scoping**   | memorySpace      | memorySpace      |
-| Privacy    | Private to space   | **TRULY Shared** | **TRULY Shared** | Private to space | Private to space |
-| Versioning | N/A (append)       | Auto             | **None**         | Auto             | Auto             |
-| Updates    | Append only        | New version      | **In-place**     | New version      | New version      |
-| Use Case   | Chats              | KB, policies     | **Live data**    | Search index     | Extracted facts  |
+<ComparisonTable
+  headers={["Feature", "Conversations (1a)", "Immutable (1b)", "Mutable (1c)", "Vector (2)", "Facts (3)"]}
+  items={[
+    { feature: "Scoping", values: ["memorySpace", "**NO scoping**", "**NO scoping**", "memorySpace", "memorySpace"] },
+    { feature: "Privacy", values: ["Private to space", "**TRULY Shared**", "**TRULY Shared**", "Private to space", "Private to space"] },
+    { feature: "Versioning", values: ["N/A (append)", "Auto", "**None**", "Auto", "Auto"] },
+    { feature: "Updates", values: ["Append only", "New version", "**In-place**", "New version", "New version"] },
+    { feature: "Use Case", values: ["Chats", "KB, policies", "**Live data**", "Search index", "Extracted facts"] }
+  ]}
+/>
 
 ---
 
@@ -1092,12 +1095,15 @@ const inventory = await listByPrefix("grocery-stores", "store-15", "inventory");
 
 ### Choosing the Right Pattern
 
-| Pattern                 | Best For                           | Query Performance | Update Performance | Complexity |
-| ----------------------- | ---------------------------------- | ----------------- | ------------------ | ---------- |
-| Hierarchical Keys       | Prefix queries, flat relationships | Excellent         | Excellent          | Low        |
-| Hierarchical Namespaces | Organizational structure           | Good              | Excellent          | Low        |
-| Nested Object Values    | Related data, small datasets       | Moderate          | Moderate           | Medium     |
-| Hybrid                  | Large systems, mixed access        | Excellent         | Excellent          | Medium     |
+<ComparisonTable
+  headers={["Pattern", "Best For", "Query Performance", "Update Performance", "Complexity"]}
+  items={[
+    { feature: "Hierarchical Keys", values: ["Prefix queries, flat relationships", "Excellent", "Excellent", "Low"] },
+    { feature: "Hierarchical Namespaces", values: ["Organizational structure", "Good", "Excellent", "Low"] },
+    { feature: "Nested Object Values", values: ["Related data, small datasets", "Moderate", "Moderate", "Medium"] },
+    { feature: "Hybrid", values: ["Large systems, mixed access", "Excellent", "Excellent", "Medium"] }
+  ]}
+/>
 
 **Recommendations:**
 
@@ -1458,16 +1464,19 @@ const apples = await cortex.mutable.get("inventory", "store-15:produce:apples");
 
 **Decision Matrix:**
 
-| Scenario                         | Recommended Pattern    | Why                           |
-| -------------------------------- | ---------------------- | ----------------------------- |
-| Store metadata (< 50 fields)     | Complex Object         | Related data, atomic updates  |
-| Product catalog (1000s of items) | Hierarchical Keys      | Scalable, independent updates |
-| App configuration                | Complex Object         | Read/updated together         |
-| Multi-tenant inventory           | Hierarchical Keys      | Per-tenant prefix queries     |
-| Workflow state                   | Complex Object         | State transitions are atomic  |
-| Metrics/counters                 | Hierarchical Keys      | Independent increments        |
-| Small lists (< 100 items)        | Complex Object (array) | Simple, atomic                |
-| Large lists (> 1000 items)       | Hierarchical Keys      | Scalable queries              |
+<DataTable
+  headers={["Scenario", "Recommended Pattern", "Why"]}
+  rows={[
+    ["Store metadata (< 50 fields)", "Complex Object", "Related data, atomic updates"],
+    ["Product catalog (1000s of items)", "Hierarchical Keys", "Scalable, independent updates"],
+    ["App configuration", "Complex Object", "Read/updated together"],
+    ["Multi-tenant inventory", "Hierarchical Keys", "Per-tenant prefix queries"],
+    ["Workflow state", "Complex Object", "State transitions are atomic"],
+    ["Metrics/counters", "Hierarchical Keys", "Independent increments"],
+    ["Small lists (< 100 items)", "Complex Object (array)", "Simple, atomic"],
+    ["Large lists (> 1000 items)", "Hierarchical Keys", "Scalable queries"]
+  ]}
+/>
 
 ### 6. Use TypeScript for Type Safety
 
@@ -2164,22 +2173,25 @@ try {
 
 **Common Error Codes:**
 
-| Code                     | Description                                                                            |
-| ------------------------ | -------------------------------------------------------------------------------------- |
-| `MISSING_NAMESPACE`      | Namespace is required but was empty or undefined                                       |
-| `INVALID_NAMESPACE`      | Namespace format is invalid (must be alphanumeric, hyphens, underscores, dots, colons) |
-| `NAMESPACE_TOO_LONG`     | Namespace exceeds 100 characters                                                       |
-| `MISSING_KEY`            | Key is required but was empty or undefined                                             |
-| `INVALID_KEY`            | Key format is invalid                                                                  |
-| `KEY_TOO_LONG`           | Key exceeds 255 characters                                                             |
-| `MISSING_VALUE`          | Value is required for set operations                                                   |
-| `VALUE_TOO_LARGE`        | Value exceeds 1MB size limit                                                           |
-| `INVALID_USER_ID`        | userId format is invalid                                                               |
-| `INVALID_LIMIT_RANGE`    | limit must be between 0 and 1000                                                       |
-| `INVALID_UPDATER_TYPE`   | Updater must be a function                                                             |
-| `MISSING_OPERATIONS`     | Transaction requires operations array                                                  |
-| `EMPTY_OPERATIONS_ARRAY` | Transaction operations array cannot be empty                                           |
-| `INVALID_OPERATION_TYPE` | Transaction operation must be set, update, delete, increment, or decrement             |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["`MISSING_NAMESPACE`", "Namespace is required but was empty or undefined"],
+    ["`INVALID_NAMESPACE`", "Namespace format is invalid (must be alphanumeric, hyphens, underscores, dots, colons)"],
+    ["`NAMESPACE_TOO_LONG`", "Namespace exceeds 100 characters"],
+    ["`MISSING_KEY`", "Key is required but was empty or undefined"],
+    ["`INVALID_KEY`", "Key format is invalid"],
+    ["`KEY_TOO_LONG`", "Key exceeds 255 characters"],
+    ["`MISSING_VALUE`", "Value is required for set operations"],
+    ["`VALUE_TOO_LARGE`", "Value exceeds 1MB size limit"],
+    ["`INVALID_USER_ID`", "userId format is invalid"],
+    ["`INVALID_LIMIT_RANGE`", "limit must be between 0 and 1000"],
+    ["`INVALID_UPDATER_TYPE`", "Updater must be a function"],
+    ["`MISSING_OPERATIONS`", "Transaction requires operations array"],
+    ["`EMPTY_OPERATIONS_ARRAY`", "Transaction operations array cannot be empty"],
+    ["`INVALID_OPERATION_TYPE`", "Transaction operation must be set, update, delete, increment, or decrement"]
+  ]}
+/>
 
 ---
 

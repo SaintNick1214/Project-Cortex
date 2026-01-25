@@ -98,7 +98,7 @@ const cortex = new Cortex({
   { name: "circuitBreaker.successThreshold", type: "number", required: false, default: "2", description: "Successes in half-open to close circuit" },
   { name: "circuitBreaker.timeout", type: "number", required: false, default: "30000", description: "Time to wait in open state before half-open (ms)" },
   { name: "circuitBreaker.halfOpenMax", type: "number", required: false, default: "3", description: "Max test requests allowed in half-open state" },
-  { name: "queue.maxSize", type: "object", required: false, default: "See defaults", description: "Max queue size per priority level (Partial<Record<Priority, number>>)" },
+  { name: "queue.maxSize", type: "object", required: false, default: "See defaults", description: "Max queue size per priority level (Partial&lt;Record&lt;Priority, number&gt;&gt;)" },
   { name: "retry.maxRetries", type: "number", required: false, default: "3", description: "Maximum number of retry attempts" },
   { name: "retry.baseDelayMs", type: "number", required: false, default: "500", description: "Base delay between retries (ms)" },
   { name: "retry.maxDelayMs", type: "number", required: false, default: "10000", description: "Maximum delay between retries (ms)" },
@@ -248,13 +248,16 @@ Controls **how many** simultaneous requests. Max 16 concurrent on free plan. Exc
 
 ### Priority Queue
 
-| Priority | Operations | Queue Size |
-|----------|------------|------------|
-| `critical` | Circuit breaker tests | 100 |
-| `high` | User-facing reads | 500 |
-| `normal` | Standard writes | 1,000 |
-| `low` | Analytics | 2,000 |
-| `background` | Cleanup | 5,000 |
+<DataTable
+  headers={["Priority", "Operations", "Queue Size"]}
+  rows={[
+    ["critical", "Circuit breaker tests", "100"],
+    ["high", "User-facing reads", "500"],
+    ["normal", "Standard writes", "1,000"],
+    ["low", "Analytics", "2,000"],
+    ["background", "Cleanup", "5,000"],
+  ]}
+/>
 
 ### Circuit Breaker
 

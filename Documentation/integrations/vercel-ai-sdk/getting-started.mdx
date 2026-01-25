@@ -271,26 +271,26 @@ npm run dev
 
 ### Required Options
 
-| Option          | Type   | Description                             |
-| --------------- | ------ | --------------------------------------- |
-| `convexUrl`     | string | Your Convex deployment URL              |
-| `memorySpaceId` | string | Namespace for memory isolation          |
-| `userId`        | string | User identifier                         |
-| `agentId`       | string | Agent identifier (required in v0.17.0+) |
-| `conversationId`| string | Conversation identifier for chat isolation |
-| `embeddingProvider` | object | Embedding provider for semantic deduplication (required for belief revision) |
+<APITable parameters={[
+  { name: "convexUrl", type: "string", required: true, description: "Your Convex deployment URL" },
+  { name: "memorySpaceId", type: "string", required: true, description: "Namespace for memory isolation" },
+  { name: "userId", type: "string", required: true, description: "User identifier" },
+  { name: "agentId", type: "string", required: true, description: "Agent identifier (required in v0.17.0+)" },
+  { name: "conversationId", type: "string", required: true, description: "Conversation identifier for chat isolation" },
+  { name: "embeddingProvider", type: "object", required: true, description: "Embedding provider for semantic deduplication (required for belief revision)" },
+]} />
 
 ### Optional Options
 
-| Option                 | Type    | Default | Description                |
-| ---------------------- | ------- | ------- | -------------------------- |
-| `userName`             | string  | "User"  | User display name          |
-| `agentName`            | string  | agentId | Agent display name         |
-| `enableFactExtraction` | boolean | false   | Enable LLM fact extraction |
-| `enableGraphMemory`    | boolean | false   | Sync to graph database     |
-| `memorySearchLimit`    | number  | 20      | Max memories to retrieve   |
-| `minMemoryRelevance`   | number  | 0.7     | Min similarity score (0-1) |
-| `debug`                | boolean | false   | Enable debug logging       |
+<APITable parameters={[
+  { name: "userName", type: "string", required: false, description: "User display name. Default: \"User\"" },
+  { name: "agentName", type: "string", required: false, description: "Agent display name. Default: agentId" },
+  { name: "enableFactExtraction", type: "boolean", required: false, description: "Enable LLM fact extraction. Default: false" },
+  { name: "enableGraphMemory", type: "boolean", required: false, description: "Sync to graph database. Default: false" },
+  { name: "memorySearchLimit", type: "number", required: false, description: "Max memories to retrieve. Default: 20" },
+  { name: "minMemoryRelevance", type: "number", required: false, description: "Min similarity score (0-1). Default: 0.7" },
+  { name: "debug", type: "boolean", required: false, description: "Enable debug logging. Default: false" },
+]} />
 
 <Callout type="info">
 Use `createCortexMemoryAsync` (with `await`) instead of `createCortexMemory` when you need graph memory support or want automatic configuration from environment variables.

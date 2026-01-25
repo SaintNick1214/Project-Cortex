@@ -156,16 +156,19 @@ cortex.graph.*           // Graph database integration
 **`cortex.memory.*` (Layer 4)** - Recommended for most use cases. Provides `remember()` / `recall()` for full orchestration, and `search()` / `get()` for quick retrieval.
 </Callout>
 
-| Namespace | Layer | Description |
-|-----------|-------|-------------|
-| `cortex.memory.*` | Layer 4 | **START HERE** - Full orchestration (recommended) |
-| `cortex.conversations.*` | Layer 1a | Direct ACID conversation access |
-| `cortex.vector.*` | Layer 2 | Direct vector index control |
-| `cortex.facts.*` | Layer 3 | Direct fact operations |
-| `cortex.immutable.*` | Layer 1b | Shared knowledge (NO memorySpace - TRULY shared) |
-| `cortex.mutable.*` | Layer 1c | Live mutable data (NO memorySpace - TRULY shared) |
-| `cortex.users.*` | — | User profiles (shared across ALL spaces + GDPR cascade) |
-| `cortex.governance.*` | — | Retention policies for all layers |
+<DataTable
+  headers={["Namespace", "Layer", "Description"]}
+  rows={[
+    ["`cortex.memory.*`", "Layer 4", "**START HERE** - Full orchestration (recommended)"],
+    ["`cortex.conversations.*`", "Layer 1a", "Direct ACID conversation access"],
+    ["`cortex.vector.*`", "Layer 2", "Direct vector index control"],
+    ["`cortex.facts.*`", "Layer 3", "Direct fact operations"],
+    ["`cortex.immutable.*`", "Layer 1b", "Shared knowledge (NO memorySpace - TRULY shared)"],
+    ["`cortex.mutable.*`", "Layer 1c", "Live mutable data (NO memorySpace - TRULY shared)"],
+    ["`cortex.users.*`", "—", "User profiles (shared across ALL spaces + GDPR cascade)"],
+    ["`cortex.governance.*`", "—", "Retention policies for all layers"],
+  ]}
+/>
 
 **GDPR Compliance:**
 
@@ -356,12 +359,15 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 ### Layer 1 Reference Rules
 
-| source.type    | Typical Ref              | Why                                                      |
-| -------------- | ------------------------ | -------------------------------------------------------- |
-| `conversation` | **conversationRef**      | Links to private conversation (Layer 1a)                 |
-| `a2a`          | **conversationRef**      | Links to A2A conversation (Layer 1a)                     |
-| `system`       | **immutableRef** or none | May link to immutable data (Layer 1b) or standalone      |
-| `tool`         | **immutableRef** or none | May link to immutable audit log (Layer 1b) or standalone |
+<DataTable
+  headers={["source.type", "Typical Ref", "Why"]}
+  rows={[
+    ["`conversation`", "**conversationRef**", "Links to private conversation (Layer 1a)"],
+    ["`a2a`", "**conversationRef**", "Links to A2A conversation (Layer 1a)"],
+    ["`system`", "**immutableRef** or none", "May link to immutable data (Layer 1b) or standalone"],
+    ["`tool`", "**immutableRef** or none", "May link to immutable audit log (Layer 1b) or standalone"],
+  ]}
+/>
 
 **Reference Types:**
 
@@ -383,39 +389,45 @@ const memory = await cortex.memory.store("user-123-personal", {
 
 ### Layer 1: cortex.conversations.\* Operations
 
-| Operation                             | Purpose                 | Returns        |
-| ------------------------------------- | ----------------------- | -------------- |
-| `create(params)`                      | Create new conversation | Conversation   |
-| `get(conversationId)`                 | Get conversation        | Conversation   |
-| `addMessage(conversationId, message)` | Add message to ACID     | Message        |
-| `getHistory(conversationId, options)` | Get message thread      | Message[]      |
-| `list(filters)`                       | List conversations      | Conversation[] |
-| `search(query, filters)`              | Search conversations    | SearchResult[] |
-| `count(filters)`                      | Count conversations     | number         |
-| `export(filters, options)`            | Export conversations    | JSON/CSV       |
-| `delete(conversationId)`              | Delete conversation     | DeletionResult |
+<DataTable
+  headers={["Operation", "Purpose", "Returns"]}
+  rows={[
+    ["`create(params)`", "Create new conversation", "Conversation"],
+    ["`get(conversationId)`", "Get conversation", "Conversation"],
+    ["`addMessage(conversationId, message)`", "Add message to ACID", "Message"],
+    ["`getHistory(conversationId, options)`", "Get message thread", "Message[]"],
+    ["`list(filters)`", "List conversations", "Conversation[]"],
+    ["`search(query, filters)`", "Search conversations", "SearchResult[]"],
+    ["`count(filters)`", "Count conversations", "number"],
+    ["`export(filters, options)`", "Export conversations", "JSON/CSV"],
+    ["`delete(conversationId)`", "Delete conversation", "DeletionResult"],
+  ]}
+/>
 
 **See:** [Conversation Operations API](/api-reference/conversation-operations)
 
 ### Layer 2: cortex.vector.\* Operations
 
-| Operation                                            | Purpose                         | Returns                                                               |
-| ---------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------- |
-| `store(memorySpaceId, input, options?)`              | Store vector memory             | MemoryEntry                                                           |
-| `get(memorySpaceId, memoryId)`                       | Get vector memory               | MemoryEntry \| null                                                   |
-| `search(memorySpaceId, query, options?)`             | Search vector index             | MemoryEntry[]                                                         |
-| `update(memorySpaceId, memoryId, updates)`           | Update memory (creates version) | MemoryEntry                                                           |
-| `delete(memorySpaceId, memoryId, options?)`          | Delete from vector              | \{ deleted: boolean; memoryId: string \}                              |
-| `updateMany(filter, updates)`                        | Bulk update                     | \{ updated: number; memoryIds: string[] \}                            |
-| `deleteMany(filter)`                                 | Bulk delete                     | \{ deleted: number; memoryIds: string[] \}                            |
-| `count(filter)`                                      | Count memories                  | number                                                                |
-| `list(filter)`                                       | List memories                   | MemoryEntry[]                                                         |
-| `export(options)`                                    | Export vector memories          | \{ format: string; data: string; count: number; exportedAt: number \} |
-| `archive(memorySpaceId, memoryId)`                   | Soft delete (single memory)     | \{ archived: boolean; memoryId: string; restorable: boolean \}        |
-| `restoreFromArchive(memorySpaceId, memoryId)`        | Restore from archive            | \{ restored: boolean; memoryId: string; memory: MemoryEntry \}        |
-| `getVersion(memorySpaceId, memoryId, version)`       | Get specific version            | MemoryVersion \| null                                                 |
-| `getHistory(memorySpaceId, memoryId)`                | Get version history             | MemoryVersion[]                                                       |
-| `getAtTimestamp(memorySpaceId, memoryId, timestamp)` | Temporal query                  | MemoryVersion \| null                                                 |
+<DataTable
+  headers={["Operation", "Purpose", "Returns"]}
+  rows={[
+    ["`store(memorySpaceId, input, options?)`", "Store vector memory", "MemoryEntry"],
+    ["`get(memorySpaceId, memoryId)`", "Get vector memory", "MemoryEntry \\| null"],
+    ["`search(memorySpaceId, query, options?)`", "Search vector index", "MemoryEntry[]"],
+    ["`update(memorySpaceId, memoryId, updates)`", "Update memory (creates version)", "MemoryEntry"],
+    ["`delete(memorySpaceId, memoryId, options?)`", "Delete from vector", "\\{ deleted: boolean; memoryId: string \\}"],
+    ["`updateMany(filter, updates)`", "Bulk update", "\\{ updated: number; memoryIds: string[] \\}"],
+    ["`deleteMany(filter)`", "Bulk delete", "\\{ deleted: number; memoryIds: string[] \\}"],
+    ["`count(filter)`", "Count memories", "number"],
+    ["`list(filter)`", "List memories", "MemoryEntry[]"],
+    ["`export(options)`", "Export vector memories", "\\{ format: string; data: string; count: number; exportedAt: number \\}"],
+    ["`archive(memorySpaceId, memoryId)`", "Soft delete (single memory)", "\\{ archived: boolean; memoryId: string; restorable: boolean \\}"],
+    ["`restoreFromArchive(memorySpaceId, memoryId)`", "Restore from archive", "\\{ restored: boolean; memoryId: string; memory: MemoryEntry \\}"],
+    ["`getVersion(memorySpaceId, memoryId, version)`", "Get specific version", "MemoryVersion \\| null"],
+    ["`getHistory(memorySpaceId, memoryId)`", "Get version history", "MemoryVersion[]"],
+    ["`getAtTimestamp(memorySpaceId, memoryId, timestamp)`", "Temporal query", "MemoryVersion \\| null"],
+  ]}
+/>
 
 <Callout type="note">
 All methods use the resilience layer (if configured) for automatic retries and circuit breaking.
@@ -423,38 +435,43 @@ All methods use the resilience layer (if configured) for automatic retries and c
 
 ### Layer 4: cortex.memory.\* Operations (Convenience API)
 
-| Operation                                  | Purpose                   | Returns            | Does                         |
-| ------------------------------------------ | ------------------------- | ------------------ | ---------------------------- |
-| `remember(params)`                         | Store conversation        | RememberResult     | ACID + Vector                |
-| `get(memorySpaceId, memoryId, options)`    | Get memory + conversation | EnrichedMemory     | Vector + optional ACID       |
-| `search(memorySpaceId, query, options)`    | Search + enrich           | EnrichedMemory[]   | Vector + optional ACID       |
-| `store(memorySpaceId, input)`              | Smart store               | StoreMemoryResult  | Detects layer automatically  |
-| `update(memorySpaceId, memoryId, updates)` | Update memory             | UpdateMemoryResult | Vector (creates version)     |
-| `delete(memorySpaceId, memoryId, options)` | Delete memory             | DeleteMemoryResult | Vector only (preserves ACID) |
-| `forget(memorySpaceId, memoryId, options)` | Delete both layers        | ForgetResult       | Vector + optionally ACID     |
-| `list(filter)`                             | List memories             | MemoryEntry[]      | Filter-based listing         |
-| _All vector operations_                    | Same as Layer 2           | Same               | Convenience wrappers         |
+<DataTable
+  headers={["Operation", "Purpose", "Returns", "Does"]}
+  rows={[
+    ["`remember(params)`", "Store conversation", "RememberResult", "ACID + Vector"],
+    ["`get(memorySpaceId, memoryId, options)`", "Get memory + conversation", "EnrichedMemory", "Vector + optional ACID"],
+    ["`search(memorySpaceId, query, options)`", "Search + enrich", "EnrichedMemory[]", "Vector + optional ACID"],
+    ["`store(memorySpaceId, input)`", "Smart store", "StoreMemoryResult", "Detects layer automatically"],
+    ["`update(memorySpaceId, memoryId, updates)`", "Update memory", "UpdateMemoryResult", "Vector (creates version)"],
+    ["`delete(memorySpaceId, memoryId, options)`", "Delete memory", "DeleteMemoryResult", "Vector only (preserves ACID)"],
+    ["`forget(memorySpaceId, memoryId, options)`", "Delete both layers", "ForgetResult", "Vector + optionally ACID"],
+    ["`list(filter)`", "List memories", "MemoryEntry[]", "Filter-based listing"],
+    ["_All vector operations_", "Same as Layer 2", "Same", "Convenience wrappers"],
+  ]}
+/>
 
 **Key Differences:**
 
-| Operation              | Layer 2 (cortex.vector.\*) | Layer 4 (cortex.memory.\*)                  |
-| ---------------------- | -------------------------- | ------------------------------------------- |
-| `remember()`           | N/A                        | **Unique** - stores in both layers          |
-| `get()`                | Vector only                | Can include ACID (`includeConversation`)    |
-| `search()`             | Vector only                | Can enrich with ACID (`enrichConversation`) |
-| `delete()`             | Vector only                | Same (preserves ACID)                       |
-| `forget()`             | N/A                        | **Unique** - deletes from both layers       |
-| `store()`              | Manual conversationRef     | Smart - detects layer from source.type      |
-| `update()`             | Direct                     | Delegates to Layer 2                        |
-| `updateMany()`         | Direct (filter, updates)   | Delegates to Layer 2                        |
-| `deleteMany()`         | Direct (filter)            | Delegates to Layer 2                        |
-| `count()`              | Direct (filter)            | Delegates to Layer 2                        |
-| `list()`               | Direct (filter)            | Delegates to Layer 2                        |
-| `export()`             | Direct (options)           | Delegates to Layer 2                        |
-| `archive()`            | Single memory              | Delegates to Layer 2                        |
-| `restoreFromArchive()` | Restore archived memory    | Delegates to Layer 2                        |
-| `archive()`            | Direct                     | Delegates to Layer 2                        |
-| Version ops            | Direct                     | Delegates to Layer 2                        |
+<ComparisonTable
+  headers={["Operation", "Layer 2 (cortex.vector.*)", "Layer 4 (cortex.memory.*)"]}
+  items={[
+    { feature: "`remember()`", values: ["N/A", "**Unique** - stores in both layers"] },
+    { feature: "`get()`", values: ["Vector only", "Can include ACID (`includeConversation`)"] },
+    { feature: "`search()`", values: ["Vector only", "Can enrich with ACID (`enrichConversation`)"] },
+    { feature: "`delete()`", values: ["Vector only", "Same (preserves ACID)"] },
+    { feature: "`forget()`", values: ["N/A", "**Unique** - deletes from both layers"] },
+    { feature: "`store()`", values: ["Manual conversationRef", "Smart - detects layer from source.type"] },
+    { feature: "`update()`", values: ["Direct", "Delegates to Layer 2"] },
+    { feature: "`updateMany()`", values: ["Direct (filter, updates)", "Delegates to Layer 2"] },
+    { feature: "`deleteMany()`", values: ["Direct (filter)", "Delegates to Layer 2"] },
+    { feature: "`count()`", values: ["Direct (filter)", "Delegates to Layer 2"] },
+    { feature: "`list()`", values: ["Direct (filter)", "Delegates to Layer 2"] },
+    { feature: "`export()`", values: ["Direct (options)", "Delegates to Layer 2"] },
+    { feature: "`archive()`", values: ["Single memory", "Delegates to Layer 2"] },
+    { feature: "`restoreFromArchive()`", values: ["Restore archived memory", "Delegates to Layer 2"] },
+    { feature: "Version ops", values: ["Direct", "Delegates to Layer 2"] },
+  ]}
+/>
 
 **Layer 4 Unique Operations:**
 
@@ -869,16 +886,19 @@ cortex.memory.recall(
 
 **Batteries Included Defaults:**
 
-| Feature                 | Default                 | Description                              |
-| ----------------------- | ----------------------- | ---------------------------------------- |
-| Vector Search           | Enabled                 | Searches Layer 2 vector memories         |
-| Facts Semantic Search   | Enabled (v0.30.0+)      | Semantic search when embedding provided  |
-| Facts Text Search       | Enabled                 | Fallback when no embedding provided      |
-| Graph Expansion         | Enabled (if configured) | Discovers related context via graph      |
-| LLM Context Formatting  | Enabled                 | Generates ready-to-inject context string |
-| Conversation Enrichment | Enabled                 | Includes ACID conversation data          |
-| Deduplication           | Enabled                 | Removes duplicates across sources        |
-| Ranking                 | Enabled                 | Multi-signal scoring algorithm           |
+<DataTable
+  headers={["Feature", "Default", "Description"]}
+  rows={[
+    ["Vector Search", "Enabled", "Searches Layer 2 vector memories"],
+    ["Facts Semantic Search", "Enabled (v0.30.0+)", "Semantic search when embedding provided"],
+    ["Facts Text Search", "Enabled", "Fallback when no embedding provided"],
+    ["Graph Expansion", "Enabled (if configured)", "Discovers related context via graph"],
+    ["LLM Context Formatting", "Enabled", "Generates ready-to-inject context string"],
+    ["Conversation Enrichment", "Enabled", "Includes ACID conversation data"],
+    ["Deduplication", "Enabled", "Removes duplicates across sources"],
+    ["Ranking", "Enabled", "Multi-signal scoring algorithm"],
+  ]}
+/>
 
 **Parameters:**
 
@@ -1089,13 +1109,16 @@ const result = await cortex.memory.recall({
 
 `remember()` and `recall()` form a symmetric pair — the two primary orchestration APIs:
 
-| Aspect  | remember()                       | recall()                         |
-| ------- | -------------------------------- | -------------------------------- |
-| Purpose | Store with full orchestration    | Retrieve with full orchestration |
-| Default | All layers enabled               | All sources enabled              |
-| Opt-out | `skipLayers: ['facts', 'graph']` | `sources: { facts: false }`      |
-| Graph   | Auto-syncs entities              | Auto-expands via relationships   |
-| Output  | `RememberResult`                 | `RecallResult` with LLM context  |
+<ComparisonTable
+  headers={["Aspect", "remember()", "recall()"]}
+  items={[
+    { feature: "Purpose", values: ["Store with full orchestration", "Retrieve with full orchestration"] },
+    { feature: "Default", values: ["All layers enabled", "All sources enabled"] },
+    { feature: "Opt-out", values: ["`skipLayers: ['facts', 'graph']`", "`sources: { facts: false }`"] },
+    { feature: "Graph", values: ["Auto-syncs entities", "Auto-expands via relationships"] },
+    { feature: "Output", values: ["`RememberResult`", "`RecallResult` with LLM context"] },
+  ]}
+/>
 
 <Tabs groupId="lifecycle">
   <TabItem value="store" label="STORE (remember)">
@@ -1170,14 +1193,17 @@ When `formatForLLM: true` (default), the context string is structured as:
 
 **When to Use `recall()` vs `search()`:**
 
-| Use Case                 | Use `recall()` | Use `search()` |
-| ------------------------ | -------------- | -------------- |
-| AI Chatbot context       | Yes            | No             |
-| Multi-agent coordination | Yes            | No             |
-| LLM prompt injection     | Yes            | No             |
-| Simple vector lookup     | No             | Yes            |
-| Direct Layer 2 access    | No             | Yes            |
-| Custom result processing | No             | Yes            |
+<ComparisonTable
+  headers={["Use Case", "Use recall()", "Use search()"]}
+  items={[
+    { feature: "AI Chatbot context", values: ["Yes", "No"] },
+    { feature: "Multi-agent coordination", values: ["Yes", "No"] },
+    { feature: "LLM prompt injection", values: ["Yes", "No"] },
+    { feature: "Simple vector lookup", values: ["No", "Yes"] },
+    { feature: "Direct Layer 2 access", values: ["No", "Yes"] },
+    { feature: "Custom result processing", values: ["No", "Yes"] },
+  ]}
+/>
 
 **Errors:**
 
@@ -3163,33 +3189,36 @@ for (const agent of agents) {
 
 All memory operation errors:
 
-| Error Code                    | Description                  | Cause                                  |
-| ----------------------------- | ---------------------------- | -------------------------------------- |
-| `INVALID_MEMORYSPACE_ID`      | Memory space ID is invalid   | Empty or malformed memorySpaceId       |
-| `INVALID_MEMORY_SPACE_ID`     | Memory space ID is invalid   | Empty or malformed memorySpaceId       |
-| `INVALID_MEMORY_ID`           | Memory ID is invalid         | Empty or malformed memoryId            |
-| `INVALID_CONTENT`             | Content is invalid           | Empty content or > 100KB               |
-| `INVALID_CONTENT_TYPE`        | Content type is invalid      | Not "raw", "summarized", or "fact"     |
-| `INVALID_SOURCE_TYPE`         | Source type is invalid       | Not valid source type                  |
-| `INVALID_IMPORTANCE`          | Importance out of range      | Not in 0-100                           |
-| `INVALID_IMPORTANCE_RANGE`    | Importance out of range      | Not in 0-100                           |
-| `INVALID_MIN_SCORE_RANGE`     | Min score out of range       | Not in 0-1                             |
-| `INVALID_LIMIT`               | Limit is invalid             | Not a positive integer                 |
-| `INVALID_VERSION`             | Version is invalid           | Not a positive integer >= 1            |
-| `INVALID_TIMESTAMP`           | Timestamp is invalid         | Not a valid number or Date             |
-| `INVALID_TAGS`                | Tags are invalid             | Not an array of strings                |
-| `INVALID_EMBEDDING`           | Embedding is invalid         | Not an array of numbers                |
-| `INVALID_EXPORT_FORMAT`       | Export format is invalid     | Not "json" or "csv"                    |
-| `INVALID_QUERY_CATEGORY`      | Query category is invalid    | Not a string                           |
-| `MISSING_REQUIRED_FIELD`      | Required field missing       | Required field not provided            |
-| `INVALID_EMBEDDING_DIMENSION` | Embedding dimension mismatch | Wrong vector size                      |
-| `MEMORY_NOT_FOUND`            | Memory doesn't exist         | Invalid memoryId                       |
-| `MEMORY_NOT_ARCHIVED`         | Memory is not archived       | Cannot restore non-archived memory     |
-| `VERSION_NOT_FOUND`           | Version doesn't exist        | Cleaned up by retention                |
-| `PERMISSION_DENIED`           | Access denied                | Agent doesn't own memory               |
-| `INVALID_FILTERS`             | Filters malformed            | Bad filter syntax                      |
-| `CONVEX_ERROR`                | Database error               | Convex operation failed                |
-| `CLOUD_MODE_REQUIRED`         | Feature requires Cloud       | autoEmbed/autoSummarize in Direct mode |
+<DataTable
+  headers={["Error Code", "Description", "Cause"]}
+  rows={[
+    ["`INVALID_MEMORYSPACE_ID`", "Memory space ID is invalid", "Empty or malformed memorySpaceId"],
+    ["`INVALID_MEMORY_SPACE_ID`", "Memory space ID is invalid", "Empty or malformed memorySpaceId"],
+    ["`INVALID_MEMORY_ID`", "Memory ID is invalid", "Empty or malformed memoryId"],
+    ["`INVALID_CONTENT`", "Content is invalid", "Empty content or > 100KB"],
+    ["`INVALID_CONTENT_TYPE`", "Content type is invalid", "Not \"raw\", \"summarized\", or \"fact\""],
+    ["`INVALID_SOURCE_TYPE`", "Source type is invalid", "Not valid source type"],
+    ["`INVALID_IMPORTANCE`", "Importance out of range", "Not in 0-100"],
+    ["`INVALID_IMPORTANCE_RANGE`", "Importance out of range", "Not in 0-100"],
+    ["`INVALID_MIN_SCORE_RANGE`", "Min score out of range", "Not in 0-1"],
+    ["`INVALID_LIMIT`", "Limit is invalid", "Not a positive integer"],
+    ["`INVALID_VERSION`", "Version is invalid", "Not a positive integer >= 1"],
+    ["`INVALID_TIMESTAMP`", "Timestamp is invalid", "Not a valid number or Date"],
+    ["`INVALID_TAGS`", "Tags are invalid", "Not an array of strings"],
+    ["`INVALID_EMBEDDING`", "Embedding is invalid", "Not an array of numbers"],
+    ["`INVALID_EXPORT_FORMAT`", "Export format is invalid", "Not \"json\" or \"csv\""],
+    ["`INVALID_QUERY_CATEGORY`", "Query category is invalid", "Not a string"],
+    ["`MISSING_REQUIRED_FIELD`", "Required field missing", "Required field not provided"],
+    ["`INVALID_EMBEDDING_DIMENSION`", "Embedding dimension mismatch", "Wrong vector size"],
+    ["`MEMORY_NOT_FOUND`", "Memory doesn't exist", "Invalid memoryId"],
+    ["`MEMORY_NOT_ARCHIVED`", "Memory is not archived", "Cannot restore non-archived memory"],
+    ["`VERSION_NOT_FOUND`", "Version doesn't exist", "Cleaned up by retention"],
+    ["`PERMISSION_DENIED`", "Access denied", "Agent doesn't own memory"],
+    ["`INVALID_FILTERS`", "Filters malformed", "Bad filter syntax"],
+    ["`CONVEX_ERROR`", "Database error", "Convex operation failed"],
+    ["`CLOUD_MODE_REQUIRED`", "Feature requires Cloud", "autoEmbed/autoSummarize in Direct mode"],
+  ]}
+/>
 
 ### VectorValidationError
 

@@ -379,12 +379,15 @@ Three transient stream events are emitted during memory orchestration:
 
 **Reduction in Boilerplate**
 
-| Component | Before | After |
-|-----------|--------|-------|
-| API Route layer observer setup | ~40 lines | ~5 lines |
-| Client-side data parsing | ~30 lines | 1 line (`handleDataPart`) |
-| Layer state management | ~100 lines | 0 (included in hook) |
-| **Total** | **~170 lines** | **~6 lines** |
+<DataTable 
+  headers={["Component", "Before", "After"]} 
+  rows={[
+    ["API Route layer observer setup", "~40 lines", "~5 lines"],
+    ["Client-side data parsing", "~30 lines", "1 line (handleDataPart)"],
+    ["Layer state management", "~100 lines", "0 (included in hook)"],
+    ["**Total**", "**~170 lines**", "**~6 lines**"],
+  ]} 
+/>
 
 **Quickstart Template Updated**
 
@@ -552,14 +555,17 @@ Limits can be configured at three levels (highest priority first):
 
 **New Environment Variables**
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `CORTEX_RECALL_LIMIT_MEMORIES` | 20 | Max vector memories per recall |
-| `CORTEX_RECALL_LIMIT_FACTS` | 15 | Max facts per recall |
-| `CORTEX_RECALL_GRAPH_HOPS` | 2 | Graph traversal depth |
-| `CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP` | 5 | Entities expanded per hop |
-| `CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY` | 3 | Results fetched per entity |
-| `CORTEX_RECALL_LIMIT_TOTAL` | 30 | Final result cap |
+<DataTable 
+  headers={["Variable", "Default", "Description"]} 
+  rows={[
+    ["CORTEX_RECALL_LIMIT_MEMORIES", "20", "Max vector memories per recall"],
+    ["CORTEX_RECALL_LIMIT_FACTS", "15", "Max facts per recall"],
+    ["CORTEX_RECALL_GRAPH_HOPS", "2", "Graph traversal depth"],
+    ["CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP", "5", "Entities expanded per hop"],
+    ["CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY", "3", "Results fetched per entity"],
+    ["CORTEX_RECALL_LIMIT_TOTAL", "30", "Final result cap"],
+  ]} 
+/>
 
 **Backward Compatibility**
 
@@ -795,16 +801,19 @@ New comprehensive stress test suite (`tests/stress/multi-turn-chaos.test.ts`):
 
 When no LLM is configured, the `getDefaultDecision()` heuristic now correctly handles all 4 decision types:
 
-| Scenario | Decision | Description |
-|----------|----------|-------------|
-| Empty memory space | ADD | No conflicts to check |
-| Different subject + low similarity | ADD | Unrelated facts |
-| Different predicate class | ADD | Independent facts (e.g., "favorite color" vs "favorite food") |
-| High similarity + higher confidence | UPDATE | Refine existing fact |
-| Same subject + same object + higher confidence | UPDATE | Confirm/strengthen existing |
-| Same subject + same object + same/lower confidence | NONE | Already captured |
-| Exact duplicate | NONE | Skip redundant storage |
-| Same subject + different object + related predicate | SUPERSEDE | Preference changed (e.g., blue → purple) |
+<DataTable 
+  headers={["Scenario", "Decision", "Description"]} 
+  rows={[
+    ["Empty memory space", "ADD", "No conflicts to check"],
+    ["Different subject + low similarity", "ADD", "Unrelated facts"],
+    ["Different predicate class", "ADD", "Independent facts (e.g., \"favorite color\" vs \"favorite food\")"],
+    ["High similarity + higher confidence", "UPDATE", "Refine existing fact"],
+    ["Same subject + same object + higher confidence", "UPDATE", "Confirm/strengthen existing"],
+    ["Same subject + same object + same/lower confidence", "NONE", "Already captured"],
+    ["Exact duplicate", "NONE", "Skip redundant storage"],
+    ["Same subject + different object + related predicate", "SUPERSEDE", "Preference changed (e.g., blue → purple)"],
+  ]} 
+/>
 
 **Key Improvements:**
 
@@ -1263,12 +1272,15 @@ await cortex.sessions.end(session.session_id)
 
 #### User Profile Schemas
 
-| Preset     | Required Fields    | Email Validation | Max Size |
-| ---------- | ------------------ | ---------------- | -------- |
-| `strict`   | displayName, email | ✓                | 64KB     |
-| `standard` | displayName        | ✓                | 256KB    |
-| `minimal`  | displayName        | ✗                | None     |
-| `none`     | None               | ✗                | None     |
+<DataTable 
+  headers={["Preset", "Required Fields", "Email Validation", "Max Size"]} 
+  rows={[
+    ["strict", "displayName, email", "✓", "64KB"],
+    ["standard", "displayName", "✓", "256KB"],
+    ["minimal", "displayName", "✗", "None"],
+    ["none", "None", "✗", "None"],
+  ]} 
+/>
 
 </details>
 
@@ -1646,14 +1658,17 @@ console.log(result.reason); // "Color preference has changed"
 
 #### New API Methods
 
-| Method | Purpose |
-|--------|---------|
-| `facts.revise()` | Full belief revision pipeline |
-| `facts.checkConflicts()` | Preview conflicts without executing |
-| `facts.supersede()` | Manually supersede one fact with another |
-| `facts.history()` | Get change history for a fact |
-| `facts.getSupersessionChain()` | Get lineage of fact versions |
-| `facts.getActivitySummary()` | Analytics on fact changes |
+<DataTable 
+  headers={["Method", "Purpose"]} 
+  rows={[
+    ["facts.revise()", "Full belief revision pipeline"],
+    ["facts.checkConflicts()", "Preview conflicts without executing"],
+    ["facts.supersede()", "Manually supersede one fact with another"],
+    ["facts.history()", "Get change history for a fact"],
+    ["facts.getSupersessionChain()", "Get lineage of fact versions"],
+    ["facts.getActivitySummary()", "Analytics on fact changes"],
+  ]} 
+/>
 
 </details>
 
@@ -1690,12 +1705,15 @@ print(f"Reason: {result.reason}")  # "Color preference has changed"
 
 #### Available Actions
 
-| Action | When Used |
-|--------|-----------|
-| **ADD** | Genuinely new information |
-| **UPDATE** | Refines existing fact |
-| **SUPERSEDE** | Replaces contradictory fact |
-| **NONE** | Already captured |
+<DataTable 
+  headers={["Action", "When Used"]} 
+  rows={[
+    ["ADD", "Genuinely new information"],
+    ["UPDATE", "Refines existing fact"],
+    ["SUPERSEDE", "Replaces contradictory fact"],
+    ["NONE", "Already captured"],
+  ]} 
+/>
 
 </details>
 
@@ -1768,13 +1786,16 @@ print(result.context)
 
 #### Ranking Algorithm
 
-| Signal | Weight | Description |
-|--------|--------|-------------|
-| Semantic | 35% | Vector similarity score |
-| Confidence | 20% | Fact confidence (0-100) |
-| Importance | 15% | Memory importance (0-100) |
-| Recency | 15% | Time decay (30-day half-life) |
-| Graph Connectivity | 15% | Connected entity count |
+<DataTable 
+  headers={["Signal", "Weight", "Description"]} 
+  rows={[
+    ["Semantic", "35%", "Vector similarity score"],
+    ["Confidence", "20%", "Fact confidence (0-100)"],
+    ["Importance", "15%", "Memory importance (0-100)"],
+    ["Recency", "15%", "Time decay (30-day half-life)"],
+    ["Graph Connectivity", "15%", "Connected entity count"],
+  ]} 
+/>
 
 </details>
 
@@ -1802,11 +1823,14 @@ Result: 1 fact instead of 3!
 
 #### Deduplication Strategies
 
-| Strategy | Speed | Accuracy |
-|----------|-------|----------|
-| `semantic` | Slower | Highest |
-| `structural` | Fast | Medium |
-| `exact` | Fastest | Low |
+<DataTable 
+  headers={["Strategy", "Speed", "Accuracy"]} 
+  rows={[
+    ["semantic", "Slower", "Highest"],
+    ["structural", "Fast", "Medium"],
+    ["exact", "Fastest", "Low"],
+  ]} 
+/>
 
 #### Configuration
 
@@ -1852,12 +1876,15 @@ await cortex.memory.remember(
 
 #### Strategies
 
-| Strategy | Speed | Accuracy |
-|----------|-------|----------|
-| `none` | ⚡ Fastest | None |
-| `exact` | ⚡ Fast | Low |
-| `structural` | ⚡ Fast | Medium |
-| `semantic` | 🐢 Slower | High |
+<DataTable 
+  headers={["Strategy", "Speed", "Accuracy"]} 
+  rows={[
+    ["none", "⚡ Fastest", "None"],
+    ["exact", "⚡ Fast", "Low"],
+    ["structural", "⚡ Fast", "Medium"],
+    ["semantic", "🐢 Slower", "High"],
+  ]} 
+/>
 
 </details>
 

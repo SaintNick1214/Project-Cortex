@@ -570,13 +570,16 @@ const result = await cortex.memory.recall({
 
 The `recall()` method uses a **multi-signal scoring algorithm** with the following weights (from `resultProcessor.ts`):
 
-| Signal | Weight | Description |
-|--------|--------|-------------|
-| Semantic similarity | 0.35 | Vector similarity score (0-1) |
-| Confidence | 0.20 | Fact confidence (0-100 → 0-1) |
-| Importance | 0.15 | Memory importance (0-100 → 0-1) |
-| Recency | 0.15 | Time decay (exponential, 30-day half-life) |
-| Graph connectivity | 0.15 | Number of connected entities (logarithmic) |
+<DataTable
+  headers={["Signal", "Weight", "Description"]}
+  rows={[
+    ["Semantic similarity", "0.35", "Vector similarity score (0-1)"],
+    ["Confidence", "0.20", "Fact confidence (0-100 → 0-1)"],
+    ["Importance", "0.15", "Memory importance (0-100 → 0-1)"],
+    ["Recency", "0.15", "Time decay (exponential, 30-day half-life)"],
+    ["Graph connectivity", "0.15", "Number of connected entities (logarithmic)"],
+  ]}
+/>
 
 **Additional boosts:**
 - Highly connected items (>3 entities): ×1.2 multiplier
@@ -1106,12 +1109,15 @@ async function searchWithFallback(
 
 ### Search Latency by Strategy
 
-| Strategy | Index Used    | Typical Latency | Dataset Size Impact             |
-| -------- | ------------- | --------------- | ------------------------------- |
-| Semantic | Vector index  | 50-100ms        | Logarithmic (with filterFields) |
-| Keyword  | Search index  | 20-50ms         | Logarithmic                     |
-| Recent   | Regular index | 10-20ms         | Logarithmic                     |
-| Hybrid   | Multiple      | 100-200ms       | Logarithmic (parallel)          |
+<DataTable
+  headers={["Strategy", "Index Used", "Typical Latency", "Dataset Size Impact"]}
+  rows={[
+    ["Semantic", "Vector index", "50-100ms", "Logarithmic (with filterFields)"],
+    ["Keyword", "Search index", "20-50ms", "Logarithmic"],
+    ["Recent", "Regular index", "10-20ms", "Logarithmic"],
+    ["Hybrid", "Multiple", "100-200ms", "Logarithmic (parallel)"],
+  ]}
+/>
 
 ### Throughput
 

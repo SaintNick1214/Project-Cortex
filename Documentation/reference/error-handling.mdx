@@ -238,28 +238,31 @@ class MemoryValidationError extends Error {
 
 **Error Codes:**
 
-| Code                       | Field                        | Description                         | Fix                                            |
-| -------------------------- | ---------------------------- | ----------------------------------- | ---------------------------------------------- |
-| `MISSING_REQUIRED_FIELD`   | `memorySpaceId`              | Missing or empty memorySpaceId      | Provide valid memorySpaceId                    |
-| `MISSING_REQUIRED_FIELD`   | `conversationId`             | Missing or empty conversationId     | Provide valid conversationId                   |
-| `MISSING_REQUIRED_FIELD`   | `userMessage`                | Missing or empty userMessage        | Provide message content                        |
-| `MISSING_REQUIRED_FIELD`   | `agentResponse`              | Missing or empty agentResponse      | Provide response content                       |
-| `MISSING_REQUIRED_FIELD`   | `userName`                   | Required when userId provided       | Provide userName with userId                   |
-| `OWNER_REQUIRED`           | `userId/agentId`             | Neither userId nor agentId provided | Provide at least one owner ID                  |
-| `INVALID_IMPORTANCE`       | `importance`                 | Not between 0-100                   | Use number 0-100                               |
-| `INVALID_ID_FORMAT`        | (any ID field)               | Invalid characters in ID            | Use alphanumeric, hyphens, underscores         |
-| `INVALID_FORMAT`           | `contentType`                | Invalid contentType                 | Use "raw" or "summarized"                      |
-| `INVALID_SOURCE_TYPE`      | `sourceType`                 | Invalid sourceType                  | Use "conversation", "system", "tool", or "a2a" |
-| `INVALID_EMBEDDING`        | `embedding`                  | Invalid embedding array             | Provide array of finite numbers                |
-| `INVALID_TIMESTAMP`        | (timestamp fields)           | Invalid timestamp                   | Use valid number or Date                       |
-| `EMPTY_ARRAY`              | `messageIds`                 | Empty array                         | Provide at least one element                   |
-| `MISSING_CONVERSATION_REF` | `conversationRef`            | Required for conversation source    | Provide conversationRef                        |
-| `INVALID_STREAM`           | `responseStream`             | Invalid stream object               | Use ReadableStream or AsyncIterable            |
-| `INVALID_FILTER`           | (filter)                     | Insufficient filter criteria        | Add userId or sourceType filter                |
-| `INVALID_CONFIDENCE`       | `minConfidence`              | Not between 0-100                   | Use number 0-100                               |
-| `INVALID_DATE_RANGE`       | `createdAfter/createdBefore` | Invalid date range                  | Ensure after < before                          |
-| `INVALID_GRAPH_DEPTH`      | `graphExpansion.maxDepth`    | Not between 1-5                     | Use depth 1-5                                  |
-| `NEGATIVE_NUMBER`          | `limit`, `version`           | Negative or invalid number          | Use positive integer                           |
+<DataTable
+  headers={["Code", "Field", "Description", "Fix"]}
+  rows={[
+    ["`MISSING_REQUIRED_FIELD`", "`memorySpaceId`", "Missing or empty memorySpaceId", "Provide valid memorySpaceId"],
+    ["`MISSING_REQUIRED_FIELD`", "`conversationId`", "Missing or empty conversationId", "Provide valid conversationId"],
+    ["`MISSING_REQUIRED_FIELD`", "`userMessage`", "Missing or empty userMessage", "Provide message content"],
+    ["`MISSING_REQUIRED_FIELD`", "`agentResponse`", "Missing or empty agentResponse", "Provide response content"],
+    ["`MISSING_REQUIRED_FIELD`", "`userName`", "Required when userId provided", "Provide userName with userId"],
+    ["`OWNER_REQUIRED`", "`userId/agentId`", "Neither userId nor agentId provided", "Provide at least one owner ID"],
+    ["`INVALID_IMPORTANCE`", "`importance`", "Not between 0-100", "Use number 0-100"],
+    ["`INVALID_ID_FORMAT`", "(any ID field)", "Invalid characters in ID", "Use alphanumeric, hyphens, underscores"],
+    ["`INVALID_FORMAT`", "`contentType`", "Invalid contentType", 'Use "raw" or "summarized"'],
+    ["`INVALID_SOURCE_TYPE`", "`sourceType`", "Invalid sourceType", '"conversation", "system", "tool", or "a2a"'],
+    ["`INVALID_EMBEDDING`", "`embedding`", "Invalid embedding array", "Provide array of finite numbers"],
+    ["`INVALID_TIMESTAMP`", "(timestamp fields)", "Invalid timestamp", "Use valid number or Date"],
+    ["`EMPTY_ARRAY`", "`messageIds`", "Empty array", "Provide at least one element"],
+    ["`MISSING_CONVERSATION_REF`", "`conversationRef`", "Required for conversation source", "Provide conversationRef"],
+    ["`INVALID_STREAM`", "`responseStream`", "Invalid stream object", "Use ReadableStream or AsyncIterable"],
+    ["`INVALID_FILTER`", "(filter)", "Insufficient filter criteria", "Add userId or sourceType filter"],
+    ["`INVALID_CONFIDENCE`", "`minConfidence`", "Not between 0-100", "Use number 0-100"],
+    ["`INVALID_DATE_RANGE`", "`createdAfter/createdBefore`", "Invalid date range", "Ensure after < before"],
+    ["`INVALID_GRAPH_DEPTH`", "`graphExpansion.maxDepth`", "Not between 1-5", "Use depth 1-5"],
+    ["`NEGATIVE_NUMBER`", "`limit`, `version`", "Negative or invalid number", "Use positive integer"],
+  ]}
+/>
 
 **Example:**
 
@@ -293,21 +296,24 @@ try {
 
 **Error Codes:**
 
-| Code                     | Field                         | Description                      | Fix                               |
-| ------------------------ | ----------------------------- | -------------------------------- | --------------------------------- |
-| `MISSING_REQUIRED_FIELD` | (various)                     | Required field missing           | Provide required field            |
-| `INVALID_TYPE`           | `type`                        | Invalid conversation type        | Use "user-agent" or "agent-agent" |
-| `INVALID_ROLE`           | `role`                        | Invalid message role             | Use "user", "agent", or "system"  |
-| `INVALID_ID_FORMAT`      | `conversationId`, `messageId` | Invalid ID format                | Remove invalid characters         |
-| `INVALID_FORMAT`         | `format`                      | Invalid export format            | Use "json" or "csv"               |
-| `INVALID_SORT_ORDER`     | `sortOrder`                   | Invalid sort order               | Use "asc" or "desc"               |
-| `EMPTY_STRING`           | `query`                       | Empty search query               | Provide non-empty query           |
-| `INVALID_RANGE`          | `limit`, `offset`             | Invalid range                    | Use valid positive integers       |
-| `EMPTY_ARRAY`            | (array fields)                | Empty array                      | Provide at least one element      |
-| `INVALID_ARRAY_LENGTH`   | (array fields)                | Array length constraint violated | Check min/max requirements        |
-| `INVALID_DATE_RANGE`     | (date fields)                 | Start >= End                     | Ensure start < end                |
-| `INVALID_PARTICIPANTS`   | `participants`                | Invalid participants structure   | Match type requirements           |
-| `DUPLICATE_VALUES`       | (array fields)                | Duplicate values in array        | Remove duplicates                 |
+<DataTable
+  headers={["Code", "Field", "Description", "Fix"]}
+  rows={[
+    ["`MISSING_REQUIRED_FIELD`", "(various)", "Required field missing", "Provide required field"],
+    ["`INVALID_TYPE`", "`type`", "Invalid conversation type", '"user-agent" or "agent-agent"'],
+    ["`INVALID_ROLE`", "`role`", "Invalid message role", '"user", "agent", or "system"'],
+    ["`INVALID_ID_FORMAT`", "`conversationId`, `messageId`", "Invalid ID format", "Remove invalid characters"],
+    ["`INVALID_FORMAT`", "`format`", "Invalid export format", '"json" or "csv"'],
+    ["`INVALID_SORT_ORDER`", "`sortOrder`", "Invalid sort order", '"asc" or "desc"'],
+    ["`EMPTY_STRING`", "`query`", "Empty search query", "Provide non-empty query"],
+    ["`INVALID_RANGE`", "`limit`, `offset`", "Invalid range", "Use valid positive integers"],
+    ["`EMPTY_ARRAY`", "(array fields)", "Empty array", "Provide at least one element"],
+    ["`INVALID_ARRAY_LENGTH`", "(array fields)", "Array length constraint violated", "Check min/max requirements"],
+    ["`INVALID_DATE_RANGE`", "(date fields)", "Start >= End", "Ensure start < end"],
+    ["`INVALID_PARTICIPANTS`", "`participants`", "Invalid participants structure", "Match type requirements"],
+    ["`DUPLICATE_VALUES`", "(array fields)", "Duplicate values in array", "Remove duplicates"],
+  ]}
+/>
 
 ---
 
@@ -319,24 +325,27 @@ try {
 
 **Error Codes:**
 
-| Code                      | Field                    | Description                  | Fix                               |
-| ------------------------- | ------------------------ | ---------------------------- | --------------------------------- |
-| `MISSING_REQUIRED_FIELD`  | (various)                | Required field missing       | Provide required field            |
-| `INVALID_FACT_ID_FORMAT`  | `factId`                 | Doesn't start with "fact-"   | Use "fact-" prefix                |
-| `INVALID_ARRAY`           | (array fields)           | Invalid array or element     | Provide valid array               |
-| `EMPTY_ARRAY`             | (array fields)           | Empty array                  | Provide at least one element      |
-| `INVALID_CONFIDENCE`      | `confidence`             | Not between 0-100            | Use number 0-100                  |
-| `INVALID_FACT_TYPE`       | `factType`               | Invalid fact type            | Use valid fact type               |
-| `INVALID_SOURCE_TYPE`     | `sourceType`             | Invalid source type          | Use valid source type             |
-| `INVALID_EXPORT_FORMAT`   | `format`                 | Invalid export format        | Use "json", "jsonld", or "csv"    |
-| `INVALID_SORT_BY`         | `sortBy`                 | Invalid sort field           | Use valid sort field              |
-| `INVALID_TAG_MATCH`       | `tagMatch`               | Invalid tag match mode       | Use "any" or "all"                |
-| `INVALID_SORT_ORDER`      | `sortOrder`              | Invalid sort order           | Use "asc" or "desc"               |
-| `INVALID_DATE_RANGE`      | (date fields)            | Invalid date range           | Ensure start < end                |
-| `INVALID_VALIDITY_PERIOD` | `validFrom`/`validUntil` | Invalid validity period      | Ensure validFrom < validUntil     |
-| `INVALID_UPDATE`          | (update fields)          | No fields to update          | Provide at least one update field |
-| `INVALID_CONSOLIDATION`   | `factIds`                | Invalid consolidation params | Check requirements                |
-| `INVALID_METADATA`        | `metadata`, `sourceRef`  | Invalid metadata structure   | Provide valid object              |
+<DataTable
+  headers={["Code", "Field", "Description", "Fix"]}
+  rows={[
+    ["`MISSING_REQUIRED_FIELD`", "(various)", "Required field missing", "Provide required field"],
+    ["`INVALID_FACT_ID_FORMAT`", "`factId`", 'Doesn\'t start with "fact-"', 'Use "fact-" prefix'],
+    ["`INVALID_ARRAY`", "(array fields)", "Invalid array or element", "Provide valid array"],
+    ["`EMPTY_ARRAY`", "(array fields)", "Empty array", "Provide at least one element"],
+    ["`INVALID_CONFIDENCE`", "`confidence`", "Not between 0-100", "Use number 0-100"],
+    ["`INVALID_FACT_TYPE`", "`factType`", "Invalid fact type", "Use valid fact type"],
+    ["`INVALID_SOURCE_TYPE`", "`sourceType`", "Invalid source type", "Use valid source type"],
+    ["`INVALID_EXPORT_FORMAT`", "`format`", "Invalid export format", '"json", "jsonld", or "csv"'],
+    ["`INVALID_SORT_BY`", "`sortBy`", "Invalid sort field", "Use valid sort field"],
+    ["`INVALID_TAG_MATCH`", "`tagMatch`", "Invalid tag match mode", '"any" or "all"'],
+    ["`INVALID_SORT_ORDER`", "`sortOrder`", "Invalid sort order", '"asc" or "desc"'],
+    ["`INVALID_DATE_RANGE`", "(date fields)", "Invalid date range", "Ensure start < end"],
+    ["`INVALID_VALIDITY_PERIOD`", "`validFrom`/`validUntil`", "Invalid validity period", "Ensure validFrom < validUntil"],
+    ["`INVALID_UPDATE`", "(update fields)", "No fields to update", "Provide at least one update field"],
+    ["`INVALID_CONSOLIDATION`", "`factIds`", "Invalid consolidation params", "Check requirements"],
+    ["`INVALID_METADATA`", "`metadata`, `sourceRef`", "Invalid metadata structure", "Provide valid object"],
+  ]}
+/>
 
 **Valid Fact Types:**
 
@@ -354,33 +363,45 @@ try {
 
 **User Validation Error** (`src/users/validators.ts`)
 
-| Code                     | Description            |
-| ------------------------ | ---------------------- |
-| `MISSING_REQUIRED_FIELD` | Required field missing |
-| `INVALID_FORMAT`         | Invalid field format   |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["`MISSING_REQUIRED_FIELD`", "Required field missing"],
+    ["`INVALID_FORMAT`", "Invalid field format"],
+  ]}
+/>
 
 **Agent Validation Error** (`src/agents/validators.ts`)
 
-| Code                     | Description            |
-| ------------------------ | ---------------------- |
-| `MISSING_REQUIRED_FIELD` | Required field missing |
-| `INVALID_FORMAT`         | Invalid field format   |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["`MISSING_REQUIRED_FIELD`", "Required field missing"],
+    ["`INVALID_FORMAT`", "Invalid field format"],
+  ]}
+/>
 
 **Session Validation Error** (`src/sessions/validators.ts`)
 
-| Code                 | Description                |
-| -------------------- | -------------------------- |
-| `MISSING_SESSION_ID` | sessionId required         |
-| `INVALID_SESSION_ID` | Invalid sessionId format   |
-| `INVALID_STATUS`     | Invalid session status     |
-| `INVALID_FILTERS`    | Invalid filter combination |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["`MISSING_SESSION_ID`", "sessionId required"],
+    ["`INVALID_SESSION_ID`", "Invalid sessionId format"],
+    ["`INVALID_STATUS`", "Invalid session status"],
+    ["`INVALID_FILTERS`", "Invalid filter combination"],
+  ]}
+/>
 
 **Auth Validation Error** (`src/auth/validators.ts`)
 
-| Code                    | Description            |
-| ----------------------- | ---------------------- |
-| `MISSING_AUTH_PROVIDER` | Auth provider required |
-| `MISSING_TENANT_ID`     | tenantId required      |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["`MISSING_AUTH_PROVIDER`", "Auth provider required"],
+    ["`MISSING_TENANT_ID`", "tenantId required"],
+  ]}
+/>
 
 ---
 
