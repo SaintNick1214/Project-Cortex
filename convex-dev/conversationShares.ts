@@ -57,7 +57,7 @@ export const create = mutation({
   args: {
     conversationId: v.string(),
     grantedBy: v.string(), // userId who is sharing
-    sourceMemorySpaceId: v.string(),
+    sourceMemorySpaceId: v.optional(v.string()), // Deprecated: now derived from conversation
     grantType: v.union(
       v.literal("user"),
       v.literal("space"),
@@ -110,7 +110,8 @@ export const create = mutation({
       shareId,
       conversationId: args.conversationId,
       grantedBy: args.grantedBy,
-      sourceMemorySpaceId: args.sourceMemorySpaceId,
+      // Use the conversation's actual memorySpaceId, not the client-provided value
+      sourceMemorySpaceId: conversation.memorySpaceId,
       grantType: args.grantType,
       grantedTo: args.grantedTo,
       permissions: args.permissions,

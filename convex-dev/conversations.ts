@@ -10,6 +10,81 @@ import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Helper Functions
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Determine if a user is the owner of a conversation.
+ * Handles both traditional single-user and collaborative multi-user conversations.
+ * 
+ * Ownership priority:
+ * 1. collaborativeSettings.ownerUserId (explicit owner for collaborative)
+ * 2. participants.userId (traditional single-user ownership)
+ * 3. First user in participants.userIds (implicit owner for collaborative)
+ */
+function isConversationOwner(
+  conversation: {
+    participants: {
+      userId?: string;
+      userIds?: string[];
+    };
+    collaborativeSettings?: {
+      ownerUserId?: string;
+    };
+  },
+  userId: string | undefined
+): boolean {
+  if (!userId) return false;
+  
+  // Check explicit collaborative owner first
+  if (conversation.collaborativeSettings?.ownerUserId) {
+    return conversation.collaborativeSettings.ownerUserId === userId;
+  }
+  
+  // Check traditional single-user ownership
+  if (conversation.participants.userId) {
+    return conversation.participants.userId === userId;
+  }
+  
+  // Check collaborative userIds (first user is implicit owner)
+  if (conversation.participants.userIds && conversation.participants.userIds.length > 0) {
+    return conversation.participants.userIds[0] === userId;
+  }
+  
+  return false;
+}
+
+/**
+ * Check if a user is a participant in a conversation (owner or collaborator)
+ */
+function isConversationParticipant(
+  conversation: {
+    participants: {
+      userId?: string;
+      userIds?: string[];
+    };
+    collaborativeSettings?: {
+      ownerUserId?: string;
+      approvedParticipants?: string[];
+    };
+  },
+  userId: string | undefined
+): boolean {
+  if (!userId) return false;
+  
+  // Check if owner
+  if (isConversationOwner(conversation, userId)) return true;
+  
+  // Check if in userIds array
+  if (conversation.participants.userIds?.includes(userId)) return true;
+  
+  // Check if in approved participants
+  if (conversation.collaborativeSettings?.approvedParticipants?.includes(userId)) return true;
+  
+  return false;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -134,8 +209,9 @@ export const setVisibility = mutation({
       throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
-    // Verify ownership: only the owner (participants.userId) can change visibility
-    if (args.userId && conversation.participants.userId !== args.userId) {
+    // Verify ownership: only the owner can change visibility
+    // Handles both traditional (userId) and collaborative (userIds/ownerUserId) conversations
+    if (args.userId && !isConversationOwner(conversation, args.userId)) {
       throw new ConvexError("VISIBILITY_CHANGE_NOT_AUTHORIZED");
     }
 
@@ -176,7 +252,9 @@ export const checkAccess = query({
     }
 
     const visibility = conversation.visibility || "private";
-    const isOwner = conversation.participants.userId === args.userId;
+    // Use helper to properly determine ownership for both traditional and collaborative conversations
+    const isOwner = isConversationOwner(conversation, args.userId);
+    const isParticipant = isConversationParticipant(conversation, args.userId);
     const isInSpace = conversation.memorySpaceId === args.memorySpaceId;
 
     // Determine access based on visibility
@@ -189,6 +267,11 @@ export const checkAccess = query({
       canView = true;
       canEdit = true;
       reason = "OWNER";
+    } else if (isParticipant) {
+      // Participants (collaborative members) can view and contribute
+      canView = true;
+      canEdit = true; // Participants can add messages (subject to approval workflow)
+      reason = "PARTICIPANT";
     } else if (visibility === "public") {
       // Public conversations: anyone can view, only owner can edit
       canView = true;

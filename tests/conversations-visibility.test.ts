@@ -9,7 +9,7 @@
  * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
-import { Cortex, createAuthContext } from "../src";
+import { Cortex } from "../src";
 import { ConvexClient } from "convex/browser";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 import { generateTenantId, createTenantAuthContext } from "./helpers/tenancy";

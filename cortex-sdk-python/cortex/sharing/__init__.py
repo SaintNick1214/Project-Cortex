@@ -85,7 +85,7 @@ def extract_share_id(
     """
     try:
         parsed = urlparse(url)
-        
+
         # Check if it's a valid URL (has scheme and netloc)
         if not parsed.scheme or not parsed.netloc:
             return None

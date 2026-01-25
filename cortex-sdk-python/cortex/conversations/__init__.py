@@ -1183,7 +1183,7 @@ class ConversationsAPI:
                 filter_none_values({
                     "conversationId": input.conversation_id,
                     "grantedBy": user_id,
-                    "sourceMemorySpaceId": input.conversation_id.split("-")[1] if "-" in input.conversation_id else "default",
+                    # Note: sourceMemorySpaceId is derived by the backend from the conversation
                     "grantType": input.grant_type,
                     "grantedTo": input.granted_to,
                     "permissions": permissions,
@@ -1516,7 +1516,7 @@ class ConversationsAPI:
             "conversationSnapshots:deleteSnapshot",
         )
 
-        return result
+        return {"deleted": bool(result.get("deleted", False)) if result else False}
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     # Collaborative Conversations (Shareable Chats Phase 4)

@@ -350,14 +350,12 @@ describe("Conversation Shares (Shareable Chats Phase 2)", () => {
       });
       expect(recipientAccess.hasAccess).toBe(true);
 
-      // Other user should not (unless there's a link share)
+      // Other user should not have access (no link shares exist)
       const otherAccess = await cortex.conversations.checkShareAccess({
         conversationId: conv.conversationId,
         userId: other,
       });
-      // This depends on whether there are other shares
-      // In this case, there are no link shares, so access should be false
-      // But we need to check if no other shares exist
+      expect(otherAccess.hasAccess).toBe(false);
     });
 
     it("returns no access when no shares exist", async () => {

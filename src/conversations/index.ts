@@ -990,7 +990,7 @@ export class ConversationsAPI {
         this.client.mutation(api.conversationShares.create, {
           conversationId: input.conversationId,
           grantedBy: this.authContext?.userId || "anonymous",
-          sourceMemorySpaceId: input.conversationId.split("-")[1] || "default", // Extract from conversation or default
+          // Note: sourceMemorySpaceId is derived by the backend from the conversation
           grantType: input.grantType,
           grantedTo: input.grantedTo,
           permissions,

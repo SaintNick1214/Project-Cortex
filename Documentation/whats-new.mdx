@@ -1,4 +1,5 @@
 ---
+id: whats-new
 title: What's New
 description: Latest updates and improvements across all Cortex packages
 sidebar_position: 1
@@ -16,6 +17,123 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 <TabItem value="all" label="All Packages" default>
 
 ## January 2026
+
+### All Packages v0.35.0 · Jan 24, 2026
+
+**Shareable Chats - Visibility, Sharing, Snapshots & Collaboration**
+
+🔓 Conversation visibility controls (private, space, public)  
+🔗 Granular sharing grants with permissions, time limits, and view limits  
+📸 Immutable conversation snapshots with optional PII redaction  
+👥 Multi-user collaborative conversations with message approval workflows
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Conversation Visibility (Phase 1)**
+
+Control who can access conversations with three visibility levels:
+
+- **private** (default): Only the conversation owner can access
+- **space**: All members of the memory space can access
+- **public**: Anyone can access the conversation
+
+```typescript
+// Create with visibility
+const conv = await cortex.conversations.create({
+  memorySpaceId: 'team-space',
+  type: 'user-agent',
+  participants: { userId: 'user-123', agentId: 'assistant' },
+  visibility: 'space',
+});
+
+// Check access
+const access = await cortex.conversations.checkAccess({
+  conversationId: conv.conversationId,
+  userId: 'user-456',
+  memorySpaceId: 'team-space',
+});
+```
+
+**Sharing Grants (Phase 2)**
+
+Create granular sharing permissions with expiration, view limits, and redaction:
+
+```typescript
+// Create a shareable link
+const share = await cortex.conversations.share({
+  conversationId: 'conv-123',
+  grantType: 'link', // or 'user', 'space', 'domain'
+  permissions: { canView: true, canFork: true },
+  expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
+  maxViews: 100,
+});
+
+// Build shareable URL
+import { buildShareUrl } from '@cortexmemory/sdk';
+const url = buildShareUrl(share.shareId, {
+  baseUrl: 'https://myapp.com/shared',
+});
+```
+
+**Conversation Snapshots (Phase 3)**
+
+Create immutable copies of conversations with PII redaction:
+
+```typescript
+const snapshot = await cortex.conversations.snapshot({
+  conversationId: 'conv-123',
+  redactPII: true, // Redacts emails, phones, SSN, credit cards, IPs
+  customRedactions: [
+    { pattern: 'ACME Corp', replacement: '[COMPANY]' },
+  ],
+});
+// "Contact me at john@example.com" → "Contact me at [EMAIL]"
+```
+
+**Collaborative Conversations (Phase 4)**
+
+Multi-user conversations with message approval workflows:
+
+```typescript
+// Create collaborative conversation
+const collab = await cortex.conversations.create({
+  memorySpaceId: 'team-space',
+  type: 'user-agent',
+  participants: {
+    userIds: ['user-1', 'user-2', 'user-3'],
+    agentId: 'team-assistant',
+  },
+  collaborativeSettings: {
+    requireApproval: true,
+    ownerUserId: 'user-1',
+    approvedParticipants: ['user-2'],
+  },
+});
+
+// Approve pending messages
+await cortex.conversations.approveMessage({
+  conversationId: collab.conversationId,
+  messageId: 'msg-456',
+});
+```
+
+#### Changes
+
+- Added `visibility` field to conversations schema
+- New `conversationShares` table for sharing grants
+- New `conversationSnapshots` table for immutable snapshots
+- Added `userIds` and `collaborativeSettings` for collaborative conversations
+- Added `approvalStatus`, `approvedBy`, `approvedAt` to messages
+- New sharing utility functions: `buildShareUrl()`, `extractShareId()`
+- Full Python SDK parity with comprehensive test coverage
+- Updated API reference and core features documentation
+
+</details>
+
+---
 
 ### All Packages v0.34.0 · Jan 24, 2026
 
