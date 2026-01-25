@@ -51,7 +51,10 @@ function getSafeErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     // Only include error name and a sanitized message
     // Avoid logging full stack traces which may contain user data
-    return `${error.name}: ${error.message.slice(0, 200)}`;
+    // Strip newline characters to prevent log injection / forgery
+    const rawMessage = error.message.slice(0, 200);
+    const safeMessage = rawMessage.replace(/[\r\n]/g, " ");
+    return `${error.name}: ${safeMessage}`;
   }
   return "Unknown error";
 }
