@@ -354,13 +354,16 @@ await cortex.memory.export(memorySpaceId, filters);
 
 Granular importance for filtering and retention:
 
-| Range | Level | Examples |
-|-------|-------|----------|
-| 90-100 | Critical | Passwords, security credentials |
-| 70-89 | High | User preferences, decisions |
-| 40-69 | Medium | Conversation context (default: 50) |
-| 10-39 | Low | Casual observations |
-| 0-9 | Trivial | Debug logs |
+<DataTable
+  headers={["Range", "Level", "Examples"]}
+  rows={[
+    ["90-100", "Critical", "Passwords, security credentials"],
+    ["70-89", "High", "User preferences, decisions"],
+    ["40-69", "Medium", "Conversation context (default: 50)"],
+    ["10-39", "Low", "Casual observations"],
+    ["0-9", "Trivial", "Debug logs"],
+  ]}
+/>
 
 ### Automatic Versioning
 

@@ -330,18 +330,21 @@ await cortex.memory.export(memorySpaceId, filters);
 
 **Supported Filters:**
 
-| Filter | Type | Description | Supported Operations |
-|--------|------|-------------|---------------------|
-| `userId` | `string` | Filter by user | memory.*, contexts.*, facts.* |
-| `tags` | `string[]` | Filter by tags (AND) | memory.* |
-| `minImportance` | `number` | Minimum importance (0-100) | memory.*, facts.* |
-| `maxImportance` | `number` | Maximum importance (0-100) | memory.*, facts.* |
-| `createdBefore` | `Date` | Created before date | memory.*, contexts.* |
-| `createdAfter` | `Date` | Created after date | memory.*, contexts.* |
-| `accessCount` | `number` | Minimum access count | memory.* |
-| `version` | `number` | Specific version | immutable.* |
-| `source.type` | `string` | Source type filter | memory.* |
-| `metadata.*` | `any` | Any metadata field | memory.*, contexts.* |
+<DataTable
+  headers={["Filter", "Type", "Description", "Supported Operations"]}
+  rows={[
+    ["`userId`", "`string`", "Filter by user", "memory.*, contexts.*, facts.*"],
+    ["`tags`", "`string[]`", "Filter by tags (AND)", "memory.*"],
+    ["`minImportance`", "`number`", "Minimum importance (0-100)", "memory.*, facts.*"],
+    ["`maxImportance`", "`number`", "Maximum importance (0-100)", "memory.*, facts.*"],
+    ["`createdBefore`", "`Date`", "Created before date", "memory.*, contexts.*"],
+    ["`createdAfter`", "`Date`", "Created after date", "memory.*, contexts.*"],
+    ["`accessCount`", "`number`", "Minimum access count", "memory.*"],
+    ["`version`", "`number`", "Specific version", "immutable.*"],
+    ["`source.type`", "`string`", "Source type filter", "memory.*"],
+    ["`metadata.*`", "`any`", "Any metadata field", "memory.*, contexts.*"],
+  ]}
+/>
 
 ---
 
@@ -380,22 +383,28 @@ await cortex.contexts.create({ purpose, memorySpaceId, userId });
 
 ### Naming Patterns
 
-| Pattern | Example | Description |
-|---------|---------|-------------|
-| Operations | `create`, `get`, `update`, `delete`, `search` | Verb-based |
-| Namespaces | `conversations`, `users`, `contexts` | Plural nouns |
-| Options | `SearchOptions`, `DeleteOptions` | `*Options` suffix |
-| Results | `RememberResult`, `DeleteResult` | `*Result` suffix |
-| Filters | `UniversalFilters`, `UserFilters` | `*Filters` suffix |
+<DataTable
+  headers={["Pattern", "Example", "Description"]}
+  rows={[
+    ["Operations", "`create`, `get`, `update`, `delete`, `search`", "Verb-based"],
+    ["Namespaces", "`conversations`, `users`, `contexts`", "Plural nouns"],
+    ["Options", "`SearchOptions`, `DeleteOptions`", "`*Options` suffix"],
+    ["Results", "`RememberResult`, `DeleteResult`", "`*Result` suffix"],
+    ["Filters", "`UniversalFilters`, `UserFilters`", "`*Filters` suffix"],
+  ]}
+/>
 
 ### Return Values
 
-| Pattern | Type | Example |
-|---------|------|---------|
-| Single item | `Entity \| null` | `cortex.users.get()` |
-| Multiple items | `Entity[]` | `cortex.users.search()` |
-| Paginated | `{ items, total, hasMore }` | `cortex.memory.list()` |
-| Operations | `*Result` | `cortex.memory.remember()` |
+<DataTable
+  headers={["Pattern", "Type", "Example"]}
+  rows={[
+    ["Single item", "`Entity | null`", "`cortex.users.get()`"],
+    ["Multiple items", "`Entity[]`", "`cortex.users.search()`"],
+    ["Paginated", "`{ items, total, hasMore }`", "`cortex.memory.list()`"],
+    ["Operations", "`*Result`", "`cortex.memory.remember()`"],
+  ]}
+/>
 
 ### Async/Await
 

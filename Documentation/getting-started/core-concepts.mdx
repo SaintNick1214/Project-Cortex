@@ -130,12 +130,15 @@ await cortex.memory.remember({
 
 ### Why Memory Spaces?
 
-| Aspect | Before (Agent-Centric) | After (Memory-Space-Centric) |
-|--------|------------------------|------------------------------|
-| Architecture | Each agent had separate memories | Tools share a memory space |
-| Example | Cursor stores "User prefers TypeScript" | Cursor stores in user-123-personal |
-| Problem/Solution | Claude can't see it (different agent) | Claude reads from user-123-personal |
-| Result | User repeats preferences to every tool | Memory follows user across tools |
+<ComparisonTable
+  headers={["Aspect", "Before (Agent-Centric)", "After (Memory-Space-Centric)"]}
+  items={[
+    { feature: "Architecture", values: ["Each agent had separate memories", "Tools share a memory space"] },
+    { feature: "Example", values: ["Cursor stores \"User prefers TypeScript\"", "Cursor stores in user-123-personal"] },
+    { feature: "Problem/Solution", values: ["Claude can't see it (different agent)", "Claude reads from user-123-personal"] },
+    { feature: "Result", values: ["User repeats preferences to every tool", "Memory follows user across tools"] },
+  ]}
+/>
 
 ### Creating Memory Spaces
 
@@ -336,15 +339,18 @@ await cortex.a2a.send({
 
 ### Comparison Table
 
-| Feature | Hive Mode | Collaboration Mode |
-|---------|-----------|-------------------|
-| Memory Spaces | 1 shared space | N separate spaces |
-| Storage | Single write | Dual-write (A2A) |
-| Consistency | Always consistent | Eventually consistent |
-| Isolation | None (by design) | Complete |
-| Use Case | Personal AI tools | Autonomous agents |
-| Agent Tracking | Via agentId | Via fromAgent/toAgent |
-| Example | Cursor + Claude | Finance agent + HR agent |
+<ComparisonTable
+  headers={["Feature", "Hive Mode", "Collaboration Mode"]}
+  items={[
+    { feature: "Memory Spaces", values: ["1 shared space", "N separate spaces"] },
+    { feature: "Storage", values: ["Single write", "Dual-write (A2A)"] },
+    { feature: "Consistency", values: ["Always consistent", "Eventually consistent"] },
+    { feature: "Isolation", values: ["None (by design)", "Complete"] },
+    { feature: "Use Case", values: ["Personal AI tools", "Autonomous agents"] },
+    { feature: "Agent Tracking", values: ["Via agentId", "Via fromAgent/toAgent"] },
+    { feature: "Example", values: ["Cursor + Claude", "Finance agent + HR agent"] },
+  ]}
+/>
 
 ### Cross-MemorySpace Access (Context Chains)
 
@@ -500,13 +506,16 @@ console.log(memory.previousVersions[0]);
 
 Cortex uses a granular 0-100 importance scale for precise prioritization:
 
-| Range | Level | Examples |
-|-------|-------|----------|
-| 90-100 | Critical | Passwords (100), Hard deadlines (95), Security alerts (95) |
-| 70-89 | High | User requirements (80), Important decisions (85), Key preferences (75) |
-| 40-69 | Medium | General preferences (60), Conversation context (50), Background info (45) |
-| 10-39 | Low | Casual observations (30), Minor details (20), Exploratory conversation (25) |
-| 0-9 | Trivial | Debug information (5), Temporary data (0) |
+<DataTable
+  headers={["Range", "Level", "Examples"]}
+  rows={[
+    ["90-100", "Critical", "Passwords (100), Hard deadlines (95), Security alerts (95)"],
+    ["70-89", "High", "User requirements (80), Important decisions (85), Key preferences (75)"],
+    ["40-69", "Medium", "General preferences (60), Conversation context (50), Background info (45)"],
+    ["10-39", "Low", "Casual observations (30), Minor details (20), Exploratory conversation (25)"],
+    ["0-9", "Trivial", "Debug information (5), Temporary data (0)"],
+  ]}
+/>
 
 ---
 
@@ -599,11 +608,14 @@ const embedding = Array.from(output.data);
 
 ### Dimension Tradeoffs
 
-| Dimensions | Speed | Accuracy | Cost | Use Case |
-|------------|-------|----------|------|----------|
-| 384-768 | Fast | Good | Low | High-volume, real-time |
-| 1536 | Medium | Better | Medium | General purpose |
-| 3072 | Slower | Best | High | When accuracy is critical |
+<ComparisonTable
+  headers={["Dimensions", "Speed", "Accuracy", "Cost", "Use Case"]}
+  items={[
+    { feature: "384-768", values: ["Fast", "Good", "Low", "High-volume, real-time"] },
+    { feature: "1536", values: ["Medium", "Better", "Medium", "General purpose"] },
+    { feature: "3072", values: ["Slower", "Best", "High", "When accuracy is critical"] },
+  ]}
+/>
 
 <Callout type="tip" title="Recommendation">
   Default to 3072 dimensions (OpenAI text-embedding-3-large) for best accuracy. Scale down if you need faster search.
@@ -1173,12 +1185,15 @@ const provenance = await graphAdapter.query(`
 
 ### Performance Characteristics
 
-| Query Type | Without Graph | With Graph |
-|------------|---------------|------------|
-| 1-hop lookup | 3-10ms | 10-25ms |
-| 3-hop traversal | 10-50ms (limited) | 4-10ms |
-| 7-hop traversal | Not feasible | 4-15ms |
-| Pattern matching | Not feasible | 10-100ms |
+<ComparisonTable
+  headers={["Query Type", "Without Graph", "With Graph"]}
+  items={[
+    { feature: "1-hop lookup", values: ["3-10ms", "10-25ms"] },
+    { feature: "3-hop traversal", values: ["10-50ms (limited)", "4-10ms"] },
+    { feature: "7-hop traversal", values: ["Not feasible", "4-15ms"] },
+    { feature: "Pattern matching", values: ["Not feasible", "10-100ms"] },
+  ]}
+/>
 
 <Callout type="info" title="Convex as Source of Truth">
   Graph is for **discovery and traversal**. Always write to Convex first, then sync to graph. Cortex works perfectly without graph—add it when you need multi-hop reasoning or knowledge graphs.

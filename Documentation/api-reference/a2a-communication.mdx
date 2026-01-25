@@ -19,13 +19,16 @@ Some A2A operations require **real-time pub/sub infrastructure**.
 
 </Callout>
 
-| Operation | Pub/Sub Required | Works Without | Why |
-|-----------|------------------|---------------|-----|
-| `send()` | No | Yes | Fire-and-forget (async) |
-| `request()` | Yes | No | Needs real-time response notification |
-| `broadcast()` | Yes (optimal) | Degraded | Can store without pub/sub, but no delivery confirmation |
-| `subscribe()` | Yes | No | Real-time inbox notifications (Planned) |
-| `getConversation()` | No | Yes | Database query only |
+<ComparisonTable
+  headers={["Operation", "Pub/Sub Required", "Works Without", "Why"]}
+  items={[
+    { feature: "send()", values: ["No", "Yes", "Fire-and-forget (async)"] },
+    { feature: "request()", values: ["Yes", "No", "Needs real-time response notification"] },
+    { feature: "broadcast()", values: ["Yes (optimal)", "Degraded", "Can store without pub/sub, but no delivery confirmation"] },
+    { feature: "subscribe()", values: ["Yes", "No", "Real-time inbox notifications (Planned)"] },
+    { feature: "getConversation()", values: ["No", "Yes", "Database query only"] },
+  ]}
+/>
 
 **Pub/Sub Options:**
 
@@ -40,17 +43,20 @@ A2A = Agent Memory + Pub/Sub (optional) + Convenience
 
 **Validation Constraints:**
 
-| Field | Constraint | Default | Details |
-|-------|------------|---------|---------|
-| Agent IDs (from, to) | Pattern: `/^[a-zA-Z0-9_-]+$/` | — | Only alphanumeric, hyphens, underscores |
-| Agent IDs (from, to) | Max length: 100 characters | — | — |
-| message | Max size: 100KB | — | Measured in UTF-8 bytes |
-| importance | Integer 0-100 | 60 for send/broadcast, 70 for request | — |
-| timeout | Integer 1000-300000ms | 30000ms (30 seconds) | — |
-| retries | Integer 0-10 | 1 | — |
-| to[] (broadcast) | Max 100 recipients | — | No duplicates, sender not allowed |
-| limit | Integer 1-1000 | 100 | — |
-| offset | Integer >= 0 | 0 | — |
+<DataTable
+  headers={["Field", "Constraint", "Default", "Details"]}
+  rows={[
+    ["Agent IDs (from, to)", "Pattern: /^[a-zA-Z0-9_-]+$/", "—", "Only alphanumeric, hyphens, underscores"],
+    ["Agent IDs (from, to)", "Max length: 100 characters", "—", "—"],
+    ["message", "Max size: 100KB", "—", "Measured in UTF-8 bytes"],
+    ["importance", "Integer 0-100", "60 for send/broadcast, 70 for request", "—"],
+    ["timeout", "Integer 1000-300000ms", "30000ms (30 seconds)", "—"],
+    ["retries", "Integer 0-10", "1", "—"],
+    ["to[] (broadcast)", "Max 100 recipients", "—", "No duplicates, sender not allowed"],
+    ["limit", "Integer 1-1000", "100", "—"],
+    ["offset", "Integer >= 0", "0", "—"],
+  ]}
+/>
 
 ```typescript
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -174,11 +180,14 @@ await cortex.vector.store("hr-agent", {
 
 **Code Reduction:**
 
-| Approach | Lines of Code | Handles ACID | Bidirectional / Complexity |
-|----------|---------------|--------------|----------------------------|
-| `cortex.a2a.send()` | 7 | Automatic | Both agents / Low complexity |
-| `cortex.memory.remember()` | ~20 | Automatic | One agent (call 2x) / Medium complexity |
-| Manual (Layer 1+2) | 50+ | Manual | One agent (call 2x) / High complexity |
+<ComparisonTable
+  headers={["Approach", "Lines of Code", "Handles ACID", "Bidirectional / Complexity"]}
+  items={[
+    { feature: "cortex.a2a.send()", values: ["7", "Automatic", "Both agents / Low complexity"] },
+    { feature: "cortex.memory.remember()", values: ["~20", "Automatic", "One agent (call 2x) / Medium complexity"] },
+    { feature: "Manual (Layer 1+2)", values: ["50+", "Manual", "One agent (call 2x) / High complexity"] },
+  ]}
+/>
 
 <Callout type="tip" title="Why cortex.a2a.send() is best for A2A">
 
@@ -1609,13 +1618,16 @@ async function askWithFallback(from: string, to: string, message: string) {
 
 ## Comparison: Helper vs Direct
 
-| Operation | A2A Helper | Memory API Direct | Lines of Code |
-|-----------|------------|-------------------|---------------|
-| Send message | `a2a.send()` | ACID + 2x Vector stores | 7 vs 40+ |
-| Request-response | `a2a.request()` | Send + polling loop | 5 vs 35+ |
-| Broadcast | `a2a.broadcast()` | Loop + Nx2 stores | 8 vs 50+ |
-| Get conversation | `a2a.getConversation()` | Bidirectional search + merge | 6 vs 40+ |
-| **Total saved** | **26 lines** | **165+ lines** | **85% reduction** |
+<ComparisonTable
+  headers={["Operation", "A2A Helper", "Memory API Direct", "Lines of Code"]}
+  items={[
+    { feature: "Send message", values: ["a2a.send()", "ACID + 2x Vector stores", "7 vs 40+"] },
+    { feature: "Request-response", values: ["a2a.request()", "Send + polling loop", "5 vs 35+"] },
+    { feature: "Broadcast", values: ["a2a.broadcast()", "Loop + Nx2 stores", "8 vs 50+"] },
+    { feature: "Get conversation", values: ["a2a.getConversation()", "Bidirectional search + merge", "6 vs 40+"] },
+    { feature: "Total saved", values: ["26 lines", "165+ lines", "85% reduction"] },
+  ]}
+/>
 
 <Callout type="info" title="Helpers are pure convenience">
 
@@ -1809,26 +1821,29 @@ try {
 
 ### All Error Codes
 
-| Error Code | Description | Cause |
-|------------|-------------|-------|
-| `INVALID_AGENT_ID` | Agent ID is invalid | Empty, malformed, or exceeds 100 chars |
-| `EMPTY_MESSAGE` | Message is empty | Message is empty or whitespace-only |
-| `MESSAGE_TOO_LARGE` | Message exceeds limit | Message exceeds 100KB (UTF-8 bytes) |
-| `EMPTY_RECIPIENTS` | No recipients | to[] array is empty |
-| `TOO_MANY_RECIPIENTS` | Too many recipients | More than 100 recipients in broadcast |
-| `DUPLICATE_RECIPIENTS` | Duplicate recipients | Same agent ID appears multiple times in to[] |
-| `INVALID_RECIPIENT` | Invalid recipient | Sender included in recipients list |
-| `SAME_AGENT_COMMUNICATION` | Self-communication | from and to are the same agent |
-| `INVALID_IMPORTANCE` | Invalid importance | Importance not integer 0-100 |
-| `INVALID_TIMEOUT` | Invalid timeout | Timeout not between 1000ms and 300000ms |
-| `INVALID_RETRIES` | Invalid retries | Retries not integer 0-10 |
-| `INVALID_DATE_RANGE` | Invalid date range | 'since' is after 'until' |
-| `INVALID_LIMIT` | Invalid limit | Limit not integer 1-1000 |
-| `INVALID_OFFSET` | Invalid offset | Offset is negative |
-| `PUBSUB_NOT_CONFIGURED` | Pub/sub required | request() needs pub/sub adapter |
-| `A2ATimeoutError` | Request timeout | No response within timeout |
-| `A2AValidationError` | Validation failed | Client-side validation error (see code/field) |
-| `CONVEX_ERROR` | Database error | Convex operation failed |
+<DataTable
+  headers={["Error Code", "Description", "Cause"]}
+  rows={[
+    ["INVALID_AGENT_ID", "Agent ID is invalid", "Empty, malformed, or exceeds 100 chars"],
+    ["EMPTY_MESSAGE", "Message is empty", "Message is empty or whitespace-only"],
+    ["MESSAGE_TOO_LARGE", "Message exceeds limit", "Message exceeds 100KB (UTF-8 bytes)"],
+    ["EMPTY_RECIPIENTS", "No recipients", "to[] array is empty"],
+    ["TOO_MANY_RECIPIENTS", "Too many recipients", "More than 100 recipients in broadcast"],
+    ["DUPLICATE_RECIPIENTS", "Duplicate recipients", "Same agent ID appears multiple times in to[]"],
+    ["INVALID_RECIPIENT", "Invalid recipient", "Sender included in recipients list"],
+    ["SAME_AGENT_COMMUNICATION", "Self-communication", "from and to are the same agent"],
+    ["INVALID_IMPORTANCE", "Invalid importance", "Importance not integer 0-100"],
+    ["INVALID_TIMEOUT", "Invalid timeout", "Timeout not between 1000ms and 300000ms"],
+    ["INVALID_RETRIES", "Invalid retries", "Retries not integer 0-10"],
+    ["INVALID_DATE_RANGE", "Invalid date range", "'since' is after 'until'"],
+    ["INVALID_LIMIT", "Invalid limit", "Limit not integer 1-1000"],
+    ["INVALID_OFFSET", "Invalid offset", "Offset is negative"],
+    ["PUBSUB_NOT_CONFIGURED", "Pub/sub required", "request() needs pub/sub adapter"],
+    ["A2ATimeoutError", "Request timeout", "No response within timeout"],
+    ["A2AValidationError", "Validation failed", "Client-side validation error (see code/field)"],
+    ["CONVEX_ERROR", "Database error", "Convex operation failed"],
+  ]}
+/>
 
 **See Also:**
 

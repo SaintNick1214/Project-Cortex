@@ -177,17 +177,20 @@ await cortex.contexts.update(spaceId, contextId, {
 
 ## Current vs. Planned
 
-| Feature | Current Status | Planned Enhancement |
-|---------|---------------|---------------------|
-| **Embeddings** | Manual generation required | Auto-embeddings (Cloud Mode) |
-| **GDPR Deletion** | Manual cascade deletion | One-click with legal guarantees (Cloud Mode) |
-| **A2A Messaging** | Manual polling or manual pub/sub | Real-time subscriptions (Cloud Mode) |
-| **Governance** | Manual `enforce()` calls | Automatic enforcement |
-| **Bulk Operations** | Direct execution | Dry-run mode, confirmation thresholds |
-| **Filtering** | Basic filters | Nested queries, range operators, text search |
-| **Context Chains** | Manual status management | Automatic validation, inheritance, completion |
-| **Search** | Semantic or keyword (separate) | Automatic hybrid search |
-| **Analytics** | Basic stats via `getStats()` | Full analytics dashboard (Cloud Mode) |
+<ComparisonTable
+  headers={["Feature", "Current Status", "Planned Enhancement"]}
+  items={[
+    { feature: "Embeddings", values: ["Manual generation required", "Auto-embeddings (Cloud Mode)"] },
+    { feature: "GDPR Deletion", values: ["Manual cascade deletion", "One-click with legal guarantees (Cloud Mode)"] },
+    { feature: "A2A Messaging", values: ["Manual polling or manual pub/sub", "Real-time subscriptions (Cloud Mode)"] },
+    { feature: "Governance", values: ["Manual enforce() calls", "Automatic enforcement"] },
+    { feature: "Bulk Operations", values: ["Direct execution", "Dry-run mode, confirmation thresholds"] },
+    { feature: "Filtering", values: ["Basic filters", "Nested queries, range operators, text search"] },
+    { feature: "Context Chains", values: ["Manual status management", "Automatic validation, inheritance, completion"] },
+    { feature: "Search", values: ["Semantic or keyword (separate)", "Automatic hybrid search"] },
+    { feature: "Analytics", values: ["Basic stats via getStats()", "Full analytics dashboard (Cloud Mode)"] },
+  ]}
+/>
 
 ---
 

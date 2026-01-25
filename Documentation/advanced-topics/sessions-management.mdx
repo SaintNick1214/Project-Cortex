@@ -54,10 +54,13 @@ Sessions follow a three-state lifecycle:
 
 **Default Timeouts:**
 
-| State  | Timeout | Description                       |
-| ------ | ------- | --------------------------------- |
-| Active | 30m     | No activity moves session to idle |
-| Idle   | 24h     | After 24h idle, session is ended  |
+<DataTable
+  headers={["State", "Timeout", "Description"]}
+  rows={[
+    ["Active", "30m", "No activity moves session to idle"],
+    ["Idle", "24h", "After 24h idle, session is ended"],
+  ]}
+/>
 
 Timeouts are configurable via the [Governance Policies](/architecture/governance-policies).
 
@@ -346,12 +349,15 @@ try {
 
 **Common Validation Errors:**
 
-| Code                   | Description                            |
-| ---------------------- | -------------------------------------- |
-| `MISSING_USER_ID`      | userId is required                     |
-| `EMPTY_USER_ID`        | userId cannot be empty                 |
-| `INVALID_STATUS_VALUE` | status must be: active, idle, or ended |
-| `INVALID_LIMIT`        | limit must be between 1 and 1000       |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["`MISSING_USER_ID`", "userId is required"],
+    ["`EMPTY_USER_ID`", "userId cannot be empty"],
+    ["`INVALID_STATUS_VALUE`", "status must be: active, idle, or ended"],
+    ["`INVALID_LIMIT`", "limit must be between 1 and 1000"],
+  ]}
+/>
 
 ## Related Features
 

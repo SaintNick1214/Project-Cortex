@@ -463,6 +463,98 @@ if (conversation.messageCount > 100) {
 
 ---
 
+## Shareable Chats
+
+<Callout type="tip" title="v0.35.0+">
+Shareable Chats add visibility control, sharing grants, snapshots, and collaborative multi-user conversations.
+</Callout>
+
+### Visibility Control
+
+Control who can access conversations:
+
+```typescript
+// Create with visibility
+const conv = await cortex.conversations.create({
+  type: 'user-agent',
+  memorySpaceId: 'team-space',
+  participants: { userId: 'user-123', agentId: 'assistant' },
+  visibility: 'space', // 'private' | 'space' | 'public'
+});
+
+// Check access
+const access = await cortex.conversations.checkAccess({
+  conversationId: conv.conversationId,
+  userId: 'user-456',
+  memorySpaceId: 'team-space',
+});
+// → { canView: true, reason: 'SPACE_MEMBER' }
+```
+
+### Sharing Grants
+
+Create shareable links with permissions and limits:
+
+```typescript
+// Create a share link
+const share = await cortex.conversations.share({
+  conversationId: 'conv-123',
+  grantType: 'link',
+  permissions: { canView: true, canFork: true },
+  expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+  maxViews: 100,
+});
+
+// Build shareable URL using the buildShareUrl utility
+const url = buildShareUrl(share.shareId, {
+  baseUrl: 'https://myapp.com/shared',
+});
+// → 'https://myapp.com/shared/share-abc123'
+```
+
+### Conversation Snapshots
+
+Create immutable copies with optional PII redaction:
+
+```typescript
+const snapshot = await cortex.conversations.snapshot({
+  conversationId: 'conv-123',
+  redactPII: true, // Redacts emails, phones, SSN, etc.
+});
+
+// "Contact me at john@example.com" → "Contact me at [EMAIL]"
+```
+
+### Collaborative Conversations
+
+Multi-user conversations with approval workflow:
+
+```typescript
+// Create collaborative conversation
+const collab = await cortex.conversations.create({
+  type: 'user-agent',
+  memorySpaceId: 'team-space',
+  participants: {
+    userIds: ['user-1', 'user-2', 'user-3'],
+    agentId: 'team-assistant',
+  },
+  collaborativeSettings: {
+    requireApproval: true,
+    ownerUserId: 'user-1',
+  },
+});
+
+// Approve pending messages
+await cortex.conversations.approveMessage({
+  conversationId: collab.conversationId,
+  messageId: 'msg-456',
+});
+```
+
+See [Conversation API Reference](/api-reference/conversation-operations#shareable-chats) for complete documentation.
+
+---
+
 ## Next Steps
 
 <QuickNav>

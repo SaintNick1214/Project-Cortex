@@ -1604,38 +1604,47 @@ Your App → Cortex Cloud API → Your Convex Instance
 
 ### Read Operations
 
-| Operation                    | Typical Latency | Indexed                 | Scalability               |
-| ---------------------------- | --------------- | ----------------------- | ------------------------- |
-| `memory.get()`               | < 10ms          | Yes (by memoryId)       | Millions of memories      |
-| `memory.search()` (semantic) | < 100ms         | Yes (vector)            | Millions of vectors       |
-| `memory.search()` (keyword)  | < 50ms          | Yes (search index)      | Millions of memories      |
-| `memory.recall()` (unified)  | < 150ms         | Yes (multi-strategy)    | Unlimited history         |
-| `facts.search()`             | < 50ms          | Yes (search index)      | Millions of facts         |
-| `conversations.get()`        | < 20ms          | Yes (by conversationId) | Millions of conversations |
-| `users.get()`                | < 10ms          | Yes (by type+id)        | Millions of users         |
-| `contexts.get()`             | < 10ms          | Yes (by contextId)      | Millions of contexts      |
-| `sessions.get()`             | < 10ms          | Yes (by sessionId)      | Millions of sessions      |
+<DataTable
+  headers={["Operation", "Typical Latency", "Indexed", "Scalability"]}
+  rows={[
+    ["`memory.get()`", "< 10ms", "Yes (by memoryId)", "Millions of memories"],
+    ["`memory.search()` (semantic)", "< 100ms", "Yes (vector)", "Millions of vectors"],
+    ["`memory.search()` (keyword)", "< 50ms", "Yes (search index)", "Millions of memories"],
+    ["`memory.recall()` (unified)", "< 150ms", "Yes (multi-strategy)", "Unlimited history"],
+    ["`facts.search()`", "< 50ms", "Yes (search index)", "Millions of facts"],
+    ["`conversations.get()`", "< 20ms", "Yes (by conversationId)", "Millions of conversations"],
+    ["`users.get()`", "< 10ms", "Yes (by type+id)", "Millions of users"],
+    ["`contexts.get()`", "< 10ms", "Yes (by contextId)", "Millions of contexts"],
+    ["`sessions.get()`", "< 10ms", "Yes (by sessionId)", "Millions of sessions"],
+  ]}
+/>
 
 ### Write Operations
 
-| Operation                    | Typical Latency | ACID | Versioning                    |
-| ---------------------------- | --------------- | ---- | ----------------------------- |
-| `memory.remember()`          | < 100ms         | ✅   | Full orchestration (L1+L2+L3) |
-| `conversations.addMessage()` | < 20ms          | ✅   | Append-only                   |
-| `immutable.store()`          | < 30ms          | ✅   | Auto (versioned)              |
-| `mutable.set()`              | < 15ms          | ✅   | No (overwrites)               |
-| `facts.store()`              | < 40ms          | ✅   | Auto (with belief revision)   |
-| `users.update()`             | < 25ms          | ✅   | Auto (versioned)              |
-| `sessions.create()`          | < 20ms          | ✅   | No versioning                 |
+<DataTable
+  headers={["Operation", "Typical Latency", "ACID", "Versioning"]}
+  rows={[
+    ["`memory.remember()`", "< 100ms", "✅", "Full orchestration (L1+L2+L3)"],
+    ["`conversations.addMessage()`", "< 20ms", "✅", "Append-only"],
+    ["`immutable.store()`", "< 30ms", "✅", "Auto (versioned)"],
+    ["`mutable.set()`", "< 15ms", "✅", "No (overwrites)"],
+    ["`facts.store()`", "< 40ms", "✅", "Auto (with belief revision)"],
+    ["`users.update()`", "< 25ms", "✅", "Auto (versioned)"],
+    ["`sessions.create()`", "< 20ms", "✅", "No versioning"],
+  ]}
+/>
 
 ### Bulk Operations
 
-| Operation                         | Typical Latency | Notes                    |
-| --------------------------------- | --------------- | ------------------------ |
-| `memory.deleteMany()` (100 items) | < 200ms         | Parallel deletes         |
-| `facts.deleteMany()` (100 items)  | < 200ms         | Parallel deletes         |
-| `users.deleteMany()` (50 items)   | < 150ms         | Parallel deletes         |
-| GDPR cascade (1K records)         | < 3s            | All layers + factHistory |
+<DataTable
+  headers={["Operation", "Typical Latency", "Notes"]}
+  rows={[
+    ["`memory.deleteMany()` (100 items)", "< 200ms", "Parallel deletes"],
+    ["`facts.deleteMany()` (100 items)", "< 200ms", "Parallel deletes"],
+    ["`users.deleteMany()` (50 items)", "< 150ms", "Parallel deletes"],
+    ["GDPR cascade (1K records)", "< 3s", "All layers + factHistory"],
+  ]}
+/>
 
 ---
 

@@ -418,12 +418,15 @@ async function manualIntelligentRetrieval(
 
 ### Scenario: 1000 Conversation Exchanges
 
-| Approach                       | Tokens per Request | Cost per Request   | Scalability                      |
-| ------------------------------ | ------------------ | ------------------ | -------------------------------- |
-| **Traditional (Accumulation)** | 50,000 tokens      | $1.50 (GPT-5-nano) | Hits limits at ~2K exchanges  |
-| **Summarization**              | 10,000 tokens      | $0.30              | Loses nuance, still expensive |
-| **Infinite Context (Facts)**   | 80 tokens          | $0.0024            | Scales to 1M+ exchanges       |
-| **Infinite Context (Hybrid)**  | 405 tokens         | $0.012             | Scales + full fidelity        |
+<ComparisonTable
+  headers={["Approach", "Tokens per Request", "Cost per Request", "Scalability"]}
+  items={[
+    { feature: "Traditional (Accumulation)", values: ["50,000 tokens", "$1.50 (GPT-5-nano)", "Hits limits at ~2K exchanges"] },
+    { feature: "Summarization", values: ["10,000 tokens", "$0.30", "Loses nuance, still expensive"] },
+    { feature: "Infinite Context (Facts)", values: ["80 tokens", "$0.0024", "Scales to 1M+ exchanges"] },
+    { feature: "Infinite Context (Hybrid)", values: ["405 tokens", "$0.012", "Scales + full fidelity"] },
+  ]}
+/>
 
 **Cost Reduction:** 99% vs traditional, 97% vs summarization
 
@@ -431,12 +434,15 @@ async function manualIntelligentRetrieval(
 
 ### Model Comparison with Infinite Context
 
-| Model               | Context Window | Cost per 1M Tokens | With Infinite Context                        |
-| ------------------- | -------------- | ------------------ | -------------------------------------------- |
-| gpt-5-nano (legacy) | 16K            | $0.50              | Effectively unlimited (via retrieval)     |
-| GPT-5               | 1M             | $5                 | Retrieval still better (cheaper + faster) |
-| Claude-4.5-sonnet   | 200K           | $3                 | Retrieval is faster than large context    |
-| o3-mini             | 128K           | $2                 | Can use smaller models effectively        |
+<ComparisonTable
+  headers={["Model", "Context Window", "Cost per 1M Tokens", "With Infinite Context"]}
+  items={[
+    { feature: "gpt-5-nano (legacy)", values: ["16K", "$0.50", "Effectively unlimited (via retrieval)"] },
+    { feature: "GPT-5", values: ["1M", "$5", "Retrieval still better (cheaper + faster)"] },
+    { feature: "Claude-4.5-sonnet", values: ["200K", "$3", "Retrieval is faster than large context"] },
+    { feature: "o3-mini", values: ["128K", "$2", "Can use smaller models effectively"] },
+  ]}
+/>
 
 **Key Insight:** Even with 1M+ context window models, retrieval-based context is:
 
@@ -459,13 +465,16 @@ Total Latency Addition:           <150ms
 
 ### Scale Limits
 
-| Component       | Limit           | Notes                              |
-| --------------- | --------------- | ---------------------------------- |
-| Conversations   | Unlimited       | Stored in Convex (terabytes)       |
-| Facts           | Unlimited       | L3 dedicated store                 |
-| Vector Memories | 100M+ per space | Convex vector index                |
-| Retrieval       | Sub-second      | Even at 100M+ scale                |
-| Token Cost      | Constant        | Retrieval size fixed (10-20 items) |
+<DataTable
+  headers={["Component", "Limit", "Notes"]}
+  rows={[
+    ["Conversations", "Unlimited", "Stored in Convex (terabytes)"],
+    ["Facts", "Unlimited", "L3 dedicated store"],
+    ["Vector Memories", "100M+ per space", "Convex vector index"],
+    ["Retrieval", "Sub-second", "Even at 100M+ scale"],
+    ["Token Cost", "Constant", "Retrieval size fixed (10-20 items)"],
+  ]}
+/>
 
 **Result:** True infinite scale with constant performance
 
@@ -760,14 +769,17 @@ class InfiniteContextAgent {
 
 ### Competitive Differentiation
 
-| Capability           | Cortex                                  | Traditional LLM Apps      |
-| -------------------- | --------------------------------------- | ------------------------- |
-| Context Limit        | Infinite                             | 16K-200K               |
-| Token Efficiency     | 99% reduction                           | Baseline (accumulation)   |
-| Retrieval Speed      | <50ms                                   | N/A (no retrieval)        |
-| Cost at Scale        | Constant                                | Grows linearly            |
-| Works with Any Model | Yes (small models perform like SOTA) | Limited by window      |
-| History Length       | Unlimited                               | Limited by context window |
+<ComparisonTable
+  headers={["Capability", "Cortex", "Traditional LLM Apps"]}
+  items={[
+    { feature: "Context Limit", values: ["Infinite", "16K-200K"] },
+    { feature: "Token Efficiency", values: ["99% reduction", "Baseline (accumulation)"] },
+    { feature: "Retrieval Speed", values: ["<50ms", "N/A (no retrieval)"] },
+    { feature: "Cost at Scale", values: ["Constant", "Grows linearly"] },
+    { feature: "Works with Any Model", values: ["Yes (small models perform like SOTA)", "Limited by window"] },
+    { feature: "History Length", values: ["Unlimited", "Limited by context window"] },
+  ]}
+/>
 
 **Unique to Cortex:**
 

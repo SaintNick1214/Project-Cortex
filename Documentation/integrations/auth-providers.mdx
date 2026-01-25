@@ -138,10 +138,13 @@ interface AuthContext {
 
 ### Claims vs Metadata
 
-| Field      | Purpose                                    | Example                                |
-| ---------- | ------------------------------------------ | -------------------------------------- |
-| `claims`   | Raw claims from auth provider (JWT, token) | `{ sub: 'abc', iss: 'auth0.com' }`     |
-| `metadata` | Your application-specific data             | `{ plan: 'enterprise', features: [] }` |
+<DataTable
+  headers={["Field", "Purpose", "Example"]}
+  rows={[
+    ["`claims`", "Raw claims from auth provider (JWT, token)", "`{ sub: 'abc', iss: 'auth0.com' }`"],
+    ["`metadata`", "Your application-specific data", "`{ plan: 'enterprise', features: [] }`"],
+  ]}
+/>
 
 ---
 

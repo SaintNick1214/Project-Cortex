@@ -150,26 +150,32 @@ OPENAI_API_KEY=sk-openai-...
 
 ### Basic Memory Operations
 
-| mem0                      | Cortex                            |
-| ------------------------- | --------------------------------- |
-| `mem0('model')`           | `cortexMemory(provider('model'))` |
-| `mem0.retrieveMemories()` | `cortexMemory.search()`           |
-| `mem0.addMemories()`      | `cortexMemory.remember()`         |
-| `mem0.getMemories()`      | `cortexMemory.getMemories()`      |
+<DataTable
+  headers={["mem0", "Cortex"]}
+  rows={[
+    ["`mem0('model')`", "`cortexMemory(provider('model'))`"],
+    ["`mem0.retrieveMemories()`", "`cortexMemory.search()`"],
+    ["`mem0.addMemories()`", "`cortexMemory.remember()`"],
+    ["`mem0.getMemories()`", "`cortexMemory.getMemories()`"],
+  ]}
+/>
 
 ### Advanced Features
 
-| mem0 Feature | Cortex Equivalent             | Notes                                    |
-| ------------ | ----------------------------- | ---------------------------------------- |
-| `user_id`    | `userId`                      | User identifier                          |
-| `agent_id`   | `memorySpaceId`               | Maps to memory space (isolation)         |
-| N/A          | `agentId`                     | **Required** - Identifies agent participant (SDK v0.17.0+) |
-| `run_id`     | `conversationId`              | Conversation identifier                  |
-| Graph memory | `enableGraphMemory: true`     | Enable graph-based memory                |
-| N/A          | Memory Spaces (multi-tenancy) | Built-in isolation                       |
-| N/A          | Hive Mode (cross-app sharing) | Cross-application memory sharing         |
-| N/A          | ACID guarantees               | Transactional consistency                |
-| N/A          | Version history               | Automatic versioning                     |
+<DataTable
+  headers={["mem0 Feature", "Cortex Equivalent", "Notes"]}
+  rows={[
+    ["`user_id`", "`userId`", "User identifier"],
+    ["`agent_id`", "`memorySpaceId`", "Maps to memory space (isolation)"],
+    ["N/A", "`agentId`", "**Required** - Identifies agent participant (SDK v0.17.0+)"],
+    ["`run_id`", "`conversationId`", "Conversation identifier"],
+    ["Graph memory", "`enableGraphMemory: true`", "Enable graph-based memory"],
+    ["N/A", "Memory Spaces (multi-tenancy)", "Built-in isolation"],
+    ["N/A", "Hive Mode (cross-app sharing)", "Cross-application memory sharing"],
+    ["N/A", "ACID guarantees", "Transactional consistency"],
+    ["N/A", "Version history", "Automatic versioning"],
+  ]}
+/>
 
 **Important**: `agentId` is a separate required field from `memorySpaceId`. While `agent_id` from mem0 maps to `memorySpaceId` (for memory isolation), Cortex also requires `agentId` to identify the agent participant in user-agent conversations.
 

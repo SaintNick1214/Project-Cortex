@@ -76,13 +76,16 @@ interface Attachment {
 
 ### Attachment Types
 
-| Type | Description | Use Cases |
-|------|-------------|-----------|
-| `image` | Image files (PNG, JPEG, GIF, WebP) | Screenshots, photos, diagrams |
-| `pdf` | PDF documents | Reports, contracts, manuals |
-| `audio` | Audio files (MP3, WAV, etc.) | Voice messages, recordings |
-| `video` | Video files (MP4, WebM, etc.) | Clips, screen recordings |
-| `file` | Generic files | Any other file type |
+<DataTable
+  headers={["Type", "Description", "Use Cases"]}
+  rows={[
+    ["`image`", "Image files (PNG, JPEG, GIF, WebP)", "Screenshots, photos, diagrams"],
+    ["`pdf`", "PDF documents", "Reports, contracts, manuals"],
+    ["`audio`", "Audio files (MP3, WAV, etc.)", "Voice messages, recordings"],
+    ["`video`", "Video files (MP4, WebM, etc.)", "Clips, screen recordings"],
+    ["`file`", "Generic files", "Any other file type"],
+  ]}
+/>
 
 ---
 
@@ -132,9 +135,12 @@ const result = await cortex.attachments.generateUploadUrl(): Promise<UploadUrlRe
 
 **Returns:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `uploadUrl` | `string` | Pre-signed URL for POST upload |
+<DataTable
+  headers={["Property", "Type", "Description"]}
+  rows={[
+    ["`uploadUrl`", "`string`", "Pre-signed URL for POST upload"],
+  ]}
+/>
 
 **Example:**
 
@@ -212,9 +218,11 @@ const attachment = await cortex.attachments.get(attachmentId: string): Promise<A
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `attachmentId` | `string` | Yes | The attachment ID |
+<APITable
+  parameters={[
+    { name: "attachmentId", type: "string", required: true, description: "The attachment ID" },
+  ]}
+/>
 
 **Returns:** `Attachment | null`
 
@@ -239,9 +247,11 @@ const url = await cortex.attachments.getUrl(attachmentId: string): Promise<strin
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `attachmentId` | `string` | Yes | The attachment ID |
+<APITable
+  parameters={[
+    { name: "attachmentId", type: "string", required: true, description: "The attachment ID" },
+  ]}
+/>
 
 **Returns:** Signed download URL or `null` if not found
 
@@ -296,12 +306,15 @@ const result = await cortex.attachments.list(filter: ListAttachmentsFilter): Pro
 
 **Returns:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `attachments` | `Attachment[]` | Array of attachments |
-| `total` | `number` | Total count matching filter |
-| `cursor` | `string?` | Next page cursor |
-| `hasMore` | `boolean` | Whether more results exist |
+<DataTable
+  headers={["Property", "Type", "Description"]}
+  rows={[
+    ["`attachments`", "`Attachment[]`", "Array of attachments"],
+    ["`total`", "`number`", "Total count matching filter"],
+    ["`cursor`", "`string?`", "Next page cursor"],
+    ["`hasMore`", "`boolean`", "Whether more results exist"],
+  ]}
+/>
 
 **Example:**
 
@@ -416,9 +429,11 @@ const success = await cortex.attachments.delete(attachmentId: string): Promise<b
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `attachmentId` | `string` | Yes | The attachment ID to delete |
+<APITable
+  parameters={[
+    { name: "attachmentId", type: "string", required: true, description: "The attachment ID to delete" },
+  ]}
+/>
 
 **Returns:** `true` if deleted successfully
 
@@ -449,17 +464,22 @@ const result = await cortex.attachments.deleteMany(attachmentIds: string[]): Pro
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `attachmentIds` | `string[]` | Yes | Array of attachment IDs |
+<APITable
+  parameters={[
+    { name: "attachmentIds", type: "string[]", required: true, description: "Array of attachment IDs" },
+  ]}
+/>
 
 **Returns:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `deleted` | `number` | Count of successfully deleted attachments |
-| `total` | `number` | Total attachments requested |
-| `errors` | `Array<{ attachmentId, error }>?` | Any errors encountered |
+<DataTable
+  headers={["Property", "Type", "Description"]}
+  rows={[
+    ["`deleted`", "`number`", "Count of successfully deleted attachments"],
+    ["`total`", "`number`", "Total attachments requested"],
+    ["`errors`", "`Array<{ attachmentId, error }>?`", "Any errors encountered"],
+  ]}
+/>
 
 **Example:**
 
@@ -539,20 +559,23 @@ try {
 
 ### Error Codes
 
-| Code | Description |
-|------|-------------|
-| `MISSING_STORAGE_ID` | Storage ID is required |
-| `MISSING_MEMORY_SPACE_ID` | Memory space ID is required |
-| `MISSING_USER_ID` | User ID is required |
-| `MISSING_TYPE` | Attachment type is required |
-| `INVALID_TYPE_VALUE` | Type must be image, audio, video, file, or pdf |
-| `MISSING_MIME_TYPE` | MIME type is required |
-| `INVALID_MIME_TYPE` | Invalid MIME type format |
-| `MISSING_FILENAME` | Filename is required |
-| `FILENAME_TOO_LONG` | Filename exceeds 255 characters |
-| `MISSING_SIZE` | File size is required |
-| `INVALID_SIZE` | Size must be a positive number |
-| `ATTACHMENT_NOT_FOUND` | Attachment not found |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["`MISSING_STORAGE_ID`", "Storage ID is required"],
+    ["`MISSING_MEMORY_SPACE_ID`", "Memory space ID is required"],
+    ["`MISSING_USER_ID`", "User ID is required"],
+    ["`MISSING_TYPE`", "Attachment type is required"],
+    ["`INVALID_TYPE_VALUE`", "Type must be image, audio, video, file, or pdf"],
+    ["`MISSING_MIME_TYPE`", "MIME type is required"],
+    ["`INVALID_MIME_TYPE`", "Invalid MIME type format"],
+    ["`MISSING_FILENAME`", "Filename is required"],
+    ["`FILENAME_TOO_LONG`", "Filename exceeds 255 characters"],
+    ["`MISSING_SIZE`", "File size is required"],
+    ["`INVALID_SIZE`", "Size must be a positive number"],
+    ["`ATTACHMENT_NOT_FOUND`", "Attachment not found"],
+  ]}
+/>
 
 ---
 

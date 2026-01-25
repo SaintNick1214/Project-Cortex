@@ -496,18 +496,21 @@ try {
 
 **Common Error Codes:**
 
-| Code                            | Description                              |
-| ------------------------------- | ---------------------------------------- |
-| `MISSING_SCOPE`                 | organizationId or memorySpaceId required |
-| `MISSING_POLICY`                | Policy object is null or undefined       |
-| `MISSING_REQUIRED_FIELD`        | Required field is missing from policy    |
-| `INVALID_SCOPE`                 | Scope object is invalid                  |
-| `INVALID_PERIOD_FORMAT`         | Period must match pattern `\d+[dmy]` (e.g., "7d", "30d", "1y") |
-| `INVALID_IMPORTANCE_RANGE`      | Range must be 0-100, min < max           |
-| `OVERLAPPING_IMPORTANCE_RANGES` | Ranges cannot overlap                    |
-| `INVALID_VERSIONS`              | Version count must be >= -1              |
-| `INVALID_LAYERS`                | Invalid layer names provided             |
-| `INVALID_RULES`                 | Invalid rule names provided              |
+<DataTable
+  headers={["Code", "Description"]}
+  rows={[
+    ["MISSING_SCOPE", "organizationId or memorySpaceId required"],
+    ["MISSING_POLICY", "Policy object is null or undefined"],
+    ["MISSING_REQUIRED_FIELD", "Required field is missing from policy"],
+    ["INVALID_SCOPE", "Scope object is invalid"],
+    ["INVALID_PERIOD_FORMAT", "Period must match pattern \\d+[dmy] (e.g., \"7d\", \"30d\", \"1y\")"],
+    ["INVALID_IMPORTANCE_RANGE", "Range must be 0-100, min < max"],
+    ["OVERLAPPING_IMPORTANCE_RANGES", "Ranges cannot overlap"],
+    ["INVALID_VERSIONS", "Version count must be >= -1"],
+    ["INVALID_LAYERS", "Invalid layer names provided"],
+    ["INVALID_RULES", "Invalid rule names provided"],
+  ]}
+/>
 
 **Period Format Details:**
 

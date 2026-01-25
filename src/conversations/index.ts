@@ -9,12 +9,22 @@ import { api } from "../../convex-dev/_generated/api";
 import type {
   AddMessageInput,
   AddMessageOptions,
+  ApproveMessageInput,
+  CheckAccessInput,
+  CheckAccessResult,
+  CheckShareAccessResult,
   Conversation,
   ConversationDeletionResult,
   ConversationSearchResult,
+  ConversationShare,
+  ConversationSnapshot,
   CountConversationsFilter,
   CreateConversationInput,
   CreateConversationOptions,
+  CreateShareInput,
+  CreateShareResult,
+  CreateSnapshotInput,
+  CreateSnapshotResult,
   DeleteConversationOptions,
   DeleteManyConversationsOptions,
   DeleteManyConversationsResult,
@@ -25,7 +35,10 @@ import type {
   ListConversationsFilter,
   ListConversationsResult,
   Message,
+  RevokeShareResult,
   SearchConversationsInput,
+  SetVisibilityInput,
+  ShareStatus,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import {
@@ -48,6 +61,10 @@ import {
   validateDateRange,
   validateParticipants,
   validateNoDuplicates,
+  validateVisibility,
+  validateGrantType,
+  validateShareStatus,
+  validateGrantedTo,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
 import type { AuthContext } from "../auth/types";
@@ -131,6 +148,9 @@ export class ConversationsAPI {
       );
     }
 
+    // Validate visibility if provided
+    validateVisibility(input.visibility);
+
     // Auto-generate conversationId if not provided
     const conversationId =
       input.conversationId || this.generateConversationId();
@@ -145,6 +165,8 @@ export class ConversationsAPI {
           type: input.type,
           participants: input.participants,
           metadata: input.metadata,
+          visibility: input.visibility, // Pass visibility (defaults to 'private' if undefined)
+          collaborativeSettings: input.collaborativeSettings, // Phase 4: Collaborative
         }),
       "conversations:create",
     );
@@ -629,6 +651,9 @@ export class ConversationsAPI {
       );
     }
 
+    // Validate visibility if provided
+    validateVisibility(input.visibility);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.mutation(api.conversations.getOrCreate, {
@@ -637,6 +662,7 @@ export class ConversationsAPI {
           type: input.type,
           participants: input.participants,
           metadata: input.metadata,
+          visibility: input.visibility, // Pass visibility (defaults to 'private' if undefined)
         }),
       "conversations:getOrCreate",
     );
@@ -825,6 +851,457 @@ export class ConversationsAPI {
     );
 
     return result as ExportResult;
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Visibility & Access Control (Shareable Chats Phase 1)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Check if a user has access to a conversation based on visibility
+   *
+   * This is a quick, cheap method to check access rights without fetching
+   * the full conversation data. Use this for access control checks.
+   *
+   * @example
+   * ```typescript
+   * const access = await cortex.conversations.checkAccess({
+   *   conversationId: 'conv-abc123',
+   *   userId: 'user-456',
+   * });
+   *
+   * if (access.canView) {
+   *   // User can access the conversation
+   * }
+   * ```
+   */
+  async checkAccess(input: CheckAccessInput): Promise<CheckAccessResult> {
+    validateRequiredString(input.conversationId, "conversationId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversations.checkAccess, {
+          conversationId: input.conversationId,
+          userId: input.userId,
+          memorySpaceId: input.memorySpaceId,
+        }),
+      "conversations:checkAccess",
+    );
+
+    return result as CheckAccessResult;
+  }
+
+  /**
+   * Set the visibility of a conversation
+   *
+   * Only the owner (participants.userId) can change visibility.
+   *
+   * @example
+   * ```typescript
+   * // Make a conversation public
+   * const updated = await cortex.conversations.setVisibility({
+   *   conversationId: 'conv-abc123',
+   *   visibility: 'public',
+   * });
+   *
+   * // Make it space-visible
+   * await cortex.conversations.setVisibility({
+   *   conversationId: 'conv-abc123',
+   *   visibility: 'space',
+   * });
+   * ```
+   */
+  async setVisibility(input: SetVisibilityInput): Promise<Conversation> {
+    validateRequiredString(input.conversationId, "conversationId");
+    validateVisibility(input.visibility);
+
+    // Ensure visibility is one of the valid values
+    if (!["private", "space", "public"].includes(input.visibility)) {
+      throw new ConversationValidationError(
+        `Invalid visibility "${input.visibility}". Must be "private", "space", or "public"`,
+        "INVALID_VISIBILITY",
+        "visibility",
+      );
+    }
+
+    let result;
+    try {
+      result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.conversations.setVisibility, {
+            conversationId: input.conversationId,
+            visibility: input.visibility,
+            userId: this.authContext?.userId, // Pass userId from auth context for ownership verification
+          }),
+        "conversations:setVisibility",
+      );
+    } catch (error) {
+      this.handleConvexError(error);
+    }
+
+    return result as Conversation;
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Sharing Grants (Shareable Chats Phase 2)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Create a share for a conversation
+   *
+   * Creates a shareable link or grant for accessing a conversation.
+   * Returns the share ID which can be used with `buildShareUrl()` to create URLs.
+   *
+   * @example
+   * ```typescript
+   * import { buildShareUrl } from '@cortex/sdk';
+   *
+   * // Create a public link share
+   * const result = await cortex.conversations.share({
+   *   conversationId: 'conv-abc123',
+   *   grantType: 'link',
+   *   permissions: { canView: true, canFork: true },
+   *   expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+   * });
+   *
+   * // Build the URL
+   * const url = buildShareUrl(result.shareId, {
+   *   baseUrl: 'https://myapp.com/shared'
+   * });
+   * ```
+   */
+  async share(input: CreateShareInput): Promise<CreateShareResult> {
+    validateRequiredString(input.conversationId, "conversationId");
+    validateGrantType(input.grantType);
+    validateGrantedTo(input.grantType, input.grantedTo);
+
+    // Default permissions
+    const permissions = {
+      canView: input.permissions?.canView ?? true,
+      canViewFacts: input.permissions?.canViewFacts ?? false,
+      canViewMemories: input.permissions?.canViewMemories ?? false,
+      canContinue: input.permissions?.canContinue ?? false,
+      canFork: input.permissions?.canFork ?? false,
+      canExport: input.permissions?.canExport ?? false,
+    };
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversationShares.create, {
+          conversationId: input.conversationId,
+          grantedBy: this.authContext?.userId || "anonymous",
+          // Note: sourceMemorySpaceId is derived by the backend from the conversation
+          grantType: input.grantType,
+          grantedTo: input.grantedTo,
+          permissions,
+          expiresAt: input.expiresAt,
+          maxViews: input.maxViews,
+          redactBefore: input.redactBefore,
+          redactSensitive: input.redactSensitive,
+          tenantId: this.authContext?.tenantId,
+        }),
+      "conversationShares:create",
+    );
+
+    const share = result as ConversationShare;
+
+    return {
+      shareId: share.shareId,
+      expiresAt: share.expiresAt,
+      share,
+    };
+  }
+
+  /**
+   * Revoke an existing share
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.conversations.revokeShare('share-abc123');
+   * console.log(`Revoked at: ${result.revokedAt}`);
+   * ```
+   */
+  async revokeShare(shareId: string): Promise<RevokeShareResult> {
+    validateRequiredString(shareId, "shareId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversationShares.revoke, {
+          shareId,
+          userId: this.authContext?.userId,
+        }),
+      "conversationShares:revoke",
+    );
+
+    const share = result as ConversationShare;
+
+    return {
+      revoked: true,
+      revokedAt: share.revokedAt || Date.now(),
+      share,
+    };
+  }
+
+  /**
+   * List shares for a conversation
+   *
+   * @example
+   * ```typescript
+   * // List all active shares
+   * const shares = await cortex.conversations.listShares('conv-abc123', {
+   *   status: 'active',
+   * });
+   * ```
+   */
+  async listShares(
+    conversationId: string,
+    filter?: { status?: ShareStatus },
+  ): Promise<ConversationShare[]> {
+    validateRequiredString(conversationId, "conversationId");
+
+    if (filter?.status) {
+      validateShareStatus(filter.status);
+    }
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversationShares.listByConversation, {
+          conversationId,
+          status: filter?.status,
+        }),
+      "conversationShares:listByConversation",
+    );
+
+    return result as ConversationShare[];
+  }
+
+  /**
+   * Get a share by its ID
+   *
+   * Also validates whether the share is still active and within limits.
+   *
+   * @example
+   * ```typescript
+   * const share = await cortex.conversations.getShare('share-abc123');
+   * if (share?.isValid) {
+   *   // Share is valid and can be used
+   * }
+   * ```
+   */
+  async getShare(shareId: string): Promise<ConversationShare | null> {
+    validateRequiredString(shareId, "shareId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversationShares.get, {
+          shareId,
+        }),
+      "conversationShares:get",
+    );
+
+    return result as ConversationShare | null;
+  }
+
+  /**
+   * Check if a user/space has access to a conversation via share
+   *
+   * @example
+   * ```typescript
+   * const access = await cortex.conversations.checkShareAccess({
+   *   conversationId: 'conv-abc123',
+   *   userId: 'user-456',
+   * });
+   *
+   * if (access.hasAccess) {
+   *   console.log('Permissions:', access.permissions);
+   * }
+   * ```
+   */
+  async checkShareAccess(input: {
+    conversationId: string;
+    userId?: string;
+    memorySpaceId?: string;
+    emailDomain?: string;
+  }): Promise<CheckShareAccessResult> {
+    validateRequiredString(input.conversationId, "conversationId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversationShares.checkAccess, {
+          conversationId: input.conversationId,
+          userId: input.userId,
+          memorySpaceId: input.memorySpaceId,
+          emailDomain: input.emailDomain,
+        }),
+      "conversationShares:checkAccess",
+    );
+
+    return result as CheckShareAccessResult;
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Snapshots (Shareable Chats Phase 3)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Create a snapshot of a conversation
+   *
+   * Creates an immutable point-in-time copy of a conversation with optional
+   * PII redaction. Useful for sharing or archiving conversations.
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.conversations.snapshot({
+   *   conversationId: 'conv-abc123',
+   *   redactPII: true,
+   * });
+   * console.log(result.snapshotId);
+   * ```
+   */
+  async snapshot(input: CreateSnapshotInput): Promise<CreateSnapshotResult> {
+    validateRequiredString(input.conversationId, "conversationId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversationSnapshots.create, {
+          conversationId: input.conversationId,
+          createdBy: this.authContext?.userId || "anonymous",
+          redactPII: input.redactPII,
+          redactBefore: input.redactBefore,
+          customRedactions: input.customRedactions,
+          includeFacts: input.includeFacts,
+          includeMemories: input.includeMemories,
+          tenantId: this.authContext?.tenantId,
+        }),
+      "conversationSnapshots:create",
+    );
+
+    const snapshot = result as ConversationSnapshot;
+
+    return {
+      snapshotId: snapshot.snapshotId,
+      snapshot,
+    };
+  }
+
+  /**
+   * Get a snapshot by ID
+   */
+  async getSnapshot(snapshotId: string): Promise<ConversationSnapshot | null> {
+    validateRequiredString(snapshotId, "snapshotId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversationSnapshots.get, {
+          snapshotId,
+        }),
+      "conversationSnapshots:get",
+    );
+
+    return result as ConversationSnapshot | null;
+  }
+
+  /**
+   * List snapshots for a conversation
+   */
+  async listSnapshots(
+    conversationId: string,
+    options?: { includeArchived?: boolean },
+  ): Promise<ConversationSnapshot[]> {
+    validateRequiredString(conversationId, "conversationId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.conversationSnapshots.listByConversation, {
+          conversationId,
+          includeArchived: options?.includeArchived,
+        }),
+      "conversationSnapshots:listByConversation",
+    );
+
+    return result as ConversationSnapshot[];
+  }
+
+  /**
+   * Delete a snapshot
+   */
+  async deleteSnapshot(snapshotId: string): Promise<{ deleted: boolean }> {
+    validateRequiredString(snapshotId, "snapshotId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversationSnapshots.deleteSnapshot, {
+          snapshotId,
+          userId: this.authContext?.userId,
+        }),
+      "conversationSnapshots:deleteSnapshot",
+    );
+
+    return result as { deleted: boolean };
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Collaborative Conversations (Shareable Chats Phase 4)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  /**
+   * Approve a pending message in a collaborative conversation
+   *
+   * Only the conversation owner can approve messages.
+   *
+   * @example
+   * ```typescript
+   * await cortex.conversations.approveMessage({
+   *   conversationId: 'conv-abc123',
+   *   messageId: 'msg-456',
+   * });
+   * ```
+   */
+  async approveMessage(input: ApproveMessageInput): Promise<Conversation> {
+    validateRequiredString(input.conversationId, "conversationId");
+    validateRequiredString(input.messageId, "messageId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversations.approveMessage, {
+          conversationId: input.conversationId,
+          messageId: input.messageId,
+          approverId: this.authContext?.userId || "",
+        }),
+      "conversations:approveMessage",
+    );
+
+    return result as Conversation;
+  }
+
+  /**
+   * Reject a pending message in a collaborative conversation
+   *
+   * Only the conversation owner can reject messages.
+   *
+   * @example
+   * ```typescript
+   * await cortex.conversations.rejectMessage({
+   *   conversationId: 'conv-abc123',
+   *   messageId: 'msg-456',
+   * });
+   * ```
+   */
+  async rejectMessage(input: ApproveMessageInput): Promise<Conversation> {
+    validateRequiredString(input.conversationId, "conversationId");
+    validateRequiredString(input.messageId, "messageId");
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.mutation(api.conversations.rejectMessage, {
+          conversationId: input.conversationId,
+          messageId: input.messageId,
+          rejecterId: this.authContext?.userId || "",
+        }),
+      "conversations:rejectMessage",
+    );
+
+    return result as Conversation;
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

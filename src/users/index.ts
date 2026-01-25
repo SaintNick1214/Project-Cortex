@@ -208,7 +208,8 @@ export class UsersAPI {
     );
 
     if (!result) {
-      throw new Error(`Failed to store user profile for ${userId}`);
+      // Use a static error message to avoid leaking user-controlled identifiers into logs
+      throw new Error("Failed to store user profile");
     }
 
     return {

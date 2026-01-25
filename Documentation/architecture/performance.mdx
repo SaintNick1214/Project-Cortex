@@ -609,31 +609,40 @@ for (const agent of allAgents) {
 
 ### Read Operations (1M memories)
 
-| Operation         | Indexed      | Latency (p50) | Latency (p95) | Latency (p99) |
-| ----------------- | ------------ | ------------- | ------------- | ------------- |
-| get() by ID       | Yes          | 5ms           | 10ms          | 15ms          |
-| search() semantic | Yes (vector) | 50ms          | 100ms         | 150ms         |
-| search() keyword  | Yes (search) | 20ms          | 40ms          | 60ms          |
-| list() paginated  | Yes          | 15ms          | 30ms          | 45ms          |
-| count() filtered  | Yes          | 10ms          | 20ms          | 30ms          |
+<DataTable
+  headers={["Operation", "Indexed", "Latency (p50)", "Latency (p95)", "Latency (p99)"]}
+  rows={[
+    ["get() by ID", "Yes", "5ms", "10ms", "15ms"],
+    ["search() semantic", "Yes (vector)", "50ms", "100ms", "150ms"],
+    ["search() keyword", "Yes (search)", "20ms", "40ms", "60ms"],
+    ["list() paginated", "Yes", "15ms", "30ms", "45ms"],
+    ["count() filtered", "Yes", "10ms", "20ms", "30ms"],
+  ]}
+/>
 
 ### Write Operations
 
-| Operation           | Latency (p50) | Latency (p95) | Throughput  |
-| ------------------- | ------------- | ------------- | ----------- |
-| store() single      | 20ms          | 40ms          | 50 ops/sec  |
-| store() batch (100) | 150ms         | 300ms         | 667 ops/sec |
-| update()            | 25ms          | 50ms          | 40 ops/sec  |
-| delete()            | 15ms          | 30ms          | 66 ops/sec  |
+<DataTable
+  headers={["Operation", "Latency (p50)", "Latency (p95)", "Throughput"]}
+  rows={[
+    ["store() single", "20ms", "40ms", "50 ops/sec"],
+    ["store() batch (100)", "150ms", "300ms", "667 ops/sec"],
+    ["update()", "25ms", "50ms", "40 ops/sec"],
+    ["delete()", "15ms", "30ms", "66 ops/sec"],
+  ]}
+/>
 
 ### Scaling Tests
 
-| Dataset | Agents | Memories | Vector Search | Keyword Search |
-| ------- | ------ | -------- | ------------- | -------------- |
-| Small   | 10     | 10K      | 30ms          | 15ms           |
-| Medium  | 100    | 1M       | 80ms          | 35ms           |
-| Large   | 1K     | 10M      | 120ms         | 55ms           |
-| XL      | 10K    | 100M     | 150ms         | 75ms           |
+<DataTable
+  headers={["Dataset", "Agents", "Memories", "Vector Search", "Keyword Search"]}
+  rows={[
+    ["Small", "10", "10K", "30ms", "15ms"],
+    ["Medium", "100", "1M", "80ms", "35ms"],
+    ["Large", "1K", "10M", "120ms", "55ms"],
+    ["XL", "10K", "100M", "150ms", "75ms"],
+  ]}
+/>
 
 **Key Insight:** Performance degrades logarithmically (O(log n)), not linearly.
 

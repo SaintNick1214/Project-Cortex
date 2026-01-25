@@ -21,16 +21,19 @@ The agent registry provides **optional metadata registration** for agents, enabl
 
 ## Agents vs Memory Spaces
 
-| Feature | Memory Spaces | Agent Registry |
-|---------|---------------|----------------|
-| **Purpose** | Define isolation boundaries | Track agent metadata |
-| **Status** | Active, required concept | Active, optional feature |
-| **Use Case** | Scope for data (conversations, memories, facts) | Analytics, discovery, team organization |
-| **Registration** | Optional | Optional |
-| **Enables** | Hive Mode, Collaboration Mode | Agent discovery, statistics, cascade deletion |
-| **Supports** | Multi-participant spaces | Single agent tracking |
-| **Query by** | memorySpaceId | agentId, capabilities, team |
-| **Cascade delete** | All data in space | All data by participantId across spaces |
+<ComparisonTable
+  headers={["Feature", "Memory Spaces", "Agent Registry"]}
+  items={[
+    { feature: "Purpose", values: ["Define isolation boundaries", "Track agent metadata"] },
+    { feature: "Status", values: ["Active, required concept", "Active, optional feature"] },
+    { feature: "Use Case", values: ["Scope for data (conversations, memories, facts)", "Analytics, discovery, team organization"] },
+    { feature: "Registration", values: ["Optional", "Optional"] },
+    { feature: "Enables", values: ["Hive Mode, Collaboration Mode", "Agent discovery, statistics, cascade deletion"] },
+    { feature: "Supports", values: ["Multi-participant spaces", "Single agent tracking"] },
+    { feature: "Query by", values: ["memorySpaceId", "agentId, capabilities, team"] },
+    { feature: "Cascade delete", values: ["All data in space", "All data by participantId across spaces"] },
+  ]}
+/>
 
 **Architecture Pattern:**
 

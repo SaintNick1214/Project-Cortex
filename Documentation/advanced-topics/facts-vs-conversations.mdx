@@ -367,11 +367,14 @@ const complexContext = await buildAdaptiveContext(
 
 **Token Efficiency:**
 
-| Query Type        | Tiers Used              | Total Tokens | vs Raw | Savings |
-| ----------------- | ----------------------- | ------------ | ------ | ------- |
-| Simple lookup     | Facts only              | 80           | 400    | 80%     |
-| Moderate question | Facts + Summaries       | 305          | 2000   | 85%     |
-| Complex reasoning | Facts + Summaries + Raw | 655          | 4000   | 84%     |
+<DataTable
+  headers={["Query Type", "Tiers Used", "Total Tokens", "vs Raw", "Savings"]}
+  rows={[
+    ["Simple lookup", "Facts only", "80", "400", "80%"],
+    ["Moderate question", "Facts + Summaries", "305", "2000", "85%"],
+    ["Complex reasoning", "Facts + Summaries + Raw", "655", "4000", "84%"],
+  ]}
+/>
 
 **The vector layer's summarized content** (contentType='summarized') acts as the perfect middle ground - it gives more context than atomic facts but is much more efficient than raw verbatim.
 
@@ -381,11 +384,14 @@ const complexContext = await buildAdaptiveContext(
 
 **Scenario:** 1,000 conversations, avg 400 tokens each
 
-| Strategy       | Storage                               | Search Context               | LLM Cost (Retrieval)            | Total Monthly |
-| -------------- | ------------------------------------- | ---------------------------- | ------------------------------- | ------------- |
-| **Raw Only**   | 400K tokens × $0.13/1M = $52          | 5 convos × 400 = 2000 tokens | 2000 × 100 users × $2/1M = $400 | **$452/mo**   |
-| **Facts Only** | 40K tokens × $0.13/1M = $5.20         | 5 facts × 8 = 40 tokens      | 40 × 100 users × $2/1M = $8     | **$13.20/mo** |
-| **Hybrid**     | ACID: $5 (no embed)<br/>Vector: $5.20 | 40 tokens                    | $8                              | **$18.20/mo** |
+<DataTable
+  headers={["Strategy", "Storage", "Search Context", "LLM Cost (Retrieval)", "Total Monthly"]}
+  rows={[
+    ["**Raw Only**", "400K tokens × $0.13/1M = $52", "5 convos × 400 = 2000 tokens", "2000 × 100 users × $2/1M = $400", "**$452/mo**"],
+    ["**Facts Only**", "40K tokens × $0.13/1M = $5.20", "5 facts × 8 = 40 tokens", "40 × 100 users × $2/1M = $8", "**$13.20/mo**"],
+    ["**Hybrid**", "ACID: $5 (no embed) / Vector: $5.20", "40 tokens", "$8", "**$18.20/mo**"],
+  ]}
+/>
 
 **Extraction Cost (Facts/Hybrid):**
 
@@ -435,17 +441,24 @@ Total: 205MB = $0.10/month
 
 **Search query:** "What are user's work preferences?"
 
-| Strategy   | Vector Search        | Result Processing            | Total Latency |
-| ---------- | -------------------- | ---------------------------- | ------------- |
-| **Raw**    | 80ms (large vectors) | 50ms (parse verbose results) | **130ms**     |
-| **Facts**  | 30ms (small vectors) | 10ms (concise results)       | **40ms**      |
-| **Hybrid** | 30ms (search facts)  | 10ms (facts are concise)     | **40ms**      |
+<DataTable
+  headers={["Strategy", "Vector Search", "Result Processing", "Total Latency"]}
+  rows={[
+    ["**Raw**", "80ms (large vectors)", "50ms (parse verbose results)", "**130ms**"],
+    ["**Facts**", "30ms (small vectors)", "10ms (concise results)", "**40ms**"],
+    ["**Hybrid**", "30ms (search facts)", "10ms (facts are concise)", "**40ms**"],
+  ]}
+/>
 
 **If need raw context:**
-| Strategy | Vector Search | Fetch ACID | Total |
-|----------|---------------|------------|-------|
-| **Raw** | 130ms | 0ms (already have it) | **130ms** |
-| **Hybrid** | 40ms | +20ms (fetch from ACID) | **60ms** |
+
+<DataTable
+  headers={["Strategy", "Vector Search", "Fetch ACID", "Total"]}
+  rows={[
+    ["**Raw**", "130ms", "0ms (already have it)", "**130ms**"],
+    ["**Hybrid**", "40ms", "+20ms (fetch from ACID)", "**60ms**"],
+  ]}
+/>
 
 **Winner:** Facts/Hybrid **70% faster** for normal queries, still fast even when fetching raw
 
@@ -515,11 +528,14 @@ Score: 0.95
 - 3072-dim embeddings
 - Convex vector search
 
-| Query Type                               | Raw   | Facts | Improvement |
-| ---------------------------------------- | ----- | ----- | ----------- |
-| Simple ("user name")                     | 45ms  | 15ms  | 67% faster  |
-| Complex ("work history and preferences") | 120ms | 35ms  | 71% faster  |
-| Broad ("everything about user")          | 200ms | 60ms  | 70% faster  |
+<DataTable
+  headers={["Query Type", "Raw", "Facts", "Improvement"]}
+  rows={[
+    ["Simple (\"user name\")", "45ms", "15ms", "67% faster"],
+    ["Complex (\"work history and preferences\")", "120ms", "35ms", "71% faster"],
+    ["Broad (\"everything about user\")", "200ms", "60ms", "70% faster"],
+  ]}
+/>
 
 **Why facts are faster:**
 
@@ -817,14 +833,17 @@ Total: 184MB = $0.09/month
 
 ### Information Preserved
 
-| Information Type      | Raw | Facts      | Hybrid       |
-| --------------------- | --- | ---------- | ------------ |
-| **Core facts**        | Yes | Yes        | Yes          |
-| **Exact wording**     | Yes | No         | Yes (in ACID) |
-| **Tone/sentiment**    | Yes | No         | Yes (in ACID) |
-| **Timestamps**        | Yes | Yes        | Yes          |
-| **Context flow**      | Yes | Partial    | Yes (in ACID) |
-| **Meta-conversation** | Yes | No         | Yes (in ACID) |
+<ComparisonTable
+  headers={["Information Type", "Raw", "Facts", "Hybrid"]}
+  items={[
+    { feature: "Core facts", values: ["Yes", "Yes", "Yes"] },
+    { feature: "Exact wording", values: ["Yes", "No", "Yes (in ACID)"] },
+    { feature: "Tone/sentiment", values: ["Yes", "No", "Yes (in ACID)"] },
+    { feature: "Timestamps", values: ["Yes", "Yes", "Yes"] },
+    { feature: "Context flow", values: ["Yes", "Partial", "Yes (in ACID)"] },
+    { feature: "Meta-conversation", values: ["Yes", "No", "Yes (in ACID)"] },
+  ]}
+/>
 
 ### Retrieval Accuracy
 
@@ -836,11 +855,14 @@ Total: 184MB = $0.09/month
 - **Recall:** % of relevant results that were retrieved
 - **F1 Score:** Harmonic mean of precision and recall
 
-| Strategy   | Precision | Recall | F1 Score | Avg Latency |
-| ---------- | --------- | ------ | -------- | ----------- |
-| **Raw**    | 72%       | 85%    | 0.78     | 130ms       |
-| **Facts**  | 89%       | 78%    | 0.83     | 40ms        |
-| **Hybrid** | 89%       | 85%    | 0.87     | 45ms        |
+<DataTable
+  headers={["Strategy", "Precision", "Recall", "F1 Score", "Avg Latency"]}
+  rows={[
+    ["**Raw**", "72%", "85%", "0.78", "130ms"],
+    ["**Facts**", "89%", "78%", "0.83", "40ms"],
+    ["**Hybrid**", "89%", "85%", "0.87", "45ms"],
+  ]}
+/>
 
 **Analysis:**
 
@@ -1172,19 +1194,22 @@ if (metrics.factPerformance > metrics.rawPerformance * 1.5) {
 
 ## Summary Table
 
-| Criteria             | Raw             | Facts           | Hybrid            |
-| -------------------- | --------------- | --------------- | ----------------- |
-| **Storage Cost**     | High ($0.50/GB) | Low ($0.05/GB)  | Medium ($0.09/GB) |
-| **Token Cost**       | High ($400/mo)  | Low ($8/mo)     | Low ($8/mo)       |
-| **Extraction Cost**  | $0              | $10/mo          | $10/mo            |
-| **Search Speed**     | Slow (130ms)    | Fast (40ms)     | Fast (40ms)       |
-| **Precision**        | Medium (72%)    | High (89%)      | High (89%)        |
-| **Recall**           | High (85%)      | Medium (78%)    | High (85%)        |
-| **Compliance**       | Perfect         | Not verbatim    | Perfect           |
-| **Exact Quotes**     | Always          | Never           | On demand         |
-| **Setup Complexity** | Low             | Medium          | Medium            |
-| **Best For**         | Compliance      | Efficiency      | Production        |
-| **Recommendation**   | Good            | Better          | Best              |
+<ComparisonTable
+  headers={["Criteria", "Raw", "Facts", "Hybrid"]}
+  items={[
+    { feature: "Storage Cost", values: ["High ($0.50/GB)", "Low ($0.05/GB)", "Medium ($0.09/GB)"] },
+    { feature: "Token Cost", values: ["High ($400/mo)", "Low ($8/mo)", "Low ($8/mo)"] },
+    { feature: "Extraction Cost", values: ["$0", "$10/mo", "$10/mo"] },
+    { feature: "Search Speed", values: ["Slow (130ms)", "Fast (40ms)", "Fast (40ms)"] },
+    { feature: "Precision", values: ["Medium (72%)", "High (89%)", "High (89%)"] },
+    { feature: "Recall", values: ["High (85%)", "Medium (78%)", "High (85%)"] },
+    { feature: "Compliance", values: ["Perfect", "Not verbatim", "Perfect"] },
+    { feature: "Exact Quotes", values: ["Always", "Never", "On demand"] },
+    { feature: "Setup Complexity", values: ["Low", "Medium", "Medium"] },
+    { feature: "Best For", values: ["Compliance", "Efficiency", "Production"] },
+    { feature: "Recommendation", values: ["Good", "Better", "Best"] },
+  ]}
+/>
 
 ## Conclusion
 

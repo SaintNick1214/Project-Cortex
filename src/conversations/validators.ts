@@ -329,10 +329,13 @@ export function validateParticipants(
   }
 
   if (type === "user-agent") {
-    // User-agent conversations require userId
-    if (!participants.userId || participants.userId.trim().length === 0) {
+    // User-agent conversations require userId OR userIds (collaborative)
+    const hasUserId = participants.userId && participants.userId.trim().length > 0;
+    const hasUserIds = participants.userIds && Array.isArray(participants.userIds) && participants.userIds.length > 0;
+    
+    if (!hasUserId && !hasUserIds) {
       throw new ConversationValidationError(
-        "user-agent conversations require userId",
+        "user-agent conversations require userId or userIds",
         "INVALID_PARTICIPANTS",
         "participants.userId",
       );
@@ -387,6 +390,119 @@ export function validateNoDuplicates<T>(arr: T[], fieldName: string): void {
       `${fieldName} contains duplicate values: ${duplicates.join(", ")}`,
       "DUPLICATE_VALUES",
       fieldName,
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Visibility Validators (Shareable Chats Phase 1)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const VALID_VISIBILITY_VALUES = ["private", "space", "public"] as const;
+
+/**
+ * Validates conversation visibility value
+ */
+export function validateVisibility(
+  visibility: string | undefined,
+  fieldName = "visibility",
+): void {
+  // Visibility is optional - undefined defaults to 'private'
+  if (visibility === undefined) {
+    return;
+  }
+
+  if (
+    typeof visibility !== "string" ||
+    !VALID_VISIBILITY_VALUES.includes(
+      visibility as (typeof VALID_VISIBILITY_VALUES)[number],
+    )
+  ) {
+    throw new ConversationValidationError(
+      `Invalid ${fieldName} "${visibility}". Must be "private", "space", or "public"`,
+      "INVALID_VISIBILITY",
+      fieldName,
+    );
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Share Validators (Shareable Chats Phase 2)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const VALID_GRANT_TYPES = ["user", "space", "link", "domain"] as const;
+const VALID_SHARE_STATUSES = ["active", "revoked", "expired"] as const;
+
+/**
+ * Validates share grant type
+ */
+export function validateGrantType(
+  grantType: string,
+  fieldName = "grantType",
+): void {
+  if (
+    !VALID_GRANT_TYPES.includes(
+      grantType as (typeof VALID_GRANT_TYPES)[number],
+    )
+  ) {
+    throw new ConversationValidationError(
+      `Invalid ${fieldName} "${grantType}". Must be "user", "space", "link", or "domain"`,
+      "INVALID_GRANT_TYPE",
+      fieldName,
+    );
+  }
+}
+
+/**
+ * Validates share status
+ */
+export function validateShareStatus(
+  status: string | undefined,
+  fieldName = "status",
+): void {
+  if (status === undefined) {
+    return;
+  }
+
+  if (
+    !VALID_SHARE_STATUSES.includes(
+      status as (typeof VALID_SHARE_STATUSES)[number],
+    )
+  ) {
+    throw new ConversationValidationError(
+      `Invalid ${fieldName} "${status}". Must be "active", "revoked", or "expired"`,
+      "INVALID_SHARE_STATUS",
+      fieldName,
+    );
+  }
+}
+
+/**
+ * Validates grantedTo is provided when required by grant type
+ */
+export function validateGrantedTo(
+  grantType: string,
+  grantedTo: string | undefined,
+): void {
+  if (grantType === "user" && !grantedTo) {
+    throw new ConversationValidationError(
+      "grantedTo (userId) is required for user share type",
+      "GRANTEE_REQUIRED",
+      "grantedTo",
+    );
+  }
+  if (grantType === "space" && !grantedTo) {
+    throw new ConversationValidationError(
+      "grantedTo (memorySpaceId) is required for space share type",
+      "GRANTEE_REQUIRED",
+      "grantedTo",
+    );
+  }
+  if (grantType === "domain" && !grantedTo) {
+    throw new ConversationValidationError(
+      "grantedTo (email domain) is required for domain share type",
+      "GRANTEE_REQUIRED",
+      "grantedTo",
     );
   }
 }

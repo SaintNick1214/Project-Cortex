@@ -20,14 +20,17 @@ Cortex is built on Convex, a **document-oriented database**, but provides **grap
 
 Every entity in Cortex is a graph node:
 
-| Entity | Description |
-|--------|-------------|
-| **Agents** | AI agents, human operators |
-| **Users** | End users, customers |
-| **Contexts** | Workflow tasks, hierarchies |
-| **Conversations** | Message threads |
-| **Memories** | Agent knowledge |
-| **Facts** | Extracted knowledge (optional) |
+<DataTable
+  headers={["Entity", "Description"]}
+  rows={[
+    ["**Agents**", "AI agents, human operators"],
+    ["**Users**", "End users, customers"],
+    ["**Contexts**", "Workflow tasks, hierarchies"],
+    ["**Conversations**", "Message threads"],
+    ["**Memories**", "Agent knowledge"],
+    ["**Facts**", "Extracted knowledge (optional)"],
+  ]}
+/>
 
 ### Edges (Relationships)
 
@@ -522,12 +525,15 @@ finance-agent ══(45)══> hr-agent
 
 ### Graph-Lite Performance
 
-| Hops | Query Type         | Avg Latency | Complexity   | Use Case                     |
-| ---- | ------------------ | ----------- | ------------ | ---------------------------- |
-| 1    | Single lookup      | 10-50ms     | Simple       | Direct relationships         |
-| 2-3  | Sequential queries | 50-200ms    | Moderate     | Context chains, A2A patterns |
-| 4-5  | Multiple queries   | 200-500ms   | Complex      | Workflow hierarchies         |
-| 6+   | Many queries       | 500-2000ms+ | Very complex | Consider native graph        |
+<DataTable
+  headers={["Hops", "Query Type", "Avg Latency", "Complexity", "Use Case"]}
+  rows={[
+    ["1", "Single lookup", "10-50ms", "Simple", "Direct relationships"],
+    ["2-3", "Sequential queries", "50-200ms", "Moderate", "Context chains, A2A patterns"],
+    ["4-5", "Multiple queries", "200-500ms", "Complex", "Workflow hierarchies"],
+    ["6+", "Many queries", "500-2000ms+", "Very complex", "Consider native graph"],
+  ]}
+/>
 
 **Example:**
 
@@ -617,15 +623,18 @@ const memorySpace = await cortex.memorySpaces.get(contexts[0].memorySpaceId); //
 
 **Decision Matrix:**
 
-| Your Need                      | Graph-Lite      | Native Graph DB |
-| ------------------------------ | --------------- | --------------- |
-| Context hierarchies (depth <5) | Perfect         | Overkill        |
-| Audit trails (known paths)     | Perfect         | Overkill        |
-| Agent collaboration (1-3 hops) | Good            | Better          |
-| Deep traversals (6+ hops)      | Too slow        | Required        |
-| Pattern matching               | Very hard       | Required        |
-| Graph algorithms               | Not feasible    | Required        |
-| Dense relationship networks    | Slow            | Best            |
+<ComparisonTable
+  headers={["Your Need", "Graph-Lite", "Native Graph DB"]}
+  items={[
+    { feature: "Context hierarchies (depth <5)", values: ["Perfect", "Overkill"] },
+    { feature: "Audit trails (known paths)", values: ["Perfect", "Overkill"] },
+    { feature: "Agent collaboration (1-3 hops)", values: ["Good", "Better"] },
+    { feature: "Deep traversals (6+ hops)", values: ["Too slow", "Required"] },
+    { feature: "Pattern matching", values: ["Very hard", "Required"] },
+    { feature: "Graph algorithms", values: ["Not feasible", "Required"] },
+    { feature: "Dense relationship networks", values: ["Slow", "Best"] },
+  ]}
+/>
 
 **When to Upgrade:**
 
@@ -664,10 +673,13 @@ See: **[Graph Database Integration Guide](./graph-database-integration)** for co
 
 **Quick comparison:**
 
-| Database        | Setup Difficulty | Performance | Cost               | Best For         |
-| --------------- | ---------------- | ----------- | ------------------ | ---------------- |
-| Neo4j Community | Medium (Docker)  | Excellent   | Free (self-hosted) | Production ready |
-| Memgraph        | Easy (Docker)    | Excellent   | Free (self-hosted) | High performance |
+<DataTable
+  headers={["Database", "Setup Difficulty", "Performance", "Cost", "Best For"]}
+  rows={[
+    ["Neo4j Community", "Medium (Docker)", "Excellent", "Free (self-hosted)", "Production ready"],
+    ["Memgraph", "Easy (Docker)", "Excellent", "Free (self-hosted)", "High performance"],
+  ]}
+/>
 
 ### Step 3: Migration Path
 
@@ -875,17 +887,20 @@ for (const childId of root.childIds) {
 
 ## Comparison: Graph-Lite vs Native Graph
 
-| Feature         | Graph-Lite (Built-in)      | Native Graph DB           |
-| --------------- | -------------------------- | ------------------------- |
-| **Setup**       | None (included)            | Docker or managed service |
-| **Storage**     | Convex only                | Convex + Graph DB         |
-| **Consistency** | Always consistent          | Eventually consistent     |
-| **Query Speed** | 50-500ms (depth-dependent) | 10-100ms (constant)       |
-| **Max Depth**   | 5 hops practical           | 100+ hops                 |
-| **Algorithms**  | Manual implementation      | Built-in                  |
-| **Cost**        | Free (Convex storage)      | Graph DB cost + sync      |
-| **Complexity**  | Low (no extra systems)     | Medium (2 databases)      |
-| **Use Cases**   | 90% of use cases           | Advanced/enterprise       |
+<ComparisonTable
+  headers={["Feature", "Graph-Lite (Built-in)", "Native Graph DB"]}
+  items={[
+    { feature: "Setup", values: ["None (included)", "Docker or managed service"] },
+    { feature: "Storage", values: ["Convex only", "Convex + Graph DB"] },
+    { feature: "Consistency", values: ["Always consistent", "Eventually consistent"] },
+    { feature: "Query Speed", values: ["50-500ms (depth-dependent)", "10-100ms (constant)"] },
+    { feature: "Max Depth", values: ["5 hops practical", "100+ hops"] },
+    { feature: "Algorithms", values: ["Manual implementation", "Built-in"] },
+    { feature: "Cost", values: ["Free (Convex storage)", "Graph DB cost + sync"] },
+    { feature: "Complexity", values: ["Low (no extra systems)", "Medium (2 databases)"] },
+    { feature: "Use Cases", values: ["90% of use cases", "Advanced/enterprise"] },
+  ]}
+/>
 
 **Summary:** Start with Graph-Lite. Upgrade to native graph only when you hit performance/complexity limits.
 

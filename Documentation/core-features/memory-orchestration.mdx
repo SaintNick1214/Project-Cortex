@@ -301,27 +301,33 @@ Both `remember()` and `recall()` work out-of-the-box with sensible defaults:
 
 ### remember() Defaults
 
-| Feature | Default | What It Does |
-|---------|---------|--------------|
-| Memory Space | Auto-register | Creates space if it doesn't exist |
-| User Profile | Auto-create | Creates user profile for new users |
-| Conversation | Always stored | Messages saved to ACID layer |
-| Vector Memory | Always created | Searchable memory entry |
-| Facts | Extracted if configured | LLM extracts structured facts |
-| Graph Sync | Enabled if configured | Syncs entities and relationships |
-| Belief Revision | Enabled if LLM configured | Handles conflicting facts |
+<DataTable
+  headers={["Feature", "Default", "What It Does"]}
+  rows={[
+    ["Memory Space", "Auto-register", "Creates space if it doesn't exist"],
+    ["User Profile", "Auto-create", "Creates user profile for new users"],
+    ["Conversation", "Always stored", "Messages saved to ACID layer"],
+    ["Vector Memory", "Always created", "Searchable memory entry"],
+    ["Facts", "Extracted if configured", "LLM extracts structured facts"],
+    ["Graph Sync", "Enabled if configured", "Syncs entities and relationships"],
+    ["Belief Revision", "Enabled if LLM configured", "Handles conflicting facts"],
+  ]}
+/>
 
 ### recall() Defaults
 
-| Feature | Default | What It Does |
-|---------|---------|--------------|
-| Vector Search | Enabled | Searches Layer 2 |
-| Facts Search | Enabled | Searches Layer 3 directly |
-| Graph Expansion | Enabled if configured | Discovers related context |
-| LLM Context | Generated | Ready-to-inject string |
-| Deduplication | Enabled | Removes duplicates |
-| Ranking | Enabled | Multi-signal scoring |
-| Configurable Limits | v0.31.0+ | Per-source data caps |
+<DataTable
+  headers={["Feature", "Default", "What It Does"]}
+  rows={[
+    ["Vector Search", "Enabled", "Searches Layer 2"],
+    ["Facts Search", "Enabled", "Searches Layer 3 directly"],
+    ["Graph Expansion", "Enabled if configured", "Discovers related context"],
+    ["LLM Context", "Generated", "Ready-to-inject string"],
+    ["Deduplication", "Enabled", "Removes duplicates"],
+    ["Ranking", "Enabled", "Multi-signal scoring"],
+    ["Configurable Limits", "v0.31.0+", "Per-source data caps"],
+  ]}
+/>
 
 <Callout type="info" title="New in v0.31.0: Configurable Limits">
 Control how much data `recall()` fetches from each source to prevent Convex read limit errors:
@@ -556,14 +562,17 @@ await cortex.memory.remember({
 });
 ```
 
-| Skip | Effect |
-|------|--------|
-| `users` | Don't auto-create user profile |
-| `agents` | Don't auto-register agent |
-| `conversations` | Don't store in ACID layer |
-| `vector` | Don't create vector memory |
-| `facts` | Don't extract facts |
-| `graph` | Don't sync to graph |
+<DataTable
+  headers={["Skip", "Effect"]}
+  rows={[
+    ["`users`", "Don't auto-create user profile"],
+    ["`agents`", "Don't auto-register agent"],
+    ["`conversations`", "Don't store in ACID layer"],
+    ["`vector`", "Don't create vector memory"],
+    ["`facts`", "Don't extract facts"],
+    ["`graph`", "Don't sync to graph"],
+  ]}
+/>
 
 ---
 

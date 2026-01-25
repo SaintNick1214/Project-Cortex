@@ -319,11 +319,14 @@ const identity = await cortex.facts.list({
   `memory.remember()` automatically deduplicates facts using semantic matching. Same fact stated differently won't create duplicates.
 </Callout>
 
-| Strategy | How it Works | Speed | Accuracy |
-|----------|--------------|-------|----------|
-| `semantic` | Embedding similarity (default) | Slower | Highest |
-| `structural` | Subject + predicate + object match | Fast | Medium |
-| `exact` | Normalized text match | Fastest | Low |
+<DataTable
+  headers={["Strategy", "How it Works", "Speed", "Accuracy"]}
+  rows={[
+    ["`semantic`", "Embedding similarity (default)", "Slower", "Highest"],
+    ["`structural`", "Subject + predicate + object match", "Fast", "Medium"],
+    ["`exact`", "Normalized text match", "Fastest", "Low"],
+  ]}
+/>
 
 ```typescript
 // Use structural deduplication (faster)

@@ -361,16 +361,26 @@ def validate_participants(type: str, participants: Any) -> None:
         )
 
     if type == "user-agent":
-        # User-agent conversations require user_id
+        # User-agent conversations require user_id OR user_ids (collaborative)
         user_id = None
+        user_ids = None
+
         if hasattr(participants, "user_id"):
             user_id = participants.user_id
         elif isinstance(participants, dict):
             user_id = participants.get("userId") or participants.get("user_id")
 
-        if not user_id or not isinstance(user_id, str) or not user_id.strip():
+        if hasattr(participants, "user_ids"):
+            user_ids = participants.user_ids
+        elif isinstance(participants, dict):
+            user_ids = participants.get("userIds") or participants.get("user_ids")
+
+        has_user_id = user_id and isinstance(user_id, str) and user_id.strip()
+        has_user_ids = user_ids and isinstance(user_ids, list) and len(user_ids) > 0
+
+        if not has_user_id and not has_user_ids:
             raise ConversationValidationError(
-                "user-agent conversations require user_id",
+                "user-agent conversations require user_id or user_ids",
                 "INVALID_PARTICIPANTS",
                 "participants.user_id",
             )
@@ -429,4 +439,118 @@ def validate_no_duplicates(lst: List[Any], field_name: str) -> None:
             f"{field_name} contains duplicate values: {', '.join(str(d) for d in duplicates)}",
             "DUPLICATE_VALUES",
             field_name,
+        )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Visibility Validators (Shareable Chats Phase 1)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VALID_VISIBILITY_VALUES = ("private", "space", "public")
+
+
+def validate_visibility(
+    visibility: Optional[str], field_name: str = "visibility"
+) -> None:
+    """
+    Validates conversation visibility value.
+
+    Args:
+        visibility: Visibility value to validate (None is OK, defaults to 'private')
+        field_name: Name of the field being validated
+
+    Raises:
+        ConversationValidationError: If visibility value is invalid
+    """
+    # Visibility is optional - None defaults to 'private'
+    if visibility is None:
+        return
+
+    if not isinstance(visibility, str) or visibility not in VALID_VISIBILITY_VALUES:
+        raise ConversationValidationError(
+            f'Invalid {field_name} "{visibility}". Must be "private", "space", or "public"',
+            "INVALID_VISIBILITY",
+            field_name,
+        )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Share Validators (Shareable Chats Phase 2)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VALID_GRANT_TYPES = ("user", "space", "link", "domain")
+VALID_SHARE_STATUSES = ("active", "revoked", "expired")
+
+
+def validate_grant_type(grant_type: str, field_name: str = "grant_type") -> None:
+    """
+    Validates share grant type.
+
+    Args:
+        grant_type: Grant type to validate
+        field_name: Name of the field being validated
+
+    Raises:
+        ConversationValidationError: If grant type is invalid
+    """
+    if grant_type not in VALID_GRANT_TYPES:
+        raise ConversationValidationError(
+            f'Invalid {field_name} "{grant_type}". Must be "user", "space", "link", or "domain"',
+            "INVALID_GRANT_TYPE",
+            field_name,
+        )
+
+
+def validate_share_status(
+    status: Optional[str], field_name: str = "status"
+) -> None:
+    """
+    Validates share status.
+
+    Args:
+        status: Status to validate (None is OK)
+        field_name: Name of the field being validated
+
+    Raises:
+        ConversationValidationError: If status is invalid
+    """
+    if status is None:
+        return
+
+    if status not in VALID_SHARE_STATUSES:
+        raise ConversationValidationError(
+            f'Invalid {field_name} "{status}". Must be "active", "revoked", or "expired"',
+            "INVALID_SHARE_STATUS",
+            field_name,
+        )
+
+
+def validate_granted_to(grant_type: str, granted_to: Optional[str]) -> None:
+    """
+    Validates granted_to is provided when required by grant type.
+
+    Args:
+        grant_type: The grant type
+        granted_to: The grantee identifier
+
+    Raises:
+        ConversationValidationError: If granted_to is required but missing
+    """
+    if grant_type == "user" and not granted_to:
+        raise ConversationValidationError(
+            "granted_to (user_id) is required for user share type",
+            "GRANTEE_REQUIRED",
+            "granted_to",
+        )
+    if grant_type == "space" and not granted_to:
+        raise ConversationValidationError(
+            "granted_to (memory_space_id) is required for space share type",
+            "GRANTEE_REQUIRED",
+            "granted_to",
+        )
+    if grant_type == "domain" and not granted_to:
+        raise ConversationValidationError(
+            "granted_to (email domain) is required for domain share type",
+            "GRANTEE_REQUIRED",
+            "granted_to",
         )

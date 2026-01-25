@@ -987,12 +987,15 @@ cortex.facts.configureBeliefRevision(llmClient, {
 
 When slot or semantic matching finds potential conflicts, the LLM makes nuanced decisions:
 
-| Decision  | Meaning                    | Example                                                   |
-| --------- | -------------------------- | --------------------------------------------------------- |
-| UPDATE    | Merge/refine existing fact | "User likes pizza" → "User's favorite pizza is pepperoni" |
-| SUPERSEDE | Replace contradictory fact | "Lives in NYC" → "Moved to SF"                            |
-| NONE      | Skip - already captured    | Duplicate or less specific                                |
-| ADD       | Genuinely new information  | Different aspect of same topic                            |
+<DataTable
+  headers={["Decision", "Meaning", "Example"]}
+  rows={[
+    ["UPDATE", "Merge/refine existing fact", "\"User likes pizza\" → \"User's favorite pizza is pepperoni\""],
+    ["SUPERSEDE", "Replace contradictory fact", "\"Lives in NYC\" → \"Moved to SF\""],
+    ["NONE", "Skip - already captured", "Duplicate or less specific"],
+    ["ADD", "Genuinely new information", "Different aspect of same topic"],
+  ]}
+/>
 
 ### `facts.get()`
 
@@ -2325,11 +2328,14 @@ When `CORTEX_GRAPH_SYNC=true` is set in your environment, enriched facts automat
 
 When searching with enriched facts, the search engine applies boosts:
 
-| Condition               | Boost |
-| ----------------------- | ----- |
-| User message role       | +20%  |
-| Matching `factCategory` | +30%  |
-| Has `enrichedContent`   | +10%  |
+<DataTable
+  headers={["Condition", "Boost"]}
+  rows={[
+    ["User message role", "+20%"],
+    ["Matching `factCategory`", "+30%"],
+    ["Has `enrichedContent`", "+10%"],
+  ]}
+/>
 
 This ensures properly enriched facts rank highest for relevant queries.
 

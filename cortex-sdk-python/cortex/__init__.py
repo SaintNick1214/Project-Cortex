@@ -72,6 +72,9 @@ from .mutable.validators import MutableValidationError
 # Sessions module
 from .sessions import SessionsAPI, SessionValidationError
 
+# Sharing utilities (Shareable Chats Phase 2)
+from .sharing import ShareUrlStyle, build_share_url, extract_share_id
+
 # Configuration
 # Core Types - Layer 1
 # Core Types - Layer 2
@@ -397,6 +400,10 @@ __all__ = [
     "SessionLimitsPolicy",
     "SessionPolicy",
     "SessionValidationError",
+    # Sharing utilities
+    "build_share_url",
+    "extract_share_id",
+    "ShareUrlStyle",
     # Config
     "CortexConfig",
     "GraphConfig",

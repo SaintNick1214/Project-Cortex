@@ -251,11 +251,14 @@ export async function POST(req: Request) {
 
 ## Supported Stream Types
 
-| Type | Source | Example |
-|------|--------|---------|
-| **ReadableStream** | Web Streams API | Vercel AI SDK, fetch() |
-| **AsyncIterable** | JavaScript async generators | OpenAI SDK, LangChain |
-| **Custom generators** | Your code | `async function*` |
+<DataTable
+  headers={["Type", "Source", "Example"]}
+  rows={[
+    ["**ReadableStream**", "Web Streams API", "Vercel AI SDK, fetch()"],
+    ["**AsyncIterable**", "JavaScript async generators", "OpenAI SDK, LangChain"],
+    ["**Custom generators**", "Your code", "`async function*`"],
+  ]}
+/>
 
 All three work seamlessly with `rememberStream()`.
 

@@ -185,13 +185,16 @@ async function search(query: string) {
 
 ## Planned MCP Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `cortex_remember` / `/add_memories` | POST | Store a memory |
-| `cortex_search` / `/search_memory` | POST | Search memories |
-| `cortex_recall` / `/list_memories` | GET | Get context for LLM |
-| `cortex_get_facts` / `/get_memory` | GET | Retrieve extracted facts |
-| `/delete_all_memories` | POST | Clear user memories |
+<DataTable
+  headers={["Endpoint", "Method", "Description"]}
+  rows={[
+    ["cortex_remember / /add_memories", "POST", "Store a memory"],
+    ["cortex_search / /search_memory", "POST", "Search memories"],
+    ["cortex_recall / /list_memories", "GET", "Get context for LLM"],
+    ["cortex_get_facts / /get_memory", "GET", "Retrieve extracted facts"],
+    ["/delete_all_memories", "POST", "Clear user memories"],
+  ]}
+/>
 
 ### Store Memory
 

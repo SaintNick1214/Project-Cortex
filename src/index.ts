@@ -750,6 +750,10 @@ export { AttachmentValidationError } from "./attachments";
 export { createAuthContext, validateAuthContext } from "./auth";
 export type { AuthContext, AuthContextParams, AuthMethod } from "./auth/types";
 
+// Re-export sharing utilities (Shareable Chats Phase 2)
+export { buildShareUrl, extractShareId } from "./sharing";
+export type { ShareUrlStyle, ShareUrlConfig } from "./sharing";
+
 // Re-export sessions module
 export { SessionsAPI } from "./sessions";
 export type {

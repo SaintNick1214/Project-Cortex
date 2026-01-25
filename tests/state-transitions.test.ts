@@ -998,6 +998,7 @@ describe("State Transition Testing", () => {
 
         // Verify retrievable - use retry to handle eventual consistency races
         // where a subsequent call might hit a different replica
+        // Increased retries (5) and initial delay (500ms) for CI resilience under parallel load
         const retrieved = await retryOperation(
           async () => {
             const result = await cortex.contexts.get(testCtx.contextId);
@@ -1007,6 +1008,8 @@ describe("State Transition Testing", () => {
             return result;
           },
           `contexts.get(${status})`,
+          5, // maxRetries - increased from default 3
+          500, // initialDelayMs - increased from default 200ms
         );
         expect((retrieved as any).status).toBe(status);
 

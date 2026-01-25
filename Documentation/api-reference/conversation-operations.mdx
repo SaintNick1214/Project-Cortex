@@ -44,10 +44,13 @@ The Conversation Operations API (`cortex.conversations.*`) manages **immutable c
 
 **Conversation Types:**
 
-| Type          | Participants  | Use Case                                          |
-| ------------- | ------------- | ------------------------------------------------- |
-| `user-agent`  | User + Agent  | User chatting with AI agent                       |
-| `agent-agent` | Agent + Agent | A2A communication (managed by cortex.a2a helpers) |
+<DataTable
+  headers={["Type", "Participants", "Use Case"]}
+  rows={[
+    ["`user-agent`", "User + Agent", "User chatting with AI agent"],
+    ["`agent-agent`", "Agent + Agent", "A2A communication (managed by cortex.a2a helpers)"],
+  ]}
+/>
 
 **Why Layer 1a Exists:**
 
@@ -88,7 +91,8 @@ interface CreateConversationInput {
 
   // Participants (REQUIRED)
   participants: {
-    userId?: string; // For user-agent conversations
+    userId?: string; // For user-agent conversations (single user)
+    userIds?: string[]; // For collaborative conversations (multiple users)
     agentId?: string; // Agent in the conversation
     participantId?: string; // Hive Mode: who created this
     memorySpaceIds?: string[]; // For agent-agent (Collaboration Mode)
@@ -99,6 +103,14 @@ interface CreateConversationInput {
   tenantId?: string; // Multi-tenancy: SaaS platform isolation
   participantId?: string; // Hive Mode tracking (top-level)
   metadata?: Record<string, unknown>;
+  
+  // Shareable Chats (v0.35.0+)
+  visibility?: 'private' | 'space' | 'public'; // Default: 'private'
+  collaborativeSettings?: {
+    requireApproval: boolean;       // Require approval for non-owner messages
+    ownerUserId?: string;           // User who can approve (defaults to userId)
+    approvedParticipants?: string[]; // Pre-approved participants
+  };
 }
 ```
 
@@ -112,6 +124,7 @@ interface Conversation {
   type: "user-agent" | "agent-agent";
   participants: {
     userId?: string;
+    userIds?: string[]; // Collaborative: multiple users
     agentId?: string;
     participantId?: string;
     memorySpaceIds?: string[];
@@ -124,6 +137,14 @@ interface Conversation {
 
   tenantId?: string; // Auto-injected from AuthContext for multi-tenancy
   participantId?: string; // Hive Mode tracking
+  
+  // Shareable Chats (v0.35.0+)
+  visibility?: 'private' | 'space' | 'public';
+  collaborativeSettings?: {
+    requireApproval: boolean;
+    ownerUserId?: string;
+    approvedParticipants?: string[];
+  };
 
   createdAt: number; // Unix timestamp (milliseconds)
   updatedAt: number; // Unix timestamp (milliseconds)
@@ -262,7 +283,7 @@ interface AddMessageInput {
     id?: string; // Auto-generated if not provided
     role: "user" | "agent" | "system";
     content: string;
-    participantId?: string; // Hive Mode: which participant sent this
+    participantId?: string; // Hive Mode/Collaborative: which participant sent this
     metadata?: Record<string, any>;
   };
 }
@@ -279,6 +300,20 @@ interface Conversation {
   messageCount: number; // Incremented
   updatedAt: number; // Updated timestamp
   // ... other fields
+}
+
+interface Message {
+  id: string;
+  role: "user" | "agent" | "system";
+  content: string;
+  timestamp: number;
+  participantId?: string;
+  metadata?: Record<string, unknown>;
+  
+  // Collaborative conversations (v0.35.0+)
+  approvalStatus?: 'pending' | 'approved' | 'rejected';
+  approvedBy?: string;    // userId who approved/rejected
+  approvedAt?: number;    // Timestamp of approval
 }
 ```
 
@@ -1036,6 +1071,480 @@ await cortex.conversations.addMessage({
 
 ---
 
+## Shareable Chats
+
+Shareable Chats enable conversation sharing, visibility control, snapshots, and collaborative multi-user conversations.
+
+### Visibility
+
+Control who can access conversations with visibility levels.
+
+#### Visibility Levels
+
+<DataTable
+  headers={["Level", "Description", "Access"]}
+  rows={[
+    ["`private`", "Owner only (default)", "Only the conversation owner"],
+    ["`space`", "Memory space members", "Anyone with access to the memory space"],
+    ["`public`", "Anyone", "Accessible to all users"],
+  ]}
+/>
+
+#### create() with visibility
+
+```typescript
+const conversation = await cortex.conversations.create({
+  memorySpaceId: 'support-space',
+  type: 'user-agent',
+  participants: {
+    userId: 'user-123',
+    agentId: 'support-agent',
+  },
+  visibility: 'space', // 'private' | 'space' | 'public'
+});
+
+console.log(conversation.visibility); // 'space'
+```
+
+#### checkAccess()
+
+Check if a user has access to a conversation.
+
+**Signature:**
+
+```typescript
+cortex.conversations.checkAccess(
+  input: CheckAccessInput
+): Promise<CheckAccessResult>
+```
+
+**Parameters:**
+
+```typescript
+interface CheckAccessInput {
+  conversationId: string;
+  userId: string;
+  memorySpaceId?: string; // For space visibility checks
+}
+```
+
+**Returns:**
+
+```typescript
+interface CheckAccessResult {
+  canView: boolean;
+  canEdit: boolean;
+  reason: 'OWNER' | 'PUBLIC_VISIBILITY' | 'SPACE_MEMBER' | 
+          'PRIVATE_VISIBILITY' | 'NOT_IN_MEMORY_SPACE' | 'CONVERSATION_NOT_FOUND';
+  visibility: 'private' | 'space' | 'public' | null;
+}
+```
+
+**Example:**
+
+```typescript
+const access = await cortex.conversations.checkAccess({
+  conversationId: 'conv-123',
+  userId: 'user-456',
+  memorySpaceId: 'shared-space',
+});
+
+if (access.canView) {
+  console.log(`Access granted: ${access.reason}`);
+} else {
+  console.log(`Access denied: ${access.reason}`);
+}
+```
+
+#### setVisibility()
+
+Change a conversation's visibility level.
+
+**Signature:**
+
+```typescript
+cortex.conversations.setVisibility(
+  input: SetVisibilityInput
+): Promise<Conversation>
+```
+
+**Example:**
+
+```typescript
+// Make a private conversation public
+const updated = await cortex.conversations.setVisibility({
+  conversationId: 'conv-123',
+  visibility: 'public',
+});
+
+console.log(updated.visibility); // 'public'
+```
+
+---
+
+### Sharing Grants
+
+Create granular sharing permissions with time limits, view limits, and redaction options.
+
+#### share()
+
+Create a sharing grant for a conversation.
+
+**Signature:**
+
+```typescript
+cortex.conversations.share(
+  input: CreateShareInput
+): Promise<CreateShareResult>
+```
+
+**Parameters:**
+
+```typescript
+interface CreateShareInput {
+  conversationId: string;
+  grantType: 'user' | 'space' | 'link' | 'domain';
+  grantedTo?: string; // Required for 'user', 'space', 'domain'
+  permissions?: {
+    canView?: boolean;      // Default: true
+    canViewFacts?: boolean; // Default: false
+    canViewMemories?: boolean;
+    canContinue?: boolean;  // Continue the conversation
+    canFork?: boolean;      // Create a copy
+    canExport?: boolean;    // Export data
+  };
+  expiresAt?: number;  // Timestamp in milliseconds
+  maxViews?: number;   // Maximum view count
+  redactBefore?: number; // Hide messages before timestamp
+  redactSensitive?: boolean;
+}
+```
+
+**Returns:**
+
+```typescript
+interface CreateShareResult {
+  shareId: string;
+  expiresAt?: number;
+  share: ConversationShare;
+}
+```
+
+**Examples:**
+
+```typescript
+// Create a link share (anyone with link can view)
+const linkShare = await cortex.conversations.share({
+  conversationId: 'conv-123',
+  grantType: 'link',
+  permissions: { canView: true, canFork: true },
+  expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+});
+
+console.log(linkShare.shareId); // 'share-abc123'
+
+// Share with specific user
+const userShare = await cortex.conversations.share({
+  conversationId: 'conv-123',
+  grantType: 'user',
+  grantedTo: 'user-456',
+  permissions: { canView: true, canContinue: true },
+});
+
+// Share with view limit
+const limitedShare = await cortex.conversations.share({
+  conversationId: 'conv-123',
+  grantType: 'link',
+  maxViews: 10, // Expires after 10 views
+});
+```
+
+#### revokeShare()
+
+Revoke a sharing grant.
+
+```typescript
+const result = await cortex.conversations.revokeShare('share-abc123');
+
+console.log(result.revoked); // true
+console.log(result.share.status); // 'revoked'
+```
+
+#### listShares()
+
+List all sharing grants for a conversation.
+
+```typescript
+// List all shares
+const shares = await cortex.conversations.listShares('conv-123');
+
+// Filter by status
+const activeShares = await cortex.conversations.listShares('conv-123', {
+  status: 'active',
+});
+
+shares.forEach(share => {
+  console.log(`${share.shareId}: ${share.grantType} - ${share.status}`);
+});
+```
+
+#### getShare()
+
+Get a share by ID with validity check.
+
+```typescript
+const share = await cortex.conversations.getShare('share-abc123');
+
+if (share?.isValid) {
+  console.log('Share is valid');
+  console.log(`Views: ${share.viewCount}/${share.maxViews || '∞'}`);
+}
+```
+
+#### checkShareAccess()
+
+Check if a user has access via sharing grants.
+
+```typescript
+const access = await cortex.conversations.checkShareAccess({
+  conversationId: 'conv-123',
+  userId: 'user-456',
+});
+
+if (access.hasAccess) {
+  console.log('Access via share:', access.shareId);
+  console.log('Permissions:', access.permissions);
+} else {
+  console.log('No access:', access.reason);
+}
+```
+
+#### URL Utilities
+
+Build and parse shareable URLs.
+
+```typescript
+import { buildShareUrl, extractShareId } from '@cortexmemory/sdk';
+
+// Build URL
+const url = buildShareUrl('share-abc123', {
+  baseUrl: 'https://myapp.com/shared',
+});
+// → 'https://myapp.com/shared/share-abc123'
+
+// Query-style URL
+const queryUrl = buildShareUrl('share-abc123', {
+  baseUrl: 'https://myapp.com/view',
+  style: 'query',
+  paramName: 'id',
+});
+// → 'https://myapp.com/view?id=share-abc123'
+
+// Extract share ID from URL
+const shareId = extractShareId('https://myapp.com/shared/share-abc123');
+// → 'share-abc123'
+```
+
+---
+
+### Conversation Snapshots
+
+Create immutable snapshots of conversations with optional PII redaction.
+
+#### snapshot()
+
+Create a snapshot of a conversation.
+
+**Signature:**
+
+```typescript
+cortex.conversations.snapshot(
+  input: CreateSnapshotInput
+): Promise<CreateSnapshotResult>
+```
+
+**Parameters:**
+
+```typescript
+interface CreateSnapshotInput {
+  conversationId: string;
+  redactPII?: boolean;        // Redact emails, phones, SSN, etc.
+  redactBefore?: number;      // Exclude messages before timestamp
+  customRedactions?: Array<{
+    pattern: string;          // Regex or string to match
+    replacement: string;      // Replacement text
+  }>;
+}
+```
+
+**Examples:**
+
+```typescript
+// Basic snapshot
+const result = await cortex.conversations.snapshot({
+  conversationId: 'conv-123',
+});
+
+console.log(result.snapshotId); // 'snap-abc123'
+console.log(result.snapshot.messageCount); // 15
+
+// Snapshot with PII redaction
+const redacted = await cortex.conversations.snapshot({
+  conversationId: 'conv-123',
+  redactPII: true, // Redacts emails, phone numbers, SSN, IPs, etc.
+});
+
+// Message: "Contact me at john@example.com"
+// Becomes: "Contact me at [EMAIL]"
+
+// Custom redactions
+const custom = await cortex.conversations.snapshot({
+  conversationId: 'conv-123',
+  redactPII: true,
+  customRedactions: [
+    { pattern: 'ACME Corp', replacement: '[COMPANY]' },
+    { pattern: 'Project Alpha', replacement: '[PROJECT]' },
+  ],
+});
+```
+
+<Callout type="info" title="PII Redaction">
+
+When `redactPII: true`, the following patterns are automatically redacted:
+- Email addresses → `[EMAIL]`
+- Phone numbers → `[PHONE]`
+- Social Security Numbers → `[SSN]`
+- Credit card numbers → `[CREDIT_CARD]`
+- IP addresses → `[IP_ADDRESS]`
+
+</Callout>
+
+#### getSnapshot()
+
+Retrieve a snapshot by ID.
+
+```typescript
+const snapshot = await cortex.conversations.getSnapshot('snap-abc123');
+
+if (snapshot) {
+  console.log(`Messages: ${snapshot.messageCount}`);
+  console.log(`Created: ${new Date(snapshot.createdAt)}`);
+  console.log(`PII Redacted: ${snapshot.redaction.piiRedacted}`);
+}
+```
+
+#### listSnapshots()
+
+List snapshots for a conversation.
+
+```typescript
+const snapshots = await cortex.conversations.listSnapshots('conv-123');
+
+snapshots.forEach(snap => {
+  console.log(`${snap.snapshotId}: ${snap.messageCount} messages`);
+});
+```
+
+#### deleteSnapshot()
+
+Delete a snapshot.
+
+```typescript
+const result = await cortex.conversations.deleteSnapshot('snap-abc123');
+console.log(result.deleted); // true
+```
+
+---
+
+### Collaborative Conversations
+
+Enable multi-user conversations with message approval workflows.
+
+#### Creating Collaborative Conversations
+
+```typescript
+// Multiple participants
+const collab = await cortex.conversations.create({
+  memorySpaceId: 'team-space',
+  type: 'user-agent',
+  participants: {
+    userIds: ['user-1', 'user-2', 'user-3'], // Multiple users
+    agentId: 'team-assistant',
+  },
+  collaborativeSettings: {
+    requireApproval: true,    // Messages from non-owners need approval
+    ownerUserId: 'user-1',    // The owner who can approve
+    approvedParticipants: ['user-2'], // Pre-approved participants
+  },
+});
+```
+
+#### Message Approval Workflow
+
+When `requireApproval: true`, messages from non-owner, non-approved participants are marked as `pending`:
+
+```typescript
+// Owner's message - auto-approved
+await cortex.conversations.addMessage({
+  conversationId: collab.conversationId,
+  message: {
+    role: 'user',
+    content: 'Team update',
+    participantId: 'user-1', // Owner
+  },
+});
+// → approvalStatus: 'approved'
+
+// Non-approved participant's message - pending
+await cortex.conversations.addMessage({
+  conversationId: collab.conversationId,
+  message: {
+    role: 'user',
+    content: 'My input',
+    participantId: 'user-3', // Not in approvedParticipants
+  },
+});
+// → approvalStatus: 'pending'
+```
+
+#### approveMessage()
+
+Approve a pending message.
+
+```typescript
+const approved = await cortex.conversations.approveMessage({
+  conversationId: collab.conversationId,
+  messageId: 'msg-456',
+});
+
+const msg = approved.messages.find(m => m.id === 'msg-456');
+console.log(msg.approvalStatus); // 'approved'
+console.log(msg.approvedBy);     // 'user-1'
+console.log(msg.approvedAt);     // timestamp
+```
+
+#### rejectMessage()
+
+Reject a pending message.
+
+```typescript
+const rejected = await cortex.conversations.rejectMessage({
+  conversationId: collab.conversationId,
+  messageId: 'msg-789',
+});
+
+const msg = rejected.messages.find(m => m.id === 'msg-789');
+console.log(msg.approvalStatus); // 'rejected'
+```
+
+<Callout type="tip" title="Backward Compatibility">
+
+Conversations without `collaborativeSettings` work exactly as before. The approval workflow only activates when `collaborativeSettings.requireApproval` is `true`.
+
+</Callout>
+
+---
+
 ## GDPR and Deletion
 
 ### Conversations Support userId
@@ -1312,29 +1821,35 @@ const memories = await cortex.memory.search('agent-1', '*', {
 
 ### SDK Validation Errors (ConversationValidationError)
 
-| Error Code               | Description                | Cause                               |
-| ------------------------ | -------------------------- | ----------------------------------- |
-| `MISSING_REQUIRED_FIELD` | Required field missing     | Field like conversationId is empty  |
-| `INVALID_TYPE`           | Type is invalid            | Not 'user-agent' or 'agent-agent'   |
-| `INVALID_ROLE`           | Message role invalid       | Not 'user', 'agent', or 'system'    |
-| `INVALID_ID_FORMAT`      | ID format invalid          | Contains invalid chars or too long  |
-| `INVALID_FORMAT`         | Export format invalid      | Not 'json' or 'csv'                 |
-| `INVALID_SORT_ORDER`     | Sort order invalid         | Not 'asc' or 'desc'                 |
-| `EMPTY_STRING`           | String is empty            | Search query is empty               |
-| `INVALID_RANGE`          | Numeric value out of range | limit < 1 or > 1000, offset < 0     |
-| `EMPTY_ARRAY`            | Array is empty             | Required array has no elements      |
-| `INVALID_ARRAY_LENGTH`   | Array length wrong         | memorySpaceIds has < 2 elements     |
-| `INVALID_DATE_RANGE`     | Date range invalid         | Start date >= end date              |
-| `INVALID_PARTICIPANTS`   | Participants malformed     | Missing required participant fields |
-| `DUPLICATE_VALUES`       | Array has duplicates       | memorySpaceIds contains duplicates  |
+<DataTable
+  headers={["Error Code", "Description", "Cause"]}
+  rows={[
+    ["`MISSING_REQUIRED_FIELD`", "Required field missing", "Field like conversationId is empty"],
+    ["`INVALID_TYPE`", "Type is invalid", "Not 'user-agent' or 'agent-agent'"],
+    ["`INVALID_ROLE`", "Message role invalid", "Not 'user', 'agent', or 'system'"],
+    ["`INVALID_ID_FORMAT`", "ID format invalid", "Contains invalid chars or too long"],
+    ["`INVALID_FORMAT`", "Export format invalid", "Not 'json' or 'csv'"],
+    ["`INVALID_SORT_ORDER`", "Sort order invalid", "Not 'asc' or 'desc'"],
+    ["`EMPTY_STRING`", "String is empty", "Search query is empty"],
+    ["`INVALID_RANGE`", "Numeric value out of range", "limit < 1 or > 1000, offset < 0"],
+    ["`EMPTY_ARRAY`", "Array is empty", "Required array has no elements"],
+    ["`INVALID_ARRAY_LENGTH`", "Array length wrong", "memorySpaceIds has < 2 elements"],
+    ["`INVALID_DATE_RANGE`", "Date range invalid", "Start date >= end date"],
+    ["`INVALID_PARTICIPANTS`", "Participants malformed", "Missing required participant fields"],
+    ["`DUPLICATE_VALUES`", "Array has duplicates", "memorySpaceIds contains duplicates"],
+  ]}
+/>
 
 ### Backend Errors (Convex)
 
-| Error Code                       | Description                 | Cause                            |
-| -------------------------------- | --------------------------- | -------------------------------- |
-| `CONVERSATION_NOT_FOUND`         | Conversation doesn't exist  | Invalid conversationId           |
-| `CONVERSATION_ALREADY_EXISTS`    | Conversation already exists | Duplicate conversationId         |
-| `DELETE_MANY_THRESHOLD_EXCEEDED` | Too many to delete          | Use dryRun or increase threshold |
+<DataTable
+  headers={["Error Code", "Description", "Cause"]}
+  rows={[
+    ["`CONVERSATION_NOT_FOUND`", "Conversation doesn't exist", "Invalid conversationId"],
+    ["`CONVERSATION_ALREADY_EXISTS`", "Conversation already exists", "Duplicate conversationId"],
+    ["`DELETE_MANY_THRESHOLD_EXCEEDED`", "Too many to delete", "Use dryRun or increase threshold"],
+  ]}
+/>
 
 ---
 

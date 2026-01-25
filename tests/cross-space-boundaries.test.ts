@@ -19,6 +19,28 @@ describe("Cross-Space Boundary Testing", () => {
   const TEST_USER_ID = "boundary-test-user";
   const TEST_AGENT_ID = "boundary-test-agent";
 
+  // Helper to wait for context to be queryable after creation (eventual consistency)
+  const waitForContextReady = async (
+    contextId: string,
+    timeoutMs = 10000,
+  ): Promise<void> => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeoutMs) {
+      try {
+        const result = await cortex.contexts.get(contextId);
+        if (result !== null) {
+          // Additional delay for index propagation
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          return;
+        }
+      } catch {
+        // Ignore errors, keep polling
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    throw new Error(`Context ${contextId} not ready after ${timeoutMs}ms`);
+  };
+
   beforeAll(() => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
   });
@@ -520,6 +542,9 @@ describe("Cross-Space Boundary Testing", () => {
         purpose: "Parent in A",
       });
 
+      // Wait for parent to be queryable (eventual consistency)
+      await waitForContextReady(parentA.contextId);
+
       const childB = await cortex.contexts.create({
         memorySpaceId: SPACE_B,
         userId: TEST_USER_ID,
@@ -725,6 +750,9 @@ describe("Cross-Space Boundary Testing", () => {
         userId: TEST_USER_ID,
         purpose: "Parent A",
       });
+
+      // Wait for parent to be queryable (eventual consistency)
+      await waitForContextReady(parentA.contextId);
 
       const childB = await cortex.contexts.create({
         memorySpaceId: SPACE_B,
@@ -1257,6 +1285,9 @@ describe("Cross-Space Boundary Testing", () => {
         userId: TEST_USER_ID,
         purpose: "Parent A",
       });
+
+      // Wait for parent to be queryable (eventual consistency)
+      await waitForContextReady(parentA.contextId);
 
       // Store private data in space A
       await cortex.vector.store(SPACE_A, {

@@ -209,14 +209,17 @@ const cursorMemories = await cortex.memory.list({
 
 How each data type is scoped by isolation layer:
 
-| Data Type | tenantId | memorySpaceId | userId | participantId |
-|-----------|:--------:|:-------------:|:------:|:-------------:|
-| Conversations | ✅ | ✅ | Optional | Optional |
-| Vector Memories | ✅ | ✅ | Optional | Optional |
-| Facts | ✅ | ✅ | Optional | Optional |
-| User Profiles | ✅ | Shared | N/A | N/A |
-| Immutable Store | ✅ | Shared | Optional | N/A |
-| Mutable Store | ✅ | Shared | Optional | N/A |
+<DataTable 
+  headers={["Data Type", "tenantId", "memorySpaceId", "userId", "participantId"]} 
+  rows={[
+    ["Conversations", "✅", "✅", "Optional", "Optional"],
+    ["Vector Memories", "✅", "✅", "Optional", "Optional"],
+    ["Facts", "✅", "✅", "Optional", "Optional"],
+    ["User Profiles", "✅", "Shared", "N/A", "N/A"],
+    ["Immutable Store", "✅", "Shared", "Optional", "N/A"],
+    ["Mutable Store", "✅", "Shared", "Optional", "N/A"],
+  ]} 
+/>
 
 ---
 

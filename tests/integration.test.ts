@@ -45,6 +45,39 @@ describe("Complex Integration Tests", () => {
     await new Promise((resolve) => setTimeout(resolve, 300));
   };
 
+  // Helper to retry operations that may fail due to eventual consistency
+  // (e.g., PARENT_NOT_FOUND, CONTEXT_NOT_FOUND when a different internal query is used)
+  const retryOnNotFound = async <T>(
+    operation: () => Promise<T>,
+    operationName: string,
+    maxRetries = 5,
+    initialDelayMs = 500,
+  ): Promise<T> => {
+    let lastError: Error | undefined;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        return await operation();
+      } catch (error) {
+        lastError = error as Error;
+        const msg = lastError.message || "";
+        // Only retry on NOT_FOUND errors (eventual consistency issues)
+        if (!msg.includes("NOT_FOUND")) {
+          throw error;
+        }
+        if (attempt < maxRetries - 1) {
+          const delay = initialDelayMs * Math.pow(2, attempt);
+          console.warn(
+            `[Retry ${attempt + 1}/${maxRetries}] ${operationName} failed with ${msg}, retrying in ${delay}ms...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
+    }
+    throw new Error(
+      `${operationName} failed after ${maxRetries} retries: ${lastError?.message}`,
+    );
+  };
+
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
     client = new ConvexClient(CONVEX_URL);
@@ -207,30 +240,40 @@ describe("Complex Integration Tests", () => {
       await waitForContextReady(rootContext.contextId);
 
       // Delegate to finance agent (cross-space collaboration)
-      const financeContext = await cortex.contexts.create({
-        purpose: "Approve $299.99 refund for VIP customer",
-        memorySpaceId: FINANCE_SPACE,
-        parentId: rootContext.contextId,
-        userId: "user-vip-123",
-        conversationRef: rootContext.conversationRef,
-        data: {
-          amount: 299.99,
-          approvalRequired: true,
-          importance: 95,
-        },
-      });
+      // Use retry to handle PARENT_NOT_FOUND due to eventual consistency between
+      // contexts.get() and contexts.create() internal parent lookup
+      const financeContext = await retryOnNotFound(
+        () =>
+          cortex.contexts.create({
+            purpose: "Approve $299.99 refund for VIP customer",
+            memorySpaceId: FINANCE_SPACE,
+            parentId: rootContext.contextId,
+            userId: "user-vip-123",
+            conversationRef: rootContext.conversationRef,
+            data: {
+              amount: 299.99,
+              approvalRequired: true,
+              importance: 95,
+            },
+          }),
+        "contexts.create(financeContext)",
+      );
 
       // Delegate to CRM agent
-      const crmContext = await cortex.contexts.create({
-        purpose: "Update customer record with refund issue",
-        memorySpaceId: CRM_SPACE,
-        parentId: rootContext.contextId,
-        userId: "user-vip-123",
-        data: {
-          action: "log-issue",
-          importance: 80,
-        },
-      });
+      const crmContext = await retryOnNotFound(
+        () =>
+          cortex.contexts.create({
+            purpose: "Update customer record with refund issue",
+            memorySpaceId: CRM_SPACE,
+            parentId: rootContext.contextId,
+            userId: "user-vip-123",
+            data: {
+              action: "log-issue",
+              importance: 80,
+            },
+          }),
+        "contexts.create(crmContext)",
+      );
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // VERIFICATION: All layers connected
@@ -384,10 +427,16 @@ describe("Complex Integration Tests", () => {
       await waitForContextReady(projectContext.contextId);
 
       // Grant access to Company B (Collaboration Mode)
-      await cortex.contexts.grantAccess(
-        projectContext.contextId,
-        companyB,
-        "collaborate",
+      // Use retry to handle CONTEXT_NOT_FOUND due to eventual consistency between
+      // contexts.get() and contexts.grantAccess() internal context lookup
+      await retryOnNotFound(
+        () =>
+          cortex.contexts.grantAccess(
+            projectContext.contextId,
+            companyB,
+            "collaborate",
+          ),
+        "contexts.grantAccess(companyB)",
       );
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1789,13 +1789,16 @@ console.log("  Duration:", result.duration, "ms");
 
 ### Query Performance
 
-| Query Type       | Graph-Lite (Convex) | Native Graph | When to Use       |
-| ---------------- | ------------------- | ------------ | ----------------- |
-| 1-hop traversal  | 3-10ms              | 10-25ms      | Graph-Lite        |
-| 3-hop traversal  | 10-50ms             | 4-10ms       | Native Graph      |
-| 7-hop traversal  | 50-200ms            | 4-15ms       | Native Graph      |
-| Pattern matching | Not feasible        | 10-100ms     | Native Graph only |
-| Entity networks  | Not feasible        | 20-50ms      | Native Graph only |
+<DataTable
+  headers={["Query Type", "Graph-Lite (Convex)", "Native Graph", "When to Use"]}
+  rows={[
+    ["1-hop traversal", "3-10ms", "10-25ms", "Graph-Lite"],
+    ["3-hop traversal", "10-50ms", "4-10ms", "Native Graph"],
+    ["7-hop traversal", "50-200ms", "4-15ms", "Native Graph"],
+    ["Pattern matching", "Not feasible", "10-100ms", "Native Graph only"],
+    ["Entity networks", "Not feasible", "20-50ms", "Native Graph only"]
+  ]}
+/>
 
 ### Sync Performance
 
