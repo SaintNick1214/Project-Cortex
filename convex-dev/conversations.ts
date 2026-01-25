@@ -353,12 +353,11 @@ export const addMessage = mutation({
     
     if (settings?.requireApproval && args.message.role === "user") {
       const participantId = args.message.participantId;
-      // Use helper to correctly determine owner (handles userIds[0] as implicit owner)
-      const ownerUserId = getOwnerUserId(conversation);
       const approvedParticipants = settings.approvedParticipants || [];
       
       // Check if participant is owner or pre-approved
-      const isOwner = participantId === ownerUserId;
+      // Use isConversationOwner helper to guard against undefined === undefined
+      const isOwner = isConversationOwner(conversation, participantId);
       const isApproved = approvedParticipants.includes(participantId || "");
       
       if (!isOwner && !isApproved) {
