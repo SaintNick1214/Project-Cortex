@@ -55,7 +55,7 @@ setup(
             "pytest-timeout>=2.4.0",
             "black>=26.1.0",
             "mypy>=1.19.1",
-            "ruff>=0.14.13",
+            "ruff>=0.14.14",
             "openai>=2.15.0",  # Required for OpenAI integration tests
             "anthropic>=0.76.0",  # Required for Anthropic integration tests
         ],

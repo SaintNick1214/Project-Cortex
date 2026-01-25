@@ -20,6 +20,7 @@ import { GovernanceAPI } from "./governance";
 import { A2AAPI } from "./a2a";
 import { SessionsAPI } from "./sessions";
 import { ArtifactsAPI } from "./artifacts";
+import { AttachmentsAPI } from "./attachments";
 import type { AuthContext } from "./auth/types";
 import type { GraphAdapter } from "./graph/types";
 import { CypherGraphAdapter } from "./graph";
@@ -481,6 +482,9 @@ export class Cortex {
   // Artifacts - Versioned Document Management
   public artifacts: ArtifactsAPI;
 
+  // Attachments - Multi-modal File Storage
+  public attachments: AttachmentsAPI;
+
   constructor(config: CortexConfig) {
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
@@ -572,6 +576,11 @@ export class Cortex {
     this.artifacts = new ArtifactsAPI(
       this.client,
       graphAdapter,
+      this.resilienceLayer,
+      this.authContext,
+    );
+    this.attachments = new AttachmentsAPI(
+      this.client,
       this.resilienceLayer,
       this.authContext,
     );
@@ -735,6 +744,7 @@ export { A2AValidationError } from "./a2a";
 export { SessionValidationError } from "./sessions";
 export { AuthValidationError } from "./auth";
 export { ArtifactValidationError } from "./artifacts";
+export { AttachmentValidationError } from "./attachments";
 
 // Re-export auth module
 export { createAuthContext, validateAuthContext } from "./auth";

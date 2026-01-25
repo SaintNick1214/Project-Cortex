@@ -996,8 +996,18 @@ describe("State Transition Testing", () => {
         // Wait for Convex consistency - poll until context is queryable AND in list
         await waitForContextReady(testCtx.contextId, spaceId, status);
 
-        // Verify retrievable
-        const retrieved = await cortex.contexts.get(testCtx.contextId);
+        // Verify retrievable - use retry to handle eventual consistency races
+        // where a subsequent call might hit a different replica
+        const retrieved = await retryOperation(
+          async () => {
+            const result = await cortex.contexts.get(testCtx.contextId);
+            if (result === null) {
+              throw new Error("CONTEXT_NOT_FOUND");
+            }
+            return result;
+          },
+          `contexts.get(${status})`,
+        );
         expect((retrieved as any).status).toBe(status);
 
         // Verify in correct status list

@@ -31,6 +31,8 @@ from .a2a.validators import A2AValidationError
 from .agents.validators import AgentValidationError
 from .artifacts import ArtifactsAPI
 from .artifacts.validators import ArtifactsValidationError
+from .attachments import AttachmentsAPI
+from .attachments.validators import AttachmentValidationError
 from .auth import (
     AuthValidationError,
     create_auth_context,
@@ -102,6 +104,11 @@ from .types import (
     Artifact,
     ArtifactKind,
     ArtifactVersion,
+    # Attachments Types
+    Attachment,
+    AttachmentDimensions,
+    AttachmentType,
+    AttachParams,
     # Auth Types
     AuthContext,
     AuthContextParams,
@@ -149,6 +156,7 @@ from .types import (
     DeleteContextResult,
     DeleteConversationOptions,
     DeleteFactResult,
+    DeleteManyAttachmentsResult,
     DeleteManyContextsResult,
     DeleteManyConversationsOptions,
     DeleteManyConversationsResult,
@@ -218,6 +226,8 @@ from .types import (
     LayerEventError,
     LayerStatus,
     ListArtifactsFilter,
+    ListAttachmentsFilter,
+    ListAttachmentsResult,
     ListContextsFilter,
     ListConversationsFilter,
     ListConversationsResult,
@@ -322,6 +332,7 @@ from .types import (
     UpdateManyResult,
     UpdateMemoryResult,
     UpdateMemorySpaceOptions,
+    UploadUrlResult,
     UserDeleteResult,
     # Users
     UserProfile,
@@ -454,6 +465,17 @@ __all__ = [
     "StreamingState",
     "UpdateArtifactOptions",
     "VersionChangeType",
+    # Layer 1 Types - Attachments
+    "AttachmentsAPI",
+    "AttachmentValidationError",
+    "Attachment",
+    "AttachmentDimensions",
+    "AttachmentType",
+    "AttachParams",
+    "DeleteManyAttachmentsResult",
+    "ListAttachmentsFilter",
+    "ListAttachmentsResult",
+    "UploadUrlResult",
     # Layer 2 Types
     "MemoryEntry",
     "MemoryMetadata",

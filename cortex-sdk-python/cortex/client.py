@@ -15,6 +15,7 @@ from ._convex_async import AsyncConvexClient
 from .a2a import A2AAPI
 from .agents import AgentsAPI
 from .artifacts import ArtifactsAPI
+from .attachments import AttachmentsAPI
 from .contexts import ContextsAPI
 from .conversations import ConversationsAPI
 from .facts import FactsAPI
@@ -301,6 +302,9 @@ class Cortex:
         )
         self.artifacts = ArtifactsAPI(
             self.client, self.graph_adapter, self._resilience, self._auth_context
+        )
+        self.attachments = AttachmentsAPI(
+            self.client, self._resilience, self._auth_context
         )
 
         # Start graph sync worker if enabled

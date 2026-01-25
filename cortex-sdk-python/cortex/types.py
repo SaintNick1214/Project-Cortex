@@ -970,7 +970,7 @@ class CancelStreamingResult:
         previous_state: State before cancelling
         current_state: Current state (should be 'draft')
         content_preserved: Whether partial content was preserved
-        bytes_discarded: Bytes discarded (if content not preserved)
+        bytes_received: Total bytes received during the streaming session
     """
     success: bool
     artifact_id: str
@@ -979,7 +979,7 @@ class CancelStreamingResult:
     previous_state: str
     current_state: str
     content_preserved: bool
-    bytes_discarded: Optional[int] = None
+    bytes_received: Optional[int] = None
 
 
 @dataclass
@@ -4292,3 +4292,201 @@ class SessionPolicy:
             cleanup=SessionCleanupPolicy.from_dict(data.get("cleanup", {})),
             limits=SessionLimitsPolicy.from_dict(data["limits"]) if data.get("limits") else None,
         )
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Attachments API Types (Multi-modal File Storage)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AttachmentType = Literal["image", "audio", "video", "file", "pdf"]
+"""Attachment type representing the kind of file."""
+
+
+@dataclass
+class AttachmentDimensions:
+    """Dimensions for image/video attachments."""
+    width: int
+    """Width in pixels"""
+    height: int
+    """Height in pixels"""
+
+
+@dataclass
+class Attachment:
+    """
+    Attachment record representing a stored file.
+
+    Attachments provide multi-modal file storage for images, PDFs, audio,
+    video, and generic files with memory space isolation.
+
+    Attributes:
+        _id: Internal Convex document ID
+        attachment_id: Unique attachment identifier
+        memory_space_id: Memory space isolation
+        user_id: User who uploaded this attachment
+        storage_id: Convex storage ID for the file
+        type: Type of attachment (image, audio, video, file, pdf)
+        mime_type: MIME type (e.g., "image/png")
+        filename: Original filename
+        size: File size in bytes
+        created_at: Creation timestamp (ms since epoch)
+        updated_at: Last update timestamp (ms since epoch)
+        tenant_id: Multi-tenancy isolation (optional)
+        conversation_id: Linked conversation (optional)
+        message_id: Linked message (optional)
+        memory_id: Linked memory (optional)
+        artifact_id: Linked artifact (optional)
+        extracted_text: OCR/PDF text extraction (future)
+        transcript: Audio/video transcription (future)
+        embedding: Semantic search embedding (future)
+        dimensions: Image/video dimensions (optional)
+        duration: Audio/video duration in seconds (optional)
+        metadata: Custom metadata (optional)
+    """
+    _id: str
+    attachment_id: str
+    memory_space_id: str
+    user_id: str
+    storage_id: str
+    type: AttachmentType
+    mime_type: str
+    filename: str
+    size: int
+    created_at: int
+    updated_at: int
+    tenant_id: Optional[str] = None
+    conversation_id: Optional[str] = None
+    message_id: Optional[str] = None
+    memory_id: Optional[str] = None
+    artifact_id: Optional[str] = None
+    extracted_text: Optional[str] = None
+    transcript: Optional[str] = None
+    embedding: Optional[List[float]] = None
+    dimensions: Optional[AttachmentDimensions] = None
+    duration: Optional[float] = None
+    metadata: Optional[Dict[str, Any]] = None
+
+
+@dataclass
+class AttachParams:
+    """
+    Parameters for attaching an uploaded file.
+
+    Call attach() after uploading a file using the URL from
+    generate_upload_url() to register it as an attachment.
+
+    Attributes:
+        storage_id: Convex storage ID from upload
+        memory_space_id: Memory space to associate with
+        user_id: User who owns this attachment
+        type: Type of attachment (image, audio, video, file, pdf)
+        mime_type: MIME type (e.g., "image/png")
+        filename: Original filename
+        size: File size in bytes
+        conversation_id: Link to conversation (optional)
+        message_id: Link to specific message (optional)
+        memory_id: Link to memory (optional)
+        artifact_id: Link to artifact (optional)
+        dimensions: Image/video dimensions (optional)
+        duration: Audio/video duration in seconds (optional)
+        metadata: Custom metadata (optional)
+        tenant_id: Multi-tenancy: tenant ID (optional)
+    """
+    storage_id: str
+    memory_space_id: str
+    user_id: str
+    type: AttachmentType
+    mime_type: str
+    filename: str
+    size: int
+    conversation_id: Optional[str] = None
+    message_id: Optional[str] = None
+    memory_id: Optional[str] = None
+    artifact_id: Optional[str] = None
+    dimensions: Optional[AttachmentDimensions] = None
+    duration: Optional[float] = None
+    metadata: Optional[Dict[str, Any]] = None
+    tenant_id: Optional[str] = None
+
+
+@dataclass
+class ListAttachmentsFilter:
+    """
+    Filter for listing attachments.
+
+    Supports filtering by memory space, conversation, message, user,
+    and attachment type with pagination.
+
+    Attributes:
+        memory_space_id: Required memory space to list from
+        conversation_id: Filter by conversation
+        message_id: Filter by message
+        memory_id: Filter by memory
+        artifact_id: Filter by artifact
+        user_id: Filter by user
+        type: Filter by attachment type
+        limit: Maximum results (1-1000, default 50)
+        cursor: Pagination cursor
+        sort_by: Sort field ("createdAt" or "updatedAt")
+        sort_order: Sort order ("asc" or "desc")
+        tenant_id: Multi-tenancy filter
+    """
+    memory_space_id: str
+    conversation_id: Optional[str] = None
+    message_id: Optional[str] = None
+    memory_id: Optional[str] = None
+    artifact_id: Optional[str] = None
+    user_id: Optional[str] = None
+    type: Optional[AttachmentType] = None
+    limit: Optional[int] = None
+    cursor: Optional[str] = None
+    sort_by: Optional[Literal["createdAt", "updatedAt"]] = None
+    sort_order: Optional[Literal["asc", "desc"]] = None
+    tenant_id: Optional[str] = None
+
+
+@dataclass
+class ListAttachmentsResult:
+    """
+    Result from listing attachments.
+
+    Includes paginated attachment list with cursor for next page.
+
+    Attributes:
+        attachments: Array of attachments
+        total: Total count matching filter
+        cursor: Next page cursor (if more results exist)
+        has_more: Whether more results exist
+    """
+    attachments: List[Attachment]
+    total: int
+    has_more: bool
+    cursor: Optional[str] = None
+
+
+@dataclass
+class UploadUrlResult:
+    """
+    Result from generating an upload URL.
+
+    Use this URL to upload a file directly to Convex storage via POST.
+
+    Attributes:
+        upload_url: Pre-signed upload URL
+    """
+    upload_url: str
+
+
+@dataclass
+class DeleteManyAttachmentsResult:
+    """
+    Result from bulk delete operation.
+
+    Attributes:
+        deleted: Number of attachments deleted
+        total: Total number of attachments requested
+        errors: Any errors encountered during deletion
+    """
+    deleted: int
+    total: int
+    errors: Optional[List[Dict[str, str]]] = None

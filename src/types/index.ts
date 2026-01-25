@@ -3454,3 +3454,175 @@ export interface FinalizeStreamingParams {
   /** Summary of the streaming session for version history */
   changeSummary?: string;
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Attachments API Types (Multi-modal File Storage)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Attachment type representing the kind of file
+ */
+export type AttachmentType = "image" | "audio" | "video" | "file" | "pdf";
+
+/**
+ * Dimensions for image/video attachments
+ */
+export interface AttachmentDimensions {
+  /** Width in pixels */
+  width: number;
+  /** Height in pixels */
+  height: number;
+}
+
+/**
+ * Attachment record representing a stored file
+ */
+export interface Attachment {
+  /** Internal Convex document ID */
+  _id: string;
+  /** Unique attachment identifier */
+  attachmentId: string;
+  /** Memory space isolation */
+  memorySpaceId: string;
+  /** Multi-tenancy: SaaS platform isolation */
+  tenantId?: string;
+  /** User who uploaded this attachment */
+  userId: string;
+  /** Linked conversation (optional) */
+  conversationId?: string;
+  /** Linked message (optional) */
+  messageId?: string;
+  /** Linked memory (optional) */
+  memoryId?: string;
+  /** Linked artifact (optional) */
+  artifactId?: string;
+  /** Convex storage ID for the file */
+  storageId: string;
+  /** Type of attachment */
+  type: AttachmentType;
+  /** MIME type (e.g., "image/png") */
+  mimeType: string;
+  /** Original filename */
+  filename: string;
+  /** File size in bytes */
+  size: number;
+  /** Extracted text from OCR/PDF parsing (future) */
+  extractedText?: string;
+  /** Audio/video transcript (future) */
+  transcript?: string;
+  /** Embedding for semantic search (future) */
+  embedding?: number[];
+  /** Image/video dimensions */
+  dimensions?: AttachmentDimensions;
+  /** Audio/video duration in seconds */
+  duration?: number;
+  /** Custom metadata */
+  metadata?: Record<string, unknown>;
+  /** Creation timestamp */
+  createdAt: number;
+  /** Last update timestamp */
+  updatedAt: number;
+}
+
+/**
+ * Parameters for attaching an uploaded file
+ */
+export interface AttachParams {
+  /** Convex storage ID from upload */
+  storageId: string;
+  /** Memory space to associate with */
+  memorySpaceId: string;
+  /** User who owns this attachment */
+  userId: string;
+  /** Type of attachment */
+  type: AttachmentType;
+  /** MIME type (e.g., "image/png") */
+  mimeType: string;
+  /** Original filename */
+  filename: string;
+  /** File size in bytes */
+  size: number;
+  /** Link to conversation (optional) */
+  conversationId?: string;
+  /** Link to specific message (optional) */
+  messageId?: string;
+  /** Link to memory (optional) */
+  memoryId?: string;
+  /** Link to artifact (optional) */
+  artifactId?: string;
+  /** Image/video dimensions (optional) */
+  dimensions?: AttachmentDimensions;
+  /** Audio/video duration in seconds (optional) */
+  duration?: number;
+  /** Custom metadata (optional) */
+  metadata?: Record<string, unknown>;
+  /** Multi-tenancy: tenant ID */
+  tenantId?: string;
+}
+
+/**
+ * Filter for listing attachments
+ */
+export interface ListAttachmentsFilter {
+  /** Required: memory space to list from */
+  memorySpaceId: string;
+  /** Filter by conversation */
+  conversationId?: string;
+  /** Filter by message */
+  messageId?: string;
+  /** Filter by memory */
+  memoryId?: string;
+  /** Filter by artifact */
+  artifactId?: string;
+  /** Filter by user */
+  userId?: string;
+  /** Filter by attachment type */
+  type?: AttachmentType;
+  /** Maximum results (1-1000, default 50) */
+  limit?: number;
+  /** Pagination cursor */
+  cursor?: string;
+  /** Sort field */
+  sortBy?: "createdAt" | "updatedAt";
+  /** Sort order */
+  sortOrder?: "asc" | "desc";
+  /** Multi-tenancy: tenant ID */
+  tenantId?: string;
+}
+
+/**
+ * Result from listing attachments
+ */
+export interface ListAttachmentsResult {
+  /** Array of attachments */
+  attachments: Attachment[];
+  /** Total count matching filter */
+  total: number;
+  /** Next page cursor (if more results exist) */
+  cursor?: string;
+  /** Whether more results exist */
+  hasMore: boolean;
+}
+
+/**
+ * Result from generating an upload URL
+ */
+export interface UploadUrlResult {
+  /** Pre-signed upload URL */
+  uploadUrl: string;
+}
+
+/**
+ * Result from bulk delete operation
+ */
+export interface DeleteManyAttachmentsResult {
+  /** Number of attachments deleted */
+  deleted: number;
+  /** Total number of attachments requested */
+  total: number;
+  /** Any errors encountered */
+  errors?: Array<{
+    attachmentId: string;
+    error: string;
+  }>;
+}

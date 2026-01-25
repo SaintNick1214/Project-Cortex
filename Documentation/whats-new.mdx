@@ -17,6 +17,98 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### All Packages v0.34.0 · Jan 24, 2026
+
+**Multi-Modal Attachments API - File Storage for AI Agents**
+
+📎 New Attachments API for multi-modal file storage (images, audio, video, PDFs)  
+☁️ Convex native file storage with signed upload/download URLs  
+🔗 Link attachments to conversations, messages, memories, and artifacts  
+🐍 Full Python SDK parity with comprehensive test coverage
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+**Attachments API**
+
+A complete system for multi-modal file storage enabling AI agents to work with images, PDFs, audio, video, and generic files:
+
+- **Upload Workflow**: Generate pre-signed URLs for direct client uploads to Convex storage
+- **File Types**: Support for `image`, `audio`, `video`, `pdf`, and generic `file` types
+- **Linkage**: Attach files to conversations, messages, memories, or artifacts
+- **Metadata**: Store dimensions (images/video), duration (audio/video), and custom metadata
+- **Multi-tenancy**: Built-in tenant isolation for SaaS applications
+- **Memory Space Scoping**: Files are scoped to memory spaces for proper isolation
+
+**TypeScript SDK**
+
+```typescript
+// Generate upload URL and upload file
+const { uploadUrl } = await cortex.attachments.generateUploadUrl();
+const response = await fetch(uploadUrl, { method: 'POST', body: file });
+const { storageId } = await response.json();
+
+// Register the attachment
+const attachment = await cortex.attachments.attach({
+  storageId,
+  memorySpaceId: 'user-123-space',
+  userId: 'user-123',
+  type: 'image',
+  mimeType: 'image/png',
+  filename: 'screenshot.png',
+  size: 1024000,
+  conversationId: 'conv-456',
+  dimensions: { width: 1920, height: 1080 },
+});
+
+// Get download URL
+const downloadUrl = await cortex.attachments.getUrl(attachment.attachmentId);
+
+// List attachments by type
+const images = await cortex.attachments.list({
+  memorySpaceId: 'user-123-space',
+  type: 'image',
+});
+```
+
+**Python SDK**
+
+```python
+# Generate upload URL
+result = await cortex.attachments.generate_upload_url()
+
+# After uploading file to result.upload_url...
+attachment = await cortex.attachments.attach(
+    AttachParams(
+        storage_id=storage_id,
+        memory_space_id="user-123-space",
+        user_id="user-123",
+        type="audio",
+        mime_type="audio/mpeg",
+        filename="recording.mp3",
+        size=5242880,
+        duration=180.0,  # 3 minutes
+    )
+)
+
+# List by conversation
+attachments = await cortex.attachments.get_by_conversation("conv-123")
+```
+
+#### Changes
+
+- Added `attachments` table to Convex schema with 16 indexes
+- New `AttachmentsAPI` class in both TypeScript and Python SDKs
+- Comprehensive validation for all attachment parameters
+- 258 new unit tests covering all modalities and operations
+- Updated dependencies to latest versions
+
+</details>
+
+---
+
 ### All Packages v0.33.0 · Jan 20, 2026
 
 **Artifacts API - Interactive Document Management**
