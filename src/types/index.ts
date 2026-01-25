@@ -8,13 +8,40 @@
 
 export type ConversationType = "user-agent" | "agent-agent";
 
+/**
+ * Conversation visibility for shareable chats
+ * - 'private': Only owner can access (default)
+ * - 'space': Anyone in the memory space can access
+ * - 'public': Anyone with the conversationId can access
+ */
+export type ConversationVisibility = "private" | "space" | "public";
+
+/** Message approval status for collaborative conversations */
+export type MessageApprovalStatus = "pending" | "approved" | "rejected";
+
 export interface Message {
   id: string;
   role: "user" | "agent" | "system";
   content: string;
   timestamp: number;
-  participantId?: string; // Hive Mode: which participant sent this
+  participantId?: string; // Hive Mode/Collaborative: which participant sent this
   metadata?: Record<string, unknown>;
+  /** Approval status for collaborative conversations (Phase 4) */
+  approvalStatus?: MessageApprovalStatus;
+  /** UserId who approved/rejected the message */
+  approvedBy?: string;
+  /** Timestamp of approval/rejection */
+  approvedAt?: number;
+}
+
+/** Settings for collaborative conversations (Phase 4) */
+export interface CollaborativeSettings {
+  /** Whether messages from non-owners require approval */
+  requireApproval: boolean;
+  /** The owner who can approve messages */
+  ownerUserId?: string;
+  /** IDs of approved participants who don't need approval */
+  approvedParticipants?: string[];
 }
 
 export interface Conversation {
@@ -27,6 +54,7 @@ export interface Conversation {
   participants: {
     userId?: string; // The human user in the conversation
     agentId?: string; // The agent/assistant in the conversation
+    userIds?: string[]; // Collaborative: multiple human users (Phase 4)
     participantId?: string; // Hive Mode: who created this
     memorySpaceIds?: string[]; // Collaboration Mode (agent-agent)
   };
@@ -35,6 +63,10 @@ export interface Conversation {
   metadata?: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
+  /** Visibility for shareable chats. Defaults to 'private' if undefined. */
+  visibility?: ConversationVisibility;
+  /** Settings for collaborative conversations (Phase 4) */
+  collaborativeSettings?: CollaborativeSettings;
 }
 
 export interface CreateConversationInput {
@@ -46,10 +78,227 @@ export interface CreateConversationInput {
   participants: {
     userId?: string; // The human user in the conversation
     agentId?: string; // The agent/assistant in the conversation
+    userIds?: string[]; // Collaborative: multiple human users (Phase 4)
     participantId?: string; // Hive Mode: who created this
     memorySpaceIds?: string[]; // Collaboration Mode (agent-agent)
   };
   metadata?: Record<string, unknown>;
+  /** Visibility for shareable chats. Defaults to 'private'. */
+  visibility?: ConversationVisibility;
+  /** Settings for collaborative conversations (Phase 4) */
+  collaborativeSettings?: CollaborativeSettings;
+}
+
+/** Input for approving/rejecting a message (Phase 4) */
+export interface ApproveMessageInput {
+  conversationId: string;
+  messageId: string;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Visibility & Access Control (Shareable Chats Phase 1)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Input for checking access to a conversation
+ */
+export interface CheckAccessInput {
+  conversationId: string;
+  userId?: string;
+  memorySpaceId?: string;
+}
+
+/**
+ * Result of an access check
+ */
+export interface CheckAccessResult {
+  canView: boolean;
+  canEdit: boolean;
+  reason: string;
+  visibility: ConversationVisibility | null;
+}
+
+/**
+ * Input for setting conversation visibility
+ */
+export interface SetVisibilityInput {
+  conversationId: string;
+  visibility: ConversationVisibility;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Sharing Grants (Shareable Chats Phase 2)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/** Type of share grant */
+export type ShareGrantType = "user" | "space" | "link" | "domain";
+
+/** Share status */
+export type ShareStatus = "active" | "revoked" | "expired";
+
+/** Granular permissions for a share */
+export interface SharePermissions {
+  canView: boolean;
+  canViewFacts: boolean;
+  canViewMemories: boolean;
+  canContinue: boolean;
+  canFork: boolean;
+  canExport: boolean;
+}
+
+/** A conversation share record */
+export interface ConversationShare {
+  _id: string;
+  shareId: string;
+  conversationId: string;
+  grantedBy: string;
+  sourceMemorySpaceId: string;
+  grantType: ShareGrantType;
+  grantedTo?: string;
+  permissions: SharePermissions;
+  expiresAt?: number;
+  maxViews?: number;
+  viewCount: number;
+  redactBefore?: number;
+  redactSensitive: boolean;
+  status: ShareStatus;
+  tenantId?: string;
+  createdAt: number;
+  revokedAt?: number;
+  /** Runtime validation - not stored */
+  isValid?: boolean;
+  invalidReason?: string;
+}
+
+/** Input for creating a share */
+export interface CreateShareInput {
+  conversationId: string;
+  grantType: ShareGrantType;
+  grantedTo?: string;
+  permissions?: Partial<SharePermissions>;
+  expiresAt?: number;
+  maxViews?: number;
+  redactBefore?: number;
+  redactSensitive?: boolean;
+}
+
+/** Result of creating a share */
+export interface CreateShareResult {
+  shareId: string;
+  expiresAt?: number;
+  share: ConversationShare;
+}
+
+/** Filter for listing shares */
+export interface ListSharesFilter {
+  conversationId?: string;
+  status?: ShareStatus;
+  grantType?: ShareGrantType;
+}
+
+/** Result of revoking a share */
+export interface RevokeShareResult {
+  revoked: boolean;
+  revokedAt: number;
+  share: ConversationShare;
+}
+
+/** Result of checking share-based access */
+export interface CheckShareAccessResult {
+  hasAccess: boolean;
+  permissions: SharePermissions | null;
+  share: {
+    shareId: string;
+    grantType: ShareGrantType;
+    expiresAt?: number;
+    viewCount: number;
+    maxViews?: number;
+    redactBefore?: number;
+    redactSensitive: boolean;
+  } | null;
+  reason: string;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Snapshots (Shareable Chats Phase 3)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/** Snapshot status */
+export type SnapshotStatus = "active" | "archived" | "deleted";
+
+/** Custom redaction rule */
+export interface CustomRedaction {
+  pattern: string;
+  replacement: string;
+}
+
+/** Snapshot redaction metadata */
+export interface SnapshotRedaction {
+  piiRedacted: boolean;
+  messagesRedactedBefore?: number;
+  customRedactions?: CustomRedaction[];
+}
+
+/** Snapshot included content flags */
+export interface SnapshotIncludedContent {
+  messages: boolean;
+  facts: boolean;
+  memories: boolean;
+}
+
+/** Snapshot fact */
+export interface SnapshotFact {
+  factId: string;
+  fact: string;
+  factType: string;
+  confidence: number;
+}
+
+/** A conversation snapshot record */
+export interface ConversationSnapshot {
+  _id: string;
+  snapshotId: string;
+  conversationId: string;
+  messages: Message[];
+  conversationType: ConversationType;
+  participants: {
+    userId?: string;
+    agentId?: string;
+    participantId?: string;
+    memorySpaceIds?: string[];
+  };
+  messageCount: number;
+  includedContent: SnapshotIncludedContent;
+  redaction: SnapshotRedaction;
+  facts?: SnapshotFact[];
+  createdBy: string;
+  memorySpaceId: string;
+  tenantId?: string;
+  status: SnapshotStatus;
+  createdAt: number;
+  snapshotOf: number;
+}
+
+/** Input for creating a snapshot */
+export interface CreateSnapshotInput {
+  conversationId: string;
+  redactPII?: boolean;
+  redactBefore?: number;
+  customRedactions?: CustomRedaction[];
+  includeFacts?: boolean;
+  includeMemories?: boolean;
+}
+
+/** Result of creating a snapshot */
+export interface CreateSnapshotResult {
+  snapshotId: string;
+  snapshot: ConversationSnapshot;
+}
+
+/** Filter for listing snapshots */
+export interface ListSnapshotsFilter {
+  conversationId?: string;
+  includeArchived?: boolean;
 }
 
 export interface AddMessageInput {

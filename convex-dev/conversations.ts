@@ -26,21 +26,38 @@ export const create = mutation({
     participants: v.object({
       userId: v.optional(v.string()), // The human user in the conversation
       agentId: v.optional(v.string()), // The agent/assistant in the conversation
+      userIds: v.optional(v.array(v.string())), // Collaborative: multiple human users (Phase 4)
       participantId: v.optional(v.string()), // Hive Mode: who created this
       memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space
     }),
     metadata: v.optional(v.any()),
+    // Visibility for shareable chats (Phase 1)
+    visibility: v.optional(
+      v.union(v.literal("private"), v.literal("space"), v.literal("public")),
+    ),
+    // Collaborative settings (Phase 4)
+    collaborativeSettings: v.optional(
+      v.object({
+        requireApproval: v.boolean(),
+        ownerUserId: v.optional(v.string()),
+        approvedParticipants: v.optional(v.array(v.string())),
+      }),
+    ),
   },
   handler: async (ctx, args) => {
     // Validate participants based on type
     if (args.type === "user-agent") {
-      if (!args.participants.userId) {
-        throw new ConvexError("user-agent conversations require userId");
+      // Check for collaborative (userIds) OR single user (userId)
+      const hasUsers = args.participants.userIds && args.participants.userIds.length > 0;
+      const hasSingleUser = !!args.participants.userId;
+      
+      if (!hasUsers && !hasSingleUser) {
+        throw new ConvexError("user-agent conversations require userId or userIds");
       }
-      // v0.17.0: User-agent conversations require both userId AND agentId
+      // v0.17.0: User-agent conversations require agentId
       if (!args.participants.agentId) {
         throw new ConvexError(
-          "agentId is required when userId is provided. User-agent conversations require both a user and an agent participant.",
+          "agentId is required. User-agent conversations require an agent participant.",
         );
       }
     } else if (args.type === "agent-agent") {
@@ -70,7 +87,7 @@ export const create = mutation({
 
     const now = Date.now();
 
-    // Create conversation with tenantId
+    // Create conversation with tenantId, visibility, and collaborative settings
     const id = await ctx.db.insert("conversations", {
       conversationId: args.conversationId,
       memorySpaceId: args.memorySpaceId,
@@ -83,9 +100,121 @@ export const create = mutation({
       metadata: args.metadata || {},
       createdAt: now,
       updatedAt: now,
+      visibility: args.visibility, // Default undefined = 'private'
+      collaborativeSettings: args.collaborativeSettings, // Phase 4: Collaborative
     });
 
     return await ctx.db.get(id);
+  },
+});
+
+/**
+ * Set visibility for a conversation
+ */
+export const setVisibility = mutation({
+  args: {
+    conversationId: v.string(),
+    visibility: v.union(
+      v.literal("private"),
+      v.literal("space"),
+      v.literal("public"),
+    ),
+    // For authorization - caller must provide their userId to verify ownership
+    userId: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
+
+    if (!conversation) {
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
+    }
+
+    // Verify ownership: only the owner (participants.userId) can change visibility
+    if (args.userId && conversation.participants.userId !== args.userId) {
+      throw new ConvexError("VISIBILITY_CHANGE_NOT_AUTHORIZED");
+    }
+
+    await ctx.db.patch(conversation._id, {
+      visibility: args.visibility,
+      updatedAt: Date.now(),
+    });
+
+    return await ctx.db.get(conversation._id);
+  },
+});
+
+/**
+ * Check access to a conversation based on visibility
+ * Returns access info without returning the full conversation data
+ */
+export const checkAccess = query({
+  args: {
+    conversationId: v.string(),
+    userId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
+
+    if (!conversation) {
+      return {
+        canView: false,
+        canEdit: false,
+        reason: "CONVERSATION_NOT_FOUND",
+        visibility: null,
+      };
+    }
+
+    const visibility = conversation.visibility || "private";
+    const isOwner = conversation.participants.userId === args.userId;
+    const isInSpace = conversation.memorySpaceId === args.memorySpaceId;
+
+    // Determine access based on visibility
+    let canView = false;
+    let canEdit = false;
+    let reason = "";
+
+    if (isOwner) {
+      // Owner always has full access
+      canView = true;
+      canEdit = true;
+      reason = "OWNER";
+    } else if (visibility === "public") {
+      // Public conversations: anyone can view, only owner can edit
+      canView = true;
+      canEdit = false;
+      reason = "PUBLIC_VISIBILITY";
+    } else if (visibility === "space" && isInSpace) {
+      // Space visibility: space members can view, only owner can edit
+      canView = true;
+      canEdit = false;
+      reason = "SPACE_MEMBER";
+    } else {
+      // Private or not in space
+      canView = false;
+      canEdit = false;
+      reason =
+        visibility === "private"
+          ? "PRIVATE_VISIBILITY"
+          : "NOT_IN_MEMORY_SPACE";
+    }
+
+    return {
+      canView,
+      canEdit,
+      reason,
+      visibility,
+    };
   },
 });
 
@@ -99,7 +228,7 @@ export const addMessage = mutation({
       id: v.string(),
       role: v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
       content: v.string(),
-      participantId: v.optional(v.string()), // Hive Mode: which participant sent this
+      participantId: v.optional(v.string()), // Hive Mode/Collaborative: which participant sent this
       metadata: v.optional(v.any()),
     }),
   },
@@ -116,16 +245,159 @@ export const addMessage = mutation({
       throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
-    // Create message with timestamp
+    // Determine approval status for collaborative conversations (Phase 4)
+    let approvalStatus: "pending" | "approved" | undefined;
+    const settings = conversation.collaborativeSettings;
+    
+    if (settings?.requireApproval && args.message.role === "user") {
+      const participantId = args.message.participantId;
+      const ownerUserId = settings.ownerUserId || conversation.participants.userId;
+      const approvedParticipants = settings.approvedParticipants || [];
+      
+      // Check if participant is owner or pre-approved
+      const isOwner = participantId === ownerUserId;
+      const isApproved = approvedParticipants.includes(participantId || "");
+      
+      if (!isOwner && !isApproved) {
+        approvalStatus = "pending";
+      } else {
+        approvalStatus = "approved";
+      }
+    }
+
+    // Create message with timestamp and optional approval status
     const message = {
       ...args.message,
       timestamp: Date.now(),
+      ...(approvalStatus && { approvalStatus }),
     };
 
     // Append message (immutable - never modify existing messages)
     await ctx.db.patch(conversation._id, {
       messages: [...conversation.messages, message],
       messageCount: conversation.messageCount + 1,
+      updatedAt: Date.now(),
+    });
+
+    return await ctx.db.get(conversation._id);
+  },
+});
+
+/**
+ * Approve a pending message in a collaborative conversation (Phase 4)
+ */
+export const approveMessage = mutation({
+  args: {
+    conversationId: v.string(),
+    messageId: v.string(),
+    approverId: v.string(), // userId of the approver
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
+
+    if (!conversation) {
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
+    }
+
+    // Verify approver is the owner
+    const settings = conversation.collaborativeSettings;
+    const ownerUserId = settings?.ownerUserId || conversation.participants.userId;
+    
+    if (args.approverId !== ownerUserId) {
+      throw new ConvexError("APPROVE_NOT_AUTHORIZED");
+    }
+
+    // Find and update the message
+    const messageIndex = conversation.messages.findIndex(
+      (m) => m.id === args.messageId
+    );
+    
+    if (messageIndex === -1) {
+      throw new ConvexError("MESSAGE_NOT_FOUND");
+    }
+
+    const message = conversation.messages[messageIndex];
+    if (message.approvalStatus !== "pending") {
+      throw new ConvexError("MESSAGE_NOT_PENDING");
+    }
+
+    // Update message with approval
+    const updatedMessages = [...conversation.messages];
+    updatedMessages[messageIndex] = {
+      ...message,
+      approvalStatus: "approved",
+      approvedBy: args.approverId,
+      approvedAt: Date.now(),
+    };
+
+    await ctx.db.patch(conversation._id, {
+      messages: updatedMessages,
+      updatedAt: Date.now(),
+    });
+
+    return await ctx.db.get(conversation._id);
+  },
+});
+
+/**
+ * Reject a pending message in a collaborative conversation (Phase 4)
+ */
+export const rejectMessage = mutation({
+  args: {
+    conversationId: v.string(),
+    messageId: v.string(),
+    rejecterId: v.string(), // userId of the rejecter
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
+
+    if (!conversation) {
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
+    }
+
+    // Verify rejecter is the owner
+    const settings = conversation.collaborativeSettings;
+    const ownerUserId = settings?.ownerUserId || conversation.participants.userId;
+    
+    if (args.rejecterId !== ownerUserId) {
+      throw new ConvexError("REJECT_NOT_AUTHORIZED");
+    }
+
+    // Find and update the message
+    const messageIndex = conversation.messages.findIndex(
+      (m) => m.id === args.messageId
+    );
+    
+    if (messageIndex === -1) {
+      throw new ConvexError("MESSAGE_NOT_FOUND");
+    }
+
+    const message = conversation.messages[messageIndex];
+    if (message.approvalStatus !== "pending") {
+      throw new ConvexError("MESSAGE_NOT_PENDING");
+    }
+
+    // Update message with rejection
+    const updatedMessages = [...conversation.messages];
+    updatedMessages[messageIndex] = {
+      ...message,
+      approvalStatus: "rejected",
+      approvedBy: args.rejecterId,
+      approvedAt: Date.now(),
+    };
+
+    await ctx.db.patch(conversation._id, {
+      messages: updatedMessages,
       updatedAt: Date.now(),
     });
 
@@ -380,6 +652,10 @@ export const getOrCreate = mutation({
       memorySpaceIds: v.optional(v.array(v.string())),
     }),
     metadata: v.optional(v.any()),
+    // Visibility for shareable chats (Phase 1)
+    visibility: v.optional(
+      v.union(v.literal("private"), v.literal("space"), v.literal("public")),
+    ),
   },
   handler: async (ctx, args) => {
     // Try to find existing
@@ -463,6 +739,7 @@ export const getOrCreate = mutation({
       metadata: args.metadata || {},
       createdAt: now,
       updatedAt: now,
+      visibility: args.visibility, // Default undefined = 'private'
     });
 
     return await ctx.db.get(_id);

@@ -13,11 +13,19 @@ from typing import Any, Callable, Dict, List, Literal, Optional, Protocol
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ConversationType = Literal["user-agent", "agent-agent"]
+
+# Conversation visibility for shareable chats
+# - 'private': Only owner can access (default)
+# - 'space': Anyone in the memory space can access
+# - 'public': Anyone with the conversationId can access
+ConversationVisibility = Literal["private", "space", "public"]
+
 SourceType = Literal["conversation", "system", "tool", "a2a"]
 ContentType = Literal["raw", "summarized"]
 FactType = Literal["preference", "identity", "knowledge", "relationship", "event", "observation", "custom"]
 ContextStatus = Literal["active", "completed", "cancelled", "blocked"]
 MessageRole = Literal["user", "agent", "system"]
+MessageApprovalStatus = Literal["pending", "approved", "rejected"]
 MemorySpaceType = Literal["personal", "team", "project", "custom"]
 MemorySpaceStatus = Literal["active", "archived"]
 
@@ -150,6 +158,18 @@ class Message:
     timestamp: int
     participant_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
+    # Collaborative conversations (Phase 4)
+    approval_status: Optional[MessageApprovalStatus] = None
+    approved_by: Optional[str] = None
+    approved_at: Optional[int] = None
+
+
+@dataclass
+class CollaborativeSettings:
+    """Settings for collaborative conversations (Phase 4)."""
+    require_approval: bool
+    owner_user_id: Optional[str] = None
+    approved_participants: Optional[List[str]] = None
 
 
 @dataclass
@@ -157,6 +177,7 @@ class ConversationParticipants:
     """Conversation participants."""
     user_id: Optional[str] = None  # The human user in the conversation
     agent_id: Optional[str] = None  # The agent/assistant in the conversation
+    user_ids: Optional[List[str]] = None  # Collaborative: multiple human users (Phase 4)
     participant_id: Optional[str] = None  # Hive Mode: who created this
     memory_space_ids: Optional[List[str]] = None  # Collaboration Mode (agent-agent)
 
@@ -175,6 +196,8 @@ class Conversation:
     created_at: int
     updated_at: int
     participant_id: Optional[str] = None
+    visibility: Optional[ConversationVisibility] = None  # Defaults to 'private' if None
+    collaborative_settings: Optional[CollaborativeSettings] = None  # Phase 4
 
 
 @dataclass
@@ -186,6 +209,203 @@ class CreateConversationInput:
     conversation_id: Optional[str] = None
     participant_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
+    visibility: Optional[ConversationVisibility] = None  # Defaults to 'private' if None
+    collaborative_settings: Optional[CollaborativeSettings] = None  # Phase 4
+
+
+@dataclass
+class ApproveMessageInput:
+    """Input for approving/rejecting a message (Phase 4)."""
+    conversation_id: str
+    message_id: str
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Visibility & Access Control (Shareable Chats Phase 1)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+@dataclass
+class CheckAccessInput:
+    """Input for checking access to a conversation."""
+    conversation_id: str
+    user_id: Optional[str] = None
+    memory_space_id: Optional[str] = None
+
+
+@dataclass
+class CheckAccessResult:
+    """Result of an access check."""
+    can_view: bool
+    can_edit: bool
+    reason: str
+    visibility: Optional[ConversationVisibility]
+
+
+@dataclass
+class SetVisibilityInput:
+    """Input for setting conversation visibility."""
+    conversation_id: str
+    visibility: ConversationVisibility
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Sharing Grants (Shareable Chats Phase 2)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ShareGrantType = Literal["user", "space", "link", "domain"]
+ShareStatus = Literal["active", "revoked", "expired"]
+
+
+@dataclass
+class SharePermissions:
+    """Granular permissions for a share."""
+    can_view: bool
+    can_view_facts: bool
+    can_view_memories: bool
+    can_continue: bool
+    can_fork: bool
+    can_export: bool
+
+
+@dataclass
+class ConversationShare:
+    """A conversation share record."""
+    _id: str
+    share_id: str
+    conversation_id: str
+    granted_by: str
+    source_memory_space_id: str
+    grant_type: ShareGrantType
+    permissions: SharePermissions
+    view_count: int
+    redact_sensitive: bool
+    status: ShareStatus
+    created_at: int
+    granted_to: Optional[str] = None
+    expires_at: Optional[int] = None
+    max_views: Optional[int] = None
+    redact_before: Optional[int] = None
+    tenant_id: Optional[str] = None
+    revoked_at: Optional[int] = None
+    is_valid: Optional[bool] = None  # Runtime validation
+    invalid_reason: Optional[str] = None
+
+
+@dataclass
+class CreateShareInput:
+    """Input for creating a share."""
+    conversation_id: str
+    grant_type: ShareGrantType
+    granted_to: Optional[str] = None
+    permissions: Optional[Dict[str, bool]] = None
+    expires_at: Optional[int] = None
+    max_views: Optional[int] = None
+    redact_before: Optional[int] = None
+    redact_sensitive: Optional[bool] = None
+
+
+@dataclass
+class CreateShareResult:
+    """Result of creating a share."""
+    share_id: str
+    share: ConversationShare
+    expires_at: Optional[int] = None
+
+
+@dataclass
+class RevokeShareResult:
+    """Result of revoking a share."""
+    revoked: bool
+    revoked_at: int
+    share: ConversationShare
+
+
+@dataclass
+class CheckShareAccessResult:
+    """Result of checking share-based access."""
+    has_access: bool
+    permissions: Optional[SharePermissions]
+    share: Optional[Dict[str, Any]]
+    reason: str
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Snapshots (Shareable Chats Phase 3)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SnapshotStatus = Literal["active", "archived", "deleted"]
+
+
+@dataclass
+class CustomRedaction:
+    """Custom redaction rule."""
+    pattern: str
+    replacement: str
+
+
+@dataclass
+class SnapshotRedaction:
+    """Snapshot redaction metadata."""
+    pii_redacted: bool
+    messages_redacted_before: Optional[int] = None
+    custom_redactions: Optional[List["CustomRedaction"]] = None
+
+
+@dataclass
+class SnapshotIncludedContent:
+    """Snapshot included content flags."""
+    messages: bool
+    facts: bool
+    memories: bool
+
+
+@dataclass
+class SnapshotFact:
+    """Snapshot fact."""
+    fact_id: str
+    fact: str
+    fact_type: str
+    confidence: float
+
+
+@dataclass
+class ConversationSnapshot:
+    """A conversation snapshot record."""
+    _id: str
+    snapshot_id: str
+    conversation_id: str
+    messages: List[Message]
+    conversation_type: ConversationType
+    participants: ConversationParticipants
+    message_count: int
+    included_content: Dict[str, bool]
+    redaction: Dict[str, Any]
+    created_by: str
+    memory_space_id: str
+    status: SnapshotStatus
+    created_at: int
+    snapshot_of: int
+    facts: Optional[List[SnapshotFact]] = None
+    tenant_id: Optional[str] = None
+
+
+@dataclass
+class CreateSnapshotInput:
+    """Input for creating a snapshot."""
+    conversation_id: str
+    redact_pii: Optional[bool] = None
+    redact_before: Optional[int] = None
+    custom_redactions: Optional[List[CustomRedaction]] = None
+    include_facts: Optional[bool] = None
+    include_memories: Optional[bool] = None
+
+
+@dataclass
+class CreateSnapshotResult:
+    """Result of creating a snapshot."""
+    snapshot_id: str
+    snapshot: ConversationSnapshot
 
 
 @dataclass

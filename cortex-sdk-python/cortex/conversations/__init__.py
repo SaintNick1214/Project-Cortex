@@ -14,14 +14,24 @@ from ..errors import CortexError, ErrorCode  # noqa: F401
 from ..types import (
     AddMessageInput,
     AddMessageOptions,
+    ApproveMessageInput,
     AuthContext,
+    CheckAccessInput,
+    CheckAccessResult,
+    CheckShareAccessResult,
     Conversation,
     ConversationDeletionResult,
     ConversationSearchResult,
+    ConversationShare,
+    ConversationSnapshot,
     ConversationType,
     CountConversationsFilter,
     CreateConversationInput,
     CreateConversationOptions,
+    CreateShareInput,
+    CreateShareResult,
+    CreateSnapshotInput,
+    CreateSnapshotResult,
     DeleteConversationOptions,
     DeleteManyConversationsOptions,
     DeleteManyConversationsResult,
@@ -32,14 +42,20 @@ from ..types import (
     ListConversationsFilter,
     ListConversationsResult,
     Message,
+    RevokeShareResult,
     SearchConversationsFilters,  # noqa: F401 - Re-exported for public API
     SearchConversationsInput,
     SearchConversationsOptions,  # noqa: F401 - Re-exported for public API
+    SetVisibilityInput,
+    SharePermissions,  # noqa: F401 - Used in type hints
+    ShareStatus,
 )
 from .validators import (
     ConversationValidationError,
     validate_conversation_type,
     validate_export_format,
+    validate_grant_type,
+    validate_granted_to,
     validate_id_format,
     validate_limit,
     validate_message_role,
@@ -49,8 +65,10 @@ from .validators import (
     validate_participants,
     validate_required_string,
     validate_search_query,
+    validate_share_status,
     validate_sort_order,
     validate_timestamp_range,
+    validate_visibility,
 )
 
 
@@ -152,6 +170,10 @@ class ConversationsAPI:
                     memory_space_ids, "participants.memory_space_ids"
                 )
 
+        # Validate visibility if provided
+        visibility = getattr(input, "visibility", None)
+        validate_visibility(visibility)
+
         # Auto-generate conversation ID if not provided
         conversation_id = input.conversation_id or self._generate_conversation_id()
 
@@ -170,10 +192,17 @@ class ConversationsAPI:
                     "participants": filter_none_values({
                         "userId": input.participants.get("userId") if isinstance(input.participants, dict) else getattr(input.participants, "user_id", None),
                         "agentId": input.participants.get("agentId") if isinstance(input.participants, dict) else getattr(input.participants, "agent_id", None),
+                        "userIds": input.participants.get("userIds") if isinstance(input.participants, dict) else getattr(input.participants, "user_ids", None),  # Phase 4: Collaborative
                         "participantId": input.participants.get("participantId") if isinstance(input.participants, dict) else getattr(input.participants, "participant_id", None),
                         "memorySpaceIds": input.participants.get("memorySpaceIds") if isinstance(input.participants, dict) else getattr(input.participants, "memory_space_ids", None),
                     }),
                     "metadata": input.metadata,
+                    "visibility": visibility,  # Pass visibility (defaults to 'private' if None)
+                    "collaborativeSettings": filter_none_values({
+                        "requireApproval": getattr(input.collaborative_settings, "require_approval", None),
+                        "ownerUserId": getattr(input.collaborative_settings, "owner_user_id", None),
+                        "approvedParticipants": getattr(input.collaborative_settings, "approved_participants", None),
+                    }) if input.collaborative_settings else None,  # Phase 4
                 }),
             ),
             "conversations:create",
@@ -766,6 +795,10 @@ class ConversationsAPI:
                     memory_space_ids, "participants.memory_space_ids"
                 )
 
+        # Validate visibility if provided
+        visibility = getattr(input, "visibility", None)
+        validate_visibility(visibility)
+
         result = await self._execute_with_resilience(
             lambda: self.client.mutation(
                 "conversations:getOrCreate",
@@ -776,10 +809,12 @@ class ConversationsAPI:
                     "participants": filter_none_values({
                         "userId": input.participants.get("userId") if isinstance(input.participants, dict) else getattr(input.participants, "user_id", None),
                         "agentId": input.participants.get("agentId") if isinstance(input.participants, dict) else getattr(input.participants, "agent_id", None),
+                        "userIds": input.participants.get("userIds") if isinstance(input.participants, dict) else getattr(input.participants, "user_ids", None),  # Phase 4: Collaborative
                         "participantId": input.participants.get("participantId") if isinstance(input.participants, dict) else getattr(input.participants, "participant_id", None),
                         "memorySpaceIds": input.participants.get("memorySpaceIds") if isinstance(input.participants, dict) else getattr(input.participants, "memory_space_ids", None),
                     }),
                     "metadata": input.metadata,
+                    "visibility": visibility,  # Pass visibility (defaults to 'private' if None)
                 }),
             ),
             "conversations:getOrCreate",
@@ -989,6 +1024,587 @@ class ConversationsAPI:
         )
 
         return ExportResult(**convert_convex_response(result))
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Visibility & Access Control (Shareable Chats Phase 1)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    async def check_access(
+        self,
+        input: CheckAccessInput,
+    ) -> CheckAccessResult:
+        """
+        Check if a user has access to a conversation based on visibility.
+
+        This is a quick, cheap method to check access rights without fetching
+        the full conversation data. Use this for access control checks.
+
+        Args:
+            input: Access check parameters (conversation_id, user_id, memory_space_id)
+
+        Returns:
+            Access check result with can_view, can_edit, reason, and visibility
+
+        Example:
+            >>> access = await cortex.conversations.check_access(
+            ...     CheckAccessInput(
+            ...         conversation_id='conv-abc123',
+            ...         user_id='user-456'
+            ...     )
+            ... )
+            >>> if access.can_view:
+            ...     # User can access the conversation
+            ...     pass
+        """
+        validate_required_string(input.conversation_id, "conversation_id")
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversations:checkAccess",
+                filter_none_values({
+                    "conversationId": input.conversation_id,
+                    "userId": input.user_id,
+                    "memorySpaceId": input.memory_space_id,
+                }),
+            ),
+            "conversations:checkAccess",
+        )
+
+        return CheckAccessResult(**convert_convex_response(result))
+
+    async def set_visibility(
+        self,
+        input: SetVisibilityInput,
+    ) -> Conversation:
+        """
+        Set the visibility of a conversation.
+
+        Only the owner (participants.user_id) can change visibility.
+
+        Args:
+            input: Visibility change parameters (conversation_id, visibility)
+
+        Returns:
+            Updated conversation
+
+        Example:
+            >>> # Make a conversation public
+            >>> updated = await cortex.conversations.set_visibility(
+            ...     SetVisibilityInput(
+            ...         conversation_id='conv-abc123',
+            ...         visibility='public'
+            ...     )
+            ... )
+            >>> # Make it space-visible
+            >>> await cortex.conversations.set_visibility(
+            ...     SetVisibilityInput(
+            ...         conversation_id='conv-abc123',
+            ...         visibility='space'
+            ...     )
+            ... )
+        """
+        validate_required_string(input.conversation_id, "conversation_id")
+        validate_visibility(input.visibility)
+
+        # Get user_id from auth context for ownership verification
+        user_id = self._auth_context.user_id if self._auth_context else None
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversations:setVisibility",
+                filter_none_values({
+                    "conversationId": input.conversation_id,
+                    "visibility": input.visibility,
+                    "userId": user_id,
+                }),
+            ),
+            "conversations:setVisibility",
+        )
+
+        return Conversation(**convert_convex_response(result))
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Sharing Grants (Shareable Chats Phase 2)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    async def share(
+        self,
+        input: CreateShareInput,
+    ) -> CreateShareResult:
+        """
+        Create a share for a conversation.
+
+        Creates a shareable link or grant for accessing a conversation.
+        Returns the share ID which can be used with build_share_url() to create URLs.
+
+        Args:
+            input: Share creation parameters
+
+        Returns:
+            CreateShareResult with share_id and share details
+
+        Example:
+            >>> from cortex.sharing import build_share_url
+            >>>
+            >>> # Create a public link share
+            >>> result = await cortex.conversations.share(
+            ...     CreateShareInput(
+            ...         conversation_id='conv-abc123',
+            ...         grant_type='link',
+            ...         permissions={'can_view': True, 'can_fork': True},
+            ...         expires_at=int(time.time() * 1000) + 7 * 24 * 60 * 60 * 1000,  # 7 days
+            ...     )
+            ... )
+            >>>
+            >>> # Build the URL
+            >>> url = build_share_url(result.share_id, base_url='https://myapp.com/shared')
+        """
+        validate_required_string(input.conversation_id, "conversation_id")
+        validate_grant_type(input.grant_type)
+        validate_granted_to(input.grant_type, input.granted_to)
+
+        # Default permissions
+        perms = input.permissions or {}
+        permissions = {
+            "canView": perms.get("can_view", True),
+            "canViewFacts": perms.get("can_view_facts", False),
+            "canViewMemories": perms.get("can_view_memories", False),
+            "canContinue": perms.get("can_continue", False),
+            "canFork": perms.get("can_fork", False),
+            "canExport": perms.get("can_export", False),
+        }
+
+        user_id = self._auth_context.user_id if self._auth_context else "anonymous"
+        tenant_id = self._tenant_id
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversationShares:create",
+                filter_none_values({
+                    "conversationId": input.conversation_id,
+                    "grantedBy": user_id,
+                    "sourceMemorySpaceId": input.conversation_id.split("-")[1] if "-" in input.conversation_id else "default",
+                    "grantType": input.grant_type,
+                    "grantedTo": input.granted_to,
+                    "permissions": permissions,
+                    "expiresAt": input.expires_at,
+                    "maxViews": input.max_views,
+                    "redactBefore": input.redact_before,
+                    "redactSensitive": input.redact_sensitive,
+                    "tenantId": tenant_id,
+                }),
+            ),
+            "conversationShares:create",
+        )
+
+        share = ConversationShare(**convert_convex_response(result))
+
+        return CreateShareResult(
+            share_id=share.share_id,
+            share=share,
+            expires_at=share.expires_at,
+        )
+
+    async def revoke_share(
+        self,
+        share_id: str,
+    ) -> RevokeShareResult:
+        """
+        Revoke an existing share.
+
+        Args:
+            share_id: The share ID to revoke
+
+        Returns:
+            RevokeShareResult with revocation details
+
+        Example:
+            >>> result = await cortex.conversations.revoke_share('share-abc123')
+            >>> print(f"Revoked at: {result.revoked_at}")
+        """
+        validate_required_string(share_id, "share_id")
+
+        user_id = self._auth_context.user_id if self._auth_context else None
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversationShares:revoke",
+                filter_none_values({
+                    "shareId": share_id,
+                    "userId": user_id,
+                }),
+            ),
+            "conversationShares:revoke",
+        )
+
+        share = ConversationShare(**convert_convex_response(result))
+
+        return RevokeShareResult(
+            revoked=True,
+            revoked_at=share.revoked_at or int(time.time() * 1000),
+            share=share,
+        )
+
+    async def list_shares(
+        self,
+        conversation_id: str,
+        status: Optional[ShareStatus] = None,
+    ) -> List[ConversationShare]:
+        """
+        List shares for a conversation.
+
+        Args:
+            conversation_id: The conversation ID
+            status: Optional filter by share status
+
+        Returns:
+            List of ConversationShare records
+
+        Example:
+            >>> # List all active shares
+            >>> shares = await cortex.conversations.list_shares(
+            ...     'conv-abc123',
+            ...     status='active'
+            ... )
+        """
+        validate_required_string(conversation_id, "conversation_id")
+
+        if status:
+            validate_share_status(status)
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversationShares:listByConversation",
+                filter_none_values({
+                    "conversationId": conversation_id,
+                    "status": status,
+                }),
+            ),
+            "conversationShares:listByConversation",
+        )
+
+        return [ConversationShare(**convert_convex_response(s)) for s in result]
+
+    async def get_share(
+        self,
+        share_id: str,
+    ) -> Optional[ConversationShare]:
+        """
+        Get a share by its ID.
+
+        Also validates whether the share is still active and within limits.
+
+        Args:
+            share_id: The share ID
+
+        Returns:
+            ConversationShare or None if not found
+
+        Example:
+            >>> share = await cortex.conversations.get_share('share-abc123')
+            >>> if share and share.is_valid:
+            ...     # Share is valid and can be used
+            ...     pass
+        """
+        validate_required_string(share_id, "share_id")
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversationShares:get",
+                {"shareId": share_id},
+            ),
+            "conversationShares:get",
+        )
+
+        if result is None:
+            return None
+
+        return ConversationShare(**convert_convex_response(result))
+
+    async def check_share_access(
+        self,
+        conversation_id: str,
+        user_id: Optional[str] = None,
+        memory_space_id: Optional[str] = None,
+        email_domain: Optional[str] = None,
+    ) -> CheckShareAccessResult:
+        """
+        Check if a user/space has access to a conversation via share.
+
+        Args:
+            conversation_id: The conversation ID
+            user_id: Optional user ID to check
+            memory_space_id: Optional memory space ID to check
+            email_domain: Optional email domain to check
+
+        Returns:
+            CheckShareAccessResult with access details
+
+        Example:
+            >>> access = await cortex.conversations.check_share_access(
+            ...     conversation_id='conv-abc123',
+            ...     user_id='user-456'
+            ... )
+            >>> if access.has_access:
+            ...     print('Permissions:', access.permissions)
+        """
+        validate_required_string(conversation_id, "conversation_id")
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversationShares:checkAccess",
+                filter_none_values({
+                    "conversationId": conversation_id,
+                    "userId": user_id,
+                    "memorySpaceId": memory_space_id,
+                    "emailDomain": email_domain,
+                }),
+            ),
+            "conversationShares:checkAccess",
+        )
+
+        return CheckShareAccessResult(**convert_convex_response(result))
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Snapshots (Shareable Chats Phase 3)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    async def snapshot(
+        self,
+        input: CreateSnapshotInput,
+    ) -> CreateSnapshotResult:
+        """
+        Create a snapshot of a conversation.
+
+        Creates an immutable point-in-time copy with optional PII redaction.
+
+        Args:
+            input: Snapshot creation parameters
+
+        Returns:
+            CreateSnapshotResult with snapshot_id and snapshot details
+
+        Example:
+            >>> result = await cortex.conversations.snapshot(
+            ...     CreateSnapshotInput(
+            ...         conversation_id='conv-abc123',
+            ...         redact_pii=True,
+            ...     )
+            ... )
+            >>> print(result.snapshot_id)
+        """
+        validate_required_string(input.conversation_id, "conversation_id")
+
+        user_id = self._auth_context.user_id if self._auth_context else "anonymous"
+        tenant_id = self._tenant_id
+
+        # Convert custom redactions to Convex format
+        custom_redactions = None
+        if input.custom_redactions:
+            custom_redactions = [
+                {"pattern": r.pattern, "replacement": r.replacement}
+                for r in input.custom_redactions
+            ]
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversationSnapshots:create",
+                filter_none_values({
+                    "conversationId": input.conversation_id,
+                    "createdBy": user_id,
+                    "redactPII": input.redact_pii,
+                    "redactBefore": input.redact_before,
+                    "customRedactions": custom_redactions,
+                    "includeFacts": input.include_facts,
+                    "includeMemories": input.include_memories,
+                    "tenantId": tenant_id,
+                }),
+            ),
+            "conversationSnapshots:create",
+        )
+
+        snapshot = ConversationSnapshot(**convert_convex_response(result))
+
+        return CreateSnapshotResult(
+            snapshot_id=snapshot.snapshot_id,
+            snapshot=snapshot,
+        )
+
+    async def get_snapshot(
+        self,
+        snapshot_id: str,
+    ) -> Optional[ConversationSnapshot]:
+        """
+        Get a snapshot by ID.
+
+        Args:
+            snapshot_id: The snapshot ID
+
+        Returns:
+            ConversationSnapshot or None if not found
+        """
+        validate_required_string(snapshot_id, "snapshot_id")
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversationSnapshots:get",
+                {"snapshotId": snapshot_id},
+            ),
+            "conversationSnapshots:get",
+        )
+
+        if result is None:
+            return None
+
+        return ConversationSnapshot(**convert_convex_response(result))
+
+    async def list_snapshots(
+        self,
+        conversation_id: str,
+        include_archived: bool = False,
+    ) -> List[ConversationSnapshot]:
+        """
+        List snapshots for a conversation.
+
+        Args:
+            conversation_id: The conversation ID
+            include_archived: Include archived snapshots
+
+        Returns:
+            List of ConversationSnapshot records
+        """
+        validate_required_string(conversation_id, "conversation_id")
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.query(
+                "conversationSnapshots:listByConversation",
+                filter_none_values({
+                    "conversationId": conversation_id,
+                    "includeArchived": include_archived if include_archived else None,
+                }),
+            ),
+            "conversationSnapshots:listByConversation",
+        )
+
+        return [ConversationSnapshot(**convert_convex_response(s)) for s in result]
+
+    async def delete_snapshot(
+        self,
+        snapshot_id: str,
+    ) -> Dict[str, bool]:
+        """
+        Delete a snapshot.
+
+        Args:
+            snapshot_id: The snapshot ID to delete
+
+        Returns:
+            Dict with 'deleted' boolean
+        """
+        validate_required_string(snapshot_id, "snapshot_id")
+
+        user_id = self._auth_context.user_id if self._auth_context else None
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversationSnapshots:deleteSnapshot",
+                filter_none_values({
+                    "snapshotId": snapshot_id,
+                    "userId": user_id,
+                }),
+            ),
+            "conversationSnapshots:deleteSnapshot",
+        )
+
+        return result
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Collaborative Conversations (Shareable Chats Phase 4)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    async def approve_message(
+        self,
+        input: ApproveMessageInput,
+    ) -> Conversation:
+        """
+        Approve a pending message in a collaborative conversation.
+
+        Only the conversation owner can approve messages.
+
+        Args:
+            input: Message approval parameters
+
+        Returns:
+            Updated Conversation
+
+        Example:
+            >>> await cortex.conversations.approve_message(
+            ...     ApproveMessageInput(
+            ...         conversation_id='conv-abc123',
+            ...         message_id='msg-456',
+            ...     )
+            ... )
+        """
+        validate_required_string(input.conversation_id, "conversation_id")
+        validate_required_string(input.message_id, "message_id")
+
+        user_id = self._auth_context.user_id if self._auth_context else ""
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversations:approveMessage",
+                {
+                    "conversationId": input.conversation_id,
+                    "messageId": input.message_id,
+                    "approverId": user_id,
+                },
+            ),
+            "conversations:approveMessage",
+        )
+
+        return Conversation(**convert_convex_response(result))
+
+    async def reject_message(
+        self,
+        input: ApproveMessageInput,
+    ) -> Conversation:
+        """
+        Reject a pending message in a collaborative conversation.
+
+        Only the conversation owner can reject messages.
+
+        Args:
+            input: Message rejection parameters
+
+        Returns:
+            Updated Conversation
+
+        Example:
+            >>> await cortex.conversations.reject_message(
+            ...     ApproveMessageInput(
+            ...         conversation_id='conv-abc123',
+            ...         message_id='msg-456',
+            ...     )
+            ... )
+        """
+        validate_required_string(input.conversation_id, "conversation_id")
+        validate_required_string(input.message_id, "message_id")
+
+        user_id = self._auth_context.user_id if self._auth_context else ""
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "conversations:rejectMessage",
+                {
+                    "conversationId": input.conversation_id,
+                    "messageId": input.message_id,
+                    "rejecterId": user_id,
+                },
+            ),
+            "conversations:rejectMessage",
+        )
+
+        return Conversation(**convert_convex_response(result))
 
     # Helper methods
 

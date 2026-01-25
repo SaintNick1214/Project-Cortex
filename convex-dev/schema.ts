@@ -49,9 +49,12 @@ export default defineSchema({
 
     // Participants (based on type)
     participants: v.object({
-      // user-agent conversations
-      userId: v.optional(v.string()), // The human user in the conversation
+      // user-agent conversations (single user)
+      userId: v.optional(v.string()), // The primary human user in the conversation
       agentId: v.optional(v.string()), // The agent/assistant in the conversation
+
+      // Collaborative conversations (Phase 4) - multiple human participants
+      userIds: v.optional(v.array(v.string())), // Multiple human users
 
       // Hive Mode tracking (which tool/agent in shared space created this)
       participantId: v.optional(v.string()),
@@ -59,6 +62,18 @@ export default defineSchema({
       // agent-agent conversations (Collaboration Mode - cross-space)
       memorySpaceIds: v.optional(v.array(v.string())), // Both spaces involved
     }),
+
+    // Collaborative settings (Phase 4)
+    collaborativeSettings: v.optional(
+      v.object({
+        // Whether messages from non-owners require approval
+        requireApproval: v.boolean(),
+        // The owner who can approve messages (defaults to first userId/userIds[0])
+        ownerUserId: v.optional(v.string()),
+        // IDs of approved participants (others require approval)
+        approvedParticipants: v.optional(v.array(v.string())),
+      }),
+    ),
 
     // Messages (append-only, immutable)
     messages: v.array(
@@ -73,9 +88,20 @@ export default defineSchema({
         timestamp: v.number(),
 
         // Optional fields
-        participantId: v.optional(v.string()), // Which participant sent this (Hive Mode)
+        participantId: v.optional(v.string()), // Which participant sent this (Hive Mode/Collaborative)
         metadata: v.optional(v.any()), // Flexible metadata
         attachmentIds: v.optional(v.array(v.string())), // Multi-modal attachment references
+
+        // Collaborative approval (Phase 4)
+        approvalStatus: v.optional(
+          v.union(
+            v.literal("pending"),
+            v.literal("approved"),
+            v.literal("rejected"),
+          ),
+        ),
+        approvedBy: v.optional(v.string()), // userId who approved
+        approvedAt: v.optional(v.number()), // Approval timestamp
       }),
     ),
 
@@ -88,6 +114,18 @@ export default defineSchema({
     // Timestamps
     createdAt: v.number(),
     updatedAt: v.number(),
+
+    // Visibility for shareable chats (Phase 1)
+    // - 'private': Only owner can access (default)
+    // - 'space': Anyone in the memory space can access
+    // - 'public': Anyone with the conversationId can access
+    visibility: v.optional(
+      v.union(
+        v.literal("private"),
+        v.literal("space"),
+        v.literal("public"),
+      ),
+    ),
   })
     .index("by_conversationId", ["conversationId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's conversations
@@ -98,7 +136,168 @@ export default defineSchema({
     .index("by_agent", ["participants.agentId"]) // Agent's conversations
     .index("by_memorySpace_user", ["memorySpaceId", "participants.userId"]) // NEW: Space + user
     .index("by_memorySpace_agent", ["memorySpaceId", "participants.agentId"]) // Space + agent
-    .index("by_created", ["createdAt"]), // Chronological ordering
+    .index("by_created", ["createdAt"]) // Chronological ordering
+    .index("by_visibility", ["visibility"]) // Filter by visibility
+    .index("by_memorySpace_visibility", ["memorySpaceId", "visibility"]), // Space + visibility
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Conversation Shares (Shareable Chats Phase 2)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  conversationShares: defineTable({
+    // Identity
+    shareId: v.string(), // Public-facing identifier for share links
+    conversationId: v.string(),
+
+    // Granter (owner)
+    grantedBy: v.string(), // userId who shared
+    sourceMemorySpaceId: v.string(),
+
+    // Recipient(s)
+    grantType: v.union(
+      v.literal("user"), // Specific user
+      v.literal("space"), // Entire memory space
+      v.literal("link"), // Anyone with link
+      v.literal("domain"), // Anyone from email domain
+    ),
+    grantedTo: v.optional(v.string()), // userId, memorySpaceId, or domain
+
+    // Permissions
+    permissions: v.object({
+      canView: v.boolean(), // See messages
+      canViewFacts: v.boolean(), // See extracted facts
+      canViewMemories: v.boolean(), // See related memories
+      canContinue: v.boolean(), // Add new messages
+      canFork: v.boolean(), // Create a copy
+      canExport: v.boolean(), // Download transcript
+    }),
+
+    // Constraints
+    expiresAt: v.optional(v.number()), // Time-limited sharing
+    maxViews: v.optional(v.number()), // View-limited sharing
+    viewCount: v.number(),
+
+    // Redaction
+    redactBefore: v.optional(v.number()), // Hide messages before timestamp
+    redactSensitive: v.boolean(), // Auto-redact PII
+
+    // Status
+    status: v.union(
+      v.literal("active"),
+      v.literal("revoked"),
+      v.literal("expired"),
+    ),
+
+    // Multi-tenancy
+    tenantId: v.optional(v.string()),
+
+    // Timestamps
+    createdAt: v.number(),
+    revokedAt: v.optional(v.number()),
+  })
+    .index("by_shareId", ["shareId"])
+    .index("by_conversation", ["conversationId"])
+    .index("by_grantedTo", ["grantedTo"])
+    .index("by_grantedBy", ["grantedBy"])
+    .index("by_status", ["status"])
+    .index("by_tenant_shareId", ["tenantId", "shareId"])
+    .index("by_tenant_conversation", ["tenantId", "conversationId"]),
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Conversation Snapshots (Shareable Chats Phase 3)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  conversationSnapshots: defineTable({
+    // Identity
+    snapshotId: v.string(),
+    conversationId: v.string(), // Source conversation
+
+    // Snapshot content (immutable after creation)
+    messages: v.array(
+      v.object({
+        id: v.string(),
+        role: v.union(
+          v.literal("user"),
+          v.literal("agent"),
+          v.literal("system"),
+        ),
+        content: v.string(),
+        timestamp: v.number(),
+        participantId: v.optional(v.string()),
+        // Note: PII-redacted version stored here
+      }),
+    ),
+
+    // Original conversation metadata
+    conversationType: v.union(
+      v.literal("user-agent"),
+      v.literal("agent-agent"),
+    ),
+    participants: v.object({
+      userId: v.optional(v.string()),
+      agentId: v.optional(v.string()),
+      participantId: v.optional(v.string()),
+      memorySpaceIds: v.optional(v.array(v.string())),
+    }),
+
+    // Snapshot metadata
+    messageCount: v.number(),
+
+    // What was included
+    includedContent: v.object({
+      messages: v.boolean(),
+      facts: v.boolean(),
+      memories: v.boolean(),
+    }),
+
+    // Redaction info
+    redaction: v.object({
+      piiRedacted: v.boolean(),
+      messagesRedactedBefore: v.optional(v.number()), // Timestamp
+      customRedactions: v.optional(
+        v.array(
+          v.object({
+            pattern: v.string(),
+            replacement: v.string(),
+          }),
+        ),
+      ),
+    }),
+
+    // Associated facts snapshot (if included)
+    facts: v.optional(
+      v.array(
+        v.object({
+          factId: v.string(),
+          fact: v.string(),
+          factType: v.string(),
+          confidence: v.number(),
+        }),
+      ),
+    ),
+
+    // Owner info
+    createdBy: v.string(), // userId
+    memorySpaceId: v.string(),
+
+    // Multi-tenancy
+    tenantId: v.optional(v.string()),
+
+    // Status
+    status: v.union(
+      v.literal("active"),
+      v.literal("archived"),
+      v.literal("deleted"),
+    ),
+
+    // Timestamps
+    createdAt: v.number(),
+    snapshotOf: v.number(), // Timestamp of when the snapshot was taken
+  })
+    .index("by_snapshotId", ["snapshotId"])
+    .index("by_conversation", ["conversationId"])
+    .index("by_createdBy", ["createdBy"])
+    .index("by_memorySpace", ["memorySpaceId"])
+    .index("by_status", ["status"])
+    .index("by_tenant_snapshotId", ["tenantId", "snapshotId"]),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Layer 1b: Immutable Store (ACID, Versioned, Shared)
