@@ -491,7 +491,7 @@ describe("Memory Orchestration Observer", () => {
       });
 
       // For each layer with multiple events, verify order
-      eventsByLayer.forEach((events, layer) => {
+      eventsByLayer.forEach((events, _layer) => {
         if (events.length >= 2) {
           const firstEvent = events[0];
           const lastEvent = events[events.length - 1];

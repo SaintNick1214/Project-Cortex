@@ -5,7 +5,7 @@
  * Verifies event ordering, timing, and phase consistency.
  */
 
-import { describe, it, expect, jest, beforeAll, afterAll } from "@jest/globals";
+import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../../src";
 import { ConvexClient } from "convex/browser";
 import { createTestRunContext } from "../helpers/isolation";
@@ -324,10 +324,10 @@ describe("Phase-Aware Orchestration Integration", () => {
       expect(summary).not.toBeNull();
 
       // Verify counts match actual result
-      const memoriesInResult = result.items.filter(
+      const _memoriesInResult = result.items.filter(
         (item) => "memoryId" in item,
       ).length;
-      const factsInResult = result.items.filter(
+      const _factsInResult = result.items.filter(
         (item) => "factId" in item,
       ).length;
 

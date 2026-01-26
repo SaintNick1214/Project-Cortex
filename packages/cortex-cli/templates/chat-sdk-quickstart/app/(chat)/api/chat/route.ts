@@ -146,29 +146,247 @@ export async function POST(request: Request) {
       originalMessages: isToolApprovalFlow ? uiMessages : undefined,
       execute: async ({ writer: dataStream }) => {
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        // Layer Observer - emits events for real-time UI visualization
+        // Layer Observer - emits phase-aware events for real-time UI visualization
+        // Includes AI SDK 6 reasoning parts for extended thinking display
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        // Track orchestration IDs for reasoning part emission
+        let currentRecallOrchestrationId: string | undefined;
+        let currentRememberOrchestrationId: string | undefined;
+
+        // Helper: Map layer names to display names
+        const getLayerDisplayName = (layer: string): string => {
+          const displayNames: Record<string, string> = {
+            memorySpace: "Memory Space",
+            user: "User Profile",
+            agent: "Agent Context",
+            context: "Context Assembly",
+            conversation: "Conversation",
+            vector: "Vector Search",
+            facts: "Facts Engine",
+            graph: "Knowledge Graph",
+          };
+          return displayNames[layer] || layer;
+        };
+
+        // Helper: Format layer status with metadata
+        const formatLayerStatus = (event: {
+          status: string;
+          data?: { metadata?: Record<string, unknown> };
+        }): string => {
+          const { status, data } = event;
+          if (status === "complete" && data?.metadata) {
+            const meta = data.metadata;
+            // Include relevant counts in status
+            if (typeof meta.vectorMatches === "number") {
+              return `complete (${meta.vectorMatches} matches)`;
+            }
+            if (typeof meta.factMatches === "number") {
+              return `complete (${meta.factMatches} facts)`;
+            }
+            if (typeof meta.count === "number") {
+              return `complete (${meta.count} items)`;
+            }
+            if (typeof meta.nodes === "number") {
+              return `complete (${meta.nodes} nodes)`;
+            }
+          }
+          return status;
+        };
+
         const layerObserver: LayerObserver = {
-          onOrchestrationStart: (orchestrationId) => {
-            dataStream.write({
-              type: "data-orchestration-start",
-              data: { orchestrationId },
-              transient: true,
-            });
+          // Phase-aware callbacks (v0.35.1+)
+          onRecallStart: (orchestrationId) => {
+            currentRecallOrchestrationId = orchestrationId;
+            try {
+              // Emit reasoning-start for recall phase (AI SDK 6 Protocol)
+              // Use providerMetadata to pass memory phase since id isn't exposed to UI
+              dataStream.write({
+                type: "reasoning-start",
+                id: `memory-recall-${orchestrationId}`,
+                providerMetadata: { cortex: { memoryPhase: "recall" } },
+              });
+              // Keep existing transient event for backward compatibility
+              dataStream.write({
+                type: "data-recall-start",
+                data: { orchestrationId },
+                transient: true,
+              });
+            } catch (error) {
+              console.error("Error in onRecallStart:", error);
+              // Ensure reasoning-end is emitted even on error
+              try {
+                dataStream.write({
+                  type: "reasoning-end",
+                  id: `memory-recall-${orchestrationId}`,
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
           },
+          onRecallComplete: (summary) => {
+            const orchestrationId =
+              summary?.orchestrationId || currentRecallOrchestrationId;
+            try {
+              // Emit reasoning-end for recall phase (AI SDK 6 Protocol)
+              dataStream.write({
+                type: "reasoning-end",
+                id: `memory-recall-${orchestrationId}`,
+              });
+              // Keep existing transient event for backward compatibility
+              dataStream.write({
+                type: "data-recall-complete",
+                data: summary,
+                transient: true,
+              });
+            } catch (error) {
+              console.error("Error in onRecallComplete:", error);
+              // Attempt to emit reasoning-end even on error
+              try {
+                dataStream.write({
+                  type: "reasoning-end",
+                  id: `memory-recall-${orchestrationId}`,
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
+          },
+          onRememberStart: (orchestrationId) => {
+            currentRememberOrchestrationId = orchestrationId;
+            try {
+              // Emit reasoning-start for storage phase (AI SDK 6 Protocol)
+              // Use providerMetadata to pass memory phase since id isn't exposed to UI
+              dataStream.write({
+                type: "reasoning-start",
+                id: `memory-storage-${orchestrationId}`,
+                providerMetadata: { cortex: { memoryPhase: "storage" } },
+              });
+              // Keep existing transient event for backward compatibility
+              dataStream.write({
+                type: "data-remember-start",
+                data: { orchestrationId },
+                transient: true,
+              });
+            } catch (error) {
+              console.error("Error in onRememberStart:", error);
+              // Ensure reasoning-end is emitted even on error
+              try {
+                dataStream.write({
+                  type: "reasoning-end",
+                  id: `memory-storage-${orchestrationId}`,
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
+          },
+          onRememberComplete: (summary) => {
+            const orchestrationId =
+              summary?.orchestrationId || currentRememberOrchestrationId;
+            try {
+              // Emit reasoning-end for storage phase (AI SDK 6 Protocol)
+              dataStream.write({
+                type: "reasoning-end",
+                id: `memory-storage-${orchestrationId}`,
+              });
+              // Keep existing transient event for backward compatibility
+              dataStream.write({
+                type: "data-remember-complete",
+                data: summary,
+                transient: true,
+              });
+            } catch (error) {
+              console.error("Error in onRememberComplete:", error);
+              // Attempt to emit reasoning-end even on error
+              try {
+                dataStream.write({
+                  type: "reasoning-end",
+                  id: `memory-storage-${orchestrationId}`,
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
+          },
+          // Layer updates include phase information
           onLayerUpdate: (event) => {
-            dataStream.write({
-              type: "data-layer-update",
-              data: event,
-              transient: true,
-            });
-          },
-          onOrchestrationComplete: (summary) => {
-            dataStream.write({
-              type: "data-orchestration-complete",
-              data: summary,
-              transient: true,
-            });
+            try {
+              // Only emit reasoning-delta for "complete" status to avoid noise
+              // Still emit transient events for all statuses for backward compatibility
+              const shouldEmitReasoning = event.status === "complete";
+
+              // Determine phase - use explicit phase if available, otherwise infer from layer
+              // Recall layers: memorySpace, user, agent, vector, facts, graph
+              // Storage layers: conversation (after response)
+              const recallLayers = ["memorySpace", "user", "agent", "vector", "facts", "graph", "context"];
+              const inferredPhase = recallLayers.includes(event.layer) ? "recall" : "remember";
+              const phase = event.phase || inferredPhase;
+
+              let orchestrationId =
+                phase === "recall"
+                  ? currentRecallOrchestrationId
+                  : currentRememberOrchestrationId;
+
+              // Auto-start reasoning if we get a layer update before start callback
+              // This can happen if the SDK emits layer updates without explicit start
+              if (!orchestrationId && shouldEmitReasoning) {
+                orchestrationId = `auto-${Date.now()}`;
+                if (phase === "recall") {
+                  currentRecallOrchestrationId = orchestrationId;
+                  dataStream.write({
+                    type: "reasoning-start",
+                    id: `memory-recall-${orchestrationId}`,
+                    providerMetadata: { cortex: { memoryPhase: "recall" } },
+                  });
+                } else {
+                  currentRememberOrchestrationId = orchestrationId;
+                  dataStream.write({
+                    type: "reasoning-start",
+                    id: `memory-storage-${orchestrationId}`,
+                    providerMetadata: { cortex: { memoryPhase: "storage" } },
+                  });
+                }
+              }
+
+              // Only emit reasoning-delta for complete status
+              if (shouldEmitReasoning && orchestrationId) {
+                const reasoningId =
+                  phase === "recall"
+                    ? `memory-recall-${orchestrationId}`
+                    : `memory-storage-${orchestrationId}`;
+
+                // Emit reasoning-delta with layer status (AI SDK 6 Protocol)
+                // Use markdown list format for proper rendering
+                const layerDisplayName = getLayerDisplayName(event.layer);
+                const statusText = formatLayerStatus(event);
+                dataStream.write({
+                  type: "reasoning-delta",
+                  id: reasoningId,
+                  delta: `- **${layerDisplayName}**: ${statusText}\n`,
+                });
+              }
+
+              // Keep existing transient event for backward compatibility (all statuses)
+              dataStream.write({
+                type: "data-layer-update",
+                data: event,
+                transient: true,
+              });
+            } catch (error) {
+              console.error("Error in onLayerUpdate:", error);
+              // Still emit the transient event even if reasoning-delta fails
+              try {
+                dataStream.write({
+                  type: "data-layer-update",
+                  data: event,
+                  transient: true,
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
           },
         };
 
@@ -256,16 +474,25 @@ export async function POST(request: Request) {
             }
           }
         } else if (finishedMessages.length > 0) {
-          await saveMessages({
-            messages: finishedMessages.map((currentMessage) => ({
-              id: currentMessage.id,
-              role: currentMessage.role,
-              parts: currentMessage.parts,
-              createdAt: new Date(),
-              attachments: [],
-              chatId: id,
-            })),
-          });
+          // Filter out messages that were already saved (user message was saved earlier)
+          // uiMessages contains: DB messages + the new user message
+          const existingMessageIds = new Set(uiMessages.map((m) => m.id));
+          const newMessages = finishedMessages.filter(
+            (msg) => !existingMessageIds.has(msg.id)
+          );
+
+          if (newMessages.length > 0) {
+            await saveMessages({
+              messages: newMessages.map((currentMessage) => ({
+                id: currentMessage.id,
+                role: currentMessage.role,
+                parts: currentMessage.parts,
+                createdAt: new Date(),
+                attachments: [],
+                chatId: id,
+              })),
+            });
+          }
         }
       },
       onError: () => "Oops, an error occurred!",

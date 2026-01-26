@@ -1,3 +1,8 @@
+/**
+ * @deprecated This component is deprecated. Memory orchestration now renders
+ * inline as reasoning panels within messages. See message-reasoning.tsx.
+ * Kept for backward compatibility with users who prefer the global panel approach.
+ */
 "use client";
 
 import { ChevronDown, ChevronUp, Search } from "lucide-react";

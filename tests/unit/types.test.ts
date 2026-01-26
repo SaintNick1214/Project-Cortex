@@ -211,7 +211,7 @@ describe("Phase-Aware Orchestration Types", () => {
 
       // Verify the method exists and can be called
       expect(observer.onRecallStart).toBeDefined();
-      observer.onRecallStart?.("test-id");
+      void observer.onRecallStart?.("test-id");
     });
 
     it("has correct onRecallComplete method signature", () => {
@@ -237,7 +237,7 @@ describe("Phase-Aware Orchestration Types", () => {
           graphEntitiesCount: 2,
         },
       };
-      observer.onRecallComplete?.(mockSummary);
+      void observer.onRecallComplete?.(mockSummary);
     });
 
     it("has correct onRememberStart method signature", () => {
@@ -248,7 +248,7 @@ describe("Phase-Aware Orchestration Types", () => {
       };
 
       expect(observer.onRememberStart).toBeDefined();
-      observer.onRememberStart?.("test-id");
+      void observer.onRememberStart?.("test-id");
     });
 
     it("has correct onRememberComplete method signature", () => {
@@ -281,7 +281,7 @@ describe("Phase-Aware Orchestration Types", () => {
         timestamp: Date.now(),
         phase: "recall",
       };
-      observer.onLayerUpdate?.(mockEvent);
+      void observer.onLayerUpdate?.(mockEvent);
     });
 
     it("supports async observer methods", async () => {

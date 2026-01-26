@@ -144,8 +144,6 @@ export async function copyTemplate(
     }
   }
 
-  console.log(pc.dim("   Looking for template..."));
-
   if (!templatePath) {
     throw new Error(
       `Template ${templateName} not found. Tried:\n` +
@@ -153,15 +151,7 @@ export async function copyTemplate(
     );
   }
 
-  console.log(pc.dim(`   Found at: ${templatePath}`));
-  console.log(pc.dim(`   Copying to: ${targetPath}`));
-
-  // List what's in the template
-  const templateFiles = await fs.readdir(templatePath, { recursive: true });
-  console.log(pc.dim(`   Template has ${templateFiles.length} items`));
-
   // Copy template files
-  console.log(pc.dim("   Starting fs.copy..."));
 
   try {
     await fs.copy(templatePath, targetPath, {
@@ -169,19 +159,18 @@ export async function copyTemplate(
       errorOnExist: false,
       filter: (src: string) => {
         const relativeSrc = path.relative(templatePath!, src) || ".";
-        // Only skip if node_modules/dist are IN the template itself
+        // Skip build artifacts that shouldn't be in templates
+        // Use path segment matching to avoid false positives like [...nextauth] matching ".next"
+        const segments = relativeSrc.split(path.sep);
         const skip =
-          relativeSrc.includes("node_modules") || relativeSrc.includes("dist");
-
-        console.log(
-          pc.dim(`     Filter: ${relativeSrc} -> ${skip ? "SKIP" : "COPY"}`),
-        );
-
+          segments.some((seg) => seg === "node_modules") ||
+          segments.some((seg) => seg === ".next") ||
+          segments.some((seg) => seg === "dist") ||
+          relativeSrc === "package-lock.json" ||
+          relativeSrc === "pnpm-lock.yaml";
         return !skip;
       },
     });
-
-    console.log(pc.dim("   fs.copy completed"));
   } catch (error) {
     console.error(pc.red(`   fs.copy error: ${error}`));
     throw new Error(`fs.copy failed: ${error}`);

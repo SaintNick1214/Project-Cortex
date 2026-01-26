@@ -8,8 +8,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { unstable_serialize } from "swr/infinite";
 import { ChatHeader } from "@/components/chat-header";
-import { MemoryRecallPanel } from "@/components/memory-recall-panel";
-import { MemoryStoragePanel } from "@/components/memory-storage-panel";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -72,13 +70,8 @@ export function Chat({
   const { setDataStream } = useDataStream();
 
   // Layer tracking for memory visualization (recall and storage phases)
-  const {
-    recallLayers,
-    rememberLayers,
-    isRecalling,
-    isRemembering,
-    handleDataPart: handleLayerDataPart,
-  } = useLayerTracking();
+  // Note: recallLayers, rememberLayers, isRecalling, isRemembering removed - memory panels now inline in messages
+  const { handleDataPart: handleLayerDataPart } = useLayerTracking();
 
   const [input, setInput] = useState<string>("");
   const [showCreditCardAlert, setShowCreditCardAlert] = useState(false);
@@ -206,27 +199,6 @@ export function Chat({
     setMessages,
   });
 
-  // Track if we've ever started each phase to show panels after completion
-  const [hasRecalled, setHasRecalled] = useState(false);
-  const [hasRemembered, setHasRemembered] = useState(false);
-
-  useEffect(() => {
-    if (isRecalling) {
-      setHasRecalled(true);
-    }
-  }, [isRecalling]);
-
-  useEffect(() => {
-    if (isRemembering) {
-      setHasRemembered(true);
-    }
-  }, [isRemembering]);
-
-  // Show recall panel when recalling or when we have completed recall results
-  const showRecallPanel = isRecalling || hasRecalled;
-  // Show storage panel when remembering or when we have completed storage results
-  const showStoragePanel = isRemembering || hasRemembered;
-
   return (
     <>
       <div className="overscroll-behavior-contain flex h-dvh min-w-0 touch-pan-y flex-col bg-background">
@@ -235,26 +207,6 @@ export function Chat({
           isReadonly={isReadonly}
           selectedVisibilityType={initialVisibilityType}
         />
-
-        {/* Memory Panels - Recall shows during/after user message, Storage shows during/after LLM response */}
-        {(showRecallPanel || showStoragePanel) && (
-          <div className="mx-auto w-full max-w-4xl px-2 pt-2 md:px-4 space-y-2">
-            {/* Memory Recall Panel - shows during recall phase (after user message) */}
-            {showRecallPanel && (
-              <MemoryRecallPanel
-                layers={recallLayers}
-                isRecalling={isRecalling}
-              />
-            )}
-            {/* Memory Storage Panel - shows during remember phase (after LLM response) */}
-            {showStoragePanel && (
-              <MemoryStoragePanel
-                layers={rememberLayers}
-                isRemembering={isRemembering}
-              />
-            )}
-          </div>
-        )}
 
         <Messages
           addToolApprovalResponse={addToolApprovalResponse}

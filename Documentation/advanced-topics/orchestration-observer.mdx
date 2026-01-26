@@ -8,10 +8,14 @@ description: Real-time monitoring of the memory orchestration pipeline for build
 # Orchestration Observer API
 
 <Callout type="info">
-**Last Updated**: 2026-01-26 | **Version**: v0.35.1+
+**Last Updated**: 2026-01-26 | **Version**: v0.35.2+
 </Callout>
 
 Real-time monitoring of the memory orchestration pipeline for building responsive UIs.
+
+<Callout type="success" title="New in v0.35.2">
+**Native Reasoning Panel Integration** - Memory orchestration now renders inline as collapsible reasoning panels using the AI SDK 6 protocol. Your users see memory recall and storage as native "thinking" indicators, just like extended thinking from reasoning models. See [Native Reasoning Panel Integration](#native-reasoning-panel-integration) for details.
+</Callout>
 
 ## Overview
 
@@ -574,6 +578,305 @@ function Chat() {
 <Callout type="tip">
 The `useLayerTracking` hook from `@cortexmemory/vercel-ai-provider/react` provides built-in state management for phase-aware layer tracking. See [useLayerTracking Hook](/integrations/vercel-ai-sdk/api-reference#uselayertracking-hook) for full documentation.
 </Callout>
+
+## Native Reasoning Panel Integration
+
+<Callout type="success" title="New in v0.35.2">
+This feature uses the AI SDK 6 protocol to render memory orchestration as native reasoning panels.
+</Callout>
+
+Starting with v0.35.2, memory orchestration can render **inline as collapsible reasoning panels** in your chat UI. This provides a native "thinking" experience for users—they see memory operations as extended thinking indicators, exactly like reasoning models.
+
+### How It Works
+
+The `LayerObserver` emits AI SDK 6 reasoning protocol events alongside the traditional transient data events:
+
+<FlowDiagram title="Dual-Emission Architecture" caption="Both reasoning parts and transient events are emitted for maximum flexibility">
+  <FlowNode title="Memory Operation" icon="database" variant="primary">
+    Recall or Remember phase starts
+  </FlowNode>
+  <FlowNode title="Reasoning Parts" icon="sparkles" variant="success">
+    reasoning-start → reasoning-delta → reasoning-end
+  </FlowNode>
+  <FlowNode title="Transient Events" icon="radio" variant="secondary">
+    data-recall-start → data-layer-update → data-recall-complete
+  </FlowNode>
+</FlowDiagram>
+
+### Visual Treatment
+
+Memory operations appear as collapsible reasoning panels with distinct visual treatments:
+
+| Phase | Icon | Label | Timing |
+|-------|------|-------|--------|
+| **Memory Recall** | `DatabaseIcon` | "Recalling Memory" | Before LLM response generation |
+| **Memory Storage** | `SaveIcon` | "Storing Memory" | After LLM response completes |
+
+The reasoning panel shows layer-by-layer progress:
+
+```
+▼ Recalling Memory
+  Memory Space: complete
+  User Profile: complete
+  Agent Context: complete
+  Context Assembly: complete (5 matches)
+```
+
+### Implementation Example
+
+Here's how to emit reasoning parts from your API route:
+
+```typescript
+// API Route with reasoning panel integration
+import { createUIMessageStream, streamText } from "ai";
+import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
+import type { LayerObserver } from "@cortexmemory/vercel-ai-provider";
+
+export async function POST(request: Request) {
+  const { messages } = await request.json();
+
+  const stream = createUIMessageStream({
+    execute: async ({ writer: dataStream }) => {
+      // Track orchestration IDs for reasoning part emission
+      let currentRecallOrchestrationId: string | undefined;
+      let currentRememberOrchestrationId: string | undefined;
+
+      // Helper: Map layer names to display names
+      const getLayerDisplayName = (layer: string): string => {
+        const displayNames: Record<string, string> = {
+          memorySpace: "Memory Space",
+          user: "User Profile",
+          agent: "Agent Context",
+          context: "Context Assembly",
+          conversation: "Conversation",
+          vector: "Vector Search",
+          facts: "Facts Engine",
+          graph: "Knowledge Graph",
+        };
+        return displayNames[layer] || layer;
+      };
+
+      // Helper: Format layer status with metadata
+      const formatLayerStatus = (event: {
+        status: string;
+        data?: { metadata?: Record<string, unknown> };
+      }): string => {
+        const { status, data } = event;
+        if (status === "complete" && data?.metadata) {
+          const meta = data.metadata;
+          if (typeof meta.vectorMatches === "number") {
+            return `complete (${meta.vectorMatches} matches)`;
+          }
+          if (typeof meta.factMatches === "number") {
+            return `complete (${meta.factMatches} facts)`;
+          }
+        }
+        return status;
+      };
+
+      const layerObserver: LayerObserver = {
+        onRecallStart: (orchestrationId) => {
+          currentRecallOrchestrationId = orchestrationId;
+          // Emit reasoning-start for recall phase (AI SDK 6 Protocol)
+          dataStream.write({
+            type: "reasoning-start",
+            id: `memory-recall-${orchestrationId}`,
+          });
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-recall-start",
+            data: { orchestrationId },
+            transient: true,
+          });
+        },
+
+        onRecallComplete: (summary) => {
+          const orchestrationId =
+            summary?.orchestrationId || currentRecallOrchestrationId;
+          // Emit reasoning-end for recall phase
+          dataStream.write({
+            type: "reasoning-end",
+            id: `memory-recall-${orchestrationId}`,
+          });
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-recall-complete",
+            data: summary,
+            transient: true,
+          });
+        },
+
+        onRememberStart: (orchestrationId) => {
+          currentRememberOrchestrationId = orchestrationId;
+          // Emit reasoning-start for storage phase
+          dataStream.write({
+            type: "reasoning-start",
+            id: `memory-storage-${orchestrationId}`,
+          });
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-remember-start",
+            data: { orchestrationId },
+            transient: true,
+          });
+        },
+
+        onRememberComplete: (summary) => {
+          const orchestrationId =
+            summary?.orchestrationId || currentRememberOrchestrationId;
+          // Emit reasoning-end for storage phase
+          dataStream.write({
+            type: "reasoning-end",
+            id: `memory-storage-${orchestrationId}`,
+          });
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-remember-complete",
+            data: summary,
+            transient: true,
+          });
+        },
+
+        onLayerUpdate: (event) => {
+          // Determine reasoning ID based on phase
+          const phase = event.phase;
+          const orchestrationId =
+            phase === "recall"
+              ? currentRecallOrchestrationId
+              : currentRememberOrchestrationId;
+          const reasoningId =
+            phase === "recall"
+              ? `memory-recall-${orchestrationId}`
+              : `memory-storage-${orchestrationId}`;
+
+          // Emit reasoning-delta with layer status
+          const layerDisplayName = getLayerDisplayName(event.layer);
+          const statusText = formatLayerStatus(event);
+          dataStream.write({
+            type: "reasoning-delta",
+            id: reasoningId,
+            delta: `${layerDisplayName}: ${statusText}\n`,
+          });
+
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-layer-update",
+            data: event,
+            transient: true,
+          });
+        },
+      };
+
+      // Create Cortex memory with observer
+      const cortexMemory = await createCortexMemoryAsync({
+        convexUrl: process.env.CORTEX_CONVEX_URL!,
+        memorySpaceId: "space-1",
+        userId: "user-1",
+        conversationId: "conv-1",
+        observer: layerObserver,
+      });
+
+      // Stream with memory-wrapped model
+      const result = streamText({
+        model: cortexMemory(yourLanguageModel),
+        messages,
+      });
+
+      // Merge with sendReasoning to include reasoning parts
+      dataStream.merge(result.toUIMessageStream({ sendReasoning: true }));
+    },
+  });
+
+  return new Response(stream);
+}
+```
+
+### Client-Side Rendering
+
+The reasoning parts are automatically rendered by AI SDK 6 compatible chat UIs. If you're using `@ai-sdk/react`, reasoning parts appear as collapsible panels:
+
+```tsx
+import { useChat } from "@ai-sdk/react";
+
+function Chat() {
+  const { messages } = useChat();
+
+  return (
+    <div>
+      {messages.map((message) => (
+        <div key={message.id}>
+          {/* Reasoning parts (including memory operations) render automatically */}
+          {message.parts.map((part, index) => {
+            if (part.type === "reasoning") {
+              return (
+                <details key={index} className="reasoning-panel">
+                  <summary>
+                    {part.id?.startsWith("memory-recall")
+                      ? "🗄️ Recalling Memory"
+                      : part.id?.startsWith("memory-storage")
+                        ? "💾 Storing Memory"
+                        : "💭 Thinking"}
+                  </summary>
+                  <pre>{part.reasoning}</pre>
+                </details>
+              );
+            }
+            if (part.type === "text") {
+              return <p key={index}>{part.text}</p>;
+            }
+            return null;
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Backward Compatibility
+
+<Callout type="info" title="No Breaking Changes">
+Existing implementations using `useLayerTracking` continue to work unchanged. The transient events (`data-recall-start`, `data-layer-update`, etc.) are still emitted alongside reasoning parts.
+</Callout>
+
+The dual-emission architecture ensures backward compatibility:
+
+| Event Type | Destination | Purpose |
+|------------|-------------|---------|
+| `reasoning-*` | Message parts | Native UI rendering |
+| `data-*` (transient) | `useLayerTracking` / custom handlers | Programmatic access |
+
+### Migration Guide
+
+If you've built a custom UI with `useLayerTracking`, you have two options:
+
+**Option 1: Keep using `useLayerTracking` (No changes required)**
+
+Your existing code continues to work. Transient events are still emitted:
+
+```tsx
+// This still works exactly as before
+const { recallLayers, rememberLayers, isRecalling, isRemembering } =
+  useLayerTracking();
+```
+
+**Option 2: Switch to native reasoning parts (Recommended for new projects)**
+
+For a cleaner implementation, render reasoning parts directly from message parts:
+
+```tsx
+// New approach: render from message.parts
+{message.parts
+  .filter((p) => p.type === "reasoning")
+  .map((part) => (
+    <ReasoningPanel key={part.id} part={part} />
+  ))}
+```
+
+Benefits of native reasoning parts:
+- **Persistence**: Reasoning parts are stored with the message, surviving page refreshes
+- **Consistency**: Same rendering as model reasoning (extended thinking)
+- **Simplicity**: No separate state management needed
 
 ## Belief Revision Events
 

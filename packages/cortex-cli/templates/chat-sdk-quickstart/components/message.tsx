@@ -19,9 +19,18 @@ import {
 import { SparklesIcon } from "./icons";
 import { MessageActions } from "./message-actions";
 import { MessageEditor } from "./message-editor";
-import { MessageReasoning } from "./message-reasoning";
+import { MessageReasoning, type ReasoningType } from "./message-reasoning";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
+
+function getReasoningType(part: unknown): ReasoningType {
+  // Check providerMetadata.cortex.memoryPhase which is passed from the server
+  const providerMetadata = (part as { providerMetadata?: Record<string, unknown> })?.providerMetadata;
+  const cortexMeta = providerMetadata?.cortex as { memoryPhase?: string } | undefined;
+  if (cortexMeta?.memoryPhase === "recall") return "memory-recall";
+  if (cortexMeta?.memoryPhase === "storage") return "memory-storage";
+  return "llm";
+}
 
 const PurePreviewMessage = ({
   addToolApprovalResponse,
@@ -117,6 +126,7 @@ const PurePreviewMessage = ({
                     isLoading={isLoading || isStreaming}
                     key={key}
                     reasoning={part.text || ""}
+                    reasoningType={getReasoningType(part)}
                   />
                 );
               }
