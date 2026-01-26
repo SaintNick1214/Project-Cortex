@@ -210,7 +210,7 @@ export async function POST(req: Request) {
 
     // Convert UIMessage[] from useChat to ModelMessage[] for streamText
     // Note: In AI SDK v6+, convertToModelMessages may return a Promise
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const modelMessagesResult = convertToModelMessages(
       normalizedMessages as any,
     );

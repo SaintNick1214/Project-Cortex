@@ -99,24 +99,24 @@ async function generateLLMResponse(
   // Build context from memories and facts
   const context = buildContext(memories, facts);
 
-  // Build messages array
-  const messages = [
-    { role: "system" as const, content: SYSTEM_PROMPT },
+  // Build messages array with proper typing for mixed roles
+  const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+    { role: "system", content: SYSTEM_PROMPT },
   ];
 
   // Add memory context if available
   if (context) {
     messages.push({
-      role: "system" as const,
+      role: "system",
       content: `Here is what you remember about this user:\n\n${context}`,
     });
   }
 
   // Add user message
-  messages.push({ role: "user" as const, content: userMessage });
+  messages.push({ role: "user", content: userMessage });
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const openai = client as any;
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",

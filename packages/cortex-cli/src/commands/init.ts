@@ -18,7 +18,7 @@ import type {
   TemplateChoice,
 } from "../utils/init/types.js";
 import { spawn } from "child_process";
-import { loadConfig, saveUserConfig } from "../utils/config.js";
+import { loadConfig, saveUserConfig, validateAndCleanConfig } from "../utils/config.js";
 import {
   isValidProjectName,
   isDirectoryEmpty,
@@ -61,6 +61,7 @@ import {
   createEnvFile,
   appendGraphEnvVars,
 } from "../utils/init/env-generator.js";
+import { displayCleanupNotification } from "../utils/formatting.js";
 
 /**
  * Register start and stop commands (lifecycle management)
@@ -87,7 +88,20 @@ export function registerLifecycleCommands(
     .option("--convex-only", "Only start Convex servers", false)
     .option("--graph-only", "Only start graph databases", false)
     .action(async (options) => {
-      const config = await loadConfig();
+      let config = await loadConfig();
+
+      // Validate paths only (skip Convex URL check for speed)
+      try {
+        const validation = await validateAndCleanConfig(config, {
+          checkConvex: false,
+        });
+        if (validation.modified) {
+          displayCleanupNotification(validation);
+        }
+        config = validation.config;
+      } catch {
+        // Continue with unvalidated config
+      }
 
       // Determine which deployments to start
       interface DeploymentToStart {

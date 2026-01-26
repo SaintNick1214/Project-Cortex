@@ -27,6 +27,8 @@ import {
   printInfo,
   printSection,
   formatOutput,
+  displayCleanupNotification,
+  runValidationWithSpinner,
 } from "../utils/formatting.js";
 import { validateUrl } from "../utils/validation.js";
 import {
@@ -63,7 +65,18 @@ export function registerConfigCommands(
     .option("-f, --format <format>", "Output format: table, json")
     .action(async (options) => {
       try {
-        const config = await loadConfig();
+        let config = await loadConfig();
+        try {
+          const validation = await runValidationWithSpinner(config, {
+            checkConvex: true,
+          });
+          if (validation.modified) {
+            displayCleanupNotification(validation);
+          }
+          config = validation.config;
+        } catch {
+          // Continue with unvalidated config
+        }
         await showConfiguration(config, options.format);
       } catch (error) {
         printError(
@@ -79,7 +92,18 @@ export function registerConfigCommands(
     .description("List all deployments in table format")
     .action(async () => {
       try {
-        const config = await loadConfig();
+        let config = await loadConfig();
+        try {
+          const validation = await runValidationWithSpinner(config, {
+            checkConvex: true,
+          });
+          if (validation.modified) {
+            displayCleanupNotification(validation);
+          }
+          config = validation.config;
+        } catch {
+          // Continue with unvalidated config
+        }
         const deployments = Object.entries(config.deployments);
 
         if (deployments.length === 0) {

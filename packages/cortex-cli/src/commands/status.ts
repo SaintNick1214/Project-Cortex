@@ -17,7 +17,11 @@ import { join } from "path";
 import type { CLIConfig, DeploymentConfig, AppConfig } from "../types.js";
 import type { SetupStatus } from "../utils/init/types.js";
 import { execCommand } from "../utils/shell.js";
-import { formatOutput } from "../utils/formatting.js";
+import {
+  formatOutput,
+  displayCleanupNotification,
+  runValidationWithSpinner,
+} from "../utils/formatting.js";
 import { loadConfig } from "../utils/config.js";
 import {
   findAppPidFiles,
@@ -153,7 +157,21 @@ async function gatherMultiDeploymentStatus(
   _runChecks: boolean,
 ): Promise<MultiDeploymentDashboard> {
   // Load fresh config to get current state
-  const config = await loadConfig();
+  let config = await loadConfig();
+
+  // Validate and clean config (with spinner to suppress verbose errors)
+  try {
+    const validation = await runValidationWithSpinner(config, {
+      checkConvex: true,
+    });
+    if (validation.modified) {
+      displayCleanupNotification(validation);
+    }
+    config = validation.config;
+  } catch {
+    // Continue with unvalidated config if validation fails
+  }
+
   const deploymentStatuses: DeploymentStatus[] = [];
 
   // Get deployments to check

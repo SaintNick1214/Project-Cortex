@@ -42,7 +42,50 @@ export default [
       "no-console": "off",
     },
   },
+  // Template: basic (Node.js backend)
   {
-    ignores: ["dist/**", "node_modules/**", "convex/**", "templates/**"],
+    files: ["templates/basic/src/**/*.ts"],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+      globals: {
+        ...globals.node,
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint,
+    },
+    rules: {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
+      "no-console": "off",
+    },
+  },
+  {
+    ignores: [
+      "dist/**",
+      "node_modules/**",
+      "convex/**",
+      // Exclude chat-sdk-quickstart (forked code)
+      "templates/chat-sdk-quickstart/**",
+      // Exclude vercel-ai-quickstart (needs npm install for proper checking)
+      "templates/vercel-ai-quickstart/**",
+      // Exclude template test files, generated files, and config files
+      "templates/**/node_modules/**",
+      "templates/**/.next/**",
+      "templates/**/dist/**",
+      "templates/**/convex/**",
+      "templates/**/tests/**",
+      "templates/**/__tests__/**",
+      "templates/**/*.config.js",
+      "templates/**/*.config.mjs",
+      "templates/**/*.mjs",
+    ],
   },
 ];

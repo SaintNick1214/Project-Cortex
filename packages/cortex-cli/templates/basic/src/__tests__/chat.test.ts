@@ -44,17 +44,37 @@ vi.mock("../cortex.js", () => ({
     userMessage: "Hello",
     agentResponse: "Hi there",
   }),
-  createLayerObserver: vi.fn().mockReturnValue({
-    onOrchestrationStart: vi.fn(),
+  // Phase-aware observers (v0.35.1+)
+  createRecallObserver: vi.fn().mockReturnValue({
+    onRecallStart: vi.fn(),
     onLayerUpdate: vi.fn(),
-    onOrchestrationComplete: vi.fn(),
+    onRecallComplete: vi.fn(),
+  }),
+  createRememberObserver: vi.fn().mockReturnValue({
+    onRememberStart: vi.fn(),
+    onLayerUpdate: vi.fn(),
+    onRememberComplete: vi.fn(),
+  }),
+  // Legacy observer (deprecated)
+  createLayerObserver: vi.fn().mockReturnValue({
+    onRememberStart: vi.fn(),
+    onLayerUpdate: vi.fn(),
+    onRememberComplete: vi.fn(),
   }),
 }));
 
 vi.mock("../display.js", () => ({
   printRecallResults: vi.fn(),
-  printOrchestrationComplete: vi.fn(),
   printInfo: vi.fn(),
+  startSpinner: vi.fn(),
+  stopSpinner: vi.fn(),
+  // Phase-aware functions (v0.35.1+)
+  printRecallStart: vi.fn(),
+  printRecallComplete: vi.fn(),
+  printRememberStart: vi.fn(),
+  printRememberComplete: vi.fn(),
+  // Legacy (deprecated)
+  printOrchestrationComplete: vi.fn(),
 }));
 
 vi.mock("../llm.js", () => ({

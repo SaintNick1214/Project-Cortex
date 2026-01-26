@@ -2796,6 +2796,84 @@ See [`cortex config`](#cortex-config) for managing configuration.
 
 ---
 
+## Config Auto-Cleanup
+
+The CLI automatically validates and cleans stale entries from your configuration during normal operations. This prevents outdated deployments or apps from cluttering your config or causing errors.
+
+### When Cleanup Occurs
+
+Validation runs automatically when you use certain commands:
+
+<DataTable
+  headers={["Command", "Validation Type", "Description"]}
+  rows={[
+    ["`cortex status`", "Full", "Checks paths + Convex URL accessibility"],
+    ["`cortex config list`", "Full", "Checks paths + Convex URL accessibility"],
+    ["`cortex config show`", "Full", "Checks paths + Convex URL accessibility"],
+    ["`cortex start`", "Path only", "Checks paths only (faster startup)"],
+  ]}
+/>
+
+### What Gets Removed
+
+<Callout type="info">
+Entries are only removed when there's definitive evidence they're invalid. The CLI errs on the side of caution to prevent accidental data loss.
+</Callout>
+
+**Deployments are removed when:**
+- The `projectPath` directory no longer exists on your filesystem
+- The Convex URL returns an authentication error (401/403)
+
+**Apps are removed when:**
+- The combined `projectPath` + `path` directory no longer exists
+
+### Safety Rails
+
+To prevent accidental removal due to transient issues:
+
+<DataTable
+  headers={["Scenario", "Action", "Reason"]}
+  rows={[
+    ["Network error (ECONNREFUSED, etc.)", "Keep", "Server might be temporarily down"],
+    ["Timeout (>3s)", "Keep", "Slow network shouldn't delete config"],
+    ["DNS failure", "Keep", "Temporary DNS issues"],
+    ["Server errors (500, 502, 503, 504)", "Keep", "Backend issues are transient"],
+    ["Auth error (401, 403)", "Remove", "Indicates invalid credentials"],
+    ["Missing project path", "Remove", "Directory definitively doesn't exist"],
+  ]}
+/>
+
+### Default Deployment Reassignment
+
+When the default deployment is removed during auto-cleanup:
+1. Remaining deployments are sorted alphabetically
+2. The first one becomes the new default
+3. If no deployments remain, default becomes empty
+
+### Cleanup Notification
+
+When entries are removed, you'll see a notification:
+
+<Terminal>Cleaned 1 stale deployment(s): old-project</Terminal>
+
+Or when both deployments and apps are removed:
+
+<Terminal>Cleaned 2 stale deployment(s), 1 app(s)</Terminal>
+
+### Manual Cleanup
+
+You can also manually remove deployments and apps:
+
+Remove a deployment:
+
+<Terminal>cortex config remove-deployment &lt;name&gt;</Terminal>
+
+View current config to verify cleanup:
+
+<Terminal>cortex config show</Terminal>
+
+---
+
 ## GDPR Compliance
 
 The CLI provides GDPR-compliant data management features.

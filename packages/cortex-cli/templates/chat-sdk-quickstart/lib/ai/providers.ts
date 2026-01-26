@@ -101,35 +101,24 @@ export function getLanguageModel(modelId: string): LanguageModelV1 {
   const openai = getOpenAIProvider();
   const anthropic = getAnthropicProvider();
 
-  // Map gateway model IDs to direct provider models
+  // Use direct provider APIs - model names pass through as-is
+  // The models.ts uses real API model names that work with both Gateway and direct APIs
   if (providerName === "openai" && openai) {
-    // Map gateway model names to OpenAI model names
-    const modelMap: Record<string, string> = {
-      "gpt-5.2": "gpt-4o",
-      "gpt-4.1-mini": "gpt-4o-mini",
-    };
-    const openaiModel = modelMap[model] || model;
-    console.log(`[AI] Using OpenAI directly: ${modelId} -> ${openaiModel}`);
-    return openai(openaiModel);
+    console.log(`[AI] Using OpenAI directly: ${model}`);
+    return openai(model);
   }
 
   if (providerName === "anthropic" && anthropic) {
-    // Map gateway model names to Anthropic model names
-    const modelMap: Record<string, string> = {
-      "claude-haiku-4.5": "claude-3-5-haiku-latest",
-      "claude-sonnet-4.5": "claude-sonnet-4-20250514",
-      "claude-opus-4.5": "claude-sonnet-4-20250514", // Fallback to Sonnet
-    };
-    const anthropicModel = modelMap[model] || model;
-    console.log(`[AI] Using Anthropic directly: ${modelId} -> ${anthropicModel}`);
+    console.log(`[AI] Using Anthropic directly: ${model}`);
 
     if (isReasoningModel) {
+      const baseModel = model.replace(THINKING_SUFFIX_REGEX, "");
       return wrapLanguageModel({
-        model: anthropic(anthropicModel),
+        model: anthropic(baseModel),
         middleware: extractReasoningMiddleware({ tagName: "thinking" }),
       });
     }
-    return anthropic(anthropicModel);
+    return anthropic(model);
   }
 
   // Google, xAI, etc. - fall back to OpenAI if available

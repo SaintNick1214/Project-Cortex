@@ -20,12 +20,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { closeCortex, initCortex, CONFIG } from "./cortex.js";
-import {
-  chat,
-  recallMemories,
-  listFacts,
-  generateConversationId,
-} from "./chat.js";
+import { chat, generateConversationId } from "./chat.js";
 import { printWelcome, printInfo, printError, printSuccess } from "./display.js";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -124,11 +119,13 @@ app.get("/recall", async (c) => {
       },
     });
 
-    console.log(`[Recall] Found ${result.memories?.length || 0} memories, ${result.facts?.length || 0} facts\n`);
+    const memories = result.sources?.vector?.items || [];
+    const facts = result.sources?.facts?.items || [];
+    console.log(`[Recall] Found ${memories.length} memories, ${facts.length} facts\n`);
 
     return c.json({
-      memories: result.memories || [],
-      facts: result.facts || [],
+      memories,
+      facts,
       query,
     });
   } catch (error) {
@@ -152,7 +149,8 @@ app.get("/facts", async (c) => {
       limit: 50,
     });
 
-    const facts = result.facts || result || [];
+    // facts.list returns FactRecord[] directly
+    const facts = Array.isArray(result) ? result : [];
 
     return c.json({ facts, count: facts.length });
   } catch (error) {

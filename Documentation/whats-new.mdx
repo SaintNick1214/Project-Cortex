@@ -18,6 +18,63 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### All Packages v0.36.0 · Jan 26, 2026
+
+**New Chat SDK Template - Production-Ready AI Chat with Memory**
+
+🎉 Complete Vercel AI Chat SDK integration template with persistent memory  
+💬 Full-featured chat UI with conversation history, streaming, and attachments  
+🧠 Memory-aware responses that improve over time with fact extraction  
+🔧 CLI config auto-cleanup with intelligent stale entry detection
+
+<details>
+<summary>Show full details</summary>
+
+#### New Chat SDK Template
+
+The new `chat-sdk` template provides a production-ready chat application built on top of the Vercel AI SDK Chat UI components with full Cortex Memory integration:
+
+- **Rich Chat UI**: Message streaming, file attachments, markdown rendering, code highlighting
+- **Conversation Management**: Multi-conversation support with sidebar navigation
+- **Memory Integration**: Automatic fact extraction and context-aware responses
+- **Authentication**: Built-in user authentication with session management
+- **Dark Mode**: Full dark mode support out of the box
+
+```bash
+# Create a new chat app with memory
+cortex init my-chat-app --template chat-sdk
+cd my-chat-app
+npm run dev
+```
+
+#### CLI Improvements
+
+**Config Auto-Cleanup**: The CLI now automatically validates and removes stale configuration entries:
+
+- Detects deployments with missing project directories
+- Validates Convex URLs and removes entries with authentication errors
+- Preserves entries during temporary network issues (fail-safe)
+- Reassigns default deployment when current default is removed
+- Silent cleanup with minimal notification
+
+**Template Sync Support**: Added `--sync-template` support for the chat-sdk template type
+
+**Improved UX**: Spinner indicator during deployment validation (suppresses verbose websocket errors)
+
+#### Dependency Updates
+
+- `ai`: 6.0.49 → 6.0.50
+- `@ai-sdk/openai`: 3.0.18 → 3.0.19
+- `@ai-sdk/react`: 3.0.51 → 3.0.52
+- `next`: 16.1.4 → 16.1.5
+- `react`: 19.2.3 → 19.2.4
+- `framer-motion`: 12.29.0 → 12.29.2
+- `@typescript-eslint/*`: 8.53.1 → 8.54.0
+
+</details>
+
+---
+
 ### All Packages v0.35.1 · Jan 26, 2026
 
 **Phase-Aware Memory Orchestration Visibility**
