@@ -29,6 +29,25 @@ import type {
   Artifact,
   ArtifactVersion,
 } from "@cortexmemory/sdk";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "@/convex/_generated/api";
+
+// ============================================================================
+// Convex Client Helper
+// ============================================================================
+
+let convexClient: ConvexHttpClient | null = null;
+
+function getConvexClient(): ConvexHttpClient {
+  if (!convexClient) {
+    const convexUrl = process.env.CONVEX_URL;
+    if (!convexUrl) {
+      throw new Error("CONVEX_URL environment variable is required");
+    }
+    convexClient = new ConvexHttpClient(convexUrl);
+  }
+  return convexClient;
+}
 
 // ============================================================================
 // Type Conversion Helpers
@@ -288,9 +307,7 @@ export async function deleteAllChatsByUserId({
 
 /**
  * Update chat title by ID.
- * @warning This function adds a system message to the conversation due to Cortex API limitations.
- * The Cortex Conversations API doesn't support direct metadata updates, so title changes
- * are recorded as system messages with metadata.
+ * Updates the conversation metadata.title field directly via Convex mutation.
  */
 export async function updateChatTitleById({
   chatId,
@@ -299,28 +316,12 @@ export async function updateChatTitleById({
   chatId: string;
   title: string;
 }): Promise<void> {
-  const cortex = getCortex();
+  const client = getConvexClient();
 
-  // Get the existing conversation
-  const conversation = await cortex.conversations.get(chatId);
-  if (!conversation) {
-    throw new Error(`Chat ${chatId} not found`);
-  }
-
-  // Cortex doesn't have a direct "update metadata" method yet
-  // We can add a system message that records the title change
-  // Or we use a workaround by adding a metadata-update message
-  // For now, we'll use addMessage with a system message that includes the title
-  await cortex.conversations.addMessage({
+  // Update the conversation metadata with the new title
+  await client.mutation(api.conversations.setMetadata, {
     conversationId: chatId,
-    message: {
-      role: "system",
-      content: `[Title updated to: ${title}]`,
-      metadata: {
-        type: "title-update",
-        title,
-      },
-    },
+    metadata: { title },
   });
 }
 
@@ -360,8 +361,20 @@ export async function getMessagesByChatId({
     return [];
   }
 
+  // Filter out system messages that are metadata updates (e.g., title changes)
+  // These are internal bookkeeping messages and should not appear in chat history
+  const chatMessages = conversation.messages.filter((msg) => {
+    // Keep all non-system messages
+    if (msg.role !== "system") return true;
+    // Filter out title-update system messages
+    const metadata = msg.metadata as { type?: string } | undefined;
+    if (metadata?.type === "title-update") return false;
+    // Keep other system messages
+    return true;
+  });
+
   // Convert Cortex messages to DBMessages
-  return conversation.messages.map((msg) => cortexMessageToDBMessage(msg, id));
+  return chatMessages.map((msg) => cortexMessageToDBMessage(msg, id));
 }
 
 export async function getMessageById({
