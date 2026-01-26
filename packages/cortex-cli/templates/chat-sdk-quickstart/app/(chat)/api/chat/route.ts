@@ -31,7 +31,6 @@ import {
   getMessageCountByUserId,
   getMessagesByChatId,
   saveChat,
-  saveMessages,
   updateChatTitleById,
   updateMessage,
 } from "@/lib/db/queries";
@@ -121,20 +120,9 @@ export async function POST(request: Request) {
       country,
     };
 
-    if (message?.role === "user") {
-      await saveMessages({
-        messages: [
-          {
-            chatId: id,
-            id: message.id,
-            role: "user",
-            parts: message.parts,
-            attachments: [],
-            createdAt: new Date(),
-          },
-        ],
-      });
-    }
+    // Note: User message storage is handled by Cortex Memory's rememberStream()
+    // to avoid duplicate messages in conversation history.
+    // See: rememberStream stores both user and assistant messages with ACID guarantees.
 
     const isReasoningModel =
       selectedChatModel.includes("reasoning") ||
@@ -450,50 +438,29 @@ export async function POST(request: Request) {
       },
       generateId: generateUUID,
       onFinish: async ({ messages: finishedMessages }) => {
+        // Note: Message storage is handled by Cortex Memory's rememberStream()
+        // to avoid duplicate messages in conversation history.
+        // rememberStream stores both user and assistant messages with ACID guarantees.
+        // 
+        // Tool approval flow may still need message updates for tool state changes:
         if (isToolApprovalFlow) {
           for (const finishedMsg of finishedMessages) {
             const existingMsg = uiMessages.find((m) => m.id === finishedMsg.id);
             if (existingMsg) {
-              await updateMessage({
-                id: finishedMsg.id,
-                parts: finishedMsg.parts,
-              });
-            } else {
-              await saveMessages({
-                messages: [
-                  {
-                    id: finishedMsg.id,
-                    role: finishedMsg.role,
-                    parts: finishedMsg.parts,
-                    createdAt: new Date(),
-                    attachments: [],
-                    chatId: id,
-                  },
-                ],
-              });
+              // Only update existing messages (Cortex messages are immutable, so this is a no-op)
+              try {
+                await updateMessage({
+                  id: finishedMsg.id,
+                  parts: finishedMsg.parts,
+                });
+              } catch {
+                // Cortex messages are immutable - this is expected to fail
+              }
             }
-          }
-        } else if (finishedMessages.length > 0) {
-          // Filter out messages that were already saved (user message was saved earlier)
-          // uiMessages contains: DB messages + the new user message
-          const existingMessageIds = new Set(uiMessages.map((m) => m.id));
-          const newMessages = finishedMessages.filter(
-            (msg) => !existingMessageIds.has(msg.id)
-          );
-
-          if (newMessages.length > 0) {
-            await saveMessages({
-              messages: newMessages.map((currentMessage) => ({
-                id: currentMessage.id,
-                role: currentMessage.role,
-                parts: currentMessage.parts,
-                createdAt: new Date(),
-                attachments: [],
-                chatId: id,
-              })),
-            });
+            // Don't save new messages - rememberStream handles this
           }
         }
+        // Normal flow: rememberStream handles all message storage
       },
       onError: () => "Oops, an error occurred!",
     });
