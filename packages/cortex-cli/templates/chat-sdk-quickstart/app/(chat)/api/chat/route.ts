@@ -432,8 +432,15 @@ export async function POST(request: Request) {
 
         if (titlePromise) {
           const title = await titlePromise;
+          // IMPORTANT: Save title to database FIRST, then notify client
+          // This ensures when client re-fetches, the new title is already in Convex
+          try {
+            await updateChatTitleById({ chatId: id, title });
+          } catch (error) {
+            console.error("Error updating chat title:", error);
+          }
+          // Now notify client to refresh - title is already saved in Convex
           dataStream.write({ type: "data-chat-title", data: title });
-          updateChatTitleById({ chatId: id, title });
         }
       },
       generateId: generateUUID,
