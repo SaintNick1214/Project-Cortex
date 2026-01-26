@@ -439,7 +439,7 @@ export async function POST(request: Request) {
           // IMPORTANT: Save title to database FIRST, then notify client
           // This ensures when client re-fetches, the new title is already in Convex
           try {
-            await updateChatTitleById({ chatId: id, title });
+            await updateChatTitleById({ chatId: id, title, userId: session.user.id });
           } catch (error) {
             console.error("Error updating chat title:", error);
           }

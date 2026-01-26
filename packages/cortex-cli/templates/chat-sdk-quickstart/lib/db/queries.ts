@@ -308,20 +308,25 @@ export async function deleteAllChatsByUserId({
 /**
  * Update chat title by ID.
  * Updates the conversation metadata.title field directly via Convex mutation.
+ * Requires userId for authorization - only the conversation owner can update the title.
  */
 export async function updateChatTitleById({
   chatId,
   title,
+  userId,
 }: {
   chatId: string;
   title: string;
+  userId: string;
 }): Promise<void> {
   const client = getConvexClient();
 
   // Update the conversation metadata with the new title
+  // userId is required for ownership verification
   await client.mutation(api.conversations.setMetadata, {
     conversationId: chatId,
     metadata: { title },
+    userId,
   });
 }
 

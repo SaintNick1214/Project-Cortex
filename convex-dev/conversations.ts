@@ -251,8 +251,8 @@ export const setMetadata = mutation({
   args: {
     conversationId: v.string(),
     metadata: v.any(),
-    // For authorization - caller must provide their userId to verify ownership
-    userId: v.optional(v.string()),
+    // Required for authorization - must verify ownership before modifying metadata
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
     const conversation = await ctx.db
@@ -267,7 +267,7 @@ export const setMetadata = mutation({
     }
 
     // Verify ownership: only the owner can change metadata
-    if (args.userId && !isConversationOwner(conversation, args.userId)) {
+    if (!isConversationOwner(conversation, args.userId)) {
       throw new ConvexError("METADATA_CHANGE_NOT_AUTHORIZED");
     }
 
