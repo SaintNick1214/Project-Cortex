@@ -195,13 +195,13 @@ describe("Layer Streaming E2E", () => {
         const events: Array<{ type: string; data: unknown }> = [];
 
         const layerObserver = {
-          onOrchestrationStart: (id: string) => {
+          onRecallStart: (id: string) => {
             events.push({ type: "start", data: { orchestrationId: id } });
           },
           onLayerUpdate: (event: LayerEvent) => {
             events.push({ type: "layer", data: event });
           },
-          onOrchestrationComplete: (summary: OrchestrationSummary) => {
+          onRememberComplete: (summary: OrchestrationSummary) => {
             events.push({ type: "complete", data: summary });
           },
         };
@@ -290,7 +290,7 @@ describe("Layer Streaming E2E", () => {
         let completeSummary: OrchestrationSummary | null = null;
 
         const layerObserver = {
-          onOrchestrationComplete: (summary: OrchestrationSummary) => {
+          onRememberComplete: (summary: OrchestrationSummary) => {
             completeSummary = summary;
             console.log(
               `Orchestration complete: ${summary.totalLatencyMs}ms`
@@ -456,13 +456,13 @@ describe("Layer Streaming E2E", () => {
         const events: Array<{ type: string }> = [];
 
         const layerObserver = {
-          onOrchestrationStart: () => {
+          onRecallStart: () => {
             events.push({ type: "start" });
           },
           onLayerUpdate: () => {
             events.push({ type: "layer" });
           },
-          onOrchestrationComplete: () => {
+          onRememberComplete: () => {
             events.push({ type: "complete" });
           },
         };
@@ -519,13 +519,13 @@ describe("Layer Streaming E2E", () => {
         let currentCount = 0;
 
         const layerObserver = {
-          onOrchestrationStart: () => {
+          onRecallStart: () => {
             currentCount = 0;
           },
           onLayerUpdate: () => {
             currentCount++;
           },
-          onOrchestrationComplete: () => {
+          onRememberComplete: () => {
             orchestrationCounts.push(currentCount);
           },
         };

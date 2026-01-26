@@ -169,6 +169,27 @@ export type WebPreviewBodyProps = ComponentProps<"iframe"> & {
   loading?: ReactNode;
 };
 
+/**
+ * Sanitize URL to prevent XSS via javascript: or data: protocols
+ */
+function sanitizeUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url);
+    // Only allow http and https protocols
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return url;
+    }
+    return undefined;
+  } catch {
+    // If URL parsing fails, check if it's a relative URL (no protocol)
+    if (!url.includes(":") || url.startsWith("/")) {
+      return url;
+    }
+    return undefined;
+  }
+}
+
 export const WebPreviewBody = ({
   className,
   loading,
@@ -176,13 +197,14 @@ export const WebPreviewBody = ({
   ...props
 }: WebPreviewBodyProps) => {
   const { url } = useWebPreview();
+  const safeSrc = sanitizeUrl(src ?? url);
 
   return (
     <div className="flex-1">
       <iframe
         className={cn("size-full", className)}
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
-        src={(src ?? url) || undefined}
+        src={safeSrc}
         title="Preview"
         {...props}
       />

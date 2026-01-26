@@ -6,13 +6,23 @@
  */
 
 /**
+ * Generate a cryptographically secure random string
+ */
+function secureRandomString(length: number): string {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("").slice(0, length);
+}
+
+/**
  * Generate a dummy password for guest accounts
  * This is used for development/demo purposes only
+ * Uses crypto.getRandomValues() for secure randomness
  */
 export function generateDummyPassword(): string {
-  // Use a fixed password for guest accounts in development
+  // Use cryptographically secure random for guest account passwords
   // In production, this should be replaced with proper authentication
-  return "guest-password-" + Math.random().toString(36).substring(2, 15);
+  return "guest-password-" + secureRandomString(16);
 }
 
 /**

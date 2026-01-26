@@ -862,6 +862,11 @@ describe("State Transition Testing", () => {
         status: "blocked",
       });
 
+      // Wait for Convex consistency - ensure all contexts are queryable AND in their respective lists
+      await waitForContextReady(active.contextId, spaceId, "active");
+      await waitForContextReady(completed.contextId, spaceId, "completed");
+      await waitForContextReady(blocked.contextId, spaceId, "blocked");
+
       // Verify each in correct status list
       const activeList = await cortex.contexts.list({
         memorySpaceId: spaceId,
