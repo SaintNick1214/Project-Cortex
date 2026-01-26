@@ -214,8 +214,10 @@ export async function POST(request: Request) {
             }
           },
           onRecallComplete: (summary) => {
+            // IMPORTANT: Use currentRecallOrchestrationId (set by onRecallStart) first
+            // This ensures the reasoning-end ID matches the reasoning-start ID
             const orchestrationId =
-              summary?.orchestrationId || currentRecallOrchestrationId;
+              currentRecallOrchestrationId || summary?.orchestrationId;
             try {
               // Emit reasoning-end for recall phase (AI SDK 6 Protocol)
               dataStream.write({
@@ -271,8 +273,10 @@ export async function POST(request: Request) {
             }
           },
           onRememberComplete: (summary) => {
+            // IMPORTANT: Use currentRememberOrchestrationId (set by onRememberStart) first
+            // The summary.orchestrationId may be different due to internal remember() call
             const orchestrationId =
-              summary?.orchestrationId || currentRememberOrchestrationId;
+              currentRememberOrchestrationId || summary?.orchestrationId;
             try {
               // Emit reasoning-end for storage phase (AI SDK 6 Protocol)
               dataStream.write({

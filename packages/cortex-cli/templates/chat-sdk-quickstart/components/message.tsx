@@ -32,6 +32,30 @@ function getReasoningType(part: unknown): ReasoningType {
   return "llm";
 }
 
+/**
+ * Sort message parts to ensure correct semantic ordering:
+ * 1. Memory recall reasoning (before LLM response)
+ * 2. Text and other content (LLM response)
+ * 3. Memory storage reasoning (after LLM response)
+ * 
+ * This fixes the issue where AI SDK orders parts by stream completion time,
+ * which can cause recall to appear after text if recall finishes late.
+ */
+function sortMessageParts<T extends { type: string }>(parts: T[]): T[] {
+  return [...parts].sort((a, b) => {
+    const getOrder = (part: T): number => {
+      if (part.type === "reasoning") {
+        const reasoningType = getReasoningType(part);
+        if (reasoningType === "memory-recall") return 0; // First
+        if (reasoningType === "memory-storage") return 2; // Last
+        return 1; // LLM reasoning in middle with text
+      }
+      return 1; // Text, tools, files, etc. in middle
+    };
+    return getOrder(a) - getOrder(b);
+  });
+}
+
 const PurePreviewMessage = ({
   addToolApprovalResponse,
   chatId,
@@ -113,7 +137,7 @@ const PurePreviewMessage = ({
             </div>
           )}
 
-          {message.parts?.map((part, index) => {
+          {sortMessageParts(message.parts ?? []).map((part, index) => {
             const { type } = part;
             const key = `message-${message.id}-part-${index}`;
 

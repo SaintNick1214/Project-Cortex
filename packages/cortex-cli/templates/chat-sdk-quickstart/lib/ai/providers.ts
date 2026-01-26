@@ -123,8 +123,8 @@ export function getLanguageModel(modelId: string): LanguageModelV1 {
 
   // Google, xAI, etc. - fall back to OpenAI if available
   if (openai) {
-    console.warn(`[AI] Provider "${providerName}" not configured, falling back to OpenAI gpt-4o`);
-    return openai("gpt-4o");
+    console.warn(`[AI] Provider "${providerName}" not configured, falling back to OpenAI gpt-5.2`);
+    return openai("gpt-5.2");
   }
 
   // Last resort: try gateway anyway (will fail without API key)
@@ -140,10 +140,10 @@ export function getTitleModel(): LanguageModelV1 {
   // Use OpenAI for title generation if available (fast and cheap)
   const openai = getOpenAIProvider();
   if (openai) {
-    return openai("gpt-4o-mini");
+    return openai("gpt-5-mini");
   }
 
-  return gateway.languageModel("google/gemini-2.5-flash-lite");
+  return gateway.languageModel("openai/gpt-5-mini");
 }
 
 export function getArtifactModel(): LanguageModelV1 {
@@ -159,8 +159,8 @@ export function getArtifactModel(): LanguageModelV1 {
   
   const openai = getOpenAIProvider();
   if (openai) {
-    return openai("gpt-4o-mini");
+    return openai("gpt-5-mini");
   }
 
-  return gateway.languageModel("anthropic/claude-haiku-4.5");
+  return gateway.languageModel("anthropic/claude-3-5-haiku-latest");
 }
