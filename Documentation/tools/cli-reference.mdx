@@ -171,6 +171,17 @@ cortex init [directory] [options]
 - `-y, --yes` - Skip confirmation prompts [default: false]
 - `--start` - Start Convex dev server after setup [default: false]
 
+**Available Templates:**
+
+<DataTable
+  headers={["Template", "Description"]}
+  rows={[
+    ["`basic`", "Interactive CLI + HTTP API server (default)"],
+    ["`vercel-ai-quickstart`", "Next.js ChatGPT-style web app with Vercel AI SDK"],
+    ["`chat-sdk`", "Full-featured chat app based on vercel/ai-chatbot with Cortex Memory"],
+  ]}
+/>
+
 **Examples:**
 
 ```bash
@@ -188,6 +199,9 @@ cortex init my-app --local --start
 
 # Skip graph database setup
 cortex init my-app --skip-graph
+
+# Use Chat SDK template (full-featured chat app)
+cortex init my-chatbot --template chat-sdk
 ```
 
 **What It Does:**

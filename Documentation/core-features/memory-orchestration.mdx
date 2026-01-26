@@ -2,12 +2,16 @@
 id: memory-orchestration
 title: Memory Orchestration
 sidebar_position: 1
-description: Understand how Cortex orchestrates memory across four layers
+description: Understand how Cortex orchestrates memory across four layers with two-phase recall/remember architecture
 ---
 
 # Memory Orchestration
 
 The heart of Cortex: automatic orchestration across all memory layers with batteries-included defaults.
+
+<Callout type="info" title="New in v0.35.1">
+Memory orchestration now operates in **two distinct phases**: **Recall** (context retrieval) and **Remember** (memory storage). This enables real-time UI progress indicators and better debugging. See [Two-Phase Architecture](#two-phase-architecture).
+</Callout>
 
 ---
 
@@ -186,6 +190,123 @@ await cortex.mutable.set(namespace, key, value);
   - Custom fact management (Layer 3)
   - Raw conversation access (Layer 1)
 </Callout>
+
+---
+
+## Two-Phase Architecture
+
+<Callout type="info" title="New in v0.35.1">
+Memory orchestration now operates in two distinct phases, each with its own set of layers.
+</Callout>
+
+A complete AI chat turn involves two orchestration phases:
+
+<FlowDiagram title="Two-Phase Orchestration Flow" caption="Recall retrieves context, Remember stores memories">
+  <FlowNode title="1. Recall Phase" icon="search" variant="primary">
+    memorySpace → user → agent → context
+  </FlowNode>
+  <FlowNode title="2. LLM Generation" icon="bot" variant="secondary">
+    AI generates response using retrieved context
+  </FlowNode>
+  <FlowNode title="3. Remember Phase" icon="database" variant="success">
+    conversation → vector → facts → graph
+  </FlowNode>
+</FlowDiagram>
+
+### Recall Phase (Context Retrieval)
+
+The **recall** phase runs *before* the LLM generates a response. It retrieves relevant context from memory to inject into the LLM prompt.
+
+**Layers involved:**
+- `memorySpace` - Validates memory space exists
+- `user` - Loads user profile and preferences
+- `agent` - Loads agent configuration
+- `context` - **NEW**: Assembles context from memories, facts, and graph
+
+```typescript
+// The recall phase is triggered by recall() or automatically before remember()
+const result = await cortex.memory.recall({
+  memorySpaceId: "user-123-space",
+  query: "user preferences",
+  observer: {
+    onRecallStart: (id) => console.log("Recall starting..."),
+    onRecallComplete: (summary) => {
+      console.log(`Retrieved ${summary.context.memoriesCount} memories`);
+      console.log(`Retrieved ${summary.context.factsCount} facts`);
+    },
+  },
+});
+
+// Use the retrieved context in your LLM call
+const response = await generateText({
+  model: openai("gpt-4o"),
+  system: `You are a helpful assistant.\n\n${result.context}`,
+  prompt: userMessage,
+});
+```
+
+### Remember Phase (Memory Storage)
+
+The **remember** phase runs *after* the LLM generates a response. It stores the conversation and extracts new knowledge.
+
+**Layers involved:**
+- `conversation` - Stores messages in ACID layer
+- `vector` - Creates searchable vector memories
+- `facts` - Extracts and stores facts (with belief revision)
+- `graph` - Syncs entities to graph database
+
+```typescript
+// The remember phase is triggered by remember()
+await cortex.memory.remember({
+  memorySpaceId: "user-123-space",
+  conversationId: "conv-456",
+  userMessage: "My favorite color is blue",
+  agentResponse: "I'll remember that!",
+  userId: "user-123",
+  userName: "Alex",
+  observer: {
+    onRememberStart: (id) => console.log("Remember starting..."),
+    onRememberComplete: (summary) => {
+      console.log(`Stored ${summary.createdIds.memoryIds?.length} memories`);
+    },
+  },
+});
+```
+
+### Monitoring Both Phases
+
+Use the `OrchestrationObserver` to monitor both phases in real-time:
+
+```typescript
+const observer: OrchestrationObserver = {
+  // Recall phase
+  onRecallStart: (id) => showRecallSpinner(),
+  onRecallComplete: (summary) => {
+    hideRecallSpinner();
+    displayContextPreview(summary.context);
+  },
+
+  // Remember phase  
+  onRememberStart: (id) => showSaveIndicator(),
+  onRememberComplete: (summary) => {
+    hideSaveIndicator();
+    showSavedNotification();
+  },
+
+  // Layer-by-layer updates
+  onLayerUpdate: (event) => {
+    updateLayerVisualization(event.phase, event.layer, event.status);
+  },
+};
+```
+
+<Callout type="tip">
+For Vercel AI SDK apps, use the `useLayerTracking` hook which provides built-in state management for phase-aware layer visualization. See [useLayerTracking Hook](/integrations/vercel-ai-sdk/api-reference#uselayertracking-hook).
+</Callout>
+
+**See Also:**
+- [Orchestration Observer API](/advanced-topics/orchestration-observer) - Full observer documentation
+- [Migration Guide](/advanced-topics/orchestration-observer#migration-guide) - Upgrading from v0.31.x
 
 ---
 

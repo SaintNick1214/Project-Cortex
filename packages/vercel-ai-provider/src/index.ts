@@ -462,16 +462,29 @@ export { CortexMemoryProvider } from "./provider";
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export {
+  // Legacy observer (deprecated - use phase-aware observers)
   createLayerStreamObserver,
+  // Phase-aware observers (v0.30.0+)
+  createRecallStreamObserver,
+  createRememberStreamObserver,
+  // Event constants
   LAYER_STREAM_EVENTS,
 } from "./streaming-helpers";
 
 export type {
   StreamWriter,
+  // Legacy types
   LayerStreamObserverResult,
   OrchestrationStartData,
-  LayerUpdateData,
   OrchestrationCompleteData,
+  // Phase-aware types (v0.30.0+)
+  OrchestrationPhase,
+  PhaseStreamObserverResult,
+  LayerUpdateData,
+  RecallStartData,
+  RecallCompleteData,
+  RememberStartData,
+  RememberCompleteData,
 } from "./streaming-helpers";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -18,6 +18,48 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 
 ## January 2026
 
+### All Packages v0.35.1 · Jan 26, 2026
+
+**Phase-Aware Memory Orchestration Visibility**
+
+🔍 Distinguish between memory recall (before LLM) and remember (after response)  
+📊 Accurate real-time UI feedback showing retrieval vs storage operations  
+🆕 New `context` layer for visualizing context assembly during recall
+
+<details>
+<summary>Show full details</summary>
+
+#### New Features
+
+- **Phase-aware events**: `LayerEvent` now includes `phase: "recall" | "remember"` field
+- **New `context` layer**: Visualize context assembly during recall phase
+- **Recall observer support**: `recall()` now accepts an observer parameter for real-time retrieval visibility
+- **Separate UI panels**: Memory Recall panel (before LLM) and Memory Storage panel (after response)
+
+#### React Hook Updates
+
+```typescript
+const {
+  recallLayers,      // Layers during recall phase
+  rememberLayers,    // Layers during remember phase
+  isRecalling,       // True during recall phase
+  isRemembering,     // True during remember phase
+  isOrchestrating,   // True if either phase active
+  handleDataPart,
+} = useLayerTracking();
+```
+
+#### Python SDK
+
+Matching updates with snake_case naming convention:
+- `on_recall_start`, `on_recall_complete`
+- `on_remember_start`, `on_remember_complete`
+- `RecallSummary` dataclass with `RecallContext`
+
+</details>
+
+---
+
 ### All Packages v0.35.0 · Jan 24, 2026
 
 **Shareable Chats - Visibility, Sharing, Snapshots & Collaboration**

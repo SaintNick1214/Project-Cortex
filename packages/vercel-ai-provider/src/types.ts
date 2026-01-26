@@ -330,8 +330,45 @@ export interface CortexMemoryConfig {
    *
    * These callbacks are invoked as data flows through the Cortex
    * memory orchestration layers, enabling real-time UI updates.
+   *
+   * @deprecated Use recallObserver and rememberObserver for phase-aware events.
+   * This single observer is used for both phases with generic orchestration events.
    */
   layerObserver?: LayerObserver;
+
+  /**
+   * Phase-aware observer for recall operations (v0.30.0+)
+   *
+   * When provided, this observer is used specifically for memory retrieval
+   * operations (recall). Events include phase information and recall-specific
+   * completion data (totalResults, sources breakdown).
+   *
+   * @example
+   * ```typescript
+   * import { createRecallStreamObserver } from '@cortexmemory/vercel-ai-provider';
+   * const { observer: recallObserver, emitTo } = createRecallStreamObserver();
+   * emitTo(writer);
+   * // Pass recallObserver to config.recallObserver
+   * ```
+   */
+  recallObserver?: LayerObserver;
+
+  /**
+   * Phase-aware observer for remember operations (v0.30.0+)
+   *
+   * When provided, this observer is used specifically for memory storage
+   * operations (remember/rememberStream). Events include phase information
+   * and remember-specific completion data (createdIds).
+   *
+   * @example
+   * ```typescript
+   * import { createRememberStreamObserver } from '@cortexmemory/vercel-ai-provider';
+   * const { observer: rememberObserver, emitTo } = createRememberStreamObserver();
+   * emitTo(writer);
+   * // Pass rememberObserver to config.rememberObserver
+   * ```
+   */
+  rememberObserver?: LayerObserver;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Debug and Logging
@@ -592,6 +629,7 @@ export type {
   LayerEvent,
   OrchestrationSummary,
   OrchestrationObserver,
+  RecallSummary,
 } from "@cortexmemory/sdk";
 
 /**

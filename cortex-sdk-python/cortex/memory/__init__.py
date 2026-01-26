@@ -21,6 +21,7 @@ from ..types import (
     ArchiveResult,
     AuthContext,
     ConversationType,
+    CreatedIds,
     DeleteManyResult,
     DeleteMemoryOptions,
     DeleteMemoryResult,
@@ -39,11 +40,14 @@ from ..types import (
     MemorySource,
     MemoryVersionInfo,
     OrchestrationObserver,
+    OrchestrationPhase,
     OrchestrationSummary,
+    RecallContext,
     RecallGraphExpansionConfig,
     RecallParams,
     RecallResult,
     RecallSourceConfig,
+    RecallSummary,
     RememberOptions,
     RememberParams,
     RememberResult,
@@ -150,7 +154,7 @@ class MemoryAPI:
         return skip_layers is not None and layer in skip_layers
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    # Orchestration Observer Helpers
+    # Orchestration Observer Helpers (Phase-Aware)
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     def _create_layer_event(
@@ -158,36 +162,24 @@ class MemoryAPI:
         layer: MemoryLayer,
         status: LayerStatus,
         start_time: int,
+        phase: OrchestrationPhase,
         data: Optional[LayerEventData] = None,
         error: Optional[LayerEventError] = None,
         revision_info: Optional[Dict[str, Any]] = None,
     ) -> LayerEvent:
-        """Create a layer event with current timing info."""
+        """Create a layer event with current timing info and phase."""
         now = int(time.time() * 1000)
         return LayerEvent(
             layer=layer,
             status=status,
             timestamp=now,
+            phase=phase,
             latency_ms=now - start_time,
             data=data,
             error=error,
             revision_action=revision_info.get("action") if revision_info else None,
             superseded_facts=revision_info.get("superseded_facts") if revision_info else None,
         )
-
-    def _notify_orchestration_start(
-        self,
-        observer: Optional[OrchestrationObserver],
-        orchestration_id: str,
-    ) -> None:
-        """Notify the observer of orchestration start."""
-        if not observer:
-            return
-        try:
-            if hasattr(observer, "on_orchestration_start"):
-                observer.on_orchestration_start(orchestration_id)
-        except Exception as e:
-            print(f"[Cortex] Observer on_orchestration_start failed: {e}")
 
     def _notify_layer_update(
         self,
@@ -203,19 +195,69 @@ class MemoryAPI:
         except Exception as e:
             print(f"[Cortex] Observer on_layer_update failed: {e}")
 
-    def _notify_orchestration_complete(
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Remember (Write) Phase Helpers
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def _notify_remember_start(
+        self,
+        observer: Optional[OrchestrationObserver],
+        orchestration_id: str,
+    ) -> None:
+        """Notify the observer of remember (write) phase start."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_remember_start"):
+                observer.on_remember_start(orchestration_id)
+        except Exception as e:
+            print(f"[Cortex] Observer on_remember_start failed: {e}")
+
+    def _notify_remember_complete(
         self,
         observer: Optional[OrchestrationObserver],
         summary: OrchestrationSummary,
     ) -> None:
-        """Notify the observer of orchestration completion."""
+        """Notify the observer of remember (write) phase completion."""
         if not observer:
             return
         try:
-            if hasattr(observer, "on_orchestration_complete"):
-                observer.on_orchestration_complete(summary)
+            if hasattr(observer, "on_remember_complete"):
+                observer.on_remember_complete(summary)
         except Exception as e:
-            print(f"[Cortex] Observer on_orchestration_complete failed: {e}")
+            print(f"[Cortex] Observer on_remember_complete failed: {e}")
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Recall (Read) Phase Helpers
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def _notify_recall_start(
+        self,
+        observer: Optional[OrchestrationObserver],
+        orchestration_id: str,
+    ) -> None:
+        """Notify the observer of recall (read) phase start."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_recall_start"):
+                observer.on_recall_start(orchestration_id)
+        except Exception as e:
+            print(f"[Cortex] Observer on_recall_start failed: {e}")
+
+    def _notify_recall_complete(
+        self,
+        observer: Optional[OrchestrationObserver],
+        summary: RecallSummary,
+    ) -> None:
+        """Notify the observer of recall (read) phase completion."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_recall_complete"):
+                observer.on_recall_complete(summary)
+        except Exception as e:
+            print(f"[Cortex] Observer on_recall_complete failed: {e}")
 
     def _get_llm_client(self) -> Optional[LLMClient]:
         """Get or create LLM client for fact extraction."""
@@ -499,8 +541,8 @@ class MemoryAPI:
         layer_events: Dict[str, LayerEvent] = {}
         created_ids: Dict[str, Any] = {}
 
-        # Notify orchestration start
-        self._notify_orchestration_start(observer, orchestration_id)
+        # Notify remember (write) phase start
+        self._notify_remember_start(observer, orchestration_id)
 
         # Determine if we should sync to graph (check skipLayers)
         should_sync_to_graph = (
@@ -513,7 +555,7 @@ class MemoryAPI:
         # STEP 1: MEMORYSPACE (Cannot be skipped)
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         if observer:
-            event = self._create_layer_event("memorySpace", "in_progress", orchestration_start_time)
+            event = self._create_layer_event("memorySpace", "in_progress", orchestration_start_time, "remember")
             layer_events["memorySpace"] = event
             self._notify_layer_update(observer, event)
 
@@ -521,7 +563,7 @@ class MemoryAPI:
             await self._ensure_memory_space_exists(params.memory_space_id, should_sync_to_graph)
             if observer:
                 event = self._create_layer_event(
-                    "memorySpace", "complete", orchestration_start_time,
+                    "memorySpace", "complete", orchestration_start_time, "remember",
                     data=LayerEventData(id=params.memory_space_id, preview=f"Memory space: {params.memory_space_id}")
                 )
                 layer_events["memorySpace"] = event
@@ -529,7 +571,7 @@ class MemoryAPI:
         except Exception as e:
             if observer:
                 event = self._create_layer_event(
-                    "memorySpace", "error", orchestration_start_time,
+                    "memorySpace", "error", orchestration_start_time, "remember",
                     error=LayerEventError(message=str(e))
                 )
                 layer_events["memorySpace"] = event
@@ -542,14 +584,14 @@ class MemoryAPI:
         # User layer
         if params.user_id and not self._should_skip_layer("users", skip_layers):
             if observer:
-                event = self._create_layer_event("user", "in_progress", orchestration_start_time)
+                event = self._create_layer_event("user", "in_progress", orchestration_start_time, "remember")
                 layer_events["user"] = event
                 self._notify_layer_update(observer, event)
             try:
                 await self._ensure_user_exists(params.user_id, params.user_name)
                 if observer:
                     event = self._create_layer_event(
-                        "user", "complete", orchestration_start_time,
+                        "user", "complete", orchestration_start_time, "remember",
                         data=LayerEventData(id=params.user_id, preview=f"User: {params.user_name or params.user_id}")
                     )
                     layer_events["user"] = event
@@ -557,28 +599,28 @@ class MemoryAPI:
             except Exception as e:
                 if observer:
                     event = self._create_layer_event(
-                        "user", "error", orchestration_start_time,
+                        "user", "error", orchestration_start_time, "remember",
                         error=LayerEventError(message=str(e))
                     )
                     layer_events["user"] = event
                     self._notify_layer_update(observer, event)
                 raise
         elif observer:
-            event = self._create_layer_event("user", "skipped", orchestration_start_time)
+            event = self._create_layer_event("user", "skipped", orchestration_start_time, "remember")
             layer_events["user"] = event
             self._notify_layer_update(observer, event)
 
         # Agent layer
         if params.agent_id and not self._should_skip_layer("agents", skip_layers):
             if observer:
-                event = self._create_layer_event("agent", "in_progress", orchestration_start_time)
+                event = self._create_layer_event("agent", "in_progress", orchestration_start_time, "remember")
                 layer_events["agent"] = event
                 self._notify_layer_update(observer, event)
             try:
                 await self._ensure_agent_exists(params.agent_id)
                 if observer:
                     event = self._create_layer_event(
-                        "agent", "complete", orchestration_start_time,
+                        "agent", "complete", orchestration_start_time, "remember",
                         data=LayerEventData(id=params.agent_id, preview=f"Agent: {params.agent_id}")
                     )
                     layer_events["agent"] = event
@@ -586,14 +628,14 @@ class MemoryAPI:
             except Exception as e:
                 if observer:
                     event = self._create_layer_event(
-                        "agent", "error", orchestration_start_time,
+                        "agent", "error", orchestration_start_time, "remember",
                         error=LayerEventError(message=str(e))
                     )
                     layer_events["agent"] = event
                     self._notify_layer_update(observer, event)
                 raise
         elif observer:
-            event = self._create_layer_event("agent", "skipped", orchestration_start_time)
+            event = self._create_layer_event("agent", "skipped", orchestration_start_time, "remember")
             layer_events["agent"] = event
             self._notify_layer_update(observer, event)
 
@@ -605,7 +647,7 @@ class MemoryAPI:
 
         if not self._should_skip_layer("conversations", skip_layers):
             if observer:
-                event = self._create_layer_event("conversation", "in_progress", orchestration_start_time)
+                event = self._create_layer_event("conversation", "in_progress", orchestration_start_time, "remember")
                 layer_events["conversation"] = event
                 self._notify_layer_update(observer, event)
 
@@ -671,7 +713,7 @@ class MemoryAPI:
 
                 if observer:
                     event = self._create_layer_event(
-                        "conversation", "complete", orchestration_start_time,
+                        "conversation", "complete", orchestration_start_time, "remember",
                         data=LayerEventData(
                             id=params.conversation_id,
                             preview=f"Conversation: {params.conversation_id} (2 messages)",
@@ -683,14 +725,14 @@ class MemoryAPI:
             except Exception as e:
                 if observer:
                     event = self._create_layer_event(
-                        "conversation", "error", orchestration_start_time,
+                        "conversation", "error", orchestration_start_time, "remember",
                         error=LayerEventError(message=str(e))
                     )
                     layer_events["conversation"] = event
                     self._notify_layer_update(observer, event)
                 raise
         elif observer:
-            event = self._create_layer_event("conversation", "skipped", orchestration_start_time)
+            event = self._create_layer_event("conversation", "skipped", orchestration_start_time, "remember")
             layer_events["conversation"] = event
             self._notify_layer_update(observer, event)
 
@@ -701,7 +743,7 @@ class MemoryAPI:
 
         if not self._should_skip_layer("vector", skip_layers):
             if observer:
-                event = self._create_layer_event("vector", "in_progress", orchestration_start_time)
+                event = self._create_layer_event("vector", "in_progress", orchestration_start_time, "remember")
                 layer_events["vector"] = event
                 self._notify_layer_update(observer, event)
 
@@ -811,7 +853,7 @@ class MemoryAPI:
 
                 if observer:
                     event = self._create_layer_event(
-                        "vector", "complete", orchestration_start_time,
+                        "vector", "complete", orchestration_start_time, "remember",
                         data=LayerEventData(
                             id=stored_memories[0].memory_id if stored_memories else None,
                             preview=f"Stored {len(stored_memories)} memories",
@@ -823,14 +865,14 @@ class MemoryAPI:
             except Exception as e:
                 if observer:
                     event = self._create_layer_event(
-                        "vector", "error", orchestration_start_time,
+                        "vector", "error", orchestration_start_time, "remember",
                         error=LayerEventError(message=str(e))
                     )
                     layer_events["vector"] = event
                     self._notify_layer_update(observer, event)
                 raise
         elif observer:
-            event = self._create_layer_event("vector", "skipped", orchestration_start_time)
+            event = self._create_layer_event("vector", "skipped", orchestration_start_time, "remember")
             layer_events["vector"] = event
             self._notify_layer_update(observer, event)
 
@@ -843,7 +885,7 @@ class MemoryAPI:
 
         if not self._should_skip_layer("facts", skip_layers):
             if observer:
-                event = self._create_layer_event("facts", "in_progress", orchestration_start_time)
+                event = self._create_layer_event("facts", "in_progress", orchestration_start_time, "remember")
                 layer_events["facts"] = event
                 self._notify_layer_update(observer, event)
 
@@ -1107,7 +1149,7 @@ class MemoryAPI:
                         }
 
                 event = self._create_layer_event(
-                    "facts", "complete", orchestration_start_time,
+                    "facts", "complete", orchestration_start_time, "remember",
                     data=LayerEventData(
                         id=extracted_facts[0].fact_id if extracted_facts else None,
                         preview=f"Extracted {len(extracted_facts)} facts",
@@ -1118,7 +1160,7 @@ class MemoryAPI:
                 layer_events["facts"] = event
                 self._notify_layer_update(observer, event)
         elif observer:
-            event = self._create_layer_event("facts", "skipped", orchestration_start_time)
+            event = self._create_layer_event("facts", "skipped", orchestration_start_time, "remember")
             layer_events["facts"] = event
             self._notify_layer_update(observer, event)
 
@@ -1129,16 +1171,16 @@ class MemoryAPI:
         if observer:
             if should_sync_to_graph:
                 event = self._create_layer_event(
-                    "graph", "complete", orchestration_start_time,
+                    "graph", "complete", orchestration_start_time, "remember",
                     data=LayerEventData(preview="Graph sync performed inline with layers")
                 )
             else:
-                event = self._create_layer_event("graph", "skipped", orchestration_start_time)
+                event = self._create_layer_event("graph", "skipped", orchestration_start_time, "remember")
             layer_events["graph"] = event
             self._notify_layer_update(observer, event)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        # Notify orchestration complete
+        # Notify remember (write) phase complete
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         if observer:
             total_latency = int(time.time() * 1000) - orchestration_start_time
@@ -1146,9 +1188,14 @@ class MemoryAPI:
                 orchestration_id=orchestration_id,
                 total_latency_ms=total_latency,
                 layers=layer_events,
-                created_ids=created_ids,
+                created_ids=CreatedIds(
+                    conversation_id=created_ids.get("conversationId"),
+                    memory_ids=created_ids.get("memoryIds"),
+                    fact_ids=created_ids.get("factIds"),
+                ),
+                phase="remember",
             )
-            self._notify_orchestration_complete(observer, summary)
+            self._notify_remember_complete(observer, summary)
 
         return RememberResult(
             conversation={
@@ -1965,6 +2012,8 @@ class MemoryAPI:
             ...     )
             ... )
         """
+        import uuid
+
         from ..config import resolve_recall_limits
         from ..types import SearchFactsOptions
         from .recall import (
@@ -1978,6 +2027,16 @@ class MemoryAPI:
 
         # Client-side validation
         validate_recall_params(params)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # OBSERVER SETUP (Phase-aware orchestration monitoring)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        observer = params.observer
+        orchestration_id = f"recall_{uuid.uuid4().hex[:12]}"
+        layer_events: Dict[str, LayerEvent] = {}
+
+        # Notify recall (read) phase start
+        self._notify_recall_start(observer, orchestration_id)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 0: RESOLVE LIMITS (v0.31.0+ - configurable per-source limits)
@@ -2026,6 +2085,10 @@ class MemoryAPI:
 
         # Vector search - skip if limits.memories is 0
         if search_vector and limits.memories > 0:
+            if observer:
+                event = self._create_layer_event("vector", "in_progress", start_time, "recall")
+                layer_events["vector"] = event
+                self._notify_layer_update(observer, event)
             try:
                 vector_memories = await self.vector.search(
                     memory_space_id, query, vector_search_opts
@@ -2036,11 +2099,36 @@ class MemoryAPI:
                         m for m in vector_memories
                         if getattr(m, 'tenant_id', None) == tenant_id
                     ]
+                if observer:
+                    event = self._create_layer_event(
+                        "vector", "complete", start_time, "recall",
+                        data=LayerEventData(
+                            preview=f"Found {len(vector_memories)} memories",
+                            metadata={"memoryCount": len(vector_memories)}
+                        )
+                    )
+                    layer_events["vector"] = event
+                    self._notify_layer_update(observer, event)
             except Exception as e:
                 print(f"[Cortex] Vector search failed: {e}")
+                if observer:
+                    event = self._create_layer_event(
+                        "vector", "error", start_time, "recall",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["vector"] = event
+                    self._notify_layer_update(observer, event)
+        elif observer:
+            event = self._create_layer_event("vector", "skipped", start_time, "recall")
+            layer_events["vector"] = event
+            self._notify_layer_update(observer, event)
 
         # Facts search - skip if limits.facts is 0
         if search_facts and limits.facts > 0:
+            if observer:
+                event = self._create_layer_event("facts", "in_progress", start_time, "recall")
+                layer_events["facts"] = event
+                self._notify_layer_update(observer, event)
             try:
                 facts_search_opts = SearchFactsOptions(
                     limit=limits.facts,  # Use per-source limit
@@ -2057,8 +2145,29 @@ class MemoryAPI:
                         f for f in direct_facts
                         if getattr(f, 'tenant_id', None) == tenant_id
                     ]
+                if observer:
+                    event = self._create_layer_event(
+                        "facts", "complete", start_time, "recall",
+                        data=LayerEventData(
+                            preview=f"Found {len(direct_facts)} facts",
+                            metadata={"factCount": len(direct_facts)}
+                        )
+                    )
+                    layer_events["facts"] = event
+                    self._notify_layer_update(observer, event)
             except Exception as e:
                 print(f"[Cortex] Facts search failed: {e}")
+                if observer:
+                    event = self._create_layer_event(
+                        "facts", "error", start_time, "recall",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["facts"] = event
+                    self._notify_layer_update(observer, event)
+        elif observer:
+            event = self._create_layer_event("facts", "skipped", start_time, "recall")
+            layer_events["facts"] = event
+            self._notify_layer_update(observer, event)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 2: GRAPH EXPANSION (if enabled and graph_hops > 0)
@@ -2069,6 +2178,10 @@ class MemoryAPI:
         graph_expansion_applied = False
 
         if graph_expansion_enabled and search_graph and self.graph_adapter:
+            if observer:
+                event = self._create_layer_event("graph", "in_progress", start_time, "recall")
+                layer_events["graph"] = event
+                self._notify_layer_update(observer, event)
             try:
                 # Build expansion config with per-source limits
                 expansion_config = GraphExpansionConfig(
@@ -2098,12 +2211,43 @@ class MemoryAPI:
                 graph_expanded_facts = expansion_result.related_facts
                 graph_expansion_applied = len(discovered_entities) > 0
 
+                if observer:
+                    event = self._create_layer_event(
+                        "graph", "complete", start_time, "recall",
+                        data=LayerEventData(
+                            preview=f"Discovered {len(discovered_entities)} entities",
+                            metadata={
+                                "entityCount": len(discovered_entities),
+                                "expandedMemories": len(graph_expanded_memories),
+                                "expandedFacts": len(graph_expanded_facts),
+                            }
+                        )
+                    )
+                    layer_events["graph"] = event
+                    self._notify_layer_update(observer, event)
+
             except Exception as e:
                 print(f"[Cortex] Graph expansion failed: {e}")
+                if observer:
+                    event = self._create_layer_event(
+                        "graph", "error", start_time, "recall",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["graph"] = event
+                    self._notify_layer_update(observer, event)
+        elif observer:
+            event = self._create_layer_event("graph", "skipped", start_time, "recall")
+            layer_events["graph"] = event
+            self._notify_layer_update(observer, event)
 
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         # STEP 3: MERGE, DEDUPE, RANK, FORMAT - with aggregate limit
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if observer:
+            event = self._create_layer_event("context", "in_progress", start_time, "recall")
+            layer_events["context"] = event
+            self._notify_layer_update(observer, event)
+
         processed = process_recall_results(
             vector_memories,
             direct_facts,
@@ -2151,10 +2295,44 @@ class MemoryAPI:
             # Enrich items
             items = enrich_with_conversations(items, conversations_map)
 
+        # Context layer complete
+        if observer:
+            event = self._create_layer_event(
+                "context", "complete", start_time, "recall",
+                data=LayerEventData(
+                    preview=f"Assembled context with {len(items)} items",
+                    metadata={
+                        "itemCount": len(items),
+                        "hasFormattedContext": context is not None,
+                    }
+                )
+            )
+            layer_events["context"] = event
+            self._notify_layer_update(observer, event)
+
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        # STEP 5: BUILD RESULT
+        # STEP 5: BUILD RESULT AND NOTIFY RECALL COMPLETE
         # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         query_time_ms = int(time.time() * 1000) - start_time
+
+        # Notify recall (read) phase complete
+        if observer:
+            # Count graph entities from the expansion
+            graph_entities_count = len(discovered_entities) if graph_expansion_applied else 0
+
+            recall_summary = RecallSummary(
+                orchestration_id=orchestration_id,
+                total_latency_ms=query_time_ms,
+                layers=layer_events,
+                context=RecallContext(
+                    memories_count=len(vector_memories) + len(graph_expanded_memories),
+                    facts_count=len(direct_facts) + len(graph_expanded_facts),
+                    graph_entities_count=graph_entities_count,
+                    formatted=context,
+                ),
+                phase="recall",
+            )
+            self._notify_recall_complete(observer, recall_summary)
 
         return RecallResult(
             items=items,

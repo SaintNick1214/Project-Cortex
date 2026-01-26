@@ -187,8 +187,13 @@ export async function copyTemplate(
     throw new Error(`fs.copy failed: ${error}`);
   }
 
-  // Verify key files were copied
-  const keyFiles = ["package.json", "src/index.ts", "tsconfig.json"];
+  // Verify key files were copied (template-specific validation)
+  const keyFilesByTemplate: Record<string, string[]> = {
+    basic: ["package.json", "src/index.ts", "tsconfig.json"],
+    "vercel-ai-quickstart": ["package.json", "tsconfig.json", "app/layout.tsx"],
+    "chat-sdk-quickstart": ["package.json", "tsconfig.json", "app/layout.tsx"],
+  };
+  const keyFiles = keyFilesByTemplate[templateName] || ["package.json"];
   const missing = keyFiles.filter(
     (f) => !fs.existsSync(path.join(targetPath, f)),
   );

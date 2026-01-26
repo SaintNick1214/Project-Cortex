@@ -1,6 +1,6 @@
 # API Reference
 
-<Callout type="info"> **Last Updated**: 2026-01-09 | **Version**: v0.29.0+ </Callout>
+<Callout type="info"> **Last Updated**: 2026-01-25 | **Version**: v0.35.1+ </Callout>
 
 Complete API documentation for @cortexmemory/vercel-ai-provider (SDK v0.21.0+)
 
@@ -135,11 +135,19 @@ beliefRevision?: {
 
 #### layerObserver
 
+
 ```typescript
 layerObserver?: {
+  /** Called when recall phase starts (context retrieval) */
+  onRecallStart?: (orchestrationId: string) => void | Promise<void>;
+  /** Called when recall phase completes */
+  onRecallComplete?: (summary: RecallSummary) => void | Promise<void>;
+  /** Called when remember phase starts (memory storage) */
+  onRememberStart?: (orchestrationId: string) => void | Promise<void>;
+  /** Called when remember phase completes */
+  onRememberComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
+  /** Called on any layer status change (includes phase info) */
   onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
-  onOrchestrationStart?: (orchestrationId: string) => void | Promise<void>;
-  onOrchestrationComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
 }
 ```
 
@@ -398,12 +406,15 @@ interface LayerEvent {
     | "memorySpace"
     | "user"
     | "agent"
+    | "context"      // NEW in v0.35.1: Context assembly layer
     | "conversation"
     | "vector"
     | "facts"
     | "graph";
   status: "pending" | "in_progress" | "complete" | "error" | "skipped";
   timestamp: number;
+  /** NEW in v0.35.1: Phase this event belongs to */
+  phase: "recall" | "remember";
   latencyMs?: number;
   data?: {
     id?: string;
@@ -417,11 +428,34 @@ interface LayerEvent {
 }
 ```
 
+### RecallSummary
+
+**NEW in v0.35.1** - Summary of the recall (context retrieval) phase:
+
+```typescript
+interface RecallSummary {
+  orchestrationId: string;
+  phase: "recall";
+  totalLatencyMs: number;
+  layers: Partial<Record<MemoryLayer, LayerEvent>>;
+  /** Retrieved context ready for LLM injection */
+  context: {
+    formatted?: string;
+    memoriesCount: number;
+    factsCount: number;
+    graphEntitiesCount: number;
+  };
+}
+```
+
 ### OrchestrationSummary
+
+Summary of the remember (memory storage) phase:
 
 ```typescript
 interface OrchestrationSummary {
   orchestrationId: string;
+  phase: "remember";
   totalLatencyMs: number;
   layers: Record<MemoryLayer, LayerEvent>;
   createdIds: {
@@ -431,6 +465,103 @@ interface OrchestrationSummary {
   };
 }
 ```
+
+---
+
+## useLayerTracking Hook
+
+**NEW in v0.35.1** - React hook for phase-aware layer tracking.
+
+```typescript
+import { useLayerTracking } from "@cortexmemory/vercel-ai-provider/react";
+```
+
+### Returns
+
+```typescript
+interface UseLayerTrackingResult {
+  // Phase-Specific State (New API - recommended)
+  recallLayers: Record<MemoryLayer, LayerState>;
+  rememberLayers: Record<MemoryLayer, LayerState>;
+  isRecalling: boolean;
+  isRemembering: boolean;
+  recallOrchestrationId?: string;
+  rememberOrchestrationId?: string;
+
+  // Backward-Compatible State (deprecated)
+  layers: Record<MemoryLayer, LayerState>;  // Combined view
+  isOrchestrating: boolean;  // isRecalling || isRemembering
+  orchestrationId?: string;
+
+  // Phase-Specific Methods (New API)
+  startRecall: (orchestrationId?: string) => void;
+  startRemember: (orchestrationId?: string) => void;
+  resetRecall: () => void;
+  resetRemember: () => void;
+  updatePhaseLayer: (phase, layer, status, data?, revisionInfo?) => void;
+
+  // Backward-Compatible Methods
+  startOrchestration: (orchestrationId?: string) => void;  // deprecated
+  updateLayer: (layer, status, data?, revisionInfo?) => void;  // deprecated
+  resetLayers: () => void;
+  handleDataPart: (dataPart: unknown) => void;  // For useChat onData
+}
+```
+
+### Example Usage
+
+```typescript
+import { useLayerTracking } from "@cortexmemory/vercel-ai-provider/react";
+import { useChat } from "@ai-sdk/react";
+
+function ChatComponent() {
+  const {
+    recallLayers,
+    rememberLayers,
+    isRecalling,
+    isRemembering,
+    handleDataPart,
+  } = useLayerTracking();
+
+  const { messages, sendMessage } = useChat({
+    onData: handleDataPart,  // Automatically parses phase-aware events
+  });
+
+  return (
+    <div>
+      {isRecalling && (
+        <div className="recall-progress">
+          <p>Retrieving context...</p>
+          <LayerProgress layers={recallLayers} />
+        </div>
+      )}
+      {isRemembering && (
+        <div className="remember-progress">
+          <p>Saving memories...</p>
+          <LayerProgress layers={rememberLayers} />
+        </div>
+      )}
+      <Messages messages={messages} />
+    </div>
+  );
+}
+```
+
+### Layer Constants
+
+```typescript
+// Layers involved in recall phase
+export const RECALL_LAYERS: MemoryLayer[] = [
+  "memorySpace", "user", "agent", "context"
+];
+
+// Layers involved in remember phase
+export const REMEMBER_LAYERS: MemoryLayer[] = [
+  "conversation", "vector", "facts", "graph"
+];
+```
+
+---
 
 ## Exported Types
 
@@ -448,8 +579,17 @@ export type {
   LayerStatus,
   MemoryLayer,
   OrchestrationSummary,
+  RecallSummary,           // NEW in v0.35.1
+  OrchestrationPhase,      // NEW in v0.35.1
   RevisionAction,
 } from "@cortexmemory/vercel-ai-provider";
+
+// React hook exports
+export {
+  useLayerTracking,        // NEW in v0.35.1
+  RECALL_LAYERS,           // NEW in v0.35.1
+  REMEMBER_LAYERS,         // NEW in v0.35.1
+} from "@cortexmemory/vercel-ai-provider/react";
 ```
 
 <Callout type="info">
