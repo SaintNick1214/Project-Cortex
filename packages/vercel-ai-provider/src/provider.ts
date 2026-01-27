@@ -27,6 +27,10 @@ export class CortexMemoryProvider {
   public readonly provider: string;
   public readonly modelId: string;
   public readonly defaultObjectGenerationMode?: string;
+  // AI SDK 6 (LanguageModelV2) requires supportedUrls property
+  public readonly supportedUrls:
+    | PromiseLike<Record<string, RegExp[]>>
+    | Record<string, RegExp[]>;
 
   private cortex: Cortex;
   private config: CortexMemoryConfig;
@@ -113,6 +117,8 @@ export class CortexMemoryProvider {
     this.specificationVersion = underlyingModel.specificationVersion;
     this.defaultObjectGenerationMode =
       underlyingModel.defaultObjectGenerationMode;
+    // AI SDK 6 (LanguageModelV2) requires supportedUrls - proxy from underlying model
+    this.supportedUrls = underlyingModel.supportedUrls || {};
     this.graphAdapter = graphAdapter;
 
     // Resolve agent identity (required for user-agent conversations)
@@ -169,6 +175,10 @@ export class CortexMemoryProvider {
     if (this.config.enableMemoryStorage !== false) {
       const lastUserMessage = getLastUserMessage(options.prompt);
       if (lastUserMessage && result.text) {
+        // Use phase-aware observer if configured, otherwise fall back to layerObserver
+        const rememberObserver =
+          this.config.rememberObserver || this.config.layerObserver;
+
         // Use remember() for non-streaming responses
         // The core SDK now handles orchestration events via the observer parameter
         this.cortex.memory
@@ -188,9 +198,9 @@ export class CortexMemoryProvider {
                 : undefined,
               importance: this.config.defaultImportance,
               tags: this.config.defaultTags,
-              // Pass layer observer to core SDK for real-time orchestration events
-              // The core SDK emits events at each layer, replacing manual notifications
-              observer: this.config.layerObserver,
+              // Pass phase-aware observer for real-time remember orchestration events
+              // Uses rememberObserver for phase-specific events if configured
+              observer: rememberObserver,
             },
             {
               // Note: syncToGraph removed in v0.29.0+ - graph sync is automatic when graphAdapter is configured
@@ -277,6 +287,10 @@ export class CortexMemoryProvider {
    * - Graph relationships (Layer 4) - if configured
    *
    * Returns a RecallResult with pre-formatted LLM context.
+   *
+   * Phase-aware orchestration (v0.30.0+):
+   * Uses recallObserver if configured for phase-specific events,
+   * otherwise falls back to layerObserver for generic events.
    */
   private async recallContext(
     query: string,
@@ -299,6 +313,9 @@ export class CortexMemoryProvider {
         }
       }
 
+      // Use phase-aware observer if configured, otherwise fall back to layerObserver
+      const observer = this.config.recallObserver || this.config.layerObserver;
+
       // Use recall() for full orchestrated retrieval across all layers
       const result = await this.cortex.memory.recall({
         memorySpaceId: this.config.memorySpaceId,
@@ -311,6 +328,8 @@ export class CortexMemoryProvider {
         // No need to explicitly enable sources - batteries included
         formatForLLM: true, // Get pre-formatted context string
         includeConversation: true, // Include ACID conversation data
+        // Pass phase-aware observer for real-time recall orchestration events
+        observer,
       });
 
       this.logger.debug(
@@ -459,6 +478,10 @@ export class CortexMemoryProvider {
           hooks: this.config.streamingHooks,
         };
 
+        // Use phase-aware observer if configured, otherwise fall back to layerObserver
+        const rememberObserver =
+          this.config.rememberObserver || this.config.layerObserver;
+
         // Call rememberStream and await it to ensure it completes before stream ends
         // The core SDK now handles orchestration events via the observer parameter
         try {
@@ -478,8 +501,9 @@ export class CortexMemoryProvider {
                 : undefined,
               importance: this.config.defaultImportance,
               tags: this.config.defaultTags,
-              // Pass layer observer to core SDK for real-time orchestration events
-              observer: this.config.layerObserver,
+              // Pass phase-aware observer for real-time remember orchestration events
+              // Uses rememberObserver for phase-specific events if configured
+              observer: rememberObserver,
             },
             streamingOptions,
           );

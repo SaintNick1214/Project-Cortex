@@ -67,3 +67,25 @@ allow-dependencies-licenses:
   # json-schema - AFL/BSD licensed (AFL is permissive, BSD already allowed)
   # Transitive dependency, not distributed with our software.
   - "pkg:npm/json-schema"
+  # Vercel packages for chat-sdk-quickstart template
+  # @vercel/analytics - MPL-2.0 (Mozilla Public License 2.0, permissive copyleft)
+  # Used in template for analytics tracking. Compatible with commercial use.
+  - "pkg:npm/@vercel/analytics"
+  # @vercel/otel - License detection issue, actually Apache-2.0
+  - "pkg:npm/@vercel/otel"
+  # geist - OFL-1.1 (SIL Open Font License), font-specific permissive license
+  # Used in template for Vercel's design system font. Free for commercial use.
+  - "pkg:npm/geist"
+  # Radix UI - MIT licensed but scanner has detection issues
+  - "pkg:npm/@radix-ui/react-icons"
+  # AI SDK packages - License detection issues, actually Apache-2.0
+  - "pkg:npm/@ai-sdk/anthropic"
+  # Security and utility packages with license detection issues
+  # bcrypt-ts - MIT licensed, scanner detection issue
+  - "pkg:npm/bcrypt-ts"
+  # lucide-react - ISC licensed, scanner detection issue
+  - "pkg:npm/lucide-react"
+  # streamdown - License detection issue
+  - "pkg:npm/streamdown"
+  # react-data-grid - MIT licensed beta package, scanner detection issue
+  - "pkg:npm/react-data-grid"

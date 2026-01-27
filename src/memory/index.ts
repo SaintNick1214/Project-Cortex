@@ -96,6 +96,7 @@ import {
   type MemoryLayer,
   type LayerStatus,
   type OrchestrationSummary,
+  type RecallSummary,
   type RevisionAction,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
@@ -437,42 +438,82 @@ export class MemoryAPI {
   }
 
   /**
-   * Notify the observer of orchestration start
+   * Notify the observer of remember phase start
    */
-  private notifyOrchestrationStart(
+  private notifyRememberStart(
     observer: OrchestrationObserver | undefined,
     orchestrationId: string,
   ): void {
-    if (!observer?.onOrchestrationStart) return;
+    if (!observer?.onRememberStart) return;
     try {
-      const result = observer.onOrchestrationStart(orchestrationId);
+      const result = observer.onRememberStart(orchestrationId);
       if (result instanceof Promise) {
         result.catch((e) =>
-          console.warn("[Cortex] Observer onOrchestrationStart failed:", e),
+          console.warn("[Cortex] Observer onRememberStart failed:", e),
         );
       }
     } catch (e) {
-      console.warn("[Cortex] Observer onOrchestrationStart threw:", e);
+      console.warn("[Cortex] Observer onRememberStart threw:", e);
     }
   }
 
   /**
-   * Notify the observer of orchestration completion
+   * Notify the observer of remember phase completion
    */
-  private notifyOrchestrationComplete(
+  private notifyRememberComplete(
     observer: OrchestrationObserver | undefined,
     summary: OrchestrationSummary,
   ): void {
-    if (!observer?.onOrchestrationComplete) return;
+    if (!observer?.onRememberComplete) return;
     try {
-      const result = observer.onOrchestrationComplete(summary);
+      const result = observer.onRememberComplete(summary);
       if (result instanceof Promise) {
         result.catch((e) =>
-          console.warn("[Cortex] Observer onOrchestrationComplete failed:", e),
+          console.warn("[Cortex] Observer onRememberComplete failed:", e),
         );
       }
     } catch (e) {
-      console.warn("[Cortex] Observer onOrchestrationComplete threw:", e);
+      console.warn("[Cortex] Observer onRememberComplete threw:", e);
+    }
+  }
+
+  /**
+   * Notify the observer of recall phase start
+   */
+  private notifyRecallStart(
+    observer: OrchestrationObserver | undefined,
+    orchestrationId: string,
+  ): void {
+    if (!observer?.onRecallStart) return;
+    try {
+      const result = observer.onRecallStart(orchestrationId);
+      if (result instanceof Promise) {
+        result.catch((e) =>
+          console.warn("[Cortex] Observer onRecallStart failed:", e),
+        );
+      }
+    } catch (e) {
+      console.warn("[Cortex] Observer onRecallStart threw:", e);
+    }
+  }
+
+  /**
+   * Notify the observer of recall phase completion
+   */
+  private notifyRecallComplete(
+    observer: OrchestrationObserver | undefined,
+    summary: RecallSummary,
+  ): void {
+    if (!observer?.onRecallComplete) return;
+    try {
+      const result = observer.onRecallComplete(summary);
+      if (result instanceof Promise) {
+        result.catch((e) =>
+          console.warn("[Cortex] Observer onRecallComplete failed:", e),
+        );
+      }
+    } catch (e) {
+      console.warn("[Cortex] Observer onRecallComplete threw:", e);
     }
   }
 
@@ -483,6 +524,7 @@ export class MemoryAPI {
     layer: MemoryLayer,
     status: LayerStatus,
     orchestrationStartTime: number,
+    phase: "recall" | "remember",
     data?: LayerEvent["data"],
     error?: LayerEvent["error"],
     revisionInfo?: { action?: RevisionAction; supersededFacts?: string[] },
@@ -493,6 +535,7 @@ export class MemoryAPI {
       status,
       timestamp: now,
       latencyMs: now - orchestrationStartTime,
+      phase,
       data,
       error,
       revisionAction: revisionInfo?.action,
@@ -885,7 +928,7 @@ export class MemoryAPI {
 
     // Notify orchestration start (skip if called from rememberStream which already notified)
     if (observer && !isPartialOrchestration) {
-      this.notifyOrchestrationStart(observer, orchestrationId);
+      this.notifyRememberStart(observer, orchestrationId);
     }
 
     // Determine if we should sync to graph (automatic when graphAdapter is configured)
@@ -903,6 +946,7 @@ export class MemoryAPI {
         "memorySpace",
         "in_progress",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.memorySpace = event;
       this.notifyLayerUpdate(observer, event);
@@ -915,6 +959,7 @@ export class MemoryAPI {
           "memorySpace",
           "complete",
           orchestrationStartTime,
+          "remember",
           {
             id: memorySpaceId,
             preview: `Memory space: ${memorySpaceId}`,
@@ -929,6 +974,7 @@ export class MemoryAPI {
           "memorySpace",
           "error",
           orchestrationStartTime,
+          "remember",
           undefined,
           {
             message: error instanceof Error ? error.message : String(error),
@@ -959,6 +1005,7 @@ export class MemoryAPI {
           "user",
           "in_progress",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.user = event;
         this.notifyLayerUpdate(observer, event);
@@ -970,6 +1017,7 @@ export class MemoryAPI {
             "user",
             "complete",
             orchestrationStartTime,
+            "remember",
             {
               id: ownerId,
               preview: `User: ${params.userName || ownerId}`,
@@ -984,6 +1032,7 @@ export class MemoryAPI {
             "user",
             "error",
             orchestrationStartTime,
+            "remember",
             undefined,
             {
               message: error instanceof Error ? error.message : String(error),
@@ -1002,6 +1051,7 @@ export class MemoryAPI {
         "user",
         "skipped",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.user = event;
       this.notifyLayerUpdate(observer, event);
@@ -1014,6 +1064,7 @@ export class MemoryAPI {
           "agent",
           "in_progress",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.agent = event;
         this.notifyLayerUpdate(observer, event);
@@ -1025,6 +1076,7 @@ export class MemoryAPI {
             "agent",
             "complete",
             orchestrationStartTime,
+            "remember",
             {
               id: ownerId,
               preview: `Agent: ${ownerId}`,
@@ -1039,6 +1091,7 @@ export class MemoryAPI {
             "agent",
             "error",
             orchestrationStartTime,
+            "remember",
             undefined,
             {
               message: error instanceof Error ? error.message : String(error),
@@ -1056,6 +1109,7 @@ export class MemoryAPI {
           "agent",
           "in_progress",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.agent = event;
         this.notifyLayerUpdate(observer, event);
@@ -1067,6 +1121,7 @@ export class MemoryAPI {
             "agent",
             "complete",
             orchestrationStartTime,
+            "remember",
             {
               id: params.agentId!,
               preview: `Agent: ${params.agentId}`,
@@ -1081,6 +1136,7 @@ export class MemoryAPI {
             "agent",
             "error",
             orchestrationStartTime,
+            "remember",
             undefined,
             {
               message: error instanceof Error ? error.message : String(error),
@@ -1098,6 +1154,7 @@ export class MemoryAPI {
         "agent",
         "skipped",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.agent = event;
       this.notifyLayerUpdate(observer, event);
@@ -1115,6 +1172,7 @@ export class MemoryAPI {
           "conversation",
           "in_progress",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.conversation = event;
         this.notifyLayerUpdate(observer, event);
@@ -1196,6 +1254,7 @@ export class MemoryAPI {
             "conversation",
             "complete",
             orchestrationStartTime,
+            "remember",
             {
               id: params.conversationId,
               preview: `Conversation: ${params.conversationId} (2 messages)`,
@@ -1211,6 +1270,7 @@ export class MemoryAPI {
             "conversation",
             "error",
             orchestrationStartTime,
+            "remember",
             undefined,
             {
               message: error instanceof Error ? error.message : String(error),
@@ -1226,6 +1286,7 @@ export class MemoryAPI {
         "conversation",
         "skipped",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.conversation = event;
       this.notifyLayerUpdate(observer, event);
@@ -1242,6 +1303,7 @@ export class MemoryAPI {
           "vector",
           "in_progress",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.vector = event;
         this.notifyLayerUpdate(observer, event);
@@ -1370,6 +1432,7 @@ export class MemoryAPI {
             "vector",
             "complete",
             orchestrationStartTime,
+            "remember",
             {
               id: storedMemories[0]?.memoryId,
               preview: `${storedMemories.length} memories stored`,
@@ -1385,6 +1448,7 @@ export class MemoryAPI {
             "vector",
             "error",
             orchestrationStartTime,
+            "remember",
             undefined,
             {
               message: error instanceof Error ? error.message : String(error),
@@ -1400,6 +1464,7 @@ export class MemoryAPI {
         "vector",
         "skipped",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.vector = event;
       this.notifyLayerUpdate(observer, event);
@@ -1420,6 +1485,7 @@ export class MemoryAPI {
             "facts",
             "in_progress",
             orchestrationStartTime,
+            "remember",
           );
           layerEvents.facts = event;
           this.notifyLayerUpdate(observer, event);
@@ -1575,6 +1641,7 @@ export class MemoryAPI {
               "facts",
               "complete",
               orchestrationStartTime,
+              "remember",
               {
                 id: extractedFacts[0]?.factId,
                 preview: `${extractedFacts.length} facts extracted`,
@@ -1600,6 +1667,7 @@ export class MemoryAPI {
               "facts",
               "error",
               orchestrationStartTime,
+              "remember",
               undefined,
               {
                 message: error instanceof Error ? error.message : String(error),
@@ -1616,6 +1684,7 @@ export class MemoryAPI {
           "facts",
           "skipped",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.facts = event;
         this.notifyLayerUpdate(observer, event);
@@ -1625,6 +1694,7 @@ export class MemoryAPI {
         "facts",
         "skipped",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.facts = event;
       this.notifyLayerUpdate(observer, event);
@@ -1642,6 +1712,7 @@ export class MemoryAPI {
           "graph",
           "complete",
           orchestrationStartTime,
+          "remember",
           {
             preview: "Graph sync completed with layer operations",
           },
@@ -1654,6 +1725,7 @@ export class MemoryAPI {
           "graph",
           "skipped",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.graph = event;
         this.notifyLayerUpdate(observer, event);
@@ -1666,6 +1738,7 @@ export class MemoryAPI {
     if (observer) {
       const summary: OrchestrationSummary = {
         orchestrationId,
+        phase: "remember",
         totalLatencyMs: Date.now() - orchestrationStartTime,
         layers: layerEvents as Record<MemoryLayer, LayerEvent>,
         createdIds: {
@@ -1674,7 +1747,7 @@ export class MemoryAPI {
           factIds: extractedFacts.map((f) => f.factId),
         },
       };
-      this.notifyOrchestrationComplete(observer, summary);
+      this.notifyRememberComplete(observer, summary);
     }
 
     return {
@@ -1860,7 +1933,7 @@ export class MemoryAPI {
 
     // Notify orchestration start
     if (observer) {
-      this.notifyOrchestrationStart(observer, orchestrationId);
+      this.notifyRememberStart(observer, orchestrationId);
     }
 
     // STEP 1: MEMORYSPACE (Cannot be skipped)
@@ -1869,6 +1942,7 @@ export class MemoryAPI {
         "memorySpace",
         "in_progress",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.memorySpace = event;
       this.notifyLayerUpdate(observer, event);
@@ -1881,6 +1955,7 @@ export class MemoryAPI {
           "memorySpace",
           "complete",
           orchestrationStartTime,
+          "remember",
           {
             id: memorySpaceId,
             preview: `Memory space: ${memorySpaceId}`,
@@ -1895,6 +1970,7 @@ export class MemoryAPI {
           "memorySpace",
           "error",
           orchestrationStartTime,
+          "remember",
           undefined,
           {
             message: error instanceof Error ? error.message : String(error),
@@ -1915,6 +1991,7 @@ export class MemoryAPI {
           "user",
           "in_progress",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.user = event;
         this.notifyLayerUpdate(observer, event);
@@ -1926,6 +2003,7 @@ export class MemoryAPI {
             "user",
             "complete",
             orchestrationStartTime,
+            "remember",
             {
               id: ownerId,
               preview: `User: ${params.userName || ownerId}`,
@@ -1940,6 +2018,7 @@ export class MemoryAPI {
             "user",
             "error",
             orchestrationStartTime,
+            "remember",
             undefined,
             {
               message: error instanceof Error ? error.message : String(error),
@@ -1955,6 +2034,7 @@ export class MemoryAPI {
         "user",
         "skipped",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.user = event;
       this.notifyLayerUpdate(observer, event);
@@ -1974,6 +2054,7 @@ export class MemoryAPI {
           "agent",
           "in_progress",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.agent = event;
         this.notifyLayerUpdate(observer, event);
@@ -1985,6 +2066,7 @@ export class MemoryAPI {
             "agent",
             "complete",
             orchestrationStartTime,
+            "remember",
             {
               id: ownerId,
               preview: `Agent: ${ownerId}`,
@@ -1999,6 +2081,7 @@ export class MemoryAPI {
             "agent",
             "error",
             orchestrationStartTime,
+            "remember",
             undefined,
             {
               message: error instanceof Error ? error.message : String(error),
@@ -2016,6 +2099,7 @@ export class MemoryAPI {
           "agent",
           "in_progress",
           orchestrationStartTime,
+          "remember",
         );
         layerEvents.agent = event;
         this.notifyLayerUpdate(observer, event);
@@ -2027,6 +2111,7 @@ export class MemoryAPI {
             "agent",
             "complete",
             orchestrationStartTime,
+            "remember",
             {
               id: params.agentId!,
               preview: `Agent: ${params.agentId}`,
@@ -2041,6 +2126,7 @@ export class MemoryAPI {
             "agent",
             "error",
             orchestrationStartTime,
+            "remember",
             undefined,
             {
               message: error instanceof Error ? error.message : String(error),
@@ -2056,6 +2142,7 @@ export class MemoryAPI {
         "agent",
         "skipped",
         orchestrationStartTime,
+        "remember",
       );
       layerEvents.agent = event;
       this.notifyLayerUpdate(observer, event);
@@ -2686,9 +2773,22 @@ export class MemoryAPI {
     const startTime = Date.now();
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // ORCHESTRATION OBSERVER SETUP
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    const observer = params.observer;
+    const orchestrationId = observer ? this.generateOrchestrationId() : "";
+    const orchestrationStartTime = startTime;
+    const layerEvents: Partial<Record<MemoryLayer, LayerEvent>> = {};
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 1: VALIDATION
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     validateRecallParams(params);
+
+    // Notify recall start
+    if (observer) {
+      this.notifyRecallStart(observer, orchestrationId);
+    }
 
     // Apply defaults (batteries included)
     const sources = {
@@ -2740,6 +2840,30 @@ export class MemoryAPI {
     const hasEmbedding =
       effectiveEmbedding && Array.isArray(effectiveEmbedding) && effectiveEmbedding.length > 0;
 
+    // Notify vector layer start
+    if (observer && sources.vector) {
+      const event = this.createLayerEvent(
+        "vector",
+        "in_progress",
+        orchestrationStartTime,
+        "recall",
+      );
+      layerEvents.vector = event;
+      this.notifyLayerUpdate(observer, event);
+    }
+
+    // Notify facts layer start
+    if (observer && sources.facts) {
+      const event = this.createLayerEvent(
+        "facts",
+        "in_progress",
+        orchestrationStartTime,
+        "recall",
+      );
+      layerEvents.facts = event;
+      this.notifyLayerUpdate(observer, event);
+    }
+
     const [rawVectorMemories, rawDirectFacts] = await Promise.all([
       // Vector search (uses embedding for semantic matching)
       // Skip search when limits.memories is 0 to gracefully return empty results
@@ -2790,6 +2914,40 @@ export class MemoryAPI {
       ? rawDirectFacts.filter((f) => f.tenantId === effectiveTenantId)
       : rawDirectFacts;
 
+    // Notify vector layer complete
+    if (observer && sources.vector) {
+      const event = this.createLayerEvent(
+        "vector",
+        "complete",
+        orchestrationStartTime,
+        "recall",
+        {
+          metadata: {
+            count: vectorMemories.length,
+          },
+        },
+      );
+      layerEvents.vector = event;
+      this.notifyLayerUpdate(observer, event);
+    }
+
+    // Notify facts layer complete
+    if (observer && sources.facts) {
+      const event = this.createLayerEvent(
+        "facts",
+        "complete",
+        orchestrationStartTime,
+        "recall",
+        {
+          metadata: {
+            count: directFacts.length,
+          },
+        },
+      );
+      layerEvents.facts = event;
+      this.notifyLayerUpdate(observer, event);
+    }
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 3: GRAPH EXPANSION (if enabled)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2798,6 +2956,18 @@ export class MemoryAPI {
     let discoveredEntities: string[] = [];
 
     if (graphExpansionEnabled && this.graphAdapter) {
+      // Notify graph layer start
+      if (observer) {
+        const event = this.createLayerEvent(
+          "graph",
+          "in_progress",
+          orchestrationStartTime,
+          "recall",
+        );
+        layerEvents.graph = event;
+        this.notifyLayerUpdate(observer, event);
+      }
+
       try {
         const expansion = await performGraphExpansion(
           vectorMemories,
@@ -2813,18 +2983,75 @@ export class MemoryAPI {
         graphExpandedMemories = expansion.relatedMemories;
         graphExpandedFacts = expansion.relatedFacts;
         discoveredEntities = expansion.discoveredEntities;
+
+        // Notify graph layer complete
+        if (observer) {
+          const event = this.createLayerEvent(
+            "graph",
+            "complete",
+            orchestrationStartTime,
+            "recall",
+            {
+              metadata: {
+                expandedMemories: graphExpandedMemories.length,
+                expandedFacts: graphExpandedFacts.length,
+                discoveredEntities: discoveredEntities.length,
+              },
+            },
+          );
+          layerEvents.graph = event;
+          this.notifyLayerUpdate(observer, event);
+        }
       } catch (error) {
+        // Notify graph layer error
+        if (observer) {
+          const event = this.createLayerEvent(
+            "graph",
+            "error",
+            orchestrationStartTime,
+            "recall",
+            undefined,
+            {
+              message:
+                error instanceof Error ? error.message : "Graph expansion failed",
+            },
+          );
+          layerEvents.graph = event;
+          this.notifyLayerUpdate(observer, event);
+        }
         // Graph expansion failed - continue with direct results
         console.warn(
           "[Cortex] Graph expansion failed, continuing without:",
           error,
         );
       }
+    } else if (observer && sources.graph) {
+      // Graph was requested but not enabled/configured - mark as skipped
+      const event = this.createLayerEvent(
+        "graph",
+        "skipped",
+        orchestrationStartTime,
+        "recall",
+      );
+      layerEvents.graph = event;
+      this.notifyLayerUpdate(observer, event);
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // STEP 4: MERGE, DEDUPE, RANK, FORMAT
+    // STEP 4: MERGE, DEDUPE, RANK, FORMAT (Context Assembly)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Notify context layer start
+    if (observer) {
+      const event = this.createLayerEvent(
+        "context",
+        "in_progress",
+        orchestrationStartTime,
+        "recall",
+      );
+      layerEvents.context = event;
+      this.notifyLayerUpdate(observer, event);
+    }
+
     const processedResults = processRecallResults(
       vectorMemories,
       directFacts,
@@ -2871,10 +3098,48 @@ export class MemoryAPI {
       }
     }
 
+    // Notify context layer complete
+    if (observer) {
+      const event = this.createLayerEvent(
+        "context",
+        "complete",
+        orchestrationStartTime,
+        "recall",
+        {
+          preview: context?.substring(0, 100),
+          metadata: {
+            memoriesCount: sourceBreakdown.vector.count,
+            factsCount: sourceBreakdown.facts.count,
+            graphEntitiesCount: sourceBreakdown.graph.count,
+            contextLength: context?.length ?? 0,
+          },
+        },
+      );
+      layerEvents.context = event;
+      this.notifyLayerUpdate(observer, event);
+    }
+
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 6: BUILD RESULT
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     const queryTimeMs = Date.now() - startTime;
+
+    // Notify recall complete
+    if (observer) {
+      const summary: RecallSummary = {
+        orchestrationId,
+        phase: "recall",
+        totalLatencyMs: queryTimeMs,
+        layers: layerEvents,
+        context: {
+          formatted: context,
+          memoriesCount: sourceBreakdown.vector.count,
+          factsCount: sourceBreakdown.facts.count,
+          graphEntitiesCount: sourceBreakdown.graph.count,
+        },
+      };
+      this.notifyRecallComplete(observer, summary);
+    }
 
     return {
       items,

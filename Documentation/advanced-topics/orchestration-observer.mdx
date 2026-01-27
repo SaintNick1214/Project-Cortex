@@ -1,14 +1,42 @@
+---
+id: orchestration-observer
+title: Orchestration Observer API
+sidebar_position: 8
+description: Real-time monitoring of the memory orchestration pipeline for building responsive UIs
+---
+
 # Orchestration Observer API
 
 <Callout type="info">
-**Last Updated**: 2026-01-08
+**Last Updated**: 2026-01-26 | **Version**: v0.35.2+
 </Callout>
 
 Real-time monitoring of the memory orchestration pipeline for building responsive UIs.
 
+<Callout type="success" title="New in v0.35.2">
+**Native Reasoning Panel Integration** - Memory orchestration now renders inline as collapsible reasoning panels using the AI SDK 6 protocol. Your users see memory recall and storage as native "thinking" indicators, just like extended thinking from reasoning models. See [Native Reasoning Panel Integration](#native-reasoning-panel-integration) for details.
+</Callout>
+
 ## Overview
 
-When you call `remember()` or `rememberStream()`, the Cortex SDK orchestrates data across multiple layers: memory spaces, users, agents, conversations, vectors, facts, and optionally graph databases. The **OrchestrationObserver** API provides real-time callbacks at each step, enabling you to build progress indicators, debugging tools, and responsive user experiences.
+Memory orchestration in Cortex operates in **two distinct phases**:
+
+1. **Recall Phase**: Retrieves context from memory layers *before* the LLM generates a response
+2. **Remember Phase**: Stores new memories *after* the LLM generates a response
+
+The **OrchestrationObserver** API provides real-time callbacks for each phase, enabling you to build progress indicators, debugging tools, and responsive user experiences.
+
+<FlowDiagram title="Two-Phase Memory Orchestration" caption="Recall retrieves context, Remember stores memories">
+  <FlowNode title="Recall Phase" icon="search" variant="primary">
+    memorySpace → user → agent → context
+  </FlowNode>
+  <FlowNode title="LLM Generation" icon="bot" variant="secondary">
+    AI generates response using retrieved context
+  </FlowNode>
+  <FlowNode title="Remember Phase" icon="database" variant="success">
+    conversation → vector → facts → graph
+  </FlowNode>
+</FlowDiagram>
 
 ## Quick Start
 
@@ -17,17 +45,27 @@ import { Cortex, OrchestrationObserver } from "@cortexmemory/sdk";
 
 const cortex = new Cortex({ convexUrl: "..." });
 
-// Create an observer
+// Create a phase-aware observer
 const observer: OrchestrationObserver = {
-  onOrchestrationStart: (id) => {
-    console.log(`Starting orchestration: ${id}`);
+  // Recall phase (context retrieval)
+  onRecallStart: (id) => {
+    console.log(`Recall started: ${id}`);
   },
+  onRecallComplete: (summary) => {
+    console.log(`Retrieved ${summary.context.memoriesCount} memories, ${summary.context.factsCount} facts`);
+  },
+
+  // Remember phase (memory storage)
+  onRememberStart: (id) => {
+    console.log(`Remember started: ${id}`);
+  },
+  onRememberComplete: (summary) => {
+    console.log(`Stored ${summary.createdIds.memoryIds?.length} memories`);
+  },
+
+  // Layer updates (both phases)
   onLayerUpdate: (event) => {
-    console.log(`${event.layer}: ${event.status} (${event.latencyMs}ms)`);
-  },
-  onOrchestrationComplete: (summary) => {
-    console.log(`Completed in ${summary.totalLatencyMs}ms`);
-    console.log(`Created: ${summary.createdIds.memoryIds?.length} memories`);
+    console.log(`[${event.phase}] ${event.layer}: ${event.status} (${event.latencyMs}ms)`);
   },
 };
 
@@ -47,17 +85,35 @@ const result = await cortex.memory.remember({
 
 ### MemoryLayer
 
-The seven layers in the orchestration pipeline:
+The eight layers in the orchestration pipeline, organized by phase:
 
 ```typescript
 type MemoryLayer =
-  | "memorySpace" // Ensures memory space exists
-  | "user" // Registers/validates user
-  | "agent" // Registers/validates agent
+  // Recall Phase (context retrieval)
+  | "memorySpace" // Validates memory space exists
+  | "user"        // Loads/validates user profile
+  | "agent"       // Loads/validates agent
+  | "context"     // NEW: Assembles context from memories, facts, graph
+
+  // Remember Phase (memory storage)
   | "conversation" // Stores conversation messages
-  | "vector" // Creates vector embeddings
-  | "facts" // Extracts and stores facts (with belief revision)
-  | "graph"; // Syncs to graph database (if configured)
+  | "vector"       // Creates vector embeddings
+  | "facts"        // Extracts and stores facts (with belief revision)
+  | "graph";       // Syncs to graph database (if configured)
+```
+
+<Callout type="info" title="New in v0.35.1">
+The `context` layer is new - it represents the context assembly step during recall, where memories, facts, and graph entities are merged and formatted for LLM injection.
+</Callout>
+
+**Phase Layer Groupings:**
+
+```typescript
+// Layers involved in recall (context retrieval)
+const RECALL_LAYERS = ["memorySpace", "user", "agent", "context"];
+
+// Layers involved in remember (memory storage)
+const REMEMBER_LAYERS = ["conversation", "vector", "facts", "graph"];
 ```
 
 ### LayerStatus
@@ -66,11 +122,11 @@ Status of each layer during orchestration:
 
 ```typescript
 type LayerStatus =
-  | "pending" // Layer queued but not started
+  | "pending"     // Layer queued but not started
   | "in_progress" // Layer actively processing
-  | "complete" // Layer finished successfully
-  | "error" // Layer failed
-  | "skipped"; // Layer not applicable (e.g., no graph configured)
+  | "complete"    // Layer finished successfully
+  | "error"       // Layer failed
+  | "skipped";    // Layer not applicable (e.g., no graph configured)
 ```
 
 ### LayerEvent
@@ -88,10 +144,13 @@ interface LayerEvent {
   /** Unix timestamp when this status was set */
   timestamp: number;
 
-  /** Milliseconds elapsed since orchestration started */
+  /** Milliseconds elapsed since phase started */
   latencyMs?: number;
 
-  /** Data about created entities (on complete) */
+  /** NEW: Phase this event belongs to */
+  phase: "recall" | "remember";
+
+  /** Data about created/retrieved entities (on complete) */
   data?: {
     id?: string;
     preview?: string;
@@ -112,16 +171,52 @@ interface LayerEvent {
 }
 ```
 
+
+### RecallSummary
+
+**NEW in v0.35.1** - Summary of the recall (context retrieval) phase:
+
+```typescript
+interface RecallSummary {
+  /** Unique ID for this orchestration run */
+  orchestrationId: string;
+
+  /** Phase identifier */
+  phase: "recall";
+
+  /** Total time for recall phase in milliseconds */
+  totalLatencyMs: number;
+
+  /** Status of each layer queried during recall */
+  layers: Partial<Record<MemoryLayer, LayerEvent>>;
+
+  /** Retrieved context ready for LLM injection */
+  context: {
+    /** Formatted context string for LLM prompt */
+    formatted?: string;
+    /** Number of memories retrieved */
+    memoriesCount: number;
+    /** Number of facts retrieved */
+    factsCount: number;
+    /** Number of graph entities retrieved */
+    graphEntitiesCount: number;
+  };
+}
+```
+
 ### OrchestrationSummary
 
-Final summary when all layers complete:
+Summary of the remember (memory storage) phase:
 
 ```typescript
 interface OrchestrationSummary {
   /** Unique ID for this orchestration run */
   orchestrationId: string;
 
-  /** Total time in milliseconds */
+  /** Phase identifier */
+  phase: "remember";
+
+  /** Total time for remember phase in milliseconds */
   totalLatencyMs: number;
 
   /** Final status of each layer */
@@ -138,59 +233,103 @@ interface OrchestrationSummary {
 
 ### OrchestrationObserver
 
-The observer interface - all callbacks are optional:
+The observer interface with phase-specific callbacks - all callbacks are optional:
 
 ```typescript
 interface OrchestrationObserver {
-  /** Called when orchestration starts */
-  onOrchestrationStart?: (orchestrationId: string) => void | Promise<void>;
+  /** Called when recall phase starts (context retrieval) */
+  onRecallStart?: (orchestrationId: string) => void | Promise<void>;
 
-  /** Called when any layer's status changes */
+  /** Called when recall phase completes with retrieved context */
+  onRecallComplete?: (summary: RecallSummary) => void | Promise<void>;
+
+  /** Called when remember phase starts (memory storage) */
+  onRememberStart?: (orchestrationId: string) => void | Promise<void>;
+
+  /** Called when remember phase completes with created IDs */
+  onRememberComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
+
+  /** Called when any layer's status changes (includes phase info) */
   onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
-
-  /** Called when orchestration completes (all layers done) */
-  onOrchestrationComplete?: (
-    summary: OrchestrationSummary,
-  ) => void | Promise<void>;
 }
 ```
 
+
 ## Event Flow
 
-A typical `remember()` call emits events in this order:
+A typical chat turn with `recall()` and `remember()` emits events in this order:
+
+### Recall Phase (Context Retrieval)
 
 ```
-onOrchestrationStart("orch-abc123")
+onRecallStart("orch-abc123")
 
-onLayerUpdate({ layer: "memorySpace", status: "in_progress" })
-onLayerUpdate({ layer: "memorySpace", status: "complete", latencyMs: 5 })
+onLayerUpdate({ layer: "memorySpace", status: "in_progress", phase: "recall" })
+onLayerUpdate({ layer: "memorySpace", status: "complete", phase: "recall", latencyMs: 5 })
 
-onLayerUpdate({ layer: "user", status: "in_progress" })
-onLayerUpdate({ layer: "user", status: "complete", latencyMs: 12 })
+onLayerUpdate({ layer: "user", status: "in_progress", phase: "recall" })
+onLayerUpdate({ layer: "user", status: "complete", phase: "recall", latencyMs: 12 })
 
-onLayerUpdate({ layer: "agent", status: "in_progress" })
-onLayerUpdate({ layer: "agent", status: "complete", latencyMs: 18 })
+onLayerUpdate({ layer: "agent", status: "in_progress", phase: "recall" })
+onLayerUpdate({ layer: "agent", status: "complete", phase: "recall", latencyMs: 18 })
 
-onLayerUpdate({ layer: "conversation", status: "in_progress" })
-onLayerUpdate({ layer: "conversation", status: "complete", latencyMs: 45 })
+onLayerUpdate({ layer: "context", status: "in_progress", phase: "recall" })
+onLayerUpdate({
+  layer: "context",
+  status: "complete",
+  phase: "recall",
+  latencyMs: 85,
+  data: {
+    preview: "Retrieved 5 memories, 3 facts",
+    metadata: { vectorMatches: 5, factMatches: 3, graphEntities: 2 }
+  }
+})
 
-onLayerUpdate({ layer: "vector", status: "in_progress" })
-onLayerUpdate({ layer: "vector", status: "complete", latencyMs: 120 })
+onRecallComplete({
+  orchestrationId: "orch-abc123",
+  phase: "recall",
+  totalLatencyMs: 120,
+  layers: { /* recall layer events */ },
+  context: {
+    memoriesCount: 5,
+    factsCount: 3,
+    graphEntitiesCount: 2,
+    formatted: "## Relevant Context\n..."
+  }
+})
+```
 
-onLayerUpdate({ layer: "facts", status: "in_progress" })
+### LLM Generation
+
+*At this point, the LLM generates a response using the retrieved context.*
+
+### Remember Phase (Memory Storage)
+
+```
+onRememberStart("orch-abc123")
+
+onLayerUpdate({ layer: "conversation", status: "in_progress", phase: "remember" })
+onLayerUpdate({ layer: "conversation", status: "complete", phase: "remember", latencyMs: 45 })
+
+onLayerUpdate({ layer: "vector", status: "in_progress", phase: "remember" })
+onLayerUpdate({ layer: "vector", status: "complete", phase: "remember", latencyMs: 120 })
+
+onLayerUpdate({ layer: "facts", status: "in_progress", phase: "remember" })
 onLayerUpdate({
   layer: "facts",
   status: "complete",
+  phase: "remember",
   latencyMs: 200,
   revisionAction: "SUPERSEDE",
   supersededFacts: ["fact-old-123"]
 })
 
-onLayerUpdate({ layer: "graph", status: "skipped" })  // No graph configured
+onLayerUpdate({ layer: "graph", status: "skipped", phase: "remember" })  // No graph configured
 
-onOrchestrationComplete({
+onRememberComplete({
   orchestrationId: "orch-abc123",
-  totalLatencyMs: 201,
+  phase: "remember",
+  totalLatencyMs: 366,
   layers: { /* all final layer events */ },
   createdIds: {
     conversationId: "conv-1",
@@ -200,11 +339,31 @@ onOrchestrationComplete({
 })
 ```
 
+<Callout type="tip">
+The same `orchestrationId` is shared across both phases for a single chat turn, allowing you to correlate recall and remember operations.
+</Callout>
+
 ## Usage with rememberStream()
 
-The observer works identically with streaming:
+The observer works identically with streaming. For streaming scenarios, recall happens before streaming starts, and remember happens after the stream completes:
 
 ```typescript
+const observer: OrchestrationObserver = {
+  onRecallStart: (id) => showRecallSpinner(),
+  onRecallComplete: (summary) => {
+    hideRecallSpinner();
+    console.log(`Context ready: ${summary.context.memoriesCount} memories`);
+  },
+  onRememberStart: (id) => showSaveIndicator(),
+  onRememberComplete: (summary) => {
+    hideSaveIndicator();
+    console.log(`Saved ${summary.createdIds.memoryIds?.length} memories`);
+  },
+  onLayerUpdate: (event) => {
+    updateLayerStatus(event.phase, event.layer, event.status);
+  },
+};
+
 const result = await cortex.memory.rememberStream(
   {
     memorySpaceId: "space-1",
@@ -212,7 +371,7 @@ const result = await cortex.memory.rememberStream(
     userMessage: "Tell me about TypeScript",
     userId: "user-1",
     agentId: "agent-1",
-    observer, // Same observer interface
+    observer, // Phase-aware observer
   },
   {
     llmStream: myLLMStream,
@@ -227,27 +386,65 @@ const result = await cortex.memory.rememberStream(
 
 ```typescript
 import { useState, useCallback } from "react";
-import type { LayerEvent, OrchestrationObserver } from "@cortexmemory/sdk";
+import type {
+  LayerEvent,
+  OrchestrationObserver,
+  RecallSummary,
+  OrchestrationSummary,
+} from "@cortexmemory/sdk";
 
 function useOrchestrationProgress() {
-  const [layers, setLayers] = useState<Record<string, LayerEvent>>({});
-  const [isComplete, setIsComplete] = useState(false);
+  const [recallLayers, setRecallLayers] = useState<Record<string, LayerEvent>>({});
+  const [rememberLayers, setRememberLayers] = useState<Record<string, LayerEvent>>({});
+  const [isRecalling, setIsRecalling] = useState(false);
+  const [isRemembering, setIsRemembering] = useState(false);
+  const [recallSummary, setRecallSummary] = useState<RecallSummary | null>(null);
 
   const observer: OrchestrationObserver = {
-    onLayerUpdate: useCallback((event: LayerEvent) => {
-      setLayers((prev) => ({ ...prev, [event.layer]: event }));
+    onRecallStart: useCallback(() => {
+      setIsRecalling(true);
+      setRecallLayers({});
     }, []),
-    onOrchestrationComplete: useCallback(() => {
-      setIsComplete(true);
+    onRecallComplete: useCallback((summary: RecallSummary) => {
+      setIsRecalling(false);
+      setRecallSummary(summary);
+    }, []),
+    onRememberStart: useCallback(() => {
+      setIsRemembering(true);
+      setRememberLayers({});
+    }, []),
+    onRememberComplete: useCallback(() => {
+      setIsRemembering(false);
+    }, []),
+    onLayerUpdate: useCallback((event: LayerEvent) => {
+      if (event.phase === "recall") {
+        setRecallLayers((prev) => ({ ...prev, [event.layer]: event }));
+      } else {
+        setRememberLayers((prev) => ({ ...prev, [event.layer]: event }));
+      }
     }, []),
   };
 
-  return { layers, isComplete, observer };
+  return {
+    recallLayers,
+    rememberLayers,
+    isRecalling,
+    isRemembering,
+    recallSummary,
+    observer,
+  };
 }
 
 // Usage in component
 function MemoryProgress() {
-  const { layers, isComplete, observer } = useOrchestrationProgress();
+  const {
+    recallLayers,
+    rememberLayers,
+    isRecalling,
+    isRemembering,
+    recallSummary,
+    observer,
+  } = useOrchestrationProgress();
 
   const handleSend = async () => {
     await cortex.memory.remember({
@@ -258,13 +455,30 @@ function MemoryProgress() {
 
   return (
     <div>
-      {Object.entries(layers).map(([layer, event]) => (
-        <div key={layer}>
-          {layer}: {event.status}
+      {/* Recall Phase */}
+      {isRecalling && <div className="spinner">Retrieving context...</div>}
+      {Object.entries(recallLayers).map(([layer, event]) => (
+        <div key={`recall-${layer}`} className="layer-status">
+          [Recall] {layer}: {event.status}
           {event.latencyMs && ` (${event.latencyMs}ms)`}
         </div>
       ))}
-      {isComplete && <div>Memory saved!</div>}
+      {recallSummary && (
+        <div className="context-summary">
+          Found {recallSummary.context.memoriesCount} memories,
+          {recallSummary.context.factsCount} facts
+        </div>
+      )}
+
+      {/* Remember Phase */}
+      {isRemembering && <div className="spinner">Saving memories...</div>}
+      {Object.entries(rememberLayers).map(([layer, event]) => (
+        <div key={`remember-${layer}`} className="layer-status">
+          [Remember] {layer}: {event.status}
+          {event.latencyMs && ` (${event.latencyMs}ms)`}
+        </div>
+      ))}
+      {!isRecalling && !isRemembering && <div>Complete!</div>}
     </div>
   );
 }
@@ -277,6 +491,7 @@ For Vercel AI SDK apps, bridge events to the client via data streams:
 ```typescript
 // API Route
 import { createDataStreamResponse, streamText } from "ai";
+import type { OrchestrationObserver } from "@cortexmemory/sdk";
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -284,18 +499,38 @@ export async function POST(req: Request) {
   return createDataStreamResponse({
     execute: async (dataStream) => {
       const observer: OrchestrationObserver = {
+        // Recall phase events
+        onRecallStart: (orchestrationId) => {
+          dataStream.writeData({ type: "data-recall-start", orchestrationId });
+        },
+        onRecallComplete: (summary) => {
+          dataStream.writeData({
+            type: "data-recall-complete",
+            totalLatencyMs: summary.totalLatencyMs,
+            context: summary.context,
+          });
+        },
+
+        // Remember phase events
+        onRememberStart: (orchestrationId) => {
+          dataStream.writeData({ type: "data-remember-start", orchestrationId });
+        },
+        onRememberComplete: (summary) => {
+          dataStream.writeData({
+            type: "data-remember-complete",
+            totalLatencyMs: summary.totalLatencyMs,
+            createdIds: summary.createdIds,
+          });
+        },
+
+        // Layer updates (both phases)
         onLayerUpdate: (event) => {
           dataStream.writeData({
-            type: "layer-update",
+            type: "data-layer-update",
+            phase: event.phase,
             layer: event.layer,
             status: event.status,
             latencyMs: event.latencyMs,
-          });
-        },
-        onOrchestrationComplete: (summary) => {
-          dataStream.writeData({
-            type: "orchestration-complete",
-            totalLatencyMs: summary.totalLatencyMs,
           });
         },
       };
@@ -309,18 +544,29 @@ export async function POST(req: Request) {
 ```
 
 ```typescript
-// Client Component
-import { useChat } from "ai/react";
+// Client Component - using useLayerTracking hook
+import { useChat } from "@ai-sdk/react";
+import { useLayerTracking } from "@cortexmemory/vercel-ai-provider/react";
 
 function Chat() {
-  const { messages, data } = useChat();
+  const {
+    recallLayers,
+    rememberLayers,
+    isRecalling,
+    isRemembering,
+    handleDataPart,
+  } = useLayerTracking();
 
-  // Extract layer updates from data stream
-  const layerUpdates = data?.filter((d) => d.type === "layer-update") ?? [];
+  const { messages } = useChat({
+    onData: handleDataPart, // Automatically parses phase-aware events
+  });
 
   return (
     <div>
-      <LayerProgress updates={layerUpdates} />
+      {/* Phase-aware progress visualization */}
+      {isRecalling && <RecallProgress layers={recallLayers} />}
+      {isRemembering && <RememberProgress layers={rememberLayers} />}
+
       {messages.map((m) => (
         <Message key={m.id} message={m} />
       ))}
@@ -328,6 +574,309 @@ function Chat() {
   );
 }
 ```
+
+<Callout type="tip">
+The `useLayerTracking` hook from `@cortexmemory/vercel-ai-provider/react` provides built-in state management for phase-aware layer tracking. See [useLayerTracking Hook](/integrations/vercel-ai-sdk/api-reference#uselayertracking-hook) for full documentation.
+</Callout>
+
+## Native Reasoning Panel Integration
+
+<Callout type="success" title="New in v0.35.2">
+This feature uses the AI SDK 6 protocol to render memory orchestration as native reasoning panels.
+</Callout>
+
+Starting with v0.35.2, memory orchestration can render **inline as collapsible reasoning panels** in your chat UI. This provides a native "thinking" experience for users—they see memory operations as extended thinking indicators, exactly like reasoning models.
+
+### How It Works
+
+The `LayerObserver` emits AI SDK 6 reasoning protocol events alongside the traditional transient data events:
+
+<FlowDiagram title="Dual-Emission Architecture" caption="Both reasoning parts and transient events are emitted for maximum flexibility">
+  <FlowNode title="Memory Operation" icon="database" variant="primary">
+    Recall or Remember phase starts
+  </FlowNode>
+  <FlowNode title="Reasoning Parts" icon="sparkles" variant="success">
+    reasoning-start → reasoning-delta → reasoning-end
+  </FlowNode>
+  <FlowNode title="Transient Events" icon="radio" variant="secondary">
+    data-recall-start → data-layer-update → data-recall-complete
+  </FlowNode>
+</FlowDiagram>
+
+### Visual Treatment
+
+Memory operations appear as collapsible reasoning panels with distinct visual treatments:
+
+| Phase | Icon | Label | Timing |
+|-------|------|-------|--------|
+| **Memory Recall** | `DatabaseIcon` | "Recalling Memory" | Before LLM response generation |
+| **Memory Storage** | `SaveIcon` | "Storing Memory" | After LLM response completes |
+
+The reasoning panel shows layer-by-layer progress:
+
+```
+▼ Recalling Memory
+  Memory Space: complete
+  User Profile: complete
+  Agent Context: complete
+  Context Assembly: complete (5 matches)
+```
+
+### Implementation Example
+
+Here's how to emit reasoning parts from your API route:
+
+```typescript
+// API Route with reasoning panel integration
+import { createUIMessageStream, streamText } from "ai";
+import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
+import type { LayerObserver } from "@cortexmemory/vercel-ai-provider";
+
+export async function POST(request: Request) {
+  const { messages } = await request.json();
+
+  const stream = createUIMessageStream({
+    execute: async ({ writer: dataStream }) => {
+      // Track orchestration IDs for reasoning part emission
+      let currentRecallOrchestrationId: string | undefined;
+      let currentRememberOrchestrationId: string | undefined;
+
+      // Helper: Map layer names to display names
+      const getLayerDisplayName = (layer: string): string => {
+        const displayNames: Record<string, string> = {
+          memorySpace: "Memory Space",
+          user: "User Profile",
+          agent: "Agent Context",
+          context: "Context Assembly",
+          conversation: "Conversation",
+          vector: "Vector Search",
+          facts: "Facts Engine",
+          graph: "Knowledge Graph",
+        };
+        return displayNames[layer] || layer;
+      };
+
+      // Helper: Format layer status with metadata
+      const formatLayerStatus = (event: {
+        status: string;
+        data?: { metadata?: Record<string, unknown> };
+      }): string => {
+        const { status, data } = event;
+        if (status === "complete" && data?.metadata) {
+          const meta = data.metadata;
+          if (typeof meta.vectorMatches === "number") {
+            return `complete (${meta.vectorMatches} matches)`;
+          }
+          if (typeof meta.factMatches === "number") {
+            return `complete (${meta.factMatches} facts)`;
+          }
+        }
+        return status;
+      };
+
+      const layerObserver: LayerObserver = {
+        onRecallStart: (orchestrationId) => {
+          currentRecallOrchestrationId = orchestrationId;
+          // Emit reasoning-start for recall phase (AI SDK 6 Protocol)
+          dataStream.write({
+            type: "reasoning-start",
+            id: `memory-recall-${orchestrationId}`,
+          });
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-recall-start",
+            data: { orchestrationId },
+            transient: true,
+          });
+        },
+
+        onRecallComplete: (summary) => {
+          const orchestrationId =
+            summary?.orchestrationId || currentRecallOrchestrationId;
+          // Emit reasoning-end for recall phase
+          dataStream.write({
+            type: "reasoning-end",
+            id: `memory-recall-${orchestrationId}`,
+          });
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-recall-complete",
+            data: summary,
+            transient: true,
+          });
+        },
+
+        onRememberStart: (orchestrationId) => {
+          currentRememberOrchestrationId = orchestrationId;
+          // Emit reasoning-start for storage phase
+          dataStream.write({
+            type: "reasoning-start",
+            id: `memory-storage-${orchestrationId}`,
+          });
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-remember-start",
+            data: { orchestrationId },
+            transient: true,
+          });
+        },
+
+        onRememberComplete: (summary) => {
+          const orchestrationId =
+            summary?.orchestrationId || currentRememberOrchestrationId;
+          // Emit reasoning-end for storage phase
+          dataStream.write({
+            type: "reasoning-end",
+            id: `memory-storage-${orchestrationId}`,
+          });
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-remember-complete",
+            data: summary,
+            transient: true,
+          });
+        },
+
+        onLayerUpdate: (event) => {
+          // Determine reasoning ID based on phase
+          const phase = event.phase;
+          const orchestrationId =
+            phase === "recall"
+              ? currentRecallOrchestrationId
+              : currentRememberOrchestrationId;
+          const reasoningId =
+            phase === "recall"
+              ? `memory-recall-${orchestrationId}`
+              : `memory-storage-${orchestrationId}`;
+
+          // Emit reasoning-delta with layer status
+          const layerDisplayName = getLayerDisplayName(event.layer);
+          const statusText = formatLayerStatus(event);
+          dataStream.write({
+            type: "reasoning-delta",
+            id: reasoningId,
+            delta: `${layerDisplayName}: ${statusText}\n`,
+          });
+
+          // Keep transient event for backward compatibility
+          dataStream.write({
+            type: "data-layer-update",
+            data: event,
+            transient: true,
+          });
+        },
+      };
+
+      // Create Cortex memory with observer
+      const cortexMemory = await createCortexMemoryAsync({
+        convexUrl: process.env.CORTEX_CONVEX_URL!,
+        memorySpaceId: "space-1",
+        userId: "user-1",
+        conversationId: "conv-1",
+        observer: layerObserver,
+      });
+
+      // Stream with memory-wrapped model
+      const result = streamText({
+        model: cortexMemory(yourLanguageModel),
+        messages,
+      });
+
+      // Merge with sendReasoning to include reasoning parts
+      dataStream.merge(result.toUIMessageStream({ sendReasoning: true }));
+    },
+  });
+
+  return new Response(stream);
+}
+```
+
+### Client-Side Rendering
+
+The reasoning parts are automatically rendered by AI SDK 6 compatible chat UIs. If you're using `@ai-sdk/react`, reasoning parts appear as collapsible panels:
+
+```tsx
+import { useChat } from "@ai-sdk/react";
+
+function Chat() {
+  const { messages } = useChat();
+
+  return (
+    <div>
+      {messages.map((message) => (
+        <div key={message.id}>
+          {/* Reasoning parts (including memory operations) render automatically */}
+          {message.parts.map((part, index) => {
+            if (part.type === "reasoning") {
+              return (
+                <details key={index} className="reasoning-panel">
+                  <summary>
+                    {part.id?.startsWith("memory-recall")
+                      ? "🗄️ Recalling Memory"
+                      : part.id?.startsWith("memory-storage")
+                        ? "💾 Storing Memory"
+                        : "💭 Thinking"}
+                  </summary>
+                  <pre>{part.reasoning}</pre>
+                </details>
+              );
+            }
+            if (part.type === "text") {
+              return <p key={index}>{part.text}</p>;
+            }
+            return null;
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Backward Compatibility
+
+<Callout type="info" title="No Breaking Changes">
+Existing implementations using `useLayerTracking` continue to work unchanged. The transient events (`data-recall-start`, `data-layer-update`, etc.) are still emitted alongside reasoning parts.
+</Callout>
+
+The dual-emission architecture ensures backward compatibility:
+
+| Event Type | Destination | Purpose |
+|------------|-------------|---------|
+| `reasoning-*` | Message parts | Native UI rendering |
+| `data-*` (transient) | `useLayerTracking` / custom handlers | Programmatic access |
+
+### Migration Guide
+
+If you've built a custom UI with `useLayerTracking`, you have two options:
+
+**Option 1: Keep using `useLayerTracking` (No changes required)**
+
+Your existing code continues to work. Transient events are still emitted:
+
+```tsx
+// This still works exactly as before
+const { recallLayers, rememberLayers, isRecalling, isRemembering } =
+  useLayerTracking();
+```
+
+**Option 2: Switch to native reasoning parts (Recommended for new projects)**
+
+For a cleaner implementation, render reasoning parts directly from message parts:
+
+```tsx
+// New approach: render from message.parts
+{message.parts
+  .filter((p) => p.type === "reasoning")
+  .map((part) => (
+    <ReasoningPanel key={part.id} part={part} />
+  ))}
+```
+
+Benefits of native reasoning parts:
+- **Persistence**: Reasoning parts are stored with the message, surviving page refreshes
+- **Consistency**: Same rendering as model reasoning (extended thinking)
+- **Simplicity**: No separate state management needed
 
 ## Belief Revision Events
 

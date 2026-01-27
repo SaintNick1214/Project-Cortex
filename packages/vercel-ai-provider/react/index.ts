@@ -41,7 +41,13 @@
 // Layer Tracking Hook Exports
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export { useLayerTracking, generateSampleLayerData, ALL_LAYERS } from "./useLayerTracking";
+export {
+  useLayerTracking,
+  generateSampleLayerData,
+  ALL_LAYERS,
+  RECALL_LAYERS,
+  REMEMBER_LAYERS,
+} from "./useLayerTracking";
 
 export type {
   LayerState,
@@ -51,6 +57,11 @@ export type {
   MemoryLayer,
   LayerStatus,
   RevisionAction,
+  // New dual-phase types
+  OrchestrationPhase,
+  PhaseStartData,
+  PhaseCompleteData,
+  DualPhaseTrackingState,
 } from "./useLayerTracking";
 
 // Re-export streaming helper types that are useful on the client

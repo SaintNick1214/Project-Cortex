@@ -330,8 +330,45 @@ export interface CortexMemoryConfig {
    *
    * These callbacks are invoked as data flows through the Cortex
    * memory orchestration layers, enabling real-time UI updates.
+   *
+   * @deprecated Use recallObserver and rememberObserver for phase-aware events.
+   * This single observer is used for both phases with generic orchestration events.
    */
   layerObserver?: LayerObserver;
+
+  /**
+   * Phase-aware observer for recall operations (v0.30.0+)
+   *
+   * When provided, this observer is used specifically for memory retrieval
+   * operations (recall). Events include phase information and recall-specific
+   * completion data (totalResults, sources breakdown).
+   *
+   * @example
+   * ```typescript
+   * import { createRecallStreamObserver } from '@cortexmemory/vercel-ai-provider';
+   * const { observer: recallObserver, emitTo } = createRecallStreamObserver();
+   * emitTo(writer);
+   * // Pass recallObserver to config.recallObserver
+   * ```
+   */
+  recallObserver?: LayerObserver;
+
+  /**
+   * Phase-aware observer for remember operations (v0.30.0+)
+   *
+   * When provided, this observer is used specifically for memory storage
+   * operations (remember/rememberStream). Events include phase information
+   * and remember-specific completion data (createdIds).
+   *
+   * @example
+   * ```typescript
+   * import { createRememberStreamObserver } from '@cortexmemory/vercel-ai-provider';
+   * const { observer: rememberObserver, emitTo } = createRememberStreamObserver();
+   * emitTo(writer);
+   * // Pass rememberObserver to config.rememberObserver
+   * ```
+   */
+  rememberObserver?: LayerObserver;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Debug and Logging
@@ -524,29 +561,48 @@ export interface Logger {
 
 /**
  * Sanitize a log argument to prevent log injection attacks.
- * Removes control characters and escapes newlines.
+ * Removes control characters, escapes newlines, and limits length.
+ * This function prevents log forging attacks where attackers could inject
+ * newlines or control characters to manipulate log output.
  */
-function sanitizeLogArg(arg: unknown): unknown {
+function sanitizeLogArg(arg: unknown): string {
   if (typeof arg === "string") {
-    // Remove control characters (except tab, newline which we escape)
-    // and escape newlines to prevent log forging
-    return arg
-      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "") // Remove control chars
-      .replace(/\r?\n/g, "\\n"); // Escape newlines
+    // Remove ALL control characters (0x00-0x1F, 0x7F-0x9F)
+    // Escape newlines and carriage returns to prevent log forging
+    // Limit length to prevent log flooding
+    const sanitized = arg
+      .replace(/[\x00-\x1F\x7F-\x9F]/g, "") // Remove all control chars
+      .replace(/\r?\n/g, "\\n") // Escape newlines
+      .slice(0, 10000); // Limit to 10KB to prevent log flooding
+    return sanitized;
   }
   if (arg instanceof Error) {
-    // Preserve Error objects but sanitize their message
+    // Sanitize error messages using the same logic
     const sanitizedMessage =
       typeof arg.message === "string"
         ? arg.message
-            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+            .replace(/[\x00-\x1F\x7F-\x9F]/g, "")
             .replace(/\r?\n/g, "\\n")
-        : arg.message;
-    // Return a new error-like object with sanitized message for logging
-    return `${arg.name}: ${sanitizedMessage}`;
+            .slice(0, 10000)
+        : String(arg.message);
+    const sanitizedName = String(arg.name).replace(/[\x00-\x1F\x7F-\x9F]/g, "");
+    return `${sanitizedName}: ${sanitizedMessage}`;
   }
-  // For objects/arrays, let console handle them (they're stringified safely)
-  return arg;
+  // For other types, convert to string and sanitize
+  // This ensures we don't pass through unsanitized objects
+  try {
+    const stringified =
+      typeof arg === "object" && arg !== null
+        ? JSON.stringify(arg, null, 2)
+        : String(arg);
+    return stringified
+      .replace(/[\x00-\x1F\x7F-\x9F]/g, "")
+      .replace(/\r?\n/g, "\\n")
+      .slice(0, 10000);
+  } catch {
+    // If stringification fails, return safe fallback
+    return "[Unstringifiable object]";
+  }
 }
 
 /**
@@ -557,14 +613,26 @@ export function createLogger(debug: boolean = false): Logger {
 
   if (debug) {
     return {
-      debug: (...args) =>
-        console.debug(prefix, ...args.map((a) => sanitizeLogArg(a))),
-      info: (...args) =>
-        console.info(prefix, ...args.map((a) => sanitizeLogArg(a))),
-      warn: (...args) =>
-        console.warn(prefix, ...args.map((a) => sanitizeLogArg(a))),
-      error: (...args) =>
-        console.error(prefix, ...args.map((a) => sanitizeLogArg(a))),
+      debug: (...args) => {
+        // Sanitize all arguments to prevent log injection
+        const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+        console.debug(prefix, ...sanitizedArgs);
+      },
+      info: (...args) => {
+        // Sanitize all arguments to prevent log injection
+        const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+        console.info(prefix, ...sanitizedArgs);
+      },
+      warn: (...args) => {
+        // Sanitize all arguments to prevent log injection
+        const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+        console.warn(prefix, ...sanitizedArgs);
+      },
+      error: (...args) => {
+        // Sanitize all arguments to prevent log injection
+        const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+        console.error(prefix, ...sanitizedArgs);
+      },
     };
   }
 
@@ -572,10 +640,16 @@ export function createLogger(debug: boolean = false): Logger {
   return {
     debug: () => {},
     info: () => {},
-    warn: (...args) =>
-      console.warn(prefix, ...args.map((a) => sanitizeLogArg(a))),
-    error: (...args) =>
-      console.error(prefix, ...args.map((a) => sanitizeLogArg(a))),
+    warn: (...args) => {
+      // Sanitize all arguments to prevent log injection
+      const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+      console.warn(prefix, ...sanitizedArgs);
+    },
+    error: (...args) => {
+      // Sanitize all arguments to prevent log injection
+      const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+      console.error(prefix, ...sanitizedArgs);
+    },
   };
 }
 
@@ -592,6 +666,7 @@ export type {
   LayerEvent,
   OrchestrationSummary,
   OrchestrationObserver,
+  RecallSummary,
 } from "@cortexmemory/sdk";
 
 /**

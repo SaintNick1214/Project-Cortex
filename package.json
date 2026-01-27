@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/sdk",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
   "type": "module",
   "workspaces": [
@@ -87,7 +87,7 @@
     "update-deps:dry": "node scripts/update-deps.mjs --dry-run"
   },
   "peerDependencies": {
-    "@anthropic-ai/sdk": "^0.30.0",
+    "@anthropic-ai/sdk": "^0.71.2",
     "convex": "^1.31.6",
     "openai": "^4.0.0 || ^5.0.0 || ^6.0.0"
   },
@@ -106,8 +106,8 @@
     "@eslint/js": "^9.39.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.10",
-    "@typescript-eslint/eslint-plugin": "^8.53.1",
-    "@typescript-eslint/parser": "^8.53.1",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.2",

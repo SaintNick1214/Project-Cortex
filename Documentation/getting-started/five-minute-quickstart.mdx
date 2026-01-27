@@ -208,22 +208,28 @@ Adds convenient npm scripts:
 
 ---
 
-### Option 6: Vercel AI Quickstart (Optional)
+### Option 6: Template Selection
 
-<Terminal>? Install Vercel AI quickstart demo? (y/N)</Terminal>
+<Terminal>? Select a template:
+❯ basic (Interactive CLI + HTTP API)
+  vercel-ai-quickstart (Next.js chat demo)
+  chat-sdk (Full-featured chat app)</Terminal>
 
-The **basic template** is always installed—it includes a full CLI and HTTP API for testing Cortex. The Vercel AI Quickstart is an **optional addition** that gives you a web-based chat UI.
+Choose the template that best fits your needs:
 
 <ComparisonTable
-  headers={["Template", "Installed", "What You Get"]}
+  headers={["Template", "Best For", "What You Get"]}
   items={[
-    { feature: "Basic Template", values: ["Always", "Interactive CLI + HTTP API server"] },
-    { feature: "Vercel AI Quickstart", values: ["Optional", "Next.js ChatGPT-style web app"] },
+    { feature: "basic", values: ["Learning Cortex APIs", "Interactive CLI + HTTP API server"] },
+    { feature: "vercel-ai-quickstart", values: ["Vercel AI SDK learning", "Next.js chat with memory visualization"] },
+    { feature: "chat-sdk", values: ["Production chat apps", "Full chat UI with artifacts, file uploads, auth"] },
   ]}
 />
 
-<Callout type="info" title="Both Templates Are Fully Functional">
-  Either template lets you immediately start chatting and see Cortex memory in action. Choose based on whether you prefer terminal or browser.
+<Callout type="tip" title="Which Template?">
+- **basic**: Start here to learn Cortex APIs via CLI
+- **vercel-ai-quickstart**: Learn Vercel AI SDK + Cortex integration
+- **chat-sdk**: Build a production-ready chat app with all features
 </Callout>
 
 ---
@@ -282,7 +288,7 @@ Or use interactive mode with live dashboard:
 ## Step 4: Start Using Cortex
 
 <Callout type="info" title="Choose Your Interface">
-  **Basic Template** — CLI + HTTP API (always installed) | **Vercel AI Quickstart** — Web chat UI (optional)
+  Your experience depends on which template you selected during setup.
 </Callout>
 
 <Tabs>
@@ -377,6 +383,34 @@ You'll see a fully functional ChatGPT-style interface powered by Cortex + Vercel
 
 <Callout type="tip" title="See Memory in Action">
   Open the Convex dashboard (`cortex convex dashboard`) alongside the chat to watch memories being stored in real-time.
+</Callout>
+
+  </TabItem>
+  <TabItem value="chat-sdk" label="Chat SDK">
+
+The Chat SDK template provides a full-featured chat application based on vercel/ai-chatbot:
+
+**http://localhost:3000**
+
+**Features:**
+
+- **Chat Interface** - Production-ready ChatGPT-style UI
+- **Artifacts** - Create and edit documents, code snippets with versioning
+- **File Uploads** - Attach images, PDFs, and other files
+- **Shareable Chats** - Toggle visibility and share via link
+- **Memory Panel** - Real-time memory retrieval visualization
+- **Auth.js** - GitHub, Google, or credential authentication
+
+**Try it:**
+
+1. **Sign in** - Use the configured auth provider
+2. **Chat with memory** - "Hi, I'm Alex. I prefer dark mode."
+3. **Create an artifact** - "Write a Python function to sort a list"
+4. **Upload a file** - Drag and drop an image into the chat
+5. **Share a chat** - Click the share button to make it public
+
+<Callout type="info" title="Based on vercel/ai-chatbot">
+  This template is a fork of the official Vercel AI chatbot with PostgreSQL replaced by Cortex Memory. All original features are preserved.
 </Callout>
 
   </TabItem>

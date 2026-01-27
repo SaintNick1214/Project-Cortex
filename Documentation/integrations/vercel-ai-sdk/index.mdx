@@ -1,21 +1,35 @@
+---
+id: vercel-ai-sdk
+title: Vercel AI SDK Integration
+sidebar_position: 0
+description: Complete integration with Vercel AI SDK for Next.js applications with full memory orchestration capabilities
+---
+
 # Vercel AI SDK Integration
 
-<Callout type="info"> **Last Updated**: 2026-01-08 </Callout>
+<Callout type="info"> **Last Updated**: 2026-01-19 </Callout>
 
 **Package**: `@cortexmemory/vercel-ai-provider` | **Version**: 0.27.2 | **SDK**: v0.21.0+ | **Status**: Production Ready
 
 Complete integration with Vercel AI SDK for Next.js applications with full memory orchestration capabilities.
 
-## Quickstart Demo (Recommended)
+## Quickstart Options
 
-**The fastest way to get started** is with our interactive quickstart demo:
+Choose the quickstart that fits your needs:
 
-<Terminal title="Option 1: Run from monorepo">
-cd packages/vercel-ai-provider/quickstart
-npm install && npm run dev
-</Terminal>
+<ComparisonTable
+  headers={["Template", "Best For", "Features"]}
+  items={[
+    { feature: "Vercel AI Quickstart", values: ["Learning Cortex + Vercel AI SDK", "Memory visualization, layer flow demo"] },
+    { feature: "Chat SDK Quickstart", values: ["Production chat apps", "Full chat UI, artifacts, file uploads, shareable chats"] },
+  ]}
+/>
 
-<Terminal title="Option 2: Use Cortex CLI">
+### Option 1: Vercel AI Quickstart (Learning)
+
+Minimal demo focused on memory orchestration visualization:
+
+<Terminal>
 cortex init my-app --template vercel-ai-quickstart
 cd my-app && cortex start
 </Terminal>
@@ -28,7 +42,29 @@ Open http://localhost:3000 to see:
 - **Streaming with Progressive Storage** - Real-time fact extraction during streaming
 - **Belief Revision** - See facts update when user changes their mind (SDK v0.24.0)
 
-[View Quickstart Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/quickstart)
+### Option 2: Chat SDK Quickstart (Production)
+
+Full-featured chat application based on [vercel/ai-chatbot](https://github.com/vercel/ai-chatbot) with Cortex Memory replacing PostgreSQL:
+
+<Terminal>
+cortex init my-chatbot --template chat-sdk
+cd my-chatbot && cortex start
+</Terminal>
+
+Open http://localhost:3000 to get:
+
+- **Production-Ready Chat UI** - Polished interface based on vercel/ai-chatbot
+- **Artifacts** - Interactive documents, code snippets with versioning
+- **File Uploads** - Images, PDFs, and file attachments via Cortex Attachments
+- **Shareable Chats** - Public/private visibility toggle with share links
+- **Memory Retrieval Panel** - Real-time visualization of memory orchestration
+- **Auth.js Authentication** - GitHub, Google, and credential providers
+
+<Callout type="tip" title="When to use Chat SDK">
+Use the Chat SDK template when building a production chat application. It includes all UI components, authentication, and features you'd expect in a modern AI chat app.
+</Callout>
+
+[View Chat SDK Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/cortex-cli/templates/chat-sdk-quickstart)
 
 ---
 

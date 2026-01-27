@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/cli",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "description": "CLI tool for managing Cortex Memory deployments, performing administrative tasks, and streamlining development workflows",
   "type": "module",
   "bin": {
@@ -32,6 +32,7 @@
     "test:integration": "node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects e2e",
     "test:fast": "node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects unit commands",
     "typecheck": "tsc --noEmit",
+    "typecheck:templates": "cd templates/basic && npx tsc --noEmit",
     "prepublishOnly": "npm run lint && npm run build && npm run test:unit"
   },
   "keywords": [
@@ -78,8 +79,8 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^25.0.10",
     "@types/prompts": "^2.4.9",
-    "@typescript-eslint/eslint-plugin": "^8.53.1",
-    "@typescript-eslint/parser": "^8.53.1",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "eslint": "^9.39.2",
     "globals": "^17.1.0",
     "jest": "^30.2.0",

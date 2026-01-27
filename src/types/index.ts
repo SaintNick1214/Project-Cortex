@@ -2852,6 +2852,27 @@ export interface RecallParams {
 
   /** Generate LLM-ready context string. Default: true */
   formatForLLM?: boolean;
+
+  /**
+   * Observer for real-time recall orchestration monitoring.
+   *
+   * Provides callbacks for tracking layer-by-layer progress during
+   * the recall() context retrieval flow. Integration-agnostic.
+   *
+   * @example
+   * ```typescript
+   * const result = await cortex.memory.recall({
+   *   memorySpaceId: 'space-1',
+   *   query: 'user preferences',
+   *   observer: {
+   *     onRecallStart: (id) => console.log(`Started: ${id}`),
+   *     onLayerUpdate: (event) => console.log(`${event.layer}: ${event.status}`),
+   *     onRecallComplete: (summary) => console.log(`Done in ${summary.totalLatencyMs}ms`),
+   *   },
+   * });
+   * ```
+   */
+  observer?: OrchestrationObserver;
 }
 
 /**
@@ -3051,7 +3072,8 @@ export type MemoryLayer =
   | "conversation"
   | "vector"
   | "facts"
-  | "graph";
+  | "graph"
+  | "context";
 
 /**
  * Layer status during orchestration
@@ -3102,6 +3124,13 @@ export interface LayerEvent {
   /** Time elapsed since orchestration started (ms) */
   latencyMs?: number;
 
+  /**
+   * Phase of the orchestration this event belongs to.
+   * - "recall": Context retrieval phase (before LLM response)
+   * - "remember": Memory storage phase (after LLM response)
+   */
+  phase: "recall" | "remember";
+
   /** Data stored in this layer (if complete) */
   data?: {
     /** ID of the stored record */
@@ -3131,13 +3160,48 @@ export interface LayerEvent {
 }
 
 /**
+ * Summary of the recall phase (context retrieval)
+ *
+ * Returned when recall orchestration completes. Contains context
+ * retrieved from various memory layers for LLM injection.
+ */
+export interface RecallSummary {
+  /** Unique ID for this orchestration run */
+  orchestrationId: string;
+
+  /** Phase identifier */
+  phase: "recall";
+
+  /** Total time for recall orchestration (ms) */
+  totalLatencyMs: number;
+
+  /** Status of each layer queried during recall */
+  layers: Partial<Record<MemoryLayer, LayerEvent>>;
+
+  /** Retrieved context ready for LLM injection */
+  context: {
+    /** Formatted context string for LLM prompt */
+    formatted?: string;
+    /** Number of memories retrieved */
+    memoriesCount: number;
+    /** Number of facts retrieved */
+    factsCount: number;
+    /** Number of graph entities retrieved */
+    graphEntitiesCount: number;
+  };
+}
+
+/**
  * Summary of the full orchestration flow
  *
- * Returned when orchestration completes (all layers processed).
+ * Returned when remember orchestration completes (all layers processed).
  */
 export interface OrchestrationSummary {
   /** Unique ID for this orchestration run */
   orchestrationId: string;
+
+  /** Phase identifier */
+  phase: "remember";
 
   /** Total time for all layers (ms) */
   totalLatencyMs: number;
@@ -3154,15 +3218,34 @@ export interface OrchestrationSummary {
 }
 
 /**
- * Observer for memory layer orchestration
+ * Observer for phase-aware memory orchestration
  *
- * Provides real-time monitoring of the remember() and rememberStream()
- * orchestration flow. This is integration-agnostic - any integration
- * (Vercel AI SDK, LangChain, custom) can use this interface.
+ * Provides real-time monitoring of recall() and remember() orchestration
+ * flows. Events include phase information to distinguish between context
+ * retrieval (recall) and memory storage (remember) operations.
+ *
+ * This is integration-agnostic - any integration (Vercel AI SDK, LangChain,
+ * custom) can use this interface.
  *
  * @example
  * ```typescript
- * // Basic usage with remember()
+ * // Phase-aware usage with recall() and remember()
+ * const observer: OrchestrationObserver = {
+ *   onRecallStart: (id) => console.log(`Recall started: ${id}`),
+ *   onRecallComplete: (summary) => console.log(`Context retrieved in ${summary.totalLatencyMs}ms`),
+ *   onRememberStart: (id) => console.log(`Remember started: ${id}`),
+ *   onRememberComplete: (summary) => console.log(`Stored in ${summary.totalLatencyMs}ms`),
+ *   onLayerUpdate: (event) => console.log(`[${event.phase}] ${event.layer}: ${event.status}`),
+ * };
+ *
+ * // Use with recall()
+ * const context = await cortex.memory.recall({
+ *   memorySpaceId: 'space-1',
+ *   query: 'user preferences',
+ *   observer,
+ * });
+ *
+ * // Use with remember()
  * await cortex.memory.remember({
  *   memorySpaceId: 'user-123-space',
  *   conversationId: 'conv-123',
@@ -3171,31 +3254,40 @@ export interface OrchestrationSummary {
  *   userId: 'user-123',
  *   userName: 'Alex',
  *   agentId: 'assistant',
- *   observer: {
- *     onOrchestrationStart: (id) => console.log(`Started: ${id}`),
- *     onLayerUpdate: (event) => console.log(`${event.layer}: ${event.status}`),
- *     onOrchestrationComplete: (summary) => console.log(`Done in ${summary.totalLatencyMs}ms`),
- *   },
+ *   observer,
  * });
  * ```
  */
 export interface OrchestrationObserver {
   /**
-   * Called when orchestration starts
+   * Called when recall phase starts (context retrieval).
+   * Recall happens before the LLM generates a response.
    */
-  onOrchestrationStart?: (orchestrationId: string) => void | Promise<void>;
+  onRecallStart?: (orchestrationId: string) => void | Promise<void>;
 
   /**
-   * Called when a layer's status changes
+   * Called when recall phase completes.
+   * Contains retrieved context and timing information.
+   */
+  onRecallComplete?: (summary: RecallSummary) => void | Promise<void>;
+
+  /**
+   * Called when remember phase starts (memory storage).
+   * Remember happens after the LLM generates a response.
+   */
+  onRememberStart?: (orchestrationId: string) => void | Promise<void>;
+
+  /**
+   * Called when remember phase completes (all layers done).
+   * Contains created record IDs and timing information.
+   */
+  onRememberComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
+
+  /**
+   * Called when a layer's status changes during either phase.
+   * The event.phase field indicates which phase the update is for.
    */
   onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
-
-  /**
-   * Called when orchestration completes (all layers done)
-   */
-  onOrchestrationComplete?: (
-    summary: OrchestrationSummary,
-  ) => void | Promise<void>;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

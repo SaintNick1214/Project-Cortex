@@ -1,5 +1,7 @@
 /**
  * Unit tests for display.ts
+ *
+ * Tests phase-aware orchestration display (v0.35.1+)
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
@@ -7,6 +9,10 @@ import {
   printOrchestrationStart,
   printLayerUpdate,
   printOrchestrationComplete,
+  printRecallStart,
+  printRecallComplete,
+  printRememberStart,
+  printRememberComplete,
   printRecallResults,
   printWelcome,
   printError,
@@ -31,6 +37,82 @@ describe("display", () => {
     vi.clearAllMocks();
   });
 
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Phase-Aware Tests (v0.35.1+)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  describe("printRecallStart", () => {
+    it("prints recall header with box drawing", () => {
+      printRecallStart("test-recall-id");
+
+      const output = consoleLogs.join("\n");
+      expect(output).toContain("┌");
+      expect(output).toContain("MEMORY RECALL");
+      expect(output).toContain("Retrieving context");
+      expect(output).toContain("├");
+    });
+  });
+
+  describe("printRecallComplete", () => {
+    it("prints recall complete with timing", () => {
+      printRecallStart("test-id");
+      consoleLogs = [];
+
+      printRecallComplete(50);
+
+      const output = consoleLogs.join("\n");
+      expect(output).toContain("Recall complete: 50ms");
+      expect(output).toContain("└");
+    });
+
+    it("does nothing when no recall is active", () => {
+      // Don't call printRecallStart
+      consoleLogs = [];
+
+      printRecallComplete(100);
+
+      expect(consoleLogs.length).toBe(0);
+    });
+  });
+
+  describe("printRememberStart", () => {
+    it("prints remember header with box drawing", () => {
+      printRememberStart("test-remember-id");
+
+      const output = consoleLogs.join("\n");
+      expect(output).toContain("┌");
+      expect(output).toContain("MEMORY STORAGE");
+      expect(output).toContain("Storing memories");
+      expect(output).toContain("├");
+    });
+  });
+
+  describe("printRememberComplete", () => {
+    it("prints remember complete with timing", () => {
+      printRememberStart("test-id");
+      consoleLogs = [];
+
+      printRememberComplete(75);
+
+      const output = consoleLogs.join("\n");
+      expect(output).toContain("Storage complete: 75ms");
+      expect(output).toContain("└");
+    });
+
+    it("does nothing when no remember is active", () => {
+      // Don't call printRememberStart
+      consoleLogs = [];
+
+      printRememberComplete(100);
+
+      expect(consoleLogs.length).toBe(0);
+    });
+  });
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Legacy Tests (Deprecated but still supported)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
   describe("printOrchestrationStart", () => {
     it("prints header with box drawing", () => {
       printOrchestrationStart("test-orchestration-id");
@@ -54,8 +136,8 @@ describe("display", () => {
   });
 
   describe("printLayerUpdate", () => {
-    it("prints layer status on completion", () => {
-      printOrchestrationStart("test-id");
+    it("prints layer status on completion (remember phase)", () => {
+      printRememberStart("test-id");
       consoleLogs = []; // Clear header output
 
       const event: LayerEvent = {
@@ -63,6 +145,7 @@ describe("display", () => {
         status: "complete",
         timestamp: Date.now(),
         latencyMs: 10,
+        phase: "remember",
         data: { id: "test-space" },
       };
 
@@ -78,13 +161,14 @@ describe("display", () => {
     });
 
     it("skips in_progress status", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "user",
         status: "in_progress",
         timestamp: Date.now(),
+        phase: "remember",
       };
 
       printLayerUpdate(event);
@@ -94,13 +178,14 @@ describe("display", () => {
     });
 
     it("prints user layer data", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "user",
         status: "complete",
         timestamp: Date.now(),
+        phase: "remember",
         data: { id: "user-123", name: "Test User" },
       };
 
@@ -113,13 +198,14 @@ describe("display", () => {
     });
 
     it("prints agent layer data", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "agent",
         status: "complete",
         timestamp: Date.now(),
+        phase: "remember",
         data: { id: "agent-123", name: "Test Agent" },
       };
 
@@ -131,14 +217,37 @@ describe("display", () => {
       expect(output).toContain("Test Agent");
     });
 
+    it("prints context layer data (recall phase)", () => {
+      printRecallStart("test-id");
+      consoleLogs = [];
+
+      const event: LayerEvent = {
+        layer: "context",
+        status: "complete",
+        timestamp: Date.now(),
+        phase: "recall",
+        data: { memoriesCount: 5, factsCount: 3, graphEntitiesCount: 2 },
+      };
+
+      printLayerUpdate(event);
+
+      const output = consoleLogs.join("\n");
+      expect(output).toContain("🧠");
+      expect(output).toContain("Context");
+      expect(output).toContain("Memories: 5");
+      expect(output).toContain("Facts: 3");
+      expect(output).toContain("Graph entities: 2");
+    });
+
     it("prints conversation layer data", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "conversation",
         status: "complete",
         timestamp: Date.now(),
+        phase: "remember",
         data: { id: "conv-123", messageCount: 5, preview: "Hello world" },
       };
 
@@ -151,14 +260,15 @@ describe("display", () => {
       expect(output).toContain("Hello world");
     });
 
-    it("prints vector layer data", () => {
-      printOrchestrationStart("test-id");
+    it("prints vector layer data (remember phase)", () => {
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "vector",
         status: "complete",
         timestamp: Date.now(),
+        phase: "remember",
         data: { dimensions: 1536, importance: 85 },
       };
 
@@ -170,14 +280,34 @@ describe("display", () => {
       expect(output).toContain("Importance: 85");
     });
 
+    it("prints vector layer data with match count (recall phase)", () => {
+      printRecallStart("test-id");
+      consoleLogs = [];
+
+      const event: LayerEvent = {
+        layer: "vector",
+        status: "complete",
+        timestamp: Date.now(),
+        phase: "recall",
+        data: { matchCount: 10 },
+      };
+
+      printLayerUpdate(event);
+
+      const output = consoleLogs.join("\n");
+      expect(output).toContain("🎯");
+      expect(output).toContain("Matches: 10");
+    });
+
     it("prints facts layer data with revision badge", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "facts",
         status: "complete",
         timestamp: Date.now(),
+        phase: "remember",
         revisionAction: "ADD",
         data: {
           facts: [
@@ -197,13 +327,14 @@ describe("display", () => {
     });
 
     it("prints superseded facts", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "facts",
         status: "complete",
         timestamp: Date.now(),
+        phase: "remember",
         revisionAction: "SUPERSEDE",
         supersededFacts: ["Old fact 1", "Old fact 2"],
         data: { facts: [{ content: "New fact" }] },
@@ -219,13 +350,14 @@ describe("display", () => {
     });
 
     it("prints graph layer data", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "graph",
         status: "complete",
         timestamp: Date.now(),
+        phase: "remember",
         data: { nodes: 5, edges: 8 },
       };
 
@@ -238,13 +370,14 @@ describe("display", () => {
     });
 
     it("prints skipped status", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "graph",
         status: "skipped",
         timestamp: Date.now(),
+        phase: "remember",
       };
 
       printLayerUpdate(event);
@@ -255,14 +388,15 @@ describe("display", () => {
     });
 
     it("prints error status", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
         layer: "vector",
         status: "error",
         timestamp: Date.now(),
-        error: "Embedding failed",
+        phase: "remember",
+        error: { message: "Embedding failed" },
       };
 
       printLayerUpdate(event);
@@ -273,13 +407,14 @@ describe("display", () => {
     });
 
     it("ignores unknown layers", () => {
-      printOrchestrationStart("test-id");
+      printRememberStart("test-id");
       consoleLogs = [];
 
       const event: LayerEvent = {
-        layer: "unknown-layer" as string,
+        layer: "unknown-layer" as LayerEvent["layer"],
         status: "complete",
         timestamp: Date.now(),
+        phase: "remember",
       };
 
       printLayerUpdate(event);

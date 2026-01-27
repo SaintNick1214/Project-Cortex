@@ -15,10 +15,14 @@ import { homedir } from "os";
 import { join, dirname } from "path";
 import type {
   CLIConfig,
+  ConvexCheckResult,
   DeploymentConfig,
   GlobalOptions,
   OutputFormat,
+  ValidationOptions,
+  ValidationResult,
 } from "../types.js";
+import { Cortex } from "@cortexmemory/sdk";
 
 /**
  * Default configuration
@@ -547,4 +551,201 @@ export async function registerApp(
 
   await saveUserConfig(config);
   return config;
+}
+
+/**
+ * Extract error message from unknown error
+ */
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
+
+/**
+ * Determine if an error indicates an authentication failure
+ *
+ * Returns true for errors that indicate the deployment/key is invalid
+ * and should be removed from config. Returns false for transient errors
+ * (network issues, timeouts) where the deployment should be kept.
+ */
+function isAuthError(error: unknown): boolean {
+  const msg = getErrorMessage(error).toLowerCase();
+
+  // HTTP status codes indicating auth failure
+  if (msg.includes("401") || msg.includes("403")) {
+    return true;
+  }
+
+  // Auth-related error messages
+  const authPatterns = [
+    "unauthorized",
+    "forbidden",
+    "invalid key",
+    "invalid token",
+    "authentication failed",
+    "access denied",
+  ];
+
+  return authPatterns.some((pattern) => msg.includes(pattern));
+}
+
+/**
+ * Check if a Convex URL is reachable and properly configured
+ *
+ * @param url - The Convex deployment URL to check
+ * @param timeout - Timeout in milliseconds (default: 3000)
+ * @returns Result indicating status of the check
+ */
+async function checkConvexUrl(
+  url: string,
+  timeout = 3000,
+): Promise<ConvexCheckResult> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  let client: Cortex | undefined;
+
+  try {
+    client = new Cortex({ convexUrl: url });
+
+    // Race the operation against the abort signal
+    const checkPromise = client.memorySpaces.list({ limit: 1 });
+
+    // Set up abort listener
+    const abortPromise = new Promise<never>((_, reject) => {
+      controller.signal.addEventListener("abort", () => {
+        reject(new Error("Operation timed out"));
+      });
+    });
+
+    await Promise.race([checkPromise, abortPromise]);
+
+    return { status: "ok" };
+  } catch (error) {
+    if (controller.signal.aborted) {
+      return { status: "timeout" };
+    }
+    if (isAuthError(error)) {
+      return { status: "auth_error", message: getErrorMessage(error) };
+    }
+    // Default to network_error for any unrecognized error (fail-safe: keep deployment)
+    return { status: "network_error", message: getErrorMessage(error) };
+  } finally {
+    clearTimeout(timeoutId);
+    client?.close();
+  }
+}
+
+/**
+ * Validate and clean a configuration, removing invalid entries
+ *
+ * Performs the following validations:
+ * 1. Deployment projectPath: removes if directory doesn't exist
+ * 2. Deployment Convex URL: removes on auth errors, keeps on network errors
+ * 3. App paths: removes if join(projectPath, path) doesn't exist
+ * 4. Default deployment: reassigns if current default was removed
+ *
+ * @param config - The configuration to validate
+ * @param options - Validation options
+ * @returns Validation result with cleaned config and list of removed items
+ */
+export async function validateAndCleanConfig(
+  config: CLIConfig,
+  options?: ValidationOptions,
+): Promise<ValidationResult> {
+  const checkConvex = options?.checkConvex ?? true;
+  const timeout = options?.timeout ?? 3000;
+
+  const result: ValidationResult = {
+    config: { ...config, deployments: { ...config.deployments } },
+    modified: false,
+    removed: {
+      deployments: [],
+      apps: [],
+    },
+  };
+
+  // Copy apps if present
+  if (config.apps) {
+    result.config.apps = { ...config.apps };
+  }
+
+  // Validate deployments
+  const deploymentNames = Object.keys(result.config.deployments);
+
+  for (const name of deploymentNames) {
+    const deployment = result.config.deployments[name];
+    let shouldRemove = false;
+
+    // Check 1: projectPath exists (filesystem validation)
+    if (deployment.projectPath && !existsSync(deployment.projectPath)) {
+      shouldRemove = true;
+    }
+
+    // Check 2: Convex URL is reachable (if enabled and not already marked for removal)
+    if (!shouldRemove && checkConvex && deployment.url) {
+      const checkResult = await checkConvexUrl(deployment.url, timeout);
+
+      if (checkResult.status === "auth_error") {
+        shouldRemove = true;
+      }
+      // Note: timeout and network_error do NOT trigger removal (fail-safe)
+    }
+
+    if (shouldRemove) {
+      delete result.config.deployments[name];
+      result.removed.deployments.push(name);
+      result.modified = true;
+    }
+  }
+
+  // Validate apps
+  if (result.config.apps) {
+    const appNames = Object.keys(result.config.apps);
+
+    for (const name of appNames) {
+      const app = result.config.apps[name];
+
+      // Check: app path exists relative to projectPath
+      const fullPath = join(app.projectPath, app.path);
+      if (!existsSync(fullPath)) {
+        delete result.config.apps[name];
+        result.removed.apps.push(name);
+        result.modified = true;
+      }
+    }
+  }
+
+  // Reassign default deployment if it was removed
+  if (
+    result.config.default &&
+    !result.config.deployments[result.config.default]
+  ) {
+    const remaining = Object.keys(result.config.deployments).sort();
+    result.config.default = remaining[0] || "";
+    result.modified = true;
+  }
+
+  // Auto-save if modified
+  if (result.modified) {
+    await saveUserConfig(result.config);
+  }
+
+  return result;
+}
+
+/**
+ * Load configuration and validate it, cleaning up invalid entries
+ *
+ * Combines loadConfig() with validateAndCleanConfig() for a single
+ * function that returns a validated, cleaned configuration.
+ *
+ * @param options - Validation options
+ * @returns The validated and cleaned configuration
+ */
+export async function loadConfigWithValidation(
+  options?: ValidationOptions,
+): Promise<CLIConfig> {
+  const config = await loadConfig();
+  const result = await validateAndCleanConfig(config, options);
+  return result.config;
 }

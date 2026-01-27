@@ -7,7 +7,13 @@
 
 import { Cortex } from "@cortexmemory/sdk";
 import type { RememberParams } from "@cortexmemory/sdk";
-import { printLayerUpdate, printOrchestrationStart } from "./display.js";
+import {
+  printLayerUpdate,
+  printRecallStart,
+  printRecallComplete,
+  printRememberStart,
+  printRememberComplete,
+} from "./display.js";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Configuration
@@ -69,7 +75,7 @@ export async function initCortex(): Promise<Cortex> {
     }
 
     // Build client config
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const config: any = { convexUrl };
 
     // Configure LLM for auto fact extraction when OpenAI key is available
@@ -121,34 +127,143 @@ export function closeCortex(): void {
 // Layer Observer (for console output)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+/**
+ * Phase of the orchestration
+ * - "recall": Context retrieval phase (before LLM response)
+ * - "remember": Memory storage phase (after LLM response)
+ */
+export type OrchestrationPhase = "recall" | "remember";
+
+/**
+ * Memory layer types
+ */
+export type MemoryLayer =
+  | "memorySpace"
+  | "user"
+  | "agent"
+  | "context"
+  | "conversation"
+  | "vector"
+  | "facts"
+  | "graph";
+
+/**
+ * Layer event with phase-aware tracking (v0.35.1+)
+ */
 export interface LayerEvent {
-  layer: string;
-  status: "in_progress" | "complete" | "error" | "skipped";
+  layer: MemoryLayer;
+  status: "pending" | "in_progress" | "complete" | "error" | "skipped";
   timestamp: number;
   latencyMs?: number;
+  /** Phase this event belongs to */
+  phase: OrchestrationPhase;
   data?: Record<string, unknown>;
-  error?: string;
+  error?: { message: string; code?: string };
   revisionAction?: "ADD" | "UPDATE" | "SUPERSEDE" | "NONE";
   supersededFacts?: string[];
 }
 
 /**
- * Create a layer observer that prints to console
+ * Summary of the recall phase (context retrieval)
  */
-export function createLayerObserver() {
+export interface RecallSummary {
+  orchestrationId: string;
+  phase: "recall";
+  totalLatencyMs: number;
+  context: {
+    memoriesCount: number;
+    factsCount: number;
+    graphEntitiesCount: number;
+  };
+}
+
+/**
+ * Summary of the remember phase (memory storage)
+ */
+export interface OrchestrationSummary {
+  orchestrationId: string;
+  phase: "remember";
+  totalLatencyMs: number;
+  createdIds: {
+    conversationId?: string;
+    memoryIds?: string[];
+    factIds?: string[];
+  };
+}
+
+/**
+ * Phase-aware orchestration observer (v0.35.1+)
+ *
+ * Provides callbacks for both recall (context retrieval) and
+ * remember (memory storage) phases of memory orchestration.
+ */
+export interface OrchestrationObserver {
+  /** Called when recall phase starts */
+  onRecallStart?: (orchestrationId: string) => void | Promise<void>;
+  /** Called when recall phase completes */
+  onRecallComplete?: (summary: RecallSummary) => void | Promise<void>;
+  /** Called when remember phase starts */
+  onRememberStart?: (orchestrationId: string) => void | Promise<void>;
+  /** Called when remember phase completes */
+  onRememberComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
+  /** Called when a layer's status changes (includes phase info) */
+  onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
+}
+
+/**
+ * Create a phase-aware layer observer for recall operations
+ */
+export function createRecallObserver(): OrchestrationObserver {
   return {
-    onOrchestrationStart: (orchestrationId: string) => {
-      printOrchestrationStart(orchestrationId);
+    onRecallStart: (orchestrationId: string) => {
+      printRecallStart(orchestrationId);
     },
     onLayerUpdate: (event: LayerEvent) => {
       printLayerUpdate(event);
     },
-    onOrchestrationComplete: (summary: {
-      orchestrationId: string;
-      totalLatencyMs: number;
-      createdIds?: Record<string, string>;
-    }) => {
-      // Summary is printed by display.ts after all layers
+    onRecallComplete: (summary: RecallSummary) => {
+      printRecallComplete(summary.totalLatencyMs);
+      if (CONFIG.debug) {
+        console.log("[Debug] Recall complete:", summary);
+      }
+    },
+  };
+}
+
+/**
+ * Create a phase-aware layer observer for remember operations
+ */
+export function createRememberObserver(): OrchestrationObserver {
+  return {
+    onRememberStart: (orchestrationId: string) => {
+      printRememberStart(orchestrationId);
+    },
+    onLayerUpdate: (event: LayerEvent) => {
+      printLayerUpdate(event);
+    },
+    onRememberComplete: (summary: OrchestrationSummary) => {
+      printRememberComplete(summary.totalLatencyMs);
+      if (CONFIG.debug) {
+        console.log("[Debug] Remember complete:", summary);
+      }
+    },
+  };
+}
+
+/**
+ * Create a legacy-compatible layer observer (deprecated)
+ * @deprecated Use createRecallObserver() and createRememberObserver() instead
+ */
+export function createLayerObserver(): OrchestrationObserver {
+  return {
+    onRememberStart: (orchestrationId: string) => {
+      printRememberStart(orchestrationId);
+    },
+    onLayerUpdate: (event: LayerEvent) => {
+      printLayerUpdate(event);
+    },
+    onRememberComplete: (summary: OrchestrationSummary) => {
+      printRememberComplete(summary.totalLatencyMs);
       if (CONFIG.debug) {
         console.log("[Debug] Orchestration complete:", summary);
       }
@@ -221,18 +336,8 @@ export async function buildRememberParams(
     // Optional embedding
     generateEmbedding: embeddingProvider,
 
-    // Fact extraction is handled by llmConfig on the Cortex client
-    // No need to pass extractFacts here - SDK auto-extracts when llmConfig is set
-
-    // Belief revision (v0.24.0+)
-    // Automatically handles fact updates, supersessions, and deduplication
-    beliefRevision: CONFIG.enableFactExtraction
-      ? {
-          enabled: true,
-          slotMatching: true,
-          llmResolution: !!process.env.OPENAI_API_KEY,
-        }
-      : undefined,
+    // Fact extraction and belief revision are handled automatically
+    // by the llmConfig on the Cortex client when enableFactExtraction is true
   };
 
   return params;

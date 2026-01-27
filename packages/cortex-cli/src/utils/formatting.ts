@@ -9,7 +9,9 @@
 
 import Table from "cli-table3";
 import pc from "picocolors";
-import type { OutputFormat } from "../types.js";
+import ora from "ora";
+import type { OutputFormat, CLIConfig, ValidationResult } from "../types.js";
+import { validateAndCleanConfig } from "./config.js";
 
 /**
  * Format data based on the specified format
@@ -302,4 +304,141 @@ export function createProgressText(current: number, total: number): string {
   const filled = Math.round(percentage / 5);
   const bar = "█".repeat(filled) + "░".repeat(20 - filled);
   return `[${bar}] ${percentage}%`;
+}
+
+/**
+ * Display notification about cleaned stale config entries
+ *
+ * Used after config validation to inform user what was auto-removed.
+ */
+export function displayCleanupNotification(validation: {
+  removed: { deployments: string[]; apps: string[] };
+}): void {
+  const { deployments, apps } = validation.removed;
+  if (deployments.length > 0 && apps.length > 0) {
+    console.log(
+      pc.dim(
+        `   Cleaned ${deployments.length} stale deployment(s), ${apps.length} app(s)`,
+      ),
+    );
+  } else if (deployments.length > 0) {
+    console.log(
+      pc.dim(
+        `   Cleaned ${deployments.length} stale deployment(s): ${deployments.join(", ")}`,
+      ),
+    );
+  } else if (apps.length > 0) {
+    console.log(
+      pc.dim(`   Cleaned ${apps.length} stale app(s): ${apps.join(", ")}`),
+    );
+  }
+}
+
+/**
+ * Run config validation with a spinner and suppressed console output
+ *
+ * Shows "Checking deployments..." indicator while validation runs,
+ * suppressing verbose websocket/network errors from the Convex client.
+ *
+ * @param config - The configuration to validate
+ * @param options - Validation options (checkConvex, timeout)
+ * @returns Validation result with cleaned config
+ */
+export async function runValidationWithSpinner(
+  config: CLIConfig,
+  options?: { checkConvex?: boolean; timeout?: number },
+): Promise<ValidationResult> {
+  const checkConvex = options?.checkConvex ?? true;
+  const deploymentCount = Object.keys(config.deployments || {}).length;
+
+  // Skip spinner if no deployments or not checking Convex
+  if (!checkConvex || deploymentCount === 0) {
+    return validateAndCleanConfig(config, options);
+  }
+
+  const spinner = ora({
+    text: pc.dim(`Checking ${deploymentCount} deployment(s)...`),
+    color: "gray",
+  }).start();
+
+  // Suppress all console output during validation to hide verbose
+  // websocket/network errors from the Convex client
+  const originalLog = console.log;
+  const originalError = console.error;
+  const originalWarn = console.warn;
+  const originalStdoutWrite = process.stdout.write.bind(process.stdout);
+  const originalStderrWrite = process.stderr.write.bind(process.stderr);
+
+  // Filter function to allow spinner updates but suppress other output
+  // Type definition matches process.stdout.write overloads
+  type WriteCallback = (err?: Error | null) => void;
+  // eslint-disable-next-line no-undef
+  type EncodingOrCallback = BufferEncoding | WriteCallback | undefined;
+
+  const filterOutput =
+    (original: typeof process.stdout.write) =>
+    (
+      chunk: Uint8Array | string,
+      encodingOrCallback?: EncodingOrCallback,
+      callback?: WriteCallback,
+    ): boolean => {
+      const str = typeof chunk === "string" ? chunk : chunk.toString();
+      // Allow spinner frames and clear sequences through
+      if (
+        str.includes("\x1B") ||
+        str.includes("⠋") ||
+        str.includes("⠙") ||
+        str.includes("⠹") ||
+        str.includes("⠸") ||
+        str.includes("⠼") ||
+        str.includes("⠴") ||
+        str.includes("⠦") ||
+        str.includes("⠧") ||
+        str.includes("⠇") ||
+        str.includes("⠏")
+      ) {
+        if (typeof encodingOrCallback === "function") {
+          return original(chunk, encodingOrCallback);
+        }
+        return original(chunk, encodingOrCallback, callback);
+      }
+      // Suppress websocket and network error messages
+      if (
+        str.includes("WebSocket") ||
+        str.includes("network error") ||
+        str.includes("ECONNREFUSED")
+      ) {
+        if (typeof encodingOrCallback === "function") {
+          encodingOrCallback(null);
+        } else if (callback) {
+          callback(null);
+        }
+        return true;
+      }
+      // Allow other output through
+      if (typeof encodingOrCallback === "function") {
+        return original(chunk, encodingOrCallback);
+      }
+      return original(chunk, encodingOrCallback, callback);
+    };
+
+  console.log = () => {};
+  console.error = () => {};
+  console.warn = () => {};
+  process.stdout.write = filterOutput(originalStdoutWrite) as typeof process.stdout.write;
+  process.stderr.write = filterOutput(originalStderrWrite) as typeof process.stderr.write;
+
+  try {
+    const result = await validateAndCleanConfig(config, options);
+    spinner.stop();
+    return result;
+  } finally {
+    // Always restore console and stream functions
+    console.log = originalLog;
+    console.error = originalError;
+    console.warn = originalWarn;
+    process.stdout.write = originalStdoutWrite;
+    process.stderr.write = originalStderrWrite;
+    spinner.stop();
+  }
 }

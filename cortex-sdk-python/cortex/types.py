@@ -50,8 +50,11 @@ SkippableLayer = Literal["users", "agents", "conversations", "vector", "facts", 
 
 # Memory orchestration layer types
 MemoryLayer = Literal[
-    "memorySpace", "user", "agent", "conversation", "vector", "facts", "graph"
+    "memorySpace", "user", "agent", "conversation", "vector", "facts", "graph", "context"
 ]
+
+# Orchestration phase - distinguishes recall (read) from remember (write)
+OrchestrationPhase = Literal["recall", "remember"]
 
 # Layer status during orchestration
 LayerStatus = Literal["pending", "in_progress", "complete", "error", "skipped"]
@@ -85,11 +88,13 @@ class LayerEvent:
         >>> # observer.on_layer_update receives LayerEvent instances
         >>> # event.layer = "conversation"
         >>> # event.status = "complete"
+        >>> # event.phase = "remember"
         >>> # event.latency_ms = 45
     """
     layer: MemoryLayer
     status: LayerStatus
     timestamp: int
+    phase: OrchestrationPhase
     latency_ms: Optional[int] = None
     data: Optional[LayerEventData] = None
     error: Optional[LayerEventError] = None
@@ -98,50 +103,100 @@ class LayerEvent:
 
 
 @dataclass
-class OrchestrationSummary:
-    """Summary of the full orchestration flow.
+class CreatedIds:
+    """IDs of entities created during remember (write) orchestration."""
+    conversation_id: Optional[str] = None
+    memory_ids: Optional[List[str]] = None
+    fact_ids: Optional[List[str]] = None
 
-    Returned when orchestration completes (all layers processed).
+
+@dataclass
+class OrchestrationSummary:
+    """Summary of the remember (write) phase of orchestration.
+
+    Returned when remember() completes (all layers processed).
+    The phase field distinguishes this from RecallSummary.
     """
     orchestration_id: str
     total_latency_ms: int
     layers: Dict[str, "LayerEvent"]  # MemoryLayer -> LayerEvent
-    created_ids: Dict[str, Any]  # conversationId, memoryIds, factIds
+    created_ids: CreatedIds
+    phase: Literal["remember"] = "remember"
+
+
+@dataclass
+class RecallContext:
+    """Context assembled during the recall (read) phase.
+
+    Contains counts and optional formatted string of retrieved data.
+    """
+    memories_count: int
+    facts_count: int
+    graph_entities_count: int
+    formatted: Optional[str] = None
+
+
+@dataclass
+class RecallSummary:
+    """Summary of the recall (read) phase of orchestration.
+
+    Returned when recall completes - includes retrieved context data.
+    The phase field distinguishes this from OrchestrationSummary.
+    """
+    orchestration_id: str
+    total_latency_ms: int
+    layers: Dict[str, "LayerEvent"]  # MemoryLayer -> LayerEvent
+    context: RecallContext
+    phase: Literal["recall"] = "recall"
 
 
 class OrchestrationObserver(Protocol):
-    """Observer for memory layer orchestration.
+    """Observer for phase-aware memory layer orchestration.
 
-    Provides real-time monitoring of the remember() and remember_stream()
-    orchestration flow. This is integration-agnostic - any integration
-    can use this interface.
+    Provides real-time monitoring of the recall() and remember() orchestration
+    phases. Each phase has distinct start/complete callbacks, with layer events
+    tagged by their phase.
 
     Example:
         >>> class MyObserver:
-        ...     def on_orchestration_start(self, orchestration_id: str) -> None:
-        ...         print(f"Starting: {orchestration_id}")
+        ...     def on_recall_start(self, orchestration_id: str) -> None:
+        ...         print(f"Recall starting: {orchestration_id}")
         ...
         ...     def on_layer_update(self, event: LayerEvent) -> None:
-        ...         print(f"Layer {event.layer}: {event.status}")
+        ...         print(f"[{event.phase}] Layer {event.layer}: {event.status}")
         ...
-        ...     def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
-        ...         print(f"Done in {summary.total_latency_ms}ms")
+        ...     def on_recall_complete(self, summary: RecallSummary) -> None:
+        ...         print(f"Recall done in {summary.total_latency_ms}ms")
+        ...
+        ...     def on_remember_start(self, orchestration_id: str) -> None:
+        ...         print(f"Remember starting: {orchestration_id}")
+        ...
+        ...     def on_remember_complete(self, summary: OrchestrationSummary) -> None:
+        ...         print(f"Remember done in {summary.total_latency_ms}ms")
         >>>
         >>> await cortex.memory.remember(
         ...     RememberParams(..., observer=MyObserver())
         ... )
     """
 
-    def on_orchestration_start(self, orchestration_id: str) -> None:
-        """Called when orchestration starts."""
+    def on_recall_start(self, orchestration_id: str) -> None:
+        """Called when the recall (read) phase starts."""
+        ...
+
+    def on_recall_complete(self, summary: RecallSummary) -> None:
+        """Called when the recall (read) phase completes."""
+        ...
+
+    def on_remember_start(self, orchestration_id: str) -> None:
+        """Called when the remember (write) phase starts."""
+        ...
+
+    def on_remember_complete(self, summary: OrchestrationSummary) -> None:
+        """Called when the remember (write) phase completes."""
         ...
 
     def on_layer_update(self, event: LayerEvent) -> None:
-        """Called when a layer's status changes."""
-        ...
-
-    def on_orchestration_complete(self, summary: OrchestrationSummary) -> None:
-        """Called when orchestration completes (all layers done)."""
+        """Called when a layer's status changes. Event includes phase info."""
         ...
 
 
@@ -2090,6 +2145,9 @@ class RecallParams:
     limit: Optional[int] = None              # Legacy: Maximum results (use limits.total instead)
     include_conversation: Optional[bool] = None  # Enrich with ACID conversation (default: True)
     format_for_llm: Optional[bool] = None    # Generate LLM-ready context (default: True)
+
+    # Observer - Real-time monitoring of recall orchestration
+    observer: Optional["OrchestrationObserver"] = None  # Real-time orchestration monitoring (v0.31.0+)
 
 
 @dataclass
