@@ -400,6 +400,9 @@ describe("State Transition Testing", () => {
         ),
       );
 
+      // Additional delay for index stabilization after parallel waits under heavy load
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       // Verify each in correct status list
       for (let i = 0; i < transitionableStatuses.length; i++) {
         const status = transitionableStatuses[i];
