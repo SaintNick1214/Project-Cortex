@@ -159,20 +159,32 @@ export type WebPreviewBodyProps = ComponentProps<"iframe"> & {
 };
 
 /**
- * Sanitize URL to prevent XSS via javascript: or data: protocols
+ * Sanitize URL to prevent XSS via javascript:, data:, and other unsafe protocols.
+ * Only allow http/https URLs and a limited set of relative URLs.
  */
 function sanitizeUrl(url: string | undefined): string | undefined {
   if (!url) return undefined;
+
+  // Reject any control characters outright
+  if (/[^\x20-\x7E]/.test(url)) {
+    return undefined;
+  }
+
   try {
-    const parsed = new URL(url);
+    // Use a fixed base so relative URLs are resolved consistently
+    const parsed = new URL(url, window.location.origin);
+
     // Only allow http and https protocols
     if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-      return url;
+      return parsed.toString();
     }
+
     return undefined;
   } catch {
-    // If URL parsing fails, check if it's a relative URL (no protocol)
-    if (!url.includes(":") || url.startsWith("/")) {
+    // If URL parsing fails, only allow simple relative paths
+    // starting with "/", "./", or "../" and containing safe characters.
+    const RELATIVE_PATH_REGEX = /^(\/|\.{1,2}\/)[A-Za-z0-9\-._~\/?#[\]@!$&'()*+,;=%:]*$/;
+    if (RELATIVE_PATH_REGEX.test(url)) {
       return url;
     }
     return undefined;
@@ -192,7 +204,7 @@ export const WebPreviewBody = ({
     <div className="flex-1">
       <iframe
         className={cn("size-full", className)}
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
+        sandbox="allow-scripts allow-forms allow-presentation"
         src={safeSrc}
         title="Preview"
         {...props}
