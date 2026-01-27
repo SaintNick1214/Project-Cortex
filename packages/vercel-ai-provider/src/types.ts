@@ -614,24 +614,24 @@ export function createLogger(debug: boolean = false): Logger {
   if (debug) {
     return {
       debug: (...args) => {
-        // lgtm[js/log-injection]
-        // Arguments are sanitized by sanitizeLogArg to prevent log injection
-        console.debug(prefix, ...args.map((a) => sanitizeLogArg(a)));
+        // Sanitize all arguments to prevent log injection
+        const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+        console.debug(prefix, ...sanitizedArgs);
       },
       info: (...args) => {
-        // lgtm[js/log-injection]
-        // Arguments are sanitized by sanitizeLogArg to prevent log injection
-        console.info(prefix, ...args.map((a) => sanitizeLogArg(a)));
+        // Sanitize all arguments to prevent log injection
+        const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+        console.info(prefix, ...sanitizedArgs);
       },
       warn: (...args) => {
-        // lgtm[js/log-injection]
-        // Arguments are sanitized by sanitizeLogArg to prevent log injection
-        console.warn(prefix, ...args.map((a) => sanitizeLogArg(a)));
+        // Sanitize all arguments to prevent log injection
+        const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+        console.warn(prefix, ...sanitizedArgs);
       },
       error: (...args) => {
-        // lgtm[js/log-injection]
-        // Arguments are sanitized by sanitizeLogArg to prevent log injection
-        console.error(prefix, ...args.map((a) => sanitizeLogArg(a)));
+        // Sanitize all arguments to prevent log injection
+        const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+        console.error(prefix, ...sanitizedArgs);
       },
     };
   }
@@ -641,14 +641,14 @@ export function createLogger(debug: boolean = false): Logger {
     debug: () => {},
     info: () => {},
     warn: (...args) => {
-      // lgtm[js/log-injection]
-      // Arguments are sanitized by sanitizeLogArg to prevent log injection
-      console.warn(prefix, ...args.map((a) => sanitizeLogArg(a)));
+      // Sanitize all arguments to prevent log injection
+      const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+      console.warn(prefix, ...sanitizedArgs);
     },
     error: (...args) => {
-      // lgtm[js/log-injection]
-      // Arguments are sanitized by sanitizeLogArg to prevent log injection
-      console.error(prefix, ...args.map((a) => sanitizeLogArg(a)));
+      // Sanitize all arguments to prevent log injection
+      const sanitizedArgs = args.map((a) => sanitizeLogArg(a));
+      console.error(prefix, ...sanitizedArgs);
     },
   };
 }
