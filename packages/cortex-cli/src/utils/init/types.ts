@@ -3,12 +3,19 @@
  */
 
 /**
+ * Available template choices
+ */
+export type TemplateChoice = "basic" | "vercel-ai-quickstart" | "chat-sdk";
+
+/**
  * Configuration collected by the wizard
  */
 export interface WizardConfig {
   projectName: string;
   projectPath: string;
   installationType: "new" | "existing";
+  /** Template to install */
+  templateChoice: TemplateChoice;
   convexSetupType: "new" | "existing" | "local";
   convexUrl?: string;
   deployKey?: string;
@@ -21,7 +28,6 @@ export interface WizardConfig {
   graphUri?: string;
   graphUsername?: string;
   graphPassword?: string;
-  installCLI?: boolean;
   openaiApiKey?: string;
 }
 

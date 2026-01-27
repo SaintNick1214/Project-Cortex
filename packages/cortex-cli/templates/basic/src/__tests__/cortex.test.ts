@@ -7,6 +7,12 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 // Mock the display module before importing cortex
 vi.mock("../display.js", () => ({
   printLayerUpdate: vi.fn(),
+  // Phase-aware print functions (v0.35.1+)
+  printRecallStart: vi.fn(),
+  printRecallComplete: vi.fn(),
+  printRememberStart: vi.fn(),
+  printRememberComplete: vi.fn(),
+  // Legacy (deprecated)
   printOrchestrationStart: vi.fn(),
 }));
 
@@ -143,44 +149,106 @@ describe("cortex", () => {
     });
   });
 
-  describe("createLayerObserver", () => {
-    it("returns an observer with required methods", async () => {
-      const { createLayerObserver } = await import("../cortex.js");
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Phase-Aware Observers (v0.35.1+)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-      const observer = createLayerObserver();
+  describe("createRecallObserver", () => {
+    it("returns an observer with recall phase methods", async () => {
+      const { createRecallObserver } = await import("../cortex.js");
 
-      expect(observer).toHaveProperty("onOrchestrationStart");
+      const observer = createRecallObserver();
+
+      expect(observer).toHaveProperty("onRecallStart");
       expect(observer).toHaveProperty("onLayerUpdate");
-      expect(observer).toHaveProperty("onOrchestrationComplete");
-      expect(typeof observer.onOrchestrationStart).toBe("function");
+      expect(observer).toHaveProperty("onRecallComplete");
+      expect(typeof observer.onRecallStart).toBe("function");
       expect(typeof observer.onLayerUpdate).toBe("function");
-      expect(typeof observer.onOrchestrationComplete).toBe("function");
+      expect(typeof observer.onRecallComplete).toBe("function");
     });
 
-    it("calls printOrchestrationStart on orchestration start", async () => {
-      const { printOrchestrationStart } = await import("../display.js");
-      const { createLayerObserver } = await import("../cortex.js");
+    it("calls printRecallStart on recall start", async () => {
+      const { printRecallStart } = await import("../display.js");
+      const { createRecallObserver } = await import("../cortex.js");
 
-      const observer = createLayerObserver();
-      observer.onOrchestrationStart("test-id");
+      const observer = createRecallObserver();
+      observer.onRecallStart?.("test-id");
 
-      expect(printOrchestrationStart).toHaveBeenCalledWith("test-id");
+      expect(printRecallStart).toHaveBeenCalledWith("test-id");
     });
 
     it("calls printLayerUpdate on layer update", async () => {
       const { printLayerUpdate } = await import("../display.js");
-      const { createLayerObserver } = await import("../cortex.js");
+      const { createRecallObserver } = await import("../cortex.js");
 
-      const observer = createLayerObserver();
+      const observer = createRecallObserver();
       const event = {
-        layer: "facts",
+        layer: "vector" as const,
         status: "complete" as const,
         timestamp: Date.now(),
         latencyMs: 100,
+        phase: "recall" as const,
       };
-      observer.onLayerUpdate(event);
+      observer.onLayerUpdate?.(event);
 
       expect(printLayerUpdate).toHaveBeenCalledWith(event);
+    });
+  });
+
+  describe("createRememberObserver", () => {
+    it("returns an observer with remember phase methods", async () => {
+      const { createRememberObserver } = await import("../cortex.js");
+
+      const observer = createRememberObserver();
+
+      expect(observer).toHaveProperty("onRememberStart");
+      expect(observer).toHaveProperty("onLayerUpdate");
+      expect(observer).toHaveProperty("onRememberComplete");
+      expect(typeof observer.onRememberStart).toBe("function");
+      expect(typeof observer.onLayerUpdate).toBe("function");
+      expect(typeof observer.onRememberComplete).toBe("function");
+    });
+
+    it("calls printRememberStart on remember start", async () => {
+      const { printRememberStart } = await import("../display.js");
+      const { createRememberObserver } = await import("../cortex.js");
+
+      const observer = createRememberObserver();
+      observer.onRememberStart?.("test-id");
+
+      expect(printRememberStart).toHaveBeenCalledWith("test-id");
+    });
+
+    it("calls printLayerUpdate on layer update", async () => {
+      const { printLayerUpdate } = await import("../display.js");
+      const { createRememberObserver } = await import("../cortex.js");
+
+      const observer = createRememberObserver();
+      const event = {
+        layer: "facts" as const,
+        status: "complete" as const,
+        timestamp: Date.now(),
+        latencyMs: 100,
+        phase: "remember" as const,
+      };
+      observer.onLayerUpdate?.(event);
+
+      expect(printLayerUpdate).toHaveBeenCalledWith(event);
+    });
+  });
+
+  describe("createLayerObserver (legacy)", () => {
+    it("returns an observer with remember phase methods for backward compatibility", async () => {
+      const { createLayerObserver } = await import("../cortex.js");
+
+      const observer = createLayerObserver();
+
+      expect(observer).toHaveProperty("onRememberStart");
+      expect(observer).toHaveProperty("onLayerUpdate");
+      expect(observer).toHaveProperty("onRememberComplete");
+      expect(typeof observer.onRememberStart).toBe("function");
+      expect(typeof observer.onLayerUpdate).toBe("function");
+      expect(typeof observer.onRememberComplete).toBe("function");
     });
   });
 

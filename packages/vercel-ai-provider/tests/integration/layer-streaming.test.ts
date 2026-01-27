@@ -21,23 +21,41 @@ import {
 import type { LayerEvent, OrchestrationSummary, MemoryLayer } from "../../src/types";
 
 /**
+ * Create a valid LayerEvent for testing with required phase field
+ */
+function createTestLayerEvent(
+  layer: MemoryLayer,
+  status: "pending" | "in_progress" | "complete" | "error" | "skipped" = "complete",
+  phase: "recall" | "remember" = "remember"
+): LayerEvent {
+  return {
+    layer,
+    status,
+    timestamp: Date.now(),
+    phase,
+  };
+}
+
+/**
  * Create a minimal valid OrchestrationSummary for testing
  */
 function createTestSummary(
   overrides: Partial<OrchestrationSummary> = {}
 ): OrchestrationSummary {
   const defaultLayers: Record<MemoryLayer, LayerEvent> = {
-    memorySpace: { layer: "memorySpace", status: "complete", timestamp: Date.now() },
-    user: { layer: "user", status: "complete", timestamp: Date.now() },
-    agent: { layer: "agent", status: "complete", timestamp: Date.now() },
-    conversation: { layer: "conversation", status: "complete", timestamp: Date.now() },
-    vector: { layer: "vector", status: "complete", timestamp: Date.now() },
-    facts: { layer: "facts", status: "complete", timestamp: Date.now() },
-    graph: { layer: "graph", status: "complete", timestamp: Date.now() },
+    memorySpace: createTestLayerEvent("memorySpace"),
+    user: createTestLayerEvent("user"),
+    agent: createTestLayerEvent("agent"),
+    context: createTestLayerEvent("context", "complete", "recall"),
+    conversation: createTestLayerEvent("conversation"),
+    vector: createTestLayerEvent("vector"),
+    facts: createTestLayerEvent("facts"),
+    graph: createTestLayerEvent("graph"),
   };
 
   return {
     orchestrationId: "test-orch-id",
+    phase: "remember",
     totalLatencyMs: 100,
     layers: defaultLayers,
     createdIds: {},
@@ -99,20 +117,14 @@ describe("Layer Streaming Integration", () => {
 
       emitTo(mockWriter);
 
-      // Trigger events
-      observer.onOrchestrationStart?.("orch-1");
+      // Trigger events using phase-aware API
+      observer.onRecallStart?.("orch-1");
+      observer.onLayerUpdate?.(createTestLayerEvent("vector", "in_progress", "recall"));
       observer.onLayerUpdate?.({
-        layer: "vector",
-        status: "in_progress",
-        timestamp: Date.now(),
-      });
-      observer.onLayerUpdate?.({
-        layer: "vector",
-        status: "complete",
-        timestamp: Date.now(),
+        ...createTestLayerEvent("vector", "complete", "recall"),
         latencyMs: 50,
       });
-      observer.onOrchestrationComplete?.(createTestSummary({
+      observer.onRememberComplete?.(createTestSummary({
         orchestrationId: "orch-1",
         totalLatencyMs: 100,
       }));
@@ -136,9 +148,9 @@ describe("Layer Streaming Integration", () => {
 
       emitTo(mockWriter);
 
-      observer.onOrchestrationStart?.("test");
-      observer.onLayerUpdate?.({ layer: "vector", status: "complete", timestamp: Date.now() });
-      observer.onOrchestrationComplete?.(createTestSummary({ orchestrationId: "test", totalLatencyMs: 50 }));
+      observer.onRecallStart?.("test");
+      observer.onLayerUpdate?.(createTestLayerEvent("vector", "complete", "recall"));
+      observer.onRememberComplete?.(createTestSummary({ orchestrationId: "test", totalLatencyMs: 50 }));
 
       for (const part of writtenParts) {
         expect(part.transient).toBe(true);
@@ -161,13 +173,9 @@ describe("Layer Streaming Integration", () => {
       emitTo(mockWriter);
 
       // Simulate interleaved layer updates
-      const layers = ["memorySpace", "user", "agent", "conversation", "vector", "facts", "graph"];
+      const layers = ["memorySpace", "user", "agent", "conversation", "vector", "facts", "graph"] as const;
       for (const layer of layers) {
-        observer.onLayerUpdate?.({
-          layer: layer as any,
-          status: "in_progress",
-          timestamp: Date.now(),
-        });
+        observer.onLayerUpdate?.(createTestLayerEvent(layer, "in_progress", "remember"));
       }
 
       expect(writtenLayers).toEqual(layers);
@@ -207,15 +215,15 @@ describe("Layer Streaming Integration", () => {
     it("should allow observer to receive events during streaming", async () => {
       const receivedEvents: Array<{ type: string; data: unknown }> = [];
 
-      // Create observer that tracks events
+      // Create observer that tracks events using phase-aware API
       const layerObserver = {
-        onOrchestrationStart: jest.fn((id: string) => {
+        onRecallStart: jest.fn((id: string) => {
           receivedEvents.push({ type: "start", data: { orchestrationId: id } });
         }),
         onLayerUpdate: jest.fn((event: LayerEvent) => {
           receivedEvents.push({ type: "layer", data: event });
         }),
-        onOrchestrationComplete: jest.fn((summary: OrchestrationSummary) => {
+        onRememberComplete: jest.fn((summary: OrchestrationSummary) => {
           receivedEvents.push({ type: "complete", data: summary });
         }),
       };
@@ -259,44 +267,36 @@ describe("Layer Streaming Integration", () => {
       emitTo(mockWriter);
 
       // Simulate what the SDK would emit during orchestration
-      observer.onOrchestrationStart?.("orch-full-test");
+      observer.onRecallStart?.("orch-full-test");
 
       // Memory space setup
-      observer.onLayerUpdate?.({ layer: "memorySpace", status: "in_progress", timestamp: Date.now() });
+      observer.onLayerUpdate?.(createTestLayerEvent("memorySpace", "in_progress", "remember"));
       observer.onLayerUpdate?.({
-        layer: "memorySpace",
-        status: "complete",
-        timestamp: Date.now(),
+        ...createTestLayerEvent("memorySpace", "complete", "remember"),
         latencyMs: 10,
         data: { id: "space-1", preview: "Test Space" },
       });
 
       // User lookup
-      observer.onLayerUpdate?.({ layer: "user", status: "in_progress", timestamp: Date.now() });
+      observer.onLayerUpdate?.(createTestLayerEvent("user", "in_progress", "remember"));
       observer.onLayerUpdate?.({
-        layer: "user",
-        status: "complete",
-        timestamp: Date.now(),
+        ...createTestLayerEvent("user", "complete", "remember"),
         latencyMs: 5,
         data: { id: "user-1", preview: "Test User" },
       });
 
       // Vector search
-      observer.onLayerUpdate?.({ layer: "vector", status: "in_progress", timestamp: Date.now() });
+      observer.onLayerUpdate?.(createTestLayerEvent("vector", "in_progress", "recall"));
       observer.onLayerUpdate?.({
-        layer: "vector",
-        status: "complete",
-        timestamp: Date.now(),
+        ...createTestLayerEvent("vector", "complete", "recall"),
         latencyMs: 80,
         data: { id: "vec-1", preview: "Found 3 memories", metadata: { count: 3 } },
       });
 
       // Facts with belief revision
-      observer.onLayerUpdate?.({ layer: "facts", status: "in_progress", timestamp: Date.now() });
+      observer.onLayerUpdate?.(createTestLayerEvent("facts", "in_progress", "remember"));
       observer.onLayerUpdate?.({
-        layer: "facts",
-        status: "complete",
-        timestamp: Date.now(),
+        ...createTestLayerEvent("facts", "complete", "remember"),
         latencyMs: 120,
         data: { id: "fact-1", preview: "Extracted 2 facts" },
         revisionAction: "SUPERSEDE",
@@ -304,7 +304,7 @@ describe("Layer Streaming Integration", () => {
       });
 
       // Complete
-      observer.onOrchestrationComplete?.(createTestSummary({
+      observer.onRememberComplete?.(createTestSummary({
         orchestrationId: "orch-full-test",
         totalLatencyMs: 215,
         createdIds: {
@@ -338,14 +338,12 @@ describe("Layer Streaming Integration", () => {
 
       emitTo(mockWriter);
 
-      observer.onOrchestrationStart?.("orch-error-test");
+      observer.onRecallStart?.("orch-error-test");
 
       // Graph layer fails
-      observer.onLayerUpdate?.({ layer: "graph", status: "in_progress", timestamp: Date.now() });
+      observer.onLayerUpdate?.(createTestLayerEvent("graph", "in_progress", "remember"));
       observer.onLayerUpdate?.({
-        layer: "graph",
-        status: "error",
-        timestamp: Date.now(),
+        ...createTestLayerEvent("graph", "error", "remember"),
         error: { message: "Graph connection timeout", code: "GRAPH_TIMEOUT" },
       });
 
@@ -371,10 +369,10 @@ describe("Layer Streaming Integration", () => {
 
       emitTo(mockWriter);
 
-      observer.onOrchestrationStart?.("orch-skip-test");
+      observer.onRecallStart?.("orch-skip-test");
 
       // Graph layer skipped (not configured)
-      observer.onLayerUpdate?.({ layer: "graph", status: "skipped", timestamp: Date.now() });
+      observer.onLayerUpdate?.(createTestLayerEvent("graph", "skipped", "remember"));
 
       const skippedEvent = events.find((e) => e.data?.status === "skipped");
       expect(skippedEvent).toBeDefined();
@@ -401,11 +399,11 @@ describe("Layer Streaming Integration", () => {
 
       // Rapid fire events
       for (let i = 0; i < 100; i++) {
-        observer.onLayerUpdate?.({
-          layer: "vector",
-          status: i % 2 === 0 ? "in_progress" : "complete",
-          timestamp: Date.now(),
-        });
+        observer.onLayerUpdate?.(createTestLayerEvent(
+          "vector",
+          i % 2 === 0 ? "in_progress" : "complete",
+          "recall"
+        ));
       }
 
       expect(eventCount).toBe(100);
@@ -415,9 +413,9 @@ describe("Layer Streaming Integration", () => {
       const { observer, emitTo } = createLayerStreamObserver();
 
       // These should not throw
-      expect(() => observer.onOrchestrationStart?.("pre-connect")).not.toThrow();
+      expect(() => observer.onRecallStart?.("pre-connect")).not.toThrow();
       expect(() =>
-        observer.onLayerUpdate?.({ layer: "vector", status: "complete", timestamp: Date.now() })
+        observer.onLayerUpdate?.(createTestLayerEvent("vector", "complete", "recall"))
       ).not.toThrow();
 
       // Now connect writer
@@ -428,7 +426,7 @@ describe("Layer Streaming Integration", () => {
       emitTo(mockWriter);
 
       // New events should be captured
-      observer.onOrchestrationStart?.("post-connect");
+      observer.onRecallStart?.("post-connect");
       expect(events).toHaveLength(1);
     });
 
@@ -442,11 +440,11 @@ describe("Layer Streaming Integration", () => {
       const writer2: StreamWriter = { write: (part) => events2.push(part) };
 
       emitTo(writer1);
-      observer.onOrchestrationStart?.("event-1");
+      observer.onRecallStart?.("event-1");
 
       // Switch writers mid-stream
       emitTo(writer2);
-      observer.onLayerUpdate?.({ layer: "vector", status: "complete", timestamp: Date.now() });
+      observer.onLayerUpdate?.(createTestLayerEvent("vector", "complete", "recall"));
 
       expect(events1).toHaveLength(1);
       expect(events2).toHaveLength(1);

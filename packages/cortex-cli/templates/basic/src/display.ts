@@ -3,9 +3,13 @@
  *
  * Provides beautiful console output showing Cortex's "thinking" process,
  * mirroring the UI visualization from the Vercel AI quickstart.
+ *
+ * Supports phase-aware orchestration (v0.35.1+):
+ * - Recall phase: Context retrieval (before LLM response)
+ * - Remember phase: Memory storage (after LLM response)
  */
 
-import type { LayerEvent } from "./cortex.js";
+import type { LayerEvent, OrchestrationPhase } from "./cortex.js";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Constants
@@ -15,27 +19,37 @@ const BOX_WIDTH = 70;
 
 const LAYER_INFO: Record<
   string,
-  { icon: string; name: string; description: string }
+  { icon: string; name: string; description: string; phase?: OrchestrationPhase }
 > = {
   memorySpace: {
     icon: "📦",
     name: "Memory Space",
     description: "Isolated namespace for multi-tenancy",
+    phase: "remember",
   },
   user: {
     icon: "👤",
     name: "User",
     description: "User profile and identity",
+    phase: "remember",
   },
   agent: {
     icon: "🤖",
     name: "Agent",
     description: "AI agent participant",
+    phase: "remember",
+  },
+  context: {
+    icon: "🧠",
+    name: "Context",
+    description: "Assembled context from memories",
+    phase: "recall",
   },
   conversation: {
     icon: "💬",
     name: "Conversation",
     description: "Message storage with threading",
+    phase: "remember",
   },
   vector: {
     icon: "🎯",
@@ -79,8 +93,20 @@ interface LayerState {
   data?: Record<string, unknown>;
   revisionAction?: string;
   supersededFacts?: string[];
+  phase?: OrchestrationPhase;
 }
 
+// Recall phase state
+const recallLayerStates: Map<string, LayerState> = new Map();
+let recallStartTime = 0;
+let isRecalling = false;
+
+// Remember phase state
+const rememberLayerStates: Map<string, LayerState> = new Map();
+let rememberStartTime = 0;
+let isRemembering = false;
+
+// Legacy compatibility
 const layerStates: Map<string, LayerState> = new Map();
 let orchestrationStartTime = 0;
 let isOrchestrating = false;
@@ -172,8 +198,8 @@ function boxDivider(): string {
 function boxLine(content: string, indent = 0): string {
   const indentStr = " ".repeat(indent);
   const text = indentStr + content;
-  const padding = BOX_WIDTH - 4 - text.length;
   // Handle ANSI escape codes by not counting them in padding
+  // eslint-disable-next-line no-control-regex
   const visibleLength = text.replace(/\x1b\[[0-9;]*m/g, "").length;
   const actualPadding = BOX_WIDTH - 4 - visibleLength;
   return "│  " + text + " ".repeat(Math.max(0, actualPadding)) + "│";
@@ -184,11 +210,78 @@ function boxEmpty(): string {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Public API
+// Public API - Phase-Aware (v0.35.1+)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Print recall phase start header
+ */
+export function printRecallStart(_orchestrationId: string): void {
+  recallStartTime = Date.now();
+  isRecalling = true;
+  recallLayerStates.clear();
+
+  console.log("");
+  console.log(boxTop());
+  console.log(boxLine("MEMORY RECALL"));
+  console.log(boxLine("\x1b[90mRetrieving context from memory...\x1b[0m"));
+  console.log(boxDivider());
+}
+
+/**
+ * Print recall phase complete
+ */
+export function printRecallComplete(totalMs?: number): void {
+  if (!isRecalling) return;
+
+  const elapsed = totalMs || Date.now() - recallStartTime;
+
+  console.log(boxDivider());
+  console.log(boxLine(`Recall complete: ${elapsed}ms`));
+  console.log(boxBottom());
+  console.log("");
+
+  isRecalling = false;
+}
+
+/**
+ * Print remember phase start header
+ */
+export function printRememberStart(_orchestrationId: string): void {
+  rememberStartTime = Date.now();
+  isRemembering = true;
+  rememberLayerStates.clear();
+
+  console.log("");
+  console.log(boxTop());
+  console.log(boxLine("MEMORY STORAGE"));
+  console.log(boxLine("\x1b[90mStoring memories for future recall...\x1b[0m"));
+  console.log(boxDivider());
+}
+
+/**
+ * Print remember phase complete
+ */
+export function printRememberComplete(totalMs?: number): void {
+  if (!isRemembering) return;
+
+  const elapsed = totalMs || Date.now() - rememberStartTime;
+
+  console.log(boxDivider());
+  console.log(boxLine(`Storage complete: ${elapsed}ms`));
+  console.log(boxBottom());
+  console.log("");
+
+  isRemembering = false;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Public API - Legacy (Deprecated)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /**
  * Print orchestration start header
+ * @deprecated Use printRecallStart() or printRememberStart() instead
  */
 export function printOrchestrationStart(_orchestrationId: string): void {
   orchestrationStartTime = Date.now();
@@ -202,23 +295,37 @@ export function printOrchestrationStart(_orchestrationId: string): void {
 }
 
 /**
- * Print a layer update event
+ * Print a layer update event (phase-aware)
  */
 export function printLayerUpdate(event: LayerEvent): void {
   const info = LAYER_INFO[event.layer];
   if (!info) return;
 
-  // Store state
+  // Determine which state map to use based on phase
+  const stateMap = event.phase === "recall" ? recallLayerStates : rememberLayerStates;
+
+  // Store state with phase info
+  stateMap.set(event.layer, {
+    status: event.status,
+    latencyMs: event.latencyMs,
+    data: event.data,
+    revisionAction: event.revisionAction,
+    supersededFacts: event.supersededFacts,
+    phase: event.phase,
+  });
+
+  // Also store in legacy map for backward compatibility
   layerStates.set(event.layer, {
     status: event.status,
     latencyMs: event.latencyMs,
     data: event.data,
     revisionAction: event.revisionAction,
     supersededFacts: event.supersededFacts,
+    phase: event.phase,
   });
 
   // Only print on complete/error/skipped
-  if (event.status === "in_progress") return;
+  if (event.status === "in_progress" || event.status === "pending") return;
 
   const symbol = STATUS_SYMBOLS[event.status] || "?";
   const latency = event.latencyMs ? `(${event.latencyMs}ms)` : "";
@@ -267,6 +374,18 @@ function printLayerData(layer: string, data: Record<string, unknown>): void {
       if (data.name) console.log(boxLine(`→ Name: ${data.name}`, 3));
       break;
 
+    case "context":
+      // Context layer shows assembled context summary (recall phase)
+      if (data.memoriesCount !== undefined)
+        console.log(boxLine(`→ Memories: ${data.memoriesCount}`, 3));
+      if (data.factsCount !== undefined)
+        console.log(boxLine(`→ Facts: ${data.factsCount}`, 3));
+      if (data.graphEntitiesCount !== undefined)
+        console.log(boxLine(`→ Graph entities: ${data.graphEntitiesCount}`, 3));
+      if (data.preview)
+        console.log(boxLine(`→ "${truncate(String(data.preview), 45)}"`, 3));
+      break;
+
     case "conversation":
       if (data.id) console.log(boxLine(`→ ID: ${data.id}`, 3));
       if (data.messageCount)
@@ -280,6 +399,9 @@ function printLayerData(layer: string, data: Record<string, unknown>): void {
         console.log(boxLine(`→ Embedded with ${data.dimensions} dimensions`, 3));
       if (data.importance)
         console.log(boxLine(`→ Importance: ${data.importance}`, 3));
+      // For recall phase, show match count
+      if (data.matchCount !== undefined)
+        console.log(boxLine(`→ Matches: ${data.matchCount}`, 3));
       break;
 
     case "facts":
@@ -297,17 +419,24 @@ function printLayerData(layer: string, data: Record<string, unknown>): void {
       } else if (data.count) {
         console.log(boxLine(`→ Extracted ${data.count} fact(s)`, 3));
       }
+      // For recall phase, show retrieved facts count
+      if (data.retrievedCount !== undefined)
+        console.log(boxLine(`→ Retrieved: ${data.retrievedCount} fact(s)`, 3));
       break;
 
     case "graph":
       if (data.nodes) console.log(boxLine(`→ Nodes: ${data.nodes}`, 3));
       if (data.edges) console.log(boxLine(`→ Edges: ${data.edges}`, 3));
+      // For recall phase, show entity count
+      if (data.entitiesCount !== undefined)
+        console.log(boxLine(`→ Entities: ${data.entitiesCount}`, 3));
       break;
   }
 }
 
 /**
  * Print orchestration complete summary
+ * @deprecated Use printRecallComplete() or printRememberComplete() instead
  */
 export function printOrchestrationComplete(totalMs?: number): void {
   if (!isOrchestrating) return;

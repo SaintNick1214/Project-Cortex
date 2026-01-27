@@ -793,12 +793,13 @@ export function registerDeployCommands(
           if (options.syncTemplate) {
             const totalTemplateChanges =
               info.templateFilesToUpdate + info.templateFilesToAdd;
+            const templateName = info.app.type;
             if (totalTemplateChanges > 0) {
               console.log(
-                `      Template: ${pc.yellow(`${totalTemplateChanges} file(s) to sync`)}`,
+                `      Template: ${pc.cyan(templateName)} ${pc.yellow(`(${totalTemplateChanges} file(s) to sync)`)}`,
               );
             } else {
-              console.log(`      Template: ${pc.green("up to date")}`);
+              console.log(`      Template: ${pc.cyan(templateName)} ${pc.green("up to date")}`);
             }
           }
           console.log();

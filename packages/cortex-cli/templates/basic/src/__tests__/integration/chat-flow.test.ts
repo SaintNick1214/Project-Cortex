@@ -137,10 +137,22 @@ vi.mock("../../cortex.js", () => ({
     agentId: "test-agent",
     agentName: "Test Agent",
   })),
-  createLayerObserver: vi.fn(() => ({
-    onOrchestrationStart: vi.fn(),
+  // Phase-aware observers (v0.35.1+)
+  createRecallObserver: vi.fn(() => ({
+    onRecallStart: vi.fn(),
     onLayerUpdate: vi.fn(),
-    onOrchestrationComplete: vi.fn(),
+    onRecallComplete: vi.fn(),
+  })),
+  createRememberObserver: vi.fn(() => ({
+    onRememberStart: vi.fn(),
+    onLayerUpdate: vi.fn(),
+    onRememberComplete: vi.fn(),
+  })),
+  // Legacy (deprecated)
+  createLayerObserver: vi.fn(() => ({
+    onRememberStart: vi.fn(),
+    onLayerUpdate: vi.fn(),
+    onRememberComplete: vi.fn(),
   })),
 }));
 
@@ -153,10 +165,18 @@ vi.mock("../../llm.js", () => ({
 // Mock display module (suppress console output in tests)
 vi.mock("../../display.js", () => ({
   printRecallResults: vi.fn(),
-  printOrchestrationComplete: vi.fn(),
   printInfo: vi.fn(),
   printError: vi.fn(),
   printSuccess: vi.fn(),
+  startSpinner: vi.fn(),
+  stopSpinner: vi.fn(),
+  // Phase-aware functions (v0.35.1+)
+  printRecallStart: vi.fn(),
+  printRecallComplete: vi.fn(),
+  printRememberStart: vi.fn(),
+  printRememberComplete: vi.fn(),
+  // Legacy (deprecated)
+  printOrchestrationComplete: vi.fn(),
 }));
 
 // Import after mocks

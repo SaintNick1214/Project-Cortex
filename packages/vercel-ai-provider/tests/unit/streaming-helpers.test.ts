@@ -12,23 +12,41 @@ import {
 import type { LayerEvent, OrchestrationSummary, MemoryLayer } from "../../src/types";
 
 /**
+ * Create a minimal valid LayerEvent for testing
+ */
+function createTestLayerEvent(
+  layer: MemoryLayer,
+  status: "pending" | "in_progress" | "complete" | "error" | "skipped" = "complete",
+  phase: "recall" | "remember" = "remember"
+): LayerEvent {
+  return {
+    layer,
+    status,
+    timestamp: Date.now(),
+    phase,
+  };
+}
+
+/**
  * Create a minimal valid OrchestrationSummary for testing
  */
 function createTestSummary(
   overrides: Partial<OrchestrationSummary> = {}
 ): OrchestrationSummary {
   const defaultLayers: Record<MemoryLayer, LayerEvent> = {
-    memorySpace: { layer: "memorySpace", status: "complete", timestamp: Date.now() },
-    user: { layer: "user", status: "complete", timestamp: Date.now() },
-    agent: { layer: "agent", status: "complete", timestamp: Date.now() },
-    conversation: { layer: "conversation", status: "complete", timestamp: Date.now() },
-    vector: { layer: "vector", status: "complete", timestamp: Date.now() },
-    facts: { layer: "facts", status: "complete", timestamp: Date.now() },
-    graph: { layer: "graph", status: "complete", timestamp: Date.now() },
+    memorySpace: createTestLayerEvent("memorySpace"),
+    user: createTestLayerEvent("user"),
+    agent: createTestLayerEvent("agent"),
+    context: createTestLayerEvent("context", "complete", "recall"),
+    conversation: createTestLayerEvent("conversation"),
+    vector: createTestLayerEvent("vector"),
+    facts: createTestLayerEvent("facts"),
+    graph: createTestLayerEvent("graph"),
   };
 
   return {
     orchestrationId: "test-orch-id",
+    phase: "remember",
     totalLatencyMs: 100,
     layers: defaultLayers,
     createdIds: {},
@@ -46,9 +64,10 @@ describe("Streaming Helpers", () => {
       const { observer, emitTo } = createLayerStreamObserver();
 
       expect(observer).toBeDefined();
-      expect(typeof observer.onOrchestrationStart).toBe("function");
+      // Phase-aware API uses onRecallStart/onRememberStart instead of onOrchestrationStart
+      expect(typeof observer.onRecallStart).toBe("function");
       expect(typeof observer.onLayerUpdate).toBe("function");
-      expect(typeof observer.onOrchestrationComplete).toBe("function");
+      expect(typeof observer.onRememberComplete).toBe("function");
       expect(typeof emitTo).toBe("function");
     });
 
@@ -56,16 +75,12 @@ describe("Streaming Helpers", () => {
       const { observer } = createLayerStreamObserver();
 
       // These should not throw even without a connected writer
-      expect(() => observer.onOrchestrationStart?.("test-id")).not.toThrow();
+      expect(() => observer.onRecallStart?.("test-id")).not.toThrow();
       expect(() =>
-        observer.onLayerUpdate?.({
-          layer: "vector",
-          status: "in_progress",
-          timestamp: Date.now(),
-        })
+        observer.onLayerUpdate?.(createTestLayerEvent("vector", "in_progress", "recall"))
       ).not.toThrow();
       expect(() =>
-        observer.onOrchestrationComplete?.(createTestSummary())
+        observer.onRememberComplete?.(createTestSummary())
       ).not.toThrow();
     });
 
@@ -77,7 +92,7 @@ describe("Streaming Helpers", () => {
 
       emitTo(mockWriter);
 
-      observer.onOrchestrationStart?.("test-id");
+      observer.onRecallStart?.("test-id");
 
       expect(mockWriter.write).toHaveBeenCalledTimes(1);
     });
@@ -89,14 +104,14 @@ describe("Streaming Helpers", () => {
       const mockWriter2: StreamWriter = { write: jest.fn() };
 
       emitTo(mockWriter1);
-      observer.onOrchestrationStart?.("id-1");
+      observer.onRecallStart?.("id-1");
 
       expect(mockWriter1.write).toHaveBeenCalledTimes(1);
       expect(mockWriter2.write).toHaveBeenCalledTimes(0);
 
       // Switch to second writer
       emitTo(mockWriter2);
-      observer.onOrchestrationStart?.("id-2");
+      observer.onRecallStart?.("id-2");
 
       expect(mockWriter1.write).toHaveBeenCalledTimes(1); // Still 1
       expect(mockWriter2.write).toHaveBeenCalledTimes(1); // Now 1
@@ -104,16 +119,16 @@ describe("Streaming Helpers", () => {
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // onOrchestrationStart
+  // onRecallStart (legacy: onOrchestrationStart)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  describe("onOrchestrationStart", () => {
+  describe("onRecallStart", () => {
     it("should write correct event format", () => {
       const { observer, emitTo } = createLayerStreamObserver();
       const mockWriter: StreamWriter = { write: jest.fn() };
       emitTo(mockWriter);
 
-      observer.onOrchestrationStart?.("orch-123");
+      observer.onRecallStart?.("orch-123");
 
       expect(mockWriter.write).toHaveBeenCalledWith({
         type: "data-orchestration-start",
@@ -127,7 +142,7 @@ describe("Streaming Helpers", () => {
       const mockWriter: StreamWriter = { write: jest.fn() };
       emitTo(mockWriter);
 
-      observer.onOrchestrationStart?.("test-id");
+      observer.onRecallStart?.("test-id");
 
       const call = (mockWriter.write as jest.Mock).mock.calls[0][0];
       expect(call.transient).toBe(true);
@@ -138,7 +153,7 @@ describe("Streaming Helpers", () => {
       const mockWriter: StreamWriter = { write: jest.fn() };
       emitTo(mockWriter);
 
-      observer.onOrchestrationStart?.("test-id");
+      observer.onRecallStart?.("test-id");
 
       const call = (mockWriter.write as jest.Mock).mock.calls[0][0];
       expect(call.type).toBe(LAYER_STREAM_EVENTS.ORCHESTRATION_START);
@@ -159,6 +174,7 @@ describe("Streaming Helpers", () => {
         layer: "vector",
         status: "in_progress",
         timestamp: 1234567890,
+        phase: "recall",
       };
 
       observer.onLayerUpdate?.(event);
@@ -188,6 +204,7 @@ describe("Streaming Helpers", () => {
         layer: "facts",
         status: "complete",
         timestamp: 1234567890,
+        phase: "remember",
         latencyMs: 150,
         data: {
           id: "fact-123",
@@ -219,6 +236,7 @@ describe("Streaming Helpers", () => {
         layer: "graph",
         status: "error",
         timestamp: 1234567890,
+        phase: "remember",
         error: {
           message: "Connection failed",
           code: "GRAPH_CONNECTION_ERROR",
@@ -239,11 +257,7 @@ describe("Streaming Helpers", () => {
       const mockWriter: StreamWriter = { write: jest.fn() };
       emitTo(mockWriter);
 
-      observer.onLayerUpdate?.({
-        layer: "vector",
-        status: "complete",
-        timestamp: Date.now(),
-      });
+      observer.onLayerUpdate?.(createTestLayerEvent("vector", "complete", "recall"));
 
       const call = (mockWriter.write as jest.Mock).mock.calls[0][0];
       expect(call.type).toBe(LAYER_STREAM_EVENTS.LAYER_UPDATE);
@@ -265,11 +279,7 @@ describe("Streaming Helpers", () => {
       ] as const;
 
       for (const layer of layers) {
-        observer.onLayerUpdate?.({
-          layer,
-          status: "complete",
-          timestamp: Date.now(),
-        });
+        observer.onLayerUpdate?.(createTestLayerEvent(layer, "complete", "remember"));
       }
 
       expect(mockWriter.write).toHaveBeenCalledTimes(layers.length);
@@ -283,10 +293,10 @@ describe("Streaming Helpers", () => {
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // onOrchestrationComplete
+  // onRememberComplete (legacy: onOrchestrationComplete)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  describe("onOrchestrationComplete", () => {
+  describe("onRememberComplete", () => {
     it("should write correct event format for minimal summary", () => {
       const { observer, emitTo } = createLayerStreamObserver();
       const mockWriter: StreamWriter = { write: jest.fn() };
@@ -298,7 +308,7 @@ describe("Streaming Helpers", () => {
         createdIds: {},
       });
 
-      observer.onOrchestrationComplete?.(summary);
+      observer.onRememberComplete?.(summary);
 
       expect(mockWriter.write).toHaveBeenCalledWith({
         type: "data-orchestration-complete",
@@ -326,7 +336,7 @@ describe("Streaming Helpers", () => {
         },
       });
 
-      observer.onOrchestrationComplete?.(summary);
+      observer.onRememberComplete?.(summary);
 
       const call = (mockWriter.write as jest.Mock).mock.calls[0][0];
       expect(call.data.createdIds).toEqual({
@@ -341,7 +351,7 @@ describe("Streaming Helpers", () => {
       const mockWriter: StreamWriter = { write: jest.fn() };
       emitTo(mockWriter);
 
-      observer.onOrchestrationComplete?.(createTestSummary({
+      observer.onRememberComplete?.(createTestSummary({
         orchestrationId: "test",
         totalLatencyMs: 100,
       }));
@@ -361,32 +371,16 @@ describe("Streaming Helpers", () => {
       const mockWriter: StreamWriter = { write: jest.fn() };
       emitTo(mockWriter);
 
-      // Simulate full orchestration
-      observer.onOrchestrationStart?.("orch-lifecycle");
+      // Simulate full orchestration using phase-aware API
+      observer.onRecallStart?.("orch-lifecycle");
 
-      observer.onLayerUpdate?.({
-        layer: "memorySpace",
-        status: "in_progress",
-        timestamp: Date.now(),
-      });
-      observer.onLayerUpdate?.({
-        layer: "memorySpace",
-        status: "complete",
-        timestamp: Date.now(),
-      });
+      observer.onLayerUpdate?.(createTestLayerEvent("memorySpace", "in_progress", "recall"));
+      observer.onLayerUpdate?.(createTestLayerEvent("memorySpace", "complete", "recall"));
 
-      observer.onLayerUpdate?.({
-        layer: "vector",
-        status: "in_progress",
-        timestamp: Date.now(),
-      });
-      observer.onLayerUpdate?.({
-        layer: "vector",
-        status: "complete",
-        timestamp: Date.now(),
-      });
+      observer.onLayerUpdate?.(createTestLayerEvent("vector", "in_progress", "recall"));
+      observer.onLayerUpdate?.(createTestLayerEvent("vector", "complete", "recall"));
 
-      observer.onOrchestrationComplete?.(createTestSummary({
+      observer.onRememberComplete?.(createTestSummary({
         orchestrationId: "orch-lifecycle",
         totalLatencyMs: 500,
       }));

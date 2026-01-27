@@ -9,11 +9,11 @@ import {
   getCortex,
   CONFIG,
   buildRememberParams,
-  createLayerObserver,
+  createRecallObserver,
+  createRememberObserver,
 } from "./cortex.js";
 import {
   printRecallResults,
-  printOrchestrationComplete,
   printInfo,
   startSpinner,
   stopSpinner,
@@ -49,7 +49,7 @@ export interface Fact {
  * Transform SDK FactRecord to local Fact interface
  * SDK uses 'fact' field, local interface uses 'content'
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function transformFacts(sdkFacts: any[]): Fact[] {
   return sdkFacts.map((f) => ({
     content: f.fact || f.content || "", // SDK uses 'fact', fallback to 'content'
@@ -110,7 +110,7 @@ export async function chat(
   const convId = conversationId || getConversationId();
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Step 1: Recall relevant memories
+  // Step 1: Recall relevant memories (with phase-aware observer)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   let memories: Memory[] = [];
@@ -119,7 +119,7 @@ export async function chat(
   startSpinner("Searching memories...");
 
   try {
-    // Use the unified recall API (v0.23.0+)
+    // Use the unified recall API with phase-aware observer (v0.35.1+)
     const recallResult = await cortex.memory.recall({
       memorySpaceId: CONFIG.memorySpaceId,
       query: userMessage,
@@ -129,11 +129,13 @@ export async function chat(
         facts: true,
         graph: CONFIG.enableGraphMemory,
       },
+      // Pass observer for real-time visibility into recall phase
+      observer: createRecallObserver(),
     });
 
     // Extract memories and facts from the correct result structure
     // SDK returns: result.sources.vector.items and result.sources.facts.items
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const result = recallResult as any;
     memories = (result.sources?.vector?.items || result.memories || []) as Memory[];
     // Transform facts: SDK FactRecord uses 'fact' field, local Fact uses 'content'
@@ -161,10 +163,8 @@ export async function chat(
   stopSpinner(true, "Response generated");
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // Step 3: Remember the exchange (triggers orchestration)
+  // Step 3: Remember the exchange (with phase-aware observer)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-  const startTime = Date.now();
 
   try {
     const params = await buildRememberParams({
@@ -173,15 +173,12 @@ export async function chat(
       conversationId: convId,
     });
 
-    // Add layer observer for console output - uses 'observer' not 'layerObserver'
+    // Use phase-aware observer for remember phase (v0.35.1+)
+    // The observer handles printing start/complete messages
     await cortex.memory.remember({
       ...params,
-      observer: createLayerObserver(),
+      observer: createRememberObserver(),
     });
-
-    // Print orchestration summary
-    const totalMs = Date.now() - startTime;
-    printOrchestrationComplete(totalMs);
   } catch (error) {
     console.error("Failed to store memory:", error);
     // Still return the response even if storage fails
@@ -200,7 +197,7 @@ export async function chat(
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 /**
- * Search memories without storing anything
+ * Search memories without storing anything (with phase-aware observer)
  */
 export async function recallMemories(query: string): Promise<void> {
   const cortex = getCortex();
@@ -208,6 +205,7 @@ export async function recallMemories(query: string): Promise<void> {
   startSpinner("Searching memories...");
 
   try {
+    // Use phase-aware observer for recall visualization (v0.35.1+)
     const recallResult = await cortex.memory.recall({
       memorySpaceId: CONFIG.memorySpaceId,
       query,
@@ -217,10 +215,11 @@ export async function recallMemories(query: string): Promise<void> {
         facts: true,
         graph: CONFIG.enableGraphMemory,
       },
+      observer: createRecallObserver(),
     });
 
     // Extract from correct result structure
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const result = recallResult as any;
     const memories = (result.sources?.vector?.items || result.memories || []) as Memory[];
     // Transform facts: SDK FactRecord uses 'fact' field, local Fact uses 'content'

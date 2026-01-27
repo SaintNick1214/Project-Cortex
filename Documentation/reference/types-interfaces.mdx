@@ -1,7 +1,7 @@
 # Types & Interfaces Reference
 
-> **Last Updated**: January 9, 2026
-> **SDK Version**: 0.29.0
+> **Last Updated**: January 25, 2026
+> **SDK Version**: 0.35.1
 > **Source**: `src/types/index.ts`
 
 ## Overview
@@ -97,6 +97,7 @@ import type {
 
 - [OrchestrationObserver](#orchestrationobserver)
 - [LayerEvent](#layerevent)
+- [RecallSummary](#recallsummary) - NEW in v0.35.1
 - [OrchestrationSummary](/advanced-topics/orchestration-observer#orchestrationsummary)
 
 ### Resilience Types
@@ -795,26 +796,39 @@ interface RecallResult {
 
 ### OrchestrationObserver
 
-**Integration-agnostic orchestration monitoring**
+**Phase-aware orchestration monitoring (v0.35.1+)**
+
 
 ```typescript
 interface OrchestrationObserver {
   /**
-   * Called when orchestration starts
+   * Called when recall phase starts (context retrieval)
+   * Recall happens before the LLM generates a response.
    */
-  onOrchestrationStart?: (orchestrationId: string) => void | Promise<void>;
+  onRecallStart?: (orchestrationId: string) => void | Promise<void>;
 
   /**
-   * Called when a layer's status changes
+   * Called when recall phase completes
+   * Contains retrieved context and timing information.
+   */
+  onRecallComplete?: (summary: RecallSummary) => void | Promise<void>;
+
+  /**
+   * Called when remember phase starts (memory storage)
+   * Remember happens after the LLM generates a response.
+   */
+  onRememberStart?: (orchestrationId: string) => void | Promise<void>;
+
+  /**
+   * Called when remember phase completes (all layers done)
+   * Contains created record IDs and timing information.
+   */
+  onRememberComplete?: (summary: OrchestrationSummary) => void | Promise<void>;
+
+  /**
+   * Called when any layer's status changes (includes phase info)
    */
   onLayerUpdate?: (event: LayerEvent) => void | Promise<void>;
-
-  /**
-   * Called when orchestration completes (all layers done)
-   */
-  onOrchestrationComplete?: (
-    summary: OrchestrationSummary,
-  ) => void | Promise<void>;
 }
 ```
 
@@ -822,22 +836,70 @@ interface OrchestrationObserver {
 
 - [RememberParams](#rememberparams)
 - [RememberStreamParams](/api-reference/memory-operations#rememberstream)
+- [RecallParams](#recallparams)
 - [Memory Orchestration](/core-features/memory-orchestration)
 
 **Related types:**
 
 - [LayerEvent](#layerevent)
+- [RecallSummary](#recallsummary)
 - [OrchestrationSummary](/advanced-topics/orchestration-observer#orchestrationsummary)
+
+---
+
+### RecallSummary
+
+**NEW in v0.35.1** - Summary of the recall (context retrieval) phase
+
+```typescript
+interface RecallSummary {
+  /** Unique ID for this orchestration run */
+  orchestrationId: string;
+
+  /** Phase identifier */
+  phase: "recall";
+
+  /** Total time for recall phase in milliseconds */
+  totalLatencyMs: number;
+
+  /** Status of each layer queried during recall */
+  layers: Partial<Record<MemoryLayer, LayerEvent>>;
+
+  /** Retrieved context ready for LLM injection */
+  context: {
+    /** Formatted context string for LLM prompt */
+    formatted?: string;
+    /** Number of memories retrieved */
+    memoriesCount: number;
+    /** Number of facts retrieved */
+    factsCount: number;
+    /** Number of graph entities retrieved */
+    graphEntitiesCount: number;
+  };
+}
+```
+
+**Used in:**
+
+- [OrchestrationObserver](#orchestrationobserver) - `onRecallComplete` callback
+- [Orchestration Observer Guide](/advanced-topics/orchestration-observer)
 
 ---
 
 ### LayerEvent
 
 ```typescript
+/**
+ * Memory orchestration layer identifiers
+ *
+ * Recall phase layers: memorySpace, user, agent, context
+ * Remember phase layers: conversation, vector, facts, graph
+ */
 type MemoryLayer =
   | "memorySpace"
   | "user"
   | "agent"
+  | "context"      // NEW in v0.35.1: Context assembly layer
   | "conversation"
   | "vector"
   | "facts"
@@ -857,12 +919,19 @@ interface LayerEvent {
   /** Timestamp when this status was set */
   timestamp: number;
 
-  /** Time elapsed since orchestration started (ms) */
+  /** Time elapsed since phase started (ms) */
   latencyMs?: number;
 
-  /** Data stored in this layer (if complete) */
+  /**
+   * Phase this event belongs to (NEW in v0.35.1)
+   * - "recall": Context retrieval phase (before LLM response)
+   * - "remember": Memory storage phase (after LLM response)
+   */
+  phase: "recall" | "remember";
+
+  /** Data stored/retrieved in this layer (if complete) */
   data?: {
-    /** ID of the stored record */
+    /** ID of the stored/retrieved record */
     id?: string;
     /** Summary or preview of the data */
     preview?: string;

@@ -12,9 +12,13 @@ import fs from "fs-extra";
 import pc from "picocolors";
 import ora from "ora";
 import type { CLIConfig, DeploymentConfig } from "../types.js";
-import type { WizardConfig, GraphConfig } from "../utils/init/types.js";
+import type {
+  WizardConfig,
+  GraphConfig,
+  TemplateChoice,
+} from "../utils/init/types.js";
 import { spawn } from "child_process";
-import { loadConfig, saveUserConfig } from "../utils/config.js";
+import { loadConfig, saveUserConfig, validateAndCleanConfig } from "../utils/config.js";
 import {
   isValidProjectName,
   isDirectoryEmpty,
@@ -57,6 +61,7 @@ import {
   createEnvFile,
   appendGraphEnvVars,
 } from "../utils/init/env-generator.js";
+import { displayCleanupNotification } from "../utils/formatting.js";
 
 /**
  * Register start and stop commands (lifecycle management)
@@ -83,7 +88,20 @@ export function registerLifecycleCommands(
     .option("--convex-only", "Only start Convex servers", false)
     .option("--graph-only", "Only start graph databases", false)
     .action(async (options) => {
-      const config = await loadConfig();
+      let config = await loadConfig();
+
+      // Validate paths only (skip Convex URL check for speed)
+      try {
+        const validation = await validateAndCleanConfig(config, {
+          checkConvex: false,
+        });
+        if (validation.modified) {
+          displayCleanupNotification(validation);
+        }
+        config = validation.config;
+      } catch {
+        // Continue with unvalidated config
+      }
 
       // Determine which deployments to start
       interface DeploymentToStart {
@@ -749,8 +767,7 @@ export function registerInitCommand(
     .option("--skip-graph", "Skip graph database setup", false)
     .option(
       "-t, --template <name>",
-      "Template to use (default: basic)",
-      "basic",
+      "Template to use (basic, vercel-ai-quickstart, chat-sdk)",
     )
     .option("-y, --yes", "Skip confirmation prompts", false)
     .option("--start", "Start Convex dev server after setup", false)
@@ -794,26 +811,27 @@ export async function runInitWizard(
   // Step 2: Installation type
   const installationType = await getInstallationType(projectInfo.projectPath);
 
-  // Step 3: Convex setup (pass project name for non-interactive setup)
+  // Step 3: Template selection
+  const templateChoice = await getTemplateChoice(options.template);
+
+  // Step 4: Convex setup (pass project name for non-interactive setup)
   const convexConfig = await getConvexSetup(options, projectInfo.projectName);
 
-  // Step 4: Graph database (optional)
+  // Step 5: Graph database (optional)
   let graphConfig: GraphConfig | null = null;
   if (!options.skipGraph) {
     graphConfig = await getGraphConfig();
   }
 
-  // Step 5: OpenAI API key (optional)
+  // Step 6: OpenAI API key (optional)
   const openaiApiKey = await getOpenAIApiKey();
-
-  // Step 6: CLI scripts option
-  const installCLI = await getCliInstallOption();
 
   // Build wizard configuration
   const config: WizardConfig = {
     projectName: projectInfo.projectName,
     projectPath: projectInfo.projectPath,
     installationType,
+    templateChoice,
     convexSetupType: convexConfig.type,
     convexUrl: convexConfig.config.convexUrl,
     deployKey: convexConfig.config.deployKey,
@@ -824,7 +842,6 @@ export async function runInitWizard(
     graphUri: graphConfig?.uri,
     graphUsername: graphConfig?.username,
     graphPassword: graphConfig?.password,
-    installCLI,
     openaiApiKey,
   };
 
@@ -836,69 +853,73 @@ export async function runInitWizard(
   // Execute setup (returns SDK metadata for post-setup steps)
   const sdkMetadata = await executeSetup(config);
 
-  // Register basic template in CLI config for template sync support
+  // Register app in CLI config based on template
   const cliConfig = await loadConfig();
   cliConfig.apps = cliConfig.apps || {};
-  cliConfig.apps[config.projectName] = {
-    type: "basic",
-    path: ".", // Basic template is the root project
-    projectPath: config.projectPath,
-    enabled: true,
-    port: 3001, // Default port for basic template server mode
-    startCommand: "npm start",
-  };
-  await saveUserConfig(cliConfig);
 
-  // Ask about Vercel AI quickstart (optional demo app)
-  let installedQuickstart = false;
-  let quickstartAppConfig = null;
+  let appConfig = null;
+  const graphConfigForTemplate: QuickstartGraphConfig | undefined =
+    config.graphEnabled
+      ? {
+          enabled: true,
+          uri: config.graphUri,
+          username: config.graphUsername,
+          password: config.graphPassword,
+        }
+      : undefined;
 
-  if (!options.yes) {
-    const { installQuickstart } = await prompts({
-      type: "confirm",
-      name: "installQuickstart",
-      message: "Install Vercel AI quickstart demo?",
-      initial: false,
-    });
+  if (config.templateChoice === "basic") {
+    // Basic template is already installed during executeSetup
+    cliConfig.apps[config.projectName] = {
+      type: "basic",
+      path: ".",
+      projectPath: config.projectPath,
+      enabled: true,
+      port: 3001,
+      startCommand: "npm start",
+    };
+    appConfig = cliConfig.apps[config.projectName];
+  } else if (config.templateChoice === "vercel-ai-quickstart") {
+    // Install Vercel AI quickstart as a subfolder
+    appConfig = await installVercelAIQuickstart(
+      config.projectPath,
+      sdkMetadata.sdkVersion,
+      config.convexUrl || "",
+      config.openaiApiKey,
+      graphConfigForTemplate,
+    );
+    cliConfig.apps["quickstart"] = appConfig;
+  } else if (config.templateChoice === "chat-sdk") {
+    // Chat SDK was already installed during executeSetup
+    // Just register it in config
+    cliConfig.apps[config.projectName] = {
+      type: "chat-sdk",
+      path: ".",
+      projectPath: config.projectPath,
+      enabled: true,
+      port: 3000,
+      startCommand: "npm run dev",
+    };
+    appConfig = cliConfig.apps[config.projectName];
 
-    if (installQuickstart) {
-      // Need the actual Convex URL from the config that was just set up
-      const convexUrl = config.convexUrl || "";
-
-      // Pass graph config if it was enabled during init
-      const graphConfig: QuickstartGraphConfig | undefined = config.graphEnabled
-        ? {
-            enabled: true,
-            uri: config.graphUri,
-            username: config.graphUsername,
-            password: config.graphPassword,
-          }
-        : undefined;
-
-      quickstartAppConfig = await installVercelAIQuickstart(
-        config.projectPath,
-        sdkMetadata.sdkVersion,
-        convexUrl,
-        config.openaiApiKey,
-        graphConfig,
-      );
-
-      // Save app to CLI config
-      const cliConfig = await loadConfig();
-      cliConfig.apps = cliConfig.apps || {};
-      cliConfig.apps["quickstart"] = quickstartAppConfig;
-      await saveUserConfig(cliConfig);
-
-      installedQuickstart = true;
-    }
+    // Create .env.local with proper configuration
+    await createChatSDKEnvFile(
+      config.projectPath,
+      config.convexUrl || "",
+      config.openaiApiKey,
+      graphConfigForTemplate,
+    );
   }
+
+  await saveUserConfig(cliConfig);
 
   // Context-aware start prompt
   let shouldStart = options.start;
   if (!shouldStart && !options.yes) {
-    const message = installedQuickstart
-      ? "Start Convex backend and quickstart app now?"
-      : "Start Convex development server now?";
+    const message =
+      config.templateChoice === "basic"
+        ? "Start Convex development server now?"
+        : "Start Convex backend and app now?";
 
     const response = await prompts({
       type: "confirm",
@@ -914,14 +935,22 @@ export async function runInitWizard(
     const isLocal = config.convexSetupType === "local";
     await startConvexInBackground(config.projectPath, isLocal);
 
-    // Start quickstart app if installed
-    if (installedQuickstart && quickstartAppConfig) {
-      await startApp("quickstart", quickstartAppConfig);
+    // Start app if not basic template
+    if (config.templateChoice !== "basic" && appConfig) {
+      const appName =
+        config.templateChoice === "vercel-ai-quickstart"
+          ? "quickstart"
+          : config.projectName;
+      await startApp(appName, appConfig);
     }
 
     // Show running status dashboard
     console.log();
-    await showRunningStatus(config.projectPath, isLocal, installedQuickstart);
+    await showRunningStatus(
+      config.projectPath,
+      isLocal,
+      config.templateChoice,
+    );
   }
 }
 
@@ -992,6 +1021,63 @@ async function getInstallationType(
   }
 
   return "new";
+}
+
+/**
+ * Get template choice
+ */
+async function getTemplateChoice(
+  cliTemplate?: string,
+): Promise<TemplateChoice> {
+  console.log(pc.cyan("\n   Template Selection"));
+  console.log(pc.dim("   Choose the starting point for your project\n"));
+
+  // If template specified via CLI flag, validate and use it
+  if (cliTemplate) {
+    const validTemplates: TemplateChoice[] = [
+      "basic",
+      "vercel-ai-quickstart",
+      "chat-sdk",
+    ];
+    if (validTemplates.includes(cliTemplate as TemplateChoice)) {
+      console.log(pc.dim(`   Using template: ${cliTemplate}`));
+      return cliTemplate as TemplateChoice;
+    }
+    console.log(
+      pc.yellow(`   Unknown template "${cliTemplate}", showing options...`),
+    );
+  }
+
+  const response = await prompts({
+    type: "select",
+    name: "template",
+    message: "Select a template:",
+    choices: [
+      {
+        title: "Basic",
+        description: "Interactive CLI + HTTP API server for learning Cortex",
+        value: "basic",
+      },
+      {
+        title: "Vercel AI Quickstart",
+        description: "Next.js chat demo with memory visualization",
+        value: "vercel-ai-quickstart",
+      },
+      {
+        title: "Chat SDK (Full-featured)",
+        description:
+          "Production chat app with artifacts, file uploads, and auth",
+        value: "chat-sdk",
+      },
+    ],
+    initial: 0,
+  });
+
+  if (!response.template) {
+    throw new Error("Template selection is required");
+  }
+
+  return response.template as TemplateChoice;
 }
 
 /**
@@ -1155,18 +1241,20 @@ async function getOpenAIApiKey(): Promise<string | undefined> {
 /**
  * Get CLI installation option
  */
-async function getCliInstallOption(): Promise<boolean> {
-  console.log(pc.cyan("\n   CLI Scripts (Optional)"));
-  console.log(pc.dim("   Add npm scripts for common Cortex commands\n"));
-
-  const response = await prompts({
-    type: "confirm",
-    name: "installCLI",
-    message: "Add Cortex CLI scripts to package.json?",
-    initial: true,
-  });
-
-  return response.installCLI ?? false;
+/**
+ * Get template display name
+ */
+function getTemplateDisplayName(template: TemplateChoice): string {
+  switch (template) {
+    case "basic":
+      return "Basic (CLI + HTTP API)";
+    case "vercel-ai-quickstart":
+      return "Vercel AI Quickstart";
+    case "chat-sdk":
+      return "Chat SDK (Full-featured)";
+    default:
+      return template;
+  }
 }
 
 /**
@@ -1182,10 +1270,16 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
     config.installationType === "new" ? "New project" : "Add to existing",
   );
   console.log(
+    pc.bold("   Template:"),
+    getTemplateDisplayName(config.templateChoice),
+  );
+  console.log(
     pc.bold("   Convex:"),
     config.convexSetupType === "new"
       ? "New Convex project"
-      : "Existing deployment",
+      : config.convexSetupType === "local"
+        ? "Local development"
+        : "Existing deployment",
   );
   console.log(
     pc.bold("   Graph DB:"),
@@ -1195,7 +1289,6 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
     pc.bold("   OpenAI:"),
     config.openaiApiKey ? "Configured" : "Not configured",
   );
-  console.log(pc.bold("   CLI Scripts:"), config.installCLI ? "Yes" : "No");
   console.log(pc.dim("   " + "─".repeat(46)));
 
   const response = await prompts({
@@ -1231,59 +1324,103 @@ async function executeSetup(
       `SDK v${sdkMetadata.sdkVersion} (Convex ${sdkMetadata.convexVersion})`,
     );
 
-    // Copy template files (check if package.json exists)
+    // Copy template files based on template choice
     const needsTemplate = !fs.existsSync(
       path.join(config.projectPath, "package.json"),
     );
 
-    if (needsTemplate || config.installationType === "new") {
-      const spinner = ora("Creating project files...").start();
-      await copyTemplate(
-        "basic",
+    if (config.templateChoice === "chat-sdk") {
+      // For chat-sdk: copy the full template (includes convex folder)
+      if (needsTemplate || config.installationType === "new") {
+        const spinner = ora("Copying Chat SDK template...").start();
+        await copyTemplate(
+          "chat-sdk-quickstart",
+          config.projectPath,
+          config.projectName,
+          sdkMetadata.convexVersion,
+        );
+        spinner.succeed("Chat SDK template copied");
+      }
+
+      // Create .gitignore
+      await ensureGitignore(config.projectPath);
+
+      // Update package.json with correct SDK versions
+      await updateChatSDKPackageVersions(
         config.projectPath,
-        config.projectName,
-        sdkMetadata.convexVersion,
+        sdkMetadata.sdkVersion,
       );
-      spinner.succeed("Project files created");
+
+      // Install dependencies
+      const installSpinner = ora("Installing dependencies...").start();
+      const result = await execCommand("npm", ["install", "--legacy-peer-deps"], {
+        cwd: config.projectPath,
+        quiet: true,
+      });
+      if (result.code !== 0) {
+        installSpinner.fail("Failed to install dependencies");
+        console.error(pc.red(result.stderr));
+        throw new Error("npm install failed");
+      }
+      installSpinner.succeed("Dependencies installed");
+
+      // Copy Cortex backend functions (chat-sdk template only has schema)
+      const backendSpinner = ora(
+        "Setting up Cortex backend functions...",
+      ).start();
+      await deployCortexBackend(config.projectPath);
+      backendSpinner.succeed("Cortex backend files ready");
     } else {
-      console.log(pc.dim("   Using existing project files"));
-    }
+      // For basic and vercel-ai-quickstart: use basic template
+      if (needsTemplate || config.installationType === "new") {
+        const spinner = ora("Creating project files...").start();
+        await copyTemplate(
+          "basic",
+          config.projectPath,
+          config.projectName,
+          sdkMetadata.convexVersion,
+        );
+        spinner.succeed("Project files created");
+      } else {
+        console.log(pc.dim("   Using existing project files"));
+      }
 
-    // Create .gitignore first (before any generated files)
-    await ensureGitignore(config.projectPath);
+      // Create .gitignore first (before any generated files)
+      await ensureGitignore(config.projectPath);
 
-    // Install dependencies FIRST - required for convex dev to work
-    const installSpinner = ora("Installing dependencies...").start();
-    const result = await execCommand("npm", ["install"], {
-      cwd: config.projectPath,
-      quiet: true,
-    });
-    if (result.code !== 0) {
-      installSpinner.fail("Failed to install dependencies");
-      console.error(pc.red(result.stderr));
-      throw new Error("npm install failed");
-    }
-    installSpinner.succeed("Dependencies installed");
+      // Install dependencies FIRST - required for convex dev to work
+      const installSpinner = ora("Installing dependencies...").start();
+      const result = await execCommand("npm", ["install"], {
+        cwd: config.projectPath,
+        quiet: true,
+      });
+      if (result.code !== 0) {
+        installSpinner.fail("Failed to install dependencies");
+        console.error(pc.red(result.stderr));
+        throw new Error("npm install failed");
+      }
+      installSpinner.succeed("Dependencies installed");
 
-    // Verify convex was installed (required for convex dev)
-    const convexCheck = fs.existsSync(
-      path.join(config.projectPath, "node_modules", "convex"),
-    );
-    if (!convexCheck) {
-      console.warn(
-        pc.yellow("   Warning: convex package not found in node_modules"),
+      // Verify convex was installed (required for convex dev)
+      const convexCheck = fs.existsSync(
+        path.join(config.projectPath, "node_modules", "convex"),
       );
-      console.log(pc.dim("   This may cause Convex setup to fail"));
-    }
+      if (!convexCheck) {
+        console.warn(
+          pc.yellow("   Warning: convex package not found in node_modules"),
+        );
+        console.log(pc.dim("   This may cause Convex setup to fail"));
+      }
 
-    // Copy Cortex backend functions FIRST (before convex dev)
-    // This way we deploy everything in ONE step
-    const backendSpinner = ora(
-      "Setting up Cortex backend functions...",
-    ).start();
-    await deployCortexBackend(config.projectPath);
-    await createConvexJson(config.projectPath);
-    backendSpinner.succeed("Cortex backend files ready");
+      // Copy Cortex backend functions FIRST (before convex dev)
+      // This way we deploy everything in ONE step
+      const backendSpinner = ora(
+        "Setting up Cortex backend functions...",
+      ).start();
+      await deployCortexBackend(config.projectPath);
+      await createConvexJson(config.projectPath);
+      backendSpinner.succeed("Cortex backend files ready");
+    }
 
     // Setup and deploy Convex in ONE step
     // Pass teamSlug and projectName for non-interactive setup
@@ -1399,8 +1536,8 @@ async function executeSetup(
       }
     }
 
-    // Add CLI scripts if requested
-    if (config.installCLI) {
+    // Add CLI scripts for basic template
+    if (config.templateChoice === "basic") {
       await addCLIScripts(config.projectPath);
     }
 
@@ -1464,6 +1601,129 @@ async function saveDeploymentToConfig(config: WizardConfig): Promise<void> {
 }
 
 /**
+ * Generate a random secret for Auth.js
+ */
+function generateAuthSecret(): string {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  for (let i = 0; i < 32; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+/**
+ * Create .env.local for Chat SDK template
+ */
+async function createChatSDKEnvFile(
+  projectPath: string,
+  convexUrl: string,
+  openaiApiKey?: string,
+  graphConfig?: QuickstartGraphConfig,
+): Promise<void> {
+  const envPath = path.join(projectPath, ".env.local");
+
+  let envContent = `# Cortex Chat SDK Environment
+# Generated by cortex init
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Required Configuration
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Convex deployment URL
+CONVEX_URL=${convexUrl}
+
+# Auth.js secret (auto-generated)
+AUTH_SECRET=${generateAuthSecret()}
+
+`;
+
+  if (openaiApiKey) {
+    envContent += `# OpenAI API key for LLM and embeddings
+OPENAI_API_KEY=${openaiApiKey}
+
+`;
+  } else {
+    envContent += `# OpenAI API key (required for chat functionality)
+# Get your key at: https://platform.openai.com/api-keys
+# OPENAI_API_KEY=sk-...
+
+`;
+  }
+
+  envContent += `# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Cortex Memory Configuration
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Memory space for the chat app
+MEMORY_SPACE_ID=chat-sdk-demo
+
+# Enable fact extraction
+CORTEX_FACT_EXTRACTION=true
+
+`;
+
+  // Graph sync configuration
+  if (graphConfig?.enabled && graphConfig.uri) {
+    envContent += `# Graph memory sync (enabled during init)
+CORTEX_GRAPH_SYNC=true
+
+# Graph database connection
+NEO4J_URI=${graphConfig.uri}
+NEO4J_USERNAME=${graphConfig.username || "neo4j"}
+NEO4J_PASSWORD=${graphConfig.password || ""}
+`;
+  } else {
+    envContent += `# Optional: Enable graph sync (requires Neo4j or Memgraph)
+# CORTEX_GRAPH_SYNC=true
+# NEO4J_URI=bolt://localhost:7687
+# NEO4J_USERNAME=neo4j
+# NEO4J_PASSWORD=your-password
+`;
+  }
+
+  await fs.writeFile(envPath, envContent);
+}
+
+/**
+ * Update package.json versions for Chat SDK template
+ */
+async function updateChatSDKPackageVersions(
+  projectPath: string,
+  sdkVersion: string,
+): Promise<void> {
+  const packageJsonPath = path.join(projectPath, "package.json");
+
+  try {
+    const content = await fs.readFile(packageJsonPath, "utf-8");
+    const pkg = JSON.parse(content);
+
+    // Update dependencies to use npm packages instead of file: references
+    if (pkg.dependencies) {
+      if (
+        pkg.dependencies["@cortexmemory/sdk"]?.startsWith("file:") ||
+        pkg.dependencies["@cortexmemory/sdk"] === "*"
+      ) {
+        pkg.dependencies["@cortexmemory/sdk"] = `^${sdkVersion}`;
+      }
+
+      if (
+        pkg.dependencies["@cortexmemory/vercel-ai-provider"]?.startsWith(
+          "file:",
+        )
+      ) {
+        pkg.dependencies["@cortexmemory/vercel-ai-provider"] = `^${sdkVersion}`;
+      }
+    }
+
+    await fs.writeFile(packageJsonPath, JSON.stringify(pkg, null, 2) + "\n");
+  } catch {
+    // Non-critical, continue silently
+  }
+}
+
+/**
  * Add CLI scripts to package.json
  */
 async function addCLIScripts(projectPath: string): Promise<void> {
@@ -1497,6 +1757,10 @@ function showSuccessMessage(config: WizardConfig): void {
 
   console.log(pc.bold("   Project:"), config.projectName);
   console.log(
+    pc.bold("   Template:"),
+    getTemplateDisplayName(config.templateChoice),
+  );
+  console.log(
     pc.bold("   Database:"),
     config.convexSetupType === "local"
       ? "Local Convex (development)"
@@ -1515,18 +1779,46 @@ function showSuccessMessage(config: WizardConfig): void {
     console.log(pc.cyan(`   cd ${config.projectName}`));
   }
 
-  if (config.convexSetupType === "local") {
+  // Template-specific instructions
+  if (config.templateChoice === "basic") {
+    if (config.convexSetupType === "local") {
+      console.log(
+        pc.cyan("   npm run dev") + pc.dim("   # Start Convex in watch mode"),
+      );
+      console.log(pc.dim("   (Then in another terminal)"));
+      console.log(
+        pc.cyan("   npm start") + pc.dim("      # Run your AI agent"),
+      );
+      console.log(pc.dim("\n   Dashboard: http://127.0.0.1:3210"));
+    } else {
+      console.log(pc.cyan("   npm start") + pc.dim("  # Run your AI agent"));
+      console.log(
+        pc.dim(`\n   Dashboard: ${config.convexUrl?.replace("/api", "")}`),
+      );
+    }
+  } else if (config.templateChoice === "vercel-ai-quickstart") {
     console.log(
-      pc.cyan("   npm run dev") + pc.dim("   # Start Convex in watch mode"),
+      pc.cyan("   npm run quickstart") +
+        pc.dim("   # Start the chat demo on http://localhost:3000"),
     );
-    console.log(pc.dim("   (Then in another terminal)"));
-    console.log(pc.cyan("   npm start") + pc.dim("      # Run your AI agent"));
-    console.log(pc.dim("\n   Dashboard: http://127.0.0.1:3210"));
-  } else {
-    console.log(pc.cyan("   npm start") + pc.dim("  # Run your AI agent"));
+    if (config.convexSetupType === "local") {
+      console.log(pc.dim("\n   Convex Dashboard: http://127.0.0.1:3210"));
+    }
+  } else if (config.templateChoice === "chat-sdk") {
     console.log(
-      pc.dim(`\n   Dashboard: ${config.convexUrl?.replace("/api", "")}`),
+      pc.cyan("   npm run dev") +
+        pc.dim("   # Start the full-featured chat app on http://localhost:3000"),
     );
+    console.log();
+    console.log(pc.dim("   Features:"));
+    console.log(pc.dim("   • Full chat UI with memory orchestration"));
+    console.log(pc.dim("   • Artifacts (documents, code blocks)"));
+    console.log(pc.dim("   • File uploads and attachments"));
+    console.log(pc.dim("   • Shareable conversations"));
+    console.log(pc.dim("   • Auth.js authentication"));
+    if (config.convexSetupType === "local") {
+      console.log(pc.dim("\n   Convex Dashboard: http://127.0.0.1:3210"));
+    }
   }
 
   // CLI commands
@@ -1623,7 +1915,7 @@ async function startConvexInBackground(
 async function showRunningStatus(
   projectPath: string,
   isLocal: boolean,
-  hasQuickstart: boolean = false,
+  templateChoice: TemplateChoice = "basic",
 ): Promise<void> {
   const width = 56;
   const line = "═".repeat(width);
@@ -1642,35 +1934,38 @@ async function showRunningStatus(
   console.log(pc.bold(pc.white("  Convex Backend")));
   console.log(pc.dim("  " + thinLine));
 
-  const pidFile = path.join(projectPath, ".convex-dev.pid");
-  let convexRunning = false;
-  let convexPid: string | null = null;
+  if (isLocal) {
+    // For local deployments, check if the dev server is running
+    const pidFile = path.join(projectPath, ".convex-dev.pid");
+    let convexRunning = false;
+    let convexPid: string | null = null;
 
-  try {
-    convexPid = await fs.readFile(pidFile, "utf-8");
-    // Check if process is running
     try {
-      process.kill(parseInt(convexPid), 0);
-      convexRunning = true;
+      convexPid = await fs.readFile(pidFile, "utf-8");
+      try {
+        process.kill(parseInt(convexPid), 0);
+        convexRunning = true;
+      } catch {
+        convexRunning = false;
+      }
     } catch {
       convexRunning = false;
     }
-  } catch {
-    convexRunning = false;
-  }
 
-  if (convexRunning) {
-    console.log(`   ${pc.green("●")} Running (PID: ${convexPid})`);
-    if (isLocal) {
+    if (convexRunning) {
+      console.log(`   ${pc.green("●")} Running locally (PID: ${convexPid})`);
       console.log(pc.dim("     Dashboard: http://127.0.0.1:3210"));
     } else {
-      console.log(
-        pc.dim(`     URL: ${process.env.CONVEX_URL || "configured"}`),
-      );
+      console.log(`   ${pc.yellow("○")} Not running`);
+      console.log(pc.dim("     Run: cortex start"));
     }
   } else {
-    console.log(`   ${pc.yellow("○")} Not running`);
-    console.log(pc.dim("     Run: cortex start"));
+    // For cloud deployments, show as connected (no local server needed)
+    console.log(`   ${pc.green("●")} Cloud (connected)`);
+    console.log(
+      pc.dim(`     URL: ${process.env.CONVEX_URL || "configured"}`),
+    );
+    console.log(pc.dim("     No local server required"));
   }
   console.log();
 
@@ -1713,13 +2008,19 @@ async function showRunningStatus(
   }
   console.log();
 
-  // Quickstart App Status (if installed)
-  if (hasQuickstart) {
-    console.log(pc.bold(pc.white("  Vercel AI Quickstart")));
+  // App Status (if not basic template)
+  if (templateChoice !== "basic") {
+    const appName = getTemplateDisplayName(templateChoice);
+    const appDescription =
+      templateChoice === "chat-sdk"
+        ? "Full-featured chat app with Cortex memory"
+        : "Interactive chat demo with memory visualization";
+
+    console.log(pc.bold(pc.white(`  ${appName}`)));
     console.log(pc.dim("  " + thinLine));
     console.log(`   ${pc.green("●")} Running`);
     console.log(pc.dim("     URL: http://localhost:3000"));
-    console.log(pc.dim("     Interactive chat demo with memory visualization"));
+    console.log(pc.dim(`     ${appDescription}`));
     console.log();
   }
 
@@ -1729,28 +2030,37 @@ async function showRunningStatus(
   console.log(
     pc.dim("   cortex status") + pc.dim("           # Full status dashboard"),
   );
-  console.log(
-    pc.dim("   cortex start -f") +
-      pc.dim("         # Foreground mode (see logs)"),
-  );
+  if (isLocal) {
+    console.log(
+      pc.dim("   cortex start -f") +
+        pc.dim("         # Foreground mode (see logs)"),
+    );
+  }
   console.log(
     pc.dim("   cortex stop") +
       pc.dim("             # Stop background services"),
   );
-  if (hasQuickstart) {
+  if (templateChoice === "vercel-ai-quickstart") {
     console.log(
       pc.dim("   npm run quickstart") + pc.dim("      # Start quickstart demo"),
     );
+  } else if (templateChoice === "chat-sdk") {
+    console.log(
+      pc.dim("   npm run dev") + pc.dim("           # Start chat app"),
+    );
+  } else {
+    console.log(
+      pc.dim("   npm start") + pc.dim("               # Run your AI agent"),
+    );
   }
-  console.log(
-    pc.dim("   npm start") + pc.dim("               # Run your AI agent"),
-  );
   console.log();
 
-  // Log file hint
-  const logFile = path.join(projectPath, ".convex-dev.log");
-  if (fs.existsSync(logFile)) {
-    console.log(pc.dim(`  View logs: tail -f ${path.basename(logFile)}`));
+  // Log file hint (only for local deployments)
+  if (isLocal) {
+    const logFile = path.join(projectPath, ".convex-dev.log");
+    if (fs.existsSync(logFile)) {
+      console.log(pc.dim(`  View logs: tail -f ${path.basename(logFile)}`));
+    }
+    console.log();
   }
-  console.log();
 }

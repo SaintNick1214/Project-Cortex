@@ -35,14 +35,24 @@ const EXCLUDE_FILES = [
 ];
 
 /**
- * Find the quickstart template directory
+ * Template names
  */
-function findTemplatePath(): string | null {
+export type TemplateName =
+  | "basic"
+  | "vercel-ai-quickstart"
+  | "chat-sdk-quickstart";
+
+/**
+ * Find a template directory by name
+ */
+function findTemplatePath(
+  templateName: TemplateName = "vercel-ai-quickstart",
+): string | null {
   const possiblePaths = [
     // From dist/utils/init/
-    path.join(__dirname, "../../../templates/vercel-ai-quickstart"),
+    path.join(__dirname, `../../../templates/${templateName}`),
     // From dist/utils/init/subdir
-    path.join(__dirname, "../../../../templates/vercel-ai-quickstart"),
+    path.join(__dirname, `../../../../templates/${templateName}`),
     // From installed package in node_modules
     path.join(
       process.cwd(),
@@ -50,7 +60,7 @@ function findTemplatePath(): string | null {
       "@cortexmemory",
       "cli",
       "templates",
-      "vercel-ai-quickstart",
+      templateName,
     ),
   ];
 

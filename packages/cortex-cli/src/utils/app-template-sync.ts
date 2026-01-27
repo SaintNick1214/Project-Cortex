@@ -275,6 +275,7 @@ function getTemplateDir(appType: string): string {
   const typeMap: Record<string, string> = {
     "basic": "basic",
     "vercel-ai-quickstart": "vercel-ai-quickstart",
+    "chat-sdk": "chat-sdk-quickstart",
   };
   return typeMap[appType] || appType;
 }

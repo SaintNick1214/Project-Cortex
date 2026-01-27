@@ -201,7 +201,7 @@ export async function POST(req: Request) {
     const normalizedMessages = normalizeMessages(messages);
 
     // Convert to model messages
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const modelMessagesResult = convertToModelMessages(
       normalizedMessages as any,
     );

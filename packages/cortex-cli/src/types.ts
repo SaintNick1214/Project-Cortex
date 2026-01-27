@@ -10,7 +10,7 @@ export type OutputFormat = "table" | "json" | "csv";
 /**
  * Template app types
  */
-export type AppType = "basic" | "vercel-ai-quickstart";
+export type AppType = "basic" | "vercel-ai-quickstart" | "chat-sdk";
 
 /**
  * Configuration for an installed template app
@@ -204,3 +204,39 @@ export interface CommandContext {
   quiet: boolean;
   debug: boolean;
 }
+
+/**
+ * Options for config validation
+ */
+export interface ValidationOptions {
+  /** Whether to check Convex URL connectivity (default: true) */
+  checkConvex?: boolean;
+  /** Timeout in milliseconds for Convex URL checks (default: 3000) */
+  timeout?: number;
+}
+
+/**
+ * Result of config validation and cleanup
+ */
+export interface ValidationResult {
+  /** The validated (and possibly modified) config */
+  config: CLIConfig;
+  /** Whether the config was modified during validation */
+  modified: boolean;
+  /** Items that were removed during validation */
+  removed: {
+    /** Deployment names that were removed */
+    deployments: string[];
+    /** App names that were removed */
+    apps: string[];
+  };
+}
+
+/**
+ * Result of checking a Convex URL
+ */
+export type ConvexCheckResult =
+  | { status: "ok" }
+  | { status: "auth_error"; message: string }
+  | { status: "network_error"; message: string }
+  | { status: "timeout" };

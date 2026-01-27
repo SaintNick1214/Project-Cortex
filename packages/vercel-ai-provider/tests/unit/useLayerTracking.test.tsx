@@ -96,7 +96,7 @@ describe("useLayerTracking", () => {
       expect(result.current.orchestrationId).toBe("orch-123");
     });
 
-    it("should set startedAt timestamp on all layers", () => {
+    it("should set startedAt timestamp on recall layers", () => {
       const { result } = renderHook(() => useLayerTracking());
       const beforeStart = Date.now();
 
@@ -106,8 +106,11 @@ describe("useLayerTracking", () => {
 
       const afterStart = Date.now();
 
-      for (const layer of ALL_LAYERS) {
-        const startedAt = result.current.layers[layer].startedAt;
+      // startOrchestration now only starts recall phase
+      // So only recall layers should have startedAt
+      const recallLayers = ["vector", "facts", "graph", "context"] as const;
+      for (const layer of recallLayers) {
+        const startedAt = result.current.recallLayers[layer].startedAt;
         expect(startedAt).toBeDefined();
         expect(startedAt).toBeGreaterThanOrEqual(beforeStart);
         expect(startedAt).toBeLessThanOrEqual(afterStart);
@@ -289,54 +292,59 @@ describe("useLayerTracking", () => {
       expect(result.current.isOrchestrating).toBe(true);
     });
 
-    it("should become false when all layers are complete", () => {
+    it("should become false when all recall layers are complete", () => {
       const { result } = renderHook(() => useLayerTracking());
 
       act(() => {
-        result.current.startOrchestration();
+        result.current.startOrchestration(); // Only starts recall phase
       });
 
-      // Complete all layers
-      for (const layer of ALL_LAYERS) {
+      // Complete all recall layers (which startOrchestration affects)
+      const recallLayers = ["vector", "facts", "graph", "context"] as const;
+      for (const layer of recallLayers) {
         act(() => {
           result.current.updateLayer(layer, "complete");
         });
       }
 
+      // isOrchestrating should be false when recall is done
+      // (remember phase was never started by startOrchestration)
       expect(result.current.isOrchestrating).toBe(false);
     });
 
-    it("should become false when layers are complete or skipped", () => {
+    it("should become false when recall layers are complete or skipped", () => {
       const { result } = renderHook(() => useLayerTracking());
 
       act(() => {
-        result.current.startOrchestration();
+        result.current.startOrchestration(); // Only starts recall phase
       });
 
-      // Some complete, some skipped
-      for (let i = 0; i < ALL_LAYERS.length; i++) {
+      // Some complete, some skipped for recall layers
+      const recallLayers = ["vector", "facts", "graph", "context"] as const;
+      for (let i = 0; i < recallLayers.length; i++) {
         const status: LayerStatus = i % 2 === 0 ? "complete" : "skipped";
         act(() => {
-          result.current.updateLayer(ALL_LAYERS[i], status);
+          result.current.updateLayer(recallLayers[i], status);
         });
       }
 
       expect(result.current.isOrchestrating).toBe(false);
     });
 
-    it("should become false when layers have errors", () => {
+    it("should become false when recall layers have errors", () => {
       const { result } = renderHook(() => useLayerTracking());
 
       act(() => {
-        result.current.startOrchestration();
+        result.current.startOrchestration(); // Only starts recall phase
       });
 
-      // Complete some, error on one, skip rest
-      for (let i = 0; i < ALL_LAYERS.length; i++) {
+      // Complete some, error on one, skip rest for recall layers
+      const recallLayers = ["vector", "facts", "graph", "context"] as const;
+      for (let i = 0; i < recallLayers.length; i++) {
         const status: LayerStatus =
           i === 0 ? "error" : i % 2 === 0 ? "complete" : "skipped";
         act(() => {
-          result.current.updateLayer(ALL_LAYERS[i], status);
+          result.current.updateLayer(recallLayers[i], status);
         });
       }
 
@@ -606,14 +614,15 @@ describe("useLayerTracking", () => {
       expect(ALL_LAYERS).toContain("memorySpace");
       expect(ALL_LAYERS).toContain("user");
       expect(ALL_LAYERS).toContain("agent");
+      expect(ALL_LAYERS).toContain("context");
       expect(ALL_LAYERS).toContain("conversation");
       expect(ALL_LAYERS).toContain("vector");
       expect(ALL_LAYERS).toContain("facts");
       expect(ALL_LAYERS).toContain("graph");
     });
 
-    it("should have 7 layers", () => {
-      expect(ALL_LAYERS).toHaveLength(7);
+    it("should have 8 layers (including context)", () => {
+      expect(ALL_LAYERS).toHaveLength(8);
     });
   });
 });

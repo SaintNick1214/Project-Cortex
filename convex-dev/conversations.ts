@@ -244,6 +244,49 @@ export const setVisibility = mutation({
 });
 
 /**
+ * Set or update metadata for a conversation
+ * This is used for storing conversation title and other metadata
+ */
+export const setMetadata = mutation({
+  args: {
+    conversationId: v.string(),
+    metadata: v.any(),
+    // Required for authorization - must verify ownership before modifying metadata
+    userId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
+
+    if (!conversation) {
+      throw new ConvexError("CONVERSATION_NOT_FOUND");
+    }
+
+    // Verify ownership: only the owner can change metadata
+    if (!isConversationOwner(conversation, args.userId)) {
+      throw new ConvexError("METADATA_CHANGE_NOT_AUTHORIZED");
+    }
+
+    // Merge new metadata with existing metadata
+    const updatedMetadata = {
+      ...(conversation.metadata || {}),
+      ...args.metadata,
+    };
+
+    await ctx.db.patch(conversation._id, {
+      metadata: updatedMetadata,
+      updatedAt: Date.now(),
+    });
+
+    return await ctx.db.get(conversation._id);
+  },
+});
+
+/**
  * Check access to a conversation based on visibility
  * Returns access info without returning the full conversation data
  */
