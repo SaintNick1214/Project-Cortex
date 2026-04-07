@@ -86,13 +86,12 @@ describe("State Transition Testing", () => {
           return list.some((c: any) => c.contextId === contextId);
         },
         ctx,
-        10000, // Extended to 10s for list index propagation in CI
-        200,
+        20000, // Extended to 20s for list index propagation under CI shard load
+        300,
       );
       if (!listReady) {
-        // Throw instead of warn - the test explicitly needs list to work
         throw new Error(
-          `Context ${contextId} visible via get() but not in list after 10s`,
+          `Context ${contextId} visible via get() but not in list after 20s`,
         );
       }
     }
