@@ -76,7 +76,7 @@ const results = [];
 
 for (const dir of packageDirs) {
   const name = relative(ROOT, dir) || "(root)";
-  const ncuCmd = DRY_RUN ? "ncu" : "ncu -u";
+  const ncuCmd = DRY_RUN ? `ncu --configFilePath ${ROOT}` : `ncu -u --configFilePath ${ROOT}`;
 
   log(`📦 ${name}`, c.cyan + c.bold);
 
