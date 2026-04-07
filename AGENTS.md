@@ -35,6 +35,9 @@ The SDK source imports from `convex-dev/_generated/api` which must be generated 
 
 Alternatively, the update script generates these files automatically using a local anonymous Convex instance.
 
+### Updating Dependencies
+Run `node scripts/update-deps.mjs` to update dependencies across **all** packages in the monorepo. It uses `npm-check-updates` (`ncu`) under the hood. Flags: `--dry-run` (preview only), `--no-install` (bump versions but skip install). Requires `ncu` installed globally (`npm install -g npm-check-updates`).
+
 ### Build Order
 1. `npm install` (workspace root – installs all packages)
 2. Generate Convex codegen (see above) – required before building
