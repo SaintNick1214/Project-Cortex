@@ -15,8 +15,8 @@ Thank you for your interest in contributing to Cortex! This document provides gu
 
 ### Prerequisites
 
-- Node.js 24+ and npm 9+
-- TypeScript 5.0+
+- Node.js 24.15+ and npm 12.2+
+- TypeScript 6.0 (installed by npm ci)
 - A Convex account (free tier works great)
 - Git
 - Familiarity with AI/LLM concepts
@@ -26,8 +26,8 @@ Thank you for your interest in contributing to Cortex! This document provides gu
 1. **Fork and Clone**
 
    ```bash
-   git clone https://github.com/SaintNick1214/cortex.git
-   cd cortex
+   git clone https://github.com/SaintNick1214/Project-Cortex.git
+   cd Project-Cortex
    ```
 
 2. **Install Dependencies**
@@ -73,7 +73,7 @@ cortex/
 │   ├── users/             # User profiles
 │   ├── analytics/         # Access analytics
 │   └── types/             # TypeScript types
-├── convex/                # Convex backend functions
+├── convex-dev/            # Convex backend functions
 │   ├── memories.ts        # Memory CRUD operations
 │   ├── search.ts          # Vector search logic
 │   ├── contexts.ts        # Context chain operations
@@ -82,7 +82,7 @@ cortex/
 │   ├── unit/             # Unit tests
 │   ├── integration/      # Integration tests
 │   └── e2e/              # End-to-end tests
-├── docs/                  # Documentation
+├── _DEPRECATED/           # Archived Python SDK
 ├── examples/              # Example applications
 └── scripts/               # Build and utility scripts
 ```
@@ -541,3 +541,9 @@ This protects both contributors and users. See [LICENSE.md](https://github.com/S
 ---
 
 Thank you for helping make Cortex better! 🎉
+
+## Automated Releases
+
+Pull requests and main-branch commits build and test the SDK, provider, CLI, and demo templates. Publishing waits for successful tests and security checks on the same main commit. CI deployments are separate from the production backend.
+
+Changes to a package trigger an npm release; SDK changes also release its dependent provider and CLI. Set a higher manifest version for a deliberate minor or major release. Otherwise the workflow chooses the next published patch version, verifies that exact version in the registry, and creates its release tag. The CLI's packaged templates use registry dependencies instead of development file links.

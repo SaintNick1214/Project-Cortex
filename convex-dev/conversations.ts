@@ -1348,6 +1348,7 @@ export const getHistory = query({
  */
 export const search = query({
   args: {
+    tenantId: v.optional(v.string()),
     query: v.string(),
     type: v.optional(
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
@@ -1406,6 +1407,9 @@ export const search = query({
     }> = [];
 
     for (const conversation of allConversations) {
+      if (args.tenantId && conversation.tenantId !== args.tenantId) {
+        continue;
+      }
       // Apply filters
       if (args.type && conversation.type !== args.type) {
         continue;

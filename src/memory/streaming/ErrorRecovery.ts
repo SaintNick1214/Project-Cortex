@@ -19,7 +19,6 @@ import type {
   StreamContext,
   StreamError,
 } from "../../types/streaming";
-import crypto from "crypto";
 
 /**
  * Handles error recovery for streaming operations
@@ -82,7 +81,7 @@ export class StreamErrorRecovery {
           partialMemoryId: context.partialMemoryId || "",
           factsExtracted: context.extractedFactIds,
           timestamp: Date.now(),
-          checksum: this.calculateChecksum(context.accumulatedText),
+          checksum: await this.calculateChecksum(context.accumulatedText),
         });
       }
 
@@ -203,7 +202,9 @@ export class StreamErrorRecovery {
    */
   async generateResumeToken(context: ResumeContext): Promise<string> {
     // Create a unique token
-    const token = `resume_${Date.now()}_${crypto.randomBytes(16).toString("hex")}`;
+    const randomPart = Array.from(globalThis.crypto.getRandomValues(new Uint8Array(16)),
+      (byte) => byte.toString(16).padStart(2, "0")).join("");
+    const token = `resume_${Date.now()}_${randomPart}`;
 
     // Store resume context in mutable store with TTL
     try {
@@ -248,7 +249,7 @@ export class StreamErrorRecovery {
       }
 
       // Validate checksum
-      const calculatedChecksum = this.calculateChecksum(
+      const calculatedChecksum = await this.calculateChecksum(
         context.accumulatedContent,
       );
       if (calculatedChecksum !== context.checksum) {
@@ -284,12 +285,10 @@ export class StreamErrorRecovery {
   /**
    * Calculate checksum for content verification
    */
-  private calculateChecksum(content: string): string {
-    return crypto
-      .createHash("sha256")
-      .update(content)
-      .digest("hex")
-      .substring(0, 16); // Use first 16 chars for brevity
+  private async calculateChecksum(content: string): Promise<string> {
+    const digest = await globalThis.crypto.subtle.digest("SHA-256", new TextEncoder().encode(content));
+    return Array.from(new Uint8Array(digest),
+      (byte) => byte.toString(16).padStart(2, "0")).join("").substring(0, 16);
   }
 
   /**

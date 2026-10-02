@@ -271,6 +271,7 @@ export const deleteMemory = mutation({
  */
 export const get = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     memoryId: v.string(),
   },
@@ -285,7 +286,7 @@ export const get = query({
     }
 
     // Verify memorySpace owns this memory
-    if (memory.memorySpaceId !== args.memorySpaceId) {
+    if (memory.memorySpaceId !== args.memorySpaceId || (args.tenantId && memory.tenantId !== args.tenantId)) {
       return null; // Permission denied (silent)
     }
 
