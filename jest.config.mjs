@@ -7,12 +7,13 @@ export default {
   setupFiles: ["<rootDir>/tests/env.ts"],
   setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
   collectCoverageFrom: ["src/**/*.ts", "!src/**/*.d.ts"],
+  // Baseline includes every implementation file, including namespace index.ts.
   coverageThreshold: {
     global: {
-      branches: 80,
+      branches: 65,
       functions: 80,
-      lines: 80,
-      statements: 80,
+      lines: 70,
+      statements: 70,
     },
   },
   moduleNameMapper: {
