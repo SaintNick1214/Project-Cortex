@@ -2,7 +2,7 @@ import { describe, it, expect, jest, afterEach } from '@jest/globals';
 import { AttachmentsAPI } from '../../../src/attachments';
 import type { ConvexClient } from 'convex/browser';
 
-afterEach(() => jest.restoreAllMocks());
+afterEach(() => { jest.restoreAllMocks(); });
 
 describe('attachment upload', () => {
   const params = {memorySpaceId:'space-example',userId:'user-example',type:'file' as const,filename:'example.txt'};

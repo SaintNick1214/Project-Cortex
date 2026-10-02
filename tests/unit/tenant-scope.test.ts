@@ -17,7 +17,7 @@ describe('configured tenant scope', () => {
     expect(query).not.toHaveBeenCalled();
   });
   it('passes configured scope to vector retrieval', async () => {
-    const query = jest.fn<() => Promise<null>>().mockResolvedValue(null);
+    const query = jest.fn<(...args: unknown[]) => Promise<null>>().mockResolvedValue(null);
     const api = new VectorAPI({query} as unknown as ConvexClient,undefined,undefined,{userId:'user-example',tenantId:'tenant-example'});
     await api.get('space-example','mem-example');
     expect(query).toHaveBeenCalledWith(expect.anything(),expect.objectContaining({tenantId:'tenant-example'}));
