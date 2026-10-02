@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 
@@ -11,7 +11,6 @@ for (const pkg of plan.filter(pkg => pkg.changed || pkg.released)) {
       for (const template of ['basic','vercel-ai-quickstart','chat-sdk-quickstart']) {
         const folder = join(pkg.folder,'templates',template);
         const filename = join(folder,'package.json');
-        if (!existsSync(filename)) continue;
         const manifest = JSON.parse(readFileSync(filename,'utf8'));
         for (const dependency of plan) {
           if (dependency.version && manifest.dependencies?.[dependency.name]) {

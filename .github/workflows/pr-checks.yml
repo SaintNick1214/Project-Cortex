@@ -57,9 +57,9 @@ jobs:
         working-directory: ${{ matrix.folder }}
         run: |
           if node -e 'process.exit(require("./package.json").dependencies["@cortexmemory/vercel-ai-provider"] ? 0 : 1)'; then
-            npm install --package-lock-only --ignore-scripts --no-audit --no-fund "@cortexmemory/sdk=$SDK_ARCHIVE" "@cortexmemory/vercel-ai-provider=$PROVIDER_ARCHIVE"
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund "@cortexmemory/sdk@file:$SDK_ARCHIVE" "@cortexmemory/vercel-ai-provider@file:$PROVIDER_ARCHIVE"
           else
-            npm install --package-lock-only --ignore-scripts --no-audit --no-fund "@cortexmemory/sdk=$SDK_ARCHIVE"
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund "@cortexmemory/sdk@file:$SDK_ARCHIVE"
           fi
           npm ci
       - name: Build demo
