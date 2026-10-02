@@ -31,6 +31,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
+          MAIN_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          if [ "$MAIN_SHA" != "$SOURCE_SHA" ]; then
+            echo 'A newer main commit superseded this delivery run.'
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           gh api "repos/$GITHUB_REPOSITORY/actions/runs?branch=main&event=push&head_sha=$SOURCE_SHA&per_page=100" > runs.json
           node --input-type=module <<'JS'
           import {readFileSync, appendFileSync} from 'node:fs';
