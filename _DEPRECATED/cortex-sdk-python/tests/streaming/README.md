@@ -188,6 +188,6 @@ To expand test coverage:
 
 ## 📚 Related Documentation
 
-- [Python SDK Documentation](../../Documentation/)
+- [Python SDK Documentation](https://docs.cortexmemory.dev)
 - [TypeScript SDK Tests](../../../tests/streaming/) - Reference implementation
 - [IMPLEMENTATION-STATUS.md](../../IMPLEMENTATION-STATUS.md) - Current progress

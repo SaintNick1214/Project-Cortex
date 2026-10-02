@@ -149,7 +149,7 @@ if (graphTestingEnabled) {
   );
   console.log("   To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local");
   console.log(
-    "   See: Documentation/07-advanced-topics/05-graph-database-setup.md\n",
+    "   See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration\n",
   );
 }
 

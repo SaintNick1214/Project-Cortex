@@ -375,10 +375,10 @@ pytest tests/test_memory.py -v
 
 ### Shared Documentation
 
-- **[API Reference](../Documentation/03-api-reference/01-overview.md)** - Complete API documentation
-- **[Core Features](../Documentation/02-core-features/)** - Feature guides
-- **[Architecture](../Documentation/04-architecture/)** - System architecture
-- **[Advanced Topics](../Documentation/07-advanced-topics/)** - Graph DB, facts, etc.
+- **[API Reference](https://docs.cortexmemory.dev/api-reference/overview)** - Complete API documentation
+- **[Core Features](https://docs.cortexmemory.dev/core-features/memory-orchestration)** - Feature guides
+- **[Architecture](https://docs.cortexmemory.dev/architecture/system-overview)** - System architecture
+- **[Advanced Topics](https://docs.cortexmemory.dev/advanced-topics/graph-database-integration)** - Graph DB, facts, etc.
 
 ## 🔒 Requirements
 
@@ -476,7 +476,7 @@ FSL-1.1-Apache-2.0 - Same as the TypeScript SDK
 - 📧 Email: support@cortexmemory.dev
 - 💬 Discussions: [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
 - 🐛 Issues: [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
-- 📖 Docs: [Documentation](../Documentation/00-README.md)
+- 📖 Docs: [Documentation](https://docs.cortexmemory.dev)
 
 ---
 

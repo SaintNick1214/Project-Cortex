@@ -32,7 +32,6 @@ export default [
       "**/.venv/**/*", // Exclude Python virtual environments
       "**/venv/**/*", // Exclude Python virtual environments
       "dev-docs/**/*", // Exclude dev documentation
-      "Documentation/**/*", // Exclude documentation
       "Internal Docs/**/*", // Exclude internal docs
     ],
   },

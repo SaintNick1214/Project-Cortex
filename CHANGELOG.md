@@ -20,4 +20,4 @@ The new changelog features:
 
 ---
 
-For local development, see the source at: `Documentation/whats-new.mdx`
+The canonical source is maintained in the cortexmemory.dev repository at `docs-site/docs/whats-new.mdx`.

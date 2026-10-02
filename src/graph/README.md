@@ -66,7 +66,7 @@ Real graph database integration for Cortex, supporting Neo4j and Memgraph for ad
   - Configured authentication and memory settings
   - Data persistence via volumes
 
-- **Documentation** (`Documentation/07-advanced-topics/05-graph-database-setup.md`)
+- **Documentation** (`https://docs.cortexmemory.dev/advanced-topics/graph-database-integration`)
   - Step-by-step setup instructions
   - Connection verification
   - Environment configuration

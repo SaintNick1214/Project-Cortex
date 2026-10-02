@@ -190,7 +190,7 @@ quickstart/
 
 - [Cortex Memory Documentation](https://cortexmemory.dev/docs)
 - [Vercel AI SDK Documentation](https://sdk.vercel.ai/docs)
-- [API Reference](/Documentation/03-api-reference/02-memory-operations.md)
+- [API Reference](https://docs.cortexmemory.dev/api-reference/memory-operations)
 
 ## Troubleshooting
 

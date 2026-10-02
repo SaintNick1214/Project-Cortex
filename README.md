@@ -138,7 +138,7 @@ const results = await cortex.memory.search(
 
 **That's it!** Your AI agent now has persistent memory.
 
-**Next steps:** [Getting Started Guide](/getting-started/introduction) | [CLI Reference](/tools/cli-reference)
+**Next steps:** [Getting Started Guide](/getting-started/introduction) | [CLI Reference](https://docs.cortexmemory.dev/tools/cli-reference)
 
 ---
 
@@ -361,9 +361,9 @@ Cortex is designed with two deployment modes:
 ### Reference
 
 - [API Reference](https://docs.cortexmemory.dev/api-reference/overview) - Full API documentation
-- [CLI Reference](/tools/cli-reference) - Complete command documentation
+- [CLI Reference](https://docs.cortexmemory.dev/tools/cli-reference) - Complete command documentation
 - [System Architecture](https://docs.cortexmemory.dev/architecture/system-overview) - How it works
-- [Local Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation) - Repository documentation
+- Documentation source: `cortexmemory.dev/docs-site/docs/` (maintained in the website repository)
 
 ## 🤝 Get Involved
 
