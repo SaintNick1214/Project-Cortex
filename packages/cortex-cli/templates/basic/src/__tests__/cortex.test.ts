@@ -75,76 +75,54 @@ describe("cortex", () => {
     });
   });
 
-  describe("getCortex", () => {
-    it("throws error when CONVEX_URL is not set", async () => {
+  describe("client lifecycle", () => {
+    it("requires explicit initialization", async () => {
+      const { getCortex } = await import("../cortex.js");
+      expect(() => getCortex()).toThrow("Call initCortex() first");
+    });
+
+    it("validates the URL and allows retry after failed initialization", async () => {
       delete process.env.CONVEX_URL;
-
-      const { getCortex } = await import("../cortex.js");
-
-      expect(() => getCortex()).toThrow("CONVEX_URL environment variable is required");
+      const client = { memory: {}, close: vi.fn() };
+      const create = vi.fn().mockResolvedValue(client);
+      vi.doMock("@cortexmemory/sdk", () => ({ Cortex: { create } }));
+      const { initCortex, getCortex } = await import("../cortex.js");
+      await expect(initCortex()).rejects.toThrow("CONVEX_URL environment variable is required");
+      process.env.CONVEX_URL = "https://test.convex.cloud";
+      await initCortex();
+      expect(getCortex()).toBe(client);
+      expect(create).toHaveBeenCalledWith(expect.objectContaining({ convexUrl: process.env.CONVEX_URL }));
     });
 
-    it("creates Cortex client when CONVEX_URL is set", async () => {
+    it("shares initialization between concurrent calls", async () => {
       process.env.CONVEX_URL = "https://test.convex.cloud";
-
-      // Mock Cortex SDK
-      vi.doMock("@cortexmemory/sdk", () => ({
-        Cortex: vi.fn().mockImplementation(() => ({
-          memory: {},
-          close: vi.fn(),
-        })),
-      }));
-
-      const { getCortex } = await import("../cortex.js");
-      const cortex = getCortex();
-
-      expect(cortex).toBeDefined();
-      expect(cortex.memory).toBeDefined();
+      const client = { memory: {}, close: vi.fn() };
+      const create = vi.fn().mockResolvedValue(client);
+      vi.doMock("@cortexmemory/sdk", () => ({ Cortex: { create } }));
+      const { initCortex, getCortex } = await import("../cortex.js");
+      const clients = await Promise.all([initCortex(), initCortex()]);
+      expect(clients).toEqual([client, client]);
+      expect(getCortex()).toBe(client);
+      expect(create).toHaveBeenCalledTimes(1);
     });
 
-    it("returns same instance on subsequent calls (singleton)", async () => {
+    it("closes and reinitializes with a fresh client", async () => {
       process.env.CONVEX_URL = "https://test.convex.cloud";
-
-      vi.doMock("@cortexmemory/sdk", () => ({
-        Cortex: vi.fn().mockImplementation(() => ({
-          memory: {},
-          close: vi.fn(),
-        })),
-      }));
-
-      const { getCortex } = await import("../cortex.js");
-
-      const instance1 = getCortex();
-      const instance2 = getCortex();
-
-      expect(instance1).toBe(instance2);
-    });
-  });
-
-  describe("closeCortex", () => {
-    it("closes the client and resets singleton", async () => {
-      process.env.CONVEX_URL = "https://test.convex.cloud";
-
-      const closeMock = vi.fn();
-      vi.doMock("@cortexmemory/sdk", () => ({
-        Cortex: vi.fn().mockImplementation(() => ({
-          memory: {},
-          close: closeMock,
-        })),
-      }));
-
-      const { getCortex, closeCortex } = await import("../cortex.js");
-
-      getCortex(); // Create instance
+      const first = { close: vi.fn() };
+      const second = { close: vi.fn() };
+      const create = vi.fn().mockResolvedValueOnce(first).mockResolvedValueOnce(second);
+      vi.doMock("@cortexmemory/sdk", () => ({ Cortex: { create } }));
+      const { initCortex, getCortex, closeCortex } = await import("../cortex.js");
+      await initCortex();
       closeCortex();
-
-      expect(closeMock).toHaveBeenCalled();
+      expect(first.close).toHaveBeenCalledOnce();
+      expect(() => getCortex()).toThrow("Call initCortex() first");
+      await initCortex();
+      expect(getCortex()).toBe(second);
     });
 
     it("does nothing when no client exists", async () => {
       const { closeCortex } = await import("../cortex.js");
-
-      // Should not throw
       expect(() => closeCortex()).not.toThrow();
     });
   });
@@ -267,13 +245,13 @@ describe("cortex", () => {
 
       // Mock OpenAI
       vi.doMock("openai", () => ({
-        default: vi.fn().mockImplementation(() => ({
+        default: vi.fn(function () { return {
           embeddings: {
             create: vi.fn().mockResolvedValue({
               data: [{ embedding: new Array(1536).fill(0.1) }],
             }),
           },
-        })),
+        }; }),
       }));
 
       const { getEmbeddingProvider } = await import("../cortex.js");
@@ -305,7 +283,7 @@ describe("cortex", () => {
       expect(params.conversationId).toBe("conv-123");
     });
 
-    it("includes belief revision when fact extraction is enabled", async () => {
+    it("leaves fact extraction to the configured client", async () => {
       delete process.env.OPENAI_API_KEY;
       process.env.CORTEX_FACT_EXTRACTION = "true";
 
@@ -317,12 +295,8 @@ describe("cortex", () => {
         conversationId: "conv-123",
       });
 
-      expect(params.extractFacts).toBe(true);
-      expect(params.beliefRevision).toEqual({
-        enabled: true,
-        slotMatching: true,
-        llmResolution: false, // No OpenAI key
-      });
+      expect(params.extractFacts).toBeUndefined();
+      expect(params.beliefRevision).toBeUndefined();
     });
   });
 });

@@ -140,6 +140,17 @@ describe("Factory Functions", () => {
       expect(typeof factory.clearMemories).toBe("function");
       expect(typeof factory.getConfig).toBe("function");
     });
+    it("shares and closes one SDK client for wrapped models", async () => {
+      const { Cortex } = await import("@cortexmemory/sdk");
+      const factory = createCortexMemory(createTestConfig());
+      factory(createMockLLM());
+      factory(createMockLLM());
+      expect(Cortex).toHaveBeenCalledTimes(1);
+      const client = (Cortex as unknown as jest.Mock).mock.results[0].value;
+      await factory.close();
+      expect(client.close).toHaveBeenCalledTimes(1);
+    });
+
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

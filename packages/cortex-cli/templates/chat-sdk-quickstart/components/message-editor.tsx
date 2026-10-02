@@ -90,7 +90,7 @@ export function MessageEditor({
               if (index !== -1) {
                 const updatedMessage: ChatMessage = {
                   ...message,
-                  parts: [{ type: "text", text: draftContent }],
+                  parts: [{ text: draftContent, type: "text" }],
                 };
 
                 return [...messages.slice(0, index), updatedMessage];

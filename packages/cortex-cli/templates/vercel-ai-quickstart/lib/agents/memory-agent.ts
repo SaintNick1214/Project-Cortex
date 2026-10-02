@@ -21,8 +21,9 @@
  * ```
  */
 
-import { ToolLoopAgent, stepCountIs } from "ai";
+import { ToolLoopAgent, tool, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
+import { z } from "zod";
 import {
   createCortexCallOptionsSchema,
   createMemoryPrepareCall,
@@ -96,7 +97,7 @@ export const memoryAgent = new ToolLoopAgent({
   // │ - Facts (extracted knowledge)                                  │
   // │ - Graph relationships (if configured)                          │
   // └─────────────────────────────────────────────────────────────────┘
-   
+
   prepareCall: createMemoryPrepareCall({
     convexUrl: process.env.CONVEX_URL!,
     maxMemories: 20, // Max items to inject from recall

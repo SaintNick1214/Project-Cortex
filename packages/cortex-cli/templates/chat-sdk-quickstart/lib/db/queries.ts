@@ -16,21 +16,15 @@
  */
 
 import type {
-  Chat,
-  DBMessage,
-  Document,
-  Suggestion,
-  Vote,
-} from "@/lib/types";
-import { getCortex, getMemorySpaceId, getAgentId } from "@/lib/cortex";
-import type {
-  Conversation,
-  Message as CortexMessage,
   Artifact,
   ArtifactVersion,
+  Conversation,
+  Message as CortexMessage,
 } from "@cortexmemory/sdk";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
+import { getAgentId, getCortex, getMemorySpaceId } from "@/lib/cortex";
+import type { Chat, DBMessage, Document, Suggestion, Vote } from "@/lib/types";
 
 // ============================================================================
 // Convex Client Helper
@@ -58,15 +52,12 @@ function getConvexClient(): ConvexHttpClient {
  */
 function conversationToChat(conversation: Conversation): Chat {
   return {
-    id: conversation.conversationId,
-    userId: conversation.participants?.userId || "",
-    title:
-      (conversation.metadata?.title as string) ||
-      "New Chat",
-    visibility:
-      conversation.visibility === "public" ? "public" : "private",
     createdAt: new Date(conversation.createdAt),
+    id: conversation.conversationId,
+    title: (conversation.metadata?.title as string) || "New Chat",
     updatedAt: new Date(conversation.updatedAt),
+    userId: conversation.participants?.userId || "",
+    visibility: conversation.visibility === "public" ? "public" : "private",
   };
 }
 
@@ -79,9 +70,9 @@ function cortexMessageToDBMessage(
 ): DBMessage {
   // Map Cortex roles to Chat SDK roles
   const roleMap: Record<string, "user" | "assistant" | "system"> = {
-    user: "user",
     agent: "assistant",
     system: "system",
+    user: "user",
   };
 
   // Parse content - Cortex stores as string, Chat SDK uses parts
@@ -91,16 +82,16 @@ function cortexMessageToDBMessage(
     parts = JSON.parse(message.content);
   } catch {
     // Simple text content - wrap in parts format
-    parts = [{ type: "text", text: message.content }];
+    parts = [{ text: message.content, type: "text" }];
   }
 
   return {
-    id: message.id,
-    chatId,
-    role: roleMap[message.role] || "assistant",
-    parts,
     attachments: (message.metadata?.attachments as unknown[]) || [],
+    chatId,
     createdAt: new Date(message.timestamp),
+    id: message.id,
+    parts,
+    role: roleMap[message.role] || "assistant",
   };
 }
 
@@ -140,7 +131,7 @@ function partsToContent(parts: unknown): string {
 // ============================================================================
 
 export async function getUser(
-  email: string
+  _email: string
 ): Promise<Array<{ id: string; email: string; password: string | null }>> {
   // User management is handled by NextAuth, not Cortex
   // This is a placeholder - actual implementation depends on your auth provider
@@ -150,21 +141,21 @@ export async function getUser(
 
 export async function createUser(
   email: string,
-  password: string
+  _password: string
 ): Promise<Array<{ id: string; email: string }>> {
   // User management is handled by NextAuth, not Cortex
   // For demo purposes, we generate a user ID
-  const id = `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-  return [{ id, email }];
+  const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  return [{ email, id }];
 }
 
 export async function createGuestUser(): Promise<
   Array<{ id: string; email: string }>
 > {
   // Create a guest user with a random ID
-  const id = `guest-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  const id = `guest-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
   const email = `guest-${id}@example.com`;
-  return [{ id, email }];
+  return [{ email, id }];
 }
 
 // ============================================================================
@@ -203,12 +194,12 @@ export async function getChatsByUserId({
   // Cortex uses offset-based pagination, convert cursor to offset if needed
   // For now, we'll do a simple list with limit
   const result = await cortex.conversations.list({
-    userId: id,
-    memorySpaceId,
+    includeMessages: false,
     limit,
+    memorySpaceId,
     sortBy: "createdAt",
     sortOrder: "desc",
-    includeMessages: false,
+    userId: id,
   });
 
   // Filter based on cursor if provided (client-side for now)
@@ -257,14 +248,14 @@ export async function saveChat({
   const conversation = await cortex.conversations.create({
     conversationId: id,
     memorySpaceId,
-    type: "user-agent",
-    participants: {
-      userId,
-      agentId,
-    },
     metadata: {
       title,
     },
+    participants: {
+      agentId,
+      userId,
+    },
+    type: "user-agent",
     visibility,
   });
 
@@ -298,8 +289,8 @@ export async function deleteAllChatsByUserId({
 
   // Delete all conversations for this user
   const result = await cortex.conversations.deleteMany({
-    userId,
     memorySpaceId,
+    userId,
   });
 
   return { deletedCount: result.deleted || 0 };
@@ -362,7 +353,7 @@ export async function getMessagesByChatId({
     includeMessages: true,
   });
 
-  if (!conversation || !conversation.messages) {
+  if (!conversation?.messages) {
     return [];
   }
 
@@ -370,10 +361,14 @@ export async function getMessagesByChatId({
   // These are internal bookkeeping messages and should not appear in chat history
   const chatMessages = conversation.messages.filter((msg) => {
     // Keep all non-system messages
-    if (msg.role !== "system") return true;
+    if (msg.role !== "system") {
+      return true;
+    }
     // Filter out title-update system messages
     const metadata = msg.metadata as { type?: string } | undefined;
-    if (metadata?.type === "title-update") return false;
+    if (metadata?.type === "title-update") {
+      return false;
+    }
     // Keep other system messages
     return true;
   });
@@ -383,7 +378,7 @@ export async function getMessagesByChatId({
 }
 
 export async function getMessageById({
-  id,
+  id: _id,
 }: {
   id: string;
 }): Promise<DBMessage[]> {
@@ -391,7 +386,9 @@ export async function getMessageById({
   // Since Cortex doesn't have a global message search by ID,
   // we'd need to know the conversation ID. For now, return empty.
   // In a real implementation, you'd want to store a message-to-conversation mapping.
-  throw new Error("getMessageById requires chatId; use getMessagesByChatId instead");
+  throw new Error(
+    "getMessageById requires chatId; use getMessagesByChatId instead"
+  );
 }
 
 export async function getMessageCountByUserId({
@@ -408,10 +405,10 @@ export async function getMessageCountByUserId({
   const since = Date.now() - differenceInHours * 60 * 60 * 1000;
 
   const result = await cortex.conversations.list({
-    userId: id,
-    memorySpaceId,
     createdAfter: since,
     includeMessages: true,
+    memorySpaceId,
+    userId: id,
   });
 
   // Count messages across all conversations
@@ -443,9 +440,9 @@ export async function saveMessages({
 
   // Map Chat SDK roles to Cortex roles
   const roleMap: Record<string, "user" | "agent" | "system"> = {
-    user: "user",
     assistant: "agent",
     system: "system",
+    user: "user",
   };
 
   // Add messages to conversations
@@ -456,21 +453,21 @@ export async function saveMessages({
     await cortex.conversations.addMessage({
       conversationId: message.chatId,
       message: {
-        id: message.id,
-        role: cortexRole,
         content,
+        id: message.id,
         metadata: {
           attachments: message.attachments,
           originalParts: message.parts,
         },
+        role: cortexRole,
       },
     });
   }
 }
 
 export async function updateMessage({
-  id,
-  parts,
+  id: _id,
+  parts: _parts,
 }: {
   id: string;
   parts: unknown;
@@ -482,8 +479,8 @@ export async function updateMessage({
 }
 
 export async function deleteMessagesByChatIdAfterTimestamp({
-  chatId,
-  timestamp,
+  chatId: _chatId,
+  timestamp: _timestamp,
 }: {
   chatId: string;
   timestamp: Date;
@@ -502,7 +499,14 @@ export async function deleteMessagesByChatIdAfterTimestamp({
 /**
  * Map Chat SDK artifact kinds to Cortex artifact kinds
  */
-type CortexArtifactKind = "text" | "code" | "sheet" | "image" | "diagram" | "html" | "custom";
+type CortexArtifactKind =
+  | "text"
+  | "code"
+  | "sheet"
+  | "image"
+  | "diagram"
+  | "html"
+  | "custom";
 
 function mapToCortexKind(chatSdkKind: string): CortexArtifactKind {
   switch (chatSdkKind) {
@@ -519,9 +523,15 @@ function mapToCortexKind(chatSdkKind: string): CortexArtifactKind {
   }
 }
 
-function mapFromCortexKind(cortexKind: CortexArtifactKind): string {
-  // Direct mapping since Chat SDK kinds are a subset of Cortex kinds
-  return cortexKind;
+function mapFromCortexKind(cortexKind: CortexArtifactKind): Document["kind"] {
+  switch (cortexKind) {
+    case "code":
+    case "sheet":
+    case "image":
+      return cortexKind;
+    default:
+      return "text";
+  }
 }
 
 /**
@@ -529,13 +539,13 @@ function mapFromCortexKind(cortexKind: CortexArtifactKind): string {
  */
 function artifactToDocument(artifact: Artifact): Document {
   return {
-    id: artifact.artifactId,
-    title: artifact.title,
     content: artifact.content || null,
-    kind: mapFromCortexKind(artifact.kind),
-    userId: artifact.userId || "",
     createdAt: new Date(artifact.createdAt),
+    id: artifact.artifactId,
+    kind: mapFromCortexKind(artifact.kind),
+    title: artifact.title,
     updatedAt: new Date(artifact.updatedAt),
+    userId: artifact.userId || "",
   };
 }
 
@@ -546,16 +556,16 @@ function artifactVersionToDocument(
   artifactId: string,
   version: ArtifactVersion,
   userId: string,
-  kind: string
+  kind: CortexArtifactKind
 ): Document {
   return {
-    id: artifactId,
-    title: version.title || "",
     content: version.content || null,
-    kind,
-    userId,
     createdAt: new Date(version.timestamp),
+    id: artifactId,
+    kind: mapFromCortexKind(kind),
+    title: version.title || "",
     updatedAt: new Date(version.timestamp),
+    userId,
   };
 }
 
@@ -634,8 +644,8 @@ export async function saveDocument({
   if (existing) {
     // Update existing artifact (creates new version)
     const updated = await cortex.artifacts.update(id, content, {
+      changeSummary: "Updated via Chat SDK",
       title,
-      changeSummary: `Updated via Chat SDK`,
     });
     return artifactToDocument(updated);
   }
@@ -643,12 +653,7 @@ export async function saveDocument({
   // Create new artifact
   const artifact = await cortex.artifacts.create({
     artifactId: id,
-    memorySpaceId,
-    kind: mapToCortexKind(kind),
-    title,
     content,
-    userId,
-    streamingState: "final",
     // Link to conversation if provided
     conversationRef: conversationId
       ? {
@@ -656,6 +661,11 @@ export async function saveDocument({
           messageId,
         }
       : undefined,
+    kind: mapToCortexKind(kind),
+    memorySpaceId,
+    streamingState: "final",
+    title,
+    userId,
   });
 
   return artifactToDocument(artifact);
@@ -682,13 +692,13 @@ export async function saveDocumentWithConversation({
   messageId?: string;
 }): Promise<Document> {
   return saveDocument({
-    id,
     content,
-    title,
-    kind,
-    userId,
     conversationId,
+    id,
+    kind,
     messageId,
+    title,
+    userId,
   });
 }
 
@@ -795,11 +805,11 @@ export async function getDocumentsByUserId({
   const memorySpaceId = getMemorySpaceId();
 
   const artifacts = await cortex.artifacts.list({
-    memorySpaceId,
-    userId,
     limit,
+    memorySpaceId,
     sortBy: "updatedAt",
     sortOrder: "desc",
+    userId,
   });
 
   return artifacts.map(artifactToDocument);
@@ -819,8 +829,8 @@ export async function getDocumentsByConversationId({
   // List artifacts and filter by conversationRef
   // Note: In a production system, you'd want an index for this query
   const artifacts = await cortex.artifacts.list({
-    memorySpaceId,
     limit: 100,
+    memorySpaceId,
   });
 
   const linkedArtifacts = artifacts.filter(
@@ -902,8 +912,8 @@ export async function voteMessage({
 
   const vote: Vote = {
     chatId,
-    messageId,
     isUpvoted: type === "up",
+    messageId,
   };
 
   if (existingIndex >= 0) {

@@ -27,17 +27,24 @@
     "rules": {
       "suspicious": {
         "noExplicitAny": "off",
+        "noUnnecessaryConditions": "off",
         "noUnknownAtRules": "off",
         "noConsole": "off",
+        "useAwait": "off",
+        "noArrayIndexKey": "off",
+        "noNestedPromises": "off",
         "noBitwiseOperators": "off"
       },
       "style": {
         "noMagicNumbers": "off",
+        "useDestructuring": "off",
+        "noIncrementDecrement": "off",
+        "noNonNullAssertion": "off",
+        "noDescendingSpecificity": "off",
         "noNestedTernary": "off",
         "useConsistentTypeDefinitions": "off"
       },
       "nursery": {
-        "noUnnecessaryConditions": "off",
         "useSortedClasses": "off"
       },
       "complexity": {
@@ -53,6 +60,8 @@
       },
       "performance": {
         "noBarrelFile": "off",
+        "noJsxPropsBind": "off",
+        "noAwaitInLoops": "off",
         "useTopLevelRegex": "off"
       }
     }

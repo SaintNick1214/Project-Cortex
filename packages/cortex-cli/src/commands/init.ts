@@ -629,7 +629,6 @@ export function registerLifecycleCommands(
                   );
                   stoppedSomething = true;
                   deploymentStopped = true;
-                  convexStopped = true;
                 }
               } else {
                 console.log(pc.dim("   No Convex process running"));
@@ -1937,7 +1936,7 @@ async function showRunningStatus(
   if (isLocal) {
     // For local deployments, check if the dev server is running
     const pidFile = path.join(projectPath, ".convex-dev.pid");
-    let convexRunning = false;
+    let convexRunning: boolean;
     let convexPid: string | null = null;
 
     try {

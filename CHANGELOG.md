@@ -7,7 +7,7 @@ View the complete changelog at: **https://docs.cortexmemory.dev/whats-new**
 All releases across the Cortex ecosystem are now unified in one easy-to-browse timeline:
 
 - **TypeScript SDK** (`@cortexmemory/sdk`)
-- **Python SDK** (`cortex-sdk-python`)
+- **Python SDK** (`cortex-sdk-python`, archived; historical releases only)
 - **CLI** (`@cortexmemory/cli`)
 - **Vercel AI Provider** (`@cortexmemory/vercel-ai-provider`)
 

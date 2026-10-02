@@ -16,7 +16,7 @@ This is the official quickstart demo for **Cortex Memory** with the **Vercel AI 
 
 ## Prerequisites
 
-- Node.js 18+
+- Node.js 24+
 - A Convex deployment ([get started](https://www.convex.dev/))
 - An OpenAI API key ([get one](https://platform.openai.com/api-keys))
 

@@ -76,6 +76,8 @@ export function ChatInterface({
   // This ensures we always send the latest conversationId
   const transport = useMemo(
     () =>
+      // The body callback reads this ref when a request is sent, after render.
+      // eslint-disable-next-line react-hooks/refs
       new DefaultChatTransport({
         api: apiEndpoint,
         // Use a function to get body so it reads latest conversationId from ref

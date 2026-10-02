@@ -51,7 +51,7 @@ export default {
         tsconfig: {
           allowJs: true,
           module: "ESNext",
-          moduleResolution: "node",
+          moduleResolution: "bundler",
         },
       },
     ],

@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/sdk",
-  "version": "0.36.0",
+  "version": "0.37.0",
   "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
   "type": "module",
   "workspaces": [
@@ -87,9 +87,9 @@
     "update-deps:dry": "node scripts/update-deps.mjs --dry-run"
   },
   "peerDependencies": {
-    "@anthropic-ai/sdk": "^0.71.2",
-    "convex": "^1.31.6",
-    "openai": "^4.0.0 || ^5.0.0 || ^6.0.0"
+    "@anthropic-ai/sdk": "^0.131.0",
+    "convex": "^1.46.0",
+    "openai": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
   },
   "peerDependenciesMeta": {
     "openai": {
@@ -100,29 +100,31 @@
     }
   },
   "devDependencies": {
-    "@anthropic-ai/sdk": "^0.71.2",
-    "@convex-dev/eslint-plugin": "^1.1.1",
-    "@eslint/eslintrc": "^3.3.3",
-    "@eslint/js": "^9.39.2",
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@convex-dev/eslint-plugin": "^5.0.0",
+    "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.10",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "@typescript-eslint/parser": "^8.54.0",
+    "@types/node": "^26.6.4",
+    "@typescript-eslint/eslint-plugin": "^8.71.0",
+    "@typescript-eslint/parser": "^8.71.0",
     "cross-env": "^10.1.0",
-    "dotenv": "^17.2.3",
-    "eslint": "^9.39.2",
-    "globals": "^17.1.0",
-    "jest": "^30.2.0",
-    "openai": "^6.16.0",
-    "rimraf": "^6.1.2",
-    "ts-jest": "^29.4.6",
-    "ts-node": "^10.9.2",
+    "dotenv": "^18.0.5",
+    "eslint": "^10.11.0",
+    "globals": "^17.13.0",
+    "jest": "^30.5.2",
+    "npm-check-updates": "^23.1.0",
+    "openai": "^7.27.0",
+    "rimraf": "^6.1.3",
+    "ts-jest": "^29.4.14",
     "tsup": "^8.5.1",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3"
   },
   "dependencies": {
-    "anthropic": "^0.0.0",
-    "neo4j-driver": "^6.0.1"
-  }
+    "neo4j-driver": "^6.2.0"
+  },
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "packageManager": "npm@12.2.0"
 }

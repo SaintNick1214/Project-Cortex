@@ -60,12 +60,12 @@ export const Branch = ({
   };
 
   const contextValue: BranchContextType = {
-    currentBranch,
-    totalBranches: branches.length,
-    goToPrevious,
-    goToNext,
     branches,
+    currentBranch,
+    goToNext,
+    goToPrevious,
     setBranches,
+    totalBranches: branches.length,
   };
 
   return (

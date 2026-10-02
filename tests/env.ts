@@ -24,7 +24,9 @@ dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
 // This file just configures the environment for each individual test run
 const testMode = process.env.CONVEX_TEST_MODE || "auto"; // "local", "managed", or "auto"
 const hasLocalConfig = Boolean(
-  process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT,
+  process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT ||
+    process.env.CONVEX_URL?.includes("localhost") ||
+    process.env.CONVEX_URL?.includes("127.0.0.1"),
 );
 const hasManagedConfig = Boolean(
   process.env.CLOUD_CONVEX_URL ||

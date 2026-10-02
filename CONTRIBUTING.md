@@ -15,7 +15,7 @@ Thank you for your interest in contributing to Cortex! This document provides gu
 
 ### Prerequisites
 
-- Node.js 18+ and npm 9+
+- Node.js 24+ and npm 9+
 - TypeScript 5.0+
 - A Convex account (free tier works great)
 - Git

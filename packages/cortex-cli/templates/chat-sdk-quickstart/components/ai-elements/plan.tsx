@@ -74,6 +74,7 @@ export const PlanTitle = ({ children, ...props }: PlanTitleProps) => {
 
   return (
     <CardTitle data-slot="plan-title" {...props}>
+      {/* biome-ignore lint/suspicious/noLeakedRender: children is intentionally rendered as a ReactNode. */}
       {isStreaming ? <Shimmer>{children}</Shimmer> : children}
     </CardTitle>
   );
@@ -99,6 +100,7 @@ export const PlanDescription = ({
       data-slot="plan-description"
       {...props}
     >
+      {/* biome-ignore lint/suspicious/noLeakedRender: children is intentionally rendered as a ReactNode. */}
       {isStreaming ? <Shimmer>{children}</Shimmer> : children}
     </CardDescription>
   );

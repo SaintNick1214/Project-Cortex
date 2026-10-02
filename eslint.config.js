@@ -26,7 +26,7 @@ export default [
       "Examples and Proofs/**/*", // Exclude example integrations
       "packages/**/*", // Exclude all packages (wizard has its own linting)
       "*.txt", // Exclude text files
-      "cortex-sdk-python/**/*", // Exclude Python SDK entirely
+      "_DEPRECATED/**/*", // Exclude Python SDK entirely
       "cortex-test/**/*", // Exclude cortex-test directory
       "**/htmlcov/**/*", // Exclude Python code coverage reports
       "**/.venv/**/*", // Exclude Python virtual environments

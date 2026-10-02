@@ -24,7 +24,7 @@ export function SubmitButton({
     >
       {children}
 
-      {(pending || isSuccessful) && (
+      {!!(pending || isSuccessful) && (
         <span className="absolute right-4 animate-spin">
           <LoaderIcon />
         </span>

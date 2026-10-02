@@ -1,6 +1,6 @@
 {
   "name": "@cortexmemory/vercel-ai-provider",
-  "version": "0.36.0",
+  "version": "0.37.0",
   "description": "Cortex Memory Provider for Vercel AI SDK - Add persistent memory with enhanced streaming capabilities to any AI application",
   "type": "module",
   "main": "./dist/src/index.cjs",
@@ -68,8 +68,8 @@
     "build": "tsup src/index.ts react/index.ts --format cjs,esm --dts --clean",
     "build:watch": "tsup src/index.ts react/index.ts --format cjs,esm --dts --watch",
     "clean": "rimraf dist",
-    "test": "jest",
-    "test:unit": "jest --selectProjects unit",
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e --",
+    "test:unit": "jest --selectProjects unit unit-react",
     "test:integration": "jest --selectProjects integration",
     "test:e2e": "node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects e2e",
     "test:watch": "jest --watch",
@@ -78,8 +78,8 @@
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
-    "ai": "^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0",
-    "convex": "^1.28.2",
+    "ai": "^7.0.0",
+    "convex": "^1.46.0",
     "react": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
@@ -88,29 +88,31 @@
     }
   },
   "dependencies": {
-    "@cortexmemory/sdk": "*"
+    "@cortexmemory/sdk": "^0.37.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@ai-sdk/openai": "^3.0.19",
-    "@ai-sdk/anthropic": "^3.0.23",
-    "@testing-library/react": "^16.3.2",
+    "@ai-sdk/openai": "^4.0.83",
+    "@ai-sdk/anthropic": "^4.0.71",
+    "@testing-library/react": "^16.3.3",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.10",
-    "@types/react": "^19.2.9",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "@typescript-eslint/parser": "^8.54.0",
-    "dotenv": "^17.2.3",
-    "eslint": "^9.39.2",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "rimraf": "^6.1.2",
-    "ts-jest": "^29.4.6",
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.71.0",
+    "@typescript-eslint/parser": "^8.71.0",
+    "dotenv": "^18.0.5",
+    "eslint": "^10.11.0",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "rimraf": "^6.1.3",
+    "ts-jest": "^29.4.14",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "~6.0.3"
   },
   "engines": {
-    "node": ">=18.0.0"
-  }
+    "node": ">=24.15.0"
+  },
+  "packageManager": "npm@12.2.0"
 }

@@ -14,58 +14,58 @@ import { v } from "convex/values";
 export default defineSchema({
   // Chat sessions table - tracks chat metadata
   chatSessions: defineTable({
+    createdAt: v.number(),
+    memorySpaceId: v.string(),
     sessionId: v.string(),
     title: v.optional(v.string()),
-    userId: v.string(),
-    memorySpaceId: v.string(),
-    visibility: v.union(v.literal("public"), v.literal("private")),
-    createdAt: v.number(),
     updatedAt: v.number(),
+    userId: v.string(),
+    visibility: v.union(v.literal("public"), v.literal("private")),
   })
     .index("by_session", ["sessionId"])
     .index("by_user", ["userId"])
     .index("by_visibility", ["visibility"]),
 
+  // Chat users - Auth.js user records synced to Convex
+  chatUsers: defineTable({
+    createdAt: v.number(),
+    email: v.string(),
+    passwordHash: v.optional(v.string()),
+  }).index("by_email", ["email"]),
+
   // Chat votes - tracks user feedback on messages
   chatVotes: defineTable({
-    sessionId: v.string(),
-    messageId: v.string(),
-    userId: v.string(),
-    isUpvoted: v.boolean(),
     createdAt: v.number(),
+    isUpvoted: v.boolean(),
+    messageId: v.string(),
+    sessionId: v.string(),
+    userId: v.string(),
   })
     .index("by_session", ["sessionId"])
     .index("by_message", ["messageId"]),
 
-  // Chat users - Auth.js user records synced to Convex
-  chatUsers: defineTable({
-    email: v.string(),
-    passwordHash: v.optional(v.string()),
-    createdAt: v.number(),
-  }).index("by_email", ["email"]),
-
   // Documents/Artifacts - stores user-created documents
   documents: defineTable({
-    documentId: v.string(),
-    sessionId: v.string(),
-    userId: v.string(),
-    title: v.string(),
-    kind: v.string(),
     content: v.optional(v.string()),
     createdAt: v.number(),
+    documentId: v.string(),
+    kind: v.string(),
+    sessionId: v.string(),
+    title: v.string(),
+    userId: v.string(),
   })
     .index("by_document", ["documentId"])
     .index("by_session", ["sessionId"]),
 
   // Suggestions - AI-generated suggestions for documents
   suggestions: defineTable({
+    createdAt: v.number(),
+    description: v.optional(v.string()),
     documentId: v.string(),
+    isResolved: v.boolean(),
     originalText: v.string(),
     suggestedText: v.string(),
-    description: v.optional(v.string()),
-    isResolved: v.boolean(),
     userId: v.string(),
-    createdAt: v.number(),
   })
     .index("by_document", ["documentId"])
     .index("by_document_resolved", ["documentId", "isResolved"]),

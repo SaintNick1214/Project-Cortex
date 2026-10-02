@@ -4,7 +4,6 @@ name: "CodeQL Config"
 # Available languages: cpp, csharp, go, java, javascript, python, ruby, swift
 languages:
   - javascript-typescript
-  - python
 
 # Disable Ruby scanning since we don't have Ruby code
 disable-default-queries: false
@@ -14,6 +13,7 @@ queries: []
 
 # Paths to ignore during analysis
 paths-ignore:
+  - "_DEPRECATED/**"
   # Build artifacts and dependencies
   - "**/node_modules/**"
   - "**/dist/**"

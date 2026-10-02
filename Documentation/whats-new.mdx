@@ -16,6 +16,22 @@ This is the complete changelog for all Cortex packages. Individual package CHANG
 <Tabs groupId="package-filter">
 <TabItem value="all" label="All Packages" default>
 
+## October 2026
+
+### TypeScript SDK, CLI, and Vercel AI Provider v0.37.0 · Unreleased
+
+The active TypeScript packages and demo templates now use current compatible dependencies. The Python SDK is archived in `_DEPRECATED/cortex-sdk-python` and no longer participates in active CI or publishing.
+
+- **Runtime requirement:** Node.js 24.15 or newer; npm 12.2.0.
+- **Dependencies:** Convex 1.46, OpenAI 7, Anthropic SDK 0.131, AI SDK 7, Next.js 16.3, React 19.3, ESLint 10, Jest 30, and Vitest 5. TypeScript remains on 6.0.3 while the current Jest/lint tooling excludes v7.
+- **CLI:** npm 12 registry metadata parsing, SDK package discovery through its exported entry point, and reproducible demo lockfiles. Template synchronization preserves local environments and installed dependencies.
+- **Provider and demos:** ESM schema helpers, shared SDK connection cleanup, current AI SDK streaming APIs, guest authentication routing, and async initialization recovery.
+- **Verification:** 4,943 passing tests, including browser and live AI memory flows; 215 existing conditional or disabled tests skipped. All package/demo builds and clean installs pass, with zero audit vulnerabilities.
+
+See [dependency upgrade verification](./getting-started/dependency-upgrade) for compatibility decisions and reproduction commands. Publish the SDK before the provider and CLI so their `^0.37.0` SDK dependency resolves.
+
+---
+
 ## January 2026
 
 ### All Packages v0.36.0 · Jan 26, 2026

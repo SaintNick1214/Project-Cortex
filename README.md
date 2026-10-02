@@ -13,13 +13,12 @@
 [Semgrep](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
 [Trivy](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
 [Gitleaks](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
-[Bandit](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
 [OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/SaintNick1214/Project-Cortex)
 
 ### ✅ Build & Tests
 
 [TypeScript SDK](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
-[Python SDK](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
+[Archived Python SDK](_DEPRECATED/cortex-sdk-python)
 [Vercel AI Provider](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
 [Socket.dev](https://socket.dev/npm/package/@cortexmemory/sdk)
 
@@ -31,7 +30,7 @@
 
 **What you get:**
 
-- ✅ **Stable APIs** - TypeScript and Python SDKs with consistent interfaces
+- ✅ **Stable APIs** - TypeScript SDK with stable interfaces
 - ✅ **Comprehensive Testing** - 124 test files with 18,460+ assertions
 - ✅ **CLI Tooling** - Complete project management and development workflow
 - ✅ **Security Scanning** - CodeQL, Semgrep, Trivy, Gitleaks, Bandit, OpenSSF Scorecard
@@ -398,7 +397,7 @@ See [CONTRIBUTING.md](/project/contributing) for detailed contribution guideline
 
 **Production Ready (Now Available):**
 
-- ✅ Core SDK (TypeScript + Python)
+- ✅ Core SDK (TypeScript)
 - ✅ CLI tooling with interactive dev mode
 - ✅ Vercel AI integration with quickstart demo
 - ✅ Complete documentation site
@@ -435,7 +434,6 @@ See [CONTRIBUTING.md](/project/contributing) for detailed contribution guideline
 - ✅ **Trivy** - Dependency vulnerability scanning
 - ✅ **Gitleaks** - Secret detection
 - ✅ **Semgrep** - API security & OWASP Top 10
-- ✅ **Bandit & Safety** - Python security scanning
 - ✅ **OpenSSF Scorecard** - Supply chain security rating
 - ✅ **Dependency Review** - Automated PR checks
 
@@ -531,3 +529,6 @@ Cortex was born out of building [Project Constellation](https://github.com/Saint
 Built with ❤️ for the AI agent community by [Nicholas Geil](https://github.com/SaintNick1214) / [Saint Nick LLC](https://saintnick.ai)
 
 *Cortex is production-ready. Join [Discussions](https://github.com/SaintNick1214/cortex/discussions) to share your use case and help shape the future of AI agent memory.*
+## Python SDK deprecation
+
+The Python SDK has moved to [`_DEPRECATED/cortex-sdk-python`](_DEPRECATED/cortex-sdk-python). It is retained for reference and is no longer maintained or published.

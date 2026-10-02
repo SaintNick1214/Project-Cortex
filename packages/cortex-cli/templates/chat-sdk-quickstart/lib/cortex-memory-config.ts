@@ -6,11 +6,11 @@
  * defaults and environment variable support.
  */
 
+import { openai } from "@ai-sdk/openai";
 import type {
   CortexMemoryConfig,
   LayerObserver,
 } from "@cortexmemory/vercel-ai-provider";
-import { openai } from "@ai-sdk/openai";
 import { embed } from "ai";
 
 /**
@@ -26,33 +26,30 @@ export function getCortexMemoryConfig(
   memorySpaceId: string,
   userId: string,
   conversationId: string,
-  layerObserver?: LayerObserver,
+  layerObserver?: LayerObserver
 ): CortexMemoryConfig {
   return {
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Core Cortex Configuration
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    convexUrl: process.env.CONVEX_URL!,
-    memorySpaceId,
-    userId,
-    userName: "User",
     agentId: "chat-sdk-assistant",
     agentName: "Chat SDK Assistant",
-    conversationId,
-
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Fact Extraction
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Belief Revision
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     beliefRevision: {
       enabled: true,
-      slotMatching: true,
       llmResolution: true,
+      slotMatching: true,
     },
+    conversationId,
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Core Cortex Configuration
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    convexUrl: process.env.CONVEX_URL!,
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Debug (enabled in development)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    debug: process.env.NODE_ENV === "development",
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Embedding Provider (OpenAI)
@@ -68,17 +65,9 @@ export function getCortexMemoryConfig(
     },
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Streaming Options
+    // Fact Extraction
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    streamingOptions: {
-      storePartialResponse: true,
-      progressiveFactExtraction: true,
-    },
-
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Memory Search Settings
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    memorySearchLimit: 20,
+    enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Layer Observation (for UI visualization)
@@ -86,9 +75,20 @@ export function getCortexMemoryConfig(
     layerObserver,
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Debug (enabled in development)
+    // Memory Search Settings
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    debug: process.env.NODE_ENV === "development",
+    memorySearchLimit: 20,
+    memorySpaceId,
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Streaming Options
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    streamingOptions: {
+      progressiveFactExtraction: true,
+      storePartialResponse: true,
+    },
+    userId,
+    userName: "User",
   };
 }
 

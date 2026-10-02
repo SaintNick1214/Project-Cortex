@@ -13,12 +13,6 @@ type UpdateDocumentProps = {
 export const updateDocument = ({ session, dataStream }: UpdateDocumentProps) =>
   tool({
     description: "Update a document with the given description.",
-    inputSchema: z.object({
-      id: z.string().describe("The ID of the document to update"),
-      description: z
-        .string()
-        .describe("The description of changes that need to be made"),
-    }),
     execute: async ({ id, description }) => {
       const document = await getDocumentById({ id });
 
@@ -29,9 +23,9 @@ export const updateDocument = ({ session, dataStream }: UpdateDocumentProps) =>
       }
 
       dataStream.write({
-        type: "data-clear",
         data: null,
         transient: true,
+        type: "data-clear",
       });
 
       const documentHandler = documentHandlersByArtifactKind.find(
@@ -44,19 +38,25 @@ export const updateDocument = ({ session, dataStream }: UpdateDocumentProps) =>
       }
 
       await documentHandler.onUpdateDocument({
-        document,
-        description,
         dataStream,
+        description,
+        document,
         session,
       });
 
-      dataStream.write({ type: "data-finish", data: null, transient: true });
+      dataStream.write({ data: null, transient: true, type: "data-finish" });
 
       return {
-        id,
-        title: document.title,
-        kind: document.kind,
         content: "The document has been updated successfully.",
+        id,
+        kind: document.kind,
+        title: document.title,
       };
     },
+    inputSchema: z.object({
+      description: z
+        .string()
+        .describe("The description of changes that need to be made"),
+      id: z.string().describe("The ID of the document to update"),
+    }),
   });

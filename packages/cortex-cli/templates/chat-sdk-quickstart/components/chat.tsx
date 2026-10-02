@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { useLayerTracking } from "@cortexmemory/vercel-ai-provider/react";
-import { DefaultChatTransport } from "ai";
+import { type DataUIPart, DefaultChatTransport } from "ai";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
@@ -21,9 +21,13 @@ import {
 import { useArtifactSelector } from "@/hooks/use-artifact";
 import { useAutoResume } from "@/hooks/use-auto-resume";
 import { useChatVisibility } from "@/hooks/use-chat-visibility";
-import type { Vote } from "@/lib/types";
 import { ChatSDKError } from "@/lib/errors";
-import type { Attachment, ChatMessage } from "@/lib/types";
+import type {
+  Attachment,
+  ChatMessage,
+  CustomUIDataTypes,
+  Vote,
+} from "@/lib/types";
 import { fetcher, fetchWithErrorHandlers, generateUUID } from "@/lib/utils";
 import { Artifact } from "./artifact";
 import { useDataStream } from "./data-stream-provider";
@@ -84,7 +88,7 @@ export function Chat({
 
   // Combined data handler for stream parts
   const handleDataPart = useCallback(
-    (dataPart: unknown) => {
+    (dataPart: DataUIPart<CustomUIDataTypes>) => {
       // Pass to layer tracking for memory visualization
       handleLayerDataPart(dataPart);
       // Pass to existing data stream handler
@@ -103,9 +107,27 @@ export function Chat({
     resumeStream,
     addToolApprovalResponse,
   } = useChat<ChatMessage>({
+    generateId: generateUUID,
     id,
     messages: initialMessages,
-    generateId: generateUUID,
+    onData: handleDataPart,
+    onError: (error) => {
+      if (error instanceof ChatSDKError) {
+        if (
+          error.message?.includes("AI Gateway requires a valid credit card")
+        ) {
+          setShowCreditCardAlert(true);
+        } else {
+          toast({
+            description: error.message,
+            type: "error",
+          });
+        }
+      }
+    },
+    onFinish: () => {
+      mutate(unstable_serialize(getChatHistoryPaginationKey));
+    },
     sendAutomaticallyWhen: ({ messages: currentMessages }) => {
       const lastMessage = currentMessages.at(-1);
       const shouldContinue =
@@ -147,24 +169,6 @@ export function Chat({
         };
       },
     }),
-    onData: handleDataPart,
-    onFinish: () => {
-      mutate(unstable_serialize(getChatHistoryPaginationKey));
-    },
-    onError: (error) => {
-      if (error instanceof ChatSDKError) {
-        if (
-          error.message?.includes("AI Gateway requires a valid credit card")
-        ) {
-          setShowCreditCardAlert(true);
-        } else {
-          toast({
-            type: "error",
-            description: error.message,
-          });
-        }
-      }
-    },
   });
 
   const searchParams = useSearchParams();
@@ -175,8 +179,8 @@ export function Chat({
   useEffect(() => {
     if (query && !hasAppendedQuery) {
       sendMessage({
+        parts: [{ text: query, type: "text" }],
         role: "user" as const,
-        parts: [{ type: "text", text: query }],
       });
 
       setHasAppendedQuery(true);

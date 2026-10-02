@@ -19,12 +19,12 @@ const Temporary = ({
   targetPosition,
 }: EdgeProps) => {
   const [edgePath] = getSimpleBezierPath({
+    sourcePosition,
     sourceX,
     sourceY,
-    sourcePosition,
+    targetPosition,
     targetX,
     targetY,
-    targetPosition,
   });
 
   return (
@@ -93,12 +93,12 @@ const getEdgeParams = (
   const [tx, ty] = getHandleCoordsByPosition(target, targetPos);
 
   return {
+    sourcePos,
     sx,
     sy,
+    targetPos,
     tx,
     ty,
-    sourcePos,
-    targetPos,
   };
 };
 
@@ -116,12 +116,12 @@ const Animated = ({ id, source, target, markerEnd, style }: EdgeProps) => {
   );
 
   const [edgePath] = getBezierPath({
+    sourcePosition: sourcePos,
     sourceX: sx,
     sourceY: sy,
-    sourcePosition: sourcePos,
+    targetPosition: targetPos,
     targetX: tx,
     targetY: ty,
-    targetPosition: targetPos,
   });
 
   return (
@@ -135,6 +135,6 @@ const Animated = ({ id, source, target, markerEnd, style }: EdgeProps) => {
 };
 
 export const Edge = {
-  Temporary,
   Animated,
+  Temporary,
 };

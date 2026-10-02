@@ -3,7 +3,6 @@
 import { useTheme } from "next-themes";
 import { parse, unparse } from "papaparse";
 import { memo, useEffect, useMemo, useState } from "react";
-// @ts-expect-error - react-data-grid@7 beta types are outdated; runtime uses named exports
 import { DataGrid, renderTextEditor } from "react-data-grid";
 import { cn } from "@/lib/utils";
 
@@ -46,45 +45,47 @@ const PureSpreadsheetEditor = ({ content, saveContent }: SheetEditorProps) => {
 
   const columns = useMemo(() => {
     const rowNumberColumn = {
+      cellClass: "border-t border-r dark:bg-zinc-950 dark:text-zinc-50",
+      frozen: true,
+      headerCellClass: "border-t border-r dark:bg-zinc-900 dark:text-zinc-50",
       key: "rowNumber",
       name: "",
-      frozen: true,
-      width: 50,
       renderCell: ({ rowIdx }: { rowIdx: number }) => rowIdx + 1,
-      cellClass: "border-t border-r dark:bg-zinc-950 dark:text-zinc-50",
-      headerCellClass: "border-t border-r dark:bg-zinc-900 dark:text-zinc-50",
+      width: 50,
     };
 
     const dataColumns = Array.from({ length: MIN_COLS }, (_, i) => ({
-      key: i.toString(),
-      name: String.fromCharCode(65 + i),
-      renderEditCell: renderTextEditor,
-      width: 120,
       cellClass: cn("border-t dark:bg-zinc-950 dark:text-zinc-50", {
         "border-l": i !== 0,
       }),
       headerCellClass: cn("border-t dark:bg-zinc-900 dark:text-zinc-50", {
         "border-l": i !== 0,
       }),
+      key: i.toString(),
+      name: String.fromCharCode(65 + i),
+      renderEditCell: renderTextEditor,
+      width: 120,
     }));
 
     return [rowNumberColumn, ...dataColumns];
   }, []);
 
-  const initialRows = useMemo(() => {
-    return parseData.map((row, rowIndex) => {
-      const rowData: any = {
-        id: rowIndex,
-        rowNumber: rowIndex + 1,
-      };
+  const initialRows = useMemo(
+    () =>
+      parseData.map((row, rowIndex) => {
+        const rowData: any = {
+          id: rowIndex,
+          rowNumber: rowIndex + 1,
+        };
 
-      columns.slice(1).forEach((col, colIndex) => {
-        rowData[col.key] = row[colIndex] || "";
-      });
+        columns.slice(1).forEach((col, colIndex) => {
+          rowData[col.key] = row[colIndex] || "";
+        });
 
-      return rowData;
-    });
-  }, [parseData, columns]);
+        return rowData;
+      }),
+    [parseData, columns]
+  );
 
   const [localRows, setLocalRows] = useState(initialRows);
 
@@ -92,16 +93,14 @@ const PureSpreadsheetEditor = ({ content, saveContent }: SheetEditorProps) => {
     setLocalRows(initialRows);
   }, [initialRows]);
 
-  const generateCsv = (data: any[][]) => {
-    return unparse(data);
-  };
+  const generateCsv = (data: any[][]) => unparse(data);
 
   const handleRowsChange = (newRows: any[]) => {
     setLocalRows(newRows);
 
-    const updatedData = newRows.map((row) => {
-      return columns.slice(1).map((col) => row[col.key] || "");
-    });
+    const updatedData = newRows.map((row) =>
+      columns.slice(1).map((col) => row[col.key] || "")
+    );
 
     const newCsvContent = generateCsv(updatedData);
     saveContent(newCsvContent, true);
@@ -118,7 +117,7 @@ const PureSpreadsheetEditor = ({ content, saveContent }: SheetEditorProps) => {
       enableVirtualization
       onCellClick={(args) => {
         if (args.column.key !== "rowNumber") {
-          args.selectCell(true);
+          args.setActivePosition(true);
         }
       }}
       onRowsChange={handleRowsChange}
