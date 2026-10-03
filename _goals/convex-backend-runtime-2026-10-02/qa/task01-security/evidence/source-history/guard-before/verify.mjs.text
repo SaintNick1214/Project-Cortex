@@ -3,8 +3,6 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { evidenceFile, fixtureDirectory } from "./paths.mjs";
 
-// Validate every output before invoking even the first command.
-for(const name of ["check-commands.json","transport.json","live-receipts.json"])evidenceFile(name);
 const commands=[
   ["npm exec --yes --package=npm@12.2.0 -- npm --version",["exec","--yes","--package=npm@12.2.0","--","npm","--version"]],
   ["npm exec --yes --package=npm@12.2.0 -- npm run typecheck",["exec","--yes","--package=npm@12.2.0","--","npm","run","typecheck"]],

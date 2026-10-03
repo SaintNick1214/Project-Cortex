@@ -33,6 +33,7 @@ export default [
       "**/venv/**/*", // Exclude Python virtual environments
       "dev-docs/**/*", // Exclude dev documentation
       "Internal Docs/**/*", // Exclude internal docs
+      "work/**/*", // Private scratch files and generated qualification probes
     ],
   },
 
@@ -187,6 +188,19 @@ export default [
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-unnecessary-condition": "off",
+    },
+  },
+
+  // Standalone qualification has its own TypeScript project and package install.
+  {
+    files: [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/**/*.ts",
+    ],
+    languageOptions: {
+      parserOptions: {
+        project:
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/tsconfig.json",
+      },
     },
   },
 

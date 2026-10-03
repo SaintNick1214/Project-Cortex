@@ -1,0 +1,169 @@
+{
+  "head": "cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8",
+  "context": "Before reviewed fixture security patch commit; not aggregate final result",
+  "codeScanningAlertsEndpoint": "403 resource not accessible by integration; check annotations readable",
+  "checks": [
+    {
+      "checkId": 111171397887,
+      "apiExitCode": 0,
+      "annotations": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/keys.mjs",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/keys.mjs",
+          "start_line": 10,
+          "start_column": 1,
+          "end_line": 10,
+          "end_column": 97,
+          "annotation_level": "failure",
+          "title": "Potential file system race condition",
+          "message": "The file may have changed since it [was checked](1).",
+          "raw_details": null
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/qualify.mjs",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/qualify.mjs",
+          "start_line": 34,
+          "start_column": 28,
+          "end_line": 34,
+          "end_column": 92,
+          "annotation_level": "warning",
+          "title": "File data in outbound network request",
+          "message": "Outbound network request depends on [file data](1).",
+          "raw_details": null
+        }
+      ]
+    },
+    {
+      "checkId": 111171255687,
+      "apiExitCode": 0,
+      "annotations": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package-lock.json",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package-lock.json",
+          "start_line": 1545,
+          "start_column": null,
+          "end_line": 1565,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "ws: ws: Denial of Service via memory exhaustion from small WebSocket fragments",
+          "message": "Package: ws\nInstalled Version: 8.18.3\nVulnerability CVE-2026-48779\nSeverity: HIGH\nFixed Version: 5.2.5, 6.2.4, 7.5.11, 8.21.0\nLink: [CVE-2026-48779](https://avd.aquasec.com/nvd/cve-2026-48779)",
+          "raw_details": null
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package-lock.json",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package-lock.json",
+          "start_line": 1545,
+          "start_column": null,
+          "end_line": 1565,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "ws: ws: Uninitialized memory disclosure via `websocket.close()` with `TypedArray`",
+          "message": "Package: ws\nInstalled Version: 8.18.3\nVulnerability CVE-2026-45736\nSeverity: MEDIUM\nFixed Version: 8.20.1\nLink: [CVE-2026-45736](https://avd.aquasec.com/nvd/cve-2026-45736)",
+          "raw_details": null
+        }
+      ]
+    },
+    {
+      "checkId": 111171223022,
+      "apiExitCode": 0,
+      "annotations": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/.github",
+          "start_line": 2,
+          "start_column": null,
+          "end_line": 2,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/dependency-review-action@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/.github",
+          "start_line": 134,
+          "start_column": null,
+          "end_line": 134,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "OpenSSF Scorecard Warning",
+          "message": "npm/async-channel has an OpenSSF Scorecard of 2.8, which is less than this repository's threshold of 3.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/.github",
+          "start_line": 133,
+          "start_column": null,
+          "end_line": 133,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "OpenSSF Scorecard Warning",
+          "message": "npm/https-proxy-agent has an OpenSSF Scorecard of 2.8, which is less than this repository's threshold of 3.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/.github",
+          "start_line": 132,
+          "start_column": null,
+          "end_line": 132,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "OpenSSF Scorecard Warning",
+          "message": "npm/debug has an OpenSSF Scorecard of 2.6, which is less than this repository's threshold of 3.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/.github",
+          "start_line": 131,
+          "start_column": null,
+          "end_line": 131,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "OpenSSF Scorecard Warning",
+          "message": "npm/async-channel has an OpenSSF Scorecard of 2.8, which is less than this repository's threshold of 3.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/.github",
+          "start_line": 130,
+          "start_column": null,
+          "end_line": 130,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "OpenSSF Scorecard Warning",
+          "message": "npm/agent-base has an OpenSSF Scorecard of 2.8, which is less than this repository's threshold of 3.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/.github",
+          "start_line": 10,
+          "start_column": null,
+          "end_line": 10,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Dependency review detected vulnerable packages.",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/cf579f3fafbd4443dcb53cc77ee7df4f58b8d3f8/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "notice",
+          "title": "",
+          "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\"",
+          "raw_details": ""
+        }
+      ]
+    }
+  ]
+}

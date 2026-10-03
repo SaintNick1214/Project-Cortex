@@ -2,10 +2,10 @@ import { sign } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { ConvexHttpClient } from "convex/browser";
+import { qualificationTarget, repo } from "./paths.mjs";
 
-export const repo=resolve("../../../../..");
-export const target=JSON.parse(readFileSync(resolve(repo,"work/backend-runtime/target.json"),"utf8"));
-if(!target.isolationVerified||target.deploymentType!=="dev"||target.productionDeployment||target.sharedCiTarget) throw new Error("Unsafe target");
+export { repo };
+export const target=qualificationTarget();
 export function jwt(subject="task01-owner",patch={},wrongSignature=false){
   const header=Buffer.from(JSON.stringify({alg:"RS256",typ:"JWT",kid:"task01-rs256-v1"})).toString("base64url");
   const now=Math.floor(Date.now()/1000);

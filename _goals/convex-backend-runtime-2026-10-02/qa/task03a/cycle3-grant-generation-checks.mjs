@@ -29,7 +29,9 @@ for (const check of checks) {
 }
 fs.writeFileSync(`${output}/commands.json`, JSON.stringify(receipts, null, 2) + "\n");
 const current = JSON.parse(fs.readFileSync(`${base}/public-path-inventory.json`, "utf8"));
-const semantic = ({ file: _file, line: _line, ...entry }) => entry;
+const semantic = (entry) => Object.fromEntries(
+  Object.entries(entry).filter(([key]) => key !== "file" && key !== "line"),
+);
 assert.deepEqual(current.completeness.counts, before.completeness.counts);
 assert.deepEqual(current.endpoints.map(semantic), before.endpoints.map(semantic));
 const hashChanges = current.completeness.sourceHashes.filter((entry) => {

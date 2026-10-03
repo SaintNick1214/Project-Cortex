@@ -3,7 +3,9 @@ import { writeFileSync } from "node:fs";
 import { build } from "esbuild";
 import { readUIMessageStream, type UIMessage, type UIMessageChunk } from "ai";
 import { CortexTextTransport, type RemoteTextRuns, type TextSnapshot } from "../transport";
+import { evidenceFile } from "./paths.mjs";
 
+evidenceFile("transport.json");
 let submissions=0,cancellations=0,observers=0;
 const remote:RemoteTextRuns={
   async start(input){assert.equal(input.text,"Hello");submissions++;return "run-1";},
@@ -42,5 +44,5 @@ const bundled=await build({entryPoints:["transport.ts"],bundle:true,platform:"br
 const inputs=Object.keys(bundled.metafile!.inputs);
 assert.ok(inputs.every(path=>!path.includes("convex/")&&!path.includes("@convex-dev")&&!path.includes("node:")));
 const result={version:1,status:"PASS",protocol:"AI SDK 7 ChatTransport / UIMessageChunk",submissions,cancellations,activeObservers:observers,browserBundleInputs:inputs,text:"Cortex ready",toolInput:{a:2,b:3},toolOutput:5,toolState:"output-available",observerDetachDidNotCancel:true,explicitAbortRequestedCancellationOnce:true,browserInteraction:"not run; native browser tools unavailable"};
-writeFileSync("../evidence/transport.json",JSON.stringify(result,null,2));
+writeFileSync(evidenceFile("transport.json"),JSON.stringify(result,null,2));
 console.log(JSON.stringify(result));

@@ -5,6 +5,7 @@ import { ConvexError, v } from "convex/values";
 import { z } from "zod";
 import { components, internal } from "./_generated/api";
 import { action, internalAction, type ActionCtx } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
 import { principal } from "./auth";
 
 type ErrorInfo = { version: 1; code: "CAPABILITY_UNAVAILABLE" | "CAPABILITY_UNSUPPORTED" | "UPSTREAM_REJECTED" | "UNCERTAIN_OUTCOME"; retryable: false; errorType: string; statusCode: number | null; message: string };

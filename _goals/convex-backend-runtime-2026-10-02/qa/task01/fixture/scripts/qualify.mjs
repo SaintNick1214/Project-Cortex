@@ -1,14 +1,23 @@
 import assert from "node:assert/strict";
-import { randomUUID } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
+import { createHash, randomUUID } from "node:crypto";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { ConvexClient } from "convex/browser";
 import WebSocket from "ws";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { client, jwt, target } from "./client.mjs";
+import { evidenceFile, fixtureDirectory } from "./paths.mjs";
+import { resolve } from "node:path";
 
-const c=client(),other=client(jwt("task01-other-owner"));
 const selected=new Set(process.argv.slice(2));
-const evidence=selected.size ? JSON.parse(readFileSync("../evidence/live-receipts.json","utf8")) : {version:1,startedAt:new Date().toISOString(),deployment:target.deploymentName,targetType:target.deploymentType,checks:[]};
+const receiptFile=evidenceFile("live-receipts.json");
+const c=client(),other=client(jwt("task01-other-owner"));
+const evidence=selected.size&&existsSync(receiptFile) ? JSON.parse(readFileSync(receiptFile,"utf8")) : {version:1,startedAt:new Date().toISOString(),deployment:target.deploymentName,targetType:target.deploymentType,checks:[]};
+if(evidence.deployment!==target.deploymentName)throw new Error("Evidence deployment differs from selected qualification target; use a fresh evidence directory.");
+const knownChecks=new Set(["signed-JWT-identity-and-boundary","live-gateway-structured","live-gateway-responses","cross-component-atomic-final-and-ingestion","durable-cursor-reconciliation-after-forced-gap","live-agent-gateway-backend-tool-and-dedup","live-Gateway-tool-disconnect-multiple-observers-no-replay","persisted-Agent-stream-multiple-observers-reconnect","persisted-Agent-stream-cancellation","interrupted-external-HTTP-effect-uncertain-no-replay"]);
+for(const name of selected)if(!knownChecks.has(name))throw new Error(`Unknown qualification check: ${name}`);
+evidence.selectedChecks=[...selected];
+evidence.wsVersion=JSON.parse(readFileSync(resolve(fixtureDirectory,"node_modules/ws/package.json"),"utf8")).version;
+evidence.fixtureLockSha256=createHash("sha256").update(readFileSync(resolve(fixtureDirectory,"package-lock.json"))).digest("hex");
 if(selected.size)evidence.rerunStartedAt=new Date().toISOString();
 const prefix=`task01-${randomUUID()}`;
 async function check(name,fn){
@@ -16,7 +25,7 @@ async function check(name,fn){
   evidence.checks=evidence.checks.filter(check=>check.name!==name);
   try{const result=await fn();evidence.checks.push({name,status:"PASS",result:result??null});console.log(name+": PASS");}
   catch(error){evidence.checks.push({name,status:"FAIL",error:String(error).slice(0,900)});console.log(name+": FAIL "+String(error).slice(0,300));}
-  writeFileSync("../evidence/live-receipts.json",JSON.stringify(evidence,null,2));
+  writeFileSync(receiptFile,JSON.stringify(evidence,null,2));
 }
 async function poll(fn,accept,timeout=60000){
   const deadline=Date.now()+timeout;let result;
@@ -157,5 +166,5 @@ await check("interrupted-external-HTTP-effect-uncertain-no-replay",async()=>{
   return {operationId:after.operationId,state:after.state,effects:after.effects,attempts:after.attempts,recovery,otherOwnerLookup:null,effectProtocol:"real HTTPS to private peer fixture; loss forced after response and before local outcome receipt",paidProviderInterruption:"not force-killed; deterministic private peer tests replay decision"};
 });
 evidence.finishedAt=new Date().toISOString();evidence.status=evidence.checks.every(c=>c.status==="PASS")?"PASS":"FAIL";
-writeFileSync("../evidence/live-receipts.json",JSON.stringify(evidence,null,2));
+writeFileSync(receiptFile,JSON.stringify(evidence,null,2));
 console.log("Qualification "+evidence.status);process.exitCode=evidence.status==="PASS"?0:1;
