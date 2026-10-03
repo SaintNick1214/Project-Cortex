@@ -1,0 +1,44 @@
+[
+  {
+    "name": "backend-types",
+    "command": "node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --noEmit --pretty false",
+    "exit": 0,
+    "cwd": "/workspace/Project-Cortex"
+  },
+  {
+    "name": "scoped-types",
+    "command": "node node_modules/typescript/bin/tsc -p _goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf-resume-optional-read-repair/tsconfig.scoped.json --pretty false",
+    "exit": 0,
+    "cwd": "/workspace/Project-Cortex"
+  },
+  {
+    "name": "lint",
+    "command": "node node_modules/eslint/bin/eslint.js convex-dev/runtimeDataAuth.ts tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts --report-unused-disable-directives",
+    "exit": 0,
+    "cwd": "/workspace/Project-Cortex"
+  },
+  {
+    "name": "unit",
+    "command": "CONVEX_URL=http://127.0.0.1:1 node --experimental-vm-modules node_modules/jest/bin/jest.js '--testPathPatterns=tests/unit/(runtimeEndpointAuth|runtimeAuth)' --runInBand --forceExit --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf-resume-optional-read-repair/tests.json",
+    "exit": 0,
+    "cwd": "/workspace/Project-Cortex"
+  },
+  {
+    "name": "new-tests",
+    "command": "CONVEX_URL=http://127.0.0.1:1 node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=optionalReadFailures --runInBand --forceExit --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf-resume-optional-read-repair/new-tests.json",
+    "exit": 0,
+    "cwd": "/workspace/Project-Cortex"
+  },
+  {
+    "name": "probes",
+    "command": "node node_modules/tsx/dist/cli.mjs work/resume/mf-optional-review/probes-repaired.mts",
+    "exit": 0,
+    "cwd": "/workspace/Project-Cortex"
+  },
+  {
+    "name": "discovery",
+    "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js '--testPathPatterns=tests/unit/(runtimeEndpointAuth|runtimeAuth)' --listTests --runInBand",
+    "exit": 0,
+    "cwd": "/workspace/Project-Cortex"
+  }
+]

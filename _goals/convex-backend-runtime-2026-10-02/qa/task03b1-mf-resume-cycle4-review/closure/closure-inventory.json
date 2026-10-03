@@ -1,0 +1,585 @@
+{
+  "version": 3,
+  "repairCycle": 3,
+  "previousJudgment": "cycle1 REJECT 3.0/5; cycle2 FINAL REJECT 3.2/5; byte-preserved history/cycle1, cycle2-open-final-read and cycle2-final",
+  "boundedScope": "Task03B1-MF only",
+  "baseline": {
+    "public": 39,
+    "internal": 3
+  },
+  "mutationResponsePolicy": "Pinned independent READ and WRITE references rechecked after final hash; both current grant lifetimes checked synchronously after last awaited control read. Admitted READ failures reject; read-less admission permits receipts. Bulk delete IDs require private exact full mutation-created scoped tombstone proofs and pinned predeletion READ targets/source witnesses; delegating control reader ignores only the matching operation tombstone while preserving tenant-wide resource and all source controls. Read-less receipts retain WRITE/resource/source fences",
+  "sourceIntegrityPolicy": "Immutable full canonical source witnesses validated against normalized NFC/LF/trim content and actual semanticHash, then exact scoped rows/owners/full tuple/content/hash/lifecycle/timestamps/control tombstones reloaded after last crypto before current/history/hydration/CAS/bulk delivery; no hash after final reload",
+  "sourceRevisionPolicy": "Server-only manualSourceBinding + exact full lineage + manual fact policy prove dedicated CAS; extracted/shared source edits create separate assertions",
+  "linkPolicy": "Active recursion path with cleanup, per-edge expected versions, all selectors and nonempty conversation anchors",
+  "current": {
+    "total": 42,
+    "public": 37,
+    "internal": 5,
+    "unresolved": 0
+  },
+  "sourceHashes": {
+    "convex-dev/runtimeDataAuth.ts": "bdba101b3edfa367f45eecc55cfd8669cc5a127b9f8e238669bfde000e583955",
+    "convex-dev/memories.ts": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4",
+    "convex-dev/facts.ts": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92",
+    "convex-dev/schema.ts": "231d351078ae7c168e3946a5ee3602f59e3c113f4145ae810a8bb02255168f53",
+    "convex-dev/runtimeAuth.ts": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+    "src/auth/verified.ts": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+    "tests/unit/runtimeEndpointAuth/memory.test.ts": "f2fd7ae91745fb7a7e8c3eb98d0ab9527b638cd434801a3cbb389925a190f4ff",
+    "tests/unit/runtimeEndpointAuth/facts.test.ts": "d59923d0f765f641b93c87844d3734e951ff3d8a5f307f4575c546fd30d4272c",
+    "tests/unit/runtimeEndpointAuth/sharedfixtures.ts": "ac53e94b7c783ce4d82223f9aa3b5b83f1daa27fcf41c843c7dd3ac8c5455c0f"
+  },
+  "entries": [
+    {
+      "path": "memories:store",
+      "file": "convex-dev/memories.ts",
+      "line": 30,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "rejectUnqualifiedEmbedding",
+        "assertDataLinks",
+        "manualDataSource",
+        "memoryMutationResult"
+      ],
+      "baselineDisposition": "guard",
+      "semanticBoundary": "PROFILE_NOT_READY for unqualified caller embedding; modern profile wiring Task09/10 pending"
+    },
+    {
+      "path": "memories:storePartialMemory",
+      "file": "convex-dev/memories.ts",
+      "line": 146,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "assertDataLinks",
+        "manualDataSource",
+        "getScopedMemory"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:updatePartialMemory",
+      "file": "convex-dev/memories.ts",
+      "line": 209,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory",
+        "reviseDataSource"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:finalizePartialMemory",
+      "file": "convex-dev/memories.ts",
+      "line": 243,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "rejectUnqualifiedEmbedding",
+        "getScopedMemory",
+        "reviseDataSource"
+      ],
+      "baselineDisposition": "guard",
+      "semanticBoundary": "PROFILE_NOT_READY for unqualified caller embedding; modern profile wiring Task09/10 pending"
+    },
+    {
+      "path": "memories:deleteMemory",
+      "file": "convex-dev/memories.ts",
+      "line": 286,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory",
+        "tombstoneDataRow"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:get",
+      "file": "convex-dev/memories.ts",
+      "line": 318,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:fetchMemoriesByIds",
+      "file": "convex-dev/memories.ts",
+      "line": 345,
+      "kind": "query",
+      "visibility": "internal",
+      "guard": "recheckDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemoryDocument",
+        "finalizeDataRead"
+      ],
+      "baselineDisposition": "retain-internal"
+    },
+    {
+      "path": "memories:keywordSearchMemories",
+      "file": "convex-dev/memories.ts",
+      "line": 363,
+      "kind": "query",
+      "visibility": "internal",
+      "guard": "recheckDataAuthority",
+      "scopedHelpers": [
+        "searchScopedMemories"
+      ],
+      "baselineDisposition": "retain-internal"
+    },
+    {
+      "path": "memories:search",
+      "file": "convex-dev/memories.ts",
+      "line": 378,
+      "kind": "action",
+      "visibility": "public",
+      "guard": "requireActionDataAuthority",
+      "scopedHelpers": [
+        "rejectUnqualifiedEmbedding",
+        "recheckActionDataAuthority"
+      ],
+      "baselineDisposition": "guard",
+      "semanticBoundary": "PROFILE_NOT_READY for unqualified caller embedding; modern profile wiring Task09/10 pending"
+    },
+    {
+      "path": "memories:list",
+      "file": "convex-dev/memories.ts",
+      "line": 422,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedMemories"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:count",
+      "file": "convex-dev/memories.ts",
+      "line": 458,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedMemories"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:update",
+      "file": "convex-dev/memories.ts",
+      "line": 497,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "rejectUnqualifiedEmbedding",
+        "getScopedMemory",
+        "reviseDataSource",
+        "memoryMutationResult"
+      ],
+      "baselineDisposition": "guard",
+      "semanticBoundary": "PROFILE_NOT_READY for unqualified caller embedding; modern profile wiring Task09/10 pending"
+    },
+    {
+      "path": "memories:getVersion",
+      "file": "convex-dev/memories.ts",
+      "line": 556,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:getHistory",
+      "file": "convex-dev/memories.ts",
+      "line": 600,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:deleteMany",
+      "file": "convex-dev/memories.ts",
+      "line": 638,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedMemories",
+        "canReadMutationRows",
+        "tombstoneDataRow",
+        "finalizeMutationRowsRead"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:deleteByIds",
+      "file": "convex-dev/memories.ts",
+      "line": 688,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory",
+        "prepareMutationRowsWrite",
+        "tombstoneDataRow",
+        "finalizeMutationRowsRead"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:purgeAll",
+      "file": "convex-dev/memories.ts",
+      "line": 716,
+      "kind": "mutation",
+      "visibility": "internal",
+      "guard": "deployment-operator internal invocation",
+      "scopedHelpers": [],
+      "baselineDisposition": "internalize"
+    },
+    {
+      "path": "memories:exportMemories",
+      "file": "convex-dev/memories.ts",
+      "line": 754,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedMemories"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:updateMany",
+      "file": "convex-dev/memories.ts",
+      "line": 823,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedMemories",
+        "canReadMutationRows",
+        "finalizeMutationRowsRead"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:archive",
+      "file": "convex-dev/memories.ts",
+      "line": 883,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:restoreFromArchive",
+      "file": "convex-dev/memories.ts",
+      "line": 924,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory",
+        "memoryMutationResult"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "memories:getAtTimestamp",
+      "file": "convex-dev/memories.ts",
+      "line": 971,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedMemory"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:store",
+      "file": "convex-dev/facts.ts",
+      "line": 26,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "rejectUnqualifiedEmbedding",
+        "assertDataLinks",
+        "manualDataSource",
+        "factMutationResult"
+      ],
+      "baselineDisposition": "guard",
+      "semanticBoundary": "PROFILE_NOT_READY for unqualified caller embedding; modern profile wiring Task09/10 pending"
+    },
+    {
+      "path": "facts:update",
+      "file": "convex-dev/facts.ts",
+      "line": 147,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "rejectUnqualifiedEmbedding",
+        "getScopedFact",
+        "reviseDataSource",
+        "factMutationResult"
+      ],
+      "baselineDisposition": "guard",
+      "semanticBoundary": "PROFILE_NOT_READY for unqualified caller embedding; modern profile wiring Task09/10 pending"
+    },
+    {
+      "path": "facts:deleteFact",
+      "file": "convex-dev/facts.ts",
+      "line": 263,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedFact",
+        "tombstoneDataRow"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:supersede",
+      "file": "convex-dev/facts.ts",
+      "line": 292,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedFact",
+        "recheckSourceWitnesses",
+        "assertDataRow"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:updateInPlace",
+      "file": "convex-dev/facts.ts",
+      "line": 359,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedFact",
+        "reviseDataSource",
+        "factMutationResult"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:deleteMany",
+      "file": "convex-dev/facts.ts",
+      "line": 436,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedFacts",
+        "prepareMutationRowsWrite",
+        "tombstoneDataRow",
+        "finalizeMutationRowsRead"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:get",
+      "file": "convex-dev/facts.ts",
+      "line": 485,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedFact"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:list",
+      "file": "convex-dev/facts.ts",
+      "line": 517,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedFacts"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:count",
+      "file": "convex-dev/facts.ts",
+      "line": 690,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedFacts"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:search",
+      "file": "convex-dev/facts.ts",
+      "line": 827,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "searchScopedFacts"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:fetchFactsByIds",
+      "file": "convex-dev/facts.ts",
+      "line": 1002,
+      "kind": "query",
+      "visibility": "internal",
+      "guard": "recheckDataAuthority",
+      "scopedHelpers": [
+        "getScopedFactDocument",
+        "finalizeDataRead"
+      ],
+      "baselineDisposition": "retain-internal"
+    },
+    {
+      "path": "facts:semanticSearch",
+      "file": "convex-dev/facts.ts",
+      "line": 1026,
+      "kind": "action",
+      "visibility": "public",
+      "guard": "requireActionDataAuthority",
+      "scopedHelpers": [
+        "recheckActionDataAuthority",
+        "rejectUnqualifiedEmbedding"
+      ],
+      "baselineDisposition": "guard",
+      "semanticBoundary": "PROFILE_NOT_READY for unqualified caller embedding; modern profile wiring Task09/10 pending"
+    },
+    {
+      "path": "facts:getHistory",
+      "file": "convex-dev/facts.ts",
+      "line": 1052,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getHistoricalScopedFact",
+        "finalizeDataRead"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:queryBySubject",
+      "file": "convex-dev/facts.ts",
+      "line": 1111,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedFacts"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:queryByRelationship",
+      "file": "convex-dev/facts.ts",
+      "line": 1275,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedFacts"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:exportFacts",
+      "file": "convex-dev/facts.ts",
+      "line": 1436,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedFacts"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:consolidate",
+      "file": "convex-dev/facts.ts",
+      "line": 1546,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedFact",
+        "recheckSourceWitnesses",
+        "assertDataRow"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:findByStructure",
+      "file": "convex-dev/facts.ts",
+      "line": 1577,
+      "kind": "query",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "listScopedFacts"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:deleteByIds",
+      "file": "convex-dev/facts.ts",
+      "line": 1634,
+      "kind": "mutation",
+      "visibility": "public",
+      "guard": "requireDataAuthority",
+      "scopedHelpers": [
+        "getScopedFact",
+        "prepareMutationRowsWrite",
+        "tombstoneDataRow",
+        "finalizeMutationRowsRead"
+      ],
+      "baselineDisposition": "guard"
+    },
+    {
+      "path": "facts:purgeAll",
+      "file": "convex-dev/facts.ts",
+      "line": 1655,
+      "kind": "mutation",
+      "visibility": "internal",
+      "guard": "deployment-operator internal invocation",
+      "scopedHelpers": [],
+      "baselineDisposition": "internalize"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+--- before/runtimeDataAuth.ts
++++ after/runtimeDataAuth.ts
+@@ -8,7 +8,7 @@
+ import type { SourceLineage } from "../src/domain/contracts";
+ import { normalizeSourceText, semanticHash } from "../src/domain/profile";
+ import { assertSourceLineage } from "../src/domain/sources";
+-import { assertResourceScope, createAuthorityReader, recheckAuthority, requireAuthority, resolveAuthorityReference } from "./runtimeAuth";
++import { assertResourceScope, createAuthorityReader, recheckAuthority, requireAuthority, resolveAuthority, resolveAuthorityReference } from "./runtimeAuth";
+ import type { AuthorityReader, GrantRecord } from "./runtimeAuth";
+ 
+ export type ScopedDataAuthority = RuntimeAuthority & { memorySpaceId: string; memorySpaceEpoch: number };
+@@ -618,17 +618,58 @@
+     assertCurrentGrant(reference, capability, grant, now);
+   }
+ }
++function dataBackendFailure(): ConvexError<{ version: number; code: string; message: string; retryable: boolean; outcome: string }> {
++  return new ConvexError({ version: 1, code: "BACKEND_OPERATION_FAILED", message: "Data operation failed.",
++    retryable: false, outcome: "not_committed" });
++}
++/** Callback errors are infrastructure failures, even when their payload resembles a policy denial. */
++async function protectedDataRead<T>(operation: () => Promise<T>): Promise<T> {
++  try { return await operation(); } catch { throw dataBackendFailure(); }
++}
++function protectedDataAuthorityReader(ctx: ReadCtx): AuthorityReader {
++  const reader = createAuthorityReader(ctx);
++  return {
++    findPrincipal: (issuer, subject) => protectedDataRead(() => reader.findPrincipal(issuer, subject)),
++    getPrincipal: id => protectedDataRead(() => reader.getPrincipal(id)),
++    listMemberships: id => protectedDataRead(() => reader.listMemberships(id)),
++    getMembership: id => protectedDataRead(() => reader.getMembership(id)),
++    listGrants: id => protectedDataRead(() => reader.listGrants(id)),
++    getGrant: id => protectedDataRead(() => reader.getGrant(id)),
++    getScope: (tenantId, spaceId) => protectedDataRead(() => reader.getScope(tenantId, spaceId)),
++    hasTombstone: target => protectedDataRead(() => reader.hasTombstone(target)),
++  };
++}
++/** Only the resolver's exact static permission denial permits a READ-less receipt. */
++function ordinaryDataReadDenial(error: unknown): boolean {
++  try {
++    if (!(error instanceof ConvexError)) return false;
++    const descriptor = Object.getOwnPropertyDescriptor(error, "data");
++    if (!descriptor || !("value" in descriptor)) return false;
++    const data: unknown = descriptor.value;
++    if (data === null || typeof data !== "object") return false;
++    const prototype: unknown = Object.getPrototypeOf(data);
++    if (prototype !== Object.prototype && prototype !== null) return false;
++    const fields = Object.getOwnPropertyDescriptors(data);
++    if (Reflect.ownKeys(fields).some(key => typeof key !== "string" || !("value" in fields[key]!))) return false;
++    if (Object.keys(fields).sort().join(",") !== "code,message,outcome,retryable,version") return false;
++    return fields.code!.value === "FORBIDDEN" && fields.message!.value === "Access denied"
++      && fields.version!.value === 1 && fields.retryable!.value === false && fields.outcome!.value === "not_dispatched";
++  } catch { return false; }
++}
+ async function optionalMutationRead(ctx: Pick<QueryCtx, "auth" | "db">, writer: ScopedDataAuthority,
+   target?: RuntimeResource): Promise<ScopedDataAuthority | undefined> {
++  // Acquire identity outside the permission catch; protect sync invocation and async rejection alike.
++  const identity = await protectedDataRead(() => ctx.auth.getUserIdentity());
++  const reader = protectedDataAuthorityReader(ctx);
+   try {
+-    return concrete(await requireAuthority(ctx, { capability: "read", tenantId: writer.tenantId,
++    return concrete(await resolveAuthority(reader, identity, { capability: "read", tenantId: writer.tenantId,
+       memorySpaceId: writer.memorySpaceId, ...(target ? { resource: target } : {}) }));
+   } catch (error) {
+-    if (!(error instanceof ConvexError) || typeof error.data !== "object" || error.data === null || !("code" in error.data) || error.data.code !== "FORBIDDEN") throw error;
+-    // Preserve usable write-only APIs, but corruption/revocation must still abort the mutation.
+-    const currentWriter = await recheckDataAuthority(ctx, writer, "write");
+-    // A grant that independently includes read must not mask a failed read check.
+-    if (currentWriter.capabilities.includes("read")) throw error;
++    if (!ordinaryDataReadDenial(error)) throw dataBackendFailure();
++    // The protected persisted WRITE recheck cannot hide callback failures in candidate pruning.
++    const currentWriter = concrete(await resolveAuthorityReference(reader, writer, { capability: "write",
++      tenantId: writer.tenantId, memorySpaceId: writer.memorySpaceId }));
++    if (currentWriter.capabilities.includes("read")) dataDenied();
+     return undefined;
+   }
+ }

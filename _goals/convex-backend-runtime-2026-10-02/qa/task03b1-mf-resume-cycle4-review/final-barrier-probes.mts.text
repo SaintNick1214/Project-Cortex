@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import {isDeepStrictEqual} from 'node:util';
+import {harness} from '/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts';
+import * as memories from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts';
+import * as facts from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts';
+import {semanticHash} from '/workspace/Project-Cortex/work/resume/mf/candidate/src/domain/profile.ts';
+const results:any[]=[];
+for (const kind of ['memories','facts']) for(const mode of ['none','late-immutable-owner','late-mutable-space','late-peer-lineage','late-linked-storage-id','late-tenant-conversation-tombstone','late-source-memory-anchor']) {
+ const h=harness(); const a=await h.provisionScope(); const common={tenantId:a.tenantId,memorySpaceId:a.memorySpaceId,ownerPrincipalId:a.principalId};
+ const conv=await h.db.insert('conversations',{...common,conversationId:'canon',messages:[{id:'anchor'}]});
+ const imm=await h.db.insert('immutable',{...common,type:'type',id:'key',version:1});
+ const mut=await h.db.insert('mutable',{...common,namespace:'ns',key:'key'});
+ const peer=await h.seedData('facts',a,'peer');
+ const linkedMemory=await h.seedData('memories',a,'linked-memory',{conversationRef:{conversationId:'canon',messageIds:['anchor']}});
+ const extra=mode.includes('immutable')||mode.includes('storage')?{immutableRef:{type:'type',id:'key',version:1}}:mode.includes('mutable')?{mutableRef:{namespace:'ns',key:'key'}}:mode.includes('peer')?{factsRef:{factId:'peer',version:1}}:mode.includes('source-memory')?{sourceRef:{memoryId:'linked-memory',conversationId:'canon',messageIds:['anchor']}}:{conversationRef:{conversationId:'canon',messageIds:['anchor']}};
+ await h.seedData(kind as any,a,'first',extra); await h.seedData(kind as any,a,'second');
+ const before=structuredClone(h.db.rows); const original=crypto.subtle.digest; let injected=false;
+ crypto.subtle.digest=async(alg,data)=>{if(mode!=='none'&&!injected&&new TextDecoder().decode(data).includes('private second')) {injected=true;
+ if(mode==='late-immutable-owner')await h.db.patch(imm,{ownerPrincipalId:'other'});
+ if(mode==='late-mutable-space')await h.db.patch(mut,{memorySpaceId:'other'});
+ if(mode==='late-peer-lineage')await h.db.patch(peer,{lineage:{...(h.db.rows.get('facts')!.find(x=>x._id===peer)!.lineage as any),sourceRevision:2}});
+ if(mode==='late-linked-storage-id'){await h.db.delete(imm);await h.db.insert('immutable',{...common,type:'type',id:'key',version:1});}
+ if(mode==='late-tenant-conversation-tombstone')await h.db.insert('runtimeAuthTombstones',{tenantId:a.tenantId,resourceType:'conversation',resourceId:'canon',deletedAt:Date.now()});
+ if(mode==='late-source-memory-anchor')await h.db.patch(linkedMemory,{conversationRef:{conversationId:'other'}});
+ }return await original.call(crypto.subtle,alg,data)};
+ let actual:any;try{actual={success:true,result:await h.invoke(kind==='memories'?memories.list:facts.list,{memorySpaceId:'space-a'})};}catch(e:any){actual={success:false,data:e.data};}finally{crypto.subtle.digest=original;}
+ const rollback=isDeepStrictEqual(before,h.db.rows), matched=mode==='none'?actual.success:injected&&!actual.success&&actual.data?.code==='FORBIDDEN'&&rollback;
+ results.push({kind,mode,injected,rollback,matched,...actual});
+}
+// Explore expiry while the added final linked reload is awaiting its canonical conversation.
+for(const kind of ['memories','facts'])for(const mode of ['none','expiry','source-replacement']){
+ const h=harness();const a=await h.provisionScope();const conv=await h.db.insert('conversations',{tenantId:a.tenantId,memorySpaceId:a.memorySpaceId,ownerPrincipalId:a.principalId,conversationId:'canon',messages:[{id:'anchor'}]});
+ await h.seedData(kind as any,a,'first',{conversationRef:{conversationId:'canon',messageIds:['anchor']}});await h.seedData(kind as any,a,'second');
+ const source=h.db.rows.get('runtimeMemorySources')![0];const content='Changed at final linked reload';const contentHash=await semanticHash(content);const before=structuredClone(h.db.rows);let hashes=0,afterLastHash=false,injected=false;const originalDigest=crypto.subtle.digest;const originalQuery=h.db.query.bind(h.db);const originalNow=Date.now;const future=originalNow()+100000;
+ if(mode==='expiry')await h.db.patch(a.grantId,{expiresAt:future});
+ const seededBefore=structuredClone(h.db.rows);
+ crypto.subtle.digest=async(alg,data)=>{if(new TextDecoder().decode(data).includes('private second')&&++hashes===2)afterLastHash=true;return await originalDigest.call(crypto.subtle,alg,data)};
+ h.db.query=table=>{const q=originalQuery(table);const collect=q.collect.bind(q);q.collect=async()=>{const rows=await collect();if(table==='conversations'&&afterLastHash&&!injected&&mode!=='none'&&new Error().stack?.includes('finalizeDataRead')){injected=true;if(mode==='expiry')Date.now=()=>future+1;else await h.db.patch(source._id,{content,contentHash});}return rows;};return q;};
+ let actual:any;try{actual={success:true,result:await h.invoke(kind==='memories'?memories.list:facts.list,{memorySpaceId:'space-a'})};}catch(e:any){actual={success:false,data:e.data};}finally{crypto.subtle.digest=originalDigest;Date.now=originalNow;}
+ results.push({kind,mode:'final-link-'+mode,injected,rollback:isDeepStrictEqual(seededBefore,h.db.rows),...actual});
+}
+console.log(JSON.stringify({results,summary:{normal:results.filter(x=>x.matched!==undefined).length,matched:results.filter(x=>x.matched).length,failures:results.filter(x=>x.matched===false)}},null,2));
+assert.equal(results.filter(x=>x.matched===false).length,0);

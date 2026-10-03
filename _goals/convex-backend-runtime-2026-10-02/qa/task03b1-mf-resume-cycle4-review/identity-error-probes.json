@@ -1,0 +1,225 @@
+{
+  "summary": {
+    "total": 12,
+    "matched": 12
+  },
+  "results": [
+    {
+      "kind": "memories",
+      "mode": "none",
+      "matched": true,
+      "privacy": true,
+      "success": true,
+      "result": {
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-a",
+        "ownerPrincipalId": "runtimeAuthPrincipals/3",
+        "lineage": {
+          "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"shared\"]",
+          "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"shared\"]",
+          "sourceRevision": 1,
+          "role": "user",
+          "trust": "user_assertion"
+        },
+        "manualSourceBinding": {
+          "resourceType": "memory",
+          "resourceId": "shared"
+        },
+        "runtimeEditor": {
+          "principalId": "runtimeAuthPrincipals/3",
+          "userId": "metadata-alice",
+          "editedAt": 1791057613261
+        },
+        "userId": "metadata-alice",
+        "participantId": "metadata-alice",
+        "tags": [],
+        "version": 1,
+        "createdAt": 1791057613261,
+        "updatedAt": 1791057613261,
+        "memoryId": "shared",
+        "content": "tenant-a private shared",
+        "contentType": "raw",
+        "sourceType": "system",
+        "sourceTimestamp": 1791057613261,
+        "importance": 50,
+        "accessCount": 0,
+        "previousVersions": [],
+        "_id": "memories/14",
+        "_creationTime": 15
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "missing",
+      "matched": true,
+      "privacy": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Verified identity required",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "forged-subject",
+      "matched": true,
+      "privacy": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "foreign-tenant",
+      "matched": true,
+      "privacy": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "foreign-owner",
+      "matched": true,
+      "privacy": true,
+      "success": true,
+      "result": null
+    },
+    {
+      "kind": "memories",
+      "mode": "source-tombstone",
+      "matched": true,
+      "privacy": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "none",
+      "matched": true,
+      "privacy": true,
+      "success": true,
+      "result": {
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-a",
+        "ownerPrincipalId": "runtimeAuthPrincipals/3",
+        "lineage": {
+          "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"shared\"]",
+          "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"shared\"]",
+          "sourceRevision": 1,
+          "role": "user",
+          "trust": "user_assertion"
+        },
+        "manualSourceBinding": {
+          "resourceType": "fact",
+          "resourceId": "shared"
+        },
+        "runtimeEditor": {
+          "principalId": "runtimeAuthPrincipals/3",
+          "userId": "metadata-alice",
+          "editedAt": 1791057613276
+        },
+        "userId": "metadata-alice",
+        "participantId": "metadata-alice",
+        "tags": [],
+        "version": 1,
+        "createdAt": 1791057613276,
+        "updatedAt": 1791057613276,
+        "factId": "shared",
+        "fact": "tenant-a private shared",
+        "factType": "preference",
+        "confidence": 80,
+        "extractionPolicyVersion": "manual-assertion-v1",
+        "sourceType": "manual",
+        "subject": "alice",
+        "predicate": "prefers",
+        "object": "dark",
+        "_id": "facts/14",
+        "_creationTime": 15
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "missing",
+      "matched": true,
+      "privacy": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Verified identity required",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "forged-subject",
+      "matched": true,
+      "privacy": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "foreign-tenant",
+      "matched": true,
+      "privacy": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "foreign-owner",
+      "matched": true,
+      "privacy": true,
+      "success": true,
+      "result": null
+    },
+    {
+      "kind": "facts",
+      "mode": "source-tombstone",
+      "matched": true,
+      "privacy": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    }
+  ]
+}

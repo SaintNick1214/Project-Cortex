@@ -1,0 +1,175 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:54:17
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:55:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:20756) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts
+  memories.store optional READ callback origin
+    ✓ healthy initially READ-less identity retains safe receipt (sync control) (11 ms)
+    ✓ healthy initially READ-less identity retains safe receipt (rejected control) (2 ms)
+    ✓ sync exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (12 ms)
+    ✓ sync code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (8 ms)
+    ✓ sync ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (1 ms)
+    ✓ rejected extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (1 ms)
+    ✓ rejected data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (1 ms)
+    ✓ rejected proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (1 ms)
+    ✓ sync low-level authority callback cannot be pruned as missing READ (7 ms)
+    ✓ rejected low-level authority callback cannot be pruned as missing READ (19 ms)
+  memories.update optional READ callback origin
+    ✓ healthy initially READ-less identity retains safe receipt (sync control) (5 ms)
+    ✓ healthy initially READ-less identity retains safe receipt (rejected control) (3 ms)
+    ✓ sync exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (5 ms)
+    ✓ sync ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (10 ms)
+    ✓ sync low-level authority callback cannot be pruned as missing READ (14 ms)
+    ✓ rejected low-level authority callback cannot be pruned as missing READ (27 ms)
+  memories.updateMany optional READ callback origin
+    ✓ healthy initially READ-less identity retains safe receipt (sync control) (3 ms)
+    ✓ healthy initially READ-less identity retains safe receipt (rejected control) (3 ms)
+    ✓ sync exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (1 ms)
+    ✓ sync low-level authority callback cannot be pruned as missing READ (8 ms)
+    ✓ rejected low-level authority callback cannot be pruned as missing READ (7 ms)
+  facts.store optional READ callback origin
+    ✓ healthy initially READ-less identity retains safe receipt (sync control) (2 ms)
+    ✓ healthy initially READ-less identity retains safe receipt (rejected control) (1 ms)
+    ✓ sync exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (5 ms)
+    ✓ sync code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (12 ms)
+    ✓ sync private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ sync data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (14 ms)
+    ✓ sync code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (5 ms)
+    ✓ sync proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (2 ms)
+    ✓ rejected proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ rejected ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (3 ms)
+    ✓ sync low-level authority callback cannot be pruned as missing READ (5 ms)
+    ✓ rejected low-level authority callback cannot be pruned as missing READ (5 ms)
+  facts.update optional READ callback origin
+    ✓ healthy initially READ-less identity retains safe receipt (sync control) (19 ms)
+    ✓ healthy initially READ-less identity retains safe receipt (rejected control) (4 ms)
+    ✓ sync exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ sync code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (5 ms)
+    ✓ sync extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ sync private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ sync data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ sync code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ sync proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ sync ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ rejected exact identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ rejected code-only identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ rejected extra-private identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ rejected private-message identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ rejected data-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ rejected code-accessor identity failure aborts with opaque error, zero diagnostic getters and full rollback (4 ms)
+    ✓ rejected proxy identity failure aborts with opaque error, zero diagnostic getters and full rollback (5 ms)
+    ✓ rejected ordinary-error identity failure aborts with opaque error, zero diagnostic getters and full rollback (29 ms)
+    ✓ sync low-level authority callback cannot be pruned as missing READ (66 ms)
+    ✓ rejected low-level authority callback cannot be pruned as missing READ (15 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       100 passed, 100 total
+Snapshots:   0 total
+Time:        2.982 s
+Ran all test suites matching optionalReadFailures.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf-resume-optional-read-repair/new-tests.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
