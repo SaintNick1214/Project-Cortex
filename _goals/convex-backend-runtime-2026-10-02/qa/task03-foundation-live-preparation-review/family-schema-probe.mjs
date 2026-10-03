@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import schema from '../../../convex-dev/schema.ts';
+import {validate} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/offline-arguments-check.mjs';
+import {collectOfflineFixtureRows} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/cases/metadata-worker-domain.mjs';
+import {prepare,offlineDenialControls} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/cases/mf-registry-artifacts.mjs';
+const run='foundation-'+'c'.repeat(32),collected=[],refs=[];
+const identities=['reader','writer','foreign','revoked','deleted','ungranted','admin'];
+const ctx={run,issuer:'https://cortex-qualification.invalid',scopes:{tenantId:run+':tenantA',memorySpaceId:run+':spaceA',writerMemorySpaceId:run+':spaceWriter',foreignTenantId:run+':tenantB',foreignMemorySpaceId:run+':spaceB'},principals:Object.fromEntries(identities.map(i=>[i,'OFFLINE_PRINCIPAL_'+i])),users:Object.fromEntries(identities.map(i=>[i,run+':user-'+i])),references:Object.fromEntries(identities.map(i=>[i,{principalId:'OFFLINE_PRINCIPAL_'+i,principalVersion:1,membershipId:'OFFLINE_MEMBERSHIP_'+i,membershipVersion:1,grantId:'OFFLINE_GRANT_'+i,grantVersion:1,tenantId:run+':tenantA',memorySpaceId:run+':spaceA',tenantEpoch:1,memorySpaceEpoch:1}])),refs};
+ctx.seed=async rows=>{const result=rows.map(row=>{validate(schema.tables[row.table].validator.json,row.value);collected.push(row);const ref={table:row.table,id:'OFFLINE_SHAPE_ONLY_'+collected.length};refs.push(ref);return ref;});return result;};
+ctx.operator=async(name,args)=>{assert.equal(name,'seed');return ctx.seed(args.rows);};
+await collectOfflineFixtureRows(ctx);assert.equal(collected.length,19);const mwdRows=collected.length;
+const suite=await prepare(ctx);assert.equal(suite.cases.length,122);assert.equal(collected.length-mwdRows,66);
+const native=JSON.parse(readFileSync(new URL('../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/native-registration-schemas.json',import.meta.url)));
+for(const item of suite.cases)validate(native.rows.find(row=>row.path===item.path).args,item.args);
+const denials=offlineDenialControls();assert.equal(denials.malformedRejected,10);
+console.log(JSON.stringify({status:'PASS',scope:'INDEPENDENT_OFFLINE_FAMILY_SCHEMAS',mwdRows,mfRows:66,mfDescriptors:122,descriptorArgumentShapes:122,malformedDenials:10,realIdEncoding:'NOT_RUN_REQUIRES_NATIVE_OWNED_IDS',serviceCalls:0,signatures:0}));
