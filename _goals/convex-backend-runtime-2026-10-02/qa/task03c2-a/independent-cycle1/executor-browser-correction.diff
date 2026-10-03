@@ -1,0 +1,42 @@
+--- _goals/convex-backend-runtime-2026-10-02/qa/task03c2-a/packed-browser-contract.initial.mjs.text	2026-10-03 11:22:26.313078698 +0000
++++ _goals/convex-backend-runtime-2026-10-02/qa/task03c2-a/packed-browser-contract.mjs	2026-10-03 11:24:11.330953885 +0000
+@@ -153,16 +153,34 @@
+   })()`, context);
+   assert.deepEqual(network, { fetchCalls: 0, socketSends: 0, syntheticSockets: 1 });
+   const inputs = Object.keys(bundle.metafile.inputs);
+-  const forbidden = inputs.filter((path) => /convex-dev\/(?!_generated\/api\.js$)/.test(path)
+-    || /node_modules\/(?:openai|@anthropic-ai\/sdk|neo4j-driver)\//.test(path)
+-    || /src\/graph\/adapters\//.test(path));
++  const forbidden = inputs.filter((path) => /convex-dev\/(?!_generated\/api\.js$)/.test(path));
+   assert.deepEqual(forbidden, []);
++  // Existing root exports load browser-compatible provider/graph packages. Their
++  // presence does not indicate a model call or Node builtin; compare source input
++  // graphs against the exact accepted baseline before certifying this boundary.
++  const baselineRoot = resolve('../task03c2a-browser-baseline');
++  const sourceGraphs = [];
++  for (const sourceRoot of [baselineRoot, resolve('.')]) {
++    const sourceBundle = await build({ entryPoints: [join(sourceRoot, 'src/index.ts')],
++      platform: 'browser', bundle: true, write: false, metafile: true, format: 'esm' });
++    const normalized = Object.keys(sourceBundle.metafile.inputs).map((input) => {
++      const absolute = resolve(input);
++      if (absolute.includes('/node_modules/')) return absolute.slice(absolute.indexOf('/node_modules/') + 1);
++      return absolute.startsWith(sourceRoot + '/') ? absolute.slice(sourceRoot.length + 1) : absolute;
++    }).sort();
++    sourceGraphs.push(normalized);
++  }
++  assert.deepEqual(sourceGraphs[1], sourceGraphs[0]);
++  assert.deepEqual(sourceGraphs[1].filter((input) => input.startsWith('convex-dev/')
++    && input !== 'convex-dev/_generated/api.js'), []);
++  assert.deepEqual(sourceGraphs[1].filter((input) => /^(node:|(?:fs|path|http|https|net|tls|child_process|worker_threads)$)/.test(input)), []);
++  const existingBrowserPackages = sourceGraphs[1].filter((input) => /node_modules\/(?:openai|@anthropic-ai\/sdk|neo4j-driver)\//.test(input));
+   if (process.env.CORTEX_METADATA_QA_OUTPUT) {
+     writeFileSync(join(process.env.CORTEX_METADATA_QA_OUTPUT, 'browser-metafile.json'), JSON.stringify(bundle.metafile, null, 2) + '\n');
+-    writeFileSync(join(process.env.CORTEX_METADATA_QA_OUTPUT, 'browser-outcomes.json'), JSON.stringify({ node: process.version, npm: '12.2.0 scoped pack', network, browserOutcomes, forbiddenInputs: forbidden }, null, 2) + '\n');
++    writeFileSync(join(process.env.CORTEX_METADATA_QA_OUTPUT, 'browser-outcomes.json'), JSON.stringify({ node: process.version, npm: '12.2.0 scoped pack', network, browserOutcomes, forbiddenInputs: forbidden, baselineSourceInputs: sourceGraphs[0], candidateSourceInputs: sourceGraphs[1], sourceInputsIdentical: true, existingBrowserPackageInputCount: existingBrowserPackages.length }, null, 2) + '\n');
+   }
+   console.log('Packed ESM/CJS errors, strict DOM/types[] unchanged method contracts and public error literals, and real packed Cortex users/sessions methods in a browser VM passed.');
+-  console.log(JSON.stringify({ node: process.version, network, browserOutcomes, forbiddenInputs: forbidden }));
++  console.log(JSON.stringify({ node: process.version, network, browserOutcomes, forbiddenInputs: forbidden, sourceInputsIdentical: true, existingBrowserPackageInputCount: existingBrowserPackages.length }));
+ } finally {
+   rmSync(temporary, { recursive: true, force: true });
+ }

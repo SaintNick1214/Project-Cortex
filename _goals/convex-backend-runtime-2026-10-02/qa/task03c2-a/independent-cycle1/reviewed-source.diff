@@ -1,0 +1,190 @@
+diff --git a/src/index.ts b/src/index.ts
+index 7f779280..903f8227 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -782,10 +782,10 @@ export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";
+ export { CypherGraphAdapter } from "./graph";
+ 
+ // Re-export validation errors for user catch blocks
+-export { UserValidationError } from "./users";
++export { UserValidationError, UserProfileWriteReceiptError } from "./users";
+ export { GovernanceValidationError, GovernanceCapabilityError } from "./governance";
+ export { A2AValidationError } from "./a2a";
+-export { SessionValidationError } from "./sessions";
++export { SessionValidationError, SessionCapabilityError } from "./sessions";
+ export { AuthValidationError } from "./auth";
+ export { ArtifactValidationError } from "./artifacts";
+ export { AttachmentValidationError } from "./attachments";
+diff --git a/src/sessions/index.ts b/src/sessions/index.ts
+index 86e368ea..168da11c 100644
+--- a/src/sessions/index.ts
++++ b/src/sessions/index.ts
+@@ -42,6 +42,22 @@ export { SessionValidationError } from "./validators";
+ 
+ import type { AuthContext } from "../auth/types";
+ 
++/** Idle session expiration requires a trusted backend worker. */
++export class SessionCapabilityError extends Error {
++  readonly code = "BACKEND_MAINTENANCE_ONLY";
++  readonly retryable = false;
++  readonly outcome = "not_dispatched";
++  readonly requiredExecution = "trusted_backend_worker";
++
++  constructor() {
++    super(
++      "Idle session expiration requires a trusted backend worker. " +
++        "No operation was dispatched by this client.",
++    );
++    this.name = "SessionCapabilityError";
++  }
++}
++
+ /**
+  * Sessions API
+  *
+@@ -391,41 +407,23 @@ export class SessionsAPI {
+   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 
+   /**
+-   * Expire idle sessions based on governance policies.
+-   *
+-   * This is typically called by a scheduled job or governance enforcement.
++   * Request idle session expiration, which requires a trusted backend worker.
+    *
+-   * @param options - Expiration options
+-   * @returns Result with count of expired sessions
+-   *
+-   * @example
+-   * ```typescript
+-   * // Expire sessions idle for more than 30 minutes
+-   * const result = await cortex.sessions.expireIdle({
+-   *   idleTimeout: 30 * 60 * 1000, // 30 minutes in ms
+-   * });
+-   * console.log(`Expired ${result.expired} idle sessions`);
++   * Valid client requests reject with SessionCapabilityError before dispatch.
++   * This method does not perform or schedule automatic session maintenance.
++   * Tenant selectors retain the existing SDK auth-context mismatch validation.
+    *
+-   * // Expire for specific tenant
+-   * const tenantResult = await cortex.sessions.expireIdle({
+-   *   tenantId: 'tenant-456',
+-   *   idleTimeout: 15 * 60 * 1000, // 15 minutes
+-   * });
+-   * ```
++   * @param options - Expiration options (idle timeout defaults to 30 minutes)
++   * @throws SessionCapabilityError when trusted backend execution is required
+    */
+   async expireIdle(
+     options?: ExpireSessionsOptions,
+   ): Promise<{ expired: number }> {
+-    const result = await this.executeWithResilience(
+-      () =>
+-        this.client.mutation(api.sessions.expireIdle, {
+-          tenantId: resolveTenantId(this.authContext?.tenantId, options?.tenantId),
+-          idleTimeout: options?.idleTimeout ?? 30 * 60 * 1000, // Default 30 min
+-        }),
+-      "sessions:expireIdle",
+-    );
+-
+-    return result as { expired: number };
++    resolveTenantId(this.authContext?.tenantId, options?.tenantId);
++    // Preserve the existing default before reporting the execution boundary.
++    const idleTimeout = options?.idleTimeout ?? 30 * 60 * 1000;
++    void idleTimeout;
++    throw new SessionCapabilityError();
+   }
+ 
+   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+diff --git a/src/users/index.ts b/src/users/index.ts
+index 361dcc72..94df89ea 100644
+--- a/src/users/index.ts
++++ b/src/users/index.ts
+@@ -69,6 +69,41 @@ export class CascadeDeletionError extends Error {
+   }
+ }
+ 
++/** Server-confirmed profile write receipt when the updated profile cannot be read. */
++export interface UserProfileWriteReceipt {
++  updated: true;
++  type: string;
++  id: string;
++  tenantId: string;
++  memorySpaceId: string | undefined;
++  createdId?: string;
++}
++
++/** The write committed, but returning a hydrated profile requires read capability. */
++export class UserProfileWriteReceiptError extends Error {
++  readonly code = "PROFILE_WRITE_COMMITTED_READ_UNAVAILABLE";
++  readonly retryable = false;
++  readonly outcome = "committed";
++  readonly requiredCapability = "read";
++  readonly receipt: Readonly<UserProfileWriteReceipt>;
++
++  constructor(receipt: UserProfileWriteReceipt) {
++    super(
++      "The user profile write committed, but the updated profile is unavailable " +
++        "without read capability. Do not retry the committed write.",
++    );
++    this.name = "UserProfileWriteReceiptError";
++    this.receipt = Object.freeze({
++      updated: receipt.updated,
++      type: receipt.type,
++      id: receipt.id,
++      tenantId: receipt.tenantId,
++      memorySpaceId: receipt.memorySpaceId,
++      ...(receipt.createdId === undefined ? {} : { createdId: receipt.createdId }),
++    });
++  }
++}
++
+ // Export validation error for users who want to catch it specifically
+ export { UserValidationError } from "./validators";
+ 
+@@ -160,6 +195,9 @@ export class UsersAPI {
+   /**
+    * Update user profile (creates new version by default)
+    *
++   * Throws UserProfileWriteReceiptError if the write committed but the backend
++   * returned a safe receipt because the updated profile could not be read.
++   *
+    * @param userId - User ID to update
+    * @param data - Profile data to store
+    * @param options - Update options
+@@ -212,6 +250,12 @@ export class UsersAPI {
+       throw new Error("Failed to store user profile");
+     }
+ 
++    // Interpret the committed response after resilience completes so this outcome
++    // cannot trigger another mutation attempt or an automatic follow-up read.
++    if ("updated" in result) {
++      throw new UserProfileWriteReceiptError(result);
++    }
++
+     return {
+       id: result.id,
+       tenantId: result.tenantId, // Include tenantId in response
+@@ -965,6 +1009,8 @@ export class UsersAPI {
+    * @param updates - Updates to apply to matching users
+    * @param options - Update options
+    * @returns Update result with count and affected userIds
++   * @throws UserProfileWriteReceiptError if an item committed without a readable
++   * profile. Earlier items may already have committed; do not replay the batch.
+    *
+    * @example
+    * ```typescript
+@@ -1045,8 +1091,12 @@ export class UsersAPI {
+           await this.update(userId, updates.data);
+           results.push(userId);
+         }
+-      } catch (_e) {
+-        // Continue on error
++      } catch (error) {
++        // A committed write must not be reported as an unsuccessful bulk item.
++        if (error instanceof UserProfileWriteReceiptError) {
++          throw error;
++        }
++        // Continue on ordinary errors, preserving existing bulk behavior.
+         continue;
+       }
+     }

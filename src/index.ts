@@ -782,10 +782,10 @@ export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";
 export { CypherGraphAdapter } from "./graph";
 
 // Re-export validation errors for user catch blocks
-export { UserValidationError } from "./users";
+export { UserValidationError, UserProfileWriteReceiptError } from "./users";
 export { GovernanceValidationError, GovernanceCapabilityError } from "./governance";
 export { A2AValidationError } from "./a2a";
-export { SessionValidationError } from "./sessions";
+export { SessionValidationError, SessionCapabilityError } from "./sessions";
 export { AuthValidationError } from "./auth";
 export { ArtifactValidationError } from "./artifacts";
 export { AttachmentValidationError } from "./attachments";

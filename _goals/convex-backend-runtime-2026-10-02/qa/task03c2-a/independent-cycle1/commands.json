@@ -1,0 +1,212 @@
+[
+  {
+    "name": "scoped-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "/tmp/task03c2-a-review1-4cCdIR/tsconfig.scoped.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 2,
+    "seconds": 1.956,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/scoped-types.log"
+  },
+  {
+    "name": "owned-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "src/users/index.ts",
+      "src/sessions/index.ts",
+      "src/index.ts",
+      "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts",
+      "tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 13.178,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/owned-lint.log"
+  },
+  {
+    "name": "root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 17.22,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/root-types.log"
+  },
+  {
+    "name": "backend-ES2021",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "convex-dev/tsconfig.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 12.446,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/backend-ES2021.log"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/tmp/task03c2-a-review1-4cCdIR/jest.scoped.cjs",
+      "--listTests",
+      "--json",
+      "--runInBand"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 0.764,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/discovery.log"
+  },
+  {
+    "name": "scoped-outcomes",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/tmp/task03c2-a-review1-4cCdIR/jest.scoped.cjs",
+      "--runInBand",
+      "--json",
+      "--outputFile=/tmp/task03c2-a-review1-4cCdIR/tests.json"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 19.949,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/scoped-outcomes.log"
+  },
+  {
+    "name": "build",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "build"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 10.184,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/build.log"
+  },
+  {
+    "name": "packed-browser-contract",
+    "argv": [
+      "node",
+      "/tmp/task03c2-a-review1-4cCdIR/packed-browser-contract.mjs"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 2.384,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/packed-browser-contract.log"
+  },
+  {
+    "name": "existing-public-contracts",
+    "argv": [
+      "node",
+      "/tmp/task03c2-a-review1-4cCdIR/public-contracts.mjs"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 6.878,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/existing-public-contracts.log"
+  },
+  {
+    "name": "scoped-types-corrected",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "/tmp/task03c2-a-review1-4cCdIR/tsconfig.scoped.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "seconds": 13.38,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/scoped-types-corrected.log"
+  },
+  {
+    "name": "baseline-root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/task03c2a-browser-baseline",
+    "exitCode": 2,
+    "seconds": 14.529,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/baseline-root-types.log"
+  },
+  {
+    "name": "main-unreviewed-root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exitCode": 2,
+    "seconds": 15.039,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/main-unreviewed-root-types.log"
+  },
+  {
+    "name": "baseline-owned-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "src/users/index.ts",
+      "src/sessions/index.ts",
+      "src/index.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/task03c2a-browser-baseline",
+    "exitCode": 0,
+    "seconds": 10.719,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/baseline-owned-lint.log"
+  },
+  {
+    "name": "adversarial-packed-browser-probe",
+    "argv": [
+      "node",
+      "/tmp/task03c2-a-review1-4cCdIR/adversarial-browser-probe.mjs"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/adversarial-browser-probe.log"
+  },
+  {
+    "name": "existing-public-contracts-guarded",
+    "argv": [
+      "node",
+      "/tmp/task03c2-a-review1-4cCdIR/public-contracts-guarded.mjs"
+    ],
+    "cwd": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "exitCode": 0,
+    "log": "/tmp/task03c2-a-review1-4cCdIR/existing-public-contracts-guarded.log"
+  }
+]

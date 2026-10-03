@@ -69,6 +69,41 @@ export class CascadeDeletionError extends Error {
   }
 }
 
+/** Server-confirmed profile write receipt when the updated profile cannot be read. */
+export interface UserProfileWriteReceipt {
+  updated: true;
+  type: string;
+  id: string;
+  tenantId: string;
+  memorySpaceId: string | undefined;
+  createdId?: string;
+}
+
+/** The write committed, but returning a hydrated profile requires read capability. */
+export class UserProfileWriteReceiptError extends Error {
+  readonly code = "PROFILE_WRITE_COMMITTED_READ_UNAVAILABLE";
+  readonly retryable = false;
+  readonly outcome = "committed";
+  readonly requiredCapability = "read";
+  readonly receipt: Readonly<UserProfileWriteReceipt>;
+
+  constructor(receipt: UserProfileWriteReceipt) {
+    super(
+      "The user profile write committed, but the updated profile is unavailable " +
+        "without read capability. Do not retry the committed write.",
+    );
+    this.name = "UserProfileWriteReceiptError";
+    this.receipt = Object.freeze({
+      updated: receipt.updated,
+      type: receipt.type,
+      id: receipt.id,
+      tenantId: receipt.tenantId,
+      memorySpaceId: receipt.memorySpaceId,
+      ...(receipt.createdId === undefined ? {} : { createdId: receipt.createdId }),
+    });
+  }
+}
+
 // Export validation error for users who want to catch it specifically
 export { UserValidationError } from "./validators";
 
@@ -160,6 +195,9 @@ export class UsersAPI {
   /**
    * Update user profile (creates new version by default)
    *
+   * Throws UserProfileWriteReceiptError if the write committed but the backend
+   * returned a safe receipt because the updated profile could not be read.
+   *
    * @param userId - User ID to update
    * @param data - Profile data to store
    * @param options - Update options
@@ -210,6 +248,12 @@ export class UsersAPI {
     if (!result) {
       // Use a static error message to avoid leaking user-controlled identifiers into logs
       throw new Error("Failed to store user profile");
+    }
+
+    // Interpret the committed response after resilience completes so this outcome
+    // cannot trigger another mutation attempt or an automatic follow-up read.
+    if ("updated" in result) {
+      throw new UserProfileWriteReceiptError(result);
     }
 
     return {
@@ -965,6 +1009,8 @@ export class UsersAPI {
    * @param updates - Updates to apply to matching users
    * @param options - Update options
    * @returns Update result with count and affected userIds
+   * @throws UserProfileWriteReceiptError if an item committed without a readable
+   * profile. Earlier items may already have committed; do not replay the batch.
    *
    * @example
    * ```typescript
@@ -1045,8 +1091,12 @@ export class UsersAPI {
           await this.update(userId, updates.data);
           results.push(userId);
         }
-      } catch (_e) {
-        // Continue on error
+      } catch (error) {
+        // A committed write must not be reported as an unsuccessful bulk item.
+        if (error instanceof UserProfileWriteReceiptError) {
+          throw error;
+        }
+        // Continue on ordinary errors, preserving existing bulk behavior.
         continue;
       }
     }

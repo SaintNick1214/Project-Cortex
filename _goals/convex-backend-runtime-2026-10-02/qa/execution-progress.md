@@ -120,3 +120,32 @@ SDKgovernance consumer Task03C2-D independently FINALPASS4.4/5 (5/4/5/4/4),28out
 Verified SDKconsumer+immutable MFcycle3evidence incremental commit pushed c0c40423b52e133b9a51f04d07fd21d38f27c7f2. Independent registry/context46 and textartifact22 subsets are active in detached reviewed-base checkouts. Statistics2/A2A4, remaining file/attachment17 and dependent transcript44 remainpending, notsilently excluded.
 
 Parent03B2Aintegration receipts: unchanged actualES2021backend compiler andnarrowtest types/lint pass; combined402/402 metadata/Dworker/SDKgovernance outcomes,6suites/0skips. Catalogbyte/tempcleanup proofs pass. CurrentrootFAIL hasexact8consumerdiagnostics (5metadata,3MFmaintenance); no integrationFAIL disguised aspre-existing.
+
+Exactreviewed03B2A sources/schema andevidence arepushedinsigned c92d548368791386c62f39895e381ef6bde2dc86. Fiveintroducedmetadata SDKconsumers areunderbounded03C2-A repair; rootAPI/errors willstatecommitted-safe-receipt andtrustedbackendmaintenanceoutcomes truthfully, withnofabricatedprivateprofile orblind replay. No unacceptedMFsourcewasstaged.
+
+SDKmetadata consumer candidate is frozen for independentfirstreview:106 outcomes,
+isolated reviewedc92d root/backend types/build/packed/browser andbaselineinputgraph
+checks pass. Parent affectedintegration observes508/508 tests in8suites/skips0 and
+actualES2021backend/lint PASS; actualroot remainsFAIL exactly3MFpurgeAll references.
+Registry/context work remainsactive; artifacttext84-outcome candidate is initsfirst
+independentreview. Preliminaryartifactcreate lateREAD-witness loss isblocking; no
+artifactsource hasbeenintegrated. FINALreviews, ratherthan candidate reports, control
+acceptance. BoundedrealJWT/reactive transportpreparation isrecordedseparately; no
+subset/live/fullTask03 qualificationdeployment hasoccurred.
+
+Task03C2-A received FINAL first-cycle independent PASS4.6/5 (5/4/5/4/5).
+The reviewer independently reproduced the five baseline errors, reran106 outcomes,
+packed public/browser contracts and protected-source hashes. GitHub confirmed the
+accepted base signature. Parent verified and copied48 raw independent records plus
+the49-record manifest; the reproducible30MB git archive remains private, with its
+hash retained. Parent508-outcome integration and actualroot MF3 failure remain honest.
+
+Artifacttext cycle1 received FINAL REJECT3.0/5. Three defects remain: create drops
+an initially admitted READ after insertion, repeated linked source admission can
+replace the earlier snapshot, and source row lifecycle is filtered after private
+hydration. Parent preserved95 exact candidate/evidence/independent records before
+the bounded cycle2 repair. Synthetic mutations of an already-read row at the final
+DB await remain fixture limitations, rather than demonstrated deployed snapshot
+exploits. Registry/context work retains its separate gate. A bounded offline live
+identity/transport qualification harness is being prepared from accepted bytes only;
+no rejected MF or unreviewed endpoint will enter its qualification deployment.

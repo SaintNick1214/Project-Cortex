@@ -1,0 +1,8 @@
+from pathlib import Path
+import subprocess,json,time,os
+s=Path('/tmp/task03c2-a-review1-4cCdIR');c=s/'candidate';npm='/workspace/Project-Cortex/work/backend-runtime/npm12-cache/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js'
+env=os.environ.copy();env['CORTEX_METADATA_QA_OUTPUT']=str(s);env['npm_config_cache']=str(s/'npm-cache');env['npm_config_offline']='true'
+checks=[('build',['node',npm,'run','build']),('packed-browser-contract',['node',str(s/'packed-browser-contract.mjs')]),('existing-public-contracts',['node',str(s/'public-contracts.mjs')])]
+for name,argv in checks:
+    start=time.time();p=subprocess.run(argv,cwd=c,env=env,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT);(s/(name+'.log')).write_text(p.stdout);results=json.loads((s/'commands.json').read_text());r={'name':name,'argv':argv,'cwd':str(c),'exitCode':p.returncode,'seconds':round(time.time()-start,3),'log':str(s/(name+'.log'))};results.append(r);(s/'commands.json').write_text(json.dumps(results,indent=2)+'\n');print(json.dumps(r),flush=True)
+    if p.returncode:print(p.stdout);raise SystemExit(p.returncode)

@@ -1,49 +1,41 @@
 {
-  "observedAt": "2026-10-03T11:06:22.458479+00:00",
-  "provenance": "Read-only installed official provider/AI sources; not model availability or live media certification",
-  "versions": {
-    "@ai-sdk/gateway": "4.0.103",
-    "ai": "7.0.127",
-    "convex": "1.46.0"
-  },
+  "observedAt": "2026-10-03T11:21:02.296991+00:00",
+  "provenance": "Read-only actual installed official Convex Gateway provider source; no media/model availability/live/callback/download certification",
+  "provider": "@convex-dev/ai-sdk-provider",
+  "version": "0.2.1",
   "sourceHashes": [
     {
-      "path": "node_modules/@ai-sdk/gateway/src/gateway-video-model.ts",
-      "sha256": "82cb835b962cfb23e558657e2c9ea77a688e3545ecd210fc3036ab5aa9bc5d4a"
+      "path": "node_modules/@convex-dev/ai-sdk-provider/src/index.ts",
+      "sha256": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
     },
     {
-      "path": "node_modules/@ai-sdk/gateway/src/gateway-image-model.ts",
-      "sha256": "d751a082280c3ff24fcd71c02ebefdb29425b0c95689f76c59a68c96f7d620d2"
+      "path": "node_modules/@convex-dev/ai-sdk-provider/src/video-model.ts",
+      "sha256": "40aa786d2c85648305ca06473b1f98565f0cbb6634046253988b680dc9b99148"
     },
     {
-      "path": "node_modules/@ai-sdk/gateway/src/gateway-provider-metadata.ts",
-      "sha256": "cd3df42b0b78eb926eaad36de8790b05c39cfeb3b379a6b6df71727792815677"
-    },
-    {
-      "path": "node_modules/ai/src/generate-video/start-video.ts",
-      "sha256": "966703d471615044171e65453094c33cbd9f8e8d3141fe1b3c2b1dd78703095e"
-    },
-    {
-      "path": "node_modules/ai/src/generate-video/get-video-status.ts",
-      "sha256": "88881aebe923e36c0d6302abb9e4ede315230fb02d4370c0de0f8dfd46559303"
+      "path": "node_modules/@convex-dev/ai-sdk-provider/src/video-webhook.ts",
+      "sha256": "c379566c8b552bf0b8cef55efcd6eec8dbc069dc57b8835185ad73694bf1ae28"
     }
   ],
-  "observations": {
-    "asyncVideo": [
-      "doStart supports webhookUrl mapped to callbackUrl",
-      "doStatus takes opaque operation JSON and returns pending/completed/error; cancellation mapped to terminalerror",
-      "gateway.asyncJob.webhookSigningSecret is sensitive start-response-only metadata",
-      "ready video returns URL or base64; owned cap-enforced materialization remains Task12/13"
-    ],
-    "image": [
-      "wire output images are base64 strings, not transcript-safe bytes"
-    ],
-    "requiredRemaining": [
-      "Actual disposable model start/poll/signed callback/download qualification",
-      "All actual billable submissions governed before Gateway tokenmint under Task04",
-      "Private operation/signing secrets never public events/logs; callbacksdedup scopedjob",
-      "Lost paidsubmission reply remainsuncertain withoutblindretry",
-      "20,000,000bytecap,costrecord,partialcleanup,cancel/expiry/provenance behavior"
-    ]
-  }
+  "correction": {
+    "previousRead": "media-contract-history/vercel-gateway-comparative-read.json",
+    "previousReadSha256": "05c38e2381f981dd8b868d75154b935b75e336132d9f7300293073dd1170dfb9",
+    "reason": "Prior package read described @ai-sdk/gateway4.0.103, which is not the configured Convex Gateway adapter. Those observations cannot specify actual Convex media requests."
+  },
+  "actualContract": {
+    "authentication": "privategatewayFetch calls getServiceToken(ai-gateway) before every HTTP fetch; Cortex actualpaid-operation admission must precede invoking model method, not merely wrap later globalHTTP fetch",
+    "origin": "https://ai-gateway.convex.dev/v1 default; CONVEX_INTERNAL_AI_GATEWAY_HOST override mustnotbecomeclient-controlled",
+    "video": "maxVideosPerCall1; doStart POSTvideos withwebhook_url returnsopaquestringoperation andprivateconvexGateway.inferenceId/webhookSecret; getStatus POSTvideos/status returns pending/completed/error; download POSTvideos/download returns exactlyonebase64video withvideo/mediatype; no doStatus/handleWebhookOption method exposed",
+    "sdkBoundary": "GenericAI asyncstatus helpers expecting doStatus areincompatible withthisprovider; Cortex durableadapter mustuseactual getStatus/download afterqualified doStart, notassumethe Vercelcontract",
+    "callback": "verifyVideoWebhook requiresunmodifiedbodystring; signature t=<integerseconds>,v1=<64lowercasehex>, absolute300secondtolerance, HMACSHA256 on timestampcommaexactbody, event.id/nonemptyoperation andmatchingvideo.generation.<completed|failed|cancelled|expired>; signatureheadername requiresactualqualification notassumed",
+    "image": "imageModel delegatesOpenAICompatible imageprovider throughprivategatewayFetch; actualimagecost metadata availability remainsunqualified",
+    "cost": "Chat extractormaps usage.cost/cost_details; video getStatus/download applysameusagemetadata; repeatedjobcostdata mustsettleoriginalpaidattempt once, neverchargeeachpoll orassumemissingdollarszero"
+  },
+  "requiredRemaining": [
+    "Actualdisposable image/video modelsubmit/poll/signedcallback/download qualification underTask13",
+    "Task04 actualchild/batch/interface/capability/budget/pinnedattempt before tokenmint; no blindpaidsubmitreplay",
+    "Allprivateoperation/inference/webhooksecret fields scopedpersistedjobonly, no publicevents/logs/transcripts",
+    "Boundedcap enforcement at download/materialization includingbase64wire expansion and typed oversizedcost/partialcleanup outcome; providerdownload itself usesresponse.json, so boundeddelivery needsqualifiedCortexadapter beforelargeallocation",
+    "20,000,000decodedbytes cap, Convex-onlyownedstorage/reference lifecycle/privateHTTP, no alternativeprovider/externalstorage"
+  ]
 }
