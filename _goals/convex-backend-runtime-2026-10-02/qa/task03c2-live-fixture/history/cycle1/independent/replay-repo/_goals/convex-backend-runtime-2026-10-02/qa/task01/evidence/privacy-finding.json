@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "evidenceProvenance": "Sanitized stdout copied from observed targeted qualify command tool receipt; original full JSON was overwritten by the next targeted rerun. No invented backend outcome.",
+  "failure": {
+    "check": "persisted-Agent-stream-multiple-observers-reconnect",
+    "assertion": "whole-message serialized output included synthetic private reasoning marker",
+    "cause": "Agent duplicates reasoning parts in top-level reasoning and reasoningDetails"
+  },
+  "firstFix": "remove top-level reasoning fields as well as reasoning parts",
+  "finalFix": "reconstruct allowlisted public canonical messages/tool shapes/UI chunks; assert entire serialized public snapshot and replay snapshot lack private marker",
+  "failureStdout": "privacy-failure-stdout.txt",
+  "successfulFinalEvidence": "live-receipts.json",
+  "rawOriginalFailedJsonRetained": false
+}

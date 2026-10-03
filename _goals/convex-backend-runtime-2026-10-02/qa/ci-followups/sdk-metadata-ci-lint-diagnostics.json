@@ -1,0 +1,15 @@
+{
+  "observedAt": "2026-10-03 12:07:34 UTC",
+  "head": "4fb3482c5e06fcab12ab8513b242a066ef761f2f",
+  "jobId": 111198987481,
+  "jobUrl": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37120469403/job/111198987481",
+  "conclusion": "FAILURE",
+  "errors": 1,
+  "warnings": 115,
+  "classification": "Accepted historical QA executable helper has unused _line. Parent preserves original bytes and has a pending ancillary style repair; actual fullroot rerun0errors137warnings includes new fixture+rejectedMF, not a CI PASS.",
+  "lines": [
+    "2026-10-03T12:06:17.9238928Z /home/runner/work/Project-Cortex/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/verify.mjs",
+    "2026-10-03T12:06:17.9242069Z ##[error]  67:27  error  '_line' is defined but never used  no-unused-vars",
+    "2026-10-03T12:06:17.9540865Z ✖ 116 problems (1 error, 115 warnings)"
+  ]
+}

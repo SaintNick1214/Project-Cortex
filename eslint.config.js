@@ -204,6 +204,22 @@ export default [
     },
   },
 
+  // Isolated live authorization qualification has separate backend/client projects.
+  {
+    files: [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/**/*.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/**/*.ts",
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: [
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/tsconfig.json",
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/client-tsconfig.json",
+        ],
+      },
+    },
+  },
+
   // Config files
   {
     files: ["*.config.ts", "*.config.js", "*.config.mjs", "*.config.cjs"],

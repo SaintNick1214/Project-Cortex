@@ -64,7 +64,11 @@ assert.deepEqual(catalog.completeness.counts, oldCatalog.completeness.counts);
 assert.equal(catalog.completeness.counts.registered, 41);
 assert.equal(catalog.completeness.counts.public, 36);
 assert.equal(catalog.completeness.counts.internal, 5);
-const omitLine = ({ line: _line, ...row }) => row;
+const omitLine = (entry) => {
+  const row = { ...entry };
+  delete row.line;
+  return row;
+};
 assert.deepEqual(catalog.endpoints.map(omitLine), oldCatalog.endpoints.map(omitLine));
 assert.deepEqual(read(`${qa}/framework-registration.json`), read(`${qa}/history/cycle2-final/qa/framework-registration.json`));
 const jest = read(`${cycle}/jest-results.json`);

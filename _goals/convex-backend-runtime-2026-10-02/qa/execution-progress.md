@@ -175,3 +175,26 @@ MFcycle3 remains FINALREJECT3.2 with maximumthreecycles exhausted. The concrete
 additionalcycleproposal and necessary asynchronous question remainpending; nofourth
 repair is assumed. Nativebrowser access is also stillunavailable. All17tasks remain
 incomplete beyond separatelyaccepted substeps; independent authorizedwork continues.
+
+
+2026-10-03T12:12Z: registry/context first FINALREJECT3.0 confirms private bulk/orphan
+IDs, native duplicate lookup diagnostics and the100->101node graph preflight defect.
+Parent preserves450 exactsource/QA/rawjudge records in task03b2b1/history/cycle1;
+all2286rawjudge hashes verified,2234 reproducible compilation-cache files remain
+private with hash/provenance. Second bounded repair is active. Schema13additive lines
+remain frozen; no registry source integrated. Whole-root candidate25SDKreceipt+2
+cleanup introduced diagnostics remain pending their own integration gate.
+
+Live-harness first FINALREJECT2.6 confirms logout/lateobserver baselines, timeout/crash
+receipt/process ownership, childdeploy-key isolation, specificbackend-denial parsing
+and setup/dependency status defects. Parent preserves280 exactcandidate/rawrecords
+in task03c2-live-fixture/history/cycle1; all407rawhashes verified,199reproducible
+acceptedSDKbuild/pack replay files remainprivate withprovenance. Second OFFLINE repair
+isactive;41servicecases stillUNEXECUTED, no authqualificationtarget created/deployed.
+The same independentreview separately PASSes the narrowly scoped lint-project/helper
+changes with originalhelper/freeze/manifest hashes preserved; no fourthAauthrepair.
+
+Current4fbCIqualityFAIL reproduces the exactone historicalQAunusedvariable error
+(115warnings); packed/browser, allfourdemobuilds andgraphcontracts PASS. Parentlocal
+actualroot lint ancillaryfix PASS0errors137warnings; receipt/context in ci-followups.
+OtherliveCIjobs continue; no aggregate/currentfullcorePASS isclaimed.

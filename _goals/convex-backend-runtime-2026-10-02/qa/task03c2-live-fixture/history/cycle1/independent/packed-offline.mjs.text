@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';
+import {writeFileSync} from 'node:fs';
+import * as sdk from '/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/packed-sdk/package/dist/index.js';
+import {verifiedSigningKey} from '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs';
+const required=['Cortex','HostCredentials','SessionsAPI','SessionCapabilityError','createAuthContext'];
+for(const name of required)assert.equal(typeof sdk[name],'function');
+let dispatches=0,callbacks=0;
+const transport=new Proxy({}, {get(){dispatches++;throw new Error('TRANSPORT_MUST_NOT_BE_TOUCHED');}});
+const sessions=new sdk.SessionsAPI(transport,undefined,undefined,sdk.createAuthContext({userId:'offline-user',tenantId:'offline-tenant'}));
+for(const options of [undefined,{idleTimeout:0},{idleTimeout:123,tenantId:'offline-tenant'}]){
+ await assert.rejects(sessions.expireIdle(options),error=>{assert(error instanceof sdk.SessionCapabilityError);assert.equal(error.code,'BACKEND_MAINTENANCE_ONLY');assert.equal(error.outcome,'not_dispatched');assert.equal(error.retryable,false);return true;});
+}
+await assert.rejects(sessions.expireIdle({tenantId:'wrong-tenant'}));assert.equal(dispatches,0);
+await assert.rejects(new sdk.HostCredentials(async()=>'not-a-JWT').withHttpAuth({},async()=>{callbacks++;return 0;}));assert.equal(callbacks,0);
+assert.deepEqual(await new sdk.HostCredentials(async()=>null).getAuthorizationHeaders(),{});
+const {jwk}=verifiedSigningKey();assert.equal(jwk.kty,'RSA');
+const receipt={requiredPackedExports:required,passed:6,dispatches,invalidCredentialCallbacks:callbacks,publicKeyMatchesExistingPrivateKey:true,newKeys:0,signedTokens:0,serviceCalls:0};
+writeFileSync('/tmp/task03c2-live-harness-review1-7m04c8w4/packed-offline.json',JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});
+process.stdout.write(JSON.stringify(receipt)+'\n');

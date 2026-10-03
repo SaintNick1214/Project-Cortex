@@ -1,0 +1,324 @@
+import assert from "node:assert/strict";
+import { randomUUID, sign } from "node:crypto";
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { ConvexClient, ConvexHttpClient } from "convex/browser";
+import { makeFunctionReference } from "convex/server";
+import { ConvexError, type Value } from "convex/values";
+import { Cortex, HostCredentials, SessionCapabilityError, createAuthContext } from "../../../../../work/backend-runtime/task03c2-live-fixture/packed-sdk/package/dist/index.js";
+import type { RuntimeAuthorityReference } from "../fixture/src/auth/verified";
+import { canonical, livePreflight, scratch, writeEvidence } from "./guard.mjs";
+import { operator } from "./operator.mjs";
+import { configureReactiveTransport } from "./reactive-transport.mjs";
+
+// Convex's SDK-created transport uses the default console logger. Consume all
+// diagnostic output here; only the allowlisted final count summary reaches stdout.
+for (const method of ["log", "warn", "error", "info", "debug"]) Reflect.set(console, method, () => {});
+const runId = randomUUID();
+const outputName = `qualify-${runId}.json`;
+const { target, privateKey, jwk } = livePreflight(outputName);
+configureReactiveTransport(target.deploymentUrl);
+const startedAt = new Date().toISOString();
+const issuer = "https://cortex-qualification.invalid";
+const audience = "cortex-task01";
+const timeoutMs = 12_000;
+const watchQuietMs = 750;
+type Args = Record<string, Value>;
+const query = (name: string) => makeFunctionReference<"query", Args, unknown>(name);
+const mutation = (name: string) => makeFunctionReference<"mutation", Args, unknown>(name);
+function object(value: unknown): Record<string, unknown> {
+  assert(value !== null && typeof value === "object" && !Array.isArray(value), "OBJECT_RESULT_REQUIRED");
+  return value as Record<string, unknown>; // Assertion above narrows unknown result shape.
+}
+async function bounded<T>(promise: Promise<T>): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try { return await Promise.race([promise, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("BOUNDED_TIMEOUT")), timeoutMs); })]); }
+  finally { clearTimeout(timer); }
+}
+async function waitFor(predicate: () => boolean): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  while (!predicate()) { assert(Date.now() < deadline, "BOUNDED_OBSERVATION_TIMEOUT"); await new Promise((done) => setTimeout(done, 25)); }
+}
+function jwt(subject: string, changes: Record<string, unknown> = {}): string {
+  const now = Math.floor(Date.now() / 1000);
+  const header = Buffer.from(JSON.stringify({ alg: "RS256", kid: jwk.kid, typ: "JWT" })).toString("base64url");
+  const payload = Buffer.from(JSON.stringify({ iss: issuer, aud: audience, sub: subject, iat: now - 1, exp: now + 300, ...changes })).toString("base64url");
+  const input = `${header}.${payload}`;
+  return `${input}.${sign("RSA-SHA256", Buffer.from(input), privateKey).toString("base64url")}`;
+}
+function denial(error: unknown): "FORBIDDEN" | "UNAUTHENTICATED" | "INTERNAL_ONLY" | undefined {
+  if (error instanceof ConvexError) {
+    const data: unknown = error.data;
+    if (typeof data === "object" && data !== null && "code" in data) {
+      if (data.code === "FORBIDDEN" || data.code === "UNAUTHENTICATED") return data.code;
+    }
+  }
+  // Official protocol errors are inspected in memory only; no raw message is saved.
+  if (error instanceof Error) {
+    if (/Could not find public function|internal function|not a public function/i.test(error.message)) return "INTERNAL_ONLY";
+    if (/InvalidAuth|could not authenticate|authentication failed|no auth provider|invalid (?:JWT|token)|token (?:is |has )?expired|JWT.*expired|expired.*JWT|Unauthenticated/i.test(error.message)) return "UNAUTHENTICATED";
+  }
+  return undefined;
+}
+async function denied(promise: Promise<unknown>, expected?: string): Promise<void> {
+  try { await bounded(promise); } catch (error) { const code = denial(error); assert(code && (!expected || code === expected), "EXPECTED_AUTH_DENIAL_REQUIRED"); return; }
+  assert.fail("UNEXPECTED_AUTHORIZATION_SUCCESS");
+}
+async function operatorDenied(name: string, args: object): Promise<void> {
+  try { await operator(name, args); } catch (error) { assert(error instanceof Error && error.message === "Operator authorization denied.", "OPERATOR_REJECTION_REQUIRED"); return; }
+  assert.fail("UNEXPECTED_OPERATOR_SUCCESS");
+}
+function http(token?: string): ConvexHttpClient { const client = new ConvexHttpClient(target.deploymentUrl, { logger: false }); if (token) client.setAuth(token); return client; }
+const ids = (caseId: string) => ({ tenantId: `task03c2-${runId}-${caseId}`, memorySpaceId: `space-${runId}-${caseId}` });
+interface Principal { subject: string; userId: string; scope: ReturnType<typeof ids>; reference: RuntimeAuthorityReference; token: string; client: ConvexHttpClient }
+const owned: Array<{ subject: string; userId: string; scope: ReturnType<typeof ids>; reference: RuntimeAuthorityReference }> = [];
+const ledgerName = `owned-${runId}.json`;
+const ledgerPath = canonical(resolve(scratch, ledgerName), scratch);
+function saveLedger() {
+  livePreflight();
+  canonical(ledgerPath, scratch, owned.length === 1 ? {} : { privateFile: true, existing: true });
+  writeFileSync(ledgerPath, JSON.stringify({ runId, deploymentName: target.deploymentName, owned }, null, 2), { flag: owned.length === 1 ? "wx" : "w", mode: 0o600 });
+}
+async function provision(caseId: string, access: "own" | "space" = "own", capabilities: string[] = ["read", "write"], scope = ids(caseId)): Promise<Principal> {
+  const subject = `subject-${runId}-${caseId}`, userId = `user-${runId}-${caseId}`;
+  const result = object(await operator("runtimeAuth:provision", { issuer, subject, actorKind: "user", metadataUserId: userId, ...scope, capabilities, resourceAccess: access }));
+  for (const field of ["principalId", "membershipId", "grantId"]) assert.equal(typeof result[field], "string", "TRUSTED_REFERENCE_REQUIRED");
+  // Only the exact accepted reference fields are copied; authority is not inferred from JWT claims.
+  const reference: RuntimeAuthorityReference = {
+    principalId: String(result.principalId), principalVersion: Number(result.principalVersion),
+    membershipId: String(result.membershipId), membershipVersion: Number(result.membershipVersion),
+    grantId: String(result.grantId), grantVersion: Number(result.grantVersion), tenantId: scope.tenantId,
+    tenantEpoch: Number(result.tenantEpoch), memorySpaceId: scope.memorySpaceId, memorySpaceEpoch: Number(result.memorySpaceEpoch),
+  };
+  owned.push({ subject, userId, scope, reference }); saveLedger();
+  const token = jwt(subject); return { subject, userId, scope, reference, token, client: http(token) };
+}
+const names = [
+  "operator-provisioning", "valid-owned-metadata", "missing-identity", "forged-signature", "wrong-issuer", "wrong-audience", "expired-token",
+  "wrong-tenant", "wrong-space", "owner-denied", "explicit-space-read", "admin-alone-read-denied", "admin-alone-write-denied",
+  "ambiguous-omission-denied", "actor-binding-denied", "caller-metadata-no-principal", "public-internal-provision-denied", "public-internal-maintenance-denied",
+  "immutable-delete-read-denied", "immutable-delete-write-denied", "mutable-delete-read-denied", "mutable-delete-write-denied", "negative-effect-counts",
+  "reactive-wrong-tenant", "reactive-wrong-space", "resource-deletion-subscription", "grant-revocation", "principal-deletion", "membership-revocation", "space-deletion", "tenant-deletion",
+  "sdk-metadata-consumers", "sdk-refresh", "sdk-logout", "sdk-labels-no-authority", "background-after-ordinary-logout", "late-credential-fencing", "sanitized-host-callback",
+  "sdk-session-capability", "background-after-revocation", "session-end-not-grant-revocation",
+] as const;
+type Name = typeof names[number];
+const results = names.map((name) => ({ name, status: "BLOCKED" as "PASS" | "FAIL" | "BLOCKED", reason: "not_reached" }));
+let prerequisiteFailure = "none";
+function failureReason(error: unknown): string {
+  const code = denial(error); if (code) return `unexpected_${code.toLowerCase()}`;
+  if (error instanceof Error) {
+    const allowed = ["BOUNDED_TIMEOUT", "BOUNDED_OBSERVATION_TIMEOUT", "EXPECTED_AUTH_DENIAL_REQUIRED", "UNEXPECTED_AUTHORIZATION_SUCCESS", "OPERATOR_REJECTION_REQUIRED", "UNEXPECTED_OPERATOR_SUCCESS", "NO_POST_REVOCATION_DELIVERY", "CAPABILITY_REJECTION_REQUIRED"];
+    if (allowed.includes(error.message)) return error.message.toLowerCase();
+    if (error.message === "Operator invocation unavailable.") return "operator_unavailable";
+  }
+  return "sanitized_assertion_or_service_failure";
+}
+async function test(name: Name, fn: () => Promise<void>) {
+  const result = results.find((entry) => entry.name === name)!;
+  try { await fn(); result.status = "PASS"; result.reason = "observed_assertions"; }
+  catch (error) { result.status = "FAIL"; result.reason = failureReason(error); }
+}
+const openClients: ConvexClient[] = [];
+const sdkClients: Cortex[] = [];
+function observe(principal: Principal, args: Args) {
+  const client = new ConvexClient(target.deploymentUrl, { logger: false }); openClients.push(client);
+  new HostCredentials(async () => principal.token).bindReactiveClient(client);
+  const state = { successes: 0, denied: false, last: undefined as unknown };
+  const stop = client.onUpdate(query("mutable:get"), args, (value) => { state.successes++; state.last = value; }, (error) => { state.denied = denial(error) !== undefined; });
+  return { state, stop };
+}
+async function revocation(kind: "grant" | "principal" | "membership" | "space" | "tenant") {
+  const principal = await provision(`revocation-${kind}`);
+  const broad = await provision(`writer-${kind}`, "space", ["read", "write"], principal.scope);
+  const key = { namespace: "revocation", key: kind, ...principal.scope };
+  await principal.client.mutation(mutation("mutable:set"), { ...key, value: 1 });
+  const watcher = observe(principal, key);
+  try {
+    await waitFor(() => watcher.state.successes > 0); assert.equal(object(watcher.state.last).value, 1);
+    const control = kind === "grant" ? ["runtimeAuth:revokeGrant", { grantId: principal.reference.grantId }] as const
+      : kind === "principal" ? ["runtimeAuth:deletePrincipal", { principalId: principal.reference.principalId }] as const
+      : kind === "membership" ? ["runtimeAuth:revokeMembership", { membershipId: principal.reference.membershipId }] as const
+      : ["runtimeAuth:deleteScope", kind === "tenant" ? { tenantId: principal.scope.tenantId } : principal.scope] as const;
+    await operator(control[0], control[1]); await waitFor(() => watcher.state.denied);
+    await denied(principal.client.query(query("mutable:get"), key), "FORBIDDEN");
+    await denied(principal.client.mutation(mutation("mutable:set"), { ...key, value: 99 }), "FORBIDDEN");
+    await operatorDenied("runtimeAuth:recheck", { reference: principal.reference, requirement: { capability: "write", ...principal.scope } });
+    const successes = watcher.state.successes;
+    if (kind !== "space" && kind !== "tenant") {
+      await broad.client.mutation(mutation("mutable:set"), { ...key, value: 2 });
+      assert.equal(object(await broad.client.query(query("mutable:get"), key)).value, 2);
+    } else {
+      await denied(broad.client.mutation(mutation("mutable:set"), { ...key, value: 2 }), "FORBIDDEN");
+      await operatorDenied("runtimeAuth:provision", { issuer, subject: principal.subject, actorKind: "user", metadataUserId: principal.userId, ...principal.scope, capabilities: ["read", "write"], resourceAccess: "own" });
+    }
+    await new Promise((done) => setTimeout(done, watchQuietMs)); assert.equal(watcher.state.successes, successes, "NO_POST_REVOCATION_DELIVERY");
+  } finally { watcher.stop(); }
+}
+
+try {
+  const owner = await provision("owner"), other = await provision("other", "own", ["read", "write"], owner.scope);
+  const broad = await provision("reader", "space", ["read"], owner.scope), admin = await provision("admin", "space", ["admin"], owner.scope);
+  const immutableKey = { type: "fixture", id: `immutable-${runId}`, ...owner.scope };
+  const mutableKey = { namespace: "fixture", key: `mutable-${runId}`, ...owner.scope };
+  const sessionKey = { sessionId: `session-${runId}`, ...owner.scope };
+  await test("operator-provisioning", async () => { assert.equal(owned.length, 4); assert.notEqual(owner.reference.principalId, other.reference.principalId); });
+  await test("valid-owned-metadata", async () => {
+    assert.equal(object(await owner.client.mutation(mutation("immutable:store"), { ...immutableKey, data: { marker: 17 }, userId: owner.userId })).version, 1);
+    assert.equal(object(await owner.client.mutation(mutation("mutable:set"), { ...mutableKey, value: 23, userId: owner.userId })).value, 23);
+    const session = object(await owner.client.mutation(mutation("sessions:create"), { ...sessionKey, userId: owner.userId, startedAt: Date.now(), metadata: { marker: 31 } }));
+    assert.equal(session.messageCount, 0); assert.equal("authorityReference" in session, false);
+    assert.equal(object(await owner.client.query(query("immutable:get"), immutableKey)).version, 1);
+  });
+  const payload = { ...mutableKey, value: 999 };
+  for (const [name, token] of [
+    ["missing-identity", undefined], ["forged-signature", owner.token.slice(0, -12) + "AAAAAAAAAAAA"],
+    ["wrong-issuer", jwt(owner.subject, { iss: "https://wrong-issuer.invalid" })], ["wrong-audience", jwt(owner.subject, { aud: "wrong-audience" })],
+    ["expired-token", jwt(owner.subject, { exp: Math.floor(Date.now() / 1000) - 60 })],
+  ] as const) await test(name, async () => { const client = http(token); await denied(client.query(query("mutable:get"), mutableKey)); await denied(client.mutation(mutation("mutable:set"), payload)); });
+  await test("wrong-tenant", async () => { const key = { ...mutableKey, tenantId: `wrong-${runId}` }; await denied(owner.client.query(query("mutable:get"), key), "FORBIDDEN"); await denied(owner.client.mutation(mutation("mutable:set"), { ...key, value: 99 }), "FORBIDDEN"); });
+  await test("wrong-space", async () => { const key = { ...mutableKey, memorySpaceId: `wrong-${runId}` }; await denied(owner.client.query(query("mutable:get"), key), "FORBIDDEN"); await denied(owner.client.mutation(mutation("mutable:set"), { ...key, value: 99 }), "FORBIDDEN"); });
+  await test("owner-denied", async () => { await denied(other.client.query(query("mutable:get"), mutableKey), "FORBIDDEN"); await denied(other.client.mutation(mutation("mutable:set"), payload), "FORBIDDEN"); });
+  await test("explicit-space-read", async () => { assert.equal(object(await broad.client.query(query("mutable:get"), mutableKey)).value, 23); await denied(broad.client.mutation(mutation("mutable:set"), payload), "FORBIDDEN"); });
+  await test("admin-alone-read-denied", async () => { await denied(admin.client.query(query("mutable:get"), mutableKey), "FORBIDDEN"); });
+  await test("admin-alone-write-denied", async () => { await denied(admin.client.mutation(mutation("mutable:set"), payload), "FORBIDDEN"); });
+  await test("ambiguous-omission-denied", async () => {
+    const scope = ids("second-owner-scope");
+    const second = object(await operator("runtimeAuth:provision", { issuer, subject: owner.subject, actorKind: "user", metadataUserId: owner.userId, ...scope, capabilities: ["read", "write"], resourceAccess: "own" }));
+    owned.push({ subject: owner.subject, userId: owner.userId, scope, reference: { ...owner.reference, ...scope, membershipId: String(second.membershipId), grantId: String(second.grantId), membershipVersion: Number(second.membershipVersion), grantVersion: Number(second.grantVersion), memorySpaceEpoch: Number(second.memorySpaceEpoch), tenantEpoch: Number(second.tenantEpoch) } }); saveLedger();
+    await denied(owner.client.query(query("mutable:get"), { namespace: mutableKey.namespace, key: mutableKey.key }), "FORBIDDEN");
+    await denied(owner.client.mutation(mutation("mutable:set"), { namespace: "ambiguous", key: runId, value: 99 }), "FORBIDDEN");
+    assert.equal(object(await owner.client.query(query("mutable:get"), mutableKey)).value, 23);
+  });
+  await test("actor-binding-denied", async () => {
+    await denied(owner.client.mutation(mutation("immutable:store"), { ...immutableKey, type: "user", id: other.userId, data: { marker: 99 }, userId: other.userId }), "FORBIDDEN");
+    await denied(owner.client.mutation(mutation("sessions:create"), { ...sessionKey, sessionId: `wrong-actor-${runId}`, userId: other.userId, startedAt: Date.now() }), "FORBIDDEN");
+  });
+  await test("caller-metadata-no-principal", async () => {
+    await owner.client.mutation(mutation("immutable:store"), { ...immutableKey, type: "user", id: owner.userId, data: { subject: `unprovisioned-${runId}`, role: "admin" } });
+    await denied(http(jwt(`unprovisioned-${runId}`, { role: "admin", tenantId: owner.scope.tenantId })).query(query("mutable:get"), mutableKey), "FORBIDDEN");
+  });
+  await test("public-internal-provision-denied", async () => {
+    await denied(owner.client.mutation(mutation("runtimeAuth:provision"), { issuer, subject: `forged-control-${runId}`, actorKind: "user", ...owner.scope, capabilities: ["admin"], resourceAccess: "space" }), "INTERNAL_ONLY");
+    for (const [name, args] of [
+      ["runtimeAuth:revokeGrant", { grantId: owner.reference.grantId }], ["runtimeAuth:revokeMembership", { membershipId: owner.reference.membershipId }],
+      ["runtimeAuth:deletePrincipal", { principalId: owner.reference.principalId }], ["runtimeAuth:deleteScope", owner.scope],
+      ["runtimeAuth:tombstoneResource", { ...owner.scope, resourceType: "source", resourceId: `fixture-${runId}` }],
+    ] satisfies Array<[string, Args]>) await denied(owner.client.mutation(mutation(name), args), "INTERNAL_ONLY");
+    await denied(owner.client.query(query("runtimeAuth:authorize"), { requirement: { capability: "admin", ...owner.scope } }), "INTERNAL_ONLY");
+    await denied(owner.client.query(query("runtimeAuth:recheck"), { reference: owner.reference as unknown as Value, requirement: { capability: "write", ...owner.scope } }), "INTERNAL_ONLY");
+  });
+  await test("public-internal-maintenance-denied", async () => { await denied(owner.client.mutation(mutation("sessions:incrementMessageCount"), { ...sessionKey, reference: owner.reference as unknown as Value }), "INTERNAL_ONLY"); await denied(owner.client.mutation(mutation("sessions:expireIdle"), { reference: owner.reference as unknown as Value, idleTimeout: 0 }), "INTERNAL_ONLY"); });
+  await test("negative-effect-counts", async () => { assert.equal(object(await owner.client.query(query("mutable:get"), mutableKey)).value, 23); assert.equal(object(await owner.client.query(query("immutable:get"), immutableKey)).version, 1); assert.equal(object(await owner.client.query(query("sessions:get"), sessionKey)).messageCount, 0); });
+  for (const [name, selector] of [["reactive-wrong-tenant", { tenantId: `wrong-${runId}` }], ["reactive-wrong-space", { memorySpaceId: `wrong-${runId}` }]] as const) await test(name, async () => { const watcher = observe(owner, { ...mutableKey, ...selector }); try { await waitFor(() => watcher.state.denied); assert.equal(watcher.state.successes, 0); } finally { watcher.stop(); } });
+  await test("resource-deletion-subscription", async () => {
+    const watcher = observe(owner, mutableKey);
+    try {
+      await waitFor(() => watcher.state.successes > 0); assert.equal(object(watcher.state.last).value, 23);
+      await owner.client.mutation(mutation("mutable:deleteKey"), mutableKey); await waitFor(() => watcher.state.denied);
+      const successes = watcher.state.successes;
+      await denied(owner.client.mutation(mutation("mutable:set"), payload), "FORBIDDEN");
+      await new Promise((done) => setTimeout(done, watchQuietMs)); assert.equal(watcher.state.successes, successes);
+    } finally { watcher.stop(); }
+  });
+  await owner.client.mutation(mutation("immutable:purge"), immutableKey);
+  await test("immutable-delete-read-denied", async () => { await denied(owner.client.query(query("immutable:get"), immutableKey), "FORBIDDEN"); });
+  await test("immutable-delete-write-denied", async () => { await denied(owner.client.mutation(mutation("immutable:store"), { ...immutableKey, data: { marker: 99 } }), "FORBIDDEN"); });
+  await test("mutable-delete-read-denied", async () => { await denied(owner.client.query(query("mutable:get"), mutableKey), "FORBIDDEN"); });
+  await test("mutable-delete-write-denied", async () => { await denied(owner.client.mutation(mutation("mutable:set"), payload), "FORBIDDEN"); });
+  for (const [name, kind] of [["grant-revocation", "grant"], ["principal-deletion", "principal"], ["membership-revocation", "membership"], ["space-deletion", "space"], ["tenant-deletion", "tenant"]] as const) await test(name, () => revocation(kind));
+
+  const principal = await provision("sdk"), sdkSession = `sdk-session-${runId}`;
+  let currentToken: string | null = principal.token;
+  let mode: "current" | "late" | "throw" = "current";
+  let lateResolve: ((value: string | null) => void) | undefined;
+  let forceRefreshSeen = false;
+  const callbackCodes: string[] = [];
+  const sdk = new Cortex({ convexUrl: target.deploymentUrl, resilience: { enabled: false }, auth: createAuthContext({ userId: principal.userId, tenantId: principal.scope.tenantId }),
+    fetchAuthToken: async (request) => {
+      forceRefreshSeen ||= request.forceRefreshToken;
+      if (mode === "late") return await new Promise((done) => { lateResolve = done; });
+      if (mode === "throw") throw new Error("PRIVATE_CALLBACK_CONTENT_MUST_NOT_ESCAPE");
+      return currentToken;
+    }, onAuthError: async (failure) => { callbackCodes.push(failure.code); throw new Error("PRIVATE_DIAGNOSTIC_OBSERVER_CONTENT"); },
+  }); sdkClients.push(sdk);
+  const sdkHttp = http();
+  const sdkKey = { namespace: "sdk", key: runId, ...principal.scope };
+  await principal.client.mutation(mutation("mutable:set"), { ...sdkKey, value: 41 });
+  await test("sdk-metadata-consumers", async () => {
+    const session = await bounded(sdk.sessions.create({ sessionId: sdkSession, userId: principal.userId, memorySpaceId: principal.scope.memorySpaceId }));
+    assert.equal(session.sessionId, sdkSession); assert.equal("authorityReference" in session, false);
+    assert.equal((await bounded(sdk.sessions.get(sdkSession)))?.sessionId, sdkSession);
+    const profile = await bounded(sdk.users.update(principal.userId, { marker: 43 })); assert.equal(profile.data.marker, 43);
+    assert.equal((await bounded(sdk.users.get(principal.userId)))?.data.marker, 43);
+  });
+  await test("sdk-refresh", async () => {
+    currentToken = jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+    assert.equal(object(await bounded(sdk.getClient().query(query("mutable:get"), sdkKey))).value, 41);
+    assert.equal(object(await sdk.credentials!.withHttpAuth(sdkHttp, (client) => client.query(query("mutable:get"), sdkKey), { forceRefreshToken: true })).value, 41);
+    assert.equal(forceRefreshSeen, true);
+  });
+  await test("sdk-logout", async () => {
+    let observedDenied = false;
+    const stop = sdk.getClient().onUpdate(query("mutable:get"), sdkKey, () => {}, (error) => { observedDenied = denial(error) === "UNAUTHENTICATED"; });
+    currentToken = null; sdk.credentials!.notifySessionChanged();
+    try {
+      await waitFor(() => observedDenied);
+      await denied(sdk.getClient().query(query("mutable:get"), sdkKey), "UNAUTHENTICATED");
+      await denied(sdk.credentials!.withHttpAuth(sdkHttp, (client) => client.query(query("mutable:get"), sdkKey)), "UNAUTHENTICATED");
+      assert.deepEqual(await sdk.credentials!.getAuthorizationHeaders(), {});
+    } finally { stop(); }
+  });
+  await test("sdk-labels-no-authority", async () => {
+    const labels = new Cortex({ convexUrl: target.deploymentUrl, resilience: { enabled: false }, auth: createAuthContext({ userId: principal.userId, tenantId: principal.scope.tenantId, claims: { role: "admin" } }), fetchAuthToken: async () => null }); sdkClients.push(labels);
+    await denied(labels.getClient().query(query("mutable:get"), sdkKey), "UNAUTHENTICATED");
+  });
+  await test("background-after-ordinary-logout", async () => { await operator("sessions:incrementMessageCount", { sessionId: sdkSession, reference: principal.reference }); assert.equal(object(await principal.client.query(query("sessions:get"), { sessionId: sdkSession, ...principal.scope })).messageCount, 1); });
+  await test("late-credential-fencing", async () => {
+    mode = "late"; sdk.credentials!.notifySessionChanged(); await waitFor(() => lateResolve !== undefined);
+    mode = "current"; currentToken = null; sdk.credentials!.notifySessionChanged(); lateResolve!(principal.token);
+    await new Promise((done) => setTimeout(done, 50)); await denied(sdk.getClient().query(query("mutable:get"), sdkKey), "UNAUTHENTICATED");
+  });
+  await test("sanitized-host-callback", async () => {
+    mode = "throw"; sdk.credentials!.notifySessionChanged(); await waitFor(() => callbackCodes.length > 0);
+    assert.deepEqual(Object.keys(sdk.credentials!.authFailure!).sort(), ["attemptId", "code"]);
+    assert(callbackCodes.every((code) => code === "HOST_TOKEN_FETCH_FAILED"));
+    await denied(sdk.getClient().query(query("mutable:get"), sdkKey), "UNAUTHENTICATED");
+    mode = "current"; currentToken = jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+    assert.equal(object(await bounded(sdk.getClient().query(query("mutable:get"), sdkKey))).value, 41);
+    assert.equal(sdk.credentials!.authFailure, undefined);
+  });
+  await test("sdk-session-capability", async () => {
+    try { await sdk.sessions.expireIdle({ idleTimeout: 0 }); assert.fail("CAPABILITY_REJECTION_REQUIRED"); }
+    catch (error) { assert(error instanceof SessionCapabilityError); assert.equal(error.outcome, "not_dispatched"); assert.equal(error.code, "BACKEND_MAINTENANCE_ONLY"); }
+    assert.equal(object(await principal.client.query(query("sessions:get"), { sessionId: sdkSession, ...principal.scope })).status, "active");
+  });
+  await test("session-end-not-grant-revocation", async () => {
+    await bounded(sdk.sessions.end(sdkSession)); assert.equal((await bounded(sdk.sessions.get(sdkSession)))?.status, "ended");
+    assert.equal(object(await principal.client.query(query("mutable:get"), sdkKey)).value, 41);
+    await operator("runtimeAuth:recheck", { reference: principal.reference, requirement: { capability: "write", ...principal.scope } });
+  });
+  await test("background-after-revocation", async () => {
+    const active = `revoked-worker-${runId}`; await principal.client.mutation(mutation("sessions:create"), { sessionId: active, ...principal.scope, userId: principal.userId, startedAt: Date.now() });
+    await operator("runtimeAuth:revokeGrant", { grantId: principal.reference.grantId });
+    await operatorDenied("sessions:incrementMemoryCount", { sessionId: active, reference: principal.reference });
+    const auditor = await provision("sdk-auditor", "space", ["read"], principal.scope);
+    assert.equal(object(await auditor.client.query(query("sessions:get"), { sessionId: active, ...principal.scope })).memoryCount, 0);
+  });
+} catch (error) {
+  prerequisiteFailure = failureReason(error);
+  // Prerequisite/setup failure leaves undiscovered dependent outcomes BLOCKED.
+} finally {
+  await Promise.allSettled(openClients.map((client) => client.close()));
+  await Promise.allSettled(sdkClients.map((client) => client.shutdown(2_000)));
+  const passed = results.filter((result) => result.status === "PASS").length;
+  const status = results.some((result) => result.status === "FAIL") ? "FAIL" : passed === names.length ? "PASS" : "INCOMPLETE";
+  const receipt = { scope: "03A/03C1/03B2A accepted metadata boundary only", whole03Certified: false, whole09Certified: false,
+    runId, startedAt, completedAt: new Date().toISOString(), deploymentName: target.deploymentName,
+    status, prerequisiteFailure, discovered: names.length, executed: results.filter((result) => result.status !== "BLOCKED").length, passed,
+    skipped: results.filter((result) => result.status === "BLOCKED").length, timeoutMs, watchQuietMs, results, cleanupLedger: ledgerName,
+    limitations: ["Canonical run/tool/storage/asset/callback adapters pending Tasks05/12/13", "No inference or model supplied", "Bounded quiet window is not a universal future delivery guarantee", "Typed capability no dispatch is independently proved offline"] };
+  writeEvidence(outputName, receipt);
+  process.stdout.write(JSON.stringify({ status, discovered: names.length, passed }) + "\n");
+  process.exitCode = status === "PASS" ? 0 : 1;
+}
