@@ -1,0 +1,302 @@
+[
+  {
+    "name": "prepare-replay",
+    "argv": [
+      "python",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/prepare-replay.py",
+      "mechanics1"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:14:37.307439+00:00",
+    "completedAt": "2026-10-03T13:14:37.518855+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-prepare-replay.txt"
+  },
+  {
+    "name": "original-classifier",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/classifier-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:14:37.519074+00:00",
+    "completedAt": "2026-10-03T13:14:37.733109+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-original-classifier.txt"
+  },
+  {
+    "name": "adversarial-classifier",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/classifier-adversarial.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:14:37.733288+00:00",
+    "completedAt": "2026-10-03T13:14:37.982239+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-adversarial-classifier.txt"
+  },
+  {
+    "name": "original-driver",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:14:37.982385+00:00",
+    "completedAt": "2026-10-03T13:14:45.042304+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-original-driver.txt"
+  },
+  {
+    "name": "group-terminal",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-check-cycle3.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:14:45.042457+00:00",
+    "completedAt": "2026-10-03T13:14:55.396938+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-group-terminal.txt"
+  },
+  {
+    "name": "initial-bound-receipts",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/receipt-check-cycle3.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:14:55.397160+00:00",
+    "completedAt": "2026-10-03T13:14:59.220211+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-initial-bound-receipts.txt"
+  },
+  {
+    "name": "original-guards",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:14:59.220355+00:00",
+    "completedAt": "2026-10-03T13:14:59.842693+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-original-guards.txt"
+  },
+  {
+    "name": "original-entrypoints",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/entrypoint-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:14:59.842839+00:00",
+    "completedAt": "2026-10-03T13:15:00.406495+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-original-entrypoints.txt"
+  },
+  {
+    "name": "original-bounds",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/bounds-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:15:00.406647+00:00",
+    "completedAt": "2026-10-03T13:15:00.847714+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-original-bounds.txt"
+  },
+  {
+    "name": "supplemental-packed-prep",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/packed-prep.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:15:00.847927+00:00",
+    "completedAt": "2026-10-03T13:15:01.208879+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-supplemental-packed-prep.txt"
+  },
+  {
+    "name": "original-sdk-prep",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/replay-mechanics1-repo",
+    "startedAt": "2026-10-03T13:15:01.209064+00:00",
+    "completedAt": "2026-10-03T13:15:01.953599+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-original-sdk-prep.txt"
+  },
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/tsconfig.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:15:01.953750+00:00",
+    "completedAt": "2026-10-03T13:15:04.374827+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-backend-types.txt"
+  },
+  {
+    "name": "client-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/client-tsconfig.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:15:04.374981+00:00",
+    "completedAt": "2026-10-03T13:15:12.159784+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-client-types.txt"
+  },
+  {
+    "name": "house-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "--no-ignore",
+      "--format",
+      "json",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/immutable.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/mutable.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuthSchema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMemorySchema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMetadataAuth.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/schema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/sessions.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/users.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/src/auth/verified.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/bounds-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/case-ledger.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/cases.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/classifier-adversarial.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/classifier-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/cleanup.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/create.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/deploy.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-engine.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/entrypoint-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/key-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/operator-classifier.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/operator.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/packed-prep.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/parent-channel.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-check-cycle3.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-owner.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-terminal.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/protocol.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/qualify.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/reactive-transport.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/receipt-check-cycle3.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:15:12.161699+00:00",
+    "completedAt": "2026-10-03T13:15:17.095721+00:00",
+    "exitCode": 1,
+    "evidence": "evidence/cycle3/mechanics1-house-lint.txt"
+  },
+  {
+    "name": "backend-policy-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "--config",
+      "work/backend-runtime/task03c2-live-fixture/eslint.config.mjs",
+      "--no-ignore",
+      "--format",
+      "json",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/immutable.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/mutable.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuthSchema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMemorySchema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMetadataAuth.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/schema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/sessions.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/users.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/src/auth/verified.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/bounds-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/case-ledger.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/cases.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/classifier-adversarial.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/classifier-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/cleanup.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/create.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/deploy.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-engine.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/entrypoint-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/key-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/operator-classifier.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/operator.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/packed-prep.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/parent-channel.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-check-cycle3.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-owner.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-terminal.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/protocol.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/qualify.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/reactive-transport.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/receipt-check-cycle3.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:15:17.096138+00:00",
+    "completedAt": "2026-10-03T13:15:21.782603+00:00",
+    "exitCode": 1,
+    "evidence": "evidence/cycle3/mechanics1-backend-policy-lint.txt"
+  },
+  {
+    "name": "node",
+    "argv": [
+      "node",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:15:21.782740+00:00",
+    "completedAt": "2026-10-03T13:15:21.787132+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-node.txt"
+  },
+  {
+    "name": "npm12",
+    "argv": [
+      "node",
+      "work/backend-runtime/npm12-cache/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:15:21.787243+00:00",
+    "completedAt": "2026-10-03T13:15:21.863164+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/mechanics1-npm12.txt"
+  }
+]

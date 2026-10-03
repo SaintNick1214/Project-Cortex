@@ -1,0 +1,64 @@
+[
+  {
+    "name": "provenance",
+    "argv": [
+      "python",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/verify-provenance.py",
+      "final",
+      "022e2e3d61161766e90e91dd572bb9b7063d5957"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:43:59.790099+00:00",
+    "completedAt": "2026-10-03T13:44:00.348270+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/final-provenance.txt",
+    "commandEnvironmentNames": [
+      "CI",
+      "HTTPS_PROXY",
+      "HTTP_PROXY",
+      "LANG",
+      "NODE_EXTRA_CA_CERTS",
+      "NODE_USE_ENV_PROXY",
+      "NO_COLOR",
+      "NO_PROXY",
+      "PATH",
+      "http_proxy",
+      "https_proxy",
+      "no_proxy"
+    ],
+    "upstreamKeyNames": 0,
+    "deploymentKeyNames": 0,
+    "privateSelectors": 0
+  },
+  {
+    "name": "existing-key-match",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/key-output-register.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/key-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:44:00.348432+00:00",
+    "completedAt": "2026-10-03T13:44:00.512021+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle3/final-existing-key-match.txt",
+    "commandEnvironmentNames": [
+      "CI",
+      "HTTPS_PROXY",
+      "HTTP_PROXY",
+      "LANG",
+      "NODE_EXTRA_CA_CERTS",
+      "NODE_USE_ENV_PROXY",
+      "NO_COLOR",
+      "NO_PROXY",
+      "PATH",
+      "http_proxy",
+      "https_proxy",
+      "no_proxy"
+    ],
+    "upstreamKeyNames": 0,
+    "deploymentKeyNames": 0,
+    "privateSelectors": 0
+  }
+]
