@@ -218,7 +218,7 @@ export const updatePartialMemory = mutation({
     const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
-      dataDenied();
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     const { lineage, manualSourceBinding } = await reviseDataSource(ctx, authority, memory, args.content ?? memory.content);
@@ -254,7 +254,7 @@ export const finalizePartialMemory = mutation({
     const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
-      dataDenied();
+      throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
     // Remove streaming-related tags

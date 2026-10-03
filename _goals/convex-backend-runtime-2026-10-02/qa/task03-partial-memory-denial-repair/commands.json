@@ -1,0 +1,40 @@
+{
+  "cwd": "/workspace/Project-Cortex",
+  "node": "v24.19.0",
+  "npm": "11.9.0",
+  "checks": [
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/partial-memory-denial-repair/jest.config.mjs --runInBand --runTestsByPath tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts",
+      "source": "preimage",
+      "exitCode": 1,
+      "tests": {
+        "passed": 2,
+        "failed": 6,
+        "skipped": 0
+      }
+    },
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/partial-memory-denial-repair/jest.config.mjs --runInBand",
+      "source": "postimage",
+      "exitCode": 0,
+      "suites": 6,
+      "tests": {
+        "passed": 408,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "command": "npx --no-install tsc --noEmit",
+      "exitCode": 0
+    },
+    {
+      "command": "npx --no-install tsc --project tsconfig.lint.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "command": "npx --no-install eslint convex-dev/memories.ts tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts --report-unused-disable-directives",
+      "exitCode": 0
+    }
+  ]
+}

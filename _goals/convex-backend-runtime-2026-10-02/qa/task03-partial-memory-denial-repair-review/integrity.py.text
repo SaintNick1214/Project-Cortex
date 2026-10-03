@@ -1,0 +1,28 @@
+import pathlib,hashlib,json
+r=pathlib.Path('/workspace/Project-Cortex'); q=r/'_goals/convex-backend-runtime-2026-10-02/qa'; out=q/'task03-partial-memory-denial-repair-review'
+h=lambda b:hashlib.sha256(b).hexdigest()
+pre=(q/'task03-partial-memory-denial-repair/memories.preimage.ts.text').read_bytes(); post=(r/'convex-dev/memories.ts').read_bytes()
+assert h(pre)=='3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4'
+assert h(post)=='988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554'
+expected=pre; offsets=[]
+for operation in ['updatePartialMemory','finalizePartialMemory']:
+ start=pre.index(('export const '+operation+' = mutation({').encode()); target=b'      throw new ConvexError("MEMORY_NOT_FOUND");'; offset=pre.index(target,start); offsets.append(offset)
+ start=expected.index(('export const '+operation+' = mutation({').encode()); at=expected.index(target,start); expected=expected[:at]+b'      dataDenied();'+expected[at+len(target):]
+assert post==expected
+assert pre==(r/'work/resume/current-guard-live-c8/preserved-partial-memory-preimage/memories.ts.text').read_bytes()
+checks=[]
+for p,expected_hash in json.loads((q/'task03-partial-memory-denial-contract-review/sources.json').read_text()).items():
+ if p=='convex-dev/memories.ts': continue
+ actual=h((r/p).read_bytes()); assert actual==expected_hash,p; checks.append({'path':p,'sha256':actual,'matchesHistoricalAssessment':True})
+for e in json.loads((q/'task03-partial-memory-denial-repair/source-integrity.json').read_text())['preservedOriginalTests']:
+ assert h((r/e['path']).read_bytes())==e['sha256'],e['path']
+ checks.append({'path':e['path'],'sha256':e['sha256'],'matchesExecutorPreimageEvidence':True})
+freeze=q/'task03-foundation-live-preparation-c8/runtime-freeze.json'; data=json.loads(freeze.read_text()); print('freeze keys',list(data))
+entries=data['files']; assert len(entries)==421
+for e in entries: assert h((r/e['path']).read_bytes())==e['sha256'],e['path']
+protected={str(p.relative_to(r)):h(p.read_bytes()) for directory in [q/'task03-partial-memory-denial-contract-review', q/'task03-foundation-live-preparation-c8',q/'task03-foundation-live-fixture-c8'] for p in directory.rglob('*') if p.is_file() and 'node_modules' not in p.parts}
+protected.update({e['path']:h((r/e['path']).read_bytes()) for e in checks})
+protected.update({p:h((r/p).read_bytes()) for p in ['convex-dev/memories.ts','tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts','package.json','package-lock.json']})
+(out/'protected-before.json').write_text(json.dumps(protected,indent=2)+'\n')
+result={'status':'PASS','preimageSha256':h(pre),'productSha256':h(post),'newTestSha256':h((r/'tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts').read_bytes()),'exactTwoReplacementEquality':True,'originalByteOffsets':offsets,'historicalChecks':checks,'c8FrozenFiles':len(entries),'c8AllHashesMatch':True,'c8ManifestSha256':h(freeze.read_bytes()),'c8State':data.get('state')}
+(out/'integrity.json').write_text(json.dumps(result,indent=2)+'\n'); print(json.dumps(result))
