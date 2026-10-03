@@ -1,0 +1,26 @@
+{
+  "name": "registry-tests",
+  "command": [
+    "npm",
+    "exec",
+    "--yes",
+    "--package=npm@12.2.0",
+    "--",
+    "npm",
+    "exec",
+    "--",
+    "node",
+    "--experimental-vm-modules",
+    "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/jest/bin/jest.js",
+    "--config",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/jest.registry.json",
+    "--runInBand",
+    "--json",
+    "--outputFile",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/registry-tests-final.json"
+  ],
+  "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+  "utcStart": "2026-10-03T19:50:47.738142+00:00",
+  "utcEnd": "2026-10-03T19:51:04.424622+00:00",
+  "exitCode": 0
+}
