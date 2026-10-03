@@ -384,3 +384,24 @@ without rewriting frozen history. All41 live outcomes remainUNEXECUTED. Parent
 verified-target/official-codegen/live41/owned-fencing/retirement and independent
 actual-service review now authorized to begin. MF/artifact extra-cycle questions,
 native browser access, whole03/text/all17 remain pending/incomplete.
+
+2026-10-03T14:20:04.434271+00:00: registry original46 THIRD fresh FINAL REJECT3.2. Complete report
+20a52a59a1269ff11c662ea1a5142d0f186bb12933bb664ec2a19d60a3b28129 read;
+50 candidate sources,322 candidate QA and516 independent records verified and
+890 history records preserved on main and candidate. Preservation manifest
+9cef74aa07e188e75ad92cc5b417a9316060b09404eb0f1b0c41bebc27b2c65b.
+Ordinary1146/133 and fresh138 DB/READ controls PASS; new identity required36
+reached with36 mismatches, exactly3 successful committed receipts, checker exit1.
+Identity adapter remains outside strict controlRead. No registry product/schema/SDK
+integration. Maximum-three gate exhausted; concrete unapplied one-line correction
+proposal and necessary one-extra-cycle question submitted. MF/artifact exceptions
+and native UI access remain pending; no elapsed time or inference-budget permission
+is treated as a repair-cycle exception.
+
+Fresh exact disposable auth project3135311/helpful-iguana-708 is created and verified
+owned/cloud/dev/nonproduction/unshared, after proxy reconciliation matched0 projects.
+Initial direct-connect provisioning failure has no recorded start/end timestamp;
+its transport failure is preserved honestly. Proxy retry has actual command/UTC
+receipts, exit0. Guarded official codegen exits1, no timeout, owned group REAPED.
+Parent diagnostic retains raw CLI streams privately with unchanged source/target
+guards. Actual41 service cases have not started. All17 goal remains incomplete.
