@@ -1,0 +1,20 @@
+--- immutable-c5/diagnostics-check.mjs
++++ new-c6/diagnostics-check.mjs
+@@ -5,7 +5,7 @@
+ import { createWireDiagnostics, boundedWireBody, diagnosticLimits } from './wire-diagnostics.mjs';
+ import { authDenial } from './native-engine.mjs';
+ import { repo } from './guard.mjs';
+-const directory=resolve(repo,'work/resume/current-guard-live-c5/diagnostic-controls-'+randomUUID());mkdirSync(directory,{mode:0o700});
++const directory=resolve(repo,'work/resume/current-guard-live-c6/diagnostic-controls-'+randomUUID());mkdirSync(directory,{mode:0o700});
+ const origin='https://diagnostic.invalid',d=createWireDiagnostics(directory,origin);d.addSecret('private-control-secret');
+ for(let i=0;i<560;i++){d.clear();d.wire(401,origin,'{"code":"InvalidAuth","message":"opaque"}',45,false);}
+ const exact={version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'};for(let i=0;i<560;i++)authDenial(undefined,{data:exact});
+@@ -20,6 +20,8 @@
+ assert.throws(()=>authDenial({unexpected:true},undefined));
+ const engine=readFileSync(new URL('./native-engine.mjs',import.meta.url),'utf8'),priorEngine=readFileSync(resolve(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c3/scripts/native-engine.mjs'),'utf8');
+ const exactClassifier=text=>text.slice(text.indexOf('export function authDenial'),text.indexOf('export function opaqueInternalFailure'));assert.equal(exactClassifier(engine),exactClassifier(priorEngine));
++assert.ok(engine.includes('diagnostics.clear();platformWireMessages.clear();return await bounded'));
++assert.ok(engine.includes('if(!response.ok){platformWireMessages.clear();const wire='));
+ const q=readFileSync(new URL('./qualify.mjs',import.meta.url),'utf8');assert.ok(q.indexOf('// Every public registration')<q.indexOf('// Run uniformly unavailable'));
+ assert.ok(q.includes('try{authDenial(result,error);}catch(assertion){ctx.diagnoseAuthFailure(result,error);throw assertion;}'));
+ const boundaryObserved=[];
