@@ -1,0 +1,242 @@
+[
+  {
+    "name": "node-version",
+    "argv": [
+      "node",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:22.195111+00:00",
+    "endedAt": "2026-10-03T11:04:22.199370+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/node-version.log"
+  },
+  {
+    "name": "npm-version",
+    "argv": [
+      "npm",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:22.199434+00:00",
+    "endedAt": "2026-10-03T11:04:22.357784+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/npm-version.log"
+  },
+  {
+    "name": "actual-backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:22.361639+00:00",
+    "endedAt": "2026-10-03T11:04:39.443771+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/actual-backend-types.log"
+  },
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.backend.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:22.361816+00:00",
+    "endedAt": "2026-10-03T11:04:26.181324+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/backend-types.log"
+  },
+  {
+    "name": "test-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.tests.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:22.362251+00:00",
+    "endedAt": "2026-10-03T11:04:27.217307+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/test-types.log"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/schema.ts",
+      "convex-dev/immutable.ts",
+      "convex-dev/mutable.ts",
+      "convex-dev/users.ts",
+      "convex-dev/sessions.ts",
+      "convex-dev/runtimeMetadataAuth.ts",
+      "tests/unit/runtimeMetadataAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:26.181515+00:00",
+    "endedAt": "2026-10-03T11:04:47.689421+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/lint.log"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeMetadataAuth",
+      "--listTests",
+      "--json",
+      "--runInBand",
+      "--cacheDirectory=/tmp/task03b2a-review3-tgufib91/jest-cache"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:27.217477+00:00",
+    "endedAt": "2026-10-03T11:04:28.166427+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/discovery.log"
+  },
+  {
+    "name": "full-root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:28.166841+00:00",
+    "endedAt": "2026-10-03T11:04:52.138856+00:00",
+    "exitCode": 2,
+    "log": "/tmp/task03b2a-review3-tgufib91/full-root-types.log"
+  },
+  {
+    "name": "baseline-root-types",
+    "argv": [
+      "node",
+      "/tmp/task03b2a-review3-tgufib91/baseline.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:39.443973+00:00",
+    "endedAt": "2026-10-03T11:04:58.432505+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/baseline-root-types.log"
+  },
+  {
+    "name": "inventory",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/inventory.mjs",
+      "/tmp/task03b2a-review3-tgufib91/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:47.689586+00:00",
+    "endedAt": "2026-10-03T11:04:48.211171+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/inventory.log"
+  },
+  {
+    "name": "registration",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/tmp/task03b2a-review3-tgufib91/registration.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:48.211333+00:00",
+    "endedAt": "2026-10-03T11:04:48.754975+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/registration.log"
+  },
+  {
+    "name": "boundary-probes",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/tmp/task03b2a-review3-tgufib91/boundary-probes.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:48.755191+00:00",
+    "endedAt": "2026-10-03T11:04:49.554658+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/boundary-probes.log"
+  },
+  {
+    "name": "extra-probes",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/tmp/task03b2a-review3-tgufib91/extra-probes.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:49.554942+00:00",
+    "endedAt": "2026-10-03T11:04:50.067568+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/extra-probes.log"
+  },
+  {
+    "name": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:50.067747+00:00",
+    "endedAt": "2026-10-03T11:04:50.080458+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/diff-check.log"
+  },
+  {
+    "name": "compiler-unchanged",
+    "argv": [
+      "git",
+      "diff",
+      "--exit-code",
+      "--",
+      "convex-dev/tsconfig.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:50.080642+00:00",
+    "endedAt": "2026-10-03T11:04:50.092815+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/compiler-unchanged.log"
+  },
+  {
+    "name": "ordinary-jest",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeMetadataAuth",
+      "--runInBand",
+      "--forceExit",
+      "--silent",
+      "--json",
+      "--outputFile=/tmp/task03b2a-review3-tgufib91/jest-results.json",
+      "--cacheDirectory=/tmp/task03b2a-review3-tgufib91/jest-cache"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T11:04:58.433670+00:00",
+    "endedAt": "2026-10-03T11:05:05.156008+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2a-review3-tgufib91/ordinary-jest.log"
+  }
+]

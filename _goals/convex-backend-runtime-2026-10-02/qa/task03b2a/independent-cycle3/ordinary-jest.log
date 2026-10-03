@@ -1,0 +1,102 @@
+(node:34011) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMetadataAuth/handlers.test.ts (5.027 s)
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.0s | 187/187 passed | /tests/unit/runtimeMetadataAuth/handlers.test.ts
+  ✅     1.3s | 2/2 passed | /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.28s ( 4.3%) - import-aware AST and native Convex registration visibility retained import-aware AST finds the exact baseline paths with zero unresolved
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.1%) - 36 registered modern public handlers immutable:store rejects missing verified identity without writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.1%) - import-aware AST and native Convex registration visibility actual framework registrations are exactly 41=36+5 with no public reference credentials
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - 36 registered modern public handlers immutable:store authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.1%) - cycle2 independent-review regressions sessions:endAll rejects foreign duplicate before any effect
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers mutable:exists authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes user binding blocks arbitrary own profiles and forged actor labels
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes tenant-wide undefined-space and explicit concrete-space records stay separate
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes write-only updates/store/transactions never return old values/history/unsupplied IDs
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes batch authorization and numeric validation preflight later operations with rollback
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes read expiry during final READ control lookup fails joint barrier and rolls back
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes retained row/control tombstones block recreation and exclude lists/counts
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - cycle2 independent-review regressions own READ cannot hydrate another user profile after explicit space WRITE; existing=false
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:purge authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:get authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:getVersion authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:getHistory authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:list authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:search authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:purgeMany authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.33s (5.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.51s
+  Test suites:        2
+  Individual tests:   135
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       189 passed, 189 total
+Snapshots:   0 total
+Time:        6.514 s
+Test results written to: ../../../../../tmp/task03b2a-review3-tgufib91/jest-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

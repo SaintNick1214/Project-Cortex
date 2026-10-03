@@ -1,0 +1,1799 @@
+[
+  {
+    "path": "immutable:count",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "createdAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "createdBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:get",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "id": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:getAtTimestamp",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "id": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "timestamp": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:getHistory",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "id": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:getVersion",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "id": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "version": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:list",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "createdAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "createdBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "offset": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "sortBy": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "sortOrder": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:purge",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "id": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:purgeAll",
+    "visibility": "internal",
+    "args": {
+      "type": "object",
+      "value": {}
+    }
+  },
+  {
+    "path": "immutable:purgeMany",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "createdAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "createdBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:purgeVersions",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "id": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "keepLatest": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:search",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "createdAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "createdBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "query": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "immutable:store",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "type": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "id": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "data": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "metadata": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:count",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "keyPrefix": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "updatedBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:deleteKey",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "key": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:exists",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "key": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:get",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "key": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:list",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "keyPrefix": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "updatedBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "offset": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "sortBy": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "sortOrder": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:purgeAll",
+    "visibility": "internal",
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:purgeMany",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "keyPrefix": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "updatedBefore": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "updatedAfter": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:purgeNamespace",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "dryRun": {
+          "fieldType": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:set",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "key": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "value": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": false
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "metadata": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:transaction",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "operations": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "object",
+              "value": {
+                "op": {
+                  "fieldType": {
+                    "type": "union",
+                    "value": [
+                      {
+                        "type": "literal",
+                        "value": "set"
+                      },
+                      {
+                        "type": "literal",
+                        "value": "update"
+                      },
+                      {
+                        "type": "literal",
+                        "value": "delete"
+                      },
+                      {
+                        "type": "literal",
+                        "value": "increment"
+                      },
+                      {
+                        "type": "literal",
+                        "value": "decrement"
+                      }
+                    ]
+                  },
+                  "optional": false
+                },
+                "namespace": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "key": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "value": {
+                  "fieldType": {
+                    "type": "any"
+                  },
+                  "optional": true
+                },
+                "amount": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": true
+                }
+              }
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "mutable:update",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "namespace": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "key": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "operation": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "increment"
+              },
+              {
+                "type": "literal",
+                "value": "decrement"
+              },
+              {
+                "type": "literal",
+                "value": "append"
+              },
+              {
+                "type": "literal",
+                "value": "custom"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "operand": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "users:count",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "users:deleteUserProfile",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "users:exists",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "users:get",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "users:getAtTimestamp",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "timestamp": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "users:getHistory",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "users:getVersion",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "version": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "users:list",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:count",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "status": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "active"
+              },
+              {
+                "type": "literal",
+                "value": "idle"
+              },
+              {
+                "type": "literal",
+                "value": "ended"
+              }
+            ]
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:create",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "sessionId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "metadata": {
+          "fieldType": {
+            "type": "any"
+          },
+          "optional": true
+        },
+        "startedAt": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": false
+        },
+        "expiresAt": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:end",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "sessionId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:endAll",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:expireIdle",
+    "visibility": "internal",
+    "args": {
+      "type": "object",
+      "value": {
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "idleTimeout": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:get",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "sessionId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:incrementMemoryCount",
+    "visibility": "internal",
+    "args": {
+      "type": "object",
+      "value": {
+        "sessionId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:incrementMessageCount",
+    "visibility": "internal",
+    "args": {
+      "type": "object",
+      "value": {
+        "sessionId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:list",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "userId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "status": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "active"
+              },
+              {
+                "type": "literal",
+                "value": "idle"
+              },
+              {
+                "type": "literal",
+                "value": "ended"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        },
+        "offset": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "path": "sessions:touch",
+    "visibility": "public",
+    "args": {
+      "type": "object",
+      "value": {
+        "sessionId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  }
+]

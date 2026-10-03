@@ -318,7 +318,10 @@ export default defineSchema({
     userId: v.optional(v.string()), // Links to user for cascade deletion
 
     // Multi-tenancy (NEW - for non-critical path isolation)
-    tenantId: v.optional(v.string()), // Tenant ID for isolation
+    tenantId: v.optional(v.string()), // Trusted tenant selector
+    ownerPrincipalId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
+    memorySpaceId: v.optional(v.string()), // Optional trusted grant scope
 
     // Versioning
     version: v.number(), // Current version number (starts at 1)
@@ -338,6 +341,8 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "type", "id"])
     .index("by_type_id", ["type", "id"]) // Unique lookup
     .index("by_type", ["type"]) // List by type
     .index("by_tenantId", ["tenantId"]) // Tenant's records
@@ -360,7 +365,10 @@ export default defineSchema({
     userId: v.optional(v.string()), // Links to user for cascade deletion
 
     // Multi-tenancy (NEW - for non-critical path isolation)
-    tenantId: v.optional(v.string()), // Tenant ID for isolation
+    tenantId: v.optional(v.string()), // Trusted tenant selector
+    ownerPrincipalId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
+    memorySpaceId: v.optional(v.string()), // Optional trusted grant scope
 
     // Metadata (optional)
     metadata: v.optional(v.any()),
@@ -369,6 +377,8 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "namespace", "key"])
     .index("by_namespace_key", ["namespace", "key"]) // Unique lookup
     .index("by_namespace", ["namespace"]) // List by namespace
     .index("by_tenantId", ["tenantId"]) // Tenant's records
@@ -869,7 +879,10 @@ export default defineSchema({
     userId: v.string(), // User this session belongs to
 
     // Multi-tenancy (NEW - critical for isolation)
-    tenantId: v.optional(v.string()), // Tenant ID for SaaS isolation
+    tenantId: v.optional(v.string()), // Trusted tenant selector
+    ownerPrincipalId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
+    authorityReference: v.optional(runtimeAuthorityReference), // Server-pinned maintenance authority
 
     // Memory space association
     memorySpaceId: v.optional(v.string()), // Memory space for this session
@@ -888,6 +901,8 @@ export default defineSchema({
     messageCount: v.number(), // Messages in this session
     memoryCount: v.number(), // Memories created in this session
   })
+    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "sessionId"])
     .index("by_sessionId", ["sessionId"]) // Unique lookup
     .index("by_userId", ["userId"]) // User's sessions
     .index("by_tenantId", ["tenantId"]) // Tenant's sessions

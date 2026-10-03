@@ -1,0 +1,18 @@
+/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/runtimeMetadataAuth.ts:14
+export function invalid(): never { throw new ConvexError({ code: "INVALID_INPUT", message: "Invalid metadata input" }); }
+                                         ^
+
+ConvexError: {"code":"INVALID_INPUT","message":"Invalid metadata input"}
+    at invalid (/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/runtimeMetadataAuth.ts:14:42)
+    at numeric (/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/mutable.ts:15:117)
+    at updateValue (/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/mutable.ts:19:70)
+    at handler (/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/mutable.ts:36:78)
+    at async <anonymous> (/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/tests/unit/runtimeMetadataAuth/fixture.ts:83:101)
+    at async MetadataTestDb.transaction (/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/tests/unit/runtimeMetadataAuth/fixture.ts:61:18)
+    at async Object.run (/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/tests/unit/runtimeMetadataAuth/fixture.ts:83:68)
+    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/numeric-probe.mjs:3:48 {
+  data: { code: 'INVALID_INPUT', message: 'Invalid metadata input' },
+  Symbol(ConvexError): true
+}
+
+Node.js v24.19.0

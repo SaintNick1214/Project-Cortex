@@ -1,0 +1,208 @@
+[
+  {
+    "name": "transaction complete preflight foreign",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "transaction complete preflight missing-owner",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "transaction complete preflight own-duplicate",
+    "pass": true,
+    "accepted": false,
+    "error": "Error: Nonunique canonical index"
+  },
+  {
+    "name": "transaction complete preflight foreign-duplicate",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "transaction complete preflight missing-target",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: MUTABLE_KEY_NOT_FOUND"
+  },
+  {
+    "name": "transaction complete preflight tombstone",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "transaction complete preflight numeric-null",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}"
+  },
+  {
+    "name": "transaction complete preflight delete-recreate",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}"
+  },
+  {
+    "name": "scope and owner constrained before immutable hydration",
+    "pass": false,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:21:476\n    at async probe (file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:10:69)\n    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:18:565"
+  },
+  {
+    "name": "scope and owner constrained before immutableCount hydration",
+    "pass": false,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:21:476\n    at async probe (file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:10:69)\n    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:18:565"
+  },
+  {
+    "name": "scope and owner constrained before immutableSearch hydration",
+    "pass": false,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:21:476\n    at async probe (file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:10:69)\n    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:18:565"
+  },
+  {
+    "name": "scope and owner constrained before mutable hydration",
+    "pass": false,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:21:476\n    at async probe (file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:10:69)\n    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:18:565"
+  },
+  {
+    "name": "scope and owner constrained before mutableCount hydration",
+    "pass": false,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:21:476\n    at async probe (file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:10:69)\n    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:18:565"
+  },
+  {
+    "name": "scope and owner constrained before sessions hydration",
+    "pass": false,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:21:476\n    at async probe (file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:10:69)\n    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:18:565"
+  },
+  {
+    "name": "scope and owner constrained before sessionsCount hydration",
+    "pass": false,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:21:476\n    at async probe (file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:10:69)\n    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:18:565"
+  },
+  {
+    "name": "scope and owner constrained before profiles hydration",
+    "pass": false,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:21:476\n    at async probe (file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:10:69)\n    at async file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/extra-probes.mjs:18:565"
+  },
+  {
+    "name": "internal immutable purge retains all controls and fences",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "deleted": 2
+    },
+    "controls": 5,
+    "tombstones": 2
+  },
+  {
+    "name": "internal mutable purge retains all controls and fences",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "deleted": 2
+    },
+    "controls": 5,
+    "tombstones": 2
+  },
+  {
+    "name": "internal message late grant rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal message late principal rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal message late membership rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal message late scope rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal message late resource rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late grant rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late principal rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late membership rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late scope rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late resource rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late grant rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late principal rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late membership rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late scope rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late resource rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  }
+]

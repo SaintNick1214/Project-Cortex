@@ -1,0 +1,86 @@
+/** Application sessions use verified metadata scope. Ending a session never revokes a runtime grant. */
+import { ConvexError, v } from "convex/values";
+import { mutation, query, internalMutation } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import type { RuntimeAuthority, RuntimeAuthorityReference } from "../src/auth/verified";
+import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+import { recheckAuthority } from "./runtimeAuth";
+import { scopeArgs, authority, actor, sessionRow, candidates, check, fresh, finalChecks, canonicalFields, newResource, sourceId,
+  readAuthority, readResourceAuthority, newTarget, resource, response, page, invalid, denied } from "./runtimeMetadataAuth";
+const keyArgs = { sessionId: v.string(), ...scopeArgs };
+const filterArgs = { ...scopeArgs, userId: v.optional(v.string()), status: v.optional(v.union(v.literal("active"), v.literal("idle"), v.literal("ended"))) };
+function filter(rows: Doc<"sessions">[], args: { userId?: string; status?: string }) { return rows.filter((row) => (args.userId === undefined || row.userId === args.userId) && (args.status === undefined || row.status === args.status)); }
+function activeSession(row: Doc<"sessions">) { if (row.status === "ended" || (row.expiresAt !== undefined && Date.now() >= row.expiresAt)) denied(); }
+export const create = mutation({ args: { ...keyArgs, userId: v.string(), metadata: v.optional(v.any()), startedAt: v.number(), expiresAt: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); actor(auth, args.userId);
+  if (!Number.isFinite(args.startedAt) || (args.expiresAt !== undefined && (!Number.isFinite(args.expiresAt) || args.expiresAt <= Date.now() || args.expiresAt <= args.startedAt))) invalid();
+  if (await sessionRow(ctx, auth, args.sessionId, "write")) throw new ConvexError("SESSION_ALREADY_EXISTS");
+  const key = sourceId("sessions", args.sessionId); await newResource(ctx, auth, key);
+  const read = await readResourceAuthority(ctx, auth, newTarget(auth, key)); await newResource(ctx, auth, key);
+  const { actorKind: _actorKind, userId: _userId, capabilities: _capabilities, resourceAccess: _resourceAccess, ...reference } = auth;
+  const id = await ctx.db.insert("sessions", { sessionId: args.sessionId, ...canonicalFields(auth), authorityReference: reference,
+    status: "active", startedAt: args.startedAt, lastActiveAt: args.startedAt, expiresAt: args.expiresAt, metadata: args.metadata, messageCount: 0, memoryCount: 0 });
+  const row = await ctx.db.get("sessions", id); if (!row) throw new ConvexError("SESSION_NOT_FOUND");
+  // Internal maintenance reference is never returned through the public API.
+  const { authorityReference: _reference, ...publicRow } = row;
+  return await response(ctx, auth, "sessions", row, read, () => publicRow, () => ({ createdId: id, sessionId: args.sessionId }));
+} });
+export const get = query({ args: keyArgs, handler: async (ctx, args) => {
+  const row = await sessionRow(ctx, await authority(ctx, "read", args), args.sessionId, "read");
+  if (!row) return null; const { authorityReference: _reference, ...publicRow } = row; return publicRow;
+} });
+export const touch = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await sessionRow(ctx, auth, args.sessionId, "write"); if (!row) throw new ConvexError("SESSION_NOT_FOUND"); activeSession(row);
+  await check(ctx, "sessions", row, auth, "write"); await ctx.db.patch("sessions", row._id, { lastActiveAt: Date.now(), status: "active" }); await check(ctx, "sessions", row, auth, "write");
+} });
+export const end = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await sessionRow(ctx, auth, args.sessionId, "write"); if (!row) throw new ConvexError("SESSION_NOT_FOUND");
+  await check(ctx, "sessions", row, auth, "write"); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); await check(ctx, "sessions", row, auth, "write");
+} });
+export const endAll = mutation({ args: { ...scopeArgs, userId: v.string() }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const rows = filter(await candidates(ctx, "sessions", auth, "write"), args).filter((row) => row.status !== "ended");
+  const reads = await Promise.all(rows.map((row) => readAuthority(ctx, auth, "sessions", row)));
+  for (const row of rows) await check(ctx, "sessions", row, auth, "write");
+  for (const row of rows) { await check(ctx, "sessions", row, auth, "write"); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); }
+  await finalChecks(ctx, [{ auth, capability: "write" }, ...reads.flatMap((read, index) => read ? [{ auth: read, capability: "read" as const, resource: resource("sessions", rows[index]!) }] : [])]);
+  return { ended: rows.length, ...(reads.every(Boolean) ? { sessionIds: rows.map((row) => row.sessionId) } : {}) };
+} });
+export const list = query({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const rows = filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args); const offset = page(args.offset, 0);
+  return rows.slice(offset, offset + page(args.limit, 100)).map(({ authorityReference: _reference, ...row }) => row);
+} });
+export const count = query({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args).length });
+function sameReference(a: RuntimeAuthorityReference, b: RuntimeAuthorityReference): boolean {
+  return a.principalId === b.principalId && a.principalVersion === b.principalVersion && a.membershipId === b.membershipId
+    && a.membershipVersion === b.membershipVersion && a.grantId === b.grantId && a.grantVersion === b.grantVersion
+    && a.tenantId === b.tenantId && a.tenantEpoch === b.tenantEpoch && a.memorySpaceId === b.memorySpaceId && a.memorySpaceEpoch === b.memorySpaceEpoch;
+}
+async function backgroundCheck(ctx: MutationCtx, reference: RuntimeAuthorityReference, row: Doc<"sessions">): Promise<RuntimeAuthority> {
+  if (!row.authorityReference || !sameReference(row.authorityReference, reference) || row.tombstonedAt !== undefined) denied();
+  const auth = await recheckAuthority(ctx, row.authorityReference, { capability: "write", resource: resource("sessions", row) });
+  await finalChecks(ctx, [{ auth, capability: "write", resource: resource("sessions", row) }]); return auth;
+}
+async function backgroundRow(ctx: MutationCtx, reference: RuntimeAuthorityReference, sessionId: string) {
+  const auth = await recheckAuthority(ctx, reference, { capability: "write", tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId });
+  const row = await sessionRow(ctx, auth, sessionId, "write"); if (row) await backgroundCheck(ctx, reference, row); return row;
+}
+const backgroundArgs = { sessionId: v.string(), reference: runtimeAuthorityReference };
+export const incrementMessageCount = internalMutation({ args: backgroundArgs, handler: async (ctx, args) => {
+  const row = await backgroundRow(ctx, args.reference, args.sessionId); if (!row) return; activeSession(row);
+  if (!Number.isSafeInteger(row.messageCount) || row.messageCount < 0 || row.messageCount >= Number.MAX_SAFE_INTEGER) invalid();
+  await backgroundCheck(ctx, args.reference, row); await ctx.db.patch("sessions", row._id, { messageCount: row.messageCount + 1, lastActiveAt: Date.now() }); await backgroundCheck(ctx, args.reference, row);
+} });
+export const incrementMemoryCount = internalMutation({ args: backgroundArgs, handler: async (ctx, args) => {
+  const row = await backgroundRow(ctx, args.reference, args.sessionId); if (!row) return; activeSession(row);
+  if (!Number.isSafeInteger(row.memoryCount) || row.memoryCount < 0 || row.memoryCount >= Number.MAX_SAFE_INTEGER) invalid();
+  await backgroundCheck(ctx, args.reference, row); await ctx.db.patch("sessions", row._id, { memoryCount: row.memoryCount + 1, lastActiveAt: Date.now() }); await backgroundCheck(ctx, args.reference, row);
+} });
+export const expireIdle = internalMutation({ args: { reference: runtimeAuthorityReference, idleTimeout: v.number() }, handler: async (ctx, args) => {
+  if (!Number.isFinite(args.idleTimeout) || args.idleTimeout < 0) invalid();
+  const auth = await recheckAuthority(ctx, args.reference, { capability: "write", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
+  const rows = (await candidates(ctx, "sessions", auth, "write")).filter((row) => row.status !== "ended" && row.lastActiveAt < Date.now() - args.idleTimeout);
+  for (const row of rows) await backgroundCheck(ctx, args.reference, row);
+  for (const row of rows) { await backgroundCheck(ctx, args.reference, row); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); await backgroundCheck(ctx, args.reference, row); }
+  await fresh(ctx, auth, "write"); return { expired: rows.length };
+} });

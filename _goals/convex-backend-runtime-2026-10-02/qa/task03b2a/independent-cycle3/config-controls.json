@@ -1,0 +1,35 @@
+{
+  "typescriptVersion": "6.0.3",
+  "configs": [
+    {
+      "file": "convex-dev/tsconfig.json",
+      "strict": true,
+      "lib": [
+        "lib.es2021.d.ts",
+        "lib.dom.d.ts"
+      ],
+      "noEmit": true,
+      "rootCount": 27
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.backend.json",
+      "strict": true,
+      "lib": [
+        "lib.es2021.d.ts",
+        "lib.dom.d.ts"
+      ],
+      "noEmit": true,
+      "rootCount": 5
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.tests.json",
+      "strict": true,
+      "lib": [
+        "lib.es2021.d.ts",
+        "lib.dom.d.ts"
+      ],
+      "noEmit": true,
+      "rootCount": 3
+    }
+  ]
+}

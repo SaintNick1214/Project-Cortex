@@ -1,0 +1,99 @@
+[
+  {
+    "name": "actual-backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T11:14:15.469889+00:00",
+    "endedAt": "2026-10-03T11:14:26.065224+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "metadata-test-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.tests.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T11:14:15.470282+00:00",
+    "endedAt": "2026-10-03T11:14:20.390876+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "affected-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/schema.ts",
+      "convex-dev/immutable.ts",
+      "convex-dev/mutable.ts",
+      "convex-dev/users.ts",
+      "convex-dev/sessions.ts",
+      "convex-dev/runtimeMetadataAuth.ts",
+      "tests/unit/runtimeMetadataAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T11:14:15.470573+00:00",
+    "endedAt": "2026-10-03T11:14:25.622647+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "combined-discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/(runtimeMetadataAuth|runtimeWorkerAuth|runtimeWorkerClient)",
+      "--listTests",
+      "--json",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T11:14:20.390970+00:00",
+    "endedAt": "2026-10-03T11:14:20.660627+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "current-root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T11:14:20.660941+00:00",
+    "endedAt": "2026-10-03T11:14:34.337733+00:00",
+    "exitCode": 2
+  },
+  {
+    "name": "combined-outcomes",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/(runtimeMetadataAuth|runtimeWorkerAuth|runtimeWorkerClient)",
+      "--runInBand",
+      "--forceExit",
+      "--silent",
+      "--json",
+      "--outputFile=/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/main-integration/combined-outcomes.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T11:14:34.338180+00:00",
+    "endedAt": "2026-10-03T11:14:52.509466+00:00",
+    "exitCode": 0
+  }
+]

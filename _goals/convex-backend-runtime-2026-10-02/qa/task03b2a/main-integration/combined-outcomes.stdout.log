@@ -1,0 +1,95 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     6.2s | 187/187 passed | /tests/unit/runtimeMetadataAuth/handlers.test.ts
+  ✅     5.5s | 28/28 passed | /tests/unit/runtimeWorkerClient/governance.test.ts
+  ✅     1.8s | 88/88 passed | /tests/unit/runtimeWorkerAuth/graph.test.ts
+  ✅     1.8s | 58/58 passed | /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ✅     1.4s | 2/2 passed | /tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ✅     1.0s | 39/39 passed | /tests/unit/runtimeWorkerAuth/governance.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.44s ( 2.5%) - actual registered visibility and canonical schema/AST catalog AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+    /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+
+ 2. [32m✓[0m    0.28s ( 1.5%) - import-aware AST and native Convex registration visibility retained import-aware AST finds the exact baseline paths with zero unresolved
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 3. [32m✓[0m    0.05s ( 0.3%) - open-review essential worker regressions clearSyncedItems rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.2%) - open-review essential worker regressions markSynced rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.2%) - open-review essential worker regressions queueForSync rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.2%) - open-review essential worker regressions getUnsyncedItems rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.1%) - 36 registered modern public handlers immutable:store rejects missing verified identity without writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - nine scoped internal worker registrations queueForSync performs its actual authorized outcome without an active JWT
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - nine scoped internal worker registrations exhausted failures remain failed, and a synced item cannot be reopened
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+10. [32m✓[0m    0.01s ( 0.0%) - isolation, receipts, fences and transaction outcomes write expiry during final READ control lookup fails joint barrier and rolls back
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+11. [32m✓[0m    0.01s ( 0.0%) - open-review essential worker regressions invalid optional validity time -Infinity denies admission and existing private delivery
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+12. [32m✓[0m    0.01s ( 0.0%) - fresh queue commit after final digest late source/fact/READ invalidation cannot insert a new queue row, while current controls can
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+13. [32m✓[0m    0.01s ( 0.0%) - open-review essential worker regressions all queue syncedAt lifecycle timestamps are canonical before delivery/count/commit
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+14. [32m✓[0m    0.01s ( 0.0%) - actual registered visibility and canonical schema/AST catalog composing D metadata definitions preserves controlled host validators/indexes and trusted control tables
+    /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+
+15. [32m✓[0m    0.01s ( 0.0%) - open-review essential worker regressions all queue createdAt lifecycle timestamps are canonical before delivery/count/commit
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+16. [32m✓[0m    0.01s ( 0.0%) - import-aware AST and native Convex registration visibility actual framework registrations are exactly 41=36+5 with no public reference credentials
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+17. [32m✓[0m    0.01s ( 0.0%) - 36 registered modern public handlers immutable:store authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+18. [32m✓[0m    0.01s ( 0.0%) - open-review essential worker regressions invalid optional validity time NaN denies admission and existing private delivery
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+19. [32m✓[0m    0.01s ( 0.0%) - open-review essential worker regressions canonical validFrom=undefined and optional active expiry still admit/mark
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - nine scoped internal worker registrations deleted-space fences later reads/marks/recreation
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.98s (5.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      17.95s
+  Test suites:        6
+  Individual tests:   299
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+

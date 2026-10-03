@@ -1,0 +1,14 @@
+() => {
+    const base = "_goals/convex-backend-runtime-2026-10-02/qa";
+    const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-metadata-inventory-"));
+    try {
+      const result = spawnSync(process.execPath, [`${base}/task03b2a/inventory.mjs`, temporary], { encoding: "utf8", timeout: 10000 }); expect({ status: result.status, stderr: result.stderr }).toEqual({ status: 0, stderr: "" });
+      const actual = JSON.parse(fs.readFileSync(path.join(temporary, "public-path-inventory.json"), "utf8"));
+      const original = JSON.parse(fs.readFileSync(`${base}/task03a/public-path-inventory.json`, "utf8"));
+      const selected = original.endpoints.filter((row: { path: string }) => /^(immutable|mutable|users|sessions):/.test(row.path));
+      expect(actual.completeness.unresolved).toEqual([]); expect(actual.completeness.counts).toMatchObject({ registered: 41, public: 36, internal: 5, registeredBuilderCalls: 41, resolvedExports: 41 });
+      expect(actual.endpoints.map((row: { path: string }) => row.path).sort()).toEqual(selected.map((row: { path: string }) => row.path).sort());
+    } finally {
+      fs.rmSync(temporary, { recursive: true, force: true });
+    }
+  }

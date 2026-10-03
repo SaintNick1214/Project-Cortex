@@ -1,0 +1,102 @@
+(node:30984) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+PASS tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.5s | 2/2 passed | /tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ✅     1.7s | 187/187 passed | /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.30s ( 5.6%) - import-aware AST and native Convex registration visibility retained import-aware AST finds the exact baseline paths with zero unresolved
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.2%) - 36 registered modern public handlers immutable:store rejects missing verified identity without writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.1%) - import-aware AST and native Convex registration visibility actual framework registrations are exactly 41=36+5 with no public reference credentials
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - 36 registered modern public handlers immutable:store authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - cycle2 independent-review regressions background memory allows exact creator/user/reference with broad space grant
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - cycle2 independent-review regressions explicit null decrement operand is invalid before writes; omitted operand defaults
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - cycle2 independent-review regressions immutable stored version 9007199254740991 rejects before version writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - cycle2 independent-review regressions immutable stored version -1 rejects before version writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - cycle2 independent-review regressions immutable stored version NaN rejects before version writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:purge rejects missing verified identity without writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers users:get rejects missing verified identity without writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - 36 registered modern public handlers immutable:store rejects forged tenant without writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes tenant-wide undefined-space and explicit concrete-space records stay separate
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes write-only updates/store/transactions never return old values/history/unsupplied IDs
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes read expiry during final READ control lookup fails joint barrier and rolls back
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes tombstoning colliding historical colon keys fences only the exact composite source
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes deleted scope/expired grants/current corrupt duplicates deny
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - isolation, receipts, fences and transaction outcomes session uniqueness/end/expiry never restores ended application sessions or revokes grants
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - five actual internal registrations idle expiry checks every pinned target before effects and after commits
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - cycle2 independent-review regressions background message rejects mismatched canonical owner with broad space grant
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.36s (6.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.39s
+  Test suites:        2
+  Individual tests:   143
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       189 passed, 189 total
+Snapshots:   0 total
+Time:        5.392 s, estimated 6 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/jest-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

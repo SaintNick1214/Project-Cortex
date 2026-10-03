@@ -1,0 +1,20 @@
+{
+  "extends": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "rootDir": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout"
+  },
+  "include": [
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/immutable.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/mutable.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/users.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/sessions.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/runtimeMetadataAuth.ts"
+  ],
+  "exclude": []
+}

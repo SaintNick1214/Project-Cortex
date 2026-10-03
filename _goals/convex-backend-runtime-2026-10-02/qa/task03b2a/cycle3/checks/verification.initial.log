@@ -1,0 +1,12 @@
+<anonymous_script>:2
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
+^
+
+SyntaxError: Unexpected non-whitespace character after JSON at position 239 (line 2 column 1)
+    at JSON.parse (<anonymous>)
+    at file:///workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/cycle3/verify.mjs:79:23
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0

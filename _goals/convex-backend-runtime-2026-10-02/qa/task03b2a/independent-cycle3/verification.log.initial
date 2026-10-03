@@ -1,0 +1,37 @@
+{
+  "verifiedAt": "2026-10-03T11:08:11.467018+00:00",
+  "checks": 949,
+  "passed": 946,
+  "failed": [
+    {
+      "name": "frozen receiptsSha256",
+      "pass": false,
+      "detail": null
+    },
+    {
+      "name": "AST exact counts",
+      "pass": false,
+      "detail": {
+        "modules": 5,
+        "registered": 41,
+        "public": 36,
+        "internal": 5,
+        "httpRoutes": 0,
+        "registeredBuilderCalls": 41,
+        "resolvedExports": 41,
+        "guard": 36,
+        "internalize": 0
+      }
+    },
+    {
+      "name": "AST all endpoints unchanged from cycle2",
+      "pass": false,
+      "detail": null
+    }
+  ],
+  "snapshotRecords": 376,
+  "archives": {
+    "cycle1-final": 69,
+    "cycle2-final": 101
+  }
+}

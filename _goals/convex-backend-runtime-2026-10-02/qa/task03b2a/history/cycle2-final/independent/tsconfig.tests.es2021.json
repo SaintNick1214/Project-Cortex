@@ -1,0 +1,16 @@
+{
+  "extends": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
+    "lib": [
+      "ES2021",
+      "DOM"
+    ],
+    "rootDir": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout"
+  },
+  "include": [
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/tests/unit/runtimeMetadataAuth/**/*.ts"
+  ],
+  "exclude": []
+}
