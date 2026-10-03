@@ -3,6 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, query, type MutationCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { RegistryAccess, selectors, spaceAt, spacesIn, resource, integer, distinct, record, mergeValue, json, receipt, tombstone, nextVersion, conflict, insertionShape, inserted, nativeJson, deny, operation, effect } from "./runtimeRegistryAuth";
+import { statisticsUnavailable } from "./runtimeRegistryStats";
 const spaceType = v.union(v.literal("personal"), v.literal("team"), v.literal("project"), v.literal("custom"));
 const status = v.union(v.literal("active"), v.literal("archived"));
 const participant = v.object({ id: v.string(), type: v.string(), joinedAt: v.number() });
@@ -101,225 +102,17 @@ export const purgeAll = internalMutation({ args: {}, handler: async (ctx) => ope
   return { deleted: rows.length, cascade: "pending" as const };
 }) });
 
-/** Cross-data statistics remain byte-frozen and PENDING the independently reviewed source bridge. */
+/** Functional cross-data statistics remain pending the qualified canonical source bridge. */
 export const getStats = query({
   args: {
+    ...selectors,
     memorySpaceId: v.string(),
-    timeWindow: v.optional(
-      v.union(
-        v.literal("24h"),
-        v.literal("7d"),
-        v.literal("30d"),
-        v.literal("90d"),
-        v.literal("all"),
-      ),
-    ),
+    timeWindow: v.optional(v.union(v.literal("24h"), v.literal("7d"), v.literal("30d"), v.literal("90d"), v.literal("all"))),
     includeParticipants: v.optional(v.boolean()),
   },
-  handler: async (ctx, args) => {
-    const space = await ctx.db
-      .query("memorySpaces")
-      .withIndex("by_memorySpaceId", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .first();
-
-    if (!space) {
-      throw new ConvexError("MEMORYSPACE_NOT_FOUND");
-    }
-
-    // Calculate time window cutoff
-    const now = Date.now();
-    let windowCutoff = 0;
-    if (args.timeWindow && args.timeWindow !== "all") {
-      const windowMs: Record<string, number> = {
-        "24h": 24 * 60 * 60 * 1000,
-        "7d": 7 * 24 * 60 * 60 * 1000,
-        "30d": 30 * 24 * 60 * 60 * 1000,
-        "90d": 90 * 24 * 60 * 60 * 1000,
-      };
-      windowCutoff = now - windowMs[args.timeWindow];
-    }
-
-    // Get all conversations
-    const conversations = await ctx.db
-      .query("conversations")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
-
-    // Get all memories
-    const memories = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
-
-    // Get all facts (active only)
-    const facts = await ctx.db
-      .query("facts")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect()
-      .then((f) => f.filter((fact) => fact.supersededBy === undefined));
-
-    // Total counts
-    const totalConversations = conversations.length;
-    const totalMemories = memories.length;
-    const totalFacts = facts.length;
-    const totalMessages = conversations.reduce(
-      (sum, conv) => sum + conv.messageCount,
-      0,
-    );
-
-    // Time window counts
-    const memoriesThisWindow =
-      windowCutoff > 0
-        ? memories.filter((m) => m.createdAt >= windowCutoff).length
-        : totalMemories;
-    const conversationsThisWindow =
-      windowCutoff > 0
-        ? conversations.filter((c) => c.createdAt >= windowCutoff).length
-        : totalConversations;
-
-    // Calculate importance breakdown
-    const importanceBreakdown = {
-      critical: memories.filter((m) => m.importance >= 90).length,
-      high: memories.filter((m) => m.importance >= 70 && m.importance < 90)
-        .length,
-      medium: memories.filter((m) => m.importance >= 40 && m.importance < 70)
-        .length,
-      low: memories.filter((m) => m.importance >= 10 && m.importance < 40)
-        .length,
-      trivial: memories.filter((m) => m.importance < 10).length,
-    };
-
-    // Aggregate tags
-    const tagCounts: Record<string, number> = {};
-    for (const memory of memories) {
-      for (const tag of memory.tags || []) {
-        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-      }
-    }
-    const topTags = Object.entries(tagCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([tag]) => tag);
-
-    // Participant activity breakdown (if requested)
-    let participants:
-      | Array<{
-          participantId: string;
-          memoriesStored: number;
-          conversationsStored: number;
-          factsExtracted: number;
-          firstActive: number;
-          lastActive: number;
-          avgImportance: number;
-          topTags: string[];
-        }>
-      | undefined;
-
-    if (args.includeParticipants) {
-      const participantMap = new Map<
-        string,
-        {
-          memoriesStored: number;
-          conversationsStored: number;
-          factsExtracted: number;
-          firstActive: number;
-          lastActive: number;
-          importanceSum: number;
-          tags: Record<string, number>;
-        }
-      >();
-
-      // Aggregate by participantId from memories
-      for (const memory of memories) {
-        const pid = memory.participantId || "unknown";
-        const existing = participantMap.get(pid) || {
-          memoriesStored: 0,
-          conversationsStored: 0,
-          factsExtracted: 0,
-          firstActive: memory.createdAt,
-          lastActive: memory.createdAt,
-          importanceSum: 0,
-          tags: {},
-        };
-
-        existing.memoriesStored++;
-        existing.importanceSum += memory.importance || 0;
-        existing.firstActive = Math.min(existing.firstActive, memory.createdAt);
-        existing.lastActive = Math.max(
-          existing.lastActive,
-          memory.updatedAt || memory.createdAt,
-        );
-
-        for (const tag of memory.tags || []) {
-          existing.tags[tag] = (existing.tags[tag] || 0) + 1;
-        }
-
-        participantMap.set(pid, existing);
-      }
-
-      // Count conversations by participant
-      for (const conv of conversations) {
-        const pid = conv.participantId || "unknown";
-        const existing = participantMap.get(pid);
-        if (existing) {
-          existing.conversationsStored++;
-        }
-      }
-
-      // Count facts by participant
-      for (const fact of facts) {
-        const pid = fact.participantId || "unknown";
-        const existing = participantMap.get(pid);
-        if (existing) {
-          existing.factsExtracted++;
-        }
-      }
-
-      participants = Array.from(participantMap.entries()).map(
-        ([participantId, data]) => ({
-          participantId,
-          memoriesStored: data.memoriesStored,
-          conversationsStored: data.conversationsStored,
-          factsExtracted: data.factsExtracted,
-          firstActive: data.firstActive,
-          lastActive: data.lastActive,
-          avgImportance:
-            data.memoriesStored > 0
-              ? Math.round(data.importanceSum / data.memoriesStored)
-              : 0,
-          topTags: Object.entries(data.tags)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 5)
-            .map(([tag]) => tag),
-        }),
-      );
-    }
-
-    return {
-      memorySpaceId: args.memorySpaceId,
-      totalMemories,
-      totalConversations,
-      totalFacts,
-      totalMessages,
-      memoriesThisWindow,
-      conversationsThisWindow,
-      storage: {
-        conversationsBytes: 0, // TODO: Implement size calculation
-        memoriesBytes: 0,
-        factsBytes: 0,
-        totalBytes: 0,
-      },
-      topTags,
-      importanceBreakdown,
-      participants,
-    };
-  },
+  handler: async (ctx, args) => operation(ctx, "query", async () => {
+    const access = await RegistryAccess.open(ctx, "read", args);
+    await spaceAt(access, args.memorySpaceId, "read");
+    return await statisticsUnavailable(access);
+  }),
 });

@@ -3,6 +3,7 @@ import { internalMutation, mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import type { Doc } from "./_generated/dataModel";
 import { RegistryAccess, selectors, agentAt, agentsIn, canonical, resource, integer, distinct, json, receipt, tombstone, conflict, insertionShape, inserted, snapshot, deny, operation, effect } from "./runtimeRegistryAuth";
+import { statisticsUnavailable } from "./runtimeRegistryStats";
 const status = v.union(v.literal("active"), v.literal("inactive"), v.literal("archived"));
 async function all(access: RegistryAccess) {
   const rows = await agentsIn(access); distinct(rows.map((row) => row.agentId));
@@ -86,61 +87,13 @@ export const purgeAll = internalMutation({ args: {}, handler: async (ctx) => ope
   return { deleted: rows.length };
 }) });
 
-/** Cross-data statistics remain byte-frozen and PENDING the independently reviewed source bridge. */
+/** Functional cross-data statistics remain pending the qualified canonical source bridge. */
 export const computeStats = query({
-  args: {
-    agentId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    // Use limits to avoid hitting Convex's 16MB read limit
-    // These are approximate counts for large datasets
-    const SAMPLE_LIMIT = 1000;
-
-    // Count memories where participantId = agentId (with limit)
-    const memories = await ctx.db
-      .query("memories")
-      .withIndex("by_participantId", (q) => q.eq("participantId", args.agentId))
-      .take(SAMPLE_LIMIT);
-
-    // Count conversations where memorySpaceId = agentId (with limit)
-    // Note: This is a simplified query - full participant matching would need a different approach
-    const conversations = await ctx.db
-      .query("conversations")
-      .withIndex("by_memorySpace", (q) => q.eq("memorySpaceId", args.agentId))
-      .take(SAMPLE_LIMIT);
-
-    // Count facts where participantId = agentId (with limit)
-    const facts = await ctx.db
-      .query("facts")
-      .withIndex("by_participantId", (q) => q.eq("participantId", args.agentId))
-      .take(SAMPLE_LIMIT);
-
-    // Find unique memory spaces from sampled memories
-    const memorySpaces = new Set(memories.map((m) => m.memorySpaceId));
-
-    // Find last active time from sampled data
-    const allTimestamps = [
-      ...memories.map((m) => m.updatedAt),
-      ...conversations.map((c) => c.updatedAt),
-      ...facts.map((f) => f.updatedAt),
-    ].filter((t): t is number => t !== undefined);
-
-    const lastActive =
-      allTimestamps.length > 0 ? Math.max(...allTimestamps) : undefined;
-
-    // Indicate if results are approximate (hit limit)
-    const isApproximate =
-      memories.length >= SAMPLE_LIMIT ||
-      conversations.length >= SAMPLE_LIMIT ||
-      facts.length >= SAMPLE_LIMIT;
-
-    return {
-      totalMemories: memories.length,
-      totalConversations: conversations.length,
-      totalFacts: facts.length,
-      memorySpacesActive: memorySpaces.size,
-      lastActive,
-      isApproximate,
-    };
-  },
+  args: { ...selectors, agentId: v.string() },
+  handler: async (ctx, args) => operation(ctx, "query", async () => {
+    const access = await RegistryAccess.open(ctx, "read", args);
+    const agent = (await agentAt(access, args.agentId))!;
+    await access.admit(resource("agents", agent), "admin");
+    return await statisticsUnavailable(access);
+  }),
 });
