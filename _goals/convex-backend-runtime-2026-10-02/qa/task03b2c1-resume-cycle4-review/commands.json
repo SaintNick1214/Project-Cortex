@@ -1,0 +1,121 @@
+[
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:02:51.379628+00:00",
+    "endUtc": "2026-10-03T20:03:00.561180+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "scoped-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/work/resume/artifact-review/tsconfig.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:03:00.561395+00:00",
+    "endUtc": "2026-10-03T20:03:06.428261+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/artifacts.ts",
+      "convex-dev/runtimeArtifactAuth.ts",
+      "tests/unit/runtimeArtifactAuth",
+      "--max-warnings=0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:03:06.428507+00:00",
+    "endUtc": "2026-10-03T20:03:15.360506+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-review/jest.cjs",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:03:15.360758+00:00",
+    "endUtc": "2026-10-03T20:03:15.569478+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "native",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-review/jest.cjs",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4-review/native.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:03:15.569739+00:00",
+    "endUtc": "2026-10-03T20:03:25.761190+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "inventory",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/artifact/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/inventory.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4-review/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:03:25.761732+00:00",
+    "endUtc": "2026-10-03T20:03:26.109752+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:05:57.349361+00:00",
+    "endUtc": "2026-10-03T20:06:11.144359+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "tools",
+    "argv": [
+      "node",
+      "-e",
+      "console.log(JSON.stringify({node:process.version,typescript:require('typescript/package.json').version,convex:require('convex/package.json').version,jest:require('jest/package.json').version,eslint:require('eslint/package.json').version}))"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:06:11.144701+00:00",
+    "endUtc": "2026-10-03T20:06:11.180073+00:00",
+    "exitCode": 0
+  }
+]
