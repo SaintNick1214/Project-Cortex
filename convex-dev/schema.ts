@@ -29,9 +29,11 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { runtimeAuthTables } from "./runtimeAuthSchema";
+import { runtimeMemoryTables, sourceLineage } from "./runtimeMemorySchema";
 
 export default defineSchema({
   ...runtimeAuthTables,
+  ...runtimeMemoryTables,
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Layer 1a: Conversations (ACID, Immutable)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -521,6 +523,12 @@ export default defineSchema({
   // Layer 3: Facts Store (NEW - memorySpace-scoped, Versioned)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   facts: defineTable({
+    // Trusted runtime provenance; unrelated explicit facts share this authoritative table.
+    ownerPrincipalId: v.optional(v.string()),
+    lineage: v.optional(sourceLineage),
+    extractionPolicyVersion: v.optional(v.string()),
+    processingReceiptId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
     // Identity
     factId: v.string(), // Unique ID for this fact
     memorySpaceId: v.string(), // Memory space isolation
@@ -611,6 +619,7 @@ export default defineSchema({
     embedding: v.optional(v.array(v.float64())),
   })
     .index("by_factId", ["factId"]) // Unique lookup
+    .index("by_runtime_scope_factId", ["tenantId", "memorySpaceId", "factId"])
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
     .index("by_tenantId", ["tenantId"]) // Tenant's facts
     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space

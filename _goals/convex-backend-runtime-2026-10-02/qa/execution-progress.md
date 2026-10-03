@@ -43,9 +43,9 @@ record historical authorship and do not supersede this request.
 | 01 | Complete/PASS | Fresh judge task01_review,4.2/5;10 live checks,Gateway Chat,strict typed UI protocol. |
 | 02A | Complete/PASS | Fresh cycle2 judge task02a_review_2,4.4/5;137 tests/211 independent assertions;02B pending trusted authority freeze. |
 | 03A | Complete/PASS | Fresh final cycle3 judge task03a_review_3,4.2/5;133 tests/38 independent outcomes. Raw duplicate grant checks corrected within open review. Existing endpoint closure remains03B. |
-| 02B | In progress | Bounded executor task02b_backend; actual scoped repository/services, fresh source/vector schema and remember/recall routes. |
+| 02B | Complete/PASS bounded | Fresh task02b_review_1,4.4/5;53 retained tests/78 independent assertions; scoped adapters/source-vector stores/remember-recall. Whole02 deployed Gateway wiring pending04/06/09. |
 | 03B1-MF | In progress | Bounded executor task03b1_memory_facts; shared scoped helpers and memories/facts39public+3internal paths. |
-| 03C1 | In progress | Bounded executor task03c1_jwt_client; refreshed hostJWT/client binding; live03C2 remainspending. |
+| 03C1 | Open first review/fix | Official Convex reactive callback rejection leaves transport paused/unhandled; executor fixing fail-closed behavior and explicit diagnostics. Live03C2 remainspending. |
 | 03B1-T/03B2/03C2/04–09 | Pending | Remaining endpoint closure and ordered text slice. |
 | 10–15 | Pending | Text slice and per-extension service gates. |
 | 16–17 | Pending | Complete implementation, outcome matrix and independent final audit. |
@@ -72,4 +72,8 @@ observed sources at that time; subsequent runtime changes require affected check
 Open security review also found evidence directory/output symlink guards ran too late.
 The executor corrected pre-effect canonical validation and private-secret confinement;
 independent32-case no-network ordering checks passed and the final followup verdict
-isPASS4.2/5. Post-change CI/scanner results remain pending; no scanner clean claim.
+isPASS4.2/5. CI on de618fa6 subsequently passed all required check runs. CodeQL still
+reports one medium outbound fixture request annotation; target/origin guards were
+independently reviewed, and no alert suppression or zero-alert scanner claim is made.
+The historical executable key-generator archive was renamed to inert text with exact
+byte identity; ci-followups/archive-source-rename.json preserves its mapping/hash.

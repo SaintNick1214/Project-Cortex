@@ -1,7 +1,7 @@
 # Goal: Cortex-owned agent runs on Convex
 
 **Created:** 2026-10-02 (America/Los_Angeles)
-**Status:** Execution in progress — fresh goal review PASS; Task01 and bounded02A independently PASS;03A inventory review active. [Current receipts](qa/execution-progress.md).
+**Status:** Execution in progress — fresh goal review PASS; Task01 and bounded02A/02B/03A independently PASS; endpoint closure and client authentication review active. [Current receipts](qa/execution-progress.md).
 **Authorization:** The user sent the implementation prompt, authorizing implementation, incremental commits/pushes and a draft PR against dev. The user subsequently authorized a fresh disposable instance and inference without a spend cap. Historical planning-only statements record the artifacts' creation phase.
 **Cloud handoff:** [Copy-paste implementation prompt](implementation-prompt.md).
 **Research:** [Architecture and evidence](../../_research/convex-ai-gateway-2026-10-02/architecture.md)

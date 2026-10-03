@@ -1,0 +1,88 @@
+[
+  {
+    "name": "scoped-types",
+    "argv": [
+      "npx",
+      "--no-install",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task02b/tsconfig.scoped.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T09:21:34.088472+00:00",
+    "durationSeconds": 4.386,
+    "exitCode": 0,
+    "evidence": "checks/scoped-types.log",
+    "target": "offline static quality"
+  },
+  {
+    "name": "backend-types",
+    "argv": [
+      "npx",
+      "--no-install",
+      "tsc",
+      "--noEmit",
+      "-p",
+      "convex-dev/tsconfig.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T09:21:38.474617+00:00",
+    "durationSeconds": 7.582,
+    "exitCode": 0,
+    "evidence": "checks/backend-types.log",
+    "target": "offline static quality"
+  },
+  {
+    "name": "root-types",
+    "argv": [
+      "npx",
+      "--no-install",
+      "tsc",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T09:21:46.056431+00:00",
+    "durationSeconds": 12.212,
+    "exitCode": 2,
+    "evidence": "checks/root-types.log",
+    "target": "offline static quality"
+  },
+  {
+    "name": "affected-eslint",
+    "argv": [
+      "npx",
+      "--no-install",
+      "eslint",
+      "convex-dev/runtimeMemory.ts",
+      "convex-dev/runtimeMemoryRepository.ts",
+      "convex-dev/runtimeMemorySchema.ts",
+      "convex-dev/runtimeMemoryServices.ts",
+      "tests/unit/runtimeMemory",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T09:21:58.268380+00:00",
+    "durationSeconds": 5.96,
+    "exitCode": 0,
+    "evidence": "checks/affected-eslint.log",
+    "target": "offline static quality"
+  },
+  {
+    "name": "runtime-memory-tests",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeMemory",
+      "--runInBand",
+      "--forceExit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T09:22:04.229081+00:00",
+    "durationSeconds": 5.113,
+    "exitCode": 0,
+    "evidence": "checks/runtime-memory-tests.log",
+    "target": "offline registered-handler/test-db"
+  }
+]

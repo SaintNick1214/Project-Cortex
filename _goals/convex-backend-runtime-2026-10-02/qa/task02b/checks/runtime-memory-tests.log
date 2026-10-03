@@ -1,0 +1,224 @@
+(node:17879) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/repository.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://unit.invalid
+
+      at tests/env.ts:62:17
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:63:17
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+PASS tests/unit/runtimeMemory/services.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against MANAGED Convex: https://unit.invalid
+
+      at tests/env.ts:72:13
+
+    console.log
+         Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:75:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.3s | 36/36 passed | /tests/unit/runtimeMemory/repository.test.ts
+  ✅     1.3s | 17/17 passed | /tests/unit/runtimeMemory/services.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.7%) - scoped Convex memory persistence post-filters actual vector candidate with invalid space
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.6%) - scoped Convex memory persistence fences source tenant-control deletion before reads and commits
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.5%) - scoped Convex memory persistence post-filters actual vector candidate with invalid tenant
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.5%) - scoped Convex memory persistence checks actual normalized content SHA-256 rather than trusting supplied same-hash metadata
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.4%) - scoped Convex memory persistence selects actual canonical source in trusted tenant/space despite a foreign duplicate ID inserted first
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.3%) - scoped Convex memory persistence requires expected version for new and updated facts
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - scoped Convex memory persistence post-filters actual vector candidate with invalid missing-receipt
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - modern backend memory services uses actual scoped internal selection and shared ranking/context for recall
+    /tests/unit/runtimeMemory/services.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - scoped Convex memory persistence rejects incompatible queries before search and revoked refs before any result
+    /tests/unit/runtimeMemory/repository.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - remember write permission write-only memory admission returns only this successful commit's facts without a general read query
+    /tests/unit/runtimeMemory/services.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - scoped Convex memory persistence checks every conflict candidate CAS and rolls back the full registered mutation on mismatch
+    /tests/unit/runtimeMemory/repository.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - modern backend memory services replays identical normalized source/derived payload without duplicate facts or receipts
+    /tests/unit/runtimeMemory/services.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - scoped Convex memory persistence commits source-derived chunk/vector/fact and one receipt atomically and idempotently
+    /tests/unit/runtimeMemory/repository.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - scoped Convex memory persistence space-sharing uses exact scope/profile prefilter while retaining explicit owner checks
+    /tests/unit/runtimeMemory/repository.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - modern backend memory services rejects source key reuse with different normalized content before a second model call
+    /tests/unit/runtimeMemory/services.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - scoped Convex memory persistence rejects noncanonical chunk hash before writes
+    /tests/unit/runtimeMemory/repository.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - scoped Convex memory persistence exact vector prefilter prevents foreign tenant/profile/owner candidates consuming top-k slots
+    /tests/unit/runtimeMemory/repository.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - modern backend memory services rechecks revocation after extraction and before the next billable dispatch
+    /tests/unit/runtimeMemory/services.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - modern backend memory services embeds attributed assistant context without extracting assistant claims as facts
+    /tests/unit/runtimeMemory/services.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.26s (5.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.88s
+  Test suites:        2
+  Individual tests:   51
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       53 passed, 53 total
+Snapshots:   0 total
+Time:        4.881 s, estimated 5 s
+Ran all test suites matching tests/unit/runtimeMemory.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
