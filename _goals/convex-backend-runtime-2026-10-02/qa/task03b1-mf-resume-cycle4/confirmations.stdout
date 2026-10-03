@@ -1,0 +1,1556 @@
+{
+  "observedAt": "2026-10-03T19:54:36.479Z",
+  "node": "v24.19.0",
+  "summary": {
+    "total": 30,
+    "matched": 30,
+    "failedExpectations": []
+  },
+  "results": [
+    {
+      "name": "memory-list-none",
+      "expectedSuccess": true,
+      "injected": false,
+      "laterCandidateReached": true,
+      "hashes": 4,
+      "matched": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276036
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276036,
+          "updatedAt": 1791057276036,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276036,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/10",
+          "_creationTime": 11
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276035
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276035,
+          "updatedAt": 1791057276035,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276035,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        }
+      ],
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "memory-list-early-control",
+      "expectedSuccess": false,
+      "injected": false,
+      "laterCandidateReached": false,
+      "hashes": 2,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "memory-list-late-control",
+      "expectedSuccess": false,
+      "injected": true,
+      "laterCandidateReached": true,
+      "hashes": 4,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeAuthTombstones/11"
+      ]
+    },
+    {
+      "name": "memory-list-late-message",
+      "expectedSuccess": false,
+      "injected": true,
+      "laterCandidateReached": true,
+      "hashes": 4,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:conversations/6"
+      ]
+    },
+    {
+      "name": "memory-internal-none",
+      "expectedSuccess": true,
+      "injected": false,
+      "laterCandidateReached": true,
+      "hashes": 2,
+      "matched": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276136
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276136,
+          "updatedAt": 1791057276136,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276136,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276140
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276140,
+          "updatedAt": 1791057276140,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276140,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/10",
+          "_creationTime": 11
+        }
+      ],
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "memory-internal-early-control",
+      "expectedSuccess": false,
+      "injected": false,
+      "laterCandidateReached": false,
+      "hashes": 1,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "memory-internal-late-control",
+      "expectedSuccess": false,
+      "injected": true,
+      "laterCandidateReached": true,
+      "hashes": 2,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeAuthTombstones/11"
+      ]
+    },
+    {
+      "name": "memory-internal-late-message",
+      "expectedSuccess": false,
+      "injected": true,
+      "laterCandidateReached": true,
+      "hashes": 2,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:conversations/6"
+      ]
+    },
+    {
+      "name": "fact-list-none",
+      "expectedSuccess": true,
+      "injected": false,
+      "laterCandidateReached": true,
+      "hashes": 4,
+      "matched": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276166
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276166,
+          "updatedAt": 1791057276166,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "sourceRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276166
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276166,
+          "updatedAt": 1791057276166,
+          "factId": "second",
+          "fact": "tenant-a private second",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "_id": "facts/10",
+          "_creationTime": 11
+        }
+      ],
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "fact-list-early-control",
+      "expectedSuccess": false,
+      "injected": false,
+      "laterCandidateReached": false,
+      "hashes": 2,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "fact-list-late-control",
+      "expectedSuccess": false,
+      "injected": true,
+      "laterCandidateReached": true,
+      "hashes": 4,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeAuthTombstones/11"
+      ]
+    },
+    {
+      "name": "fact-list-late-message",
+      "expectedSuccess": false,
+      "injected": true,
+      "laterCandidateReached": true,
+      "hashes": 4,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:conversations/6"
+      ]
+    },
+    {
+      "name": "fact-internal-none",
+      "expectedSuccess": true,
+      "injected": false,
+      "laterCandidateReached": true,
+      "hashes": 2,
+      "matched": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276201
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276201,
+          "updatedAt": 1791057276201,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "sourceRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276201
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276201,
+          "updatedAt": 1791057276201,
+          "factId": "second",
+          "fact": "tenant-a private second",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "_id": "facts/10",
+          "_creationTime": 11
+        }
+      ],
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "fact-internal-early-control",
+      "expectedSuccess": false,
+      "injected": false,
+      "laterCandidateReached": false,
+      "hashes": 1,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "fact-internal-late-control",
+      "expectedSuccess": false,
+      "injected": true,
+      "laterCandidateReached": true,
+      "hashes": 2,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeAuthTombstones/11"
+      ]
+    },
+    {
+      "name": "fact-internal-late-message",
+      "expectedSuccess": false,
+      "injected": true,
+      "laterCandidateReached": true,
+      "hashes": 2,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:conversations/6"
+      ]
+    },
+    {
+      "name": "memory-list-linked-fact-none",
+      "expectedSuccess": true,
+      "injected": false,
+      "matched": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276247
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276247,
+          "updatedAt": 1791057276247,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276247,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/11",
+          "_creationTime": 12
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276247
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276247,
+          "updatedAt": 1791057276247,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276247,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "factsRef": {
+            "factId": "peer",
+            "version": 1
+          },
+          "_id": "memories/9",
+          "_creationTime": 10
+        }
+      ],
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "memory-list-linked-fact-early-version",
+      "expectedSuccess": false,
+      "injected": false,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "memory-list-linked-fact-late-version",
+      "expectedSuccess": false,
+      "injected": true,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:facts/7"
+      ]
+    },
+    {
+      "name": "memory-list-linked-fact-late-peer-control",
+      "expectedSuccess": false,
+      "injected": true,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeAuthTombstones/12"
+      ]
+    },
+    {
+      "name": "memory-internal-linked-fact-none",
+      "expectedSuccess": true,
+      "injected": false,
+      "matched": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276285
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276285,
+          "updatedAt": 1791057276285,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276285,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "factsRef": {
+            "factId": "peer",
+            "version": 1
+          },
+          "_id": "memories/9",
+          "_creationTime": 10
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276285
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276285,
+          "updatedAt": 1791057276285,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276285,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/11",
+          "_creationTime": 12
+        }
+      ],
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "memory-internal-linked-fact-early-version",
+      "expectedSuccess": false,
+      "injected": false,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": []
+    },
+    {
+      "name": "memory-internal-linked-fact-late-version",
+      "expectedSuccess": false,
+      "injected": true,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:facts/7"
+      ]
+    },
+    {
+      "name": "memory-internal-linked-fact-late-peer-control",
+      "expectedSuccess": false,
+      "injected": true,
+      "matched": true,
+      "success": false,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "insert:runtimeAuthTombstones/12"
+      ]
+    },
+    {
+      "name": "updateMany-readable-false-none",
+      "expectedSuccess": true,
+      "injected": false,
+      "matched": true,
+      "success": true,
+      "result": {
+        "updated": 2,
+        "mutationReceipt": true
+      },
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7",
+        "patch:memories/9"
+      ],
+      "currentSources": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private first",
+          "contentHash": "5063cb88655c018b207c8c415cc54c502e3b6ada7fe5ec9f470f76407a3d8d59",
+          "createdAt": 1791057276341,
+          "_id": "runtimeMemorySources/6",
+          "_creationTime": 7
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private second",
+          "contentHash": "96ed9e74369450e7ff4e95c7d0484c508e50fc01f46393746c948dbcba674ff4",
+          "createdAt": 1791057276345,
+          "_id": "runtimeMemorySources/8",
+          "_creationTime": 9
+        }
+      ],
+      "currentMemories": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276366
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276341,
+          "updatedAt": 1791057276366,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276341,
+          "importance": 77,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/7",
+          "_creationTime": 8
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276366
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276345,
+          "updatedAt": 1791057276366,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276345,
+          "importance": 77,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/9",
+          "_creationTime": 10
+        }
+      ]
+    },
+    {
+      "name": "updateMany-readable-false-late-valid-source-replacement",
+      "expectedSuccess": false,
+      "injected": true,
+      "matched": true,
+      "success": false,
+      "code": "STALE_SOURCE",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:memories/7",
+        "patch:runtimeMemorySources/6",
+        "patch:memories/9"
+      ],
+      "currentSources": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private first",
+          "contentHash": "5063cb88655c018b207c8c415cc54c502e3b6ada7fe5ec9f470f76407a3d8d59",
+          "createdAt": 1791057276377,
+          "_id": "runtimeMemorySources/6",
+          "_creationTime": 7
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private second",
+          "contentHash": "96ed9e74369450e7ff4e95c7d0484c508e50fc01f46393746c948dbcba674ff4",
+          "createdAt": 1791057276379,
+          "_id": "runtimeMemorySources/8",
+          "_creationTime": 9
+        }
+      ],
+      "currentMemories": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276377
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276377,
+          "updatedAt": 1791057276377,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276377,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/7",
+          "_creationTime": 8
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276379
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276379,
+          "updatedAt": 1791057276379,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276379,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/9",
+          "_creationTime": 10
+        }
+      ]
+    },
+    {
+      "name": "updateMany-readable-false-late-corrupt-source",
+      "expectedSuccess": false,
+      "injected": true,
+      "matched": true,
+      "success": false,
+      "code": "STALE_SOURCE",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:memories/7",
+        "patch:runtimeMemorySources/6",
+        "patch:memories/9"
+      ],
+      "currentSources": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private first",
+          "contentHash": "5063cb88655c018b207c8c415cc54c502e3b6ada7fe5ec9f470f76407a3d8d59",
+          "createdAt": 1791057276394,
+          "_id": "runtimeMemorySources/6",
+          "_creationTime": 7
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private second",
+          "contentHash": "96ed9e74369450e7ff4e95c7d0484c508e50fc01f46393746c948dbcba674ff4",
+          "createdAt": 1791057276394,
+          "_id": "runtimeMemorySources/8",
+          "_creationTime": 9
+        }
+      ],
+      "currentMemories": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276394
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276394,
+          "updatedAt": 1791057276394,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276394,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/7",
+          "_creationTime": 8
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276394
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276394,
+          "updatedAt": 1791057276394,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276394,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/9",
+          "_creationTime": 10
+        }
+      ]
+    },
+    {
+      "name": "updateMany-readable-true-none",
+      "expectedSuccess": true,
+      "injected": false,
+      "matched": true,
+      "success": true,
+      "result": {
+        "updated": 2,
+        "memoryIds": [
+          "first",
+          "second"
+        ]
+      },
+      "rolledBack": false,
+      "attemptedWrites": [
+        "patch:memories/7",
+        "patch:memories/9"
+      ],
+      "currentSources": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private first",
+          "contentHash": "5063cb88655c018b207c8c415cc54c502e3b6ada7fe5ec9f470f76407a3d8d59",
+          "createdAt": 1791057276426,
+          "_id": "runtimeMemorySources/6",
+          "_creationTime": 7
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private second",
+          "contentHash": "96ed9e74369450e7ff4e95c7d0484c508e50fc01f46393746c948dbcba674ff4",
+          "createdAt": 1791057276426,
+          "_id": "runtimeMemorySources/8",
+          "_creationTime": 9
+        }
+      ],
+      "currentMemories": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276439
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276426,
+          "updatedAt": 1791057276439,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276426,
+          "importance": 77,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/7",
+          "_creationTime": 8
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276439
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276426,
+          "updatedAt": 1791057276439,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276426,
+          "importance": 77,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/9",
+          "_creationTime": 10
+        }
+      ]
+    },
+    {
+      "name": "updateMany-readable-true-late-valid-source-replacement",
+      "expectedSuccess": false,
+      "injected": true,
+      "matched": true,
+      "success": false,
+      "code": "STALE_SOURCE",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:memories/7",
+        "patch:runtimeMemorySources/6",
+        "patch:memories/9"
+      ],
+      "currentSources": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private first",
+          "contentHash": "5063cb88655c018b207c8c415cc54c502e3b6ada7fe5ec9f470f76407a3d8d59",
+          "createdAt": 1791057276443,
+          "_id": "runtimeMemorySources/6",
+          "_creationTime": 7
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private second",
+          "contentHash": "96ed9e74369450e7ff4e95c7d0484c508e50fc01f46393746c948dbcba674ff4",
+          "createdAt": 1791057276443,
+          "_id": "runtimeMemorySources/8",
+          "_creationTime": 9
+        }
+      ],
+      "currentMemories": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276443
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276443,
+          "updatedAt": 1791057276443,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276443,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/7",
+          "_creationTime": 8
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276443
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276443,
+          "updatedAt": 1791057276443,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276443,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/9",
+          "_creationTime": 10
+        }
+      ]
+    },
+    {
+      "name": "updateMany-readable-true-late-corrupt-source",
+      "expectedSuccess": false,
+      "injected": true,
+      "matched": true,
+      "success": false,
+      "code": "STALE_SOURCE",
+      "rolledBack": true,
+      "attemptedWrites": [
+        "patch:memories/7",
+        "patch:runtimeMemorySources/6",
+        "patch:memories/9"
+      ],
+      "currentSources": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private first",
+          "contentHash": "5063cb88655c018b207c8c415cc54c502e3b6ada7fe5ec9f470f76407a3d8d59",
+          "createdAt": 1791057276469,
+          "_id": "runtimeMemorySources/6",
+          "_creationTime": 7
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "content": "tenant-a private second",
+          "contentHash": "96ed9e74369450e7ff4e95c7d0484c508e50fc01f46393746c948dbcba674ff4",
+          "createdAt": 1791057276469,
+          "_id": "runtimeMemorySources/8",
+          "_creationTime": 9
+        }
+      ],
+      "currentMemories": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276469
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276469,
+          "updatedAt": 1791057276469,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276469,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/7",
+          "_creationTime": 8
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057276469
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057276469,
+          "updatedAt": 1791057276469,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057276469,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/9",
+          "_creationTime": 10
+        }
+      ]
+    }
+  ]
+}

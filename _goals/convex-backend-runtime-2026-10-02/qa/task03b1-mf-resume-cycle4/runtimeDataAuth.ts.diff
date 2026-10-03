@@ -1,0 +1,181 @@
+--- cycle3/convex-dev/runtimeDataAuth.ts
++++ cycle4/convex-dev/runtimeDataAuth.ts
+@@ -82,6 +82,70 @@
+ }
+ /** Private server witness; public validators/metadata never accept it. */
+ export type CanonicalSourceWitness = Readonly<Doc<"runtimeMemorySources">>;
++/** Private linked admissions follow retained source objects across array concatenation. */
++type LinkedWitness = {
++  table: "conversations" | "immutable" | "mutable" | DataTable;
++  target: RuntimeResource; storageId: string;
++  selectors: { type?: string; id?: string; namespace?: string; key?: string };
++  expectedVersion?: number; messageIds?: readonly string[]; conversationId?: string; dataBinding?: string;
++};
++function linkedDataBinding(row: DataRow): string {
++  return JSON.stringify({ lineage: row.lineage, conversationRef: "conversationRef" in row ? row.conversationRef : undefined,
++    factsRef: "factsRef" in row ? row.factsRef : undefined, immutableRef: "immutableRef" in row ? row.immutableRef : undefined,
++    mutableRef: "mutableRef" in row ? row.mutableRef : undefined, sourceRef: "sourceRef" in row ? row.sourceRef : undefined });
++}
++const operationLinks = new WeakMap<CanonicalSourceWitness[], LinkedWitness[]>();
++const sourceLinks = new WeakMap<CanonicalSourceWitness, LinkedWitness[]>();
++function retainedLinks(witnesses: CanonicalSourceWitness[]): LinkedWitness[] {
++  let links = operationLinks.get(witnesses);
++  if (!links) { links = []; operationLinks.set(witnesses, links); }
++  return links;
++}
++function allLinkedWitnesses(witnesses: readonly CanonicalSourceWitness[]): LinkedWitness[] {
++  return [...new Set(witnesses.flatMap(witness => sourceLinks.get(witness) ?? []))];
++}
++async function authorizeLinkedWitnesses(ctx: ReadCtx, authority: ScopedDataAuthority, capability: Capability,
++  witnesses: readonly CanonicalSourceWitness[]): Promise<void> {
++  for (const link of allLinkedWitnesses(witnesses)) await assertOwnedResource(ctx, authority, capability, link.target);
++}
++/** Final scoped reload checks exact edge predicates without recursion or hashing. */
++async function reloadLinkedWitnesses(ctx: ReadCtx, authority: ScopedDataAuthority,
++  witnesses: readonly CanonicalSourceWitness[]): Promise<void> {
++  const reader = createAuthorityReader(ctx);
++  for (const link of allLinkedWitnesses(witnesses)) {
++    const { target, selectors } = link;
++    let row: (LinkOwner & { tenantId?: string; version?: number }) | null;
++    if (link.table === "conversations") {
++      const rows = await ctx.db.query("conversations").withIndex("by_tenant_space", q => q.eq("tenantId", authority.tenantId)
++        .eq("memorySpaceId", authority.memorySpaceId)).filter(q => q.eq(q.field("conversationId"), target.resourceId)).collect();
++      if (rows.length !== 1) dataDenied();
++      const conversation = rows[0]; row = conversation;
++      if (conversation.participants?.memorySpaceIds?.some(space => space !== authority.memorySpaceId)
++        || link.messageIds?.some(id => !conversation.messages.some(message => message.id === id))) dataDenied();
++    } else if (link.table === "immutable") {
++      row = await ctx.db.query("immutable").withIndex("by_tenant_type_id", q => q.eq("tenantId", authority.tenantId)
++        .eq("type", selectors.type!).eq("id", selectors.id!)).unique();
++    } else if (link.table === "mutable") {
++      row = await ctx.db.query("mutable").withIndex("by_tenant_namespace_key", q => q.eq("tenantId", authority.tenantId)
++        .eq("namespace", selectors.namespace!).eq("key", selectors.key!)).unique();
++    } else if (link.table === "facts") {
++      const fact = await ctx.db.query("facts").withIndex("by_runtime_scope_factId", q => q.eq("tenantId", authority.tenantId)
++        .eq("memorySpaceId", authority.memorySpaceId).eq("factId", target.resourceId)).unique(); row = fact;
++      if (fact && link.dataBinding !== linkedDataBinding(fact)) dataDenied();
++    } else {
++      const memory = await ctx.db.query("memories").withIndex("by_runtime_scope_memoryId", q => q.eq("tenantId", authority.tenantId)
++        .eq("memorySpaceId", authority.memorySpaceId).eq("memoryId", target.resourceId)).unique(); row = memory;
++      if (memory && link.dataBinding !== linkedDataBinding(memory)) dataDenied();
++      if (link.conversationId !== undefined && memory?.conversationRef?.conversationId !== link.conversationId) dataDenied();
++    }
++    if (!row || row._id !== link.storageId || row.tenantId !== target.tenantId
++      || row.memorySpaceId !== target.memorySpaceId || row.ownerPrincipalId !== target.ownerPrincipalId
++      || row.tombstonedAt !== undefined || (link.expectedVersion !== undefined && row.version !== link.expectedVersion)) dataDenied();
++    const key = { tenantId: target.tenantId!, memorySpaceId: target.memorySpaceId,
++      resourceType: target.resourceType, resourceId: target.resourceId };
++    if (await reader.hasTombstone(key) || await reader.hasTombstone({ ...key, memorySpaceId: undefined })) dataDenied();
++  }
++}
+ function sourceWitness(source: Doc<"runtimeMemorySources">): CanonicalSourceWitness {
+   return Object.freeze({ ...source, lineage: Object.freeze({ ...source.lineage }) });
+ }
+@@ -131,8 +195,10 @@
+   witnesses: readonly CanonicalSourceWitness[]): Promise<void> {
+   await recheckDataAuthority(ctx, authority, capability);
+   await authorizeSourceWitnesses(ctx, authority, capability, witnesses);
++  await authorizeLinkedWitnesses(ctx, authority, capability, witnesses);
+   const grant = await createAuthorityReader(ctx).getGrant(authority.grantId);
+   await reloadSourceWitnesses(ctx, authority, witnesses);
++  await reloadLinkedWitnesses(ctx, authority, witnesses);
+   assertCurrentGrant(authority, capability, grant, Date.now());
+ }
+ function assertCurrentGrant(reference: ScopedDataAuthority, capability: Capability, grant: GrantRecord | null, now: number): void {
+@@ -207,17 +273,23 @@
+     await assertOwnedResource(ctx, authority, capability, { resourceType: "conversation", resourceId: conversationId,
+       tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, ownerPrincipalId: owner.ownerPrincipalId });
+     if (messageIds.some(id => !row.messages.some(message => message.id === id))) dataDenied();
++    retainedLinks(witnesses).push({ table: "conversations", storageId: row._id,
++      target: { resourceType: "conversation", resourceId: conversationId, tenantId: row.tenantId,
++        memorySpaceId: row.memorySpaceId, ownerPrincipalId: owner.ownerPrincipalId }, selectors: {}, messageIds: [...messageIds] });
+   }
+   if (input.factsRef !== undefined) {
+     nonemptySelector(input.factsRef.factId);
+     if (input.factsRef.version !== undefined && (!Number.isSafeInteger(input.factsRef.version) || input.factsRef.version < 1)) dataDenied("INVALID_INPUT", "Invalid fact reference version");
+     // Validate every requested edge version before descending, even for repeated nodes.
+-    if (!await getScopedFact(ctx, authority, input.factsRef.factId, capability, activePath, input.factsRef.version, witnesses)) dataDenied();
++    const peer = await getScopedFact(ctx, authority, input.factsRef.factId, capability, activePath, input.factsRef.version, witnesses);
++    if (!peer) dataDenied();
++    retainedLinks(witnesses).push({ table: "facts", storageId: peer._id, target: resource(peer), selectors: {}, expectedVersion: input.factsRef.version, dataBinding: linkedDataBinding(peer) });
+   }
+   if (input.sourceRef?.memoryId !== undefined) {
+     nonemptySelector(input.sourceRef.memoryId);
+     const memory = await getScopedMemory(ctx, authority, input.sourceRef.memoryId, capability, activePath, witnesses);
+     if (!memory || (conversationId !== undefined && memory.conversationRef?.conversationId !== conversationId)) dataDenied();
++    retainedLinks(witnesses).push({ table: "memories", storageId: memory._id, target: resource(memory), selectors: {}, conversationId, dataBinding: linkedDataBinding(memory) });
+   }
+   if (input.immutableRef) {
+     const ref = input.immutableRef;
+@@ -229,6 +301,10 @@
+     if (owner.tombstonedAt !== undefined || (ref.version !== undefined && row.version !== ref.version)) dataDenied();
+     await assertOwnedResource(ctx, authority, capability, { resourceType: "source", resourceId: `immutable:${ref.type}:${ref.id}`,
+       tenantId: row.tenantId, memorySpaceId: owner.memorySpaceId, ownerPrincipalId: owner.ownerPrincipalId });
++    retainedLinks(witnesses).push({ table: "immutable", storageId: row._id,
++      target: { resourceType: "source", resourceId: `immutable:${ref.type}:${ref.id}`, tenantId: row.tenantId,
++        memorySpaceId: owner.memorySpaceId, ownerPrincipalId: owner.ownerPrincipalId },
++      selectors: { type: ref.type, id: ref.id }, expectedVersion: ref.version });
+   }
+   if (input.mutableRef) {
+     const ref = input.mutableRef;
+@@ -239,6 +315,10 @@
+     if (owner.tombstonedAt !== undefined) dataDenied();
+     await assertOwnedResource(ctx, authority, capability, { resourceType: "source", resourceId: `mutable:${ref.namespace}:${ref.key}`,
+       tenantId: row.tenantId, memorySpaceId: owner.memorySpaceId, ownerPrincipalId: owner.ownerPrincipalId });
++    retainedLinks(witnesses).push({ table: "mutable", storageId: row._id,
++      target: { resourceType: "source", resourceId: `mutable:${ref.namespace}:${ref.key}`, tenantId: row.tenantId,
++        memorySpaceId: owner.memorySpaceId, ownerPrincipalId: owner.ownerPrincipalId },
++      selectors: { namespace: ref.namespace, key: ref.key } });
+   }
+   if (!activePath.size) await recheckSourceWitnesses(ctx, authority, capability, witnesses);
+ }
+@@ -253,6 +333,7 @@
+     const witness = await sourceIsCurrent(ctx, authority, capability, row);
+     if (!witness) dataDenied("STALE_SOURCE", "Source is missing, corrupt, stale or deleted");
+     witnesses.push(witness);
++    sourceLinks.set(witness, retainedLinks(witnesses));
+     await assertDataLinks(ctx, authority, capability, row, activePath, witnesses);
+     await assertOwnedResource(ctx, authority, capability, target);
+     if (root) await recheckSourceWitnesses(ctx, authority, capability, witnesses);
+@@ -288,7 +369,8 @@
+       || await reader.hasTombstone({ tenantId: authority.tenantId, resourceType: target.resourceType, resourceId: target.resourceId })) continue;
+     const selected = await sourceIsCurrent(ctx, authority, capability, row);
+     if (!selected) continue;
+-    witnesses.push(selected, ...await assertDataRow(ctx, authority, capability, row)); result.push(row);
++    witnesses.push(selected);
++    await assertDataRow(ctx, authority, capability, row, new Set<string>(), witnesses); result.push(row);
+   }
+   if (capability === "read") await finalizeDataRead(ctx, authority, witnesses, result);
+   else await recheckSourceWitnesses(ctx, authority, capability, witnesses);
+@@ -450,6 +532,7 @@
+     || !Number.isSafeInteger(source.lineage.sourceRevision) || source.lineage.sourceRevision < row.lineage.sourceRevision
+     || !sameLineage(source.lineage, { ...row.lineage, sourceRevision: source.lineage.sourceRevision })) dataDenied("STALE_SOURCE");
+   const witness = sourceWitness(source); witnesses.push(witness);
++    sourceLinks.set(witness, retainedLinks(witnesses));
+   await assertOwnedResource(ctx, authority, "read", sourceResource(witness));
+   if (!await canonicalSource(witness)) dataDenied("STALE_SOURCE", "Canonical source content/hash is corrupt");
+   await assertDataLinks(ctx, authority, "read", row, new Set<string>(), witnesses);
+@@ -515,7 +598,11 @@
+     await resolveAuthorityReference(deletionReader, reference, { capability, tenantId: reference.tenantId,
+       memorySpaceId: reference.memorySpaceId, ...(target ? { resource: target } : {}) })));
+   await authorizeSourceWitnesses(ctx, writer, "write", witnesses);
+-  for (const reader of readers) await authorizeSourceWitnesses(ctx, reader.authority, "read", reader.sources ?? []);
++  await authorizeLinkedWitnesses(ctx, writer, "write", witnesses);
++  for (const reader of readers) {
++    await authorizeSourceWitnesses(ctx, reader.authority, "read", reader.sources ?? []);
++    await authorizeLinkedWitnesses(ctx, reader.authority, "read", reader.sources ?? []);
++  }
+   const grants = await Promise.all(requirements.map(async requirement => ({ ...requirement,
+     grant: await authorityReader.getGrant(requirement.reference.grantId) })));
+   const controls = await Promise.all(targets.map(async target => {
+@@ -523,7 +610,9 @@
+     return await deletionReader.hasTombstone(key) || await deletionReader.hasTombstone({ ...key, memorySpaceId: undefined });
+   }));
+   if (controls.some(Boolean)) dataDenied();
+-  await reloadSourceWitnesses(ctx, writer, [...witnesses, ...readers.flatMap(reader => reader.sources ?? [])]);
++  const allSources = [...witnesses, ...readers.flatMap(reader => reader.sources ?? [])];
++  await reloadSourceWitnesses(ctx, writer, allSources);
++  await reloadLinkedWitnesses(ctx, writer, allSources);
+   const now = Date.now();
+   for (const { reference, capability, grant } of grants) {
+     assertCurrentGrant(reference, capability, grant, now);

@@ -6,8 +6,18 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { action, internalQuery, mutation, query } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { makeFunctionReference } from "convex/server";
+import type { FunctionReference } from "convex/server";
+import type { RuntimeAuthorityReference } from "../src/auth/verified";
+import type { DataDeletionProof } from "./runtimeDataAuth";
+import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+import type { CanonicalSourceWitness } from "./runtimeDataAuth";
+import { finalizeDataRead, prepareMutationRowsWrite, memoryMutationResult, canReadMutationRows, finalizeMutationRowsRead, dataEditor, assertDataLinks, bindDataActor, dataDenied, getScopedMemory,
+  listScopedMemories, manualDataSource, recheckDataAuthority,
+  requireDataAuthority, requireActionDataAuthority, recheckActionDataAuthority,
+  getScopedMemoryDocument, rejectUnqualifiedEmbedding, reviseDataSource, searchScopedMemories, tombstoneDataRow,
+} from "./runtimeDataAuth";
 import { Doc } from "./_generated/dataModel";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -77,26 +87,40 @@ export const store = mutation({
     tags: v.array(v.string()),
   },
   handler: async (ctx, args) => {
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
     const now = Date.now();
     const memoryId = `mem-${now}-${Math.random().toString(36).substring(2, 11)}`;
+    rejectUnqualifiedEmbedding(args.embedding);
+    bindDataActor(authority, args.userId);
+    bindDataActor(authority, args.participantId);
+    await assertDataLinks(ctx, authority, capability, args);
+    bindDataActor(authority, args.sourceUserId);
+    if (args.agentId !== undefined && args.agentId !== authority.principalId) dataDenied();
+    const manualSourceBinding = { resourceType: "memory" as const, resourceId: memoryId };
+    const lineage = await manualDataSource(ctx, authority, manualSourceBinding, args.content, authority.principalId, args.messageRole === "agent" ? "assistant" : "user");
 
-    const _id = await ctx.db.insert("memories", {
+    await ctx.db.insert("memories", {
       memoryId,
+      ownerPrincipalId: authority.principalId,
+      runtimeEditor: dataEditor(authority),
+      lineage,
+      manualSourceBinding,
       memorySpaceId: args.memorySpaceId, // Updated
-      participantId: args.participantId, // NEW
-      tenantId: args.tenantId, // Store tenantId
+      participantId: authority.userId, // NEW
+      tenantId: authority.tenantId, // Store tenantId
       content: args.content,
       contentType: args.contentType,
       embedding: args.embedding,
       sourceType: args.sourceType,
-      sourceUserId: args.sourceUserId,
+      sourceUserId: authority.userId,
       sourceUserName: args.sourceUserName,
       sourceTimestamp: now,
-      messageRole: args.messageRole, // NEW
+      messageRole: args.messageRole === "agent" ? "agent" : "user", // NEW
       // Enrichment fields
       enrichedContent: args.enrichedContent,
       factCategory: args.factCategory,
-      userId: args.userId,
+      userId: authority.userId,
       agentId: args.agentId, // NEW: Agent-owned memories support
       conversationRef: args.conversationRef,
       immutableRef: args.immutableRef,
@@ -111,7 +135,7 @@ export const store = mutation({
       accessCount: 0,
     });
 
-    return await ctx.db.get(_id);
+    return await memoryMutationResult(ctx, authority, memoryId, authority.principalId, "store");
   },
 });
 
@@ -132,18 +156,31 @@ export const storePartialMemory = mutation({
     tags: v.array(v.string()),
   },
   handler: async (ctx, args) => {
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
     const now = Date.now();
     const memoryId = `mem-partial-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
+    bindDataActor(authority, args.userId);
+    bindDataActor(authority, args.participantId);
+    await assertDataLinks(ctx, authority, capability, args);
+    const manualSourceBinding = { resourceType: "memory" as const, resourceId: memoryId };
+    const lineage = await manualDataSource(ctx, authority, manualSourceBinding, args.content, authority.principalId, "assistant");
     const _id = await ctx.db.insert("memories", {
       memoryId,
+      tenantId: authority.tenantId,
+      ownerPrincipalId: authority.principalId,
+      runtimeEditor: dataEditor(authority),
+      lineage,
+      manualSourceBinding,
       memorySpaceId: args.memorySpaceId,
-      participantId: args.participantId,
+      participantId: authority.userId,
       content: args.content,
       contentType: "raw" as const,
+      messageRole: "agent" as const,
       sourceType: "conversation" as const,
       sourceTimestamp: now,
-      userId: args.userId,
+      userId: authority.userId,
       conversationRef: {
         conversationId: args.conversationId,
         messageIds: [],
@@ -160,6 +197,7 @@ export const storePartialMemory = mutation({
       partialMetadata: args.metadata,
     });
 
+    if (!await getScopedMemory(ctx, authority, memoryId, capability)) dataDenied();
     return { memoryId, _id };
   },
 });
@@ -175,21 +213,25 @@ export const updatePartialMemory = mutation({
     metadata: v.any(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, {}, capability);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
     }
 
-    await ctx.db.patch(memory._id, {
+    const { lineage, manualSourceBinding } = await reviseDataSource(ctx, authority, memory, args.content ?? memory.content);
+    await ctx.db.patch(memory._id, { runtimeEditor: dataEditor(authority),
+      lineage,
+      manualSourceBinding,
       content: args.content,
+      version: memory.version + 1,
       updatedAt: Date.now(),
       partialMetadata: args.metadata,
     });
 
+    if (!await getScopedMemory(ctx, authority, args.memoryId, capability)) dataDenied();
     return { success: true };
   },
 });
@@ -206,10 +248,10 @@ export const finalizePartialMemory = mutation({
     metadata: v.any(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, {}, capability);
+    rejectUnqualifiedEmbedding(args.embedding);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
@@ -220,15 +262,20 @@ export const finalizePartialMemory = mutation({
       (tag) => tag !== "streaming" && tag !== "partial",
     );
 
-    await ctx.db.patch(memory._id, {
+    const { lineage, manualSourceBinding } = await reviseDataSource(ctx, authority, memory, args.content ?? memory.content);
+    await ctx.db.patch(memory._id, { runtimeEditor: dataEditor(authority),
+      lineage,
+      manualSourceBinding,
       content: args.content,
       embedding: args.embedding,
+      version: memory.version + 1,
       updatedAt: Date.now(),
       isPartial: false,
       tags: finalTags,
       partialMetadata: args.metadata,
     });
 
+    if (!await getScopedMemory(ctx, authority, args.memoryId, capability)) dataDenied();
     return { success: true };
   },
 });
@@ -242,10 +289,9 @@ export const deleteMemory = mutation({
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
@@ -256,7 +302,7 @@ export const deleteMemory = mutation({
       throw new ConvexError("PERMISSION_DENIED");
     }
 
-    await ctx.db.delete(memory._id);
+    await tombstoneDataRow(ctx, authority, "memories", memory);
 
     return { deleted: true, memoryId: args.memoryId };
   },
@@ -276,10 +322,9 @@ export const get = query({
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
       return null;
@@ -298,15 +343,16 @@ export const get = query({
  * Internal query to fetch memories by their IDs (used by search action)
  */
 export const fetchMemoriesByIds = internalQuery({
-  args: { ids: v.array(v.id("memories")) },
-  handler: async (ctx, { ids }): Promise<Doc<"memories">[]> => {
-    const results: Doc<"memories">[] = [];
-    for (const id of ids) {
-      const doc = await ctx.db.get(id);
-      if (doc !== null) {
-        results.push(doc);
-      }
+  args: { ids: v.array(v.id("memories")), reference: runtimeAuthorityReference },
+  handler: async (ctx, args): Promise<Doc<"memories">[]> => {
+    const authority = await recheckDataAuthority(ctx, args.reference, "read");
+    const results: Doc<"memories">[] = []; const witnesses: CanonicalSourceWitness[] = [];
+    for (const id of args.ids) {
+      const row = await getScopedMemoryDocument(ctx, authority, id, witnesses);
+      if (!row) dataDenied();
+      results.push(row);
     }
+    await finalizeDataRead(ctx, authority, witnesses, results);
     return results;
   },
 });
@@ -315,18 +361,11 @@ export const fetchMemoriesByIds = internalQuery({
  * Internal query for keyword search (used by search action)
  */
 export const keywordSearchMemories = internalQuery({
-  args: {
-    memorySpaceId: v.string(),
-    query: v.string(),
-    limit: v.number(),
-  },
+  args: { memorySpaceId: v.string(), query: v.string(), limit: v.number(), reference: runtimeAuthorityReference },
   handler: async (ctx, args) => {
-    return await ctx.db
-      .query("memories")
-      .withSearchIndex("by_content", (q) =>
-        q.search("content", args.query).eq("memorySpaceId", args.memorySpaceId),
-      )
-      .take(args.limit);
+    const authority = await recheckDataAuthority(ctx, args.reference, "read");
+    if (args.memorySpaceId !== authority.memorySpaceId || !Number.isSafeInteger(args.limit) || args.limit < 1 || args.limit > 100) dataDenied();
+    return (await searchScopedMemories(ctx, authority, args.query)).slice(0, args.limit);
   },
 });
 
@@ -357,118 +396,23 @@ export const search = action({
     queryCategory: v.optional(v.string()),
     limit: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
-    const limit = args.limit || 20;
-    let results: any[] = [];
-
-    if (args.embedding && args.embedding.length > 0) {
-      // Semantic search with vector similarity using ctx.vectorSearch()
-      // This is the correct Convex API for vector search (only available in actions)
-      const vectorResults = await ctx.vectorSearch("memories", "by_embedding", {
-        vector: args.embedding,
-        limit: Math.min(limit * 2, 256), // Fetch more for post-filtering, max 256
-        filter: (q) => q.eq("memorySpaceId", args.memorySpaceId),
-      });
-
-      // Fetch full documents using internal query
-      const ids = vectorResults.map((r) => r._id);
-      const docs = await ctx.runQuery(internal.memories.fetchMemoriesByIds, {
-        ids,
-      });
-
-      // Merge scores with documents (preserve order from vector search)
-      const scoreMap = new Map(
-        vectorResults.map((r) => [r._id.toString(), r._score]),
-      );
-      results = docs.map((doc) => ({
-        ...doc,
-        _score: scoreMap.get(doc._id.toString()) ?? 0,
-      }));
-
-      // Sort by score (should already be sorted, but ensure consistency)
-      results.sort((a, b) => (b._score ?? 0) - (a._score ?? 0));
-    } else {
-      // Keyword search using internal query
-      results = await ctx.runQuery(internal.memories.keywordSearchMemories, {
-        memorySpaceId: args.memorySpaceId,
-        query: args.query,
-        limit,
-      });
-    }
-
-    // Apply filters
-    if (args.userId) {
-      results = results.filter(
-        (m) => m.sourceUserId === args.userId || m.userId === args.userId,
-      );
-    }
-
-    if (args.tags && args.tags.length > 0) {
-      results = results.filter((m) =>
-        args.tags!.some((tag) => m.tags.includes(tag)),
-      );
-    }
-
-    if (args.sourceType) {
-      results = results.filter((m) => m.sourceType === args.sourceType);
-    }
-
-    if (args.minImportance !== undefined) {
-      results = results.filter((m) => m.importance >= args.minImportance!);
-    }
-
-    // Apply role-based and category-based weighting for semantic search
-    if (args.embedding && args.embedding.length > 0) {
-      results = results.map((m: any) => {
-        let score = m._score ?? 0;
-
-        // Role-based weighting
-        if (m.messageRole === "user") {
-          score *= 1.25;
-        } else if (m.messageRole === "agent") {
-          const content = (m.content || "").toLowerCase();
-          const isAcknowledgment =
-            content.length < 60 &&
-            (content.includes("got it") ||
-              content.includes("i've noted") ||
-              content.includes("i'll remember") ||
-              content.includes("noted") ||
-              content.includes("understood") ||
-              content.includes("i'll set") ||
-              content.includes("i'll call"));
-          if (isAcknowledgment) {
-            score *= 0.5;
-          }
-        }
-
-        // Category-based boosting
-        if (args.queryCategory && m.factCategory === args.queryCategory) {
-          score *= 1.3;
-        }
-
-        // Enriched content boost
-        if (m.enrichedContent) {
-          score *= 1.1;
-        }
-
-        return { ...m, _score: score };
-      });
-
-      // Re-sort after applying weights
-      results.sort((a: any, b: any) => (b._score ?? 0) - (a._score ?? 0));
-    }
-
-    // Filter by minimum score
-    if (args.minScore !== undefined) {
-      results = results.filter((m: any) => {
-        if (m._score !== undefined) {
-          return m._score >= args.minScore!;
-        }
-        return true;
-      });
-    }
-
-    return results.slice(0, limit);
+  handler: async (ctx, args): Promise<Array<Doc<"memories"> & { _score?: number }>> => {
+    const authority = await requireActionDataAuthority(ctx, args, "read");
+    rejectUnqualifiedEmbedding(args.embedding);
+    const limit = args.limit ?? 20;
+    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) dataDenied("INVALID_INPUT", "Limit must be between 1 and 100");
+    await recheckActionDataAuthority(ctx, authority, "read");
+    const reference = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; memorySpaceId: string; query: string; limit: number }, Doc<"memories">[]>(
+      "memories:keywordSearchMemories") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; memorySpaceId: string; query: string; limit: number }, Doc<"memories">[]>;
+    let results = await ctx.runQuery(reference, { reference: authority, memorySpaceId: authority.memorySpaceId, query: args.query, limit });
+    if (args.userId) results = results.filter(m => m.sourceUserId === args.userId || m.userId === args.userId);
+    if (args.tags?.length) results = results.filter(m => args.tags!.some(tag => m.tags.includes(tag)));
+    if (args.sourceType) results = results.filter(m => m.sourceType === args.sourceType);
+    if (args.minImportance !== undefined) results = results.filter(m => m.importance >= args.minImportance!);
+    const hydrate = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>(
+      "memories:fetchMemoriesByIds") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>;
+    // Final scoped hydration rechecks each source/resource fence after candidate selection.
+    return await ctx.runQuery(hydrate, { reference: authority, ids: results.slice(0, limit).map(row => row._id) });
   },
 });
 
@@ -491,13 +435,9 @@ export const list = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let memories = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      ) // Updated
-      .order("desc")
-      .take(args.limit || 100);
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let memories = (await listScopedMemories(ctx, authority, capability)).sort((a, b) => b._creationTime - a._creationTime).slice(0, args.limit || 100);
 
     // Apply filters
     if (args.userId) {
@@ -530,12 +470,9 @@ export const count = query({
     ),
   },
   handler: async (ctx, args) => {
-    let memories = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      ) // Updated
-      .collect();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let memories = await listScopedMemories(ctx, authority, capability);
 
     // Apply filters
     if (args.userId) {
@@ -567,10 +504,10 @@ export const update = mutation({
     tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    rejectUnqualifiedEmbedding(args.embedding);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
@@ -594,7 +531,10 @@ export const update = mutation({
       },
     ];
 
-    await ctx.db.patch(memory._id, {
+    const { lineage, manualSourceBinding } = await reviseDataSource(ctx, authority, memory, args.content ?? memory.content);
+    await ctx.db.patch(memory._id, { runtimeEditor: dataEditor(authority),
+      lineage,
+      manualSourceBinding,
       content: args.content || memory.content,
       embedding:
         args.embedding !== undefined ? args.embedding : memory.embedding,
@@ -606,7 +546,7 @@ export const update = mutation({
       updatedAt: now,
     });
 
-    return await ctx.db.get(memory._id);
+    return await memoryMutationResult(ctx, authority, memory.memoryId, memory.ownerPrincipalId!, "update");
   },
 });
 
@@ -620,10 +560,9 @@ export const getVersion = query({
     version: v.number(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return null;
@@ -664,10 +603,9 @@ export const getHistory = query({
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return [];
@@ -711,12 +649,9 @@ export const deleteMany = mutation({
     ),
   },
   handler: async (ctx, args) => {
-    let memories = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let memories = await listScopedMemories(ctx, authority, capability);
 
     if (args.userId) {
       memories = memories.filter(
@@ -728,16 +663,19 @@ export const deleteMany = mutation({
       memories = memories.filter((m) => m.sourceType === args.sourceType);
     }
 
+    const admission = await canReadMutationRows(ctx, authority, memories);
+    const deletions: DataDeletionProof[] = [];
     let deleted = 0;
 
     for (const memory of memories) {
-      await ctx.db.delete(memory._id);
+      deletions.push(await tombstoneDataRow(ctx, authority, "memories", memory));
       deleted++;
     }
 
+    await finalizeMutationRowsRead(ctx, authority, admission, deletions);
     return {
       deleted,
-      memoryIds: memories.map((m) => m.memoryId),
+      ...(admission.discloseIds ? { memoryIds: memories.map((m) => m.memoryId) } : { mutationReceipt: true as const }),
     };
   },
 });
@@ -748,30 +686,20 @@ export const deleteMany = mutation({
  * Uses index lookups instead of full table scan to avoid memory issues with large tables
  */
 export const deleteByIds = mutation({
-  args: {
-    memoryIds: v.array(v.string()),
-  },
+  args: { memoryIds: v.array(v.string()) },
   handler: async (ctx, args) => {
-    const deletedIds: string[] = [];
-
-    // Look up each memory by index to avoid full table scan
-    // This is O(n) index lookups vs O(entire table) memory usage
-    for (const memoryId of args.memoryIds) {
-      const memory = await ctx.db
-        .query("memories")
-        .withIndex("by_memoryId", (q) => q.eq("memoryId", memoryId))
-        .first();
-
-      if (memory) {
-        await ctx.db.delete(memory._id);
-        deletedIds.push(memoryId);
-      }
+    const authority = await requireDataAuthority(ctx, {}, "write");
+    const rows: Doc<"memories">[] = [];
+    for (const id of [...new Set(args.memoryIds)]) {
+      const row = await getScopedMemory(ctx, authority, id, "write");
+      if (!row) dataDenied();
+      rows.push(row);
     }
-
-    return {
-      deleted: deletedIds.length,
-      memoryIds: deletedIds,
-    };
+    const admission = await prepareMutationRowsWrite(ctx, authority, rows);
+    const deletions = [];
+    for (const row of rows) deletions.push(await tombstoneDataRow(ctx, authority, "memories", row));
+    await finalizeMutationRowsRead(ctx, authority, admission, deletions);
+    return { deleted: rows.length, memoryIds: rows.map(row => row.memoryId) };
   },
 });
 
@@ -785,7 +713,7 @@ export const deleteByIds = mutation({
  * - Test deployments: dev-* deployment names allowed
  * - Production: Explicitly blocked
  */
-export const purgeAll = mutation({
+export const purgeAll = internalMutation({
   args: {},
   handler: async (ctx) => {
     // Security check: Only allow in test/dev environments
@@ -831,12 +759,9 @@ export const exportMemories = query({
     includeEmbeddings: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    let memories = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let memories = await listScopedMemories(ctx, authority, capability);
 
     if (args.userId) {
       memories = memories.filter(
@@ -911,12 +836,9 @@ export const updateMany = mutation({
     tags: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
-    let memories = await ctx.db
-      .query("memories")
-      .withIndex("by_memorySpace", (q) =>
-        q.eq("memorySpaceId", args.memorySpaceId),
-      )
-      .collect();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    let memories = await listScopedMemories(ctx, authority, capability);
 
     if (args.userId) {
       memories = memories.filter((m) => m.userId === args.userId);
@@ -926,10 +848,11 @@ export const updateMany = mutation({
       memories = memories.filter((m) => m.sourceType === args.sourceType);
     }
 
+    const admission = await canReadMutationRows(ctx, authority, memories);
     let updated = 0;
 
     for (const memory of memories) {
-      const patches: any = { updatedAt: Date.now() };
+      const patches: Partial<Omit<Doc<"memories">, "_id" | "_creationTime">> = { updatedAt: Date.now() };
 
       if (args.importance !== undefined) {
         patches.importance = args.importance;
@@ -939,13 +862,17 @@ export const updateMany = mutation({
         patches.tags = args.tags;
       }
 
-      await ctx.db.patch(memory._id, patches);
+      await ctx.db.patch(memory._id, { ...patches, runtimeEditor: dataEditor(authority) });
       updated++;
     }
 
+    // Re-evaluate independent READ after effects while retaining both original admissions.
+    const delivery = await canReadMutationRows(ctx, authority, memories);
+    await finalizeMutationRowsRead(ctx, authority, { ...admission,
+      readers: [...admission.readers, ...delivery.readers], sources: [...admission.sources, ...delivery.sources] }, []);
     return {
       updated,
-      memoryIds: memories.map((m) => m.memoryId),
+      ...(admission.discloseIds && delivery.discloseIds ? { memoryIds: memories.map((m) => m.memoryId) } : { mutationReceipt: true as const }),
     };
   },
 });
@@ -959,10 +886,9 @@ export const archive = mutation({
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
@@ -977,12 +903,13 @@ export const archive = mutation({
       ? memory.tags
       : [...memory.tags, "archived"];
 
-    await ctx.db.patch(memory._id, {
+    await ctx.db.patch(memory._id, { runtimeEditor: dataEditor(authority),
       tags: updatedTags,
       importance: Math.min(memory.importance, 10), // Reduce importance
       updatedAt: Date.now(),
     });
 
+    if (!await getScopedMemory(ctx, authority, args.memoryId, capability)) dataDenied();
     return {
       archived: true,
       memoryId: args.memoryId,
@@ -1000,10 +927,9 @@ export const restoreFromArchive = mutation({
     memoryId: v.string(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "write" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory) {
       throw new ConvexError("MEMORY_NOT_FOUND");
@@ -1024,16 +950,17 @@ export const restoreFromArchive = mutation({
     // Restore importance to a reasonable default if it was reduced
     const restoredImportance = memory.importance < 50 ? 50 : memory.importance;
 
-    await ctx.db.patch(memory._id, {
+    await ctx.db.patch(memory._id, { runtimeEditor: dataEditor(authority),
       tags: updatedTags,
       importance: restoredImportance,
       updatedAt: Date.now(),
     });
 
+    const result = await memoryMutationResult(ctx, authority, memory.memoryId, memory.ownerPrincipalId!, "update");
     return {
       restored: true,
       memoryId: args.memoryId,
-      memory: await ctx.db.get(memory._id),
+      ...("mutationReceipt" in result ? { mutationReceipt: true as const } : { memory: result }),
     };
   },
 });
@@ -1048,10 +975,9 @@ export const getAtTimestamp = query({
     timestamp: v.number(),
   },
   handler: async (ctx, args) => {
-    const memory = await ctx.db
-      .query("memories")
-      .withIndex("by_memoryId", (q) => q.eq("memoryId", args.memoryId))
-      .first();
+    const capability = "read" as const;
+    const authority = await requireDataAuthority(ctx, args, capability);
+    const memory = await getScopedMemory(ctx, authority, args.memoryId, capability);
 
     if (!memory || memory.memorySpaceId !== args.memorySpaceId) {
       return null;

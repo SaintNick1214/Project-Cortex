@@ -1,0 +1,26 @@
+--- cycle3/convex-dev/memories.ts
++++ cycle4/convex-dev/memories.ts
+@@ -848,6 +848,7 @@
+       memories = memories.filter((m) => m.sourceType === args.sourceType);
+     }
+ 
++    const admission = await canReadMutationRows(ctx, authority, memories);
+     let updated = 0;
+ 
+     for (const memory of memories) {
+@@ -865,10 +866,13 @@
+       updated++;
+     }
+ 
+-    const admission = await canReadMutationRows(ctx, authority, memories);
++    // Re-evaluate independent READ after effects while retaining both original admissions.
++    const delivery = await canReadMutationRows(ctx, authority, memories);
++    await finalizeMutationRowsRead(ctx, authority, { ...admission,
++      readers: [...admission.readers, ...delivery.readers], sources: [...admission.sources, ...delivery.sources] }, []);
+     return {
+       updated,
+-      ...(admission.discloseIds ? { memoryIds: memories.map((m) => m.memoryId) } : { mutationReceipt: true as const }),
++      ...(admission.discloseIds && delivery.discloseIds ? { memoryIds: memories.map((m) => m.memoryId) } : { mutationReceipt: true as const }),
+     };
+   },
+ });
