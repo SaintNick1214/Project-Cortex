@@ -1,0 +1,15 @@
+{
+  "scope": "SAFETYONLY original48 transcript/A2A registrations; original functional acceptance pending",
+  "checks": [
+    {"command": "CORTEX_UNAVAILABLE_RECEIPT=scratchwork/resume/transcript-closure/positive-controls48.json node --experimental-vm-modules node_modules/jest/bin/jest.js --config scratchwork/resume/transcript-closure/jest.config.mjs --runInBand", "exitCode": 0, "tests": 837, "passed": 837, "receipt": "native-handler-tests.txt"},
+    {"command": "npx --no-install tsc --noEmit -p work/resume/transcript-closure/tsconfig.json", "exitCode": 0, "receipt": "backend-typecheck.txt"},
+    {"command": "npx --no-install eslint convex-dev/conversations.ts convex-dev/conversationShares.ts convex-dev/conversationSnapshots.ts convex-dev/factHistory.ts convex-dev/a2a.ts convex-dev/runtimeUnavailableAuth.ts tests/unit/runtimeUnavailableAuth/closure.test.ts", "exitCode": 0, "receipt": "lint.txt"},
+    {"command": "node _goals/convex-backend-runtime-2026-10-02/qa/resume-dependency-refinement-c2/inventory.mjs _goals/convex-backend-runtime-2026-10-02/qa/task03b2e-transcript-a2a-foundation/current-inventory", "exitCode": 0, "registered": 259, "public": 206, "internal": 53, "unresolved": 0, "receipt": "inventory.txt"},
+    {"command": "git diff --check -- convex-dev/conversations.ts convex-dev/conversationShares.ts convex-dev/conversationSnapshots.ts convex-dev/factHistory.ts convex-dev/a2a.ts convex-dev/runtimeUnavailableAuth.ts tests/unit/runtimeUnavailableAuth", "exitCode": 0},
+    {"command": "npx --no-install tsc --noEmit", "exitCode": 2, "status": "INITIAL_BLOCKER_PRESERVED_NOT_CURRENT_ROOT_PASS", "receipt": "initial-root-typecheck-blockers.txt"}
+  ],
+  "scratchMove": "Original commands ran under scratchwork/resume/transcript-closure. After completion, only this executor's owned tree moved to work/resume/transcript-closure per developer instruction; command provenance remains unchanged. Standalone config and source criteria remain identical.",
+  "independentTaskReview": "PENDING_COORDINATOR",
+  "currentGuardLiveAggregate": "PENDING_COORDINATOR",
+  "Task04": "HELD"
+}

@@ -1,3 +1,4 @@
+import { runtimeUnavailable, internalUnavailable } from "./runtimeUnavailableAuth";
 /**
  * Cortex SDK - Fact History API
  *
@@ -6,7 +7,7 @@
  */
 
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { query, internalMutation } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -15,7 +16,7 @@ import { mutation, query } from "./_generated/server";
 /**
  * Log a fact change event
  */
-export const logEvent = mutation({
+export const logEvent = internalMutation({
   args: {
     factId: v.string(),
     memorySpaceId: v.string(),
@@ -43,6 +44,9 @@ export const logEvent = mutation({
     conversationId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
     const now = Date.now();
     const eventId = `fh-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
@@ -71,11 +75,14 @@ export const logEvent = mutation({
 /**
  * Delete history events for a fact (GDPR cascade)
  */
-export const deleteByFactId = mutation({
+export const deleteByFactId = internalMutation({
   args: {
     factId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
     const events = await ctx.db
       .query("factHistory")
       .withIndex("by_factId", (q) => q.eq("factId", args.factId))
@@ -92,11 +99,14 @@ export const deleteByFactId = mutation({
 /**
  * Delete history events for a user (GDPR cascade)
  */
-export const deleteByUserId = mutation({
+export const deleteByUserId = internalMutation({
   args: {
     userId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
     const events = await ctx.db
       .query("factHistory")
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
@@ -113,11 +123,14 @@ export const deleteByUserId = mutation({
 /**
  * Delete history events by memory space
  */
-export const deleteByMemorySpace = mutation({
+export const deleteByMemorySpace = internalMutation({
   args: {
     memorySpaceId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
     const events = await ctx.db
       .query("factHistory")
       .withIndex("by_memorySpace", (q) =>
@@ -136,13 +149,16 @@ export const deleteByMemorySpace = mutation({
 /**
  * Purge old history events (retention policy)
  */
-export const purgeOldEvents = mutation({
+export const purgeOldEvents = internalMutation({
   args: {
     memorySpaceId: v.optional(v.string()),
     olderThan: v.number(), // Timestamp - delete events before this
     limit: v.optional(v.number()), // Max events to delete per call
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
     // Filter by memory space if provided
     const events = args.memorySpaceId
       ? await ctx.db
@@ -181,10 +197,15 @@ export const purgeOldEvents = mutation({
  */
 export const getHistory = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     factId: v.string(),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const historyQuery = ctx.db
       .query("factHistory")
       .withIndex("by_factId", (q) => q.eq("factId", args.factId))
@@ -203,9 +224,14 @@ export const getHistory = query({
  */
 export const getEvent = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     eventId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const event = await ctx.db
       .query("factHistory")
       .withIndex("by_eventId", (q) => q.eq("eventId", args.eventId))
@@ -220,6 +246,7 @@ export const getEvent = query({
  */
 export const getChangesByTimeRange = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     after: v.optional(v.number()),
     before: v.optional(v.number()),
@@ -235,6 +262,9 @@ export const getChangesByTimeRange = query({
     offset: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     let events = await ctx.db
       .query("factHistory")
       .withIndex("by_memorySpace", (q) =>
@@ -270,11 +300,15 @@ export const getChangesByTimeRange = query({
  */
 export const countByAction = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     after: v.optional(v.number()),
     before: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     let events = await ctx.db
       .query("factHistory")
       .withIndex("by_memorySpace", (q) =>
@@ -313,9 +347,14 @@ export const countByAction = query({
  */
 export const getSupersessionChain = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     factId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const chain: any[] = [];
     let currentFactId: string | undefined = args.factId;
 
@@ -357,10 +396,14 @@ export const getSupersessionChain = query({
  */
 export const getActivitySummary = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     hours: v.optional(v.number()), // Default 24 hours
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const hours = args.hours ?? 24;
     const since = Date.now() - hours * 60 * 60 * 1000;
 

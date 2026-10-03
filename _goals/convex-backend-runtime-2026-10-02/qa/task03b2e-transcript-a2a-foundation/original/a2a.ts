@@ -1,4 +1,3 @@
-import { runtimeUnavailable } from "./runtimeUnavailableAuth";
 /**
  * Cortex SDK - A2A Communication API
  *
@@ -27,8 +26,6 @@ import { mutation, query } from "./_generated/server";
  */
 export const send = mutation({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
     from: v.string(),
     to: v.string(),
     message: v.string(),
@@ -40,9 +37,6 @@ export const send = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "write", args);
-
     // Validation
     if (!args.from || args.from.trim() === "") {
       throw new Error("INVALID_AGENT_ID: 'from' agent ID is required");
@@ -244,8 +238,6 @@ export const send = mutation({
  */
 export const request = mutation({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
     from: v.string(),
     to: v.string(),
     message: v.string(),
@@ -256,9 +248,6 @@ export const request = mutation({
     importance: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "write", args);
-
     // Validation
     if (!args.from || args.from.trim() === "") {
       throw new Error("INVALID_AGENT_ID: 'from' agent ID is required");
@@ -382,8 +371,6 @@ export const request = mutation({
  */
 export const broadcast = mutation({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
     from: v.string(),
     to: v.array(v.string()),
     message: v.string(),
@@ -394,9 +381,6 @@ export const broadcast = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "write", args);
-
     // Validation
     if (!args.from || args.from.trim() === "") {
       throw new Error("INVALID_AGENT_ID: 'from' agent ID is required");
@@ -639,8 +623,6 @@ export const broadcast = mutation({
  */
 export const getConversation = query({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
     agent1: v.string(),
     agent2: v.string(),
     since: v.optional(v.number()),
@@ -652,9 +634,6 @@ export const getConversation = query({
     offset: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "read", args);
-
     // Validation
     if (!args.agent1 || args.agent1.trim() === "") {
       throw new Error("INVALID_AGENT_ID: 'agent1' is required");

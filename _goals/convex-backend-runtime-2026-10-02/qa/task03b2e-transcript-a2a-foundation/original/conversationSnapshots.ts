@@ -1,4 +1,3 @@
-import { runtimeUnavailable } from "./runtimeUnavailableAuth";
 /**
  * Cortex SDK - Conversation Snapshots API
  *
@@ -73,7 +72,6 @@ function redactPII(text: string, customRedactions?: { pattern: string; replaceme
  */
 export const create = mutation({
   args: {
-    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     createdBy: v.string(),
     
@@ -93,9 +91,6 @@ export const create = mutation({
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "write", args);
-
     // Get the source conversation
     const conversation = await ctx.db
       .query("conversations")
@@ -175,15 +170,10 @@ export const create = mutation({
  */
 export const deleteSnapshot = mutation({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
     snapshotId: v.string(),
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "write", args);
-
     const snapshot = await ctx.db
       .query("conversationSnapshots")
       .withIndex("by_snapshotId", (q) => q.eq("snapshotId", args.snapshotId))
@@ -215,14 +205,9 @@ export const deleteSnapshot = mutation({
  */
 export const get = query({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
     snapshotId: v.string(),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "read", args);
-
     const snapshot = await ctx.db
       .query("conversationSnapshots")
       .withIndex("by_snapshotId", (q) => q.eq("snapshotId", args.snapshotId))
@@ -241,15 +226,10 @@ export const get = query({
  */
 export const listByConversation = query({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     includeArchived: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "read", args);
-
     const snapshots = await ctx.db
       .query("conversationSnapshots")
       .withIndex("by_conversation", (q) =>
@@ -270,15 +250,10 @@ export const listByConversation = query({
  */
 export const listByUser = query({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.optional(v.string()),
     userId: v.string(),
     includeArchived: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "read", args);
-
     const snapshots = await ctx.db
       .query("conversationSnapshots")
       .withIndex("by_createdBy", (q) => q.eq("createdBy", args.userId))
