@@ -1,0 +1,32 @@
+import {ConvexError} from 'convex/values';
+import {isDeepStrictEqual} from 'node:util';
+import {harness,memoryStoreArgs,factStoreArgs} from '/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts';
+import * as memories from '/workspace/Project-Cortex/convex-dev/memories.ts';
+import * as facts from '/workspace/Project-Cortex/convex-dev/facts.ts';
+Error.stackTraceLimit=100;
+const operations:any[]=[['memories.store',memories.store,memoryStoreArgs],['memories.update',memories.update,{memorySpaceId:'space-a',memoryId:'target',importance:77}],['memories.updateMany',memories.updateMany,{memorySpaceId:'space-a',importance:77}],['facts.store',facts.store,factStoreArgs],['facts.update',facts.update,{memorySpaceId:'space-a',factId:'target',confidence:88}]];
+const methods=['findPrincipal','getPrincipal','listMemberships','getMembership','listGrants','getGrant','getScope','hasTombstone'];
+const expected={version:1,code:'BACKEND_OPERATION_FAILED',message:'Data operation failed.',retryable:false,outcome:'not_committed'};
+const results:any[]=[];
+for(const [name,registration,args] of operations)for(const method of methods)for(const timing of ['sync','rejected'])for(const mode of ['exact','private-data-accessor','revoked-proxy']) {
+ const h=harness();const writer=await h.provisionScope({capabilities:['write']});
+ // Scope/tombstone failures must hit candidate materialization, not only WRITE fallback.
+ if(['getScope','hasTombstone'].includes(method))await h.provisionTenantRead();
+ if(name.includes('update'))await h.seedData(name.startsWith('memories')?'memories':'facts',writer,'target');
+ const before=structuredClone(h.db.rows);h.db.attemptedWrites=[];let injected=0,traps=0;let error:any=new ConvexError({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'});
+ if(mode==='private-data-accessor')Object.defineProperty(error,'data',{get(){traps++;throw new Error('PRIVATE_DIAGNOSTIC');}});
+ if(mode==='revoked-proxy'){const r=Proxy.revocable({},{});error=r.proxy;r.revoke();}
+ const selected=()=>{const stack=new Error().stack??'';return stack.includes('optionalMutationRead')&&stack.includes('Object.'+method);};
+ const fail=()=>{injected++;if(timing==='sync')throw error;return Promise.reject(error);};
+ const originalGet=h.db.get.bind(h.db);h.db.get=((...a:any[])=>selected()?fail():originalGet(...a)) as any;
+ const originalQuery=h.db.query.bind(h.db);h.db.query=((...a:any[])=>{
+  if(selected()&&timing==='sync')return fail();
+  const q:any=originalQuery(...a);
+  for(const terminal of ['take','collect']){const f=q[terminal].bind(q);q[terminal]=(...b:any[])=>selected()?fail():f(...b);}
+  return q;
+ }) as any;
+ let success=false,data:any;try{await h.invoke(registration,args);success=true;}catch(e:any){data=e.data;}
+ const rollback=isDeepStrictEqual(before,h.db.rows);const matched=injected>0&&!success&&rollback&&traps===0&&isDeepStrictEqual(data,expected);
+ results.push({name,method,timing,mode,injected,traps,success,rollback,data,attemptedWrites:h.db.attemptedWrites,matched});
+}
+console.log(JSON.stringify({summary:{total:results.length,matched:results.filter(x=>x.matched).length,missed:results.filter(x=>!x.injected).length},results},null,2));process.exitCode=results.some(x=>!x.matched)?1:0;

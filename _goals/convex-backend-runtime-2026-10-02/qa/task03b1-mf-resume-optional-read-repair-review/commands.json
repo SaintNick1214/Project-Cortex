@@ -1,0 +1,152 @@
+[
+  {
+    "name": "prior80",
+    "argv": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "work/resume/mf-optional-repair-review/prior80.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.44652867317199707
+  },
+  {
+    "name": "fresh-controls",
+    "argv": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "work/resume/mf-optional-repair-review/fresh-controls.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 1,
+    "seconds": 3.63228178024292
+  },
+  {
+    "name": "unit",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/(runtimeEndpointAuth|runtimeAuth)",
+      "--runInBand",
+      "--forceExit",
+      "--json",
+      "--outputFile=/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf-resume-optional-read-repair-review/tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 6.183926820755005
+  },
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 7.676892280578613
+  },
+  {
+    "name": "scoped-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf-resume-optional-read-repair/tsconfig.scoped.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 4.122039079666138
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeDataAuth.ts",
+      "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 6.804240465164185
+  },
+  {
+    "name": "fresh-controls-corrected",
+    "argv": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "work/resume/mf-optional-repair-review/fresh-controls.mts"
+    ],
+    "exit": 0,
+    "note": "Error.stackTraceLimit100; all240 callback injections reached; original short-stack noncertifying result retained"
+  },
+  {
+    "name": "confirmations",
+    "argv": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/work/resume/mf-optional-repair-review/confirmations.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.39438796043395996,
+    "onlyImportRootsAdapted": true
+  },
+  {
+    "name": "repair-controls",
+    "argv": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/work/resume/mf-optional-repair-review/repair-controls.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.45860910415649414,
+    "onlyImportRootsAdapted": true
+  },
+  {
+    "name": "source-fence-probes",
+    "argv": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/work/resume/mf-optional-repair-review/source-fence-probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.3041543960571289,
+    "onlyImportRootsAdapted": true
+  },
+  {
+    "name": "historical-source-probes",
+    "argv": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/work/resume/mf-optional-repair-review/historical-source-probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.27730393409729004,
+    "onlyImportRootsAdapted": true
+  },
+  {
+    "name": "final-read-probes",
+    "argv": [
+      "node",
+      "node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/work/resume/mf-optional-repair-review/final-read-probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.30178093910217285,
+    "onlyImportRootsAdapted": true
+  }
+]
