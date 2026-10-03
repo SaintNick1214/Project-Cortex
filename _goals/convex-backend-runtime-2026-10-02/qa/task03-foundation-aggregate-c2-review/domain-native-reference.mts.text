@@ -1,0 +1,10 @@
+import {memoryFixture,registeredHandler} from '../../../tests/unit/runtimeMemory/fixture.ts';
+import {remember,recall,checkAuthority} from '../../../convex-dev/runtimeMemory.ts';
+import {getFunctionName} from 'convex/server';
+import {convexToJson} from 'convex/values';
+import fs from 'node:fs';
+const schema=JSON.parse((checkAuthority as unknown as {exportArgs():string}).exportArgs());
+const rows=[]; for(const [name,registration] of [['remember',remember],['recall',recall]] as const){const f=memoryFixture();const run=f.actionCtx.runQuery.bind(f.actionCtx);let captured:unknown;
+f.actionCtx.runQuery=async(ref,input)=>{if(getFunctionName(ref)==='runtimeMemory:checkAuthority')captured=convexToJson(input);return await run(ref,input);};let error;try{await registeredHandler(registration)(f.actionCtx as never,{tenantId:'tenant-a',memorySpaceId:'space-a',requestId:'validator-witness',text:'owned source'});}catch(e){error=(e as {data:unknown}).data;}
+const reference=(captured as {reference:Record<string,unknown>}).reference;const acceptedFields=Object.keys(schema.value.reference.fieldType.value);rows.push({name,serializedReferenceKeys:Object.keys(reference),nativeAcceptedReferenceKeys:acceptedFields,extraFields:Object.keys(reference).filter(k=>!acceptedFields.includes(k)),fixtureReturnedError:error});}
+const result={nativeCheckAuthorityArgs:schema,rows};fs.writeFileSync('_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-aggregate-c2-review/domain-native-reference.json',JSON.stringify(result,null,2));console.log(JSON.stringify(rows,null,2));
