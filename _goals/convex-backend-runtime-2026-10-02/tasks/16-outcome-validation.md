@@ -1,8 +1,10 @@
 # Task 16: Cross-layer live behavior and adversarial outcomes
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [10 Clean-slate embedding storage and retrieval](10-embedding-profiles.md), [11 Scoped durable external graph projection](11-graph-outbox.md), [12 Convex-owned assets and bounded private delivery](12-asset-lifecycle.md), [13 Gateway image and durable asynchronous video jobs](13-media-jobs.md), [14 TypeScript media, embedding and UI extensions](14-client-extensions.md), [15 Additive CLI, quickstart and template integration](15-product-integration.md)
+
+Execution may gather missing aggregate security outcomes after accepted implementation prerequisites. Completion requires fresh accepted03-final for every original Task03 criterion and every current/new registration, plus all original outcomes below; no typed-unavailable feature counts as final success.
 
 ## Objective
 

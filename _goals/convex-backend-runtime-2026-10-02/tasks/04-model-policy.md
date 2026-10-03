@@ -1,8 +1,10 @@
 # Task 04: Per-function model policy and admission budgets
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
-**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md), [03 Verified identity, grants and alternate endpoint closure](03-authorization.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md), [03 authorization foundation](03-authorization.md#authorization-execution-gates)
+
+This execution prerequisite means independently accepted **03-foundation**, not full03-final. All original Task03 functional criteria remain required at their mapped implementation gates and03-final before Task17. See [accepted sequencing contract](../qa/resume-dependency-refinement-c2/plan.md).
 
 ## Objective
 

@@ -1,8 +1,8 @@
 # Task 10: Clean-slate embedding storage and retrieval
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
-**Depends on:** [04 Per-function model policy and admission budgets](04-model-policy.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+**Depends on:** [09 accepted actual text/UI slice](09-text-client-slice.md), [04 Per-function model policy and admission budgets](04-model-policy.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
 
 ## Objective
 

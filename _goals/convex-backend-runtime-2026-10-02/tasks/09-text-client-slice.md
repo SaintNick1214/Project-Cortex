@@ -1,8 +1,10 @@
 # Task 09: Minimal text clients and UI vertical slice
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [06 Additive backend development installation](06-additive-installation.md), [07 Agent execution and durable reactive output](07-agent-streams.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+
+Text execution consumes accepted03-foundation and05/07/08 functional text authorization, not later03-assets or03-final. All original text/UI/native evidence is required before extensions.
 
 ## Objective
 

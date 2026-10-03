@@ -1,8 +1,10 @@
 # Task 11: Scoped durable external graph projection
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
-**Depends on:** [03 Verified identity, grants and alternate endpoint closure](03-authorization.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+**Depends on:** [09 accepted actual text/UI slice](09-text-client-slice.md), [03 authorization foundation](03-authorization.md#authorization-execution-gates), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+
+This execution prerequisite means independently accepted **03-foundation**, not full03-final. All original Task03 functional criteria remain required at their mapped implementation gates and03-final before Task17. See [accepted sequencing contract](../qa/resume-dependency-refinement-c2/plan.md).
 
 ## Objective
 

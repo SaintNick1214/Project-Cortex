@@ -1,6 +1,6 @@
 # Task 07: Agent execution and durable reactive output
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [06 Additive backend development installation](06-additive-installation.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md)
 

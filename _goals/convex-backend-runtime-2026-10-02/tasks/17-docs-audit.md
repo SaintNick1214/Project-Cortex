@@ -1,8 +1,10 @@
 # Task 17: Installation documentation, quality and independent final gate
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [15 Additive CLI, quickstart and template integration](15-product-integration.md), [16 Cross-layer live behavior and adversarial outcomes](16-outcome-validation.md)
+
+Completion requires accepted03-final and complete16 outcomes plus every original final quality/module/UI criterion.03-foundation safety acceptance never substitutes for full functional scope.
 
 ## Objective
 

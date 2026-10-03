@@ -1,6 +1,6 @@
 # Task 08: Durable asynchronous memory and belief consistency
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [02 Backend-friendly memory domain services](02-domain-services.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md), [07 Agent execution and durable reactive output](07-agent-streams.md)
 

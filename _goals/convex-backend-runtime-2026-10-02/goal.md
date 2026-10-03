@@ -94,22 +94,24 @@ The original task artifacts were written during planning and are flat under `tas
 | Core qualification | [01 Stack and text-boundary qualification](tasks/01-qualification.md) | Execution request + disposable core prerequisites | M |
 | Foundation | [02 Backend domain separation](tasks/02-domain-services.md) | 01 | L |
 | Foundation | [03 Identity and scoped endpoint access](tasks/03-authorization.md) | 01 | L |
-| Foundation | [04 Model policy and admission budgets](tasks/04-model-policy.md) | 01, 03 | M |
-| Runtime | [05 Transcript and run ledger](tasks/05-transcripts-runs.md) | 02, 03, 04 | M |
-| Early integration | [06 Additive backend installation](tasks/06-additive-installation.md) | 03, 05 | M |
+| Foundation | [04 Model policy and admission budgets](tasks/04-model-policy.md) | 01, 03-foundation | M |
+| Runtime | [05 Transcript and run ledger](tasks/05-transcripts-runs.md) | 02, 03-foundation, 04 | M |
+| Early integration | [06 Additive backend installation](tasks/06-additive-installation.md) | 03-foundation, 05 | M |
 | Runtime | [07 Agent execution and reactive output](tasks/07-agent-streams.md) | 05, 06 | L |
 | Memory | [08 Durable memory consistency](tasks/08-memory-pipeline.md) | 02, 05, 07 | L |
 | First vertical slice | [09 Text clients and UI](tasks/09-text-client-slice.md) | 06, 07, 08 | M |
-| Memory extension | [10 Clean-slate embeddings and retrieval](tasks/10-embedding-profiles.md) | 04, 08, own service gate | M |
-| Memory extension | [11 Durable graph projection](tasks/11-graph-outbox.md) | 03, 08, own service gate | M |
-| Media foundation | [12 Convex assets and bounded delivery](tasks/12-asset-lifecycle.md) | 03, 05, own storage gate | M |
-| Media extension | [13 Gateway media jobs](tasks/13-media-jobs.md) | 04, 07, 12, own media gate | M |
+| Memory extension | [10 Clean-slate embeddings and retrieval](tasks/10-embedding-profiles.md) | 04, 08, 09, own service gate | M |
+| Memory extension | [11 Durable graph projection](tasks/11-graph-outbox.md) | 03-foundation, 08, 09, own service gate | M |
+| Media foundation | [12 Convex assets and bounded delivery](tasks/12-asset-lifecycle.md) | 03-foundation, 05, 09, own storage gate | M |
+| Media extension | [13 Gateway media jobs](tasks/13-media-jobs.md) | 04, 07, 09, 12, own media gate | M |
 | Client extensions | [14 TypeScript and UI extensions](tasks/14-client-extensions.md) | 09, 10, 12, 13 | L; bounded substeps |
 | Full integration | [15 CLI/demo/template integration](tasks/15-product-integration.md) | 06, 11, 14 | L; bounded substeps |
 | Verification | [16 Cross-layer outcomes](tasks/16-outcome-validation.md) | 10–15 | L |
 | Handoff | [17 Documentation and independent gate](tasks/17-docs-audit.md) | 15, 16 | M |
 
 Tasks 01–09 form the first complete vertical slice, independent of media/storage/graph service access. It proves an authenticated text turn, scoped recall, one backend tool, reconnect, immediate next-turn continuity and durable ingestion. Full media/vector/graph scope follows the same foundation. TypeScript/UI substeps may parallelize once the shared contract is stable; serialize overlapping provider/demo/CLI/mirror work and preserve unrelated local work. The handoff branch excludes the dirty local source work from other sessions.
+
+03 dependency edges in this table denote **03-foundation**, independently reviewed after exhaustive currentguard live qualification. Full03-final remains required for17 and is aggregated with16 outcomes. The row-level functional restoration map and exact prerequisites are in [authorization sequencing](qa/resume-dependency-refinement-c2/plan.md). No original acceptance criterion is removed; typed unavailability certifies safety only.
 
 ## Open Gates and Definition of Done
 

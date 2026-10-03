@@ -33,3 +33,11 @@ Establish one trusted authorization boundary for runtime and all reachable Corte
 Profile isolation skill and trusted identity fixtures. Preserve consumer auth.config/http routing. Do not infer access from AuthContext IDs.
 
 No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+## Authorization execution gates
+
+03-foundation closes every current registered bypass with verified guards, safe internalization or typed authorized unavailability before private hydration/effects, with exhaustive native/live currentguard negatives and fresh aggregate independent PASS before04. It does not complete this task.
+
+03-transcript completes05 single-Agent direct access, shares/redaction and tracked lock/unlock/revision;03-text-execution covers07/08/09 live tool/subscription/background/current source/derived repair;03-assets covers12/13/14 private bytes, storage ownership, media callbacks and client delivery.11 supplies actual graph late-write/deletion receipts. Each carries its original task criteria and fresh review.
+
+03-final aggregates every original requirement above and every current/new registration, consuming16 adversarial outcomes;17 cannot complete without03-final. Authorized capability errors are intermediate safety receipts, never final functional feature acceptance. [Sequencing contract and exhaustive row ledger](../qa/resume-dependency-refinement-c2/plan.md).

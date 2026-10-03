@@ -1,6 +1,6 @@
 # Task 14: TypeScript media, embedding and UI extensions
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [09 Minimal text clients and UI vertical slice](09-text-client-slice.md), [10 Clean-slate embedding storage and retrieval](10-embedding-profiles.md), [12 Convex-owned assets and bounded private delivery](12-asset-lifecycle.md), [13 Gateway image and durable asynchronous video jobs](13-media-jobs.md)
 

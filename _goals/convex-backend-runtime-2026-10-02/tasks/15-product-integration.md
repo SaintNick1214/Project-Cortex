@@ -1,8 +1,8 @@
 # Task 15: Additive CLI, quickstart and template integration
 
-**Status:** Planning only — pending execution authorization.
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
 **Goal:** [Cortex-owned backend runs](../goal.md)
-**Depends on:** [11 Scoped durable external graph projection](11-graph-outbox.md), [14 TypeScript media, embedding and UI extensions](14-client-extensions.md)
+**Depends on:** [06 Additive backend development installation](06-additive-installation.md), [11 Scoped durable external graph projection](11-graph-outbox.md), [14 TypeScript media, embedding and UI extensions](14-client-extensions.md)
 
 ## Objective
 
