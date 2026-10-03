@@ -1,0 +1,261 @@
+[
+  {
+    "name": "npm-version",
+    "argv": [
+      "npm",
+      "exec",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T19:59:48.902256+00:00",
+    "endUtc": "2026-10-03T19:59:49.989845+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/npm-version.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/npm-version.stderr"
+  },
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "convex-dev/tsconfig.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T19:59:49.990044+00:00",
+    "endUtc": "2026-10-03T19:59:58.640305+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/backend-types.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/backend-types.stderr"
+  },
+  {
+    "name": "scoped-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/tsconfig.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T19:59:58.640607+00:00",
+    "endUtc": "2026-10-03T20:00:01.804778+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/scoped-types.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/scoped-types.stderr"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/artifacts.ts",
+      "convex-dev/runtimeArtifactAuth.ts",
+      "tests/unit/runtimeArtifactAuth",
+      "--max-warnings=0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:01.805041+00:00",
+    "endUtc": "2026-10-03T20:00:08.847209+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/lint.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/lint.stderr"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/jest.cjs",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:08.847588+00:00",
+    "endUtc": "2026-10-03T20:00:09.030652+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/discovery.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/discovery.stderr"
+  },
+  {
+    "name": "native",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/jest.cjs",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/native-tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:09.031068+00:00",
+    "endUtc": "2026-10-03T20:00:15.396779+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/native.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/native.stderr"
+  },
+  {
+    "name": "inventory",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/artifact/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/inventory.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:15.397182+00:00",
+    "endUtc": "2026-10-03T20:00:15.757717+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/inventory.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/inventory.stderr"
+  },
+  {
+    "name": "root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:15.758261+00:00",
+    "endUtc": "2026-10-03T20:00:29.251512+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/root-types.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/root-types.stderr"
+  },
+  {
+    "name": "probe-probes",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:29.252227+00:00",
+    "endUtc": "2026-10-03T20:00:29.489455+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-probes.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-probes.stderr"
+  },
+  {
+    "name": "probe-repeated-source",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/repeated-source.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:29.489934+00:00",
+    "endUtc": "2026-10-03T20:00:29.703598+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-repeated-source.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-repeated-source.stderr"
+  },
+  {
+    "name": "probe-adversarial",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/adversarial.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:29.704118+00:00",
+    "endUtc": "2026-10-03T20:00:29.953598+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-adversarial.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-adversarial.stderr"
+  },
+  {
+    "name": "probe-additional",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/additional.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:29.954132+00:00",
+    "endUtc": "2026-10-03T20:00:30.184377+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-additional.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-additional.stderr"
+  },
+  {
+    "name": "probe-write-error-output",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/write-error-output.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:30.184950+00:00",
+    "endUtc": "2026-10-03T20:00:30.392547+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-write-error-output.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-write-error-output.stderr"
+  },
+  {
+    "name": "probe-write-error-output-controls",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/write-error-output-controls.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:30.393153+00:00",
+    "endUtc": "2026-10-03T20:00:30.594479+00:00",
+    "exitCode": 1,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-write-error-output-controls.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-write-error-output-controls.stderr"
+  },
+  {
+    "name": "probe-private-error-admission",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/private-error-admission.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:30.595061+00:00",
+    "endUtc": "2026-10-03T20:00:30.852110+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-private-error-admission.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-private-error-admission.stderr"
+  },
+  {
+    "name": "probe-fresh-boundary",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/node_modules/tsx/dist/loader.mjs",
+      "/workspace/Project-Cortex/work/resume/artifact-checks/fresh-boundary.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/artifact",
+    "startUtc": "2026-10-03T20:00:30.852784+00:00",
+    "endUtc": "2026-10-03T20:00:31.093164+00:00",
+    "exitCode": 0,
+    "stdout": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-fresh-boundary.stdout",
+    "stderr": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks/probe-fresh-boundary.stderr"
+  }
+]

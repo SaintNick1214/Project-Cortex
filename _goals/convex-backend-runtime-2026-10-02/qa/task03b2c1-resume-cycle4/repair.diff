@@ -1,0 +1,179 @@
+--- cycle3/runtimeArtifactAuth.ts
++++ cycle4/runtimeArtifactAuth.ts
+@@ -8,7 +8,7 @@
+ import type { Doc, Id } from "./_generated/dataModel";
+ import type { MutationCtx, QueryCtx } from "./_generated/server";
+ import {
+-  assertResourceScope, createAuthorityReader, requireAuthority, resolveAuthorityReference,
++  assertResourceScope, createAuthorityReader, resolveAuthority, resolveAuthorityReference,
+   type AuthorityReader, type GrantRecord, type MembershipRecord, type PrincipalRecord,
+   type ScopeRecord, type TombstoneKey,
+ } from "./runtimeAuth";
+@@ -52,13 +52,21 @@
+ ]);
+ function safeArtifactErrorData(error: unknown): Value | undefined {
+   if (!(error instanceof ConvexError)) return undefined;
+-  const data: unknown = error.data;
++  // Native ConvexError owns a data field. Do not invoke exception getters.
++  const descriptor = Object.getOwnPropertyDescriptor(error, "data");
++  if (!descriptor || !("value" in descriptor)) return undefined;
++  const data: unknown = descriptor.value;
+   if (typeof data === "string" && SAFE_ARTIFACT_STRING_ERRORS.has(data)) return data;
+   if (data === null || typeof data !== "object") return undefined;
+-  const fields = data as Record<string, unknown>;
++  const prototype: unknown = Object.getPrototypeOf(data);
++  if (prototype !== Object.prototype && prototype !== null) return undefined;
++  const descriptors = Object.getOwnPropertyDescriptors(data);
++  const ownKeys = Reflect.ownKeys(descriptors);
++  if (ownKeys.some((key) => typeof key !== "string" || !("value" in descriptors[key]!))) return undefined;
++  const fields: Record<string, unknown> = Object.fromEntries(ownKeys.map((key) => [key, descriptors[key as string]!.value]));
+   const code = fields.code;
+   if (typeof code !== "string") return undefined;
+-  const keys = Object.keys(fields).sort().join(",");
++  const keys = ownKeys.map(String).sort().join(",");
+   if (keys === "code,message" && SAFE_ARTIFACT_ERROR_CODES.has(code)
+     && fields.message === (code === "CAPABILITY_NOT_READY"
+       ? "Owned file and canonical source admission is pending." : "Artifact operation denied.")) {
+@@ -71,6 +79,42 @@
+     return { version: 1, code, message, retryable: false, outcome: "not_dispatched" };
+   }
+   return undefined;
++}
++function backendFailure(): ConvexError<Value> {
++  return new ConvexError({ version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.",
++    retryable: false, outcome: "not_committed" });
++}
++function ordinaryAuthorityDenial(error: unknown): boolean {
++  const safe = safeArtifactErrorData(error);
++  if (typeof safe !== "object" || safe === null || safe instanceof ArrayBuffer || Array.isArray(safe)) return false;
++  // safeArtifactErrorData constructs static object envelopes itself.
++  const fields = safe as Record<string, unknown>;
++  return fields.code === "FORBIDDEN" && fields.message === "Access denied"
++    && fields.version === 1 && fields.retryable === false && fields.outcome === "not_dispatched";
++}
++/** Dependency reads produce records, never policy denials. Protect each read
++ * before the accepted resolver's candidate-pruning catch can erase a diagnostic.
++ * The accepted resolver still evaluates all identity/scope/generation policy.
++ */
++function protectedAuthorityReader(ctx: Context): AuthorityReader {
++  const reader = createAuthorityReader(ctx);
++  async function read<T>(operation: () => Promise<T>): Promise<T> {
++    try { return await operation(); }
++    catch { throw backendFailure(); }
++  }
++  return {
++    findPrincipal: (issuer, subject) => read(() => reader.findPrincipal(issuer, subject)),
++    getPrincipal: (id) => read(() => reader.getPrincipal(id)),
++    listMemberships: (id) => read(() => reader.listMemberships(id)),
++    getMembership: (id) => read(() => reader.getMembership(id)),
++    listGrants: (id) => read(() => reader.listGrants(id)),
++    getGrant: (id) => read(() => reader.getGrant(id)),
++    getScope: (tenantId, spaceId) => read(() => reader.getScope(tenantId, spaceId)),
++    hasTombstone: (target) => read(() => reader.hasTombstone(target)),
++  };
++}
++async function artifactAuthority(ctx: Context, requirement: RuntimeAuthorityRequirement): Promise<RuntimeAuthority> {
++  return await resolveAuthority(protectedAuthorityReader(ctx), await ctx.auth.getUserIdentity(), requirement);
+ }
+ /** Error delivery is also an output boundary. Retain only exact static typed
+  * authority/input/capability errors. Unexpected backend diagnostics are distinct
+@@ -86,8 +130,7 @@
+     if (safeData !== undefined) throw new ConvexError(safeData);
+     // Every selected mutation propagates failure so Convex aborts the transaction;
+     // queries have no committed effects. No original diagnostic is retained.
+-    throw new ConvexError({ version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.",
+-      retryable: false, outcome: "not_committed" });
++    throw backendFailure();
+   }
+ }
+ export function safeInteger(value: number, minimum = 0): number {
+@@ -150,7 +193,7 @@
+  * These are transaction snapshot witnesses, not authorization from cached metadata.
+  */
+ async function controlSnapshot(ctx: Context, witnesses: Witness[]): Promise<ControlSnapshot> {
+-  const reader = createAuthorityReader(ctx);
++  const reader = protectedAuthorityReader(ctx);
+   const principals = new Map<string, PrincipalRecord | null>();
+   const memberships = new Map<string, MembershipRecord | null>();
+   const grants = new Map<string, GrantRecord | null>();
+@@ -210,7 +253,7 @@
+ 
+   static async begin<W extends boolean>(ctx: Context, scope: Scope, write: W): Promise<ArtifactOperation<W>> {
+     const requirement: RuntimeAuthorityRequirement = { capability: write ? "write" : "read", tenantId: scope.tenantId, memorySpaceId: scope.memorySpaceId };
+-    const authority = await requireAuthority(ctx, requirement);
++    const authority = await artifactAuthority(ctx, requirement);
+     if (!authority.memorySpaceId) artifactDeny();
+     const operation = new ArtifactOperation(ctx, { ...authority, memorySpaceId: authority.memorySpaceId }, write);
+     operation.witnesses.push({ authority, requirement: { ...requirement, tenantId: authority.tenantId,
+@@ -219,10 +262,10 @@
+       try {
+         const readRequirement: RuntimeAuthorityRequirement = { capability: "read", tenantId: authority.tenantId,
+           memorySpaceId: authority.memorySpaceId };
+-        const readAuthority = await requireAuthority(ctx, readRequirement);
++        const readAuthority = await artifactAuthority(ctx, readRequirement);
+         operation.witnesses.push({ authority: readAuthority, requirement: readRequirement });
+       } catch (error) {
+-        if (!(error instanceof ConvexError) || error.data?.code !== "FORBIDDEN") throw error;
++        if (!ordinaryAuthorityDenial(error)) throw error;
+         operation.readable = false;
+       }
+     }
+@@ -266,14 +309,14 @@
+       if (this.write && base.requirement.capability === "read" && !this.effectsStarted) {
+         // An initially inaccessible owner may require a receipt, but the admitted
+         // scope READ grant stays pinned. Currentness failures are never caught.
+-        const current = await resolveAuthorityReference(createAuthorityReader(this.ctx), base.authority, base.requirement);
++        const current = await resolveAuthorityReference(protectedAuthorityReader(this.ctx), base.authority, base.requirement);
+         try { assertResourceScope(current, resource(row)); }
+         catch (error) {
+-          if (!(error instanceof ConvexError) || error.data?.code !== "FORBIDDEN") throw error;
++          if (!ordinaryAuthorityDenial(error)) throw error;
+           this.readable = false; continue;
+         }
+       }
+-      const authority = await resolveAuthorityReference(createAuthorityReader(this.ctx), base.authority, requirement);
++      const authority = await resolveAuthorityReference(protectedAuthorityReader(this.ctx), base.authority, requirement);
+       // Initially admitted READ is never reclassified or removed. Its exact
+       // resource decision is pinned before effects, including create's insert.
+       this.witnesses.push({ authority, requirement });
+@@ -289,7 +332,7 @@
+     await this.admitLinks(row);
+   }
+   private async requireLiveKey(resourceType: RuntimeResourceType, resourceId: string): Promise<void> {
+-    const reader = createAuthorityReader(this.ctx);
++    const reader = protectedAuthorityReader(this.ctx);
+     const target = { tenantId: this.authority.tenantId, memorySpaceId: this.authority.memorySpaceId,
+       resourceType, resourceId };
+     if (await reader.hasTombstone(target) || await reader.hasTombstone({ ...target, memorySpaceId: undefined })) artifactDeny();
+@@ -329,11 +372,11 @@
+       memorySpaceId: this.authority.memorySpaceId, resource: { resourceType: "artifact" as const,
+         resourceId: artifactId, tenantId: this.authority.tenantId, memorySpaceId: this.authority.memorySpaceId,
+         ownerPrincipalId: this.authority.principalId } };
+-    await resolveAuthorityReference(createAuthorityReader(this.ctx), this.authority, requirement);
++    await resolveAuthorityReference(protectedAuthorityReader(this.ctx), this.authority, requirement);
+     this.witnesses.push({ authority: this.authority, requirement });
+   }
+   async conversation(reference: { conversationId: string; messageId?: string }): Promise<void> {
+-    const authority = await requireAuthority(this.ctx, { capability: "read", tenantId: this.authority.tenantId,
++    const authority = await artifactAuthority(this.ctx, { capability: "read", tenantId: this.authority.tenantId,
+       memorySpaceId: this.authority.memorySpaceId });
+     await this.requireLiveKey("conversation", reference.conversationId);
+     const rows = await this.ctx.db.query("conversations").withIndex("by_tenant_space", (q) =>
+@@ -364,7 +407,7 @@
+       });
+   }
+   private async memory(memoryId: string): Promise<void> {
+-    const authority = await requireAuthority(this.ctx, { capability: "read", tenantId: this.authority.tenantId,
++    const authority = await artifactAuthority(this.ctx, { capability: "read", tenantId: this.authority.tenantId,
+       memorySpaceId: this.authority.memorySpaceId });
+     await this.requireLiveKey("memory", memoryId);
+     const rows = await this.ctx.db.query("memories").withIndex("by_tenant_space", (q) =>
+@@ -390,7 +433,7 @@
+     if (source.sourceVersion !== undefined) safeInteger(source.sourceVersion, 1);
+     const requirement: RuntimeAuthorityRequirement = { capability: "read", tenantId: this.authority.tenantId,
+       memorySpaceId: this.authority.memorySpaceId, resource: linked };
+-    const authority = await resolveAuthorityReference(createAuthorityReader(this.ctx), admittedRead, requirement);
++    const authority = await resolveAuthorityReference(protectedAuthorityReader(this.ctx), admittedRead, requirement);
+     if (authority.principalId !== this.authority.principalId) artifactDeny();
+     this.witnesses.push({ authority, requirement, source });
+   }

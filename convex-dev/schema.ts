@@ -391,6 +391,12 @@ export default defineSchema({
   // Layer 2: Vector Memory (Searchable, memorySpace-scoped, Versioned)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   memories: defineTable({
+    // Fresh runtime ownership/provenance; old unowned rows are never adopted.
+    ownerPrincipalId: v.optional(v.string()),
+    runtimeEditor: v.optional(v.object({ principalId: v.string(), userId: v.string(), editedAt: v.number() })),
+    manualSourceBinding: v.optional(v.object({ resourceType: v.union(v.literal("memory"), v.literal("fact")), resourceId: v.string() })),
+    lineage: v.optional(sourceLineage),
+    tombstonedAt: v.optional(v.number()),
     // Identity
     memoryId: v.string(), // Unique ID for this memory
     memorySpaceId: v.string(), // NEW: Memory space isolation (was agentId)
@@ -498,6 +504,7 @@ export default defineSchema({
   })
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's memories
     .index("by_memoryId", ["memoryId"]) // Unique lookup
+    .index("by_runtime_scope_memoryId", ["tenantId", "memorySpaceId", "memoryId"])
     .index("by_tenantId", ["tenantId"]) // Tenant's memories
     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
     .index("by_userId", ["userId"]) // GDPR cascade
@@ -509,6 +516,7 @@ export default defineSchema({
     .searchIndex("by_content", {
       searchField: "content",
       filterFields: [
+        "ownerPrincipalId",
         "memorySpaceId",
         "tenantId",
         "sourceType",
@@ -535,6 +543,8 @@ export default defineSchema({
   facts: defineTable({
     // Trusted runtime provenance; unrelated explicit facts share this authoritative table.
     ownerPrincipalId: v.optional(v.string()),
+    runtimeEditor: v.optional(v.object({ principalId: v.string(), userId: v.string(), editedAt: v.number() })),
+    manualSourceBinding: v.optional(v.object({ resourceType: v.union(v.literal("memory"), v.literal("fact")), resourceId: v.string() })),
     lineage: v.optional(sourceLineage),
     extractionPolicyVersion: v.optional(v.string()),
     processingReceiptId: v.optional(v.string()),
@@ -638,7 +648,7 @@ export default defineSchema({
     .index("by_userId", ["userId"]) // GDPR cascade
     .searchIndex("by_content", {
       searchField: "fact",
-      filterFields: ["memorySpaceId", "tenantId", "factType"],
+      filterFields: ["memorySpaceId", "tenantId", "factType", "ownerPrincipalId"],
     })
     .vectorIndex("by_embedding", {
       vectorField: "embedding",
@@ -1050,6 +1060,11 @@ export default defineSchema({
     // Multi-tenancy
     tenantId: v.optional(v.string()),
 
+    // Fresh trusted ownership; caller user/participant labels never grant access.
+    ownerPrincipalId: v.optional(v.string()),
+    lastActorPrincipalId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
+
     // Ownership
     userId: v.optional(v.string()),
     agentId: v.optional(v.string()),
@@ -1199,6 +1214,10 @@ export default defineSchema({
     deletedAt: v.optional(v.number()),
     deletedBy: v.optional(v.string()),
   })
+    // Fresh canonical selection; constrain owner before hydration/limit.
+    .index("by_runtime_scope", ["tenantId", "memorySpaceId"])
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "artifactId"])
+
     // Unique lookups
     .index("by_artifactId", ["artifactId"])
 

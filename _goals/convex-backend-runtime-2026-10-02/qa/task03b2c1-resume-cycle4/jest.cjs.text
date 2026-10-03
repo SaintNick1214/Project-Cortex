@@ -1,0 +1,36 @@
+module.exports = {
+  "rootDir": "/workspace/Project-Cortex/work/resume/artifact",
+  "testEnvironment": "node",
+  "roots": ["<rootDir>/tests/unit/runtimeArtifactAuth"],
+  "testMatch": [
+    "<rootDir>/tests/unit/runtimeArtifactAuth/**/*.test.ts"
+  ],
+  "setupFilesAfterEnv": [
+    "<rootDir>/tests/unit/runtimeArtifactAuth/accepted-reader-compat.ts"
+  ],
+  "extensionsToTreatAsEsm": [
+    ".ts"
+  ],
+  "transform": {
+    "^.+\\.(ts|tsx|js)$": [
+      "ts-jest",
+      {
+        "useESM": true,
+        "tsconfig": {
+          "allowJs": true,
+          "module": "ESNext",
+          "moduleResolution": "bundler",
+          "target": "ES2021",
+          "lib": [
+            "ES2021",
+            "dom"
+          ]
+        }
+      }
+    ]
+  },
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "cacheDirectory": "/workspace/Project-Cortex/work/resume/artifact-checks/jest-cache"
+}

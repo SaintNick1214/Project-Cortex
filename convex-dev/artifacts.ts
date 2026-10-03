@@ -14,7 +14,8 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
+import { ArtifactOperation, artifactDeny, artifactHandler, nextArtifactVersion, safeInteger, validateArtifact } from "./runtimeArtifactAuth";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Shared Validators
@@ -78,75 +79,27 @@ export const create = mutation({
     metadata: v.optional(v.any()),
     tags: v.optional(v.array(v.string())),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
     const now = Date.now();
-    const artifactId =
-      args.artifactId ||
-      `art-${now}-${Math.random().toString(36).substring(2, 11)}`;
-
-    // Check for duplicate artifactId (within tenant if provided)
-    let existing;
-    if (args.tenantId) {
-      existing = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", artifactId),
-        )
-        .first();
-    } else {
-      existing = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", artifactId))
-        .first();
-    }
-
-    if (existing) {
-      throw new ConvexError("ARTIFACT_ALREADY_EXISTS");
-    }
-
-    // Create initial version history entry
-    const initialVersion = {
-      version: 1,
-      content: args.content,
-      title: args.title,
-      timestamp: now,
-      changeType: "create" as const,
-      changeSummary: "Initial creation",
-    };
-
-    // Build kindConfig if language or mimeType provided
-    const kindConfig =
-      args.language || args.mimeType
-        ? {
-            language: args.language,
-            mimeType: args.mimeType,
-          }
-        : undefined;
-
-    const _id = await ctx.db.insert("artifacts", {
-      artifactId,
-      memorySpaceId: args.memorySpaceId,
-      participantId: args.participantId,
-      tenantId: args.tenantId,
-      userId: args.userId,
-      kind: args.kind ?? "text", // Default to "text" if not provided
-      kindConfig,
-      streamingState: args.streamingState || "draft",
-      title: args.title || "Untitled", // Required field - provide default
-      description: args.description,
-      content: args.content,
-      conversationRef: args.conversationRef,
-      version: 1,
-      versionPointer: 1, // Points to current version
-      versionHistory: [initialVersion],
-      metadata: args.metadata,
-      tags: args.tags || [],
-      createdAt: now,
-      updatedAt: now,
+    const artifactId = args.artifactId ?? `art-${now}-${Math.random().toString(36).substring(2, 11)}`;
+    if (!artifactId) artifactDeny("INVALID_ARGUMENT");
+    await operation.collision(artifactId);
+    const artifact = await operation.insert({
+      artifactId, tenantId: operation.authority.tenantId, memorySpaceId: operation.authority.memorySpaceId,
+      ownerPrincipalId: operation.authority.principalId, lastActorPrincipalId: operation.authority.principalId,
+      userId: operation.authority.userId, participantId: args.participantId,
+      kind: args.kind ?? "text", kindConfig: args.language || args.mimeType
+        ? { language: args.language, mimeType: args.mimeType } : undefined,
+      streamingState: args.streamingState ?? "draft", title: args.title ?? "Untitled",
+      description: args.description, content: args.content, conversationRef: args.conversationRef,
+      version: 1, versionPointer: 1, versionHistory: [{ version: 1, content: args.content,
+        title: args.title ?? "Untitled", timestamp: now, changedBy: operation.authority.principalId,
+        changeType: "create", changeSummary: "Initial creation" }],
+      metadata: args.metadata, tags: args.tags ?? [], createdAt: now, updatedAt: now,
     });
-
-    return await ctx.db.get(_id);
-  },
+    return await operation.complete(artifact);
+  }),
 });
 
 /**
@@ -157,6 +110,7 @@ export const create = mutation({
  */
 export const update = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()), // For tenant-isolated lookup
 
@@ -173,28 +127,10 @@ export const update = mutation({
     // Change description
     changeSummary: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      // Security: Only match if global (no tenantId) to prevent cross-tenant access
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     // Cannot update deleted artifacts
     if (artifact.isDeleted) {
@@ -206,7 +142,7 @@ export const update = mutation({
     const newTitle = args.title ?? artifact.title;
 
     // Calculate new version number
-    const newVersion = artifact.versionPointer + 1;
+    const newVersion = nextArtifactVersion(artifact);
 
     // If versionPointer is not at the end, we're branching from an undo state
     // Discard all versions after versionPointer
@@ -225,6 +161,7 @@ export const update = mutation({
       title: newTitle,
       timestamp: now,
       changeType: "update" as const,
+      changedBy: operation.authority.principalId,
       changeSummary: args.changeSummary,
     };
     versionHistory.push(newVersionEntry);
@@ -246,7 +183,7 @@ export const update = mutation({
         : artifact.kindConfig;
 
     // Update artifact
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       content: newContent,
       title: newTitle,
       kindConfig: kindConfigUpdate,
@@ -258,72 +195,30 @@ export const update = mutation({
       updatedAt: now,
     });
 
-    return await ctx.db.get(artifact._id);
-  },
+    return await operation.complete(await ctx.db.get(artifact._id));
+  }),
 });
 
 /**
- * Delete an artifact (soft delete by default, hard delete optional)
+ * Tombstone an artifact. Retain the canonical row and resource control.
  */
 export const deleteArtifact = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     hard: v.optional(v.boolean()), // Default: false (soft delete)
     deletedBy: v.optional(v.string()), // Optional: track who deleted
   },
-  handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
-
-    if (args.hard) {
-      // Hard delete - permanently remove
-      await ctx.db.delete(artifact._id);
-
-      return {
-        deleted: true,
-        artifactId: args.artifactId,
-        deletedAt: Date.now(),
-        permanent: true,
-        versionsPurged: artifact.versionHistory?.length ?? artifact.version,
-      };
-    }
-
-    // Soft delete - set isDeleted flag (separate from streamingState)
-    const now = Date.now();
-    await ctx.db.patch(artifact._id, {
-      isDeleted: true,
-      deletedAt: now,
-      deletedBy: args.deletedBy,
-      updatedAt: now,
-    });
-
-    return {
-      deleted: true,
-      artifactId: args.artifactId,
-      deletedAt: now,
-      permanent: false,
-      restorable: true,
-    };
-  },
+    const artifact = await operation.load(args.artifactId);
+    await operation.tombstone(artifact);
+    return await operation.complete({ deleted: true, artifactId: artifact.artifactId,
+      deletedAt: Date.now(), permanent: true, restorable: false,
+      versionsPurged: 0, requestedHardDelete: args.hard === true });
+  }),
 });
 
 /**
@@ -334,30 +229,14 @@ export const deleteArtifact = mutation({
  */
 export const undo = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     // Find the nearest previous version (handles gaps from purgeVersions)
     // Sort versions below current pointer in descending order and take the first
@@ -374,7 +253,7 @@ export const undo = mutation({
 
     // Update artifact to reflect undone state
     // Restore content, title, and fileRef from the target version
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       content: targetVersion.content,
       title: targetVersion.title,
       fileRef: targetVersion.fileRef,
@@ -382,15 +261,15 @@ export const undo = mutation({
       updatedAt: Date.now(),
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       previousVersion: artifact.versionPointer,
       currentVersion: newPointer,
       canUndo: canUndoTo(artifact.versionHistory, newPointer),
       canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -400,30 +279,14 @@ export const undo = mutation({
  */
 export const redo = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     // Find the nearest next version (handles gaps from purgeVersions)
     // Sort versions above current pointer in ascending order and take the first
@@ -440,7 +303,7 @@ export const redo = mutation({
 
     // Update artifact to reflect redone state
     // Restore content, title, and fileRef from the target version
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       content: targetVersion.content,
       title: targetVersion.title,
       fileRef: targetVersion.fileRef,
@@ -448,15 +311,15 @@ export const redo = mutation({
       updatedAt: Date.now(),
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       previousVersion: artifact.versionPointer,
       currentVersion: newPointer,
       canUndo: canUndoTo(artifact.versionHistory, newPointer),
       canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -468,48 +331,33 @@ export const redo = mutation({
  */
 export const setStreamingState = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     streamingState: streamingStateValidator,
   },
-  handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
+    if (!isValidTransition(artifact.streamingState, args.streamingState)) artifactDeny("INVALID_STATE_TRANSITION");
     const now = Date.now();
     const previousState = artifact.streamingState;
 
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       streamingState: args.streamingState,
       updatedAt: now,
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       previousState,
       currentState: args.streamingState,
       updatedAt: now,
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -576,43 +424,27 @@ export const setFileRef = mutation({
  */
 export const purgeVersions = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     keepLatest: v.number(), // Number of versions to keep
   },
-  handler: async (ctx, args) => {
-    if (args.keepLatest < 1) {
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
+
+    if (safeInteger(args.keepLatest, 1) < 1) {
       throw new ConvexError("KEEP_LATEST_MUST_BE_POSITIVE");
     }
 
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
-
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     const totalVersions = artifact.versionHistory.length;
 
     if (totalVersions <= args.keepLatest) {
-      return {
+      return await operation.complete({
         versionsPurged: 0,
         versionsRemaining: totalVersions,
-      };
+      });
     }
 
     // Calculate how many to remove (from oldest, excluding v1)
@@ -655,68 +487,55 @@ export const purgeVersions = mutation({
     // Calculate actual versions purged
     const versionsToRemove = totalVersions - prunedHistory.length;
 
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       versionHistory: prunedHistory,
     });
 
-    return {
+    return await operation.complete({
       versionsPurged: versionsToRemove,
       versionsRemaining: prunedHistory.length,
-    };
-  },
+    });
+  }),
 });
 
 /**
- * Purge ALL artifacts (TEST/DEV ONLY)
- *
- * WARNING: Permanently deletes all artifacts!
+ * Tombstone scoped text artifacts through trusted operator internal tooling.
+ * Retained file/link resources await their full ownership admission adapters.
  */
-export const purgeAll = mutation({
+export const purgeAll = internalMutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     tenantId: v.optional(v.string()), // Limit to tenant if provided
   },
-  handler: async (ctx, args) => {
-    // Safety check: Only allow in test/dev environments
-    // IMPORTANT: Do NOT use broad patterns like "convex.cloud" which match ALL deployments
-    const siteUrl = process.env.CONVEX_SITE_URL || "";
-    const isLocal =
-      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
-    // Check for specific dev/preview deployment indicators in the URL
-    // Production deployments should NOT match these patterns
-    const isDevDeployment =
-      siteUrl.includes(".convex.site") || // Convex preview sites
-      siteUrl.includes("dev-") || // dev- prefix convention
-      siteUrl.includes("-dev") || // -dev suffix convention
-      siteUrl.includes("preview") || // preview deployments
-      siteUrl.includes("staging"); // staging deployments
-    const isTestEnv =
-      process.env.NODE_ENV === "test" ||
-      process.env.CONVEX_ENVIRONMENT === "test" ||
-      process.env.CONVEX_ENVIRONMENT === "development";
-
-    if (!isLocal && !isDevDeployment && !isTestEnv) {
-      throw new Error(
-        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments. " +
-          "Set CONVEX_ENVIRONMENT=test or use a deployment with dev-/preview/staging in its name.",
-      );
+  handler: async (ctx, args) => artifactHandler(async () => {
+    // Only authenticated Convex deployment-operator internal tooling may invoke
+    // this registration. URL/environment names and public JWT admin labels are
+    // never operator credentials. This does not remove other control tables.
+    if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");
+    const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>
+      q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();
+    // Full preflight, including retained history, before the first mutation.
+    for (const row of rows) {
+      if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");
+      if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");
+      if (!row.isDeleted && row.tombstonedAt === undefined) validateArtifact(row);
     }
-
-    let allArtifacts;
-    if (args.tenantId) {
-      allArtifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .collect();
-    } else {
-      allArtifacts = await ctx.db.query("artifacts").collect();
+    const now = Date.now();
+    let deleted = 0;
+    for (const row of rows) {
+      if (row.isDeleted || row.tombstonedAt !== undefined) continue;
+      await ctx.db.patch(row._id, { isDeleted: true, deletedAt: now, tombstonedAt: now,
+        deletedBy: "trusted-deployment-operator", updatedAt: now });
+      const target = { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId,
+        resourceType: "artifact" as const, resourceId: row.artifactId };
+      const existing = await ctx.db.query("runtimeAuthTombstones").withIndex("by_resource", (q) =>
+        q.eq("tenantId", target.tenantId).eq("memorySpaceId", target.memorySpaceId)
+          .eq("resourceType", target.resourceType).eq("resourceId", target.resourceId)).unique();
+      if (!existing) await ctx.db.insert("runtimeAuthTombstones", { ...target, deletedAt: now });
+      deleted += 1;
     }
-
-    for (const artifact of allArtifacts) {
-      await ctx.db.delete(artifact._id);
-    }
-
-    return { deleted: allArtifacts.length };
-  },
+    return { deleted };
+  }),
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -728,43 +547,26 @@ export const purgeAll = mutation({
  */
 export const get = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     includeVersionHistory: v.optional(v.boolean()), // Default: true
   },
-  handler: async (ctx, args) => {
-    // Lookup artifact (tenant-aware)
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      // Security: Only match global records
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, false);
 
-    if (!artifact) {
-      return null;
-    }
+    const artifact = await operation.load(args.artifactId);
 
     // Optionally exclude version history for smaller response
     if (args.includeVersionHistory === false) {
-      return {
+      return await operation.complete({
         ...artifact,
         versionHistory: [], // Omit for performance
-      };
+      });
     }
 
-    return artifact;
-  },
+    return await operation.complete(artifact);
+  }),
 });
 
 /**
@@ -772,44 +574,20 @@ export const get = query({
  */
 export const getByConversation = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     tenantId: v.optional(v.string()),
     streamingState: v.optional(streamingStateValidator),
     includeVersionHistory: v.optional(v.boolean()),
   },
-  handler: async (ctx, args) => {
-    let artifacts = await ctx.db
-      .query("artifacts")
-      .withIndex("by_conversation", (q) =>
-        q.eq("conversationRef.conversationId", args.conversationId),
-      )
-      .collect();
-
-    // Tenant filtering - Security: match tenant or global records only
-    if (args.tenantId) {
-      artifacts = artifacts.filter((a) => a.tenantId === args.tenantId);
-    } else {
-      // Security: Only match global records (no tenantId) to prevent cross-tenant access
-      artifacts = artifacts.filter((a) => !a.tenantId);
-    }
-
-    // Status filtering
-    if (args.streamingState) {
-      artifacts = artifacts.filter(
-        (a) => a.streamingState === args.streamingState,
-      );
-    }
-
-    // Filter out deleted artifacts
-    artifacts = artifacts.filter((a) => !a.isDeleted);
-
-    // Optionally exclude version history
-    if (args.includeVersionHistory === false) {
-      return artifacts.map((a) => ({ ...a, versionHistory: [] }));
-    }
-
-    return artifacts;
-  },
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, false);
+    await operation.conversation({ conversationId: args.conversationId });
+    let artifacts = await operation.list();
+    artifacts = artifacts.filter((row) => row.conversationRef?.conversationId === args.conversationId);
+    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);
+    return await operation.complete(args.includeVersionHistory === false ? artifacts.map((row) => ({ ...row, versionHistory: [] })) : artifacts);
+  }),
 });
 
 /**
@@ -835,153 +613,28 @@ export const list = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
     includeVersionHistory: v.optional(v.boolean()),
   },
-  handler: async (ctx, args) => {
-    const limit = Math.min(args.limit || 50, 100); // Max 100
-    const offset = args.offset || 0;
-
-    // Select optimal index based on provided filters
-    // Track which fields were already filtered by the index
-    let artifacts;
-    let streamingStateIndexed = false;
-
-    if (args.tenantId && args.memorySpaceId) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_space", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-    } else if (args.tenantId) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .collect();
-    } else if (args.memorySpaceId && args.streamingState) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_memorySpace_state", (q) =>
-          q
-            .eq("memorySpaceId", args.memorySpaceId!)
-            .eq("streamingState", args.streamingState!),
-        )
-        .collect();
-      streamingStateIndexed = true;
-      // Security: Only match global records when no tenantId provided
-      artifacts = artifacts.filter((a) => !a.tenantId);
-    } else if (args.memorySpaceId && args.kind) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_memorySpace_kind", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!).eq("kind", args.kind!),
-        )
-        .collect();
-      // Security: Only match global records when no tenantId provided
-      artifacts = artifacts.filter((a) => !a.tenantId);
-    } else if (args.memorySpaceId) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-      // Security: Only match global records when no tenantId provided
-      artifacts = artifacts.filter((a) => !a.tenantId);
-    } else if (args.userId) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_userId", (q) => q.eq("userId", args.userId!))
-        .collect();
-      // Security: Only match global records when no tenantId provided
-      artifacts = artifacts.filter((a) => !a.tenantId);
-    } else if (args.streamingState) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_streamingState", (q) =>
-          q.eq("streamingState", args.streamingState!),
-        )
-        .collect();
-      streamingStateIndexed = true;
-      // Security: Only match global records when no tenantId provided
-      artifacts = artifacts.filter((a) => !a.tenantId);
-    } else {
-      // Security: Only match global records (no tenantId) to prevent cross-tenant access
-      const allArtifacts = await ctx.db.query("artifacts").collect();
-      artifacts = allArtifacts.filter((a) => !a.tenantId);
-    }
-
-    // Apply post-filters
-    if (!args.includeDeleted) {
-      artifacts = artifacts.filter((a) => !a.isDeleted);
-    }
-    // Always filter by kind if provided (not just when memorySpaceId is absent)
-    if (args.kind) {
-      artifacts = artifacts.filter((a) => a.kind === args.kind);
-    }
-    // Filter by streamingState if provided and not already indexed by it
-    if (args.streamingState && !streamingStateIndexed) {
-      artifacts = artifacts.filter(
-        (a) => a.streamingState === args.streamingState,
-      );
-    }
-    if (args.userId && args.tenantId) {
-      artifacts = artifacts.filter((a) => a.userId === args.userId);
-    }
-    if (args.participantId) {
-      artifacts = artifacts.filter(
-        (a) => a.participantId === args.participantId,
-      );
-    }
-    if (args.tags && args.tags.length > 0) {
-      artifacts = artifacts.filter((a) =>
-        args.tags!.every((tag) => a.tags.includes(tag)),
-      );
-    }
-    if (args.createdAfter !== undefined) {
-      artifacts = artifacts.filter((a) => a.createdAt > args.createdAfter!);
-    }
-    if (args.createdBefore !== undefined) {
-      artifacts = artifacts.filter((a) => a.createdAt < args.createdBefore!);
-    }
-    if (args.updatedAfter !== undefined) {
-      artifacts = artifacts.filter((a) => a.updatedAt > args.updatedAfter!);
-    }
-    if (args.updatedBefore !== undefined) {
-      artifacts = artifacts.filter((a) => a.updatedAt < args.updatedBefore!);
-    }
-
-    // Get total before pagination
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, false);
+    let artifacts = await operation.list();
+    if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);
+    if (args.participantId !== undefined) artifacts = artifacts.filter((row) => row.participantId === args.participantId);
+    if (args.kind !== undefined) artifacts = artifacts.filter((row) => row.kind === args.kind);
+    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);
+    if (args.tags?.length) artifacts = artifacts.filter((row) => args.tags!.every((tag) => row.tags.includes(tag)));
+    if (args.createdAfter !== undefined) { if (!Number.isFinite(args.createdAfter)) artifactDeny("INVALID_ARGUMENT"); artifacts = artifacts.filter((row) => row.createdAt > args.createdAfter!); }
+    if (args.createdBefore !== undefined) { if (!Number.isFinite(args.createdBefore)) artifactDeny("INVALID_ARGUMENT"); artifacts = artifacts.filter((row) => row.createdAt < args.createdBefore!); }
+    if (args.updatedAfter !== undefined) { if (!Number.isFinite(args.updatedAfter)) artifactDeny("INVALID_ARGUMENT"); artifacts = artifacts.filter((row) => row.updatedAt > args.updatedAfter!); }
+    if (args.updatedBefore !== undefined) { if (!Number.isFinite(args.updatedBefore)) artifactDeny("INVALID_ARGUMENT"); artifacts = artifacts.filter((row) => row.updatedAt < args.updatedBefore!); }
     const total = artifacts.length;
-
-    // Sort
-    const sortBy = args.sortBy || "createdAt";
-    const sortOrder = args.sortOrder || "desc";
-    const multiplier = sortOrder === "desc" ? -1 : 1;
-
-    artifacts.sort((a, b) => {
-      const aVal = sortBy === "updatedAt" ? a.updatedAt : a.createdAt;
-      const bVal = sortBy === "updatedAt" ? b.updatedAt : b.createdAt;
-      return (aVal - bVal) * multiplier;
-    });
-
-    // Paginate
-    const paginated = artifacts.slice(offset, offset + limit);
-
-    // Optionally exclude version history
-    const result =
-      args.includeVersionHistory === false
-        ? paginated.map((a) => ({ ...a, versionHistory: [] }))
-        : paginated;
-
-    return {
-      artifacts: result,
-      total,
-      limit,
-      offset,
-      hasMore: offset + limit < total,
-    };
-  },
+    const limit = Math.min(safeInteger(args.limit ?? 50, 1), 100);
+    const offset = safeInteger(args.offset ?? 0);
+    const sortBy = args.sortBy ?? "createdAt";
+    artifacts.sort((left, right) => (left[sortBy] - right[sortBy]) * (args.sortOrder === "asc" ? 1 : -1));
+    const selected = artifacts.slice(offset, offset + limit);
+    return await operation.complete({ artifacts: args.includeVersionHistory === false
+      ? selected.map((row) => ({ ...row, versionHistory: [] })) : selected,
+      total, limit, offset, hasMore: offset + limit < total });
+  }),
 });
 
 /**
@@ -998,63 +651,16 @@ export const count = query({
     createdAfter: v.optional(v.number()),
     createdBefore: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
-    // Use indexed query when possible
-    let artifacts;
-
-    if (args.tenantId && args.memorySpaceId) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_space", (q) =>
-          q
-            .eq("tenantId", args.tenantId!)
-            .eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-    } else if (args.memorySpaceId) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_memorySpace", (q) =>
-          q.eq("memorySpaceId", args.memorySpaceId!),
-        )
-        .collect();
-      // Security: Only match global records when no tenantId provided
-      artifacts = artifacts.filter((a) => !a.tenantId);
-    } else if (args.tenantId) {
-      artifacts = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
-        .collect();
-    } else {
-      // Security: Only match global records (no tenantId) to prevent cross-tenant access
-      const allArtifacts = await ctx.db.query("artifacts").collect();
-      artifacts = allArtifacts.filter((a) => !a.tenantId);
-    }
-
-    // Apply filters
-    if (!args.includeDeleted) {
-      artifacts = artifacts.filter((a) => !a.isDeleted);
-    }
-    if (args.userId) {
-      artifacts = artifacts.filter((a) => a.userId === args.userId);
-    }
-    if (args.kind) {
-      artifacts = artifacts.filter((a) => a.kind === args.kind);
-    }
-    if (args.streamingState) {
-      artifacts = artifacts.filter(
-        (a) => a.streamingState === args.streamingState,
-      );
-    }
-    if (args.createdAfter !== undefined) {
-      artifacts = artifacts.filter((a) => a.createdAt > args.createdAfter!);
-    }
-    if (args.createdBefore !== undefined) {
-      artifacts = artifacts.filter((a) => a.createdAt < args.createdBefore!);
-    }
-
-    return artifacts.length;
-  },
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, false);
+    let artifacts = await operation.list();
+    if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);
+    if (args.kind !== undefined) artifacts = artifacts.filter((row) => row.kind === args.kind);
+    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);
+    if (args.createdAfter !== undefined) { if (!Number.isFinite(args.createdAfter)) artifactDeny("INVALID_ARGUMENT"); artifacts = artifacts.filter((row) => row.createdAt > args.createdAfter!); }
+    if (args.createdBefore !== undefined) { if (!Number.isFinite(args.createdBefore)) artifactDeny("INVALID_ARGUMENT"); artifacts = artifacts.filter((row) => row.createdAt < args.createdBefore!); }
+    return await operation.complete(artifacts.length);
+  }),
 });
 
 /**
@@ -1062,31 +668,16 @@ export const count = query({
  */
 export const getVersion = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     version: v.number(),
     tenantId: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    // Lookup artifact
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, false);
 
-    if (!artifact) {
-      return null;
-    }
+    safeInteger(args.version, 1);
+    const artifact = await operation.load(args.artifactId);
 
     // Find version in history
     const versionEntry = artifact.versionHistory.find(
@@ -1094,10 +685,10 @@ export const getVersion = query({
     );
 
     if (!versionEntry) {
-      return null;
+      return await operation.complete(null);
     }
 
-    return {
+    return await operation.complete({
       artifactId: artifact.artifactId,
       version: versionEntry.version,
       content: versionEntry.content,
@@ -1106,8 +697,8 @@ export const getVersion = query({
       changeType: versionEntry.changeType,
       changeSummary: versionEntry.changeSummary,
       isCurrent: versionEntry.version === artifact.versionPointer,
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -1115,33 +706,17 @@ export const getVersion = query({
  */
 export const getHistory = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
-  handler: async (ctx, args) => {
-    // Lookup artifact
-    let artifact;
-    if (args.tenantId) {
-      artifact = await ctx.db
-        .query("artifacts")
-        .withIndex("by_tenant_artifactId", (q) =>
-          q.eq("tenantId", args.tenantId!).eq("artifactId", args.artifactId),
-        )
-        .first();
-    } else {
-      const candidate = await ctx.db
-        .query("artifacts")
-        .withIndex("by_artifactId", (q) => q.eq("artifactId", args.artifactId))
-        .first();
-      artifact = candidate && !candidate.tenantId ? candidate : null;
-    }
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, false);
 
-    if (!artifact) {
-      return null;
-    }
+    const artifact = await operation.load(args.artifactId);
 
     let history = [...artifact.versionHistory];
 
@@ -1152,8 +727,8 @@ export const getHistory = query({
     }
 
     const total = history.length;
-    const offset = args.offset || 0;
-    const limit = Math.min(args.limit || 50, 100); // Max 100
+    const offset = safeInteger(args.offset ?? 0);
+    const limit = Math.min(safeInteger(args.limit ?? 50, 1), 100); // Max 100
 
     // Paginate
     history = history.slice(offset, offset + limit);
@@ -1165,7 +740,7 @@ export const getHistory = query({
       isCurrent: v.version === artifact.versionPointer,
     }));
 
-    return {
+    return await operation.complete({
       history: enrichedHistory,
       total,
       offset,
@@ -1173,41 +748,15 @@ export const getHistory = query({
       hasMore: offset + limit < total,
       currentVersion: artifact.versionPointer,
       latestVersion: artifact.version,
-      canUndo: artifact.versionPointer > 1,
-      canRedo: artifact.versionPointer < artifact.version,
-    };
-  },
+      canUndo: canUndoTo(artifact.versionHistory, artifact.versionPointer),
+      canRedo: canRedoTo(artifact.versionHistory, artifact.versionPointer, artifact.version),
+    });
+  }),
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Streaming Mutations
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Helper to lookup artifact with tenant awareness
- */
-async function lookupArtifact(
-  ctx: { db: any },
-  artifactId: string,
-  tenantId?: string,
-) {
-  if (tenantId) {
-    return await ctx.db
-      .query("artifacts")
-      .withIndex("by_tenant_artifactId", (q: any) =>
-        q.eq("tenantId", tenantId).eq("artifactId", artifactId),
-      )
-      .first();
-  }
-
-  const candidate = await ctx.db
-    .query("artifacts")
-    .withIndex("by_artifactId", (q: any) => q.eq("artifactId", artifactId))
-    .first();
-
-  // Security: Only match global records (no tenantId) to prevent cross-tenant access
-  return candidate && !candidate.tenantId ? candidate : null;
-}
 
 /**
  * Helper to generate unique session ID
@@ -1276,6 +825,7 @@ function isValidTransition(from: string, to: string): boolean {
  */
 export const startStreaming = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     streamSource: v.optional(
@@ -1288,12 +838,10 @@ export const startStreaming = mutation({
     estimatedTotal: v.optional(v.number()), // Estimated total bytes
     metadata: v.optional(v.any()),
   },
-  handler: async (ctx, args) => {
-    const artifact = await lookupArtifact(ctx, args.artifactId, args.tenantId);
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     if (artifact.isDeleted) {
       throw new ConvexError("ARTIFACT_IS_DELETED");
@@ -1303,21 +851,17 @@ export const startStreaming = mutation({
     // Note: We explicitly check for draft rather than using isValidTransition because
     // paused → streaming is valid for resumeStreaming, not startStreaming
     if (artifact.streamingState !== "draft") {
-      throw new ConvexError({
-        code: "INVALID_STATE_TRANSITION",
-        message: `Cannot start streaming: artifact is in '${artifact.streamingState}' state. Expected 'draft'.`,
-        currentState: artifact.streamingState,
-        targetState: "streaming",
-      });
+      artifactDeny("INVALID_STATE_TRANSITION");
     }
 
+    if (args.estimatedTotal !== undefined) safeInteger(args.estimatedTotal);
     const now = Date.now();
     const sessionId = generateSessionId();
 
     // Update artifact to streaming state with metadata
     // Note: streamingMetadata schema only supports: sessionId, startedAt, lastChunkAt,
     // bytesReceived, estimatedTotal, errorMessage, errorCode
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       streamingState: "streaming",
       streamingMetadata: {
         sessionId,
@@ -1331,15 +875,15 @@ export const startStreaming = mutation({
       updatedAt: now,
     });
 
-    return {
+    return await operation.complete({
       success: true,
       sessionId,
       artifactId: args.artifactId,
       startedAt: now,
       previousState: artifact.streamingState,
       currentState: "streaming",
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -1350,18 +894,17 @@ export const startStreaming = mutation({
  */
 export const appendContent = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     sessionId: v.string(),
     chunk: v.string(),
     chunkIndex: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
-    const artifact = await lookupArtifact(ctx, args.artifactId, args.tenantId);
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     if (artifact.isDeleted) {
       throw new ConvexError("ARTIFACT_IS_DELETED");
@@ -1369,33 +912,24 @@ export const appendContent = mutation({
 
     // Verify artifact is in streaming state
     if (artifact.streamingState !== "streaming") {
-      throw new ConvexError({
-        code: "INVALID_STATE_TRANSITION",
-        message: `Cannot append content: artifact is in '${artifact.streamingState}' state. Expected 'streaming'.`,
-        currentState: artifact.streamingState,
-      });
+      artifactDeny("INVALID_STATE_TRANSITION");
     }
 
     // Verify sessionId matches current streaming session
     const currentSessionId = artifact.streamingMetadata?.sessionId;
     if (currentSessionId !== args.sessionId) {
-      throw new ConvexError({
-        code: "STREAMING_SESSION_INVALID",
-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
-        expectedSessionId: currentSessionId,
-        providedSessionId: args.sessionId,
-      });
+      artifactDeny("STREAMING_SESSION_INVALID");
     }
 
+    if (args.chunkIndex !== undefined) safeInteger(args.chunkIndex);
     const now = Date.now();
     const chunkBytes = new TextEncoder().encode(args.chunk).length;
     const currentContent = artifact.content || "";
     const newContent = currentContent + args.chunk;
-    const newBytesReceived =
-      (artifact.streamingMetadata?.bytesReceived || 0) + chunkBytes;
+    const newBytesReceived = safeInteger((artifact.streamingMetadata?.bytesReceived || 0) + chunkBytes);
 
     // Update artifact with appended content
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       content: newContent,
       streamingMetadata: {
         ...artifact.streamingMetadata,
@@ -1412,7 +946,7 @@ export const appendContent = mutation({
         ? Math.min((newBytesReceived / estimatedTotal) * 100, 100)
         : undefined;
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       sessionId: args.sessionId,
@@ -1422,8 +956,8 @@ export const appendContent = mutation({
       contentLength: newContent.length,
       progress,
       timestamp: now,
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -1434,17 +968,16 @@ export const appendContent = mutation({
  */
 export const pauseStreaming = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     sessionId: v.string(),
     reason: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    const artifact = await lookupArtifact(ctx, args.artifactId, args.tenantId);
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     if (artifact.isDeleted) {
       throw new ConvexError("ARTIFACT_IS_DELETED");
@@ -1452,28 +985,20 @@ export const pauseStreaming = mutation({
 
     // Validate state transition: streaming → paused
     if (!isValidTransition(artifact.streamingState, "paused")) {
-      throw new ConvexError({
-        code: "INVALID_STATE_TRANSITION",
-        message: `Cannot pause: artifact is in '${artifact.streamingState}' state. Expected 'streaming'.`,
-        currentState: artifact.streamingState,
-        targetState: "paused",
-      });
+      artifactDeny("INVALID_STATE_TRANSITION");
     }
 
     // Verify sessionId matches
     const currentSessionId = artifact.streamingMetadata?.sessionId;
     if (currentSessionId !== args.sessionId) {
-      throw new ConvexError({
-        code: "STREAMING_SESSION_INVALID",
-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
-      });
+      artifactDeny("STREAMING_SESSION_INVALID");
     }
 
     const now = Date.now();
 
     // Note: Schema streamingMetadata doesn't have pausedAt/pauseReason fields
     // We transition to paused state but can't store pause metadata in schema
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       streamingState: "paused",
       streamingMetadata: {
         ...artifact.streamingMetadata,
@@ -1481,7 +1006,7 @@ export const pauseStreaming = mutation({
       updatedAt: now,
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       sessionId: args.sessionId,
@@ -1490,8 +1015,8 @@ export const pauseStreaming = mutation({
       currentState: "paused",
       bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,
       contentPreserved: true,
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -1502,16 +1027,15 @@ export const pauseStreaming = mutation({
  */
 export const resumeStreaming = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     sessionId: v.string(),
   },
-  handler: async (ctx, args) => {
-    const artifact = await lookupArtifact(ctx, args.artifactId, args.tenantId);
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     if (artifact.isDeleted) {
       throw new ConvexError("ARTIFACT_IS_DELETED");
@@ -1521,27 +1045,19 @@ export const resumeStreaming = mutation({
     // Note: We explicitly check for paused rather than using isValidTransition because
     // draft → streaming is valid for startStreaming, not resumeStreaming
     if (artifact.streamingState !== "paused") {
-      throw new ConvexError({
-        code: "INVALID_STATE_TRANSITION",
-        message: `Cannot resume: artifact is in '${artifact.streamingState}' state. Expected 'paused'.`,
-        currentState: artifact.streamingState,
-        targetState: "streaming",
-      });
+      artifactDeny("INVALID_STATE_TRANSITION");
     }
 
     // Verify sessionId matches
     const currentSessionId = artifact.streamingMetadata?.sessionId;
     if (currentSessionId !== args.sessionId) {
-      throw new ConvexError({
-        code: "STREAMING_SESSION_INVALID",
-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
-      });
+      artifactDeny("STREAMING_SESSION_INVALID");
     }
 
     const now = Date.now();
 
     // Note: Schema streamingMetadata doesn't have pausedAt/resumedAt/totalPauseDuration fields
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       streamingState: "streaming",
       streamingMetadata: {
         ...artifact.streamingMetadata,
@@ -1549,7 +1065,7 @@ export const resumeStreaming = mutation({
       updatedAt: now,
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       sessionId: args.sessionId,
@@ -1557,8 +1073,8 @@ export const resumeStreaming = mutation({
       previousState: "paused",
       currentState: "streaming",
       bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -1569,18 +1085,17 @@ export const resumeStreaming = mutation({
  */
 export const cancelStreaming = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     sessionId: v.string(),
     reason: v.optional(v.string()),
     preserveContent: v.optional(v.boolean()), // Default: true
   },
-  handler: async (ctx, args) => {
-    const artifact = await lookupArtifact(ctx, args.artifactId, args.tenantId);
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     if (artifact.isDeleted) {
       throw new ConvexError("ARTIFACT_IS_DELETED");
@@ -1590,27 +1105,16 @@ export const cancelStreaming = mutation({
     // Note: We explicitly check states rather than using isValidTransition because
     // final → draft is valid for update operations, but not for cancel operations
     if (artifact.streamingState !== "streaming" && artifact.streamingState !== "paused") {
-      throw new ConvexError({
-        code: "INVALID_STATE_TRANSITION",
-        message: `Cannot cancel: artifact is in '${artifact.streamingState}' state. Expected 'streaming' or 'paused'.`,
-        currentState: artifact.streamingState,
-        targetState: "draft",
-      });
+      artifactDeny("INVALID_STATE_TRANSITION");
     }
 
     // Verify sessionId matches - required for active streaming sessions
     const currentSessionId = artifact.streamingMetadata?.sessionId;
     if (!currentSessionId) {
-      throw new ConvexError({
-        code: "STREAMING_SESSION_INVALID",
-        message: "No active streaming session to cancel.",
-      });
+      artifactDeny("STREAMING_SESSION_INVALID");
     }
     if (currentSessionId !== args.sessionId) {
-      throw new ConvexError({
-        code: "STREAMING_SESSION_INVALID",
-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
-      });
+      artifactDeny("STREAMING_SESSION_INVALID");
     }
 
     const now = Date.now();
@@ -1620,7 +1124,7 @@ export const cancelStreaming = mutation({
 
     // Revert to draft, optionally preserving content
     // Note: Schema streamingMetadata only supports limited fields
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       streamingState: "draft",
       content: preserveContent ? artifact.content : "",
       streamingMetadata: {
@@ -1636,7 +1140,7 @@ export const cancelStreaming = mutation({
       updatedAt: now,
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       sessionId: args.sessionId,
@@ -1646,8 +1150,8 @@ export const cancelStreaming = mutation({
       contentPreserved: preserveContent,
       bytesReceived,
       contentLength: preserveContent ? contentLength : 0,
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -1659,18 +1163,17 @@ export const cancelStreaming = mutation({
  */
 export const finalizeStreaming = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     sessionId: v.string(),
     createVersion: v.optional(v.boolean()), // Default: true - create version history entry
     changeSummary: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
-    const artifact = await lookupArtifact(ctx, args.artifactId, args.tenantId);
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     if (artifact.isDeleted) {
       throw new ConvexError("ARTIFACT_IS_DELETED");
@@ -1678,21 +1181,13 @@ export const finalizeStreaming = mutation({
 
     // Validate state transition: streaming → final
     if (!isValidTransition(artifact.streamingState, "final")) {
-      throw new ConvexError({
-        code: "INVALID_STATE_TRANSITION",
-        message: `Cannot finalize: artifact is in '${artifact.streamingState}' state. Expected 'streaming'.`,
-        currentState: artifact.streamingState,
-        targetState: "final",
-      });
+      artifactDeny("INVALID_STATE_TRANSITION");
     }
 
     // Verify sessionId matches
     const currentSessionId = artifact.streamingMetadata?.sessionId;
     if (currentSessionId !== args.sessionId) {
-      throw new ConvexError({
-        code: "STREAMING_SESSION_INVALID",
-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
-      });
+      artifactDeny("STREAMING_SESSION_INVALID");
     }
 
     const now = Date.now();
@@ -1705,7 +1200,7 @@ export const finalizeStreaming = mutation({
     // Prepare version history update if requested
     let versionUpdate = {};
     if (createVersion) {
-      const newVersion = artifact.versionPointer + 1;
+      const newVersion = nextArtifactVersion(artifact);
 
       // Truncate history if user had undone (branching from undo state)
       let versionHistory = [...artifact.versionHistory];
@@ -1722,6 +1217,7 @@ export const finalizeStreaming = mutation({
         title: artifact.title,
         timestamp: now,
         changeType: "update" as const,
+        changedBy: operation.authority.principalId,
         changeSummary: args.changeSummary || "Streaming content finalized",
       });
 
@@ -1734,7 +1230,7 @@ export const finalizeStreaming = mutation({
 
     // Finalize: transition to final state, clear streaming metadata
     // Note: Schema streamingMetadata only supports limited fields
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       streamingState: "final",
       streamingMetadata: {
         // Clear all active streaming fields
@@ -1750,7 +1246,7 @@ export const finalizeStreaming = mutation({
       updatedAt: now,
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       sessionId: args.sessionId,
@@ -1762,10 +1258,10 @@ export const finalizeStreaming = mutation({
       totalDurationMs,
       versionCreated: createVersion,
       version: createVersion
-        ? artifact.versionPointer + 1
+        ? nextArtifactVersion(artifact)
         : artifact.versionPointer,
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -1776,18 +1272,17 @@ export const finalizeStreaming = mutation({
  */
 export const setStreamingError = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     sessionId: v.optional(v.string()),
     errorCode: v.string(),
     errorMessage: v.string(),
   },
-  handler: async (ctx, args) => {
-    const artifact = await lookupArtifact(ctx, args.artifactId, args.tenantId);
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     if (artifact.isDeleted) {
       throw new ConvexError("ARTIFACT_IS_DELETED");
@@ -1795,26 +1290,18 @@ export const setStreamingError = mutation({
 
     // Validate state transition: most states can go to error
     if (!isValidTransition(artifact.streamingState, "error")) {
-      throw new ConvexError({
-        code: "INVALID_STATE_TRANSITION",
-        message: `Cannot set error state: artifact is in '${artifact.streamingState}' state.`,
-        currentState: artifact.streamingState,
-        targetState: "error",
-      });
+      artifactDeny("INVALID_STATE_TRANSITION");
     }
 
     // If sessionId provided, verify it matches (optional for error state)
     const currentSessionId = artifact.streamingMetadata?.sessionId;
     if (args.sessionId && currentSessionId && currentSessionId !== args.sessionId) {
-      throw new ConvexError({
-        code: "STREAMING_SESSION_INVALID",
-        message: `Session ID mismatch. Expected '${currentSessionId}', got '${args.sessionId}'.`,
-      });
+      artifactDeny("STREAMING_SESSION_INVALID");
     }
 
     const now = Date.now();
 
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       streamingState: "error",
       streamingMetadata: {
         ...artifact.streamingMetadata,
@@ -1825,7 +1312,7 @@ export const setStreamingError = mutation({
       updatedAt: now,
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       previousState: artifact.streamingState,
@@ -1834,8 +1321,8 @@ export const setStreamingError = mutation({
       errorMessage: args.errorMessage,
       contentPreserved: true,
       bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,
-    };
-  },
+    });
+  }),
 });
 
 /**
@@ -1846,16 +1333,15 @@ export const setStreamingError = mutation({
  */
 export const retryFromError = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     clearContent: v.optional(v.boolean()), // Default: false - preserve content
   },
-  handler: async (ctx, args) => {
-    const artifact = await lookupArtifact(ctx, args.artifactId, args.tenantId);
+  handler: async (ctx, args) => artifactHandler(async () => {
+    const operation = await ArtifactOperation.begin(ctx, args, true);
 
-    if (!artifact) {
-      throw new ConvexError("ARTIFACT_NOT_FOUND");
-    }
+    const artifact = await operation.load(args.artifactId);
 
     if (artifact.isDeleted) {
       throw new ConvexError("ARTIFACT_IS_DELETED");
@@ -1863,19 +1349,14 @@ export const retryFromError = mutation({
 
     // Validate state transition: error → draft
     if (artifact.streamingState !== "error") {
-      throw new ConvexError({
-        code: "INVALID_STATE_TRANSITION",
-        message: `Cannot retry: artifact is in '${artifact.streamingState}' state. Expected 'error'.`,
-        currentState: artifact.streamingState,
-        targetState: "draft",
-      });
+      artifactDeny("INVALID_STATE_TRANSITION");
     }
 
     const now = Date.now();
     const clearContent = args.clearContent === true; // Default false
 
     // Note: Schema streamingMetadata only supports limited fields
-    await ctx.db.patch(artifact._id, {
+    await operation.patch(artifact._id, {
       streamingState: "draft",
       content: clearContent ? "" : artifact.content,
       streamingMetadata: {
@@ -1891,15 +1372,15 @@ export const retryFromError = mutation({
       updatedAt: now,
     });
 
-    return {
+    return await operation.complete({
       success: true,
       artifactId: args.artifactId,
       previousState: "error",
       currentState: "draft",
       contentCleared: clearContent,
       contentLength: clearContent ? 0 : (artifact.content?.length || 0),
-    };
-  },
+    });
+  }),
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
