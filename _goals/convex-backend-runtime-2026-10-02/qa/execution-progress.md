@@ -1,6 +1,7 @@
 # Backend-runtime execution progress
 
-Current phase: Task 01 qualification. Fresh independent goal review cycle 2 PASS.
+Current phase: foundation Tasks02A/03A. Fresh independent goal review cycle2 PASS;
+Task01 independent review cycle1 PASS (4.2/5).
 Execution authorized by the user's implementation request. Plan-only disclaimers
 record historical authorship and do not supersede this request.
 
@@ -16,11 +17,16 @@ record historical authorship and do not supersede this request.
   alone is not interpreted as ready. Actual Convex team-access read returned HTTP 200.
 - User response to live target/budget question: **"create a fresh instance, no cap"**.
   Create an isolated disposable development deployment; no shared CI/production targets.
-- Fresh cloud dev target efficient-ox-979 / project 3133325 is verified owned and
-  disposable; see disposable-target.json. Private credentials remain in ignored work/.
-- Task 01 standalone Agent/Workflow/Workpool fixture is deployed there. Actual Gateway
+- Qualification target efficient-ox-979 / project3133325 was verified and retired
+  after review; disposable-target.json and qualification-target-retirement.json.
+- Separate fresh product integration target limitless-chameleon-209 / project3133446
+  is verified owned/development-only; integration-target.json. Private credentials
+  remain in ignored work/.
+- Task01 standalone Agent/Workflow/Workpool fixture was deployed on its qualification
+  target. Actual Gateway
   Chat, structured output, Responses and backend tool calls have succeeded. Final
-  Task 01 report and independent task review are still pending; no task PASS yet.
+  Task01 qualification is independently PASS; see task01/report.md and task01-review-1.md.
+  Its bounded spike is not the production runtime.
 - Baseline active-package offline quality receipts are in baseline-quality.md.
   Live core module/runtime/UI certification remains pending.
 
@@ -28,8 +34,10 @@ record historical authorship and do not supersede this request.
 
 | Tasks | State | Dependency / evidence |
 |---|---|---|
-| 01 | In progress | Goal cycle 2 PASS; disposable provisioning and qualification executor next. |
-| 02–09 | Pending | Task 01 qualification, then ordered text slice. |
+| 01 | Complete/PASS | Fresh judge task01_review,4.2/5;10 live checks,Gateway Chat,strict typed UI protocol. |
+| 02A | In progress | task02a_domain;pure modules and frozen02B adapter contracts. |
+| 03A | In progress | task03a_authority;public endpoint inventory and trusted authority contracts. |
+| 02B/03B/03C/04–09 | Pending | Foundation interface freezes/reviews,then ordered text slice. |
 | 10–15 | Pending | Text slice and per-extension service gates. |
 | 16–17 | Pending | Complete implementation, outcome matrix and independent final audit. |
 

@@ -1,0 +1,7 @@
+live-Gateway-tool-disconnect-multiple-observers-no-replay: PASS
+persisted-Agent-stream-multiple-observers-reconnect: FAIL AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(!JSON.stringify(end.messages).includes("private fixture reasoning"))
+
+persisted-Agent-stream-cancellation: PASS
+Qualification FAIL

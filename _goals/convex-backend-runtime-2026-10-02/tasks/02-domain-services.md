@@ -1,6 +1,6 @@
 # Task 02: Backend-friendly memory domain services
 
-**Status:** Planning only — pending execution authorization.
+**Status:** In progress — execution authorized; Task01 independent PASS. Bounded foundation substeps active.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md)
 

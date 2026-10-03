@@ -1,0 +1,21 @@
+import { spawnSync } from "node:child_process";
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { randomBytes } from "node:crypto";
+
+const repo = resolve("../../../../..");
+const target = JSON.parse(readFileSync(resolve(repo, "work/backend-runtime/target.json"), "utf8"));
+if (!target.isolationVerified || target.deploymentType !== "dev" || target.productionDeployment || target.sharedCiTarget) throw new Error("Unverified disposable target");
+const envFile = resolve(repo, target.privateEnvironmentFile);
+process.loadEnvFile(envFile);
+const effectSecret = randomBytes(32).toString("hex");
+writeFileSync(resolve(repo,"work/backend-runtime/qualification/effect-secret.txt"),effectSecret,{mode:0o600});
+const setting=spawnSync(process.execPath,["node_modules/convex/bin/main.js","env","set","QUALIFICATION_EFFECT_SECRET",effectSecret,"--env-file",envFile],{encoding:"utf8",env:process.env});
+if(setting.status!==0) throw new Error("Could not set private fixture HTTP effect secret");
+const secretValues = Object.entries(process.env).filter(([key,value]) => /KEY|TOKEN|SECRET|PASSWORD/.test(key) && value && value.length > 8).map(([,value]) => value);
+const child = spawnSync(process.execPath, ["node_modules/convex/bin/main.js", "dev", "--once", "--typecheck", "disable", "--tail-logs", "disable", "--env-file", envFile], { encoding: "utf8", env: process.env });
+let log = String(child.stdout ?? "") + String(child.stderr ?? "");
+for (const secret of secretValues) log = log.replaceAll(secret, "[REDACTED]");
+writeFileSync("../evidence/deploy.txt", log);
+console.log(log);
+process.exitCode = child.status ?? 1;

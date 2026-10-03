@@ -10,6 +10,7 @@ These are baseline/offline receipts, not full runtime/module/UI certification.
 | Install | `npm exec --yes --package=npm@12.2.0 -- npm ci --no-audit --no-fund` | root | 0; 553 packages, no lock changes | baseline-install.log |
 | SDK lint | `npm run lint` through npm 12.2.0 | root | 0 | baseline-root-lint.log |
 | SDK typecheck | `npm exec -- tsc --noEmit` through npm 12.2.0 | root | 0 | baseline-root-typecheck.log |
+| Backend typecheck | `npm exec -- tsc --project convex-dev/tsconfig.json --noEmit` through npm 12.2.0 | root | 0 | baseline-backend-typecheck.log |
 | SDK build | `npm run build` through npm 12.2.0 | root | 0 | baseline-root-build.log |
 | Packed/browser contracts | `npm run test:contracts` through npm 12.2.0 | root | 0 | baseline-root-contracts.log |
 | SDK offline unit | See exact command below | root | 0; 19 suites, 619 tests | baseline-root-offline-unit.log |
@@ -61,6 +62,7 @@ Live core module coverage, runtime acceptance and browser flows remain pending.
 No native browser/computer-use tool is exposed in this session (tool discovery
 checked both names and descriptions). Existing Playwright suites remain available
 as package checks; native UI certification requires its own evidence/gate later.
-Root/package build output is ignored;
+Log files normalize terminal carriage returns and trailing whitespace; original
+captures remain in ignored private scratch. Root/package build output is ignored;
 no product/generated/mirror tracked files changed. No model inference or live data
 mutation occurred in these checks.
