@@ -1,0 +1,24 @@
+{
+  "extends": "/workspace/Project-Cortex/work/resume/registry/candidate/tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "rootDir": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "target": "ES2021",
+    "lib": [
+      "ES2021",
+      "DOM"
+    ],
+    "typeRoots": [
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/@types"
+    ]
+  },
+  "include": [
+    "/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/agents.ts",
+    "/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/memorySpaces.ts",
+    "/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/contexts.ts",
+    "/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/runtimeRegistryAuth.ts",
+    "/workspace/Project-Cortex/work/resume/registry/candidate/tests/unit/runtimeRegistryAuth/**/*.ts"
+  ],
+  "exclude": []
+}

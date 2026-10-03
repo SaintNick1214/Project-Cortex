@@ -1,0 +1,46 @@
+import assert from 'node:assert/strict';
+import {ConvexError,convexToJson} from '/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/convex/dist/esm/values/index.js';
+import {fixture,invoke,seedAgent,seedSpace,seedContext} from '/workspace/Project-Cortex/work/resume/registry/candidate/tests/unit/runtimeRegistryAuth/fixture.ts';
+import {snapshot} from '/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/runtimeRegistryAuth.ts';
+import * as agents from '/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/agents.ts';
+import * as spaces from '/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/memorySpaces.ts';
+import * as contexts from '/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/contexts.ts';
+const scope={tenantId:'tenant-a',memorySpaceId:'space-a'};
+const entries=[{table:'agents',reg:agents.update,seed:seedAgent,args:{agentId:'agent-a',name:'Changed'}},{table:'memorySpaces',reg:spaces.update,seed:seedSpace,args:{name:'Changed'}},{table:'contexts',reg:contexts.update,seed:seedContext,args:{contextId:'context-a',description:'Changed'}}];
+const envelopes=[['UNAUTHENTICATED','Verified identity required'],['FORBIDDEN','Access denied'],['INVALID_INPUT','Invalid authority configuration'],['CAPABILITY_NOT_READY','Access denied or invalid registry input']];
+const stages=[
+ {name:'principal-initial-query',table:'runtimeAuthPrincipals',post:false},
+ {name:'memberships-initial-query',table:'runtimeAuthMemberships',post:false},
+ {name:'grants-initial-query',table:'runtimeAuthGrants',post:false},
+ {name:'scope-initial-query',table:'runtimeAuthScopes',post:false},
+ {name:'tombstone-initial-query',table:'runtimeAuthTombstones',post:false},
+ {name:'principal-final-get',table:'runtimeAuthPrincipals',post:true},
+ {name:'membership-final-get',table:'runtimeAuthMemberships',post:true},
+ {name:'grant-final-get',table:'runtimeAuthGrants',post:true},
+ {name:'normalizeId-final',table:null,post:true},
+ {name:'scope-final-query',table:'runtimeAuthScopes',post:true},
+ {name:'tombstone-final-query',table:'runtimeAuthTombstones',post:true},
+];
+const rows=[];
+for(const entry of entries)for(const [code,message] of envelopes)for(const stage of stages){
+ const f=fixture();entry.seed(f);const before=snapshot([...f.db.rows]);let reached=false,attempts=0;
+ const fault=new ConvexError({version:1,code,message,retryable:false,outcome:'not_dispatched'});
+ f.db.beforeWrite=()=>{attempts++;};
+ if(stage.table)f.db.beforeRead=(table)=>{if(table===stage.table&&(!stage.post||f.db.writes>0)){reached=true;throw fault;}};
+ else{const original=f.db.normalizeId.bind(f.db);f.db.normalizeId=(table,id)=>{if(f.db.writes>0){reached=true;throw fault;}return original(table,id);};}
+ let caught;try{await f.db.transaction(()=>invoke(entry.reg,f.ctx,{...scope,...entry.args}));}catch(e){caught=e;}
+ assert(reached);assert(caught instanceof ConvexError);const expected={version:1,code:'REGISTRY_OPERATION_FAILED',message:'Registry operation failed',retryable:false,outcome:stage.post?'rolled_back':'failed'};
+ assert.deepEqual(caught.data,expected);assert.equal(caught.message,JSON.stringify(expected));assert.deepEqual(convexToJson(caught.data),expected);assert(!caught.stack.includes('private-control'));
+ assert.equal(attempts,stage.post?1:0);assert.equal(f.db.writes,0);assert.equal(snapshot([...f.db.rows]),before);
+ rows.push({table:entry.table,stage:stage.name,injectedCode:code,reached,attempts,commits:f.db.writes,result:expected});
+}
+for(const entry of entries)for(const read of [false,true]){
+ const f=fixture(read?['admin','read','write']:['admin','write']);const original=entry.seed(f);
+ const result=await f.db.transaction(()=>invoke(entry.reg,f.ctx,{...scope,...entry.args}));
+ assert.equal(f.db.writes,1);
+ if(read){assert.equal(result._id,original._id);assert.equal(result.ownerPrincipalId,f.principal._id);}
+ else assert.deepEqual(result,{accepted:true,resourceType:entry.table,resourceId:entry.table==='agents'?'agent-a':entry.table==='contexts'?'context-a':'space-a'});
+ rows.push({table:entry.table,stage:'ordinary-positive',read,commits:1});
+}
+assert.equal(rows.length,138);
+console.log(JSON.stringify({count:138,readFaults:132,ordinaryPositive:6,allAsserted:true,rows},null,2));

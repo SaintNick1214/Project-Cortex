@@ -1,0 +1,2024 @@
+{
+  "count": 138,
+  "readFaults": 132,
+  "ordinaryPositive": 6,
+  "allAsserted": true,
+  "rows": [
+    {
+      "table": "agents",
+      "stage": "principal-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "memberships-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "grants-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "scope-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "principal-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "membership-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "grant-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "normalizeId-final",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "scope-final-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "tombstone-final-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "principal-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "memberships-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "grants-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "scope-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "principal-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "membership-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "grant-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "normalizeId-final",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "scope-final-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "tombstone-final-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "principal-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "memberships-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "grants-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "scope-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "principal-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "membership-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "grant-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "normalizeId-final",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "scope-final-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "tombstone-final-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "principal-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "memberships-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "grants-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "scope-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "principal-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "membership-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "grant-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "normalizeId-final",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "scope-final-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "tombstone-final-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "principal-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "memberships-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "grants-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "scope-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "principal-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "membership-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "grant-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "normalizeId-final",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "scope-final-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "tombstone-final-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "principal-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "memberships-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "grants-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "scope-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "principal-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "membership-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "grant-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "normalizeId-final",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "scope-final-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "tombstone-final-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "principal-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "memberships-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "grants-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "scope-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "principal-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "membership-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "grant-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "normalizeId-final",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "scope-final-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "tombstone-final-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "principal-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "memberships-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "grants-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "scope-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "principal-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "membership-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "grant-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "normalizeId-final",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "scope-final-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "tombstone-final-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "principal-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "memberships-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "grants-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "scope-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "principal-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "membership-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "grant-final-get",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "normalizeId-final",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "scope-final-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "tombstone-final-query",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "principal-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "memberships-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "grants-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "scope-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "principal-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "membership-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "grant-final-get",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "normalizeId-final",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "scope-final-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "tombstone-final-query",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "principal-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "memberships-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "grants-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "scope-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "principal-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "membership-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "grant-final-get",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "normalizeId-final",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "scope-final-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "tombstone-final-query",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "principal-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "memberships-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "grants-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "scope-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "tombstone-initial-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 0,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "principal-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "membership-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "grant-final-get",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "normalizeId-final",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "scope-final-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "contexts",
+      "stage": "tombstone-final-query",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "attempts": 1,
+      "commits": 0,
+      "result": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      }
+    },
+    {
+      "table": "agents",
+      "stage": "ordinary-positive",
+      "read": false,
+      "commits": 1
+    },
+    {
+      "table": "agents",
+      "stage": "ordinary-positive",
+      "read": true,
+      "commits": 1
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "ordinary-positive",
+      "read": false,
+      "commits": 1
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "ordinary-positive",
+      "read": true,
+      "commits": 1
+    },
+    {
+      "table": "contexts",
+      "stage": "ordinary-positive",
+      "read": false,
+      "commits": 1
+    },
+    {
+      "table": "contexts",
+      "stage": "ordinary-positive",
+      "read": true,
+      "commits": 1
+    }
+  ]
+}

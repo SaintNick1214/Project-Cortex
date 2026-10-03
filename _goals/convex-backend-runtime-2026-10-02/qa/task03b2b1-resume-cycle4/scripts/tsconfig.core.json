@@ -1,0 +1,21 @@
+{
+  "extends": "/workspace/Project-Cortex/work/resume/registry/candidate/tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "rootDir": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "target": "ES2021",
+    "lib": [
+      "ES2021",
+      "DOM"
+    ],
+    "typeRoots": [
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/@types"
+    ]
+  },
+  "include": [
+    "/workspace/Project-Cortex/work/resume/registry/candidate/convex-dev/runtimeAuth.ts",
+    "/workspace/Project-Cortex/work/resume/registry/candidate/tests/unit/runtimeAuth/**/*.ts"
+  ],
+  "exclude": []
+}
