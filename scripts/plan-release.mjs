@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, appendFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
 const paths = JSON.parse(readFileSync('delivery-paths.json', 'utf8'));
@@ -62,5 +62,4 @@ if (sdk.version) {
   }
 }
 writeFileSync('release-plan.json', JSON.stringify(packages, null, 2) + '\n');
-appendFileSync(process.env.GITHUB_ENV, `RELEASE_SDK=${Boolean(sdk.changed || sdk.released)}\n`);
 console.log(packages.map(pkg => `${pkg.name}: ${pkg.changed ? pkg.version : 'unchanged/already released'}`).join('\n'));

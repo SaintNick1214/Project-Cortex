@@ -78,13 +78,6 @@ jobs:
         run: node scripts/plan-release.mjs
         env:
           SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
-      - name: Deploy production backend once when SDK changes
-        if: env.RELEASE_SDK == 'true'
-        env:
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_PRODUCTION_DEPLOY_KEY }}
-        run: |
-          test -n "$CONVEX_DEPLOY_KEY" || { echo 'Configure CONVEX_PRODUCTION_DEPLOY_KEY (a production deployment, separate from CI).'; exit 1; }
-          npx convex deploy --yes
       - name: Build and check public package contracts
         run: |
           npm run build
