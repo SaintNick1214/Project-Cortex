@@ -1,0 +1,21 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'tsx' /tmp/task03b2b1-review1-5DtS9Q/graph-boundary.mts
+/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/convex-dev/runtimeRegistryAuth.ts:60
+    if (known || ambiguous) throw new ConvexError({ version: 1, code: known ?? "FORBIDDEN",
+                                  ^
+
+ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+    at operation (/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/convex-dev/runtimeRegistryAuth.ts:60:35)
+    at async RegistryTestDb.transaction (/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/tests/unit/runtimeRegistryAuth/fixture.ts:84:18)
+    at async <anonymous> (/tmp/task03b2b1-review1-5DtS9Q/graph-boundary.mts:6:15) {
+  data: {
+    version: 1,
+    code: 'INVALID_INPUT',
+    message: 'Access denied or invalid registry input',
+    retryable: false,
+    outcome: 'not_dispatched'
+  },
+  Symbol(ConvexError): true
+}
+
+Node.js v24.19.0

@@ -1,0 +1,34 @@
+/** One-off bounded source edit: native registrations stay native; statistics remain byte-frozen. */
+import fs from 'node:fs';
+import ts from 'typescript';
+for (const file of ['agents', 'memorySpaces', 'contexts']) {
+  const path = `convex-dev/${file}.ts`;
+  let text = fs.readFileSync(path, 'utf8');
+  const parse = () => ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true);
+  let edits = [];
+  function writes(node) {
+    if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)
+      && ['insert', 'patch', 'delete', 'replace'].includes(node.expression.name.text)
+      && node.expression.expression.getText() === 'ctx.db') {
+      edits.push([node.getStart(), node.end, `effect(ctx, async () => await ${node.getText()})`]);
+    }
+    ts.forEachChild(node, writes);
+  }
+  writes(parse());
+  for (const [start, end, value] of edits.sort((a, b) => b[0] - a[0])) text = text.slice(0, start) + value + text.slice(end);
+  edits = [];
+  for (const statement of parse().statements) {
+    if (!ts.isVariableStatement(statement)) continue;
+    for (const declaration of statement.declarationList.declarations) {
+      if (['computeStats', 'getStats'].includes(declaration.name.getText())) continue;
+      const call = declaration.initializer;
+      if (!call || !ts.isCallExpression(call) || !['query', 'mutation', 'internalMutation'].includes(call.expression.getText())) continue;
+      const handler = call.arguments[0].properties.find((property) => property.name?.getText() === 'handler').initializer;
+      const body = handler.body; const kind = call.expression.getText() === 'query' ? 'query' : 'mutation';
+      const original = ts.isBlock(body) ? body.getText() : `(${body.getText()})`;
+      edits.push([body.getStart(), body.end, `operation(ctx, "${kind}", async () => ${original})`]);
+    }
+  }
+  for (const [start, end, value] of edits.sort((a, b) => b[0] - a[0])) text = text.slice(0, start) + value + text.slice(end);
+  fs.writeFileSync(path, text); console.log(JSON.stringify({ file: path, registrations: edits.length }));
+}

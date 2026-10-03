@@ -1,0 +1,417 @@
+/** Independent registry/context boundary using the frozen Task03A authority contract. */
+import { ConvexError, v, convexToJson, type GenericValidator, type Value, type JSONValue } from "convex/values";
+import type { QueryCtx, MutationCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import type { RuntimeAuthority, RuntimeAuthorityRequirement, RuntimeCapability, RuntimeResource } from "../src/auth/verified";
+import { resolveAuthority, resolveAuthorityReference, createAuthorityReader, type AuthorityReader, type TombstoneKey } from "./runtimeAuth";
+import schema from "./schema";
+
+export const selectors = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
+export type Selectors = { tenantId?: string; memorySpaceId?: string };
+export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+export function deny(code = "FORBIDDEN"): never {
+  throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+}
+const attemptedEffects = new WeakSet<RegistryCtx>();
+const safeCodes = ["UNAUTHENTICATED", "FORBIDDEN", "INVALID_INPUT", "CAPABILITY_NOT_READY"];
+const safeMessages = ["Verified identity required", "Invalid authority configuration", "Access denied", "Access denied or invalid registry input"];
+function safeErrorCode(error: unknown): string | null {
+  const data: unknown = error instanceof ConvexError ? error.data : null;
+  const shape = data && typeof data === "object" && !Array.isArray(data) ? data as Record<string, unknown> : null;
+  return shape && Object.keys(shape).every((key) => ["version", "code", "message", "retryable", "outcome"].includes(key))
+    && shape.version === 1 && typeof shape.code === "string" && safeCodes.includes(shape.code)
+    && typeof shape.message === "string" && safeMessages.includes(shape.message)
+    && shape.retryable === false && shape.outcome === "not_dispatched" ? shape.code : null;
+}
+async function controlRead<T>(run: () => Promise<T>): Promise<T> {
+  try { return await run(); }
+  catch (error) {
+    // The frozen resolver intentionally prunes typed FORBIDDEN candidates. An unexpected
+    // database ConvexError must not masquerade as that decision and become a safe receipt.
+    if (error instanceof ConvexError && safeErrorCode(error) === null) throw new ConvexError({ version: 1,
+      code: "REGISTRY_OPERATION_FAILED", message: "Registry operation failed", retryable: false, outcome: "failed" });
+    throw error;
+  }
+}
+function registryReader(ctx: RegistryCtx): AuthorityReader {
+  const base = createAuthorityReader(ctx);
+  return {
+    findPrincipal: async (issuer, subject) => await controlRead(async () => await base.findPrincipal(issuer, subject)),
+    getPrincipal: async (id) => await controlRead(async () => await base.getPrincipal(id)),
+    listMemberships: async (id) => await controlRead(async () => await base.listMemberships(id)),
+    getMembership: async (id) => await controlRead(async () => await base.getMembership(id)),
+    listGrants: async (id) => await controlRead(async () => await base.listGrants(id)),
+    getGrant: async (id) => await controlRead(async () => await base.getGrant(id)),
+    getScope: async (tenant, space) => await controlRead(async () => await base.getScope(tenant, space)),
+    hasTombstone: async (key) => await controlRead(async () => await base.hasTombstone(key)),
+  };
+}
+async function requireRegistryAuthority(ctx: RegistryCtx, requirement: RuntimeAuthorityRequirement) {
+  return await resolveAuthority(registryReader(ctx), await ctx.auth.getUserIdentity(), requirement);
+}
+/** Every selected native handler normalizes private errors without turning failures into success. */
+export async function operation<T>(ctx: RegistryCtx, kind: "query" | "mutation", run: () => Promise<T>): Promise<T> {
+  try { return await run(); }
+  catch (error) {
+    const known = safeErrorCode(error);
+    // This exact installed QueryImpl error denotes canonical/control ambiguity. Its IDs are discarded.
+    const ambiguous = error instanceof Error && error.message.startsWith("unique() query returned more than one result from table ");
+    const attempted = attemptedEffects.has(ctx);
+    if (known || ambiguous) throw new ConvexError({ version: 1, code: known ?? "FORBIDDEN",
+      message: "Access denied or invalid registry input", retryable: false, outcome: attempted ? "rolled_back" : "not_dispatched" });
+    throw new ConvexError({ version: 1, code: "REGISTRY_OPERATION_FAILED", message: "Registry operation failed",
+      retryable: false, outcome: kind === "mutation" && attempted ? "rolled_back" : "failed" });
+  } finally { attemptedEffects.delete(ctx); }
+}
+/** Mark a real write attempt before invoking the native writer, including a rejected first attempt. */
+export async function effect<T>(ctx: RegistryCtx, run: () => Promise<T>): Promise<T> {
+  attemptedEffects.add(ctx); return await run();
+}
+export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+export function integer(value: number, min = 0, max = 1000): number {
+  if (!Number.isSafeInteger(value) || value < min || value > max) deny("INVALID_INPUT"); return value;
+}
+export function nextVersion(value: number): number { integer(value, 1, Number.MAX_SAFE_INTEGER - 1); return value + 1; }
+export function distinct(values: string[]): void { values.forEach(textId); if (new Set(values).size !== values.length) deny("INVALID_INPUT"); }
+export function record(value: unknown): value is Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const prototype: unknown = Object.getPrototypeOf(value);
+  return prototype === null || typeof prototype === "object" && prototype !== null
+    && (prototype as { constructor?: { name?: string } }).constructor?.name === "Object";
+}
+export function mergeValue(previous: unknown, patch: unknown): unknown {
+  json(patch); if (patch === undefined) return previous;
+  return record(previous) && record(patch) ? { ...previous, ...patch } : patch;
+}
+export function nativeJson(value: unknown): JSONValue {
+  try {
+    // This narrow unknown-value seam delegates validation to Convex's official codec.
+    // The cast permits the codec to reject unsupported values; it asserts no authority/receipt.
+    return convexToJson(value as Value);
+  } catch { return deny("INVALID_INPUT"); }
+}
+export function json(value: unknown): void {
+  if (value !== undefined) nativeJson(value);
+}
+function matches(value: unknown, validator: GenericValidator): boolean {
+  switch (validator.kind) {
+    case "any": try { json(value); return true; } catch { return false; }
+    case "string": return typeof value === "string";
+    case "id": return typeof value === "string" && value.trim().length > 0;
+    case "float64": return typeof value === "number" && Number.isFinite(value);
+    case "boolean": return typeof value === "boolean";
+    case "literal": return value === validator.value;
+    case "null": return value === null;
+    case "array": return Array.isArray(value) && value.every((item: unknown) => matches(item, validator.element));
+    case "union": return validator.members.some((member: GenericValidator) => matches(value, member));
+    case "object": {
+      if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+      const record = value as Record<string, unknown>; const fields: Record<string, GenericValidator> = validator.fields;
+      return Object.keys(record).every((key) => Object.prototype.hasOwnProperty.call(fields, key))
+        && Object.entries(fields).every(([key, field]) => record[key] === undefined ? field.isOptional === "optional" : matches(record[key], field));
+    }
+    default: return false;
+  }
+}
+export type RegistryTable = "agents" | "memorySpaces" | "contexts";
+export function insertionShape(table: RegistryTable, value: Record<string, unknown>) {
+  if (!matches(value, schema.tables[table].validator)) deny("INVALID_INPUT");
+}
+export function snapshot(value: unknown): string {
+  // Convex's codec sorts object keys and preserves bytes, int64, special floats and signed zero.
+  return value === undefined ? "undefined" : JSON.stringify(nativeJson(value));
+}
+export function canonical(table: RegistryTable, row: Doc<RegistryTable>): void {
+  const { _id: _unusedId, _creationTime: _unusedCreation, ...value } = row;
+  if (!matches(value, schema.tables[table].validator) || !row.tenantId?.trim() || !row.ownerPrincipalId?.trim() || row.tombstonedAt !== undefined) deny();
+  const start = table === "agents" ? (row as Doc<"agents">).registeredAt : (row as Doc<"contexts">).createdAt;
+  if (start < 0 || row.updatedAt < start || row.updatedAt > 8.64e15) deny();
+  if (table === "memorySpaces") distinct((row as Doc<"memorySpaces">).participants.map((p) => p.id));
+  if (table === "contexts") {
+    const c = row as Doc<"contexts">;
+    if (c.lastUpdatedBy !== undefined && !c.lastUpdatedBy.trim()) deny();
+    integer(c.version, 1, Number.MAX_SAFE_INTEGER); integer(c.depth, 0, 100);
+    distinct(c.childIds); distinct(c.participants);
+    if (!c.rootId || c.contextId === c.parentId || c.childIds.includes(c.contextId)
+      || c.previousVersions.length !== c.version - 1 || c.previousVersions.length > 1000) deny();
+    let timestamp = c.createdAt;
+    for (let index = 0; index < c.previousVersions.length; index++) {
+      const history = c.previousVersions[index]!;
+      if (history.version !== index + 1 || history.timestamp < timestamp || history.timestamp > c.updatedAt
+        || !["active", "completed", "cancelled", "blocked"].includes(history.status)
+        || history.updatedBy !== undefined && !history.updatedBy.trim()) deny();
+      timestamp = history.timestamp;
+    }
+    if (c.grantedAccess) distinct(c.grantedAccess.map((grant) => grant.memorySpaceId));
+  }
+}
+export function resource(table: RegistryTable, row: { tenantId?: string; memorySpaceId?: string; ownerPrincipalId?: string; agentId?: string; contextId?: string }): RuntimeResource {
+  return { resourceType: table === "agents" ? "source" : table === "contexts" ? "context" : "memorySpace",
+    // Agent labels live in the existing source resource namespace with collision-safe tuple IDs.
+    resourceId: table === "agents" ? JSON.stringify(["agents", row.agentId]) : table === "contexts" ? row.contextId! : row.memorySpaceId!,
+    tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId };
+}
+
+/** Every admitted capability and canonical snapshot survives the entire transaction. */
+export class RegistryAccess {
+  readonly checks: { authority: RuntimeAuthority; requirement: RuntimeAuthorityRequirement }[] = [];
+  readonly witnesses = new Map<string, { expected: string; reload: () => Promise<unknown> }>();
+  private readonly readDecisions = new Map<string, boolean>();
+  private readonly retiredResources = new Map<string, number>();
+  private constructor(readonly ctx: RegistryCtx, readonly authority: RuntimeAuthority, readonly capability: RuntimeCapability) {}
+  static async open(ctx: RegistryCtx, capability: RuntimeCapability, scope: Selectors) {
+    const authority = await requireRegistryAuthority(ctx, { capability, ...scope });
+    const access = new RegistryAccess(ctx, authority, capability);
+    access.keep(authority, { capability, tenantId: authority.tenantId, memorySpaceId: authority.memorySpaceId });
+    return access;
+  }
+  keep(authority: RuntimeAuthority, requirement: RuntimeAuthorityRequirement) {
+    const key = JSON.stringify([authority.grantId, authority.memorySpaceId, requirement]);
+    if (!this.checks.some((check) => JSON.stringify([check.authority.grantId, check.authority.memorySpaceId, check.requirement]) === key)) this.checks.push({ authority, requirement });
+  }
+  async admit(rowResource: RuntimeResource, capability = this.capability): Promise<RuntimeAuthority> {
+    const authority = await requireRegistryAuthority(this.ctx, { capability, resource: rowResource });
+    if (authority.principalId !== this.authority.principalId || authority.tenantId !== this.authority.tenantId) deny();
+    this.keep(authority, { capability, tenantId: authority.tenantId, memorySpaceId: authority.memorySpaceId });
+    this.keep(authority, { capability, resource: rowResource }); return authority;
+  }
+  async optionalRead(rowResource: RuntimeResource): Promise<boolean> {
+    const key = JSON.stringify(rowResource); const initial = this.readDecisions.get(key);
+    if (initial !== undefined) return initial;
+    try { await this.admit(rowResource, "read"); this.readDecisions.set(key, true); return true; }
+    catch (error) { if (safeErrorCode(error) === "FORBIDDEN") { this.readDecisions.set(key, false); return false; } throw error; }
+  }
+  async readAll(resources: RuntimeResource[]): Promise<boolean> {
+    let readable = true;
+    for (const rowResource of resources) if (!await this.optionalRead(rowResource)) readable = false;
+    return readable;
+  }
+  witness(key: string, row: unknown, reload: () => Promise<unknown>) {
+    const expected = snapshot(row); const existing = this.witnesses.get(key);
+    if (existing && existing.expected !== expected) deny();
+    if (!existing) this.witnesses.set(key, { expected, reload });
+  }
+  expect(key: string, row: unknown) { const witness = this.witnesses.get(key); if (witness) witness.expected = snapshot(row); }
+  retainTombstone(rowResource: RuntimeResource, deletedAt: number) {
+    const key = { tenantId: rowResource.tenantId!, memorySpaceId: rowResource.memorySpaceId,
+      resourceType: rowResource.resourceType, resourceId: rowResource.resourceId };
+    const reload = async () => {
+      const row = await this.ctx.db.query("runtimeAuthTombstones").withIndex("by_resource", (q) => q.eq("tenantId", key.tenantId)
+        .eq("memorySpaceId", key.memorySpaceId).eq("resourceType", key.resourceType).eq("resourceId", key.resourceId)).unique();
+      return row ? { tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, resourceType: row.resourceType, resourceId: row.resourceId, deletedAt: row.deletedAt } : null;
+    };
+    this.witness(`retired:${JSON.stringify(key)}`, { ...key, deletedAt }, reload);
+  }
+  retire(rowResource: RuntimeResource, deletedAt: number) {
+    this.retainTombstone(rowResource, deletedAt);
+    // Keep resource READ/WRITE/ADMIN eligibility too: retirement cannot erase a private-output witness.
+    this.retiredResources.set(snapshot({ tenantId: rowResource.tenantId, memorySpaceId: rowResource.memorySpaceId,
+      resourceType: rowResource.resourceType, resourceId: rowResource.resourceId }), deletedAt);
+  }
+  private reader() {
+    const base = registryReader(this.ctx);
+    return { ...base, hasTombstone: async (key: TombstoneKey) => {
+      const deletedAt = this.retiredResources.get(snapshot(key));
+      if (deletedAt === undefined) return await base.hasTombstone(key);
+      const row = await this.ctx.db.query("runtimeAuthTombstones").withIndex("by_resource", (q) => q.eq("tenantId", key.tenantId)
+        .eq("memorySpaceId", key.memorySpaceId).eq("resourceType", key.resourceType).eq("resourceId", key.resourceId)).unique();
+      if (!row || row.deletedAt !== deletedAt) deny(); return false;
+    } };
+  }
+  /** Final deletion barrier accepts only this transaction's exact new space fence. Principal,
+   * membership, immutable grants, tenant fences and all other resource fences remain current.
+   * It cannot admit a later operation: open() fails on the retired space before this object exists. */
+  async fenceRetiredSpace(expected: { memorySpaceId: string; epoch: number; deletedAt: number }) {
+    const base = this.reader(); const tenantId = this.authority.tenantId;
+    const reader = { ...base,
+      getScope: async (tenant: string, space?: string) => {
+        const scope = await base.getScope(tenant, space);
+        if (tenant !== tenantId || space !== expected.memorySpaceId) return scope;
+        if (!scope || scope.epoch !== expected.epoch || scope.deletedAt !== expected.deletedAt) deny();
+        return { ...scope, epoch: expected.epoch - 1, deletedAt: undefined };
+      },
+      hasTombstone: async (key: Parameters<typeof base.hasTombstone>[0]) => {
+        if (key.tenantId !== tenantId || key.memorySpaceId !== expected.memorySpaceId
+          || key.resourceType !== "memorySpace" || key.resourceId !== expected.memorySpaceId) return await base.hasTombstone(key);
+        const row = await this.ctx.db.query("runtimeAuthTombstones").withIndex("by_resource", (q) => q.eq("tenantId", tenantId)
+          .eq("memorySpaceId", expected.memorySpaceId).eq("resourceType", "memorySpace").eq("resourceId", expected.memorySpaceId)).unique();
+        if (!row || row.deletedAt !== expected.deletedAt) deny(); return false;
+      },
+    };
+    let previous: string | undefined;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const snapshots: string[] = [];
+      for (const check of this.checks) snapshots.push(JSON.stringify(await resolveAuthorityReference(reader, check.authority, check.requirement)));
+      for (const witness of this.witnesses.values()) {
+        const actual = snapshot(await witness.reload()); if (actual !== witness.expected) deny(); snapshots.push(actual);
+      }
+      const current = JSON.stringify(snapshots); if (current === previous) return; previous = current;
+    }
+    deny();
+  }
+  /** Two matching complete sweeps prevent a late check from hiding changes to an earlier admitted row/grant.
+   * Real Convex reads/effects share an atomic snapshot; bounded convergence also checks adversarial awaited fixtures. */
+  async fence() {
+    const reader = this.reader();
+    let previous: string | undefined;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const snapshots: string[] = [];
+      for (const check of this.checks) snapshots.push(JSON.stringify(await resolveAuthorityReference(reader, check.authority, check.requirement)));
+      for (const witness of this.witnesses.values()) {
+        const actual = snapshot(await witness.reload());
+        if (actual !== witness.expected) deny(); snapshots.push(actual);
+      }
+      const current = JSON.stringify(snapshots);
+      if (current === previous) return;
+      previous = current;
+    }
+    deny();
+  }
+}
+function owner(authority: RuntimeAuthority): string | undefined { return authority.resourceAccess === "own" ? authority.principalId : undefined; }
+export async function agentsIn(access: RegistryAccess) {
+  const a = access.authority;
+  return await access.ctx.db.query("agents").withIndex("by_runtime_scope_owner", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId))
+    .filter((q) => q.and(q.eq(q.field("tombstonedAt"), undefined), owner(a) ? q.eq(q.field("ownerPrincipalId"), a.principalId) : q.neq(q.field("ownerPrincipalId"), undefined))).collect();
+}
+export async function agentAt(access: RegistryAccess, id: string, required = true) {
+  textId(id); const a = access.authority;
+  const load = async () => await access.ctx.db.query("agents").withIndex("by_runtime_scope_agent", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId).eq("agentId", id))
+    .filter((q) => owner(a) ? q.eq(q.field("ownerPrincipalId"), a.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
+  const row = await load();
+  if (!row) { if (required) deny(); return null; }
+  canonical("agents", row); await access.admit(resource("agents", row)); if (access.capability === "write") await uniqueKey(access, "agents", row.agentId, row.memorySpaceId); access.witness(`agents:${row._id}`, row, load); return row;
+}
+export async function spaceAt(access: RegistryAccess, id: string, capability = access.capability, required = true) {
+  textId(id); const admitted = await requireRegistryAuthority(access.ctx, { capability, tenantId: access.authority.tenantId, memorySpaceId: id });
+  const load = async () => await access.ctx.db.query("memorySpaces").withIndex("by_tenant_memorySpaceId", (q) => q.eq("tenantId", admitted.tenantId).eq("memorySpaceId", id))
+    .filter((q) => owner(admitted) ? q.eq(q.field("ownerPrincipalId"), admitted.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
+  access.keep(admitted, { capability, tenantId: admitted.tenantId, memorySpaceId: id });
+  const row = await load();
+  if (!row) { if (required) deny(); return null; }
+  canonical("memorySpaces", row); await access.admit(resource("memorySpaces", row), capability); if (capability === "write") await uniqueKey(access, "memorySpaces", row.memorySpaceId, row.memorySpaceId); access.witness(`memorySpaces:${row._id}`, row, load); return row;
+}
+async function admittedSpaces(access: RegistryAccess) {
+  const a = access.authority;
+  const scopes = a.memorySpaceId === undefined
+    ? await access.ctx.db.query("runtimeAuthScopes").withIndex("by_tenant_space", (q) => q.eq("tenantId", a.tenantId)).collect()
+    : [{ tenantId: a.tenantId, memorySpaceId: a.memorySpaceId, deletedAt: undefined }];
+  const result: RuntimeAuthority[] = [];
+  for (const scope of scopes) {
+    if (!scope.memorySpaceId || scope.deletedAt !== undefined) continue;
+    let authority: RuntimeAuthority;
+    try { authority = await requireRegistryAuthority(access.ctx, { capability: access.capability, tenantId: a.tenantId, memorySpaceId: scope.memorySpaceId }); }
+    catch (error) { if (safeErrorCode(error) === "FORBIDDEN") continue; throw error; }
+    access.keep(authority, { capability: access.capability, tenantId: authority.tenantId, memorySpaceId: authority.memorySpaceId }); result.push(authority);
+  }
+  return result;
+}
+export async function spacesIn(access: RegistryAccess) {
+  const result: Doc<"memorySpaces">[] = [];
+  for (const a of await admittedSpaces(access)) {
+    const rows = await access.ctx.db.query("memorySpaces").withIndex("by_tenant_memorySpaceId", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId!))
+      .filter((q) => q.and(q.eq(q.field("tombstonedAt"), undefined), owner(a) ? q.eq(q.field("ownerPrincipalId"), a.principalId) : q.neq(q.field("ownerPrincipalId"), undefined))).collect();
+    for (const row of rows) { const current = await spaceAt(access, row.memorySpaceId); if (snapshot(current) !== snapshot(row)) deny(); result.push(row); }
+  }
+  return result;
+}
+/** Candidate spaces come solely from trusted scope controls; labels/participants/grantedAccess never grant access. */
+export async function contextAt(access: RegistryAccess, id: string, crossSpace = false, required = true) {
+  textId(id); const a = access.authority;
+  const scopes = crossSpace || a.memorySpaceId === undefined
+    ? await access.ctx.db.query("runtimeAuthScopes").withIndex("by_tenant_space", (q) => q.eq("tenantId", a.tenantId)).collect()
+    : [{ tenantId: a.tenantId, memorySpaceId: a.memorySpaceId, deletedAt: undefined }];
+  const matches: Doc<"contexts">[] = [];
+  for (const scope of scopes) {
+    if (!scope.memorySpaceId || scope.deletedAt !== undefined) continue;
+    let admitted: RuntimeAuthority;
+    try { admitted = await requireRegistryAuthority(access.ctx, { capability: access.capability, tenantId: a.tenantId, memorySpaceId: scope.memorySpaceId }); }
+    catch (error) { if (safeErrorCode(error) === "FORBIDDEN") continue; throw error; }
+    const load = async () => await access.ctx.db.query("contexts").withIndex("by_runtime_scope_context", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", scope.memorySpaceId!).eq("contextId", id))
+      .filter((q) => owner(admitted) ? q.eq(q.field("ownerPrincipalId"), admitted.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
+    const row = await load(); if (!row) continue;
+    canonical("contexts", row); await access.admit(resource("contexts", row)); if (access.capability === "write") await uniqueKey(access, "contexts", row.contextId, row.memorySpaceId); access.witness(`contexts:${row._id}`, row, load); matches.push(row);
+  }
+  if (matches.length > 1 || matches.length === 0 && required) deny(); return matches[0] ?? null;
+}
+export async function contextsIn(access: RegistryAccess) {
+  const result: Doc<"contexts">[] = [];
+  for (const a of await admittedSpaces(access)) {
+    const rows = await access.ctx.db.query("contexts").withIndex("by_runtime_scope_owner", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId!))
+      .filter((q) => q.and(q.eq(q.field("tombstonedAt"), undefined), owner(a) ? q.eq(q.field("ownerPrincipalId"), a.principalId) : q.neq(q.field("ownerPrincipalId"), undefined))).collect();
+    for (const row of rows) { canonical("contexts", row); const current = await contextAt(access, row.contextId, true); if (snapshot(current) !== snapshot(row)) deny(); result.push(row); }
+  }
+  return result;
+}
+export async function tombstone(ctx: MutationCtx, rowResource: RuntimeResource, deletedAt = Date.now()) {
+  if (!rowResource.tenantId) deny();
+  const key = { tenantId: rowResource.tenantId, memorySpaceId: rowResource.memorySpaceId, resourceType: rowResource.resourceType, resourceId: rowResource.resourceId };
+  if (!await registryReader(ctx).hasTombstone(key)) await effect(ctx, async () => await ctx.db.insert("runtimeAuthTombstones", { ...key, deletedAt }));
+}
+export function receipt(table: RegistryTable, id: string) { return { accepted: true as const, resourceType: table, resourceId: id }; }
+
+/** Mutation-only uniqueness fence after owner-filtered target admission. Convex fetches the
+ * exact-key server document (or detects more than one); only Boolean existence/uniqueness survives.
+ * Its payload is never used as a canonical candidate, permission, processed input, log or response. */
+async function uniqueKey(access: RegistryAccess, table: RegistryTable, id: string, memorySpaceId?: string) {
+  const tenantId = access.authority.tenantId;
+  const probe = table === "agents" ? async () => (await access.ctx.db.query("agents")
+    .withIndex("by_runtime_scope_agent", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("agentId", id)).unique()) !== null
+    : table === "memorySpaces" ? async () => (await access.ctx.db.query("memorySpaces")
+      .withIndex("by_tenant_memorySpaceId", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", id)).unique()) !== null
+    : async () => (await access.ctx.db.query("contexts")
+      .withIndex("by_runtime_scope_context", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId!).eq("contextId", id)).unique()) !== null;
+  const load = async () => await probe();
+  if (!await load()) deny(); access.witness(`unique:${table}:${id}:${memorySpaceId ?? ""}`, true, load);
+}
+
+/** The first insert expectation comes only from validated local values and the native returned ID.
+ * Convex assigns _creationTime; all application fields/owner/lifecycle and ID remain exact witnesses. */
+export async function inserted(access: RegistryAccess, table: RegistryTable, id: string,
+  value: Record<string, unknown> & { tenantId: string; ownerPrincipalId: string; memorySpaceId?: string; agentId?: string; contextId?: string }) {
+  const load = table === "agents" ? async () => await access.ctx.db.query("agents")
+    .withIndex("by_runtime_scope_agent", (q) => q.eq("tenantId", value.tenantId).eq("memorySpaceId", value.memorySpaceId).eq("agentId", value.agentId!))
+    .filter((q) => q.eq(q.field("ownerPrincipalId"), value.ownerPrincipalId)).unique()
+    : table === "memorySpaces" ? async () => await access.ctx.db.query("memorySpaces")
+      .withIndex("by_tenant_memorySpaceId", (q) => q.eq("tenantId", value.tenantId).eq("memorySpaceId", value.memorySpaceId!))
+      .filter((q) => q.eq(q.field("ownerPrincipalId"), value.ownerPrincipalId)).unique()
+    : async () => await access.ctx.db.query("contexts")
+      .withIndex("by_runtime_scope_context", (q) => q.eq("tenantId", value.tenantId).eq("memorySpaceId", value.memorySpaceId!).eq("contextId", value.contextId!))
+      .filter((q) => q.eq(q.field("ownerPrincipalId"), value.ownerPrincipalId)).unique();
+  access.witness(`inserted:${table}:${id}`, { ...value, _id: id }, async () => {
+    const row = await load(); if (!row) return null;
+    const { _creationTime: _unusedCreationTime, ...payload } = row; return payload;
+  });
+  await uniqueKey(access, table, table === "agents" ? value.agentId! : table === "contexts" ? value.contextId! : value.memorySpaceId!, value.memorySpaceId);
+}
+
+/** Convex has no indexed existence projection. This exact-key collision fence necessarily fetches
+ * one full server document, immediately discards it and retains only a Boolean. It must never use
+ * payload/owner/config for admission, processing, logs or delivery. This is the documented exception
+ * to owner-before-hydration; ordinary lookup, hierarchy, bulk and delivery retain owner predicates. */
+export async function conflict(access: RegistryAccess, table: RegistryTable, id: string) {
+  const a = access.authority;
+  const load = table === "agents" ? async () => (await access.ctx.db.query("agents")
+    .withIndex("by_runtime_scope_agent", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId).eq("agentId", id)).first()) !== null
+    : table === "memorySpaces" ? async () => (await access.ctx.db.query("memorySpaces")
+      .withIndex("by_tenant_memorySpaceId", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", id)).first()) !== null
+    : async () => (await access.ctx.db.query("contexts")
+      .withIndex("by_runtime_scope_context", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId!).eq("contextId", id)).first()) !== null;
+  const exists = await load(); if (exists) deny(); access.witness(`conflict:${table}:${id}`, false, load);
+}
+
+/** Independent structural seam for Task03T/05. No current row can establish a trusted owner:
+ * do not hydrate transcript/private fields merely to discover that ownership is absent. */
+export interface TrustedConversationMetadata {
+  conversationId: string; tenantId: string; memorySpaceId: string; ownerPrincipalId: string;
+  createdAt: number; updatedAt: number; tombstonedAt?: number;
+  messageAnchors: { id: string; role: "user" | "agent"; timestamp: number }[];
+}
+export async function conversationAt(access: RegistryAccess, ref: { conversationId: string; messageIds?: string[] }, space: string): Promise<TrustedConversationMetadata> {
+  textId(ref.conversationId); if (ref.messageIds) distinct(ref.messageIds);
+  const authority = await requireRegistryAuthority(access.ctx, { capability: "read", tenantId: access.authority.tenantId, memorySpaceId: space });
+  access.keep(authority, { capability: "read", tenantId: authority.tenantId, memorySpaceId: space });
+  // Current conversation schema has no trusted owner; a metadata-only reference never adopts one.
+  // Task03T must implement owner/lifecycle and every message-anchor check before this seam can deliver.
+  await access.fence(); return deny("CAPABILITY_NOT_READY");
+}

@@ -1,0 +1,36 @@
+import pathlib, hashlib, json, subprocess, os, datetime, io, tarfile
+S = pathlib.Path(__file__).resolve().parent
+R = pathlib.Path('/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout')
+Q = R / '_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+def freeze():
+    expected=json.loads((Q/'source-freeze.json').read_text())
+    actual={f:sha(R/f) for f in expected['sourceHashes']}
+    qa={str(p.relative_to(Q)):sha(p) for p in Q.rglob('*') if p.is_file()}
+    return {'actualSourceHashes':actual,'matchesDeclaredFreeze':{f:h==expected['sourceHashes'][f] for f,h in actual.items()},'qaHashes':qa,'gitHead':subprocess.check_output(['git','rev-parse','HEAD'],cwd=R,text=True).strip(),'gitStatus':subprocess.check_output(['git','status','--short'],cwd=R,text=True)}
+(S/'before.json').write_text(json.dumps(freeze(),indent=2)+'\n')
+env=os.environ.copy();env.update(npm_config_cache='/workspace/Project-Cortex/work/backend-runtime/npm12-cache',npm_config_offline='true',TMPDIR=str(S))
+prefix=['npx','--yes','--package=npm@12.2.0','--','npm']
+receipts=[]
+def run(name,cmd,cwd=R):
+    start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+    proc=subprocess.run(cmd,cwd=cwd,env=env,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    (S/(name+'.stdout.txt')).write_text(proc.stdout);(S/(name+'.stderr.txt')).write_text(proc.stderr)
+    receipt={'name':name,'command':cmd,'cwd':str(cwd),'utcStart':start,'utcEnd':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':proc.returncode,'stdout':name+'.stdout.txt','stderr':name+'.stderr.txt'}
+    receipts.append(receipt);(S/'commands.json').write_text(json.dumps(receipts,indent=2)+'\n');print(json.dumps(receipt),flush=True)
+qa=str(Q.relative_to(R))
+checks=[('node-version',['node','--version']),('npm-version',prefix+['--version']),('backend-types',prefix+['exec','--','tsc','--project','convex-dev/tsconfig.json','--noEmit']),('scoped-types',prefix+['exec','--','tsc','--project',qa+'/tsconfig.scoped.json','--noEmit']),('scoped-lint',prefix+['exec','--','eslint','convex-dev/agents.ts','convex-dev/memorySpaces.ts','convex-dev/contexts.ts','convex-dev/runtimeRegistryAuth.ts','convex-dev/schema.ts','tests/unit/runtimeRegistryAuth',qa+'/inventory.mjs',qa+'/jest.scoped.cjs','--max-warnings=0']),('discovery',prefix+['exec','--','node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',qa+'/jest.scoped.cjs','--runInBand','--listTests']),('tests',prefix+['exec','--','node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',qa+'/jest.scoped.cjs','--runInBand','--json','--outputFile='+str(S/'tests.json')]),('catalog',prefix+['exec','--','node',qa+'/inventory.mjs',str(S/'catalog')]),('root-types',prefix+['exec','--','tsc','--noEmit']),('root-lint-types',prefix+['exec','--','tsc','--project','tsconfig.lint.json','--noEmit']),('diff-check',['git','diff','--check'])]
+for n,c in checks:run(n,c)
+schemaDiff=subprocess.check_output(['git','diff','--','convex-dev/schema.ts'],cwd=R)
+(S/'schema-actual.patch').write_bytes(schemaDiff)
+print(json.dumps({'schemaPatchExact':schemaDiff==(Q/'schema-additive.patch').read_bytes()}),flush=True)
+for label,commit in [('pinned-base','a2c9827783e9dd49b9811a2899ba4acbeadc21cd'),('accepted-main','4fb3482c5e06fcab12ab8513b242a066ef761f2f')]:
+    destination=S/label;destination.mkdir()
+    archive=subprocess.check_output(['git','archive',commit],cwd=R)
+    with tarfile.open(fileobj=io.BytesIO(archive),mode='r:') as tf:tf.extractall(destination,filter='data')
+    (destination/'node_modules').symlink_to(R/'node_modules',target_is_directory=True)
+    run(label+'-root-types',prefix+['exec','--','tsc','--noEmit'],destination)
+    run(label+'-root-lint-types',prefix+['exec','--','tsc','--project','tsconfig.lint.json','--noEmit'],destination)
+after=freeze();(S/'after.json').write_text(json.dumps(after,indent=2)+'\n')
+before=json.loads((S/'before.json').read_text())
+(S/'preservation.json').write_text(json.dumps({'allSourceHashesUnchanged':before['actualSourceHashes']==after['actualSourceHashes'],'allCanonicalQaHashesUnchanged':before['qaHashes']==after['qaHashes'],'sourceFreezeAllMatch':all(after['matchesDeclaredFreeze'].values()),'schemaPatchExact':schemaDiff==(Q/'schema-additive.patch').read_bytes(),'gitStatusUnchanged':before['gitStatus']==after['gitStatus']},indent=2)+'\n')

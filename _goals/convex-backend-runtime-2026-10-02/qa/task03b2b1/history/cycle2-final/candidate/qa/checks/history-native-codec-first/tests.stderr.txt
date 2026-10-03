@@ -1,0 +1,76 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --experimental-vm-modules node_modules/jest/bin/jest.js --config _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/jest.scoped.cjs --runInBand --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/tests-final.json
+(node:50247) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeRegistryAuth/adversarial.test.ts
+  ● whole-graph links, cross-space grants, deletion and revision attribution › orphan deletion repairs all descendant root/depth links and records revisions
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 0
+
+      Object {
+        "depth": 0,
+    -   "parentId": undefined,
+        "rootId": "context-b",
+        "version": 2,
+      }
+
+      129 |     const grandchild = seedContext(f, { contextId: "context-c", parentId: "context-b", rootId: "context-a", depth: 2 });
+      130 |     expect(await invoke(contexts.deleteContext, f.ctx, { ...scope, contextId: "context-a", orphanChildren: true })).toEqual({ deleted: true, contextId: "context-a", descendantsDeleted: 0, orphanedChildren: ["context-b"] });
+    > 131 |     expect(parent.tombstonedAt).toEqual(expect.any(Number)); expect(child).toMatchObject({ parentId: undefined, rootId: "context-b", depth: 0, version: 2 }); expect(grandchild).toMatchObject({ rootId: "context-b", depth: 1, version: 2 });
+          |                                                                            ^
+      132 |     expect(await invoke(contexts.getChain, f.ctx, { ...scope, contextId: "context-b" })).toMatchObject({ totalNodes: 2 });
+      133 |   });
+      134 |   it("overlapping cascade bulk preflights and retires each row exactly once", async () => {
+
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:131:76)
+
+  ● native Convex v.any round trips and exact integer/binary witnesses › (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } retains native v.any root values instead of silently coercing them to records
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {}
+
+      425 |         if (value instanceof ArrayBuffer) expect([...new Uint8Array(result[field] as ArrayBuffer)]).toEqual([0, 128, 255]);
+      426 |         else if (typeof value === "number") expect(Object.is(result[field], value)).toBe(true);
+    > 427 |         else expect(result[field]).toEqual(value);
+          |                                    ^
+      428 |         expect(result.ownerPrincipalId).toBe(f.principal._id);
+      429 |       }
+      430 |     }
+
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:427:36
+
+  ● native Convex v.any round trips and exact integer/binary witnesses › (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } retains native v.any root values instead of silently coercing them to records
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: null
+    Received: {}
+
+      425 |         if (value instanceof ArrayBuffer) expect([...new Uint8Array(result[field] as ArrayBuffer)]).toEqual([0, 128, 255]);
+      426 |         else if (typeof value === "number") expect(Object.is(result[field], value)).toBe(true);
+    > 427 |         else expect(result[field]).toEqual(value);
+          |                                    ^
+      428 |         expect(result.ownerPrincipalId).toBe(f.principal._id);
+      429 |       }
+      430 |     }
+
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:427:36
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       3 failed, 333 passed, 336 total
+Snapshots:   0 total
+Time:        7.929 s, estimated 8 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/tests-final.json

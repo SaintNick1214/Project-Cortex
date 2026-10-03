@@ -1,0 +1,43 @@
+{
+  "name": "100-node-create-boundary",
+  "beforeTotalNodes": 100,
+  "created": {
+    "_creationTime": 1000,
+    "_id": "contexts:107",
+    "childIds": [],
+    "contextId": "ctx-1791029094712-6p2oxlo8qla",
+    "createdAt": 1791029094761,
+    "data": {},
+    "depth": 100,
+    "grantedAccess": [],
+    "lastUpdatedBy": "runtimeAuthPrincipals:1",
+    "memorySpaceId": "space-a",
+    "metadata": {},
+    "ownerPrincipalId": "runtimeAuthPrincipals:1",
+    "parentId": "node-99",
+    "participants": [
+      "space-a"
+    ],
+    "previousVersions": [],
+    "purpose": "One beyond graph limit",
+    "rootId": "node-0",
+    "status": "active",
+    "tenantId": "tenant-a",
+    "updatedAt": 1791029094761,
+    "userId": "user-a",
+    "version": 1
+  },
+  "afterError": {
+    "type": "ConvexError",
+    "message": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    }
+  },
+  "totalPersistedNodes": 101,
+  "writes": 2
+}
