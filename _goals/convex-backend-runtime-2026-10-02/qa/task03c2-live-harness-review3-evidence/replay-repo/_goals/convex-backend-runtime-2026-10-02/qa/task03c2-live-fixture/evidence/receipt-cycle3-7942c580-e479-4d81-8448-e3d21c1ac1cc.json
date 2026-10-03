@@ -1,0 +1,147 @@
+{
+  "evidenceKind": "OFFLINE actual deploy/cleanup module paths with explicit dependency interceptions only",
+  "discovered": 13,
+  "passed": 13,
+  "skipped": 0,
+  "networkCalls": 0,
+  "serviceEffects": 0,
+  "actualOperatorCliCalls": 0,
+  "ownedProbeGroupsTerminalVerified": 9,
+  "rows": [
+    {
+      "name": "deploy-success-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "codegen-success-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "deploy-throw-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "deploy-exit-fail-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "deploy-timeout-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "deploy-process-fail-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "cleanup-success-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "cleanup-operator-fail-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "cleanup-invalid-ledger-exact-receipt-after-private-preflight-unavailable",
+      "passed": true
+    },
+    {
+      "name": "initial-bound-output-rejects-symlink-without-replacement",
+      "passed": true
+    },
+    {
+      "name": "initial-bound-output-rejects-hardlink-without-replacement",
+      "passed": true
+    },
+    {
+      "name": "initial-bound-output-rejects-prior-without-replacement",
+      "passed": true
+    },
+    {
+      "name": "initial-bound-output-rejects-wrong-origin-and-basename",
+      "passed": true
+    }
+  ],
+  "outcomes": [
+    {
+      "scenario": "deploy-success",
+      "basename": "deploy-33e571d5-93da-4f57-aa20-1b16f3230cb7.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 1,
+      "operatorCalls": 0,
+      "exitCode": 0
+    },
+    {
+      "scenario": "codegen-success",
+      "basename": "codegen-f1a9f079-35db-46e7-8e2d-8c3f3b23a4e0.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 1,
+      "operatorCalls": 0,
+      "exitCode": 0
+    },
+    {
+      "scenario": "deploy-throw",
+      "basename": "deploy-79f16e14-b79e-46c3-91a2-da3120fc177d.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 1,
+      "operatorCalls": 0,
+      "exitCode": 1
+    },
+    {
+      "scenario": "deploy-exit-fail",
+      "basename": "deploy-d109bd58-6328-42a1-aea0-228e55d35421.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 1,
+      "operatorCalls": 0,
+      "exitCode": 1
+    },
+    {
+      "scenario": "deploy-timeout",
+      "basename": "deploy-b8cd4564-0392-4292-95b7-d404a59c11a7.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 1,
+      "operatorCalls": 0,
+      "exitCode": 1
+    },
+    {
+      "scenario": "deploy-process-fail",
+      "basename": "deploy-b33e030a-41eb-43c7-a319-cf990b98cbc5.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 1,
+      "operatorCalls": 0,
+      "exitCode": 1
+    },
+    {
+      "scenario": "cleanup-success",
+      "basename": "cleanup-218b8832-53b2-4bd3-8ab7-aff422e95579.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 0,
+      "operatorCalls": 2,
+      "exitCode": 0
+    },
+    {
+      "scenario": "cleanup-operator-fail",
+      "basename": "cleanup-68fc7105-ba25-4c2b-bc6c-6f94ffd4d8e8.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 0,
+      "operatorCalls": 2,
+      "exitCode": 1
+    },
+    {
+      "scenario": "cleanup-invalid-ledger",
+      "basename": "cleanup-26f808a0-6e12-4ec3-986c-210b26198ac1.json",
+      "preflightCalls": 1,
+      "writes": 1,
+      "cliCalls": 0,
+      "operatorCalls": 0,
+      "exitCode": 1
+    }
+  ]
+}

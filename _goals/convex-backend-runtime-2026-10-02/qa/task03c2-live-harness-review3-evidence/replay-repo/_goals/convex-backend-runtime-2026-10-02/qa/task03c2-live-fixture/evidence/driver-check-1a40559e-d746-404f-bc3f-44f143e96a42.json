@@ -1,0 +1,266 @@
+{
+  "startedAt": "2026-10-03T13:51:06.239Z",
+  "completedAt": "2026-10-03T13:51:10.649Z",
+  "evidenceKind": "OFFLINE only; fake parent operator/sign values cannot certify service",
+  "discovered": 34,
+  "passed": 34,
+  "skipped": 0,
+  "liveCaseDiscovery": 41,
+  "networkAttempts": 0,
+  "privateKeyReadsBySdk": 0,
+  "signedTokens": 0,
+  "serviceEffects": 0,
+  "rows": [
+    {
+      "name": "environment-excludes-keys-selectors-and-inference",
+      "passed": true
+    },
+    {
+      "name": "actual-sdk-child-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "actual-sdk-child-zero-private-key-reads-values-selectors-protocol-and-network",
+      "passed": true
+    },
+    {
+      "name": "actual-sdk-setup-unavailable-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "actual-sdk-operator-setup-blocks-dependent-cases",
+      "passed": true
+    },
+    {
+      "name": "crash-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "crash-reached-fail-dependent-blocked",
+      "passed": true
+    },
+    {
+      "name": "sigkill-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "sigkill-reached-fail-dependent-blocked",
+      "passed": true
+    },
+    {
+      "name": "whole-hang-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "whole-hang-reached-fail-dependent-blocked",
+      "passed": true
+    },
+    {
+      "name": "case-hang-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "case-hang-reached-fail-dependent-blocked",
+      "passed": true
+    },
+    {
+      "name": "descendant-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "descendant-reached-fail-dependent-blocked",
+      "passed": true
+    },
+    {
+      "name": "owned-grandchild-has-no-running-process-after-receipt",
+      "passed": true
+    },
+    {
+      "name": "operator-hang-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "operator-timeout-is-blocked-setup-never-negative-pass",
+      "passed": true
+    },
+    {
+      "name": "operator-grandchild-not-running-before-receipt",
+      "passed": true
+    },
+    {
+      "name": "whole-operator-hang-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "whole-ceiling-kills-inflight-operator-and-descendant-before-41-receipt",
+      "passed": true
+    },
+    {
+      "name": "startup-crash-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "startup-crash-retains-all-41-unreached-blocked-and-driver-fail",
+      "passed": true
+    },
+    {
+      "name": "unknown-operator-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "unknown-operator-rejected-before-authority-effects",
+      "passed": true
+    },
+    {
+      "name": "foreign-sign-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "foreign-sign-rejected-before-authority-effects",
+      "passed": true
+    },
+    {
+      "name": "extra-private-field-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "extra-private-field-rejected-before-authority-effects",
+      "passed": true
+    },
+    {
+      "name": "offline-audit-in-live-append-only-41-case-receipt-and-process-reaping",
+      "passed": true
+    },
+    {
+      "name": "offline-audit-in-live-rejected-before-authority-effects",
+      "passed": true
+    },
+    {
+      "name": "protocol-rejects-unsuccessful-observer-and-private-payload",
+      "passed": true
+    },
+    {
+      "name": "child-transitive-local-import-graph-excludes-trusted-modules",
+      "passed": true
+    },
+    {
+      "name": "failed-accepted-authority-result-is-protocol-failure",
+      "passed": true
+    }
+  ],
+  "receipts": [
+    {
+      "name": "actual-sdk-child",
+      "basename": "qualify-498f2970-1f1e-4f84-8b54-b0cbe918c8f5.json",
+      "status": "INCOMPLETE",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "actual-sdk-setup-unavailable",
+      "basename": "qualify-311dbed7-56dd-4826-b501-13dd4402cf73.json",
+      "status": "INCOMPLETE",
+      "discovered": 41,
+      "skipped": 41,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "crash",
+      "basename": "qualify-3bab4faa-b391-4821-a6d7-e0a966a597b7.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "sigkill",
+      "basename": "qualify-d8e3e865-595c-4bbd-9dc7-fea36f06fc7f.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "whole-hang",
+      "basename": "qualify-824e4ce7-c6b3-47ad-9f31-f805fa31040a.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "case-hang",
+      "basename": "qualify-a53c0603-afed-4075-a8fd-7e6c98402b6c.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "descendant",
+      "basename": "qualify-cd6e7d2e-81ed-4732-bb03-51ee10e952e0.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "operator-hang",
+      "basename": "qualify-883ae011-0267-4b57-b3ee-a83bab45ae43.json",
+      "status": "INCOMPLETE",
+      "discovered": 41,
+      "skipped": 41,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "whole-operator-hang",
+      "basename": "qualify-ab073bc8-8f3f-4c5a-8e42-9f4d9a420a7f.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "startup-crash",
+      "basename": "qualify-4ae7c77c-0d0d-4adf-80de-6e5d847a7a46.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 41,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "unknown-operator",
+      "basename": "qualify-15202532-b03c-4144-ad90-fd9c61caec66.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "foreign-sign",
+      "basename": "qualify-6a7ecf95-00cb-4442-abf1-8de3c6036c5d.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "extra-private-field",
+      "basename": "qualify-4b102e8f-1c89-455e-8539-caa1ec2e2ba5.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    },
+    {
+      "name": "offline-audit-in-live",
+      "basename": "qualify-0b1c5a16-4a63-41de-bd27-b9421bb32940.json",
+      "status": "FAIL",
+      "discovered": 41,
+      "skipped": 40,
+      "processCleanup": "REAPED"
+    }
+  ],
+  "privateProbeFiles": 3
+}

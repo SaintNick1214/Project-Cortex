@@ -1,0 +1,12 @@
+file:///tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs:5
+  if (Object.keys(process.env).some((name) => forbidden.test(name))) throw new Error('OFFLINE_SDK_PRIVATE_ENVIRONMENT_PRESENT');
+                                                                           ^
+
+Error: OFFLINE_SDK_PRIVATE_ENVIRONMENT_PRESENT
+    at check (file:///tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs:5:76)
+    at file:///tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs:7:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:96:9)
+
+Node.js v24.19.0

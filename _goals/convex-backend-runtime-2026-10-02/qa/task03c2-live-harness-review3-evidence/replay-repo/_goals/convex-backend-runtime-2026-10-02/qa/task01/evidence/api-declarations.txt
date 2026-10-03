@@ -1,0 +1,332 @@
+Gateway declaration
+node_modules/@convex-dev/ai-sdk-provider/dist/esm/index.d.ts:1
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
+type Provider = ReturnType<typeof createOpenAICompatible>;
+type ChatModel = ReturnType<Provider>;
+type EmbeddingModel = ReturnType<typeof wrapEmbeddingModel>;
+type ImageModel = ReturnType<Provider["imageModel"]>;
+type GatewayLanguageModel = ReturnType<typeof wrapLanguageModel>;
+/**
+ * The recommended model interface for text generation through the Convex AI gateway.
+ * Use `messages` or `responses` only for endpoint-specific features.
+ *
+ * `getServiceToken` caches and refreshes credentials within the current action,
+ * so calling this more than once in the same action is fine.
+ */
+export declare function convexGateway(modelId: string): ChatModel;
+export declare namespace convexGateway {
+    var messages: (modelId: string) => GatewayLanguageModel;
+    var responses: (modelId: string) => GatewayLanguageModel;
+    var evaluationModel;
+    var embeddingModel: (modelId: string) => EmbeddingModel;
+    var imageModel: (modelId: string) => ImageModel;
+    var videoModel;
+}
+export { verifyVideoWebhook, type VideoWebhookEvent } from "./video-webhook.js";
+//# sourceMappingURL=index.d.ts.map
+
+Agent stream functions
+node_modules/@convex-dev/agent/src/vercel/client/streaming.ts:49
+export async function syncStreams(
+  ctx: QueryCtx | MutationCtx | ActionCtx,
+  component: AgentComponent,
+  {
+    threadId,
+    streamArgs,
+    includeStatuses,
+  }: {
+    threadId: string;
+    streamArgs?: StreamArgs | undefined;
+    // By default, only streaming messages are included.
+    includeStatuses?: ("streaming" | "finished" | "aborted")[];
+  },
+): Promise<SyncStreamsReturnValue | undefined> {
+  if (!streamArgs) return undefined;
+  if (streamArgs.kind === "list") {
+    return {
+      kind: "list",
+      messages: await listStreams(ctx, component, {
+        threadId,
+        startOrder: streamArgs.startOrder,
+        includeStatuses,
+      }),
+    };
+  } else {
+    return {
+      kind: "deltas",
+      deltas: await ctx.runQuery(component.streams.listDeltas, {
+        threadId,
+        cursors: streamArgs.cursors,
+      }),
+    };
+  }
+}
+
+export async function abortStream(
+  ctx: MutationCtx | ActionCtx,
+  component: AgentComponent,
+  args: { reason: string } & (
+    | { streamId: string }
+    | { threadId: string; order: number }
+  ),
+): Promise<boolean> {
+  if ("streamId" in args) {
+    return await ctx.runMutation(component.streams.abort, {
+      reason: args.reason,
+      streamId: args.streamId,
+    });
+  } else {
+    return await ctx.runMutation(component.streams.abortByOrder, {
+      reason: args.reason,
+      threadId: args.threadId,
+      order: args.order,
+    });
+  }
+}
+
+/**
+ * List the streaming messages for a thread.
+ * @param ctx A ctx object from a query, mutation, or action.
+ * @param component The agent component, usually `components.agent`.
+ * @param args.threadId The thread to list streams for.
+ * @param args.startOrder The order of the messages in the thread to start listing from.
+ * @param args.includeStatuses The statuses to include in the list.
+ * @returns The streams for the thread.
+ */
+export async function listStreams(
+  ctx: QueryCtx | MutationCtx | ActionCtx,
+  component: AgentComponent,
+  {
+    threadId,
+    startOrder,
+    includeStatuses,
+  }: {
+    threadId: string;
+    startOrder?: number;
+    includeStatuses?: ("streaming" | "finished" | "aborted")[];
+  },
+): Promise<StreamMessage[]> {
+  return ctx.runQuery(component.streams.list, {
+    threadId,
+    startOrder,
+    statuses: includeStatuses,
+  });
+}
+
+export type StreamingOptions = {
+  /**
+   * Whether source parts emitted by the model are included in the persisted
+   * delta stream. Defaults to false.
+   */
+  sendSources?: boolean;
+  /**
+   * The minimum granularity of deltas to save.
+   * Note: this is not a guarantee that every delta will be exactly one line.
+   * E.g. if "line" is specified, it won't save any deltas until it encounters
+   * a newline character.
+   * Defaults to a regex that chunks by punctuation followed by whitespace.
+   */
+  chunking?: "word" | "line" | RegExp | ChunkDetector;
+  /**
+   * The minimum number of milliseconds to wait between saving deltas.
+   * Defaults to 250.
+   */
+  throttleMs?: number;
+  /**
+   * If set to true, this will return immediately, as it would if you weren't
+   * saving the deltas. Otherwise, the call will "consume" the stream with
+   * .consumeStream(), which waits for the stream to finish before returning.
+   *
+   * When saving deltas, you're often not interactin with the stream otherwise.
+   */
+  returnImmediately?: boolean;
+};
+export const DEFAULT_STREAMING_OPTIONS = {
+  sendSources: false,
+  // This chunks by sentences / clauses. Punctuation followed by whitespace.
+  chunking: /[\p{P}\s]/u,
+  throttleMs: 250,
+  returnImmediately: false,
+} satisfies StreamingOptions;
+
+/**
+ *
+
+Agent tool execute declaration
+node_modules/@convex-dev/agent/dist/vercel/client/createTool.d.ts:1
+import type { JSONObject } from "@ai-sdk/provider";
+import type { Context, Experimental_SandboxSession, ToolResultOutput } from "@ai-sdk/provider-utils";
+import type { FlexibleSchema, ModelMessage, Tool, ToolExecutionOptions, ToolSet } from "ai";
+import type { GenericActionCtx, GenericDataModel } from "convex/server";
+import type { ProviderOptions } from "../../validators.js";
+import type { Agent } from "../index.js";
+export type ToolCtx<DataModel extends GenericDataModel = GenericDataModel> = GenericActionCtx<DataModel> & {
+    agent?: Agent;
+    userId?: string;
+    threadId?: string;
+    messageId?: string;
+};
+export type AgentToolExecutionOptions<TOOL_CONTEXT extends Context = Context> = ToolExecutionOptions<TOOL_CONTEXT>;
+/**
+ * Function that is called to determine if the tool needs approval before it can be executed.
+ */
+export type ToolNeedsApprovalFunctionCtx<INPUT, Ctx extends ToolCtx = ToolCtx, TOOL_CONTEXT extends Context = Context> = (ctx: Ctx, input: INPUT, options: {
+    /**
+     * The ID of the tool call. You can use it e.g. when sending tool-call related information with stream data.
+     */
+    toolCallId: string;
+    /**
+     * Messages that were sent to the language model to initiate the response that contained the tool call.
+     * The messages **do not** include the system prompt nor the assistant response that contained the tool call.
+     */
+    messages: ModelMessage[];
+    /**
+     * Additional context.
+     *
+     * Experimental (can break in patch releases).
+     */
+    context: TOOL_CONTEXT;
+}) => boolean | PromiseLike<boolean>;
+export type ToolExecuteFunctionCtx<INPUT, OUTPUT, Ctx extends ToolCtx = ToolCtx, TOOL_CONTEXT extends Context = Context> = (ctx: Ctx, input: INPUT, options: AgentToolExecutionOptions<TOOL_CONTEXT>) => AsyncIterable<OUTPUT> | PromiseLike<OUTPUT>;
+type NeverOptional<N, T> = 0 extends 1 & N ? Partial<T> : [N] extends [never] ? Partial<Record<keyof T, undefined>> : T;
+/**
+ * Error message type for deprecated 'handler' property.
+ * Using a string literal type causes TypeScript to show this message in errors.
+ */
+type HANDLER_REMOVED_ERROR = "⚠️ 'handler' was removed in @convex-dev/agent v0.6.0. Rename to 'execute'. See: node_modules/@convex-dev/agent/MIGRATION.md";
+export type ToolOutputPropertiesCtx<INPUT, OUTPUT, Ctx extends ToolCtx = ToolCtx, TOOL_CONTEXT extends Context = Context> = NeverOptional<OUTPUT, {
+    /**
+     * An async function that is called with the arguments from the tool call and produces a result.
+     * If `execute` is not provided, the tool will not be executed automatically.
+     *
+     * @param input - The input of the tool call.
+     * @param options.abortSignal - A signal that can be used to abort the tool call.
+     */
+    execute?: ToolExecuteFunctionCtx<INPUT, OUTPUT, Ctx, TOOL_CONTEXT>;
+    outputSchema?: FlexibleSchema<OUTPUT>;
+    /**
+     * @deprecated Removed in v0.6.0. Use `execute` instead.
+     */
+    handler?: HANDLER_REMOVED_ERROR;
+}>;
+
+Workflow action retry declaration
+node_modules/@convex-dev/workflow/src/client/workflowContext.ts:90
+  ): Promise<FunctionReturnType<Query>>;
+
+  /**
+   * Run a mutation with the given name and arguments.
+   *
+   * @param mutation - The mutation to run, like `internal.index.exampleMutation`.
+   * @param args - The arguments to the mutation function.
+   * @param opts - Options for scheduling and naming the mutation.
+   */
+  runMutation<
+    Mutation extends FunctionReference<"mutation", FunctionVisibility>,
+  >(
+    mutation: Mutation,
+    ...args: ArgsAndOptions<Mutation, RunOptions & InlineArgs>
+  ): Promise<FunctionReturnType<Mutation>>;
+
+  /**
+   * Run an action with the given name and arguments.
+   *
+   * @param action - The action to run, like `internal.index.exampleAction`.
+   * @param args - The arguments to the action function.
+   * @param opts - Options for retrying, scheduling and naming the action.
+   */
+  runAction<Action extends FunctionReference<"action", FunctionVisibility>>(
+    action: Action,
+    ...args: ArgsAndOptions<Action, RunOptions & RetryOption>
+  ): Promise<FunctionReturnType<Action>>;
+
+  /**
+   * Run a workflow with the given name and arguments.
+   *
+   * @param workflow - The workflow to run, like `internal.index.exampleWorkflow`.
+   * @param args - The arguments to the workflow function.
+   * @param opts - Options for retrying, scheduling and naming the workflow.
+   */
+  runWorkflow<Workflow extends FunctionReference<"mutation", "internal">>(
+    workflow: Workflow,
+    args: FunctionArgs<Workflow>["args"],
+    opts?: RunOptions,
+
+AI7 ChatTransport declaration
+node_modules/ai/dist/index.d.ts:5816
+ * The `ChatTransport` interface provides fine-grained control over how messages
+ * are sent to API endpoints and how responses are processed. This enables
+ * alternative communication protocols like WebSockets, custom authentication
+ * patterns, or specialized backend integrations.
+ *
+ * @template UI_MESSAGE - The UI message type extending UIMessage
+ */
+interface ChatTransport<UI_MESSAGE extends UIMessage> {
+  /**
+   * Sends messages to the chat API endpoint and returns a streaming response.
+   *
+   * This method handles both new message submission and message regeneration.
+   * It supports real-time streaming of responses through UIMessageChunk events.
+   *
+   * @param options - Configuration object containing:
+   * @param options.trigger - The type of message submission:
+   *   - `'submit-message'`: Submitting a new user message
+   *   - `'regenerate-message'`: Regenerating an assistant response
+   * @param options.chatId - Unique identifier for the chat session
+   * @param options.messageId - ID of the message to regenerate (for regenerate-message trigger) or undefined for new messages
+   * @param options.messages - Array of UI messages representing the conversation history
+   * @param options.abortSignal - Signal to abort the request if needed
+   * @param options.headers - Additional HTTP headers to include in the request
+   * @param options.body - Additional JSON properties to include in the request body
+   * @param options.metadata - Custom metadata to attach to the request
+   *
+   * @returns Promise resolving to a ReadableStream of UIMessageChunk objects.
+   *   The stream emits various chunk types like:
+   *   - `text-start`, `text-delta`, `text-end`: For streaming text content
+   *   - `tool-input-start`, `tool-input-delta`, `tool-input-available`: For tool calls
+   *   - `data-part-start`, `data-part-delta`, `data-part-available`: For data parts
+   *   - `error`: For error handling
+   *
+   * @throws Error when the API request fails or response is invalid
+   */
+  sendMessages: (options: {
+    /** The type of message submission - either new message or regeneration */
+    trigger: 'submit-message' | 'regenerate-message';
+    /** Unique identifier for the chat session */
+    chatId: string;
+    /** ID of the message to regenerate, or undefined for new messages */
+    messageId: string | undefined;
+    /** Array of UI messages representing the conversation history */
+    messages: UI_MESSAGE[];
+    /** Signal to abort the request if needed */
+    abortSignal: AbortSignal | undefined;
+  } & ChatRequestOptions) => Promise<ReadableStream<UIMessageChunk>>;
+  /**
+   * Reconnects to an existing streaming response for the specified chat session.
+   *
+   * This method is used to resume streaming when a connection is interrupted
+   * or when resuming a chat session. It's particularly useful for maintaining
+   * continuity in long-running conversations or recovering from network issues.
+   *
+   * @param options - Configuration object containing:
+   * @param options.chatId - Unique identifier for the chat session to reconnect to
+   * @param options.abortSignal - Signal to abort the reconnection request if needed
+   * @param options.headers - Additional HTTP headers to include in the reconnection request
+   * @param options.body - Additional JSON properties to include in the request body
+   * @param options.metadata - Custom metadata to attach to the request
+   *
+   * @returns Promise resolving to:
+   *   - `ReadableStream<UIMessageChunk>`: If an active stream is found and can be resumed
+   *   - `null`: If no active stream exists for the specified chat session (e.g., response already completed)
+   *
+   * @throws Error when the reconnection request fails or response is invalid
+   */
+  reconnectToStream: (options: {
+    /** Unique identifier for the chat session to reconnect to */
+    chatId: string;
+    /** Signal to abort the reconnection request if needed */
+    abortSignal?: AbortSignal;
+  } & ChatRequestOptions) => Promise<ReadableStream<UIMessageChunk> | null>;
+}
+//#endregion
