@@ -11,6 +11,7 @@
  * - Graph database integration
  */
 
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
@@ -205,7 +206,7 @@ export class ArtifactsAPI {
           kind: options.kind ?? "text",
           streamingState: options.streamingState ?? "draft",
           artifactId: options.artifactId,
-          tenantId: options.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, options.tenantId),
           userId: options.userId,
           participantId: options.participantId,
           description: options.description,
@@ -377,7 +378,7 @@ export class ArtifactsAPI {
       () =>
         this.client.query(api.artifacts.list, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
           participantId: filter.participantId,
           kind: filter.kind,
@@ -420,7 +421,7 @@ export class ArtifactsAPI {
       () =>
         this.client.query(api.artifacts.count, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
           kind: filter.kind,
           streamingState: filter.streamingState,

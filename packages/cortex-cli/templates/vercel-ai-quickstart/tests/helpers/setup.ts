@@ -12,7 +12,7 @@ global.TextDecoder = TextDecoder as typeof global.TextDecoder;
 
 // Polyfill crypto for Node.js environment (required for password utilities)
 if (typeof global.crypto === "undefined") {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+
   const { webcrypto } = require("crypto");
   global.crypto = webcrypto;
 }
@@ -28,7 +28,7 @@ if (typeof global.atob === "undefined") {
 
 // Set test environment variables
 process.env.NODE_ENV = "test";
-process.env.CONVEX_URL = "https://test.convex.cloud";
+process.env.CONVEX_URL ??= "https://test.convex.cloud";
 
 // Suppress console output during tests (optional - comment out for debugging)
 // global.console = {
@@ -40,7 +40,7 @@ process.env.CONVEX_URL = "https://test.convex.cloud";
 // };
 
 // Increase test timeout for async operations
-jest.setTimeout(10000);
+// Each project config supplies its own timeout.
 
 // Reset mocks between tests
 beforeEach(() => {

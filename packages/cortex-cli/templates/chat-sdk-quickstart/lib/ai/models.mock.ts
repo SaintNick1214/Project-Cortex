@@ -2,13 +2,13 @@ import type { LanguageModel } from "ai";
 
 const mockResponses: Record<string, string> = {
   default: "This is a mock response for testing.",
-  weather: "The weather in San Francisco is sunny and 72°F.",
   greeting: "Hello! How can I help you today?",
+  weather: "The weather in San Francisco is sunny and 72°F.",
 };
 
 const mockUsage = {
-  inputTokens: { total: 10, noCache: 10, cacheRead: 0, cacheWrite: 0 },
-  outputTokens: { total: 20, text: 20, reasoning: 0 },
+  inputTokens: { cacheRead: 0, cacheWrite: 0, noCache: 10, total: 10 },
+  outputTokens: { reasoning: 0, text: 20, total: 20 },
 };
 
 function getResponseForPrompt(prompt: unknown): string {
@@ -28,17 +28,13 @@ function getResponseForPrompt(prompt: unknown): string {
   return mockResponses.default;
 }
 
-const createMockModel = (): LanguageModel => {
-  return {
-    specificationVersion: "v3",
-    provider: "mock",
-    modelId: "mock-model",
+const createMockModel = (): LanguageModel =>
+  ({
     defaultObjectGenerationMode: "tool",
-    supportedUrls: {},
     doGenerate: async ({ prompt }: { prompt: unknown }) => ({
+      content: [{ text: getResponseForPrompt(prompt), type: "text" }],
       finishReason: "stop",
       usage: mockUsage,
-      content: [{ type: "text", text: getResponseForPrompt(prompt) }],
       warnings: [],
     }),
     doStream: ({ prompt }: { prompt: unknown }) => {
@@ -48,21 +44,21 @@ const createMockModel = (): LanguageModel => {
       return {
         stream: new ReadableStream({
           async start(controller) {
-            controller.enqueue({ type: "text-start", id: "t1" });
+            controller.enqueue({ id: "t1", type: "text-start" });
             for (const word of words) {
               controller.enqueue({
-                type: "text-delta",
-                id: "t1",
                 delta: `${word} `,
+                id: "t1",
+                type: "text-delta",
               });
               await new Promise((resolve) => {
                 setTimeout(resolve, 10);
               });
             }
-            controller.enqueue({ type: "text-end", id: "t1" });
+            controller.enqueue({ id: "t1", type: "text-end" });
             controller.enqueue({
-              type: "finish",
               finishReason: "stop",
+              type: "finish",
               usage: mockUsage,
             });
             controller.close();
@@ -70,102 +66,103 @@ const createMockModel = (): LanguageModel => {
         }),
       };
     },
-  } as unknown as LanguageModel;
-};
-
-const createMockReasoningModel = (): LanguageModel => {
-  return {
-    specificationVersion: "v3",
+    modelId: "mock-model",
     provider: "mock",
-    modelId: "mock-reasoning-model",
-    defaultObjectGenerationMode: "tool",
+    specificationVersion: "v3",
     supportedUrls: {},
+  }) as unknown as LanguageModel;
+
+const createMockReasoningModel = (): LanguageModel =>
+  ({
+    defaultObjectGenerationMode: "tool",
     doGenerate: async () => ({
+      content: [{ text: "This is a reasoned response.", type: "text" }],
       finishReason: "stop",
-      usage: mockUsage,
-      content: [{ type: "text", text: "This is a reasoned response." }],
       reasoning: [
-        { type: "text", text: "Let me think through this step by step..." },
+        { text: "Let me think through this step by step...", type: "text" },
       ],
+      usage: mockUsage,
       warnings: [],
     }),
     doStream: () => ({
       stream: new ReadableStream({
         async start(controller) {
-          controller.enqueue({ type: "reasoning-start", id: "r1" });
+          controller.enqueue({ id: "r1", type: "reasoning-start" });
           controller.enqueue({
-            type: "reasoning-delta",
-            id: "r1",
             delta: "Let me think through this step by step... ",
+            id: "r1",
+            type: "reasoning-delta",
           });
-          controller.enqueue({ type: "reasoning-end", id: "r1" });
+          controller.enqueue({ id: "r1", type: "reasoning-end" });
           await new Promise((resolve) => {
             setTimeout(resolve, 10);
           });
-          controller.enqueue({ type: "text-start", id: "t1" });
+          controller.enqueue({ id: "t1", type: "text-start" });
           controller.enqueue({
-            type: "text-delta",
-            id: "t1",
             delta: "This is a reasoned response.",
+            id: "t1",
+            type: "text-delta",
           });
-          controller.enqueue({ type: "text-end", id: "t1" });
+          controller.enqueue({ id: "t1", type: "text-end" });
           controller.enqueue({
-            type: "finish",
             finishReason: "stop",
+            type: "finish",
             usage: mockUsage,
           });
           controller.close();
         },
       }),
     }),
-  } as unknown as LanguageModel;
-};
-
-const createMockTitleModel = (): LanguageModel => {
-  return {
-    specificationVersion: "v3",
+    modelId: "mock-reasoning-model",
     provider: "mock",
-    modelId: "mock-title-model",
-    defaultObjectGenerationMode: "tool",
+    specificationVersion: "v3",
     supportedUrls: {},
+  }) as unknown as LanguageModel;
+
+const createMockTitleModel = (): LanguageModel =>
+  ({
+    defaultObjectGenerationMode: "tool",
     doGenerate: async () => ({
+      content: [{ text: "Test Conversation", type: "text" }],
       finishReason: "stop",
       usage: {
-        inputTokens: { total: 5, noCache: 5, cacheRead: 0, cacheWrite: 0 },
-        outputTokens: { total: 5, text: 5, reasoning: 0 },
+        inputTokens: { cacheRead: 0, cacheWrite: 0, noCache: 5, total: 5 },
+        outputTokens: { reasoning: 0, text: 5, total: 5 },
       },
-      content: [{ type: "text", text: "Test Conversation" }],
       warnings: [],
     }),
     doStream: () => ({
       stream: new ReadableStream({
         start(controller) {
-          controller.enqueue({ type: "text-start", id: "t1" });
+          controller.enqueue({ id: "t1", type: "text-start" });
           controller.enqueue({
-            type: "text-delta",
-            id: "t1",
             delta: "Test Conversation",
+            id: "t1",
+            type: "text-delta",
           });
-          controller.enqueue({ type: "text-end", id: "t1" });
+          controller.enqueue({ id: "t1", type: "text-end" });
           controller.enqueue({
-            type: "finish",
             finishReason: "stop",
+            type: "finish",
             usage: {
               inputTokens: {
-                total: 5,
-                noCache: 5,
                 cacheRead: 0,
                 cacheWrite: 0,
+                noCache: 5,
+                total: 5,
               },
-              outputTokens: { total: 5, text: 5, reasoning: 0 },
+              outputTokens: { reasoning: 0, text: 5, total: 5 },
             },
           });
           controller.close();
         },
       }),
     }),
-  } as unknown as LanguageModel;
-};
+    modelId: "mock-title-model",
+    provider: "mock",
+    specificationVersion: "v3",
+    supportedUrls: {},
+  }) as unknown as LanguageModel;
 
 export const chatModel = createMockModel();
 export const reasoningModel = createMockReasoningModel();

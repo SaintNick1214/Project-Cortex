@@ -8,6 +8,7 @@ export default defineConfig({
       "src/**/*.test.ts",
       "src/__tests__/**/*.test.ts",
     ],
+    exclude: ["node_modules/**", "src/__tests__/integration/**", "src/__tests__/e2e/**"],
     // Unit tests run fast
     testTimeout: 10000,
     coverage: {
@@ -24,10 +25,6 @@ export default defineConfig({
     clearMocks: true,
     restoreMocks: true,
     // Separate pools for different test types
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    maxWorkers: 1,
   },
 });

@@ -300,9 +300,7 @@ describe("chat", () => {
 
   describe("listFacts", () => {
     it("lists facts and prints results", async () => {
-      mockFactsList.mockResolvedValue({
-        facts: [{ content: "fact 1" }, { content: "fact 2" }],
-      });
+      mockFactsList.mockResolvedValue([{ fact: "fact 1" }, { fact: "fact 2" }]);
 
       const { printRecallResults } = await import("../display.js");
 

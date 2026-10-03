@@ -30,6 +30,7 @@ import {
   printSection,
 } from "../utils/formatting.js";
 import { execCommand, execCommandLive } from "../utils/shell.js";
+import { parseNpmViewJson } from "../utils/shell-utils.js";
 import {
   syncAppTemplate,
   checkTemplateSync,
@@ -465,7 +466,7 @@ export function registerDeployCommands(
           latestProviderVersion = providerResult.stdout.trim() || "unknown";
           latestAiVersion = aiResult.stdout.trim() || "unknown";
           try {
-            const peerDeps = JSON.parse(peerDepResult.stdout);
+            const peerDeps = parseNpmViewJson(peerDepResult.stdout);
             sdkConvexPeerDep = peerDeps?.convex ?? "unknown";
           } catch {
             // Ignore parse errors
@@ -998,7 +999,7 @@ async function updateDeployment(
         ["view", "@cortexmemory/sdk", "peerDependencies", "--json"],
         { quiet: true },
       );
-      const peerDeps = JSON.parse(result.stdout);
+      const peerDeps = parseNpmViewJson(result.stdout);
       sdkConvexPeerDep = peerDeps?.convex ?? "unknown";
     } catch {
       // Ignore errors

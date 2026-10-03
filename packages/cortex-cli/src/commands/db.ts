@@ -82,7 +82,7 @@ export function registerDbCommands(program: Command, _config: CLIConfig): void {
 
             // Get comprehensive counts from all tables using admin function
             spinner.text = "Counting all tables...";
-            let tableCounts: Record<string, number> = {};
+            let tableCounts: Record<string, number>;
             try {
               tableCounts = await rawClient.query(
                 "admin:getAllCounts" as unknown as Parameters<

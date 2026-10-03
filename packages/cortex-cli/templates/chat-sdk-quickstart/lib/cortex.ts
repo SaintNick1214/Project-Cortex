@@ -5,7 +5,7 @@
  * Supports both unauthenticated (shared) and authenticated (per-request) clients.
  */
 
-import { Cortex, type AuthContext } from "@cortexmemory/sdk";
+import { type AuthContext, Cortex } from "@cortexmemory/sdk";
 
 /**
  * Cached unauthenticated client (singleton for operations that don't need auth)
@@ -66,8 +66,8 @@ export function getCortexWithAuth(authContext: AuthContext): Cortex {
   }
 
   return new Cortex({
-    convexUrl,
     auth: authContext,
+    convexUrl,
   });
 }
 

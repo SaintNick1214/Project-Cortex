@@ -210,7 +210,7 @@ export async function POST(req: Request) {
 
     // Convert UIMessage[] from useChat to ModelMessage[] for streamText
     // Note: In AI SDK v6+, convertToModelMessages may return a Promise
-     
+
     const modelMessagesResult = convertToModelMessages(
       normalizedMessages as any,
     );
@@ -241,7 +241,7 @@ export async function POST(req: Request) {
           // Create observer that writes layer events to the stream
           // These events are transient (not persisted in message history)
           const layerObserver: LayerObserver = {
-            onOrchestrationStart: (orchestrationId) => {
+            onRememberStart: (orchestrationId) => {
               writer.write({
                 type: "data-orchestration-start",
                 data: { orchestrationId },
@@ -264,7 +264,7 @@ export async function POST(req: Request) {
                 transient: true,
               });
             },
-            onOrchestrationComplete: (summary) => {
+            onRememberComplete: (summary) => {
               writer.write({
                 type: "data-orchestration-complete",
                 data: {

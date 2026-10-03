@@ -52,9 +52,9 @@ export const ChainOfThought = memo(
     ...props
   }: ChainOfThoughtProps) => {
     const [isOpen, setIsOpen] = useControllableState({
-      prop: open,
       defaultProp: defaultOpen,
       onChange: onOpenChange,
+      prop: open,
     });
 
     const chainOfThoughtContext = useMemo(
@@ -126,8 +126,8 @@ export const ChainOfThoughtStep = memo(
     ...props
   }: ChainOfThoughtStepProps) => {
     const statusStyles = {
-      complete: "text-muted-foreground",
       active: "text-foreground",
+      complete: "text-muted-foreground",
       pending: "text-muted-foreground/50",
     };
 
@@ -147,7 +147,7 @@ export const ChainOfThoughtStep = memo(
         </div>
         <div className="flex-1 space-y-2 overflow-hidden">
           <div>{label}</div>
-          {description && (
+          {!!description && (
             <div className="text-muted-foreground text-xs">{description}</div>
           )}
           {children}
@@ -217,7 +217,7 @@ export const ChainOfThoughtImage = memo(
       <div className="relative flex max-h-[22rem] items-center justify-center overflow-hidden rounded-lg bg-muted p-3">
         {children}
       </div>
-      {caption && <p className="text-muted-foreground text-xs">{caption}</p>}
+      {!!caption && <p className="text-muted-foreground text-xs">{caption}</p>}
     </div>
   )
 );

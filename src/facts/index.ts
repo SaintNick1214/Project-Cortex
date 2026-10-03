@@ -4,6 +4,7 @@
  * Structured knowledge with versioning and relationships
  */
 
+import { resolveTenantId } from "../auth/tenant";
 import { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
@@ -246,7 +247,7 @@ export class FactsAPI {
           memorySpaceId: params.memorySpaceId,
           participantId: params.participantId,
           userId: params.userId,
-          tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
+          tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId),
           fact: params.fact,
           factType: params.factType,
           subject: params.subject,
@@ -795,7 +796,7 @@ export class FactsAPI {
         this.client.action(api.facts.semanticSearch, {
           memorySpaceId,
           embedding,
-          tenantId: options?.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, options?.tenantId),
           userId: options?.userId,
           minConfidence: options?.minConfidence,
           includeSuperseded: options?.includeSuperseded,

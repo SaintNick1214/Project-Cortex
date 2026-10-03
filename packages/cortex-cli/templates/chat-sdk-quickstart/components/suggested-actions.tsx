@@ -39,8 +39,8 @@ function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
             onClick={(suggestion) => {
               window.history.pushState({}, "", `/chat/${chatId}`);
               sendMessage({
+                parts: [{ text: suggestion, type: "text" }],
                 role: "user",
-                parts: [{ type: "text", text: suggestion }],
               });
             }}
             suggestion={suggestedAction}

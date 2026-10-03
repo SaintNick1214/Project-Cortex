@@ -96,7 +96,12 @@ export async function initCortex(): Promise<Cortex> {
     return cortexClient;
   })();
 
-  return initPromise;
+  try {
+    return await initPromise;
+  } catch (error) {
+    initPromise = null;
+    throw error;
+  }
 }
 
 /**
@@ -117,6 +122,7 @@ export function getCortex(): Cortex {
  * Close the Cortex client connection
  */
 export function closeCortex(): void {
+  initPromise = null;
   if (cortexClient) {
     cortexClient.close();
     cortexClient = null;

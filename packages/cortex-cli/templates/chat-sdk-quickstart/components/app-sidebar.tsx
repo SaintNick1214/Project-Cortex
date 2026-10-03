@@ -46,6 +46,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
     });
 
     toast.promise(deletePromise, {
+      error: "Failed to delete all chats",
       loading: "Deleting all chats...",
       success: () => {
         mutate(unstable_serialize(getChatHistoryPaginationKey));
@@ -54,7 +55,6 @@ export function AppSidebar({ user }: { user: User | undefined }) {
         router.refresh();
         return "All chats deleted successfully";
       },
-      error: "Failed to delete all chats",
     });
   };
 
@@ -76,7 +76,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 </span>
               </Link>
               <div className="flex flex-row gap-1">
-                {user && (
+                {!!user && (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -119,7 +119,9 @@ export function AppSidebar({ user }: { user: User | undefined }) {
         <SidebarContent>
           <SidebarHistory user={user} />
         </SidebarContent>
-        <SidebarFooter>{user && <SidebarUserNav user={user} />}</SidebarFooter>
+        <SidebarFooter>
+          {!!user && <SidebarUserNav user={user} />}
+        </SidebarFooter>
       </Sidebar>
 
       <AlertDialog

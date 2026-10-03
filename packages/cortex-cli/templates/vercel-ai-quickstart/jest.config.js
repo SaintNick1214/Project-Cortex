@@ -7,6 +7,12 @@
  * - e2e: End-to-end tests with real Cortex backend (requires CONVEX_URL, OPENAI_API_KEY)
  */
 
+const { existsSync } = require("node:fs");
+const { join } = require("node:path");
+const localEnvPath = join(__dirname, ".env.local");
+// Load before Jest creates worker environments; Node's loader preserves overrides.
+if (existsSync(localEnvPath)) process.loadEnvFile(localEnvPath);
+
 const baseConfig = {
   preset: "ts-jest",
   testEnvironment: "node",
@@ -18,7 +24,7 @@ const baseConfig = {
     "^.+\\.tsx?$": [
       "ts-jest",
       {
-        tsconfig: "tsconfig.json",
+        tsconfig: { ...require("./tsconfig.json").compilerOptions, rootDir: "." },
       },
     ],
   },

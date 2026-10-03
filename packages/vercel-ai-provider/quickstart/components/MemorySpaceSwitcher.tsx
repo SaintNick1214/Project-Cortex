@@ -81,7 +81,7 @@ export function MemorySpaceSwitcher({
               <div className="border-t border-white/10 p-3 bg-white/5">
                 <p className="text-xs text-gray-400">
                   Switch memory spaces to demonstrate multi-tenant isolation.
-                  Memories in one space don't appear in others.
+                  Memories in one space don&apos;t appear in others.
                 </p>
               </div>
             </motion.div>

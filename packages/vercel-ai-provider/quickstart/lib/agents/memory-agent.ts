@@ -97,7 +97,7 @@ export const memoryAgent = new ToolLoopAgent({
   // │ - Facts (extracted knowledge)                                  │
   // │ - Graph relationships (if configured)                          │
   // └─────────────────────────────────────────────────────────────────┘
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   prepareCall: createMemoryPrepareCall({
     convexUrl: process.env.CONVEX_URL!,
     maxMemories: 20, // Max items to inject from recall
