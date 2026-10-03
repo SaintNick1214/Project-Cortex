@@ -427,3 +427,24 @@ ci-followups/qa-only-ci-20261003. Historical full-module CI failures remain pend
 Outcome matrix and draftPR132 updated; all17 goal incomplete. Three exhausted
 REJECT gates and native UI access questions remain unanswered. No user authorization
 for production, merging or releases is inferred.
+
+2026-10-03T14:46:15.499724+00:00: first actual41 service review native FINAL REJECT3.0.
+Complete report0a729a722c65e7912e8986d571f574824ad0e83ecafd8fecff9c0468ec25ad65 read;
+1369 raw records verified,971 preserved with399 reproducible SDK copies retained
+privately under exact bindings. Preservation manifest3cda46e110bef2c5183d6a6d524c42b29b86de20626101c1e8047e0d08a566eb.
+Actual39PASS/1FAIL/1BLOCKED remains unchanged. Native offline3 processes/31 named
+executions/15 unique names yield30PASS/1 preserved required failure,0 skips/network.
+Immediate one-shot query after void async notifySessionChanged can consume the
+preceding cached UNAUTHENTICATED; settling host getter/diagnostic does not clear
+native query cache. Later exact43 observer delivery demonstrated only offline.
+No SDK source defect established; exact live cache/transition trace is unavailable.
+
+Feature-orchestrator section5 explicitly provides bounded fixes for new QA issues.
+First actual-service QA correction is delegated under existing execution authority:
+only client.ts recovered-result synchronization and additive cycle1 QA, preserving
+all41 assertions/dependencies plus bounded actual onUpdate witness/final disposal.
+This is not a fourth offline-mechanics repair or a reset of any exhausted REJECT
+gate. Original third offlinePASS certifies frozen old bytes only. Fresh target,
+all41 actual rerun and fresh independent service review follow the executor FINAL.
+MF/artifact/registry exception requests and native UI access remain pending;
+whole03/text/full17 incomplete. No production/release/merge.

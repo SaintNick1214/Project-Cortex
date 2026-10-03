@@ -38,8 +38,11 @@ implementation/judge cycle; no exception is granted by elapsed time:
   FINALREJECT3.2 has36 reached mismatches/3 erroneous committed receipts.
 
 The separate first actual41 auth/client service run has39 passes/1 failed/1 blocked
-(40 executed). Its fresh independent review is active; callback recovery origin
-remains unresolved, no source repair or assertion relaxation has been applied.
+(40 executed). Its first fresh independent review is FINALREJECT3.0. A native probe establishes
+incorrect immediate-query setup after asynchronous notification; exact live cache
+state is untraced. First bounded actual-service QA correction is active under
+feature-orchestrator section5, with every original41 assertion preserved. No SDK
+source defect or exhausted-gate exception is inferred.
 See [actual service evidence](task03c2-live-service/report.md). All owned fixtures
 were fenced and the exact fresh dev/cloud project was physically retired.
 
