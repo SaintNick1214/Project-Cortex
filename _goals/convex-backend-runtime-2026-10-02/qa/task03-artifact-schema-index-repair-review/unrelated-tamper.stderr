@@ -1,0 +1,24 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Exact current source hash convex-dev/artifacts.ts
++ actual - expected
+
++ '7204f4d92da72ff750eab2efd7284da0fca1c67449b75a2f610cf83006c31161'
+- '3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3'
+
+    at verify (file:///workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/clean-replica/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:48:12)
+    at file:///workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/clean-replica/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs:52:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '7204f4d92da72ff750eab2efd7284da0fca1c67449b75a2f610cf83006c31161',
+  expected: '3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
