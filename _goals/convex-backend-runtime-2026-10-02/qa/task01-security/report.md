@@ -78,3 +78,11 @@ setup; the three affected checks do not certify unexecuted current-source struct
 native, transaction or HTTP-effect checks. Those original observed outcomes retain
 their own historical provenance. Native interactive browser evidence remains absent
 and unclaimed. No unresolved technical conflict remains for this followup.
+
+After the final followup review, CI confirmed dependency and lint fixes. Its high
+CodeQL finding moved to the preserved historical keys-before.mjs snapshot. The
+coordinator renamed only that inert snapshot to keys-before.mjs.text, retaining
+byte-identical contents. Earlier path/hash receipts remain historical; the explicit
+old/new mapping is in ../ci-followups/archive-source-rename.json. No active fixture
+source or scanner suppression changed. The outbound-file-data annotation remains
+unresolved as a scanner result and is not reported clean.

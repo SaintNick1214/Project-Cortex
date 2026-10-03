@@ -1,0 +1,11 @@
+{
+  "operation": "rename-inert-historical-source-to-text",
+  "oldPath": "_goals/convex-backend-runtime-2026-10-02/qa/task01-security/evidence/source-history/keys-before.mjs",
+  "newPath": "_goals/convex-backend-runtime-2026-10-02/qa/task01-security/evidence/source-history/keys-before.mjs.text",
+  "sha256Before": "58e14b01e766a4e329c8ec4c4291a2892404faa70738496cbc2d449b0cb8f0d9",
+  "sha256After": "58e14b01e766a4e329c8ec4c4291a2892404faa70738496cbc2d449b0cb8f0d9",
+  "byteIdentical": true,
+  "activeFixtureSourcesChanged": false,
+  "reason": "Post-fix CodeQL high alert now points only to executable .mjs extension on preserved historical pre-fix key generator. Retain its exact bytes as non-executable text; no scanner exclusion/suppression. Earlier path/hash receipts remain historical, resolved by this explicit mapping.",
+  "remainingScannerAnnotation": "Outbound request uses verified qualification receipt URL; independently reviewed matching HTTPS Convex origin guard; not yet cleared."
+}
