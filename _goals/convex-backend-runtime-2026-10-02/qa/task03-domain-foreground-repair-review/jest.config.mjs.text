@@ -1,0 +1,2 @@
+import base from '../foundation-jest.config.mjs';
+export default {...base, rootDir:'/workspace/Project-Cortex', testMatch:['<rootDir>/tests/unit/runtimeMemory/**/*.test.ts','<rootDir>/tests/unit/domain/**/*.test.ts']};

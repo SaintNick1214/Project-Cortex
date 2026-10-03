@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import { writeFileSync } from 'node:fs';
+import { getFunctionName } from 'convex/server';
+import * as handlers from '../../../convex-dev/runtimeMemory.ts';
+import {memoryFixture, registeredHandler} from '../../../tests/unit/runtimeMemory/fixture.ts';
+const unavailable={version:1,code:'CAPABILITY_UNAVAILABLE',message:'Memory capability unavailable.',retryable:false,outcome:'not_dispatched'};
+const outcomes=[];
+for(const operation of ['remember','recall'] as const) {
+ for(const scenario of ['healthy','ownerless-private','malformed-semantics','late-delete-principal','late-delete-membership','late-delete-grant','late-delete-space','late-remove-capability','late-version-grant','initial-bad-issuer']) {
+  const f=memoryFixture();f.db.table('runtimeAuthTombstones'); const calls:string[]=[],reads:string[]=[];
+  if(scenario==='ownerless-private') for(const table of ['facts','runtimeMemorySources','runtimeMemoryChunks','runtimeMemoryVectors','runtimeMemoryReceipts']) f.db.seed(table,{sourceId:'same-id',factId:'same-id',tenantId:'tenant-a',memorySpaceId:'space-a',content:'private'});
+  if(scenario==='initial-bad-issuer') f.ctx.auth.getUserIdentity=async()=>({issuer:'https://untrusted.test',subject:'user-a'}) as any;
+  const q=f.db.query.bind(f.db);f.db.query=(table)=>{reads.push(table);return q(table)};
+  const g=f.db.get.bind(f.db);f.db.get=async(table,id)=>{reads.push(table);return g(table,id)};
+  const rq=f.actionCtx.runQuery.bind(f.actionCtx);
+  f.actionCtx.runQuery=async(ref,input)=>{
+   const name=getFunctionName(ref);calls.push(name);
+   if(name==='runtimeMemory:checkAuthority'){
+    const targets:{[key:string]:[string,string]}={'late-delete-principal':['runtimeAuthPrincipals',f.principal._id],'late-delete-membership':['runtimeAuthMemberships',f.membership._id],'late-delete-grant':['runtimeAuthGrants',f.grant._id]};
+    const target=targets[scenario]; if(target) f.db.rows.set(target[0],f.db.table(target[0]).filter(r=>r._id!==target[1]));
+    if(scenario==='late-delete-space') f.db.rows.set('runtimeAuthScopes',f.db.table('runtimeAuthScopes').filter(r=>r.memorySpaceId!=='space-a'));
+    if(scenario==='late-remove-capability') f.grant.capabilities=[];
+    if(scenario==='late-version-grant') f.grant.version=2;
+   }
+   return rq(ref,input);
+  };
+  const forbidden=()=>{throw Error('Forbidden effect dispatch')};
+  f.actionCtx.runMutation=forbidden;f.actionCtx.vectorSearch=forbidden;
+  Object.assign(f.actionCtx,{runAction:forbidden,scheduler:{runAfter:forbidden,runAt:forbidden},storage:{getUrl:forbidden,store:forbidden,delete:forbidden}});
+  const input=scenario==='malformed-semantics'?{tenantId:'tenant-a',memorySpaceId:'space-a',text:' \r\n ',requestId:'',limit:-999}:{tenantId:'tenant-a',memorySpaceId:'space-a',text:'private',requestId:'same-id',limit:1};
+  const before=structuredClone(f.db.rows);let data;
+  try{await registeredHandler<any,unknown>(handlers[operation])(f.actionCtx as any,JSON.parse(JSON.stringify(input)));assert.fail('Unexpected success')}catch(e){data=(e as any).data;assert.ok(data,'Structured error required')}
+  if(scenario.startsWith('late-')||scenario==='initial-bad-issuer') assert.equal(data.code,'FORBIDDEN');else assert.deepEqual(data,unavailable);
+  assert.equal(data.outcome,'not_dispatched');assert.equal(f.db.writes,0);assert.deepEqual(f.searches,[]);assert.ok(reads.every(t=>t.startsWith('runtimeAuth')));
+  assert.deepEqual(calls,scenario==='initial-bad-issuer'?['runtimeAuth:authorize']:['runtimeAuth:authorize','runtimeMemory:checkAuthority']);
+  if(!scenario.startsWith('late-'))assert.deepEqual(f.db.rows,before);
+  outcomes.push({operation,scenario,data,calls,reads,writes:f.db.writes});
+ }
+}
+writeFileSync('_goals/convex-backend-runtime-2026-10-02/qa/task03-domain-foreground-repair-review/independent-probe.json',JSON.stringify(outcomes,null,2));
+console.log(JSON.stringify({passed:outcomes.length,failed:0}));
