@@ -1,0 +1,31 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { randomUUID } from "node:crypto";
+import { canonical, livePreflight, scratch, writeEvidence } from "./guard.mjs";
+import { operator } from "./operator.mjs";
+const name = process.argv[2];
+if (!/^owned-[a-f0-9-]{36}\.json$/.test(name ?? "")) throw new Error("Select a private owned-fixture ledger basename.");
+const output = `cleanup-${randomUUID()}.json`;
+const { target } = livePreflight(output);
+const path = canonical(resolve(scratch, name), scratch, { privateFile: true, existing: true });
+const ledger = JSON.parse(readFileSync(path, "utf8"));
+if (ledger.deploymentName !== target.deploymentName || name !== `owned-${ledger.runId}.json` || !Array.isArray(ledger.owned) || ledger.owned.length === 0) throw new Error("Cleanup ledger rejected before dispatch.");
+const scopePrefix = `task03c2-${ledger.runId}-`;
+for (const entry of ledger.owned) {
+  if (!entry.scope?.tenantId?.startsWith(scopePrefix) || !entry.scope.memorySpaceId?.startsWith(`space-${ledger.runId}-`)
+    || !entry.subject?.startsWith(`subject-${ledger.runId}-`) || !entry.userId?.startsWith(`user-${ledger.runId}-`)
+    || typeof entry.reference?.principalId !== "string") throw new Error("Cleanup ownership rejected before dispatch.");
+}
+const scopes = new Map(ledger.owned.map((entry) => [entry.scope.tenantId, entry.scope]));
+const principals = new Set(ledger.owned.map((entry) => entry.reference.principalId));
+let completed = 0, failed = 0;
+for (const scope of scopes.values()) {
+  try { await operator("runtimeAuth:deleteScope", { tenantId: scope.tenantId }); completed++; } catch { failed++; }
+}
+for (const principalId of principals) {
+  try { await operator("runtimeAuth:deletePrincipal", { principalId }); completed++; } catch { failed++; }
+}
+writeEvidence(output, { operation: "fence-owned-qualification-fixtures", deploymentName: target.deploymentName, completed, failed,
+  retainedTombstones: true, physicalCleanup: "parent must retire/delete this exact qualification project via trusted service tool", globalPurge: false });
+process.stdout.write(JSON.stringify({ completed, failed, retirement: "pending-parent" }) + "\n");
+process.exitCode = failed === 0 ? 0 : 1;

@@ -1,0 +1,64 @@
+import os,json,hashlib,stat,shutil,subprocess,datetime,tarfile
+from pathlib import Path
+R=Path('/workspace/Project-Cortex'); O=Path('/tmp/task03c2-live-harness-review3-01t5pzfe'); Q=R/'_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture'; S=R/'work/backend-runtime/task03c2-live-fixture'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+now=lambda:datetime.datetime.now(datetime.timezone.utc).isoformat()
+def write(p,v):
+ p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(v,indent=2)+'\n');os.chmod(p,0o600)
+def run(name,argv,cwd=R,timeout=60):
+ env={k:v for k,v in os.environ.items() if k in ['PATH','HTTPS_PROXY','HTTP_PROXY','NO_PROXY','https_proxy','http_proxy','no_proxy','NODE_EXTRA_CA_CERTS']}
+ env.update(LANG='C.UTF-8',CI='1',NO_COLOR='1',NODE_USE_ENV_PROXY='1',npm_config_cache=str(R/'work/backend-runtime/npm12-cache'),npm_config_userconfig=str(O/'user.npmrc'),npm_config_globalconfig=str(O/'global.npmrc'))
+ t=now();p=subprocess.run(argv,cwd=cwd,env=env,capture_output=True,timeout=timeout)
+ (O/'logs'/f'{name}.stdout').write_bytes(p.stdout);(O/'logs'/f'{name}.stderr').write_bytes(p.stderr)
+ rows=json.loads((O/'commands.json').read_text());rows.append(dict(name=name,argv=argv,cwd=str(cwd),startedAt=t,completedAt=now(),exitCode=p.returncode,stdout=f'logs/{name}.stdout',stderr=f'logs/{name}.stderr',environmentNames=sorted(env),credentialFilesSupplied=0));write(O/'commands.json',rows)
+ return p
+if __name__=='__main__':
+ expected={'source-freeze.json':'301a0b9a6f08112544e79d49656021d39c31ed28d1e08adb8274db382e5d213f','report.md':'9f3d0213e60187d2464c794d01c8ab39c64d6b462df66c51cfca7f161189eb89','file-inventory.json':'70781efe0fec0e514a1b3921472aa693bfa013bf2bf81b41f2276a67fa25d96e','private-file-inventory.json':'55c0e28feffd66c565003ba3f58a22df72cbbbb6ae27ffae4fcb2f8a34e8261f'}
+ for n,h in expected.items():assert sha((Q/n).read_bytes())==h,n
+ rows={}
+ for n in ['file-inventory.json','private-file-inventory.json','archive-preservation.json']:
+  vals=json.loads((Q/n).read_text());assert len({x['path'] for x in vals})==len(vals),n
+  for x in vals:
+   p=R/x['path'];b=p.read_bytes();assert sha(b)==x['sha256'],str(p);st=p.lstat();assert stat.S_ISREG(st.st_mode) and st.st_nlink==1,str(p)
+   rows[str(p)]=dict(sha256=sha(b),mode=stat.S_IMODE(st.st_mode),uid=st.st_uid,nlink=st.st_nlink,size=st.st_size)
+ f=json.loads((Q/'source-freeze.json').read_text())
+ for field,base in [('files',Q),('privateExecutorFiles',R)]:
+  for x in f[field]:assert sha((base/x['path']).read_bytes())==x['sha256'],str(x)
+ links={}
+ for x in f['privateSymlinkBindings']:
+  p=R/x['path'];assert p.is_symlink() and os.readlink(p)==x['target'],str(p);st=p.lstat();links[str(p)]=dict(target=os.readlink(p),mode=stat.S_IMODE(st.st_mode),uid=st.st_uid,nlink=st.st_nlink)
+ for n in expected:
+  p=Q/n;st=p.stat();rows[str(p)]=dict(sha256=sha(p.read_bytes()),mode=stat.S_IMODE(st.st_mode),uid=st.st_uid,nlink=st.st_nlink,size=st.st_size)
+ write(O/'before.json',dict(recordedAt=now(),files=rows,links=links))
+ for n in ['AGENTS.md','.agents/CODEX-RUNTIME.md','.agents/PROJECT-PROFILE.md','.agents/roles/pessimistic-judge.md','.agents/skills/judge-task/SKILL.md','.agents/skills/feature-orchestrator/SKILL.md','_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md','_goals/convex-backend-runtime-2026-10-02/goal.md','_goals/convex-backend-runtime-2026-10-02/tasks/03-authorization.md','_goals/convex-backend-runtime-2026-10-02/tasks/09-text-client-slice.md','_research/convex-ai-gateway-2026-10-02/architecture.md','_research/convex-ai-gateway-2026-10-02/decision-gates.md','work/backend-runtime/task03c2-harness-review3-prompt.md','_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-preparation.md','_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-1.md','_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md','_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-review-2.md']:
+  dest=O/'source-context'/n.replace('/','--');shutil.copyfile(R/n,dest)
+ for p in Q.rglob('*'):
+  if p.is_file() and not p.is_symlink():
+   dest=O/'source-context'/'candidate'/p.relative_to(Q);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
+ replay=O/'replay-repo';rq=replay/Q.relative_to(R);rq.mkdir(parents=True)
+ for p in Q.rglob('*'):
+  if p.is_file() and not p.is_symlink() and 'history' not in p.relative_to(Q).parts and 'evidence' not in p.relative_to(Q).parts:
+   dest=rq/p.relative_to(Q);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
+ (rq/'evidence').mkdir()
+ # Installed package directories are explicit links; guard reads require nonaliased package.json paths.
+ nm=replay/'node_modules';nm.mkdir()
+ for p in (R/'node_modules').iterdir():
+  dest=nm/p.name
+  if p.name in ['convex','ws','https-proxy-agent','tsx']:
+   dest.mkdir();shutil.copyfile(p/'package.json',dest/'package.json')
+   for c in p.iterdir():
+    if c.name!='package.json':os.symlink(c,dest/c.name)
+  else:os.symlink(p,dest)
+ rs=replay/S.relative_to(R);rs.mkdir(parents=True,mode=0o700);os.chmod(rs,0o700)
+ for d in ['sdk','packed-sdk']:shutil.copytree(S/d,rs/d,ignore=shutil.ignore_patterns('node_modules'))
+ shutil.copyfile(S/'cortexmemory-sdk-0.37.0.tgz',rs/'cortexmemory-sdk-0.37.0.tgz')
+ shutil.copyfile(S/'sdk/package.json',replay/'package.json')
+ for x in json.loads((Q/'archive-preservation.json').read_text()):
+  dest=replay/x['path'];dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(R/x['path'],dest)
+ # Original SDK source imports need own dependency link, not original private fixture access.
+ os.symlink(nm,rs/'sdk/node_modules')
+ write(O/'setup.json',dict(publicRows=1924,privateRows=2035,activeRows=len(f['files']),privateExecutorRows=len(f['privateExecutorFiles']),symlinkRows=len(f['privateSymlinkBindings']),beforeRecords=len(rows),replay=str(replay),excluded=['target.json','deploy.env','RSA private key','dependency content'],canonicalWrites=0))
+ p=run('git-head',['git','rev-parse','HEAD']);assert p.returncode==0
+ p=run('git-status',['git','status','--porcelain=v1','--untracked-files=all']);assert p.returncode==0
+ print(json.dumps({'root':str(O),'replay':str(replay),'files':len(rows),'links':len(links)}))
+

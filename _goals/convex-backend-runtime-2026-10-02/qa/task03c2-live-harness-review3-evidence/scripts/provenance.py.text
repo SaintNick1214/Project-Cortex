@@ -1,0 +1,47 @@
+import sys
+sys.path.insert(0,'/tmp/task03c2-live-harness-review3-01t5pzfe/scripts')
+from reviewlib import *
+result={'fixtures':[],'sdkSources':[],'sdkProvenance':[],'tarEntries':[],'history':[]}
+prov=json.loads((Q/'source-provenance.json').read_text())
+assert prov['acceptedCommit']=='4fb3482c5e06fcab12ab8513b242a066ef761f2f' and prov['backendAcceptedCommit']=='c92d548368791386c62f39895e381ef6bde2dc86'
+assert prov['nativeErrorCorrectionCommit']=='022e2e3d61161766e90e91dd572bb9b7063d5957'
+report=R/'_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-review-2.md'
+assert sha(report.read_bytes())==prov['independentReportSha256']=='b608adce3d20d8fdac98f8c2541c243dfa72616b6204e21ca1e7cf0dc6d8a94d'
+for i,x in enumerate(prov['copied']):
+ p=run(f'fixture-source-{i:02}',['git','cat-file','blob',f"{x['sourceCommit']}:{x['source']}"]);assert p.returncode==0
+ assert sha(p.stdout)==x['sha256']==sha((Q/x['fixture']).read_bytes()),x
+ result['fixtures'].append(dict(source=x['source'],sourceCommit=x['sourceCommit'],sha256=x['sha256'],match=True))
+assert len(result['fixtures'])==14
+assert sum(x['sourceCommit']==prov['nativeErrorCorrectionCommit'] for x in result['fixtures'])==2
+assert sum(x['sourceCommit']==prov['backendAcceptedCommit'] for x in result['fixtures'])==11
+assert sum(x['sourceCommit']==prov['acceptedCommit'] for x in result['fixtures'])==1
+sd=json.loads((Q/'sdk-provenance.json').read_text())
+for i,x in enumerate(sd['files']):
+ b=(S/x['path']).read_bytes();assert sha(b)==x['sha256'],x
+ result['sdkProvenance'].append(dict(path=x['path'],sha256=x['sha256'],match=True))
+ if x['path'].startswith('sdk/') and not x['path'].startswith('sdk/dist/'):
+  source=x['path'][4:];p=run(f'sdk-source-{i:03}',['git','cat-file','blob',f"{sd['acceptedCommit']}:{source}"]);assert p.returncode==0
+  assert p.stdout==b,source;result['sdkSources'].append(dict(source=source,sha256=sha(b),match=True))
+assert len(result['sdkSources'])==129 and len(sd['files'])==199
+assert (O/'replay-repo/package.json').read_bytes()==(S/'sdk/package.json').read_bytes()
+pack=S/sd['package']['path'];assert sha(pack.read_bytes())==sd['package']['sha256']=='cd97dabc1428e2dc7f217bf316aff0d7bf4ebf0d843a214a5777a2228275193d'
+with tarfile.open(pack,'r:gz') as t:
+ for m in t.getmembers():
+  if m.isfile():
+   b=t.extractfile(m).read();assert b==(S/'packed-sdk'/m.name).read_bytes(),m.name;result['tarEntries'].append(dict(path=m.name,sha256=sha(b),match=True))
+assert len(result['tarEntries'])==53
+for cycle in ['cycle1','cycle2-final']:
+ d=json.loads((Q/'history'/cycle/'preservation-manifest.json').read_text())
+ for x in d['records']:assert sha((R/x['file']).read_bytes())==x['sha256'],x
+ result['history'].append(dict(cycle=cycle,records=len(d['records']),allMatch=True,fields={k:v for k,v in d.items() if k!='records'}))
+write(O/'results/provenance.json',result)
+# Compare protected original bindings and exact accepted scope mechanics.
+old=Q/'history/cycle2-final/candidate/public'
+protected=['scripts/client.ts','scripts/client-prep.ts','scripts/packed-prep.mjs','scripts/classifier-check.mjs','scripts/driver-check.mjs','scripts/cases.mjs','scripts/protocol.mjs','scripts/parent-channel.ts','scripts/bounds-check.mjs','scripts/entrypoint-check.mjs','scripts/guard-check.mjs','fixture/convex/auth.config.ts','client-tsconfig.json','service-outcomes.json']
+for x in protected:assert (Q/x).read_bytes()==(old/x).read_bytes(),x
+oldpr=json.loads((old/'source-provenance.json').read_text())
+for x in oldpr['copied']:
+ if x['source'] not in ['convex-dev/runtimeAuth.ts','convex-dev/runtimeMetadataAuth.ts']:assert (Q/x['fixture']).read_bytes()==(old/x['fixture']).read_bytes(),x
+write(O/'results/protected-byte-comparison.json',dict(protected=protected,exactUnchanged=True,unchangedFixtures=12,allowedHelpers=2))
+print(json.dumps({'fixtures':len(result['fixtures']),'sdkSources':len(result['sdkSources']),'sdkProvenance':len(result['sdkProvenance']),'tarEntries':len(result['tarEntries']),'history':[(x['cycle'],x['records']) for x in result['history']]}))
+

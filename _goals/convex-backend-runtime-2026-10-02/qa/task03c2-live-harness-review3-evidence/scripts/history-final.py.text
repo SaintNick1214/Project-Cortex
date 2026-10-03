@@ -1,0 +1,45 @@
+import sys,re
+sys.path.insert(0,'/tmp/task03c2-live-harness-review3-01t5pzfe/scripts')
+from reviewlib import *
+result={}
+for cycle,total,omissionField in [('cycle1',407,'omittedPrivateReproducibleSdk'),('cycle2-final',976,'privateReproducibleOmissions')]:
+ hist=Q/'history'/cycle;d=json.loads((hist/'preservation-manifest.json').read_text());omits=d[omissionField]
+ byorig={x['original']:x for x in d['records']};m=json.loads((hist/'independent/manifest.original.json').read_text());assert len(m['files'])==total
+ resolved=omitted=0
+ # Match each exact relative manifest path to its preserved original identity.
+ for x in m['files']:
+  matches=[y for key,y in byorig.items() if key.endswith('/'+x['path']) and y['sha256']==x['sha256'] and '/independent/' in y['file']]
+  if matches:
+   y=matches[0];p=R/y['file'];assert sha(p.read_bytes())==x['sha256'] and p.stat().st_size==x['bytes'];resolved+=1
+  else:
+   matches=[y for y in omits if y['path']==x['path'] and y['sha256']==x['sha256']];assert len(matches)==1,(cycle,x)
+   y=matches[0]
+   if 'original' in y:p=Path(y['original'])
+   else:p=S/x['path'].split('replay-repo/work/backend-runtime/task03c2-live-fixture/',1)[1]
+   assert sha(p.read_bytes())==x['sha256'] and p.stat().st_size==x['bytes'];omitted+=1
+ for y in omits:
+  if 'original' in y:p=Path(y['original'])
+  else:p=S/y['path'].split('replay-repo/work/backend-runtime/task03c2-live-fixture/',1)[1]
+  assert sha(p.read_bytes())==y['sha256'];assert 'bytes' not in y or p.stat().st_size==y['bytes']
+ result[cycle]=dict(originalManifestRecords=total,resolvedSavedRecords=resolved,resolvedPrivateOmissions=omitted,allOmissionsChecked=len(omits),allSavedRecords=len(d['records']),allHashMatches=True)
+old=Q/'history/cycle2-final/candidate/public'
+for name,count in [('file-inventory.json',511),('private-file-inventory.json',214)]:
+ rows=json.loads((old/name).read_text());assert len(rows)==count
+ for x in rows:
+  p=R/x['path']
+  if name.startswith('private'):assert sha(p.read_bytes())==x['sha256'],x
+ result[name]=dict(rows=count,privateUnchanged=name.startswith('private'))
+allowed={f'scripts/{x}.mjs' for x in ['process-owner','operator-classifier','guard','deploy','cleanup','driver-engine']}|{'README.md','report.md','file-inventory.json','private-file-inventory.json','source-freeze.json','fixture/convex/runtimeAuth.ts','fixture/convex/runtimeMetadataAuth.ts','source-provenance.json'}
+d=json.loads((Q/'history/cycle2-final/preservation-manifest.json').read_text())
+public=[x for x in d['records'] if x['file'].startswith(str(old.relative_to(R))+'/')]
+assert len(public)==513
+unchanged=[]
+for x in public:
+ rel=str(Path(x['original']).relative_to(Q))
+ if rel not in allowed:assert sha(Path(x['original']).read_bytes())==x['sha256'],rel;unchanged.append(rel)
+result['oldPublic']=dict(recordsChecked=513,allowedChanged=sorted(allowed),unchangedRecords=len(unchanged),allRequiredMatch=True)
+fail=Q/'history/cycle2-final/independent/driver-check-retry.log';assert b'AssertionError' in fail.read_bytes()
+result['priorProcessFailure']=dict(retained=True,raw=str(fail.relative_to(R)),laterPasses=[str((Q/'history/cycle2-final/independent'/n).relative_to(R)) for n in ['driver-check-repeat2.log','driver-check-repeat3.log']])
+write(O/'results/history-integrity.json',result)
+
+print(json.dumps(result))

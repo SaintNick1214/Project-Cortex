@@ -1,0 +1,97 @@
+{
+  "discovered": 4,
+  "passed": 4,
+  "skipped": 0,
+  "networkCalls": 0,
+  "callbackEffects": 0,
+  "credentialFilesSupplied": 0,
+  "keyValuesPrinted": 0,
+  "rows": [
+    {
+      "name": "minimal",
+      "argv": [
+        "node",
+        "--import",
+        "/tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+        "-e",
+        ""
+      ],
+      "cwd": "/tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo",
+      "startedAt": "2026-10-03T13:56:50.490401+00:00",
+      "completedAt": "2026-10-03T13:56:50.521993+00:00",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "environmentNames": [
+        "LANG",
+        "PATH"
+      ],
+      "stdout": "logs/env-minimal.stdout",
+      "stderr": "logs/env-minimal.stderr"
+    },
+    {
+      "name": "provider-before-import",
+      "argv": [
+        "node",
+        "--import",
+        "/tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+        "-e",
+        "process.stdout.write(\"UNEXPECTED_CALLBACK\")"
+      ],
+      "cwd": "/tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo",
+      "startedAt": "2026-10-03T13:56:50.522017+00:00",
+      "completedAt": "2026-10-03T13:56:50.553941+00:00",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "environmentNames": [
+        "LANG",
+        "OPENAI_API_KEY",
+        "PATH"
+      ],
+      "stdout": "logs/env-provider-before-import.stdout",
+      "stderr": "logs/env-provider-before-import.stderr"
+    },
+    {
+      "name": "deployment-before-import",
+      "argv": [
+        "node",
+        "--import",
+        "/tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+        "-e",
+        "process.stdout.write(\"UNEXPECTED_CALLBACK\")"
+      ],
+      "cwd": "/tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo",
+      "startedAt": "2026-10-03T13:56:50.553965+00:00",
+      "completedAt": "2026-10-03T13:56:50.583406+00:00",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "environmentNames": [
+        "CONVEX_DEPLOY_KEY",
+        "LANG",
+        "PATH"
+      ],
+      "stdout": "logs/env-deployment-before-import.stdout",
+      "stderr": "logs/env-deployment-before-import.stderr"
+    },
+    {
+      "name": "provider-at-exit",
+      "argv": [
+        "node",
+        "--import",
+        "/tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+        "-e",
+        "process.env.ANTHROPIC_API_KEY=\"OFFLINE_ENVIRONMENT_STANDIN\""
+      ],
+      "cwd": "/tmp/task03c2-live-harness-review3-01t5pzfe/replay-repo",
+      "startedAt": "2026-10-03T13:56:50.583432+00:00",
+      "completedAt": "2026-10-03T13:56:50.609122+00:00",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "environmentNames": [
+        "LANG",
+        "PATH"
+      ],
+      "stdout": "logs/env-provider-at-exit.stdout",
+      "stderr": "logs/env-provider-at-exit.stderr"
+    }
+  ]
+}

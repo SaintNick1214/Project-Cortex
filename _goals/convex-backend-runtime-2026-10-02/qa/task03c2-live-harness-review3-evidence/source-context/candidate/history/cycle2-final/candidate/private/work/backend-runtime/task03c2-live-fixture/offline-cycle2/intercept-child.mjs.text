@@ -1,0 +1,39 @@
+// OFFLINE ONLY: never imported by the live driver. Inspect actual child imports,
+// environment and IPC without reading keys or creating any service effect.
+import { createRequire, syncBuiltinESMExports } from "node:module";
+const require = createRequire(import.meta.url), fs = require("node:fs"), fsp = require("node:fs/promises");
+const audit = { type: "offline-audit", sensitiveReads: 0, keyValues: 0, selectorVariables: 0, networkAttempts: 0, privateProtocolFields: 0 };
+const forbiddenPath = (path) => /(?:qualification\/jwt-private\.pem|task03c2-live-fixture\/(?:deploy\.env|target\.json))/.test(String(path));
+for (const name of ["readFileSync", "readFile", "openSync", "open", "createReadStream"]) {
+  const original = fs[name];
+  fs[name] = function (path, ...args) { if (forbiddenPath(path)) { audit.sensitiveReads++; throw new Error("OFFLINE_PRIVATE_READ_REJECTED"); } return original.call(this, path, ...args); };
+}
+for (const name of ["readFile", "open"]) {
+  const original = fsp[name];
+  fsp[name] = async function (path, ...args) { if (forbiddenPath(path)) { audit.sensitiveReads++; throw new Error("OFFLINE_PRIVATE_READ_REJECTED"); } return await original.call(this, path, ...args); };
+}
+const rejectNetwork = () => { audit.networkAttempts++; throw new Error("OFFLINE_NETWORK_REJECTED"); };
+globalThis.fetch = async () => rejectNetwork();
+for (const name of ["node:http", "node:https"]) { const module = require(name); module.request = rejectNetwork; module.get = rejectNetwork; }
+const socket = require("node:net").Socket.prototype, connect = socket.connect;
+socket.connect = function (...args) {
+  const options = Array.isArray(args[0]) ? args[0][0] : args[0];
+  // tsx's local loader IPC uses a Unix socket. It cannot reach a service origin.
+  if ((typeof options === "string" && options.startsWith("/")) || (options && typeof options.path === "string")) return connect.apply(this, args);
+  return rejectNetwork();
+};
+syncBuiltinESMExports();
+for (const [name, value] of Object.entries(process.env)) {
+  if (/^(?:CONVEX_DEPLOY_KEY|CONVEX_DEPLOYMENT|CONVEX_URL|CORTEX_QUALIFICATION_|OPENAI_API_KEY|ANTHROPIC_API_KEY)/.test(name)) audit.selectorVariables++;
+  if (String(value).includes("DEVKEY_BOUNDARY_STANDIN")) audit.keyValues++;
+}
+process.on("message", (message) => {
+  const serialized = JSON.stringify(message);
+  if (serialized.includes("DEVKEY_BOUNDARY_STANDIN")) audit.keyValues++;
+  if (/(?:deploy\.env|jwt-private\.pem|target\.json|CONVEX_DEPLOY_KEY|privateKey|envFile)/.test(serialized)) audit.privateProtocolFields++;
+});
+const send = process.send.bind(process);
+process.send = (message, ...args) => {
+  if (message?.type === "complete") send(audit);
+  return send(message, ...args);
+};

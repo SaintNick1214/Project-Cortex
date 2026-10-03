@@ -1,0 +1,14 @@
+import sys
+sys.path.insert(0,'/tmp/task03c2-live-harness-review3-01t5pzfe/scripts')
+from reviewlib import *
+m=json.loads((Q/'history/cycle2-final/preservation-manifest.json').read_text())
+byOriginal={x['original']:R/x['file'] for x in m['records']}
+protected=['scripts/client.ts','scripts/client-prep.ts','scripts/packed-prep.mjs','scripts/classifier-check.mjs','scripts/driver-check.mjs','scripts/cases.mjs','scripts/protocol.mjs','scripts/parent-channel.ts','scripts/bounds-check.mjs','scripts/entrypoint-check.mjs','scripts/guard-check.mjs','fixture/convex/auth.config.ts','client-tsconfig.json','service-outcomes.json']
+for x in protected:assert (Q/x).read_bytes()==byOriginal[str(Q/x)].read_bytes(),x
+oldpr=json.loads(byOriginal[str(Q/'source-provenance.json')].read_text())
+for x in oldpr['copied']:
+ if x['source'] not in ['convex-dev/runtimeAuth.ts','convex-dev/runtimeMetadataAuth.ts']:assert (Q/x['fixture']).read_bytes()==byOriginal[str(Q/x['fixture'])].read_bytes(),x
+write(O/'results/protected-byte-comparison.json',dict(protected=protected,exactUnchanged=True,unchangedFixtures=12,allowedHelpers=2))
+write(O/'results/initial-provenance-failure.json',dict(reason='Reviewer path assumption omitted archival .text suffix; all142 Git source comparisons and199/53 provenance records had already passed. Corrected only reviewer archive selection using original->file manifest mapping. No source/assertion edits or rerun/overwrite of original source commands.'))
+print(json.dumps({'protectedFiles':len(protected),'unchangedFixtures':12,'exact':True}))
+

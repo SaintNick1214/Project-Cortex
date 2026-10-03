@@ -1,0 +1,63 @@
+{
+  "recordedAt": "2026-10-03T13:45:40.551712+00:00",
+  "failures": [
+    {
+      "phase": "mechanics1",
+      "commands": [
+        "house-lint",
+        "backend-policy-lint"
+      ],
+      "evidence": [
+        "mechanics1-house-lint.txt",
+        "mechanics1-backend-policy-lint.txt",
+        "commands-mechanics1.json"
+      ],
+      "cause": "Two new lint findings: no-constant-condition and preserve-caught-error.",
+      "correction": "Bounded do/while condition and Error cause; no suppressions; mechanics2/final pass."
+    },
+    {
+      "phase": "preservation-mechanics2",
+      "evidence": [
+        "mechanics2-provenance.txt",
+        "commands-preservation-mechanics2.json"
+      ],
+      "cause": "Verifier expected511 preserved public files; actual513 includes both inventory files.",
+      "correction": "Check513 full candidate files, documenting511 inventory records plus2 inventories; mechanics3/final pass."
+    },
+    {
+      "phase": "documentation-atomic-patches",
+      "evidence": [
+        "readme-patch-failure.txt",
+        "provenance-note-patch-failure.txt"
+      ],
+      "cause": "Two apply_patch invocations rejected unmatched context; no partial source write.",
+      "correction": "Read exact context and applied the patch. Tool diagnostic transcribed verbatim; no service effects."
+    },
+    {
+      "phase": "hygiene-two-literal-survey",
+      "evidence": [
+        "hygiene-incomplete-literal-survey.txt",
+        "command-hygiene-incomplete-literal-survey.json"
+      ],
+      "cause": "A tightened exploratory allowlist omitted two exact original offline guard-case literals.",
+      "correction": "Final scan covers development/production key syntax, uses four exact known standin strings plus the exact historical test-only-placeholder secret; arbitrary standin substrings are not accepted."
+    },
+    {
+      "phase": "mechanics-runner-inherited-environment",
+      "evidence": [
+        "environment-initial-observation.json",
+        "commands-mechanics1.json",
+        "commands-mechanics2.json"
+      ],
+      "cause": "Separate offline source/packed prep command processes inherited managed-shell OPENAI_API_KEY/OPENAI_CLUSTER names; values were not inspected or logged. Network/dispatch remained0. Actual qualification SDK child was already sanitized.",
+      "correction": "New cycle3 command-local environment allowlist removes upstream/deploy keys and selectors without global env changes; final command records bind exact allowed names."
+    }
+  ],
+  "independentPriorFailure": {
+    "evidence": "history/cycle2-final/independent/driver-check-retry.log",
+    "receipt": "history/cycle2-final/independent/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/evidence/qualify-4729e92f-7700-44b0-b0c5-cee0c09cba59.json",
+    "status": "Original failure retained; later repeats2/3 PASS remain separate"
+  },
+  "networkCalls": 0,
+  "signedTokens": 0
+}

@@ -1,0 +1,11 @@
+import { state } from "./receipt-state.mjs";
+export class ProcessOwner {
+  records = new Set(); verifiedGroups = 0;
+  async run(args) {
+    state.cliCalls++; state.args = args;
+    if (process.env.OFFLINE_CASE === "deploy-throw") throw new Error("PRIVATE_OFFLINE_DIAGNOSTIC_MUST_NOT_ESCAPE");
+    if (process.env.OFFLINE_CASE === "deploy-process-fail") { this.records.add("offline-unverified-group"); throw new Error("PRIVATE_OFFLINE_DIAGNOSTIC_MUST_NOT_ESCAPE"); }
+    return { code: process.env.OFFLINE_CASE === "deploy-exit-fail" ? 1 : 0, timedOut: process.env.OFFLINE_CASE === "deploy-timeout", stdout: "PRIVATE_OFFLINE_DIAGNOSTIC_MUST_NOT_ESCAPE", stderr: "PRIVATE_OFFLINE_DIAGNOSTIC_MUST_NOT_ESCAPE" };
+  }
+  async reapAll() { /* No actual child was spawned by this explicit offline stub. */ }
+}

@@ -1,0 +1,13 @@
+import sys
+sys.path.insert(0,'/tmp/task03c2-live-harness-review3-01t5pzfe/scripts')
+from reviewlib import *
+RP=O/'replay-repo';scope=Q.relative_to(R);PS=RP/S.relative_to(R)
+checks=[('guards','guard-check.mjs'),('entrypoints','entrypoint-check.mjs'),('classifier','classifier-check.mjs'),('adversarial','classifier-adversarial.mjs'),('driver','driver-check.mjs'),('group','process-check-cycle3.mjs'),('receipts','receipt-check-cycle3.mjs'),('bounds','bounds-check.mjs'),('packed-prep','packed-prep.mjs')]
+results=[]
+for label,entry in checks:
+ argv=['node',str(scope/'scripts'/entry)]
+ if label=='packed-prep':argv=['node','--import',str(PS/'offline-cycle3/sdk-environment-check.mjs'),str(scope/'scripts'/entry)]
+ p=run(label,argv,RP,timeout=60);results.append(dict(name=label,exitCode=p.returncode,stdout=p.stdout.decode(),stderr=p.stderr.decode()));print(json.dumps(results[-1]),flush=True)
+p=run('source-prep',['node','--import',str(PS/'offline-cycle3/sdk-environment-check.mjs'),'--import',str(RP/'node_modules/tsx/dist/loader.mjs'),str(scope/'scripts/client-prep.ts')],RP,timeout=30);results.append(dict(name='source-prep',exitCode=p.returncode,stdout=p.stdout.decode(),stderr=p.stderr.decode()));print(json.dumps(results[-1]),flush=True)
+write(O/'results/replays.json',results)
+

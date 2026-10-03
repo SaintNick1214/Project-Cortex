@@ -1,0 +1,29 @@
+import { spawn } from "node:child_process";
+import { writeFileSync } from "node:fs";
+const scenario = process.env.PROBE_SCENARIO;
+process.once("message", (boot) => {
+  if (scenario === "startup-crash") { process.exit(3); return; }
+  process.send({ type: "case-start", name: "operator-provisioning" });
+  const args = { issuer: "https://cortex-qualification.invalid", subject: `subject-${boot.runId}-probe`, actorKind: "user", metadataUserId: `user-${boot.runId}-probe`, tenantId: `task03c2-${boot.runId}-probe`, memorySpaceId: `space-${boot.runId}-probe`, capabilities: ["read", "write"], resourceAccess: "own" };
+  if (scenario === "crash") { setTimeout(() => process.exit(3), 30); return; }
+  if (scenario === "sigkill") { setTimeout(() => process.kill(process.pid, "SIGKILL"), 30); return; }
+  if (scenario === "descendant") {
+    const child = spawn(process.execPath, ["-e", 'process.on("SIGTERM",()=>{});setInterval(()=>{},1000)'], { stdio: "ignore" });
+    writeFileSync(process.env.PROBE_PIDFILE, String(child.pid), { mode: 0o600, flag: "wx" });
+    process.on("SIGTERM", () => {});
+  }
+  if (["operator-hang", "whole-operator-hang"].includes(scenario)) {
+    process.on("message", (message) => {
+      if (message.type !== "rpc-result") return;
+      process.send({ type: "case-end", name: "operator-provisioning", status: "BLOCKED", reason: "operator_setup_unavailable" });
+      process.send({ type: "complete" }, () => process.disconnect());
+    });
+    process.send({ type: "rpc", id: 1, action: "operator", args: { name: "runtimeAuth:provision", args } });
+  }
+  if (scenario === "unknown-operator") process.send({ type: "rpc", id: 1, action: "operator", args: { name: "sessions:purgeAll", args: {} } });
+  if (scenario === "foreign-sign") process.send({ type: "rpc", id: 1, action: "sign", args: { subject: "foreign-principal", variant: "valid" } });
+  if (scenario === "extra-private-field") process.send({ type: "rpc", id: 1, action: "sign", args: { subject: `unprovisioned-${boot.runId}`, variant: "valid" }, envFile: "forbidden-standin" });
+  if (scenario === "offline-audit-in-live") process.send({ type: "offline-audit", sensitiveReads: 0, keyValues: 0, selectorVariables: 0, networkAttempts: 0, privateProtocolFields: 0 });
+  setInterval(() => {}, 1_000);
+});
+process.send({ type: "ready" });

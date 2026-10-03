@@ -1,0 +1,8 @@
+import { readFileSync, lstatSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { verifiedSigningKey, keyFile } from "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs";
+const snapshot=()=>{const s=lstatSync(keyFile);return {sha256:createHash("sha256").update(readFileSync(keyFile)).digest("hex"),mode:s.mode&511,uid:s.uid,nlink:s.nlink,size:s.size};};
+const before=snapshot(); verifiedSigningKey(); const after=snapshot();
+if(JSON.stringify(before)!==JSON.stringify(after))throw Error("KEY_COMPARISON_PRESERVATION_FAILED");
+process.stdout.write(JSON.stringify({publicJwksMatches:true,comparisonOnly:true,noKeyCopy:true,newKeys:0,signedTokens:0,networkCalls:0,before,after})+"\n");
+

@@ -1,0 +1,30 @@
+import sys
+sys.path.insert(0,'/tmp/task03c2-live-harness-review3-01t5pzfe/scripts')
+from reviewlib import *
+state=json.loads((O/'before.json').read_text());after={'recordedAt':now(),'files':{},'links':{}}
+for path,old in state['files'].items():
+ p=Path(path);st=p.lstat();row=dict(sha256=sha(p.read_bytes()),mode=stat.S_IMODE(st.st_mode),uid=st.st_uid,nlink=st.st_nlink,size=st.st_size);after['files'][path]=row;assert row==old,path
+for path,old in state['links'].items():
+ p=Path(path);st=p.lstat();row=dict(target=os.readlink(p),mode=stat.S_IMODE(st.st_mode),uid=st.st_uid,nlink=st.st_nlink);after['links'][path]=row;assert row==old,path
+write(O/'after.json',after)
+p=run('git-head-final',['git','rev-parse','HEAD']);assert p.stdout==(O/'logs/git-head.stdout').read_bytes()
+p=run('git-status-final',['git','status','--porcelain=v1','--untracked-files=all']);assert p.stdout==(O/'logs/git-status-initial.stdout').read_bytes()
+for n in ['eslint.config.js','work/backend-runtime/task03c2-live-fixture/eslint.config.mjs']:
+ assert (R/n).read_bytes()==(O/'source-context'/n.replace('/','--')).read_bytes(),n
+rp=O/'replay-repo';rq=rp/Q.relative_to(R);rs=rp/S.relative_to(R)
+for p in Q.rglob('*'):
+ rel=p.relative_to(Q)
+ if p.is_file() and not p.is_symlink() and 'history' not in rel.parts and 'evidence' not in rel.parts:assert p.read_bytes()==(rq/rel).read_bytes(),str(rel)
+for x in json.loads((Q/'sdk-provenance.json').read_text())['files']:assert (S/x['path']).read_bytes()==(rs/x['path']).read_bytes(),x
+for n in ['target.json','deploy.env']:assert not (rs/n).exists()
+assert not (rp/'work/backend-runtime/qualification/jwt-private.pem').exists()
+receipts=[]
+for p in (rq/'evidence').glob('*.json'):
+ d=json.loads(p.read_text());
+ if p.name.startswith('qualify-'):assert d['discovered']==41 and len(d['results'])==41
+ receipts.append(dict(path=str(p.relative_to(O)),sha256=sha(p.read_bytes()),discovered=d.get('discovered',d.get('discovery')),passed=d.get('passed'),skipped=d.get('skipped'),processCleanup=d.get('processCleanup')))
+checks=json.loads((O/'results/replays.json').read_text());assert len(checks)==10 and all(x['exitCode']==0 for x in checks)
+write(O/'results/receipt-inventory.json',receipts)
+write(O/'results/preservation.json',dict(filesUnchanged=len(after['files']),symlinksUnchanged=len(after['links']),gitHeadUnchanged=True,gitStatusUnchanged=True,rootAndPrivateLintConfigUnchanged=True,replayExactBeforeAndAfter=True,canonicalWrites=0,noTargetEnvKeyInReplay=True))
+print(json.dumps({'filesUnchanged':len(after['files']),'symlinksUnchanged':len(after['links']),'receipts':len(receipts),'gitStatusUnchanged':True}))
+
