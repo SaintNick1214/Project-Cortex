@@ -1,0 +1,1534 @@
+{
+  "status": "PASS",
+  "scope": "OFFLINE_AUTHORING_ONLY",
+  "registeredPaths": 117,
+  "caseDescriptors": 122,
+  "seedRows": 66,
+  "nativeSchemaValidated": true,
+  "nativeArgumentsValidated": true,
+  "serviceCalls": 0,
+  "signatures": 0,
+  "liveStatus": "NOT_RUN",
+  "contract": {
+    "identities": [
+      "reader",
+      "writer",
+      "foreign",
+      "revoked",
+      "deleted",
+      "ungranted"
+    ],
+    "readerCapabilities": [
+      "read",
+      "write",
+      "admin"
+    ],
+    "writerCapabilities": [
+      "write",
+      "admin"
+    ],
+    "cleanup": "Every seed ref plus discoverOwnedEffects after tracked mutations; no cleanup means no live PASS."
+  },
+  "cases": [
+    {
+      "id": "mf-registry-artifacts:memories:owned-read",
+      "path": "memories:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-owned"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:readable-write",
+      "path": "memories:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-owned",
+        "importance": 51
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:write-only-no-read",
+      "path": "memories:get",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-writeOnly"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:write-only-receipt",
+      "path": "memories:update",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-writeOnly",
+        "importance": 51
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:foreign-read",
+      "path": "memories:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-foreign"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:foreign-write",
+      "path": "memories:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-foreign",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:ownerless-read",
+      "path": "memories:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-ownerless"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:ownerless-write",
+      "path": "memories:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-ownerless",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:crossTenant-read",
+      "path": "memories:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-crossTenant"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:crossTenant-write",
+      "path": "memories:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-crossTenant",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:crossSpace-read",
+      "path": "memories:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-crossSpace"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:crossSpace-write",
+      "path": "memories:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-crossSpace",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:tombstone-read",
+      "path": "memories:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-tombstone"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:tombstone-write",
+      "path": "memories:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-tombstone",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:revoked-read",
+      "path": "memories:get",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-revoked"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:revoked-write",
+      "path": "memories:update",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-revoked",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:deleted-read",
+      "path": "memories:get",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-deleted"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:deleted-write",
+      "path": "memories:update",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-deleted",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:owned-read",
+      "path": "facts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-owned"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:readable-write",
+      "path": "facts:updateInPlace",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-owned",
+        "confidence": 81
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:write-only-no-read",
+      "path": "facts:get",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-writeOnly"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:write-only-receipt",
+      "path": "facts:updateInPlace",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-writeOnly",
+        "confidence": 81
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:foreign-read",
+      "path": "facts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-foreign"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:foreign-write",
+      "path": "facts:updateInPlace",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-foreign",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:ownerless-read",
+      "path": "facts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-ownerless"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:ownerless-write",
+      "path": "facts:updateInPlace",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-ownerless",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:crossTenant-read",
+      "path": "facts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-crossTenant"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:crossTenant-write",
+      "path": "facts:updateInPlace",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-crossTenant",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:crossSpace-read",
+      "path": "facts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-crossSpace"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:crossSpace-write",
+      "path": "facts:updateInPlace",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-crossSpace",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:tombstone-read",
+      "path": "facts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-tombstone"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:tombstone-write",
+      "path": "facts:updateInPlace",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-tombstone",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:revoked-read",
+      "path": "facts:get",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-revoked"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:revoked-write",
+      "path": "facts:updateInPlace",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-revoked",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:deleted-read",
+      "path": "facts:get",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-deleted"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:deleted-write",
+      "path": "facts:updateInPlace",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-deleted",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:owned-read",
+      "path": "agents:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:readable-write",
+      "path": "agents:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:write-only-no-read",
+      "path": "agents:get",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-writeOnly",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:write-only-receipt",
+      "path": "agents:update",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-writeOnly",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:foreign-read",
+      "path": "agents:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-foreign",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:foreign-write",
+      "path": "agents:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-foreign",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:ownerless-read",
+      "path": "agents:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-ownerless",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:ownerless-write",
+      "path": "agents:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-ownerless",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:crossTenant-read",
+      "path": "agents:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-crossTenant",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:crossTenant-write",
+      "path": "agents:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-crossTenant",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:crossSpace-read",
+      "path": "agents:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-crossSpace",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:crossSpace-write",
+      "path": "agents:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-crossSpace",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:tombstone-read",
+      "path": "agents:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-tombstone",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:tombstone-write",
+      "path": "agents:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-tombstone",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:revoked-read",
+      "path": "agents:get",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-revoked",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:revoked-write",
+      "path": "agents:update",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-revoked",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:deleted-read",
+      "path": "agents:get",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-deleted",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:deleted-write",
+      "path": "agents:update",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-deleted",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:owned-read",
+      "path": "contexts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:readable-write",
+      "path": "contexts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:write-only-no-read",
+      "path": "contexts:get",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-writeOnly",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:write-only-receipt",
+      "path": "contexts:update",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-writeOnly",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:foreign-read",
+      "path": "contexts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-foreign",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:foreign-write",
+      "path": "contexts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-foreign",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:ownerless-read",
+      "path": "contexts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-ownerless",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:ownerless-write",
+      "path": "contexts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-ownerless",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:crossTenant-read",
+      "path": "contexts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-crossTenant",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:crossTenant-write",
+      "path": "contexts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-crossTenant",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:crossSpace-read",
+      "path": "contexts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-crossSpace",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:crossSpace-write",
+      "path": "contexts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-crossSpace",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:tombstone-read",
+      "path": "contexts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-tombstone",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:tombstone-write",
+      "path": "contexts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-tombstone",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:revoked-read",
+      "path": "contexts:get",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-revoked",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:revoked-write",
+      "path": "contexts:update",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-revoked",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:deleted-read",
+      "path": "contexts:get",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-deleted",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:deleted-write",
+      "path": "contexts:update",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-deleted",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "description": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-context"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:owned-read",
+      "path": "artifacts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:readable-write",
+      "path": "artifacts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:owned-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:write-only-no-read",
+      "path": "artifacts:get",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-writeOnly",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:write-only-receipt",
+      "path": "artifacts:update",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-writeOnly",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:writeOnly-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "writer",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-writeOnly",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:foreign-read",
+      "path": "artifacts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-foreign",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:foreign-write",
+      "path": "artifacts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-foreign",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:foreign-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-foreign",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:ownerless-read",
+      "path": "artifacts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-ownerless",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:ownerless-write",
+      "path": "artifacts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-ownerless",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:ownerless-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-ownerless",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:crossTenant-read",
+      "path": "artifacts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-crossTenant",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:crossTenant-write",
+      "path": "artifacts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-crossTenant",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:crossTenant-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-crossTenant",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:crossSpace-read",
+      "path": "artifacts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-crossSpace",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:crossSpace-write",
+      "path": "artifacts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-crossSpace",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:crossSpace-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-crossSpace",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:tombstone-read",
+      "path": "artifacts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-tombstone",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:tombstone-write",
+      "path": "artifacts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-tombstone",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:tombstone-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-tombstone",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:revoked-read",
+      "path": "artifacts:get",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-revoked",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:revoked-write",
+      "path": "artifacts:update",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-revoked",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:revoked-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "revoked",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-revoked",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:deleted-read",
+      "path": "artifacts:get",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-deleted",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:deleted-write",
+      "path": "artifacts:update",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-deleted",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:deleted-retained-version",
+      "path": "artifacts:getVersion",
+      "identity": "deleted",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-deleted",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "version": 1
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:absent-read-control",
+      "path": "memories:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-absent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:absent-write-control",
+      "path": "memories:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-absent",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:absent-read-control",
+      "path": "facts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-absent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:absent-write-control",
+      "path": "facts:updateInPlace",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-absent",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:contexts:foreign-share-target",
+      "path": "contexts:grantAccess",
+      "identity": "reader",
+      "args": {
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "contextId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:contexts-share-source",
+        "targetMemorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-b",
+        "scope": "read-only"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memorySpaces:owned-read",
+      "path": "memorySpaces:get",
+      "identity": "reader",
+      "args": {
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memorySpaces:foreign-read",
+      "path": "memorySpaces:get",
+      "identity": "reader",
+      "args": {
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-b"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memorySpaces:foreign-write",
+      "path": "memorySpaces:update",
+      "identity": "reader",
+      "args": {
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-b",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:forbidden-change"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memorySpaces:write-only-no-read",
+      "path": "memorySpaces:get",
+      "identity": "writer",
+      "args": {
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memorySpaces:write-only-receipt",
+      "path": "memorySpaces:update",
+      "identity": "writer",
+      "args": {
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-write",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:writer-space"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:final-tombstone-recreate",
+      "path": "artifacts:create",
+      "identity": "reader",
+      "args": {
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-final-deleted",
+        "content": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:resurrection"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:actual-delete",
+      "path": "memories:deleteMemory",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-owned"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:later-read-after-delete",
+      "path": "memories:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-owned"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:memories:later-write-after-delete",
+      "path": "memories:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "memoryId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:memories-owned",
+        "importance": 51
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:actual-delete",
+      "path": "facts:deleteFact",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-owned"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:later-read-after-delete",
+      "path": "facts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-owned"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:facts:later-write-after-delete",
+      "path": "facts:updateInPlace",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "factId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:facts-owned",
+        "confidence": 81
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:actual-delete",
+      "path": "agents:unregister",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:later-read-after-delete",
+      "path": "agents:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:agents:later-write-after-delete",
+      "path": "agents:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "agentId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:agents-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "name": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-agent"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:actual-delete",
+      "path": "artifacts:deleteArtifact",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "tracked",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:later-read-after-delete",
+      "path": "artifacts:get",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mf-registry-artifacts:artifacts:later-write-after-delete",
+      "path": "artifacts:update",
+      "identity": "reader",
+      "args": {
+        "memorySpaceId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:space-a",
+        "artifactId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:artifacts-owned",
+        "tenantId": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:tenant-a",
+        "title": "foundation-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:updated-artifact"
+      },
+      "effects": "unchanged",
+      "status": "NOT_RUN"
+    }
+  ],
+  "gaps": [
+    "Actual delete requires discoverOwnedEffects and complete tracked-ref cleanup; neither is executed by this authoring check.",
+    "No actual interleaved single-mutation race is claimed.",
+    "Subscriptions/background/source-to-derived lifecycle remain parent or later-task gates."
+  ],
+  "assertionPolicy": {
+    "authDenial": "shared scripts/native-engine.mjs authDenial exact whole native/source-backed or observed platform wire envelope",
+    "staleSource": {
+      "version": 1,
+      "code": "STALE_SOURCE",
+      "message": "Source is missing, corrupt, stale or deleted",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "offlineMalformedControls": {
+      "status": "PASS",
+      "scope": "OFFLINE_DENIAL_ASSERTIONS",
+      "positiveControls": 2,
+      "malformedRejected": 10,
+      "serviceCalls": 0
+    }
+  }
+}
