@@ -1,0 +1,8 @@
+import pathlib,hashlib,json,shutil
+r=pathlib.Path.cwd(); q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair'; manifest={}
+paths=[r/'convex-dev/schema.ts',r/'convex-dev/runtimeArtifactAuth.ts',r/'convex-dev/artifacts.ts',*sorted((r/'tests/unit/runtimeArtifactAuth').glob('*'))]
+paths += [r/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4-review/report.md',*sorted((r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c2-execution').glob('deploy*'))]
+for p in paths:
+ if p.is_file():
+  rel=str(p.relative_to(r)); dest=q/'archive'/rel;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest);manifest[rel]=hashlib.sha256(p.read_bytes()).hexdigest()
+(q/'pre-edit-hashes.json').write_text(json.dumps(manifest,indent=2)+'\n')

@@ -1,0 +1,15 @@
+import subprocess,json,time,pathlib,os
+r=pathlib.Path.cwd();q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair'
+env={**os.environ,'CONVEX_URL':'http://127.0.0.1:1','CONVEX_TEST_MODE':'local'}
+checks={
+'discovery':['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','work/resume/artifact-schema-index-repair/asset-composition-jest.config.mjs','--listTests','--runInBand'],
+'native-tests':['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','work/resume/artifact-schema-index-repair/asset-composition-jest.config.mjs','--runInBand','--json','--outputFile',str(q/'asset-composition-native-tests.json')],
+'root-types':['node','node_modules/typescript/bin/tsc','--noEmit'],
+'backend-types':['node','node_modules/typescript/bin/tsc','-p','convex-dev/tsconfig.json','--noEmit'],
+'lint-types':['node','node_modules/typescript/bin/tsc','-p','tsconfig.lint.json','--noEmit'],
+'scoped-lint':['node','node_modules/eslint/bin/eslint.js','convex-dev/schema.ts','convex-dev/runtimeArtifactAuth.ts','convex-dev/artifacts.ts','tests/unit/runtimeArtifactAuth/schema-indexes.test.ts','tests/unit/runtimeArtifactAuth/inventory.test.ts','tests/unit/runtimeAssetUnavailableAuth/closure.test.ts','--max-warnings','0','--report-unused-disable-directives']}
+for name,argv in checks.items():
+ start=time.time();p=subprocess.run(argv,cwd=r,env=env,capture_output=True,text=True)
+ (q/f'asset-composition-{name}.stdout').write_text(p.stdout);(q/f'asset-composition-{name}.stderr').write_text(p.stderr)
+ receipt={'argv':argv,'cwd':str(r),'startedAt':start,'durationSeconds':time.time()-start,'exitCode':p.returncode,'inertConvexUrl':env['CONVEX_URL'],'setupFiles':[],'setupFilesAfterEnv':[]}
+ (q/f'asset-composition-{name}.receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(name,p.returncode,flush=True)
