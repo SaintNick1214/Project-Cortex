@@ -109,6 +109,25 @@ export interface SupersessionChainEntry {
   reason?: string;
 }
 
+/**
+ * Public history writes and maintenance require trusted backend execution.
+ * This static browser-safe error contains no caller input or private metadata.
+ */
+export class FactHistoryCapabilityError extends Error {
+  readonly version = 1;
+  readonly code = "CAPABILITY_UNAVAILABLE";
+  readonly retryable = false;
+  readonly outcome = "not_dispatched";
+
+  constructor() {
+    super(
+      "Fact history writes and maintenance require trusted backend execution. " +
+        "No operation was dispatched by this client.",
+    );
+    this.name = "FactHistoryCapabilityError";
+  }
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // FactHistoryService
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -163,30 +182,11 @@ export class FactHistoryService {
    * Log a fact change event
    *
    * @param params - Event parameters
-   * @returns The created event ID
+   * @throws FactHistoryCapabilityError before dispatch; history is server-owned.
    */
   async log(params: LogEventParams): Promise<{ eventId: string }> {
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.factHistory.logEvent, {
-          factId: params.factId,
-          memorySpaceId: params.memorySpaceId,
-          action: params.action,
-          oldValue: params.oldValue,
-          newValue: params.newValue,
-          supersededBy: params.supersededBy,
-          supersedes: params.supersedes,
-          reason: params.reason,
-          confidence: params.confidence,
-          pipeline: params.pipeline,
-          userId: params.userId,
-          participantId: params.participantId,
-          conversationId: params.conversationId,
-        }),
-      "factHistory:log",
-    );
-
-    return result as { eventId: string };
+    void params;
+    throw new FactHistoryCapabilityError();
   }
 
   /**
@@ -338,56 +338,35 @@ export class FactHistoryService {
    * Delete history for a fact (GDPR cascade)
    *
    * @param factId - The fact ID
-   * @returns Number of events deleted
+   * @throws FactHistoryCapabilityError before dispatch; requires trusted backend execution.
    */
   async deleteByFactId(factId: string): Promise<{ deleted: number }> {
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.factHistory.deleteByFactId, {
-          factId,
-        }),
-      "factHistory:deleteByFactId",
-    );
-
-    return result as { deleted: number };
+    void factId;
+    throw new FactHistoryCapabilityError();
   }
 
   /**
    * Delete history for a user (GDPR cascade)
    *
    * @param userId - The user ID
-   * @returns Number of events deleted
+   * @throws FactHistoryCapabilityError before dispatch; requires trusted backend execution.
    */
   async deleteByUserId(userId: string): Promise<{ deleted: number }> {
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.factHistory.deleteByUserId, {
-          userId,
-        }),
-      "factHistory:deleteByUserId",
-    );
-
-    return result as { deleted: number };
+    void userId;
+    throw new FactHistoryCapabilityError();
   }
 
   /**
    * Delete history for a memory space
    *
    * @param memorySpaceId - The memory space ID
-   * @returns Number of events deleted
+   * @throws FactHistoryCapabilityError before dispatch; requires trusted backend execution.
    */
   async deleteByMemorySpace(
     memorySpaceId: string,
   ): Promise<{ deleted: number }> {
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.factHistory.deleteByMemorySpace, {
-          memorySpaceId,
-        }),
-      "factHistory:deleteByMemorySpace",
-    );
-
-    return result as { deleted: number };
+    void memorySpaceId;
+    throw new FactHistoryCapabilityError();
   }
 
   /**
@@ -396,23 +375,16 @@ export class FactHistoryService {
    * @param memorySpaceId - Optional memory space filter
    * @param olderThan - Delete events before this date
    * @param limit - Max events to delete per call
-   * @returns Deletion result
+   * @throws FactHistoryCapabilityError before dispatch; requires trusted backend execution.
    */
   async purgeOldEvents(
     olderThan: Date,
     memorySpaceId?: string,
     limit?: number,
   ): Promise<{ deleted: number; remaining: number }> {
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.factHistory.purgeOldEvents, {
-          memorySpaceId,
-          olderThan: olderThan.getTime(),
-          limit,
-        }),
-      "factHistory:purgeOldEvents",
-    );
-
-    return result as { deleted: number; remaining: number };
+    void olderThan;
+    void memorySpaceId;
+    void limit;
+    throw new FactHistoryCapabilityError();
   }
 }

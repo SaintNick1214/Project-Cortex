@@ -1,0 +1,219 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against MANAGED Convex: https://example.convex.cloud
+
+      at tests/env.ts:62:17
+
+  console.log
+       Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:63:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:26542) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeHistoryClient/operator-bridge.test.ts (8.023 s)
+  history operator bridge resilience=absent
+    ✓ log rejects with a static typed capability error and zero dispatch (7 ms)
+    ✓ deleteByFactId rejects with a static typed capability error and zero dispatch (2 ms)
+    ✓ deleteByUserId rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ deleteByMemorySpace rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ purgeOldEvents rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ log does not hydrate caller properties or treat caller admin labels as authority (1 ms)
+    ✓ retention capability rejection does not call a caller-controlled date (1 ms)
+    ✓ getHistory retains the public read reference, selectors and result (1 ms)
+    ✓ getEvent retains the public read reference, selectors and result (1 ms)
+    ✓ getChanges retains the public read reference, selectors and result (1 ms)
+    ✓ countByAction retains the public read reference, selectors and result (1 ms)
+    ✓ getSupersessionChain retains the public read reference, selectors and result (1 ms)
+    ✓ getActivitySummary retains the public read reference, selectors and result
+    ✓ getHistory preserves backend read denial without converting it to a capability or success (1 ms)
+    ✓ getEvent preserves backend read denial without converting it to a capability or success (1 ms)
+    ✓ getChanges preserves backend read denial without converting it to a capability or success
+    ✓ countByAction preserves backend read denial without converting it to a capability or success (1 ms)
+    ✓ getSupersessionChain preserves backend read denial without converting it to a capability or success
+    ✓ getActivitySummary preserves backend read denial without converting it to a capability or success (1 ms)
+  history operator bridge resilience=disabled
+    ✓ log rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ deleteByFactId rejects with a static typed capability error and zero dispatch (8 ms)
+    ✓ deleteByUserId rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ deleteByMemorySpace rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ purgeOldEvents rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ log does not hydrate caller properties or treat caller admin labels as authority
+    ✓ retention capability rejection does not call a caller-controlled date (1 ms)
+    ✓ getHistory retains the public read reference, selectors and result (1 ms)
+    ✓ getEvent retains the public read reference, selectors and result
+    ✓ getChanges retains the public read reference, selectors and result (1 ms)
+    ✓ countByAction retains the public read reference, selectors and result (1 ms)
+    ✓ getSupersessionChain retains the public read reference, selectors and result
+    ✓ getActivitySummary retains the public read reference, selectors and result (1 ms)
+    ✓ getHistory preserves backend read denial without converting it to a capability or success
+    ✓ getEvent preserves backend read denial without converting it to a capability or success (1 ms)
+    ✓ getChanges preserves backend read denial without converting it to a capability or success
+    ✓ countByAction preserves backend read denial without converting it to a capability or success (1 ms)
+    ✓ getSupersessionChain preserves backend read denial without converting it to a capability or success
+    ✓ getActivitySummary preserves backend read denial without converting it to a capability or success (1 ms)
+  history operator bridge resilience=enabled
+    ✓ log rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ deleteByFactId rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ deleteByUserId rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ deleteByMemorySpace rejects with a static typed capability error and zero dispatch (1 ms)
+    ✓ purgeOldEvents rejects with a static typed capability error and zero dispatch
+    ✓ log does not hydrate caller properties or treat caller admin labels as authority (1 ms)
+    ✓ retention capability rejection does not call a caller-controlled date (1 ms)
+    ✓ getHistory retains the public read reference, selectors and result (1 ms)
+    ✓ getEvent retains the public read reference, selectors and result (1 ms)
+    ✓ getChanges retains the public read reference, selectors and result
+    ✓ countByAction retains the public read reference, selectors and result (1 ms)
+    ✓ getSupersessionChain retains the public read reference, selectors and result
+    ✓ getActivitySummary retains the public read reference, selectors and result (1 ms)
+    ✓ getHistory preserves backend read denial without converting it to a capability or success (1 ms)
+    ✓ getEvent preserves backend read denial without converting it to a capability or success
+    ✓ getChanges preserves backend read denial without converting it to a capability or success
+    ✓ countByAction preserves backend read denial without converting it to a capability or success (1 ms)
+    ✓ getSupersessionChain preserves backend read denial without converting it to a capability or success
+    ✓ getActivitySummary preserves backend read denial without converting it to a capability or success
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     8.0s | 57/57 passed | /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.1%) - history operator bridge resilience=disabled deleteByFactId rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.1%) - history operator bridge resilience=absent log rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent deleteByFactId rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent deleteByUserId rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent deleteByMemorySpace rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent purgeOldEvents rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent log does not hydrate caller properties or treat caller admin labels as authority
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent retention capability rejection does not call a caller-controlled date
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent getHistory retains the public read reference, selectors and result
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent getEvent retains the public read reference, selectors and result
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent getChanges retains the public read reference, selectors and result
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent countByAction retains the public read reference, selectors and result
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent getSupersessionChain retains the public read reference, selectors and result
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent getHistory preserves backend read denial without converting it to a capability or success
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent getEvent preserves backend read denial without converting it to a capability or success
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent countByAction preserves backend read denial without converting it to a capability or success
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=absent getActivitySummary preserves backend read denial without converting it to a capability or success
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=disabled log rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=disabled deleteByUserId rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - history operator bridge resilience=disabled deleteByMemorySpace rejects with a static typed capability error and zero dispatch
+    /tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.03s (0.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.26s
+  Test suites:        1
+  Individual tests:   41
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       57 passed, 57 total
+Snapshots:   0 total
+Time:        8.261 s
+Ran all test suites matching tests/unit/runtimeHistoryClient.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
