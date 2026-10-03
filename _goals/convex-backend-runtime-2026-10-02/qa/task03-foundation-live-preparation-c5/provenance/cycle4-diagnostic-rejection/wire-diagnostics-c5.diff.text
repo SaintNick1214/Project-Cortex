@@ -1,0 +1,21 @@
+--- immutable-c4/wire-diagnostics.mjs
++++ new-c5/wire-diagnostics.mjs
+@@ -10,7 +10,7 @@
+  const chunks=[];let size=0,truncated=false;
+  try{while(true){const {done,value}=await reader.read();if(done)break;const remaining=diagnosticLimits.bytesPerRecord-size;if(value.length>remaining){chunks.push(value.subarray(0,remaining));size+=remaining;truncated=true;break;}chunks.push(value);size+=value.length;}}
+  finally{void reader.cancel().catch(()=>{});}
+- return {body:Buffer.concat(chunks.map(value=>Buffer.from(value))).toString('utf8'),byteCount:size,truncated};
++ return {body:new TextDecoder('utf-8').decode(Buffer.concat(chunks.map(value=>Buffer.from(value)))),byteCount:size,truncated};
+ }
+ export function createWireDiagnostics(directory,origin){
+  const stat=lstatSync(directory);if(!stat.isDirectory()||stat.isSymbolicLink()||(stat.mode&0o777)!==0o700||stat.uid!==process.getuid())throw new Error('Private diagnostic directory rejected');
+@@ -19,7 +19,8 @@
+  function save(kind,metadata,raw){
+   if(count>=diagnosticLimits.records){dropped++;return;}
+   const alias='wire-diagnostic-'+randomUUID()+'.json';let text=JSON.stringify({version:1,observedAt:new Date().toISOString(),kind,...metadata,privateDiagnostic:scrub(raw)});
+-  const originalBytes=Buffer.byteLength(text);if(originalBytes>diagnosticLimits.bytesPerRecord)text=JSON.stringify({version:1,kind,...metadata,privateDiagnostic:'[TRUNCATED]',diagnosticSha256:hash(scrub(raw)),truncated:true});
++  const originalBytes=Buffer.byteLength(text)+1;if(originalBytes>diagnosticLimits.bytesPerRecord)text=JSON.stringify({version:1,kind,...metadata,privateDiagnostic:'[TRUNCATED]',diagnosticSha256:hash(scrub(raw)),truncated:true});
++  if(Buffer.byteLength(text)+1>diagnosticLimits.bytesPerRecord)text=JSON.stringify({version:1,kind,privateDiagnostic:'[TRUNCATED]',diagnosticSha256:hash(scrub(raw)),truncated:true});
+   const path=resolve(directory,alias);const fd=openSync(path,'wx',0o600);try{writeSync(fd,text+'\n');fsyncSync(fd);}finally{closeSync(fd);}
+   const stat=lstatSync(path);if(!stat.isFile()||stat.nlink!==1||(stat.mode&0o777)!==0o600||stat.uid!==process.getuid()||stat.size>diagnosticLimits.bytesPerRecord)throw new Error('Diagnostic receipt rejected');
+   count++;observations.push({alias,kind,...metadata,receiptSha256:hash(text+'\n'),receiptBytes:stat.size});
