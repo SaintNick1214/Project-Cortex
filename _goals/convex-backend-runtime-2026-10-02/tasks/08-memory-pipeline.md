@@ -10,6 +10,7 @@ Update Cortex memory independently of response delivery with explicit freshness 
 
 ## Requirements
 
+- [ ] Execute bounded substeps with separate receipts: 08A durable source/stage records, pinned extraction and default-profile vector jobs; 08B ordered atomic belief/history/projection commits and tombstone/revision fencing; 08C contiguous watermarks, pending-tail context and strict barriers. Freeze shared records/interfaces before dependent edits and serialize schema/finalization writes. Prove the fresh default profile's source/chunk/vector and query-policy matching here; managed retrieval is a Task 09 acceptance prerequisite, while additional profiles remain Task 10.
 - [ ] Persist source-role/trust/event lineage and pinned extraction versions; enqueue eligible user work during response and completed assistant work according to policy.
 - [ ] Deduplicate per-stage extraction/fact/vector receipts; atomically version-check and apply belief revision/history/outbox; enforce source ordering for corrections.
 - [ ] Implement scoped stage-specific indexedThrough watermarks defined by contiguous eligible completion, with explicit holes/failed receipts rather than the highest completed sequence, bounded eligible pending-tail context and strict stage-specific memory barrier; handle oversized tail/deadlines explicitly.

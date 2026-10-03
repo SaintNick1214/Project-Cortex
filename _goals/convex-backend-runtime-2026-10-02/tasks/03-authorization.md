@@ -10,6 +10,7 @@ Establish one trusted authorization boundary for runtime and all reachable Corte
 
 ## Requirements
 
+- [ ] Execute bounded substeps and record separate receipts: 03A public-path inventory and trusted principal/grant/bootstrap contracts; 03B guard/internalize the inventoried backend paths and background checks; 03C client JWT refresh and scoped subscription/byte/callback negative cases. Freeze 03A before dependent edits; serialize shared backend files.
 - [ ] Inventory public memory/facts/conversation/search/share/artifact/attachment/graph/user/agent/policy functions; guard or internalize bypass paths.
 - [ ] Attach refreshed host JWT credentials in clients; map verified issuer/subject to trusted memberships/grants. Establish trusted bootstrap/service provisioning; existing caller-created user metadata cannot grant privilege.
 - [ ] Direct endpoint access remains scoped/authenticated. Only trusted administrators can unlock transcript writes; unlocked writes target the same canonical store with revision tracking and stale-derived-memory detection. No write-lock setting disables authorization or billable controls.
@@ -23,6 +24,7 @@ Establish one trusted authorization boundary for runtime and all reachable Corte
 
 ## Context and Research
 
+[Architecture §9](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), [authoritative decisions](../../../_research/convex-ai-gateway-2026-10-02/decision-gates.md), [backend schema](../../../convex-dev/schema.ts) and [current auth context](../../../src/auth/context.ts). Caller-provided identity metadata is reference material, not verified authorization.
 
 **Likely areas:** convex-dev public functions; src/auth/; src/index.ts; host auth registration helpers.
 

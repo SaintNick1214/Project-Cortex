@@ -19,6 +19,7 @@ Execute a Cortex-scoped backend agent turn with reconnectable typed output.
 
 ## Acceptance Criteria
 
+- [ ] The disposable development target installed in Task 06 accepts and executes the core runtime, proving the additive installation is wired to the qualified Agent/Workflow/Gateway contracts.
 - [ ] Authenticated live turn recalls scoped memory, executes a backend tool and streams correctly after client disconnect/reconnect and multiple observers.
 - [ ] One logical completed turn yields one final transcript and one ingestion receipt; failure between component completion and registration is recovered.
 - [ ] A manual unlocked edit cannot silently attach an obsolete completion to changed history or reuse stale injected memory. Interrupted model/tool effects are not blindly replayed; final/cancel/error events are distinguishable; tool secrets/context/raw reasoning are redacted.

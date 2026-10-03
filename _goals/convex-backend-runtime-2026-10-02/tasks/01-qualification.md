@@ -11,7 +11,7 @@ Qualify the composed stack and finalize the run/tool/stream/storage contracts be
 ## Requirements
 
 - [ ] Record a qualified lock matrix for AI SDK >=7.0.105, Gateway provider, Agent, Workflow/Workpool, Convex >=1.46 and the repository Node >=24.15.0 / npm 12.2.0 floor; isolate Node-only modules.
-- [ ] Core bounded spikes: authenticated text/tool/structured output and native interface; persisted stream reconnect/cancel; component finalization transaction; interrupted external call; minimal TS/UI transport. Establish approved disposable test prerequisites and shared versioned text/run/event/error contracts. Media/storage/graph/vector service gates occur at their own task entry and do not block the core text slice.
+- [ ] Core bounded spikes: authenticated text/tool/structured output and native interface; persisted stream reconnect/cancel; component finalization transaction; interrupted external call; minimal TS/UI transport. Establish approved disposable test prerequisites and shared versioned text/run/event/error contracts. Freeze the fresh default embedding profile (model, dimensions, preprocessing/chunking version and declared index contract) here; Tasks 02/04/08 implement its source/chunk/vector storage and policy matching. Observed managed retrieval for this profile is required before Task 09 PASS. Media/storage/graph and additional embedding-profile service gates occur at their own task entry and do not block the core text slice.
 - [ ] Identify eligible disposable deployment and real test identities/services without printing secrets; no production deployment. Freeze explicit capability errors and uncertain-outcome semantics.
 
 ## Acceptance Criteria

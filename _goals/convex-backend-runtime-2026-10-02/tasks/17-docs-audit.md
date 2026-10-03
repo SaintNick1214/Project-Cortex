@@ -19,7 +19,7 @@ Deliver a documented modern architecture with complete independent validation ev
 
 - [ ] Docs contain runnable qualified modern TypeScript/client examples and preserve unrelated host data/config during new installation.
 - [ ] All required selected checks have observed successful receipts and independent final verdict; missing credentials/services prevent completion.
-- [ ] No unrelated dirty changes, generated-API edits, production deploy, commit or publication are included.
+- [ ] No unrelated dirty changes, hand-edited generated APIs, production deployment or package publication are included. Current execution authorization permits incremental implementation commits, branch pushes and a draft PR against dev.
 
 ## Context and Research
 

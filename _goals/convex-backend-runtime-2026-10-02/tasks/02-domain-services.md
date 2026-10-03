@@ -10,6 +10,7 @@ Separate reusable Cortex domain logic from application-held clients and workers.
 
 ## Requirements
 
+- [ ] Execute bounded substeps with disjoint ownership and separate receipts: 02A pure normalization/ranking/context/extraction/conflict modules; 02B scoped backend repository/model/clock adapters and explicit remember/recall wiring. Freeze 02A interfaces before 02B. Implement the fresh default source/chunk/vector contract qualified in Task 01; additional profile qualification remains Task 10.
 - [ ] Extract pure normalization/ranking/context-formatting/extraction schemas/prompts and conflict logic with explicit repository/model/clock adapters.
 - [ ] Backend services use scoped Convex ctx operations and Gateway; clients never instantiate the backend runtime or bundle tokens.
 - [ ] Route explicit modern remember/recall operations through shared domain services; deployed extensions replace local callback assumptions.

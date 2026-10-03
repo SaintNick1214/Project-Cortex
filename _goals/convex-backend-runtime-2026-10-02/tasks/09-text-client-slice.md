@@ -25,7 +25,7 @@ Prove the complete authenticated text architecture in modern TS and a small UI b
 
 ## Context and Research
 
-[Architecture](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), §§4–5, 8, 10. Existing same-profile vector retrieval can be qualified for text recall; alternate profile selection/guards remain Task 10.
+[Architecture](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), §§4–5, 8, 10. Qualify actual managed retrieval for the fresh core default profile selected in Task 01 and implemented in Tasks 02/04/08 before this task's PASS. Source revisions, declared dimensions and query/index policy must match; no prior vector architecture is reused. Additional profile qualification remains Task 10.
 
 **Likely areas:** core TS client facade, Vercel remote UI transport, canonical quickstart text route and focused fixtures. Use bounded disjoint TS/UI substeps after the shared contract is fixed.
 

@@ -18,7 +18,7 @@ Install the core backend components and schema safely enough to qualify the firs
 ## Acceptance Criteria
 
 - [ ] Fresh-host and customized-host-without-Cortex fixtures register core components/schema/routes without removing unrelated objects or changing the host functions directory.
-- [ ] A verified disposable development target can accept the core runtime after Task 07; incomplete backend capability returns an actionable error.
+- [ ] A verified disposable development target registers the installed core component/schema/auth/route contracts; incomplete backend capability returns an actionable error. Task 07 owns the subsequent live execution receipt.
 - [ ] New-install retry/partial-failure and ambiguous merge fixtures preserve unrelated host data/configuration. No wholesale backend tree or schema copy is used.
 
 ## Context and Research
