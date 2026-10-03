@@ -1,0 +1,13 @@
+import './cycle6-preservation-check.mjs';
+import './cycle5-preservation-check.mjs';
+import './cycle4-preservation-check.mjs';
+import './cycle3-preservation-check.mjs';
+import './cycle2-preservation-check.mjs';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { preparation, repo, sha256, canonical } from './guard.mjs';
+const manifest=JSON.parse(readFileSync(resolve(preparation,'first-candidate-preservation.json')));
+for(const row of [...manifest.files,...manifest.firstIndependentReviewFiles])assert.equal(sha256(readFileSync(canonical(resolve(repo,row.path),repo))),row.sha256);
+assert.equal(sha256(readFileSync(resolve(preparation,'../task03-foundation-live-preparation/runtime-freeze.json'))),manifest.firstCandidateSha256);
+console.log(JSON.stringify({scope:'OFFLINE_FIRST_CANDIDATE_BYTE_PRESERVATION',status:'PASS',files:manifest.files.length,reviewFiles:manifest.firstIndependentReviewFiles.length,firstDigest:manifest.firstCandidateSha256,serviceCalls:0,signatures:0}));

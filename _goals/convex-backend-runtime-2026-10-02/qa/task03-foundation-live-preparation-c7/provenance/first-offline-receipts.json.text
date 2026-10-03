@@ -1,0 +1,221 @@
+{
+  "scope": "FINAL_OFFLINE_PREPARATION_CHECKS_ONLY",
+  "recordedAtUtc": "2026-10-03T21:32:50.717505+00:00",
+  "cwd": "/workspace/Project-Cortex",
+  "pathPrefix": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/",
+  "checks": [
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/native-validator-check.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "redactedOutput": "Observed exact259 native registrations/exportArgs, validatorMismatches0, dispatches0/signatures0."
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/offline-check.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.434,
+      "redactedOutput": "{\"scope\":\"OFFLINE_ONLY\",\"status\":\"PASS\",\"negativeControls\":25,\"registered\":259,\"public\":200,\"internal\":59,\"liveQualification\":\"BLOCKED\",\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/offline-arguments-check.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.065,
+      "redactedOutput": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/offline-closure-check.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.228,
+      "redactedOutput": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CURRENT_TABLE_SHAPES\",\"status\":\"PASS\",\"rows\":12,\"tables\":4,\"realIds\":\"NOT_RUN_REQUIRES_OWNED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/auth-classifier-check.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.134,
+      "redactedOutput": "{\"scope\":\"OFFLINE_AUTH_CLASSIFIER\",\"status\":\"PASS\",\"negativeControls\":39,\"arbitraryDeniedAccepted\":false,\"privateDiagnosticAccepted\":false,\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/callback-check.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.344,
+      "redactedOutput": "{\"scope\":\"OFFLINE_HOST_CALLBACK_PAYLOAD\",\"status\":\"PASS\",\"malformedRejected\":9,\"serviceCalls\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/management-check.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.109,
+      "redactedOutput": "{\"scope\":\"OFFLINE_MANAGEMENT_CONTRACT\",\"status\":\"PASS\",\"partialRecoveryPrepared\":true,\"negativeControls\":10,\"dispatches\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--strict",
+        "--skipLibCheck",
+        "--moduleResolution",
+        "Bundler",
+        "--module",
+        "ESNext",
+        "--target",
+        "ES2022",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/contracts.ts"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.964,
+      "redactedOutput": ""
+    },
+    {
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "work/resume/current-guard-live/offline-fixture/convex/tsconfig.json",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 8.547,
+      "redactedOutput": ""
+    },
+    {
+      "argv": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/eslint.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/cases"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 1.581,
+      "redactedOutput": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "work/resume/current-guard-live/offline-mwd.ts"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.59,
+      "redactedOutput": "{\"scope\":\"OFFLINE_AUTHOR_ONLY\",\"status\":\"PASS\",\"syntax\":\"node --check module\",\"actualSchemaRowsValidated\":11,\"tableTypes\":[\"immutable\",\"mutable\",\"sessions\",\"runtimeAuthPrincipals\",\"runtimeAuthMemberships\",\"runtimeAuthGrants\",\"runtimeMemorySources\",\"facts\"],\"registeredPaths\":74,\"metadata\":41,\"worker\":25,\"domain\":8,\"descriptorSuites\":8,\"liveStatus\":\"NOT_RUN\",\"liveDispatches\":0,\"signatures\":0,\"servicesStarted\":0,\"seededRows\":0,\"idValidation\":\"schema-only synthetic string references; actual v.id identity is live prerequisite\"}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "work/resume/current-guard-live/offline-mra.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.783,
+      "redactedOutput": "{\"status\":\"PASS\",\"scope\":\"OFFLINE_AUTHORING_ONLY\",\"registeredPaths\":117,\"caseDescriptors\":122,\"seedRows\":66,\"nativeSchemaValidated\":true,\"nativeArgumentsValidated\":true,\"serviceCalls\":0,\"signatures\":0,\"liveStatus\":\"NOT_RUN\"}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "-e",
+        "import('./_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/cases/mf-registry-artifacts.mjs').then(m=>console.log(JSON.stringify(m.offlineDenialControls())))"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.152,
+      "redactedOutput": "{\"scope\":\"OFFLINE_DENIAL_ASSERTIONS\",\"positiveControls\":2,\"malformedRejected\":10,\"serviceCalls\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "work/resume/current-guard-live/offline-mwd.ts"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "redactedOutput": "Post-integration actual native schemas19rows/8tables,74path validator copies,8suites; services/signatures0."
+    },
+    {
+      "argv": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/eslint.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/cases"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "redactedOutput": "Post-integration scoped ESLint PASS."
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/offline-check.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "redactedOutput": "Final frozen operational source/topology/target preflight PASS25 negative controls,259registered/200public/59internal; signatures/dispatches0."
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/freeze.mjs"
+      ],
+      "exitCode": 0,
+      "status": "PASS",
+      "redactedOutput": "Final198 operational file freeze/sourcePreflight PASS; digest 8189fbaecd8e5c588b1446644741642f2525e5c27a0451d72b458b72cba0564c; services/signatures0."
+    }
+  ],
+  "keyMatch": {
+    "status": "NOT_RUN_AFTER_INDEPENDENT_REVIEW_GATE",
+    "historicalEarlierReadOnlyMatch": "Observed once before the final review-gated script revision; public modulus matched, keysCreated0/signatures0. This historical observation is not the final reviewed key-check."
+  },
+  "codegen": {
+    "status": "NOT_RUN",
+    "offlineTypeSupport": "Temporary scratch copy of existing versioned root-generated bindings only; not official fixture API/codegen."
+  },
+  "serviceCalls": 0,
+  "signatures": 0,
+  "deployments": 0,
+  "managementCalls": 0,
+  "paidInference": 0,
+  "liveQualification": "NOT_RUN",
+  "freshIndependentPreparationReview": "PENDING",
+  "candidateSha256": "8189fbaecd8e5c588b1446644741642f2525e5c27a0451d72b458b72cba0564c",
+  "operationalFiles": 198
+}
