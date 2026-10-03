@@ -24,14 +24,19 @@ for (const pkg of plan.filter(pkg => pkg.changed || pkg.released)) {
     run('npm', ['pack', '--workspaces=false', '--dry-run', '--ignore-scripts'], pkg.folder);
     run('npm', ['publish', '--workspaces=false', '--access', 'public', '--ignore-scripts'], pkg.folder);
   }
-  // Check the exact version, not merely that the package name exists.
+  // npm can accept an upload before processing makes it readable. Wait for
+  // the exact version before publishing dependent packages, and bypass cached
+  // metadata so a previous 404 does not hide a completed upload.
   let visible = false;
-  for (let attempt = 0; attempt < 6; attempt++) {
+  const visibilityDeadline = Date.now() + 10 * 60_000;
+  console.log(`Waiting for npm registry visibility: ${pkg.name}@${pkg.version}`);
+  while (Date.now() < visibilityDeadline) {
     try {
-      const actual = execFileSync('npm', ['view', `${pkg.name}@${pkg.version}`, 'version'], {encoding:'utf8'}).trim();
+      const actual = execFileSync('npm', ['view', `${pkg.name}@${pkg.version}`, 'version', '--prefer-online', '--fetch-retries=0', '--fetch-timeout=20000'], {encoding:'utf8', timeout:30_000, stdio:['ignore','pipe','pipe']}).trim();
       if (actual === pkg.version) { visible = true; break; }
-    } catch { /* Registry propagation can take several seconds. */ }
-    await new Promise(resolve => setTimeout(resolve, 10_000));
+    } catch { /* Registry processing can take several minutes. */ }
+    const remaining = visibilityDeadline - Date.now();
+    if (remaining > 0) await new Promise(resolve => setTimeout(resolve, Math.min(10_000, remaining)));
   }
   if (!visible) throw new Error(`Published version not visible: ${pkg.name}@${pkg.version}`);
   const tag = `${pkg.tag}${pkg.version}`;

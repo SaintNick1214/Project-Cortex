@@ -24,7 +24,7 @@ for (const pkg of packages) {
   pkg.name = manifest.name;
   pkg.version = manifest.version;
   // Registry errors must fail the release, not masquerade as an unpublished package.
-  const response = JSON.parse(execFileSync('npm', ['view', pkg.name, 'version', 'gitHead', '--json'], { encoding: 'utf8' }));
+  const response = JSON.parse(execFileSync('npm', ['view', pkg.name, 'version', 'gitHead', '--json', '--prefer-online'], { encoding: 'utf8' }));
   const latest = Array.isArray(response) ? response[0] : response;
   // Include changes from earlier main commits whose delivery was superseded
   // or failed. A push's path list alone would permanently lose those changes.
