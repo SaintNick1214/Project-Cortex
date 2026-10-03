@@ -1,131 +1,92 @@
-/**
- * Cortex Convex Functions - Agents Registry API
- *
- * Backend functions for optional agent metadata registration.
- * Agents work without registration - this is just for discovery and analytics.
- */
-
-import { mutation, query } from "./_generated/server";
+/** Optional agent registry. Labels and config never provision verified authority. */
+import { internalMutation, mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
+import type { Doc } from "./_generated/dataModel";
+import { RegistryAccess, selectors, agentAt, agentsIn, canonical, resource, integer, distinct, json, receipt, tombstone, conflict, insertionShape, inserted, snapshot, deny, operation, effect } from "./runtimeRegistryAuth";
+const status = v.union(v.literal("active"), v.literal("inactive"), v.literal("archived"));
+async function all(access: RegistryAccess) {
+  const rows = await agentsIn(access); distinct(rows.map((row) => row.agentId));
+  for (const row of rows) { canonical("agents", row); const current = await agentAt(access, row.agentId); if (snapshot(current) !== snapshot(row)) deny(); await access.admit(resource("agents", row), "admin"); }
+  return rows;
+}
+export const get = query({ args: { ...selectors, agentId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const row = await agentAt(access, args.agentId, false);
+  if (row) await access.admit(resource("agents", row), "admin"); await access.fence(); return row;
+}) });
+export const exists = query({ args: { ...selectors, agentId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const row = await agentAt(access, args.agentId, false);
+  if (row) await access.admit(resource("agents", row), "admin"); await access.fence(); return row !== null;
+}) });
+export const list = query({ args: { ...selectors, status: v.optional(status), limit: v.optional(v.number()), offset: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const limit = integer(args.limit ?? 100, 1); const offset = integer(args.offset ?? 0);
+  const rows = (await all(access)).filter((row) => args.status === undefined || row.status === args.status).sort((a, b) => b.registeredAt - a.registeredAt);
+  await access.fence(); return rows.slice(offset, offset + limit);
+}) });
+export const count = query({ args: { ...selectors, status: v.optional(status) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+  const access = await RegistryAccess.open(ctx, "read", args); const rows = (await all(access)).filter((row) => args.status === undefined || row.status === args.status);
+  await access.fence(); return rows.length;
+}) });
+export const register = mutation({ args: { ...selectors, agentId: v.string(), name: v.string(), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args); const a = access.authority;
+  const candidate = { agentId: args.agentId, tenantId: a.tenantId, memorySpaceId: a.memorySpaceId, ownerPrincipalId: a.principalId };
+  await access.admit(resource("agents", candidate), "admin"); await conflict(access, "agents", args.agentId); const readable = await access.optionalRead(resource("agents", candidate));
+  if (await agentAt(access, args.agentId, false)) throw new ConvexError("AGENT_ALREADY_REGISTERED");
+  json(args.metadata); json(args.config); const now = Date.now();
+  const value = { ...candidate, name: args.name, description: args.description, metadata: args.metadata === undefined ? {} : args.metadata, config: args.config === undefined ? {} : args.config, status: "active" as const, registeredAt: now, updatedAt: now };
+  insertionShape("agents", value); await access.fence(); const id = await effect(ctx, async () => await ctx.db.insert("agents", value));
+  access.expect(`conflict:agents:${args.agentId}`, true); await inserted(access, "agents", id, value); await access.fence();
+  const created = readable ? await agentAt(access, args.agentId) : null; await access.fence();
+  return readable ? created : receipt("agents", args.agentId);
+}) });
+function changes(args: { name?: string; description?: string; metadata?: unknown; config?: unknown; status?: Doc<"agents">["status"] }): Partial<Doc<"agents">> {
+  json(args.metadata); json(args.config);
+  return { updatedAt: Date.now(), ...(args.name === undefined ? {} : { name: args.name }), ...(args.description === undefined ? {} : { description: args.description }),
+    ...(args.metadata === undefined ? {} : { metadata: args.metadata }), ...(args.config === undefined ? {} : { config: args.config }), ...(args.status === undefined ? {} : { status: args.status }) };
+}
+export const update = mutation({ args: { ...selectors, agentId: v.string(), name: v.optional(v.string()), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()), status: v.optional(status) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args); const row = (await agentAt(access, args.agentId))!;
+  await access.admit(resource("agents", row), "admin"); const readable = await access.optionalRead(resource("agents", row)); const patch = changes(args);
+  await access.fence(); await effect(ctx, async () => await ctx.db.patch("agents", row._id, patch)); access.expect(`agents:${row._id}`, { ...row, ...patch }); await access.fence();
+  return readable ? { ...row, ...patch } : receipt("agents", args.agentId);
+}) });
+export const updateMany = mutation({ args: { ...selectors, agentIds: v.array(v.string()), name: v.optional(v.string()), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args); distinct(args.agentIds); const rows: Doc<"agents">[] = []; const patch = changes(args);
+  for (const id of args.agentIds) { const row = (await agentAt(access, id))!; await access.admit(resource("agents", row), "admin"); rows.push(row); }
+  await access.fence();
+  for (const row of rows) { await effect(ctx, async () => await ctx.db.patch("agents", row._id, patch)); access.expect(`agents:${row._id}`, { ...row, ...patch }); }
+  await access.fence(); return { updated: rows.length, agentIds: rows.map((row) => row.agentId) };
+}) });
+export const unregister = mutation({ args: { ...selectors, agentId: v.string() }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args); const row = (await agentAt(access, args.agentId))!;
+  await access.admit(resource("agents", row), "admin"); await access.fence();
+  const now = Date.now(); const patch = { tombstonedAt: now, updatedAt: now };
+  await tombstone(ctx, resource("agents", row), now); await effect(ctx, async () => await ctx.db.patch("agents", row._id, patch));
+  access.expect(`agents:${row._id}`, { ...row, ...patch }); access.retire(resource("agents", row), now);
+  await access.fence(); return { deleted: true, agentId: args.agentId };
+}) });
+export const unregisterMany = mutation({ args: { ...selectors, status: v.optional(status), agentIds: v.optional(v.array(v.string())) }, handler: async (ctx, args) => operation(ctx, "mutation", async () => {
+  const access = await RegistryAccess.open(ctx, "write", args);
+  if (args.agentIds) distinct(args.agentIds); if (!args.agentIds && !args.status) deny("INVALID_INPUT");
+  const rows: Doc<"agents">[] = args.agentIds ? [] : (await all(access)).filter((row) => row.status === args.status);
+  if (args.agentIds) for (const id of args.agentIds) rows.push((await agentAt(access, id))!);
+  for (const row of rows) await access.admit(resource("agents", row), "admin");
+  const readable = args.agentIds !== undefined || await access.readAll(rows.map((row) => resource("agents", row))); await access.fence();
+  for (const row of rows) {
+    const now = Date.now(); const patch = { tombstonedAt: now, updatedAt: now };
+    await tombstone(ctx, resource("agents", row), now); await effect(ctx, async () => await ctx.db.patch("agents", row._id, patch));
+    access.expect(`agents:${row._id}`, { ...row, ...patch }); access.retire(resource("agents", row), now);
+  }
+  await access.fence(); return { deleted: rows.length, ...(readable ? { agentIds: rows.map((row) => row.agentId) } : {}) };
+}) });
+/** Trusted operator cleanup preserves canonical fences and every auth/control table. */
+export const purgeAll = internalMutation({ args: {}, handler: async (ctx) => operation(ctx, "mutation", async () => {
+  const rows = await ctx.db.query("agents").collect();
+  for (const row of rows) if (row.tenantId && row.ownerPrincipalId) await tombstone(ctx, resource("agents", row));
+  for (const row of rows) await effect(ctx, async () => await ctx.db.patch("agents", row._id, { tombstonedAt: row.tombstonedAt ?? Date.now(), updatedAt: Date.now() }));
+  return { deleted: rows.length };
+}) });
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Query Operations
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Get agent registration by ID
- */
-export const get = query({
-  args: {
-    agentId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const agent = await ctx.db
-      .query("agents")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
-      .first();
-
-    return agent;
-  },
-});
-
-/**
- * List agents with optional filters
- */
-export const list = query({
-  args: {
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("inactive"),
-        v.literal("archived"),
-      ),
-    ),
-    limit: v.optional(v.number()),
-    offset: v.optional(v.number()),
-  },
-  handler: async (ctx, args) => {
-    let query;
-
-    if (args.status) {
-      query = ctx.db
-        .query("agents")
-        .withIndex("by_status", (q) => q.eq("status", args.status!))
-        .order("desc");
-    } else {
-      query = ctx.db.query("agents").withIndex("by_registered").order("desc");
-    }
-
-    if (args.offset) {
-      // Skip first N results
-      const allResults = await query.collect();
-      const sliced = allResults.slice(
-        args.offset,
-        args.offset + (args.limit || 100),
-      );
-      return sliced;
-    }
-
-    if (args.limit) {
-      return await query.take(args.limit);
-    }
-
-    return await query.take(100); // Default limit
-  },
-});
-
-/**
- * Count agents
- */
-export const count = query({
-  args: {
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("inactive"),
-        v.literal("archived"),
-      ),
-    ),
-  },
-  handler: async (ctx, args) => {
-    let agents;
-
-    if (args.status) {
-      agents = await ctx.db
-        .query("agents")
-        .withIndex("by_status", (q) => q.eq("status", args.status!))
-        .collect();
-    } else {
-      agents = await ctx.db.query("agents").collect();
-    }
-
-    return agents.length;
-  },
-});
-
-/**
- * Check if agent exists
- */
-export const exists = query({
-  args: {
-    agentId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const agent = await ctx.db
-      .query("agents")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
-      .first();
-
-    return agent !== null;
-  },
-});
-
-/**
- * Compute agent statistics
- *
- * Note: Uses sampling with limits to avoid hitting Convex's read limits.
- * For exact counts on large datasets, use dedicated count functions with indexes.
- */
+/** Cross-data statistics remain byte-frozen and PENDING the independently reviewed source bridge. */
 export const computeStats = query({
   args: {
     agentId: v.string(),
@@ -181,281 +142,5 @@ export const computeStats = query({
       lastActive,
       isApproximate,
     };
-  },
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Mutation Operations
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Register an agent
- */
-export const register = mutation({
-  args: {
-    agentId: v.string(),
-    name: v.string(),
-    description: v.optional(v.string()),
-    metadata: v.optional(v.any()),
-    config: v.optional(v.any()),
-  },
-  handler: async (ctx, args) => {
-    // Check if agent already registered
-    const existing = await ctx.db
-      .query("agents")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
-      .first();
-
-    if (existing) {
-      throw new ConvexError("AGENT_ALREADY_REGISTERED");
-    }
-
-    const now = Date.now();
-
-    const agentId = await ctx.db.insert("agents", {
-      agentId: args.agentId,
-      name: args.name,
-      description: args.description,
-      metadata: args.metadata || {},
-      config: args.config || {},
-      status: "active",
-      registeredAt: now,
-      updatedAt: now,
-    });
-
-    const agent = await ctx.db.get(agentId);
-    return agent;
-  },
-});
-
-/**
- * Update agent registration
- */
-export const update = mutation({
-  args: {
-    agentId: v.string(),
-    name: v.optional(v.string()),
-    description: v.optional(v.string()),
-    metadata: v.optional(v.any()),
-    config: v.optional(v.any()),
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("inactive"),
-        v.literal("archived"),
-      ),
-    ),
-  },
-  handler: async (ctx, args) => {
-    const agent = await ctx.db
-      .query("agents")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
-      .first();
-
-    if (!agent) {
-      throw new ConvexError("AGENT_NOT_REGISTERED");
-    }
-
-    // Build update object
-    const updates: any = {
-      updatedAt: Date.now(),
-    };
-
-    if (args.name !== undefined) updates.name = args.name;
-    if (args.description !== undefined) updates.description = args.description;
-    if (args.metadata !== undefined) updates.metadata = args.metadata;
-    if (args.config !== undefined) updates.config = args.config;
-    if (args.status !== undefined) updates.status = args.status;
-
-    await ctx.db.patch(agent._id, updates);
-
-    const updated = await ctx.db.get(agent._id);
-    return updated;
-  },
-});
-
-/**
- * Update multiple agents by IDs
- *
- * Note: Filtering is handled in the SDK layer - this mutation receives
- * specific agent IDs to update.
- */
-export const updateMany = mutation({
-  args: {
-    agentIds: v.array(v.string()),
-    name: v.optional(v.string()),
-    description: v.optional(v.string()),
-    metadata: v.optional(v.any()),
-    config: v.optional(v.any()),
-  },
-  handler: async (ctx, args) => {
-    if (!args.agentIds || args.agentIds.length === 0) {
-      return { updated: 0, agentIds: [] };
-    }
-
-    // Build update object (only include provided fields)
-    const updates: Record<string, unknown> = {
-      updatedAt: Date.now(),
-    };
-
-    if (args.name !== undefined) updates.name = args.name;
-    if (args.description !== undefined) updates.description = args.description;
-    if (args.metadata !== undefined) updates.metadata = args.metadata;
-    if (args.config !== undefined) updates.config = args.config;
-
-    const updatedAgentIds: string[] = [];
-
-    for (const agentId of args.agentIds) {
-      const agent = await ctx.db
-        .query("agents")
-        .withIndex("by_agentId", (q) => q.eq("agentId", agentId))
-        .first();
-
-      if (agent) {
-        await ctx.db.patch(agent._id, updates);
-        updatedAgentIds.push(agentId);
-      }
-    }
-
-    return {
-      updated: updatedAgentIds.length,
-      agentIds: updatedAgentIds,
-    };
-  },
-});
-
-/**
- * Unregister agent (just removes registration, cascade handled in SDK)
- */
-export const unregister = mutation({
-  args: {
-    agentId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const agent = await ctx.db
-      .query("agents")
-      .withIndex("by_agentId", (q) => q.eq("agentId", args.agentId))
-      .first();
-
-    if (!agent) {
-      throw new ConvexError("AGENT_NOT_REGISTERED");
-    }
-
-    await ctx.db.delete(agent._id);
-
-    return { deleted: true, agentId: args.agentId };
-  },
-});
-
-/**
- * Unregister multiple agents matching filters
- *
- * Note: This only removes registrations. Cascade deletion of agent data
- * is handled in the SDK layer for each agent.
- */
-export const unregisterMany = mutation({
-  args: {
-    status: v.optional(
-      v.union(
-        v.literal("active"),
-        v.literal("inactive"),
-        v.literal("archived"),
-      ),
-    ),
-    agentIds: v.optional(v.array(v.string())), // Specific agent IDs
-  },
-  handler: async (ctx, args) => {
-    let agents;
-
-    if (args.agentIds && args.agentIds.length > 0) {
-      // Delete specific agents
-      agents = await Promise.all(
-        args.agentIds.map((agentId) =>
-          ctx.db
-            .query("agents")
-            .withIndex("by_agentId", (q) => q.eq("agentId", agentId))
-            .first(),
-        ),
-      );
-      agents = agents.filter((a) => a !== null);
-    } else if (args.status) {
-      // Delete by status filter
-      agents = await ctx.db
-        .query("agents")
-        .withIndex("by_status", (q) => q.eq("status", args.status!))
-        .collect();
-    } else {
-      throw new Error(
-        "INVALID_FILTERS: Must provide agentIds or status filter",
-      );
-    }
-
-    const deletedAgentIds: string[] = [];
-
-    for (const agent of agents) {
-      try {
-        await ctx.db.delete(agent._id);
-        deletedAgentIds.push(agent.agentId);
-      } catch (error) {
-        console.error(`Failed to unregister agent ${agent.agentId}:`, error);
-        // Continue with other agents
-      }
-    }
-
-    return {
-      deleted: deletedAgentIds.length,
-      agentIds: deletedAgentIds,
-    };
-  },
-});
-
-/**
- * Note: Cascade deletion by participantId is orchestrated in the SDK layer.
- *
- * The SDK will:
- * 1. Query all memory spaces
- * 2. For each space, find records where participantId = agentId
- * 3. Delete conversations, memories, facts, graph nodes
- * 4. Delete agent registration (last)
- * 5. Verify completeness and rollback on failure
- *
- * This approach provides better control and error handling than a single
- * complex backend mutation.
- */
-
-/**
- * Purge all agents (TEST/DEV ONLY)
- *
- * WARNING: This permanently deletes ALL agent registrations!
- * Only available in test/dev environments.
- */
-export const purgeAll = mutation({
-  args: {},
-  handler: async (ctx) => {
-    // Safety check: Only allow in test/dev environments
-    const siteUrl = process.env.CONVEX_SITE_URL || "";
-    const isLocal =
-      siteUrl.includes("localhost") || siteUrl.includes("127.0.0.1");
-    const isDevDeployment =
-      siteUrl.includes(".convex.site") ||
-      siteUrl.includes("dev-") ||
-      siteUrl.includes("convex.cloud");
-    const isTestEnv =
-      process.env.NODE_ENV === "test" ||
-      process.env.CONVEX_ENVIRONMENT === "test";
-
-    if (!isLocal && !isDevDeployment && !isTestEnv) {
-      throw new Error(
-        "PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.",
-      );
-    }
-
-    const allAgents = await ctx.db.query("agents").collect();
-
-    for (const agent of allAgents) {
-      await ctx.db.delete(agent._id);
-    }
-
-    return { deleted: allAgents.length };
   },
 });

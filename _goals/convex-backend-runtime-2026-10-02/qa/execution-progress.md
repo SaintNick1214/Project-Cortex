@@ -460,3 +460,6 @@ Delegated active scopes: auth QA recovered-result synchronization, read-only liv
 
 
 Resumed auth QA correction independently FINAL PASS4.6 (Requirements5/Code4/Tests5/Patterns4/Completeness5). Actual131/131 native assertions in8 passing processes, separate original3PASS/1expectedFAIL reproduction retained; full client types/lint0warnings; all199 packed SDK and originaltarball hashes reproduced exactly. Original58 public freeze now has only18added client lines changed; new current binding preserves original manifest. Actual41 remains historical39PASS/1FAIL/1BLOCKED pending reviewed fresh testidentity preparation and target. Root98 auth unit tests/3suites0skips and root compiler pass; initial missing setup URL failure retained. Convex readonly team-project accessHTTP200.
+
+
+Registry original46 resume repair independently FINAL PASS4.4; fresh judge reproduced1182registry/133core,36identity/138DB controls and27 newidentitycallback cases. Exact source/test/schema merged to main: ES2021backendPASS,1182/1182 main outcomes10suites0skips. CurrentrootFAIL28=26agentsSDK+2cleanup consumer mismatches; tracked bounded bridge required, no root/core green claim. Stats2/A2A4/transcript/byte endpoints and actual service gates remain pending.

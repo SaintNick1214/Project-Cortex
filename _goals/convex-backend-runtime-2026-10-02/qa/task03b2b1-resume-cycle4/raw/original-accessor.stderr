@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ '{"version":1,"code":"REGISTRY_OPERATION_FAILED","message":"Registry operation failed","retryable":false,"outcome":"failed"}'
+- 'private-document-id-and-driver-payload-accessor-escape'
+
+    at <anonymous> (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-accessor.mts:24:79) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '{"version":1,"code":"REGISTRY_OPERATION_FAILED","message":"Registry operation failed","retryable":false,"outcome":"failed"}',
+  expected: 'private-document-id-and-driver-payload-accessor-escape',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

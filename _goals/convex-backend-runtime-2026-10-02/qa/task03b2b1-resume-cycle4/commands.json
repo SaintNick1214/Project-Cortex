@@ -1,0 +1,324 @@
+[
+  {
+    "name": "node-version",
+    "command": [
+      "node",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:23.124595+00:00",
+    "utcEnd": "2026-10-03T19:49:23.131448+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "backend-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:23.125177+00:00",
+    "utcEnd": "2026-10-03T19:49:36.807906+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "scoped-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/tsconfig.registry.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:23.125737+00:00",
+    "utcEnd": "2026-10-03T19:49:29.495700+00:00",
+    "exitCode": 2
+  },
+  {
+    "name": "core-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/tsconfig.core.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:23.131604+00:00",
+    "utcEnd": "2026-10-03T19:49:26.946406+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "scoped-lint",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeRegistryAuth.ts",
+      "convex-dev/agents.ts",
+      "convex-dev/memorySpaces.ts",
+      "convex-dev/contexts.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeRegistryAuth",
+      "--max-warnings",
+      "0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:26.946555+00:00",
+    "utcEnd": "2026-10-03T19:49:41.073561+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "core-lint",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeAuth.ts",
+      "tests/unit/runtimeAuth",
+      "--max-warnings",
+      "0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:29.495908+00:00",
+    "utcEnd": "2026-10-03T19:49:40.599457+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "discovery",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/jest.registry.json",
+      "--listTests",
+      "--json",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:36.808170+00:00",
+    "utcEnd": "2026-10-03T19:49:37.150478+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "registry-tests",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/jest.registry.json",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/registry-tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:37.150635+00:00",
+    "utcEnd": "2026-10-03T19:50:07.261253+00:00",
+    "exitCode": 1
+  },
+  {
+    "name": "core-tests",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/jest.core.json",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/core-tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:40.599861+00:00",
+    "utcEnd": "2026-10-03T19:49:52.567453+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "root-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:41.073893+00:00",
+    "utcEnd": "2026-10-03T19:50:00.578350+00:00",
+    "exitCode": 2
+  },
+  {
+    "name": "root-lint-types",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:49:52.567851+00:00",
+    "utcEnd": "2026-10-03T19:50:04.010110+00:00",
+    "exitCode": 2
+  },
+  {
+    "name": "catalog",
+    "command": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/inventory.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:00.578857+00:00",
+    "utcEnd": "2026-10-03T19:50:00.980226+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "original-authority",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-authority.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:00.980586+00:00",
+    "utcEnd": "2026-10-03T19:50:01.571946+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "original-native",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-native.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:01.572171+00:00",
+    "utcEnd": "2026-10-03T19:50:01.980158+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "original-graph",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-graph.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:01.980965+00:00",
+    "utcEnd": "2026-10-03T19:50:02.521534+00:00",
+    "exitCode": 1
+  },
+  {
+    "name": "original-accessor",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-accessor.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:02.521698+00:00",
+    "utcEnd": "2026-10-03T19:50:02.965656+00:00",
+    "exitCode": 1
+  },
+  {
+    "name": "original-stateful",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/original-stateful.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:02.965897+00:00",
+    "utcEnd": "2026-10-03T19:50:03.338762+00:00",
+    "exitCode": 1
+  },
+  {
+    "name": "required-graph",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/required-graph.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:03.338942+00:00",
+    "utcEnd": "2026-10-03T19:50:04.320782+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "required-accessor",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/required-accessor.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:04.010300+00:00",
+    "utcEnd": "2026-10-03T19:50:04.485518+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "required-stateful",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/required-stateful.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:04.321203+00:00",
+    "utcEnd": "2026-10-03T19:50:04.768626+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "required-admission",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/required-admission.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:04.485720+00:00",
+    "utcEnd": "2026-10-03T19:50:04.962635+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "db-read-matrix",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/db-read-matrix.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:04.768802+00:00",
+    "utcEnd": "2026-10-03T19:50:05.942733+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "identity-required",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/identity-required.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:04.962794+00:00",
+    "utcEnd": "2026-10-03T19:50:05.837826+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "identity-observation",
+    "command": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/tsx/dist/cli.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/scripts/identity-observation.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+    "utcStart": "2026-10-03T19:50:05.837982+00:00",
+    "utcEnd": "2026-10-03T19:50:06.441138+00:00",
+    "exitCode": 0
+  }
+]

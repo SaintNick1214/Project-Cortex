@@ -1,0 +1,11 @@
+--- a/convex-dev/runtimeRegistryAuth.ts
++++ b/convex-dev/runtimeRegistryAuth.ts
+@@ -106,7 +106,7 @@
+   };
+ }
+ async function requireRegistryAuthority(ctx: RegistryCtx, requirement: RuntimeAuthorityRequirement) {
+-  return await resolveAuthority(registryReader(ctx), await ctx.auth.getUserIdentity(), requirement);
++  return await resolveAuthority(registryReader(ctx), await controlRead(async () => await ctx.auth.getUserIdentity()), requirement);
+ }
+ /** Every selected native handler normalizes private errors without turning failures into success. */
+ export async function operation<T>(ctx: RegistryCtx, kind: "query" | "mutation", run: () => Promise<T>): Promise<T> {

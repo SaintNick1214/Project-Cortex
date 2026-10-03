@@ -710,6 +710,8 @@ export default defineSchema({
 
     // Multi-tenancy (NEW - critical for SaaS isolation)
     tenantId: v.optional(v.string()), // Tenant ID for isolation
+    ownerPrincipalId: v.optional(v.string()), // Trusted verified resource owner
+    tombstonedAt: v.optional(v.number()), // Retained deletion fence
 
     type: v.union(
       v.literal("personal"),
@@ -737,6 +739,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
     .index("by_memorySpaceId", ["memorySpaceId"]) // Unique lookup
     .index("by_tenantId", ["tenantId"]) // Tenant's memory spaces
     .index("by_tenant_memorySpaceId", ["tenantId", "memorySpaceId"]) // Tenant-scoped lookup
@@ -755,6 +758,8 @@ export default defineSchema({
 
     // Multi-tenancy (NEW - critical for SaaS isolation)
     tenantId: v.optional(v.string()), // Tenant ID for isolation
+    ownerPrincipalId: v.optional(v.string()), // Trusted verified resource owner
+    tombstonedAt: v.optional(v.number()), // Retained deletion fence
 
     // Purpose
     purpose: v.string(), // What this context is for
@@ -806,6 +811,7 @@ export default defineSchema({
     metadata: v.optional(v.any()),
 
     // Versioning (automatic version tracking for updates)
+    lastUpdatedBy: v.optional(v.string()), // Actual verified writer of the current revision
     version: v.number(), // Current version number (starts at 1)
     previousVersions: v.array(
       v.object({
@@ -822,6 +828,8 @@ export default defineSchema({
     updatedAt: v.number(),
     completedAt: v.optional(v.number()),
   })
+    .index("by_runtime_scope_context", ["tenantId", "memorySpaceId", "contextId"])
+    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
     .index("by_contextId", ["contextId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Space's contexts
     .index("by_tenantId", ["tenantId"]) // Tenant's contexts
@@ -840,9 +848,12 @@ export default defineSchema({
   agents: defineTable({
     // Identity
     agentId: v.string(), // Unique agent identifier
+    memorySpaceId: v.optional(v.string()), // Optional trusted space scope
 
     // Multi-tenancy (NEW - critical for SaaS isolation)
     tenantId: v.optional(v.string()), // Tenant ID for isolation
+    ownerPrincipalId: v.optional(v.string()), // Trusted verified resource owner
+    tombstonedAt: v.optional(v.number()), // Retained deletion fence
 
     // Metadata
     name: v.string(), // Display name
@@ -864,6 +875,8 @@ export default defineSchema({
     updatedAt: v.number(),
     lastActive: v.optional(v.number()), // Last time agent created data
   })
+    .index("by_runtime_scope_agent", ["tenantId", "memorySpaceId", "agentId"])
+    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
     .index("by_agentId", ["agentId"]) // Unique lookup
     .index("by_tenantId", ["tenantId"]) // Tenant's agents
     .index("by_tenant_status", ["tenantId", "status"]) // Tenant + status

@@ -1,0 +1,38 @@
+(node:2511) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ● portable inventory, actual schema exports and preserved sources › excluded convex-dev/agents.ts registration remains byte-for-byte frozen
+
+    ENOENT: no such file or directory, open '_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/stats-agents.frozen.txt'
+
+      40 |   it.each([["convex-dev/agents.ts", "computeStats", "stats-agents.frozen.txt"], ["convex-dev/memorySpaces.ts", "getStats", "stats-spaces.frozen.txt"]])("excluded %s registration remains byte-for-byte frozen", (file, name, frozen) => {
+      41 |     const source = fs.readFileSync(file, "utf8"); const start = source.indexOf(`export const ${name} =`); const end = source.indexOf("\n});", start) + 4;
+    > 42 |     expect(source.slice(start, end)).toBe(fs.readFileSync(`${qa}/${frozen}`, "utf8"));
+         |                                              ^
+      43 |   });
+      44 |   it("independent helper imports no unreviewed metadata/MF/worker bridge and no unsafe any/ts-ignore", () => {
+      45 |     const source = fs.readFileSync("convex-dev/runtimeRegistryAuth.ts", "utf8");
+
+      at tests/unit/runtimeRegistryAuth/catalog.test.ts:42:46
+
+  ● portable inventory, actual schema exports and preserved sources › excluded convex-dev/memorySpaces.ts registration remains byte-for-byte frozen
+
+    ENOENT: no such file or directory, open '_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/stats-spaces.frozen.txt'
+
+      40 |   it.each([["convex-dev/agents.ts", "computeStats", "stats-agents.frozen.txt"], ["convex-dev/memorySpaces.ts", "getStats", "stats-spaces.frozen.txt"]])("excluded %s registration remains byte-for-byte frozen", (file, name, frozen) => {
+      41 |     const source = fs.readFileSync(file, "utf8"); const start = source.indexOf(`export const ${name} =`); const end = source.indexOf("\n});", start) + 4;
+    > 42 |     expect(source.slice(start, end)).toBe(fs.readFileSync(`${qa}/${frozen}`, "utf8"));
+         |                                              ^
+      43 |   });
+      44 |   it("independent helper imports no unreviewed metadata/MF/worker bridge and no unsafe any/ts-ignore", () => {
+      45 |     const source = fs.readFileSync("convex-dev/runtimeRegistryAuth.ts", "utf8");
+
+      at tests/unit/runtimeRegistryAuth/catalog.test.ts:42:46
+
+
+Test Suites: 1 failed, 9 passed, 10 total
+Tests:       2 failed, 1180 passed, 1182 total
+Snapshots:   0 total
+Time:        29.7 s
+Ran all test suites.
+Test results written to: ../../../../_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1-resume-cycle4/registry-tests.json
