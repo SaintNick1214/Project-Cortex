@@ -1,0 +1,135 @@
+{
+  "utc": "2026-10-03T13:46:15.011851+00:00",
+  "status": "Accepted-core final affected checks completed; source/QA FINAL freeze not yet written",
+  "priorQaVerified": 2085,
+  "immutableSourceHashesVerified": 35,
+  "archives": [
+    {
+      "manifest": "history/cycle1/preservation-manifest.json",
+      "sha256": "19bf653d2f4f2b11c8ef6d32b6d11d04dd47243b385896578983ef8fed4bcf23",
+      "verifiedRecords": 450
+    },
+    {
+      "manifest": "history/cycle2-final/preservation-manifest.json",
+      "sha256": "a145d0c03c61ddfce0915ec330a276d0f2a06e397a7ac1d12fbc96c9eadebbf2",
+      "verifiedRecords": 970
+    }
+  ],
+  "original480OrderedOutcomesPreserved": true,
+  "schemaPatchByteExact": true,
+  "catalogEndpointsAndCountsUnchanged": true,
+  "tests": {
+    "suites": 9,
+    "passed": 1146,
+    "skipped": 0,
+    "todo": 0,
+    "original": 480,
+    "failureBoundary": 366,
+    "priorAdmissionFailure": 99,
+    "admissionBoundary": 99,
+    "controlAmbiguityCompatibility": 66,
+    "lowLevelReadBoundary": 36
+  },
+  "acceptedCoreRefresh": {
+    "observedAt": "2026-10-03T13:43:41.952075+00:00",
+    "acceptedCommit": "022e2e3d61161766e90e91dd572bb9b7063d5957",
+    "independentReviewSha256": "b608adce3d20d8fdac98f8c2541c243dfa72616b6204e21ca1e7cf0dc6d8a94d",
+    "cycle": "Existing registry/harness THIRD; dependency refresh before FINAL freeze, not another implementation/judge cycle",
+    "helperBefore": "f2985d405d13e8094b6b8729d72979819ad22897cc614c1fdf44addb37bb4e9f",
+    "helperAfter": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+    "source": "convex-dev/runtimeAuth.ts",
+    "sourceCommit": "022e2e3d61161766e90e91dd572bb9b7063d5957",
+    "changes": "Parent copied only accepted runtimeAuth.ts into isolated registry; all registry-owned sources/schema/tests unchanged. Live fixture exactly2 helpers changed and12 remaining file rows unchanged,14 per-row sourceCommit bindings."
+  },
+  "sourceHashes": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/baseline-diagnostic.py": "d6f99d802e3f45889e48ee81a66f5c9054f2987cf8aeea09e64e3a03a986a814",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/run-checks.py": "854e84388223da1548c32d6b12dca4e7d6463928da57014f2bd9951c2e42fcca",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/inventory.mjs": "2b0f53b8b36bb58dedc3ceed5d70095811bb94e75c215c41dd587c078ee2c764",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/jest.scoped.cjs": "c2bba3700310cad71a4ce692b6e1cc4680e6183735c83ddd6696328bf5dc2ad7",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/tsconfig.scoped.json": "db3adfe9f5ab01616dff32bd51815515384972546779af86930616d06d2febb5",
+    "convex-dev/_generated/api.d.ts": "ef17837015baea01a4c2035dd7efd94f9641d5d6024362c0b65426591082e682",
+    "convex-dev/_generated/dataModel.d.ts": "db177073d16a4393c7a96bcdc3a2a904e88c2432d54d138ca7715cc431982c17",
+    "convex-dev/_generated/server.d.ts": "2b536ee08d434dd044efe0302aeaf4ccb00cd08af10c9f8c7bc7a6734e4aa49b",
+    "convex-dev/_generated/server.js": "0cdd1d842b9458d8a6f2444c35eb9929312316a384ca76a4b1d964bedde8a6f2",
+    "convex-dev/a2a.ts": "a898a0316faac0a48e08d0ee0ee650d81078789f0603439fdb256a34d7d1e1a3",
+    "convex-dev/agents.ts": "d9a4cc4cde5d85ad9e1966a4186ce31f2e41d450d151353a86af42893168fd85",
+    "convex-dev/contexts.ts": "facb2f35168ab2243d59b88cc39ac6bafba2044a3fafcbc751f4a323c47367e2",
+    "convex-dev/memorySpaces.ts": "88f73e309d8de5a2d3146db9993d2242888beb045bffaaef6f72c43880e78a92",
+    "convex-dev/runtimeAuth.ts": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+    "convex-dev/runtimeAuthSchema.ts": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+    "convex-dev/runtimeMemorySchema.ts": "24abaebe350c4127c3b4b376b6749ef86ef6e4e1820b59b2d8a9538e7f257aba",
+    "convex-dev/runtimeRegistryAuth.ts": "ce7a0770803bef6b68440a0cd1b103228b2da20a5bf386a909a14d022101e8e5",
+    "convex-dev/schema.ts": "4863a3445f58692a7f5b264c880cb069783971be0182fc0dfe77010111fc5e93",
+    "convex-dev/tsconfig.json": "6b077cd115f1e1a1cd41fe22824624d9ee39d89b2a53b016aaf59dd2981fdc17",
+    "convex.json": "18322fd7794e0309e3773d5ef112360621bc187f6f4ca834eec671e278b8a9b4",
+    "eslint.config.js": "74ff9169e6fb26a185fb22366f6de01d0aa9c2a6e28f1a9bd7835f00a0eb217b",
+    "node_modules/convex/dist/esm/server/impl/query_impl.js": "cb338c5d58d0ffbbdd311954e24456d7fa501f901b205784ce93d67e63206857",
+    "node_modules/convex/package.json": "bafaba6990e5e8107400da04a66dfde18dd7fa81471c123695779d234717f290",
+    "node_modules/convex/src/server/impl/query_impl.ts": "18deadd486a3c701d534a739057b3fd3b9fd8a38a42942b9d4f91e5fe387bf99",
+    "package-lock.json": "d85a63567c0340a07eed9655cd8ce9d932f4871a0660350e8e0d25739662abf5",
+    "package.json": "a684600bd22363a6c4127c4dd65e95afa1ffe6659b574a5ea74e0e0a3219f3d6",
+    "src/agents/index.ts": "e53a0dcab39242d58fdab6d2be34be3cac600377ec5c794615afe30c089ec042",
+    "src/auth/verified.ts": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+    "src/governance/index.ts": "99a2f5e48620784bf5c6e73b14732ad658e4bed12845bbe587ba4e3576247b10",
+    "tests/helpers/cleanup.ts": "149b497071490b1e1bc6294db2fecdca63c2c42977fffea05df15bab5be72c4c",
+    "tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts": "ba7888359786d341f9e2b5feb62f9249618fe598550498f94eddfcc6037caa5d",
+    "tests/unit/runtimeRegistryAuth/admissionFailure.test.ts": "03a70fabbb1c531284bffc24b5d625ce751115464b871bc6190b272f288f9c77",
+    "tests/unit/runtimeRegistryAuth/admissionFixture.ts": "032f5f86b5c0476fd1d17f5c9515763d38f8ab15f585a67cd4076dbfcf8c43f6",
+    "tests/unit/runtimeRegistryAuth/adversarial.test.ts": "3019112f84ea51c4c2a1c9406feb39e418b158f67d7667331c5a48315861f72e",
+    "tests/unit/runtimeRegistryAuth/catalog.test.ts": "0ce1d029a2bfb2de957c78432ab5661b07af9ebe498160e17698a9b2a123d281",
+    "tests/unit/runtimeRegistryAuth/closureRepair.test.ts": "65694cf2ad118f1c0537794e3df21f757fedfabc099a90c91d79991de08c369d",
+    "tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts": "49ceecc003899d148b836d05923b259aa48898b8b0e864252c8b1b5241bcd21b",
+    "tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts": "2ea67653090942b85f5abc4c0b270bd40b496bbd3c9107793a84b0ed26a6d65f",
+    "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts": "84d14f4d2b8ddd29bdfd334ff00868b5a2d83a6e522011f2f5fb073f856225f9",
+    "tests/unit/runtimeRegistryAuth/fixture.ts": "2bd2f13861e0021964f3e985697b64e58f58b16d7bb75fbc612bdb9a567d842a",
+    "tests/unit/runtimeRegistryAuth/registered.test.ts": "89ccc7b47b97e4f9be74722493cd6cc5ed4bca8963e7013d3b4b625507abf52d",
+    "tsconfig.json": "cd150cbae2e9a5140c069877d2b101b453a7a54aad5db7fca330d1c68d5018d7",
+    "tsconfig.lint.json": "70d8e256124c4bb928095fc00a6fab9a36897e03f00ab58faf933cb55cc5db57"
+  },
+  "checks": [
+    {
+      "name": "node-version",
+      "exitCode": 0
+    },
+    {
+      "name": "npm-version",
+      "exitCode": 0
+    },
+    {
+      "name": "backend-types",
+      "exitCode": 0
+    },
+    {
+      "name": "scoped-types",
+      "exitCode": 0
+    },
+    {
+      "name": "scoped-lint",
+      "exitCode": 0
+    },
+    {
+      "name": "discovery",
+      "exitCode": 0
+    },
+    {
+      "name": "tests",
+      "exitCode": 0
+    },
+    {
+      "name": "catalog",
+      "exitCode": 0
+    },
+    {
+      "name": "root-types-diagnostic",
+      "exitCode": 2
+    },
+    {
+      "name": "root-lint-types-diagnostic",
+      "exitCode": 2
+    },
+    {
+      "name": "diff-check",
+      "exitCode": 0
+    }
+  ]
+}

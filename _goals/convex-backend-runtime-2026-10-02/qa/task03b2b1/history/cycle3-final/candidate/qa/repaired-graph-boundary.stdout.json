@@ -1,0 +1,70 @@
+{
+  "cases": 4,
+  "results": [
+    {
+      "count": 99,
+      "read": false,
+      "created": {
+        "accepted": true,
+        "resourceType": "contexts",
+        "resourceId": "ctx-1791033078077-l28mrklmwho"
+      },
+      "attempts": 2,
+      "committedWrites": 2,
+      "readableTotalNodes": 100,
+      "readableDepth": 99
+    },
+    {
+      "count": 99,
+      "read": true,
+      "created": {
+        "_creationTime": 1000,
+        "_id": "contexts:106",
+        "childIds": [],
+        "contextId": "ctx-1791033078307-y505q2n0vzh",
+        "createdAt": 1791033078339,
+        "data": {},
+        "depth": 99,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "parentId": "node-98",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [],
+        "purpose": "Boundary",
+        "rootId": "node-0",
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1791033078339,
+        "userId": "user-a",
+        "version": 1
+      },
+      "attempts": 2,
+      "committedWrites": 2,
+      "readableTotalNodes": 100,
+      "readableDepth": 99
+    },
+    {
+      "count": 100,
+      "read": false,
+      "code": "INVALID_INPUT",
+      "outcome": "not_dispatched",
+      "attempts": 0,
+      "committedWrites": 0,
+      "persistedNodes": 100
+    },
+    {
+      "count": 100,
+      "read": true,
+      "code": "INVALID_INPUT",
+      "outcome": "not_dispatched",
+      "attempts": 0,
+      "committedWrites": 0,
+      "persistedNodes": 100
+    }
+  ]
+}
