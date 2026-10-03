@@ -1,0 +1,112 @@
+[
+  {
+    "name": "inventory-retained",
+    "command": "node",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:47:59.766Z",
+    "finishedAt": "2026-10-03T08:48:00.187Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/inventory-retained.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/inventory-retained.stderr.log"
+  },
+  {
+    "name": "inventory-reproduction",
+    "command": "node",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:48:00.187Z",
+    "finishedAt": "2026-10-03T08:48:00.599Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/inventory-reproduction.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/inventory-reproduction.stderr.log"
+  },
+  {
+    "name": "root-strict-policy-tests",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/tsconfig.policy-tests.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:48:00.599Z",
+    "finishedAt": "2026-10-03T08:48:02.345Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/root-strict-policy-tests.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/root-strict-policy-tests.stderr.log"
+  },
+  {
+    "name": "policy-scoped-eslint",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "eslint",
+      "tests/unit/runtimeAuth/inventory.test.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:48:02.345Z",
+    "finishedAt": "2026-10-03T08:48:06.212Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/policy-scoped-eslint.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/policy-scoped-eslint.stderr.log"
+  },
+  {
+    "name": "portable-fixture-policy-unit",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeAuth/inventory.test.ts",
+      "--runInBand",
+      "--forceExit"
+    ],
+    "environment": {
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local"
+    },
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:48:06.212Z",
+    "finishedAt": "2026-10-03T08:48:10.379Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/portable-fixture-policy-unit.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-inventory-portability-fix/portable-fixture-policy-unit.stderr.log"
+  }
+]

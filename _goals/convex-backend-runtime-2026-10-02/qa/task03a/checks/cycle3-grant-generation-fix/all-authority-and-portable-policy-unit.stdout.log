@@ -1,0 +1,91 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.8s | 15/15 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ✅     1.2s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+  ✅     0.4s | 54/54 passed | /tests/unit/runtimeAuth/authority.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.27s ( 4.8%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 2. [32m✓[0m    0.24s ( 4.3%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.2%) - verified principal and grant authority does not let expiry/currentness pruning repair duplicate unrevoked generations
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - internal bootstrap and trusted control table adapters uses table-specific ID normalization and rejects duplicate exact issuer/subject records
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - internal bootstrap and trusted control table adapters exposes no public provisioning, revocation, deletion, or action authority resolver
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - verified principal and grant authority derives exact trusted scope and immutable versions from verified issuer/subject, including omitted selectors
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters provisions only trusted control records, returns immutable references and is idempotent
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - background rechecks and deletion fences checks ownership synchronously without accepting missing owner/tenant fields
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters resolves public identity through Convex auth and never uses tokenIdentifier or admin metadata
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters adapts internal action authorization and sessionless background rechecks without mutating authority
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters replaces changed capabilities with a new grant generation and invalidates pending old work
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters revokes an exact grant permanently; only an explicit trusted new generation can issue later authority
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters retains membership revocation fences and refuses to re-provision the same membership
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters retains principal deletion fences and refuses issuer/subject recreation
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters records deletion even before a scope is provisioned, preventing later resurrection
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters rejects invalid provisioning, actor rebinding and metadata-user rebinding
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs facts:fetchFactsByIds remains a scoped internal read helper
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs admin:getAllCounts requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs attachments:purgeAll requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs governance:purgeAllPolicies requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.55s (9.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.61s
+  Test suites:        3
+  Individual tests:   49
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════

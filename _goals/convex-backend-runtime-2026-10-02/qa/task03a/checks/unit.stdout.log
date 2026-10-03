@@ -1,0 +1,90 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.1s | 40/40 passed | /tests/unit/runtimeAuth/authority.test.ts
+  ✅     1.1s | 15/15 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.2%) - background rechecks and deletion fences checks ownership synchronously without accepting missing owner/tenant fields
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.1%) - verified principal and grant authority derives exact trusted scope and immutable versions from verified issuer/subject, including omitted selectors
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters exposes no public provisioning, revocation, deletion, or action authority resolver
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters provisions only trusted control records, returns immutable references and is idempotent
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters resolves public identity through Convex auth and never uses tokenIdentifier or admin metadata
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters uses table-specific ID normalization and rejects duplicate exact issuer/subject records
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority rejects missing identity and never turns metadata into a membership
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies revoked membership before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies revoked grant before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies expired grant before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies missing read capability before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies mismatched grant principal before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies stale memory space epoch before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies deleted memory space before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies tenant tombstone before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority fails closed on duplicate active grants rather than picking a permissive version
+    /tests/unit/runtimeAuth/authority.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority allows a tenant-wide grant to narrow to an existing space while preserving its epoch
+    /tests/unit/runtimeAuth/authority.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - background rechecks and deletion fences continues after ordinary observer logout and stops on subsequent grant revocation
+    /tests/unit/runtimeAuth/authority.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - background rechecks and deletion fences rejects a changed or forged pinned membershipVersion
+    /tests/unit/runtimeAuth/authority.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - background rechecks and deletion fences rejects identity/scope substitution and cannot widen a pinned space grant
+    /tests/unit/runtimeAuth/authority.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.03s (0.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.43s
+  Test suites:        2
+  Individual tests:   28
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════

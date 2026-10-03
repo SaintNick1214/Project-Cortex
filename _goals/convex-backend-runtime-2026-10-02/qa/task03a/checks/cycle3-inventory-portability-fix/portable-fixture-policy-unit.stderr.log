@@ -1,0 +1,78 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=tests/unit/runtimeAuth/inventory.test.ts --runInBand --forceExit
+(node:11416) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAuth/inventory.test.ts
+  portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs
+    ✓ facts:fetchFactsByIds remains a scoped internal read helper (1 ms)
+    ✓ memories:fetchMemoriesByIds remains a scoped internal read helper (1 ms)
+    ✓ memories:keywordSearchMemories remains a scoped internal read helper
+    ✓ admin:listTable requires operator maintenance without a target runtime grant (1 ms)
+    ✓ admin:deleteRecord requires operator maintenance without a target runtime grant
+    ✓ admin:clearTable requires operator maintenance without a target runtime grant (1 ms)
+    ✓ admin:countTable requires operator maintenance without a target runtime grant
+    ✓ admin:getAllCounts requires operator maintenance without a target runtime grant
+    ✓ agents:purgeAll requires operator maintenance without a target runtime grant (1 ms)
+    ✓ artifacts:purgeAll requires operator maintenance without a target runtime grant
+    ✓ attachments:purgeAll requires operator maintenance without a target runtime grant
+    ✓ contexts:purgeAll requires operator maintenance without a target runtime grant
+    ✓ conversations:purgeAll requires operator maintenance without a target runtime grant
+    ✓ facts:purgeAll requires operator maintenance without a target runtime grant
+    ✓ graphSync:purgeAll requires operator maintenance without a target runtime grant
+    ✓ immutable:purgeAll requires operator maintenance without a target runtime grant
+    ✓ memories:purgeAll requires operator maintenance without a target runtime grant
+    ✓ memorySpaces:purgeAll requires operator maintenance without a target runtime grant
+    ✓ mutable:purgeAll requires operator maintenance without a target runtime grant
+    ✓ governance:purgeAllPolicies requires operator maintenance without a target runtime grant
+    ✓ governance:purgeAllEnforcement requires operator maintenance without a target runtime grant
+    ✓ authorize uses requested capability and inherited verified issuer/subject
+    ✓ recheck uses requested capability and exact persisted versions/epochs/optional scope (1 ms)
+    ✓ runtimeAuth:provision is a deployment operator control
+    ✓ runtimeAuth:revokeGrant is a deployment operator control
+    ✓ runtimeAuth:revokeMembership is a deployment operator control
+    ✓ runtimeAuth:deletePrincipal is a deployment operator control
+    ✓ runtimeAuth:deleteScope is a deployment operator control (1 ms)
+    ✓ runtimeAuth:tombstoneResource is a deployment operator control
+    ✓ keeps ordinary facts:get available through scoped read grants
+    ✓ keeps ordinary memories:store available through scoped write grants (1 ms)
+    ✓ accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts (239 ms)
+  portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs
+    ✓ facts:fetchFactsByIds remains a scoped internal read helper
+    ✓ memories:fetchMemoriesByIds remains a scoped internal read helper (1 ms)
+    ✓ memories:keywordSearchMemories remains a scoped internal read helper
+    ✓ admin:listTable requires operator maintenance without a target runtime grant
+    ✓ admin:deleteRecord requires operator maintenance without a target runtime grant
+    ✓ admin:clearTable requires operator maintenance without a target runtime grant
+    ✓ admin:countTable requires operator maintenance without a target runtime grant
+    ✓ admin:getAllCounts requires operator maintenance without a target runtime grant
+    ✓ agents:purgeAll requires operator maintenance without a target runtime grant
+    ✓ artifacts:purgeAll requires operator maintenance without a target runtime grant (1 ms)
+    ✓ attachments:purgeAll requires operator maintenance without a target runtime grant
+    ✓ contexts:purgeAll requires operator maintenance without a target runtime grant
+    ✓ conversations:purgeAll requires operator maintenance without a target runtime grant
+    ✓ facts:purgeAll requires operator maintenance without a target runtime grant (1 ms)
+    ✓ graphSync:purgeAll requires operator maintenance without a target runtime grant
+    ✓ immutable:purgeAll requires operator maintenance without a target runtime grant
+    ✓ memories:purgeAll requires operator maintenance without a target runtime grant
+    ✓ memorySpaces:purgeAll requires operator maintenance without a target runtime grant
+    ✓ mutable:purgeAll requires operator maintenance without a target runtime grant (1 ms)
+    ✓ governance:purgeAllPolicies requires operator maintenance without a target runtime grant
+    ✓ governance:purgeAllEnforcement requires operator maintenance without a target runtime grant
+    ✓ authorize uses requested capability and inherited verified issuer/subject
+    ✓ recheck uses requested capability and exact persisted versions/epochs/optional scope
+    ✓ runtimeAuth:provision is a deployment operator control
+    ✓ runtimeAuth:revokeGrant is a deployment operator control (1 ms)
+    ✓ runtimeAuth:revokeMembership is a deployment operator control
+    ✓ runtimeAuth:deletePrincipal is a deployment operator control
+    ✓ runtimeAuth:deleteScope is a deployment operator control
+    ✓ runtimeAuth:tombstoneResource is a deployment operator control
+    ✓ keeps ordinary facts:get available through scoped read grants (1 ms)
+    ✓ keeps ordinary memories:store available through scoped write grants
+    ✓ accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts (236 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       64 passed, 64 total
+Snapshots:   0 total
+Time:        2.941 s
+Ran all test suites matching tests/unit/runtimeAuth/inventory.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

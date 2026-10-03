@@ -28,8 +28,10 @@
 
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { runtimeAuthTables } from "./runtimeAuthSchema";
 
 export default defineSchema({
+  ...runtimeAuthTables,
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Layer 1a: Conversations (ACID, Immutable)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

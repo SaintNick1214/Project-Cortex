@@ -1,0 +1,220 @@
+{
+  "countsUnchanged": true,
+  "sourceHashesUnchanged": true,
+  "authPoliciesUnchanged": true,
+  "retainedRunnersIdentical": true,
+  "intentionalNonAuthChanges": [
+    {
+      "path": "admin:listTable",
+      "changedFields": [
+        "requiredCapability",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "admin:deleteRecord",
+      "changedFields": [
+        "requiredCapability",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "admin:clearTable",
+      "changedFields": [
+        "requiredCapability",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "admin:countTable",
+      "changedFields": [
+        "requiredCapability",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "admin:getAllCounts",
+      "changedFields": [
+        "requiredCapability",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "agents:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "artifacts:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "attachments:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "contexts:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "conversations:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "facts:fetchFactsByIds",
+      "changedFields": [
+        "requiredCapability"
+      ]
+    },
+    {
+      "path": "facts:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "governance:purgeAllPolicies",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "governance:purgeAllEnforcement",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "graphSync:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "immutable:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "memories:fetchMemoriesByIds",
+      "changedFields": [
+        "requiredCapability"
+      ]
+    },
+    {
+      "path": "memories:keywordSearchMemories",
+      "changedFields": [
+        "requiredCapability"
+      ]
+    },
+    {
+      "path": "memories:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "memorySpaces:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    },
+    {
+      "path": "mutable:purgeAll",
+      "changedFields": [
+        "requiredCapability",
+        "scope",
+        "resourceLookup",
+        "ownership",
+        "backgroundCheck",
+        "reason"
+      ]
+    }
+  ],
+  "policyTestIsolation": "Both actual retained generators run from independent OS temporary AST fixtures; child work parent and runner absent before/after, production bytes/counts never loaded by active tests."
+}
