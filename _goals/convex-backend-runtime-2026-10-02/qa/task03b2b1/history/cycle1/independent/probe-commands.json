@@ -1,0 +1,72 @@
+[
+  {
+    "script": "/tmp/task03b2b1-review1-5DtS9Q/probes.mts",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsx",
+      "/tmp/task03b2b1-review1-5DtS9Q/probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true"
+    },
+    "stdout": "probes.stdout.json",
+    "stderr": "probes.stderr.txt",
+    "observedExitCode": 0,
+    "observation": "Tool command completed exit0; receipt recorded after completion, no invented start time"
+  },
+  {
+    "script": "/tmp/task03b2b1-review1-5DtS9Q/graph-boundary.mts",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsx",
+      "/tmp/task03b2b1-review1-5DtS9Q/graph-boundary.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true"
+    },
+    "stdout": "graph-boundary.stdout.json",
+    "stderr": "graph-boundary.stderr.txt",
+    "observedExitCode": 0,
+    "observation": "Tool command completed exit0; receipt recorded after completion, no invented start time"
+  },
+  {
+    "script": "/tmp/task03b2b1-review1-5DtS9Q/authority-probes.mts",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsx",
+      "/tmp/task03b2b1-review1-5DtS9Q/authority-probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+    "environmentOverrides": {
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "TMPDIR": "/tmp/task03b2b1-review1-5DtS9Q"
+    },
+    "stdout": "authority-probes.stdout.json",
+    "stderr": "authority-probes.stderr.txt",
+    "observedExitCode": 0,
+    "observation": "Tool command completed exit0; receipt recorded after completion, no invented start time"
+  }
+]
