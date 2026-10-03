@@ -6,7 +6,7 @@ import { action, internalMutation, internalQuery } from "./_generated/server";
 import type { RuntimeAuthority, RuntimeAuthorityRequirement } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { commitDerivedInput, sourceContent } from "./runtimeMemorySchema";
-import { ConvexMemoryRepository, createActionMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
+import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope } from "./runtimeMemoryRepository";
 import { explicitSourceLineage, recallMemory, rememberMemory, unconfiguredMemoryModel } from "./runtimeMemoryServices";
 
 const scopedArgs = { reference: runtimeAuthorityReference, capability: v.union(v.literal("read"), v.literal("write")) };
@@ -27,15 +27,22 @@ export const readVectorMatches = internalQuery({ args: { ...scopedArgs, hits: v.
 
 const authorize = makeFunctionReference<"query", { requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>("runtimeAuth:authorize") as unknown as
   FunctionReference<"query", "internal", { requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>;
+/** Foundation closure: only current trusted controls may be read before readiness. */
+async function memoryCapabilityUnavailable(repository: ReturnType<typeof createActionMemoryRepository>): Promise<never> {
+  await repository.recheckAuthority();
+  return memoryError("CAPABILITY_UNAVAILABLE", "Memory capability unavailable.");
+}
 const requestArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()), text: v.string(), requestId: v.string() };
 export const remember = action({ args: requestArgs, handler: async (ctx, args) => {
   const authority = await ctx.runQuery(authorize, { requirement: { capability: "write", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId } });
   const repository = createActionMemoryRepository(ctx, authority, "write");
+  await memoryCapabilityUnavailable(repository);
   return await rememberMemory({ repository, model: unconfiguredMemoryModel(), clock: { now: () => Date.now() } },
     { text: args.text, lineage: explicitSourceLineage(memoryScope(authority), args.requestId) });
 } });
 export const recall = action({ args: { ...requestArgs, limit: v.optional(v.number()) }, handler: async (ctx, args) => {
   const authority = await ctx.runQuery(authorize, { requirement: { capability: "read", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId } });
+  await memoryCapabilityUnavailable(createActionMemoryRepository(ctx, authority, "read"));
   return await recallMemory({ repository: createActionMemoryRepository(ctx, authority, "read"),
     model: unconfiguredMemoryModel(), clock: { now: () => Date.now() } }, { text: args.text, requestId: args.requestId, limit: args.limit ?? 10 });
 } });

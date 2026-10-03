@@ -97,7 +97,8 @@ describe("modern backend memory services", () => {
   it.each(["remember", "recall"])("registered public %s cannot invoke a provider without configured policy", async (operation) => {
     const f = setup();
     await expect(registeredHandler<{ text: string; requestId: string; tenantId: string; memorySpaceId: string }, unknown>(operation === "remember" ? remember : recall)(f.actionCtx as unknown as Parameters<ReturnType<typeof registeredHandler>>[0],
-      { text: "dark", requestId: "public-1", tenantId: "tenant-a", memorySpaceId: "space-a" })).rejects.toMatchObject({ data: { code: "POLICY_NOT_CONFIGURED" } });
+      { text: "dark", requestId: "public-1", tenantId: "tenant-a", memorySpaceId: "space-a" })).rejects.toMatchObject({ data: { version: 1, code: "CAPABILITY_UNAVAILABLE", message: "Memory capability unavailable.", retryable: false, outcome: "not_dispatched" } });
+    expect(f.db.writes).toBe(0); expect(f.db.table("runtimeMemorySources")).toHaveLength(0);
     expect(f.db.table("facts")).toHaveLength(0); expect(f.db.table("runtimeMemoryVectors")).toHaveLength(0);
   });
   it("unconfigured resolve also fails closed and cannot enter public orchestration", async () => {
