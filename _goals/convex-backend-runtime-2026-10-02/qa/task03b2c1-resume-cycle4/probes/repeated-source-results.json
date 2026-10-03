@@ -1,0 +1,4500 @@
+[
+  {
+    "mutation": "none",
+    "matched": true,
+    "outcome": "resolved",
+    "output": {
+      "artifacts": [
+        {
+          "_id": "artifacts:7",
+          "_creationTime": 1,
+          "artifactId": "first",
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "userId": "trusted-user",
+          "kind": "text",
+          "title": "Document",
+          "content": "first",
+          "tags": [],
+          "version": 2,
+          "versionPointer": 2,
+          "versionHistory": [
+            {
+              "version": 1,
+              "content": "first",
+              "title": "First",
+              "timestamp": 1,
+              "changeType": "create"
+            },
+            {
+              "version": 2,
+              "content": "second",
+              "title": "Second",
+              "timestamp": 2,
+              "changeType": "update"
+            }
+          ],
+          "streamingState": "draft",
+          "createdAt": 1,
+          "updatedAt": 2,
+          "conversationRef": {
+            "conversationId": "conversation-a",
+            "messageId": "message-a"
+          }
+        },
+        {
+          "_id": "artifacts:8",
+          "_creationTime": 1,
+          "artifactId": "second",
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "userId": "trusted-user",
+          "kind": "text",
+          "title": "Document",
+          "content": "first",
+          "tags": [],
+          "version": 2,
+          "versionPointer": 2,
+          "versionHistory": [
+            {
+              "version": 1,
+              "content": "first",
+              "title": "First",
+              "timestamp": 1,
+              "changeType": "create"
+            },
+            {
+              "version": 2,
+              "content": "second",
+              "title": "Second",
+              "timestamp": 2,
+              "changeType": "update"
+            }
+          ],
+          "streamingState": "draft",
+          "createdAt": 1,
+          "updatedAt": 2,
+          "conversationRef": {
+            "conversationId": "conversation-a",
+            "messageId": "message-b"
+          }
+        }
+      ],
+      "total": 2,
+      "limit": 50,
+      "offset": 0,
+      "hasMore": false
+    },
+    "sourceQueries": 2,
+    "injections": 0,
+    "attempts": [],
+    "sourceRow": {
+      "_id": "conversations:6",
+      "_creationTime": 1,
+      "conversationId": "conversation-a",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "type": "user-agent",
+      "participants": {
+        "userId": "attacker-label"
+      },
+      "messages": [
+        {
+          "id": "message-a",
+          "role": "user",
+          "content": "source one",
+          "timestamp": 1
+        },
+        {
+          "id": "message-b",
+          "role": "user",
+          "content": "source two",
+          "timestamp": 2
+        }
+      ],
+      "messageCount": 1,
+      "createdAt": 1,
+      "updatedAt": 1,
+      "version": 1
+    },
+    "reads": [
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ]
+        ]
+      },
+      {
+        "table": "artifacts",
+        "ids": [
+          "artifacts:7",
+          "artifacts:8"
+        ],
+        "index": "by_runtime_scope",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "conversations",
+        "ids": [
+          "conversations:6"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "conversations",
+        "ids": [
+          "conversations:6"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "mutation": "anchor",
+    "matched": true,
+    "outcome": "rejected",
+    "error": {
+      "code": "FORBIDDEN",
+      "message": "Artifact operation denied."
+    },
+    "sourceQueries": 2,
+    "injections": 1,
+    "attempts": [],
+    "sourceRow": {
+      "_id": "conversations:6",
+      "_creationTime": 1,
+      "conversationId": "conversation-a",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "type": "user-agent",
+      "participants": {
+        "userId": "attacker-label"
+      },
+      "messages": [
+        {
+          "id": "replacement",
+          "role": "user",
+          "content": "source one",
+          "timestamp": 1
+        },
+        {
+          "id": "message-b",
+          "role": "user",
+          "content": "source two",
+          "timestamp": 2
+        }
+      ],
+      "messageCount": 1,
+      "createdAt": 1,
+      "updatedAt": 1,
+      "version": 1
+    },
+    "reads": [
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ]
+        ]
+      },
+      {
+        "table": "artifacts",
+        "ids": [
+          "artifacts:7",
+          "artifacts:8"
+        ],
+        "index": "by_runtime_scope",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "conversations",
+        "ids": [
+          "conversations:6"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "conversations",
+        "ids": [
+          "conversations:6"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "mutation": "content",
+    "matched": true,
+    "outcome": "rejected",
+    "error": {
+      "code": "FORBIDDEN",
+      "message": "Artifact operation denied."
+    },
+    "sourceQueries": 2,
+    "injections": 1,
+    "attempts": [],
+    "sourceRow": {
+      "_id": "conversations:6",
+      "_creationTime": 1,
+      "conversationId": "conversation-a",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "type": "user-agent",
+      "participants": {
+        "userId": "attacker-label"
+      },
+      "messages": [
+        {
+          "id": "message-a",
+          "role": "user",
+          "content": "replaced first source",
+          "timestamp": 1
+        },
+        {
+          "id": "message-b",
+          "role": "user",
+          "content": "source two",
+          "timestamp": 2
+        }
+      ],
+      "messageCount": 1,
+      "createdAt": 1,
+      "updatedAt": 1,
+      "version": 1
+    },
+    "reads": [
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ]
+        ]
+      },
+      {
+        "table": "artifacts",
+        "ids": [
+          "artifacts:7",
+          "artifacts:8"
+        ],
+        "index": "by_runtime_scope",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "conversations",
+        "ids": [
+          "conversations:6"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "conversations",
+        "ids": [
+          "conversations:6"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "mutation": "version",
+    "matched": true,
+    "outcome": "rejected",
+    "error": {
+      "code": "FORBIDDEN",
+      "message": "Artifact operation denied."
+    },
+    "sourceQueries": 2,
+    "injections": 1,
+    "attempts": [],
+    "sourceRow": {
+      "_id": "conversations:6",
+      "_creationTime": 1,
+      "conversationId": "conversation-a",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "type": "user-agent",
+      "participants": {
+        "userId": "attacker-label"
+      },
+      "messages": [
+        {
+          "id": "message-a",
+          "role": "user",
+          "content": "source one",
+          "timestamp": 1
+        },
+        {
+          "id": "message-b",
+          "role": "user",
+          "content": "source two",
+          "timestamp": 2
+        }
+      ],
+      "messageCount": 1,
+      "createdAt": 1,
+      "updatedAt": 1,
+      "version": 2
+    },
+    "reads": [
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ]
+        ]
+      },
+      {
+        "table": "artifacts",
+        "ids": [
+          "artifacts:7",
+          "artifacts:8"
+        ],
+        "index": "by_runtime_scope",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "first"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "conversations",
+        "ids": [
+          "conversations:6"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "artifact"
+          ],
+          [
+            "resourceId",
+            "second"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthPrincipals",
+        "ids": [
+          "runtimeAuthPrincipals:1"
+        ],
+        "index": "by_issuer_subject",
+        "filters": [
+          [
+            "issuer",
+            "https://issuer.example"
+          ],
+          [
+            "subject",
+            "verified-subject"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthMemberships",
+        "ids": [
+          "runtimeAuthMemberships:2"
+        ],
+        "index": "by_principal_tenant",
+        "filters": [
+          [
+            "principalId",
+            "runtimeAuthPrincipals:1"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthGrants",
+        "ids": [
+          "runtimeAuthGrants:3"
+        ],
+        "index": "by_membership",
+        "filters": [
+          [
+            "membershipId",
+            "runtimeAuthMemberships:2"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:4"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "tenant"
+          ],
+          [
+            "resourceId",
+            "tenant-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthScopes",
+        "ids": [
+          "runtimeAuthScopes:5"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "memorySpace"
+          ],
+          [
+            "resourceId",
+            "space-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "runtimeAuthTombstones",
+        "ids": [],
+        "index": "by_resource",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            null
+          ],
+          [
+            "resourceType",
+            "conversation"
+          ],
+          [
+            "resourceId",
+            "conversation-a"
+          ]
+        ]
+      },
+      {
+        "table": "conversations",
+        "ids": [
+          "conversations:6"
+        ],
+        "index": "by_tenant_space",
+        "filters": [
+          [
+            "tenantId",
+            "tenant-a"
+          ],
+          [
+            "memorySpaceId",
+            "space-a"
+          ]
+        ]
+      }
+    ]
+  }
+]
