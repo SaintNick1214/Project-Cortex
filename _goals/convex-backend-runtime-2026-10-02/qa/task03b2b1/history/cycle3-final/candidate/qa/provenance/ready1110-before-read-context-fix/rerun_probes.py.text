@@ -1,0 +1,43 @@
+"""Offline byte-exact regression reruns to new private continuation paths."""
+import datetime
+import hashlib
+import json
+import os
+import pathlib
+import subprocess
+import time
+
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+QA = ROOT/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+OUT = QA/'cycle3/continuation/current-base-rerun/probes'
+OUT.mkdir(parents=True, exist_ok=True)
+PREFIX = ['npx', '--offline', '--cache', '/workspace/Project-Cortex/work/backend-runtime/npm12-cache', '--yes', '--package=npm@12.2.0', '--', 'npm', 'exec', '--', 'tsx']
+ENV = {**os.environ, 'npm_config_offline': 'true', 'npm_config_cache': '/workspace/Project-Cortex/work/backend-runtime/npm12-cache'}
+sources = ['convex-dev/runtimeRegistryAuth.ts', 'convex-dev/runtimeAuth.ts', 'src/auth/verified.ts'] + sorted(str(p.relative_to(ROOT)) for p in (ROOT/'tests/unit/runtimeRegistryAuth').glob('*.ts'))
+records = []
+probes = [
+    ('original-native-probes', pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/probes.mts'), 0),
+    ('original-authority-probes', pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/authority-probes.mts'), 0),
+    ('original-graph-boundary', pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/graph-boundary.mts'), 1),
+    ('repaired-graph-boundary', QA/'cycle2/graph-boundary.mts', 0),
+    ('original-accessor-finding', pathlib.Path('/tmp/task03b2b1-review2-onz6ay2u/accessor-probes.mts'), 1),
+    ('original-stateful-finding', pathlib.Path('/tmp/task03b2b1-review2-onz6ay2u/stateful-envelope-probes.mts'), 1),
+    ('repaired-accessor-outcomes', QA/'cycle3/accessor-outcomes.mts', 0),
+    ('repaired-stateful-outcomes', QA/'cycle3/stateful-outcomes.mts', 0),
+    ('repaired-admission-outcomes', QA/'cycle3/admission-probes.mts', 0),
+]
+for name, script, expected in probes:
+    hashes = {file: hashlib.sha256((ROOT/file).read_bytes()).hexdigest() for file in sources}
+    command = PREFIX + [str(script)]
+    start = datetime.datetime.now(datetime.timezone.utc).isoformat(); begin = time.monotonic()
+    result = subprocess.run(command, cwd=ROOT, env=ENV, text=True, capture_output=True)
+    (OUT/(name+'.stdout.json')).write_text(result.stdout); (OUT/(name+'.stderr.txt')).write_text(result.stderr)
+    records.append({'name': name, 'script': str(script), 'scriptSha256': hashlib.sha256(script.read_bytes()).hexdigest(),
+        'command': command, 'cwd': str(ROOT), 'utcStart': start, 'utcEnd': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        'seconds': round(time.monotonic()-begin, 3), 'exitCode': result.returncode, 'expectedExitCode': expected,
+        'sourceHashes': hashes, 'stdout': name+'.stdout.json', 'stderr': name+'.stderr.txt',
+        'classification': 'Immutable historical finding assertion exits1 on repaired outcomes; retained as expected non-PASS, no relabeling'
+            if expected == 1 else 'Observed asserted offline registered-handler regression outcomes; no live deployment claim'})
+    (OUT/'commands.json').write_text(json.dumps(records, indent=2)+'\n')
+    print(json.dumps({'name': name, 'exitCode': result.returncode, 'expectedExitCode': expected}), flush=True)
+assert all(row['exitCode'] == row['expectedExitCode'] for row in records)

@@ -1,0 +1,249 @@
+{
+  "classification": "Synthetic stateful/accessor-bearing exception data at actual native registered handlers; no claim these shapes come from installed QueryImpl.unique.",
+  "count": 12,
+  "outcomes": [
+    {
+      "path": "agents:update",
+      "stage": "canonicalRead",
+      "reached": true,
+      "attempts": 0,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"failed\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "agents:update",
+      "stage": "firstWrite",
+      "reached": true,
+      "attempts": 1,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"rolled_back\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "agents:update",
+      "stage": "postEffectReload",
+      "reached": true,
+      "attempts": 0,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"rolled_back\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "memorySpaces:update",
+      "stage": "canonicalRead",
+      "reached": true,
+      "attempts": 0,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"failed\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "memorySpaces:update",
+      "stage": "firstWrite",
+      "reached": true,
+      "attempts": 1,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"rolled_back\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "memorySpaces:update",
+      "stage": "postEffectReload",
+      "reached": true,
+      "attempts": 0,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"rolled_back\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "contexts:update",
+      "stage": "canonicalRead",
+      "reached": true,
+      "attempts": 0,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"failed\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "contexts:update",
+      "stage": "firstWrite",
+      "reached": true,
+      "attempts": 1,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"rolled_back\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "contexts:update",
+      "stage": "postEffectReload",
+      "reached": true,
+      "attempts": 0,
+      "reads": 0,
+      "committedWrites": 0,
+      "errorType": "ConvexError",
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"REGISTRY_OPERATION_FAILED\",\"message\":\"Registry operation failed\",\"retryable\":false,\"outcome\":\"rolled_back\"}",
+      "privateOutputLeak": false,
+      "synthetic": true
+    },
+    {
+      "path": "agents:update",
+      "stage": "nonenumerable-extra initial optional READ",
+      "reached": true,
+      "principalReads": 4,
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "writes": 0,
+      "ownDataKeys": [
+        "version",
+        "code",
+        "message",
+        "retryable",
+        "outcome",
+        "privateDriverPayload"
+      ],
+      "unexpectedDriverFaultBecameSuccess": false,
+      "synthetic": true
+    },
+    {
+      "path": "memorySpaces:update",
+      "stage": "nonenumerable-extra initial optional READ",
+      "reached": true,
+      "principalReads": 5,
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "writes": 0,
+      "ownDataKeys": [
+        "version",
+        "code",
+        "message",
+        "retryable",
+        "outcome",
+        "privateDriverPayload"
+      ],
+      "unexpectedDriverFaultBecameSuccess": false,
+      "synthetic": true
+    },
+    {
+      "path": "contexts:update",
+      "stage": "nonenumerable-extra initial optional READ",
+      "reached": true,
+      "principalReads": 4,
+      "errorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "writes": 0,
+      "ownDataKeys": [
+        "version",
+        "code",
+        "message",
+        "retryable",
+        "outcome",
+        "privateDriverPayload"
+      ],
+      "unexpectedDriverFaultBecameSuccess": false,
+      "synthetic": true
+    }
+  ]
+}

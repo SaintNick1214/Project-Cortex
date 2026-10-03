@@ -1,0 +1,140 @@
+[
+  {
+    "name": "tests",
+    "command": [
+      "npx",
+      "--offline",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "work/task03b2b1-cycle3-continuation/core-jest.cjs",
+      "--runInBand",
+      "--json",
+      "--outputFile=/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/cycle3/core-replay/accepted-fixture/tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+    "utcStart": "2026-10-03T13:47:22.299680+00:00",
+    "utcEnd": "2026-10-03T13:47:28.890943+00:00",
+    "exitCode": 0,
+    "sourceHashes": {
+      "convex-dev/runtimeAuth.ts": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "tests/unit/runtimeAuth/provisioning.test.ts": "54aca98b16f3ffb77d2d7740e986dfc68aa124e8baff56ae33486ccddc07b580",
+      "tests/unit/runtimeAuth/authority.test.ts": "1b7503136bd8e34da1f13fc2f68a828a28680ba352008266faf8e90f182f905c",
+      "tests/unit/runtimeAuth/inventory.test.ts": "df38d2f49861acc331e4fbad5fdac55ab0ede8cf39cc15d7df1cfd049c6d9a57",
+      "src/auth/verified.ts": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+      "convex-dev/runtimeAuthSchema.ts": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1"
+    },
+    "stdout": "tests.stdout.txt",
+    "stderr": "tests.stderr.txt"
+  },
+  {
+    "name": "core-root-types",
+    "command": [
+      "npx",
+      "--offline",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/tsconfig.authority-root.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+    "utcStart": "2026-10-03T13:47:28.891338+00:00",
+    "utcEnd": "2026-10-03T13:47:32.532295+00:00",
+    "exitCode": 0,
+    "sourceHashes": {
+      "convex-dev/runtimeAuth.ts": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "tests/unit/runtimeAuth/provisioning.test.ts": "54aca98b16f3ffb77d2d7740e986dfc68aa124e8baff56ae33486ccddc07b580",
+      "tests/unit/runtimeAuth/authority.test.ts": "1b7503136bd8e34da1f13fc2f68a828a28680ba352008266faf8e90f182f905c",
+      "tests/unit/runtimeAuth/inventory.test.ts": "df38d2f49861acc331e4fbad5fdac55ab0ede8cf39cc15d7df1cfd049c6d9a57",
+      "src/auth/verified.ts": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+      "convex-dev/runtimeAuthSchema.ts": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1"
+    },
+    "stdout": "core-root-types.stdout.txt",
+    "stderr": "core-root-types.stderr.txt"
+  },
+  {
+    "name": "core-backend-types",
+    "command": [
+      "npx",
+      "--offline",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/tsconfig.authority-backend.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+    "utcStart": "2026-10-03T13:47:32.532693+00:00",
+    "utcEnd": "2026-10-03T13:47:35.598193+00:00",
+    "exitCode": 0,
+    "sourceHashes": {
+      "convex-dev/runtimeAuth.ts": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "tests/unit/runtimeAuth/provisioning.test.ts": "54aca98b16f3ffb77d2d7740e986dfc68aa124e8baff56ae33486ccddc07b580",
+      "tests/unit/runtimeAuth/authority.test.ts": "1b7503136bd8e34da1f13fc2f68a828a28680ba352008266faf8e90f182f905c",
+      "tests/unit/runtimeAuth/inventory.test.ts": "df38d2f49861acc331e4fbad5fdac55ab0ede8cf39cc15d7df1cfd049c6d9a57",
+      "src/auth/verified.ts": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+      "convex-dev/runtimeAuthSchema.ts": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1"
+    },
+    "stdout": "core-backend-types.stdout.txt",
+    "stderr": "core-backend-types.stderr.txt"
+  },
+  {
+    "name": "core-lint",
+    "command": [
+      "npx",
+      "--offline",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "eslint",
+      "convex-dev/runtimeAuth.ts",
+      "convex-dev/runtimeAuthSchema.ts",
+      "src/auth/verified.ts",
+      "tests/unit/runtimeAuth",
+      "--max-warnings=0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+    "utcStart": "2026-10-03T13:47:35.598604+00:00",
+    "utcEnd": "2026-10-03T13:47:42.690624+00:00",
+    "exitCode": 0,
+    "sourceHashes": {
+      "convex-dev/runtimeAuth.ts": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "tests/unit/runtimeAuth/provisioning.test.ts": "54aca98b16f3ffb77d2d7740e986dfc68aa124e8baff56ae33486ccddc07b580",
+      "tests/unit/runtimeAuth/authority.test.ts": "1b7503136bd8e34da1f13fc2f68a828a28680ba352008266faf8e90f182f905c",
+      "tests/unit/runtimeAuth/inventory.test.ts": "df38d2f49861acc331e4fbad5fdac55ab0ede8cf39cc15d7df1cfd049c6d9a57",
+      "src/auth/verified.ts": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+      "convex-dev/runtimeAuthSchema.ts": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1"
+    },
+    "stdout": "core-lint.stdout.txt",
+    "stderr": "core-lint.stderr.txt"
+  }
+]

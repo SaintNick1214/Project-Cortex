@@ -1,0 +1,139 @@
+[
+  {
+    "name": "agent-status-bulk-retirement",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "args": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "status": "active"
+    },
+    "result": {
+      "deleted": 1
+    },
+    "leaksPrivateStoredIdentifier": false,
+    "writes": 2
+  },
+  {
+    "name": "context-filter-bulk-update",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "args": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "updates": {
+        "status": "completed"
+      }
+    },
+    "result": {
+      "updated": 1
+    },
+    "leaksPrivateStoredIdentifier": false,
+    "writes": 1
+  },
+  {
+    "name": "context-filter-bulk-retirement",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "args": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a"
+    },
+    "result": {
+      "deleted": 1
+    },
+    "leaksPrivateStoredIdentifier": false,
+    "writes": 2
+  },
+  {
+    "name": "write-only-orphan-child-identifier-receipt",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "args": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "contextId": "known-parent",
+      "orphanChildren": true
+    },
+    "result": {
+      "deleted": true,
+      "contextId": "known-parent",
+      "descendantsDeleted": 0
+    },
+    "leaksPrivateStoredIdentifier": false
+  },
+  {
+    "name": "agent-write-only-native-duplicate-error",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "errorType": "ConvexError",
+    "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "errorData": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "leaksPrivateStoredDocumentId": false,
+    "writes": 0,
+    "nativeUniqueImplementation": "Convex1.46 QueryImpl.prototype.unique (real installed dependency); take(2) delegated to traced fixture"
+  },
+  {
+    "name": "space-write-only-native-duplicate-error",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "errorType": "ConvexError",
+    "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "errorData": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "leaksPrivateStoredDocumentId": false,
+    "writes": 0,
+    "nativeUniqueImplementation": "Convex1.46 QueryImpl.prototype.unique (real installed dependency); take(2) delegated to traced fixture"
+  },
+  {
+    "name": "context-write-only-native-duplicate-error",
+    "capabilities": [
+      "write",
+      "admin"
+    ],
+    "errorType": "ConvexError",
+    "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "errorData": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied or invalid registry input",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "leaksPrivateStoredDocumentId": false,
+    "writes": 0,
+    "nativeUniqueImplementation": "Convex1.46 QueryImpl.prototype.unique (real installed dependency); take(2) delegated to traced fixture"
+  },
+  {
+    "name": "write-only-individual-safe-receipt-positive-control",
+    "result": {
+      "accepted": true,
+      "resourceType": "agents",
+      "resourceId": "agent-a"
+    },
+    "privatePayloadAbsent": true
+  }
+]

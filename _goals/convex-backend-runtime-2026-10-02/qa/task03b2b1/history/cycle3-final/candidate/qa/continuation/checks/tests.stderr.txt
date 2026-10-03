@@ -1,0 +1,48 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --experimental-vm-modules node_modules/jest/bin/jest.js --config _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/jest.scoped.cjs --runInBand --json --outputFile=/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/cycle3/continuation/checks/tests.json
+(node:78225) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts
+  ● cycle3 strict admission cannot prune malformed controls into another scope › spaces contexts:get explicit valid selection chooses the requested scope
+
+    expect(received).toContainEqual(expected) // deep equality
+
+    Expected value: ["memorySpaceId", "space-b"]
+    Received array: [["tenantId", "tenant-a"], ["memorySpaceId", "space-a"], ["contextId", "context-a"]]
+
+      35 |   for (const trace of f.db.traces.filter((trace) => domainTables.includes(trace.table))) {
+      36 |     expect(trace.keys).toContainEqual(["tenantId", f.secondTenant]);
+    > 37 |     expect(trace.keys).toContainEqual(["memorySpaceId", f.secondSpace]);
+         |                        ^
+      38 |   }
+      39 | }
+      40 |
+
+      at selectedOutput (tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts:37:24)
+      at tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts:75:5
+
+  ● cycle3 strict admission cannot prune malformed controls into another scope › spaces contexts:update explicit valid selection chooses the requested scope
+
+    expect(received).toContainEqual(expected) // deep equality
+
+    Expected value: ["memorySpaceId", "space-b"]
+    Received array: [["tenantId", "tenant-a"], ["memorySpaceId", "space-a"], ["contextId", "context-a"]]
+
+      35 |   for (const trace of f.db.traces.filter((trace) => domainTables.includes(trace.table))) {
+      36 |     expect(trace.keys).toContainEqual(["tenantId", f.secondTenant]);
+    > 37 |     expect(trace.keys).toContainEqual(["memorySpaceId", f.secondSpace]);
+         |                        ^
+      38 |   }
+      39 | }
+      40 |
+
+      at selectedOutput (tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts:37:24)
+      at tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts:75:5
+
+
+Test Suites: 1 failed, 6 passed, 7 total
+Tests:       2 failed, 1042 passed, 1044 total
+Snapshots:   0 total
+Time:        6.861 s, estimated 18 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/cycle3/continuation/checks/tests.json

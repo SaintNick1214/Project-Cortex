@@ -1,0 +1,1290 @@
+{
+  "mode": "pre-repair observed outcomes without a PASS claim",
+  "count": 44,
+  "outcomes": [
+    {
+      "path": "agents:get",
+      "scopes": "spaces",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "agents:get",
+      "scopes": "spaces",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:9",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-b",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Agent A",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:get",
+      "scopes": "spaces",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "agents:get",
+      "scopes": "spaces",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:9",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-b",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Agent A",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:update",
+      "scopes": "spaces",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "agents:update",
+      "scopes": "spaces",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:9",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-b",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Updated",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1791032999525
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:update",
+      "scopes": "spaces",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "agents:update",
+      "scopes": "spaces",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:9",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-b",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Updated",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1791032999530
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:get",
+      "scopes": "spaces",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "contexts:get",
+      "scopes": "spaces",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:10",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-b",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-b"
+        ],
+        "previousVersions": [],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1000,
+        "userId": "user-a",
+        "version": 1
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:get",
+      "scopes": "spaces",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "contexts:get",
+      "scopes": "spaces",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:10",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-b",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-b"
+        ],
+        "previousVersions": [],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1000,
+        "userId": "user-a",
+        "version": 1
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:update",
+      "scopes": "spaces",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "contexts:update",
+      "scopes": "spaces",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:10",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-b",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-b"
+        ],
+        "previousVersions": [
+          {
+            "version": 1,
+            "status": "active",
+            "data": {
+              "private": "a"
+            },
+            "timestamp": 1000,
+            "updatedBy": "runtimeAuthPrincipals:1"
+          }
+        ],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1791032999542,
+        "userId": "user-a",
+        "version": 2,
+        "description": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:update",
+      "scopes": "spaces",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "contexts:update",
+      "scopes": "spaces",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:10",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-b",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-b"
+        ],
+        "previousVersions": [
+          {
+            "version": 1,
+            "status": "active",
+            "data": {
+              "private": "a"
+            },
+            "timestamp": 1000,
+            "updatedBy": "runtimeAuthPrincipals:1"
+          }
+        ],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-a",
+        "updatedAt": 1791032999547,
+        "userId": "user-a",
+        "version": 2,
+        "description": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:get",
+      "scopes": "tenants",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:11",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-a",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Agent A",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:get",
+      "scopes": "tenants",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:11",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-a",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Agent A",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:get",
+      "scopes": "tenants",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:11",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-a",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Agent A",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:get",
+      "scopes": "tenants",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:11",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-a",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Agent A",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:update",
+      "scopes": "tenants",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:11",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-a",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Updated",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1791032999555
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:update",
+      "scopes": "tenants",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:11",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-a",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Updated",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1791032999558
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:update",
+      "scopes": "tenants",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:11",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-a",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Updated",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1791032999561
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "agents:update",
+      "scopes": "tenants",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "agents:11",
+        "agentId": "agent-a",
+        "config": {},
+        "memorySpaceId": "space-a",
+        "metadata": {
+          "marker": "healthy-second-scope-private-value"
+        },
+        "name": "Updated",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "registeredAt": 1000,
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1791032999564
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:get",
+      "scopes": "tenants",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:12",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1000,
+        "userId": "user-a",
+        "version": 1
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:get",
+      "scopes": "tenants",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:12",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1000,
+        "userId": "user-a",
+        "version": 1
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:get",
+      "scopes": "tenants",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:12",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1000,
+        "userId": "user-a",
+        "version": 1
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:get",
+      "scopes": "tenants",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:12",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1000,
+        "userId": "user-a",
+        "version": 1
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:update",
+      "scopes": "tenants",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:12",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [
+          {
+            "version": 1,
+            "status": "active",
+            "data": {
+              "private": "a"
+            },
+            "timestamp": 1000,
+            "updatedBy": "runtimeAuthPrincipals:1"
+          }
+        ],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1791032999572,
+        "userId": "user-a",
+        "version": 2,
+        "description": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:update",
+      "scopes": "tenants",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:12",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [
+          {
+            "version": 1,
+            "status": "active",
+            "data": {
+              "private": "a"
+            },
+            "timestamp": 1000,
+            "updatedBy": "runtimeAuthPrincipals:1"
+          }
+        ],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1791032999574,
+        "userId": "user-a",
+        "version": 2,
+        "description": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:update",
+      "scopes": "tenants",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:12",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [
+          {
+            "version": 1,
+            "status": "active",
+            "data": {
+              "private": "a"
+            },
+            "timestamp": 1000,
+            "updatedBy": "runtimeAuthPrincipals:1"
+          }
+        ],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1791032999577,
+        "userId": "user-a",
+        "version": 2,
+        "description": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "contexts:update",
+      "scopes": "tenants",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "contexts:12",
+        "childIds": [],
+        "contextId": "context-a",
+        "createdAt": 1000,
+        "data": {
+          "private": "a"
+        },
+        "depth": 0,
+        "grantedAccess": [],
+        "lastUpdatedBy": "runtimeAuthPrincipals:1",
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [
+          "space-a"
+        ],
+        "previousVersions": [
+          {
+            "version": 1,
+            "status": "active",
+            "data": {
+              "private": "a"
+            },
+            "timestamp": 1000,
+            "updatedBy": "runtimeAuthPrincipals:1"
+          }
+        ],
+        "purpose": "Task A",
+        "rootId": "context-a",
+        "status": "active",
+        "tenantId": "tenant-b",
+        "updatedAt": 1791032999579,
+        "userId": "user-a",
+        "version": 2,
+        "description": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:list",
+      "scopes": "spaces",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "memorySpaces:list",
+      "scopes": "spaces",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "spaces": [
+          {
+            "_creationTime": 1000,
+            "_id": "memorySpaces:8",
+            "createdAt": 1000,
+            "memorySpaceId": "space-b",
+            "metadata": {},
+            "ownerPrincipalId": "runtimeAuthPrincipals:1",
+            "participants": [],
+            "status": "active",
+            "tenantId": "tenant-a",
+            "type": "personal",
+            "updatedAt": 1000
+          }
+        ],
+        "total": 1,
+        "hasMore": false,
+        "offset": 0
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:list",
+      "scopes": "spaces",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": false,
+      "result": null,
+      "errorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "errorMessage": "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    {
+      "path": "memorySpaces:list",
+      "scopes": "spaces",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "spaces": [
+          {
+            "_creationTime": 1000,
+            "_id": "memorySpaces:8",
+            "createdAt": 1000,
+            "memorySpaceId": "space-b",
+            "metadata": {},
+            "ownerPrincipalId": "runtimeAuthPrincipals:1",
+            "participants": [],
+            "status": "active",
+            "tenantId": "tenant-a",
+            "type": "personal",
+            "updatedAt": 1000
+          }
+        ],
+        "total": 1,
+        "hasMore": false,
+        "offset": 0
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:get",
+      "scopes": "tenants",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "memorySpaces:10",
+        "createdAt": 1000,
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [],
+        "status": "active",
+        "tenantId": "tenant-b",
+        "type": "personal",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:get",
+      "scopes": "tenants",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "memorySpaces:10",
+        "createdAt": 1000,
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [],
+        "status": "active",
+        "tenantId": "tenant-b",
+        "type": "personal",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:get",
+      "scopes": "tenants",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "memorySpaces:10",
+        "createdAt": 1000,
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [],
+        "status": "active",
+        "tenantId": "tenant-b",
+        "type": "personal",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:get",
+      "scopes": "tenants",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 0,
+      "writes": 0,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "memorySpaces:10",
+        "createdAt": 1000,
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [],
+        "status": "active",
+        "tenantId": "tenant-b",
+        "type": "personal",
+        "updatedAt": 1000
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:update",
+      "scopes": "tenants",
+      "corruption": "tenantScope",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "memorySpaces:10",
+        "createdAt": 1000,
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [],
+        "status": "active",
+        "tenantId": "tenant-b",
+        "type": "personal",
+        "updatedAt": 1791032999590,
+        "name": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:update",
+      "scopes": "tenants",
+      "corruption": "spaceScope",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "memorySpaces:10",
+        "createdAt": 1000,
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [],
+        "status": "active",
+        "tenantId": "tenant-b",
+        "type": "personal",
+        "updatedAt": 1791032999593,
+        "name": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:update",
+      "scopes": "tenants",
+      "corruption": "tenantTombstone",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "memorySpaces:10",
+        "createdAt": 1000,
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [],
+        "status": "active",
+        "tenantId": "tenant-b",
+        "type": "personal",
+        "updatedAt": 1791032999596,
+        "name": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    },
+    {
+      "path": "memorySpaces:update",
+      "scopes": "tenants",
+      "corruption": "spaceTombstone",
+      "reached": true,
+      "attempts": 1,
+      "writes": 1,
+      "success": true,
+      "result": {
+        "_creationTime": 1000,
+        "_id": "memorySpaces:10",
+        "createdAt": 1000,
+        "memorySpaceId": "space-a",
+        "metadata": {},
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "participants": [],
+        "status": "active",
+        "tenantId": "tenant-b",
+        "type": "personal",
+        "updatedAt": 1791032999599,
+        "name": "Updated"
+      },
+      "errorData": null,
+      "errorMessage": null
+    }
+  ]
+}

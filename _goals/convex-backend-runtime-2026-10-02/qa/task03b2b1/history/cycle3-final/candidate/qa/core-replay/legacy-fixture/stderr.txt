@@ -1,0 +1,245 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --experimental-vm-modules node_modules/jest/bin/jest.js --config work/task03b2b1-cycle3-continuation/core-jest.cjs --runInBand --json --outputFile=/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/cycle3/core-replay/legacy-fixture/tests.json
+(node:87252) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAuth/provisioning.test.ts
+  ● internal bootstrap and trusted control table adapters › provisions only trusted control records, returns immutable references and is idempotent
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:88:19)
+
+  ● internal bootstrap and trusted control table adapters › resolves public identity through Convex auth and never uses tokenIdentifier or admin metadata
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:100:5)
+
+  ● internal bootstrap and trusted control table adapters › adapts internal action authorization and sessionless background rechecks without mutating authority
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:120:44)
+
+  ● internal bootstrap and trusted control table adapters › replaces changed capabilities with a new grant generation and invalidates pending old work
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:130:40)
+
+  ● internal bootstrap and trusted control table adapters › revokes an exact grant permanently; only an explicit trusted new generation can issue later authority
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:142:40)
+
+  ● internal bootstrap and trusted control table adapters › retains membership revocation fences and refuses to re-provision the same membership
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:155:40)
+
+  ● internal bootstrap and trusted control table adapters › retains principal deletion fences and refuses issuer/subject recreation
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:166:40)
+
+  ● internal bootstrap and trusted control table adapters › fences deleted scope undefined and prevents bootstrap recreation
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at tests/unit/runtimeAuth/provisioning.test.ts:177:40
+
+  ● internal bootstrap and trusted control table adapters › fences deleted scope space-a and prevents bootstrap recreation
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at tests/unit/runtimeAuth/provisioning.test.ts:177:40
+
+  ● internal bootstrap and trusted control table adapters › records deletion even before a scope is provisioned, preventing later resurrection
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at handler (convex-dev/runtimeAuth.ts:387:43)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:191:5)
+
+  ● internal bootstrap and trusted control table adapters › tombstones a resource idempotently and rejects its delayed read/commit
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:197:40)
+
+  ● internal bootstrap and trusted control table adapters › rejects invalid provisioning, actor rebinding and metadata-user rebinding
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:216:5)
+
+  ● internal bootstrap and trusted control table adapters › uses table-specific ID normalization and rejects duplicate exact issuer/subject records
+
+    TypeError: query.take is not a function
+
+      205 | /** Avoid native unique() diagnostics containing trusted control document IDs. */
+      206 | async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
+    > 207 |   const rows = await query.take(2);
+          |                            ^
+      208 |   if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+      209 |     message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+      210 |   return rows[0] ?? null;
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:241:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:280:40)
+      at handler (convex-dev/runtimeAuth.ts:303:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:222:26)
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       13 failed, 120 passed, 133 total
+Snapshots:   0 total
+Time:        7.75 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/cycle3/core-replay/legacy-fixture/tests.json

@@ -1,0 +1,87 @@
+{
+  "literalFailed": 13,
+  "literalPassed": 120,
+  "total": 133,
+  "zeroSkipped": true,
+  "classification": "All13 exact literal failures are TypeError query.take is not a function from old MemoryDb fixture; no authority/inventory outcome failure and no test adjustment performed. Parent accepted test-dependency refresh required.",
+  "failures": [
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters provisions only trusted control records, returns immutable references and is idempotent",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters resolves public identity through Convex auth and never uses tokenIdentifier or admin metadata",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters adapts internal action authorization and sessionless background rechecks without mutating authority",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters replaces changed capabilities with a new grant generation and invalidates pending old work",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters revokes an exact grant permanently; only an explicit trusted new generation can issue later authority",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters retains membership revocation fences and refuses to re-provision the same membership",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters retains principal deletion fences and refuses issuer/subject recreation",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters fences deleted scope undefined and prevents bootstrap recreation",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters fences deleted scope space-a and prevents bootstrap recreation",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters records deletion even before a scope is provisioned, preventing later resurrection",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters tombstones a resource idempotently and rejects its delayed read/commit",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters rejects invalid provisioning, actor rebinding and metadata-user rebinding",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    },
+    {
+      "suite": "provisioning.test.ts",
+      "name": "internal bootstrap and trusted control table adapters uses table-specific ID normalization and rejects duplicate exact issuer/subject records",
+      "firstError": "TypeError: query.take is not a function",
+      "hasMissingTake": true
+    }
+  ]
+}

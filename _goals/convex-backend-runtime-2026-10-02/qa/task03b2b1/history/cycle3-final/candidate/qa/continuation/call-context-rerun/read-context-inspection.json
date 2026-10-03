@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-03T13:32:26.057602+00:00",
+  "finding": "No legitimate policy denial is emitted by createAuthorityReader read bodies. Low-level exceptions must not be accepted as prunable resolver decisions merely because their static envelope resembles one.",
+  "readerMethods": {
+    "findPrincipal": "indexed native unique",
+    "getPrincipal": "normalizeId/get",
+    "listMemberships": "normalizeId/indexed collect",
+    "getMembership": "normalizeId/get",
+    "listGrants": "normalizeId/indexed collect",
+    "getGrant": "normalizeId/get",
+    "getScope": "indexed native unique",
+    "hasTombstone": "indexed native unique reduced to Boolean"
+  },
+  "policyLocationsOutsideBoundary": [
+    "runtimeAuth.validateRequirement",
+    "runtimeAuth.active/assertSingleActiveGeneration",
+    "runtimeAuth.materialize capability,actor,expiry,scope epoch,owner and tombstone decisions",
+    "runtimeAuth.resolveAuthority omitted-scope/candidate uniqueness",
+    "runtimeAuth.resolveAuthorityReference retained reference/currentness"
+  ],
+  "installedReadBehavior": "Convex1.46 database_impl performs argument validation and read syscalls; QueryImpl.unique throws ordinary Error on2 results. No implementation path emits a known permission envelope from these read bodies. This is dependency source inspection, no live-service assertion.",
+  "choice": "controlRead discards failure.code in every context. Strict reads always throw REGISTRY_OPERATION_FAILED. Only referenceOnly && descriptor-safe exact/native ambiguity can preserve FORBIDDEN in pinned final checks with no alternative-scope selection. Outer operation continues to preserve legitimate known policy/input/readiness codes thrown outside read bodies.",
+  "sourceChange": "One code-selection expression plus explanatory comment in permitted helper; no resolver/database adapter source changed.",
+  "outcomeControls": "36 exact-envelope low-level initial/optional-READ/post-effect reference cases require reached injection, separate failure code,0 commits and exact rollback; genuine READ/expiry/revocation/pruning behavior is covered by preserved full suites.",
+  "sources": {
+    "convex-dev/runtimeAuth.ts": {
+      "sha256": "f2985d405d13e8094b6b8729d72979819ad22897cc614c1fdf44addb37bb4e9f",
+      "bytes": 22793
+    },
+    "convex-dev/runtimeRegistryAuth.ts": {
+      "sha256": "ce7a0770803bef6b68440a0cd1b103228b2da20a5bf386a909a14d022101e8e5",
+      "bytes": 34998
+    },
+    "node_modules/convex/src/server/impl/database_impl.ts": {
+      "sha256": "bf436688f63d62730635bb6865ff039433e2f0011aeaf5f80a1b1d9e7e97fe8a",
+      "bytes": 6276
+    },
+    "node_modules/convex/src/server/impl/query_impl.ts": {
+      "sha256": "18deadd486a3c701d534a739057b3fd3b9fd8a38a42942b9d4f91e5fe387bf99",
+      "bytes": 10098
+    },
+    "tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts": {
+      "sha256": "2ea67653090942b85f5abc4c0b270bd40b496bbd3c9107793a84b0ed26a6d65f",
+      "bytes": 3058
+    }
+  },
+  "preservedReady1110": "cycle3/provenance/ready1110-before-read-context-fix/preservation-manifest.json verifies42 source hashes and48 raw records; prior helper source saved exactly.",
+  "status": "Same third repair cycle; core dependency refresh/final freeze/fresh third review remain HOLD"
+}
