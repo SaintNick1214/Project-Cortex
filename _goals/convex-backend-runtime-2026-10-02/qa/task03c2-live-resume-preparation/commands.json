@@ -1,0 +1,290 @@
+[
+  {
+    "name": "key-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/key-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:58:46.428748+00:00",
+    "endUtc": "2026-10-03T19:58:46.630168+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "guard-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/guard-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:58:46.630607+00:00",
+    "endUtc": "2026-10-03T19:58:47.069747+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "classifier-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/classifier-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:58:47.070168+00:00",
+    "endUtc": "2026-10-03T19:58:47.238734+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "driver-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/driver-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:58:47.239147+00:00",
+    "endUtc": "2026-10-03T19:58:53.731018+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "classifier-adversarial",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/classifier-adversarial.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:58:53.731677+00:00",
+    "endUtc": "2026-10-03T19:58:53.903981+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "process-check-cycle3",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/process-check-cycle3.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:58:53.904473+00:00",
+    "endUtc": "2026-10-03T19:59:03.811495+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "receipt-check-cycle3",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/receipt-check-cycle3.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:03.812196+00:00",
+    "endUtc": "2026-10-03T19:59:07.697900+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "entrypoint-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/entrypoint-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:07.698437+00:00",
+    "endUtc": "2026-10-03T19:59:08.037273+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "bounds-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/bounds-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:08.038078+00:00",
+    "endUtc": "2026-10-03T19:59:08.453921+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "packed-prep",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/packed-prep.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:08.454406+00:00",
+    "endUtc": "2026-10-03T19:59:08.778205+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "client-prep",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/client-prep.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:08.778798+00:00",
+    "endUtc": "2026-10-03T19:59:09.544059+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "client-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/client-tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:09.544571+00:00",
+    "endUtc": "2026-10-03T19:59:17.465028+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "backend-es2021-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:17.465630+00:00",
+    "endUtc": "2026-10-03T19:59:19.910332+00:00",
+    "exitCode": 0
+  },
+  {
+    "name": "scoped-eslint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:19.910888+00:00",
+    "endUtc": "2026-10-03T19:59:22.770195+00:00",
+    "exitCode": 1
+  },
+  {
+    "name": "scoped-eslint-corrected",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "--config",
+      "work/resume/fresh-identity/eslint.config.mjs",
+      "--format",
+      "json",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/auth.config.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/immutable.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/mutable.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/runtimeAuth.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/runtimeAuthSchema.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/runtimeMemorySchema.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/runtimeMetadataAuth.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/schema.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/sessions.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/convex/users.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/src/auth/verified.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/bounds-check.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/case-ledger.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/cases.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/classifier-adversarial.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/classifier-check.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/cleanup.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/client-prep.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/client.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/create.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/deploy.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/driver-check.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/driver-engine.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/driver.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/entrypoint-check.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/guard-check.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/guard.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/key-check.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/operator-classifier.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/operator.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/packed-prep.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/parent-channel.ts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/process-check-cycle3.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/process-owner.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/process-terminal.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/protocol.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/qualify.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/reactive-transport.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/scripts/receipt-check-cycle3.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:52.097729+00:00",
+    "endUtc": "2026-10-03T19:59:57.630154+00:00",
+    "exitCode": 0,
+    "environmentNames": []
+  },
+  {
+    "name": "environment-provider-rejected",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+      "-e",
+      "process.stdout.write(\"offline-env-body-ran\\n\")"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:57.631045+00:00",
+    "endUtc": "2026-10-03T19:59:57.668515+00:00",
+    "exitCode": 1,
+    "environmentNames": [
+      "OPENAI_API_KEY"
+    ]
+  },
+  {
+    "name": "environment-deployment-rejected",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+      "-e",
+      "process.stdout.write(\"offline-env-body-ran\\n\")"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:57.669214+00:00",
+    "endUtc": "2026-10-03T19:59:57.702164+00:00",
+    "exitCode": 1,
+    "environmentNames": [
+      "CONVEX_DEPLOYMENT"
+    ]
+  },
+  {
+    "name": "environment-private-selector-rejected",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+      "-e",
+      "process.stdout.write(\"offline-env-body-ran\\n\")"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:57.702661+00:00",
+    "endUtc": "2026-10-03T19:59:57.750794+00:00",
+    "exitCode": 1,
+    "environmentNames": [
+      "CORTEX_QUALIFICATION_TARGET_RECEIPT"
+    ]
+  },
+  {
+    "name": "environment-clean-environment",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+      "-e",
+      "process.stdout.write(\"offline-env-body-ran\\n\")"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUtc": "2026-10-03T19:59:57.751365+00:00",
+    "endUtc": "2026-10-03T19:59:57.786050+00:00",
+    "exitCode": 0,
+    "environmentNames": []
+  }
+]
