@@ -1,0 +1,39 @@
+import datetime
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+root = Path('/workspace/Project-Cortex')
+name, *argv = sys.argv[1:]
+if not name.replace('-', '').isalnum() or not argv:
+    raise SystemExit('Expected operation name and argv')
+out = root / 'work/backend-runtime/auth-live-execution'
+out.mkdir(mode=0o700, exist_ok=True)
+record = out / f'{name}.command.json'
+if record.exists():
+    raise SystemExit('Append-only operation receipt already exists')
+selectors = {
+    'NODE_USE_ENV_PROXY': '1',
+    'CORTEX_QUALIFICATION_TARGET_RECEIPT': str(root / 'work/backend-runtime/task03c2-live-fixture/target.json'),
+    'CORTEX_QUALIFICATION_DEPLOY_ENV': str(root / 'work/backend-runtime/task03c2-live-fixture/deploy.env'),
+}
+env = dict(os.environ)
+env.update(selectors)
+receipt = {'argv': argv, 'cwd': str(root), 'commandLocalEnvironment': selectors,
+           'startedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'status': 'RUNNING'}
+record.write_text(json.dumps(receipt, indent=2) + '\n')
+record.chmod(0o600)
+with open(out / f'{name}.stdout', 'x') as stdout, open(out / f'{name}.stderr', 'x') as stderr:
+    os.chmod(stdout.name, 0o600)
+    os.chmod(stderr.name, 0o600)
+    result = subprocess.run(argv, cwd=root, env=env, stdout=stdout, stderr=stderr)
+receipt.update(endedAt=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+               exitCode=result.returncode, status='COMPLETED')
+record.write_text(json.dumps(receipt, indent=2) + '\n')
+print(json.dumps(receipt))
+print((out / f'{name}.stdout').read_text())
+if result.returncode:
+    print('Private stderr retained; inspect with redaction before publication.')
+sys.exit(result.returncode)
