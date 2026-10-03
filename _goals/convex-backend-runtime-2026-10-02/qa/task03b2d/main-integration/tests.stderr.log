@@ -1,0 +1,64 @@
+(node:25917) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● actual registered visibility and canonical schema/AST catalog › preserves every unrelated schema table declaration from the reviewed base
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 0
+    + Received  + 8
+
+    @@ -1,6 +1,12 @@
+      memories: defineTable({
+    +     // Fresh runtime ownership/provenance; old unowned rows are never adopted.
+    +     ownerPrincipalId: v.optional(v.string()),
+    +     runtimeEditor: v.optional(v.object({ principalId: v.string(), userId: v.string(), editedAt: v.number() })),
+    +     manualSourceBinding: v.optional(v.object({ resourceType: v.union(v.literal("memory"), v.literal("fact")), resourceId: v.string() })),
+    +     lineage: v.optional(sourceLineage),
+    +     tombstonedAt: v.optional(v.number()),
+          // Identity
+          memoryId: v.string(), // Unique ID for this memory
+          memorySpaceId: v.string(), // NEW: Memory space isolation (was agentId)
+          participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking
+
+    @@ -104,10 +110,11 @@
+          isPartial: v.optional(v.boolean()), // Flag for in-progress streaming memories
+          partialMetadata: v.optional(v.any()), // Metadata for partial/streaming memories
+        })
+          .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's memories
+          .index("by_memoryId", ["memoryId"]) // Unique lookup
+    +     .index("by_runtime_scope_memoryId", ["tenantId", "memorySpaceId", "memoryId"])
+          .index("by_tenantId", ["tenantId"]) // Tenant's memories
+          .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
+          .index("by_userId", ["userId"]) // GDPR cascade
+          .index("by_agentId", ["agentId"]) // Agent deletion cascade
+          .index("by_memorySpace_created", ["memorySpaceId", "createdAt"]) // NEW: Chronological
+    @@ -115,10 +122,11 @@
+          .index("by_memorySpace_agentId", ["memorySpaceId", "agentId"]) // NEW: Space + agent
+          .index("by_participantId", ["participantId"]) // NEW: Hive Mode tracking
+          .searchIndex("by_content", {
+            searchField: "content",
+            filterFields: [
+    +         "ownerPrincipalId",
+              "memorySpaceId",
+              "tenantId",
+              "sourceType",
+              "userId",
+              "agentId",
+
+      115 |     const tableNames = (schema as unknown as { tables: Record<string, unknown> }).tables;
+      116 |     for (const table of Object.keys(tableNames).filter((name) => !["governancePolicies", "governanceEnforcement", "graphSyncQueue"].includes(name))) {
+    > 117 |       if (old.has(table)) expect(current.get(table)).toBe(old.get(table));
+          |                                                      ^
+      118 |     }
+      119 |   });
+      120 |   it("native public/internal validators reject caller entity/admin metadata and require worker references", () => {
+
+      at Object.<anonymous> (tests/unit/runtimeWorkerAuth/admin-catalog.test.ts:117:54)
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 184 passed, 185 total
+Snapshots:   0 total
+Time:        11.051 s
+Ran all test suites.

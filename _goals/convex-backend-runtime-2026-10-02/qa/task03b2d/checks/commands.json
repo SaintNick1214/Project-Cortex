@@ -1,0 +1,391 @@
+[
+  {
+    "name": "typecheck",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/tsconfig.scoped.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "startedAt": "2026-10-03T10:15:29.205761+00:00",
+    "completedAt": "2026-10-03T10:15:32.018144+00:00",
+    "elapsedSeconds": 2.812389400000029,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "542a07b4e2cdca557d01740da97d4dc4e8b9c4ca3d22cc71b3771dc466522617"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "dcecce4f2bfc78e84d7dfde7684ffbfa35d64c7e66a8bba21fa790cb1ce25c09"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/fixture.ts",
+        "sha256": "ddb8dce2e5dcc855dea5a5d57c04108cdd39b3fb954ce79c4b9b61bc65371d73"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "sha256": "7d582eb8cb2f9b402b1b19cd627f2d1e5961db31cb44b0369159e3b552b93b51"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "sha256": "bd17bbc3ef418c38cf6533f75a96d8e890a3e7c6ea0061fffc443da9f8c3c7f3"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/typecheck-final.log"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/admin.ts",
+      "convex-dev/governance.ts",
+      "convex-dev/graphSync.ts",
+      "convex-dev/runtimeWorkerAuth.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeWorkerAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "startedAt": "2026-10-03T10:15:32.018481+00:00",
+    "completedAt": "2026-10-03T10:15:38.124871+00:00",
+    "elapsedSeconds": 6.106400544998905,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "542a07b4e2cdca557d01740da97d4dc4e8b9c4ca3d22cc71b3771dc466522617"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "dcecce4f2bfc78e84d7dfde7684ffbfa35d64c7e66a8bba21fa790cb1ce25c09"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/fixture.ts",
+        "sha256": "ddb8dce2e5dcc855dea5a5d57c04108cdd39b3fb954ce79c4b9b61bc65371d73"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "sha256": "7d582eb8cb2f9b402b1b19cd627f2d1e5961db31cb44b0369159e3b552b93b51"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "sha256": "bd17bbc3ef418c38cf6533f75a96d8e890a3e7c6ea0061fffc443da9f8c3c7f3"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/lint-final.log"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/jest.scoped.cjs",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "startedAt": "2026-10-03T10:15:38.125252+00:00",
+    "completedAt": "2026-10-03T10:15:38.280113+00:00",
+    "elapsedSeconds": 0.15486880100070266,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "542a07b4e2cdca557d01740da97d4dc4e8b9c4ca3d22cc71b3771dc466522617"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "dcecce4f2bfc78e84d7dfde7684ffbfa35d64c7e66a8bba21fa790cb1ce25c09"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/fixture.ts",
+        "sha256": "ddb8dce2e5dcc855dea5a5d57c04108cdd39b3fb954ce79c4b9b61bc65371d73"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "sha256": "7d582eb8cb2f9b402b1b19cd627f2d1e5961db31cb44b0369159e3b552b93b51"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "sha256": "bd17bbc3ef418c38cf6533f75a96d8e890a3e7c6ea0061fffc443da9f8c3c7f3"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/discovery-final.log"
+  },
+  {
+    "name": "tests",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/jest.scoped.cjs",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/tests-final.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "startedAt": "2026-10-03T10:15:38.280695+00:00",
+    "completedAt": "2026-10-03T10:15:43.126188+00:00",
+    "elapsedSeconds": 4.84539455400045,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "542a07b4e2cdca557d01740da97d4dc4e8b9c4ca3d22cc71b3771dc466522617"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "dcecce4f2bfc78e84d7dfde7684ffbfa35d64c7e66a8bba21fa790cb1ce25c09"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/fixture.ts",
+        "sha256": "ddb8dce2e5dcc855dea5a5d57c04108cdd39b3fb954ce79c4b9b61bc65371d73"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "sha256": "7d582eb8cb2f9b402b1b19cd627f2d1e5961db31cb44b0369159e3b552b93b51"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "sha256": "bd17bbc3ef418c38cf6533f75a96d8e890a3e7c6ea0061fffc443da9f8c3c7f3"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/tests-final.log"
+  },
+  {
+    "name": "catalog",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "startedAt": "2026-10-03T10:15:43.126577+00:00",
+    "completedAt": "2026-10-03T10:15:43.541137+00:00",
+    "elapsedSeconds": 0.4145703180001874,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "542a07b4e2cdca557d01740da97d4dc4e8b9c4ca3d22cc71b3771dc466522617"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "dcecce4f2bfc78e84d7dfde7684ffbfa35d64c7e66a8bba21fa790cb1ce25c09"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/fixture.ts",
+        "sha256": "ddb8dce2e5dcc855dea5a5d57c04108cdd39b3fb954ce79c4b9b61bc65371d73"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "sha256": "7d582eb8cb2f9b402b1b19cd627f2d1e5961db31cb44b0369159e3b552b93b51"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "sha256": "bd17bbc3ef418c38cf6533f75a96d8e890a3e7c6ea0061fffc443da9f8c3c7f3"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/catalog-final.log"
+  },
+  {
+    "name": "root-types-tests-diagnostics",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "startedAt": "2026-10-03T10:15:43.541612+00:00",
+    "completedAt": "2026-10-03T10:15:54.407508+00:00",
+    "elapsedSeconds": 10.865906218999953,
+    "exitCode": 2,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "542a07b4e2cdca557d01740da97d4dc4e8b9c4ca3d22cc71b3771dc466522617"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "dcecce4f2bfc78e84d7dfde7684ffbfa35d64c7e66a8bba21fa790cb1ce25c09"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/fixture.ts",
+        "sha256": "ddb8dce2e5dcc855dea5a5d57c04108cdd39b3fb954ce79c4b9b61bc65371d73"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "sha256": "7d582eb8cb2f9b402b1b19cd627f2d1e5961db31cb44b0369159e3b552b93b51"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "sha256": "bd17bbc3ef418c38cf6533f75a96d8e890a3e7c6ea0061fffc443da9f8c3c7f3"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/root-types-tests-diagnostics-final.log"
+  },
+  {
+    "name": "root-diagnostics",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "tsconfig.lint.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "startedAt": "2026-10-03T10:15:54.407956+00:00",
+    "completedAt": "2026-10-03T10:16:02.616331+00:00",
+    "elapsedSeconds": 8.208385889000056,
+    "exitCode": 2,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "542a07b4e2cdca557d01740da97d4dc4e8b9c4ca3d22cc71b3771dc466522617"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "dcecce4f2bfc78e84d7dfde7684ffbfa35d64c7e66a8bba21fa790cb1ce25c09"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/fixture.ts",
+        "sha256": "ddb8dce2e5dcc855dea5a5d57c04108cdd39b3fb954ce79c4b9b61bc65371d73"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/governance.test.ts",
+        "sha256": "7d582eb8cb2f9b402b1b19cd627f2d1e5961db31cb44b0369159e3b552b93b51"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/graph.test.ts",
+        "sha256": "bd17bbc3ef418c38cf6533f75a96d8e890a3e7c6ea0061fffc443da9f8c3c7f3"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/checks/root-diagnostics-final.log"
+  }
+]

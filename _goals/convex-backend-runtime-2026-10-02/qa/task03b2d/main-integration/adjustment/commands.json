@@ -1,0 +1,177 @@
+[
+  {
+    "name": "typecheck",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/tsconfig.scoped.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:31:45.527662+00:00",
+    "completedAt": "2026-10-03T10:31:48.333434+00:00",
+    "elapsedSeconds": 2.805781905000913,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "231d351078ae7c168e3946a5ee3602f59e3c113f4145ae810a8bb02255168f53"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "3fc79b16b3e2a553dfe8f2906da177ed59055934267a392b9aaafea63b703dde"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/main-integration/adjustment/typecheck.log"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:31:48.333646+00:00",
+    "completedAt": "2026-10-03T10:31:52.245976+00:00",
+    "elapsedSeconds": 3.912343484000303,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "231d351078ae7c168e3946a5ee3602f59e3c113f4145ae810a8bb02255168f53"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "3fc79b16b3e2a553dfe8f2906da177ed59055934267a392b9aaafea63b703dde"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/main-integration/adjustment/lint.log"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/jest.scoped.cjs",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:31:52.246259+00:00",
+    "completedAt": "2026-10-03T10:31:52.402935+00:00",
+    "elapsedSeconds": 0.15668708500015782,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "231d351078ae7c168e3946a5ee3602f59e3c113f4145ae810a8bb02255168f53"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "3fc79b16b3e2a553dfe8f2906da177ed59055934267a392b9aaafea63b703dde"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/main-integration/adjustment/discovery.log"
+  },
+  {
+    "name": "tests",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/jest.scoped.cjs",
+      "--runInBand",
+      "--no-cache",
+      "--json",
+      "--outputFile",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/main-integration/adjustment/tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:31:52.403237+00:00",
+    "completedAt": "2026-10-03T10:32:00.205876+00:00",
+    "elapsedSeconds": 7.802652700000181,
+    "exitCode": 0,
+    "sourceHashes": [
+      {
+        "file": "convex-dev/admin.ts",
+        "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345"
+      },
+      {
+        "file": "convex-dev/governance.ts",
+        "sha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70"
+      },
+      {
+        "file": "convex-dev/graphSync.ts",
+        "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9"
+      },
+      {
+        "file": "convex-dev/runtimeWorkerAuth.ts",
+        "sha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a"
+      },
+      {
+        "file": "convex-dev/schema.ts",
+        "sha256": "231d351078ae7c168e3946a5ee3602f59e3c113f4145ae810a8bb02255168f53"
+      },
+      {
+        "file": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "sha256": "3fc79b16b3e2a553dfe8f2906da177ed59055934267a392b9aaafea63b703dde"
+      }
+    ],
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/main-integration/adjustment/tests.log"
+  }
+]

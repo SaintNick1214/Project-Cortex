@@ -1,0 +1,95 @@
+{
+  "actualDAndTrustedTableCompositionMatchesStaged": [
+    {
+      "name": "governancePolicies",
+      "found": true,
+      "exactEqual": true
+    },
+    {
+      "name": "governanceEnforcement",
+      "found": true,
+      "exactEqual": true
+    },
+    {
+      "name": "graphSyncQueue",
+      "found": true,
+      "exactEqual": true
+    },
+    {
+      "name": "...runtimeAuthTables",
+      "found": true,
+      "exactEqual": true
+    },
+    {
+      "name": "...runtimeMemoryTables",
+      "found": true,
+      "exactEqual": true
+    }
+  ],
+  "unchangedOtherCallbacks": [
+    {
+      "name": "listTable/countTable/getAllCounts operate without target grants and stay on the fixed Cortex allowlist",
+      "unchanged": true
+    },
+    {
+      "name": "%s rejects forged/control table selectors with typed invalid input",
+      "unchanged": true
+    },
+    {
+      "name": "deleteRecord validates table-ID equality before any deletion",
+      "unchanged": true
+    },
+    {
+      "name": "deleteRecord cleans policy log references and preserves auth/source/tombstone fences",
+      "unchanged": true
+    },
+    {
+      "name": "clearTable removes bounded queue metadata, leaves canonical data and reports hasMore",
+      "unchanged": true
+    },
+    {
+      "name": "unsafe %s deletion/clear has a typed unsupported lifecycle outcome",
+      "unchanged": true
+    },
+    {
+      "name": "invalid maintenance limit %s performs no destructive work",
+      "unchanged": true
+    },
+    {
+      "name": "operator purge cleans only selected metadata despite revoked target",
+      "unchanged": true
+    },
+    {
+      "name": "clearTable rolls back earlier metadata deletions on a later database failure",
+      "unchanged": true
+    },
+    {
+      "name": "%s has internal registration visibility, unavailable through api",
+      "unchanged": true
+    },
+    {
+      "name": "governance:%s stays public with guarded handler",
+      "unchanged": true
+    },
+    {
+      "name": "native Convex schema export retains all 02B/auth/host tables and scoped indexes",
+      "unchanged": true
+    },
+    {
+      "name": "native public/internal validators reject caller entity/admin metadata and require worker references",
+      "unchanged": true
+    }
+  ],
+  "exactRetainedASTOutcomeAssertions": [
+    "expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: \"\" })",
+    "expect(inventory.completeness.unresolved).toEqual([])",
+    "expect(selected).toHaveLength(25)",
+    "expect(selected.filter((entry) => entry.visibility === \"public\")).toHaveLength(7)",
+    "expect(selected.filter((entry) => entry.visibility === \"internal\")).toHaveLength(18)",
+    "expect(selected.find((entry) => entry.path === key)).toMatchObject({ visibility: \"internal\" })"
+  ],
+  "addedCleanupAssertions": [
+    "expect(fs.existsSync(target)).toBe(false)"
+  ],
+  "scope": "Read-only AST checks of reviewed staged D schema and adjusted test; future MF schema declarations intentionally excluded"
+}

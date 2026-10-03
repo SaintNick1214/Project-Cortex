@@ -1,0 +1,145 @@
+[
+  {
+    "name": "typecheck",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/tsconfig.scoped.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "start": "2026-10-03T10:17:52.448311+00:00",
+    "end": "2026-10-03T10:17:58.963201+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2d-review1-repair-shhw0moj/typecheck.log",
+    "tail": ""
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/admin.ts",
+      "convex-dev/governance.ts",
+      "convex-dev/graphSync.ts",
+      "convex-dev/runtimeWorkerAuth.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeWorkerAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "start": "2026-10-03T10:17:52.448624+00:00",
+    "end": "2026-10-03T10:18:09.066896+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2d-review1-repair-shhw0moj/lint.log",
+    "tail": ""
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/tmp/task03b2d-review1-repair-shhw0moj/jest-retained.json",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "start": "2026-10-03T10:17:52.448786+00:00",
+    "end": "2026-10-03T10:17:52.799703+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2d-review1-repair-shhw0moj/discovery.log",
+    "tail": "/tmp/task03b2d-review1-repair-shhw0moj/tests/unit/runtimeWorkerAuth/graph.test.ts\n/tmp/task03b2d-review1-repair-shhw0moj/tests/unit/runtimeWorkerAuth/admin-catalog.test.ts\n/tmp/task03b2d-review1-repair-shhw0moj/tests/unit/runtimeWorkerAuth/governance.test.ts\n"
+  },
+  {
+    "name": "tests",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/tmp/task03b2d-review1-repair-shhw0moj/jest-retained.json",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/tmp/task03b2d-review1-repair-shhw0moj/tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "start": "2026-10-03T10:17:52.449029+00:00",
+    "end": "2026-10-03T10:18:13.243965+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2d-review1-repair-shhw0moj/tests.log",
+    "tail": "(node:25031) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n\nTest Suites: 3 passed, 3 total\nTests:       185 passed, 185 total\nSnapshots:   0 total\nTime:        20.315 s\nRan all test suites.\nTest results written to: ../../../../../tmp/task03b2d-review1-repair-shhw0moj/tests.json\n"
+  },
+  {
+    "name": "catalog",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs",
+      "/tmp/task03b2d-review1-repair-shhw0moj/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "start": "2026-10-03T10:17:52.799777+00:00",
+    "end": "2026-10-03T10:17:54.025472+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2d-review1-repair-shhw0moj/catalog.log",
+    "tail": "{\n  \"counts\": {\n    \"modules\": 27,\n    \"registered\": 259,\n    \"public\": 224,\n    \"internal\": 35,\n    \"httpRoutes\": 0,\n    \"registeredBuilderCalls\": 259,\n    \"resolvedExports\": 259,\n    \"guard\": 200,\n    \"internalize\": 24\n  },\n  \"unresolved\": [],\n  \"output\": \"/tmp/task03b2d-review1-repair-shhw0moj/catalog/public-path-inventory.json\"\n}\n"
+  },
+  {
+    "name": "root-types-tests-diagnostics",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "start": "2026-10-03T10:17:54.025522+00:00",
+    "end": "2026-10-03T10:18:15.359261+00:00",
+    "exitCode": 2,
+    "log": "/tmp/task03b2d-review1-repair-shhw0moj/root-types-tests-diagnostics.log",
+    "tail": "src/governance/index.ts(380,28): error TS2339: Property 'enforce' does not exist on type '{ setPolicy: FunctionReference<\"mutation\", \"public\", { tenantId?: string | undefined; policy: { organizationId?: string | undefined; memorySpaceId?: string | undefined; sessions?: { limits?: { maxActiveSessions?: number | undefined; maxSessionsPerDevice?: number | undefined; } | undefined; lifecycle: { ...; }; clean...'.\n"
+  },
+  {
+    "name": "root-diagnostics",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "tsconfig.lint.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "start": "2026-10-03T10:17:58.963261+00:00",
+    "end": "2026-10-03T10:18:15.010770+00:00",
+    "exitCode": 2,
+    "log": "/tmp/task03b2d-review1-repair-shhw0moj/root-diagnostics.log",
+    "tail": "src/governance/index.ts(380,28): error TS2339: Property 'enforce' does not exist on type '{ setPolicy: FunctionReference<\"mutation\", \"public\", { tenantId?: string | undefined; policy: { organizationId?: string | undefined; memorySpaceId?: string | undefined; sessions?: { limits?: { maxActiveSessions?: number | undefined; maxSessionsPerDevice?: number | undefined; } | undefined; lifecycle: { ...; }; clean...'.\n"
+  },
+  {
+    "name": "original-28-probes",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/tmp/task03b2d-review1-repair-shhw0moj/jest-original-probes.json",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/tmp/task03b2d-review1-repair-shhw0moj/original-28-probes.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2d-checkout",
+    "start": "2026-10-03T10:18:09.066958+00:00",
+    "end": "2026-10-03T10:18:18.597330+00:00",
+    "exitCode": 0,
+    "log": "/tmp/task03b2d-review1-repair-shhw0moj/original-28-probes.log",
+    "tail": "(node:25104) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nTest Suites: 1 passed, 1 total\nTests:       28 passed, 28 total\nSnapshots:   0 total\nTime:        9.158 s\nRan all test suites.\nTest results written to: ../../../../../tmp/task03b2d-review1-repair-shhw0moj/original-28-probes.json\n"
+  }
+]

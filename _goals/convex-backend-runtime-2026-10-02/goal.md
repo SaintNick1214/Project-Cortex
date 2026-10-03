@@ -1,7 +1,7 @@
 # Goal: Cortex-owned agent runs on Convex
 
 **Created:** 2026-10-02 (America/Los_Angeles)
-**Status:** Execution in progress — fresh goal review PASS; Task01 and bounded02A/02B/03A independently PASS; endpoint closure and client authentication review active. [Current receipts](qa/execution-progress.md).
+**Status:** Execution in progress — fresh goal review PASS; Task01 and bounded02A/02B/03A/03C1/03B2D independently PASS; worker test integration, third memory/fact repair and second metadata repair active. [Current receipts](qa/execution-progress.md).
 **Authorization:** The user sent the implementation prompt, authorizing implementation, incremental commits/pushes and a draft PR against dev. The user subsequently authorized a fresh disposable instance and inference without a spend cap. Historical planning-only statements record the artifacts' creation phase.
 **Cloud handoff:** [Copy-paste implementation prompt](implementation-prompt.md).
 **Research:** [Architecture and evidence](../../_research/convex-ai-gateway-2026-10-02/architecture.md)
@@ -9,7 +9,7 @@
 **Current authority:** [User decision register](../../_research/convex-ai-gateway-2026-10-02/decision-gates.md). The [earlier planning PASS](qa/planning-review-2.md) covered broader superseded scope. Current [execution goal review](qa/execution-goal-review-2.md) passed before execution; [Task01 review](qa/task01-review-1.md) qualifies the core text stack. Production runtime and extension compatibility remain pending.
 **Confirmed direction:** Indexed memory plus eligible pending context, queued mutating runs within a conversation, tracked transcript unlocks and the remaining tool/retry/default policies are aligned. Embeddings use a clean-slate design; previous models, dimensions and schema layouts impose no constraints. No product decision question remains pending.
 **Target:** This `Project-Cortex` repository; resolve all paths against the cloud checkout root.
-**Branch prerequisite:** COMPLETE: #130/#131 merged; remote dev `3341d64ddc06f1de26ed525312ef2c1b89b16952` contains current main and matches the CI-qualified reconciliation tree; [reconciliation report](../../_research/branch-reconciliation-2026-10-02/report.md). Refresh manifests, runtime floor and canonical documentation paths on that baseline before execution. Planning files were excluded from the reconciliation merge. The implementation handoff is on `feat/convex-backend-runtime`, based on that reconciled dev commit; no product implementation has started.
+**Branch prerequisite:** COMPLETE: #130/#131 merged; remote dev `3341d64ddc06f1de26ed525312ef2c1b89b16952` contains current main and matches the CI-qualified reconciliation tree; [reconciliation report](../../_research/branch-reconciliation-2026-10-02/report.md). Refresh manifests, runtime floor and canonical documentation paths on that baseline before execution. Planning files were excluded from the reconciliation merge. The implementation handoff is on `feat/convex-backend-runtime`, based on that reconciled dev commit; product implementation began after the execution request.
 
 ## Summary
 
@@ -87,7 +87,7 @@ Explicit browser/device tool lane; measured adaptive routing/Decisions after sta
 
 ## Implementation Phases and Tasks
 
-All tasks are planning-only and flat under `tasks/`. Relative effort is guidance, not a time estimate. Shared interfaces must be fixed before dependent writes. Each task requires its own observed acceptance evidence during later execution.
+The original task artifacts were written during planning and are flat under `tasks/`. Execution status and observed evidence are tracked in [qa/execution-progress.md](qa/execution-progress.md) and [qa/outcome-matrix.md](qa/outcome-matrix.md). Relative effort is guidance, not a time estimate. Shared interfaces must be fixed before dependent writes. Each task requires its own observed acceptance evidence.
 
 | Phase | Task | Depends on | Effort |
 |---|---|---|---|

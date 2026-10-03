@@ -1,0 +1,37 @@
+{
+  "sourceSha256": "3fc79b16b3e2a553dfe8f2906da177ed59055934267a392b9aaafea63b703dde",
+  "exactCallbackSha256": "77ba2c075c3a4eb5a6e69f94ddc6a52fb6f1069d78924349db6c182103c4c94c",
+  "scope": "Three controlled failure probes of exact transpiled source callback, no repository mutation",
+  "results": [
+    {
+      "probe": "child-process-status",
+      "expectedFailureObserved": {
+        "name": "AssertionError",
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"status\":1,\"stderr\":\"injected child process failure\"}'\n- '{\"status\":0,\"stderr\":\"\"}'\n"
+      },
+      "created": "/tmp/cortex-task03b2d-catalog-hT9sf5",
+      "finallyRemoved": "/tmp/cortex-task03b2d-catalog-hT9sf5",
+      "absentAfterFailure": true
+    },
+    {
+      "probe": "inventory-read",
+      "expectedFailureObserved": {
+        "name": "Error",
+        "message": "ENOENT: no such file or directory, open '/tmp/cortex-task03b2d-catalog-SqJpj0/public-path-inventory.json'"
+      },
+      "created": "/tmp/cortex-task03b2d-catalog-SqJpj0",
+      "finallyRemoved": "/tmp/cortex-task03b2d-catalog-SqJpj0",
+      "absentAfterFailure": true
+    },
+    {
+      "probe": "outcome-assertion",
+      "expectedFailureObserved": {
+        "name": "AssertionError",
+        "message": "Expected values to be strictly equal:\n\n0 !== 25\n"
+      },
+      "created": "/tmp/cortex-task03b2d-catalog-8doo1S",
+      "finallyRemoved": "/tmp/cortex-task03b2d-catalog-8doo1S",
+      "absentAfterFailure": true
+    }
+  ]
+}
