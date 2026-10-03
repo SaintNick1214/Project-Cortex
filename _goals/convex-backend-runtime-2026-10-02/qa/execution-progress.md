@@ -198,3 +198,23 @@ Current4fbCIqualityFAIL reproduces the exactone historicalQAunusedvariable error
 (115warnings); packed/browser, allfourdemobuilds andgraphcontracts PASS. Parentlocal
 actualroot lint ancillaryfix PASS0errors137warnings; receipt/context in ci-followups.
 OtherliveCIjobs continue; no aggregate/currentfullcorePASS isclaimed.
+
+
+2026-10-03T12:34Z: parent read-only native Convex1.46 metadata probes confirm six
+zero-effect duplicate-key outcomes disclose stored internal document IDs: WRITE-only
+immutable.store/mutable.set/sessions.touch and three READ controls. The accepted
+metadata41 historical verdict is preserved; the new regression followup is pending
+bounded implementation and fresh independent review, with exact proof in
+task03-metadata-native-errors/. No helper was changed and no service target invoked.
+Fresh live-harness execution is held until the helper fix is independently qualified
+and any fixture dependency refresh is separately evidenced/reviewed. This is distinct
+from the rejected MF gate; its additional-cycle request remains unanswered.
+
+Registry second repair reports480 passing outcomes across4suites, including exact
+99->100 readable and100->101 zero-effect graph boundaries; artifact third repair
+reports218 passing outcomes and48 error privacy probes. Both still await FINALfreeze
+and fresh judgment. Registry count-only unregisterMany exposes one further SDK
+assumption:26consumer diagnostics plus2cleanup, separately from the archived25+2.
+Live harness second repair remains OFFLINE with all41servicecases UNEXECUTED. No
+preliminary check has been converted into acceptance. Native browser access remains
+unavailable; all17 implementation/validation tasks remain incomplete.
