@@ -24,8 +24,8 @@ export async function generateTitleFromUserMessage({
 }) {
   const { text } = await generateText({
     model: getTitleModel(),
-    system: titlePrompt,
     prompt: getTextFromMessage(message),
+    system: titlePrompt,
   });
   return text
     .replace(/^[#*"\s]+/, "")

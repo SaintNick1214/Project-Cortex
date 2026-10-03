@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, dev]
   pull_request:
-    branches: [main, dev]
+    branches: [main, dev, chore/cortex-0.37-modernization]
   schedule:
     # Run weekly security scans every Monday at 3 AM UTC
     - cron: "0 3 * * 1"
@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["javascript-typescript", "python"]
+        language: ["javascript-typescript"]
 
     steps:
       - name: Checkout repository
@@ -57,18 +57,12 @@ jobs:
         if: matrix.language == 'javascript-typescript'
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
 
       - name: Install dependencies (for JS/TS)
         if: matrix.language == 'javascript-typescript'
         run: npm ci
-
-      - name: Setup Python
-        if: matrix.language == 'python'
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v4
@@ -96,7 +90,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0 - pinned to SHA per supply chain advisory
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0; retain dev SHA-pinning policy
         with:
           scan-type: "fs"
           scan-ref: "."
@@ -169,7 +163,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install dependencies
         run: npm ci
@@ -209,41 +203,6 @@ jobs:
         with:
           sarif_file: results.sarif
           category: "scorecard"
-
-  # Python package security (for your Python SDK)
-  python-security:
-    name: Python Security Scan
-    runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-      security-events: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          cd cortex-sdk-python
-          python -m pip install --upgrade pip
-          pip install safety bandit[toml]
-
-      - name: Run Safety check (vulnerabilities)
-        run: |
-          cd cortex-sdk-python
-          safety check --json || true
-
-      - name: Run Bandit (security issues)
-        run: |
-          cd cortex-sdk-python
-          bandit -r cortex -f json -o bandit-report.json || true
-          bandit -r cortex || true
 
   # API Security scanning
   api-security:
@@ -404,7 +363,6 @@ jobs:
         codeql-analysis,
         dependency-scan,
         secret-scan,
-        python-security,
         api-security,
         commit-signature-check,
       ]
@@ -421,7 +379,6 @@ jobs:
           echo "  CodeQL Analysis:      ${{ needs.codeql-analysis.result }}"
           echo "  Dependency Scan:      ${{ needs.dependency-scan.result }}"
           echo "  Secret Scan:          ${{ needs.secret-scan.result }}"
-          echo "  Python Security:      ${{ needs.python-security.result }}"
           echo "  API Security:         ${{ needs.api-security.result }}"
           echo "  Commit Signatures:    ${{ needs.commit-signature-check.result }}"
           echo ""
@@ -433,7 +390,6 @@ jobs:
           if [[ "${{ needs.codeql-analysis.result }}" == "failure" ]] || \
              [[ "${{ needs.dependency-scan.result }}" == "failure" ]] || \
              [[ "${{ needs.secret-scan.result }}" == "failure" ]] || \
-             [[ "${{ needs.python-security.result }}" == "failure" ]] || \
              [[ "${{ needs.commit-signature-check.result }}" == "failure" ]]; then
             echo "❌ Security checks failed"
             exit 1

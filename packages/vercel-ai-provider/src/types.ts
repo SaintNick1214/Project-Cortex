@@ -541,6 +541,9 @@ export interface CortexMemoryModel {
    *
    * @returns Current configuration (read-only)
    */
+  /** Close the shared SDK client after using this factory and its models. */
+  close: () => Promise<void>;
+
   getConfig: () => Readonly<CortexMemoryConfig>;
 }
 

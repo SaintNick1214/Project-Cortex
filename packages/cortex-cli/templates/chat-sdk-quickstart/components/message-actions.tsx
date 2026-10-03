@@ -3,8 +3,7 @@ import { memo } from "react";
 import { toast } from "sonner";
 import { useSWRConfig } from "swr";
 import { useCopyToClipboard } from "usehooks-ts";
-import type { Vote } from "@/lib/types";
-import type { ChatMessage } from "@/lib/types";
+import type { ChatMessage, Vote } from "@/lib/types";
 import { Action, Actions } from "./elements/actions";
 import { CopyIcon, PencilEditIcon, ThumbDownIcon, ThumbUpIcon } from "./icons";
 
@@ -49,7 +48,7 @@ export function PureMessageActions({
     return (
       <Actions className="-mr-0.5 justify-end">
         <div className="relative">
-          {setMode && (
+          {!!setMode && (
             <Action
               className="absolute top-0 -left-10 opacity-0 transition-opacity focus-visible:opacity-100 group-hover/message:opacity-100"
               data-testid="message-edit-button"
@@ -78,15 +77,16 @@ export function PureMessageActions({
         disabled={vote?.isUpvoted}
         onClick={() => {
           const upvote = fetch("/api/vote", {
-            method: "PATCH",
             body: JSON.stringify({
               chatId,
               messageId: message.id,
               type: "up",
             }),
+            method: "PATCH",
           });
 
           toast.promise(upvote, {
+            error: "Failed to upvote response.",
             loading: "Upvoting Response...",
             success: () => {
               mutate<Vote[]>(
@@ -104,8 +104,8 @@ export function PureMessageActions({
                     ...votesWithoutCurrent,
                     {
                       chatId,
-                      messageId: message.id,
                       isUpvoted: true,
+                      messageId: message.id,
                     },
                   ];
                 },
@@ -114,7 +114,6 @@ export function PureMessageActions({
 
               return "Upvoted Response!";
             },
-            error: "Failed to upvote response.",
           });
         }}
         tooltip="Upvote Response"
@@ -127,15 +126,16 @@ export function PureMessageActions({
         disabled={vote && !vote.isUpvoted}
         onClick={() => {
           const downvote = fetch("/api/vote", {
-            method: "PATCH",
             body: JSON.stringify({
               chatId,
               messageId: message.id,
               type: "down",
             }),
+            method: "PATCH",
           });
 
           toast.promise(downvote, {
+            error: "Failed to downvote response.",
             loading: "Downvoting Response...",
             success: () => {
               mutate<Vote[]>(
@@ -153,8 +153,8 @@ export function PureMessageActions({
                     ...votesWithoutCurrent,
                     {
                       chatId,
-                      messageId: message.id,
                       isUpvoted: false,
+                      messageId: message.id,
                     },
                   ];
                 },
@@ -163,7 +163,6 @@ export function PureMessageActions({
 
               return "Downvoted Response!";
             },
-            error: "Failed to downvote response.",
           });
         }}
         tooltip="Downvote Response"

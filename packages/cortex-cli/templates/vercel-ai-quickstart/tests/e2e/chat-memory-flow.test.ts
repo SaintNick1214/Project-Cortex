@@ -78,6 +78,13 @@ async function sendChatMessage(
 
   const lines = text.split("\n");
   for (const line of lines) {
+    if (line.startsWith("data: ") && line !== "data: [DONE]") {
+      const event = JSON.parse(line.slice(6));
+      if (event.type === "error") throw new Error(event.errorText);
+      if (event.type === "text-delta") fullResponse += event.delta;
+      if (event.type === "data-conversation-id") conversationId = event.data.conversationId;
+      if (event.type === "data-orchestration-complete") conversationId = event.data.createdIds?.conversationId;
+    }
     if (line.startsWith("0:")) {
       // Text content
       try {
@@ -130,6 +137,16 @@ describe("Chat Memory Flow E2E", () => {
       cortex.close();
     }
   });
+
+  async function waitForFacts(memorySpaceId: string, userId: string) {
+    const deadline = Date.now() + 30000;
+    let facts = await cortex.facts.list({ memorySpaceId, userId, includeSuperseded: false });
+    while (facts.length === 0 && Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      facts = await cortex.facts.list({ memorySpaceId, userId, includeSuperseded: false });
+    }
+    return facts;
+  }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // V5 Route Tests
@@ -393,21 +410,10 @@ describe("Chat Memory Flow E2E", () => {
         }),
       ]);
 
-      // Wait for fact extraction
-      await new Promise((r) => setTimeout(r, 7000));
-
-      // Check facts for both users
+      // Extraction completes asynchronously; wait for both users' persisted facts.
       const [v5Facts, v6Facts] = await Promise.all([
-        cortex.facts.list({
-          memorySpaceId: sharedSpaceId,
-          userId: v5UserId,
-          includeSuperseded: false,
-        }),
-        cortex.facts.list({
-          memorySpaceId: sharedSpaceId,
-          userId: v6UserId,
-          includeSuperseded: false,
-        }),
+        waitForFacts(sharedSpaceId, v5UserId),
+        waitForFacts(sharedSpaceId, v6UserId),
       ]);
 
       console.log(`V5 facts: ${v5Facts.length}, V6 facts: ${v6Facts.length}`);

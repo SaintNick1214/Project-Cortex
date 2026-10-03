@@ -8,7 +8,7 @@
  * - isAuthenticated
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { auth } from "@/app/(auth)/auth";
 import type { AuthSession } from "@/lib/auth-cortex";
 
@@ -31,13 +31,13 @@ describe("lib/auth-cortex", () => {
   describe("getCortexAuthContext", () => {
     it("returns AuthContext when session has valid user", async () => {
       mockAuth.mockResolvedValue({
+        expires: "2025-12-31T23:59:59.999Z",
         user: {
-          id: "user-123",
           email: "test@example.com",
+          id: "user-123",
           name: "Test User",
           type: "regular",
         },
-        expires: "2025-12-31T23:59:59.999Z",
       });
 
       const { getCortexAuthContext } = await import("@/lib/auth-cortex");
@@ -79,11 +79,11 @@ describe("lib/auth-cortex", () => {
 
     it("returns null when user has no id", async () => {
       mockAuth.mockResolvedValue({
+        expires: "2025-12-31T23:59:59.999Z",
         user: {
           email: "test@example.com",
           name: "Test User",
         },
-        expires: "2025-12-31T23:59:59.999Z",
       });
 
       const { getCortexAuthContext } = await import("@/lib/auth-cortex");
@@ -96,8 +96,8 @@ describe("lib/auth-cortex", () => {
     it("handles null email and name in metadata", async () => {
       mockAuth.mockResolvedValue({
         user: {
-          id: "user-123",
           email: null,
+          id: "user-123",
           name: null,
         },
       });
@@ -116,8 +116,8 @@ describe("lib/auth-cortex", () => {
     it("creates AuthContext from valid session", async () => {
       const session: AuthSession = {
         user: {
-          id: "user-456",
           email: "session@example.com",
+          id: "user-456",
           name: "Session User",
           type: "premium",
         },

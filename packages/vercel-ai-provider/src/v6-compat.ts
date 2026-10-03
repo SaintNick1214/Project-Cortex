@@ -10,6 +10,7 @@
  */
 
 import type { CortexMemoryConfig } from "./types";
+import { z } from "zod";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // AI SDK v6 Type Re-exports
@@ -101,10 +102,6 @@ export interface CortexCallOptions {
  * ```
  */
 export function createCortexCallOptionsSchema() {
-  // Dynamic import to avoid requiring zod at module load
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { z } = require("zod");
-
   return z.object({
     userId: z.string().describe("User ID for memory isolation"),
     memorySpaceId: z.string().describe("Memory space ID for data partitioning"),

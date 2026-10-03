@@ -1,3 +1,8 @@
+import type {
+  LayerEvent,
+  OrchestrationSummary,
+  RecallSummary,
+} from "@cortexmemory/sdk";
 import type { InferUITool, UIMessage } from "ai";
 import { z } from "zod";
 import type { ArtifactKind } from "@/components/artifact";
@@ -13,49 +18,49 @@ import type { updateDocument } from "./ai/tools/update-document";
  */
 
 export interface Chat {
+  createdAt: Date;
   id: string;
   title: string;
+  updatedAt: Date;
   userId: string;
   visibility: "private" | "public";
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface Vote {
   chatId: string;
-  messageId: string;
   isUpvoted: boolean;
+  messageId: string;
 }
 
 export interface Document {
-  id: string;
-  title: string;
   content: string | null;
-  kind: string;
-  userId: string;
   createdAt: Date;
+  id: string;
+  kind: ArtifactKind;
+  title: string;
   updatedAt: Date;
+  userId: string;
 }
 
 export interface Suggestion {
-  id: string;
-  documentId: string;
+  createdAt: Date;
+  description: string | null;
   documentCreatedAt: Date;
+  documentId: string;
+  id: string;
+  isResolved: boolean;
   originalText: string;
   suggestedText: string;
-  description: string | null;
-  isResolved: boolean;
   userId: string;
-  createdAt: Date;
 }
 
 export interface DBMessage {
-  id: string;
-  chatId: string;
-  role: "user" | "assistant" | "system";
-  parts: unknown;
   attachments: unknown[];
+  chatId: string;
   createdAt: Date;
+  id: string;
+  parts: unknown;
+  role: "user" | "assistant" | "system";
 }
 
 export type DataPart = { type: "append-message"; message: string };
@@ -93,6 +98,11 @@ export type CustomUIDataTypes = {
   clear: null;
   finish: null;
   "chat-title": string;
+  "recall-start": { orchestrationId: string };
+  "recall-complete": RecallSummary;
+  "remember-start": { orchestrationId: string };
+  "remember-complete": OrchestrationSummary;
+  "layer-update": LayerEvent;
 };
 
 export type ChatMessage = UIMessage<

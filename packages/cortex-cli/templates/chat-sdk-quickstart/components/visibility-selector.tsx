@@ -26,16 +26,16 @@ const visibilities: Array<{
   icon: ReactNode;
 }> = [
   {
-    id: "private",
-    label: "Private",
     description: "Only you can access this chat",
     icon: <LockIcon />,
+    id: "private",
+    label: "Private",
   },
   {
-    id: "public",
-    label: "Public",
     description: "Anyone with the link can access this chat",
     icon: <GlobeIcon />,
+    id: "public",
+    label: "Public",
   },
 ];
 
@@ -93,7 +93,7 @@ export function VisibilitySelector({
           >
             <div className="flex flex-col items-start gap-1">
               {visibility.label}
-              {visibility.description && (
+              {!!visibility.description && (
                 <div className="text-muted-foreground text-xs">
                   {visibility.description}
                 </div>

@@ -5,23 +5,20 @@
  * and convert to Cortex SDK AuthContext format.
  */
 
+import { type AuthContext, createAuthContext } from "@cortexmemory/sdk";
 import { auth } from "@/app/(auth)/auth";
-import {
-  createAuthContext,
-  type AuthContext,
-} from "@cortexmemory/sdk";
 
 /**
  * Session type from Auth.js
  */
 export interface AuthSession {
+  expires?: string;
   user?: {
     id?: string;
     email?: string | null;
     name?: string | null;
     type?: string;
   };
-  expires?: string;
 }
 
 /**
@@ -49,15 +46,15 @@ export async function getCortexAuthContext(): Promise<AuthContext | null> {
   }
 
   return createAuthContext({
-    userId: session.user.id,
-    authProvider: "nextauth",
-    authMethod: "session",
     authenticatedAt: Date.now(),
+    authMethod: "session",
+    authProvider: "nextauth",
     metadata: {
       email: session.user.email ?? undefined,
       name: session.user.name ?? undefined,
       userType: session.user.type,
     },
+    userId: session.user.id,
   });
 }
 
@@ -80,22 +77,22 @@ export async function getCortexAuthContext(): Promise<AuthContext | null> {
  * ```
  */
 export function createCortexAuthContextFromSession(
-  session: AuthSession | null,
+  session: AuthSession | null
 ): AuthContext | null {
   if (!session?.user?.id) {
     return null;
   }
 
   return createAuthContext({
-    userId: session.user.id,
-    authProvider: "nextauth",
-    authMethod: "session",
     authenticatedAt: Date.now(),
+    authMethod: "session",
+    authProvider: "nextauth",
     metadata: {
       email: session.user.email ?? undefined,
       name: session.user.name ?? undefined,
       userType: session.user.type,
     },
+    userId: session.user.id,
   });
 }
 
@@ -118,7 +115,7 @@ export function createCortexAuthContextFromSession(
  */
 export function getUserIdFromSession(
   session: AuthSession | null,
-  fallback: string = "anonymous",
+  fallback = "anonymous"
 ): string {
   return session?.user?.id ?? fallback;
 }

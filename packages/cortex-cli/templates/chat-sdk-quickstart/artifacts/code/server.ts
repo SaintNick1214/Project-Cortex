@@ -11,11 +11,11 @@ export const codeDocumentHandler = createDocumentHandler<"code">({
 
     const { fullStream } = streamObject({
       model: getArtifactModel(),
-      system: codePrompt,
       prompt: title,
       schema: z.object({
         code: z.string(),
       }),
+      system: codePrompt,
     });
 
     for await (const delta of fullStream) {
@@ -27,9 +27,9 @@ export const codeDocumentHandler = createDocumentHandler<"code">({
 
         if (code) {
           dataStream.write({
-            type: "data-codeDelta",
             data: code ?? "",
             transient: true,
+            type: "data-codeDelta",
           });
 
           draftContent = code;
@@ -44,11 +44,11 @@ export const codeDocumentHandler = createDocumentHandler<"code">({
 
     const { fullStream } = streamObject({
       model: getArtifactModel(),
-      system: updateDocumentPrompt(document.content, "code"),
       prompt: description,
       schema: z.object({
         code: z.string(),
       }),
+      system: updateDocumentPrompt(document.content, "code"),
     });
 
     for await (const delta of fullStream) {
@@ -60,9 +60,9 @@ export const codeDocumentHandler = createDocumentHandler<"code">({
 
         if (code) {
           dataStream.write({
-            type: "data-codeDelta",
             data: code ?? "",
             transient: true,
+            type: "data-codeDelta",
           });
 
           draftContent = code;

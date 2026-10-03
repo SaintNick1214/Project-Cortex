@@ -17,8 +17,8 @@ declare module "next-auth" {
   }
 
   interface User {
-    id?: string;
     email?: string | null;
+    id?: string;
     type: UserType;
   }
 }
@@ -37,16 +37,33 @@ export const {
   signOut,
 } = NextAuth({
   ...authConfig,
-  // Explicit JWT session strategy (stateless - no database adapter required)
-  session: {
-    strategy: "jwt",
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id as string;
+        token.type = user.type;
+      }
+
+      return token;
+    },
+    session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.type = token.type;
+      }
+
+      return session;
+    },
   },
   providers: [
     Credentials({
-      credentials: {},
-      async authorize(credentials: { email?: string; password?: string } | undefined) {
+      async authorize(
+        credentials: { email?: string; password?: string } | undefined
+      ) {
         const { email, password } = credentials ?? {};
-        if (!email || !password) return null;
+        if (!email || !password) {
+          return null;
+        }
         const users = await getUser(email);
 
         if (users.length === 0) {
@@ -69,32 +86,19 @@ export const {
 
         return { ...user, type: "regular" };
       },
+      credentials: {},
     }),
     Credentials({
-      id: "guest",
-      credentials: {},
       async authorize() {
         const [guestUser] = await createGuestUser();
         return { ...guestUser, type: "guest" };
       },
+      credentials: {},
+      id: "guest",
     }),
   ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id as string;
-        token.type = user.type;
-      }
-
-      return token;
-    },
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id;
-        session.user.type = token.type;
-      }
-
-      return session;
-    },
+  // Explicit JWT session strategy (stateless - no database adapter required)
+  session: {
+    strategy: "jwt",
   },
 });

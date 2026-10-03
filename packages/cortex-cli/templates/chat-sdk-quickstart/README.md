@@ -39,8 +39,8 @@
 
 ## Prerequisites
 
-- **Node.js 18+** ([download](https://nodejs.org/))
-- **pnpm** (recommended) — `npm install -g pnpm`
+- **Node.js 24+** ([download](https://nodejs.org/))
+- **npm 12** — included with a compatible Node.js release, or `npm install -g npm@12`
 - **Convex account** (free tier available) — [Sign up](https://dashboard.convex.dev)
 - **OpenAI API key** — [Get one](https://platform.openai.com/api-keys)
 - **Auth provider** configured (GitHub, Google, or credentials)
@@ -57,7 +57,7 @@ npx cortex create my-chatbot --template chat-sdk
 cd my-chatbot
 
 # Install dependencies
-pnpm install
+npm install
 ```
 
 ### Option 2: Clone Manually
@@ -68,7 +68,7 @@ git clone https://github.com/cortexmemory/chat-sdk-quickstart my-chatbot
 cd my-chatbot
 
 # Install dependencies
-pnpm install
+npm install
 ```
 
 ### Configure Environment
@@ -85,7 +85,7 @@ cp .env.local.example .env.local
 
 ```bash
 # Start Convex development server (creates your deployment)
-pnpm convex:dev
+npm run convex:dev
 ```
 
 This will:
@@ -96,7 +96,7 @@ This will:
 ### Start Development
 
 ```bash
-pnpm dev
+npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) to see your chatbot.
@@ -108,7 +108,7 @@ Visit [http://localhost:3000](http://localhost:3000) to see your chatbot.
 | `AUTH_SECRET` | Yes | Auth.js secret for JWT signing. Generate with `openssl rand -base64 32` |
 | `OPENAI_API_KEY` | Yes* | OpenAI API key for GPT models and embeddings |
 | `AI_GATEWAY_API_KEY` | Yes* | Vercel AI Gateway API key (alternative to OpenAI direct) |
-| `CONVEX_URL` | Yes | Your Convex deployment URL (auto-set by `pnpm convex:dev`) |
+| `CONVEX_URL` | Yes | Your Convex deployment URL (auto-set by `npm run convex:dev`) |
 | `MEMORY_SPACE_ID` | No | Memory space name (default: `chat-sdk-demo`) |
 | `CORTEX_FACT_EXTRACTION` | No | Enable LLM-powered fact extraction (default: `true`) |
 | `CORTEX_FACT_EXTRACTION_MODEL` | No | Model for fact extraction (default: `gpt-4o-mini`) |
@@ -308,7 +308,7 @@ vercel
 
 ```bash
 # Deploy to production Convex
-pnpm convex:deploy
+npm run convex:deploy
 ```
 
 ### One-Click Deploy
@@ -319,7 +319,7 @@ pnpm convex:deploy
 
 - [ ] Set `AUTH_SECRET` with a strong random value
 - [ ] Configure OAuth providers (GitHub, Google)
-- [ ] Deploy Convex to production (`pnpm convex:deploy`)
+- [ ] Deploy Convex to production (`npm run convex:deploy`)
 - [ ] Set `CONVEX_URL` to production deployment URL
 - [ ] Configure `REDIS_URL` for resumable streams (optional)
 - [ ] Enable analytics with `VERCEL_ANALYTICS=true`
@@ -328,10 +328,10 @@ pnpm convex:deploy
 
 ```bash
 # Run E2E tests
-pnpm test
+npm test
 
 # Run with UI
-pnpm exec playwright test --ui
+npx playwright test --ui
 ```
 
 ## Based On

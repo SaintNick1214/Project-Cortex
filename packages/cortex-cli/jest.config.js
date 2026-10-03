@@ -15,7 +15,7 @@ const sharedConfig = {
         useESM: true,
         tsconfig: {
           module: "ESNext",
-          moduleResolution: "node",
+          moduleResolution: "bundler",
         },
       },
     ],

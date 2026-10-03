@@ -156,13 +156,13 @@ describe("llm", () => {
         });
 
         vi.doMock("openai", () => ({
-          default: vi.fn().mockImplementation(() => ({
+          default: vi.fn(function () { return {
             chat: {
               completions: {
                 create: mockCreate,
               },
             },
-          })),
+          }; }),
         }));
 
         const { generateResponse } = await import("../llm.js");
@@ -189,13 +189,13 @@ describe("llm", () => {
         });
 
         vi.doMock("openai", () => ({
-          default: vi.fn().mockImplementation(() => ({
+          default: vi.fn(function () { return {
             chat: {
               completions: {
                 create: mockCreate,
               },
             },
-          })),
+          }; }),
         }));
 
         const { generateResponse } = await import("../llm.js");
@@ -221,13 +221,13 @@ describe("llm", () => {
         process.env.OPENAI_API_KEY = "sk-test-key";
 
         vi.doMock("openai", () => ({
-          default: vi.fn().mockImplementation(() => ({
+          default: vi.fn(function () { return {
             chat: {
               completions: {
                 create: vi.fn().mockRejectedValue(new Error("API Error")),
               },
             },
-          })),
+          }; }),
         }));
 
         const { generateResponse } = await import("../llm.js");
@@ -243,7 +243,7 @@ describe("llm", () => {
         process.env.OPENAI_API_KEY = "sk-test-key";
 
         vi.doMock("openai", () => ({
-          default: vi.fn().mockImplementation(() => ({
+          default: vi.fn(function () { return {
             chat: {
               completions: {
                 create: vi.fn().mockResolvedValue({
@@ -251,7 +251,7 @@ describe("llm", () => {
                 }),
               },
             },
-          })),
+          }; }),
         }));
 
         const { generateResponse } = await import("../llm.js");
@@ -316,7 +316,7 @@ describe("llm", () => {
 
       let capturedMessages: unknown[] = [];
       vi.doMock("openai", () => ({
-        default: vi.fn().mockImplementation(() => ({
+        default: vi.fn(function () { return {
           chat: {
             completions: {
               create: vi.fn().mockImplementation((opts: { messages: unknown[] }) => {
@@ -325,7 +325,7 @@ describe("llm", () => {
               }),
             },
           },
-        })),
+        }; }),
       }));
 
       const { generateResponse } = await import("../llm.js");

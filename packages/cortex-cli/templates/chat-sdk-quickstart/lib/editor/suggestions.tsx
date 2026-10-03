@@ -11,8 +11,8 @@ import { Suggestion as PreviewSuggestion } from "@/components/suggestion";
 import type { Suggestion } from "@/lib/types";
 
 export interface UISuggestion extends Suggestion {
-  selectionStart: number;
   selectionEnd: number;
+  selectionStart: number;
 }
 
 type Position = {
@@ -29,8 +29,8 @@ function findPositionsInDoc(doc: Node, searchText: string): Position | null {
 
       if (index !== -1) {
         positions = {
-          start: pos + index,
           end: pos + index + searchText.length,
+          start: pos + index,
         };
 
         return false;
@@ -53,15 +53,15 @@ export function projectWithPositions(
     if (!positions) {
       return {
         ...suggestion,
-        selectionStart: 0,
         selectionEnd: 0,
+        selectionStart: 0,
       };
     }
 
     return {
       ...suggestion,
-      selectionStart: positions.start,
       selectionEnd: positions.end,
+      selectionStart: positions.start,
     };
   });
 }
@@ -89,9 +89,12 @@ export function createSuggestionWidget(
     if (currentDecorations) {
       const newDecorations = DecorationSet.create(
         state.doc,
-        currentDecorations.find().filter((decoration: Decoration) => {
-          return decoration.spec.suggestionId !== suggestion.id;
-        })
+        currentDecorations
+          .find()
+          .filter(
+            (decoration: Decoration) =>
+              decoration.spec.suggestionId !== suggestion.id
+          )
       );
 
       decorationTransaction.setMeta(suggestionsPluginKey, {
@@ -121,23 +124,25 @@ export function createSuggestionWidget(
   );
 
   return {
-    dom,
     destroy: () => {
       // Wrapping unmount in setTimeout to avoid synchronous unmounting during render
       setTimeout(() => {
         root.unmount();
       }, 0);
     },
+    dom,
   };
 }
 
 export const suggestionsPluginKey = new PluginKey("suggestions");
 export const suggestionsPlugin = new Plugin({
   key: suggestionsPluginKey,
-  state: {
-    init() {
-      return { decorations: DecorationSet.empty, selected: null };
+  props: {
+    decorations(state) {
+      return this.getState(state)?.decorations ?? DecorationSet.empty;
     },
+  },
+  state: {
     apply(tr, state) {
       const newDecorations = tr.getMeta(suggestionsPluginKey);
       if (newDecorations) {
@@ -149,10 +154,8 @@ export const suggestionsPlugin = new Plugin({
         selected: state.selected,
       };
     },
-  },
-  props: {
-    decorations(state) {
-      return this.getState(state)?.decorations ?? DecorationSet.empty;
+    init() {
+      return { decorations: DecorationSet.empty, selected: null };
     },
   },
 });

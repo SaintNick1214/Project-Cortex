@@ -31,7 +31,7 @@ export const Suggestion = ({
           exit={{ opacity: 0, y: -10 }}
           initial={{ opacity: 0, y: -10 }}
           key={suggestion.id}
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          transition={{ damping: 30, stiffness: 500, type: "spring" }}
           whileHover={{ scale: 1.05 }}
         >
           <div className="flex flex-row items-center justify-between">

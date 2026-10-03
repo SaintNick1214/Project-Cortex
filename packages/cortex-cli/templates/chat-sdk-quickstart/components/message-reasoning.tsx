@@ -10,16 +10,19 @@ import {
 
 export type ReasoningType = "llm" | "memory-recall" | "memory-storage";
 
-const REASONING_ICON_MAP: Record<ReasoningType, React.ComponentType<{ className?: string }>> = {
+const REASONING_ICON_MAP: Record<
+  ReasoningType,
+  React.ComponentType<{ className?: string }>
+> = {
+  llm: BrainIcon,
   "memory-recall": DatabaseIcon,
   "memory-storage": SaveIcon,
-  "llm": BrainIcon,
 };
 
 const REASONING_LABEL_MAP: Record<ReasoningType, string> = {
+  llm: "Thinking",
   "memory-recall": "Recalling Memory",
   "memory-storage": "Storing Memory",
-  "llm": "Thinking",
 };
 
 type MessageReasoningProps = {

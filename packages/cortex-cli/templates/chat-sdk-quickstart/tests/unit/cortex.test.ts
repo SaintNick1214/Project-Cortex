@@ -5,17 +5,22 @@
  * getMemorySpaceId, and getAgentId.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMockAuthContext } from "../helpers/mock-cortex";
 
 // Mock the Cortex SDK before importing the module under test
 vi.mock("@cortexmemory/sdk", () => ({
-  Cortex: vi.fn().mockImplementation((config) => ({
-    _config: config,
-    conversations: {},
-    artifacts: {},
-    memory: {},
-  })),
+  Cortex: vi.fn(
+    class {
+      readonly _config: unknown;
+      artifacts = {};
+      conversations = {};
+      memory = {};
+      constructor(config: unknown) {
+        this._config = config;
+      }
+    }
+  ),
 }));
 
 describe("lib/cortex", () => {
@@ -27,6 +32,7 @@ describe("lib/cortex", () => {
 
     // Clear module cache to reset singleton
     vi.resetModules();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
@@ -43,7 +49,7 @@ describe("lib/cortex", () => {
       const client = getCortex();
 
       expect(client).toBeDefined();
-      expect(client._config).toEqual({
+      expect((await import("@cortexmemory/sdk")).Cortex).toHaveBeenCalledWith({
         convexUrl: "https://test-convex.cloud",
       });
     });
@@ -65,7 +71,7 @@ describe("lib/cortex", () => {
       const { getCortex } = await import("@/lib/cortex");
 
       expect(() => getCortex()).toThrow(
-        "CONVEX_URL environment variable is required",
+        "CONVEX_URL environment variable is required"
       );
     });
   });
@@ -80,9 +86,9 @@ describe("lib/cortex", () => {
       const client = getCortexWithAuth(authContext);
 
       expect(client).toBeDefined();
-      expect(client._config).toEqual({
-        convexUrl: "https://test-convex.cloud",
+      expect((await import("@cortexmemory/sdk")).Cortex).toHaveBeenCalledWith({
         auth: authContext,
+        convexUrl: "https://test-convex.cloud",
       });
     });
 
@@ -97,8 +103,16 @@ describe("lib/cortex", () => {
       const instance2 = getCortexWithAuth(authContext2);
 
       // Each call creates a new instance for different auth contexts
-      expect(instance1._config.auth.userId).toBe("user-1");
-      expect(instance2._config.auth.userId).toBe("user-2");
+      expect(instance1).not.toBe(instance2);
+      const { Cortex } = await import("@cortexmemory/sdk");
+      expect(Cortex).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ auth: authContext1 })
+      );
+      expect(Cortex).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ auth: authContext2 })
+      );
     });
 
     it("throws error when CONVEX_URL is not set", async () => {
@@ -108,7 +122,7 @@ describe("lib/cortex", () => {
       const authContext = createMockAuthContext();
 
       expect(() => getCortexWithAuth(authContext)).toThrow(
-        "CONVEX_URL environment variable is required",
+        "CONVEX_URL environment variable is required"
       );
     });
   });

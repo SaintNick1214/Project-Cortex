@@ -201,7 +201,7 @@ export async function POST(req: Request) {
     const normalizedMessages = normalizeMessages(messages);
 
     // Convert to model messages
-     
+
     const modelMessagesResult = convertToModelMessages(
       normalizedMessages as any,
     );
