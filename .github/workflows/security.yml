@@ -291,6 +291,7 @@ jobs:
           fetch-depth: 0 # Need full history to check all commits
 
       - name: Verify commit signatures
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -299,13 +300,21 @@ jobs:
           echo "════════════════════════════════════════════════════════════"
           echo ""
 
-          # Determine commits to check based on event type
+          # Verify the PR head and newly introduced commits. Historical commits
+          # already on main/dev are imported history, not new changes to sign.
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            # For PRs, check all commits in the PR
             BASE_SHA="${{ github.event.pull_request.base.sha }}"
             HEAD_SHA="${{ github.event.pull_request.head.sha }}"
-            echo "📋 Checking PR commits: $BASE_SHA..$HEAD_SHA"
-            COMMITS=$(git rev-list "$BASE_SHA".."$HEAD_SHA")
+            git fetch --no-tags origin \
+              +refs/heads/main:refs/remotes/origin/main \
+              +refs/heads/dev:refs/remotes/origin/dev
+            echo "📋 Checking PR head and commits outside reviewed main/dev history"
+            COMMITS=$(
+              {
+                printf '%s\n' "$HEAD_SHA"
+                git rev-list "$BASE_SHA..$HEAD_SHA" --not origin/main origin/dev
+              } | awk 'NF && !seen[$0]++'
+            )
           else
             # For pushes, check just the pushed commit
             echo "📋 Checking pushed commit: ${{ github.sha }}"
@@ -353,7 +362,7 @@ jobs:
           fi
 
           echo ""
-          echo "✅ All commits have verified signatures!"
+          echo "✅ All selected commits have verified signatures!"
 
   # All security checks summary
   security-summary:
