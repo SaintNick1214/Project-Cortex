@@ -1,0 +1,92 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    21.7s | 40/40 passed | /tests/unit/auth/credentials.test.ts
+  ✅     0.3s | 32/32 passed | /tests/unit/auth/validators.test.ts
+  ✅     0.3s | 26/26 passed | /tests/unit/auth/context.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.02s ( 0.1%) - Installed Convex reactive authentication error outcomes official server rejection refresh contains host errors, reconnects unauthenticated and exposes a diagnostic
+    /tests/unit/auth/credentials.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.1%) - Installed Convex reactive authentication error outcomes older delayed success/rejection cannot overwrite the latest failure or recovered official session
+    /tests/unit/auth/credentials.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.1%) - Auth Validators validateTenantId should reject tenant IDs exceeding max length
+    /tests/unit/auth/validators.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.0%) - HostCredentials rejects a non-function getter (undefined) before any client is allocated
+    /tests/unit/auth/credentials.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.0%) - Installed Convex reactive authentication error outcomes actual Cortex constructor contains rejecting host callbacks, resumes unauthenticated and recovers
+    /tests/unit/auth/credentials.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.0%) - Installed Convex reactive authentication error outcomes overlapping official notifications while paused deliver None and preserve a newer recovered identity
+    /tests/unit/auth/credentials.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.0%) - Cortex host credential constructor binding auth success notifications cannot hide a getter diagnostic and stale/closed deferred clears are fenced
+    /tests/unit/auth/credentials.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.0%) - Installed Convex reactive authentication error outcomes official client contains malformed results, isolates async observers and clears an existing identity
+    /tests/unit/auth/credentials.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.0%) - HostCredentials attaches changed JWTs to actual ConvexHttpClient wire requests and clears logout identity
+    /tests/unit/auth/credentials.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - HostCredentials forwards the exact official force-refresh request and returns changed tokens
+    /tests/unit/auth/credentials.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - Installed Convex reactive authentication error outcomes official client contains synchronous results, isolates async observers and clears an existing identity
+    /tests/unit/auth/credentials.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - Installed Convex reactive authentication error outcomes official refresh/logout/login updates identity with no getter failure diagnostic
+    /tests/unit/auth/credentials.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - Auth Context createAuthContext - Basic Creation should throw on missing userId
+    /tests/unit/auth/context.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - Auth Validators validateUserId should reject empty user IDs
+    /tests/unit/auth/validators.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - HostCredentials rejects malformed token results (undefined) without disclosure or HTTP effects
+    /tests/unit/auth/credentials.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - HostCredentials serializes a shared HTTP client without fetching or replacing the next operation's token early
+    /tests/unit/auth/credentials.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - Cortex host credential constructor binding binds the real credential callback and observes refresh/logout changes
+    /tests/unit/auth/credentials.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - Cortex host credential constructor binding rejects unbound/closed reactive notifications and prevents multiple active bindings
+    /tests/unit/auth/credentials.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - Auth Context createAuthContext - Basic Creation should create minimal context with only userId
+    /tests/unit/auth/context.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - Auth Validators validateUserId should accept valid user IDs
+    /tests/unit/auth/validators.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.15s (0.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      22.97s
+  Test suites:        3
+  Individual tests:   61
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+

@@ -36,6 +36,23 @@ async function waitFor(predicate: () => boolean): Promise<void> {
   const deadline = Date.now() + timeoutMs;
   while (!predicate()) { assert(Date.now() < deadline, "BOUNDED_OBSERVATION_TIMEOUT"); await new Promise((done) => setTimeout(done, 25)); }
 }
+async function waitForRecoveredSdkValue(client: ConvexClient, args: Args): Promise<void> {
+  let stop: (() => void) | undefined;
+  try {
+    await bounded(new Promise<void>((resolve, reject) => {
+      stop = client.onUpdate(query("mutable:get"), args, (value) => {
+        try { assert.equal(object(value).value, 43); resolve(); }
+        catch (error) { reject(error); }
+      }, (error) => {
+        // A prior denied result can remain cached while async setAuth recovers.
+        // Only that structured native denial may precede the fresh exact43 update.
+        const data: unknown = error instanceof ConvexError ? error.data : undefined;
+        if (!(error instanceof ConvexError && data !== null && typeof data === "object"
+          && "code" in data && data.code === "UNAUTHENTICATED")) reject(error);
+      });
+    }));
+  } finally { stop?.(); }
+}
 async function jwt(subject: string, variant: Variant = "valid"): Promise<string> { return await parent.sign(subject, variant); }
 function denial(error: unknown): "FORBIDDEN" | "UNAUTHENTICATED" | "INTERNAL_ONLY" | undefined {
   if (error instanceof ConvexError) {
@@ -307,6 +324,7 @@ async function qualifyCases() {
     assert(callbackCodes.every((code) => code === "HOST_TOKEN_FETCH_FAILED"));
     await denied(sdk.getClient().query(query("mutable:get"), sdkKey), "UNAUTHENTICATED");
     mode = "current"; currentToken = await jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+    await waitForRecoveredSdkValue(sdk.getClient(), sdkKey);
     assert.equal(object(await bounded(sdk.getClient().query(query("mutable:get"), sdkKey))).value, 43);
     assert.equal(sdk.credentials!.authFailure, undefined);
   }, ["sdk-metadata-consumers", "late-credential-fencing"]);

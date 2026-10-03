@@ -1,0 +1,27 @@
+[
+  {
+    "name": "full-client-typecheck-restored",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/client-tsconfig.json",
+      "--noEmit"
+    ],
+    "startUtc": "2026-10-03T19:50:04.541481+00:00",
+    "endUtc": "2026-10-03T19:50:13.126607+00:00",
+    "exit": 0
+  },
+  {
+    "name": "scoped-eslint-restored",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1/native-regression.mjs"
+    ],
+    "startUtc": "2026-10-03T19:50:13.126832+00:00",
+    "endUtc": "2026-10-03T19:50:15.848494+00:00",
+    "exit": 0
+  }
+]
