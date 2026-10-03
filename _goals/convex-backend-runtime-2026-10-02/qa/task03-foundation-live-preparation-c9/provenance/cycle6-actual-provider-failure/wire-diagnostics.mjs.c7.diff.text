@@ -1,0 +1,11 @@
+--- immutable-c6/wire-diagnostics.mjs
++++ new-c7/wire-diagnostics.mjs
+@@ -4,7 +4,7 @@
+ import { createHash, randomUUID } from 'node:crypto';
+ export const diagnosticLimits=Object.freeze({bytesPerRecord:65536,records:32});
+ const hash=value=>createHash('sha256').update(value).digest('hex');
+-const codes=new Set(['InvalidAuth','InvalidAuthHeader','Unauthenticated','FORBIDDEN','UNAUTHENTICATED','INTERNAL_FAILURE']);
++const codes=new Set(['InvalidAuth','InvalidAuthHeader','NoAuthProvider','Unauthenticated','FORBIDDEN','UNAUTHENTICATED','INTERNAL_FAILURE']);
+ export async function boundedWireBody(response){
+  const reader=response.clone().body?.getReader();if(!reader)return {body:'',byteCount:0,truncated:false};
+  const chunks=[];let size=0,truncated=false;
