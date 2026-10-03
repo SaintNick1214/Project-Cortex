@@ -8,7 +8,7 @@ The17-task goal remains incomplete. The exact sequencing refinement independentl
 |---|---|---|
 |01 | Bounded actual qualification independently PASS; targets retired | Later product capabilities retain own live gates |
 |02 | Domain/repository foundations independently PASS | Governed models, canonical writers and managed retrieval later |
-|03 | Partial: accepted controls/refresh/metadata41/worker25/MF42/registry46/artifact22/stats2/SDK registry | All65 safety closures and SDK followups independently accepted offline; catalog preservation composition repair, currentguard live qualification and fresh aggregate03-foundation review; later original functional03-final |
+|03 | Partial: accepted controls/refresh/metadata41/worker25/MF42/registry46/artifact22/stats2/SDK registry | All65 safety closures and SDK followups independently accepted offline; catalog preservation composition independentlyPASS4.4, currentguard live qualification and fresh aggregate03-foundation review; later original functional03-final |
 |04 | Pending |03-foundation live/implementation PASS |
 |05 | Pending |02/04/03-foundation; canonical Agent transcript, source ownership, statistics restoration, locks/revisions |
 |06 | Pending |05/03-foundation; additive host installation |
@@ -37,3 +37,5 @@ Standard npm12.2 root lint passes (115 warnings,0 errors) after independently re
 Currentguard live preparation is delegated without service dispatch: source-bound full current backend, all259 resolved native argument schemas, exact owned internal fixture operators and per-path live case ledger. Verified new target provisioning awaits fresh preparation review. Two disjoint family case authors supply actual owned/private counterpart outcomes; no current live PASS is claimed.
 
 CLI dependency typecheck and provider TypeScript lint pass against current SDK; full module/e2e checks remain unrun. Catalog repair and all accepted closures are pushed with server-verified signatures; currentguard live harness preparation remains offline.
+
+Preparation review findings before freeze: additional forged-signature, omitted/mismatched/ambiguous scope, actual grant expiry, revoked membership and deleted scope service cases are being added. No membership-expiry field is invented where the trusted schema has none. Private key checks require reviewed source/runtime preflight; partial provisioning recovery must retain exact-owned development retirement. These findings are not live results. Task04 contract preparation is independent/offline only; its production implementation remains gated by03-foundation PASS.
