@@ -487,3 +487,7 @@ Root standard lint initially failed87 QA-only discovery errors; one reviewed ign
 ## Resume: accepted preservation composition
 
 Fresh independent catalog reviewPASS4.4: historical scripts/baselines/assertions retained through exact accepted source snapshots, current22/file5/stats2 checked separately against reviewed bytes. Targeted8 and seven independent rejected-tamper controls pass; final aggregate4577/4577 across45suites,0skips/pending. Roottsc and affected zero-warning lint pass. CLI/provider dependency typechecks pass; initial private wrapper output-path failure retained with no inferred child outcome. Signed catalog commits pushed through8bfb6d59. Full live/currentguard/aggregatefoundation and remaining runtime implementation are pending.
+
+## Current aggregate finding — foreground unavailable ordering
+
+Fresh aggregatejudge FINALNEEDS_REVISION3.6 reproduced actualremember1committedsource andrecall1privatefacts query before POLICY_NOT_CONFIGURED/not_dispatched. Appliedsequencing foundationrequiresno such sourceprocessing/write/privatehydration onunavailable paths; historical02B allowance doesnot override.4577nativePASS plusroot/backend/linttypesPASS remainhonest priorsource evidence, insufficientfor thismissing assertion. Exactfailedprobe/source/rawjudgment arepushedthrough9d473f46. Boundedpublic2foreground repair isactive withoriginalpure services/internal6 preserved; freshreview/sourcefixture refreshrequired before currentlive. Task04 qualifiedcontractpacketispushedonlypreparation, productheld.
