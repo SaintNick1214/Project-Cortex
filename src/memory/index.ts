@@ -32,6 +32,7 @@
  *    - Syncs entities to graph database if configured
  */
 
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import { ConversationsAPI } from "../conversations";
@@ -1345,7 +1346,7 @@ export class MemoryAPI {
           {
             content: userContent,
             contentType,
-            tenantId: params.tenantId ?? this.authContext?.tenantId, // Multi-tenancy: SaaS platform isolation
+            tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId), // Multi-tenancy: SaaS platform isolation
             participantId: params.participantId,
             embedding: userEmbedding,
             userId: params.userId,
@@ -1399,7 +1400,7 @@ export class MemoryAPI {
             {
               content: agentContent,
               contentType: "raw",
-              tenantId: params.tenantId ?? this.authContext?.tenantId, // Multi-tenancy: SaaS platform isolation
+              tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId), // Multi-tenancy: SaaS platform isolation
               participantId: params.participantId,
               embedding: agentEmbedding,
               userId: params.userId,
@@ -2534,6 +2535,12 @@ export class MemoryAPI {
    * });
    * ```
    */
+  async get(memorySpaceId: string, memoryId: string,
+    options?: GetMemoryOptions & { includeConversation?: false }): Promise<MemoryEntry | null>;
+  async get(memorySpaceId: string, memoryId: string,
+    options: GetMemoryOptions & { includeConversation: true }): Promise<EnrichedMemory | null>;
+  async get(memorySpaceId: string, memoryId: string,
+    options: GetMemoryOptions): Promise<MemoryEntry | EnrichedMemory | null>;
   async get(
     memorySpaceId: string,
     memoryId: string,
@@ -2604,6 +2611,12 @@ export class MemoryAPI {
    * });
    * ```
    */
+  async search(memorySpaceId: string, query: string,
+    options?: SearchMemoryOptions & { enrichConversation?: false }): Promise<MemoryEntry[]>;
+  async search(memorySpaceId: string, query: string,
+    options: SearchMemoryOptions & { enrichConversation: true }): Promise<EnrichedMemory[]>;
+  async search(memorySpaceId: string, query: string,
+    options: SearchMemoryOptions): Promise<MemoryEntry[] | EnrichedMemory[]>;
   async search(
     memorySpaceId: string,
     query: string,
@@ -2822,7 +2835,7 @@ export class MemoryAPI {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // STEP 2: PARALLEL SEARCH - Vector + Facts (Semantic when embedding available)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    const effectiveTenantId = params.tenantId ?? this.authContext?.tenantId;
+    const effectiveTenantId = resolveTenantId(this.authContext?.tenantId, params.tenantId);
 
     // BATTERIES INCLUDED (v0.30.0+): Auto-generate embedding if not provided
     // When embedding config is set, we automatically generate embeddings from the query
@@ -3396,6 +3409,9 @@ export class MemoryAPI {
   /**
    * List memories with optional fact enrichment
    */
+  async list(filter: ListMemoriesFilter & { enrichFacts?: false }): Promise<MemoryEntry[]>;
+  async list(filter: ListMemoriesFilter & { enrichFacts: true }): Promise<EnrichedMemory[]>;
+  async list(filter: ListMemoriesFilter): Promise<MemoryEntry[] | EnrichedMemory[]>;
   async list(
     filter: ListMemoriesFilter,
   ): Promise<MemoryEntry[] | EnrichedMemory[]> {

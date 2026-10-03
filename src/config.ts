@@ -5,6 +5,7 @@
  * Values can be overridden at runtime via API parameters.
  */
 
+import { runtimeEnv } from "./runtime";
 import type { RecallLimits } from "./types";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -49,7 +50,7 @@ export function resolveFactExtractionModel(
 ): string {
   return (
     configModel ||
-    process.env.CORTEX_FACT_EXTRACTION_MODEL ||
+    runtimeEnv.CORTEX_FACT_EXTRACTION_MODEL ||
     MODEL_DEFAULTS.factExtraction[provider]
   );
 }
@@ -73,8 +74,8 @@ export function resolveConflictResolutionModel(
 ): string {
   return (
     configModel ||
-    process.env.CORTEX_CONFLICT_RESOLUTION_MODEL ||
-    process.env.CORTEX_FACT_EXTRACTION_MODEL ||
+    runtimeEnv.CORTEX_CONFLICT_RESOLUTION_MODEL ||
+    runtimeEnv.CORTEX_FACT_EXTRACTION_MODEL ||
     MODEL_DEFAULTS.conflictResolution[provider]
   );
 }
@@ -92,7 +93,7 @@ export function resolveConflictResolutionModel(
  */
 export function resolveEmbeddingModel(configModel?: string): string {
   return (
-    configModel || process.env.CORTEX_EMBEDDING_MODEL || MODEL_DEFAULTS.embedding
+    configModel || runtimeEnv.CORTEX_EMBEDDING_MODEL || MODEL_DEFAULTS.embedding
   );
 }
 
@@ -127,18 +128,18 @@ function parseEnvInt(envVar: string | undefined, defaultValue: number): number {
  * - CORTEX_RECALL_LIMIT_TOTAL: Final aggregate limit (default: 30)
  */
 export const RECALL_DEFAULTS: Required<RecallLimits> = {
-  memories: parseEnvInt(process.env.CORTEX_RECALL_LIMIT_MEMORIES, 20),
-  facts: parseEnvInt(process.env.CORTEX_RECALL_LIMIT_FACTS, 15),
-  graphHops: parseEnvInt(process.env.CORTEX_RECALL_GRAPH_HOPS, 2),
+  memories: parseEnvInt(runtimeEnv.CORTEX_RECALL_LIMIT_MEMORIES, 20),
+  facts: parseEnvInt(runtimeEnv.CORTEX_RECALL_LIMIT_FACTS, 15),
+  graphHops: parseEnvInt(runtimeEnv.CORTEX_RECALL_GRAPH_HOPS, 2),
   graphEntitiesPerHop: parseEnvInt(
-    process.env.CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP,
+    runtimeEnv.CORTEX_RECALL_GRAPH_ENTITIES_PER_HOP,
     5,
   ),
   graphResultsPerEntity: parseEnvInt(
-    process.env.CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY,
+    runtimeEnv.CORTEX_RECALL_GRAPH_RESULTS_PER_ENTITY,
     3,
   ),
-  total: parseEnvInt(process.env.CORTEX_RECALL_LIMIT_TOTAL, 30),
+  total: parseEnvInt(runtimeEnv.CORTEX_RECALL_LIMIT_TOTAL, 30),
 };
 
 /**

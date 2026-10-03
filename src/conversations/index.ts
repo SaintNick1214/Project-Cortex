@@ -4,6 +4,7 @@
  * Layer 1a: ACID-compliant immutable conversation storage
  */
 
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
@@ -361,7 +362,7 @@ export class ConversationsAPI {
           type: filter?.type,
           userId: filter?.userId,
           memorySpaceId: filter?.memorySpaceId,
-          tenantId: filter?.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter?.tenantId), // Support explicit or auth context
           participantId: filter?.participantId,
           createdBefore: filter?.createdBefore,
           createdAfter: filter?.createdAfter,
@@ -788,6 +789,7 @@ export class ConversationsAPI {
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.conversations.search, {
+          tenantId: this.authContext?.tenantId,
           query: input.query,
           type: input.filters?.type,
           userId: input.filters?.userId,

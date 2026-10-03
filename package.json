@@ -84,7 +84,8 @@
     "test:debug": "cross-env TEST_DEBUG=true TEST_VERBOSE=true TEST_INSPECT=true node --experimental-vm-modules node_modules/jest/bin/jest.js debug --runInBand",
     "test:stress": "npx tsx tests/resilience-stress.manual.ts",
     "update-deps": "node scripts/update-deps.mjs",
-    "update-deps:dry": "node scripts/update-deps.mjs --dry-run"
+    "update-deps:dry": "node scripts/update-deps.mjs --dry-run",
+    "test:contracts": "node scripts/verify-public-contracts.mjs"
   },
   "peerDependencies": {
     "@anthropic-ai/sdk": "^0.131.0",
