@@ -37,9 +37,17 @@ describe("portable inventory, actual schema exports and preserved sources", () =
     const combined = serialize(defineSchema({ hostTable: defineTable({ preserved: v.string() }), ...schema.tables }));
     expect(combined.tables.map((value) => value.tableName)).toContain("hostTable"); expect(combined.tables).toHaveLength(exported.tables.length + 1);
   });
-  it.each([["convex-dev/agents.ts", "computeStats", "stats-agents.frozen.txt"], ["convex-dev/memorySpaces.ts", "getStats", "stats-spaces.frozen.txt"]])("excluded %s registration remains byte-for-byte frozen", (file, name, frozen) => {
-    const source = fs.readFileSync(file, "utf8"); const start = source.indexOf(`export const ${name} =`); const end = source.indexOf("\n});", start) + 4;
+  it.each([["convex-dev/agents.ts", "computeStats", "stats-agents.frozen.txt"], ["convex-dev/memorySpaces.ts", "getStats", "stats-spaces.frozen.txt"]])("historical accepted %s excluded registration remains byte-for-byte frozen; later closure stays pinned", (file, name, frozen) => {
+    const nameOfFile = path.basename(file);
+    const repair = "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair";
+    const historical = `${repair}/accepted-registry/${nameOfFile}.text`;
+    const manifest = JSON.parse(fs.readFileSync(`${repair}/accepted-registry-manifest.json`, "utf8")) as { file: string; sha256: string }[];
+    const source = fs.readFileSync(historical, "utf8");
+    expect(crypto.createHash("sha256").update(source).digest("hex")).toBe(manifest.find(row => row.file === historical)!.sha256);
+    const start = source.indexOf(`export const ${name} =`); const end = source.indexOf("\n});", start) + 4;
     expect(source.slice(start, end)).toBe(fs.readFileSync(`${qa}/${frozen}`, "utf8"));
+    const later = JSON.parse(fs.readFileSync("_goals/convex-backend-runtime-2026-10-02/qa/task03b2b2-stats/frozen-uniform-closure.json", "utf8")) as Record<string, string>;
+    expect(crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex")).toBe(later[file]);
   });
   it("independent helper imports no unreviewed metadata/MF/worker bridge and no unsafe any/ts-ignore", () => {
     const source = fs.readFileSync("convex-dev/runtimeRegistryAuth.ts", "utf8");
