@@ -1,0 +1,15 @@
+# Aggregate03-foundation cycle2 — offline findings; FINAL HELD
+
+Independent judge inspected actual source and reran the original transaction-aware two-path witness. Public remember and recall now return exact version1 CAPABILITY_UNAVAILABLE, fixed Memory capability unavailable. message, retryablefalse and not_dispatched. Source writes, persisted sources and private facts queries are zero in both paths. This repairs the original aggregate finding; immutable old report/probe/raw witness hashes are recorded separately.
+
+Fresh import-aware AST resolves259 registrations,200 public,59 internal,34 modules,0 HTTP routes,0 unresolved. The generated JSON equals current inventory byte-for-byte. All50 prior selected source/catalog/SDK bindings and142 product/import-manifest records were independently checked; runtimeMemory.ts is the sole changed product record, matching accepted repair bdd5e261e263a852ac0ec427971b31a0689b55f0810143d82edd9b7308012255. Shared auth/repository/services/schema and current SDK sources remain exact prior inspected bytes.
+
+Independent focused actual native regression executes75 tests in3 suites,0 failures/pending/todo: domain public closure67 plus registry/artifact preservation8. This targeted selection adds source-dependent aggregate/preservation evidence without repeating the full identical passing quality gate. Parent raw broader JSON independently parsed as4644 tests/46 suites/0 failures or skips. Root standard npm12.2 lint raw output reports0 errors/115 warnings. Prior current source-bound build/packed/browser/type receipts and independent SDK160+16 safety evidence inspected.
+
+No additional supported offline blocker established. Returned-identity accessor and post-snapshot mutation explorations retain their prior supported-platform classification; no custom identity adapter or inconsistent Convex snapshot is invented as a required production state. Actual schema supports membership revocation/deletion/version and grant expiry, not a membership expiresAt field.
+
+FINAL remains held. Required actual frozen currentguard candidate, official codegen/native259 publication, exhaustive live path/class outcomes, functional owned/private controls, uniform closure, current SDK refresh/subscription/background lifecycle, owned cleanup/process reaping and physical management404 retirement must be supplied and independently reviewed. Original historic41 receipts cannot substitute. No score/verdict is awarded before these mandatory current evidence gates.
+
+Foundation is only intermediate safety. All original functional restoration criteria remain required at05/07/08/09/11/12/13/14/15/16 and03-final; it cannot complete full03, Task04 before acceptance, or full17.
+
+Writes limited to this QA and work/resume/foundation-aggregate-c2-review. No production/test/fixture/Git/keys/signing/network/service/child actions. One reviewer source-verifier setup assumed a nonexistent top-level counts field and failed before writing; corrected inventory comparison uses actual schema and retains that setup limitation here. No test assertion was weakened or skipped.
