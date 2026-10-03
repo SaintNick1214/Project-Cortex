@@ -517,7 +517,7 @@ export const purgeAll = internalMutation({
     // this registration. URL/environment names and public JWT admin labels are
     // never operator credentials. This does not remove other control tables.
     if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");
-    const rows = await ctx.db.query("artifacts").withIndex("by_tenant_space", (q) =>
+    const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>
       q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();
     // Full preflight, including retained history, before the first mutation.
     for (const row of rows) {

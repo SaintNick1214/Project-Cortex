@@ -7,6 +7,9 @@ import { fixture, invoke } from '../runtimeRegistryAuth/fixture';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import ts from 'typescript';
+import { execFileSync } from 'node:child_process';
+import os from 'node:os';
+import path from 'node:path';
 
 type Native = { isPublic?: boolean; isInternal?: boolean; isQuery?: boolean; exportArgs(): string };
 type Validator = { type: string; value?: unknown; tableName?: string };
@@ -197,8 +200,39 @@ it('native exportArgs matches every original installed Convex validator field an
 });
 it('accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added', () => {
   const accepted = JSON.parse(fs.readFileSync(qa + 'accepted22.json', 'utf8')) as { path: string; declaration: string; sha256: string }[];
-  const current = declarations(fs.readFileSync('convex-dev/artifacts.ts', 'utf8')); expect(accepted).toHaveLength(22);
+  // Preserve the exact accepted historical declarations while separately proving
+  // the sole current native index repair; no declaration is normalized.
+  const archivedArtifact = '_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/convex-dev/artifacts.ts';
+  expect(crypto.createHash('sha256').update(fs.readFileSync(archivedArtifact)).digest('hex')).toBe('15959b6cbc5126425c40a16d7a473cf0c353211b78b677e51660720abe7a9c14');
+  const current = declarations(fs.readFileSync(archivedArtifact, 'utf8')); expect(accepted).toHaveLength(22);
   for (const row of accepted) { const text = current.get(row.path.split(':')[1])!.declaration; expect(text).toBe(row.declaration); expect(crypto.createHash('sha256').update(text).digest('hex')).toBe(row.sha256); }
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'cortex-asset-index-preservation-'));
+  try {
+    const composition = JSON.parse(execFileSync(process.execPath,
+      ['_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs', directory],
+      { encoding: 'utf8' }));
+    expect(composition.exactCurrentRepair.wholeByteAuthorizedEdits).toBe(3);
+    expect(composition.exactCurrentRepair.postHashes).toEqual({
+      'convex-dev/schema.ts': '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
+      'convex-dev/runtimeArtifactAuth.ts': 'aa75122698632dfb836b10a12251de7c580f58aa8c16d866913f07fc657962c8',
+      'convex-dev/artifacts.ts': '3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3',
+    });
+    expect(composition.exactCurrentRepair.tables).toBe(26);
+    expect(composition.exactCurrentRepair.indexes).toBe(173);
+    expect(composition.exactCurrentRepair.duplicateSequences).toBe(0);
+    expect(composition.exactCurrentRepair.currentTamperControls).toEqual([
+      'changed tenant scope', 'extra index', 'changed candidate index', 'changed purge space bound', 'changed other declaration',
+    ]);
+    expect(composition.negativeControls).toBe(4);
+    const nativeSchema = JSON.parse(fs.readFileSync(composition.exactCurrentRepair.nativeWitness, 'utf8'));
+    expect(nativeSchema.duplicates).toEqual([]);
+    expect(nativeSchema.definitions.find((table: { table: string }) => table.table === 'artifacts').indexes
+      .filter((index: { fields: string[] }) => index.fields.join(',') === 'tenantId,memorySpaceId'))
+      .toEqual([{ indexDescriptor: 'by_tenant_space', fields: ['tenantId', 'memorySpaceId'] }]);
+    // The composer rejects any predicate/contract/index/declaration drift through
+    // exact whole-byte current proof and compares all native contracts unchanged.
+  } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+  expect(fs.existsSync(directory)).toBe(false);
   for (const module of ['artifacts', 'attachments']) {
     const before = declarations(fs.readFileSync(qa + module + '.ts', 'utf8')); const after = declarations(fs.readFileSync('convex-dev/' + module + '.ts', 'utf8'));
     expect([...after.keys()]).toEqual([...before.keys()]);
@@ -210,7 +244,9 @@ it('accepted22 declarations stay literal-identical;17 original validators unchan
   }
   const hashes = JSON.parse(fs.readFileSync(qa + 'source-hashes.json', 'utf8')) as Record<string, string>;
   for (const [path, hash] of Object.entries(hashes)) {
-    const actual = path.endsWith('/artifacts.ts') || path.endsWith('/attachments.ts') ? qa + path.split('/').pop() : path;
+    const actual = path.endsWith('/artifacts.ts') || path.endsWith('/attachments.ts') ? qa + path.split('/').pop()
+      : path === 'convex-dev/runtimeArtifactAuth.ts' || path === 'convex-dev/schema.ts'
+        ? '_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/' + path : path;
     expect(crypto.createHash('sha256').update(fs.readFileSync(actual)).digest('hex')).toBe(hash);
   }
 });

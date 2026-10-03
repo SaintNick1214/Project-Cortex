@@ -1215,6 +1215,7 @@ export default defineSchema({
     deletedBy: v.optional(v.string()),
   })
     // Fresh canonical selection; constrain owner before hydration/limit.
+    .index("by_runtime_scope", ["tenantId", "memorySpaceId"])
     .index("by_runtime_key", ["tenantId", "memorySpaceId", "artifactId"])
 
     // Unique lookups

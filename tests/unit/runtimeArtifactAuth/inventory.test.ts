@@ -8,7 +8,7 @@ import { execFileSync } from "node:child_process";
 test("native catalog composes accepted selected22 and later five file closures while preserving historical inventory", () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-artifact-inventory-"));
   try {
-    const output = execFileSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs", directory], { encoding: "utf8" });
+    const output = execFileSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs", directory], { encoding: "utf8" });
     const composition = JSON.parse(output);
     expect(composition.counts).toEqual({ selected22: 22, approvedLaterFileDeclarations: 5, approvedLaterStats: 2, artifactModuleRegistrations: 27, registryModuleRegistrations: 48 });
     expect(composition.negativeControls).toBe(4);

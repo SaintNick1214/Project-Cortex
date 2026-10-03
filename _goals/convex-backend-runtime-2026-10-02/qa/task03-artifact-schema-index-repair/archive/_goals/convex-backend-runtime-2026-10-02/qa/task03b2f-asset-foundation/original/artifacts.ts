@@ -14,10 +14,8 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { ArtifactOperation, artifactDeny, artifactHandler, nextArtifactVersion, safeInteger, validateArtifact } from "./runtimeArtifactAuth";
-
-import { internalAssetUnavailable, runtimeAssetUnavailable } from "./runtimeAssetUnavailableAuth";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Shared Validators
@@ -368,7 +366,7 @@ export const setStreamingState = mutation({
  * NOTE: Schema uses single fileRef, not attachedFiles array.
  * Use completeArtifactUpload for file uploads via storage.
  */
-export const setFileRef = internalMutation({
+export const setFileRef = mutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -381,9 +379,6 @@ export const setFileRef = internalMutation({
     }),
   },
   handler: async (ctx, args) => {
-    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
-    await internalAssetUnavailable();
-
     // Lookup artifact (tenant-aware)
     let artifact;
     if (args.tenantId) {
@@ -517,7 +512,7 @@ export const purgeAll = internalMutation({
     // this registration. URL/environment names and public JWT admin labels are
     // never operator credentials. This does not remove other control tables.
     if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");
-    const rows = await ctx.db.query("artifacts").withIndex("by_tenant_space", (q) =>
+    const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>
       q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();
     // Full preflight, including retained history, before the first mutation.
     for (const row of rows) {
@@ -1410,7 +1405,7 @@ export const retryFromError = mutation({
  * await fetch(uploadUrl, { method: 'POST', body: file });
  * ```
  */
-export const generateArtifactUploadUrl = internalMutation({
+export const generateArtifactUploadUrl = mutation({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
@@ -1418,9 +1413,6 @@ export const generateArtifactUploadUrl = internalMutation({
     filename: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
-    await internalAssetUnavailable();
-
     // Lookup artifact (tenant-aware)
     let artifact;
     if (args.tenantId) {
@@ -1482,7 +1474,6 @@ export const generateArtifactUploadUrl = internalMutation({
  */
 export const completeArtifactUpload = mutation({
   args: {
-    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     storageId: v.id("_storage"),
@@ -1494,9 +1485,6 @@ export const completeArtifactUpload = mutation({
     markFinal: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
-    await runtimeAssetUnavailable(ctx, "storage:write", args);
-
     // Lookup artifact (tenant-aware)
     let artifact;
     if (args.tenantId) {
@@ -1600,15 +1588,12 @@ export const completeArtifactUpload = mutation({
  * }
  * ```
  */
-export const getArtifactFileUrl = internalQuery({
+export const getArtifactFileUrl = query({
   args: {
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
-    await internalAssetUnavailable();
-
     // Lookup artifact (tenant-aware)
     let artifact;
     if (args.tenantId) {
@@ -1675,15 +1660,11 @@ export const getArtifactFileUrl = internalQuery({
  */
 export const detachFile = mutation({
   args: {
-    memorySpaceId: v.optional(v.string()),
     artifactId: v.string(),
     tenantId: v.optional(v.string()),
     deleteFile: v.optional(v.boolean()), // Default: false
   },
   handler: async (ctx, args) => {
-    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
-    await runtimeAssetUnavailable(ctx, "storage:write", args);
-
     // Lookup artifact (tenant-aware)
     let artifact;
     if (args.tenantId) {

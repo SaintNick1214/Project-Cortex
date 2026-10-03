@@ -276,7 +276,7 @@ export class ArtifactOperation<W extends boolean> {
   private candidates(artifactId?: string, blockedIds: string[] = []) {
     const authority = this.authority;
     return this.ctx.db.query("artifacts")
-      .withIndex("by_tenant_space", (q) => q.eq("tenantId", authority.tenantId).eq("memorySpaceId", this.authority.memorySpaceId))
+      .withIndex("by_runtime_scope", (q) => q.eq("tenantId", authority.tenantId).eq("memorySpaceId", this.authority.memorySpaceId))
       .filter((q) => q.and(
         q.neq(q.field("ownerPrincipalId"), undefined),
         authority.resourceAccess === "own" ? q.eq(q.field("ownerPrincipalId"), authority.principalId) : q.eq(1, 1),
