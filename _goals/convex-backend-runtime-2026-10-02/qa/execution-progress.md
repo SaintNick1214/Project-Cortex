@@ -463,3 +463,23 @@ Resumed auth QA correction independently FINAL PASS4.6 (Requirements5/Code4/Test
 
 
 Registry original46 resume repair independently FINAL PASS4.4; fresh judge reproduced1182registry/133core,36identity/138DB controls and27 newidentitycallback cases. Exact source/test/schema merged to main: ES2021backendPASS,1182/1182 main outcomes10suites0skips. CurrentrootFAIL28=26agentsSDK+2cleanup consumer mismatches; tracked bounded bridge required, no root/core green claim. Stats2/A2A4/transcript/byte endpoints and actual service gates remain pending.
+
+## Resume accepted integrations and actual41 rerun — 2026-10-03
+
+Registry46 independently4.4 integrated1182PASS; artifact22 independently4.2 integrated356PASS with ownedartifact schema property only and factualprovenanceaddendum. SDKregistry bridge independently4.4:39PASS, root/linttypes, maxwarnings0lint, build and packed/browsercontracts. Incremental serversigned verifiedfeaturecommits pushed; PR132 remainsdraftagainstdev. MF42 originalreview4.2 accepted, supportedoptionalREAD supplementalreview60falsecommits/80 REJECT retained; narrowrepair471PASS/80PASS awaits newindependentreview. Registrycrossdata stats2 active.
+
+Fresh original41actualservice run fa549ab0-5d1c-4487-9f7e-063648f3182d on separatelyreviewedfreshidentity fixture:41discovered/executed/passed,0skips,REAPED0groups. Official codegen+mandatorytypecheckPASS; ownedledgercleanupPASS; exactrosy-blackbird-933 project physicallyretired managementdelete200/GET404. Freshindependentservicejudge pending. Original39PASS1FAIL1BLOCKED preserved; no sharedtarget/newguardlive/inference claim.
+
+## Accepted sequencing and latest reviews — 2026-10-03
+
+Fresh sequencingcycle2 PASS4.6 verified all259registrations/32hashes/exact13filepatch/original17checkboxlists/acyclicordering. Applied exact reviewed aftercontents afterbeforehashchecks; originalfirst NEEDSREVISION3.2 retained.03-foundation currentguardLIVE+freshaggregatePASS stillrequired before04. Functional03-final retained through05/07/08/09/11/12/13/14/15/16;09 actualslice beforeextensions.
+
+MFoptionalREAD freshPASS4.2 and original42 retained, pushedacceptedsource/evidence. Original41actualservice freshPASS4.6 and exactproject404, pushedpublicprovenance/results; keys/env excluded. Uniformstats2 safetyclosure freshPASS4.4, functionalitypending05. SDKstats firstfreshREJECT3.8 despite76nativePASS: getStats othererrornormalization changed; boundedrepairactive.48transcript/A2A safetyclosure boundedexecutoractive, remaining17assetclosuretofollow; no newAgentwriter/adoption or fakecounts.
+
+## Resume: current safety closures and quality composition
+
+Accepted transcript/A2A48 repair4.4: original two privacy failures reproduced on immutable rejected source; current1124/unchanged330/fresh451 pass. Accepted assets17 safety4.4:390 native+19 fresh pass, original22 and validators retained. SDK statistics repair82, history57 and assets21 each independent4.2; all latest types/lint/build/packed-browser pass. Signed incremental branch commits retain original failures and reviews. No actual functional transcript/tool/assets acceptance is claimed.
+
+Fresh MF returned-identity review reproduced10 synthetic accessor commits and qualified installed Convex setupAuth→JSON.parse construction: no supported production accessor state or new blocker. Twenty supported actual handler controls pass; all synthetic/failed probes preserved.
+
+Root standard lint initially failed87 QA-only discovery errors; one reviewed ignore aligns root application lint with standalone scoped QA configs, rerun passes0errors/115warnings. Combined current authorization/domain regression observes4574PASS/3FAIL/0pending. All three preservation failures arise from approved later stats2/file5 closures; bounded test composition repair is delegated without weakening original historical assertions. Currentguard live fixture preparation and disjoint family cases remain offline; no target exists or currentguard live/aggregate03-foundationPASS yet. Task04 remains held, original full03 and Tasks04–17 remain incomplete.
