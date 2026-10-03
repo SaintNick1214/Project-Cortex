@@ -1,0 +1,31 @@
+{
+  "reason": "Official native-value witness compatibility discovery; first run passed, no fixture realm correction needed.",
+  "command": [
+    "npx",
+    "--yes",
+    "--package=npm@12.2.0",
+    "--",
+    "npm",
+    "exec",
+    "--",
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/jest.scoped.cjs",
+    "--runInBand",
+    "--json",
+    "--outputFile",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-native-codec-initial-tests.json"
+  ],
+  "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+  "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+  "jestStartedAtUtc": "2026-10-03T11:52:30.669000+00:00",
+  "receiptWrittenAtUtc": "2026-10-03T11:52:35.499835+00:00",
+  "exitCode": 0,
+  "tests": 133,
+  "passed": 133,
+  "failed": 0,
+  "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-native-codec-initial.stdout",
+  "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-native-codec-initial.stderr"
+}

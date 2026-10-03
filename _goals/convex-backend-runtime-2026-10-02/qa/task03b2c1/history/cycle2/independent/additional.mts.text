@@ -1,0 +1,48 @@
+import fs from "node:fs";
+import assert from "node:assert/strict";
+import { fixture } from "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/fixture.ts";
+const results: any[] = [];
+async function check(name: string, work: () => Promise<any>) {
+  try { const evidence = await work(); results.push({name,matched:true,...evidence}); }
+  catch(error: any) { results.push({name,matched:false,error:String(error),data:error.data}); }
+}
+function readGrant(f: any, access="own") { return f.db.add("runtimeAuthGrants", {principalId:f.principal._id,membershipId:f.membership._id,tenantId:"tenant-a",tenantEpoch:1,capabilities:["read"],resourceAccess:access,version:1}); }
+for (const operation of ["create", "update"]) for (const change of ["replace-generation", "version", "membership", "scope"]) {
+ await check(`${operation} distinct scope READ ${change} remains pinned after effect`,async()=>{
+  const f=fixture(["write"]); if(operation==="update") f.row(); const read=readGrant(f);let injections=0;
+  f.db.hook=(event:any)=>{if(event.table==="artifacts"&&["insert","patch"].includes(event.action)) {
+    injections++;
+    if(change==="replace-generation") {read.revokedAt=1; f.db.add("runtimeAuthGrants",{...read,_id:"runtimeAuthGrants:replacement",revokedAt:undefined,version:2});}
+    if(change==="version") read.version=2;
+    if(change==="membership") f.membership.version=2;
+    if(change==="scope") f.db.rows("runtimeAuthScopes").find((row:any)=>row.memorySpaceId==="space-a").epoch=2;
+  }};
+  let denied:any; try {await f.invoke(operation,{artifactId:operation==="create"?"new":"artifact-a",memorySpaceId:"space-a",content:"unsafe"});}catch(e:any){denied=e.data;}
+  assert.equal(denied?.code,"FORBIDDEN");assert.equal(injections,1);assert.equal(f.db.attempts.length,1);assert.equal(f.db.writes.length,0);
+  assert.equal(f.db.rows("artifacts").length,operation==="create"?0:1);if(operation==="update") assert.equal(f.db.rows("artifacts")[0].content,"first");
+  return {denied,injections,attempts:f.db.attempts.length,committed:f.db.writes.length};
+ });
+}
+for (const operation of ["create","update"]) await check(`${operation} initially absent READ cannot adopt new separate READ after effect`,async()=>{
+ const f=fixture(["write"]);if(operation==="update") f.row();let injections=0;
+ f.db.hook=(event:any)=>{if(event.table==="artifacts"&&["insert","patch"].includes(event.action)){injections++;readGrant(f);}};
+ const out=await f.invoke(operation,{artifactId:operation==="create"?"new":"artifact-a",memorySpaceId:"space-a",content:"manual"});
+ assert.deepEqual(out,{success:true,artifactId:operation==="create"?"new":"artifact-a"});assert.equal(injections,1);assert.equal(f.db.attempts.length,1);
+ return {output:out,injections,attempts:f.db.attempts.length};
+});
+await check("space editor preserves canonical owner and derives all actor labels",async()=>{
+ const f=fixture(["read","write"],"space");const row=f.row({ownerPrincipalId:"canonical-owner"});
+ const out=await f.invoke("update",{artifactId:"artifact-a",content:"edited",metadata:{admin:true,ownerPrincipalId:"forged"}});
+ assert.equal(out.ownerPrincipalId,"canonical-owner");assert.equal(out.lastActorPrincipalId,f.principal._id);assert.equal(out.versionHistory.at(-1).changedBy,f.principal._id);
+ await f.invoke("deleteArtifact",{artifactId:"artifact-a",hard:true,deletedBy:"forged"});assert.equal(f.db.rows("artifacts")[0].deletedBy,f.principal._id);assert.equal(f.db.rows("artifacts")[0].ownerPrincipalId,"canonical-owner");
+ return {owner:"canonical-owner",actor:f.principal._id,retainedRows:f.db.rows("artifacts").length,tombstones:f.db.rows("runtimeAuthTombstones").length};
+});
+await check("tenant WRITE grant narrows to explicit concrete space; omission denies",async()=>{
+ const f=fixture(["write"],"tenant");delete f.grant.memorySpaceId;delete f.grant.memorySpaceEpoch;let denied:any;
+ try{await f.invoke("create",{artifactId:"new",content:"manual"});}catch(e:any){denied=e.data;}assert.equal(denied?.code,"FORBIDDEN");assert.equal(f.db.attempts.length,0);
+ const out=await f.invoke("create",{artifactId:"new",memorySpaceId:"space-a",content:"manual"});assert.deepEqual(out,{success:true,artifactId:"new"});assert.equal(f.db.rows("artifacts")[0].memorySpaceId,"space-a");
+ return {omissionDenied:denied,explicitOutput:out,attempts:f.db.attempts.length};
+});
+fs.writeFileSync("/tmp/task03b2c1-review2-3it_0vsh/additional-results.json",JSON.stringify(results,null,2)+"\n");
+for(const result of results) console.log(JSON.stringify(result));
+if(results.some(r=>!r.matched))process.exitCode=1;

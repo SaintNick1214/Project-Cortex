@@ -1,0 +1,48 @@
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import ts from "typescript";
+import { execFileSync } from "node:child_process";
+const file = "convex-dev/artifacts.ts";
+const source = fs.readFileSync(file, "utf8");
+const baseline = execFileSync("git", ["show", "c0c40423:convex-dev/artifacts.ts"], { encoding: "utf8" });
+const excluded = new Set(["setFileRef", "generateArtifactUploadUrl", "completeArtifactUpload", "getArtifactFileUrl", "detachFile"]);
+const parse = (text) => {
+  const ast = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true);
+  const builders = new Map(); const rows = []; const calls = new Set();
+  for (const node of ast.statements) if (ts.isImportDeclaration(node) && node.moduleSpecifier.text === "./_generated/server") {
+    const bindings = node.importClause?.namedBindings;
+    if (bindings && ts.isNamedImports(bindings)) for (const item of bindings.elements) builders.set(item.name.text, item.propertyName?.text ?? item.name.text);
+  }
+  const visit = (node) => { if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && builders.has(node.expression.text)) calls.add(node); ts.forEachChild(node, visit); };
+  visit(ast);
+  for (const node of ast.statements) if (ts.isVariableStatement(node) && node.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) {
+    for (const declaration of node.declarationList.declarations) if (ts.isIdentifier(declaration.name) && declaration.initializer && calls.has(declaration.initializer)) {
+      const builder = builders.get(declaration.initializer.expression.text);
+      rows.push({ name: declaration.name.text, builder, visibility: builder.startsWith("internal") ? "internal" : "public",
+        line: ast.getLineAndCharacterOfPosition(node.getStart()).line + 1,
+        text: node.getText(ast) }); calls.delete(declaration.initializer);
+    }
+  }
+  return { rows, unresolved: calls.size };
+};
+const actual = parse(source); const original = parse(baseline);
+const selected = actual.rows.filter((row) => !excluded.has(row.name));
+const frozen = actual.rows.filter((row) => excluded.has(row.name)).map((row) => ({ path: `artifacts:${row.name}`,
+  unchanged: row.text === original.rows.find((originalRow) => originalRow.name === row.name)?.text,
+  state: "PENDING full C2 owned-file admission/private delivery Task12" }));
+const originalContract = JSON.parse(fs.readFileSync("_goals/convex-backend-runtime-2026-10-02/qa/task03a/public-path-inventory.json", "utf8"));
+const result = { version: 1, scope: "03B2C1 manual text artifact metadata only", counts: { registered: selected.length,
+  public: selected.filter((row) => row.visibility === "public").length,
+  internal: selected.filter((row) => row.visibility === "internal").length, unresolved: actual.unresolved,
+  pendingFileRegistrations: frozen.length },
+  sourceHash: crypto.createHash("sha256").update(source).digest("hex"),
+  endpoints: selected.map(({ name, builder, visibility, line }) => ({ path: `artifacts:${name}`, builder, visibility, line,
+    accepted03ADisposition: originalContract.endpoints.find((endpoint) => endpoint.path === `artifacts:${name}`)?.disposition,
+    closure: name === "purgeAll" ? "trusted operator internal; exact tenant/space; full file/link preflight; retained rows+tombstones"
+      : "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only" })),
+  frozenFilePaths: frozen, excludedAttachments: "all 12 attachments registrations/source unchanged" };
+if (result.counts.registered !== 22 || result.counts.public !== 21 || result.counts.internal !== 1 || result.counts.unresolved !== 0 || frozen.some((row) => !row.unchanged)) throw new Error("Artifact inventory/preservation mismatch");
+const output = process.argv[2];
+if (output) { fs.mkdirSync(output, { recursive: true }); fs.writeFileSync(path.join(output, "public-path-inventory.json"), JSON.stringify(result, null, 2) + "\n"); }
+process.stdout.write(JSON.stringify(result, null, 2) + "\n");

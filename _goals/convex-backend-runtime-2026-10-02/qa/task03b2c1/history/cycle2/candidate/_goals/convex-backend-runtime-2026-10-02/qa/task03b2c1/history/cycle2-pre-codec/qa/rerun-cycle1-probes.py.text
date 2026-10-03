@@ -1,0 +1,15 @@
+from pathlib import Path
+import hashlib,json,subprocess,datetime,os
+root=Path.cwd();qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1';out=qa/'cycle2-probes';out.mkdir(exist_ok=True)
+source=qa/'history/cycle1/independent';original_output='/tmp/task03b2c1-review1-vm2r9skl'
+env=os.environ.copy();env['npm_config_cache']='/workspace/Project-Cortex/work/backend-runtime/npm12-cache'
+records=[];provenance=[]
+for name in ['probes','adversarial','repeated-source']:
+ archived=source/(name+'.mts.text');original=archived.read_text();current=original.replace(original_output,str(out));runner=out/(name+'.mts');runner.write_text(current)
+ provenance.append(dict(name=name,originalSource=str(archived.relative_to(root)),originalSha256=hashlib.sha256(archived.read_bytes()).hexdigest(),executedSha256=hashlib.sha256(runner.read_bytes()).hexdigest(),onlyTransformation='original output directory replaced with fresh cycle2 output directory; fixtures/cases/expectations/assertions unchanged'))
+ command=['npx','--yes','--package=npm@12.2.0','--','npm','exec','--','node','--import','tsx',str(runner)]
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();result=subprocess.run(command,cwd=root,env=env,capture_output=True,text=True)
+ (out/(name+'.stdout')).write_text(result.stdout);(out/(name+'.stderr')).write_text(result.stderr)
+ records.append(dict(name=name,command=command,cwd=str(root),startedAtUtc=start,finishedAtUtc=datetime.datetime.now(datetime.timezone.utc).isoformat(),exitCode=result.returncode,stdout=str((out/(name+'.stdout')).relative_to(root)),stderr=str((out/(name+'.stderr')).relative_to(root))))
+ print(name,result.returncode,flush=True)
+(out/'commands.json').write_text(json.dumps(records,indent=2)+'\n');(out/'source-provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')

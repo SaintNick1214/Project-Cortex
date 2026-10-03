@@ -1,0 +1,12 @@
+{
+  "observedRun": {
+    "passed": 69,
+    "failed": 1,
+    "skipped": 0
+  },
+  "explanation": "Clock injection used >12 tombstone query count while native handler performs exactly10; injection never reached. Fixture corrected to exactly tenth final awaited control read, asserts count/key and zero attempts. Denial assertion preserved; no tests weakened/skipped.",
+  "failedMessages": [
+    "  \u25cf independent03A resource and lifecycle boundary \u203a expiry after the last control await blocks delivery\n\n    expect(received).rejects.toMatchObject()\n\n    Received promise resolved instead of rejected\n    Resolved to value: {\"_creationTime\": 1, \"_id\": \"artifacts:6\", \"artifactId\": \"artifact-a\", \"content\": \"first\", \"createdAt\": 1, \"kind\": \"text\", \"memorySpaceId\": \"space-a\", \"ownerPrincipalId\": \"runtimeAuthPrincipals:1\", \"streamingState\": \"draft\", \"tags\": [], \"tenantId\": \"tenant-a\", \"title\": \"Document\", \"updatedAt\": 2, \"userId\": \"trusted-user\", \"version\": 2, \"versionHistory\": [{\"changeType\": \"create\", \"content\": \"first\", \"timestamp\": 1, \"title\": \"First\", \"version\": 1}, {\"changeType\": \"update\", \"content\": \"second\", \"timestamp\": 2, \"title\": \"Second\", \"version\": 2}], \"versionPointer\": 2}\n\n      105 |     let calls = 0;\n      106 |     f.db.hook = (event) => { if (event.table === \"runtimeAuthTombstones\" && ++calls > 12) clock.mockReturnValue(now + 1000); };\n    > 107 |     try { await expect(f.invoke(\"get\", { artifactId: \"artifact-a\" })).rejects.toMatchObject({ data: { code: \"FORBIDDEN\" } }); }\n          |                 ^\n      108 |     finally { clock.mockRestore(); }\n      109 |   });\n      110 |   test(\"canonical resource tombstones block update and retained IDs cannot resurrect\", async () => {\n\n      at expect (../../../node_modules/expect/build/index.js:2116:15)\n      at Object.<anonymous> (tests/unit/runtimeArtifactAuth/handlers.test.ts:107:17)\n"
+  ],
+  "currentVerification": "After earlier tombstone/source READ gates were added, expiry test independently measures successful native path final control-read position and asserts injection reached, exact final control key and zero attempts."
+}
