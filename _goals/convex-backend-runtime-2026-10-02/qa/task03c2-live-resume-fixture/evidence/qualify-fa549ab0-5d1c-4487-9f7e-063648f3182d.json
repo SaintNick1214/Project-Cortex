@@ -1,0 +1,405 @@
+{
+  "discovered": 41,
+  "executed": 41,
+  "passed": 41,
+  "skipped": 0,
+  "status": "PASS",
+  "results": [
+    {
+      "name": "operator-provisioning",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "valid-owned-metadata",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "missing-identity",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "forged-signature",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "wrong-issuer",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "wrong-audience",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "expired-token",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "wrong-tenant",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "wrong-space",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "owner-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "explicit-space-read",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "admin-alone-read-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "admin-alone-write-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "ambiguous-omission-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "actor-binding-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "caller-metadata-no-principal",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "public-internal-provision-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "public-internal-maintenance-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "immutable-delete-read-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "immutable-delete-write-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "mutable-delete-read-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "mutable-delete-write-denied",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "negative-effect-counts",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "reactive-wrong-tenant",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "reactive-wrong-space",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "resource-deletion-subscription",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "grant-revocation",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "principal-deletion",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "membership-revocation",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "space-deletion",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "tenant-deletion",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "sdk-metadata-consumers",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "sdk-refresh",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "sdk-logout",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "sdk-labels-no-authority",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "background-after-ordinary-logout",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "late-credential-fencing",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "sanitized-host-callback",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "sdk-session-capability",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "background-after-revocation",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    },
+    {
+      "name": "session-end-not-grant-revocation",
+      "status": "PASS",
+      "reason": "observed_assertions"
+    }
+  ],
+  "effects": [
+    {
+      "type": "metric",
+      "name": "sdk-logout",
+      "baseline": 41,
+      "updated": 42,
+      "before": 1,
+      "after": 1,
+      "quietMs": 750,
+      "payloadFields": [
+        "value"
+      ],
+      "observedValues": [
+        41
+      ]
+    },
+    {
+      "type": "metric",
+      "name": "late-credential-fencing",
+      "baseline": 42,
+      "updated": 43,
+      "before": 1,
+      "after": 1,
+      "quietMs": 750,
+      "payloadFields": [
+        "value"
+      ],
+      "observedValues": [
+        42
+      ]
+    }
+  ],
+  "completed": true,
+  "terminalReason": "completed",
+  "phase": "live",
+  "runId": "fa549ab0-5d1c-4487-9f7e-063648f3182d",
+  "operatorEffects": [
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:revokeGrant",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:recheck",
+      "status": "denied"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:deletePrincipal",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:recheck",
+      "status": "denied"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:revokeMembership",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:recheck",
+      "status": "denied"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:deleteScope",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:recheck",
+      "status": "denied"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "denied"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:deleteScope",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:recheck",
+      "status": "denied"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "denied"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    },
+    {
+      "name": "sessions:incrementMessageCount",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:recheck",
+      "status": "completed"
+    },
+    {
+      "name": "runtimeAuth:revokeGrant",
+      "status": "completed"
+    },
+    {
+      "name": "sessions:incrementMemoryCount",
+      "status": "denied"
+    },
+    {
+      "name": "runtimeAuth:provision",
+      "status": "completed"
+    }
+  ],
+  "ownedProcessGroups": 34,
+  "remainingOwnedGroups": 0,
+  "terminalVerifiedGroups": 34,
+  "processCleanup": "REAPED",
+  "ledgerCheckpoint": "saved",
+  "startedAt": "2026-10-03T20:09:24.795Z",
+  "completedAt": "2026-10-03T20:10:43.560Z",
+  "deploymentName": "rosy-blackbird-933",
+  "cleanupLedger": "owned-fa549ab0-5d1c-4487-9f7e-063648f3182d.json",
+  "scope": "accepted03A/03C1/03B2A and metadata SDK consumers",
+  "whole03Certified": false,
+  "whole09Certified": false,
+  "requestMs": 12000,
+  "operatorMs": 25000,
+  "wholeMs": 600000,
+  "quietMs": 750,
+  "isolation": "code/import/env/IPC boundary; same-UID filesystem is not an OS sandbox",
+  "limitations": [
+    "Tasks05/12/13 and UI remain pending",
+    "No inference supplied"
+  ]
+}

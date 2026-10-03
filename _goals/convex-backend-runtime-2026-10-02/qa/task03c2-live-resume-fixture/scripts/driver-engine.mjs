@@ -1,0 +1,80 @@
+import { CaseLedger } from "./case-ledger.mjs";
+import { AuthorityProtocol, validateMessage, validateOfflineAudit } from "./protocol.mjs";
+
+/** Pure process orchestration, shared by the guarded live driver and offline probes. */
+export async function drive({ owner, args, env, cwd, bootstrap, sign, operator, checkpoint, finish, wholeMs = 600_000, caseMs = 120_000 }) {
+  const ledger = new CaseLedger(), authority = new AuthorityProtocol(bootstrap.runId);
+  let record, receipt, terminalReason, wholeTimer, caseTimer, readyTimer, ready = false, completed = false, stopping = false, pending = Promise.resolve();
+  const offlineAudits = [];
+  let end;
+  const terminal = new Promise((done) => { end = done; });
+  const stop = (reason) => { if (stopping) return; stopping = true; terminalReason = reason; ledger.abnormal(reason); end(); };
+  const send = (message) => { if (record?.child.connected && !stopping) record.child.send(message, () => {}); };
+  const signal = () => stop("driver_failure");
+  process.on("SIGTERM", signal); process.on("SIGINT", signal);
+  try {
+    record = owner.spawn(args, { cwd, env, stdio: ["ignore", "ignore", "ignore", "ipc"] });
+    wholeTimer = setTimeout(() => stop("whole_timeout"), wholeMs);
+    readyTimer = setTimeout(() => stop("bounded_timeout"), 12_000);
+    record.child.on("message", (raw) => {
+      pending = pending.then(async () => {
+        if (stopping) return;
+        if (bootstrap.phase === "offline-probe" && raw?.type === "offline-audit") { const audit = validateOfflineAudit(raw); offlineAudits.push(audit); if (Object.entries(audit).some(([key, value]) => key !== "type" && value !== 0)) throw new Error("PROTOCOL_REJECTED"); return; }
+        const message = validateMessage(raw);
+        if (message.type === "ready") { if (ready) throw new Error("PROTOCOL_REJECTED"); ready = true; clearTimeout(readyTimer); send({ type: "bootstrap", ...bootstrap }); return; }
+        if (!ready) throw new Error("PROTOCOL_REJECTED");
+        if (message.type === "case-start") { ledger.start(message.name); clearTimeout(caseTimer); caseTimer = setTimeout(() => stop("case_timeout"), caseMs); return; }
+        if (message.type === "case-end") { ledger.end(message.name, message.status, message.reason); clearTimeout(caseTimer); return; }
+        if (message.type === "case-block") { ledger.block(message.name); return; }
+        if (message.type === "metric") { if (ledger.active !== message.name) throw new Error("PROTOCOL_REJECTED"); ledger.effects.push(message); return; }
+        if (message.type === "complete") { if (ledger.active) throw new Error("PROTOCOL_REJECTED"); completed = true; end(); return; }
+        if (message.type === "rpc") {
+          if (!ledger.active) throw new Error("PROTOCOL_REJECTED");
+          try {
+            let value;
+            if (message.action === "sign") { authority.validateSign(message.args.subject, message.args.variant); value = await sign(message.args.subject, message.args.variant); if (stopping) return; }
+            else {
+              const { name, args: operatorArgs } = message.args; authority.validateOperator(name, operatorArgs);
+              authority.operations.push({ name, status: "attempted" }); await checkpoint(authority);
+              try { value = await operator(name, operatorArgs); if (stopping) return; authority.operations.at(-1).status = "completed"; }
+              catch (error) { authority.operations.at(-1).status = error.message === "OPERATOR_AUTHORIZATION_DENIED" ? "denied" : "unavailable"; throw error; }
+              if (name === "runtimeAuth:provision") value = authority.enroll(operatorArgs, value);
+              else if (name === "runtimeAuth:recheck") value = { rechecked: true };
+              else value = null;
+              await checkpoint(authority);
+            }
+            send({ type: "rpc-result", id: message.id, ok: true, value });
+          } catch (error) {
+            if (stopping) return;
+            if (error.message === "PROTOCOL_REJECTED") throw error;
+            await checkpoint(authority);
+            send({ type: "rpc-result", id: message.id, ok: false, code: error.message === "OPERATOR_AUTHORIZATION_DENIED" ? "OPERATOR_AUTHORIZATION_DENIED" : "OPERATOR_UNAVAILABLE" });
+          }
+        }
+      }).catch(() => stop("protocol_rejected"));
+    });
+    // IPC messages received before disconnect must settle in order. Otherwise
+    // a normal complete message can lose its race with the channel close event.
+    record.child.once("disconnect", () => { void pending.then(() => { if (!completed) stop("child_disconnect"); }); });
+    void record.closed.then(async (result) => { await pending; if (!completed) stop(result.code === 0 ? "child_disconnect" : "child_crash"); });
+    await terminal;
+  } catch { stop("driver_failure"); }
+  finally {
+    clearTimeout(wholeTimer); clearTimeout(caseTimer); clearTimeout(readyTimer); stopping = true;
+    // First kill every SDK/operator group. Then settle bounded in-flight RPC work;
+    // no operator process or its descendants outlive the final receipt.
+    await owner.reapAll();
+    await Promise.race([pending, new Promise((done) => setTimeout(done, 2_000))]);
+    await owner.reapAll();
+    ledger.abnormal(completed ? "dependency_blocked" : "driver_failure");
+    process.off("SIGTERM", signal); process.off("SIGINT", signal);
+    receipt = structuredClone({ ...ledger.receipt(), completed, terminalReason: terminalReason ?? "completed", phase: bootstrap.phase, runId: bootstrap.runId,
+      operatorEffects: authority.operations, ownedProcessGroups: owner.spawned, remainingOwnedGroups: owner.records.size,
+      terminalVerifiedGroups: owner.verifiedGroups,
+      processCleanup: owner.records.size === 0 ? "REAPED" : "FAIL",
+      ...(bootstrap.phase === "offline-probe" ? { offlineAudits } : {}) });
+    if (owner.records.size !== 0 || !completed) receipt.status = "FAIL";
+    await finish(receipt, authority);
+  }
+  return receipt;
+}

@@ -1,0 +1,11 @@
+# Fresh authorization qualification fixture
+
+Separately prepared resume fixture for original41 actual-service qualification. The bounded client recovery correction is the independently reviewed continuation at commit215e64. All41 case names, dependencies, exact outcomes and service/process ceilings remain unchanged. Offline results do not certify live identity or qualification.
+
+A fresh test-only RSA was generated under the unchanged guard key path in an owned0700 directory and exclusive regular0600 file. The original Task01 private identity was unavailable; no historical key restoration is claimed. Only the inline public JWKS changed: issuer https://cortex-qualification.invalid, audience cortex-task01 and RS256 remain identical. Source provenance binds its new auth configuration. No private key, token, deployment environment or service payload is included.
+
+The guard, classifier, driver, operator and process scripts remain byte-exact. Their path-derived root now resolves this fixture; scratch and key paths remain work/backend-runtime/task03c2-live-fixture and work/backend-runtime/qualification/jwt-private.pem. The14 accepted source rows,107 archive hashes,199 SDK file hashes and accepted tarball hash remain unchanged. Baseline freezes, inventories, failed receipts and rejected histories remain immutable in the original fixture. current-freeze.json and current-inventory.json bind the new preparation and explicitly identify deviations.
+
+A fresh unique project request is prepared but no project exists. After independent preparation review, the coordinator must create and verify an owned disposable target, write canonical0600 target.json/deploy.env and use command-local selectors. Run this fixture's create/deploy/codegen/qualify/cleanup entrypoints from /workspace/Project-Cortex with the original guarded workflow. Official codegen and enabled ES2021 fixture typecheck remain mandatory; no API was generated during preparation. Physically copied pinned TypeScript dependencies support that check.
+
+The key-check script's newKeys:0 describes its own read-only invocation, not this preparation's earlier one-key generation. All probes are explicitly offline. No service, model, deployment, signing or actual41 execution occurs during preparation.
