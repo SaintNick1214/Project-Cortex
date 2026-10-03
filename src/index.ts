@@ -783,7 +783,7 @@ export { CypherGraphAdapter } from "./graph";
 
 // Re-export validation errors for user catch blocks
 export { UserValidationError } from "./users";
-export { GovernanceValidationError } from "./governance";
+export { GovernanceValidationError, GovernanceCapabilityError } from "./governance";
 export { A2AValidationError } from "./a2a";
 export { SessionValidationError } from "./sessions";
 export { AuthValidationError } from "./auth";

@@ -1,0 +1,49 @@
+{
+  "observedAt": "2026-10-03T11:06:22.458479+00:00",
+  "provenance": "Read-only installed official provider/AI sources; not model availability or live media certification",
+  "versions": {
+    "@ai-sdk/gateway": "4.0.103",
+    "ai": "7.0.127",
+    "convex": "1.46.0"
+  },
+  "sourceHashes": [
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-video-model.ts",
+      "sha256": "82cb835b962cfb23e558657e2c9ea77a688e3545ecd210fc3036ab5aa9bc5d4a"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-image-model.ts",
+      "sha256": "d751a082280c3ff24fcd71c02ebefdb29425b0c95689f76c59a68c96f7d620d2"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-provider-metadata.ts",
+      "sha256": "cd3df42b0b78eb926eaad36de8790b05c39cfeb3b379a6b6df71727792815677"
+    },
+    {
+      "path": "node_modules/ai/src/generate-video/start-video.ts",
+      "sha256": "966703d471615044171e65453094c33cbd9f8e8d3141fe1b3c2b1dd78703095e"
+    },
+    {
+      "path": "node_modules/ai/src/generate-video/get-video-status.ts",
+      "sha256": "88881aebe923e36c0d6302abb9e4ede315230fb02d4370c0de0f8dfd46559303"
+    }
+  ],
+  "observations": {
+    "asyncVideo": [
+      "doStart supports webhookUrl mapped to callbackUrl",
+      "doStatus takes opaque operation JSON and returns pending/completed/error; cancellation mapped to terminalerror",
+      "gateway.asyncJob.webhookSigningSecret is sensitive start-response-only metadata",
+      "ready video returns URL or base64; owned cap-enforced materialization remains Task12/13"
+    ],
+    "image": [
+      "wire output images are base64 strings, not transcript-safe bytes"
+    ],
+    "requiredRemaining": [
+      "Actual disposable model start/poll/signed callback/download qualification",
+      "All actual billable submissions governed before Gateway tokenmint under Task04",
+      "Private operation/signing secrets never public events/logs; callbacksdedup scopedjob",
+      "Lost paidsubmission reply remainsuncertain withoutblindretry",
+      "20,000,000bytecap,costrecord,partialcleanup,cancel/expiry/provenance behavior"
+    ]
+  }
+}

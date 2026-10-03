@@ -1,0 +1,133 @@
+[
+  {
+    "name": "backend-types",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/tsconfig.backend.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 5.218,
+    "stdout": "/tmp/mf-cycle3-judge/backend-types.stdout",
+    "stderr": "/tmp/mf-cycle3-judge/backend-types.stderr"
+  },
+  {
+    "name": "scoped-types",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/tsconfig.root.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 6.773,
+    "stdout": "/tmp/mf-cycle3-judge/scoped-types.stdout",
+    "stderr": "/tmp/mf-cycle3-judge/scoped-types.stderr"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeDataAuth.ts",
+      "convex-dev/memories.ts",
+      "convex-dev/facts.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeEndpointAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 13.421,
+    "stdout": "/tmp/mf-cycle3-judge/lint.stdout",
+    "stderr": "/tmp/mf-cycle3-judge/lint.stderr"
+  },
+  {
+    "name": "root-types",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 2,
+    "seconds": 16.516,
+    "stdout": "/tmp/mf-cycle3-judge/root-types.stdout",
+    "stderr": "/tmp/mf-cycle3-judge/root-types.stderr"
+  },
+  {
+    "name": "unit",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/(runtimeEndpointAuth|runtimeAuth)",
+      "--runInBand",
+      "--forceExit",
+      "--json",
+      "--outputFile=/tmp/mf-cycle3-judge/tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 7.406,
+    "stdout": "/tmp/mf-cycle3-judge/unit.stdout",
+    "stderr": "/tmp/mf-cycle3-judge/unit.stderr"
+  },
+  {
+    "name": "discovery",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/(runtimeEndpointAuth|runtimeAuth)",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.473,
+    "stdout": "/tmp/mf-cycle3-judge/discovery.stdout",
+    "stderr": "/tmp/mf-cycle3-judge/discovery.stderr"
+  },
+  {
+    "name": "closure",
+    "command": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/closure.mjs",
+      "/tmp/mf-cycle3-judge/closure"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.647,
+    "stdout": "/tmp/mf-cycle3-judge/closure.stdout",
+    "stderr": "/tmp/mf-cycle3-judge/closure.stderr"
+  },
+  {
+    "name": "whitespace",
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "convex-dev/runtimeDataAuth.ts",
+      "convex-dev/memories.ts",
+      "convex-dev/facts.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeEndpointAuth"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 0,
+    "seconds": 0.005,
+    "stdout": "/tmp/mf-cycle3-judge/whitespace.stdout",
+    "stderr": "/tmp/mf-cycle3-judge/whitespace.stderr"
+  }
+]

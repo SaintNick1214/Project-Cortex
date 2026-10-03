@@ -1,0 +1,22 @@
+{
+  "name": "lint",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "node_modules/eslint/bin/eslint.js",
+    "src/governance/index.ts",
+    "src/index.ts",
+    "tests/unit/runtimeWorkerClient/governance.test.ts",
+    "--report-unused-disable-directives"
+  ],
+  "cwd": "/tmp/task03c2-d-review1-o0v1eus6/snapshot",
+  "startedAt": "2026-10-03T11:04:26.788472+00:00",
+  "durationSeconds": 19.833,
+  "exitCode": 0,
+  "nodeExecutable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+  "nodeVersion": "v24.19.0",
+  "environmentOverrides": {
+    "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+    "CORTEX_GOVERNANCE_QA_OUTPUT": "/tmp/task03c2-d-review1-o0v1eus6/raw"
+  },
+  "log": "/tmp/task03c2-d-review1-o0v1eus6/raw/lint.log"
+}

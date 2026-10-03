@@ -1,0 +1,62 @@
+/** Reproduce bounded actual-registration closure evidence; frozen 03A catalog stays historical. */
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import ts from "typescript";
+const root = process.cwd();
+const destination = process.argv[2] ?? path.join(root, "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf");
+const baseline = JSON.parse(fs.readFileSync(path.join(root, "_goals/convex-backend-runtime-2026-10-02/qa/task03a/public-path-inventory.json"), "utf8"));
+const frozen = baseline.endpoints.filter(entry => ["convex-dev/memories.ts", "convex-dev/facts.ts"].includes(entry.file));
+const entries = [];
+for (const file of ["convex-dev/memories.ts", "convex-dev/facts.ts"]) {
+  const source = fs.readFileSync(path.join(root, file), "utf8");
+  const tree = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  let builders = 0;
+  function count(node) {
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && /^(query|mutation|action|internalQuery|internalMutation)$/.test(node.expression.text)) builders++;
+    ts.forEachChild(node, count);
+  }
+  count(tree);
+  const moduleEntries = [];
+  for (const statement of tree.statements) {
+    if (!ts.isVariableStatement(statement) || !statement.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword)) continue;
+    for (const declaration of statement.declarationList.declarations) {
+      const call = declaration.initializer;
+      if (!ts.isCallExpression(call) || !ts.isIdentifier(call.expression) || !/^(query|mutation|action|internalQuery|internalMutation)$/.test(call.expression.text)) continue;
+      const name = declaration.name.getText(tree); const kind = call.expression.text;
+      const text = call.getText(tree);
+      const guard = kind.startsWith("internal") ? name === "purgeAll" ? "deployment-operator internal invocation" : "recheckDataAuthority"
+        : kind === "action" ? "requireActionDataAuthority" : "requireDataAuthority";
+      if (name !== "purgeAll" && !text.includes(`${guard}(`)) throw new Error(`Missing actual handler guard: ${file}:${name}`);
+      if (!kind.startsWith("internal") && /\.query\(|\.get\(/.test(text)) throw new Error(`Unexpected raw public DB selection: ${file}:${name}`);
+      const scopedHelpers = [...new Set([...text.matchAll(/\b((?:get|list|search)Scoped\w+|getHistoricalScopedFact|assertData\w+|manualDataSource|reviseDataSource|tombstoneDataRow|recheckActionDataAuthority|rejectUnqualifiedEmbedding|(?:memory|fact)MutationResult|canReadMutationRows|finalizeMutationRowsRead|prepareMutationRowsWrite|finalizeDataRead|recheckSourceWitnesses)\(/g)].map(match => match[1]))];
+      moduleEntries.push({ path: `${path.basename(file, ".ts")}:${name}`, file, line: tree.getLineAndCharacterOfPosition(declaration.getStart(tree)).line + 1,
+        kind: kind.replace(/^internal/, "").toLowerCase(), visibility: kind.startsWith("internal") ? "internal" : "public",
+        guard, scopedHelpers, baselineDisposition: frozen.find(entry => entry.path === `${path.basename(file, ".ts")}:${name}`)?.disposition,
+        semanticBoundary: text.includes("rejectUnqualifiedEmbedding(") ? "PROFILE_NOT_READY for unqualified caller embedding; modern profile wiring Task09/10 pending" : undefined });
+    }
+  }
+  if (builders !== moduleEntries.length) throw new Error(`Unresolved registrations: ${file}`);
+  entries.push(...moduleEntries);
+}
+const actualPaths = entries.map(entry => entry.path).sort();
+if (JSON.stringify(actualPaths) !== JSON.stringify(frozen.map(entry => entry.path).sort())) throw new Error("Bounded baseline paths changed unexpectedly");
+if (entries.length !== 42 || entries.filter(entry => entry.visibility === "public").length !== 37) throw new Error("Unexpected bounded registration totals");
+for (const entry of entries) {
+  if ((entry.baselineDisposition === "internalize") !== (entry.visibility === "internal" && entry.path.endsWith(":purgeAll"))) {
+    if (!entry.path.includes("fetch") && !entry.path.includes("keywordSearchMemories")) throw new Error(`Disposition mismatch: ${entry.path}`);
+  }
+}
+const sourceFiles = ["convex-dev/runtimeDataAuth.ts", "convex-dev/memories.ts", "convex-dev/facts.ts", "convex-dev/schema.ts", "convex-dev/runtimeAuth.ts",
+  "src/auth/verified.ts", "tests/unit/runtimeEndpointAuth/memory.test.ts", "tests/unit/runtimeEndpointAuth/facts.test.ts", "tests/unit/runtimeEndpointAuth/sharedfixtures.ts"];
+const sourceHashes = Object.fromEntries(sourceFiles.map(file => [file, crypto.createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex")]));
+const catalog = { version: 3, repairCycle: 3, previousJudgment: "cycle1 REJECT 3.0/5; cycle2 FINAL REJECT 3.2/5; byte-preserved history/cycle1, cycle2-open-final-read and cycle2-final", boundedScope: "Task03B1-MF only", baseline: { public: 39, internal: 3 },
+  mutationResponsePolicy: "Pinned independent READ and WRITE references rechecked after final hash; both current grant lifetimes checked synchronously after last awaited control read. Admitted READ failures reject; read-less admission permits receipts. Bulk delete IDs require private exact full mutation-created scoped tombstone proofs and pinned predeletion READ targets/source witnesses; delegating control reader ignores only the matching operation tombstone while preserving tenant-wide resource and all source controls. Read-less receipts retain WRITE/resource/source fences",
+  sourceIntegrityPolicy: "Immutable full canonical source witnesses validated against normalized NFC/LF/trim content and actual semanticHash, then exact scoped rows/owners/full tuple/content/hash/lifecycle/timestamps/control tombstones reloaded after last crypto before current/history/hydration/CAS/bulk delivery; no hash after final reload",
+  sourceRevisionPolicy: "Server-only manualSourceBinding + exact full lineage + manual fact policy prove dedicated CAS; extracted/shared source edits create separate assertions",
+  linkPolicy: "Active recursion path with cleanup, per-edge expected versions, all selectors and nonempty conversation anchors",
+  current: { total: entries.length, public: 37, internal: 5, unresolved: 0 }, sourceHashes, entries };
+fs.mkdirSync(destination, { recursive: true });
+fs.writeFileSync(path.join(destination, "closure-inventory.json"), `${JSON.stringify(catalog, null, 2)}\n`);
+fs.writeFileSync(path.join(destination, "closure-inventory.md"), `# Bounded memories/facts closure catalog\n\n39 baseline public paths +3 existing internal helpers;37 public remain and2 operator purges become internal.42 actual AST registrations,42 resolved exports,0 unresolved.\n\n| Path | Visibility | Guard | Scoped helpers |\n|---|---|---|---|\n${entries.map(entry => `| ${entry.path} | ${entry.visibility} | ${entry.guard} | ${entry.scopedHelpers.join(", ")} |`).join("\n")}\n`);
+console.log(JSON.stringify(catalog.current));

@@ -1,0 +1,587 @@
+node:assert:885
+    throw err;
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /SIMULATION/. Input:
+
+'/**\n' +
+  ' * Cortex - Governance Policies Backend\n' +
+  ' *\n' +
+  ' * Data retention, purging, and compliance rules across all Cortex layers.\n' +
+  ' */\n' +
+  '\n' +
+  'import { internalMutation, mutation, query, type QueryCtx } from "./_generated/server";\n' +
+  'import type { Doc } from "./_generated/dataModel";\n' +
+  'import type { RuntimeAuthority } from "../src/auth/verified";\n' +
+  'import { requireAuthority, recheckAuthority } from "./runtimeAuth";\n' +
+  'import { authorityReference, boundedInteger, deleteMaintenanceRecord, matchesValidator, workerDeny } from "./runtimeWorkerAuth";\n' +
+  'import { v, type Infer } from "convex/values";\n' +
+  '\n' +
+  '// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+  '// Compliance Templates\n' +
+  '// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+  '\n' +
+  'const COMPLIANCE_TEMPLATES = {\n' +
+  '  GDPR: {\n' +
+  '    conversations: {\n' +
+  '      retention: {\n' +
+  '        deleteAfter: "7y",\n' +
+  '        archiveAfter: "1y",\n' +
+  '        purgeOnUserRequest: true,\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoDelete: true,\n' +
+  '        deleteInactiveAfter: "2y",\n' +
+  '      },\n' +
+  '    },\n' +
+  '    immutable: {\n' +
+  '      retention: {\n' +
+  '        defaultVersions: 20,\n' +
+  '        byType: {\n' +
+  '          "audit-log": { versionsToKeep: -1 },\n' +
+  '          policy: { versionsToKeep: -1 },\n' +
+  '          "kb-article": { versionsToKeep: 50 },\n' +
+  '        },\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoCleanupVersions: true,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    mutable: {\n' +
+  '      retention: {\n' +
+  '        defaultTTL: undefined,\n' +
+  '        purgeInactiveAfter: "2y",\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoDelete: false,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    vector: {\n' +
+  '      retention: {\n' +
+  '        defaultVersions: 10,\n' +
+  '        byImportance: [\n' +
+  '          { range: [0, 20], versions: 1 },\n' +
+  '          { range: [21, 40], versions: 3 },\n' +
+  '          { range: [41, 70], versions: 10 },\n' +
+  '          { range: [71, 89], versions: 20 },\n' +
+  '          { range: [90, 100], versions: 30 },\n' +
+  '        ],\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoCleanupVersions: true,\n' +
+  '        deleteOrphaned: false,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    compliance: {\n' +
+  '      mode: "GDPR" as const,\n' +
+  '      dataRetentionYears: 7,\n' +
+  '      requireJustification: [90, 100],\n' +
+  '      auditLogging: true,\n' +
+  '    },\n' +
+  '  },\n' +
+  '  HIPAA: {\n' +
+  '    conversations: {\n' +
+  '      retention: {\n' +
+  '        deleteAfter: "6y",\n' +
+  '        purgeOnUserRequest: true,\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoDelete: false, // More conservative\n' +
+  '        deleteInactiveAfter: "6y",\n' +
+  '      },\n' +
+  '    },\n' +
+  '    immutable: {\n' +
+  '      retention: {\n' +
+  '        defaultVersions: 50,\n' +
+  '        byType: {\n' +
+  '          "audit-log": { versionsToKeep: -1 },\n' +
+  '          "medical-record": { versionsToKeep: -1 },\n' +
+  '          policy: { versionsToKeep: -1 },\n' +
+  '        },\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoCleanupVersions: false, // Manual control\n' +
+  '      },\n' +
+  '    },\n' +
+  '    mutable: {\n' +
+  '      retention: {\n' +
+  '        purgeInactiveAfter: "6y",\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoDelete: false,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    vector: {\n' +
+  '      retention: {\n' +
+  '        defaultVersions: 20,\n' +
+  '        byImportance: [\n' +
+  '          { range: [0, 20], versions: 5 },\n' +
+  '          { range: [21, 40], versions: 10 },\n' +
+  '          { range: [41, 100], versions: 20 },\n' +
+  '        ],\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoCleanupVersions: false,\n' +
+  '        deleteOrphaned: false,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    compliance: {\n' +
+  '      mode: "HIPAA" as const,\n' +
+  '      dataRetentionYears: 6,\n' +
+  '      requireJustification: [80, 90, 100],\n' +
+  '      auditLogging: true,\n' +
+  '    },\n' +
+  '  },\n' +
+  '  SOC2: {\n' +
+  '    conversations: {\n' +
+  '      retention: {\n' +
+  '        deleteAfter: "7y",\n' +
+  '        archiveAfter: "1y",\n' +
+  '        purgeOnUserRequest: true,\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoDelete: true,\n' +
+  '        deleteInactiveAfter: "2y",\n' +
+  '      },\n' +
+  '    },\n' +
+  '    immutable: {\n' +
+  '      retention: {\n' +
+  '        defaultVersions: 30,\n' +
+  '        byType: {\n' +
+  '          "audit-log": { versionsToKeep: -1 },\n' +
+  '          "access-log": { versionsToKeep: -1 },\n' +
+  '          policy: { versionsToKeep: -1 },\n' +
+  '        },\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoCleanupVersions: true,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    mutable: {\n' +
+  '      retention: {\n' +
+  '        purgeInactiveAfter: "2y",\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoDelete: false,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    vector: {\n' +
+  '      retention: {\n' +
+  '        defaultVersions: 15,\n' +
+  '        byImportance: [\n' +
+  '          { range: [0, 30], versions: 3 },\n' +
+  '          { range: [31, 70], versions: 10 },\n' +
+  '          { range: [71, 100], versions: 20 },\n' +
+  '        ],\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoCleanupVersions: true,\n' +
+  '        deleteOrphaned: true,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    compliance: {\n' +
+  '      mode: "SOC2" as const,\n' +
+  '      dataRetentionYears: 7,\n' +
+  '      requireJustification: [90, 100],\n' +
+  '      auditLogging: true,\n' +
+  '    },\n' +
+  '  },\n' +
+  '  FINRA: {\n' +
+  '    conversations: {\n' +
+  '      retention: {\n' +
+  '        deleteAfter: "7y",\n' +
+  '        purgeOnUserRequest: false, // FINRA requires retention even after deletion request\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoDelete: false,\n' +
+  '        deleteInactiveAfter: "7y",\n' +
+  '      },\n' +
+  '    },\n' +
+  '    immutable: {\n' +
+  '      retention: {\n' +
+  '        defaultVersions: -1, // Unlimited\n' +
+  '        byType: {\n' +
+  '          "audit-log": { versionsToKeep: -1 },\n' +
+  '          "financial-record": { versionsToKeep: -1 },\n' +
+  '          transaction: { versionsToKeep: -1 },\n' +
+  '        },\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoCleanupVersions: false,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    mutable: {\n' +
+  '      retention: {\n' +
+  '        purgeInactiveAfter: "7y",\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoDelete: false,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    vector: {\n' +
+  '      retention: {\n' +
+  '        defaultVersions: 30,\n' +
+  '        byImportance: [{ range: [0, 100], versions: 30 }],\n' +
+  '      },\n' +
+  '      purging: {\n' +
+  '        autoCleanupVersions: false,\n' +
+  '        deleteOrphaned: false,\n' +
+  '      },\n' +
+  '    },\n' +
+  '    compliance: {\n' +
+  '      mode: "FINRA" as const,\n' +
+  '      dataRetentionYears: 7,\n' +
+  '      requireJustification: [80, 90, 100],\n' +
+  '      auditLogging: true,\n' +
+  '    },\n' +
+  '  },\n' +
+  '};\n' +
+  '\n' +
+  'const scopeValidator = v.object({ organizationId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) });\n' +
+  'const mode = v.union(v.literal("GDPR"), v.literal("HIPAA"), v.literal("SOC2"), v.literal("FINRA"), v.literal("Custom"));\n' +
+  'const conversations = v.object({ retention: v.object({ deleteAfter: v.string(), archiveAfter: v.optional(v.string()), purgeOnUserRequest: v.boolean() }),\n' +
+  '  purging: v.object({ autoDelete: v.boolean(), deleteInactiveAfter: v.optional(v.string()) }) });\n' +
+  'const immutable = v.object({ retention: v.object({ defaultVersions: v.number(), byType: v.record(v.string(), v.object({ versionsToKeep: v.number(), deleteAfter: v.optional(v.string()) })) }),\n' +
+  '  purging: v.object({ autoCleanupVersions: v.boolean(), purgeUnusedAfter: v.optional(v.string()) }) });\n' +
+  'const mutable = v.object({ retention: v.object({ defaultTTL: v.optional(v.string()), purgeInactiveAfter: v.optional(v.string()) }),\n' +
+  '  purging: v.object({ autoDelete: v.boolean(), deleteUnaccessedAfter: v.optional(v.string()) }) });\n' +
+  'const vector = v.object({ retention: v.object({ defaultVersions: v.number(), byImportance: v.array(v.object({ range: v.array(v.number()), versions: v.number() })),\n' +
+  '  bySourceType: v.optional(v.record(v.string(), v.number())) }), purging: v.object({ autoCleanupVersions: v.boolean(), deleteOrphaned: v.boolean() }) });\n' +
+  'const compliance = v.object({ mode, dataRetentionYears: v.number(), requireJustification: v.array(v.number()), auditLogging: v.boolean() });\n' +
+  'const sessions = v.object({ lifecycle: v.object({ idleTimeout: v.string(), maxDuration: v.string(), autoExtend: v.boolean(), warnBeforeExpiry: v.optional(v.string()) }),\n' +
+  '  cleanup: v.object({ autoExpireIdle: v.boolean(), deleteEndedAfter: v.optional(v.string()), archiveAfter: v.optional(v.string()) }),\n' +
+  '  limits: v.optional(v.object({ maxActiveSessions: v.optional(v.number()), maxSessionsPerDevice: v.optional(v.number()) })) });\n' +
+  'const scopeFields = { organizationId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };\n' +
+  'const policyValidator = v.object({ ...scopeFields, conversations, immutable, mutable, vector, compliance, sessions: v.optional(sessions) });\n' +
+  'const partialPolicyValidator = v.object({ ...scopeFields, conversations: v.optional(conversations), immutable: v.optional(immutable), mutable: v.optional(mutable),\n' +
+  '  vector: v.optional(vector), compliance: v.optional(compliance), sessions: v.optional(sessions) });\n' +
+  'type Policy = Infer<typeof policyValidator>;\n' +
+  'type Scope = Infer<typeof scopeValidator>;\n' +
+  'function validatePolicy(value: unknown, partial = false): void {\n' +
+  '  if (!matchesValidator(value, (partial ? partialPolicyValidator : policyValidator))) workerDeny("INVALID_INPUT");\n' +
+  '  function semantic(item: unknown, key = "") {\n' +
+  '    if (item === undefined) return;\n' +
+  '    if (typeof item === "string" && /(?:After|TTL|Timeout|Duration|Expiry)$/.test(key) && !/^[1-9]\\d*(?:s|m|h|d|w|y)$/.test(item)) workerDeny("INVALID_INPUT");\n' +
+  '    if (typeof item === "number") {\n' +
+  '      if (/Versions$|versions$|versionsToKeep$/.test(key)) { if (item !== -1) boundedInteger(item, 1000000); }\n' +
+  '      else if (item < 0) workerDeny("INVALID_INPUT");\n' +
+  '      if (/maxActiveSessions|maxSessionsPerDevice/.test(key)) boundedInteger(item, 1000000);\n' +
+  '    }\n' +
+  '    if (Array.isArray(item)) item.forEach((entry: unknown) => semantic(entry, key));\n' +
+  '    else if (item && typeof item === "object") Object.entries(item).forEach(([name, entry]) => semantic(entry, name));\n' +
+  '  }\n' +
+  '  semantic(value);\n' +
+  '  const policy = value as Partial<Policy>;\n' +
+  '  if (policy.vector) {\n' +
+  '    let priorEnd = -1;\n' +
+  '    for (const range of policy.vector.retention.byImportance) {\n' +
+  '      if (range.range.length !== 2 || !range.range.every((part) => Number.isSafeInteger(part) && part >= 0 && part <= 100)\n' +
+  '        || range.range[0]! > range.range[1]! || range.range[0]! <= priorEnd) workerDeny("INVALID_INPUT");\n' +
+  '      priorEnd = range.range[1]!;\n' +
+  '    }\n' +
+  '    for (const count of Object.values(policy.vector.retention.bySourceType ?? {})) if (count !== -1) boundedInteger(count, 1000000);\n' +
+  '  }\n' +
+  '  if (policy.compliance?.requireJustification.some((importance) => !Number.isFinite(importance) || importance < 0 || importance > 100)) workerDeny("INVALID_INPUT");\n' +
+  '}\n' +
+  'async function publicAdmin(ctx: QueryCtx, scope: Scope = {}, tenantId?: string) {\n' +
+  '  if (!matchesValidator(scope, scopeValidator)) workerDeny("INVALID_INPUT");\n' +
+  '  if (tenantId !== undefined && scope.organizationId !== undefined &'... 12041 more characters
+
+    at Object.<anonymous> (/tmp/task03c2-d-review1-o0v1eus6/source-boundary.cjs:17:157)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object..js (node:internal/modules/cjs/loader:2003:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '/**\n' +
+    ' * Cortex - Governance Policies Backend\n' +
+    ' *\n' +
+    ' * Data retention, purging, and compliance rules across all Cortex layers.\n' +
+    ' */\n' +
+    '\n' +
+    'import { internalMutation, mutation, query, type QueryCtx } from "./_generated/server";\n' +
+    'import type { Doc } from "./_generated/dataModel";\n' +
+    'import type { RuntimeAuthority } from "../src/auth/verified";\n' +
+    'import { requireAuthority, recheckAuthority } from "./runtimeAuth";\n' +
+    'import { authorityReference, boundedInteger, deleteMaintenanceRecord, matchesValidator, workerDeny } from "./runtimeWorkerAuth";\n' +
+    'import { v, type Infer } from "convex/values";\n' +
+    '\n' +
+    '// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    '// Compliance Templates\n' +
+    '// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    '\n' +
+    'const COMPLIANCE_TEMPLATES = {\n' +
+    '  GDPR: {\n' +
+    '    conversations: {\n' +
+    '      retention: {\n' +
+    '        deleteAfter: "7y",\n' +
+    '        archiveAfter: "1y",\n' +
+    '        purgeOnUserRequest: true,\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoDelete: true,\n' +
+    '        deleteInactiveAfter: "2y",\n' +
+    '      },\n' +
+    '    },\n' +
+    '    immutable: {\n' +
+    '      retention: {\n' +
+    '        defaultVersions: 20,\n' +
+    '        byType: {\n' +
+    '          "audit-log": { versionsToKeep: -1 },\n' +
+    '          policy: { versionsToKeep: -1 },\n' +
+    '          "kb-article": { versionsToKeep: 50 },\n' +
+    '        },\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoCleanupVersions: true,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    mutable: {\n' +
+    '      retention: {\n' +
+    '        defaultTTL: undefined,\n' +
+    '        purgeInactiveAfter: "2y",\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoDelete: false,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    vector: {\n' +
+    '      retention: {\n' +
+    '        defaultVersions: 10,\n' +
+    '        byImportance: [\n' +
+    '          { range: [0, 20], versions: 1 },\n' +
+    '          { range: [21, 40], versions: 3 },\n' +
+    '          { range: [41, 70], versions: 10 },\n' +
+    '          { range: [71, 89], versions: 20 },\n' +
+    '          { range: [90, 100], versions: 30 },\n' +
+    '        ],\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoCleanupVersions: true,\n' +
+    '        deleteOrphaned: false,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    compliance: {\n' +
+    '      mode: "GDPR" as const,\n' +
+    '      dataRetentionYears: 7,\n' +
+    '      requireJustification: [90, 100],\n' +
+    '      auditLogging: true,\n' +
+    '    },\n' +
+    '  },\n' +
+    '  HIPAA: {\n' +
+    '    conversations: {\n' +
+    '      retention: {\n' +
+    '        deleteAfter: "6y",\n' +
+    '        purgeOnUserRequest: true,\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoDelete: false, // More conservative\n' +
+    '        deleteInactiveAfter: "6y",\n' +
+    '      },\n' +
+    '    },\n' +
+    '    immutable: {\n' +
+    '      retention: {\n' +
+    '        defaultVersions: 50,\n' +
+    '        byType: {\n' +
+    '          "audit-log": { versionsToKeep: -1 },\n' +
+    '          "medical-record": { versionsToKeep: -1 },\n' +
+    '          policy: { versionsToKeep: -1 },\n' +
+    '        },\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoCleanupVersions: false, // Manual control\n' +
+    '      },\n' +
+    '    },\n' +
+    '    mutable: {\n' +
+    '      retention: {\n' +
+    '        purgeInactiveAfter: "6y",\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoDelete: false,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    vector: {\n' +
+    '      retention: {\n' +
+    '        defaultVersions: 20,\n' +
+    '        byImportance: [\n' +
+    '          { range: [0, 20], versions: 5 },\n' +
+    '          { range: [21, 40], versions: 10 },\n' +
+    '          { range: [41, 100], versions: 20 },\n' +
+    '        ],\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoCleanupVersions: false,\n' +
+    '        deleteOrphaned: false,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    compliance: {\n' +
+    '      mode: "HIPAA" as const,\n' +
+    '      dataRetentionYears: 6,\n' +
+    '      requireJustification: [80, 90, 100],\n' +
+    '      auditLogging: true,\n' +
+    '    },\n' +
+    '  },\n' +
+    '  SOC2: {\n' +
+    '    conversations: {\n' +
+    '      retention: {\n' +
+    '        deleteAfter: "7y",\n' +
+    '        archiveAfter: "1y",\n' +
+    '        purgeOnUserRequest: true,\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoDelete: true,\n' +
+    '        deleteInactiveAfter: "2y",\n' +
+    '      },\n' +
+    '    },\n' +
+    '    immutable: {\n' +
+    '      retention: {\n' +
+    '        defaultVersions: 30,\n' +
+    '        byType: {\n' +
+    '          "audit-log": { versionsToKeep: -1 },\n' +
+    '          "access-log": { versionsToKeep: -1 },\n' +
+    '          policy: { versionsToKeep: -1 },\n' +
+    '        },\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoCleanupVersions: true,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    mutable: {\n' +
+    '      retention: {\n' +
+    '        purgeInactiveAfter: "2y",\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoDelete: false,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    vector: {\n' +
+    '      retention: {\n' +
+    '        defaultVersions: 15,\n' +
+    '        byImportance: [\n' +
+    '          { range: [0, 30], versions: 3 },\n' +
+    '          { range: [31, 70], versions: 10 },\n' +
+    '          { range: [71, 100], versions: 20 },\n' +
+    '        ],\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoCleanupVersions: true,\n' +
+    '        deleteOrphaned: true,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    compliance: {\n' +
+    '      mode: "SOC2" as const,\n' +
+    '      dataRetentionYears: 7,\n' +
+    '      requireJustification: [90, 100],\n' +
+    '      auditLogging: true,\n' +
+    '    },\n' +
+    '  },\n' +
+    '  FINRA: {\n' +
+    '    conversations: {\n' +
+    '      retention: {\n' +
+    '        deleteAfter: "7y",\n' +
+    '        purgeOnUserRequest: false, // FINRA requires retention even after deletion request\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoDelete: false,\n' +
+    '        deleteInactiveAfter: "7y",\n' +
+    '      },\n' +
+    '    },\n' +
+    '    immutable: {\n' +
+    '      retention: {\n' +
+    '        defaultVersions: -1, // Unlimited\n' +
+    '        byType: {\n' +
+    '          "audit-log": { versionsToKeep: -1 },\n' +
+    '          "financial-record": { versionsToKeep: -1 },\n' +
+    '          transaction: { versionsToKeep: -1 },\n' +
+    '        },\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoCleanupVersions: false,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    mutable: {\n' +
+    '      retention: {\n' +
+    '        purgeInactiveAfter: "7y",\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoDelete: false,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    vector: {\n' +
+    '      retention: {\n' +
+    '        defaultVersions: 30,\n' +
+    '        byImportance: [{ range: [0, 100], versions: 30 }],\n' +
+    '      },\n' +
+    '      purging: {\n' +
+    '        autoCleanupVersions: false,\n' +
+    '        deleteOrphaned: false,\n' +
+    '      },\n' +
+    '    },\n' +
+    '    compliance: {\n' +
+    '      mode: "FINRA" as const,\n' +
+    '      dataRetentionYears: 7,\n' +
+    '      requireJustification: [80, 90, 100],\n' +
+    '      auditLogging: true,\n' +
+    '    },\n' +
+    '  },\n' +
+    '};\n' +
+    '\n' +
+    'const scopeValidator = v.object({ organizationId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) });\n' +
+    'const mode = v.union(v.literal("GDPR"), v.literal("HIPAA"), v.literal("SOC2"), v.literal("FINRA"), v.literal("Custom"));\n' +
+    'const conversations = v.object({ retention: v.object({ deleteAfter: v.string(), archiveAfter: v.optional(v.string()), purgeOnUserRequest: v.boolean() }),\n' +
+    '  purging: v.object({ autoDelete: v.boolean(), deleteInactiveAfter: v.optional(v.string()) }) });\n' +
+    'const immutable = v.object({ retention: v.object({ defaultVersions: v.number(), byType: v.record(v.string(), v.object({ versionsToKeep: v.number(), deleteAfter: v.optional(v.string()) })) }),\n' +
+    '  purging: v.object({ autoCleanupVersions: v.boolean(), purgeUnusedAfter: v.optional(v.string()) }) });\n' +
+    'const mutable = v.object({ retention: v.object({ defaultTTL: v.optional(v.string()), purgeInactiveAfter: v.optional(v.string()) }),\n' +
+    '  purging: v.object({ autoDelete: v.boolean(), deleteUnaccessedAfter: v.optional(v.string()) }) });\n' +
+    'const vector = v.object({ retention: v.object({ defaultVersions: v.number(), byImportance: v.array(v.object({ range: v.array(v.number()), versions: v.number() })),\n' +
+    '  bySourceType: v.optional(v.record(v.string(), v.number())) }), purging: v.object({ autoCleanupVersions: v.boolean(), deleteOrphaned: v.boolean() }) });\n' +
+    'const compliance = v.object({ mode, dataRetentionYears: v.number(), requireJustification: v.array(v.number()), auditLogging: v.boolean() });\n' +
+    'const sessions = v.object({ lifecycle: v.object({ idleTimeout: v.string(), maxDuration: v.string(), autoExtend: v.boolean(), warnBeforeExpiry: v.optional(v.string()) }),\n' +
+    '  cleanup: v.object({ autoExpireIdle: v.boolean(), deleteEndedAfter: v.optional(v.string()), archiveAfter: v.optional(v.string()) }),\n' +
+    '  limits: v.optional(v.object({ maxActiveSessions: v.optional(v.number()), maxSessionsPerDevice: v.optional(v.number()) })) });\n' +
+    'const scopeFields = { organizationId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };\n' +
+    'const policyValidator = v.object({ ...scopeFields, conversations, immutable, mutable, vector, compliance, sessions: v.optional(sessions) });\n' +
+    'const partialPolicyValidator = v.object({ ...scopeFields, conversations: v.optional(conversations), immutable: v.optional(immutable), mutable: v.optional(mutable),\n' +
+    '  vector: v.optional(vector), compliance: v.optional(compliance), sessions: v.optional(sessions) });\n' +
+    'type Policy = Infer<typeof policyValidator>;\n' +
+    'type Scope = Infer<typeof scopeValidator>;\n' +
+    'function validatePolicy(value: unknown, partial = false): void {\n' +
+    '  if (!matchesValidator(value, (partial ? partialPolicyValidator : policyValidator))) workerDeny("INVALID_INPUT");\n' +
+    '  function semantic(item: unknown, key = "") {\n' +
+    '    if (item === undefined) return;\n' +
+    '    if (typeof item === "string" && /(?:After|TTL|Timeout|Duration|Expiry)$/.test(key) && !/^[1-9]\\d*(?:s|m|h|d|w|y)$/.test(item)) workerDeny("INVALID_INPUT");\n' +
+    '    if (typeof item === "number") {\n' +
+    '      if (/Versions$|versions$|versionsToKeep$/.test(key)) { if (item !== -1) boundedInteger(item, 1000000); }\n' +
+    '      else if (item < 0) workerDeny("INVALID_INPUT");\n' +
+    '      if (/maxActiveSessions|maxSessionsPerDevice/.test(key)) boundedInteger(item, 1000000);\n' +
+    '    }\n' +
+    '    if (Array.isArray(item)) item.forEach((entry: unknown) => semantic(entry, key));\n' +
+    '    else if (item && typeof item === "object") Object.entries(item).forEach(([name, entry]) => semantic(entry, name));\n' +
+    '  }\n' +
+    '  semantic(value);\n' +
+    '  const policy = value as Partial<Policy>;\n' +
+    '  if (policy.vector) {\n' +
+    '    let priorEnd = -1;\n' +
+    '    for (const range of policy.vector.retention.byImportance) {\n' +
+    '      if (range.range.length !== 2 || !range.range.every((part) => Number.isSafeInteger(part) && part >= 0 && part <= 100)\n' +
+    '        || range.range[0]! > range.range[1]! || range.range[0]! <= priorEnd) workerDeny("INVALID_INPUT");\n' +
+    '      priorEnd = range.range[1]!;\n' +
+    '    }\n' +
+    '    for (const count of Object.values(policy.vector.retention.bySourceType ?? {})) if (count !== -1) boundedInteger(count, 1000000);\n' +
+    '  }\n' +
+    '  if (policy.compliance?.requireJustification.some((importance) => !Number.isFinite(importance) || importance < 0 || importance > 100)) workerDeny("INVALID_INPUT");\n' +
+    '}\n' +
+    'async function publicAdmin(ctx: QueryCtx, scope: Scope = {}, tenantId?: string) {\n' +
+    '  if (!matchesValidator(scope, scopeValidator)) workerDeny("INVALID_INPUT");\n' +
+    '  if (tenantId !== undefined && scope.organizationId !== undefined &'... 12041 more characters,
+  expected: /SIMULATION/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

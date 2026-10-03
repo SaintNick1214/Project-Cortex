@@ -1,0 +1,127 @@
+{
+  "observedAt": "2026-10-03T10:14:55.826Z",
+  "node": "v24.19.0",
+  "results": [
+    {
+      "name": "memory-none",
+      "status": "PASS",
+      "injected": false,
+      "hashesAfterReadAdmission": 2,
+      "result": {
+        "restored": true,
+        "memoryId": "private",
+        "memory": {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"private\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"private\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "private"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791022495773
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791022495773,
+          "updatedAt": 1791022495773,
+          "memoryId": "private",
+          "content": "tenant-a private private",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791022495773,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/7",
+          "_creationTime": 8
+        }
+      }
+    },
+    {
+      "name": "memory-revoked",
+      "status": "PASS",
+      "injected": true,
+      "hashesAfterReadAdmission": 2,
+      "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:46:9)\n    at materialize (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:126:82)\n    at resolveAuthorityReference (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:202:16)\n    at async recheckAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:248:10)\n    at async <anonymous> (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:403:5)\n    at async Promise.all (index 1)\n    at async finalMutationDelivery (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:402:3)\n    at async memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:446:3)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:951:20)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)"
+    },
+    {
+      "name": "memory-expiry",
+      "status": "PASS",
+      "injected": true,
+      "hashesAfterReadAdmission": 2,
+      "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:46:9)\n    at materialize (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:126:82)\n    at resolveAuthorityReference (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:202:16)\n    at async recheckAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:248:10)\n    at async <anonymous> (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:403:5)\n    at async Promise.all (index 1)\n    at async finalMutationDelivery (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:402:3)\n    at async memoryMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:446:3)\n    at async handler (/workspace/Project-Cortex/convex-dev/memories.ts:951:20)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)"
+    },
+    {
+      "name": "fact-none",
+      "status": "PASS",
+      "injected": false,
+      "hashesAfterReadAdmission": 2,
+      "result": {
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-a",
+        "ownerPrincipalId": "runtimeAuthPrincipals/3",
+        "lineage": {
+          "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"private\"]",
+          "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"private\"]",
+          "sourceRevision": 2,
+          "role": "user",
+          "trust": "user_assertion"
+        },
+        "manualSourceBinding": {
+          "resourceType": "fact",
+          "resourceId": "private"
+        },
+        "runtimeEditor": {
+          "principalId": "runtimeAuthPrincipals/3",
+          "userId": "metadata-alice",
+          "editedAt": 1791022495807
+        },
+        "userId": "metadata-alice",
+        "participantId": "metadata-alice",
+        "tags": [
+          "archived"
+        ],
+        "version": 2,
+        "createdAt": 1791022495807,
+        "updatedAt": 1791022495807,
+        "factId": "private",
+        "fact": "tenant-a private private",
+        "factType": "preference",
+        "confidence": 90,
+        "extractionPolicyVersion": "manual-assertion-v1",
+        "sourceType": "manual",
+        "subject": "alice",
+        "predicate": "prefers",
+        "object": "dark",
+        "_id": "facts/7",
+        "_creationTime": 8
+      }
+    },
+    {
+      "name": "fact-revoked",
+      "status": "PASS",
+      "injected": true,
+      "hashesAfterReadAdmission": 2,
+      "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:46:9)\n    at materialize (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:126:82)\n    at resolveAuthorityReference (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:202:16)\n    at async recheckAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:248:10)\n    at async <anonymous> (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:403:5)\n    at async Promise.all (index 1)\n    at async finalMutationDelivery (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:402:3)\n    at async factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:463:3)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:427:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)"
+    },
+    {
+      "name": "fact-expiry",
+      "status": "PASS",
+      "injected": true,
+      "hashesAfterReadAdmission": 2,
+      "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:46:9)\n    at materialize (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:126:82)\n    at resolveAuthorityReference (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:202:16)\n    at async recheckAuthority (/workspace/Project-Cortex/convex-dev/runtimeAuth.ts:248:10)\n    at async <anonymous> (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:403:5)\n    at async Promise.all (index 1)\n    at async finalMutationDelivery (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:402:3)\n    at async factMutationResult (/workspace/Project-Cortex/convex-dev/runtimeDataAuth.ts:463:3)\n    at async handler (/workspace/Project-Cortex/convex-dev/facts.ts:427:12)\n    at async <anonymous> (/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts:112:38)"
+    }
+  ]
+}

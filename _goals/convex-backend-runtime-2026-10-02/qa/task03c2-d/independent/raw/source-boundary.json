@@ -1,0 +1,48 @@
+{
+  "head": "a2c9827783e9dd49b9811a2899ba4acbeadc21cd",
+  "unchangedPublicGovernanceMethods": [
+    {
+      "name": "setPolicy",
+      "exactBodyAndSignatureEqual": true
+    },
+    {
+      "name": "getPolicy",
+      "exactBodyAndSignatureEqual": true
+    },
+    {
+      "name": "setAgentOverride",
+      "exactBodyAndSignatureEqual": true
+    },
+    {
+      "name": "getTemplate",
+      "exactBodyAndSignatureEqual": true
+    },
+    {
+      "name": "simulate",
+      "exactBodyAndSignatureEqual": true
+    },
+    {
+      "name": "getComplianceReport",
+      "exactBodyAndSignatureEqual": true
+    },
+    {
+      "name": "getEnforcementStats",
+      "exactBodyAndSignatureEqual": true
+    }
+  ],
+  "constructorAndResilienceHelperUnchanged": true,
+  "validationFileUnchanged": true,
+  "enforceSignatureRetained": true,
+  "enforceBody": [
+    "validateEnforcementOptions(options);",
+    "throw new GovernanceCapabilityError();"
+  ],
+  "forbiddenReferenceOrErrorSuppressionAbsent": true,
+  "rootExactlyErrorReexportOnly": true,
+  "reviewedBackendEnforceInternal": true,
+  "sourceHashes": {
+    "governance": "f59390017184a080246c1d6185c8c834ba0ad20d9f936889beb10c3bc4fe785a",
+    "rootIndex": "d8787940029ce46ec648cdb4750747eb2079b8bd1297619b3407ba78d80a6bd7",
+    "test": "714ac72255b71c1e0df69273894e1e12223afaea8b4b39de95d4373f191a23ab"
+  }
+}

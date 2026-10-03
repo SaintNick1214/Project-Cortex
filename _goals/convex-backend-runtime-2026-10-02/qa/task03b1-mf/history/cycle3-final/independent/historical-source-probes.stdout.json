@@ -1,0 +1,34 @@
+{
+  "node": "v24.19.0",
+  "observedAt": "2026-10-03T10:53:07.530Z",
+  "results": [
+    {
+      "name": "history-positive",
+      "status": "PASS"
+    },
+    {
+      "name": "history-tombstone",
+      "status": "PASS",
+      "injected": true,
+      "error": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "name": "history-event",
+      "status": "PASS",
+      "injected": true,
+      "error": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "success": true,
+  "numTotalTests": 28,
+  "numPassedTests": 28,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "numTodoTests": 0,
+  "numTotalTestSuites": 1,
+  "numPassedTestSuites": 1,
+  "numPendingTestSuites": 0,
+  "statuses": [
+    {
+      "name": "manual governance client enforcement (resilience=false) rejects valid options with an actionable typed capability outcome ({\"scope\":{\"organizationId\":\"tenant-a\"}})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) rejects valid options with an actionable typed capability outcome ({\"scope\":{\"memorySpaceId\":\"space-a\"},\"layers\":[\"vector\",\"immutable\"],\"rules\":[\"retention\",\"purging\"]})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) rejects valid options with an actionable typed capability outcome ({\"scope\":{\"organizationId\":\"tenant-a\",\"memorySpaceId\":\"space-a\"},\"layers\":[\"conversations\",\"mutable\"],\"rules\":[\"retention\"]})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"code\":\"MISSING_OPTIONS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":null,\"code\":\"MISSING_OPTIONS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{},\"code\":\"MISSING_SCOPE\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{}},\"code\":\"INVALID_SCOPE\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"organizationId\":\" \"}},\"code\":\"INVALID_SCOPE\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"layers\":[]},\"code\":\"INVALID_LAYERS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"layers\":[\"invalid\"]},\"code\":\"INVALID_LAYERS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"layers\":\"vector\"},\"code\":\"INVALID_LAYERS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"rules\":[]},\"code\":\"INVALID_RULES\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"rules\":[\"invalid\"]},\"code\":\"INVALID_RULES\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=false) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"rules\":\"retention\"},\"code\":\"INVALID_RULES\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) rejects valid options with an actionable typed capability outcome ({\"scope\":{\"organizationId\":\"tenant-a\"}})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) rejects valid options with an actionable typed capability outcome ({\"scope\":{\"memorySpaceId\":\"space-a\"},\"layers\":[\"vector\",\"immutable\"],\"rules\":[\"retention\",\"purging\"]})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) rejects valid options with an actionable typed capability outcome ({\"scope\":{\"organizationId\":\"tenant-a\",\"memorySpaceId\":\"space-a\"},\"layers\":[\"conversations\",\"mutable\"],\"rules\":[\"retention\"]})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"code\":\"MISSING_OPTIONS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":null,\"code\":\"MISSING_OPTIONS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{},\"code\":\"MISSING_SCOPE\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{}},\"code\":\"INVALID_SCOPE\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"organizationId\":\" \"}},\"code\":\"INVALID_SCOPE\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"layers\":[]},\"code\":\"INVALID_LAYERS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"layers\":[\"invalid\"]},\"code\":\"INVALID_LAYERS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"layers\":\"vector\"},\"code\":\"INVALID_LAYERS\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"rules\":[]},\"code\":\"INVALID_RULES\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"rules\":[\"invalid\"]},\"code\":\"INVALID_RULES\"})",
+      "status": "passed",
+      "failureMessages": []
+    },
+    {
+      "name": "manual governance client enforcement (resilience=true) preserves $code validation before capability rejection or any dispatch ({\"options\":{\"scope\":{\"memorySpaceId\":\"space-a\"},\"rules\":\"retention\"},\"code\":\"INVALID_RULES\"})",
+      "status": "passed",
+      "failureMessages": []
+    }
+  ]
+}
