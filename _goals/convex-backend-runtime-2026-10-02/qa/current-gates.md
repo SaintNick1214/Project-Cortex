@@ -1,5 +1,7 @@
 # Current execution gates
 
+Resume update (2026-10-03): fresh independent goal review PASS4.6/5. The user explicitly answered **“Ignore cycle limits”**; numerical cycle restrictions below are historical, and targeted repairs are now active. Original REJECT results and acceptance criteria remain. [Resume authorization](resume-authorization-2026-10-03.json). A clean checkout root typecheck passed; the historical rejected-candidate compiler blocker remains candidate-specific. No live rerun or whole-task acceptance is newly claimed.
+
 The approved17-task goal remains incomplete. Existing plans and decisions are
 unchanged; bounded foundation PASS does not certify a goal criterion or full task
 integration. The draft is [PR132](https://github.com/SaintNick1214/Project-Cortex/pull/132),
