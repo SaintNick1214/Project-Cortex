@@ -1,0 +1,32 @@
+{
+  "scope": "OFFLINE_REPRODUCED_OLD_FAILURES",
+  "sourceSha256": "c25ed0ff70bea507094e10569565211f416f26e642fa68e6b6dc6dd1c8eabffc",
+  "sourceBytes": 2483,
+  "argv": [
+    "node",
+    "work/resume/current-guard-live-c5/boundaries-old-c4-replay.mjs"
+  ],
+  "exitCode": 0,
+  "oldCandidateSha256": "16fa59a1564dd628bbf1f2507b822f98053bd26140c74fb286840818d3d86cd1",
+  "observations": {
+    "recordBoundary": {
+      "n": 65311,
+      "error": "Diagnostic receipt rejected",
+      "files": [
+        {
+          "name": "wire-diagnostic-06031a2a-5f82-4ca6-b436-d8674ef040ff.json",
+          "bytes": 65537
+        }
+      ]
+    },
+    "utf8": {
+      "same": false,
+      "originalAccepted": true,
+      "newAccepted": false,
+      "originalDenial": true,
+      "newDenial": false,
+      "originalPrefix": 123,
+      "capturedPrefix": 65279
+    }
+  }
+}
