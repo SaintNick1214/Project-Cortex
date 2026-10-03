@@ -295,3 +295,27 @@ two helper dependency copies after metadata FINALPASS/integration and before the
 third final freeze/review. No service/target/deploy/signing occurred;41 live cases
 remain UNEXECUTED. MF/artifact additional-cycle questions and native UI access remain
 pending; Task03, text retrieval slice and whole17-task goal remain incomplete.
+
+2026-10-03T13:14Z: native-error followup FIRST fresh FINAL REJECT3.0. All845
+ordinary outcomes/types/lint/build/packed/history checks pass, but four independent
+actual-handler omitted-selector cases read/write a second granted space after a
+duplicate scope/fence becomes FORBIDDEN and is pruned; accepted native-unique baseline
+denies. Full original41/affected03A report is task03-metadata-native-errors/followup-review-1.md.
+Preserved490 records in both main/isolated history/followup-cycle1-final, manifest
+06c8c4e8b77b059ae3a12a05f5be9bc7a7ac23cbc259f0b4f28438362bbdbd5d;
+all5 source/114 QA/386 raw records verified,18 compiled dependencies/cache artifacts
+remain immutable private bindings. SECOND repair uses a distinct static
+AUTHORITY_LOOKUP_AMBIGUOUS error for the three shared-reader bounded lookups, retaining
+pure policy/resolver/pruning and canonical metadata FORBIDDEN semantics. Narrow
+documented test API expectations and new multi-grant regressions remain subject to
+fresh original-scope judgment; nothing is integrated/deployed.
+
+Registry third executor reproduced the same dependency interaction with44 reached
+offline native-handler controls before fixing admission;34 select another scope and
+16 commit fixture writes. An automatic cybersecurity content flag stopped that
+executor turn before completion. A new bounded executor continues the SAME third
+cycle, with identical original46 scope and original480 preservation; no fourth cycle
+or gate reset. Initial admission must abort control ambiguity; pinned references
+cannot select alternatives. Current metadata dependency remains unaccepted; parent
+will coordinate accepted helper refresh before final third registry/harness judgment.
+All41 real service cases and whole03/text/full17 remain incomplete.

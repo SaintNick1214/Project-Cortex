@@ -1,0 +1,43 @@
+FAIL tests/unit/runtimeMetadataAuth/native-errors.test.ts
+  ● Test suite failed to run
+
+    TypeError: describe(...) is not a function
+
+    [0m [90m 185 |[39m     expect(f[33m.[39mdb[33m.[39mattemptedWrites)[33m.[39mtoBe([35m0[39m)[33m;[39m expect(f[33m.[39mdb[33m.[39mwrites)[33m.[39mtoBe([35m0[39m)[33m;[39m expect(native[33m.[39muniqueCalls())[33m.[39mtoBe([35m0[39m)[33m;[39m
+     [90m 186 |[39m   })[33m;[39m
+    [31m[1m>[22m[39m[90m 187 |[39m   it[33m.[39meach([[32m"runtimeAuthPrincipals"[39m[33m,[39m [32m"runtimeAuthScopes"[39m[33m,[39m [32m"runtimeAuthTombstones"[39m[33m,[39m [33m...[39mtables][33m.[39mflatMap((table) [33m=>[39m capabilities[33m.[39mmap((capability) [33m=>[39m ({ table[33m,[39m capability })))))([32m"$table $capability infrastructure exception remains the same infrastructure failure"[39m[33m,[39m [36masync[39m ({ table[33m,[39m capability }) [33m=>[39m {
+     [90m     |[39m                                                                                                                                                                             [31m[1m^[22m[39m
+     [90m 188 |[39m     [36mconst[39m f [33m=[39m scopedFixture(capability)[33m;[39m [36mfor[39m ([36mconst[39m dataTable [36mof[39m tables) seed(f[33m,[39m dataTable)[33m;[39m
+     [90m 189 |[39m     [36mconst[39m failure [33m=[39m [36mnew[39m [33mError[39m([32m"unavailable database infrastructure"[39m)[33m;[39m [36mlet[39m reached [33m=[39m [35m0[39m[33m;[39m
+     [90m 190 |[39m     [36mconst[39m original [33m=[39m f[33m.[39mdb[33m.[39mquery[33m.[39mbind(f[33m.[39mdb)[33m;[39m f[33m.[39mdb[33m.[39mquery [33m=[39m (name) [33m=>[39m { [36mconst[39m query [33m=[39m original(name)[33m;[39m[0m
+
+      at tests/unit/runtimeMetadataAuth/native-errors.test.ts:187:173
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     0.0s | 0/0 passed | /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.25s
+  Test suites:        1
+  Individual tests:   0
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        3.254 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/native-errors-initial.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

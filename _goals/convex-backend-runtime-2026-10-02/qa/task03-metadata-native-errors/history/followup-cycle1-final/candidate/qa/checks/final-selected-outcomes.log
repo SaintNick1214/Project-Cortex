@@ -1,0 +1,124 @@
+(node:70089) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/auth/credentials.test.ts (8.046 s)
+PASS tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+PASS tests/unit/runtimeMetadataAuth/handlers.test.ts
+PASS tests/unit/runtimeWorkerAuth/graph.test.ts
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+PASS tests/unit/runtimeAuth/inventory.test.ts
+PASS tests/unit/runtimeMetadataAuth/native-errors.test.ts
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+PASS tests/unit/runtimeWorkerAuth/governance.test.ts
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+PASS tests/unit/runtimeAuth/authority.test.ts
+PASS tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts
+PASS tests/unit/runtimeWorkerClient/governance.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     8.0s | 40/40 passed | /tests/unit/auth/credentials.test.ts
+  ✅     3.5s | 187/187 passed | /tests/unit/runtimeMetadataAuth/handlers.test.ts
+  ✅     1.8s | 15/15 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ✅     1.6s | 106/106 passed | /tests/unit/runtimeMetadataAuth/native-errors.test.ts
+  ✅     1.4s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+  ✅     1.0s | 88/88 passed | /tests/unit/runtimeWorkerAuth/graph.test.ts
+  ✅     1.0s | 58/58 passed | /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ✅     0.6s | 2/2 passed | /tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ✅     0.5s | 79/79 passed | /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+  ✅     0.3s | 28/28 passed | /tests/unit/runtimeWorkerClient/governance.test.ts
+  ✅     0.2s | 39/39 passed | /tests/unit/runtimeWorkerAuth/governance.test.ts
+  ✅     0.2s | 27/27 passed | /tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts
+  ✅     0.2s | 54/54 passed | /tests/unit/runtimeAuth/authority.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.68s ( 3.2%) - actual registered visibility and canonical schema/AST catalog AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+    /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+
+ 2. [32m✓[0m    0.39s ( 1.8%) - import-aware AST and native Convex registration visibility retained import-aware AST finds the exact baseline paths with zero unresolved
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 3. [32m✓[0m    0.30s ( 1.4%) - portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 4. [32m✓[0m    0.29s ( 1.4%) - portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 5. [32m✓[0m    0.09s ( 0.4%) - open-review essential worker regressions getUnsyncedItems rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 6. [32m✓[0m    0.08s ( 0.4%) - open-review essential worker regressions markSynced rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 7. [32m✓[0m    0.08s ( 0.4%) - open-review essential worker regressions queueForSync rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+ 8. [32m✓[0m    0.08s ( 0.4%) - Cortex host credential constructor binding auth success notifications cannot hide a getter diagnostic and stale/closed deferred clears are fenced
+    /tests/unit/auth/credentials.test.ts
+
+ 9. [32m✓[0m    0.07s ( 0.3%) - open-review essential worker regressions clearSyncedItems rechecks source/fact/current READ independently after final digest
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+10. [32m✓[0m    0.04s ( 0.2%) - metadata consumers (resilience=enabled) reports a committed receipt without fabricating a profile or rereading ({"updated":true,"type":"user","id":"server-user","tenantId":"tenant-a"})
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+11. [32m✓[0m    0.04s ( 0.2%) - nine scoped internal worker registrations clearSyncedItems performs its actual authorized outcome without an active JWT
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+12. [32m✓[0m    0.04s ( 0.2%) - open-review essential worker regressions explicit space access permits canonical other-owner jobs inside the selected scope
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+13. [32m✓[0m    0.03s ( 0.1%) - metadata consumers (resilience=disabled) reports a committed receipt without fabricating a profile or rereading ({"updated":true,"type":"user","id":"server-user","tenantId":"tenant-a","memorySpaceId":"space-a"})
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+14. [32m✓[0m    0.03s ( 0.1%) - nine scoped internal worker registrations markFailed performs its actual authorized outcome without an active JWT
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+15. [32m✓[0m    0.02s ( 0.1%) - metadata consumers (resilience=absent) reports a committed receipt without fabricating a profile or rereading ({"updated":true,"type":"user","id":"server-user","tenantId":"tenant-a","memorySpaceId":"space-a"})
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+16. [32m✓[0m    0.02s ( 0.1%) - 36 registered modern public handlers immutable:purgeMany authorized outcomes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+17. [32m✓[0m    0.02s ( 0.1%) - nine scoped internal worker registrations clearSyncedItems rejects a revoked pinned grant before read/delivery/mark
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+18. [32m✓[0m    0.02s ( 0.1%) - actual registered visibility and canonical schema/AST catalog governance:enforce has internal registration visibility, unavailable through api
+    /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+
+19. [32m✓[0m    0.02s ( 0.1%) - 36 registered modern public handlers immutable:store rejects forged tenant without writes
+    /tests/unit/runtimeMetadataAuth/handlers.test.ts
+
+20. [32m✓[0m    0.02s ( 0.1%) - nine scoped internal worker registrations foreign queue ID cannot be updated or deleted with this worker's reference
+    /tests/unit/runtimeWorkerAuth/graph.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.37s (11.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      21.26s
+  Test suites:        13
+  Individual tests:   554
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 13
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 13 passed, 13 total
+Tests:       787 passed, 787 total
+Snapshots:   0 total
+Time:        21.258 s, estimated 36 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/final-selected-outcomes.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

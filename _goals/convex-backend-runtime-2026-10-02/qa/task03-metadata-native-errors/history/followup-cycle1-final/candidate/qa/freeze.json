@@ -1,0 +1,496 @@
+{
+  "frozenAt": "2026-10-03T12:58:59.208030+00:00",
+  "status": "FROZEN; fresh independent verdict pending",
+  "acceptedHead": "c01ea6f06262d3a5eae9d171654e770c694ad409",
+  "sourceRecords": [
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "sha256": "3df76cb9dd7269eee22211a63deb993c9630b787bc40d58f8c4bc2e7301e1a95"
+    },
+    {
+      "file": "convex-dev/runtimeMetadataAuth.ts",
+      "sha256": "7ba6fe51bb8828a9a18b8486f63e5975b84a99b725b3ffac93ac61fff811428f"
+    },
+    {
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts",
+      "sha256": "d8f565851db9ba4303aacb8161eb7890a9b6efde4e876f6c13cb8ce3a1cd1f09"
+    },
+    {
+      "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+      "sha256": "5ad4aa46789786fed26c9fc1b3fda316e16197249c5b5c0e3d79d8f85dff2eb6"
+    },
+    {
+      "file": "tests/unit/runtimeMetadataAuth/native-errors.test.ts",
+      "sha256": "f9de255bd48252fe9c9a652894c55e24259aa866e1d44b41f34e4686fee2eb6c"
+    }
+  ],
+  "qaRecords": [
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/baseline-hashes.json",
+      "sha256": "9decc37757d8004eff92ad46a56e0dd5c83015c2f211d8242967bfb1185b33b1"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/boundary-probes.json",
+      "sha256": "ed51c0cd02b97d60cdb40fb54f97642acd057ed0482f8a341125a9b7f7a5db17"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/boundary-probes.mjs.text",
+      "sha256": "cf1b9f75a5d3110d5b6c920f2f99289cd907a359fd74eede371f06b9b86bd967"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/catalog/public-path-inventory.json",
+      "sha256": "f8c9308083e883bd9a027d377f3414a49b958e69670ff75646fa204cddd4ef00"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/catalog/public-path-inventory.md",
+      "sha256": "e193d9c41e807505aa0021a035d5d959e5ee10319029c418627ce58379cf36f7"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/changed-paths.patch",
+      "sha256": "0358dd66764ee6b8eec5d40401adab36410b482114a2f910a7c620b57c2b393e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/actual-backend-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/actual-backend-types.receipt.json",
+      "sha256": "04dfd9687c00e8acd144ace4e8947a52126a45606e692e2dd41302a6079d3cee"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/ast-inventory.log",
+      "sha256": "ec8148cfe972183ecee99090d2075e4150eae80b289c96f8b493051505aafbdd"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/ast-inventory.receipt.json",
+      "sha256": "8aa6bac20ae5139dd09165df3703d3677c72005e358e0bd21d36a19d96b8fc5c"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/boundary-replay.log",
+      "sha256": "db28c329a0539de9ce830bbad4a61786d52fb9779ad11db551a3d803942db6ff"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/boundary-replay.receipt.json",
+      "sha256": "c35af688641bbe42f3d0d32ff1d9131f4a28a55814e037a9827f0ab7db65300f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/closure-replay.log",
+      "sha256": "503d65b873ff4ef3b730d5867d9fcc57b9e708d5fb7a0f87d3d34009628da63f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/closure-replay.receipt.json",
+      "sha256": "bea5e9209b744b69df0d49356bfbd481e83f9dec89e21093bc2a07e087818c00"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/credentials-outcomes.log",
+      "sha256": "e284ed4987540b09ffc30ce19b749d0725610d18ede833b9252d1b9842294509"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/credentials-outcomes.receipt.json",
+      "sha256": "a1e0b8ae97ead3d4369535ca974b06ef1e851eacbd81615d4190afc913dc326f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/diff-check.receipt.json",
+      "sha256": "8012912b8d8fe4626ad76a79e346bc1fe54c39c6ec9d6bf26bd9038f2921f620"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/discovery.log",
+      "sha256": "b9b7dfd4cbdb1cfc805f91d333014549c917ffe799a4050521989cb29916e2ee"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/discovery.receipt.json",
+      "sha256": "7d1e403eba713e93d99a3f012b57857aeeb36d605171576e526ea32948a67776"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/extra-replay.log",
+      "sha256": "4b560026c100fd7ddb4ecf96ef25f793496291e40d3e5e9e53e3500c0b2b346e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/extra-replay.receipt.json",
+      "sha256": "1238eced8962d8cb15875e2f67aec50f8018ebd6c03bad54c6c8490241c6025e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/final-selected-outcomes.log",
+      "sha256": "b9ce3a2acc97330544e49dd2006cc59f49d749d5971e4d9b8d9f193d90463f28"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/final-selected-outcomes.receipt.json",
+      "sha256": "37e846704c6c03bbba68d5a6b9516a611d3d73febcf94c5df75e0b40fad347c5"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/final-verification.log",
+      "sha256": "150d5241f448308e3602be80e6db968fcca598f746d2e2561f7f75e46f4ca3c4"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/final-verification.receipt.json",
+      "sha256": "18209b6c5ff3dc59ae97191494c793b537557347b346a9edcad9165f5258a50e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/full-root-types-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/full-root-types-final.receipt.json",
+      "sha256": "cd3d0913a90c09110b64ad2b2385e99a6513ff600b4b246a43c2393145da276a"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/full-root-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/full-root-types.receipt.json",
+      "sha256": "7c48901fb8b745de34db439b0a80aa35ea59026d42cfeb26aa3499b68e5e9bc3"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/historical-observations-additional.log",
+      "sha256": "c9e5ac612385a9f2b4f522c8cf6dee2de819ab7c0cbca5231b4a125f9439636f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/historical-observations-additional.receipt.json",
+      "sha256": "e1d84871fdb78daf97945b2f35fc8c5c94a89bab149afe33d443aab45f8d21cb"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/historical-observations-numeric.log",
+      "sha256": "747a16a3f5196c9b94cc3d82c08ecc518f806efe6aff47b484906354fd8aa4d7"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/historical-observations-numeric.receipt.json",
+      "sha256": "9f4541d8cace0ba7de88590c5182d4d74024a64cc4782683d848b5b3a3465e3c"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/historical-observations-ordinary.log",
+      "sha256": "9e79b492b61cac96eba1277426f24c11086bf252c73a63e3cf9b669c56dc9bc2"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/historical-observations-ordinary.receipt.json",
+      "sha256": "c5a68f44cfe229856827fe63000f22b3599f4566782c53934bf329d21e6f2c95"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/historical19-check.log",
+      "sha256": "4a8a2c384c60eeece22c4a3ccf5ab21aff26a40ab31b53fee428044f3370aeaa"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/historical19-check.receipt.json",
+      "sha256": "a36775271cc62311febcd7abc8c2bcd1fc63e4a1e0a13dd91171a0fa15c4252c"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/literal-original-auth.log",
+      "sha256": "cc3e381fca0aee1b6defd8438e1dd06543ebbe45e6ff666c72b1fc2ae55d4b40"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/literal-original-auth.receipt.json",
+      "sha256": "f53f518c5d16fd49ab62d276fdde6accaaa64910b5d8f3e49f0ce1f32d45fb4f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/literal-original-metadata.log",
+      "sha256": "5dca2bd07b997db6be23d273b6875d19af188c87fcb7a3682cb5a28e89682cde"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/literal-original-metadata.receipt.json",
+      "sha256": "5b86fe4e9457f6cb7550a03326417025a3a5a0ba7c503ad5b5d822b5b7d4b78f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/native-errors-initial.log",
+      "sha256": "aa0200ffc020023bbe62ff0617810378a0100817bbfb759cb6c54fa7b23e00db"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/native-errors-initial.receipt.json",
+      "sha256": "19dfed60e337c47cde1bbdbe256a2f9dc45a5d392970a1c8a0f0aafe176d427e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/native-errors-second.log",
+      "sha256": "1672d6cc7e420d2a49ab049cc3d95ec382d34fd24342045893e6a045a0eab0e4"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/native-errors-second.receipt.json",
+      "sha256": "9c4db99f22e512de8c7788842df7fea8846c91c5032f42c1452838249d2381f1"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/native-registration.log",
+      "sha256": "210a6c01dddf19e9a78b692e00b28aa758daddfe394618f0827cb093ae21369f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/native-registration.receipt.json",
+      "sha256": "75540c5b7508b3b22c838447961f5d6b7a009b28b18663e4bb75f50a139a6499"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/node-version.log",
+      "sha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/node-version.receipt.json",
+      "sha256": "5c9ff8c1653d8eb64a2414e58c7fbdff29cc8444000f893fb9019fb862c7da16"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/npm-version-final.log",
+      "sha256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/npm-version-final.receipt.json",
+      "sha256": "66649a548ad70a4599393842901bbd57bb8534892ff87747a9df068e597bbf6b"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/npm-version.log",
+      "sha256": "c8df5f3d4c0502a55d25de5328c0ae1520bb48b13411bb01fd058514210ce57e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/npm-version.receipt.json",
+      "sha256": "975dc6ba6c1f8e3c65901abe974ebd2de17a05966b69bac02c51f72ba45fd5c1"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/packed-contracts.log",
+      "sha256": "3c4870336ebdfd49299ad2b0c0154f23e2ec5a0dd8cca89980ef3bd54fc34048"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/packed-contracts.receipt.json",
+      "sha256": "523fe1d46b66f9cece7cf49a0cbbafe1c5ad9ef74fce84bcd9d0fe4ba659c6cc"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/root-build-final.log",
+      "sha256": "a56f6a13aba5969c73eb8f38a8ed1888ba90460598200e8b7126a2cee71f8417"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/root-build-final.receipt.json",
+      "sha256": "908c41338cac5895692f23eeb1d4e15128c1a1d695b2344dfa7ef9c483e49ed1"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/root-build.log",
+      "sha256": "c8df5f3d4c0502a55d25de5328c0ae1520bb48b13411bb01fd058514210ce57e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/root-build.receipt.json",
+      "sha256": "235cac913f2c643324fce4b601f3bfc8cf68a33005063c1c86c2b3655e6e7b41"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/root-lint-final.log",
+      "sha256": "ae548f88dc0a8801a27b0664c04d77eac4ceee2f0ffb7cabfc3cd296871cb23c"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/root-lint-final.receipt.json",
+      "sha256": "49c1a7b963c307b211f22a5e55e133c0004d1a2a91192bc1c77983cabf230feb"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/root-lint.log",
+      "sha256": "c8df5f3d4c0502a55d25de5328c0ae1520bb48b13411bb01fd058514210ce57e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/root-lint.receipt.json",
+      "sha256": "5638b0762022c1a6eb2eafd056faa77b26a9e9882c3b4143ba2a18796820e138"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/scoped-lint-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/scoped-lint-final.receipt.json",
+      "sha256": "8a0bb1d877eb3c0eeed680bbfccb71219ec8b3e3a6c7b197aacce3b88bf20d80"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/scoped-lint.log",
+      "sha256": "f31cd7f4f50e2d42dfdd4e9cdac5b108f5bf12de862ac2eaa36a64aca0b0a6b3"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/scoped-lint.receipt.json",
+      "sha256": "16c0b22a435f892e2556fc274de1998b0604bfa3d2013e473c97a50efc80e417"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/scoped-types-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/scoped-types-final.receipt.json",
+      "sha256": "b81188b819f37c1d813c5fdf23ac426619521f8c56d0610a281f22dabda35376"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/scoped-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/scoped-types.receipt.json",
+      "sha256": "204762fd1644e82d51483d79a2a4c10fd73e605c6f0b80537b75bd8cdc81958d"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/selected-outcomes.log",
+      "sha256": "ec6b7de111ec6e7b1e71e208eb3d1a51a27b4fc2ebece10ef8f9893daae70b72"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/selected-outcomes.receipt.json",
+      "sha256": "8ae76ad48d0a394528a64be66990556904f8569065cde28570918fd3d7a12db4"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/test-types-initial.log",
+      "sha256": "a663610e29ca0236f187a5325948faf1826d116c98735602fb64ff91b8cca57d"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/test-types-initial.receipt.json",
+      "sha256": "a0e50f3959cdcd89dfabd9e72bc1a464cf4fc27146594d6697607fdf96515666"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/test-types-second.log",
+      "sha256": "717a5b80ba50742d3f8e7635c2659024a37b12ceb4c3ceb1dbfee7fdac6ba5d2"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/checks/test-types-second.receipt.json",
+      "sha256": "a5b973c1080d8e104f19494002920333deea2bdd6e86bfb7943b6ef8be79153e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/cleanup-controls.json",
+      "sha256": "fb82bc689864fa56db8f52709c34a9b49a45eb7213fb6c62dedd3d645cc0b8b1"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/closure-controls.mjs.text",
+      "sha256": "de32de9402c1db0bdd2fd551c32fe8059cb76ba3344dbe836e65b80815f77483"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/commands.json",
+      "sha256": "125cb61584cc6e4802adcf665ce2580f150562fd25096ddb1ba4a568d63fb887"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/credentials-outcomes.json",
+      "sha256": "e5b5f6cd4cbf4de7ef81477397004442426440eb2f72daf9ba6095288d3a5edd"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/extra-probes.json",
+      "sha256": "8108253a0f16eaddabd7cfb76d608c4a176739857fff07a3598b5ba69978f21e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/extra-probes.mjs.text",
+      "sha256": "10e27fb601819251c79ddfd1cb0f2679a4e3cb81a58df0dcd55bd60bb643e852"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/final-selected-outcomes.json",
+      "sha256": "bfcd03b9af4bc808cf7ef6be8955836b6f17db5de4959d24540f390497613e12"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/final-source.json",
+      "sha256": "cbc80c2a23f3131526bff5ea32f3c4aa709258ff02a679e05fc9175150c62b45"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/finalize.py.text",
+      "sha256": "ca88213769f5aac7d71fab5f8d80f9775b7c52ebdf9c1431264484ae0071e3be"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/framework-registration.json",
+      "sha256": "8af1d20eb51c7125b6f0a08ea12daa630fe2ed2b9cb5583e3339fbd3714e1321"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/historical-additional-probes.mjs.text",
+      "sha256": "91942cf089f18e0fd498224cf7ef0aa643d908206cd668316b8da6766a8d7f5d"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/historical-numeric-probe.mjs.text",
+      "sha256": "98232255659a8a3f7becf7205464a7d576ea88d1a5b29f088fa7a0aecdac6c0f"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/historical-probe-check.mjs.text",
+      "sha256": "89ffb29f1770e6e94561ec7c618214bd7d735cd70d7fe1e2c61a90efeb2b619e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/historical-probes.mjs.text",
+      "sha256": "431a7ba0cce7ef8b8a77383d52b86d8c004f80d9b65a001694461143869051d4"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/historical19-provenance.json",
+      "sha256": "ce7b68465562967e3aa809b87eacade36614412c438284ea2e8eacf66ca0208e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/inventory-callback.ts.text",
+      "sha256": "9ca580ecbc350aae28b22c1556093125d5b8a022c65a4a4180bb11a2f3c76906"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/literal-original-auth.json",
+      "sha256": "62d716d26b8533973832ee025d269100c02f3b24494593f50472bdeee93fcf60"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/literal-original-metadata.json",
+      "sha256": "07d034465050313595b474daea0b25ec41cdad2db0cf8fd0eeaa73fa973c0084"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/native-errors-initial.json",
+      "sha256": "dd439727b1fdd5ad04dafda3597e2b0aebe2607be07eca48f82ea8560e37d8df"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/native-errors-second.json",
+      "sha256": "08b3b5f7d4af55e52cae5e0d5a74581f362c4e198ac9f97821da5c4654f210f4"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/native-errors.test.ts.text",
+      "sha256": "f9de255bd48252fe9c9a652894c55e24259aa866e1d44b41f34e4686fee2eb6c"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/original-source/tests/unit/runtimeAuth/provisioning.test.ts.text",
+      "sha256": "695b0dc0d138a5c62fc334ec1b4e0ee88ffd5a0363a7907a7b224a554b99b576"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/original-source/tests/unit/runtimeMetadataAuth/handlers.test.ts.text",
+      "sha256": "e80833776309a2f63a8083eaf9a882c78b233dcf902a68d6802a817197068af0"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/original41-requirement-mapping.json",
+      "sha256": "92144bdbec14ad5805777d1764c13aee39aaa4eefcd9e016927ef65d3bb3f394"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/preservation.json",
+      "sha256": "3d77af4b1bc2d6c753d51ad62b15ffcd174baf6141f297e1e2dd494338ed2982"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/registration.mjs.text",
+      "sha256": "73a962c15454314e7e06b7f7941e98f516b70627f6ca27c492c984f16308ae44"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/replay-provenance.json",
+      "sha256": "a18908cff1643ef43203b745622d0861ad4f066aac26cb76c393b18acc6adfe5"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/report.md",
+      "sha256": "91528db7d8dfe4976980888ce151c41c00e222a4d5d46b98d93d0d7c0290fb9e"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/run-check.py.text",
+      "sha256": "f2c83ecc9ed8c38f93d4f1c4c364736d1be4f15c774ccbd9c5d078087840eee9"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/scope-extension.md",
+      "sha256": "80e04b594aa289fc01ccbff1b70c14333342b22e413bfc248cb753c17539cbf8"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/selected-outcomes.json",
+      "sha256": "3c31065c92bbaefb986a003046fe5c0ae281c16a0070ff76f334a75b755da7b2"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/test-summary.json",
+      "sha256": "0d0aabf1d17a02788d399be5fca9c7b1129846fa1e5c70a02ede0b67d39222a9"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/tested-source.json",
+      "sha256": "da5544c2308fa6a357f16262d03e636cd8c7b12e8a275334333c854d7663152a"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/timestamp-equivalence.json",
+      "sha256": "23772fd58f156130f5981020c56cc5e561f83efa2c468890ef66e3eb95600fb8"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/tsconfig.tests.json",
+      "sha256": "c4fd528ee25f26ba2876ec6df9fb5744c5c9e2e2dcf4537afc7b5161f54774c9"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/verify.py.text",
+      "sha256": "42ed9fafd8db79948d5b335450a35dd07125d32c5a408dcc9f32d3118129b8ff"
+    }
+  ],
+  "protectedBaselineManifestSha256": "9decc37757d8004eff92ad46a56e0dd5c83015c2f211d8242967bfb1185b33b1",
+  "historicalPreservationSha256": "3d77af4b1bc2d6c753d51ad62b15ffcd174baf6141f297e1e2dd494338ed2982",
+  "privateHistoricalArchiveSha256": "3df10bacf45e2a774109fd748e7883fa48a3c19ffa0874955a51e3c3e58f3c91",
+  "remainingGates": [
+    "fresh independent original-scope judge",
+    "parent integration/accepted livefixture provenance and harness review",
+    "all41 live service outcomes",
+    "managed JWT/subscriptions/bytes/callbacks",
+    "UI",
+    "wholeTask03/full17"
+  ]
+}

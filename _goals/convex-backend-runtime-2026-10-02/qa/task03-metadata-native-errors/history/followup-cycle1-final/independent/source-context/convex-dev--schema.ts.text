@@ -1,0 +1,1337 @@
+   1: /**
+   2:  * Cortex SDK - Convex Schema
+   3:  *
+   4:  * Layer 1: ACID Stores
+   5:  * - conversations (Layer 1a) - Immutable conversation history (memorySpace-scoped)
+   6:  * - immutable (Layer 1b) - Versioned immutable data (TRULY shared, NO memorySpace)
+   7:  * - mutable (Layer 1c) - Live operational data (TRULY shared, NO memorySpace)
+   8:  *
+   9:  * Layer 2: Vector Index
+  10:  * - memories - Searchable knowledge with embeddings (memorySpace-scoped)
+  11:  *
+  12:  * Layer 3: Facts Store
+  13:  * - facts - LLM-extracted facts (memorySpace-scoped, versioned)
+  14:  *
+  15:  * Layer 4: Convenience APIs (SDK only, no schema)
+  16:  *
+  17:  * Artifacts
+  18:  * - artifacts - Interactive versioned documents (memorySpace-scoped, streaming support)
+  19:  *
+  20:  * Attachments (Multi-modal)
+  21:  * - attachments - Multi-modal file storage (images, PDFs, audio, video, files)
+  22:  *
+  23:  * Coordination:
+  24:  * - contexts - Hierarchical context chains (memorySpace-scoped, cross-space support)
+  25:  * - memorySpaces - Memory space registry (Hive/Collaboration modes)
+  26:  * - agents - Optional agent metadata registry (analytics, discovery, team organization)
+  27:  */
+  28: 
+  29: import { defineSchema, defineTable } from "convex/server";
+  30: import { v } from "convex/values";
+  31: import { runtimeAuthorityReference, runtimeAuthTables } from "./runtimeAuthSchema";
+  32: import { runtimeMemoryTables, sourceLineage } from "./runtimeMemorySchema";
+  33: 
+  34: export default defineSchema({
+  35:   ...runtimeAuthTables,
+  36:   ...runtimeMemoryTables,
+  37:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  38:   // Layer 1a: Conversations (ACID, Immutable)
+  39:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  40:   conversations: defineTable({
+  41:     // Identity
+  42:     conversationId: v.string(), // Unique ID (e.g., "conv-abc123")
+  43: 
+  44:     // Memory Space (NEW - fundamental isolation boundary)
+  45:     memorySpaceId: v.string(), // Which memory space owns this conversation
+  46:     participantId: v.optional(v.string()), // Hive Mode: which participant created this
+  47: 
+  48:     // Multi-tenancy (NEW - critical for SaaS isolation)
+  49:     tenantId: v.optional(v.string()), // Tenant ID for isolation
+  50: 
+  51:     // Type: user-agent (user ↔ participant) or agent-agent (space ↔ space)
+  52:     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
+  53: 
+  54:     // Participants (based on type)
+  55:     participants: v.object({
+  56:       // user-agent conversations (single user)
+  57:       userId: v.optional(v.string()), // The primary human user in the conversation
+  58:       agentId: v.optional(v.string()), // The agent/assistant in the conversation
+  59: 
+  60:       // Collaborative conversations (Phase 4) - multiple human participants
+  61:       userIds: v.optional(v.array(v.string())), // Multiple human users
+  62: 
+  63:       // Hive Mode tracking (which tool/agent in shared space created this)
+  64:       participantId: v.optional(v.string()),
+  65: 
+  66:       // agent-agent conversations (Collaboration Mode - cross-space)
+  67:       memorySpaceIds: v.optional(v.array(v.string())), // Both spaces involved
+  68:     }),
+  69: 
+  70:     // Collaborative settings (Phase 4)
+  71:     collaborativeSettings: v.optional(
+  72:       v.object({
+  73:         // Whether messages from non-owners require approval
+  74:         requireApproval: v.boolean(),
+  75:         // The owner who can approve messages (defaults to first userId/userIds[0])
+  76:         ownerUserId: v.optional(v.string()),
+  77:         // IDs of approved participants (others require approval)
+  78:         approvedParticipants: v.optional(v.array(v.string())),
+  79:       }),
+  80:     ),
+  81: 
+  82:     // Messages (append-only, immutable)
+  83:     messages: v.array(
+  84:       v.object({
+  85:         id: v.string(), // Message ID
+  86:         role: v.union(
+  87:           v.literal("user"),
+  88:           v.literal("agent"),
+  89:           v.literal("system"),
+  90:         ),
+  91:         content: v.string(),
+  92:         timestamp: v.number(),
+  93: 
+  94:         // Optional fields
+  95:         participantId: v.optional(v.string()), // Which participant sent this (Hive Mode/Collaborative)
+  96:         metadata: v.optional(v.any()), // Flexible metadata
+  97:         attachmentIds: v.optional(v.array(v.string())), // Multi-modal attachment references
+  98: 
+  99:         // Collaborative approval (Phase 4)
+ 100:         approvalStatus: v.optional(
+ 101:           v.union(
+ 102:             v.literal("pending"),
+ 103:             v.literal("approved"),
+ 104:             v.literal("rejected"),
+ 105:           ),
+ 106:         ),
+ 107:         approvedBy: v.optional(v.string()), // userId who approved
+ 108:         approvedAt: v.optional(v.number()), // Approval timestamp
+ 109:       }),
+ 110:     ),
+ 111: 
+ 112:     // Statistics
+ 113:     messageCount: v.number(),
+ 114: 
+ 115:     // Metadata (flexible)
+ 116:     metadata: v.optional(v.any()),
+ 117: 
+ 118:     // Timestamps
+ 119:     createdAt: v.number(),
+ 120:     updatedAt: v.number(),
+ 121: 
+ 122:     // Visibility for shareable chats (Phase 1)
+ 123:     // - 'private': Only owner can access (default)
+ 124:     // - 'space': Anyone in the memory space can access
+ 125:     // - 'public': Anyone with the conversationId can access
+ 126:     visibility: v.optional(
+ 127:       v.union(
+ 128:         v.literal("private"),
+ 129:         v.literal("space"),
+ 130:         v.literal("public"),
+ 131:       ),
+ 132:     ),
+ 133:   })
+ 134:     .index("by_conversationId", ["conversationId"]) // Unique lookup
+ 135:     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's conversations
+ 136:     .index("by_tenantId", ["tenantId"]) // Tenant's conversations
+ 137:     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
+ 138:     .index("by_type", ["type"]) // List by type
+ 139:     .index("by_user", ["participants.userId"]) // User's conversations
+ 140:     .index("by_agent", ["participants.agentId"]) // Agent's conversations
+ 141:     .index("by_memorySpace_user", ["memorySpaceId", "participants.userId"]) // NEW: Space + user
+ 142:     .index("by_memorySpace_agent", ["memorySpaceId", "participants.agentId"]) // Space + agent
+ 143:     .index("by_created", ["createdAt"]) // Chronological ordering
+ 144:     .index("by_visibility", ["visibility"]) // Filter by visibility
+ 145:     .index("by_memorySpace_visibility", ["memorySpaceId", "visibility"]), // Space + visibility
+ 146: 
+ 147:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 148:   // Conversation Shares (Shareable Chats Phase 2)
+ 149:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 150:   conversationShares: defineTable({
+ 151:     // Identity
+ 152:     shareId: v.string(), // Public-facing identifier for share links
+ 153:     conversationId: v.string(),
+ 154: 
+ 155:     // Granter (owner)
+ 156:     grantedBy: v.string(), // userId who shared
+ 157:     sourceMemorySpaceId: v.string(),
+ 158: 
+ 159:     // Recipient(s)
+ 160:     grantType: v.union(
+ 161:       v.literal("user"), // Specific user
+ 162:       v.literal("space"), // Entire memory space
+ 163:       v.literal("link"), // Anyone with link
+ 164:       v.literal("domain"), // Anyone from email domain
+ 165:     ),
+ 166:     grantedTo: v.optional(v.string()), // userId, memorySpaceId, or domain
+ 167: 
+ 168:     // Permissions
+ 169:     permissions: v.object({
+ 170:       canView: v.boolean(), // See messages
+ 171:       canViewFacts: v.boolean(), // See extracted facts
+ 172:       canViewMemories: v.boolean(), // See related memories
+ 173:       canContinue: v.boolean(), // Add new messages
+ 174:       canFork: v.boolean(), // Create a copy
+ 175:       canExport: v.boolean(), // Download transcript
+ 176:     }),
+ 177: 
+ 178:     // Constraints
+ 179:     expiresAt: v.optional(v.number()), // Time-limited sharing
+ 180:     maxViews: v.optional(v.number()), // View-limited sharing
+ 181:     viewCount: v.number(),
+ 182: 
+ 183:     // Redaction
+ 184:     redactBefore: v.optional(v.number()), // Hide messages before timestamp
+ 185:     redactSensitive: v.boolean(), // Auto-redact PII
+ 186: 
+ 187:     // Status
+ 188:     status: v.union(
+ 189:       v.literal("active"),
+ 190:       v.literal("revoked"),
+ 191:       v.literal("expired"),
+ 192:     ),
+ 193: 
+ 194:     // Multi-tenancy
+ 195:     tenantId: v.optional(v.string()),
+ 196: 
+ 197:     // Timestamps
+ 198:     createdAt: v.number(),
+ 199:     revokedAt: v.optional(v.number()),
+ 200:   })
+ 201:     .index("by_shareId", ["shareId"])
+ 202:     .index("by_conversation", ["conversationId"])
+ 203:     .index("by_grantedTo", ["grantedTo"])
+ 204:     .index("by_grantedBy", ["grantedBy"])
+ 205:     .index("by_status", ["status"])
+ 206:     .index("by_tenant_shareId", ["tenantId", "shareId"])
+ 207:     .index("by_tenant_conversation", ["tenantId", "conversationId"]),
+ 208: 
+ 209:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 210:   // Conversation Snapshots (Shareable Chats Phase 3)
+ 211:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 212:   conversationSnapshots: defineTable({
+ 213:     // Identity
+ 214:     snapshotId: v.string(),
+ 215:     conversationId: v.string(), // Source conversation
+ 216: 
+ 217:     // Snapshot content (immutable after creation)
+ 218:     messages: v.array(
+ 219:       v.object({
+ 220:         id: v.string(),
+ 221:         role: v.union(
+ 222:           v.literal("user"),
+ 223:           v.literal("agent"),
+ 224:           v.literal("system"),
+ 225:         ),
+ 226:         content: v.string(),
+ 227:         timestamp: v.number(),
+ 228:         participantId: v.optional(v.string()),
+ 229:         // Note: PII-redacted version stored here
+ 230:       }),
+ 231:     ),
+ 232: 
+ 233:     // Original conversation metadata
+ 234:     conversationType: v.union(
+ 235:       v.literal("user-agent"),
+ 236:       v.literal("agent-agent"),
+ 237:     ),
+ 238:     participants: v.object({
+ 239:       userId: v.optional(v.string()),
+ 240:       agentId: v.optional(v.string()),
+ 241:       participantId: v.optional(v.string()),
+ 242:       memorySpaceIds: v.optional(v.array(v.string())),
+ 243:     }),
+ 244: 
+ 245:     // Snapshot metadata
+ 246:     messageCount: v.number(),
+ 247: 
+ 248:     // What was included
+ 249:     includedContent: v.object({
+ 250:       messages: v.boolean(),
+ 251:       facts: v.boolean(),
+ 252:       memories: v.boolean(),
+ 253:     }),
+ 254: 
+ 255:     // Redaction info
+ 256:     redaction: v.object({
+ 257:       piiRedacted: v.boolean(),
+ 258:       messagesRedactedBefore: v.optional(v.number()), // Timestamp
+ 259:       customRedactions: v.optional(
+ 260:         v.array(
+ 261:           v.object({
+ 262:             pattern: v.string(),
+ 263:             replacement: v.string(),
+ 264:           }),
+ 265:         ),
+ 266:       ),
+ 267:     }),
+ 268: 
+ 269:     // Associated facts snapshot (if included)
+ 270:     facts: v.optional(
+ 271:       v.array(
+ 272:         v.object({
+ 273:           factId: v.string(),
+ 274:           fact: v.string(),
+ 275:           factType: v.string(),
+ 276:           confidence: v.number(),
+ 277:         }),
+ 278:       ),
+ 279:     ),
+ 280: 
+ 281:     // Owner info
+ 282:     createdBy: v.string(), // userId
+ 283:     memorySpaceId: v.string(),
+ 284: 
+ 285:     // Multi-tenancy
+ 286:     tenantId: v.optional(v.string()),
+ 287: 
+ 288:     // Status
+ 289:     status: v.union(
+ 290:       v.literal("active"),
+ 291:       v.literal("archived"),
+ 292:       v.literal("deleted"),
+ 293:     ),
+ 294: 
+ 295:     // Timestamps
+ 296:     createdAt: v.number(),
+ 297:     snapshotOf: v.number(), // Timestamp of when the snapshot was taken
+ 298:   })
+ 299:     .index("by_snapshotId", ["snapshotId"])
+ 300:     .index("by_conversation", ["conversationId"])
+ 301:     .index("by_createdBy", ["createdBy"])
+ 302:     .index("by_memorySpace", ["memorySpaceId"])
+ 303:     .index("by_status", ["status"])
+ 304:     .index("by_tenant_snapshotId", ["tenantId", "snapshotId"]),
+ 305: 
+ 306:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 307:   // Layer 1b: Immutable Store (ACID, Versioned, Shared)
+ 308:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 309:   immutable: defineTable({
+ 310:     // Identity (composite key: type + id)
+ 311:     type: v.string(), // Entity type: 'kb-article', 'policy', 'audit-log', 'feedback', 'user'
+ 312:     id: v.string(), // Type-specific logical ID
+ 313: 
+ 314:     // Data (flexible, immutable once stored)
+ 315:     data: v.any(),
+ 316: 
+ 317:     // GDPR support (optional)
+ 318:     userId: v.optional(v.string()), // Links to user for cascade deletion
+ 319: 
+ 320:     // Multi-tenancy (NEW - for non-critical path isolation)
+ 321:     tenantId: v.optional(v.string()), // Trusted tenant selector
+ 322:     ownerPrincipalId: v.optional(v.string()),
+ 323:     tombstonedAt: v.optional(v.number()),
+ 324:     memorySpaceId: v.optional(v.string()), // Optional trusted grant scope
+ 325: 
+ 326:     // Versioning
+ 327:     version: v.number(), // Current version number (starts at 1)
+ 328:     previousVersions: v.array(
+ 329:       v.object({
+ 330:         version: v.number(),
+ 331:         data: v.any(),
+ 332:         timestamp: v.number(),
+ 333:         metadata: v.optional(v.any()),
+ 334:       }),
+ 335:     ),
+ 336: 
+ 337:     // Metadata (flexible - any JSON-serializable object)
+ 338:     metadata: v.optional(v.any()),
+ 339: 
+ 340:     // Timestamps
+ 341:     createdAt: v.number(),
+ 342:     updatedAt: v.number(),
+ 343:   })
+ 344:     .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+ 345:     .index("by_runtime_key", ["tenantId", "memorySpaceId", "type", "id"])
+ 346:     .index("by_type_id", ["type", "id"]) // Unique lookup
+ 347:     .index("by_type", ["type"]) // List by type
+ 348:     .index("by_tenantId", ["tenantId"]) // Tenant's records
+ 349:     .index("by_tenant_type_id", ["tenantId", "type", "id"]) // Tenant-scoped lookup
+ 350:     .index("by_userId", ["userId"]) // GDPR cascade
+ 351:     .index("by_created", ["createdAt"]), // Chronological
+ 352: 
+ 353:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 354:   // Layer 1c: Mutable Store (ACID, No Versioning, Shared)
+ 355:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 356:   mutable: defineTable({
+ 357:     // Composite key: namespace + key
+ 358:     namespace: v.string(), // Logical grouping: 'inventory', 'config', 'counters', etc.
+ 359:     key: v.string(), // Unique key within namespace
+ 360: 
+ 361:     // Value (flexible, mutable)
+ 362:     value: v.any(),
+ 363: 
+ 364:     // GDPR support (optional)
+ 365:     userId: v.optional(v.string()), // Links to user for cascade deletion
+ 366: 
+ 367:     // Multi-tenancy (NEW - for non-critical path isolation)
+ 368:     tenantId: v.optional(v.string()), // Trusted tenant selector
+ 369:     ownerPrincipalId: v.optional(v.string()),
+ 370:     tombstonedAt: v.optional(v.number()),
+ 371:     memorySpaceId: v.optional(v.string()), // Optional trusted grant scope
+ 372: 
+ 373:     // Metadata (optional)
+ 374:     metadata: v.optional(v.any()),
+ 375: 
+ 376:     // Timestamps
+ 377:     createdAt: v.number(),
+ 378:     updatedAt: v.number(),
+ 379:   })
+ 380:     .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+ 381:     .index("by_runtime_key", ["tenantId", "memorySpaceId", "namespace", "key"])
+ 382:     .index("by_namespace_key", ["namespace", "key"]) // Unique lookup
+ 383:     .index("by_namespace", ["namespace"]) // List by namespace
+ 384:     .index("by_tenantId", ["tenantId"]) // Tenant's records
+ 385:     .index("by_tenant_namespace", ["tenantId", "namespace"]) // Tenant-scoped namespace listing
+ 386:     .index("by_tenant_namespace_key", ["tenantId", "namespace", "key"]) // Tenant-scoped lookup
+ 387:     .index("by_userId", ["userId"]) // GDPR cascade
+ 388:     .index("by_updated", ["updatedAt"]), // Recent changes
+ 389: 
+ 390:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 391:   // Layer 2: Vector Memory (Searchable, memorySpace-scoped, Versioned)
+ 392:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 393:   memories: defineTable({
+ 394:     // Identity
+ 395:     memoryId: v.string(), // Unique ID for this memory
+ 396:     memorySpaceId: v.string(), // NEW: Memory space isolation (was agentId)
+ 397:     participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking
+ 398: 
+ 399:     // Multi-tenancy (NEW - critical for SaaS isolation)
+ 400:     tenantId: v.optional(v.string()), // Tenant ID for isolation
+ 401: 
+ 402:     // Content
+ 403:     content: v.string(),
+ 404:     contentType: v.union(
+ 405:       v.literal("raw"),
+ 406:       v.literal("summarized"),
+ 407:       v.literal("fact"), // NEW: For facts indexed in vector layer
+ 408:     ),
+ 409:     embedding: v.optional(v.array(v.float64())), // Optional for keyword-only
+ 410: 
+ 411:     // Source (flattened for indexing performance)
+ 412:     sourceType: v.union(
+ 413:       v.literal("conversation"),
+ 414:       v.literal("system"),
+ 415:       v.literal("tool"),
+ 416:       v.literal("a2a"),
+ 417:       v.literal("fact-extraction"), // NEW: For facts
+ 418:     ),
+ 419:     sourceUserId: v.optional(v.string()),
+ 420:     sourceUserName: v.optional(v.string()),
+ 421:     sourceTimestamp: v.number(),
+ 422: 
+ 423:     // Message role (for conversation memories) - helps with semantic search weighting
+ 424:     messageRole: v.optional(
+ 425:       v.union(v.literal("user"), v.literal("agent"), v.literal("system")),
+ 426:     ),
+ 427: 
+ 428:     // Owner Attribution (at least one required for proper tracking)
+ 429:     userId: v.optional(v.string()), // For user-owned memories (GDPR cascade)
+ 430:     agentId: v.optional(v.string()), // For agent-owned memories (agent deletion cascade)
+ 431: 
+ 432:     // References to Layer 1 (mutually exclusive, all optional)
+ 433:     conversationRef: v.optional(
+ 434:       v.object({
+ 435:         conversationId: v.string(),
+ 436:         messageIds: v.array(v.string()),
+ 437:       }),
+ 438:     ),
+ 439: 
+ 440:     immutableRef: v.optional(
+ 441:       v.object({
+ 442:         type: v.string(),
+ 443:         id: v.string(),
+ 444:         version: v.optional(v.number()),
+ 445:       }),
+ 446:     ),
+ 447: 
+ 448:     mutableRef: v.optional(
+ 449:       v.object({
+ 450:         namespace: v.string(),
+ 451:         key: v.string(),
+ 452:         snapshotValue: v.any(),
+ 453:         snapshotAt: v.number(),
+ 454:       }),
+ 455:     ),
+ 456: 
+ 457:     // NEW: Reference to Layer 3 fact
+ 458:     factsRef: v.optional(
+ 459:       v.object({
+ 460:         factId: v.string(),
+ 461:         version: v.optional(v.number()),
+ 462:       }),
+ 463:     ),
+ 464: 
+ 465:     // Metadata (flattened for indexing/filtering)
+ 466:     importance: v.number(), // 0-100 (flattened for filtering)
+ 467:     tags: v.array(v.string()), // Flattened for filtering
+ 468: 
+ 469:     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 470:     // Enrichment Fields (for bullet-proof retrieval)
+ 471:     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 472:     enrichedContent: v.optional(v.string()), // Concatenated searchable content for embedding
+ 473:     factCategory: v.optional(v.string()), // Category for filtering (e.g., "addressing_preference")
+ 474: 
+ 475:     // Flexible metadata (for source-specific data like A2A direction, messageId, etc.)
+ 476:     metadata: v.optional(v.any()),
+ 477: 
+ 478:     // Versioning (like immutable)
+ 479:     version: v.number(),
+ 480:     previousVersions: v.array(
+ 481:       v.object({
+ 482:         version: v.number(),
+ 483:         content: v.string(),
+ 484:         embedding: v.optional(v.array(v.float64())),
+ 485:         timestamp: v.number(),
+ 486:       }),
+ 487:     ),
+ 488: 
+ 489:     // Timestamps & Access
+ 490:     createdAt: v.number(),
+ 491:     updatedAt: v.number(),
+ 492:     lastAccessed: v.optional(v.number()),
+ 493:     accessCount: v.number(),
+ 494: 
+ 495:     // Streaming support (NEW - for progressive storage)
+ 496:     isPartial: v.optional(v.boolean()), // Flag for in-progress streaming memories
+ 497:     partialMetadata: v.optional(v.any()), // Metadata for partial/streaming memories
+ 498:   })
+ 499:     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's memories
+ 500:     .index("by_memoryId", ["memoryId"]) // Unique lookup
+ 501:     .index("by_tenantId", ["tenantId"]) // Tenant's memories
+ 502:     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
+ 503:     .index("by_userId", ["userId"]) // GDPR cascade
+ 504:     .index("by_agentId", ["agentId"]) // Agent deletion cascade
+ 505:     .index("by_memorySpace_created", ["memorySpaceId", "createdAt"]) // NEW: Chronological
+ 506:     .index("by_memorySpace_userId", ["memorySpaceId", "userId"]) // NEW: Space + user
+ 507:     .index("by_memorySpace_agentId", ["memorySpaceId", "agentId"]) // NEW: Space + agent
+ 508:     .index("by_participantId", ["participantId"]) // NEW: Hive Mode tracking
+ 509:     .searchIndex("by_content", {
+ 510:       searchField: "content",
+ 511:       filterFields: [
+ 512:         "memorySpaceId",
+ 513:         "tenantId",
+ 514:         "sourceType",
+ 515:         "userId",
+ 516:         "agentId",
+ 517:         "participantId",
+ 518:       ], // Updated filters
+ 519:     })
+ 520:     .vectorIndex("by_embedding", {
+ 521:       vectorField: "embedding",
+ 522:       dimensions: 1536, // Default: OpenAI text-embedding-3-small
+ 523:       filterFields: [
+ 524:         "memorySpaceId",
+ 525:         "tenantId",
+ 526:         "userId",
+ 527:         "agentId",
+ 528:         "participantId",
+ 529:       ], // Updated: tenantId for isolation
+ 530:     }),
+ 531: 
+ 532:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 533:   // Layer 3: Facts Store (NEW - memorySpace-scoped, Versioned)
+ 534:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 535:   facts: defineTable({
+ 536:     // Trusted runtime provenance; unrelated explicit facts share this authoritative table.
+ 537:     ownerPrincipalId: v.optional(v.string()),
+ 538:     lineage: v.optional(sourceLineage),
+ 539:     extractionPolicyVersion: v.optional(v.string()),
+ 540:     processingReceiptId: v.optional(v.string()),
+ 541:     tombstonedAt: v.optional(v.number()),
+ 542:     // Identity
+ 543:     factId: v.string(), // Unique ID for this fact
+ 544:     memorySpaceId: v.string(), // Memory space isolation
+ 545:     participantId: v.optional(v.string()), // Hive Mode: which participant extracted this
+ 546:     userId: v.optional(v.string()), // GDPR compliance - links to user
+ 547: 
+ 548:     // Multi-tenancy (NEW - critical for SaaS isolation)
+ 549:     tenantId: v.optional(v.string()), // Tenant ID for isolation
+ 550: 
+ 551:     // Fact content
+ 552:     fact: v.string(), // The fact statement
+ 553:     factType: v.union(
+ 554:       v.literal("preference"),
+ 555:       v.literal("identity"),
+ 556:       v.literal("knowledge"),
+ 557:       v.literal("relationship"),
+ 558:       v.literal("event"),
+ 559:       v.literal("observation"),
+ 560:       v.literal("custom"),
+ 561:     ),
+ 562: 
+ 563:     // Triple structure (subject-predicate-object)
+ 564:     subject: v.optional(v.string()), // Primary entity (e.g., "user-123")
+ 565:     predicate: v.optional(v.string()), // Relationship (e.g., "prefers", "works_at")
+ 566:     object: v.optional(v.string()), // Secondary entity (e.g., "dark mode")
+ 567: 
+ 568:     // Quality & Source
+ 569:     confidence: v.number(), // 0-100: extraction confidence
+ 570:     sourceType: v.union(
+ 571:       v.literal("conversation"),
+ 572:       v.literal("system"),
+ 573:       v.literal("tool"),
+ 574:       v.literal("manual"),
+ 575:       v.literal("a2a"),
+ 576:       v.literal("fact-extraction"), // For fact-extracted content
+ 577:     ),
+ 578:     sourceRef: v.optional(
+ 579:       v.object({
+ 580:         conversationId: v.optional(v.string()),
+ 581:         messageIds: v.optional(v.array(v.string())),
+ 582:         memoryId: v.optional(v.string()),
+ 583:       }),
+ 584:     ),
+ 585: 
+ 586:     // Metadata & Tags
+ 587:     metadata: v.optional(v.any()),
+ 588:     tags: v.array(v.string()),
+ 589: 
+ 590:     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 591:     // Enrichment Fields (for bullet-proof retrieval)
+ 592:     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 593:     category: v.optional(v.string()), // Specific sub-category (e.g., "addressing_preference")
+ 594:     searchAliases: v.optional(v.array(v.string())), // Alternative search terms
+ 595:     semanticContext: v.optional(v.string()), // Usage context sentence
+ 596:     entities: v.optional(
+ 597:       v.array(
+ 598:         v.object({
+ 599:           name: v.string(),
+ 600:           type: v.string(),
+ 601:           fullValue: v.optional(v.string()),
+ 602:         }),
+ 603:       ),
+ 604:     ), // Extracted entities with types
+ 605:     relations: v.optional(
+ 606:       v.array(
+ 607:         v.object({
+ 608:           subject: v.string(),
+ 609:           predicate: v.string(),
+ 610:           object: v.string(),
+ 611:         }),
+ 612:       ),
+ 613:     ), // Subject-predicate-object triples for graph
+ 614: 
+ 615:     // Temporal validity
+ 616:     validFrom: v.optional(v.number()),
+ 617:     validUntil: v.optional(v.number()),
+ 618: 
+ 619:     // Versioning (creates immutable chain)
+ 620:     version: v.number(),
+ 621:     supersededBy: v.optional(v.string()), // factId of newer version
+ 622:     supersedes: v.optional(v.string()), // factId this replaces
+ 623: 
+ 624:     // Timestamps
+ 625:     createdAt: v.number(),
+ 626:     updatedAt: v.number(),
+ 627: 
+ 628:     // Embedding for semantic search (v0.30.0+)
+ 629:     embedding: v.optional(v.array(v.float64())),
+ 630:   })
+ 631:     .index("by_factId", ["factId"]) // Unique lookup
+ 632:     .index("by_runtime_scope_factId", ["tenantId", "memorySpaceId", "factId"])
+ 633:     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
+ 634:     .index("by_tenantId", ["tenantId"]) // Tenant's facts
+ 635:     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
+ 636:     .index("by_memorySpace_subject", ["memorySpaceId", "subject"]) // Entity-centric queries
+ 637:     .index("by_participantId", ["participantId"]) // Hive Mode tracking
+ 638:     .index("by_userId", ["userId"]) // GDPR cascade
+ 639:     .searchIndex("by_content", {
+ 640:       searchField: "fact",
+ 641:       filterFields: ["memorySpaceId", "tenantId", "factType"],
+ 642:     })
+ 643:     .vectorIndex("by_embedding", {
+ 644:       vectorField: "embedding",
+ 645:       dimensions: 1536, // OpenAI text-embedding-3-small / ada-002
+ 646:       filterFields: ["memorySpaceId", "tenantId"],
+ 647:     }),
+ 648: 
+ 649:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 650:   // Fact History (Belief Revision Audit Trail)
+ 651:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 652:   factHistory: defineTable({
+ 653:     // Identity
+ 654:     eventId: v.string(), // Unique event ID
+ 655:     factId: v.string(), // The fact this event relates to
+ 656:     memorySpaceId: v.string(), // Memory space for scoping
+ 657: 
+ 658:     // Action that was taken
+ 659:     action: v.union(
+ 660:       v.literal("CREATE"),
+ 661:       v.literal("UPDATE"),
+ 662:       v.literal("SUPERSEDE"),
+ 663:       v.literal("DELETE"),
+ 664:     ),
+ 665: 
+ 666:     // Values (for tracking changes)
+ 667:     oldValue: v.optional(v.string()), // Previous fact text
+ 668:     newValue: v.optional(v.string()), // New fact text
+ 669: 
+ 670:     // Relationships
+ 671:     supersededBy: v.optional(v.string()), // factId that replaced this
+ 672:     supersedes: v.optional(v.string()), // factId this replaced
+ 673: 
+ 674:     // Decision context
+ 675:     reason: v.optional(v.string()), // Why this action was taken
+ 676:     confidence: v.optional(v.number()), // Confidence in the decision
+ 677: 
+ 678:     // Pipeline info
+ 679:     pipeline: v.optional(
+ 680:       v.object({
+ 681:         slotMatching: v.optional(v.boolean()),
+ 682:         semanticMatching: v.optional(v.boolean()),
+ 683:         llmResolution: v.optional(v.boolean()),
+ 684:       }),
+ 685:     ),
+ 686: 
+ 687:     // Source context
+ 688:     userId: v.optional(v.string()), // User who triggered the change
+ 689:     participantId: v.optional(v.string()), // Participant who triggered
+ 690:     conversationId: v.optional(v.string()), // Conversation context
+ 691: 
+ 692:     // Timestamps
+ 693:     timestamp: v.number(),
+ 694:   })
+ 695:     .index("by_eventId", ["eventId"]) // Unique lookup
+ 696:     .index("by_factId", ["factId"]) // Get history for a fact
+ 697:     .index("by_memorySpace", ["memorySpaceId"]) // Get all changes in a space
+ 698:     .index("by_memorySpace_timestamp", ["memorySpaceId", "timestamp"]) // Time-range queries
+ 699:     .index("by_action", ["action"]) // Filter by action type
+ 700:     .index("by_userId", ["userId"]) // GDPR cascade
+ 701:     .index("by_timestamp", ["timestamp"]), // Chronological
+ 702: 
+ 703:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 704:   // Memory Spaces Registry (Hive/Collaboration Mode Management)
+ 705:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 706:   memorySpaces: defineTable({
+ 707:     // Identity
+ 708:     memorySpaceId: v.string(), // Unique memory space ID
+ 709:     name: v.optional(v.string()), // Human-readable name
+ 710: 
+ 711:     // Multi-tenancy (NEW - critical for SaaS isolation)
+ 712:     tenantId: v.optional(v.string()), // Tenant ID for isolation
+ 713: 
+ 714:     type: v.union(
+ 715:       v.literal("personal"),
+ 716:       v.literal("team"),
+ 717:       v.literal("project"),
+ 718:       v.literal("custom"),
+ 719:     ),
+ 720: 
+ 721:     // Participants (for Hive Mode)
+ 722:     participants: v.array(
+ 723:       v.object({
+ 724:         id: v.string(), // Participant ID (e.g., 'cursor', 'claude', 'my-bot')
+ 725:         type: v.string(), // 'ai-tool', 'human', 'ai-agent', 'system'
+ 726:         joinedAt: v.number(),
+ 727:       }),
+ 728:     ),
+ 729: 
+ 730:     // Metadata (flexible)
+ 731:     metadata: v.any(),
+ 732: 
+ 733:     // Status
+ 734:     status: v.union(v.literal("active"), v.literal("archived")),
+ 735: 
+ 736:     // Timestamps
+ 737:     createdAt: v.number(),
+ 738:     updatedAt: v.number(),
+ 739:   })
+ 740:     .index("by_memorySpaceId", ["memorySpaceId"]) // Unique lookup
+ 741:     .index("by_tenantId", ["tenantId"]) // Tenant's memory spaces
+ 742:     .index("by_tenant_memorySpaceId", ["tenantId", "memorySpaceId"]) // Tenant-scoped lookup
+ 743:     .index("by_tenant_status", ["tenantId", "status"]) // Tenant + status
+ 744:     .index("by_status", ["status"]) // Filter active/archived
+ 745:     .index("by_type", ["type"]) // Filter by type
+ 746:     .index("by_created", ["createdAt"]), // Chronological
+ 747: 
+ 748:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 749:   // Contexts (Hierarchical Coordination, memorySpace-scoped with cross-space support)
+ 750:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 751:   contexts: defineTable({
+ 752:     // Identity
+ 753:     contextId: v.string(), // Unique ID
+ 754:     memorySpaceId: v.string(), // NEW: Which memory space owns this context
+ 755: 
+ 756:     // Multi-tenancy (NEW - critical for SaaS isolation)
+ 757:     tenantId: v.optional(v.string()), // Tenant ID for isolation
+ 758: 
+ 759:     // Purpose
+ 760:     purpose: v.string(), // What this context is for
+ 761:     description: v.optional(v.string()), // Optional description
+ 762: 
+ 763:     // Hierarchy
+ 764:     parentId: v.optional(v.string()), // Parent context (can be cross-space)
+ 765:     rootId: v.optional(v.string()), // Root context
+ 766:     depth: v.number(), // 0 for root, increments with depth
+ 767:     childIds: v.array(v.string()), // Child contexts
+ 768: 
+ 769:     // Status
+ 770:     status: v.union(
+ 771:       v.literal("active"),
+ 772:       v.literal("completed"),
+ 773:       v.literal("cancelled"),
+ 774:       v.literal("blocked"),
+ 775:     ),
+ 776: 
+ 777:     // Source conversation (optional)
+ 778:     conversationRef: v.optional(
+ 779:       v.object({
+ 780:         conversationId: v.string(),
+ 781:         messageIds: v.optional(v.array(v.string())),
+ 782:       }),
+ 783:     ),
+ 784: 
+ 785:     // User association (GDPR)
+ 786:     userId: v.optional(v.string()),
+ 787: 
+ 788:     // Participants (for tracking)
+ 789:     participants: v.array(v.string()), // Memory spaces or participants involved
+ 790: 
+ 791:     // Cross-space access control
+ 792:     grantedAccess: v.optional(
+ 793:       v.array(
+ 794:         v.object({
+ 795:           memorySpaceId: v.string(), // Which space has access
+ 796:           scope: v.string(), // 'read-only', 'context-only', etc.
+ 797:           grantedAt: v.number(),
+ 798:         }),
+ 799:       ),
+ 800:     ),
+ 801: 
+ 802:     // Data (flexible)
+ 803:     data: v.optional(v.any()),
+ 804: 
+ 805:     // Metadata
+ 806:     metadata: v.optional(v.any()),
+ 807: 
+ 808:     // Versioning (automatic version tracking for updates)
+ 809:     version: v.number(), // Current version number (starts at 1)
+ 810:     previousVersions: v.array(
+ 811:       v.object({
+ 812:         version: v.number(),
+ 813:         status: v.string(),
+ 814:         data: v.optional(v.any()),
+ 815:         timestamp: v.number(),
+ 816:         updatedBy: v.optional(v.string()), // Agent/participant that made the change
+ 817:       }),
+ 818:     ),
+ 819: 
+ 820:     // Timestamps
+ 821:     createdAt: v.number(),
+ 822:     updatedAt: v.number(),
+ 823:     completedAt: v.optional(v.number()),
+ 824:   })
+ 825:     .index("by_contextId", ["contextId"]) // Unique lookup
+ 826:     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Space's contexts
+ 827:     .index("by_tenantId", ["tenantId"]) // Tenant's contexts
+ 828:     .index("by_tenant_contextId", ["tenantId", "contextId"]) // Tenant + context ID
+ 829:     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
+ 830:     .index("by_parentId", ["parentId"]) // Child lookup
+ 831:     .index("by_rootId", ["rootId"]) // All contexts in tree
+ 832:     .index("by_status", ["status"]) // Filter by status
+ 833:     .index("by_memorySpace_status", ["memorySpaceId", "status"]) // NEW
+ 834:     .index("by_userId", ["userId"]) // GDPR cascade
+ 835:     .index("by_created", ["createdAt"]), // Chronological
+ 836: 
+ 837:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 838:   // Agents Registry (Optional Metadata Layer)
+ 839:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 840:   agents: defineTable({
+ 841:     // Identity
+ 842:     agentId: v.string(), // Unique agent identifier
+ 843: 
+ 844:     // Multi-tenancy (NEW - critical for SaaS isolation)
+ 845:     tenantId: v.optional(v.string()), // Tenant ID for isolation
+ 846: 
+ 847:     // Metadata
+ 848:     name: v.string(), // Display name
+ 849:     description: v.optional(v.string()), // What this agent does
+ 850:     metadata: v.optional(v.any()), // Flexible metadata (team, capabilities, etc.)
+ 851: 
+ 852:     // Configuration
+ 853:     config: v.optional(v.any()), // Agent-specific configuration
+ 854: 
+ 855:     // Status
+ 856:     status: v.union(
+ 857:       v.literal("active"),
+ 858:       v.literal("inactive"),
+ 859:       v.literal("archived"),
+ 860:     ),
+ 861: 
+ 862:     // Timestamps
+ 863:     registeredAt: v.number(),
+ 864:     updatedAt: v.number(),
+ 865:     lastActive: v.optional(v.number()), // Last time agent created data
+ 866:   })
+ 867:     .index("by_agentId", ["agentId"]) // Unique lookup
+ 868:     .index("by_tenantId", ["tenantId"]) // Tenant's agents
+ 869:     .index("by_tenant_status", ["tenantId", "status"]) // Tenant + status
+ 870:     .index("by_status", ["status"]) // Filter by status
+ 871:     .index("by_registered", ["registeredAt"]), // Chronological ordering
+ 872: 
+ 873:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 874:   // Sessions (Native Session Management)
+ 875:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 876:   sessions: defineTable({
+ 877:     // Identity
+ 878:     sessionId: v.string(), // Unique session ID
+ 879:     userId: v.string(), // User this session belongs to
+ 880: 
+ 881:     // Multi-tenancy (NEW - critical for isolation)
+ 882:     tenantId: v.optional(v.string()), // Trusted tenant selector
+ 883:     ownerPrincipalId: v.optional(v.string()),
+ 884:     tombstonedAt: v.optional(v.number()),
+ 885:     authorityReference: v.optional(runtimeAuthorityReference), // Server-pinned maintenance authority
+ 886: 
+ 887:     // Memory space association
+ 888:     memorySpaceId: v.optional(v.string()), // Memory space for this session
+ 889: 
+ 890:     // Session state
+ 891:     status: v.union(v.literal("active"), v.literal("idle"), v.literal("ended")),
+ 892:     startedAt: v.number(), // When session started
+ 893:     lastActiveAt: v.number(), // Last activity timestamp
+ 894:     endedAt: v.optional(v.number()), // When session ended
+ 895:     expiresAt: v.optional(v.number()), // When session expires (from governance policy)
+ 896: 
+ 897:     // Fully extensible metadata (v.any() allows any shape)
+ 898:     metadata: v.optional(v.any()),
+ 899: 
+ 900:     // Statistics
+ 901:     messageCount: v.number(), // Messages in this session
+ 902:     memoryCount: v.number(), // Memories created in this session
+ 903:   })
+ 904:     .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+ 905:     .index("by_runtime_key", ["tenantId", "memorySpaceId", "sessionId"])
+ 906:     .index("by_sessionId", ["sessionId"]) // Unique lookup
+ 907:     .index("by_userId", ["userId"]) // User's sessions
+ 908:     .index("by_tenantId", ["tenantId"]) // Tenant's sessions
+ 909:     .index("by_tenant_user", ["tenantId", "userId"]) // Tenant + user sessions
+ 910:     .index("by_status", ["status"]) // Active/idle/ended
+ 911:     .index("by_memorySpace", ["memorySpaceId"]) // Sessions in memory space
+ 912:     .index("by_lastActive", ["lastActiveAt"]) // For expiration cleanup
+ 913:     .index("by_tenant_status", ["tenantId", "status"]), // Tenant + status
+ 914: 
+ 915:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 916:   // Governance Policies (Data Retention, Purging, and Compliance)
+ 917:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 918:   governancePolicies: defineTable({
+ 919:     // Fresh verified ownership; handlers reject missing fields rather than adopt rows.
+ 920:     tenantId: v.optional(v.string()),
+ 921:     ownerPrincipalId: v.optional(v.string()),
+ 922:     authority: v.optional(runtimeAuthorityReference),
+ 923:     // Scope
+ 924:     organizationId: v.optional(v.string()),
+ 925:     memorySpaceId: v.optional(v.string()), // Memory space override
+ 926: 
+ 927:     // Policy configuration (full JSON structure)
+ 928:     policy: v.any(), // GovernancePolicy structure
+ 929: 
+ 930:     // Metadata
+ 931:     isActive: v.boolean(),
+ 932:     appliedBy: v.optional(v.string()), // Who applied this policy
+ 933: 
+ 934:     // Timestamps
+ 935:     createdAt: v.number(),
+ 936:     updatedAt: v.number(),
+ 937:   })
+ 938:     .index("by_organization", ["organizationId"])
+ 939:     .index("by_memorySpace", ["memorySpaceId"])
+ 940:     .index("by_active", ["isActive", "organizationId"])
+ 941:     .index("by_updated", ["updatedAt"])
+ 942:     .index("by_runtime_scope_active", ["tenantId", "memorySpaceId", "isActive"]),
+ 943: 
+ 944:   // Governance Enforcement Log (Audit Trail)
+ 945:   governanceEnforcement: defineTable({
+ 946:     policyId: v.optional(v.id("governancePolicies")),
+ 947:     simulation: v.optional(v.boolean()),
+ 948:     // Fresh verified ownership; handlers reject missing fields rather than adopt rows.
+ 949:     tenantId: v.optional(v.string()),
+ 950:     ownerPrincipalId: v.optional(v.string()),
+ 951:     authority: v.optional(runtimeAuthorityReference),
+ 952:     // Scope
+ 953:     organizationId: v.optional(v.string()),
+ 954:     memorySpaceId: v.optional(v.string()),
+ 955: 
+ 956:     // Enforcement details
+ 957:     enforcementType: v.union(v.literal("automatic"), v.literal("manual")),
+ 958:     layers: v.array(v.string()), // Which layers were enforced
+ 959:     rules: v.array(v.string()), // Which rules were enforced
+ 960: 
+ 961:     // Results
+ 962:     versionsDeleted: v.number(),
+ 963:     recordsPurged: v.number(),
+ 964:     storageFreed: v.number(), // MB
+ 965: 
+ 966:     // Metadata
+ 967:     triggeredBy: v.optional(v.string()),
+ 968: 
+ 969:     // Timestamps
+ 970:     executedAt: v.number(),
+ 971:   })
+ 972:     .index("by_organization", ["organizationId", "executedAt"])
+ 973:     .index("by_memorySpace", ["memorySpaceId", "executedAt"])
+ 974:     .index("by_executed", ["executedAt"])
+ 975:     .index("by_runtime_scope_executed", ["tenantId", "memorySpaceId", "executedAt"])
+ 976:     .index("by_runtime_policy", ["policyId"]),
+ 977: 
+ 978:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 979:   // Graph Sync Queue (Real-time Graph Database Synchronization)
+ 980:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 981:   graphSyncQueue: defineTable({
+ 982:     memorySpaceId: v.optional(v.string()),
+ 983:     entityDocumentId: v.optional(v.id("facts")),
+ 984:     entityVersion: v.optional(v.number()),
+ 985:     sourceId: v.optional(v.string()),
+ 986:     sourceEventId: v.optional(v.string()),
+ 987:     sourceRevision: v.optional(v.number()),
+ 988:     // Fresh verified ownership; handlers reject missing fields rather than adopt rows.
+ 989:     tenantId: v.optional(v.string()),
+ 990:     ownerPrincipalId: v.optional(v.string()),
+ 991:     authority: v.optional(runtimeAuthorityReference),
+ 992:     // Entity identification
+ 993:     table: v.string(), // "memories", "facts", "contexts", "conversations", etc.
+ 994:     entityId: v.string(), // Cortex entity ID
+ 995: 
+ 996:     // Operation type
+ 997:     operation: v.union(
+ 998:       v.literal("insert"),
+ 999:       v.literal("update"),
+1000:       v.literal("delete"),
+1001:     ),
+1002: 
+1003:     // Entity data (full object for sync)
+1004:     entity: v.optional(v.any()), // Null for deletes
+1005: 
+1006:     // Sync status
+1007:     synced: v.boolean(),
+1008:     syncedAt: v.optional(v.number()),
+1009: 
+1010:     // Retry tracking
+1011:     failedAttempts: v.optional(v.number()),
+1012:     lastError: v.optional(v.string()),
+1013: 
+1014:     // Priority (for ordering)
+1015:     priority: v.optional(v.string()), // "high", "normal", "low"
+1016: 
+1017:     // Timestamps
+1018:     createdAt: v.number(),
+1019:   })
+1020:     .index("by_synced", ["synced"]) // Get unsynced items (reactive query!)
+1021:     .index("by_table", ["table"]) // Filter by entity type
+1022:     .index("by_table_entity", ["table", "entityId"]) // Unique lookup
+1023:     .index("by_priority", ["priority", "synced"]) // Priority-based processing
+1024:     .index("by_created", ["createdAt"]) // Chronological
+1025:     .index("by_runtime_worker_entity", ["tenantId", "memorySpaceId", "authority.grantId", "table", "entityId"])
+1026:     .index("by_runtime_worker_state", ["tenantId", "memorySpaceId", "authority.grantId", "synced", "priority"]),
+1027: 
+1028:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1029:   // Artifacts (Interactive Versioned Documents, memorySpace-scoped)
+1030:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1031:   artifacts: defineTable({
+1032:     // Identity
+1033:     artifactId: v.string(),
+1034:     memorySpaceId: v.string(),
+1035:     participantId: v.optional(v.string()),
+1036: 
+1037:     // Multi-tenancy
+1038:     tenantId: v.optional(v.string()),
+1039: 
+1040:     // Ownership
+1041:     userId: v.optional(v.string()),
+1042:     agentId: v.optional(v.string()),
+1043: 
+1044:     // Kind
+1045:     kind: v.union(
+1046:       v.literal("text"),
+1047:       v.literal("code"),
+1048:       v.literal("sheet"),
+1049:       v.literal("image"),
+1050:       v.literal("diagram"),
+1051:       v.literal("html"),
+1052:       v.literal("custom"),
+1053:     ),
+1054:     kindConfig: v.optional(
+1055:       v.object({
+1056:         customKind: v.optional(v.string()),
+1057:         mimeType: v.optional(v.string()),
+1058:         language: v.optional(v.string()),
+1059:         framework: v.optional(v.string()),
+1060:         schema: v.optional(v.any()),
+1061:       }),
+1062:     ),
+1063: 
+1064:     // Content (mutually exclusive)
+1065:     content: v.optional(v.string()),
+1066:     fileRef: v.optional(
+1067:       v.object({
+1068:         storageId: v.id("_storage"),
+1069:         mimeType: v.string(),
+1070:         size: v.number(),
+1071:         checksum: v.optional(v.string()),
+1072:         originalFilename: v.optional(v.string()),
+1073:       }),
+1074:     ),
+1075: 
+1076:     // Streaming
+1077:     streamingState: v.union(
+1078:       v.literal("draft"),
+1079:       v.literal("streaming"),
+1080:       v.literal("paused"),
+1081:       v.literal("final"),
+1082:       v.literal("error"),
+1083:     ),
+1084:     streamingMetadata: v.optional(
+1085:       v.object({
+1086:         sessionId: v.optional(v.string()),
+1087:         startedAt: v.optional(v.number()),
+1088:         lastChunkAt: v.optional(v.number()),
+1089:         bytesReceived: v.optional(v.number()),
+1090:         estimatedTotal: v.optional(v.number()),
+1091:         errorMessage: v.optional(v.string()),
+1092:         errorCode: v.optional(v.string()),
+1093:         errorAt: v.optional(v.number()),
+1094:       }),
+1095:     ),
+1096: 
+1097:     // Display
+1098:     title: v.string(),
+1099:     description: v.optional(v.string()),
+1100:     tags: v.array(v.string()),
+1101: 
+1102:     // References
+1103:     conversationRef: v.optional(
+1104:       v.object({
+1105:         conversationId: v.string(),
+1106:         messageId: v.optional(v.string()),
+1107:         turnIndex: v.optional(v.number()),
+1108:       }),
+1109:     ),
+1110:     memoryRefs: v.optional(
+1111:       v.array(
+1112:         v.object({
+1113:           memoryId: v.string(),
+1114:           relevance: v.optional(v.number()),
+1115:         }),
+1116:       ),
+1117:     ),
+1118: 
+1119:     // Versioning (Undo/Redo)
+1120:     version: v.number(),
+1121:     versionPointer: v.number(),
+1122:     versionHistory: v.array(
+1123:       v.object({
+1124:         version: v.number(),
+1125:         content: v.optional(v.string()),
+1126:         fileRef: v.optional(
+1127:           v.object({
+1128:             storageId: v.id("_storage"),
+1129:             mimeType: v.string(),
+1130:             size: v.number(),
+1131:             checksum: v.optional(v.string()),
+1132:             originalFilename: v.optional(v.string()),
+1133:           }),
+1134:         ),
+1135:         title: v.optional(v.string()),
+1136:         timestamp: v.number(),
+1137:         changedBy: v.optional(v.string()),
+1138:         changeType: v.union(
+1139:           v.literal("create"),
+1140:           v.literal("update"),
+1141:           v.literal("undo"),
+1142:           v.literal("redo"),
+1143:         ),
+1144:         changeSummary: v.optional(v.string()),
+1145:       }),
+1146:     ),
+1147: 
+1148:     // Collaboration
+1149:     collaborators: v.optional(
+1150:       v.array(
+1151:         v.object({
+1152:           id: v.string(),
+1153:           type: v.union(v.literal("user"), v.literal("agent")),
+1154:           role: v.union(
+1155:             v.literal("owner"),
+1156:             v.literal("editor"),
+1157:             v.literal("viewer"),
+1158:           ),
+1159:           addedAt: v.number(),
+1160:           lastEditAt: v.optional(v.number()),
+1161:         }),
+1162:       ),
+1163:     ),
+1164: 
+1165:     // Stats
+1166:     stats: v.optional(
+1167:       v.object({
+1168:         characterCount: v.optional(v.number()),
+1169:         wordCount: v.optional(v.number()),
+1170:         lineCount: v.optional(v.number()),
+1171:         tokenCount: v.optional(v.number()),
+1172:       }),
+1173:     ),
+1174: 
+1175:     // Metadata
+1176:     metadata: v.optional(v.any()),
+1177: 
+1178:     // Timestamps
+1179:     createdAt: v.number(),
+1180:     updatedAt: v.number(),
+1181:     lastAccessedAt: v.optional(v.number()),
+1182:     accessCount: v.optional(v.number()),
+1183: 
+1184:     // Soft Delete
+1185:     isDeleted: v.optional(v.boolean()),
+1186:     deletedAt: v.optional(v.number()),
+1187:     deletedBy: v.optional(v.string()),
+1188:   })
+1189:     // Unique lookups
+1190:     .index("by_artifactId", ["artifactId"])
+1191: 
+1192:     // Memory space isolation
+1193:     .index("by_memorySpace", ["memorySpaceId"])
+1194:     .index("by_memorySpace_created", ["memorySpaceId", "createdAt"])
+1195:     .index("by_memorySpace_updated", ["memorySpaceId", "updatedAt"])
+1196:     .index("by_memorySpace_kind", ["memorySpaceId", "kind"])
+1197:     .index("by_memorySpace_state", ["memorySpaceId", "streamingState"])
+1198: 
+1199:     // Multi-tenancy
+1200:     .index("by_tenantId", ["tenantId"])
+1201:     .index("by_tenant_space", ["tenantId", "memorySpaceId"])
+1202:     .index("by_tenant_artifactId", ["tenantId", "artifactId"])
+1203:     .index("by_tenant_space_kind", ["tenantId", "memorySpaceId", "kind"])
+1204: 
+1205:     // Conversation association
+1206:     .index("by_conversation", ["conversationRef.conversationId"])
+1207:     .index("by_memorySpace_conversation", [
+1208:       "memorySpaceId",
+1209:       "conversationRef.conversationId",
+1210:     ])
+1211: 
+1212:     // Ownership (GDPR, attribution)
+1213:     .index("by_userId", ["userId"])
+1214:     .index("by_agentId", ["agentId"])
+1215:     .index("by_memorySpace_user", ["memorySpaceId", "userId"])
+1216:     .index("by_memorySpace_agent", ["memorySpaceId", "agentId"])
+1217:     .index("by_participantId", ["participantId"])
+1218: 
+1219:     // Streaming queries
+1220:     .index("by_streamingState", ["streamingState"])
+1221:     .index("by_memorySpace_streaming", [
+1222:       "memorySpaceId",
+1223:       "streamingState",
+1224:       "updatedAt",
+1225:     ])
+1226: 
+1227:     // Chronological
+1228:     .index("by_created", ["createdAt"])
+1229:     .index("by_updated", ["updatedAt"])
+1230:     .index("by_lastAccessed", ["lastAccessedAt"])
+1231: 
+1232:     // Full-text search
+1233:     .searchIndex("by_content", {
+1234:       searchField: "content",
+1235:       filterFields: [
+1236:         "memorySpaceId",
+1237:         "tenantId",
+1238:         "kind",
+1239:         "userId",
+1240:         "agentId",
+1241:         "participantId",
+1242:         "streamingState",
+1243:       ],
+1244:     })
+1245:     .searchIndex("by_title", {
+1246:       searchField: "title",
+1247:       filterFields: ["memorySpaceId", "tenantId", "kind"],
+1248:     }),
+1249: 
+1250:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1251:   // Attachments (Multi-modal File Storage, memorySpace-scoped)
+1252:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1253:   attachments: defineTable({
+1254:     // Identity
+1255:     attachmentId: v.string(), // Unique attachment ID
+1256:     memorySpaceId: v.string(), // Memory space isolation
+1257: 
+1258:     // Multi-tenancy
+1259:     tenantId: v.optional(v.string()), // Tenant ID for SaaS isolation
+1260: 
+1261:     // Ownership
+1262:     userId: v.string(), // User who uploaded this attachment
+1263:     conversationId: v.optional(v.string()), // Linked conversation
+1264:     messageId: v.optional(v.string()), // Linked message
+1265:     memoryId: v.optional(v.string()), // Linked memory
+1266:     artifactId: v.optional(v.string()), // Linked artifact
+1267: 
+1268:     // File storage (Convex native)
+1269:     storageId: v.id("_storage"), // Convex file storage reference
+1270: 
+1271:     // File metadata
+1272:     type: v.union(
+1273:       v.literal("image"),
+1274:       v.literal("audio"),
+1275:       v.literal("video"),
+1276:       v.literal("file"),
+1277:       v.literal("pdf"),
+1278:     ),
+1279:     mimeType: v.string(), // MIME type (e.g., "image/png")
+1280:     filename: v.string(), // Original filename
+1281:     size: v.number(), // File size in bytes
+1282: 
+1283:     // Extracted content (for future search/RAG - Phase 2+)
+1284:     extractedText: v.optional(v.string()), // OCR/PDF text extraction
+1285:     transcript: v.optional(v.string()), // Audio/video transcription
+1286:     embedding: v.optional(v.array(v.float64())), // Semantic search embedding
+1287: 
+1288:     // Type-specific metadata
+1289:     dimensions: v.optional(
+1290:       v.object({
+1291:         width: v.number(),
+1292:         height: v.number(),
+1293:       }),
+1294:     ), // Image/video dimensions
+1295:     duration: v.optional(v.number()), // Audio/video duration in seconds
+1296: 
+1297:     // Generic metadata
+1298:     metadata: v.optional(v.any()),
+1299: 
+1300:     // Timestamps
+1301:     createdAt: v.number(),
+1302:     updatedAt: v.number(),
+1303:   })
+1304:     // Unique lookups
+1305:     .index("by_attachmentId", ["attachmentId"])
+1306: 
+1307:     // Memory space isolation
+1308:     .index("by_memorySpace", ["memorySpaceId"])
+1309:     .index("by_memorySpace_type", ["memorySpaceId", "type"])
+1310:     .index("by_memorySpace_created", ["memorySpaceId", "createdAt"])
+1311: 
+1312:     // Multi-tenancy
+1313:     .index("by_tenantId", ["tenantId"])
+1314:     .index("by_tenant_space", ["tenantId", "memorySpaceId"])
+1315:     .index("by_tenant_attachmentId", ["tenantId", "attachmentId"])
+1316: 
+1317:     // Relationship lookups
+1318:     .index("by_conversation", ["conversationId"])
+1319:     .index("by_message", ["messageId"])
+1320:     .index("by_memory", ["memoryId"])
+1321:     .index("by_artifact", ["artifactId"])
+1322: 
+1323:     // Ownership (GDPR cascade)
+1324:     .index("by_userId", ["userId"])
+1325:     .index("by_memorySpace_user", ["memorySpaceId", "userId"])
+1326: 
+1327:     // Chronological
+1328:     .index("by_created", ["createdAt"])
+1329:     .index("by_updated", ["updatedAt"])
+1330: 
+1331:     // Vector search for semantic content (Phase 3+)
+1332:     .vectorIndex("by_embedding", {
+1333:       vectorField: "embedding",
+1334:       dimensions: 1536, // OpenAI text-embedding-3-small / ada-002
+1335:       filterFields: ["memorySpaceId", "tenantId", "type"],
+1336:     }),
+1337: });

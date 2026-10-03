@@ -1,0 +1,30 @@
+{
+  "name": "discovery",
+  "argv": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--testPathPatterns=tests/unit/(runtimeMetadataAuth|runtimeAuth|runtimeWorkerAuth|runtimeWorkerClient|auth)",
+    "--listTests",
+    "--json",
+    "--runInBand",
+    "--cacheDirectory=/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/jest-discovery-cache"
+  ],
+  "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+  "startedAt": "2026-10-03T13:03:56.524406+00:00",
+  "finishedAt": "2026-10-03T13:03:57.443995+00:00",
+  "seconds": 0.9195931169997493,
+  "exitCode": 0,
+  "environment": {
+    "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+    "CONVEX_URL": "http://127.0.0.1:1",
+    "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+    "CONVEX_TEST_MODE": "local",
+    "CI": "1",
+    "GIT_OPTIONAL_LOCKS": "0",
+    "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+    "npm_config_offline": "true",
+    "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+    "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+  }
+}

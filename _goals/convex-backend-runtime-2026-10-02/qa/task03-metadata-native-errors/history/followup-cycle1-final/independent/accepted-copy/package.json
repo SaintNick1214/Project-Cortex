@@ -1,0 +1,137 @@
+{
+  "name": "@cortexmemory/sdk",
+  "version": "0.37.0",
+  "description": "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management",
+  "type": "module",
+  "workspaces": [
+    ".",
+    "packages/*"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "convex-dev",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "keywords": [
+    "ai",
+    "agents",
+    "memory",
+    "convex",
+    "sdk",
+    "typescript",
+    "conversations",
+    "vector-search",
+    "llm",
+    "chatbot",
+    "knowledge-graph",
+    "facts",
+    "hive-mode",
+    "memory-spaces",
+    "workflow-coordination",
+    "multi-agent",
+    "infinite-context"
+  ],
+  "author": "Saint Nick LLC",
+  "license": "FSL-1.1-Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaintNick1214/Project-Cortex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SaintNick1214/Project-Cortex/issues"
+  },
+  "homepage": "https://github.com/SaintNick1214/Project-Cortex#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "clean": "rimraf dist",
+    "prepublishOnly": "npm test && npm run build",
+    "prepack": "npm run build",
+    "release": "pwsh -File scripts/release.ps1",
+    "dev": "node scripts/dev-runner.mjs",
+    "dev:local": "node scripts/dev-runner.mjs --local",
+    "dev:cloud": "node scripts/dev-runner.mjs --cloud",
+    "logs": "convex logs",
+    "logs:local": "convex logs --url http://127.0.0.1:3210",
+    "logs:cloud": "convex logs --prod",
+    "lint": "tsc --project tsconfig.lint.json --noEmit && eslint . --report-unused-disable-directives",
+    "test": "node scripts/test-runner.mjs",
+    "test:local": "cross-env CONVEX_TEST_MODE=local node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug",
+    "test:managed": "cross-env CONVEX_TEST_MODE=managed node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug",
+    "test:both": "npm run test:local && npm run test:managed",
+    "test:serial": "node scripts/test-runner.mjs --runInBand",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --watch",
+    "test:interactive": "tsx tests/interactive-runner.ts",
+    "test:interactive:local": "cross-env CONVEX_URL=http://127.0.0.1:3210 tsx tests/interactive-runner.ts",
+    "test:interactive:cloud": "tsx tests/interactive-runner.ts",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=debug --coverage",
+    "test:debug": "cross-env TEST_DEBUG=true TEST_VERBOSE=true TEST_INSPECT=true node --experimental-vm-modules node_modules/jest/bin/jest.js debug --runInBand",
+    "test:stress": "npx tsx tests/resilience-stress.manual.ts",
+    "update-deps": "node scripts/update-deps.mjs",
+    "update-deps:dry": "node scripts/update-deps.mjs --dry-run",
+    "test:contracts": "node scripts/verify-public-contracts.mjs"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "convex": "^1.46.0",
+    "openai": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "openai": {
+      "optional": true
+    },
+    "@anthropic-ai/sdk": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@convex-dev/eslint-plugin": "^5.0.0",
+    "@eslint/js": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.6.4",
+    "@typescript-eslint/eslint-plugin": "^8.71.0",
+    "@typescript-eslint/parser": "^8.71.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^18.0.5",
+    "eslint": "^10.11.0",
+    "globals": "^17.13.0",
+    "jest": "^30.5.2",
+    "npm-check-updates": "^23.1.0",
+    "openai": "^7.27.0",
+    "rimraf": "^6.1.3",
+    "ts-jest": "^29.4.14",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3"
+  },
+  "dependencies": {
+    "@convex-dev/agent": "0.7.3",
+    "@convex-dev/ai-sdk-provider": "0.2.1",
+    "@convex-dev/workflow": "0.4.8",
+    "@convex-dev/workpool": "0.4.13",
+    "ai": "7.0.127",
+    "neo4j-driver": "^6.2.0",
+    "zod": "4.6.5"
+  },
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "packageManager": "npm@12.2.0"
+}

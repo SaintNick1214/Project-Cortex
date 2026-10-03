@@ -1,0 +1,1525 @@
+[
+  {
+    "path": "immutable:store",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:store authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:store rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:store rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:get",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:getVersion",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:getVersion authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:getHistory",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:getHistory authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:getAtTimestamp",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:list",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:count",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:search",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:search authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:search rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:search rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:purge",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:purge authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purge rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purge rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:purgeMany",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:purgeVersions",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "immutable:purgeAll",
+    "visibility": "internal",
+    "requiredCapability": "trusted deployment-operator internal invocation",
+    "scope": "deployment-operator",
+    "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+    "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+    "resourceLookup": "immutable deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+    "currentOutcomeTests": [
+      {
+        "name": "five actual internal registrations immutable operator purge preserves control/tombstone rows",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      }
+    ],
+    "coverage": "original actual registration and operator/creator/currentness outcomes plus151 current boundary controls",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:set",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:set authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:set rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:set rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:update",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:update authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:update rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:update rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:get",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:exists",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:exists authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:exists rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:exists rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:list",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:count",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:deleteKey",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:deleteKey authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:deleteKey rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:deleteKey rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:purgeMany",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeMany authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeMany rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeMany rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeMany rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeMany rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:purgeNamespace",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:purgeNamespace authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeNamespace rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeNamespace rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeNamespace rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeNamespace rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeNamespace rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:transaction",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:transaction authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:transaction rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:transaction rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "mutable:purgeAll",
+    "visibility": "internal",
+    "requiredCapability": "trusted deployment-operator internal invocation",
+    "scope": "deployment-operator",
+    "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+    "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+    "resourceLookup": "mutable deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+    "currentOutcomeTests": [
+      {
+        "name": "five actual internal registrations immutable operator purge preserves control/tombstone rows",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "five actual internal registrations mutable operator purge preserves control/tombstone rows",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs mutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs mutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      }
+    ],
+    "coverage": "original actual registration and operator/creator/currentness outcomes plus151 current boundary controls",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:create",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:create authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:create rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:create rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:get",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:touch",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:touch authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:touch rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:touch rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:touch rejects session expiry before-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:touch rejects session expiry after-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:end",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:end authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:endAll authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:end rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:endAll rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:end rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:endAll rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:endAll",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:endAll authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:endAll rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:endAll rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:list",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:count",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:incrementMessageCount",
+    "visibility": "internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "cycle2 independent-review regressions sessions:incrementMessageCount rejects session expiry before-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:incrementMessageCount rejects session expiry after-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original actual registration and operator/creator/currentness outcomes plus151 current boundary controls",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:incrementMemoryCount",
+    "visibility": "internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "cycle2 independent-review regressions sessions:incrementMemoryCount rejects session expiry before-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:incrementMemoryCount rejects session expiry after-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original actual registration and operator/creator/currentness outcomes plus151 current boundary controls",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "sessions:expireIdle",
+    "visibility": "internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "currentOutcomeTests": [
+      {
+        "name": "five actual internal registrations idle expiry checks every pinned target before effects and after commits",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:expireIdle rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:expireIdle rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:expireIdle rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original actual registration and operator/creator/currentness outcomes plus151 current boundary controls",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "users:get",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getVersion authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getHistory authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getVersion rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getHistory rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getVersion rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getHistory rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "users:list",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "users:count",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "users:getVersion",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:getVersion authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getVersion rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getVersion rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "users:getHistory",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:getHistory authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getHistory rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getHistory rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "users:getAtTimestamp",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "users:exists",
+    "visibility": "public",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:exists authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:exists rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:exists rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  },
+  {
+    "path": "users:deleteUserProfile",
+    "visibility": "public",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "currentOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:deleteUserProfile authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:deleteUserProfile rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:deleteUserProfile rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "coverage": "original authorized/missing identity/forged tenant handler outcomes",
+    "nativeRegistrationEvidence": "framework-registration.json: exact path/visibility/validator record; registrations.test.ts all41 assertion"
+  }
+]

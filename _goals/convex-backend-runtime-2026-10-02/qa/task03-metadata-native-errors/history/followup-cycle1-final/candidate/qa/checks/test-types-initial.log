@@ -1,0 +1,7 @@
+tests/unit/runtimeMetadataAuth/native-errors.test.ts(72,5): error TS2322: Type '() => Promise<Row | null>' is not assignable to type '() => Promise<Row>'.
+  Type 'Promise<Row | null>' is not assignable to type 'Promise<Row>'.
+    Type 'Row | null' is not assignable to type 'Row'.
+      Type 'null' is not assignable to type 'Row'.
+        Type 'null' is not assignable to type 'Record<string, unknown>'.
+tests/unit/runtimeMetadataAuth/native-errors.test.ts(86,32): error TS2344: Type 'unknown' does not satisfy the constraint 'Value'.
+tests/unit/runtimeMetadataAuth/native-errors.test.ts(87,111): error TS2344: Type 'unknown' does not satisfy the constraint 'Value'.

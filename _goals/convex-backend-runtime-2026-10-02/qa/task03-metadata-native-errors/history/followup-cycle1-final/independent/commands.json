@@ -1,0 +1,919 @@
+[
+  {
+    "name": "before-candidate-status",
+    "argv": [
+      "git",
+      "status",
+      "--porcelain=v1",
+      "--untracked-files=all"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:03:01.861427+00:00",
+    "finishedAt": "2026-10-03T13:03:01.888840+00:00",
+    "seconds": 0.027410694001446245,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "before-main-status",
+    "argv": [
+      "git",
+      "status",
+      "--porcelain=v1",
+      "--untracked-files=all"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:03:01.889254+00:00",
+    "finishedAt": "2026-10-03T13:03:01.901834+00:00",
+    "seconds": 0.012586729000759078,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "selected",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--runTestsByPath",
+      "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+      "tests/unit/runtimeMetadataAuth/registrations.test.ts",
+      "tests/unit/runtimeMetadataAuth/native-errors.test.ts",
+      "tests/unit/runtimeAuth/authority.test.ts",
+      "tests/unit/runtimeAuth/provisioning.test.ts",
+      "tests/unit/runtimeAuth/inventory.test.ts",
+      "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+      "tests/unit/runtimeWorkerAuth/governance.test.ts",
+      "tests/unit/runtimeWorkerAuth/graph.test.ts",
+      "tests/unit/runtimeWorkerClient/governance.test.ts",
+      "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts",
+      "tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts",
+      "tests/unit/auth/credentials.test.ts",
+      "--runInBand",
+      "--silent",
+      "--json",
+      "--outputFile=/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/selected.json",
+      "--cacheDirectory=/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/jest-cache"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:03:46.041533+00:00",
+    "finishedAt": "2026-10-03T13:04:32.872954+00:00",
+    "seconds": 46.83143239600031,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "auth",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/auth",
+      "--runInBand",
+      "--silent",
+      "--json",
+      "--outputFile=/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/auth.json",
+      "--cacheDirectory=/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/jest-auth-cache"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:03:56.456703+00:00",
+    "finishedAt": "2026-10-03T13:04:24.328192+00:00",
+    "seconds": 27.87149737800064,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:03:56.472780+00:00",
+    "finishedAt": "2026-10-03T13:04:14.449684+00:00",
+    "seconds": 17.97691172800114,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:03:56.482719+00:00",
+    "finishedAt": "2026-10-03T13:04:19.049387+00:00",
+    "seconds": 22.566675681999186,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "scoped-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/tsconfig.tests.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:03:56.487681+00:00",
+    "finishedAt": "2026-10-03T13:04:04.315027+00:00",
+    "seconds": 7.827386410001054,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/(runtimeMetadataAuth|runtimeAuth|runtimeWorkerAuth|runtimeWorkerClient|auth)",
+      "--listTests",
+      "--json",
+      "--runInBand",
+      "--cacheDirectory=/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/jest-discovery-cache"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:03:56.524406+00:00",
+    "finishedAt": "2026-10-03T13:03:57.443995+00:00",
+    "seconds": 0.9195931169997493,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "scoped-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeAuth.ts",
+      "convex-dev/runtimeMetadataAuth.ts",
+      "tests/unit/runtimeMetadataAuth",
+      "tests/unit/runtimeAuth/provisioning.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:03:56.566158+00:00",
+    "finishedAt": "2026-10-03T13:04:15.981850+00:00",
+    "seconds": 19.415696871001273,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "ambiguity-pruning",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/ambiguity-pruning-probe.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:04:35.340159+00:00",
+    "finishedAt": "2026-10-03T13:04:35.634885+00:00",
+    "seconds": 0.2947344610001892,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "root-lint",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js",
+      "run",
+      "lint"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:05:28.962848+00:00",
+    "finishedAt": "2026-10-03T13:06:09.977749+00:00",
+    "seconds": 41.01491219500167,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "boundary-probes",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/replays/boundary-probes.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:05:50.415556+00:00",
+    "finishedAt": "2026-10-03T13:05:51.294058+00:00",
+    "seconds": 0.8785092460020678,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "closure-controls",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/replays/closure-controls.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:05:50.415653+00:00",
+    "finishedAt": "2026-10-03T13:05:53.264372+00:00",
+    "seconds": 2.8487279399996623,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "extra-probes",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/replays/extra-probes.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:05:50.430449+00:00",
+    "finishedAt": "2026-10-03T13:05:51.201548+00:00",
+    "seconds": 0.7711128310002096,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "historical-additional",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/replays/historical-additional-probes.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:05:50.454688+00:00",
+    "finishedAt": "2026-10-03T13:05:51.355661+00:00",
+    "seconds": 0.9009808139999222,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "historical-ordinary",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/replays/historical-probes.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:05:50.477494+00:00",
+    "finishedAt": "2026-10-03T13:05:51.094801+00:00",
+    "seconds": 0.6173117840007762,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "historical-numeric",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/replays/historical-numeric-probe.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:05:50.518419+00:00",
+    "finishedAt": "2026-10-03T13:05:50.995660+00:00",
+    "seconds": 0.4772497590020066,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "registration",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/replays/registration.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:05:50.565355+00:00",
+    "finishedAt": "2026-10-03T13:05:51.283701+00:00",
+    "seconds": 0.7183434329999727,
+    "exitCode": 0,
+    "environment": {
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "ast-inventory",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/inventory.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:06:11.050081+00:00",
+    "finishedAt": "2026-10-03T13:06:11.365439+00:00",
+    "seconds": 0.31536264000169467,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "historical19-check",
+    "argv": [
+      "node",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/replays/historical-probe-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:06:11.050236+00:00",
+    "finishedAt": "2026-10-03T13:06:11.096280+00:00",
+    "seconds": 0.04605080100009218,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "root-build-private",
+    "argv": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy",
+    "startedAt": "2026-10-03T13:06:11.062444+00:00",
+    "finishedAt": "2026-10-03T13:06:20.857811+00:00",
+    "seconds": 9.795373969998764,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "npm-version",
+    "argv": [
+      "npm",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:06:11.064535+00:00",
+    "finishedAt": "2026-10-03T13:06:11.199954+00:00",
+    "seconds": 0.13543026199840824,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:06:11.068759+00:00",
+    "finishedAt": "2026-10-03T13:06:11.079606+00:00",
+    "seconds": 0.010853657997358823,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "packed-browser-contracts-private",
+    "argv": [
+      "npm",
+      "run",
+      "test:contracts"
+    ],
+    "cwd": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy",
+    "startedAt": "2026-10-03T13:06:53.571984+00:00",
+    "finishedAt": "2026-10-03T13:07:00.681743+00:00",
+    "seconds": 7.1097653600008925,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "ambiguity-pruning-with-baseline-handlers",
+    "argv": [
+      "node",
+      "--import",
+      "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/tsx/dist/loader.mjs",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/ambiguity-pruning-probe.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:06:55.454467+00:00",
+    "finishedAt": "2026-10-03T13:06:55.716207+00:00",
+    "seconds": 0.26174029699905077,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "regression-required-denial",
+    "argv": [
+      "node",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/regression-required-denial.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:07:37.815085+00:00",
+    "finishedAt": "2026-10-03T13:07:37.845603+00:00",
+    "seconds": 0.030524377998517593,
+    "exitCode": 1,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "independent-verification",
+    "argv": [
+      "python",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/verify-review.py"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:08:33.822872+00:00",
+    "finishedAt": "2026-10-03T13:08:33.833926+00:00",
+    "seconds": 0.011051461999159073,
+    "exitCode": 1,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "independent-verification-second",
+    "argv": [
+      "python",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/verify-review.py"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:08:43.662537+00:00",
+    "finishedAt": "2026-10-03T13:08:43.901144+00:00",
+    "seconds": 0.23861744799796725,
+    "exitCode": 1,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "independent-verification-final",
+    "argv": [
+      "python",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/verify-review.py"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:09:18.897661+00:00",
+    "finishedAt": "2026-10-03T13:09:19.051943+00:00",
+    "seconds": 0.15428667399828555,
+    "exitCode": 1,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "independent-verification-corrected",
+    "argv": [
+      "python",
+      "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/verify-review.py"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:09:36.531420+00:00",
+    "finishedAt": "2026-10-03T13:09:36.901322+00:00",
+    "seconds": 0.3699084030013182,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "after-candidate-status",
+    "argv": [
+      "git",
+      "status",
+      "--porcelain=v1",
+      "--untracked-files=all"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:10:03.240509+00:00",
+    "finishedAt": "2026-10-03T13:10:03.256593+00:00",
+    "seconds": 0.016082363999885274,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "after-main-status",
+    "argv": [
+      "git",
+      "status",
+      "--porcelain=v1",
+      "--untracked-files=all"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:10:03.256785+00:00",
+    "finishedAt": "2026-10-03T13:10:03.276824+00:00",
+    "seconds": 0.020050898001500173,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "final-candidate-status",
+    "argv": [
+      "git",
+      "status",
+      "--porcelain=v1",
+      "--untracked-files=all"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout",
+    "startedAt": "2026-10-03T13:13:16.055759+00:00",
+    "finishedAt": "2026-10-03T13:13:16.069850+00:00",
+    "seconds": 0.014082117999350885,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  },
+  {
+    "name": "final-main-status",
+    "argv": [
+      "git",
+      "status",
+      "--porcelain=v1",
+      "--untracked-files=all"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:13:16.070005+00:00",
+    "finishedAt": "2026-10-03T13:13:16.089952+00:00",
+    "seconds": 0.019953904000431066,
+    "exitCode": 0,
+    "environment": {
+      "PATH": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/accepted-copy/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+      "TMPDIR": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/tmp",
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local",
+      "CI": "1",
+      "GIT_OPTIONAL_LOCKS": "0",
+      "npm_config_cache": "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "npm_config_offline": "true",
+      "npm_config_userconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/user.npmrc",
+      "npm_config_globalconfig": "/tmp/task03-metadata-native-errors-review1-7MWpo4Y1/global.npmrc"
+    }
+  }
+]

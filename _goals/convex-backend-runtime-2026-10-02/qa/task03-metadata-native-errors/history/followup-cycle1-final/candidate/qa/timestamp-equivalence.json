@@ -1,0 +1,873 @@
+{
+  "method": "Compare archived cycle2 native registered handlers and frozen cycle3 handlers with the same current authority/fixture; only relative module imports are relocated in owned /tmp copies. Covers missing/no-match, null data, inclusive boundaries, version ordering distinct from timestamp ordering and duplicate timestamps.",
+  "outcomes": [
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "0",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "1000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "2000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "2999",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "3000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "4000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "5000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "Infinity",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "missing",
+      "timestamp": "NaN",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "0",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "1000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "2000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "2999",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "3000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "4000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "5000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "Infinity",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "single-null-data",
+      "timestamp": "NaN",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "0",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "1000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": "v1",
+        "timestamp": 1000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "2000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": "v1",
+        "timestamp": 1000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "2999",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": "v1",
+        "timestamp": 1000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "3000",
+      "pass": true,
+      "result": {
+        "version": 4,
+        "data": {
+          "marker": "v4"
+        },
+        "timestamp": 3000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "4000",
+      "pass": true,
+      "result": {
+        "version": 4,
+        "data": {
+          "marker": "v4"
+        },
+        "timestamp": 3000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "5000",
+      "pass": true,
+      "result": {
+        "version": 4,
+        "data": {
+          "marker": "v4"
+        },
+        "timestamp": 3000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "Infinity",
+      "pass": true,
+      "result": {
+        "version": 4,
+        "data": {
+          "marker": "v4"
+        },
+        "timestamp": 3000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "unordered-history",
+      "timestamp": "NaN",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "0",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "1000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "2000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "2999",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "3000",
+      "pass": true,
+      "result": {
+        "version": 3,
+        "data": "v3",
+        "timestamp": 3000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "4000",
+      "pass": true,
+      "result": {
+        "version": 3,
+        "data": "v3",
+        "timestamp": 3000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "5000",
+      "pass": true,
+      "result": {
+        "version": 3,
+        "data": "v3",
+        "timestamp": 3000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "Infinity",
+      "pass": true,
+      "result": {
+        "version": 3,
+        "data": "v3",
+        "timestamp": 3000,
+        "type": "note",
+        "id": "one",
+        "userId": "alice",
+        "createdAt": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "immutable",
+      "case": "duplicate-timestamps",
+      "timestamp": "NaN",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "0",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "1000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "2000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "2999",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "3000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "4000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "5000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "Infinity",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "missing",
+      "timestamp": "NaN",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "0",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "1000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "2000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "2999",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "3000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "4000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "5000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "Infinity",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": null,
+        "timestamp": 2000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "single-null-data",
+      "timestamp": "NaN",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "0",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "1000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": "v1",
+        "timestamp": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "2000",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": "v1",
+        "timestamp": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "2999",
+      "pass": true,
+      "result": {
+        "version": 1,
+        "data": "v1",
+        "timestamp": 1000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "3000",
+      "pass": true,
+      "result": {
+        "version": 4,
+        "data": {
+          "marker": "v4"
+        },
+        "timestamp": 3000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "4000",
+      "pass": true,
+      "result": {
+        "version": 4,
+        "data": {
+          "marker": "v4"
+        },
+        "timestamp": 3000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "5000",
+      "pass": true,
+      "result": {
+        "version": 4,
+        "data": {
+          "marker": "v4"
+        },
+        "timestamp": 3000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "Infinity",
+      "pass": true,
+      "result": {
+        "version": 4,
+        "data": {
+          "marker": "v4"
+        },
+        "timestamp": 3000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "unordered-history",
+      "timestamp": "NaN",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "0",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "1000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "2000",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "2999",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "3000",
+      "pass": true,
+      "result": {
+        "version": 3,
+        "data": "v3",
+        "timestamp": 3000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "4000",
+      "pass": true,
+      "result": {
+        "version": 3,
+        "data": "v3",
+        "timestamp": 3000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "5000",
+      "pass": true,
+      "result": {
+        "version": 3,
+        "data": "v3",
+        "timestamp": 3000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "Infinity",
+      "pass": true,
+      "result": {
+        "version": 3,
+        "data": "v3",
+        "timestamp": 3000
+      },
+      "writes": 0,
+      "identicalToCycle2": true
+    },
+    {
+      "module": "users",
+      "case": "duplicate-timestamps",
+      "timestamp": "NaN",
+      "pass": true,
+      "result": null,
+      "writes": 0,
+      "identicalToCycle2": true
+    }
+  ]
+}

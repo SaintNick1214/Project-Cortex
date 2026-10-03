@@ -1,0 +1,77 @@
+[
+  {
+    "requirement": "Exact Convex-verified issuer/subject; no tokenIdentifier/JWT role/tenant claim trust",
+    "status": "PASS",
+    "evidence": "runtimeAuth.ts:158-163; original authority/provisioning133 outcomes; metadata missing identity36 and forged tenant36"
+  },
+  {
+    "requirement": "Internal trusted bootstrap; immutable metadataUserId; public metadata never mints control privilege",
+    "status": "PASS",
+    "evidence": "internal native auth registrations and provisioning15; original metadata actor/profile binding tests"
+  },
+  {
+    "requirement": "Independent capabilities; admin does not imply read/write/run/tool/storage",
+    "status": "PASS",
+    "evidence": "runtimeAuth.ts materialize; metadata admin-alone test; authority54"
+  },
+  {
+    "requirement": "Exact raw tenant/optional-space grant grouping before capability/ownership/currentness pruning",
+    "status": "PASS",
+    "evidence": "runtimeAuth.ts:58-80 byte-identical; original133 retained"
+  },
+  {
+    "requirement": "Omitted selectors derive only one trusted scope; corrupt control ambiguity cannot be used as pruning",
+    "status": "FAIL",
+    "evidence": "runtimeAuth.ts:174-177 consumes newly typed boundedSingle error at207-208; ambiguity-pruning-outcomes.json has four improper actual-handler admissions"
+  },
+  {
+    "requirement": "Owner/resourceAccess own/space/tenant checks; selectors narrow authority; no orphan or owner adoption",
+    "status": "PASS except shared admission regression",
+    "evidence": "assertResourceScope and metadata owner predicates unchanged; original189 and151 boundaries; multi-grant omission fails separately"
+  },
+  {
+    "requirement": "Immutable grant ID/version, principal/membership versions, tenant/space epochs and expiry rechecks",
+    "status": "PASS",
+    "evidence": "resolveAuthorityReference byte-identical; original authority/provisioning69 and worker185;151 late-fence probes"
+  },
+  {
+    "requirement": "Pinned references enumerate exact raw grant group and retained generation present",
+    "status": "PASS",
+    "evidence": "resolveAuthorityReference:197-202 byte-identical; affected auth133"
+  },
+  {
+    "requirement": "Principal/membership/scope deletion, revocation, source tombstone fences persist; no resurrection",
+    "status": "PASS for tested pinned/single-grant contexts; FAIL for ambiguous foreground controls",
+    "evidence": "native42 duplicate control denial outcomes are single-grant; omitted-scope control regression bypasses required whole-operation denial"
+  },
+  {
+    "requirement": "New reader ambiguity uses bounded exact principal/scope/resource indexes; absent/single tombstone booleans",
+    "status": "PASS in direct/single-grant contexts; FAIL through foreground resolver composition",
+    "evidence": "native test106 asserts exact limits/selected scope and absent/single fences; independent multi-grant regression demonstrates catch interaction"
+  },
+  {
+    "requirement": "Infrastructure exceptions remain infrastructure, identical objects; final failure aborts and rolls back",
+    "status": "PASS",
+    "evidence": "native12 pre-effect errors+3 final WRITE-only rollback outcomes; no new generic catch"
+  },
+  {
+    "requirement": "Pure policy/resolvers/pruning/internal provisioning/registrations unchanged in source",
+    "status": "PASS for byte preservation; semantic composition FAIL",
+    "evidence": "verification.json source prefix/suffix assertions; new error class exercises existing catch"
+  },
+  {
+    "requirement": "Original133 auth outcomes/names/multiplicity and portable inventory64; compatibility change only",
+    "status": "PASS",
+    "evidence": "selected.json auth133; literal-original-auth120/133 retained; diff adds take and static-envelope expectation with no-new-write"
+  },
+  {
+    "requirement": "Additive schema/generated SDK/browser-safe source contracts and host config unchanged",
+    "status": "PASS",
+    "evidence": "3453 protected source/QA records; actual ES2021+DOM types; root/scoped types/lint; private packed/browser contract"
+  },
+  {
+    "requirement": "Transcript/share/storage/tools/callback contracts and actual managed JWT/subscriptions remain downstream",
+    "status": "PENDING OUTSIDE BOUNDED REVIEW",
+    "evidence": "original Task03/03A contracts; no services/bytes/callback/UI executed"
+  }
+]
