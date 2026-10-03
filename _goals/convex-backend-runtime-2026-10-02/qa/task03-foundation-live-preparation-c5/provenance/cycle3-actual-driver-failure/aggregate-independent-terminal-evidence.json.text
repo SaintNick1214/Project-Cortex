@@ -1,0 +1,66 @@
+{
+  "observedAt": "2026-10-03T22:35:12.268891+00:00",
+  "journalMatchesTerminalEvidence": true,
+  "journalRows": 529,
+  "phaseStatusCounts": [
+    {
+      "phase": "rpc-observation",
+      "status": "OBSERVED",
+      "rows": 264
+    },
+    {
+      "phase": "uniform-unavailability",
+      "status": "PASS",
+      "rows": 262
+    },
+    {
+      "phase": "authorization",
+      "status": "PASS",
+      "rows": 1
+    },
+    {
+      "phase": "authorization",
+      "status": "FAIL",
+      "rows": 1
+    },
+    {
+      "phase": "terminal",
+      "status": "FAIL",
+      "rows": 1
+    }
+  ],
+  "failures": [
+    {
+      "observedAt": "2026-10-03T22:33:10.985Z",
+      "id": "negative:forgedJWT:a2a:send",
+      "paths": [
+        "a2a:send"
+      ],
+      "phase": "authorization",
+      "identityAlias": "forgedJWT",
+      "expectedCode": "FORBIDDEN_OR_UNAUTHENTICATED",
+      "status": "FAIL",
+      "failureClass": "assertion",
+      "observedCode": "UNRECOGNIZED",
+      "noEffect": false
+    },
+    {
+      "observedAt": "2026-10-03T22:33:12.414Z",
+      "id": "qualification-final",
+      "paths": [],
+      "phase": "terminal",
+      "status": "FAIL",
+      "cleanupComplete": true
+    }
+  ],
+  "final": {
+    "observedAt": "2026-10-03T22:33:12.414Z",
+    "id": "qualification-final",
+    "paths": [],
+    "phase": "terminal",
+    "status": "FAIL",
+    "cleanupComplete": true
+  },
+  "frozenFiles": 233,
+  "finalFrozenMismatches": []
+}
