@@ -1,0 +1,353 @@
+{
+  "scope": "NATIVE_PUBLIC_ARRAY_BEARING_RESOURCE_AUDIT",
+  "arrayBearingPublicPaths": 42,
+  "classificationCounts": {
+    "guarded-unavailable": 12,
+    "scoped-array-input": 27,
+    "owned-resource-batch-corrected": 2,
+    "single-resource-nonbatch": 1
+  },
+  "correctedPaths": [
+    "facts:deleteByIds",
+    "memories:deleteByIds"
+  ],
+  "notServiceAcceptance": true,
+  "rows": [
+    {
+      "path": "a2a:broadcast",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "a38ecb526b5c86a1c2b0de0d69f2d7df056286b912aefdb9532dbd621cc06bc7",
+      "source": "convex-dev/a2a.ts",
+      "sourceSha256": "d5f3c93db358f10635bb451f69dae779fd1eb11e1d52aa0a16912dbfc405f7c1"
+    },
+    {
+      "path": "a2a:getConversation",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "20d1daa70d5253646c069a43c9fb710c9860fb36c18a6f0db6cfc7c56cf8d92c",
+      "source": "convex-dev/a2a.ts",
+      "sourceSha256": "d5f3c93db358f10635bb451f69dae779fd1eb11e1d52aa0a16912dbfc405f7c1"
+    },
+    {
+      "path": "agents:updateMany",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "84212d3f994035d3c4162ad82effe2daee1760ad5f683087096c6e4e9cd244fb",
+      "source": "convex-dev/agents.ts",
+      "sourceSha256": "2f62a62e8ae23e84542324fc2201335eb99ca36ae7ed7c9a3173c352e3e3e17d"
+    },
+    {
+      "path": "agents:unregisterMany",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "a31eafb6fe61c04012b8351d8e90ebccfa69a47dafe760556c9380b2e07e1654",
+      "source": "convex-dev/agents.ts",
+      "sourceSha256": "2f62a62e8ae23e84542324fc2201335eb99ca36ae7ed7c9a3173c352e3e3e17d"
+    },
+    {
+      "path": "artifacts:create",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "b5987b5f58ebbc08fcdd6ad19fd17cec8924ac0e4a6d373413b0a042b879d03d",
+      "source": "convex-dev/artifacts.ts",
+      "sourceSha256": "3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3"
+    },
+    {
+      "path": "artifacts:update",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "56274c5d76f598e8558adc81b9a1522a6349ba3ccbf2e6ab859716be8623b8ba",
+      "source": "convex-dev/artifacts.ts",
+      "sourceSha256": "3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3"
+    },
+    {
+      "path": "artifacts:list",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "79dc2d301acaeaff4890f8e30df77b027fc3f629adc827191a059ee8dd58779c",
+      "source": "convex-dev/artifacts.ts",
+      "sourceSha256": "3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3"
+    },
+    {
+      "path": "attachments:removeMany",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "181565b9f8c45d7fd77a929e4235e45b113c624968e7b6e4b281eeae4c55bc1e",
+      "source": "convex-dev/attachments.ts",
+      "sourceSha256": "d76ae987e6f778023c95231dd4b92d19f02232c694128a4f46bbef825fb921f3"
+    },
+    {
+      "path": "attachments:getByIds",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "181565b9f8c45d7fd77a929e4235e45b113c624968e7b6e4b281eeae4c55bc1e",
+      "source": "convex-dev/attachments.ts",
+      "sourceSha256": "d76ae987e6f778023c95231dd4b92d19f02232c694128a4f46bbef825fb921f3"
+    },
+    {
+      "path": "contexts:create",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "d7809015769fd692e0e5841a70f0ad64cc731b5fce2c34f36f0144ac64152c8b",
+      "source": "convex-dev/contexts.ts",
+      "sourceSha256": "facb2f35168ab2243d59b88cc39ac6bafba2044a3fafcbc751f4a323c47367e2"
+    },
+    {
+      "path": "conversationSnapshots:create",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "468307b98c85608f317c86393ea0b1e30701efab3030a74190aadc82391e2a51",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "sourceSha256": "7af4e9ad27d7fd5e1883e57ed560fbc509c4c10d3454ee2fe578edc790e6c1ac"
+    },
+    {
+      "path": "conversations:create",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "a14889ac9a3f8387c17225f765535e72b31f5e1aba0b4cdd6ba9fc7dc49a254b",
+      "source": "convex-dev/conversations.ts",
+      "sourceSha256": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586"
+    },
+    {
+      "path": "conversations:deleteByIds",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "79b23a71e1925325292f87631c9afd21fda9594d216da46f339458c15c3e75fc",
+      "source": "convex-dev/conversations.ts",
+      "sourceSha256": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586"
+    },
+    {
+      "path": "conversations:getMessagesByIds",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "6c44685427725ec4459abc01bbe0134fb7ece902ece3689479e78078342faa72",
+      "source": "convex-dev/conversations.ts",
+      "sourceSha256": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586"
+    },
+    {
+      "path": "conversations:getOrCreate",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "8856047f6d11c144b640c4fb5a1cb4c7e83cc29152ffd62e4f6356ec05e3b8a6",
+      "source": "convex-dev/conversations.ts",
+      "sourceSha256": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586"
+    },
+    {
+      "path": "conversations:findConversation",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "41070b2d9eca0650a2d8a6e412ec1d9e88761831f3bae98ae1bba71fb803772b",
+      "source": "convex-dev/conversations.ts",
+      "sourceSha256": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586"
+    },
+    {
+      "path": "conversations:getHistory",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "aea838d51f8ea49460cad076f21f9524483da46c3bceb39b5bea0ae88c232b49",
+      "source": "convex-dev/conversations.ts",
+      "sourceSha256": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586"
+    },
+    {
+      "path": "conversations:exportConversations",
+      "classification": "guarded-unavailable",
+      "note": "Fixed guarded closure runs before unsupported resource work.",
+      "nativeArgsSha256": "913a0de20352ef1ae74b3d3313c81072adf089d37b4bee5de11ca4b57c9112a4",
+      "source": "convex-dev/conversations.ts",
+      "sourceSha256": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586"
+    },
+    {
+      "path": "facts:store",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "d6b57b6ebe5bd6716a5a743014532b142b643416b135cac7fad3b254aa69a488",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:update",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "5d494ed14c61478848822c949d0c0f97b5cf66e2f1867fafb976ad4578f005ec",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:updateInPlace",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "e7667405a8a0fcdb34b8afe39fc608330d466c2b58974215f1cc5a7b061c88b1",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:list",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "45f82f3dc30fd109b41b4c85ccd8cf466925a68a0d7c0553ff08c26062227e3e",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:count",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "50d87c0860017fce9ffbba43948ce204752d0f006beb05d044baad4728016b60",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:search",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "86af3943c316e7eb49a0069de3b31b6bcc2352199d15bdeddad68b1a108effe9",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:semanticSearch",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "35c95e86e754ee8139e69c51502f539fbd734f164d5942cea5327b31922aa586",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:queryBySubject",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "a72353a29055bfe36a99982412eed394cc4a8a1b72ff39e8b0bc669bfdafd060",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:queryByRelationship",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "4a36c1192343221d1761bbbc6ba0d1d8cbd41eec08af775dfa2f4eec351b8190",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:consolidate",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "d0a94323e0324e00181b08c3eb0a61d4970a9ae585beae13bbb42b779d87d6c4",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "facts:deleteByIds",
+      "classification": "owned-resource-batch-corrected",
+      "note": "Only resource-ID array, no scope args; caller own scope admits empty no-op. Bind nonempty actual reader-owned logical resource.",
+      "nativeArgsSha256": "8fa6b010f5512dc2dba42ff604ca488a1af7f3fc9c7696fcadf280c1f9f2c8a3",
+      "source": "convex-dev/facts.ts",
+      "sourceSha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "path": "governance:setPolicy",
+      "classification": "scoped-array-input",
+      "note": "Policy/options/override arrays are nested policy fields, not resource-ID batches. Generated explicit tenantId and publicAdmin guard the operation.",
+      "nativeArgsSha256": "c99f4aace844b6a0010c7881c3a13ba232e31f45b038da8874923d10784f2874",
+      "source": "convex-dev/governance.ts",
+      "sourceSha256": "262c2f892bdc577b44b53dc1bff35ee7c8cebc55937b9f87469938e0b5c4e668"
+    },
+    {
+      "path": "governance:setAgentOverride",
+      "classification": "scoped-array-input",
+      "note": "Policy/options/override arrays are nested policy fields, not resource-ID batches. Generated explicit tenantId and publicAdmin guard the operation.",
+      "nativeArgsSha256": "23d02e006c1b715520bfa5cb640ae3915d74811bf2505a30bc2ca624e6bbdc3c",
+      "source": "convex-dev/governance.ts",
+      "sourceSha256": "262c2f892bdc577b44b53dc1bff35ee7c8cebc55937b9f87469938e0b5c4e668"
+    },
+    {
+      "path": "governance:simulate",
+      "classification": "scoped-array-input",
+      "note": "Policy/options/override arrays are nested policy fields, not resource-ID batches. Generated explicit tenantId and publicAdmin guard the operation.",
+      "nativeArgsSha256": "feb6e4982cea382906dbb329f775846d57b5b59dd88df4b6f32668b8e1abeebe",
+      "source": "convex-dev/governance.ts",
+      "sourceSha256": "262c2f892bdc577b44b53dc1bff35ee7c8cebc55937b9f87469938e0b5c4e668"
+    },
+    {
+      "path": "memories:store",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "ab5f3b4fc05805f68992d79b30cbdfe534e721d258cf4e0fafadcb5628b24b08",
+      "source": "convex-dev/memories.ts",
+      "sourceSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4"
+    },
+    {
+      "path": "memories:storePartialMemory",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "7444eae608bae8505aa8b67037112a53dcb1883443fd4e7f5ab7b91dd5677c73",
+      "source": "convex-dev/memories.ts",
+      "sourceSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4"
+    },
+    {
+      "path": "memories:finalizePartialMemory",
+      "classification": "single-resource-nonbatch",
+      "note": "finalizePartialMemory takes one memoryId; array is optional embedding, not resource batch.",
+      "nativeArgsSha256": "9252a6f9b11e96fe214bbdc2489796b5d8bd91765d68fba31acc6ad09ce5f73f",
+      "source": "convex-dev/memories.ts",
+      "sourceSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4"
+    },
+    {
+      "path": "memories:search",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "0f0c77ce1e7e2278ff7e4f258ed7af1b2d356986d1cd6c6806abcf22adb2394c",
+      "source": "convex-dev/memories.ts",
+      "sourceSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4"
+    },
+    {
+      "path": "memories:update",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "1f4d0144588593c6e002e46cba9d4d77219411c9599c53ac5a8d3ce182e8a833",
+      "source": "convex-dev/memories.ts",
+      "sourceSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4"
+    },
+    {
+      "path": "memories:deleteByIds",
+      "classification": "owned-resource-batch-corrected",
+      "note": "Only resource-ID array, no scope args; caller own scope admits empty no-op. Bind nonempty actual reader-owned logical resource.",
+      "nativeArgsSha256": "72f878a9cc5fc4c0b54db8abd6f82d72cf1b3ecd04cbd69bba74b5b7f7a6958a",
+      "source": "convex-dev/memories.ts",
+      "sourceSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4"
+    },
+    {
+      "path": "memories:updateMany",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "1255a2a7f081a87714524b7b47bf0b7893ae81144182290df5e1774d0bf4465b",
+      "source": "convex-dev/memories.ts",
+      "sourceSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4"
+    },
+    {
+      "path": "memorySpaces:register",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "c3361f1ab4bb186252b66f807eedaff6c6e09dfc480e3746158acfbc333076cc",
+      "source": "convex-dev/memorySpaces.ts",
+      "sourceSha256": "cabb138c578220ee3b4b56fd16bf466da9e92e9508f8485ce1582fd3b29eee2c"
+    },
+    {
+      "path": "memorySpaces:updateParticipants",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "b69abc998699c6f0a7fc01c6e36a96834d3a6d4cdc0a6ecfbb9c6e6538fa90ab",
+      "source": "convex-dev/memorySpaces.ts",
+      "sourceSha256": "cabb138c578220ee3b4b56fd16bf466da9e92e9508f8485ce1582fd3b29eee2c"
+    },
+    {
+      "path": "mutable:transaction",
+      "classification": "scoped-array-input",
+      "note": "Generated scope selectors target reader tenant/space; array input is not a scope-free resource-ID batch.",
+      "nativeArgsSha256": "afd2bbd70f2d6bf318998e86e59b5342ecde4faf94bbd7201abd1b5f32620f6c",
+      "source": "convex-dev/mutable.ts",
+      "sourceSha256": "14feb91094f31b9f72cdab9ecb6faa5025a27972f234b1129d4c77ee4ee037e5"
+    }
+  ]
+}
