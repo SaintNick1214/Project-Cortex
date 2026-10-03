@@ -34,6 +34,7 @@ export default [
       "dev-docs/**/*", // Exclude dev documentation
       "Internal Docs/**/*", // Exclude internal docs
       "work/**/*", // Private scratch files and generated qualification probes
+      "_goals/**/qa/**/*", // Frozen evidence and standalone fixtures use their scoped lint configs
     ],
   },
 

@@ -1,0 +1,16 @@
+{"name":"memories.store","mode":"returned-issuer-getter","syscalls":0}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: memories.store returned-issuer-getter injection reached
+    at <anonymous> (/workspace/Project-Cortex/work/resume/sdk-safety-judge/mf/probe.mts:14:86) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

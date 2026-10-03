@@ -1,0 +1,29 @@
+[
+  {
+    "command": "CONVEX_URL=https://example.convex.cloud node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns='tests/unit/runtime(RegistryClient|HistoryClient|AssetClient)' --runInBand --forceExit --json --outputFile=work/resume/sdk-safety-judge/tests.json",
+    "exitCode": 0,
+    "passed": 160,
+    "skipped": 0
+  },
+  {
+    "command": "node work/resume/sdk-safety-judge/preservation.mjs",
+    "exitCode": 0
+  },
+  {
+    "command": "node node_modules/tsx/dist/cli.mjs work/resume/sdk-safety-judge/probe.mts",
+    "exitCode": 0,
+    "freshControls": 16
+  },
+  {
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "exitCode": 0
+  },
+  {
+    "command": "node node_modules/eslint/bin/eslint.js src/agents/index.ts src/agents/statistics.ts src/memorySpaces/index.ts src/types/index.ts src/facts/history.ts src/artifacts/index.ts src/attachments/index.ts src/assets/errors.ts src/index.ts tests/unit/runtimeRegistryClient tests/unit/runtimeHistoryClient tests/unit/runtimeAssetClient --max-warnings 0",
+    "exitCode": 0
+  },
+  {
+    "command": "esbuild asset error leaf browser bundle + actual dist ESM/CJS and declaration checks (tool inline JS)",
+    "exitCode": 0
+  }
+]

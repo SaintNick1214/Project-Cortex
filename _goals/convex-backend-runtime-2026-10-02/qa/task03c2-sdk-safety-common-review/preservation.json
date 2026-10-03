@@ -1,0 +1,37 @@
+{
+  "task03c2-registry-stats-client-repairHashes": 6,
+  "task03c2-asset-client-bridgeHashes": 5,
+  "historyPreserved": {
+    "unchangedServiceMembers": [
+      "constructor",
+      "executeWithResilience",
+      "getHistory",
+      "getEvent",
+      "getChanges",
+      "countByAction",
+      "getSupersessionChain",
+      "getActivitySummary"
+    ],
+    "unchangedFiveSignatures": [
+      "log",
+      "deleteByFactId",
+      "deleteByUserId",
+      "deleteByMemorySpace",
+      "purgeOldEvents"
+    ],
+    "sourceSha256": "3702193d07c9817ae5b3744ff7e13b948a0e4f97a1999c9a2161b419fdbd9c84",
+    "testSha256": "0fbe56b10d86818570789ffb9db549b7a4f0f7cd77e6272190249f52222bfdf4"
+  },
+  "artifactsOtherBytes": true,
+  "attachmentsOtherBytes": true,
+  "repairOnlyTwoFilesChanged": true,
+  "agentChanges": [
+    "register",
+    "get",
+    "list",
+    "update",
+    "export",
+    "getAgentStats"
+  ],
+  "original39Diff": "--- _goals/convex-backend-runtime-2026-10-02/qa/task03c2-registry-stats-client-bridge/prior/tests/unit/runtimeRegistryClient/registry-bridge.test.ts\t2026-10-03 20:18:12.739208779 +0000\n+++ tests/unit/runtimeRegistryClient/registry-bridge.test.ts\t2026-10-03 20:18:12.741367790 +0000\n@@ -17,7 +17,6 @@\n   status: \"active\", registeredAt: 10, updatedAt: 20,\n } satisfies Exclude<RegisterResult, null | { accepted: true }>;\n const receipt = { accepted: true, resourceType: \"agents\", resourceId: \"server-agent\" } satisfies Extract<RegisterResult, { accepted: true }>;\n-const stats = { totalMemories: 2, totalConversations: 3, totalFacts: 4, memorySpacesActive: 1 };\n \n function fixture(mode: \"absent\" | \"disabled\" | \"enabled\") {\n   const client = new ConvexClient(\"https://example.convex.cloud\", { disabled: true, logger: false });\n@@ -59,12 +58,12 @@\n   });\n \n   it.each([\"register\", \"update\"] as const)(\"%s maps the readable official row and runs poststeps once\", async (operation) => {\n-    current = fixture(mode); current.mutation.mockResolvedValue(row); current.query.mockResolvedValue(stats);\n+    current = fixture(mode); current.mutation.mockResolvedValue(row); current.query.mockRejectedValue(new Error(\"statistics unavailable\"));\n     const result = operation === \"register\"\n       ? await current.agents.register({ id: \"server-agent\", name: \"Input\" })\n       : await current.agents.update(\"server-agent\", { name: \"Input\" });\n-    expect(result).toEqual({ id: row.agentId, tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, name: row.name, description: undefined, metadata: row.metadata, config: row.config, status: row.status, registeredAt: row.registeredAt, updatedAt: row.updatedAt, lastActive: undefined, stats });\n-    expect(current.query).toHaveBeenCalledWith(api.agents.computeStats, { agentId: \"server-agent\" });\n+    expect(result).toEqual({ id: row.agentId, tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, name: row.name, description: undefined, metadata: row.metadata, config: row.config, status: row.status, registeredAt: row.registeredAt, updatedAt: row.updatedAt, lastActive: undefined });\n+    expect(current.query).not.toHaveBeenCalled();\n     expect(current.mutation).toHaveBeenCalledTimes(1);\n     expect(current.createNode).toHaveBeenCalledTimes(operation === \"register\" ? 1 : 0);\n   });\n"
+}

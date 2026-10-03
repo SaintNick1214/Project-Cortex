@@ -1,0 +1,413 @@
+{
+  "total": 30,
+  "supported": 20,
+  "syntheticReturnedAccessors": 10,
+  "allExpected": true,
+  "results": [
+    {
+      "name": "memories.store",
+      "mode": "healthy-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": true,
+      "rollback": false,
+      "supported": true
+    },
+    {
+      "name": "memories.store",
+      "mode": "returned-issuer-getter",
+      "reached": 1,
+      "getters": 1,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "memories.store",
+      "mode": "returned-subject-getter",
+      "reached": 1,
+      "getters": 1,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "memories.store",
+      "mode": "callback-sync-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "memories.store",
+      "mode": "callback-reject-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "memories.store",
+      "mode": "invalid-syscall-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "memories.update",
+      "mode": "healthy-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": true,
+      "rollback": false,
+      "supported": true
+    },
+    {
+      "name": "memories.update",
+      "mode": "returned-issuer-getter",
+      "reached": 1,
+      "getters": 1,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "memories.update",
+      "mode": "returned-subject-getter",
+      "reached": 1,
+      "getters": 1,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "memories.update",
+      "mode": "callback-sync-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "memories.update",
+      "mode": "callback-reject-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "memories.update",
+      "mode": "invalid-syscall-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "memories.updateMany",
+      "mode": "healthy-json",
+      "reached": 2,
+      "getters": 0,
+      "syscalls": 3,
+      "receipt": true,
+      "rollback": false,
+      "supported": true
+    },
+    {
+      "name": "memories.updateMany",
+      "mode": "returned-issuer-getter",
+      "reached": 2,
+      "getters": 2,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "memories.updateMany",
+      "mode": "returned-subject-getter",
+      "reached": 2,
+      "getters": 2,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "memories.updateMany",
+      "mode": "callback-sync-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "memories.updateMany",
+      "mode": "callback-reject-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "memories.updateMany",
+      "mode": "invalid-syscall-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "facts.store",
+      "mode": "healthy-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": true,
+      "rollback": false,
+      "supported": true
+    },
+    {
+      "name": "facts.store",
+      "mode": "returned-issuer-getter",
+      "reached": 1,
+      "getters": 1,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "facts.store",
+      "mode": "returned-subject-getter",
+      "reached": 1,
+      "getters": 1,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "facts.store",
+      "mode": "callback-sync-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "facts.store",
+      "mode": "callback-reject-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "facts.store",
+      "mode": "invalid-syscall-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "facts.update",
+      "mode": "healthy-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": true,
+      "rollback": false,
+      "supported": true
+    },
+    {
+      "name": "facts.update",
+      "mode": "returned-issuer-getter",
+      "reached": 1,
+      "getters": 1,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "facts.update",
+      "mode": "returned-subject-getter",
+      "reached": 1,
+      "getters": 1,
+      "syscalls": 1,
+      "receipt": true,
+      "rollback": false,
+      "supported": false
+    },
+    {
+      "name": "facts.update",
+      "mode": "callback-sync-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "facts.update",
+      "mode": "callback-reject-exact",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 1,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    },
+    {
+      "name": "facts.update",
+      "mode": "invalid-syscall-json",
+      "reached": 1,
+      "getters": 0,
+      "syscalls": 2,
+      "receipt": false,
+      "error": {
+        "version": 1,
+        "code": "BACKEND_OPERATION_FAILED",
+        "message": "Data operation failed.",
+        "retryable": false,
+        "outcome": "not_committed"
+      },
+      "rollback": true,
+      "supported": true
+    }
+  ]
+}

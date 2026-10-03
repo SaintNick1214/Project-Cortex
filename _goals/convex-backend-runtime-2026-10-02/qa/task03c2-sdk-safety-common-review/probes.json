@@ -1,0 +1,89 @@
+[
+  {
+    "mode": "absent",
+    "case": "actual-baseline-normalization",
+    "name": "Error",
+    "message": "MEMORY_SPACE_NOT_FOUND"
+  },
+  {
+    "mode": "absent",
+    "case": "actual-baseline-normalization",
+    "name": "Error",
+    "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}"
+  },
+  {
+    "mode": "absent",
+    "case": "single-resilience-crossing",
+    "calls": 1,
+    "exec": 0
+  },
+  {
+    "mode": "absent",
+    "case": "all-nine-methods-poison-input-and-dependencies",
+    "touches": 0
+  },
+  {
+    "mode": "disabled",
+    "case": "actual-baseline-normalization",
+    "name": "Error",
+    "message": "MEMORY_SPACE_NOT_FOUND"
+  },
+  {
+    "mode": "disabled",
+    "case": "actual-baseline-normalization",
+    "name": "Error",
+    "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}"
+  },
+  {
+    "mode": "disabled",
+    "case": "single-resilience-crossing",
+    "calls": 1,
+    "exec": 1
+  },
+  {
+    "mode": "disabled",
+    "case": "all-nine-methods-poison-input-and-dependencies",
+    "touches": 0
+  },
+  {
+    "mode": "enabled",
+    "case": "actual-baseline-normalization",
+    "name": "Error",
+    "message": "MEMORY_SPACE_NOT_FOUND"
+  },
+  {
+    "mode": "enabled",
+    "case": "actual-baseline-normalization",
+    "name": "Error",
+    "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}"
+  },
+  {
+    "mode": "enabled",
+    "case": "single-resilience-crossing",
+    "calls": 1,
+    "exec": 1
+  },
+  {
+    "mode": "enabled",
+    "case": "all-nine-methods-poison-input-and-dependencies",
+    "touches": 0
+  },
+  {
+    "case": "wrapper-accessor",
+    "field": "message",
+    "hits": 0
+  },
+  {
+    "case": "wrapper-accessor",
+    "field": "name",
+    "hits": 0
+  },
+  {
+    "case": "wrapper-accessor",
+    "field": "Symbol(ConvexError)",
+    "hits": 0
+  },
+  {
+    "case": "revoked-proxy-rejected"
+  }
+]

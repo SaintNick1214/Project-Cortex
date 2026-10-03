@@ -1,0 +1,38 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  {
+    code: 'BACKEND_OPERATION_FAILED',
++   message: 'Data operation failed.',
+-   message: 'Operation failed',
+    outcome: 'not_committed',
+    retryable: false,
+    version: 1
+  }
+
+    at <anonymous> (/workspace/Project-Cortex/work/resume/sdk-safety-judge/mf/probe.mts:15:183) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    version: 1,
+    code: 'BACKEND_OPERATION_FAILED',
+    message: 'Data operation failed.',
+    retryable: false,
+    outcome: 'not_committed'
+  },
+  expected: {
+    version: 1,
+    code: 'BACKEND_OPERATION_FAILED',
+    message: 'Operation failed',
+    retryable: false,
+    outcome: 'not_committed'
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
