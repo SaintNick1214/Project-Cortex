@@ -11,7 +11,6 @@
  * - Graph database integration
  */
 
-import { AssetCapabilityUnavailableError } from "../assets/errors";
 import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
@@ -1004,12 +1003,21 @@ export class ArtifactsAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /**
-   * Asset upload and delivery require a qualified authenticated backend capability.
-   * This intermediate SDK rejects with AssetCapabilityUnavailableError before
-   * transport or file processing; no bearer URL or upload result is returned.
-   * Future support uses bounded authenticated Convex upload and delivery.
+   * Upload a file and attach it to an artifact
    *
-   * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
+   * Handles the full upload flow: generates upload URL, uploads file,
+   * and attaches the reference to the artifact.
+   *
+   * @example
+   * ```typescript
+   * const artifact = await cortex.artifacts.uploadFile({
+   *   artifactId: 'art-abc123',
+   *   file: imageBlob,
+   *   filename: 'diagram.png',
+   *   mimeType: 'image/png',
+   * });
+   * console.log(artifact.attachedFiles.length); // 1
+   * ```
    */
   async uploadFile(params: {
     artifactId: string;
@@ -1030,21 +1038,94 @@ export class ArtifactsAPI {
     version: number;
     updatedAt: number;
   }> {
-    void params;
-    throw new AssetCapabilityUnavailableError();
+    // Client-side validation
+    validateArtifactId(params.artifactId);
+    validateArtifactIdFormat(params.artifactId);
+
+    try {
+      // Step 1: Generate upload URL
+      const { uploadUrl } = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.artifacts.generateArtifactUploadUrl, {
+            artifactId: params.artifactId,
+            mimeType: params.mimeType,
+            filename: params.filename,
+            tenantId: this.authContext?.tenantId,
+          }),
+        "artifacts:generateUploadUrl",
+      );
+
+      // Step 2: Upload the file
+      const response = await fetch(uploadUrl as string, {
+        method: "POST",
+        headers: { "Content-Type": params.mimeType },
+        body: params.file,
+      });
+
+      if (!response.ok) {
+        throw new Error(`File upload failed: ${response.statusText}`);
+      }
+
+      // Get the storageId from the response
+      const { storageId } = (await response.json()) as { storageId: string };
+
+      // Step 3: Complete the upload with file reference
+      const result = await this.executeWithResilience(
+        () =>
+          this.client.mutation(api.artifacts.completeArtifactUpload, {
+            artifactId: params.artifactId,
+            storageId: storageId as unknown as import("convex/values").GenericId<"_storage">,
+            mimeType: params.mimeType,
+            size: params.file.size,
+            originalFilename: params.filename,
+            tenantId: this.authContext?.tenantId,
+          }),
+        "artifacts:completeUpload",
+      );
+
+      return result as {
+        success: boolean;
+        artifactId: string;
+        fileRef: {
+          storageId: string;
+          mimeType: string;
+          size: number;
+          checksum?: string;
+          originalFilename?: string;
+        };
+        version: number;
+        updatedAt: number;
+      };
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**
-   * Asset upload and delivery require a qualified authenticated backend capability.
-   * This intermediate SDK rejects with AssetCapabilityUnavailableError before
-   * transport or file processing; no bearer URL or upload result is returned.
-   * Future support uses bounded authenticated Convex upload and delivery.
+   * Get a signed URL for an attached file
    *
-   * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
+   * @example
+   * ```typescript
+   * const url = await cortex.artifacts.getFileUrl('art-abc123', 'file-xyz');
+   * // Use url to display or download the file
+   * ```
    */
   async getFileUrl(artifactId: string): Promise<string | null> {
-    void artifactId;
-    throw new AssetCapabilityUnavailableError();
+    // Client-side validation
+    validateArtifactId(artifactId);
+    validateArtifactIdFormat(artifactId);
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.artifacts.getArtifactFileUrl, {
+          artifactId,
+          tenantId: this.authContext?.tenantId,
+        }),
+      "artifacts:getFileUrl",
+    );
+
+    const fileResult = result as { url: string } | null;
+    return fileResult?.url ?? null;
   }
 
   /**

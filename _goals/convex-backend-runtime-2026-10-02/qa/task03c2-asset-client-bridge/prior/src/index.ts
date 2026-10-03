@@ -870,5 +870,3 @@ export type {
 
 export { AgentRegistryWriteReceiptError, AgentRegistryCapabilityError, AgentRegistryCommittedResultError } from "./agents";
 export type { AgentRegistryWriteReceipt, AgentRegistryScope } from "./agents";
-
-export { AssetCapabilityUnavailableError } from "./assets/errors";

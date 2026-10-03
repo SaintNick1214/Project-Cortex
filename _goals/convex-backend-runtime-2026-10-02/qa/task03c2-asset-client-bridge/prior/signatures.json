@@ -1,0 +1,6 @@
+{
+  "src/artifacts/index.ts:uploadFile": "  async uploadFile(params: {\n    artifactId: string;\n    file: Blob;\n    filename: string;\n    mimeType: string;\n    metadata?: Record<string, unknown>;\n  }): Promise<{\n    success: boolean;\n    artifactId: string;\n    fileRef: {\n      storageId: string;\n      mimeType: string;\n      size: number;\n      checksum?: string;\n      originalFilename?: string;\n    };\n    version: number;\n    updatedAt: number;\n  }> {",
+  "src/artifacts/index.ts:getFileUrl": "  async getFileUrl(artifactId: string): Promise<string | null> {",
+  "src/attachments/index.ts:generateUploadUrl": "  async generateUploadUrl(): Promise<UploadUrlResult> {",
+  "src/attachments/index.ts:getUrl": "  async getUrl(attachmentId: string): Promise<string | null> {"
+}
