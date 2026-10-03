@@ -1,0 +1,41 @@
+import { it, expect, jest } from '@jest/globals';
+import { ConvexError, convexToJson, type Value } from 'convex/values';
+import { fixture } from '../../../tests/unit/runtimeRegistryAuth/fixture';
+import { runtimeAssetUnavailable } from '../../../convex-dev/runtimeAssetUnavailableAuth';
+const forbidden = () => new ConvexError({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'});
+const scope = {tenantId:'tenant-a',memorySpaceId:'space-a'};
+async function check(f:ReturnType<typeof fixture>, code:string) {
+ let result:unknown; try { await runtimeAssetUnavailable(f.ctx,'storage:read',scope); } catch(e){result=e;}
+ expect(result).toBeInstanceOf(ConvexError);
+ expect((result as ConvexError<Value>).data).toEqual({version:1,code,message:code==='REGISTRY_OPERATION_FAILED'?'Registry operation failed':code==='CAPABILITY_UNAVAILABLE'?'Asset capability unavailable.':'Access denied or invalid registry input',retryable:false,outcome:code==='REGISTRY_OPERATION_FAILED'?'failed':'not_dispatched'});
+ expect(JSON.stringify((result as ConvexError<Value>).data)).not.toContain('PRIVATE'); expect(f.db.writes).toBe(0);
+}
+for (const trap of ['getter','descriptor','ownKeys','prototype','then'] as const) it('actual get callback '+trap+' error is opaque',async()=>{
+ const f=fixture(['storage:read']); const original=f.db.get.bind(f.db); let hits=0;
+ f.db.get=async(table,id)=>{const row=await original(table,id); if(table!=='runtimeAuthPrincipals'||!row)return row;
+ if(trap==='getter')return Object.defineProperty({...row},'version',{enumerable:true,get(){hits++;throw forbidden();}});
+ return new Proxy(row,{get(t,k,r){if(trap==='then'&&k==='then'){hits++;throw forbidden();}return Reflect.get(t,k,r);},getOwnPropertyDescriptor(t,k){if(trap==='descriptor'){hits++;throw forbidden();}return Reflect.getOwnPropertyDescriptor(t,k);},ownKeys(t){if(trap==='ownKeys'){hits++;throw forbidden();}return Reflect.ownKeys(t);},getPrototypeOf(t){if(trap==='prototype'){hits++;throw forbidden();}return Reflect.getPrototypeOf(t);}});
+ };
+ await check(f,'REGISTRY_OPERATION_FAILED');expect(hits).toBeGreaterThan(0);
+});
+for(const location of ['auth','query','get','normalizeId'] as const)it('exact ordinary forbidden callback '+location+' cannot prune',async()=>{
+ const f=fixture(['storage:read']);
+ if(location==='auth')f.ctx.auth.getUserIdentity=async()=>{throw forbidden();};
+ if(location==='query')f.db.query=()=>{throw forbidden();};
+ if(location==='get')f.db.get=async()=>{throw forbidden();};
+ if(location==='normalizeId')f.db.normalizeId=()=>{throw forbidden();};
+ await check(f,'REGISTRY_OPERATION_FAILED');
+});
+for(const trap of ['descriptor','then','issuerGetter'] as const)it('returned identity '+trap+' errors stay opaque',async()=>{
+ const f=fixture(['storage:read']);let hits=0;const identity={issuer:'https://host.test',subject:'user-a'};
+ if(trap==='issuerGetter')Object.defineProperty(identity,'issuer',{get(){hits++;throw forbidden();}});
+ f.ctx.auth.getUserIdentity=async()=>new Proxy(identity,{getOwnPropertyDescriptor(t,k){if(trap==='descriptor'){hits++;throw forbidden();}return Reflect.getOwnPropertyDescriptor(t,k);},get(t,k,r){if(trap==='then'&&k==='then'){hits++;throw forbidden();}return Reflect.get(t,k,r);}});
+ await check(f,'REGISTRY_OPERATION_FAILED');expect(hits).toBe(trap==='issuerGetter'?0:1);
+});
+it('codec actually executes ordinary enumerable accessors once and captures data',()=>{let hits=0;const row=Object.defineProperty({},'version',{enumerable:true,get(){hits++;return 1;}});expect(convexToJson(row)).toEqual({version:1});expect(hits).toBe(1);});
+for(const variant of ['principal','membership','grant','scope','expired'] as const)it('final sweep '+variant+' rejects',async()=>{
+ const f=fixture(['storage:read']);let reads=0;
+ f.db.beforeRead=table=>{if(table==='runtimeAuthPrincipals'&&++reads===3){if(variant==='principal')f.principal.revokedAt=1;if(variant==='membership')f.membership.revokedAt=1;if(variant==='grant')f.grant.revokedAt=1;if(variant==='scope')f.db.table('runtimeAuthScopes')[1].epoch=2;if(variant==='expired')f.grant.expiresAt=0;}};
+ await check(f,'FORBIDDEN');expect(reads).toBe(3);
+});
+it('expiry after final await is independently denied',async()=>{const f=fixture(['storage:read']);let now=1000;f.grant.expiresAt=1001;let reads=0;const clock=jest.spyOn(Date,'now').mockImplementation(()=>now);f.db.beforeRead=table=>{if(table==='runtimeAuthTombstones'&&++reads===6)now=1001;};try{await check(f,'FORBIDDEN');expect(reads).toBe(6);}finally{clock.mockRestore();}});

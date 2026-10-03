@@ -1,0 +1,30 @@
+(node:29028) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS work/resume/asset-judge/probes.test.ts (5.943 s)
+  ✓ actual get callback getter error is opaque (7 ms)
+  ✓ actual get callback descriptor error is opaque (2 ms)
+  ✓ actual get callback ownKeys error is opaque (1 ms)
+  ✓ actual get callback prototype error is opaque (2 ms)
+  ✓ actual get callback then error is opaque (1 ms)
+  ✓ exact ordinary forbidden callback auth cannot prune (1 ms)
+  ✓ exact ordinary forbidden callback query cannot prune
+  ✓ exact ordinary forbidden callback get cannot prune (1 ms)
+  ✓ exact ordinary forbidden callback normalizeId cannot prune
+  ✓ returned identity descriptor errors stay opaque (1 ms)
+  ✓ returned identity then errors stay opaque (1 ms)
+  ✓ returned identity issuerGetter errors stay opaque (1 ms)
+  ✓ codec actually executes ordinary enumerable accessors once and captures data
+  ✓ final sweep principal rejects (2 ms)
+  ✓ final sweep membership rejects (1 ms)
+  ✓ final sweep grant rejects (1 ms)
+  ✓ final sweep scope rejects (1 ms)
+  ✓ final sweep expired rejects (1 ms)
+  ✓ expiry after final await is independently denied (3 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   0 total
+Time:        6.196 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation-review/probes.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

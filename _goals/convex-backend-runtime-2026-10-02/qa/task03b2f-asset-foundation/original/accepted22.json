@@ -1,0 +1,311 @@
+[
+  {
+    "path": "artifacts:create",
+    "builder": "mutation",
+    "declaration": "export const create = mutation({\n  args: {\n    artifactId: v.optional(v.string()), // Auto-generate if not provided\n    memorySpaceId: v.string(), // Required - memory space isolation\n    participantId: v.optional(v.string()), // Hive Mode tracking\n    tenantId: v.optional(v.string()), // Multi-tenancy\n    userId: v.optional(v.string()), // GDPR linkage\n\n    // Content (see 00-unified-specification.md for canonical kinds)\n    kind: v.optional(artifactKindValidator), // Default: \"text\"\n    title: v.optional(v.string()),\n    content: v.string(),\n    language: v.optional(v.string()),\n    mimeType: v.optional(v.string()),\n\n    // Initial streaming state (default: draft)\n    streamingState: v.optional(streamingStateValidator),\n\n    // Conversation linkage\n    conversationRef: v.optional(\n      v.object({\n        conversationId: v.string(),\n        messageId: v.optional(v.string()),\n      }),\n    ),\n\n    // Display\n    description: v.optional(v.string()),\n\n    // Metadata & tags\n    metadata: v.optional(v.any()),\n    tags: v.optional(v.array(v.string())),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n    const now = Date.now();\n    const artifactId = args.artifactId ?? `art-${now}-${Math.random().toString(36).substring(2, 11)}`;\n    if (!artifactId) artifactDeny(\"INVALID_ARGUMENT\");\n    await operation.collision(artifactId);\n    const artifact = await operation.insert({\n      artifactId, tenantId: operation.authority.tenantId, memorySpaceId: operation.authority.memorySpaceId,\n      ownerPrincipalId: operation.authority.principalId, lastActorPrincipalId: operation.authority.principalId,\n      userId: operation.authority.userId, participantId: args.participantId,\n      kind: args.kind ?? \"text\", kindConfig: args.language || args.mimeType\n        ? { language: args.language, mimeType: args.mimeType } : undefined,\n      streamingState: args.streamingState ?? \"draft\", title: args.title ?? \"Untitled\",\n      description: args.description, content: args.content, conversationRef: args.conversationRef,\n      version: 1, versionPointer: 1, versionHistory: [{ version: 1, content: args.content,\n        title: args.title ?? \"Untitled\", timestamp: now, changedBy: operation.authority.principalId,\n        changeType: \"create\", changeSummary: \"Initial creation\" }],\n      metadata: args.metadata, tags: args.tags ?? [], createdAt: now, updatedAt: now,\n    });\n    return await operation.complete(artifact);\n  }),\n});",
+    "sha256": "76a0d6be26461d7cf78dcd19c7267fbf7503b8276b12f05562184e9f61887261",
+    "validators": {
+      "artifactId": "v.optional(v.string())",
+      "memorySpaceId": "v.string()",
+      "participantId": "v.optional(v.string())",
+      "tenantId": "v.optional(v.string())",
+      "userId": "v.optional(v.string())",
+      "kind": "v.optional(artifactKindValidator)",
+      "title": "v.optional(v.string())",
+      "content": "v.string()",
+      "language": "v.optional(v.string())",
+      "mimeType": "v.optional(v.string())",
+      "streamingState": "v.optional(streamingStateValidator)",
+      "conversationRef": "v.optional(\n      v.object({\n        conversationId: v.string(),\n        messageId: v.optional(v.string()),\n      }),\n    )",
+      "description": "v.optional(v.string())",
+      "metadata": "v.optional(v.any())",
+      "tags": "v.optional(v.array(v.string()))"
+    }
+  },
+  {
+    "path": "artifacts:update",
+    "builder": "mutation",
+    "declaration": "export const update = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()), // For tenant-isolated lookup\n\n    // Content updates (at least one required)\n    content: v.optional(v.string()),\n    title: v.optional(v.string()),\n    language: v.optional(v.string()),\n    mimeType: v.optional(v.string()),\n\n    // Metadata updates\n    metadata: v.optional(v.any()),\n    tags: v.optional(v.array(v.string())),\n\n    // Change description\n    changeSummary: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Cannot update deleted artifacts\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    const now = Date.now();\n    const newContent = args.content ?? artifact.content;\n    const newTitle = args.title ?? artifact.title;\n\n    // Calculate new version number\n    const newVersion = nextArtifactVersion(artifact);\n\n    // If versionPointer is not at the end, we're branching from an undo state\n    // Discard all versions after versionPointer\n    let versionHistory = [...artifact.versionHistory];\n    if (artifact.versionPointer < artifact.version) {\n      // Truncate history to versionPointer position\n      versionHistory = versionHistory.filter(\n        (v) => v.version <= artifact.versionPointer,\n      );\n    }\n\n    // Add new version\n    const newVersionEntry = {\n      version: newVersion,\n      content: newContent,\n      title: newTitle,\n      timestamp: now,\n      changeType: \"update\" as const,\n      changedBy: operation.authority.principalId,\n      changeSummary: args.changeSummary,\n    };\n    versionHistory.push(newVersionEntry);\n\n    // Build kindConfig update if language or mimeType provided\n    const kindConfigUpdate =\n      args.language !== undefined || args.mimeType !== undefined\n        ? {\n            ...artifact.kindConfig,\n            language:\n              args.language !== undefined\n                ? args.language\n                : artifact.kindConfig?.language,\n            mimeType:\n              args.mimeType !== undefined\n                ? args.mimeType\n                : artifact.kindConfig?.mimeType,\n          }\n        : artifact.kindConfig;\n\n    // Update artifact\n    await operation.patch(artifact._id, {\n      content: newContent,\n      title: newTitle,\n      kindConfig: kindConfigUpdate,\n      version: newVersion,\n      versionPointer: newVersion, // Move pointer to new version\n      versionHistory,\n      metadata: args.metadata !== undefined ? args.metadata : artifact.metadata,\n      tags: args.tags !== undefined ? args.tags : artifact.tags,\n      updatedAt: now,\n    });\n\n    return await operation.complete(await ctx.db.get(artifact._id));\n  }),\n});",
+    "sha256": "90ffe862e4b4e725b24512edea3a023597a95f339b04588cbcb6f62479a805c5",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "content": "v.optional(v.string())",
+      "title": "v.optional(v.string())",
+      "language": "v.optional(v.string())",
+      "mimeType": "v.optional(v.string())",
+      "metadata": "v.optional(v.any())",
+      "tags": "v.optional(v.array(v.string()))",
+      "changeSummary": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:deleteArtifact",
+    "builder": "mutation",
+    "declaration": "export const deleteArtifact = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    hard: v.optional(v.boolean()), // Default: false (soft delete)\n    deletedBy: v.optional(v.string()), // Optional: track who deleted\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n    await operation.tombstone(artifact);\n    return await operation.complete({ deleted: true, artifactId: artifact.artifactId,\n      deletedAt: Date.now(), permanent: true, restorable: false,\n      versionsPurged: 0, requestedHardDelete: args.hard === true });\n  }),\n});",
+    "sha256": "c1774ed5a3479f724e77f0fadf351aa2bf4686fee221904999f3b96b5651272b",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "hard": "v.optional(v.boolean())",
+      "deletedBy": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:undo",
+    "builder": "mutation",
+    "declaration": "export const undo = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Find the nearest previous version (handles gaps from purgeVersions)\n    // Sort versions below current pointer in descending order and take the first\n    const previousVersions = artifact.versionHistory\n      .filter((v) => v.version < artifact.versionPointer)\n      .sort((a, b) => b.version - a.version);\n\n    if (previousVersions.length === 0) {\n      throw new ConvexError(\"UNDO_NOT_AVAILABLE\");\n    }\n\n    const targetVersion = previousVersions[0];\n    const newPointer = targetVersion.version;\n\n    // Update artifact to reflect undone state\n    // Restore content, title, and fileRef from the target version\n    await operation.patch(artifact._id, {\n      content: targetVersion.content,\n      title: targetVersion.title,\n      fileRef: targetVersion.fileRef,\n      versionPointer: newPointer,\n      updatedAt: Date.now(),\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousVersion: artifact.versionPointer,\n      currentVersion: newPointer,\n      canUndo: canUndoTo(artifact.versionHistory, newPointer),\n      canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),\n    });\n  }),\n});",
+    "sha256": "33a511c7f167363aeaa16025d94ef41c5ec1a33a9f646d00976ebe11a2bda529",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:redo",
+    "builder": "mutation",
+    "declaration": "export const redo = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Find the nearest next version (handles gaps from purgeVersions)\n    // Sort versions above current pointer in ascending order and take the first\n    const nextVersions = artifact.versionHistory\n      .filter((v) => v.version > artifact.versionPointer)\n      .sort((a, b) => a.version - b.version);\n\n    if (nextVersions.length === 0) {\n      throw new ConvexError(\"REDO_NOT_AVAILABLE\");\n    }\n\n    const targetVersion = nextVersions[0];\n    const newPointer = targetVersion.version;\n\n    // Update artifact to reflect redone state\n    // Restore content, title, and fileRef from the target version\n    await operation.patch(artifact._id, {\n      content: targetVersion.content,\n      title: targetVersion.title,\n      fileRef: targetVersion.fileRef,\n      versionPointer: newPointer,\n      updatedAt: Date.now(),\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousVersion: artifact.versionPointer,\n      currentVersion: newPointer,\n      canUndo: canUndoTo(artifact.versionHistory, newPointer),\n      canRedo: canRedoTo(artifact.versionHistory, newPointer, artifact.version),\n    });\n  }),\n});",
+    "sha256": "9ed2d39d08be37d91e1adfcf366480929214e83db9138558d58f5b18da52075c",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:setStreamingState",
+    "builder": "mutation",
+    "declaration": "export const setStreamingState = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    streamingState: streamingStateValidator,\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (!isValidTransition(artifact.streamingState, args.streamingState)) artifactDeny(\"INVALID_STATE_TRANSITION\");\n    const now = Date.now();\n    const previousState = artifact.streamingState;\n\n    await operation.patch(artifact._id, {\n      streamingState: args.streamingState,\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousState,\n      currentState: args.streamingState,\n      updatedAt: now,\n    });\n  }),\n});",
+    "sha256": "7793faeeb8cb22230398bfd13a8c1e6695ecf31b0f2362b018233459cb6bcab0",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "streamingState": "streamingStateValidator"
+    }
+  },
+  {
+    "path": "artifacts:purgeVersions",
+    "builder": "mutation",
+    "declaration": "export const purgeVersions = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    keepLatest: v.number(), // Number of versions to keep\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    if (safeInteger(args.keepLatest, 1) < 1) {\n      throw new ConvexError(\"KEEP_LATEST_MUST_BE_POSITIVE\");\n    }\n\n    const artifact = await operation.load(args.artifactId);\n\n    const totalVersions = artifact.versionHistory.length;\n\n    if (totalVersions <= args.keepLatest) {\n      return await operation.complete({\n        versionsPurged: 0,\n        versionsRemaining: totalVersions,\n      });\n    }\n\n    // Calculate how many to remove (from oldest, excluding v1)\n    const versionsToKeep = args.keepLatest;\n\n    // Keep latest N versions, but ALWAYS preserve version 1 (initial creation)\n    // and the version at versionPointer\n    const latestVersions = artifact.versionHistory.slice(-versionsToKeep);\n    const version1 = artifact.versionHistory.find((v) => v.version === 1);\n\n    // Start with latest versions\n    let prunedHistory = [...latestVersions];\n\n    // Always preserve version 1 if not already included\n    if (version1 && !prunedHistory.some((v) => v.version === 1)) {\n      prunedHistory = [version1, ...prunedHistory];\n    }\n\n    // Ensure version at versionPointer is preserved\n    const pointerVersionExists = prunedHistory.some(\n      (v) => v.version === artifact.versionPointer,\n    );\n    if (!pointerVersionExists) {\n      const pointerVersion = artifact.versionHistory.find(\n        (v) => v.version === artifact.versionPointer,\n      );\n      if (pointerVersion) {\n        // Insert pointer version in correct position (after v1 if present)\n        const insertIdx = prunedHistory.findIndex(\n          (v) => v.version > artifact.versionPointer,\n        );\n        if (insertIdx === -1) {\n          prunedHistory.push(pointerVersion);\n        } else {\n          prunedHistory.splice(insertIdx, 0, pointerVersion);\n        }\n      }\n    }\n\n    // Calculate actual versions purged\n    const versionsToRemove = totalVersions - prunedHistory.length;\n\n    await operation.patch(artifact._id, {\n      versionHistory: prunedHistory,\n    });\n\n    return await operation.complete({\n      versionsPurged: versionsToRemove,\n      versionsRemaining: prunedHistory.length,\n    });\n  }),\n});",
+    "sha256": "1fedd210a458eb8b1fb2dce0307c67e74244db8fbaec790531b3cd685c82ca67",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "keepLatest": "v.number()"
+    }
+  },
+  {
+    "path": "artifacts:purgeAll",
+    "builder": "internalMutation",
+    "declaration": "export const purgeAll = internalMutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    tenantId: v.optional(v.string()), // Limit to tenant if provided\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    // Only authenticated Convex deployment-operator internal tooling may invoke\n    // this registration. URL/environment names and public JWT admin labels are\n    // never operator credentials. This does not remove other control tables.\n    if (!args.tenantId || !args.memorySpaceId) artifactDeny(\"INVALID_ARGUMENT\");\n    const rows = await ctx.db.query(\"artifacts\").withIndex(\"by_runtime_scope\", (q) =>\n      q.eq(\"tenantId\", args.tenantId!).eq(\"memorySpaceId\", args.memorySpaceId!)).collect();\n    // Full preflight, including retained history, before the first mutation.\n    for (const row of rows) {\n      if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny(\"CAPABILITY_NOT_READY\");\n      if (row.conversationRef || row.memoryRefs?.length) artifactDeny(\"CAPABILITY_NOT_READY\");\n      if (!row.isDeleted && row.tombstonedAt === undefined) validateArtifact(row);\n    }\n    const now = Date.now();\n    let deleted = 0;\n    for (const row of rows) {\n      if (row.isDeleted || row.tombstonedAt !== undefined) continue;\n      await ctx.db.patch(row._id, { isDeleted: true, deletedAt: now, tombstonedAt: now,\n        deletedBy: \"trusted-deployment-operator\", updatedAt: now });\n      const target = { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId,\n        resourceType: \"artifact\" as const, resourceId: row.artifactId };\n      const existing = await ctx.db.query(\"runtimeAuthTombstones\").withIndex(\"by_resource\", (q) =>\n        q.eq(\"tenantId\", target.tenantId).eq(\"memorySpaceId\", target.memorySpaceId)\n          .eq(\"resourceType\", target.resourceType).eq(\"resourceId\", target.resourceId)).unique();\n      if (!existing) await ctx.db.insert(\"runtimeAuthTombstones\", { ...target, deletedAt: now });\n      deleted += 1;\n    }\n    return { deleted };\n  }),\n});",
+    "sha256": "1f37bf3e44dc9e9254192d54536989f5fe89319ad8ef72f5525507f21b708846",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:get",
+    "builder": "query",
+    "declaration": "export const get = query({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    includeVersionHistory: v.optional(v.boolean()), // Default: true\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    const artifact = await operation.load(args.artifactId);\n\n    // Optionally exclude version history for smaller response\n    if (args.includeVersionHistory === false) {\n      return await operation.complete({\n        ...artifact,\n        versionHistory: [], // Omit for performance\n      });\n    }\n\n    return await operation.complete(artifact);\n  }),\n});",
+    "sha256": "1feb80506cef504a17348d49a7d0d28f195e17cf31ff38d2f1b44354c31393c2",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "includeVersionHistory": "v.optional(v.boolean())"
+    }
+  },
+  {
+    "path": "artifacts:getByConversation",
+    "builder": "query",
+    "declaration": "export const getByConversation = query({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    conversationId: v.string(),\n    tenantId: v.optional(v.string()),\n    streamingState: v.optional(streamingStateValidator),\n    includeVersionHistory: v.optional(v.boolean()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    await operation.conversation({ conversationId: args.conversationId });\n    let artifacts = await operation.list();\n    artifacts = artifacts.filter((row) => row.conversationRef?.conversationId === args.conversationId);\n    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);\n    return await operation.complete(args.includeVersionHistory === false ? artifacts.map((row) => ({ ...row, versionHistory: [] })) : artifacts);\n  }),\n});",
+    "sha256": "b99ee145cdd6cdf0434b2060b071594a11227f9c7f7fc19715d98e791a4b66e9",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "conversationId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "streamingState": "v.optional(streamingStateValidator)",
+      "includeVersionHistory": "v.optional(v.boolean())"
+    }
+  },
+  {
+    "path": "artifacts:list",
+    "builder": "query",
+    "declaration": "export const list = query({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    tenantId: v.optional(v.string()),\n    userId: v.optional(v.string()),\n    participantId: v.optional(v.string()),\n    kind: v.optional(artifactKindValidator),\n    streamingState: v.optional(streamingStateValidator),\n    tags: v.optional(v.array(v.string())), // Filter by tags (AND logic)\n    includeDeleted: v.optional(v.boolean()), // Default: false\n    createdAfter: v.optional(v.number()),\n    createdBefore: v.optional(v.number()),\n    updatedAfter: v.optional(v.number()),\n    updatedBefore: v.optional(v.number()),\n    limit: v.optional(v.number()),\n    offset: v.optional(v.number()),\n    sortBy: v.optional(v.union(v.literal(\"createdAt\"), v.literal(\"updatedAt\"))),\n    sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))),\n    includeVersionHistory: v.optional(v.boolean()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    let artifacts = await operation.list();\n    if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);\n    if (args.participantId !== undefined) artifacts = artifacts.filter((row) => row.participantId === args.participantId);\n    if (args.kind !== undefined) artifacts = artifacts.filter((row) => row.kind === args.kind);\n    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);\n    if (args.tags?.length) artifacts = artifacts.filter((row) => args.tags!.every((tag) => row.tags.includes(tag)));\n    if (args.createdAfter !== undefined) { if (!Number.isFinite(args.createdAfter)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.createdAt > args.createdAfter!); }\n    if (args.createdBefore !== undefined) { if (!Number.isFinite(args.createdBefore)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.createdAt < args.createdBefore!); }\n    if (args.updatedAfter !== undefined) { if (!Number.isFinite(args.updatedAfter)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.updatedAt > args.updatedAfter!); }\n    if (args.updatedBefore !== undefined) { if (!Number.isFinite(args.updatedBefore)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.updatedAt < args.updatedBefore!); }\n    const total = artifacts.length;\n    const limit = Math.min(safeInteger(args.limit ?? 50, 1), 100);\n    const offset = safeInteger(args.offset ?? 0);\n    const sortBy = args.sortBy ?? \"createdAt\";\n    artifacts.sort((left, right) => (left[sortBy] - right[sortBy]) * (args.sortOrder === \"asc\" ? 1 : -1));\n    const selected = artifacts.slice(offset, offset + limit);\n    return await operation.complete({ artifacts: args.includeVersionHistory === false\n      ? selected.map((row) => ({ ...row, versionHistory: [] })) : selected,\n      total, limit, offset, hasMore: offset + limit < total });\n  }),\n});",
+    "sha256": "68d8e58156a8a762c1acdbc1bde6048e7f7d2eaf09ff8744ec21a987b08557c7",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "tenantId": "v.optional(v.string())",
+      "userId": "v.optional(v.string())",
+      "participantId": "v.optional(v.string())",
+      "kind": "v.optional(artifactKindValidator)",
+      "streamingState": "v.optional(streamingStateValidator)",
+      "tags": "v.optional(v.array(v.string()))",
+      "includeDeleted": "v.optional(v.boolean())",
+      "createdAfter": "v.optional(v.number())",
+      "createdBefore": "v.optional(v.number())",
+      "updatedAfter": "v.optional(v.number())",
+      "updatedBefore": "v.optional(v.number())",
+      "limit": "v.optional(v.number())",
+      "offset": "v.optional(v.number())",
+      "sortBy": "v.optional(v.union(v.literal(\"createdAt\"), v.literal(\"updatedAt\")))",
+      "sortOrder": "v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\")))",
+      "includeVersionHistory": "v.optional(v.boolean())"
+    }
+  },
+  {
+    "path": "artifacts:count",
+    "builder": "query",
+    "declaration": "export const count = query({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    tenantId: v.optional(v.string()),\n    userId: v.optional(v.string()),\n    kind: v.optional(artifactKindValidator),\n    streamingState: v.optional(streamingStateValidator),\n    includeDeleted: v.optional(v.boolean()), // Default: false\n    createdAfter: v.optional(v.number()),\n    createdBefore: v.optional(v.number()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n    let artifacts = await operation.list();\n    if (args.userId !== undefined) artifacts = artifacts.filter((row) => row.userId === args.userId);\n    if (args.kind !== undefined) artifacts = artifacts.filter((row) => row.kind === args.kind);\n    if (args.streamingState !== undefined) artifacts = artifacts.filter((row) => row.streamingState === args.streamingState);\n    if (args.createdAfter !== undefined) { if (!Number.isFinite(args.createdAfter)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.createdAt > args.createdAfter!); }\n    if (args.createdBefore !== undefined) { if (!Number.isFinite(args.createdBefore)) artifactDeny(\"INVALID_ARGUMENT\"); artifacts = artifacts.filter((row) => row.createdAt < args.createdBefore!); }\n    return await operation.complete(artifacts.length);\n  }),\n});",
+    "sha256": "18bceba27dc623d6da1d392a0763cf2741fe28e84e0bffd24a118b15521b9cd5",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "tenantId": "v.optional(v.string())",
+      "userId": "v.optional(v.string())",
+      "kind": "v.optional(artifactKindValidator)",
+      "streamingState": "v.optional(streamingStateValidator)",
+      "includeDeleted": "v.optional(v.boolean())",
+      "createdAfter": "v.optional(v.number())",
+      "createdBefore": "v.optional(v.number())"
+    }
+  },
+  {
+    "path": "artifacts:getVersion",
+    "builder": "query",
+    "declaration": "export const getVersion = query({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    version: v.number(),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    safeInteger(args.version, 1);\n    const artifact = await operation.load(args.artifactId);\n\n    // Find version in history\n    const versionEntry = artifact.versionHistory.find(\n      (v) => v.version === args.version,\n    );\n\n    if (!versionEntry) {\n      return await operation.complete(null);\n    }\n\n    return await operation.complete({\n      artifactId: artifact.artifactId,\n      version: versionEntry.version,\n      content: versionEntry.content,\n      title: versionEntry.title,\n      timestamp: versionEntry.timestamp,\n      changeType: versionEntry.changeType,\n      changeSummary: versionEntry.changeSummary,\n      isCurrent: versionEntry.version === artifact.versionPointer,\n    });\n  }),\n});",
+    "sha256": "f88e914b2b7a9d1481b57651665c599fb78ae09d06b57f736d650ed5cdfd2913",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "version": "v.number()",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:getHistory",
+    "builder": "query",
+    "declaration": "export const getHistory = query({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    limit: v.optional(v.number()),\n    offset: v.optional(v.number()),\n    sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, false);\n\n    const artifact = await operation.load(args.artifactId);\n\n    let history = [...artifact.versionHistory];\n\n    // Sort by version (asc = oldest first, desc = newest first)\n    const sortOrder = args.sortOrder || \"asc\";\n    if (sortOrder === \"desc\") {\n      history.reverse();\n    }\n\n    const total = history.length;\n    const offset = safeInteger(args.offset ?? 0);\n    const limit = Math.min(safeInteger(args.limit ?? 50, 1), 100); // Max 100\n\n    // Paginate\n    history = history.slice(offset, offset + limit);\n\n    // Add current version indicator\n    const enrichedHistory = history.map((v) => ({\n      ...v,\n      artifactId: artifact.artifactId,\n      isCurrent: v.version === artifact.versionPointer,\n    }));\n\n    return await operation.complete({\n      history: enrichedHistory,\n      total,\n      offset,\n      limit,\n      hasMore: offset + limit < total,\n      currentVersion: artifact.versionPointer,\n      latestVersion: artifact.version,\n      canUndo: canUndoTo(artifact.versionHistory, artifact.versionPointer),\n      canRedo: canRedoTo(artifact.versionHistory, artifact.versionPointer, artifact.version),\n    });\n  }),\n});",
+    "sha256": "00977323253993bfc2483d3d4dc6cb7d711e49b67597d83289dec7431413049f",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "limit": "v.optional(v.number())",
+      "offset": "v.optional(v.number())",
+      "sortOrder": "v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\")))"
+    }
+  },
+  {
+    "path": "artifacts:startStreaming",
+    "builder": "mutation",
+    "declaration": "export const startStreaming = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    streamSource: v.optional(\n      v.union(\n        v.literal(\"ai_generation\"),\n        v.literal(\"import\"),\n        v.literal(\"transform\"),\n      ),\n    ),\n    estimatedTotal: v.optional(v.number()), // Estimated total bytes\n    metadata: v.optional(v.any()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state: only draft can start streaming\n    // Note: We explicitly check for draft rather than using isValidTransition because\n    // paused → streaming is valid for resumeStreaming, not startStreaming\n    if (artifact.streamingState !== \"draft\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    if (args.estimatedTotal !== undefined) safeInteger(args.estimatedTotal);\n    const now = Date.now();\n    const sessionId = generateSessionId();\n\n    // Update artifact to streaming state with metadata\n    // Note: streamingMetadata schema only supports: sessionId, startedAt, lastChunkAt,\n    // bytesReceived, estimatedTotal, errorMessage, errorCode\n    await operation.patch(artifact._id, {\n      streamingState: \"streaming\",\n      streamingMetadata: {\n        sessionId,\n        startedAt: now,\n        lastChunkAt: undefined,\n        bytesReceived: 0,\n        estimatedTotal: args.estimatedTotal,\n        errorMessage: undefined,\n        errorCode: undefined,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      sessionId,\n      artifactId: args.artifactId,\n      startedAt: now,\n      previousState: artifact.streamingState,\n      currentState: \"streaming\",\n    });\n  }),\n});",
+    "sha256": "8632b2a6b4f51948579587fad5c8b7531714428ed7a540db6dc55a9a11d48b73",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "streamSource": "v.optional(\n      v.union(\n        v.literal(\"ai_generation\"),\n        v.literal(\"import\"),\n        v.literal(\"transform\"),\n      ),\n    )",
+      "estimatedTotal": "v.optional(v.number())",
+      "metadata": "v.optional(v.any())"
+    }
+  },
+  {
+    "path": "artifacts:appendContent",
+    "builder": "mutation",
+    "declaration": "export const appendContent = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    sessionId: v.string(),\n    chunk: v.string(),\n    chunkIndex: v.optional(v.number()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Verify artifact is in streaming state\n    if (artifact.streamingState !== \"streaming\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches current streaming session\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    if (args.chunkIndex !== undefined) safeInteger(args.chunkIndex);\n    const now = Date.now();\n    const chunkBytes = new TextEncoder().encode(args.chunk).length;\n    const currentContent = artifact.content || \"\";\n    const newContent = currentContent + args.chunk;\n    const newBytesReceived = safeInteger((artifact.streamingMetadata?.bytesReceived || 0) + chunkBytes);\n\n    // Update artifact with appended content\n    await operation.patch(artifact._id, {\n      content: newContent,\n      streamingMetadata: {\n        ...artifact.streamingMetadata,\n        lastChunkAt: now,\n        bytesReceived: newBytesReceived,\n      },\n      updatedAt: now,\n    });\n\n    // Calculate progress percentage if estimatedTotal is available\n    const estimatedTotal = artifact.streamingMetadata?.estimatedTotal;\n    const progress =\n      estimatedTotal && estimatedTotal > 0\n        ? Math.min((newBytesReceived / estimatedTotal) * 100, 100)\n        : undefined;\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      chunkIndex: args.chunkIndex,\n      chunkBytes,\n      totalBytesReceived: newBytesReceived,\n      contentLength: newContent.length,\n      progress,\n      timestamp: now,\n    });\n  }),\n});",
+    "sha256": "ef63d4bcf110b5d43fb2d6772a68b7f2f12df9ec1b9b18fb8d5e63adaacb81c4",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "sessionId": "v.string()",
+      "chunk": "v.string()",
+      "chunkIndex": "v.optional(v.number())"
+    }
+  },
+  {
+    "path": "artifacts:pauseStreaming",
+    "builder": "mutation",
+    "declaration": "export const pauseStreaming = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    sessionId: v.string(),\n    reason: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state transition: streaming → paused\n    if (!isValidTransition(artifact.streamingState, \"paused\")) {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n\n    // Note: Schema streamingMetadata doesn't have pausedAt/pauseReason fields\n    // We transition to paused state but can't store pause metadata in schema\n    await operation.patch(artifact._id, {\n      streamingState: \"paused\",\n      streamingMetadata: {\n        ...artifact.streamingMetadata,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      pausedAt: now,\n      previousState: \"streaming\",\n      currentState: \"paused\",\n      bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,\n      contentPreserved: true,\n    });\n  }),\n});",
+    "sha256": "f356a88997ada95671eb1e3d465b0f66a10a950823f2a58dccde798239e50f83",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "sessionId": "v.string()",
+      "reason": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:resumeStreaming",
+    "builder": "mutation",
+    "declaration": "export const resumeStreaming = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    sessionId: v.string(),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state: only paused can be resumed\n    // Note: We explicitly check for paused rather than using isValidTransition because\n    // draft → streaming is valid for startStreaming, not resumeStreaming\n    if (artifact.streamingState !== \"paused\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n\n    // Note: Schema streamingMetadata doesn't have pausedAt/resumedAt/totalPauseDuration fields\n    await operation.patch(artifact._id, {\n      streamingState: \"streaming\",\n      streamingMetadata: {\n        ...artifact.streamingMetadata,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      resumedAt: now,\n      previousState: \"paused\",\n      currentState: \"streaming\",\n      bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,\n    });\n  }),\n});",
+    "sha256": "b97aa570b31c5fa79fa942c6bdc0aa47d043a0054dabba48cee5a1c91cf4219e",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "sessionId": "v.string()"
+    }
+  },
+  {
+    "path": "artifacts:cancelStreaming",
+    "builder": "mutation",
+    "declaration": "export const cancelStreaming = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    sessionId: v.string(),\n    reason: v.optional(v.string()),\n    preserveContent: v.optional(v.boolean()), // Default: true\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state: only streaming or paused can be cancelled\n    // Note: We explicitly check states rather than using isValidTransition because\n    // final → draft is valid for update operations, but not for cancel operations\n    if (artifact.streamingState !== \"streaming\" && artifact.streamingState !== \"paused\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches - required for active streaming sessions\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (!currentSessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n    const preserveContent = args.preserveContent !== false; // Default true\n    const bytesReceived = artifact.streamingMetadata?.bytesReceived || 0;\n    const contentLength = artifact.content?.length || 0;\n\n    // Revert to draft, optionally preserving content\n    // Note: Schema streamingMetadata only supports limited fields\n    await operation.patch(artifact._id, {\n      streamingState: \"draft\",\n      content: preserveContent ? artifact.content : \"\",\n      streamingMetadata: {\n        // Clear active session data\n        sessionId: undefined,\n        startedAt: undefined,\n        lastChunkAt: undefined,\n        bytesReceived: undefined,\n        estimatedTotal: undefined,\n        errorMessage: undefined,\n        errorCode: undefined,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      cancelledAt: now,\n      previousState: artifact.streamingState,\n      currentState: \"draft\",\n      contentPreserved: preserveContent,\n      bytesReceived,\n      contentLength: preserveContent ? contentLength : 0,\n    });\n  }),\n});",
+    "sha256": "c3d84d188e787a5ad0a4e45b55bfdf92d8ffb6afbb39decb937d86b917c01f7d",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "sessionId": "v.string()",
+      "reason": "v.optional(v.string())",
+      "preserveContent": "v.optional(v.boolean())"
+    }
+  },
+  {
+    "path": "artifacts:finalizeStreaming",
+    "builder": "mutation",
+    "declaration": "export const finalizeStreaming = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    sessionId: v.string(),\n    createVersion: v.optional(v.boolean()), // Default: true - create version history entry\n    changeSummary: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state transition: streaming → final\n    if (!isValidTransition(artifact.streamingState, \"final\")) {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // Verify sessionId matches\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n    const startedAt = artifact.streamingMetadata?.startedAt || now;\n    const totalDurationMs = now - startedAt;\n    const bytesReceived = artifact.streamingMetadata?.bytesReceived || 0;\n    const finalContent = artifact.content || \"\";\n    const createVersion = args.createVersion !== false; // Default true\n\n    // Prepare version history update if requested\n    let versionUpdate = {};\n    if (createVersion) {\n      const newVersion = nextArtifactVersion(artifact);\n\n      // Truncate history if user had undone (branching from undo state)\n      let versionHistory = [...artifact.versionHistory];\n      if (artifact.versionPointer < artifact.version) {\n        versionHistory = versionHistory.filter(\n          (v) => v.version <= artifact.versionPointer,\n        );\n      }\n\n      // Add new version entry for finalized streaming content\n      versionHistory.push({\n        version: newVersion,\n        content: finalContent,\n        title: artifact.title,\n        timestamp: now,\n        changeType: \"update\" as const,\n        changedBy: operation.authority.principalId,\n        changeSummary: args.changeSummary || \"Streaming content finalized\",\n      });\n\n      versionUpdate = {\n        version: newVersion,\n        versionPointer: newVersion,\n        versionHistory,\n      };\n    }\n\n    // Finalize: transition to final state, clear streaming metadata\n    // Note: Schema streamingMetadata only supports limited fields\n    await operation.patch(artifact._id, {\n      streamingState: \"final\",\n      streamingMetadata: {\n        // Clear all active streaming fields\n        sessionId: undefined,\n        startedAt: undefined,\n        lastChunkAt: undefined,\n        bytesReceived: undefined,\n        estimatedTotal: undefined,\n        errorMessage: undefined,\n        errorCode: undefined,\n      },\n      ...versionUpdate,\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      sessionId: args.sessionId,\n      finalizedAt: now,\n      previousState: artifact.streamingState,\n      currentState: \"final\",\n      contentLength: finalContent.length,\n      bytesReceived,\n      totalDurationMs,\n      versionCreated: createVersion,\n      version: createVersion\n        ? nextArtifactVersion(artifact)\n        : artifact.versionPointer,\n    });\n  }),\n});",
+    "sha256": "d2b89588bd10559fd7981b108dfb74c3280f1cf418c379386c7e42a10be3a7fa",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "sessionId": "v.string()",
+      "createVersion": "v.optional(v.boolean())",
+      "changeSummary": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:setStreamingError",
+    "builder": "mutation",
+    "declaration": "export const setStreamingError = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    sessionId: v.optional(v.string()),\n    errorCode: v.string(),\n    errorMessage: v.string(),\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state transition: most states can go to error\n    if (!isValidTransition(artifact.streamingState, \"error\")) {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    // If sessionId provided, verify it matches (optional for error state)\n    const currentSessionId = artifact.streamingMetadata?.sessionId;\n    if (args.sessionId && currentSessionId && currentSessionId !== args.sessionId) {\n      artifactDeny(\"STREAMING_SESSION_INVALID\");\n    }\n\n    const now = Date.now();\n\n    await operation.patch(artifact._id, {\n      streamingState: \"error\",\n      streamingMetadata: {\n        ...artifact.streamingMetadata,\n        errorCode: args.errorCode,\n        errorMessage: args.errorMessage,\n        errorAt: now,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousState: artifact.streamingState,\n      currentState: \"error\",\n      errorCode: args.errorCode,\n      errorMessage: args.errorMessage,\n      contentPreserved: true,\n      bytesReceived: artifact.streamingMetadata?.bytesReceived || 0,\n    });\n  }),\n});",
+    "sha256": "38962b0b57b5c6a1ab2dad254be8b24a8ef0bf87646026a4f32f5a0fa3312465",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "sessionId": "v.optional(v.string())",
+      "errorCode": "v.string()",
+      "errorMessage": "v.string()"
+    }
+  },
+  {
+    "path": "artifacts:retryFromError",
+    "builder": "mutation",
+    "declaration": "export const retryFromError = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()),\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    clearContent: v.optional(v.boolean()), // Default: false - preserve content\n  },\n  handler: async (ctx, args) => artifactHandler(async () => {\n    const operation = await ArtifactOperation.begin(ctx, args, true);\n\n    const artifact = await operation.load(args.artifactId);\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Validate state transition: error → draft\n    if (artifact.streamingState !== \"error\") {\n      artifactDeny(\"INVALID_STATE_TRANSITION\");\n    }\n\n    const now = Date.now();\n    const clearContent = args.clearContent === true; // Default false\n\n    // Note: Schema streamingMetadata only supports limited fields\n    await operation.patch(artifact._id, {\n      streamingState: \"draft\",\n      content: clearContent ? \"\" : artifact.content,\n      streamingMetadata: {\n        // Clear all fields for retry\n        sessionId: undefined,\n        startedAt: undefined,\n        lastChunkAt: undefined,\n        bytesReceived: undefined,\n        estimatedTotal: undefined,\n        errorMessage: undefined,\n        errorCode: undefined,\n      },\n      updatedAt: now,\n    });\n\n    return await operation.complete({\n      success: true,\n      artifactId: args.artifactId,\n      previousState: \"error\",\n      currentState: \"draft\",\n      contentCleared: clearContent,\n      contentLength: clearContent ? 0 : (artifact.content?.length || 0),\n    });\n  }),\n});",
+    "sha256": "975c95b0e6844077b990fe16ddbfbf0b78f90e8eb60ff18918b1068b5c633bb0",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "clearContent": "v.optional(v.boolean())"
+    }
+  }
+]

@@ -1,0 +1,210 @@
+[
+  {
+    "path": "artifacts:setFileRef",
+    "builder": "mutation",
+    "declaration": "export const setFileRef = mutation({\n  args: {\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    fileRef: v.object({\n      storageId: v.id(\"_storage\"),\n      mimeType: v.string(),\n      size: v.number(),\n      checksum: v.optional(v.string()),\n      originalFilename: v.optional(v.string()),\n    }),\n  },\n  handler: async (ctx, args) => {\n    // Lookup artifact (tenant-aware)\n    let artifact;\n    if (args.tenantId) {\n      artifact = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first();\n    } else {\n      const candidate = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first();\n      artifact = candidate && !candidate.tenantId ? candidate : null;\n    }\n\n    if (!artifact) {\n      throw new ConvexError(\"ARTIFACT_NOT_FOUND\");\n    }\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    const now = Date.now();\n\n    await ctx.db.patch(artifact._id, {\n      fileRef: args.fileRef,\n      content: undefined, // fileRef and content are mutually exclusive\n      updatedAt: now,\n    });\n\n    return await ctx.db.get(artifact._id);\n  },\n});",
+    "sha256": "6519b8e5f892b19189d0674435dee82f5ae6a17b1f16e9536c7cb6e552329e55",
+    "validators": {
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "fileRef": "v.object({\n      storageId: v.id(\"_storage\"),\n      mimeType: v.string(),\n      size: v.number(),\n      checksum: v.optional(v.string()),\n      originalFilename: v.optional(v.string()),\n    })"
+    }
+  },
+  {
+    "path": "artifacts:generateArtifactUploadUrl",
+    "builder": "mutation",
+    "declaration": "export const generateArtifactUploadUrl = mutation({\n  args: {\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    mimeType: v.string(),\n    filename: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    // Lookup artifact (tenant-aware)\n    let artifact;\n    if (args.tenantId) {\n      artifact = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first();\n    } else {\n      const candidate = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first();\n      artifact = candidate && !candidate.tenantId ? candidate : null;\n    }\n\n    if (!artifact) {\n      throw new ConvexError(\"ARTIFACT_NOT_FOUND\");\n    }\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    // Generate upload URL (expires in 1 hour per Convex docs)\n    const uploadUrl = await ctx.storage.generateUploadUrl();\n\n    // Calculate expiration (1 hour from now)\n    const expiresAt = Date.now() + 60 * 60 * 1000;\n\n    return {\n      uploadUrl,\n      expiresAt,\n      artifactId: args.artifactId,\n      mimeType: args.mimeType,\n      filename: args.filename,\n    };\n  },\n});",
+    "sha256": "1e5be8114685eb04a5fdddd8a3584ad2d65ac2ec2811628647b110dc6fe08423",
+    "validators": {
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "mimeType": "v.string()",
+      "filename": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:completeArtifactUpload",
+    "builder": "mutation",
+    "declaration": "export const completeArtifactUpload = mutation({\n  args: {\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    storageId: v.id(\"_storage\"),\n    mimeType: v.string(),\n    size: v.number(),\n    originalFilename: v.optional(v.string()),\n    checksum: v.optional(v.string()),\n    // If true, transition streamingState to \"final\"\n    markFinal: v.optional(v.boolean()),\n  },\n  handler: async (ctx, args) => {\n    // Lookup artifact (tenant-aware)\n    let artifact;\n    if (args.tenantId) {\n      artifact = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first();\n    } else {\n      const candidate = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first();\n      artifact = candidate && !candidate.tenantId ? candidate : null;\n    }\n\n    if (!artifact) {\n      throw new ConvexError(\"ARTIFACT_NOT_FOUND\");\n    }\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    const now = Date.now();\n\n    // Build the fileRef object\n    const fileRef = {\n      storageId: args.storageId,\n      mimeType: args.mimeType,\n      size: args.size,\n      checksum: args.checksum,\n      originalFilename: args.originalFilename,\n    };\n\n    // If versionPointer is not at the end, truncate future versions (branch)\n    let versionHistory = [...artifact.versionHistory];\n    if (artifact.versionPointer < artifact.version) {\n      versionHistory = versionHistory.filter(\n        (v) => v.version <= artifact.versionPointer,\n      );\n    }\n\n    // Create version history entry for file attachment\n    // Use versionPointer + 1 to maintain version continuity after undo\n    const newVersion = artifact.versionPointer + 1;\n\n    const newVersionEntry = {\n      version: newVersion,\n      content: undefined as string | undefined,\n      fileRef,\n      title: artifact.title,\n      timestamp: now,\n      changeType: \"update\" as const,\n      changeSummary: `File attached: ${args.originalFilename || \"unnamed\"}`,\n    };\n    versionHistory.push(newVersionEntry);\n\n    // Prepare update - content and fileRef are mutually exclusive\n    const updates: Record<string, unknown> = {\n      fileRef,\n      content: undefined, // Clear inline content\n      version: newVersion,\n      versionPointer: newVersion,\n      versionHistory,\n      updatedAt: now,\n    };\n\n    // Optionally mark as final\n    if (args.markFinal) {\n      updates.streamingState = \"final\";\n    }\n\n    await ctx.db.patch(artifact._id, updates);\n\n    return {\n      success: true,\n      artifactId: args.artifactId,\n      fileRef,\n      version: newVersion,\n      updatedAt: now,\n    };\n  },\n});",
+    "sha256": "a652ce9062afa0fcd07c9323029262a03827b241fbdc192bf16ddf0f2882cf8d",
+    "validators": {
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "storageId": "v.id(\"_storage\")",
+      "mimeType": "v.string()",
+      "size": "v.number()",
+      "originalFilename": "v.optional(v.string())",
+      "checksum": "v.optional(v.string())",
+      "markFinal": "v.optional(v.boolean())"
+    }
+  },
+  {
+    "path": "artifacts:getArtifactFileUrl",
+    "builder": "query",
+    "declaration": "export const getArtifactFileUrl = query({\n  args: {\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    // Lookup artifact (tenant-aware)\n    let artifact;\n    if (args.tenantId) {\n      artifact = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first();\n    } else {\n      const candidate = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first();\n      artifact = candidate && !candidate.tenantId ? candidate : null;\n    }\n\n    if (!artifact) {\n      return null;\n    }\n\n    // Check if file is attached\n    if (!artifact.fileRef) {\n      return null;\n    }\n\n    // Get signed URL from storage\n    const url = await ctx.storage.getUrl(artifact.fileRef.storageId);\n\n    if (!url) {\n      return null;\n    }\n\n    return {\n      url,\n      mimeType: artifact.fileRef.mimeType,\n      size: artifact.fileRef.size,\n      checksum: artifact.fileRef.checksum,\n      originalFilename: artifact.fileRef.originalFilename,\n      artifactId: artifact.artifactId,\n    };\n  },\n});",
+    "sha256": "19d6e0d0765598d1309cc3ce2d88480bbbf97411367c6ef96f1462af20efa450",
+    "validators": {
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "artifacts:detachFile",
+    "builder": "mutation",
+    "declaration": "export const detachFile = mutation({\n  args: {\n    artifactId: v.string(),\n    tenantId: v.optional(v.string()),\n    deleteFile: v.optional(v.boolean()), // Default: false\n  },\n  handler: async (ctx, args) => {\n    // Lookup artifact (tenant-aware)\n    let artifact;\n    if (args.tenantId) {\n      artifact = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_tenant_artifactId\", (q) =>\n          q.eq(\"tenantId\", args.tenantId!).eq(\"artifactId\", args.artifactId),\n        )\n        .first();\n    } else {\n      const candidate = await ctx.db\n        .query(\"artifacts\")\n        .withIndex(\"by_artifactId\", (q) => q.eq(\"artifactId\", args.artifactId))\n        .first();\n      artifact = candidate && !candidate.tenantId ? candidate : null;\n    }\n\n    if (!artifact) {\n      throw new ConvexError(\"ARTIFACT_NOT_FOUND\");\n    }\n\n    if (artifact.isDeleted) {\n      throw new ConvexError(\"ARTIFACT_IS_DELETED\");\n    }\n\n    if (!artifact.fileRef) {\n      throw new ConvexError(\"NO_FILE_ATTACHED\");\n    }\n\n    const now = Date.now();\n    const previousFileRef = artifact.fileRef;\n\n    // Delete file from storage if requested\n    if (args.deleteFile) {\n      try {\n        await ctx.storage.delete(artifact.fileRef.storageId);\n      } catch (error) {\n        // Log but don't fail - file might already be deleted or inaccessible\n        console.warn(\n          `Failed to delete file ${artifact.fileRef.storageId}:`,\n          error,\n        );\n      }\n    }\n\n    // If versionPointer is not at the end, truncate future versions (branch)\n    let versionHistory = [...artifact.versionHistory];\n    if (artifact.versionPointer < artifact.version) {\n      versionHistory = versionHistory.filter(\n        (v) => v.version <= artifact.versionPointer,\n      );\n    }\n\n    // Create version history entry for detachment\n    // Use versionPointer + 1 to maintain version continuity after undo\n    const newVersion = artifact.versionPointer + 1;\n\n    const newVersionEntry = {\n      version: newVersion,\n      content: artifact.content,\n      fileRef: undefined as\n        | {\n            storageId: typeof previousFileRef.storageId;\n            mimeType: string;\n            size: number;\n            checksum?: string;\n            originalFilename?: string;\n          }\n        | undefined,\n      title: artifact.title,\n      timestamp: now,\n      changeType: \"update\" as const,\n      changeSummary: `File detached: ${previousFileRef.originalFilename || \"unnamed\"}${args.deleteFile ? \" (deleted from storage)\" : \"\"}`,\n    };\n    versionHistory.push(newVersionEntry);\n\n    // Clear the fileRef\n    await ctx.db.patch(artifact._id, {\n      fileRef: undefined,\n      version: newVersion,\n      versionPointer: newVersion,\n      versionHistory,\n      updatedAt: now,\n    });\n\n    return {\n      success: true,\n      artifactId: args.artifactId,\n      previousFileRef: {\n        storageId: previousFileRef.storageId,\n        mimeType: previousFileRef.mimeType,\n        size: previousFileRef.size,\n        originalFilename: previousFileRef.originalFilename,\n      },\n      fileDeleted: args.deleteFile ?? false,\n      version: newVersion,\n      updatedAt: now,\n    };\n  },\n});",
+    "sha256": "09f548ecd1ec646665068fc39d4ee17fa815a5d2e58b1203af8a888e3347cd2d",
+    "validators": {
+      "artifactId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "deleteFile": "v.optional(v.boolean())"
+    }
+  },
+  {
+    "path": "attachments:generateUploadUrl",
+    "builder": "mutation",
+    "declaration": "export const generateUploadUrl = mutation({\n  args: {\n    // Multi-tenancy (optional - passed by SDKs for consistency/auditing)\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx) => {\n    // Generate upload URL (expires in 1 hour per Convex docs)\n    // Note: tenantId is accepted for SDK consistency but not used here\n    // since Convex storage is global; tenant isolation happens at attach()\n    const uploadUrl = await ctx.storage.generateUploadUrl();\n\n    return {\n      uploadUrl,\n    };\n  },\n});",
+    "sha256": "dfbf44f4a9bbbf05b9b82317f11b29418f628482ec87bf8f63f5ca94ca2d47ec",
+    "validators": {
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "attachments:attach",
+    "builder": "mutation",
+    "declaration": "export const attach = mutation({\n  args: {\n    // Required fields\n    storageId: v.id(\"_storage\"), // Convex storage ID from upload\n    memorySpaceId: v.string(), // Memory space isolation\n    userId: v.string(), // User who owns this attachment\n    type: attachmentTypeValidator, // Attachment type\n    mimeType: v.string(), // MIME type (e.g., \"image/png\")\n    filename: v.string(), // Original filename\n    size: v.number(), // File size in bytes\n\n    // Optional linkage\n    conversationId: v.optional(v.string()), // Link to conversation\n    messageId: v.optional(v.string()), // Link to specific message\n    memoryId: v.optional(v.string()), // Link to memory\n    artifactId: v.optional(v.string()), // Link to artifact\n\n    // Optional type-specific metadata\n    dimensions: v.optional(\n      v.object({\n        width: v.number(),\n        height: v.number(),\n      }),\n    ), // Image/video dimensions\n    duration: v.optional(v.number()), // Audio/video duration in seconds\n\n    // Generic metadata\n    metadata: v.optional(v.any()),\n\n    // Multi-tenancy\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    const now = Date.now();\n    const attachmentId = generateAttachmentId();\n\n    // Verify the storage ID exists\n    const storageMetadata = await ctx.storage.getMetadata(args.storageId);\n    if (!storageMetadata) {\n      throw new ConvexError({\n        code: \"INVALID_STORAGE_ID\",\n        message: \"The provided storageId does not exist or has expired.\",\n      });\n    }\n\n    const _id = await ctx.db.insert(\"attachments\", {\n      attachmentId,\n      memorySpaceId: args.memorySpaceId,\n      tenantId: args.tenantId,\n      userId: args.userId,\n      conversationId: args.conversationId,\n      messageId: args.messageId,\n      memoryId: args.memoryId,\n      artifactId: args.artifactId,\n      storageId: args.storageId,\n      type: args.type,\n      mimeType: args.mimeType,\n      filename: args.filename,\n      size: args.size,\n      dimensions: args.dimensions,\n      duration: args.duration,\n      metadata: args.metadata,\n      createdAt: now,\n      updatedAt: now,\n    });\n\n    return await ctx.db.get(_id);\n  },\n});",
+    "sha256": "267cb23fcc9d105505553101b529ae98e95bb08050ec753d85701fdc525c9a67",
+    "validators": {
+      "storageId": "v.id(\"_storage\")",
+      "memorySpaceId": "v.string()",
+      "userId": "v.string()",
+      "type": "attachmentTypeValidator",
+      "mimeType": "v.string()",
+      "filename": "v.string()",
+      "size": "v.number()",
+      "conversationId": "v.optional(v.string())",
+      "messageId": "v.optional(v.string())",
+      "memoryId": "v.optional(v.string())",
+      "artifactId": "v.optional(v.string())",
+      "dimensions": "v.optional(\n      v.object({\n        width: v.number(),\n        height: v.number(),\n      }),\n    )",
+      "duration": "v.optional(v.number())",
+      "metadata": "v.optional(v.any())",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "attachments:remove",
+    "builder": "mutation",
+    "declaration": "export const remove = mutation({\n  args: {\n    attachmentId: v.string(),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    const attachment = await lookupAttachment(\n      ctx,\n      args.attachmentId,\n      args.tenantId,\n    );\n\n    if (!attachment) {\n      throw new ConvexError({\n        code: \"ATTACHMENT_NOT_FOUND\",\n        message: `Attachment with ID '${args.attachmentId}' not found.`,\n      });\n    }\n\n    // Delete file from storage\n    try {\n      await ctx.storage.delete(attachment.storageId);\n    } catch (error) {\n      // Log but don't fail - file might already be deleted or inaccessible\n      console.warn(\n        `Failed to delete file ${attachment.storageId}:`,\n        error,\n      );\n    }\n\n    // Delete the attachment record\n    await ctx.db.delete(attachment._id);\n\n    return {\n      deleted: true,\n      attachmentId: args.attachmentId,\n      deletedAt: Date.now(),\n    };\n  },\n});",
+    "sha256": "077e2342b05d5b96e8286c214c6a33297b0c2362ed8ab414bddaff60d170c318",
+    "validators": {
+      "attachmentId": "v.string()",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "attachments:removeMany",
+    "builder": "mutation",
+    "declaration": "export const removeMany = mutation({\n  args: {\n    attachmentIds: v.array(v.string()),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    let deleted = 0;\n    const errors: Array<{ attachmentId: string; error: string }> = [];\n\n    for (const attachmentId of args.attachmentIds) {\n      try {\n        const attachment = await lookupAttachment(\n          ctx,\n          attachmentId,\n          args.tenantId,\n        );\n\n        if (!attachment) {\n          errors.push({\n            attachmentId,\n            error: \"ATTACHMENT_NOT_FOUND\",\n          });\n          continue;\n        }\n\n        // Delete file from storage\n        try {\n          await ctx.storage.delete(attachment.storageId);\n        } catch (error) {\n          console.warn(\n            `Failed to delete file ${attachment.storageId}:`,\n            error,\n          );\n        }\n\n        // Delete the attachment record\n        await ctx.db.delete(attachment._id);\n        deleted++;\n      } catch (error) {\n        errors.push({\n          attachmentId,\n          error: error instanceof Error ? error.message : \"Unknown error\",\n        });\n      }\n    }\n\n    return {\n      deleted,\n      total: args.attachmentIds.length,\n      errors: errors.length > 0 ? errors : undefined,\n    };\n  },\n});",
+    "sha256": "bf2bf718523d62dae1ece4797680e84095364aeade5675354d95db34d48f1365",
+    "validators": {
+      "attachmentIds": "v.array(v.string())",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "attachments:purgeAll",
+    "builder": "mutation",
+    "declaration": "export const purgeAll = mutation({\n  args: {\n    memorySpaceId: v.optional(v.string()), // Limit to memory space if provided\n    tenantId: v.optional(v.string()), // Limit to tenant if provided\n  },\n  handler: async (ctx, args) => {\n    // Safety check: Only allow in test/dev environments\n    const siteUrl = process.env.CONVEX_SITE_URL || \"\";\n    const isLocal =\n      siteUrl.includes(\"localhost\") || siteUrl.includes(\"127.0.0.1\");\n    const isDevDeployment =\n      siteUrl.includes(\".convex.site\") ||\n      siteUrl.includes(\"dev-\") ||\n      siteUrl.includes(\"-dev\") ||\n      siteUrl.includes(\"preview\") ||\n      siteUrl.includes(\"staging\");\n    const isTestEnv =\n      process.env.NODE_ENV === \"test\" ||\n      process.env.CONVEX_ENVIRONMENT === \"test\" ||\n      process.env.CONVEX_ENVIRONMENT === \"development\";\n\n    if (!isLocal && !isDevDeployment && !isTestEnv) {\n      throw new Error(\n        \"PURGE_DISABLED_IN_PRODUCTION: purgeAll is only available in test/dev environments.\",\n      );\n    }\n\n    let attachments;\n    if (args.tenantId && args.memorySpaceId) {\n      attachments = await ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_tenant_space\", (q) =>\n          q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect();\n    } else if (args.tenantId) {\n      attachments = await ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_tenantId\", (q) => q.eq(\"tenantId\", args.tenantId!))\n        .collect();\n    } else if (args.memorySpaceId) {\n      attachments = await ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId!),\n        )\n        .collect();\n    } else {\n      attachments = await ctx.db.query(\"attachments\").collect();\n    }\n\n    let filesDeleted = 0;\n    for (const attachment of attachments) {\n      // Delete file from storage\n      try {\n        await ctx.storage.delete(attachment.storageId);\n        filesDeleted++;\n      } catch (error) {\n        console.warn(\n          `Failed to delete file ${attachment.storageId}:`,\n          error,\n        );\n      }\n\n      // Delete the attachment record\n      await ctx.db.delete(attachment._id);\n    }\n\n    return {\n      deleted: attachments.length,\n      filesDeleted,\n    };\n  },\n});",
+    "sha256": "c0f6f4ad1a8fc7175b4b11c3d484caa90eaad2f64626f57af33ed50599d9840b",
+    "validators": {
+      "memorySpaceId": "v.optional(v.string())",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "attachments:get",
+    "builder": "query",
+    "declaration": "export const get = query({\n  args: {\n    attachmentId: v.string(),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    return await lookupAttachment(ctx, args.attachmentId, args.tenantId);\n  },\n});",
+    "sha256": "35d2a9d0dfe9cb227eb28275955b9d9a796fee9e4e817d3eba541245f21d91e8",
+    "validators": {
+      "attachmentId": "v.string()",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "attachments:getUrl",
+    "builder": "query",
+    "declaration": "export const getUrl = query({\n  args: {\n    attachmentId: v.string(),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    const attachment = await lookupAttachment(\n      ctx,\n      args.attachmentId,\n      args.tenantId,\n    );\n\n    if (!attachment) {\n      return null;\n    }\n\n    // Get signed URL from storage\n    const url = await ctx.storage.getUrl(attachment.storageId);\n\n    if (!url) {\n      return null;\n    }\n\n    return {\n      url,\n      attachmentId: attachment.attachmentId,\n      mimeType: attachment.mimeType,\n      filename: attachment.filename,\n      size: attachment.size,\n    };\n  },\n});",
+    "sha256": "25e97edd76ff688ab3bfdba4235abffb636e216f508d662769aae35a80de1e71",
+    "validators": {
+      "attachmentId": "v.string()",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "attachments:list",
+    "builder": "query",
+    "declaration": "export const list = query({\n  args: {\n    memorySpaceId: v.string(), // Required - memory space isolation\n    tenantId: v.optional(v.string()),\n\n    // Optional filters\n    conversationId: v.optional(v.string()),\n    messageId: v.optional(v.string()),\n    memoryId: v.optional(v.string()),\n    artifactId: v.optional(v.string()),\n    userId: v.optional(v.string()),\n    type: v.optional(attachmentTypeValidator),\n\n    // Pagination\n    limit: v.optional(v.number()),\n    cursor: v.optional(v.string()),\n\n    // Sorting\n    sortBy: v.optional(v.union(v.literal(\"createdAt\"), v.literal(\"updatedAt\"))),\n    sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))),\n  },\n  handler: async (ctx, args) => {\n    const limit = Math.min(args.limit || 50, 1000); // Max 1000 (matches SDK validators)\n\n    // Select optimal index based on provided filters\n    let attachments;\n\n    if (args.tenantId) {\n      attachments = await ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_tenant_space\", (q) =>\n          q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq(\"memorySpaceId\", args.memorySpaceId),\n        )\n        .collect();\n    } else if (args.type) {\n      attachments = await ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_memorySpace_type\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId).eq(\"type\", args.type!),\n        )\n        .collect();\n      // Security: Only match global records when no tenantId provided\n      attachments = attachments.filter((a) => !a.tenantId);\n    } else {\n      attachments = await ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId),\n        )\n        .collect();\n      // Security: Only match global records when no tenantId provided\n      attachments = attachments.filter((a) => !a.tenantId);\n    }\n\n    // Apply post-filters\n    if (args.conversationId) {\n      attachments = attachments.filter(\n        (a) => a.conversationId === args.conversationId,\n      );\n    }\n    if (args.messageId) {\n      attachments = attachments.filter((a) => a.messageId === args.messageId);\n    }\n    if (args.memoryId) {\n      attachments = attachments.filter((a) => a.memoryId === args.memoryId);\n    }\n    if (args.artifactId) {\n      attachments = attachments.filter((a) => a.artifactId === args.artifactId);\n    }\n    if (args.userId) {\n      attachments = attachments.filter((a) => a.userId === args.userId);\n    }\n    // Filter by type if not already filtered by index\n    if (args.type && args.tenantId) {\n      attachments = attachments.filter((a) => a.type === args.type);\n    }\n\n    // Get total before pagination\n    const total = attachments.length;\n\n    // Sort\n    const sortBy = args.sortBy || \"createdAt\";\n    const sortOrder = args.sortOrder || \"desc\";\n    const multiplier = sortOrder === \"desc\" ? -1 : 1;\n\n    attachments.sort((a, b) => {\n      const aVal = sortBy === \"updatedAt\" ? a.updatedAt : a.createdAt;\n      const bVal = sortBy === \"updatedAt\" ? b.updatedAt : b.createdAt;\n      return (aVal - bVal) * multiplier;\n    });\n\n    // Handle cursor-based pagination\n    let offset = 0;\n    if (args.cursor) {\n      try {\n        const cursorData = JSON.parse(\n          Buffer.from(args.cursor, \"base64\").toString(\"utf-8\"),\n        );\n        offset = cursorData.offset || 0;\n      } catch {\n        // Invalid cursor, start from beginning\n        offset = 0;\n      }\n    }\n\n    // Paginate\n    const paginated = attachments.slice(offset, offset + limit);\n\n    // Generate next cursor\n    const hasMore = offset + limit < total;\n    const nextCursor = hasMore\n      ? Buffer.from(JSON.stringify({ offset: offset + limit })).toString(\n          \"base64\",\n        )\n      : undefined;\n\n    return {\n      attachments: paginated,\n      total,\n      cursor: nextCursor,\n      hasMore,\n    };\n  },\n});",
+    "sha256": "04ecdb6bce511d28fbea1ee6c662314f82f76f5c00cd0d9f704be37694a06db8",
+    "validators": {
+      "memorySpaceId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "conversationId": "v.optional(v.string())",
+      "messageId": "v.optional(v.string())",
+      "memoryId": "v.optional(v.string())",
+      "artifactId": "v.optional(v.string())",
+      "userId": "v.optional(v.string())",
+      "type": "v.optional(attachmentTypeValidator)",
+      "limit": "v.optional(v.number())",
+      "cursor": "v.optional(v.string())",
+      "sortBy": "v.optional(v.union(v.literal(\"createdAt\"), v.literal(\"updatedAt\")))",
+      "sortOrder": "v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\")))"
+    }
+  },
+  {
+    "path": "attachments:count",
+    "builder": "query",
+    "declaration": "export const count = query({\n  args: {\n    memorySpaceId: v.string(),\n    tenantId: v.optional(v.string()),\n    conversationId: v.optional(v.string()),\n    messageId: v.optional(v.string()),\n    userId: v.optional(v.string()),\n    type: v.optional(attachmentTypeValidator),\n  },\n  handler: async (ctx, args) => {\n    let attachments;\n\n    if (args.tenantId) {\n      attachments = await ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_tenant_space\", (q) =>\n          q\n            .eq(\"tenantId\", args.tenantId!)\n            .eq(\"memorySpaceId\", args.memorySpaceId),\n        )\n        .collect();\n    } else {\n      attachments = await ctx.db\n        .query(\"attachments\")\n        .withIndex(\"by_memorySpace\", (q) =>\n          q.eq(\"memorySpaceId\", args.memorySpaceId),\n        )\n        .collect();\n      // Security: Only match global records when no tenantId provided\n      attachments = attachments.filter((a) => !a.tenantId);\n    }\n\n    // Apply filters\n    if (args.conversationId) {\n      attachments = attachments.filter(\n        (a) => a.conversationId === args.conversationId,\n      );\n    }\n    if (args.messageId) {\n      attachments = attachments.filter((a) => a.messageId === args.messageId);\n    }\n    if (args.userId) {\n      attachments = attachments.filter((a) => a.userId === args.userId);\n    }\n    if (args.type) {\n      attachments = attachments.filter((a) => a.type === args.type);\n    }\n\n    return attachments.length;\n  },\n});",
+    "sha256": "71f10a000efd61fb0b225d9ec83efde4939f80d51ed58a97eb690d87cb6ce189",
+    "validators": {
+      "memorySpaceId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "conversationId": "v.optional(v.string())",
+      "messageId": "v.optional(v.string())",
+      "userId": "v.optional(v.string())",
+      "type": "v.optional(attachmentTypeValidator)"
+    }
+  },
+  {
+    "path": "attachments:getByIds",
+    "builder": "query",
+    "declaration": "export const getByIds = query({\n  args: {\n    attachmentIds: v.array(v.string()),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    const results: Array<any> = [];\n\n    for (const attachmentId of args.attachmentIds) {\n      const attachment = await lookupAttachment(\n        ctx,\n        attachmentId,\n        args.tenantId,\n      );\n      if (attachment) {\n        results.push(attachment);\n      }\n    }\n\n    return results;\n  },\n});",
+    "sha256": "4f7c4b161d069dc5462ec29c6a57cbff077f77ab1016614df69c5e4938a83377",
+    "validators": {
+      "attachmentIds": "v.array(v.string())",
+      "tenantId": "v.optional(v.string())"
+    }
+  },
+  {
+    "path": "attachments:getByConversation",
+    "builder": "query",
+    "declaration": "export const getByConversation = query({\n  args: {\n    conversationId: v.string(),\n    tenantId: v.optional(v.string()),\n    type: v.optional(attachmentTypeValidator),\n    limit: v.optional(v.number()),\n  },\n  handler: async (ctx, args) => {\n    const limit = Math.min(args.limit || 50, 100);\n\n    let attachments = await ctx.db\n      .query(\"attachments\")\n      .withIndex(\"by_conversation\", (q) =>\n        q.eq(\"conversationId\", args.conversationId),\n      )\n      .collect();\n\n    // Tenant filtering\n    if (args.tenantId) {\n      attachments = attachments.filter((a) => a.tenantId === args.tenantId);\n    } else {\n      // Security: Only match global records when no tenantId provided\n      attachments = attachments.filter((a) => !a.tenantId);\n    }\n\n    // Type filtering\n    if (args.type) {\n      attachments = attachments.filter((a) => a.type === args.type);\n    }\n\n    // Sort by createdAt descending (newest first)\n    attachments.sort((a, b) => b.createdAt - a.createdAt);\n\n    // Apply limit\n    return attachments.slice(0, limit);\n  },\n});",
+    "sha256": "8794cc649abd44104c28693f60ec30599090d8143d394e127f2b784cf6ba058f",
+    "validators": {
+      "conversationId": "v.string()",
+      "tenantId": "v.optional(v.string())",
+      "type": "v.optional(attachmentTypeValidator)",
+      "limit": "v.optional(v.number())"
+    }
+  },
+  {
+    "path": "attachments:getByMessage",
+    "builder": "query",
+    "declaration": "export const getByMessage = query({\n  args: {\n    messageId: v.string(),\n    tenantId: v.optional(v.string()),\n  },\n  handler: async (ctx, args) => {\n    let attachments = await ctx.db\n      .query(\"attachments\")\n      .withIndex(\"by_message\", (q) => q.eq(\"messageId\", args.messageId))\n      .collect();\n\n    // Tenant filtering\n    if (args.tenantId) {\n      attachments = attachments.filter((a) => a.tenantId === args.tenantId);\n    } else {\n      // Security: Only match global records when no tenantId provided\n      attachments = attachments.filter((a) => !a.tenantId);\n    }\n\n    // Sort by createdAt ascending (order added)\n    attachments.sort((a, b) => a.createdAt - b.createdAt);\n\n    return attachments;\n  },\n});",
+    "sha256": "5c1a4c23bcbd4973e3527e683123e7d823206d6011b784f16a3b88c34cf3f252",
+    "validators": {
+      "messageId": "v.string()",
+      "tenantId": "v.optional(v.string())"
+    }
+  }
+]

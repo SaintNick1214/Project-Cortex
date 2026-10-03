@@ -1,0 +1,753 @@
+{
+  "provenance": "Native installed Convex builder exportArgs evaluated from pre-edit frozen AST args and shared validator literals; inert handler replaces every original effect.",
+  "registrations": [
+    {
+      "path": "artifacts:setFileRef",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "artifactId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "fileRef": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "storageId": {
+                  "fieldType": {
+                    "type": "id",
+                    "tableName": "_storage"
+                  },
+                  "optional": false
+                },
+                "mimeType": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": false
+                },
+                "size": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "checksum": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                },
+                "originalFilename": {
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "optional": true
+                }
+              }
+            },
+            "optional": false
+          }
+        }
+      }
+    },
+    {
+      "path": "artifacts:generateArtifactUploadUrl",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "artifactId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "mimeType": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "filename": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "artifacts:completeArtifactUpload",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "artifactId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "storageId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "_storage"
+            },
+            "optional": false
+          },
+          "mimeType": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "size": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "originalFilename": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "checksum": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "markFinal": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "artifacts:getArtifactFileUrl",
+      "builder": "query",
+      "args": {
+        "type": "object",
+        "value": {
+          "artifactId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "artifacts:detachFile",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "artifactId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "deleteFile": {
+            "fieldType": {
+              "type": "boolean"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:generateUploadUrl",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:attach",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "storageId": {
+            "fieldType": {
+              "type": "id",
+              "tableName": "_storage"
+            },
+            "optional": false
+          },
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "image"
+                },
+                {
+                  "type": "literal",
+                  "value": "audio"
+                },
+                {
+                  "type": "literal",
+                  "value": "video"
+                },
+                {
+                  "type": "literal",
+                  "value": "file"
+                },
+                {
+                  "type": "literal",
+                  "value": "pdf"
+                }
+              ]
+            },
+            "optional": false
+          },
+          "mimeType": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "filename": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "size": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": false
+          },
+          "conversationId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "messageId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memoryId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "artifactId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "dimensions": {
+            "fieldType": {
+              "type": "object",
+              "value": {
+                "width": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                },
+                "height": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                }
+              }
+            },
+            "optional": true
+          },
+          "duration": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "metadata": {
+            "fieldType": {
+              "type": "any"
+            },
+            "optional": true
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:remove",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "attachmentId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:removeMany",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "attachmentIds": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "string"
+              }
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:purgeAll",
+      "builder": "mutation",
+      "args": {
+        "type": "object",
+        "value": {
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:get",
+      "builder": "query",
+      "args": {
+        "type": "object",
+        "value": {
+          "attachmentId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:getUrl",
+      "builder": "query",
+      "args": {
+        "type": "object",
+        "value": {
+          "attachmentId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:list",
+      "builder": "query",
+      "args": {
+        "type": "object",
+        "value": {
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "conversationId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "messageId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "memoryId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "artifactId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "image"
+                },
+                {
+                  "type": "literal",
+                  "value": "audio"
+                },
+                {
+                  "type": "literal",
+                  "value": "video"
+                },
+                {
+                  "type": "literal",
+                  "value": "file"
+                },
+                {
+                  "type": "literal",
+                  "value": "pdf"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "limit": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          },
+          "cursor": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "sortBy": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "createdAt"
+                },
+                {
+                  "type": "literal",
+                  "value": "updatedAt"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "sortOrder": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "asc"
+                },
+                {
+                  "type": "literal",
+                  "value": "desc"
+                }
+              ]
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:count",
+      "builder": "query",
+      "args": {
+        "type": "object",
+        "value": {
+          "memorySpaceId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "conversationId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "messageId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "userId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "image"
+                },
+                {
+                  "type": "literal",
+                  "value": "audio"
+                },
+                {
+                  "type": "literal",
+                  "value": "video"
+                },
+                {
+                  "type": "literal",
+                  "value": "file"
+                },
+                {
+                  "type": "literal",
+                  "value": "pdf"
+                }
+              ]
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:getByIds",
+      "builder": "query",
+      "args": {
+        "type": "object",
+        "value": {
+          "attachmentIds": {
+            "fieldType": {
+              "type": "array",
+              "value": {
+                "type": "string"
+              }
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:getByConversation",
+      "builder": "query",
+      "args": {
+        "type": "object",
+        "value": {
+          "conversationId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          },
+          "type": {
+            "fieldType": {
+              "type": "union",
+              "value": [
+                {
+                  "type": "literal",
+                  "value": "image"
+                },
+                {
+                  "type": "literal",
+                  "value": "audio"
+                },
+                {
+                  "type": "literal",
+                  "value": "video"
+                },
+                {
+                  "type": "literal",
+                  "value": "file"
+                },
+                {
+                  "type": "literal",
+                  "value": "pdf"
+                }
+              ]
+            },
+            "optional": true
+          },
+          "limit": {
+            "fieldType": {
+              "type": "number"
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    {
+      "path": "attachments:getByMessage",
+      "builder": "query",
+      "args": {
+        "type": "object",
+        "value": {
+          "messageId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": false
+          },
+          "tenantId": {
+            "fieldType": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      }
+    }
+  ]
+}
