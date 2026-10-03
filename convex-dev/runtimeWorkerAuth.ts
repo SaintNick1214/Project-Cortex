@@ -49,7 +49,7 @@ export function matchesValidator(value: unknown, schema: GenericValidator): bool
       if (!value || typeof value !== "object" || Array.isArray(value)) return false;
       const record = value as Record<string, unknown>;
       const fields: Record<string, GenericValidator> = schema.fields;
-      return Object.keys(record).every((key) => Object.hasOwn(fields, key))
+      return Object.keys(record).every((key) => Object.prototype.hasOwnProperty.call(fields, key))
         && Object.entries(fields).every(([key, field]) => record[key] === undefined
           ? field.isOptional === "optional" : matchesValidator(record[key], field));
     }

@@ -1,0 +1,355 @@
+{
+  "source": "Actual HEAD and current source function/guard AST extraction, transpiled or evaluated directly; no repository changes or mirrored production test addition",
+  "matchesValidator": [
+    {
+      "name": "valid persisted JSON object",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "optional absence",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "unexpected admin key",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "null object",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "array input",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "missing required field",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "invalid required value",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "null prototype record and fields",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "null prototype record unknown key",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "persisted JSON undeclared prototype key __proto__",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "null prototype undeclared key __proto__",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "explicit own schema declaration __proto__",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "persisted JSON undeclared prototype key constructor",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "null prototype undeclared key constructor",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "explicit own schema declaration constructor",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "persisted JSON undeclared prototype key prototype",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "null prototype undeclared key prototype",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "explicit own schema declaration prototype",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "persisted JSON undeclared prototype key toString",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "null prototype undeclared key toString",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "explicit own schema declaration toString",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "persisted JSON undeclared prototype key hasOwnProperty",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "null prototype undeclared key hasOwnProperty",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "explicit own schema declaration hasOwnProperty",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "persisted JSON undeclared prototype key valueOf",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "null prototype undeclared key valueOf",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "explicit own schema declaration valueOf",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "inherited schema field does not authorize own input key",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "nested persisted JSON forged prototype key",
+      "before": false,
+      "after": false,
+      "expected": false
+    },
+    {
+      "name": "nested persisted JSON valid",
+      "before": true,
+      "after": true,
+      "expected": true
+    },
+    {
+      "name": "shadowed own hasOwnProperty is not called",
+      "before": true,
+      "after": true,
+      "expected": true
+    }
+  ],
+  "getEnforcementStatsGuard": {
+    "beforeExpression": "Object.hasOwn(durations, options.period)",
+    "afterExpression": "Object.prototype.hasOwnProperty.call(durations, options.period)",
+    "cases": [
+      {
+        "period": "7d",
+        "before": true,
+        "after": true,
+        "expected": true
+      },
+      {
+        "period": "30d",
+        "before": true,
+        "after": true,
+        "expected": true
+      },
+      {
+        "period": "90d",
+        "before": true,
+        "after": true,
+        "expected": true
+      },
+      {
+        "period": "1y",
+        "before": true,
+        "after": true,
+        "expected": true
+      },
+      {
+        "period": "__proto__",
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": "constructor",
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": "toString",
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": "hasOwnProperty",
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": "valueOf",
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": "2d",
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": "",
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": null,
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": "undefined",
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": 7,
+        "before": false,
+        "after": false,
+        "expected": false
+      },
+      {
+        "period": "Symbol(7d)",
+        "before": false,
+        "after": false,
+        "expected": false
+      }
+    ]
+  },
+  "intrinsicCases": [
+    {
+      "label": "null prototype",
+      "original": {
+        "value": true
+      },
+      "current": {
+        "value": true
+      }
+    },
+    {
+      "label": "JSON own __proto__",
+      "original": {
+        "value": true
+      },
+      "current": {
+        "value": true
+      }
+    },
+    {
+      "label": "plain inherited constructor",
+      "original": {
+        "value": false
+      },
+      "current": {
+        "value": false
+      }
+    },
+    {
+      "label": "primitive string",
+      "original": {
+        "value": true
+      },
+      "current": {
+        "value": true
+      }
+    },
+    {
+      "label": "null",
+      "original": {
+        "errorName": "TypeError"
+      },
+      "current": {
+        "errorName": "TypeError"
+      }
+    },
+    {
+      "label": "undefined",
+      "original": {
+        "errorName": "TypeError"
+      },
+      "current": {
+        "errorName": "TypeError"
+      }
+    }
+  ],
+  "schemaParts": {
+    "exactFiveDAndTrustedDeclarationsMatchHead": true,
+    "parts": [
+      "spread:runtimeAuthTables",
+      "spread:runtimeMemoryTables",
+      "governancePolicies",
+      "governanceEnforcement",
+      "graphSyncQueue"
+    ]
+  },
+  "equivalent": true,
+  "qualification": "Unmodified native intrinsics; identical own-property logic including inherited and persisted JSON prototype names/null prototypes. Other validator semantics remain unchanged."
+}

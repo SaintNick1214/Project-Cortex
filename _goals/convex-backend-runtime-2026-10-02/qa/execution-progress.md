@@ -44,10 +44,10 @@ record historical authorship and do not supersede this request.
 | 02A | Complete/PASS | Fresh cycle2 judge task02a_review_2,4.4/5;137 tests/211 independent assertions;02B pending trusted authority freeze. |
 | 03A | Complete/PASS | Fresh final cycle3 judge task03a_review_3,4.2/5;133 tests/38 independent outcomes. Raw duplicate grant checks corrected within open review. Existing endpoint closure remains03B. |
 | 02B | Complete/PASS bounded | Fresh task02b_review_1,4.4/5;53 retained tests/78 independent assertions; scoped adapters/source-vector stores/remember-recall. Whole02 deployed Gateway wiring pending04/06/09. |
-| 03B1-MF | Loop1 REJECT; Cycle2 REJECT; third repair active | Fresh final task03b1_mf_review_2 REJECT3.2/5 despite307 passing tests: post-crypto source revision/lifecycle and overbroad deletion-proof exemptions.32/38/44 historical records preserved. Last fresh cycle3 review pending; no dependent MF edits. |
+| 03B1-MF | Loop1 REJECT; Cycle2 REJECT; frozen third review active | Fresh final task03b1_mf_review_2 REJECT3.2/5 despite307 passing tests: post-crypto source revision/lifecycle and overbroad deletion-proof exemptions.32/38/44 historical records preserved. Thirdfreeze361tests/15originalprobe replays; freshcycle3judge active, no dependent MF edits. |
 | 03C1 | Complete/PASS bounded | Fresh task03c1_review_1,4.2/5;98 tests/53 independent reactive assertions; official paused rejection and wire logout fixed. Reviewed-foundation snapshot build/packed/browser PASS npm12.2. Live03C2 remainspending. |
-| 03B2D | Complete/PASS bounded; reviewed integration ready for commit | Fresh task03b2d_review_1 FINALPASS4.4/5:185tests/3suites+60 independent probes,25paths. Reviewed schema3blocks staged exactly, MF schema preserved unstaged. Main185/185 tests pass. Initial184PASS/1FAIL retained; justified test-only repair independentlyFINALPASS4.4 including exact host validators/indexes and success/failure temp cleanup. oldSDK enforce consumer and graph/storage/live pending. |
-| 03B2A | Cycle1 REJECT; second repair active | Fresh task03b2a_review_1 REJECT3.0/5: profile READ eligibility, bulk key preflight, session expiry/reference binding and numeric/version defects despite139tests.69 original records preserved.5 SDK consumer errors and MF source-key bridge remain pending; no main source writes. |
+| 03B2D | Complete/PASS bounded; committed/pushed cd567144 | Fresh task03b2d_review_1 FINALPASS4.4/5:185tests/3suites+60 independent probes,25paths. Reviewed schema3blocks staged exactly, MF schema preserved unstaged. Main185/185 tests pass. Initial184PASS/1FAIL retained; justified test-only repair independentlyFINALPASS4.4 including exact host validators/indexes and success/failure temp cleanup. oldSDK enforce consumer and graph/storage/live pending. |
+| 03B2A | Cycle1 REJECT; Cycle2 NEEDS FIXES; third repair active | Fresh cycle2NEEDS FIXES3.4: prior19failureobservations+151newboundaries+189tests pass; actualES2021 Array.at typing and ordinarytestcanonicalQA writes remain.69/101historical records preserved; bounded thirdrepair.5 SDK consumer errors and MF source-key bridge remain pending; no main source writes. |
 | 03B1-T/03B2B–C/03C2/04–09 | Pending | Remaining endpoint closure and ordered text slice. |
 | 10–15 | Pending | Text slice and per-extension service gates. |
 | 16–17 | Pending | Complete implementation, outcome matrix and independent final audit. |
@@ -97,3 +97,18 @@ without changing the frozen main memory/fact candidate. Neither imports the MF h
 under review. Parent owns integration, shared codegen/deployment, and incremental signed
 commits. The maximum four active agents includes the parent; fresh reviewers occupy
 released executor slots.
+
+Current worker-closure CI on cd567144 is FAILURE: packed/build consumers retain the
+known removed public governance.enforce reference, and actual backend typing found
+two Object.hasOwn/ES2021 library mismatches missed by the raised scoped configuration.
+A bounded semantics-preserving backend fix is active, without host config changes;
+fresh review is required. See ci-followups/worker-closure-checks.json and
+worker-closure-failures.json. Successful old CI and scoped185 tests do not certify
+this failed aggregate. No manual shared-target deployment/purge was issued.
+
+D compiler followup independently FINALPASS4.4/5: exacttwo same-semantics own-property
+checks, actual preserved ES2021 backend tsc and185tests PASS;52 independent semantic
+cases and172 preservation checks PASS. Original139DQAfiles, host compilerconfig and
+initialerrors unchanged; task03b2d-compiler-review-1.md. SDK governance consumer boundary
+repair is independently active03C2-D; no raw worker invocation or operator references
+will be exposed merely to restore compilation.

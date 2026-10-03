@@ -1,0 +1,52 @@
+{
+  "verifiedAt": "2026-10-03T10:45:48.604199+00:00",
+  "products": [
+    {
+      "file": "convex-dev/governance.ts",
+      "beforeSha256": "066b39a7f078daeb53df74798e18d474785038f81dbcc23914c9dfab2da81c70",
+      "sha256": "262c2f892bdc577b44b53dc1bff35ee7c8cebc55937b9f87469938e0b5c4e668",
+      "replacements": 1
+    },
+    {
+      "file": "convex-dev/runtimeWorkerAuth.ts",
+      "beforeSha256": "49cfdcad2f2470f8155360a9b334f337d25d1d0ea44fb772f79c8fe90444030a",
+      "sha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+      "replacements": 1
+    }
+  ],
+  "hostCompilerConfig": {
+    "file": "convex-dev/tsconfig.json",
+    "sha256": "6b077cd115f1e1a1cd41fe22824624d9ee39d89b2a53b016aaf59dd2981fdc17",
+    "unchanged": true
+  },
+  "preservation": [
+    {
+      "group": "preservedQa",
+      "count": 139,
+      "changed": []
+    },
+    {
+      "group": "originalCiReceipts",
+      "count": 2,
+      "changed": [
+        {
+          "file": "_goals/convex-backend-runtime-2026-10-02/qa/ci-followups/worker-closure-failures.json",
+          "beforeSha256": "f190b74a76bc1912d7e1ee3203ed921a94999bf8ff9076585f24f99a4149e6a7",
+          "observedSha256": "26b647c13590be1c68653a3568a423f6cfa6d0be19b79a991791748fc5674fb3"
+        }
+      ]
+    }
+  ],
+  "testCounts": {
+    "success": true,
+    "numTotalTests": 185,
+    "numPassedTests": 185,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTotalTestSuites": 3,
+    "numPassedTestSuites": 3,
+    "numFailedTestSuites": 0,
+    "numPendingTestSuites": 0
+  },
+  "exactTwoReplacementsOnly": true
+}

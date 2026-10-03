@@ -1,0 +1,31 @@
+{
+  "observedAt": "2026-10-03T10:41:39.314158+00:00",
+  "head": "cd5671449beb64ed1ca4a284a761cad60ab70525",
+  "workflowRun": 37117112735,
+  "diagnostics": [
+    "Packed package and browser contracts\tRun npm run build\t2026-10-03T10:39:33.0335339Z ##[error]src/governance/index.ts(380,28): error TS2339: Property 'enforce' does not exist on type '{ setPolicy: FunctionReference<\"mutation\", \"public\", { tenantId?: string | undefined; policy: { organizationId?: string | undefined; memorySpaceId?: string | undefined; sessions?: { limits?: { maxActiveSessions?: number | undefined; maxSessionsPerDevice?: number | undefined; } | undefined; lifecycle: { ...; }; clean...'.",
+    "Packed package and browser contracts\tRun npm run build\t2026-10-03T10:39:33.0348417Z \u001b[31mError: error occurred in dts build",
+    "Packed package and browser contracts\tRun npm run build\t2026-10-03T10:39:33.1147312Z ##[error]Process completed with exit code 1.",
+    "Deploy & Purge Database\tDeploy Convex backend\t2026-10-03T10:39:34.8258960Z ##[error]Process completed with exit code 1.",
+    "All Checks Passed\tCheck if all jobs passed\t2026-10-03T10:39:53.8957174Z ##[error]Process completed with exit code 1."
+  ],
+  "fullLogRetainedPrivately": "work/backend-runtime/ci-worker-closure-failures.log",
+  "fullRootStatus": "FAILURE",
+  "inference": "No fix has been applied by this log review.",
+  "backendDiagnostics": [
+    {
+      "file": "convex-dev/governance.ts",
+      "line": 434,
+      "code": "TS2550",
+      "message": "Object.hasOwn requires ES2022 but the actual preserved backend project uses ES2021."
+    },
+    {
+      "file": "convex-dev/runtimeWorkerAuth.ts",
+      "line": 52,
+      "code": "TS2550",
+      "message": "Object.hasOwn requires ES2022 but the actual preserved backend project uses ES2021."
+    }
+  ],
+  "backendFix": "Bounded same-semantics ES2021-compatible own-property checks; host compiler configuration remains preserved. Independent followup review pending.",
+  "deploymentCoverage": "Existing automatic dedicated SDK-test workflow halted at backend typecheck; no disposable-product deployment or service PASS is established by this run. The session did not manually invoke its shared target."
+}

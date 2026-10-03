@@ -431,7 +431,7 @@ export const getEnforcementStats = query({
     const options = args.options ?? { period: "30d" as const };
     const authority = await publicAdmin(ctx, { organizationId: options.organizationId, memorySpaceId: options.memorySpaceId }, args.tenantId);
     const durations = { "7d": 7, "30d": 30, "90d": 90, "1y": 365 };
-    if (!Object.hasOwn(durations, options.period)) workerDeny("INVALID_INPUT");
+    if (!Object.prototype.hasOwnProperty.call(durations, options.period)) workerDeny("INVALID_INPUT");
     const end = Date.now(); const start = end - durations[options.period] * 86400000;
     const logs = await scopedLogs(ctx, authority, start, end);
     return { period: { start, end }, status: "RETENTION_EXECUTION_NOT_IMPLEMENTED", simulation: true,

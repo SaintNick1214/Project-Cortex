@@ -1,0 +1,26 @@
+diff --git a/convex-dev/governance.ts b/convex-dev/governance.ts
+index 646eba63..ff058169 100644
+--- a/convex-dev/governance.ts
++++ b/convex-dev/governance.ts
+@@ -431,7 +431,7 @@ export const getEnforcementStats = query({
+     const options = args.options ?? { period: "30d" as const };
+     const authority = await publicAdmin(ctx, { organizationId: options.organizationId, memorySpaceId: options.memorySpaceId }, args.tenantId);
+     const durations = { "7d": 7, "30d": 30, "90d": 90, "1y": 365 };
+-    if (!Object.hasOwn(durations, options.period)) workerDeny("INVALID_INPUT");
++    if (!Object.prototype.hasOwnProperty.call(durations, options.period)) workerDeny("INVALID_INPUT");
+     const end = Date.now(); const start = end - durations[options.period] * 86400000;
+     const logs = await scopedLogs(ctx, authority, start, end);
+     return { period: { start, end }, status: "RETENTION_EXECUTION_NOT_IMPLEMENTED", simulation: true,
+diff --git a/convex-dev/runtimeWorkerAuth.ts b/convex-dev/runtimeWorkerAuth.ts
+index c576070b..160ed598 100644
+--- a/convex-dev/runtimeWorkerAuth.ts
++++ b/convex-dev/runtimeWorkerAuth.ts
+@@ -49,7 +49,7 @@ export function matchesValidator(value: unknown, schema: GenericValidator): bool
+       if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+       const record = value as Record<string, unknown>;
+       const fields: Record<string, GenericValidator> = schema.fields;
+-      return Object.keys(record).every((key) => Object.hasOwn(fields, key))
++      return Object.keys(record).every((key) => Object.prototype.hasOwnProperty.call(fields, key))
+         && Object.entries(fields).every(([key, field]) => record[key] === undefined
+           ? field.isOptional === "optional" : matchesValidator(record[key], field));
+     }
