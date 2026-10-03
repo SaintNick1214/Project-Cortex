@@ -1,0 +1,713 @@
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts
+250   }, ["operator-provisioning"]);
+251   if (!sdkReady) { for (const name of names.slice(names.indexOf("sdk-refresh"))) await test(name, async () => {}, ["sdk-metadata-consumers"]); return; }
+252   function watchSdk() {
+253     const state = { successes: 0, denied: false, values: [] as number[], invalidPayload: false };
+254     const stop = sdk.getClient().onUpdate(query("mutable:get"), sdkKey, (value) => {
+255       state.successes++;
+256       const marker = value !== null && typeof value === "object" && "value" in value ? value.value : undefined;
+257       if (typeof marker !== "number" || ![41, 42, 43].includes(marker) || state.values.length >= 64) state.invalidPayload = true;
+258       else state.values.push(marker);
+259     }, (error) => { state.denied = denial(error) === "UNAUTHENTICATED"; });
+260     return { state, stop };
+261   }
+262   async function fenced(name: "sdk-logout" | "late-credential-fencing", baseline: 41 | 42, updated: 42 | 43, late = false) {
+263     const watcher = watchSdk();
+264     try {
+265       await waitFor(() => watcher.state.successes > 0); assert.equal(watcher.state.invalidPayload, false);
+266       assert.equal(watcher.state.values.at(-1), baseline);
+267       if (late) { lateResolve = undefined; mode = "late"; sdk.credentials!.notifySessionChanged(); await waitFor(() => lateResolve !== undefined); }
+268       const before = watcher.state.successes;
+269       mode = "current"; currentToken = null; sdk.credentials!.notifySessionChanged();
+270       await waitFor(() => watcher.state.denied);
+271       if (late) lateResolve!(principal.token);
+272       // A separately authenticated owned writer changes the real persisted row
+273       // after null/logout. This gives the former observer a concrete new delivery
+274       // opportunity, rather than allowing a silent/never-working observer to pass.
+275       await bounded(principal.client.mutation(mutation("mutable:set"), { ...sdkKey, value: updated }));
+276       assert.equal(object(await bounded(principal.client.query(query("mutable:get"), sdkKey))).value, updated);
+277       await new Promise((done) => setTimeout(done, watchQuietMs));
+278       assert.equal(watcher.state.invalidPayload, false); assert.equal(watcher.state.successes, before, "NO_POST_REVOCATION_DELIVERY");
+279       await denied(sdk.getClient().query(query("mutable:get"), sdkKey), "UNAUTHENTICATED");
+280       parent.send({ type: "metric", name, baseline, updated, before, after: watcher.state.successes, quietMs: watchQuietMs,
+281         payloadFields: ["value"], observedValues: watcher.state.values });
+282     } finally { watcher.stop(); }
+283   }
+284   await test("sdk-refresh", async () => {
+285     currentToken = await jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+286     assert.equal(object(await bounded(sdk.getClient().query(query("mutable:get"), sdkKey))).value, 41);
+287     assert.equal(object(await bounded(sdk.credentials!.withHttpAuth(sdkHttp, (client) => bounded(client.query(query("mutable:get"), sdkKey)), { forceRefreshToken: true }))).value, 41);
+288     assert.equal(forceRefreshSeen, true);
+289   });
+290   await test("sdk-logout", async () => {
+291     await fenced("sdk-logout", 41, 42);
+292     await denied(sdk.credentials!.withHttpAuth(sdkHttp, (client) => bounded(client.query(query("mutable:get"), sdkKey))), "UNAUTHENTICATED");
+293     assert.deepEqual(await bounded(sdk.credentials!.getAuthorizationHeaders()), {});
+294   }, ["sdk-metadata-consumers", "sdk-refresh"]);
+295   await test("sdk-labels-no-authority", async () => {
+296     const labels = new Cortex({ convexUrl: target.deploymentUrl, resilience: { enabled: false }, auth: createAuthContext({ userId: principal.userId, tenantId: principal.scope.tenantId, claims: { role: "admin" } }), fetchAuthToken: async () => null }); sdkClients.push(labels);
+297     await denied(labels.getClient().query(query("mutable:get"), sdkKey), "UNAUTHENTICATED");
+298   });
+299   await test("background-after-ordinary-logout", async () => { await operator("sessions:incrementMessageCount", { sessionId: sdkSession, reference: principal.reference }); assert.equal(object(await bounded(principal.client.query(query("sessions:get"), { sessionId: sdkSession, ...principal.scope }))).messageCount, 1); }, ["sdk-metadata-consumers", "sdk-logout"]);
+300   await test("late-credential-fencing", async () => {
+301     mode = "current"; currentToken = await jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+302     await fenced("late-credential-fencing", 42, 43, true);
+303   }, ["sdk-metadata-consumers", "sdk-logout"]);
+304   await test("sanitized-host-callback", async () => {
+305     mode = "throw"; sdk.credentials!.notifySessionChanged(); await waitFor(() => callbackCodes.length > 0);
+306     assert.deepEqual(Object.keys(sdk.credentials!.authFailure!).sort(), ["attemptId", "code"]);
+307     assert(callbackCodes.every((code) => code === "HOST_TOKEN_FETCH_FAILED"));
+308     await denied(sdk.getClient().query(query("mutable:get"), sdkKey), "UNAUTHENTICATED");
+309     mode = "current"; currentToken = await jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+310     assert.equal(object(await bounded(sdk.getClient().query(query("mutable:get"), sdkKey))).value, 43);
+311     assert.equal(sdk.credentials!.authFailure, undefined);
+312   }, ["sdk-metadata-consumers", "late-credential-fencing"]);
+313   await test("sdk-session-capability", async () => {
+314     try { await bounded(sdk.sessions.expireIdle({ idleTimeout: 0 })); assert.fail("CAPABILITY_REJECTION_REQUIRED"); }
+315     catch (error) { assert(error instanceof SessionCapabilityError); assert.equal(error.outcome, "not_dispatched"); assert.equal(error.code, "BACKEND_MAINTENANCE_ONLY"); }
+316     assert.equal(object(await bounded(principal.client.query(query("sessions:get"), { sessionId: sdkSession, ...principal.scope }))).status, "active");
+317   });
+318   await test("session-end-not-grant-revocation", async () => {
+319     await bounded(sdk.sessions.end(sdkSession)); assert.equal((await bounded(sdk.sessions.get(sdkSession)))?.status, "ended");
+320     assert.equal(object(await bounded(principal.client.query(query("mutable:get"), sdkKey))).value, 43);
+321     await operator("runtimeAuth:recheck", { reference: principal.reference, requirement: { capability: "write", ...principal.scope } });
+322   }, ["sdk-metadata-consumers", "sanitized-host-callback"]);
+323   await test("background-after-revocation", async () => {
+324     const active = `revoked-worker-${runId}`; await bounded(principal.client.mutation(mutation("sessions:create"), { sessionId: active, ...principal.scope, userId: principal.userId, startedAt: Date.now() }));
+325     await operator("runtimeAuth:revokeGrant", { grantId: principal.reference.grantId });
+326     await operatorDenied("sessions:incrementMemoryCount", { sessionId: active, reference: principal.reference });
+327     const auditor = await provision("sdk-auditor", "space", ["read"], principal.scope);
+328     assert.equal(object(await bounded(auditor.client.query(query("sessions:get"), { sessionId: active, ...principal.scope }))).memoryCount, 0);
+329   });
+330 }
+FILE src/auth/credentials.ts
+88   };
+89 
+90   /** Bind one reactive transport using Convex's official refresh callback. */
+91   bindReactiveClient(client: ReactiveAuthClient): void {
+92     if (client.closed) {
+93       throw new Error("Cannot bind a closed reactive client");
+94     }
+95     if (this.reactiveClient && this.reactiveClient !== client && !this.reactiveClient.closed) {
+96       throw new Error("Host credentials already have a bound reactive client");
+97     }
+98     this.reactiveClient = client;
+99     this.configureReactiveAuth(client, false);
+100   }
+101 
+102   /**
+103    * Call after host login, logout or identity changes. Reconfigure official Convex
+104    * auth and force the first host token fetch to bypass its cache; later refresh
+105    * requests are forwarded unchanged. A null token clears Convex identity.
+106    * Stop private observers on logout; persisted background grants still require
+107    * explicit backend revocation/deletion. Throws when unbound or already closed.
+108    */
+109   notifySessionChanged(): void {
+110     const client = this.reactiveClient;
+111     if (!client) {
+112       throw new Error("No reactive client is bound to host credentials");
+113     }
+114     if (client.closed) {
+115       this.reactiveClient = undefined;
+116       throw new Error("Cannot refresh a closed reactive client");
+117     }
+118     this.configureReactiveAuth(client, true);
+119   }
+120 
+121   private configureReactiveAuth(
+122     client: ReactiveAuthClient,
+123     forceFirstFetch: boolean,
+124   ): void {
+125     const version = ++this.reactiveVersion;
+126     if (this.pendingDeauthTimer !== undefined) {
+127       clearTimeout(this.pendingDeauthTimer);
+128       this.pendingDeauthTimer = undefined;
+129     }
+130     const baseClient = client.client;
+131     // Remove the prior session identity before setAuth pauses the transport.
+132     if (baseClient.hasAuth()) {
+133       baseClient.clearAuth();
+134     }
+135     let firstFetch = forceFirstFetch;
+136     client.setAuth(async (request) => {
+137       if (version !== this.reactiveVersion || client.closed) {
+138         return null;
+139       }
+140       const currentRequest = firstFetch
+141         ? { ...request, forceRefreshToken: true }
+142         : request;
+143       firstFetch = false;
+144       const attemptId = ++this.reactiveAttemptId;
+145       try {
+146         const token = await this.fetchToken(currentRequest);
+147         if (this.isCurrentReactiveAttempt(client, version, attemptId)) {
+148           this.latestAuthFailure = undefined;
+149         }
+150         return token;
+151       } catch (error: unknown) {
+152         if (this.isCurrentReactiveAttempt(client, version, attemptId)) {
+153           const failure: HostAuthFailure = Object.freeze({
+154             code: error instanceof InvalidHostTokenResultError
+155               ? "INVALID_HOST_TOKEN"
+156               : "HOST_TOKEN_FETCH_FAILED",
+157             attemptId,
+158           });
+159           this.latestAuthFailure = failure;
+160           // Convex invokes setAuth's async callback without awaiting/catching it.
+161           // Isolate both synchronous and async diagnostic observer failures too.
+162           try {
+163             void Promise.resolve(this.onAuthError?.(failure)).catch(() => undefined);
+164           } catch (_observerError: unknown) {
+165             // The diagnostic remains readable even if the observer fails.
+166           }
+167         }
+168         // Official null handling clears identity and resumes the paused socket.
+169         return null;
+170       }
+171     }, (authenticated) => {
+172       if (authenticated || version !== this.reactiveVersion || client.closed) return;
+173       const attemptId = this.reactiveAttemptId;
+174       // Convex 1.46 drops Authenticate(None) while setConfig is paused. Its
+175       // false callback runs before the await-refetch continuation resumes the
+176       // socket. One event task lets those promise continuations finish, then
+177       // uses the public clearAuth API to actually deliver identity removal.
+178       if (this.pendingDeauthTimer !== undefined) {
+179         clearTimeout(this.pendingDeauthTimer);
+180       }
+181       const timer = setTimeout(() => {
+182         if (this.pendingDeauthTimer === timer) {
+183           this.pendingDeauthTimer = undefined;
+184         }
+185         if (this.isCurrentReactiveAttempt(client, version, attemptId)) {
+186           baseClient.clearAuth();
+187         }
+188       }, 0);
+189       this.pendingDeauthTimer = timer;
+190     });
+191   }
+192 
+193   private isCurrentReactiveAttempt(
+194     client: ReactiveAuthClient,
+195     version: number,
+196     attemptId: number,
+197   ): boolean {
+198     return version === this.reactiveVersion &&
+199       attemptId === this.reactiveAttemptId && !client.closed;
+200   }
+201 
+202   /**
+203    * Fresh headers for a host-approved private Convex HTTP request. Use this
+204    * result as the request's auth headers; do not retain old Authorization headers
+205    * after null/logout. The caller owns route/origin validation and byte limits.
+206    */
+207   async getAuthorizationHeaders(
+208     request: HostTokenRequest = { forceRefreshToken: false },
+209   ): Promise<Record<string, string>> {
+210     const token = await this.fetchToken(request);
+211     return token === null ? {} : { Authorization: `Bearer ${token}` };
+212   }
+213 
+214   /**
+215    * Attach the current credential before one HTTP operation. The official HTTP
+216    * client accepts a static token, so obtain it again for every invocation.
+217    * Serialize operations on this client to keep concurrent credentials separate.
+218    * No authentication failure or operation error triggers an operation retry.
+219    * Use a dedicated client with this helper for all of its authenticated calls.
+220    */
+221   async withHttpAuth<T>(
+222     client: ConvexHttpClient,
+223     operation: (client: ConvexHttpClient) => Promise<T>,
+224     request: HostTokenRequest = { forceRefreshToken: false },
+225   ): Promise<T> {
+226     const previous = this.httpOperations.get(client) ?? Promise.resolve();
+227     const result = previous.then(async () => {
+228       const token = await this.fetchToken(request);
+229       if (token === null) {
+230         client.clearAuth();
+231       } else {
+232         client.setAuth(token);
+233       }
+234       return await operation(client);
+235     });
+236     // A rejected operation must not poison the queue or replay that operation.
+237     const settled = result.then(() => undefined, () => undefined);
+238     this.httpOperations.set(client, settled);
+239     try {
+240       return await result;
+241     } finally {
+242       if (this.httpOperations.get(client) === settled) {
+243         this.httpOperations.delete(client);
+244       }
+245     }
+FILE node_modules/convex/src/browser/simple_client.ts
+530   }
+531 
+532   /**
+533    * Fetch a query result once.
+534    *
+535    * @param query - A {@link server.FunctionReference} for the public query
+536    * to run.
+537    * @param args - An arguments object for the query.
+538    * @returns A promise of the query's result.
+539    */
+540   async query<
+541     Query extends
+542       | FunctionReference<"query">
+543       | FunctionReference_future<"query">,
+544   >(
+545     query: Query,
+546     args: FunctionArgs<Query>,
+547   ): Promise<Awaited<FunctionReturnType<Query>>> {
+548     if (this.disabled) throw new Error("ConvexClient is disabled");
+549     const value = this.client.localQueryResult(getFunctionName(query), args) as
+550       | Awaited<FunctionReturnType<Query>>
+551       | undefined;
+552     if (value !== undefined) return Promise.resolve(value);
+553 
+554     return new Promise((resolve, reject) => {
+555       const { unsubscribe } = this.onUpdate(
+556         query,
+557         args,
+558         (value) => {
+559           unsubscribe();
+560           resolve(value);
+561         },
+562         (e: Error) => {
+563           unsubscribe();
+564           reject(e);
+565         },
+FILE node_modules/convex/src/browser/sync/authentication_manager.ts
+145       this.lastRefreshChange = isRefreshing;
+146       this.authState.config.onRefreshChange(isRefreshing);
+147     }
+148   }
+149 
+150   async setConfig(
+151     fetchToken: AuthTokenFetcher,
+152     onChange: (isAuthenticated: boolean) => void,
+153     onRefreshChange?: (isRefreshing: boolean) => void,
+154   ) {
+155     this.resetAuthState();
+156     this._logVerbose("pausing WS for auth token fetch");
+157     this.pauseSocket();
+158     const token = await this.fetchTokenAndGuardAgainstRace(fetchToken, {
+159       forceRefreshToken: false,
+160     });
+161     if (token.isFromOutdatedConfig) {
+162       return;
+163     }
+164     const config: AuthConfig = {
+165       fetchToken,
+166       onAuthChange: onChange,
+167       onRefreshChange,
+168     };
+169     if (token.value) {
+170       this.setAuthState({
+171         state: "waitingForServerConfirmationOfCachedToken",
+172         config,
+173         hasRetried: false,
+174       });
+175       this.authenticate(token.value);
+176     } else {
+177       this.setAuthState({
+178         state: "initialRefetch",
+179         config,
+180       });
+181       // Try again with `forceRefreshToken: true`
+182       await this.refetchToken();
+183     }
+184     this._logVerbose("resuming WS after auth token fetch");
+185     this.resumeSocket();
+186   }
+187 
+188   onTransition(serverMessage: Transition) {
+189     if (
+190       !this.syncState.isCurrentOrNewerAuthVersion(
+191         serverMessage.endVersion.identity,
+192       )
+193     ) {
+194       // This is a stale transition - client has moved on to
+195       // a newer auth version.
+196       return;
+197     }
+198     if (
+199       serverMessage.endVersion.identity <= serverMessage.startVersion.identity
+200     ) {
+201       // This transition did not change auth - it is not a response to Authenticate.
+202       return;
+203     }
+204 
+205     this._logVerbose(
+206       `auth state is ${this.authState.state} when handling transition`,
+207     );
+208 
+209     // This transition advanced the auth version, which means the token used was valid
+210     // and the client and server auth states are in sync.
+FILE node_modules/convex/src/browser/sync/client.ts
+660    * Set the authentication token to be used for subsequent queries and mutations.
+661    * `fetchToken` will be called automatically again if a token expires.
+662    * `fetchToken` should return `null` if the token cannot be retrieved, for example
+663    * when the user's rights were permanently revoked.
+664    * @param fetchToken - an async function returning the JWT-encoded OpenID Connect Identity Token
+665    * @param onChange - a callback that will be called when the authentication status changes
+666    * @param onRefreshChange - a callback called with `true` when the socket is paused to fetch a replacement token after a server rejection, and `false` when refresh completes
+667    */
+668   setAuth(
+669     fetchToken: AuthTokenFetcher,
+670     onChange: (isAuthenticated: boolean) => void,
+671     onRefreshChange?: (isRefreshing: boolean) => void,
+672   ) {
+673     void this.authenticationManager.setConfig(
+674       fetchToken,
+675       onChange,
+676       onRefreshChange,
+677     );
+678   }
+679 
+680   hasAuth() {
+681     return this.state.hasAuth();
+682   }
+683 
+684   /** @internal */
+685   setAdminAuth(value: string, fakeUserIdentity?: UserIdentityAttributes) {
+686     const message = this.state.setAdminAuth(value, fakeUserIdentity);
+687     this.webSocketManager.sendMessage(message);
+688   }
+689 
+690   clearAuth() {
+691     const message = this.state.clearAuth();
+692     this.webSocketManager.sendMessage(message);
+693   }
+694 
+695   /**
+696    * Subscribe to a query function.
+697    *
+698    * Whenever this query's result changes, the `onTransition` callback
+699    * passed into the constructor will be called.
+700    *
+701    * @param name - The name of the query.
+702    * @param args - An arguments object for the query. If this is omitted, the
+703    * arguments will be `{}`.
+704    * @param options - A {@link SubscribeOptions} options object for this query.
+705 
+FILE node_modules/convex/src/browser/sync/optimistic_updates_impl.ts
+225     if (query === undefined) {
+226       return undefined;
+227     }
+228     return query.result;
+229   }
+230 
+231   queryResult(queryToken: QueryToken): Value | undefined {
+232     const query = this.queryResults.get(queryToken);
+233     if (query === undefined) {
+234       return undefined;
+235     }
+236     const result = query.result;
+237     if (result === undefined) {
+238       return undefined;
+239     } else if (result.success) {
+240       return result.value;
+241     } else {
+242       if (result.errorData !== undefined) {
+243         throw forwardData(
+244           result,
+245           new ConvexError(
+246             createHybridErrorStacktrace("query", query.udfPath, result),
+247           ),
+248         );
+249       }
+250       throw new Error(
+251         createHybridErrorStacktrace("query", query.udfPath, result),
+252       );
+253     }
+254   }
+255 
+256   hasQueryResult(queryToken: QueryToken): boolean {
+257     return this.queryResults.get(queryToken) !== undefined;
+258   }
+259 
+260   /**
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md
+43 contains `forceRefreshToken`, returning `Promise<string | null | undefined>`.
+44 Cortex intentionally narrows absence to `null`. The constructor calls
+45 `credentials.bindReactiveClient(client)` and attaches a dedicated safe adapter
+46 through that official API. Normal reactive refresh requests reach the host unchanged.
+47 The installed auth manager refreshes the active socket identity, so subscriptions
+48 share the refreshed credential rather than a captured startup token.
+49 
+50 `bindReactiveClient` supports one live transport. An additional different live
+51 binding throws. A closed transport cannot be bound. `notifySessionChanged` calls
+52 `setAuth` once and forces the first getter request to bypass the host cache; later
+53 requests are forwarded unchanged. It throws when unbound or closed and drops the
+54 stored closed binding when notified. It creates no additional client or polling loop. Convex handles outdated
+55 credential-fetch races itself; the adapter separately fences diagnostic updates and
+56 one bounded deferred identity-removal event task.
+57 
+58 ## Reactive failures and Convex 1.46 transport workaround
+59 
+60 `HostAuthFailure` is a readonly `{ code, attemptId }` snapshot, where code is
+61 `"HOST_TOKEN_FETCH_FAILED"` or `"INVALID_HOST_TOKEN"`. It contains no token,
+62 original error/message/stack, host claims or identity. `HostAuthErrorHandler` is
+63 `(failure: HostAuthFailure) => void | Promise<void>`. Optional
+64 `CortexConfig.onAuthError` observes new current reactive failures. The handler is
+65 validated before transport allocation, and synchronous throws/async rejections from
+66 it are isolated without logging or blocking null/deauthentication.
+67 
+68 `credentials.authFailure` returns the latest frozen current reactive failure.
+69 Only a later current successful JWT or null getter result clears it. Configuration
+70 and callback attempt sequence fences prevent older delayed successes/rejections from
+71 clearing or overwriting a newer diagnostic or recovered session. An auth-status true
+72 notification does not clear a pending getter diagnostic. Closed transports ignore
+73 late adapter completions and deferred delivery. Standalone token/header/HTTP errors
+74 remain ordinary rejected promises; this state concerns the reactive adapter only.
+75 
+76 The installed Convex 1.46 BaseConvexClient invokes AuthenticationManager.setConfig
+77 without awaiting/catching its promise. Passing the throwing direct getter into
+78 setAuth causes an unhandled rejection and leaves the socket paused. The reactive
+79 adapter catches host/shape/asynchrony failures, publishes only the fixed diagnostic,
+80 and returns null so the official manager can resume unauthenticated. Official
+81 initial null handling may request the host getter a second time with forced refresh;
+82 each failed latest attempt is observable rather than a hidden operation replay.
+83 
+84 The installed manager has another transport gap: clearAuth during setConfig's pause
+85 clears local identity, but its Authenticate(None) message is dropped and resume does
+86 not send an absent identity. The adapter uses supported public APIs only: before
+87 explicit configuration/session changes it calls `client.client.clearAuth()` when an
+88 identity is attached. Its official setAuth status-false callback schedules one
+89 `setTimeout(..., 0)` event task to clearAuth again after promise continuations resume
+90 the socket, ensuring wire identity removal. That task is fenced by current config,
+91 latest attempt and client.closed. Reconfiguration or another false notification
+92 cancels the older pending task. It does not inspect private paused state, patch the
+93 installed library, poll or redispatch an operation. Future Convex updates must
+94 requalify this installed-version workaround.
+95 
+96 Real installed-client tests use an inert opened WebSocket and record actual protocol
+97 messages in memory. They verify rejecting/malformed/synchronous getters, synchronous
+98 and async observer failures, no unhandled rejection, resumed query delivery, explicit
+99 Authenticate(None), recovery, null/logout/login, server-rejected-token refresh,
+100 overlapping notifications while paused, stale completions and closed/deferred fences.
+101 This is actual client/manager qualification, not managed signature/grant verification.
+102 
+103 ## Authority, logout and host responsibilities
+104 
+FILE .agents/skills/feature-orchestrator/SKILL.md
+43 checks. Parallelize only independent tasks with nonoverlapping permitted writes.
+44 Read the completion report and inspect changed files.
+45 
+46 Then spawn a fresh read-only pessimistic judge using judge-task, original task criteria,
+47 actual changed files, and execution receipts. Review every requirement, wiring/export,
+48 behavioral correctness, test outcomes, and pattern adherence.
+49 Only PASS marks the task complete. Otherwise send concrete feedback to an executor,
+50 inspect the fix, and launch a fresh judge. Maximum three implementation/judge cycles.
+51 Do not weaken requirements or assertions just to pass.
+52 
+53 ## 5. Quality, final audit, and QA
+54 
+55 Run `$code-quality` for the affected stacks and dependencies. After all task verdicts and
+56 required checks pass, delegate a final read-only audit of the goal's success criteria,
+57 integration/wiring, compatibility, and receipts. Verdict APPROVED / ISSUES FOUND.
+58 Fix findings, rerun affected checks, and reaudit; maximum three cycles.
+59 Only APPROVED permits completion. If the audit changes code, old check receipts for that
+60 code no longer certify the fix.
+61 
+62 Run Profile §9 module QA when a full core gate is requested; otherwise run affected module
+63 validators. Run `$ui-qa-orchestrator` for changed UI/flows when Profile §8 applies.
+64 For QA issues: create bounded fixes, delegate implementation, rejudge, and rerun the
+65 failing QA gate. Never claim a full QA pass from a scoped run.
+66 
+67 ## State and output
+68 
+69 Track phase, task ownership/dependencies, per-cycle verdicts, check receipts, QA coverage,
+70 and unresolved blockers in the goal/task artifacts. Final output states what changed,
+71 what passed, what remains incomplete, and artifact paths. Commit only per Profile §10.
+FILE .agents/skills/judge-task/SKILL.md
+1 ---
+2 name: judge-task
+3 description: Reference criteria for judging task implementation quality. Used by the pessimistic-judge subagent when evaluating work produced by implementation-executor. Not a standalone skill - provides a judgment framework. Stack-agnostic.
+4 ---
+5 
+6 Read `.agents/CODEX-RUNTIME.md` before applying this document. Resolve profile and role
+7 paths against the orchestration root defined there; its scope and evidence rules apply.
+8 
+9 # Task Judgment Criteria
+10 
+11 Reference document for the pessimistic-judge subagent when evaluating task implementations.
+12 
+13 > Read `.agents/PROJECT-PROFILE.md` first. "Patterns," "hard rules," "quality commands,"
+14 > and "schema doc" below refer to what the Project Profile declares for *this* project.
+15 
+16 ## Judgment Dimensions
+17 
+18 ### 1. Requirement Fulfillment (Weight: Critical)
+19 
+20 **Question**: Are ALL requirements from the task file met?
+21 
+22 | Score | Criteria |
+23 |-------|----------|
+24 | 5 | All requirements met with evidence, exceeds expectations |
+25 | 4 | All requirements met, evidence clear |
+26 | 3 | Most requirements met, minor gaps |
+27 | 2 | Some requirements unmet or partially met |
+28 | 1 | Major requirements missing |
+29 
+30 **Verification Method:**
+31 1. List every requirement from the task file
+32 2. Check the implementation against each one
+33 3. Require evidence for each (file, line, test name, command output)
+34 
+35 **Auto-Fail Triggers:**
+36 - Any requirement marked complete but not verifiable
+37 - Any requirement silently dropped
+38 
+39 ### 2. Code Quality (Weight: High)
+40 
+41 **Question**: Does the code follow project patterns and language best practices?
+42 
+43 | Score | Criteria |
+44 |-------|----------|
+45 | 5 | Exemplary code, could be used as a reference |
+46 | 4 | Clean code, follows patterns, minor improvements possible |
+47 | 3 | Acceptable code, some pattern deviations |
+48 | 2 | Code quality issues that need fixing |
+49 | 1 | Poor code quality, significant issues |
+50 
+51 **Universal checks (translate to the stack):**
+52 - [ ] Inputs validated at public boundaries
+53 - [ ] Errors handled or deliberately propagated (never silently swallowed)
+54 - [ ] Async/concurrent work awaited/synchronized correctly
+55 - [ ] Resources released on all paths (files, connections, locks)
+56 - [ ] Dependencies injected/passed per house convention (not constructed ad hoc)
+57 - [ ] Strong typing where the language allows; escape hatches justified
+58 - [ ] Logging/observability present for failures and key paths
+59 - [ ] No violations of the Project Profile hard rules
+60 
+61 ### 3. Test Quality (Weight: High — for test tasks)
+62 
+63 **Question**: Do tests actually verify behavior?
+64 
+65 | Score | Criteria |
+66 |-------|----------|
+67 | 5 | Comprehensive tests with outcome verification |
+68 | 4 | Good coverage, all tests verify outcomes |
+69 | 3 | Adequate tests, some weak assertions |
+70 | 2 | Tests present but don't verify outcomes |
+71 | 1 | Missing tests or tests that just call code |
+72 
+73 **Verification Method:**
+74 1. Map changed public behavior, branches, and error paths to meaningful assertions
+75 2. Review relevant test cases and their asserted outcomes
+76 3. For each test, confirm assertions verify ACTUAL outcomes (not just "ran without error")
+77 
+78 **Auto-Fail Triggers:**
+79 - Tests that only invoke code without meaningful assertions
+80 - "Not null" / "is defined" / "did not throw" as the *only* assertion
+81 - Missing error-case tests
+82 - Public functions with no test coverage
+83 
+84 ### 4. Pattern Adherence (Weight: Medium)
+85 
+86 **Question**: Does the implementation follow established project patterns?
+87 
+88 | Score | Criteria |
+89 |-------|----------|
+90 | 5 | Perfect pattern adherence, consistent with the codebase |
+91 | 4 | Follows patterns, minor style differences |
+92 | 3 | Mostly follows patterns, some deviations |
+93 | 2 | Significant pattern deviations |
+94 | 1 | Ignores established patterns |
+95 
+96 **How to check:** Compare the new code against the canonical exemplar files named in the
+97 Project Profile (§5) for this concern. Deviations in structure, naming, error handling, or
+98 layering count against this dimension.
+99 
+100 ### 5. Completeness (Weight: Medium)
+101 
+102 **Question**: Is the implementation truly complete and reachable?
+103 
+104 | Score | Criteria |
+105 |-------|----------|
+106 | 5 | Complete with all supporting changes (wiring, exports, registration) |
+107 | 4 | Implementation complete, supporting changes present |
+108 | 3 | Core implementation complete, some supporting changes missing |
+109 | 2 | Partial implementation, gaps in supporting infrastructure |
+110 | 1 | Incomplete implementation |
+111 
+112 **Completeness checks (translate to the stack):**
+113 - [ ] New components registered/wired so they're reachable
+114 - [ ] New routes/handlers mounted
+115 - [ ] New symbols exported where consumers need them
+116 - [ ] Config/enums/manifests updated where the pattern requires
+117 - [ ] Build/lint/typecheck/tests for the touched stack pass
+118 
+119 ## Verdict Thresholds
+120 
+121 | Verdict | Criteria |
+122 |---------|----------|
+123 | **PASS** | All dimensions ≥ 4 AND Requirement Fulfillment = 5 |
+124 | **NEEDS FIXES** | Any dimension 3-4 AND no critical issues |
+125 | **REJECT** | Any dimension ≤ 2 OR an auto-fail trigger hit |
+126 
+127 ## Output Format
+128 
+129 ```markdown
+130 # Task Judgment: [Task Name]
+131 
+132 ## Verdict: [PASS | NEEDS FIXES | REJECT]
+133 
+134 ## Requirements Review
+135 
+136 | Requirement | Met? | Evidence |
+137 |-------------|------|----------|
+138 | [Req 1] | ✅/❌ | [Location/proof] |
+139 | [Req 2] | ✅/❌ | [Location/proof] |
+140 
+141 ## Dimension Scores
+142 
+143 | Dimension | Score | Evidence |
+144 |-----------|-------|----------|
+145 | Requirement Fulfillment | X/5 | [Observation] |
+146 | Code Quality | X/5 | [Observation] |
+147 | Test Quality | X/5 | [Observation] (if test task) |
+148 | Pattern Adherence | X/5 | [Observation] |
+149 | Completeness | X/5 | [Observation] |
+150 
+151 **Average**: X.X/5
+152 
+153 ## Issues Found
+154 
+155 ### Critical (must fix - blocks PASS)
+156 - [Issue with file:line and suggested fix]
+157 
+158 ### Important (should fix)
+159 - [Issue with file:line and suggested fix]
+160 
+161 ### Minor (consider fixing)
+162 - [Issue with file:line and suggested fix]
+163 
+164 ## Recommendations
+165 
+166 [Specific actions to achieve PASS verdict]
+167 ```
+168 
+169 ## Special Case: Test Task Judgment
+170 
+171 When judging test tasks, add this section:
+172 
+173 ```markdown
+174 ## Test Coverage Analysis
+175 
+176 | Implementation Function | Test Cases | Assertions Verify Outcome? |
+177 |-------------------------|------------|----------------------------|
+178 | `getById` | 2 | ✅ Checks return value |
+179 | `create` | 3 | ✅ Verifies created entity |
+180 | `delete` | 1 | ❌ Only checks no exception |
+181 
+182 **Coverage**: X/Y functions have adequate tests
+183 **Verdict Impact**: [How this affects overall verdict]
+184 ```
+185 
+186 ## Iron Law for Test Fixes
+187 
+188 When judging fixes to failing tests:
+189 
+190 **The TEST defines expected behavior. The IMPLEMENTATION must be fixed.**

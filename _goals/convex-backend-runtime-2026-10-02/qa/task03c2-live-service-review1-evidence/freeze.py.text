@@ -1,0 +1,48 @@
+from pathlib import Path
+import json, hashlib, subprocess, datetime, sys
+p=Path('/workspace/Project-Cortex');r=Path(__file__).parent;g=p/'_goals/convex-backend-runtime-2026-10-02';q=g/'qa';a=q/'task03c2-live-service';h=q/'task03c2-live-fixture';w=p/'work/backend-runtime/task03c2-live-fixture'
+phase=sys.argv[1]
+def H(f):
+ b=f.read_bytes();return {'path':str(f.relative_to(p)),'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
+checks=[];paths=set();omissions=[]
+m=json.loads((a/'preservation-manifest.json').read_text()); assert hashlib.sha256((a/'preservation-manifest.json').read_bytes()).hexdigest()=='8659d4de0a9c8929e3fefd4065944026decc54cd07e9683eeb8d4b6b6038014d'
+for row in m['records']:
+ f=p/row['file'];v=H(f);checks.append({'kind':'actual47','path':v['path'],'match':v['sha256']==row['sha256'] and v['bytes']==row['bytes']});paths.add(f)
+ orig=Path(row['original'])
+ if orig.is_absolute() and orig.is_file():
+  ov=H(orig);checks.append({'kind':'original-record','path':ov['path'],'match':ov['sha256']==v['sha256'] and ov['bytes']==v['bytes']});paths.add(orig)
+ else: omissions.append({'kind':'non-file-original-label','original':row['original'],'canonical':row['file']})
+assert len(m['records'])==47
+s=json.loads((h/'source-freeze.json').read_text())
+for row in s['files']:
+ f=h/row['path'];v=H(f);checks.append({'kind':'frozen58','path':v['path'],'match':v['sha256']==row['sha256']});paths.add(f)
+assert len(s['files'])==58
+sp=json.loads((h/'sdk-provenance.json').read_text())
+for row in sp['files']+[sp['package']]:
+ f=w/row['path'];v=H(f);checks.append({'kind':'sdk199-and-pack','path':v['path'],'match':v['sha256']==row['sha256']});paths.add(f)
+assert len(sp['files'])==199
+for row in json.loads((h/'source-provenance.json').read_text())['copied']:
+ f=h/row['fixture']; b=subprocess.check_output(['git','show',row.get('sourceCommit','c92d548368791386c62f39895e381ef6bde2dc86')+':'+row['source']],cwd=p);checks.append({'kind':'accepted-backend','path':str(f.relative_to(p)),'match':hashlib.sha256(b).hexdigest()==row['sha256']==H(f)['sha256']});paths.add(p/row['source'])
+ledger=p/m['privateOwnedFixtureLedger']['path']; lv=H(ledger);checks.append({'kind':'private-ledger','path':lv['path'],'match':lv['sha256']==m['privateOwnedFixtureLedger']['sha256'] and lv['bytes']==m['privateOwnedFixtureLedger']['bytes']});paths.add(ledger)
+for glob in ['src/auth/*.ts','tests/unit/auth/*.ts','tests/unit/credentials/*.ts','tests/unit/runtimeMetadataAuth/*.ts','tests/unit/runtimeAuth/*.ts']:
+ paths.update(p.glob(glob))
+paths.update([p/'src/index.ts',p/'package.json',p/'package-lock.json',p/'node_modules/convex/package.json',p/'node_modules/typescript/package.json'])
+paths.update((p/'node_modules/convex/src/browser').rglob('*.ts'))
+paths.update((p/'node_modules/convex/dist/cjs/browser').rglob('*.js'))
+paths.update((g/'tasks').glob('*.md'));paths.update([g/'implementation-prompt.md',g/'goal.md',p/'_research/convex-ai-gateway-2026-10-02/decision-gates.md',p/'_research/convex-ai-gateway-2026-10-02/architecture.md'])
+paths.update(p.glob('.agents/**/*.md'));paths.add(p/'AGENTS.md');paths.add(a/'preservation-manifest.json')
+for f in q.glob('task03c*-review-*.md'): paths.add(f)
+for d in ['task03a','task03c1','task03c2-a','task03c2-d','task03-metadata-native-errors']:
+ paths.update((q/d).glob('*.md'))
+rows=[H(f) for f in sorted(paths) if f.is_file()]
+payload={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'rows':rows,'checks':checks,'omissions':omissions}
+(r/('freeze-'+phase+'.json')).write_text(json.dumps(payload,indent=2)+'\n')
+(r/('git-'+phase+'.json')).write_text(json.dumps({k:subprocess.check_output(v,cwd=p).decode() for k,v in {'head':['git','rev-parse','HEAD'],'status':['git','status','--porcelain=v1'],'headSignature':['git','log','-1','--format=%H %G? %s']}.items()},indent=2)+'\n')
+if phase=='before':
+ for f in sorted(paths):
+  if not f.is_file() or f==ledger: continue
+  if 'work/backend-runtime' in str(f) and not str(f).startswith(str(w/'sdk')): continue
+  dest=r/'source-context'/f.relative_to(p);dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(f.read_bytes())
+else:
+ prior=json.loads((r/'freeze-before.json').read_text());old={x['path']:x for x in prior['rows']};new={x['path']:x for x in rows};payload['changed']=[k for k in old if new.get(k)!=old[k]];(r/'freeze-after.json').write_text(json.dumps(payload,indent=2)+'\n')
+print(json.dumps({'records':len(rows),'actual47':47,'frozen58':len(s['files']),'sdkRows':len(sp['files']),'checks':len(checks),'mismatches':[x for x in checks if not x['match']],'omissions':omissions,'changed':payload.get('changed'),'git':json.loads((r/('git-'+phase+'.json')).read_text())},indent=2))

@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python",
+    "-c",
+    "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts\",390,480),(\"tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts\",1,500),(\"tests/unit/runtimeWorkerClient/metadata-consumers.test.ts\",180,700)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files];f=p/files[1][0];d=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context\")/files[1][0];d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes(f.read_bytes())"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-03T14:35:44.818833+00:00",
+  "endUtc": "2026-10-03T14:35:44.839689+00:00",
+  "exit": 0,
+  "environment": "inherited for read-only context command; no env dump"
+}

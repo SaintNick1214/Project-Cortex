@@ -1,0 +1,231 @@
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts
+390 export const tombstoneResource = internalMutation({
+391   args: { tenantId: v.string(), memorySpaceId: v.optional(v.string()), resourceType: runtimeResourceType, resourceId: v.string() },
+392   handler: async (ctx, args) => {
+393     nonempty(args.tenantId); nonempty(args.resourceId);
+394     if (!await createAuthorityReader(ctx).hasTombstone(args)) await ctx.db.insert("runtimeAuthTombstones", { ...args, deletedAt: Date.now() });
+395   },
+396 });
+FILE tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts
+1 import { afterEach, describe, expect, it, jest } from "@jest/globals";
+2 import { ConvexClient } from "convex/browser";
+3 import { SessionsAPI, SessionCapabilityError } from "../../../src/sessions";
+4 import { AuthValidationError } from "../../../src/auth";
+5 import { ResilienceLayer } from "../../../src/resilience";
+6 import type { ExpireSessionsOptions } from "../../../src/sessions/types";
+7 
+8 function fixture(mode: "absent" | "disabled" | "enabled", tenantId?: string) {
+9   const client = new ConvexClient("https://example.convex.cloud", {
+10     disabled: true,
+11     logger: false,
+12   });
+13   const mutation = jest.spyOn(client, "mutation");
+14   const query = jest.spyOn(client, "query");
+15   const action = jest.spyOn(client, "action");
+16   const resilience = new ResilienceLayer({ enabled: mode === "enabled" });
+17   const execute = jest.spyOn(resilience, "execute");
+18   const sessions = new SessionsAPI(client, undefined,
+19     mode === "absent" ? undefined : resilience,
+20     tenantId === undefined ? undefined : { userId: "sdk-user", tenantId });
+21   return { sessions, client, mutation, query, action, resilience, execute };
+22 }
+23 
+24 describe.each(["absent", "disabled", "enabled"] as const)(
+25   "session maintenance boundary (resilience=%s)", (mode) => {
+26     let current: ReturnType<typeof fixture> | undefined;
+27 
+28     afterEach(async () => {
+29       await current?.client.close();
+30       await current?.resilience.shutdown();
+31       jest.restoreAllMocks();
+32     });
+33 
+34     function assertNotDispatched() {
+35       expect(current?.mutation).not.toHaveBeenCalled();
+36       expect(current?.query).not.toHaveBeenCalled();
+37       expect(current?.action).not.toHaveBeenCalled();
+38       expect(current?.execute).not.toHaveBeenCalled();
+39     }
+40 
+41     it.each<ExpireSessionsOptions | undefined>([
+42       undefined,
+43       {},
+44       { idleTimeout: 15 * 60 * 1000 },
+45       { tenantId: "tenant-a" },
+46       { tenantId: "tenant-a", idleTimeout: 0 },
+47     ])("returns a typed undispatched outcome for valid options %j", async (options) => {
+48       current = fixture(mode);
+49       const error: unknown = await current.sessions.expireIdle(options)
+50         .catch((failure: unknown) => failure);
+51       expect(error).toBeInstanceOf(SessionCapabilityError);
+52       expect(error).toMatchObject({
+53         name: "SessionCapabilityError",
+54         code: "BACKEND_MAINTENANCE_ONLY",
+55         retryable: false,
+56         outcome: "not_dispatched",
+57         requiredExecution: "trusted_backend_worker",
+58       });
+59       if (!(error instanceof SessionCapabilityError)) throw new Error("Expected capability error");
+60       expect(error.message).toContain("requires a trusted backend worker");
+61       expect(Object.keys(error).sort()).toEqual([
+62         "code", "name", "outcome", "requiredExecution", "retryable",
+63       ]);
+64       expect(JSON.stringify(error)).not.toMatch(/operator|credentials|FunctionReference/);
+65       assertNotDispatched();
+66     });
+67 
+68     it.each<ExpireSessionsOptions | undefined>([
+69       undefined,
+70       {},
+71       { tenantId: "tenant-a", idleTimeout: 1000 },
+72     ])("accepts the configured tenant selector before capability rejection %j", async (options) => {
+73       current = fixture(mode, "tenant-a");
+74       await expect(current.sessions.expireIdle(options)).rejects.toBeInstanceOf(SessionCapabilityError);
+75       assertNotDispatched();
+76     });
+77 
+78     it("preserves tenant mismatch validation before reading the timeout or dispatching", async () => {
+79       current = fixture(mode, "tenant-a");
+80       const timeoutRead = jest.fn(() => 1000);
+81       const options: ExpireSessionsOptions = {
+82         tenantId: "tenant-b",
+83         get idleTimeout() { return timeoutRead(); },
+84       };
+85       const error: unknown = await current.sessions.expireIdle(options)
+86         .catch((failure: unknown) => failure);
+87       expect(error).toBeInstanceOf(AuthValidationError);
+88       expect(error).not.toBeInstanceOf(SessionCapabilityError);
+89       expect(error).toMatchObject({ code: "TENANT_SCOPE_MISMATCH", field: "tenantId" });
+90       expect(timeoutRead).not.toHaveBeenCalled();
+91       assertNotDispatched();
+92     });
+93   },
+94 );
+FILE tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+180       current.query.mockResolvedValue(null);
+181       current.mutation.mockResolvedValue(hydrated);
+182       await expect(current.users.getOrCreate("caller-user")).resolves.toEqual(mapped(hydrated));
+183       expect(current.mutation).toHaveBeenCalledWith(api.immutable.store, {
+184         type: "user", id: "caller-user", tenantId: "tenant-a", data: {},
+185       });
+186       assertAttempts(2, 1);
+187     });
+188 
+189     it.each([true, false])("merge preserves hydrated results and default merge semantics (existing=%s)", async (exists) => {
+190       current = fixture(mode);
+191       current.query.mockResolvedValue(exists ? profile : null);
+192       current.mutation.mockResolvedValue(hydrated);
+193       await expect(current.users.merge("caller-user", { preferences: { theme: "light" } })).resolves.toEqual(mapped(hydrated));
+194       expect(current.mutation).toHaveBeenCalledWith(api.immutable.store, {
+195         type: "user", id: "caller-user", tenantId: "tenant-a",
+196         data: exists ? { name: "Existing", preferences: { theme: "light", language: "en" } }
+197           : { preferences: { theme: "light" } },
+198       });
+199       assertAttempts(2, 1);
+200     });
+201 
+202     it.each(["update", "getOrCreate", "merge"] as const)("preserves read failure before %s and never introduces a blind write", async (method) => {
+203       current = fixture(mode);
+204       const denied = new Error("PERMISSION_DENIED");
+205       current.query.mockRejectedValue(denied);
+206       await expect(current.users[method]("caller-user", { name: "unused" })).rejects.toBe(denied);
+207       assertAttempts(1, 0);
+208     });
+209 
+210     it.each(["update", "getOrCreate", "merge"] as const)("validates malformed profile data before %s reads or writes", async (method) => {
+211       current = fixture(mode);
+212       // Reflect exercises external runtime data without lying about its type.
+213       const request: Promise<unknown> = Reflect.apply(current.users[method], current.users, ["caller-user", []]);
+214       await expect(request).rejects.toMatchObject({ name: "UserValidationError", code: "INVALID_DATA_TYPE" });
+215       assertAttempts(0, 0);
+216     });
+217 
+218     it.each(["update", "getOrCreate", "merge"] as const)("validates the identifier before %s dispatch", async (method) => {
+219       current = fixture(mode);
+220       await expect(current.users[method](" ", {})).rejects.toMatchObject({ name: "UserValidationError", code: "INVALID_USER_ID_FORMAT" });
+221       assertAttempts(0, 0);
+222     });
+223 
+224     it("preserves ordinary mutation failure identity", async () => {
+225       current = fixture(mode);
+226       const failure = new Error("PERMISSION_DENIED");
+227       current.query.mockResolvedValue(profile);
+228       current.mutation.mockRejectedValue(failure);
+229       await expect(current.users.update("caller-user", {})).rejects.toBe(failure);
+230       assertAttempts(1, 1);
+231     });
+232 
+233     it("bulk update rejects the exact committed receipt instead of reporting an unsuccessful count", async () => {
+234       current = fixture(mode);
+235       current.query.mockResolvedValue(profile);
+236       current.mutation.mockResolvedValue(receipt);
+237       const error: unknown = await current.users.updateMany(["caller-user", "untouched-user"], { data: {} })
+238         .catch((failure: unknown) => failure);
+239       expect(error).toBeInstanceOf(UserProfileWriteReceiptError);
+240       expect(error).toMatchObject({ outcome: "committed", receipt });
+241       assertAttempts(2, 1);
+242       expect(current.mutation.mock.calls[0][1]).toMatchObject({ id: "caller-user" });
+243     });
+244 
+245     it("bulk propagation preserves earlier committed writes and stops before later items", async () => {
+246       current = fixture(mode);
+247       current.query.mockResolvedValue(profile);
+248       current.mutation.mockResolvedValueOnce(hydrated).mockResolvedValueOnce(createdReceipt);
+249       const error: unknown = await current.users.updateMany(["first-user", "second-user", "third-user"], { data: { status: "active" } })
+250         .catch((failure: unknown) => failure);
+251       expect(error).toBeInstanceOf(UserProfileWriteReceiptError);
+252       expect(error).toMatchObject({ outcome: "committed", receipt: createdReceipt });
+253       expect(current.query).toHaveBeenCalledTimes(4);
+254       expect(current.mutation.mock.calls.map((call) => call[1])).toEqual([
+255         expect.objectContaining({ id: "first-user" }), expect.objectContaining({ id: "second-user" }),
+256       ]);
+257       expect(current.execute.mock.calls.map((call) => call[1])).toEqual(mode === "absent" ? [] : [
+258         "users:get", "users:get", "users:update", "users:get", "users:get", "users:update",
+259       ]);
+260       expect(current.onRetry).not.toHaveBeenCalled();
+261       expect(current.action).not.toHaveBeenCalled();
+262     });
+263 
+264     it("bulk updates preserve ordinary failures, missing rows and successful counts", async () => {
+265       current = fixture(mode);
+266       current.query.mockRejectedValueOnce(new Error("PERMISSION_DENIED"))
+267         .mockResolvedValueOnce(null).mockResolvedValueOnce(profile).mockResolvedValueOnce(profile);
+268       current.mutation.mockResolvedValue(hydrated);
+269       await expect(current.users.updateMany(["denied", "missing", "success"], { data: {} })).resolves.toEqual({ updated: 1, userIds: ["success"] });
+270       assertAttempts(4, 1);
+271     });
+272 
+273     it("bulk dry run preserves selected IDs without any reads or writes", async () => {
+274       current = fixture(mode);
+275       await expect(current.users.updateMany(["caller-user"], { data: {} }, { dryRun: true }))
+276         .resolves.toEqual({ updated: 0, userIds: ["caller-user"] });
+277       assertAttempts(0, 0);
+278     });
+279 
+280     it("bulk validation rejects malformed updates before any attempt", async () => {
+281       current = fixture(mode);
+282       const request: Promise<unknown> = Reflect.apply(current.users.updateMany, current.users, [["caller-user"], { data: [] }]);
+283       await expect(request).rejects.toMatchObject({ name: "UserValidationError", code: "INVALID_DATA_TYPE" });
+284       assertAttempts(0, 0);
+285     });
+286   },
+287 );
+288 
+289 it("preserves actual resilience retry behavior for an ordinary transient mutation failure", async () => {
+290   const current = fixture("enabled");
+291   try {
+292     current.query.mockResolvedValue(profile);
+293     current.mutation.mockRejectedValueOnce(new Error("Server Error"))
+294       .mockRejectedValueOnce(new Error("Server Error")).mockResolvedValueOnce(hydrated);
+295     await expect(current.users.update("caller-user", {})).resolves.toEqual(mapped(hydrated));
+296     expect(current.query).toHaveBeenCalledTimes(1);
+297     expect(current.mutation).toHaveBeenCalledTimes(3);
+298     expect(current.execute.mock.calls.map((call) => call[1])).toEqual(["users:get", "users:update"]);
+299     expect(current.onRetry).toHaveBeenCalledTimes(2);
+300     expect(current.action).not.toHaveBeenCalled();
+301   } finally {
+302     await current.client.close();
+303     await current.resilience.shutdown();
+304     jest.restoreAllMocks();
+305   }
+306 });

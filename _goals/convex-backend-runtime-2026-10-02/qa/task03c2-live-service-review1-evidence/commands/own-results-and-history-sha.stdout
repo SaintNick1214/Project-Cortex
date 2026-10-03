@@ -1,0 +1,402 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import http from 'node:http';
+import https from 'node:https';
+import net from 'node:net';
+import tls from 'node:tls';
+import dns from 'node:dns';
+const output = new URL('./native-' + process.argv[2] + '.json', import.meta.url);
+let networkAttempts = 0;
+const forbidden = () => { networkAttempts++; throw new Error('OFFLINE_NETWORK_FORBIDDEN'); };
+globalThis.fetch = forbidden;
+for (const [object, names] of [[http,['request','get']],[https,['request','get']],[net,['connect','createConnection']],[tls,['connect']],[dns,['lookup','resolve']]]) for (const name of names) object[name]=forbidden;
+const fullNames=[]; const events=[];
+const check=(name, fn)=>{fn();fullNames.push(name);};
+class InertWebSocket {
+ static instances=[];
+ readyState=0; onopen=null; onclose=null; onmessage=null; onerror=null;
+ messages=[];
+ constructor(url){assert.match(url,/^ws:\/\/127\.0\.0\.1:9\//);InertWebSocket.instances.push(this);queueMicrotask(()=>{if(this.readyState===0){this.readyState=1;this.onopen?.();}});}
+ send(raw){this.messages.push(JSON.parse(raw));}
+ close(){this.readyState=3;queueMicrotask(()=>this.onclose?.({code:1000,reason:'offline complete',wasClean:true}));}
+}
+globalThis.WebSocket=InertWebSocket;
+// Imports occur only after the empty/minimal environment and network interceptors.
+const {Cortex}=await import('/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/packed-sdk/package/dist/index.js');
+const {makeFunctionReference}=await import('/workspace/Project-Cortex/node_modules/convex/dist/esm/server/index.js');
+const {ConvexError}=await import('/workspace/Project-Cortex/node_modules/convex/dist/esm/values/index.js');
+const modeArg=process.argv[2];
+let hostMode='throw';let release;let getterCalls=0;
+const now=Math.floor(Date.now()/1000);
+// Public synthetic compact string; no private JWT, signature, key or signer is used.
+const dummyToken='eyJhbGciOiJub25lIn0.'+Buffer.from(JSON.stringify({iat:now,exp:now+3600,sub:'offline-synthetic'})).toString('base64url')+'.offline';
+const diagnostics=[];const unhandled=[];const onUnhandled=e=>unhandled.push(e?.name??'unknown');process.on('unhandledRejection',onUnhandled);
+const oldConsole={...console};console.log=()=>{};console.warn=()=>{};console.error=()=>{};
+const cortex=new Cortex({convexUrl:'http://127.0.0.1:9',resilience:{enabled:false},fetchAuthToken:async()=>{getterCalls++;if(hostMode==='throw')throw new Error('SYNTHETIC_PRIVATE_FAILURE');if(hostMode==='defer')return await new Promise(r=>release=r);return dummyToken;},onAuthError:async d=>{diagnostics.push(d);throw new Error('SYNTHETIC_OBSERVER_FAILURE');}});
+const client=cortex.getClient();const query=makeFunctionReference('mutable:get');const args={namespace:'offline',key:'recovery',tenantId:'offline-tenant',memorySpaceId:'offline-space'};
+const flush=async()=>{await new Promise(r=>setImmediate(r));await new Promise(r=>setTimeout(r,0));await new Promise(r=>setImmediate(r));};
+let serverVersion={querySet:0,identity:0,ts:0n};
+const encodeTs=ts=>{const b=Buffer.alloc(8);b.writeBigUInt64LE(ts);return b.toString('base64');};
+let socket;
+function transition(modifications){
+ const latestQuery=socket.messages.filter(m=>m.type==='ModifyQuerySet').at(-1);
+ const latestAuth=socket.messages.filter(m=>m.type==='Authenticate').at(-1);
+ const next={querySet:latestQuery?.newVersion??serverVersion.querySet,identity:latestAuth?latestAuth.baseVersion+1:serverVersion.identity,ts:serverVersion.ts+1n};
+ const ver=v=>({...v,ts:encodeTs(v.ts)});
+ socket.onmessage?.({data:JSON.stringify({type:'Transition',startVersion:ver(serverVersion),endVersion:ver(next),modifications})});serverVersion=next;
+}
+let stop;let reproduced=false;let nativeError;
+try {
+ await flush();socket=InertWebSocket.instances.at(-1);
+ check('initial host failures contained and exact sanitized keys',()=>{assert.equal(diagnostics.length,2);assert.deepEqual(Object.keys(cortex.credentials.authFailure).sort(),['attemptId','code']);assert.equal(cortex.credentials.authFailure.code,'HOST_TOKEN_FETCH_FAILED');});
+ const watcher={errors:0,values:[]};
+ stop=client.onUpdate(query,args,v=>watcher.values.push(v),e=>{assert(e instanceof ConvexError);assert.equal(e.data.code,'UNAUTHENTICATED');watcher.errors++;});
+ const add=socket.messages.flatMap(m=>m.modifications??[]).find(m=>m.type==='Add');
+ transition([{type:'QueryFailed',queryId:add.queryId,errorMessage:'Uncaught ConvexError: UNAUTHENTICATED',errorData:{code:'UNAUTHENTICATED'},logLines:[],journal:null}]);
+ check('native QueryFailed is received by actual listener',()=>assert.equal(watcher.errors,1));
+ stop();stop=undefined;
+ const beforeQueryMessages=socket.messages.filter(m=>m.type==='ModifyQuerySet').length;
+ hostMode=modeArg==='immediate'?'valid':'defer';
+ const notificationReturn=cortex.credentials.notifySessionChanged();
+ check('session notification has void return',()=>assert.equal(notificationReturn,undefined));
+ const callsAtNotification=getterCalls;
+ if(modeArg==='required-assertion'){
+  // This outcome assertion is identical in purpose/value to original client.ts:317.
+  // It is intentionally left failing; no retry/assertion weakening occurs.
+  try {assert.equal((await client.query(query,args)).value,43);}catch(e){nativeError=e;reproduced=true;throw e;}
+ } else {
+  try {await client.query(query,args);} catch(e){nativeError=e;reproduced=e instanceof ConvexError&&e.data.code==='UNAUTHENTICATED';}
+  check('immediate query rethrows cached native unauthenticated result',()=>assert.equal(reproduced,true));
+  check('cached error path adds no query subscription or request',()=>assert.equal(socket.messages.filter(m=>m.type==='ModifyQuerySet').length,beforeQueryMessages));
+  if(hostMode==='defer'){
+   check('diagnostic remains until current getter settles',()=>assert.notEqual(cortex.credentials.authFailure,undefined));
+   release(dummyToken);
+  }
+  await flush();
+  check('current valid getter clears diagnostic and restores native identity',()=>{assert.equal(cortex.credentials.authFailure,undefined);assert.equal(client.client.hasAuth(),true);});
+  check('wire recovery sends User with no late None',()=>{assert.equal(socket.messages.filter(m=>m.type==='Authenticate').at(-1).tokenType,'User');assert(getterCalls>=callsAtNotification);});
+  let postFetchDenied=false;try{await client.query(query,args);}catch(e){postFetchDenied=e instanceof ConvexError&&e.data.code==='UNAUTHENTICATED';}
+  check('settled getter alone does not purge native cached query error',()=>assert.equal(postFetchDenied,true));
+  const recovery={errors:0,values:[]};
+  stop=client.onUpdate(query,args,v=>recovery.values.push(v),e=>{assert.equal(e.data.code,'UNAUTHENTICATED');recovery.errors++;});
+  await flush();
+  check('persistent observation survives an initial cached denial',()=>assert.equal(recovery.errors,1));
+  const recoveryAdd=socket.messages.flatMap(m=>m.modifications??[]).filter(m=>m.type==='Add').at(-1);
+  transition([{type:'QueryRemoved',queryId:add.queryId},{type:'QueryUpdated',queryId:recoveryAdd.queryId,value:{value:43},logLines:[],journal:null}]);
+  await flush();
+  check('native server transition delivers exact recovered value',()=>assert.deepEqual(recovery.values,[{value:43}]));
+  check('subsequent native query returns exact43 and diagnostic remains cleared',()=>{assert.equal(client.client.localQueryResult('mutable:get',args).value,43);assert.equal(cortex.credentials.authFailure,undefined);});
+  assert.equal((await client.query(query,args)).value,43);
+  check('observer exceptions produce no unhandled rejection',()=>assert.deepEqual(unhandled,[]));
+  check('actual network attempts remain zero',()=>assert.equal(networkAttempts,0));
+ }
+} finally {
+ if(release&&hostMode==='defer')release(dummyToken);
+ stop?.();await cortex.shutdown(500);await flush();
+ for(const key of ['log','warn','error'])console[key]=oldConsole[key];
+ process.off('unhandledRejection',onUnhandled);
+ const result={mode:modeArg,phase:'independent-installed-client-OFFLINE',original41Replays:0,discovered:modeArg==='required-assertion'?4:modeArg==='immediate'?13:14,executed:fullNames.length+(modeArg==='required-assertion'?1:0),passed:fullNames.length,failed:modeArg==='required-assertion'?1:0,skipped:0,todo:0,fullNames:[...fullNames,...(modeArg==='required-assertion'?['original immediate recovery value43 assertion']:[])],reproduced,errorCode:nativeError?.data?.code,networkAttempts,closed:client.closed,credentialFilesRead:0,privateJwtRead:0,signedTokens:0,sourceEdits:0,diagnostics:diagnostics.map(d=>({code:d.code,attemptId:d.attemptId})),wireTypes:socket?.messages.map(m=>({type:m.type,tokenType:m.tokenType,baseVersion:m.baseVersion,newVersion:m.newVersion,modifications:m.modifications?.map(x=>({type:x.type,queryId:x.queryId}))})),unhandled};
+ fs.writeFileSync(output,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({mode:result.mode,discovered:result.discovered,executed:result.executed,passed:result.passed,failed:result.failed,reproduced,closed:result.closed,networkAttempts}));
+}
+
+native-deferred.json
+{
+  "mode": "deferred",
+  "phase": "independent-installed-client-OFFLINE",
+  "original41Replays": 0,
+  "discovered": 14,
+  "executed": 14,
+  "passed": 14,
+  "failed": 0,
+  "skipped": 0,
+  "todo": 0,
+  "fullNames": [
+    "initial host failures contained and exact sanitized keys",
+    "native QueryFailed is received by actual listener",
+    "session notification has void return",
+    "immediate query rethrows cached native unauthenticated result",
+    "cached error path adds no query subscription or request",
+    "diagnostic remains until current getter settles",
+    "current valid getter clears diagnostic and restores native identity",
+    "wire recovery sends User with no late None",
+    "settled getter alone does not purge native cached query error",
+    "persistent observation survives an initial cached denial",
+    "native server transition delivers exact recovered value",
+    "subsequent native query returns exact43 and diagnostic remains cleared",
+    "observer exceptions produce no unhandled rejection",
+    "actual network attempts remain zero"
+  ],
+  "reproduced": true,
+  "errorCode": "UNAUTHENTICATED",
+  "networkAttempts": 0,
+  "closed": true,
+  "credentialFilesRead": 0,
+  "privateJwtRead": 0,
+  "signedTokens": 0,
+  "sourceEdits": 0,
+  "diagnostics": [
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 1
+    },
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 2
+    }
+  ],
+  "wireTypes": [
+    {
+      "type": "Connect"
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 0,
+      "newVersion": 1,
+      "modifications": []
+    },
+    {
+      "type": "Authenticate",
+      "tokenType": "None",
+      "baseVersion": 0
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "modifications": [
+        {
+          "type": "Add",
+          "queryId": 0
+        }
+      ]
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "modifications": [
+        {
+          "type": "Remove",
+          "queryId": 0
+        }
+      ]
+    },
+    {
+      "type": "Authenticate",
+      "tokenType": "User",
+      "baseVersion": 1
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 3,
+      "newVersion": 4,
+      "modifications": [
+        {
+          "type": "Add",
+          "queryId": 1
+        }
+      ]
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 4,
+      "newVersion": 5,
+      "modifications": [
+        {
+          "type": "Remove",
+          "queryId": 1
+        }
+      ]
+    }
+  ],
+  "unhandled": []
+}
+
+native-immediate.json
+{
+  "mode": "immediate",
+  "phase": "independent-installed-client-OFFLINE",
+  "original41Replays": 0,
+  "discovered": 13,
+  "executed": 13,
+  "passed": 13,
+  "failed": 0,
+  "skipped": 0,
+  "todo": 0,
+  "fullNames": [
+    "initial host failures contained and exact sanitized keys",
+    "native QueryFailed is received by actual listener",
+    "session notification has void return",
+    "immediate query rethrows cached native unauthenticated result",
+    "cached error path adds no query subscription or request",
+    "current valid getter clears diagnostic and restores native identity",
+    "wire recovery sends User with no late None",
+    "settled getter alone does not purge native cached query error",
+    "persistent observation survives an initial cached denial",
+    "native server transition delivers exact recovered value",
+    "subsequent native query returns exact43 and diagnostic remains cleared",
+    "observer exceptions produce no unhandled rejection",
+    "actual network attempts remain zero"
+  ],
+  "reproduced": true,
+  "errorCode": "UNAUTHENTICATED",
+  "networkAttempts": 0,
+  "closed": true,
+  "credentialFilesRead": 0,
+  "privateJwtRead": 0,
+  "signedTokens": 0,
+  "sourceEdits": 0,
+  "diagnostics": [
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 1
+    },
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 2
+    }
+  ],
+  "wireTypes": [
+    {
+      "type": "Connect"
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 0,
+      "newVersion": 1,
+      "modifications": []
+    },
+    {
+      "type": "Authenticate",
+      "tokenType": "None",
+      "baseVersion": 0
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "modifications": [
+        {
+          "type": "Add",
+          "queryId": 0
+        }
+      ]
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "modifications": [
+        {
+          "type": "Remove",
+          "queryId": 0
+        }
+      ]
+    },
+    {
+      "type": "Authenticate",
+      "tokenType": "User",
+      "baseVersion": 1
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 3,
+      "newVersion": 4,
+      "modifications": [
+        {
+          "type": "Add",
+          "queryId": 1
+        }
+      ]
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 4,
+      "newVersion": 5,
+      "modifications": [
+        {
+          "type": "Remove",
+          "queryId": 1
+        }
+      ]
+    }
+  ],
+  "unhandled": []
+}
+
+native-required-assertion.json
+{
+  "mode": "required-assertion",
+  "phase": "independent-installed-client-OFFLINE",
+  "original41Replays": 0,
+  "discovered": 4,
+  "executed": 4,
+  "passed": 3,
+  "failed": 1,
+  "skipped": 0,
+  "todo": 0,
+  "fullNames": [
+    "initial host failures contained and exact sanitized keys",
+    "native QueryFailed is received by actual listener",
+    "session notification has void return",
+    "original immediate recovery value43 assertion"
+  ],
+  "reproduced": true,
+  "errorCode": "UNAUTHENTICATED",
+  "networkAttempts": 0,
+  "closed": true,
+  "credentialFilesRead": 0,
+  "privateJwtRead": 0,
+  "signedTokens": 0,
+  "sourceEdits": 0,
+  "diagnostics": [
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 1
+    },
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 2
+    }
+  ],
+  "wireTypes": [
+    {
+      "type": "Connect"
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 0,
+      "newVersion": 1,
+      "modifications": []
+    },
+    {
+      "type": "Authenticate",
+      "tokenType": "None",
+      "baseVersion": 0
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "modifications": [
+        {
+          "type": "Add",
+          "queryId": 0
+        }
+      ]
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "modifications": [
+        {
+          "type": "Remove",
+          "queryId": 0
+        }
+      ]
+    }
+  ],
+  "unhandled": []
+}
+

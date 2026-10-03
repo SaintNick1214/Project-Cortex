@@ -1,0 +1,1165 @@
+
+FILE node_modules/convex/src/browser/simple_client.ts
+import { validateDeploymentUrl } from "../common/index.js";
+import {
+  FunctionArgs,
+  FunctionReturnType,
+  PaginationResult,
+  FunctionReference,
+  FunctionReference_future,
+} from "../server/index.js";
+import { getFunctionName } from "../server/api.js";
+import { AuthTokenFetcher } from "./sync/authentication_manager.js";
+import {
+  BaseConvexClient,
+  BaseConvexClientOptions,
+  ConnectionState,
+  MutationOptions,
+} from "./sync/client.js";
+import {
+  ExtendedTransition,
+  PaginatedQueryClient,
+} from "./sync/paginated_query_client.js";
+import { PaginatedQueryResult } from "./sync/pagination.js";
+import { UserIdentityAttributes } from "./sync/protocol.js";
+import {
+  PaginatedQueryToken,
+  QueryToken,
+  serializedQueryTokenIsPaginated,
+} from "./sync/udf_path_utils.js";
+
+// In Node.js builds this points to a bundled WebSocket implementation. If no
+// WebSocket implementation is manually specified or globally available,
+// this one is used.
+let defaultWebSocketConstructor: typeof WebSocket | undefined;
+
+/** internal */
+export function setDefaultWebSocketConstructor(ws: typeof WebSocket) {
+  defaultWebSocketConstructor = ws;
+}
+
+export type ConvexClientOptions = BaseConvexClientOptions & {
+  /**
+   * `disabled` makes onUpdate callback registration a no-op and actions,
+   * mutations and one-shot queries throw. Setting disabled to true may be
+   * useful for server-side rendering, where subscriptions don't make sense.
+   */
+  disabled?: boolean;
+  /**
+   * Whether to prompt users in browsers about queued or in-flight mutations.
+   * This only works in environments where `window.onbeforeunload` is available.
+   *
+   * Defaults to true when `window` is defined, otherwise false.
+   */
+  unsavedChangesWarning?: boolean;
+};
+
+/**
+ * Stops callbacks from running.
+ *
+ * @public
+ */
+export type Unsubscribe<T> = {
+  /** Stop calling callback when query results changes. If this is the last listener on this query, stop received updates. */
+  (): void;
+  /** Stop calling callback when query results changes. If this is the last listener on this query, stop received updates. */
+  unsubscribe(): void;
+  /** Get the last known value, possibly with local optimistic updates applied. */
+  getCurrentValue(): T | undefined;
+  /** @internal */
+  getQueryLogs(): string[] | undefined;
+};
+
+/**
+ * Subscribes to Convex query functions and executes mutations and actions over a WebSocket.
+ *
+ * Optimistic updates for mutations are not provided for this client.
+ * Third party clients may choose to wrap {@link browser.BaseConvexClient} for additional control.
+ *
+ * ```ts
+ * const client = new ConvexClient("https://happy-otter-123.convex.cloud");
+ * const unsubscribe = client.onUpdate(api.messages.list, {}, (messages) => {
+ *   console.log(messages[0].body);
+ * });
+ * ```
+ *
+ * @public
+ */
+export class ConvexClient {
+  private listeners: Set<QueryInfo>;
+  private _client: BaseConvexClient | undefined;
+  private _paginatedClient: PaginatedQueryClient | undefined;
+  // A synthetic server event to run callbacks the first time
+  private callNewListenersWithCurrentValuesTimer:
+    | ReturnType<typeof setTimeout>
+    | undefined;
+  private _closed: boolean;
+  private _disabled: boolean;
+  /**
+   * Once closed no registered callbacks will fire again.
+   */
+  get closed(): boolean {
+    return this._closed;
+  }
+  get client(): BaseConvexClient {
+    if (this._client) return this._client;
+    throw new Error("ConvexClient is disabled");
+  }
+  /**
+   * @internal
+   */
+  get paginatedClient(): PaginatedQueryClient {
+    if (this._paginatedClient) return this._paginatedClient;
+    throw new Error("ConvexClient is disabled");
+  }
+  get disabled(): boolean {
+    return this._disabled;
+  }
+
+  /**
+   * Construct a client and immediately initiate a WebSocket connection to the passed address.
+   *
+   * @public
+   */
+  constructor(address: string, options: ConvexClientOptions = {}) {
+    if (options.skipConvexDeploymentUrlCheck !== true) {
+      validateDeploymentUrl(address);
+    }
+    const { disabled, ...baseOptions } = options;
+    this._closed = false;
+    this._disabled = !!disabled;
+    if (
+      defaultWebSocketConstructor &&
+      !("webSocketConstructor" in baseOptions) &&
+      typeof WebSocket === "undefined"
+    ) {
+      baseOptions.webSocketConstructor = defaultWebSocketConstructor;
+    }
+    if (
+      typeof window === "undefined" &&
+      !("unsavedChangesWarning" in baseOptions)
+    ) {
+      baseOptions.unsavedChangesWarning = false;
+    }
+    if (!this.disabled) {
+      this._client = new BaseConvexClient(
+        address,
+        () => {}, // NOP, let the paginated query client do it all
+        baseOptions,
+      );
+      this._paginatedClient = new PaginatedQueryClient(
+        this._client,
+        (transition) => this._transition(transition),
+      );
+    }
+    this.listeners = new Set();
+  }
+
+  /**
+   * Call a callback whenever a new result for a query is received. The callback
+   * will run soon after being registered if a result for the query is already
+   * in memory.
+   *
+   * The return value is an {@link Unsubscribe} object which is both a function
+   * an an object with properties. Both of the patterns below work with this object:
+   *
+   *```ts
+   * // call the return value as a function
+   * const unsubscribe = client.onUpdate(api.messages.list, {}, (messages) => {
+   *   console.log(messages);
+   * });
+   * unsubscribe();
+   *
+   * // unpack the return value into its properties
+   * const {
+   *   getCurrentValue,
+   *   unsubscribe,
+   * } = client.onUpdate(api.messages.list, {}, (messages) => {
+   *   console.log(messages);
+   * });
+   *```
+   *
+   * @param query - A {@link server.FunctionReference} for the public query to run.
+   * @param args - The arguments to run the query with.
+   * @param callback - Function to call when the query result updates.
+   * @param onError - Function to call when the query result updates with an error.
+   * If not provided, errors will be thrown instead of calling the callback.
+   *
+   * @return an {@link Unsubscribe} function to stop calling the onUpdate function.
+   */
+  onUpdate<
+    Query extends
+      | FunctionReference<"query">
+      | FunctionReference_future<"query">,
+  >(
+    query: Query,
+    args: FunctionArgs<Query>,
+    callback: (result: FunctionReturnType<Query>) => unknown,
+    onError?: (e: Error) => unknown,
+  ): Unsubscribe<FunctionReturnType<Query>> {
+    if (this.disabled) {
+      return this.createDisabledUnsubscribe<FunctionReturnType<Query>>();
+    }
+
+    // BaseConvexClient takes care of deduplicating queries subscriptions...
+    const { queryToken, unsubscribe } = this.client.subscribe(
+      getFunctionName(query),
+      args,
+    );
+
+    // ...but we still need to bookkeep callbacks to actually call them.
+    const queryInfo: QueryInfo = {
+      queryToken,
+      callback,
+      onError,
+      unsubscribe,
+      hasEverRun: false,
+      query,
+      args,
+      paginationOptions: undefined,
+    };
+    this.listeners.add(queryInfo);
+
+    // If the callback is registered for a query with a result immediately available
+    // schedule a fake transition to call the callback soon instead of waiting for
+    // a new server update (which could take seconds or days).
+    if (
+      this.queryResultReady(queryToken) &&
+      this.callNewListenersWithCurrentValuesTimer === undefined
+    ) {
+      this.callNewListenersWithCurrentValuesTimer = setTimeout(
+        () => this.callNewListenersWithCurrentValues(),
+        0,
+      );
+    }
+
+    const unsubscribeProps: RemoveCallSignature<
+      Unsubscribe<FunctionReturnType<Query>>
+    > = {
+      unsubscribe: () => {
+        if (this.closed) {
+          // all unsubscribes already ran
+          return;
+        }
+        this.listeners.delete(queryInfo);
+        unsubscribe();
+      },
+      getCurrentValue: () => this.client.localQueryResultByToken(queryToken),
+      getQueryLogs: () => this.client.localQueryLogs(queryToken),
+    };
+    const ret = unsubscribeProps.unsubscribe as Unsubscribe<
+      FunctionReturnType<Query>
+    >;
+    Object.assign(ret, unsubscribeProps);
+    return ret;
+  }
+
+  /**
+   * Call a callback whenever a new result for a paginated query is received.
+   *
+   * This is an experimental preview: the final API may change.
+   * In particular, caching behavior, page splitting, and required paginated query options
+   * may change.
+   *
+   * @param query - A {@link server.FunctionReference} for the public query to run.
+   * @param args - The arguments to run the query with.
+   * @param options - Options for the paginated query including initialNumItems and id.
+   * @param callback - Function to call when the query result updates.
+   * @param onError - Function to call when the query result updates with an error.
+   *
+   * @return an {@link Unsubscribe} function to stop calling the callback.
+   */
+  onPaginatedUpdate_experimental<
+    Query extends
+      | FunctionReference<"query">
+      | FunctionReference_future<"query">,
+  >(
+    query: Query,
+    args: FunctionArgs<Query>,
+    options: { initialNumItems: number },
+    callback: (result: PaginationResult<FunctionReturnType<Query>>) => unknown,
+    onError?: (e: Error) => unknown,
+  ): Unsubscribe<PaginatedQueryResult<FunctionReturnType<Query>[]>> {
+    if (this.disabled) {
+      return this.createDisabledUnsubscribe<
+        PaginatedQueryResult<FunctionReturnType<Query>>
+      >();
+    }
+
+    const paginationOptions = {
+      initialNumItems: options.initialNumItems,
+      id: -1,
+    };
+
+    const { paginatedQueryToken, unsubscribe } = this.paginatedClient.subscribe(
+      getFunctionName(query),
+      args,
+      // Simple client doesn't use IDs, there's no expectation that these queries remain separate.
+      paginationOptions,
+    );
+
+    const queryInfo: QueryInfo = {
+      queryToken: paginatedQueryToken,
+      callback,
+      onError,
+      unsubscribe,
+      hasEverRun: false,
+      query,
+      args,
+      paginationOptions,
+    };
+    this.listeners.add(queryInfo);
+
+    // If the callback is registered for a query with a result immediately available
+    // schedule a fake transition to call the callback soon instead of waiting for
+    // a new server update (which could take seconds or days).
+    if (
+      !!this.paginatedClient.localQueryResultByToken(paginatedQueryToken) &&
+      this.callNewListenersWithCurrentValuesTimer === undefined
+    ) {
+      this.callNewListenersWithCurrentValuesTimer = setTimeout(
+        () => this.callNewListenersWithCurrentValues(),
+        0,
+      );
+    }
+
+    const unsubscribeProps: RemoveCallSignature<
+      Unsubscribe<PaginatedQueryResult<FunctionReturnType<Query>[]>>
+    > = {
+      unsubscribe: () => {
+        if (this.closed) {
+          // all unsubscribes already ran
+          return;
+        }
+        this.listeners.delete(queryInfo);
+        unsubscribe();
+      },
+      getCurrentValue: () => {
+        const result = this.paginatedClient.localQueryResult(
+          getFunctionName(query),
+          args,
+          paginationOptions,
+        );
+        // cast to apply the specific function type
+        return result as
+          | PaginatedQueryResult<FunctionReturnType<Query>>
+          | undefined;
+      },
+      getQueryLogs: () => [], // Paginated queries don't aggregate their logs
+    };
+    const ret = unsubscribeProps.unsubscribe as Unsubscribe<
+      PaginatedQueryResult<FunctionReturnType<Query>>
+    >;
+    Object.assign(ret, unsubscribeProps);
+    return ret;
+  }
+
+  // Run all callbacks that have never been run before if they have a query
+  // result available now.
+  private callNewListenersWithCurrentValues() {
+    this.callNewListenersWithCurrentValuesTimer = undefined;
+    this._transition({ queries: [], paginatedQueries: [] }, true);
+  }
+
+  private queryResultReady(queryToken: QueryToken): boolean {
+    return this.client.hasLocalQueryResultByToken(queryToken);
+  }
+
+  private createDisabledUnsubscribe<T>(): Unsubscribe<T> {
+    const disabledUnsubscribe = (() => {}) as Unsubscribe<T>;
+    const unsubscribeProps: RemoveCallSignature<Unsubscribe<T>> = {
+      unsubscribe: disabledUnsubscribe,
+      getCurrentValue: () => undefined,
+      getQueryLogs: () => undefined,
+    };
+    Object.assign(disabledUnsubscribe, unsubscribeProps);
+    return disabledUnsubscribe;
+  }
+
+  async close() {
+    if (this.disabled) return;
+    // prevent pending updates
+    this.listeners.clear();
+    this._closed = true;
+    if (this._paginatedClient) {
+      this._paginatedClient = undefined;
+    }
+    return this.client.close();
+  }
+
+  /**
+   * Get the current JWT auth token and decoded claims.
+   */
+  getAuth(): { token: string; decoded: Record<string, any> } | undefined {
+    if (this.disabled) return;
+    return this.client.getCurrentAuthClaims();
+  }
+
+  /**
+   * Set the authentication token to be used for subsequent queries and mutations.
+   * `fetchToken` will be called automatically again if a token expires.
+   * `fetchToken` should return `null` if the token cannot be retrieved, for example
+   * when the user's rights were permanently revoked.
+   * @param fetchToken - an async function returning the JWT (typically an OpenID Connect Identity Token)
+   * @param onChange - a callback that will be called when the authentication status changes
+   */
+  setAuth(
+    fetchToken: AuthTokenFetcher,
+    onChange?: (isAuthenticated: boolean) => void,
+  ) {
+    if (this.disabled) return;
+    this.client.setAuth(
+      fetchToken,
+      onChange ??
+        (() => {
+          // Do nothing
+        }),
+    );
+  }
+
+  /**
+   * @internal
+   */
+  setAdminAuth(token: string, identity?: UserIdentityAttributes) {
+    if (this.closed) {
+      throw new Error("ConvexClient has already been closed.");
+    }
+    if (this.disabled) return;
+    this.client.setAdminAuth(token, identity);
+  }
+
+  /**
+   * @internal
+   */
+  _transition(
+    {
+      queries,
+      paginatedQueries,
+    }: Pick<ExtendedTransition, "queries" | "paginatedQueries">,
+    callNewListeners = false,
+  ) {
+    const updatedQueries = [
+      ...queries.map((q) => q.token),
+      ...paginatedQueries.map((q) => q.token),
+    ];
+
+    // Deduping subscriptions happens in the BaseConvexClient, so not much to do here.
+
+    // Call all callbacks in the order they were registered
+    for (const queryInfo of this.listeners) {
+      const { callback, queryToken, onError, hasEverRun } = queryInfo;
+      const isPaginatedQuery = serializedQueryTokenIsPaginated(queryToken);
+
+      // What does it mean to have a paginated query result ready? I think it's
+      // always going to fire immediately.
+      const hasResultReady = isPaginatedQuery
+        ? !!this.paginatedClient.localQueryResultByToken(queryToken)
+        : this.client.hasLocalQueryResultByToken(queryToken);
+
+      if (
+        updatedQueries.includes(queryToken) ||
+        (callNewListeners && !hasEverRun && hasResultReady)
+      ) {
+        queryInfo.hasEverRun = true;
+        let newValue;
+        try {
+          if (isPaginatedQuery) {
+            newValue = this.paginatedClient.localQueryResultByToken(queryToken);
+          } else {
+            newValue = this.client.localQueryResultByToken(queryToken);
+          }
+        } catch (error) {
+          if (!(error instanceof Error)) throw error;
+          if (onError) {
+            onError(
+              error,
+              "Second argument to onUpdate onError is reserved for later use",
+            );
+          } else {
+            // Make some noise without unsubscribing or failing to call other callbacks.
+            void Promise.reject(error);
+          }
+          continue;
+        }
+        callback(
+          newValue,
+          "Second argument to onUpdate callback is reserved for later use",
+        );
+      }
+    }
+  }
+
+  /**
+   * Execute a mutation function.
+   *
+   * @param mutation - A {@link server.FunctionReference} for the public mutation
+   * to run.
+   * @param args - An arguments object for the mutation.
+   * @param options - A {@link MutationOptions} options object for the mutation.
+   * @returns A promise of the mutation's result.
+   */
+  async mutation<
+    Mutation extends
+      | FunctionReference<"mutation">
+      | FunctionReference_future<"mutation">,
+  >(
+    mutation: Mutation,
+    args: FunctionArgs<Mutation>,
+    options?: MutationOptions,
+  ): Promise<Awaited<FunctionReturnType<Mutation>>> {
+    if (this.disabled) throw new Error("ConvexClient is disabled");
+    return await this.client.mutation(getFunctionName(mutation), args, options);
+  }
+
+  /**
+   * Execute an action function.
+   *
+   * @param action - A {@link server.FunctionReference} for the public action
+   * to run.
+   * @param args - An arguments object for the action.
+   * @returns A promise of the action's result.
+   */
+  async action<
+    Action extends
+      | FunctionReference<"action">
+      | FunctionReference_future<"action">,
+  >(
+    action: Action,
+    args: FunctionArgs<Action>,
+  ): Promise<Awaited<FunctionReturnType<Action>>> {
+    if (this.disabled) throw new Error("ConvexClient is disabled");
+    return await this.client.action(getFunctionName(action), args);
+  }
+
+  /**
+   * Fetch a query result once.
+   *
+   * @param query - A {@link server.FunctionReference} for the public query
+   * to run.
+   * @param args - An arguments object for the query.
+   * @returns A promise of the query's result.
+   */
+  async query<
+    Query extends
+      | FunctionReference<"query">
+      | FunctionReference_future<"query">,
+  >(
+    query: Query,
+    args: FunctionArgs<Query>,
+  ): Promise<Awaited<FunctionReturnType<Query>>> {
+    if (this.disabled) throw new Error("ConvexClient is disabled");
+    const value = this.client.localQueryResult(getFunctionName(query), args) as
+      | Awaited<FunctionReturnType<Query>>
+      | undefined;
+    if (value !== undefined) return Promise.resolve(value);
+
+    return new Promise((resolve, reject) => {
+      const { unsubscribe } = this.onUpdate(
+        query,
+        args,
+        (value) => {
+          unsubscribe();
+          resolve(value);
+        },
+        (e: Error) => {
+          unsubscribe();
+          reject(e);
+        },
+      );
+    });
+  }
+
+  /**
+   * Get the current {@link ConnectionState} between the client and the Convex
+   * backend.
+   *
+   * @returns The {@link ConnectionState} with the Convex backend.
+   */
+  connectionState(): ConnectionState {
+    if (this.disabled) throw new Error("ConvexClient is disabled");
+    return this.client.connectionState();
+  }
+
+  /**
+   * Subscribe to the {@link ConnectionState} between the client and the Convex
+   * backend, calling a callback each time it changes.
+   *
+   * Subscribed callbacks will be called when any part of ConnectionState changes.
+   * ConnectionState may grow in future versions (e.g. to provide a array of
+   * inflight requests) in which case callbacks would be called more frequently.
+   *
+   * @returns An unsubscribe function to stop listening.
+   */
+  subscribeToConnectionState(
+    cb: (connectionState: ConnectionState) => void,
+  ): () => void {
+    if (this.disabled) return () => {};
+    return this.client.subscribeToConnectionState(cb);
+  }
+}
+
+// internal information tracked about each registered callback
+type QueryInfo = {
+  callback: (result: any, meta: unknown) => unknown;
+  onError: ((e: Error, meta: unknown) => unknown) | undefined;
+  unsubscribe: () => void;
+  queryToken: QueryToken | PaginatedQueryToken;
+  hasEverRun: boolean;
+  // query, args and paginationOptions are just here for debugging, the queryToken is authoritative
+  query: FunctionReference<"query"> | FunctionReference_future<"query">;
+  args: any;
+  paginationOptions: { initialNumItems: number; id: number } | undefined;
+};
+
+// helps to construct objects with a call signature
+type RemoveCallSignature<T> = Omit<T, never>;
+
+
+FILE node_modules/convex/src/browser/sync/authentication_manager.ts
+import { Logger } from "../logging.js";
+import { LocalSyncState } from "./local_state.js";
+import { AuthError, IdentityVersion, Transition } from "./protocol.js";
+import { jwtDecode } from "../../vendor/jwt-decode/index.js";
+
+// setTimout uses 32 bit integer, so it can only
+// schedule about 24 days in the future.
+const MAXIMUM_REFRESH_DELAY = 20 * 24 * 60 * 60 * 1000; // 20 days
+
+const MAX_TOKEN_CONFIRMATION_ATTEMPTS = 2;
+
+/**
+ * An async function returning a JWT. Depending on the auth providers
+ * configured in convex/auth.config.ts, this may be a JWT-encoded OpenID
+ * Connect Identity Token or a traditional JWT.
+ *
+ * `forceRefreshToken` is `true` if the server rejected a previously
+ * returned token or the token is anticipated to expiring soon
+ * based on its `exp` time.
+ *
+ * See {@link ConvexReactClient.setAuth}.
+ *
+ * @public
+ */
+export type AuthTokenFetcher = (args: {
+  forceRefreshToken: boolean;
+}) => Promise<string | null | undefined>;
+
+/**
+ * What is provided to the client.
+ */
+type AuthConfig = {
+  fetchToken: AuthTokenFetcher;
+  onAuthChange: (isAuthenticated: boolean) => void;
+  onRefreshChange?: ((isRefreshing: boolean) => void) | undefined;
+};
+
+/**
+ * By default we take 3 steps:
+ *   1. Fetch a possibly cached token and send it to the server
+ *   2. Immediately fetch a fresh token without using a cache
+ *   3. Repeat step 2 before the end of the fresh token's lifetime
+ *
+ * When `initialAuthTokenReuse` is enabled, step 2 is skipped: the
+ * cached token is reused and a refetch is scheduled based on its
+ * remaining lifetime (estimated via the server's clock skew). This
+ * avoids a second Authenticate message that would cause the server
+ * to re-execute all authenticated queries.
+ *
+ * If the server rejects a token before a scheduled refetch, we
+ * immediately fetch a fresh token and retry.
+ */
+type AuthState =
+  | { state: "noAuth" }
+  | {
+      state: "waitingForServerConfirmationOfCachedToken";
+      config: AuthConfig;
+      hasRetried: boolean;
+    }
+  | {
+      state: "initialRefetch";
+      config: AuthConfig;
+    }
+  | {
+      state: "waitingForServerConfirmationOfFreshToken";
+      config: AuthConfig;
+      hadAuth: boolean;
+      token: string;
+    }
+  | {
+      state: "waitingForScheduledRefetch";
+      config: AuthConfig;
+      refetchTokenTimeoutId: ReturnType<typeof setTimeout>;
+    }
+  // Special/weird state when we got a valid token
+  // but could not fetch a new one.
+  | {
+      state: "notRefetching";
+      config: AuthConfig;
+    };
+
+/**
+ * Handles the state transitions for auth. The server is the source
+ * of truth.
+ */
+export class AuthenticationManager {
+  private authState: AuthState = { state: "noAuth" };
+  // Used to detect races involving `setConfig` calls
+  // while a token is being fetched.
+  private configVersion = 0;
+  // Shared by the BaseClient so that the auth manager can easily inspect it
+  private readonly syncState: LocalSyncState;
+  // Passed down by BaseClient, sends a message to the server
+  private readonly authenticate: (token: string) => IdentityVersion;
+  private readonly stopSocket: () => Promise<void>;
+  private readonly tryRestartSocket: () => void;
+  private readonly pauseSocket: () => void;
+  private readonly resumeSocket: () => void;
+  // Passed down by BaseClient, sends a message to the server
+  private readonly clearAuth: () => void;
+  private readonly logger: Logger;
+  private readonly refreshTokenLeewaySeconds: number;
+  private readonly initialAuthTokenReuse: boolean;
+  // Track last value to avoid redundant calls
+  private lastRefreshChange: boolean;
+  // Number of times we have attempted to confirm the latest token. We retry up
+  // to `MAX_TOKEN_CONFIRMATION_ATTEMPTS` times.
+  private tokenConfirmationAttempts = 0;
+  constructor(
+    syncState: LocalSyncState,
+    callbacks: {
+      authenticate: (token: string) => IdentityVersion;
+      stopSocket: () => Promise<void>;
+      tryRestartSocket: () => void;
+      pauseSocket: () => void;
+      resumeSocket: () => void;
+      clearAuth: () => void;
+    },
+    config: {
+      refreshTokenLeewaySeconds: number;
+      logger: Logger;
+      initialAuthTokenReuse: boolean;
+    },
+  ) {
+    this.syncState = syncState;
+    this.authenticate = callbacks.authenticate;
+    this.stopSocket = callbacks.stopSocket;
+    this.tryRestartSocket = callbacks.tryRestartSocket;
+    this.pauseSocket = callbacks.pauseSocket;
+    this.resumeSocket = callbacks.resumeSocket;
+    this.clearAuth = callbacks.clearAuth;
+    this.logger = config.logger;
+    this.refreshTokenLeewaySeconds = config.refreshTokenLeewaySeconds;
+    this.initialAuthTokenReuse = config.initialAuthTokenReuse;
+    this.lastRefreshChange = false;
+  }
+
+  private notifyRefreshChange(isRefreshing: boolean) {
+    if (
+      this.authState.state !== "noAuth" &&
+      this.authState.state !== "initialRefetch" &&
+      this.authState.config.onRefreshChange &&
+      this.lastRefreshChange !== isRefreshing
+    ) {
+      this.lastRefreshChange = isRefreshing;
+      this.authState.config.onRefreshChange(isRefreshing);
+    }
+  }
+
+  async setConfig(
+    fetchToken: AuthTokenFetcher,
+    onChange: (isAuthenticated: boolean) => void,
+    onRefreshChange?: (isRefreshing: boolean) => void,
+  ) {
+    this.resetAuthState();
+    this._logVerbose("pausing WS for auth token fetch");
+    this.pauseSocket();
+    const token = await this.fetchTokenAndGuardAgainstRace(fetchToken, {
+      forceRefreshToken: false,
+    });
+    if (token.isFromOutdatedConfig) {
+      return;
+    }
+    const config: AuthConfig = {
+      fetchToken,
+      onAuthChange: onChange,
+      onRefreshChange,
+    };
+    if (token.value) {
+      this.setAuthState({
+        state: "waitingForServerConfirmationOfCachedToken",
+        config,
+        hasRetried: false,
+      });
+      this.authenticate(token.value);
+    } else {
+      this.setAuthState({
+        state: "initialRefetch",
+        config,
+      });
+      // Try again with `forceRefreshToken: true`
+      await this.refetchToken();
+    }
+    this._logVerbose("resuming WS after auth token fetch");
+    this.resumeSocket();
+  }
+
+  onTransition(serverMessage: Transition) {
+    if (
+      !this.syncState.isCurrentOrNewerAuthVersion(
+        serverMessage.endVersion.identity,
+      )
+    ) {
+      // This is a stale transition - client has moved on to
+      // a newer auth version.
+      return;
+    }
+    if (
+      serverMessage.endVersion.identity <= serverMessage.startVersion.identity
+    ) {
+      // This transition did not change auth - it is not a response to Authenticate.
+      return;
+    }
+
+    this._logVerbose(
+      `auth state is ${this.authState.state} when handling transition`,
+    );
+
+    // This transition advanced the auth version, which means the token used was valid
+    // and the client and server auth states are in sync.
+    this.syncState.markAuthCompletion();
+
+    if (this.authState.state === "waitingForServerConfirmationOfCachedToken") {
+      this._logVerbose("server confirmed auth token is valid");
+      const cachedToken = this.syncState.getAuth()?.value;
+      if (this.initialAuthTokenReuse && cachedToken) {
+        this.scheduleTokenRefetch(cachedToken, serverMessage.clientClockSkew);
+      } else {
+        void this.refetchToken();
+      }
+      this.authState.config.onAuthChange(true);
+      return;
+    }
+    if (this.authState.state === "waitingForServerConfirmationOfFreshToken") {
+      this._logVerbose("server confirmed new auth token is valid");
+      this.notifyRefreshChange(false);
+      this.scheduleTokenRefetch(this.authState.token);
+      this.tokenConfirmationAttempts = 0;
+      if (!this.authState.hadAuth) {
+        this.authState.config.onAuthChange(true);
+      }
+    }
+  }
+
+  onAuthError(serverMessage: AuthError) {
+    // If the AuthError is not due to updating the token, and we're currently
+    // waiting on the result of a token update, ignore.
+    if (
+      serverMessage.authUpdateAttempted === false &&
+      (this.authState.state === "waitingForServerConfirmationOfFreshToken" ||
+        this.authState.state === "waitingForServerConfirmationOfCachedToken")
+    ) {
+      this._logVerbose("ignoring non-auth token expired error");
+      return;
+    }
+    const { baseVersion } = serverMessage;
+    // Versioned AuthErrors are ignored if the client advanced to
+    // a newer auth identity
+    // Error are reporting the previous version, since the server
+    // didn't advance, hence `+ 1`.
+    if (!this.syncState.isCurrentOrNewerAuthVersion(baseVersion + 1)) {
+      this._logVerbose("ignoring auth error for previous auth attempt");
+      return;
+    }
+    void this.tryToReauthenticate(serverMessage);
+    return;
+  }
+
+  // This is similar to `refetchToken` defined below, in fact we
+  // don't represent them as different states, but it is different
+  // in that we pause the WebSocket so that mutations
+  // don't retry with bad auth.
+  private async tryToReauthenticate(serverMessage: AuthError) {
+    this._logVerbose(`attempting to reauthenticate: ${serverMessage.error}`);
+    if (
+      // No way to fetch another token, kaboom
+      this.authState.state === "noAuth" ||
+      // We failed on a fresh token. After a small number of retries, we give up
+      // and clear the auth state to avoid infinite retries.
+      (this.authState.state === "waitingForServerConfirmationOfFreshToken" &&
+        this.tokenConfirmationAttempts >= MAX_TOKEN_CONFIRMATION_ATTEMPTS)
+    ) {
+      this.logger.error(
+        `Failed to authenticate: "${serverMessage.error}", check your server auth config`,
+      );
+      if (this.syncState.hasAuth()) {
+        this.syncState.clearAuth();
+      }
+      if (this.authState.state !== "noAuth") {
+        this.setAndReportAuthFailed(this.authState.config.onAuthChange);
+      }
+      return;
+    }
+    if (this.authState.state === "waitingForServerConfirmationOfFreshToken") {
+      this.tokenConfirmationAttempts++;
+      this._logVerbose(
+        `retrying reauthentication, ${MAX_TOKEN_CONFIRMATION_ATTEMPTS - this.tokenConfirmationAttempts} attempts remaining`,
+      );
+    }
+
+    this.notifyRefreshChange(true);
+    await this.stopSocket();
+    if ((this.authState.state as AuthState["state"]) === "noAuth") {
+      // setConfig() or stop() ran during the await.
+      return;
+    }
+    const token = await this.fetchTokenAndGuardAgainstRace(
+      this.authState.config.fetchToken,
+      {
+        forceRefreshToken: true,
+      },
+    );
+    if (token.isFromOutdatedConfig) {
+      return;
+    }
+
+    if (token.value && this.syncState.isNewAuth(token.value)) {
+      this.authenticate(token.value);
+      this.setAuthState({
+        state: "waitingForServerConfirmationOfFreshToken",
+        config: this.authState.config,
+        token: token.value,
+        hadAuth:
+          this.authState.state === "notRefetching" ||
+          this.authState.state === "waitingForScheduledRefetch",
+      });
+    } else {
+      this._logVerbose("reauthentication failed, could not fetch a new token");
+      if (this.syncState.hasAuth()) {
+        this.syncState.clearAuth();
+      }
+      this.setAndReportAuthFailed(this.authState.config.onAuthChange);
+    }
+    this.tryRestartSocket();
+  }
+
+  // Force refetch the token and schedule another refetch
+  // before the token expires - an active client should never
+  // need to reauthenticate.
+  private async refetchToken() {
+    if (this.authState.state === "noAuth") {
+      return;
+    }
+    this._logVerbose("refetching auth token");
+    const token = await this.fetchTokenAndGuardAgainstRace(
+      this.authState.config.fetchToken,
+      {
+        forceRefreshToken: true,
+      },
+    );
+    if (token.isFromOutdatedConfig) {
+      return;
+    }
+
+    if (token.value) {
+      if (this.syncState.isNewAuth(token.value)) {
+        this.setAuthState({
+          state: "waitingForServerConfirmationOfFreshToken",
+          hadAuth: this.syncState.hasAuth(),
+          token: token.value,
+          config: this.authState.config,
+        });
+        this.authenticate(token.value);
+      } else {
+        this.setAuthState({
+          state: "notRefetching",
+          config: this.authState.config,
+        });
+      }
+    } else {
+      this._logVerbose("refetching token failed");
+      if (this.syncState.hasAuth()) {
+        this.clearAuth();
+      }
+      this.setAndReportAuthFailed(this.authState.config.onAuthChange);
+    }
+    // Restart in case this refetch was triggered via schedule during
+    // a reauthentication attempt.
+    this._logVerbose(
+      "restarting WS after auth token fetch (if currently stopped)",
+    );
+    this.tryRestartSocket();
+  }
+
+  private scheduleTokenRefetch(token: string, clientClockSkewMs?: number) {
+    if (this.authState.state === "noAuth") {
+      return;
+    }
+    const decodedToken = this.decodeToken(token);
+    if (!decodedToken) {
+      // This is no longer really possible, because
+      // we wait on server response before scheduling token refetch,
+      // and the server currently requires JWT tokens.
+      this.logger.error(
+        "Auth token is not a valid JWT, cannot refetch the token",
+      );
+      return;
+    }
+    // iat: issued at time, UTC seconds timestamp at which the JWT was issued
+    // exp: expiration time, UTC seconds timestamp at which the JWT will expire
+    const { iat, exp } = decodedToken as { iat?: number; exp?: number };
+    if (!iat || !exp) {
+      this.logger.error(
+        "Auth token does not have required fields, cannot refetch the token",
+      );
+      return;
+    }
+    const fullLifetimeSeconds = exp - iat;
+    if (fullLifetimeSeconds <= 2) {
+      this.logger.error(
+        "Auth token does not live long enough, cannot refetch the token",
+      );
+      return;
+    }
+    let tokenValiditySeconds: number;
+    if (clientClockSkewMs !== undefined) {
+      // For cached tokens we use the server's clock skew estimate to
+      // compute remaining lifetime. The server computes
+      // clientClockSkew = clientTs - serverReceiveTs, so it's positive
+      // when the client is ahead and negative when behind. To recover
+      // server time: serverNow = Date.now() - clientClockSkew.
+      // Both Date.now() and setTimeout use the same client clock, so
+      // the scheduled delay is accurate regardless of absolute offset.
+      // Connect latency inflates the skew toward "client behind," which
+      // is conservative — we schedule the refetch slightly early.
+      const estimatedServerNowSeconds = (Date.now() - clientClockSkewMs) / 1000;
+      tokenValiditySeconds = exp - estimatedServerNowSeconds;
+      if (tokenValiditySeconds <= 0) {
+        tokenValiditySeconds = 0;
+      }
+    } else {
+      // For freshly-fetched tokens, `exp - iat` is the full lifetime
+      // starting from now.
+      tokenValiditySeconds = fullLifetimeSeconds;
+    }
+    // Attempt to refresh the token `refreshTokenLeewaySeconds` before it expires,
+    // or immediately if the token is already expiring soon.
+    let delay = Math.min(
+      MAXIMUM_REFRESH_DELAY,
+      (tokenValiditySeconds - this.refreshTokenLeewaySeconds) * 1000,
+    );
+    if (delay <= 0) {
+      // Refetch immediately, but this might be due to configuring a `refreshTokenLeewaySeconds`
+      // that is too large compared to the token's actual lifetime.
+      this.logger.warn(
+        `Refetching auth token immediately, configured leeway ${this.refreshTokenLeewaySeconds}s is larger than the token's lifetime ${tokenValiditySeconds}s`,
+      );
+      delay = 0;
+    }
+    const refetchTokenTimeoutId = setTimeout(() => {
+      this._logVerbose("running scheduled token refetch");
+      void this.refetchToken();
+    }, delay);
+    this.setAuthState({
+      state: "waitingForScheduledRefetch",
+      refetchTokenTimeoutId,
+      config: this.authState.config,
+    });
+    this._logVerbose(
+      `scheduled preemptive auth token refetching in ${delay}ms`,
+    );
+  }
+
+  // Protects against simultaneous calls to `setConfig`
+  // while we're fetching a token
+  private async fetchTokenAndGuardAgainstRace(
+    fetchToken: AuthTokenFetcher,
+    fetchArgs: {
+      forceRefreshToken: boolean;
+    },
+  ) {
+    const originalConfigVersion = ++this.configVersion;
+    this._logVerbose(
+      `fetching token with config version ${originalConfigVersion}`,
+    );
+    const token = await fetchToken(fetchArgs);
+    if (this.configVersion !== originalConfigVersion) {
+      // This is a stale config
+      this._logVerbose(
+        `stale config version, expected ${originalConfigVersion}, got ${this.configVersion}`,
+      );
+      return { isFromOutdatedConfig: true };
+    }
+    return { isFromOutdatedConfig: false, value: token };
+  }
+
+  stop() {
+    this.resetAuthState();
+    // Bump this in case we are mid-token-fetch when we get stopped
+    this.configVersion++;
+    this._logVerbose(`config version bumped to ${this.configVersion}`);
+  }
+
+  private setAndReportAuthFailed(
+    onAuthChange: (authenticated: boolean) => void,
+  ) {
+    onAuthChange(false);
+    this.resetAuthState();
+  }
+
+  // The sole path to `state === "noAuth"`; consumers rely on this firing
+  // `notifyRefreshChange(false)` to pair any in-flight `(true)`. May run
+  // when refresh state is already false.
+  private resetAuthState() {
+    this.notifyRefreshChange(false);
+    this.setAuthState({ state: "noAuth" });
+  }
+
+  private setAuthState(newAuth: AuthState) {
+    const authStateForLog =
+      newAuth.state === "waitingForServerConfirmationOfFreshToken"
+        ? {
+            hadAuth: newAuth.hadAuth,
+            state: newAuth.state,
+            token: `...${newAuth.token.slice(-7)}`,
+          }
+        : { state: newAuth.state };
+    this._logVerbose(
+      `setting auth state to ${JSON.stringify(authStateForLog)}`,
+    );
+    switch (newAuth.state) {
+      case "waitingForScheduledRefetch":
+      case "notRefetching":
+      case "noAuth":
+        this.tokenConfirmationAttempts = 0;
+        break;
+      case "waitingForServerConfirmationOfFreshToken":
+      case "waitingForServerConfirmationOfCachedToken":
+      case "initialRefetch":
+        break;
+      default: {
+        newAuth satisfies never;
+      }
+    }
+    if (this.authState.state === "waitingForScheduledRefetch") {
+      // TODO: this side-effect would be better situated with scheduling refetch
+      clearTimeout(this.authState.refetchTokenTimeoutId);
+    }
+    this.authState = newAuth;
+  }
+
+  private decodeToken(token: string) {
+    try {
+      return jwtDecode(token);
+    } catch (e) {
+      this._logVerbose(
+        `Error decoding token: ${e instanceof Error ? e.message : "Unknown error"}`,
+      );
+      return null;
+    }
+  }
+
+  private _logVerbose(message: string) {
+    this.logger.logVerbose(`${message} [v${this.configVersion}]`);
+  }
+}
+

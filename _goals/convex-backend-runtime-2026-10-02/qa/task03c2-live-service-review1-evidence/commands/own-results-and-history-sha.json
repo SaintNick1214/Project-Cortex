@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python",
+    "-c",
+    "from pathlib import Path;import json,hashlib;r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");print((r/\"native-recovery.mjs\").read_text());[(print(f.name),print(f.read_text())) for f in sorted(r.glob(\"native-*.json\"))];p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review3.md\");print(\"THIRD_REPORT\",str(p),hashlib.sha256(p.read_bytes()).hexdigest());assert hashlib.sha256(p.read_bytes()).hexdigest()==\"556643c11ca4a94a48a1c3d4ff91bdc185466a637e592c72db4db15193ffe9e4\""
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-03T14:35:54.441168+00:00",
+  "endUtc": "2026-10-03T14:35:54.466848+00:00",
+  "exit": 1,
+  "environment": "inherited for read-only context command; no env dump"
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/cli/deployment.ts"],
+  "sourcesContent": ["import { Command } from \"@commander-js/extra-typings\";\nimport { deploymentSelect } from \"./deploymentSelect.js\";\nimport { deploymentCreate } from \"./deploymentCreate.js\";\nimport { deploymentToken } from \"./deploymentToken.js\";\nimport { usage, usageLimits } from \"./usageLimits.js\";\n\nexport const deployment = new Command(\"deployment\")\n  .summary(\"Manage deployments\")\n  .description(\"Manage deployments in your project.\")\n  .addCommand(deploymentSelect)\n  .addCommand(deploymentCreate)\n  .addCommand(deploymentToken)\n  .addCommand(usage)\n  .addCommand(usageLimits);\n"],
+  "mappings": ";AAAA,SAAS,eAAe;AACxB,SAAS,wBAAwB;AACjC,SAAS,wBAAwB;AACjC,SAAS,uBAAuB;AAChC,SAAS,OAAO,mBAAmB;AAE5B,aAAM,aAAa,IAAI,QAAQ,YAAY,EAC/C,QAAQ,oBAAoB,EAC5B,YAAY,qCAAqC,EACjD,WAAW,gBAAgB,EAC3B,WAAW,gBAAgB,EAC3B,WAAW,eAAe,EAC1B,WAAW,KAAK,EAChB,WAAW,WAAW;",
+  "names": []
+}

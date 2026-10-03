@@ -1,0 +1,414 @@
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/01-qualification.md
+# Task 01: Stack and execution-boundary qualification
+
+**Status:** Complete — independent Task 01 review PASS (4.2/5). [Qualification evidence](../qa/task01/); [review](../qa/task01-review-1.md).
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** Later execution request and verified disposable prerequisites
+
+## Objective
+
+Qualify the composed stack and finalize the run/tool/stream/storage contracts before production implementation.
+
+## Requirements
+
+- [x] Record a qualified lock matrix for AI SDK >=7.0.105, Gateway provider, Agent, Workflow/Workpool, Convex >=1.46 and the repository Node >=24.15.0 / npm 12.2.0 floor; isolate Node-only modules.
+- [x] Core bounded spikes: authenticated text/tool/structured output and native interface; persisted stream reconnect/cancel; component finalization transaction; interrupted external call; minimal TS/UI transport. Establish approved disposable test prerequisites and shared versioned text/run/event/error contracts. Freeze the fresh default embedding profile (model, dimensions, preprocessing/chunking version and declared index contract) here; Tasks 02/04/08 implement its source/chunk/vector storage and policy matching. Observed managed retrieval for this profile is required before Task 09 PASS. Media/storage/graph and additional embedding-profile service gates occur at their own task entry and do not block the core text slice.
+- [x] Identify eligible disposable deployment and real test identities/services without printing secrets; no production deployment. Freeze explicit capability errors and uncertain-outcome semantics.
+
+## Acceptance Criteria
+
+- [x] Observed package/runtime/backend evidence distinguishes supported behavior from documented peers; missing service access is BLOCKED.
+- [x] Final-output/ingestion atomicity or cursor reconciliation is demonstrated with a forced failure boundary.
+- [x] The AI SDK UI transport contract is documented, model/tool effects are not duplicated after disconnect or retry.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §§3–4, 8, 10. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** Root/package manifests; convex.json; convex-dev component adapters; Vercel provider integration.
+
+## Validation and Execution Notes
+
+Profile §4/§9; retain spike receipts under qa/. No broad dependency upgrade or paid call before execution authorization.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/02-domain-services.md
+# Task 02: Backend-friendly memory domain services
+
+**Status:** In progress — execution authorized; Task01 independent PASS. Bounded foundation substeps active.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md)
+
+## Objective
+
+Separate reusable Cortex domain logic from application-held clients and workers.
+
+## Requirements
+
+- [ ] Execute bounded substeps with disjoint ownership and separate receipts: 02A pure normalization/ranking/context/extraction/conflict modules; 02B scoped backend repository/model/clock adapters and explicit remember/recall wiring. Freeze 02A interfaces before 02B. Implement the fresh default source/chunk/vector contract qualified in Task 01; additional profile qualification remains Task 10.
+- [ ] Extract pure normalization/ranking/context-formatting/extraction schemas/prompts and conflict logic with explicit repository/model/clock adapters.
+- [ ] Backend services use scoped Convex ctx operations and Gateway; clients never instantiate the backend runtime or bundle tokens.
+- [ ] Route explicit modern remember/recall operations through shared domain services; deployed extensions replace local callback assumptions.
+
+## Acceptance Criteria
+
+- [ ] A backend action can invoke domain services without new Cortex(), ConvexClient, browser subscriptions or a local GraphSyncWorker.
+- [ ] Existing normalization/ranking/extraction/conflict outcome fixtures remain equivalent where source-policy changes are not intended.
+- [ ] Internal extraction/embedding calls cannot recursively enter the user-chat context/remember wrapper.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §§5, 8. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** src/memory/; src/facts/; src/llm/; src/index.ts; backend domain modules.
+
+## Validation and Execution Notes
+
+Profile §5 memory API exemplars; preserve dirty src/index.ts work. Meaningful domain fixtures and scoped backend typechecking after execution.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/03-authorization.md
+# Task 03: Verified identity, grants and alternate endpoint closure
+
+**Status:** In progress — execution authorized; Task01 independent PASS. Bounded foundation substeps active.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md)
+
+## Objective
+
+Establish one trusted authorization boundary for runtime and all reachable Cortex data paths.
+
+## Requirements
+
+- [ ] Execute bounded substeps and record separate receipts: 03A public-path inventory and trusted principal/grant/bootstrap contracts; 03B guard/internalize the inventoried backend paths and background checks; 03C client JWT refresh and scoped subscription/byte/callback negative cases. Freeze 03A before dependent edits; serialize shared backend files.
+- [ ] Inventory public memory/facts/conversation/search/share/artifact/attachment/graph/user/agent/policy functions; guard or internalize bypass paths.
+- [ ] Attach refreshed host JWT credentials in clients; map verified issuer/subject to trusted memberships/grants. Establish trusted bootstrap/service provisioning; existing caller-created user metadata cannot grant privilege.
+- [ ] Direct endpoint access remains scoped/authenticated. Only trusted administrators can unlock transcript writes; unlocked writes target the same canonical store with revision tracking and stale-derived-memory detection. No write-lock setting disables authorization or billable controls.
+- [ ] Background run/service references recheck revocation/deletion; subscriptions, uploads/downloads and connector callbacks use appropriate scoped authentication. Protect administrative config; shares expose permitted redacted views.
+
+## Acceptance Criteria
+
+- [ ] Missing/forged identity, omitted/mismatched tenant, unauthorized scope and public share cannot read/write/stream/invoke paid inference through any alternate path.
+- [ ] Cross-tenant subscription, tool execution, upload and storage reference tests deny access; internal helpers are not public.
+- [ ] Revoked grant or deletion stops later reads/effects/commits and cannot recreate deleted rows; ordinary logout semantics are documented.
+
+## Context and Research
+
+[Architecture §9](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), [authoritative decisions](../../../_research/convex-ai-gateway-2026-10-02/decision-gates.md), [backend schema](../../../convex-dev/schema.ts) and [current auth context](../../../src/auth/context.ts). Caller-provided identity metadata is reference material, not verified authorization.
+
+**Likely areas:** convex-dev public functions; src/auth/; src/index.ts; host auth registration helpers.
+
+## Validation and Execution Notes
+
+Profile isolation skill and trusted identity fixtures. Preserve consumer auth.config/http routing. Do not infer access from AuthContext IDs.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md
+# Task 04: Per-function model policy and admission budgets
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md), [03 Verified identity, grants and alternate endpoint closure](03-authorization.md)
+
+## Objective
+
+Resolve and enforce versioned operation/model/capability and cost policy for every billable call.
+
+## Requirements
+
+- [ ] Register operation keys for chat, extraction, conflict, summaries/titles, memory/query embeddings, text/code/sheet/suggestions and image/video generation.
+- [ ] Resolve deployment/tenant/agent/operation policy with trusted overrides; pin model/interface/prompt versions and validate options, token limits and tools.
+- [ ] Atomically reserve run/tenant operation budget and concurrency; settle known usage once, retain uncertain paid outcomes conservatively; explicit safe fallbacks only.
+
+## Acceptance Criteria
+
+- [ ] Distinct function policies select different allowed models with correlated audit receipts; no hidden direct provider call bypasses policy.
+- [ ] Concurrent submissions and child/secondary calls cannot bypass reservation or settle twice; exhausted quotas fail before token mint.
+- [ ] Fallback never repeats visible output, tools or ambiguous paid jobs, and never changes an embedding profile.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §6. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** src/config.ts; backend policy/admission/usage schema and helpers; provider secondary-call integrations.
+
+## Validation and Execution Notes
+
+Concurrency/outcome fixtures with controlled failure injection; actual model/interface evidence in Task 14. Gateway deployment kill switch is not the application quota.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/05-transcripts-runs.md
+# Task 05: Canonical transcript, agent definitions and run admission
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [02 Backend-friendly memory domain services](02-domain-services.md), [03 Verified identity, grants and alternate endpoint closure](03-authorization.md), [04 Per-function model policy and admission budgets](04-model-policy.md)
+
+## Objective
+
+Create authoritative conversation/run identity and durably accept input without duplicate histories.
+
+## Requirements
+
+- [ ] Map stable Cortex conversations to Agent threads; retain access/share/retention metadata and expose authoritative typed transcript through an adapter.
+- [ ] Introduce versioned executable agent definitions separate from existing discovery registry; registered tools/context/memory/policy/budgets are backend-owned.
+- [ ] Transactionally deduplicate input key, persist user event/reservation and enqueue execution where supported; default queue/serialize mutating runs per conversation and make branching explicit.
+- [ ] Define response/memory/graph statuses, attempts, cancellation, approval, output references and new-record export/delete behavior. Provide an administrator-controlled managed transcript write lock; authorized reads remain available. Unlocked append/edit/delete uses the same canonical store, tracks revisions and invalidates affected derived records.
+
+## Acceptance Criteria
+
+- [ ] Same key/input returns one run; changed input/key reuse conflicts; concurrent inputs have deterministic queue/branch behavior.
+- [ ] Locked manual writes fail; authorized reads work. After administrator unlock, direct conversation append/edit/delete changes the authoritative transcript once, records actor/source revision and makes stale derived facts/vectors ineligible until repair.
+- [ ] Crash after acceptance leaves recoverable work; transcript projections can be rebuilt; raw hidden context/credentials do not enter public records.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §§3–4, 9. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** convex-dev/schema.ts; conversations.ts; agents.ts; new run/agent-definition adapters.
+
+## Validation and Execution Notes
+
+Profile backend patterns. Meaningful admission concurrency/transcript-policy fixtures and live component evidence; do not overwrite host schema.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/06-additive-installation.md
+# Task 06: Additive backend development installation
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [03 Verified identity, grants and alternate endpoint closure](03-authorization.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md)
+
+## Objective
+
+Install the core backend components and schema safely enough to qualify the first live text slice before optional media/graph extensions.
+
+## Requirements
+
+- [ ] Ship versioned additive schema fragments/component registration/helper functions and route/auth integration for the qualified core contracts. Respect custom functions directories and Node/default-runtime separation.
+- [ ] Preserve existing host tables/indexes, unrelated backend functions, HTTP/auth routes, component setup and Convex runtime/configuration. Detect conflicts and require a reviewable merge rather than replacement.
+- [ ] Provide a bounded development-target capability/provisioning helper with trusted auth/bootstrap configuration, without production deployment or implicit project creation.
+- [ ] Install core run/transcript/policy/ingestion capability incrementally; later graph/vector/media tasks extend the same additive mechanism. Full CLI UX is Task 15.
+
+## Acceptance Criteria
+
+- [ ] Fresh-host and customized-host-without-Cortex fixtures register core components/schema/routes without removing unrelated objects or changing the host functions directory.
+- [ ] A verified disposable development target registers the installed core component/schema/auth/route contracts; incomplete backend capability returns an actionable error. Task 07 owns the subsequent live execution receipt.
+- [ ] New-install retry/partial-failure and ambiguous merge fixtures preserve unrelated host data/configuration. No wholesale backend tree or schema copy is used.
+
+## Context and Research
+
+[Architecture](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), §§8–10; earlier installation review in [Gateway report](../../../_research/convex-ai-gateway-2026-10-02/report.md). This task unblocks text qualification rather than waiting on video/object-storage/graph prerequisites.
+
+**Likely areas:** backend distribution/component setup, schema helpers, scoped CLI development integration and custom-host fixtures. Protect ongoing CLI work and serialize overlapping writes.
+
+## Validation and Execution Notes
+
+Use offline host-preservation fixtures first, then scoped codegen/backend checks on the verified disposable target when execution is requested. Preserve consumer auth/http configuration; do not hand-edit generated APIs. Full CLI/template behavior is separately validated in Task 15. Existing-Cortex deployment upgrades are excluded; collisions with an old Cortex installation fail clearly rather than resetting it.
+
+No implementation, installation, paid inference or deployment is authorized by this planning file. Re-read AGENTS.md, Git status and manifests at execution; use explicit working directories.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/07-agent-streams.md
+# Task 07: Agent execution and durable reactive output
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [06 Additive backend development installation](06-additive-installation.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md)
+
+## Objective
+
+Execute a Cortex-scoped backend agent turn with reconnectable typed output.
+
+## Requirements
+
+- [ ] Compose recent Agent history with bounded authorized Cortex context using context hooks; disable duplicate independent semantic retrieval by default.
+- [ ] Register server tools/connectors with operation IDs, grants and explicit side-effect retry/approval semantics; pin run context/policies.
+- [ ] Persist throttled typed deltas/tool/artifact/status parts; authorize observers, cancel and approval continuation; support final-only delivery.
+- [ ] Model failure/interruption creates explicit partial/unknown attempt state; finalization registers durable memory work using the qualified transaction or reconciliation design.
+
+- [ ] Pin transcript revision with run context. Detect unlocked edits during execution; reject/cancel/branch stale completion according to the qualified contract.
+
+## Acceptance Criteria
+
+- [ ] The disposable development target installed in Task 06 accepts and executes the core runtime, proving the additive installation is wired to the qualified Agent/Workflow/Gateway contracts.
+- [ ] Authenticated live turn recalls scoped memory, executes a backend tool and streams correctly after client disconnect/reconnect and multiple observers.
+- [ ] One logical completed turn yields one final transcript and one ingestion receipt; failure between component completion and registration is recovered.
+- [ ] A manual unlocked edit cannot silently attach an obsolete completion to changed history or reuse stale injected memory. Interrupted model/tool effects are not blindly replayed; final/cancel/error events are distinguishable; tool secrets/context/raw reasoning are redacted.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §§3–5. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** backend Agent/Workflow adapters; run/event queries; context service; tool registry.
+
+## Validation and Execution Notes
+
+Provider/memory/isolation checks plus live native interface qualification. Saved-output replay must not be called upstream stream resumption.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/08-memory-pipeline.md
+# Task 08: Durable asynchronous memory and belief consistency
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [02 Backend-friendly memory domain services](02-domain-services.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md), [07 Agent execution and durable reactive output](07-agent-streams.md)
+
+## Objective
+
+Update Cortex memory independently of response delivery with explicit freshness and ordering guarantees.
+
+## Requirements
+
+- [ ] Execute bounded substeps with separate receipts: 08A durable source/stage records, pinned extraction and default-profile vector jobs; 08B ordered atomic belief/history/projection commits and tombstone/revision fencing; 08C contiguous watermarks, pending-tail context and strict barriers. Freeze shared records/interfaces before dependent edits and serialize schema/finalization writes. Prove the fresh default profile's source/chunk/vector and query-policy matching here; managed retrieval is a Task 09 acceptance prerequisite, while additional profiles remain Task 10.
+- [ ] Persist source-role/trust/event lineage and pinned extraction versions; enqueue eligible user work during response and completed assistant work according to policy.
+- [ ] Deduplicate per-stage extraction/fact/vector receipts; atomically version-check and apply belief revision/history/outbox; enforce source ordering for corrections.
+- [ ] Implement scoped stage-specific indexedThrough watermarks defined by contiguous eligible completion, with explicit holes/failed receipts rather than the highest completed sequence, bounded eligible pending-tail context and strict stage-specific memory barrier; handle oversized tail/deadlines explicitly.
+- [ ] Bound retries and dead-letter states; deletion tombstones, source revision changes and revoked grants block every late commit. Unlocked transcript edits invalidate affected derived data and reset stage readiness until eligible repair completes. Expose response success with indexing pending/failed.
+
+## Acceptance Criteria
+
+- [ ] Response reaches final before delayed extraction finishes, and next same-thread turn answers from unprocessed approved history.
+- [ ] Cross-thread pending updates and strict barrier have documented measurable behavior; an earlier failed/pending event followed by a later completed event cannot advance the contiguous watermark across the hole. Tail overflow cannot silently claim fresh context.
+- [ ] Duplicate jobs, reversed correction completion, concurrent fact mutation and delete-during-extraction cannot duplicate, restore stale or recreate facts. Editing a source while extraction is running rejects the obsolete result; stale derived memory is excluded until repair.
+- [ ] Assistant speculation and cancelled partial output are not recorded as authoritative user assertions; failures remain observable and retryable.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §5. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** backend ingestion/outbox/watermark services; src/memory/ domain logic; facts/belief-revision; governance/deletion.
+
+## Validation and Execution Notes
+
+Memory and isolation skills; forced failure/race assertions rather than implementation-mirroring tests. Stage freshness is explicit.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/09-text-client-slice.md
+# Task 09: Minimal text clients and UI vertical slice
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [06 Additive backend development installation](06-additive-installation.md), [07 Agent execution and durable reactive output](07-agent-streams.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+
+## Objective
+
+Prove the complete authenticated text architecture in modern TS and a small UI before media/vector/graph extension work.
+
+## Requirements
+
+- [ ] Use Task 01 versioned text/run/event/error contracts for TS start/get/observe/cancel/approval and explicit memory receipts, with auth refresh and reconnect cursors. Pin server scope and run policy.
+- [ ] Provide an AI SDK 7 remote-run text UI transport and one canonical quickstart text path with a registered backend tool. The app has no model/tool loop or second remember writer.
+- [ ] Observe response finality separately from delayed memory status, expose strict memory barrier and context-overflow behavior, and keep unsupported inference capability errors explicit.
+- [ ] Maintain browser-safe package boundaries; backend/Node graph dependencies and tokens cannot leak into client bundles. Media/embedding/upload/artifact extensions are Task 14.
+
+## Acceptance Criteria
+
+- [ ] Actual authenticated text turn recalls scoped Cortex memory, executes one backend tool and reaches final output while intentionally delayed indexing remains pending.
+- [ ] Disconnect/reconnect and a second observer reconstruct one transcript/output without duplicated tool or ingestion effects; cancellation and approval continuation produce typed terminal states.
+- [ ] An immediate next turn uses the eligible unprocessed tail. A strict barrier does not pass across a failed earlier event followed by a completed later event.
+- [ ] TS and the UI observe equivalent run/scope/error semantics without upstream provider keys; credential refresh and unauthorized observation are exercised.
+- [ ] The slice runs using Tasks 01–09 alone. No graph service, media enablement, private-video storage or alternate embedding-profile prerequisite is introduced.
+
+## Context and Research
+
+[Architecture](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), §§4–5, 8, 10. Qualify actual managed retrieval for the fresh core default profile selected in Task 01 and implemented in Tasks 02/04/08 before this task's PASS. Source revisions, declared dimensions and query/index policy must match; no prior vector architecture is reused. Additional profile qualification remains Task 10.
+
+**Likely areas:** core TS client facade, Vercel remote UI transport, canonical quickstart text route and focused fixtures. Use bounded disjoint TS/UI substeps after the shared contract is fixed.
+
+## Validation and Execution Notes
+
+Apply affected provider/memory/isolation and scoped quickstart UI checks with actual auth/model/managed retrieval on the disposable target. Missing core prerequisites remain BLOCKED. This early slice is evidence for text behavior only, not completion of the full goal's media/graph/vector requirements.
+
+No implementation, paid inference, testing or deployment is authorized by this planning file. Re-read target AGENTS.md, Git status and manifests at execution and preserve local work.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/10-embedding-profiles.md
+# Task 10: Clean-slate embedding storage and retrieval
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [04 Per-function model policy and admission budgets](04-model-policy.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+
+## Objective
+
+Design embedding storage and semantic retrieval for the new runtime without retaining previous models, dimensions, vector-field layouts or upgrade paths.
+
+## Requirements
+
+- [ ] Separate logical source content and versioned chunks from profile-specific derived vectors. Record source revision/chunk, tenant/space, model/profile identity, dimensions, preprocessing/chunking version and stage receipt.
+- [ ] Define the core default profile before the text slice, then qualify additional supported profile/index configurations on a managed disposable target. Choose schema/index layouts for the supported new-runtime models; declared index dimensions must match actual vectors.
+- [ ] Resolve storage/query profiles through backend operation policy; pin the profile to each job/query. Only current, authorized sources and matching semantic profiles participate in retrieval. Same-dimensional different-model vectors are not interchangeable; malformed/dimension-mismatched vectors fail validation.
+- [ ] Policy changes cannot relabel stored vectors or silently compare profiles. Missing compatible vectors/indexes produce explicit readiness/capability state; ordinary fallback cannot change an embedding profile.
+- [ ] Keep source identity independent of derived generations so future models or image-artifact analysis can add separate derived records. No image processing, old-corpus import/conversion, legacy compatibility or general reindex orchestration is implemented in this goal.
+
+## Acceptance Criteria
+
+- [ ] Source/chunk/vector records and declared indexes follow the new design without an inherited model/dimension/schema requirement. Stored and query vectors record the matching profile and actual configured dimensions.
+- [ ] Same-dimensional incompatible models cannot mix in retrieval; concurrent policy changes, transcript edits and deletion cannot commit or return obsolete source-derived vectors.
+- [ ] Actual managed retrieval returns expected known fixtures under each qualified profile. Unit/local search is not presented as managed evidence.
+- [ ] Unsupported model/index choices and provider alias/version limits have explicit outcomes. Existing vectors are never relabeled to satisfy a policy change.
+
+## Context and Research
+
+[Architecture](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), §6; [decision gates](../../../_research/convex-ai-gateway-2026-10-02/decision-gates.md). The user explicitly authorizes clean-slate architecture and excludes upgrade concerns.
+
+**Likely areas:** backend source/chunk/vector schema, search and embedding policy; TypeScript configuration/types. The core Tasks 01/02/04/08 declare and use the fresh default profile; this extension qualifies additional profiles without blocking the earlier text slice.
+
+## Validation and Execution Notes
+
+Meaningful profile mismatch, concurrent policy-change/write, dimension, source-revision/deletion and managed retrieval fixtures. No Python work, legacy migrations or service operations during planning. Re-read AGENTS.md, Git status and manifests at later execution; protect local work.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/tasks/11-graph-outbox.md
+# Task 11: Scoped durable external graph projection
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [03 Verified identity, grants and alternate endpoint closure](03-authorization.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+
+## Objective
+
+Move graph orchestration off developer apps while preserving external graph storage boundaries.
+
+## Requirements
+
+- [ ] Entry gate: qualify the actual graph runtime/network/service; a Node connector or trusted worker is required for this task, not for the earlier text slice.
+
+- [ ] Use tenant-scoped versioned outbox, leases, deduplicated receipts, bounded retry and explicit dead-letter status; atomic fact commits enqueue projection.
+- [ ] Deploy qualified Node connector or trusted worker seam; do not instantiate the SDK subscription worker in actions.
+- [ ] Apply remote revision/epoch fencing and transactional tombstones where supported; otherwise reconcile against authoritative state and keep strict graph freshness blocked until repair. A preflight local check alone cannot stop an already-issued stale external write. Graph expansion respects grant/profile/source revision; deletion and revoked work cannot restore nodes; expose graph lag separately and support strict barrier when requested.
+
+## Acceptance Criteria
+
+- [ ] Actual qualified Neo4j/Memgraph service receives ordered, deduplicated updates after worker failure/retry.
+- [ ] Cross-tenant graph access is denied. An old worker whose lease expires during an external write cannot overwrite a newer revision or restore deleted content after delayed arrival; verify fencing or detected reconciliation, including strict freshness behavior.
+- [ ] Exhausted retry is failed rather than synced; app disconnect has no effect on eventual projection.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §5. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** convex-dev/graphSync.ts; src/graph/adapters/; backend graph connector/worker.
+
+## Validation and Execution Notes
+
+Profile graph/isolation skills with actual graph evidence. Missing services remain BLOCKED; external storage is not migrated into Convex.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+

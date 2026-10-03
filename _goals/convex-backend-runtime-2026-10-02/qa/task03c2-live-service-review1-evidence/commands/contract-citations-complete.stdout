@@ -1,0 +1,168 @@
+FILE node_modules/convex/src/browser/sync/optimistic_updates_impl.ts
+225     if (query === undefined) {
+226       return undefined;
+227     }
+228     return query.result;
+229   }
+230 
+231   queryResult(queryToken: QueryToken): Value | undefined {
+232     const query = this.queryResults.get(queryToken);
+233     if (query === undefined) {
+234       return undefined;
+235     }
+236     const result = query.result;
+237     if (result === undefined) {
+238       return undefined;
+239     } else if (result.success) {
+240       return result.value;
+241     } else {
+242       if (result.errorData !== undefined) {
+243         throw forwardData(
+244           result,
+245           new ConvexError(
+246             createHybridErrorStacktrace("query", query.udfPath, result),
+247           ),
+248         );
+249       }
+250       throw new Error(
+251         createHybridErrorStacktrace("query", query.udfPath, result),
+252       );
+253     }
+254   }
+255 
+256   hasQueryResult(queryToken: QueryToken): boolean {
+257     return this.queryResults.get(queryToken) !== undefined;
+258   }
+259 
+260   /**
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md
+43 contains `forceRefreshToken`, returning `Promise<string | null | undefined>`.
+44 Cortex intentionally narrows absence to `null`. The constructor calls
+45 `credentials.bindReactiveClient(client)` and attaches a dedicated safe adapter
+46 through that official API. Normal reactive refresh requests reach the host unchanged.
+47 The installed auth manager refreshes the active socket identity, so subscriptions
+48 share the refreshed credential rather than a captured startup token.
+49 
+50 `bindReactiveClient` supports one live transport. An additional different live
+51 binding throws. A closed transport cannot be bound. `notifySessionChanged` calls
+52 `setAuth` once and forces the first getter request to bypass the host cache; later
+53 requests are forwarded unchanged. It throws when unbound or closed and drops the
+54 stored closed binding when notified. It creates no additional client or polling loop. Convex handles outdated
+55 credential-fetch races itself; the adapter separately fences diagnostic updates and
+56 one bounded deferred identity-removal event task.
+57 
+58 ## Reactive failures and Convex 1.46 transport workaround
+59 
+60 `HostAuthFailure` is a readonly `{ code, attemptId }` snapshot, where code is
+61 `"HOST_TOKEN_FETCH_FAILED"` or `"INVALID_HOST_TOKEN"`. It contains no token,
+62 original error/message/stack, host claims or identity. `HostAuthErrorHandler` is
+63 `(failure: HostAuthFailure) => void | Promise<void>`. Optional
+64 `CortexConfig.onAuthError` observes new current reactive failures. The handler is
+65 validated before transport allocation, and synchronous throws/async rejections from
+66 it are isolated without logging or blocking null/deauthentication.
+67 
+68 `credentials.authFailure` returns the latest frozen current reactive failure.
+69 Only a later current successful JWT or null getter result clears it. Configuration
+70 and callback attempt sequence fences prevent older delayed successes/rejections from
+71 clearing or overwriting a newer diagnostic or recovered session. An auth-status true
+72 notification does not clear a pending getter diagnostic. Closed transports ignore
+73 late adapter completions and deferred delivery. Standalone token/header/HTTP errors
+74 remain ordinary rejected promises; this state concerns the reactive adapter only.
+75 
+76 The installed Convex 1.46 BaseConvexClient invokes AuthenticationManager.setConfig
+77 without awaiting/catching its promise. Passing the throwing direct getter into
+78 setAuth causes an unhandled rejection and leaves the socket paused. The reactive
+79 adapter catches host/shape/asynchrony failures, publishes only the fixed diagnostic,
+80 and returns null so the official manager can resume unauthenticated. Official
+81 initial null handling may request the host getter a second time with forced refresh;
+82 each failed latest attempt is observable rather than a hidden operation replay.
+83 
+84 The installed manager has another transport gap: clearAuth during setConfig's pause
+85 clears local identity, but its Authenticate(None) message is dropped and resume does
+86 not send an absent identity. The adapter uses supported public APIs only: before
+87 explicit configuration/session changes it calls `client.client.clearAuth()` when an
+88 identity is attached. Its official setAuth status-false callback schedules one
+89 `setTimeout(..., 0)` event task to clearAuth again after promise continuations resume
+90 the socket, ensuring wire identity removal. That task is fenced by current config,
+91 latest attempt and client.closed. Reconfiguration or another false notification
+92 cancels the older pending task. It does not inspect private paused state, patch the
+93 installed library, poll or redispatch an operation. Future Convex updates must
+94 requalify this installed-version workaround.
+95 
+96 Real installed-client tests use an inert opened WebSocket and record actual protocol
+97 messages in memory. They verify rejecting/malformed/synchronous getters, synchronous
+98 and async observer failures, no unhandled rejection, resumed query delivery, explicit
+99 Authenticate(None), recovery, null/logout/login, server-rejected-token refresh,
+100 overlapping notifications while paused, stale completions and closed/deferred fences.
+101 This is actual client/manager qualification, not managed signature/grant verification.
+102 
+103 ## Authority, logout and host responsibilities
+104 
+FILE .agents/skills/feature-orchestrator/SKILL.md
+43 checks. Parallelize only independent tasks with nonoverlapping permitted writes.
+44 Read the completion report and inspect changed files.
+45 
+46 Then spawn a fresh read-only pessimistic judge using judge-task, original task criteria,
+47 actual changed files, and execution receipts. Review every requirement, wiring/export,
+48 behavioral correctness, test outcomes, and pattern adherence.
+49 Only PASS marks the task complete. Otherwise send concrete feedback to an executor,
+50 inspect the fix, and launch a fresh judge. Maximum three implementation/judge cycles.
+51 Do not weaken requirements or assertions just to pass.
+52 
+53 ## 5. Quality, final audit, and QA
+54 
+55 Run `$code-quality` for the affected stacks and dependencies. After all task verdicts and
+56 required checks pass, delegate a final read-only audit of the goal's success criteria,
+57 integration/wiring, compatibility, and receipts. Verdict APPROVED / ISSUES FOUND.
+58 Fix findings, rerun affected checks, and reaudit; maximum three cycles.
+59 Only APPROVED permits completion. If the audit changes code, old check receipts for that
+60 code no longer certify the fix.
+61 
+62 Run Profile §9 module QA when a full core gate is requested; otherwise run affected module
+63 validators. Run `$ui-qa-orchestrator` for changed UI/flows when Profile §8 applies.
+64 For QA issues: create bounded fixes, delegate implementation, rejudge, and rerun the
+65 failing QA gate. Never claim a full QA pass from a scoped run.
+66 
+67 ## State and output
+68 
+69 Track phase, task ownership/dependencies, per-cycle verdicts, check receipts, QA coverage,
+70 and unresolved blockers in the goal/task artifacts. Final output states what changed,
+71 what passed, what remains incomplete, and artifact paths. Commit only per Profile §10.
+FILE .agents/skills/judge-task/SKILL.md
+186 ## Iron Law for Test Fixes
+187 
+188 When judging fixes to failing tests:
+189 
+190 **The TEST defines expected behavior. The IMPLEMENTATION must be fixed.**
+191 
+192 **Auto-REJECT if:**
+193 - Assertions were removed
+194 - Expected values were changed without justification
+195 - A test was made less specific just to pass
+196 - Error handling was removed from a test
+197 
+198 **Only acceptable test changes:**
+199 - Test setup was incorrect (wrong mock data)
+200 - Test was asserting wrong behavior (misread the spec)
+201 - The API genuinely changed and the test must update to the new correct behavior
+202 
+203 ---
+204 
+205 ## Critical Reference: Schema / Contract Doc
+206 
+207 The Project Profile (§6) names the authoritative schema/contract doc. When judging
+208 data-layer work (migrations, queries, persistence, models), verify against it:
+209 
+210 - [ ] Field names match the schema exactly
+211 - [ ] Data types are correct
+212 - [ ] Required (non-nullable) fields are always populated
+213 - [ ] Optional fields have appropriate absent-value handling
+214 - [ ] Relationships are respected
+215 - [ ] Lookup/index usage aligns with access patterns
+216 - [ ] Scripts are idempotent (safe to re-run)
+217 
+218 ### Auto-Fail Triggers (Data Layer)
+219 - References to non-existent fields or entities
+220 - Data types that don't match the schema
+221 - Required fields left empty without a valid default
+222 - Injection risk (concatenating untrusted input instead of parameterizing)

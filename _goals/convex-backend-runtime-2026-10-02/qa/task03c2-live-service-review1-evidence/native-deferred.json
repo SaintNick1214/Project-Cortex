@@ -1,0 +1,111 @@
+{
+  "mode": "deferred",
+  "phase": "independent-installed-client-OFFLINE",
+  "original41Replays": 0,
+  "discovered": 14,
+  "executed": 14,
+  "passed": 14,
+  "failed": 0,
+  "skipped": 0,
+  "todo": 0,
+  "fullNames": [
+    "initial host failures contained and exact sanitized keys",
+    "native QueryFailed is received by actual listener",
+    "session notification has void return",
+    "immediate query rethrows cached native unauthenticated result",
+    "cached error path adds no query subscription or request",
+    "diagnostic remains until current getter settles",
+    "current valid getter clears diagnostic and restores native identity",
+    "wire recovery sends User with no late None",
+    "settled getter alone does not purge native cached query error",
+    "persistent observation survives an initial cached denial",
+    "native server transition delivers exact recovered value",
+    "subsequent native query returns exact43 and diagnostic remains cleared",
+    "observer exceptions produce no unhandled rejection",
+    "actual network attempts remain zero"
+  ],
+  "reproduced": true,
+  "errorCode": "UNAUTHENTICATED",
+  "networkAttempts": 0,
+  "closed": true,
+  "credentialFilesRead": 0,
+  "privateJwtRead": 0,
+  "signedTokens": 0,
+  "sourceEdits": 0,
+  "diagnostics": [
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 1
+    },
+    {
+      "code": "HOST_TOKEN_FETCH_FAILED",
+      "attemptId": 2
+    }
+  ],
+  "wireTypes": [
+    {
+      "type": "Connect"
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 0,
+      "newVersion": 1,
+      "modifications": []
+    },
+    {
+      "type": "Authenticate",
+      "tokenType": "None",
+      "baseVersion": 0
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 1,
+      "newVersion": 2,
+      "modifications": [
+        {
+          "type": "Add",
+          "queryId": 0
+        }
+      ]
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 2,
+      "newVersion": 3,
+      "modifications": [
+        {
+          "type": "Remove",
+          "queryId": 0
+        }
+      ]
+    },
+    {
+      "type": "Authenticate",
+      "tokenType": "User",
+      "baseVersion": 1
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 3,
+      "newVersion": 4,
+      "modifications": [
+        {
+          "type": "Add",
+          "queryId": 1
+        }
+      ]
+    },
+    {
+      "type": "ModifyQuerySet",
+      "baseVersion": 4,
+      "newVersion": 5,
+      "modifications": [
+        {
+          "type": "Remove",
+          "queryId": 1
+        }
+      ]
+    }
+  ],
+  "unhandled": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../src/cli/lib/aiFiles/cursorrules.ts"],
+  "sourcesContent": ["import path from \"path\";\nimport { chalkStderr } from \"chalk\";\nimport { logMessage } from \"../../../bundler/log.js\";\nimport { safelyDeleteFile } from \"./utils.js\";\n\n/**\n * Remove the legacy `.cursor/rules/convex_rules.mdc` file if it exists.\n * This file was written by the old cursor rules auto-update feature (removed\n * in favour of the AI files system). We clean it up unconditionally\n * during `writeAiFiles`, `convex ai-files update`, and `convex ai-files remove`\n * since it was always auto-managed and is now superseded by\n * `convex/_generated/ai/guidelines.md`.\n */\nexport async function removeLegacyCursorRulesFile(\n  projectDir: string,\n): Promise<boolean> {\n  const removed = await safelyDeleteFile(\n    path.join(projectDir, \".cursor\", \"rules\", \"convex_rules.mdc\"),\n  );\n  if (removed)\n    logMessage(\n      `${chalkStderr.green(\"\u2714\")} Removed legacy .cursor/rules/convex_rules.mdc (superseded by convex/_generated/ai/guidelines.md).`,\n    );\n  return removed;\n}\n"],
+  "mappings": ";AAAA,OAAO,UAAU;AACjB,SAAS,mBAAmB;AAC5B,SAAS,kBAAkB;AAC3B,SAAS,wBAAwB;AAUjC,sBAAsB,4BACpB,YACkB;AAClB,QAAM,UAAU,MAAM;AAAA,IACpB,KAAK,KAAK,YAAY,WAAW,SAAS,kBAAkB;AAAA,EAC9D;AACA,MAAI;AACF;AAAA,MACE,GAAG,YAAY,MAAM,QAAG,CAAC;AAAA,IAC3B;AACF,SAAO;AACT;",
+  "names": []
+}

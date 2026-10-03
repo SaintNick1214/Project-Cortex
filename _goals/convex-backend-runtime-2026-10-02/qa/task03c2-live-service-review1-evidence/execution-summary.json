@@ -1,0 +1,1521 @@
+{
+  "actualOriginal41": {
+    "discovered": 41,
+    "executed": 40,
+    "passed": 39,
+    "failed": 1,
+    "blocked": 1,
+    "todo": 0,
+    "fullNameMultiplicity": {
+      "operator-provisioning": 1,
+      "valid-owned-metadata": 1,
+      "missing-identity": 1,
+      "forged-signature": 1,
+      "wrong-issuer": 1,
+      "wrong-audience": 1,
+      "expired-token": 1,
+      "wrong-tenant": 1,
+      "wrong-space": 1,
+      "owner-denied": 1,
+      "explicit-space-read": 1,
+      "admin-alone-read-denied": 1,
+      "admin-alone-write-denied": 1,
+      "ambiguous-omission-denied": 1,
+      "actor-binding-denied": 1,
+      "caller-metadata-no-principal": 1,
+      "public-internal-provision-denied": 1,
+      "public-internal-maintenance-denied": 1,
+      "immutable-delete-read-denied": 1,
+      "immutable-delete-write-denied": 1,
+      "mutable-delete-read-denied": 1,
+      "mutable-delete-write-denied": 1,
+      "negative-effect-counts": 1,
+      "reactive-wrong-tenant": 1,
+      "reactive-wrong-space": 1,
+      "resource-deletion-subscription": 1,
+      "grant-revocation": 1,
+      "principal-deletion": 1,
+      "membership-revocation": 1,
+      "space-deletion": 1,
+      "tenant-deletion": 1,
+      "sdk-metadata-consumers": 1,
+      "sdk-refresh": 1,
+      "sdk-logout": 1,
+      "sdk-labels-no-authority": 1,
+      "background-after-ordinary-logout": 1,
+      "late-credential-fencing": 1,
+      "sanitized-host-callback": 1,
+      "sdk-session-capability": 1,
+      "background-after-revocation": 1,
+      "session-end-not-grant-revocation": 1
+    }
+  },
+  "judgeOriginal41Replays": 0,
+  "judgeOffline": {
+    "processRuns": 3,
+    "discoveredExecutions": 31,
+    "executed": 31,
+    "passed": 30,
+    "failed": 1,
+    "skipped": 0,
+    "todo": 0,
+    "uniqueFullNames": 15,
+    "fullNameMultiplicity": {
+      "initial host failures contained and exact sanitized keys": 3,
+      "native QueryFailed is received by actual listener": 3,
+      "session notification has void return": 3,
+      "original immediate recovery value43 assertion": 1,
+      "immediate query rethrows cached native unauthenticated result": 2,
+      "cached error path adds no query subscription or request": 2,
+      "diagnostic remains until current getter settles": 1,
+      "current valid getter clears diagnostic and restores native identity": 2,
+      "wire recovery sends User with no late None": 2,
+      "settled getter alone does not purge native cached query error": 2,
+      "persistent observation survives an initial cached denial": 2,
+      "native server transition delivers exact recovered value": 2,
+      "subsequent native query returns exact43 and diagnostic remains cleared": 2,
+      "observer exceptions produce no unhandled rejection": 2,
+      "actual network attempts remain zero": 2
+    },
+    "networkAttempts": 0,
+    "allClientsClosed": true
+  },
+  "recordedCommandsAtReportGeneration": [
+    {
+      "label": "actual-receipts",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/report.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:24.392409+00:00",
+      "endUtc": "2026-10-03T14:28:24.414158+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "actual-sdk-index",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "work/backend-runtime/task03c2-live-fixture/sdk/src/index.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/report.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:29:19.474357+00:00",
+      "endUtc": "2026-10-03T14:29:19.496418+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "approved-context",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+        "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+        "_research/convex-ai-gateway-2026-10-02/architecture.md",
+        "_goals/convex-backend-runtime-2026-10-02/goal.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:48.694443+00:00",
+      "endUtc": "2026-10-03T14:27:48.712855+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "architecture-goal",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_research/convex-ai-gateway-2026-10-02/architecture.md",
+        "_goals/convex-backend-runtime-2026-10-02/goal.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:55.891390+00:00",
+      "endUtc": "2026-10-03T14:27:55.910768+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "authority-source",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-review-2.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:31:07.650412+00:00",
+      "endUtc": "2026-10-03T14:31:07.677056+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "cache-and-operation-evidence",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:29:01.308155+00:00",
+      "endUtc": "2026-10-03T14:29:01.330452+00:00",
+      "exit": 1,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "cache-operation-evidence-corrected",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:29:11.701300+00:00",
+      "endUtc": "2026-10-03T14:29:11.722320+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "case-receipt-contract-mapping",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import json;p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa\");f=p/\"task03c2-live-service/service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json\";m=json.loads(f.read_text());print(json.dumps({k:v for k,v in m.items() if k not in [\"operatorEffects\",\"results\"]},indent=2));[(print(str(i),json.dumps(v))) for i,v in enumerate(m[\"results\"],1)];print(\"ENDPOINT_REQUIREMENTS\");print(Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context/original41-independent-requirement-mapping.json\").read_text());print(\"COMMANDS_SUMMARY\");r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");print(json.dumps([{ \"label\":f.stem,**json.loads(f.read_text())} for f in sorted((r/\"commands\").glob(\"*.json\"))],indent=2))"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:36:25.455220+00:00",
+      "endUtc": "2026-10-03T14:36:25.478924+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "ci-evidence-summary",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/ci-followups/qa-only-ci-20261003/summary.json"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:38:19.251663+00:00",
+      "endUtc": "2026-10-03T14:38:19.274456+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "citation-locations",
+      "argv": [
+        "rg",
+        "-n",
+        "sanitized-host-callback|session-end-not-grant-revocation|notifySessionChanged|configureReactiveAuth|queryResult\\(|localQueryResult\\(|setConfig\\(|testsetup|test setup|For QA issues|later valid|recover|SessionMaintenance|BACKEND_MAINTENANCE_ONLY",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts",
+        "src/auth/credentials.ts",
+        "src/sessions/index.ts",
+        "node_modules/convex/src/browser/simple_client.ts",
+        "node_modules/convex/src/browser/sync/client.ts",
+        "node_modules/convex/src/browser/sync/authentication_manager.ts",
+        "node_modules/convex/src/browser/sync/optimistic_updates_impl.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md",
+        ".agents/skills/judge-task/SKILL.md",
+        ".agents/skills/feature-orchestrator/SKILL.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:33.537519+00:00",
+      "endUtc": "2026-10-03T14:35:33.547678+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "contract-citations-complete",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"node_modules/convex/src/browser/sync/optimistic_updates_impl.ts\",225,260),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md\",43,104),(\".agents/skills/feature-orchestrator/SKILL.md\",43,81),(\".agents/skills/judge-task/SKILL.md\",186,250)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:54.254306+00:00",
+      "endUtc": "2026-10-03T14:35:54.275814+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "contracts-inventory",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:08.001304+00:00",
+      "endUtc": "2026-10-03T14:28:08.024489+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "coordinator-head-advance",
+      "argv": [
+        "git",
+        "diff",
+        "--name-status",
+        "a1dcb487a732407d0cc15c2dd99835810ee579be",
+        "df49be9f2294e7c0538ea47d59e1546bff377612"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:38:01.308291+00:00",
+      "endUtc": "2026-10-03T14:38:01.311075+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "credential-contracts",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03a/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/report.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1-review-1.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/contracts.md",
+        "src/auth/credentials.ts",
+        "tests/unit/auth/credentials.test.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:13.868817+00:00",
+      "endUtc": "2026-10-03T14:28:13.888100+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "credential-source",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "work/backend-runtime/task03c2-live-fixture/sdk/src/auth/credentials.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1-review-1.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/contracts.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:18.773080+00:00",
+      "endUtc": "2026-10-03T14:28:18.793529+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "endpoint-contract-summary",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import json,collections;m=json.loads(Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context/original41-independent-requirement-mapping.json\").read_text());print(\"COUNT\",len(m));print(\"GROUPS\",dict(collections.Counter(x[\"path\"].split(\":\")[0] for x in m)));print(\"VISIBILITY\",dict(collections.Counter(x[\"visibility\"] for x in m)));[(print(x[\"path\"],x[\"visibility\"],x[\"requiredCapability\"])) for x in m]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:38:01.475975+00:00",
+      "endUtc": "2026-10-03T14:38:01.497354+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "exact-history-report",
+      "argv": [
+        "rg",
+        "--files",
+        "-g",
+        "*task03c2*review*.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:36:00.894793+00:00",
+      "endUtc": "2026-10-03T14:36:00.907522+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "final-context",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_research/convex-ai-gateway-2026-10-02/architecture.md\",125,190),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts\",1,100),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/lib/runtimeAuth.ts\",390,490),(\"tests/unit/auth/credentials.test.ts\",270,410),(\"tests/unit/runtimeWorkerClient/metadata-consumers.test.ts\",1,180)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files if (p/f).exists()]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:26.610030+00:00",
+      "endUtc": "2026-10-03T14:35:26.630510+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "freeze-after",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/freeze.py",
+        "after"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:37:53.733448+00:00",
+      "endUtc": "2026-10-03T14:37:53.890910+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "freeze-before-corrected",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/freeze.py",
+        "before"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:40.856979+00:00",
+      "endUtc": "2026-10-03T14:27:41.037627+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "freeze-before",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:09.730921+00:00",
+      "endUtc": "2026-10-03T14:27:09.768838+00:00",
+      "exit": 1,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "harness-history",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-1.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-3.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/README.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:33.269751+00:00",
+      "endUtc": "2026-10-03T14:28:33.299198+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "harness-reviews2-3",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-3.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:37.698745+00:00",
+      "endUtc": "2026-10-03T14:28:37.720800+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "history-report-location",
+      "argv": [
+        "rg",
+        "--files",
+        "_goals/convex-backend-runtime-2026-10-02/qa"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:57.428388+00:00",
+      "endUtc": "2026-10-03T14:35:57.448920+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "installed-simple-auth",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "node_modules/convex/src/browser/simple_client.ts",
+        "node_modules/convex/src/browser/sync/authentication_manager.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:28.226619+00:00",
+      "endUtc": "2026-10-03T14:28:28.248691+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "inventory",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:26:40.958074+00:00",
+      "endUtc": "2026-10-03T14:26:40.986832+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "ledger-and-binding-structure",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:31:21.440566+00:00",
+      "endUtc": "2026-10-03T14:31:21.469301+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "maintenance-and-tail",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts\",390,480),(\"tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts\",1,500),(\"tests/unit/runtimeWorkerClient/metadata-consumers.test.ts\",180,700)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files];f=p/files[1][0];d=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context\")/files[1][0];d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes(f.read_bytes())"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:44.818833+00:00",
+      "endUtc": "2026-10-03T14:35:44.839689+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "metadata-contract-source",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMetadataAuth.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/sessions.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/users.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:31:02.223358+00:00",
+      "endUtc": "2026-10-03T14:31:02.246360+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "metadata-endpoints",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/immutable.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/mutable.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:31:40.149374+00:00",
+      "endUtc": "2026-10-03T14:31:40.170170+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "native-cache-details",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:53.950254+00:00",
+      "endUtc": "2026-10-03T14:28:53.969702+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "native-cache-paths",
+      "argv": [
+        "rg",
+        "-n",
+        "-A",
+        "28",
+        "-B",
+        "8",
+        "setAuth\\(|clearAuth\\(|hasAuth\\(|localQueryResult\\(|localQueryResultByToken\\(|hasLocalQueryResultByToken\\(|ingestQueryResultsFromServer|onTransition|removeQuery",
+        "node_modules/convex/src/browser/sync/client.ts",
+        "node_modules/convex/src/browser/sync/local_state.ts",
+        "node_modules/convex/src/browser/sync/remote_query_set.ts",
+        "node_modules/convex/src/browser/sync/optimistic_updates.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:46.730751+00:00",
+      "endUtc": "2026-10-03T14:28:46.735262+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "native-contract-citations",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts\",250,330),(\"src/auth/credentials.ts\",88,245),(\"node_modules/convex/src/browser/simple_client.ts\",530,565),(\"node_modules/convex/src/browser/sync/authentication_manager.ts\",145,210),(\"node_modules/convex/src/browser/sync/client.ts\",660,705),(\"node_modules/convex/src/browser/sync/optimistic_updates_impl.ts\",225,260),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md\",43,104),(\".agents/skills/feature-orchestrator/SKILL.md\",43,81),(\".agents/skills/judge-task/SKILL.md\",1,190)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:44.812247+00:00",
+      "endUtc": "2026-10-03T14:35:44.831297+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "offline-deferred",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+        "deferred"
+      ],
+      "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+      "startUtc": "2026-10-03T14:30:46.524932+00:00",
+      "endUtc": "2026-10-03T14:30:46.785993+00:00",
+      "exit": 0,
+      "environment": {
+        "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+        "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+      },
+      "boundSeconds": 15
+    },
+    {
+      "label": "offline-immediate",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+        "immediate"
+      ],
+      "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+      "startUtc": "2026-10-03T14:30:46.519232+00:00",
+      "endUtc": "2026-10-03T14:30:46.785989+00:00",
+      "exit": 0,
+      "environment": {
+        "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+        "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+      },
+      "boundSeconds": 15
+    },
+    {
+      "label": "offline-required-assertion",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+        "required-assertion"
+      ],
+      "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+      "startUtc": "2026-10-03T14:30:31.619221+00:00",
+      "endUtc": "2026-10-03T14:30:31.867469+00:00",
+      "exit": 1,
+      "environment": {
+        "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+        "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+      },
+      "boundSeconds": 15
+    },
+    {
+      "label": "original-task-headings",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;[(print(f.name),print(\"\\n\".join(f.read_text().splitlines()[:7]))) for f in sorted(Path(\"_goals/convex-backend-runtime-2026-10-02/tasks\").glob(\"*.md\"))]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:38:19.071582+00:00",
+      "endUtc": "2026-10-03T14:38:19.090804+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "original17",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:48.690699+00:00",
+      "endUtc": "2026-10-03T14:27:48.716348+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "own-results-and-history-sha",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import json,hashlib;r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");print((r/\"native-recovery.mjs\").read_text());[(print(f.name),print(f.read_text())) for f in sorted(r.glob(\"native-*.json\"))];p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review3.md\");print(\"THIRD_REPORT\",str(p),hashlib.sha256(p.read_bytes()).hexdigest());assert hashlib.sha256(p.read_bytes()).hexdigest()==\"556643c11ca4a94a48a1c3d4ff91bdc185466a637e592c72db4db15193ffe9e4\""
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:54.441168+00:00",
+      "endUtc": "2026-10-03T14:35:54.466848+00:00",
+      "exit": 1,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "preservation-extra-after",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/after-extra.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:37:54.036563+00:00",
+      "endUtc": "2026-10-03T14:37:54.197999+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "preservation-extra-final",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/after-extra.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:41:38.504583+00:00",
+      "endUtc": "2026-10-03T14:41:38.668872+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "provenance-history-native-bindings",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/verify-extra.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:32:14.936613+00:00",
+      "endUtc": "2026-10-03T14:32:15.617951+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "relevant-file-list",
+      "argv": [
+        "rg",
+        "--files",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex",
+        "tests/unit/runtimeWorkerClient",
+        "tests/unit/sessions"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:33.709286+00:00",
+      "endUtc": "2026-10-03T14:35:33.714926+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "remaining-context",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:33:09.450758+00:00",
+      "endUtc": "2026-10-03T14:33:09.475537+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "review-histories-final",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import hashlib;p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa\");names=[\"task03c2-live-harness-review-1.md\",\"task03c2-live-harness-review-2.md\",\"task03c2-live-harness-review-3.md\"];[(print(n,\"SHA\",hashlib.sha256((p/n).read_bytes()).hexdigest(),\"lines\",len((p/n).read_text().splitlines())),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/n).read_text().splitlines(),1) if (n==names[1] and i>=180) or (n==names[2] and i<=42)))) for n in names];assert hashlib.sha256((p/names[2]).read_bytes()).hexdigest()==\"556643c11ca4a94a48a1c3d4ff91bdc185466a637e592c72db4db15193ffe9e4\""
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:36:07.512587+00:00",
+      "endUtc": "2026-10-03T14:36:07.536975+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "scoped-summary",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import json,hashlib,collections;r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");p=Path(\"/workspace/Project-Cortex\");q=p/\"_goals/convex-backend-runtime-2026-10-02/qa\";a=json.loads((q/\"task03c2-live-service/service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json\").read_text());print(json.dumps({k:v for k,v in a.items() if k not in [\"operatorEffects\",\"results\"]},indent=2));[(print(str(i),json.dumps(v))) for i,v in enumerate(a[\"results\"],1)];m=json.loads((r/\"source-context/original41-independent-requirement-mapping.json\").read_text());print(\"MAPPING_TYPE\",type(m).__name__,\"KEYS\",list(m)[:10]);print(\"GITSDK_AUTH_IDENTICAL\",(p/\"src/auth/credentials.ts\").read_bytes()==(p/\"work/backend-runtime/task03c2-live-fixture/sdk/src/auth/credentials.ts\").read_bytes());print(\"GITSDK_INDEX_IDENTICAL\",(p/\"src/index.ts\").read_bytes()==(p/\"work/backend-runtime/task03c2-live-fixture/sdk/src/index.ts\").read_bytes());print(\"OWN_COMMANDS\",len(list((r/\"commands\").glob(\"*.json\"))));print(\"COMMAND_EXIT_COUNTS\",dict(collections.Counter(json.loads(f.read_text())[\"exit\"] for f in (r/\"commands\").glob(\"*.json\"))))"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:37:22.457959+00:00",
+      "endUtc": "2026-10-03T14:37:22.487350+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "second-history-complete",
+      "argv": [
+        "cat",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:36:25.286797+00:00",
+      "endUtc": "2026-10-03T14:36:25.287873+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "second-history-tail",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md\");print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate(p.read_text().splitlines(),1) if i>=132))"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:37:22.446247+00:00",
+      "endUtc": "2026-10-03T14:37:22.466444+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "tasks01-11",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:00.556582+00:00",
+      "endUtc": "2026-10-03T14:28:00.587229+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    }
+  ],
+  "recordedCommandExitCountsAtReportGeneration": {
+    "0": 45,
+    "1": 4
+  },
+  "finalRecordedCommandCount": 53,
+  "finalRecordedCommandExitCounts": {
+    "0": 48,
+    "1": 5
+  },
+  "finalRecordedCommands": [
+    {
+      "label": "actual-receipts",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/report.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:24.392409+00:00",
+      "endUtc": "2026-10-03T14:28:24.414158+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "actual-sdk-index",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "work/backend-runtime/task03c2-live-fixture/sdk/src/index.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/report.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:29:19.474357+00:00",
+      "endUtc": "2026-10-03T14:29:19.496418+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "approved-context",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+        "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+        "_research/convex-ai-gateway-2026-10-02/architecture.md",
+        "_goals/convex-backend-runtime-2026-10-02/goal.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:48.694443+00:00",
+      "endUtc": "2026-10-03T14:27:48.712855+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "architecture-goal",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_research/convex-ai-gateway-2026-10-02/architecture.md",
+        "_goals/convex-backend-runtime-2026-10-02/goal.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:55.891390+00:00",
+      "endUtc": "2026-10-03T14:27:55.910768+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "authority-source",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-review-2.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:31:07.650412+00:00",
+      "endUtc": "2026-10-03T14:31:07.677056+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "cache-and-operation-evidence",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:29:01.308155+00:00",
+      "endUtc": "2026-10-03T14:29:01.330452+00:00",
+      "exit": 1,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "cache-operation-evidence-corrected",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:29:11.701300+00:00",
+      "endUtc": "2026-10-03T14:29:11.722320+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "case-receipt-contract-mapping",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import json;p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa\");f=p/\"task03c2-live-service/service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json\";m=json.loads(f.read_text());print(json.dumps({k:v for k,v in m.items() if k not in [\"operatorEffects\",\"results\"]},indent=2));[(print(str(i),json.dumps(v))) for i,v in enumerate(m[\"results\"],1)];print(\"ENDPOINT_REQUIREMENTS\");print(Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context/original41-independent-requirement-mapping.json\").read_text());print(\"COMMANDS_SUMMARY\");r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");print(json.dumps([{ \"label\":f.stem,**json.loads(f.read_text())} for f in sorted((r/\"commands\").glob(\"*.json\"))],indent=2))"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:36:25.455220+00:00",
+      "endUtc": "2026-10-03T14:36:25.478924+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "ci-evidence-summary",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/ci-followups/qa-only-ci-20261003/summary.json"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:38:19.251663+00:00",
+      "endUtc": "2026-10-03T14:38:19.274456+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "citation-locations",
+      "argv": [
+        "rg",
+        "-n",
+        "sanitized-host-callback|session-end-not-grant-revocation|notifySessionChanged|configureReactiveAuth|queryResult\\(|localQueryResult\\(|setConfig\\(|testsetup|test setup|For QA issues|later valid|recover|SessionMaintenance|BACKEND_MAINTENANCE_ONLY",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts",
+        "src/auth/credentials.ts",
+        "src/sessions/index.ts",
+        "node_modules/convex/src/browser/simple_client.ts",
+        "node_modules/convex/src/browser/sync/client.ts",
+        "node_modules/convex/src/browser/sync/authentication_manager.ts",
+        "node_modules/convex/src/browser/sync/optimistic_updates_impl.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md",
+        ".agents/skills/judge-task/SKILL.md",
+        ".agents/skills/feature-orchestrator/SKILL.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:33.537519+00:00",
+      "endUtc": "2026-10-03T14:35:33.547678+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "contract-citations-complete",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"node_modules/convex/src/browser/sync/optimistic_updates_impl.ts\",225,260),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md\",43,104),(\".agents/skills/feature-orchestrator/SKILL.md\",43,81),(\".agents/skills/judge-task/SKILL.md\",186,250)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:54.254306+00:00",
+      "endUtc": "2026-10-03T14:35:54.275814+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "contracts-inventory",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:08.001304+00:00",
+      "endUtc": "2026-10-03T14:28:08.024489+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "coordinator-head-advance",
+      "argv": [
+        "git",
+        "diff",
+        "--name-status",
+        "a1dcb487a732407d0cc15c2dd99835810ee579be",
+        "df49be9f2294e7c0538ea47d59e1546bff377612"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:38:01.308291+00:00",
+      "endUtc": "2026-10-03T14:38:01.311075+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "credential-contracts",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03a/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1/report.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1-review-1.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/contracts.md",
+        "src/auth/credentials.ts",
+        "tests/unit/auth/credentials.test.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:13.868817+00:00",
+      "endUtc": "2026-10-03T14:28:13.888100+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "credential-source",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "work/backend-runtime/task03c2-live-fixture/sdk/src/auth/credentials.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c1-review-1.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-d/contracts.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:18.773080+00:00",
+      "endUtc": "2026-10-03T14:28:18.793529+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "endpoint-contract-summary",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import json,collections;m=json.loads(Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context/original41-independent-requirement-mapping.json\").read_text());print(\"COUNT\",len(m));print(\"GROUPS\",dict(collections.Counter(x[\"path\"].split(\":\")[0] for x in m)));print(\"VISIBILITY\",dict(collections.Counter(x[\"visibility\"] for x in m)));[(print(x[\"path\"],x[\"visibility\"],x[\"requiredCapability\"])) for x in m]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:38:01.475975+00:00",
+      "endUtc": "2026-10-03T14:38:01.497354+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "exact-history-report",
+      "argv": [
+        "rg",
+        "--files",
+        "-g",
+        "*task03c2*review*.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:36:00.894793+00:00",
+      "endUtc": "2026-10-03T14:36:00.907522+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "final-context",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_research/convex-ai-gateway-2026-10-02/architecture.md\",125,190),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts\",1,100),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/lib/runtimeAuth.ts\",390,490),(\"tests/unit/auth/credentials.test.ts\",270,410),(\"tests/unit/runtimeWorkerClient/metadata-consumers.test.ts\",1,180)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files if (p/f).exists()]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:26.610030+00:00",
+      "endUtc": "2026-10-03T14:35:26.630510+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "freeze-after",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/freeze.py",
+        "after"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:37:53.733448+00:00",
+      "endUtc": "2026-10-03T14:37:53.890910+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "freeze-before-corrected",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/freeze.py",
+        "before"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:40.856979+00:00",
+      "endUtc": "2026-10-03T14:27:41.037627+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "freeze-before",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:09.730921+00:00",
+      "endUtc": "2026-10-03T14:27:09.768838+00:00",
+      "exit": 1,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "harness-history",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-1.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-3.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/README.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:33.269751+00:00",
+      "endUtc": "2026-10-03T14:28:33.299198+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "harness-reviews2-3",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-3.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:37.698745+00:00",
+      "endUtc": "2026-10-03T14:28:37.720800+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "history-report-location",
+      "argv": [
+        "rg",
+        "--files",
+        "_goals/convex-backend-runtime-2026-10-02/qa"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:57.428388+00:00",
+      "endUtc": "2026-10-03T14:35:57.448920+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "installed-simple-auth",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "node_modules/convex/src/browser/simple_client.ts",
+        "node_modules/convex/src/browser/sync/authentication_manager.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:28.226619+00:00",
+      "endUtc": "2026-10-03T14:28:28.248691+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "inventory",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:26:40.958074+00:00",
+      "endUtc": "2026-10-03T14:26:40.986832+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "ledger-and-binding-structure",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:31:21.440566+00:00",
+      "endUtc": "2026-10-03T14:31:21.469301+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "maintenance-and-tail",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts\",390,480),(\"tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts\",1,500),(\"tests/unit/runtimeWorkerClient/metadata-consumers.test.ts\",180,700)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files];f=p/files[1][0];d=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context\")/files[1][0];d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes(f.read_bytes())"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:44.818833+00:00",
+      "endUtc": "2026-10-03T14:35:44.839689+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "manifest-finalization-initial",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/seal.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": null,
+      "endUtc": null,
+      "exit": 1,
+      "sourceBeforeCorrectionSha256": "1d282b99ab350c4820924a10b167b865f6d7e4743fed0619456d5f286753cb3f",
+      "sourceSavedAs": "seal.initial.py",
+      "observation": "Tool-returned failure retained exactly; this initial finalization tool call did not record explicit UTC. No manifest was created. Incorrect expected header count0 corrected to exact1, plus existing all41 name verification retained. Native/fixture assertions unchanged."
+    },
+    {
+      "label": "manifest-finalization",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/seal.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:43:40.042886+00:00",
+      "endUtcOfRecordedPreSealPhase": "2026-10-03T14:43:40.045820+00:00",
+      "exit": 0,
+      "rawStreamScope": "Only pre-seal bookkeeping phase is recorded. Terminal manifest/hash display omitted from recursive self-binding, as disclosed in omissions.json.",
+      "noSubprocesses": true
+    },
+    {
+      "label": "metadata-contract-source",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/contracts.md",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMetadataAuth.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/sessions.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/users.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:31:02.223358+00:00",
+      "endUtc": "2026-10-03T14:31:02.246360+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "metadata-endpoints",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/read.py",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/immutable.ts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/mutable.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:31:40.149374+00:00",
+      "endUtc": "2026-10-03T14:31:40.170170+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "native-cache-details",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:53.950254+00:00",
+      "endUtc": "2026-10-03T14:28:53.969702+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "native-cache-paths",
+      "argv": [
+        "rg",
+        "-n",
+        "-A",
+        "28",
+        "-B",
+        "8",
+        "setAuth\\(|clearAuth\\(|hasAuth\\(|localQueryResult\\(|localQueryResultByToken\\(|hasLocalQueryResultByToken\\(|ingestQueryResultsFromServer|onTransition|removeQuery",
+        "node_modules/convex/src/browser/sync/client.ts",
+        "node_modules/convex/src/browser/sync/local_state.ts",
+        "node_modules/convex/src/browser/sync/remote_query_set.ts",
+        "node_modules/convex/src/browser/sync/optimistic_updates.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:46.730751+00:00",
+      "endUtc": "2026-10-03T14:28:46.735262+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "native-contract-citations",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"/workspace/Project-Cortex\");files=[(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts\",250,330),(\"src/auth/credentials.ts\",88,245),(\"node_modules/convex/src/browser/simple_client.ts\",530,565),(\"node_modules/convex/src/browser/sync/authentication_manager.ts\",145,210),(\"node_modules/convex/src/browser/sync/client.ts\",660,705),(\"node_modules/convex/src/browser/sync/optimistic_updates_impl.ts\",225,260),(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md\",43,104),(\".agents/skills/feature-orchestrator/SKILL.md\",43,81),(\".agents/skills/judge-task/SKILL.md\",1,190)];[(print(\"FILE\",f),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/f).read_text().splitlines(),1) if lo<=i<=hi))) for f,lo,hi in files]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:44.812247+00:00",
+      "endUtc": "2026-10-03T14:35:44.831297+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "offline-deferred",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+        "deferred"
+      ],
+      "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+      "startUtc": "2026-10-03T14:30:46.524932+00:00",
+      "endUtc": "2026-10-03T14:30:46.785993+00:00",
+      "exit": 0,
+      "environment": {
+        "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+        "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+      },
+      "boundSeconds": 15
+    },
+    {
+      "label": "offline-immediate",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+        "immediate"
+      ],
+      "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+      "startUtc": "2026-10-03T14:30:46.519232+00:00",
+      "endUtc": "2026-10-03T14:30:46.785989+00:00",
+      "exit": 0,
+      "environment": {
+        "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+        "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+      },
+      "boundSeconds": 15
+    },
+    {
+      "label": "offline-required-assertion",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs",
+        "required-assertion"
+      ],
+      "cwd": "/tmp/task03c2-live-service-review-gkwkb7lc",
+      "startUtc": "2026-10-03T14:30:31.619221+00:00",
+      "endUtc": "2026-10-03T14:30:31.867469+00:00",
+      "exit": 1,
+      "environment": {
+        "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+        "TMPDIR": "/tmp/task03c2-live-service-review-gkwkb7lc"
+      },
+      "boundSeconds": 15
+    },
+    {
+      "label": "original-task-headings",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;[(print(f.name),print(\"\\n\".join(f.read_text().splitlines()[:7]))) for f in sorted(Path(\"_goals/convex-backend-runtime-2026-10-02/tasks\").glob(\"*.md\"))]"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:38:19.071582+00:00",
+      "endUtc": "2026-10-03T14:38:19.090804+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "original17",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:27:48.690699+00:00",
+      "endUtc": "2026-10-03T14:27:48.716348+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "own-results-and-history-sha",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import json,hashlib;r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");print((r/\"native-recovery.mjs\").read_text());[(print(f.name),print(f.read_text())) for f in sorted(r.glob(\"native-*.json\"))];p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review3.md\");print(\"THIRD_REPORT\",str(p),hashlib.sha256(p.read_bytes()).hexdigest());assert hashlib.sha256(p.read_bytes()).hexdigest()==\"556643c11ca4a94a48a1c3d4ff91bdc185466a637e592c72db4db15193ffe9e4\""
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:54.441168+00:00",
+      "endUtc": "2026-10-03T14:35:54.466848+00:00",
+      "exit": 1,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "preservation-extra-after",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/after-extra.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:37:54.036563+00:00",
+      "endUtc": "2026-10-03T14:37:54.197999+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "preservation-extra-final",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/after-extra.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:41:38.504583+00:00",
+      "endUtc": "2026-10-03T14:41:38.668872+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "provenance-history-native-bindings",
+      "argv": [
+        "python3",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/verify-extra.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:32:14.936613+00:00",
+      "endUtc": "2026-10-03T14:32:15.617951+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "relevant-file-list",
+      "argv": [
+        "rg",
+        "--files",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex",
+        "tests/unit/runtimeWorkerClient",
+        "tests/unit/sessions"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:35:33.709286+00:00",
+      "endUtc": "2026-10-03T14:35:33.714926+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "remaining-context",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:33:09.450758+00:00",
+      "endUtc": "2026-10-03T14:33:09.475537+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "report-generation",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/write-report.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:41:38.813137+00:00",
+      "endUtc": "2026-10-03T14:41:38.841268+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "review-histories-final",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import hashlib;p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa\");names=[\"task03c2-live-harness-review-1.md\",\"task03c2-live-harness-review-2.md\",\"task03c2-live-harness-review-3.md\"];[(print(n,\"SHA\",hashlib.sha256((p/n).read_bytes()).hexdigest(),\"lines\",len((p/n).read_text().splitlines())),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/n).read_text().splitlines(),1) if (n==names[1] and i>=180) or (n==names[2] and i<=42)))) for n in names];assert hashlib.sha256((p/names[2]).read_bytes()).hexdigest()==\"556643c11ca4a94a48a1c3d4ff91bdc185466a637e592c72db4db15193ffe9e4\""
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:36:07.512587+00:00",
+      "endUtc": "2026-10-03T14:36:07.536975+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "scoped-summary",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;import json,hashlib,collections;r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");p=Path(\"/workspace/Project-Cortex\");q=p/\"_goals/convex-backend-runtime-2026-10-02/qa\";a=json.loads((q/\"task03c2-live-service/service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json\").read_text());print(json.dumps({k:v for k,v in a.items() if k not in [\"operatorEffects\",\"results\"]},indent=2));[(print(str(i),json.dumps(v))) for i,v in enumerate(a[\"results\"],1)];m=json.loads((r/\"source-context/original41-independent-requirement-mapping.json\").read_text());print(\"MAPPING_TYPE\",type(m).__name__,\"KEYS\",list(m)[:10]);print(\"GITSDK_AUTH_IDENTICAL\",(p/\"src/auth/credentials.ts\").read_bytes()==(p/\"work/backend-runtime/task03c2-live-fixture/sdk/src/auth/credentials.ts\").read_bytes());print(\"GITSDK_INDEX_IDENTICAL\",(p/\"src/index.ts\").read_bytes()==(p/\"work/backend-runtime/task03c2-live-fixture/sdk/src/index.ts\").read_bytes());print(\"OWN_COMMANDS\",len(list((r/\"commands\").glob(\"*.json\"))));print(\"COMMAND_EXIT_COUNTS\",dict(collections.Counter(json.loads(f.read_text())[\"exit\"] for f in (r/\"commands\").glob(\"*.json\"))))"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:37:22.457959+00:00",
+      "endUtc": "2026-10-03T14:37:22.487350+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "seal-bookkeeping-correction",
+      "argv": [
+        "python",
+        "/tmp/task03c2-live-service-review-gkwkb7lc/record-seal-correction.py"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:43:39.848892+00:00",
+      "endUtc": "2026-10-03T14:43:39.876082+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "second-history-complete",
+      "argv": [
+        "cat",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:36:25.286797+00:00",
+      "endUtc": "2026-10-03T14:36:25.287873+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "second-history-tail",
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path;p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md\");print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate(p.read_text().splitlines(),1) if i>=132))"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:37:22.446247+00:00",
+      "endUtc": "2026-10-03T14:37:22.466444+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    },
+    {
+      "label": "tasks01-11",
+      "argv": [
+        "python3",
+        "-"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUtc": "2026-10-03T14:28:00.556582+00:00",
+      "endUtc": "2026-10-03T14:28:00.587229+00:00",
+      "exit": 0,
+      "environment": "inherited for read-only context command; no env dump"
+    }
+  ]
+}

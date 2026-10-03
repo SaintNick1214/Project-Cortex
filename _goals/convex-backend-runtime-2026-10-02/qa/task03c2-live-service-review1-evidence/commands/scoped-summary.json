@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python",
+    "-c",
+    "from pathlib import Path;import json,hashlib,collections;r=Path(\"/tmp/task03c2-live-service-review-gkwkb7lc\");p=Path(\"/workspace/Project-Cortex\");q=p/\"_goals/convex-backend-runtime-2026-10-02/qa\";a=json.loads((q/\"task03c2-live-service/service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json\").read_text());print(json.dumps({k:v for k,v in a.items() if k not in [\"operatorEffects\",\"results\"]},indent=2));[(print(str(i),json.dumps(v))) for i,v in enumerate(a[\"results\"],1)];m=json.loads((r/\"source-context/original41-independent-requirement-mapping.json\").read_text());print(\"MAPPING_TYPE\",type(m).__name__,\"KEYS\",list(m)[:10]);print(\"GITSDK_AUTH_IDENTICAL\",(p/\"src/auth/credentials.ts\").read_bytes()==(p/\"work/backend-runtime/task03c2-live-fixture/sdk/src/auth/credentials.ts\").read_bytes());print(\"GITSDK_INDEX_IDENTICAL\",(p/\"src/index.ts\").read_bytes()==(p/\"work/backend-runtime/task03c2-live-fixture/sdk/src/index.ts\").read_bytes());print(\"OWN_COMMANDS\",len(list((r/\"commands\").glob(\"*.json\"))));print(\"COMMAND_EXIT_COUNTS\",dict(collections.Counter(json.loads(f.read_text())[\"exit\"] for f in (r/\"commands\").glob(\"*.json\"))))"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-03T14:37:22.457959+00:00",
+  "endUtc": "2026-10-03T14:37:22.487350+00:00",
+  "exit": 0,
+  "environment": "inherited for read-only context command; no env dump"
+}

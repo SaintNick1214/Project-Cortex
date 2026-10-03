@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../src/cli/lib/aiFiles/paths.ts"],
+  "sourcesContent": ["import path from \"path\";\n\nexport type AiFilesPaths = {\n  projectDir: string;\n  convexDir: string;\n};\n\nconst AI_FILES_PARENT_DIR = \"_generated\";\nconst AI_FILES_DIR = \"ai\";\n\nexport function aiDirForConvexDir(convexDir: string): string {\n  return path.join(convexDir, AI_FILES_PARENT_DIR, AI_FILES_DIR);\n}\n\nexport function guidelinesPathForConvexDir(convexDir: string): string {\n  return path.join(aiDirForConvexDir(convexDir), \"guidelines.md\");\n}\n\nexport function aiFilesStatePathForConvexDir(convexDir: string): string {\n  return path.join(aiDirForConvexDir(convexDir), \"ai-files.state.json\");\n}\n\nexport function agentsMdPath(projectDir?: string): string {\n  return path.join(projectDir ?? process.cwd(), \"AGENTS.md\");\n}\n\nexport function claudeMdPath(projectDir?: string): string {\n  return path.join(projectDir ?? process.cwd(), \"CLAUDE.md\");\n}\n"],
+  "mappings": ";AAAA,OAAO,UAAU;AAOjB,MAAM,sBAAsB;AAC5B,MAAM,eAAe;AAEd,gBAAS,kBAAkB,WAA2B;AAC3D,SAAO,KAAK,KAAK,WAAW,qBAAqB,YAAY;AAC/D;AAEO,gBAAS,2BAA2B,WAA2B;AACpE,SAAO,KAAK,KAAK,kBAAkB,SAAS,GAAG,eAAe;AAChE;AAEO,gBAAS,6BAA6B,WAA2B;AACtE,SAAO,KAAK,KAAK,kBAAkB,SAAS,GAAG,qBAAqB;AACtE;AAEO,gBAAS,aAAa,YAA6B;AACxD,SAAO,KAAK,KAAK,cAAc,QAAQ,IAAI,GAAG,WAAW;AAC3D;AAEO,gBAAS,aAAa,YAA6B;AACxD,SAAO,KAAK,KAAK,cAAc,QAAQ,IAAI,GAAG,WAAW;AAC3D;",
+  "names": []
+}

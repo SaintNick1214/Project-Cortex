@@ -1,0 +1,23 @@
+from pathlib import Path
+import json, hashlib
+r=Path(__file__).parent
+seal=r/'seal.py'
+original=seal.read_bytes()
+(r/'seal.initial.py').write_bytes(original)
+old="assert report.read_text().count('| Original case |')==0"
+new="assert report.read_text().count('| Original case |')==1"
+assert seal.read_text().count(old)==1
+seal.write_text(seal.read_text().replace(old,new))
+(r/'commands/manifest-finalization-initial.stdout').write_text('')
+(r/'commands/manifest-finalization-initial.stderr').write_text('Traceback (most recent call last):\n  File "/tmp/task03c2-live-service-review-gkwkb7lc/seal.py", line 16, in <module>\n    assert report.read_text().count(\'| Original case |\')==0\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n')
+(r/'commands/manifest-finalization-initial.json').write_text(json.dumps({'argv':['python',str(seal)],'cwd':'/workspace/Project-Cortex','startUtc':None,'endUtc':None,'exit':1,'sourceBeforeCorrectionSha256':hashlib.sha256(original).hexdigest(),'sourceSavedAs':'seal.initial.py','observation':'Tool-returned failure retained exactly; this initial finalization tool call did not record explicit UTC. No manifest was created. Incorrect expected header count0 corrected to exact1, plus existing all41 name verification retained. Native/fixture assertions unchanged.'},indent=2)+'\n')
+report=r/'report.md'
+(r/'report.initial.md').write_bytes(report.read_bytes())
+s=report.read_text()
+s=s.replace('Four recorded exit1 commands are retained: expected original-purpose native reproduction, initial freeze treating a synthetic original label as a file, an exploratory wrong cache filename, and a later third-report SHA read using the wrong filename.', 'Five recorded exit1 commands are retained: expected original-purpose native reproduction, initial freeze treating a synthetic original label as a file, an exploratory wrong cache filename, a later third-report SHA read using the wrong filename, and initial manifest bookkeeping incorrectly expecting zero case-table headers. The final bookkeeping assertion was corrected to expect the exact one header; all41 name checks and native/fixture assertions remained intact. Initial seal source and tool-returned full failure stream are preserved; that tool call lacked explicit UTC, which remains null rather than invented.')
+assert s!=report.read_text()
+report.write_text(s)
+omissions=json.loads((r/'omissions.json').read_text())
+omissions['initialManifestBookkeepingUtc']='Initial failed seal tool call had no explicit UTC capture; tool-returned exact error stream, argv/cwd/exit and initial source are retained, null timestamps disclosed.'
+(r/'omissions.json').write_text(json.dumps(omissions,indent=2)+'\n')
+print('Preserved failed finalization raw/source; corrected only own exact report-header bookkeeping assertion; candidate/native assertions unchanged.')

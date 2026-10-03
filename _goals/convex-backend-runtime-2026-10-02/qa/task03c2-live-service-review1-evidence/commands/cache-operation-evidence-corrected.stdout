@@ -1,0 +1,1220 @@
+
+FILE node_modules/convex/src/browser/sync/optimistic_updates_impl.ts
+import {
+  FunctionArgs,
+  FunctionReturnType,
+  OptionalRestArgs,
+  getFunctionName,
+  FunctionReference,
+  FunctionReference_future,
+} from "../../server/api.js";
+import { parseArgs } from "../../common/index.js";
+import { Value } from "../../values/index.js";
+import { createHybridErrorStacktrace, forwardData } from "../logging.js";
+import { FunctionResult } from "./function_result.js";
+import { OptimisticLocalStore } from "./optimistic_updates.js";
+import { RequestId } from "./protocol.js";
+import {
+  canonicalizeUdfPath,
+  QueryToken,
+  serializePathAndArgs,
+} from "./udf_path_utils.js";
+import { ConvexError } from "../../values/errors.js";
+
+/**
+ * An optimistic update function that has been curried over its arguments.
+ */
+type WrappedOptimisticUpdate = (locaQueryStore: OptimisticLocalStore) => void;
+
+/**
+ * The implementation of `OptimisticLocalStore`.
+ *
+ * This class provides the interface for optimistic updates to modify query results.
+ */
+class OptimisticLocalStoreImpl implements OptimisticLocalStore {
+  // A references of the query results in OptimisticQueryResults
+  private readonly queryResults: QueryResultsMap;
+
+  // All of the queries modified by this class
+  readonly modifiedQueries: QueryToken[];
+
+  constructor(queryResults: QueryResultsMap) {
+    this.queryResults = queryResults;
+    this.modifiedQueries = [];
+  }
+
+  getQuery<
+    Query extends
+      | FunctionReference<"query">
+      | FunctionReference_future<"query">,
+  >(
+    query: Query,
+    ...args: OptionalRestArgs<Query>
+  ): undefined | FunctionReturnType<Query> {
+    const queryArgs = parseArgs(args[0]);
+    const name = getFunctionName(query);
+    const queryResult = this.queryResults.get(
+      serializePathAndArgs(name, queryArgs),
+    );
+    if (queryResult === undefined) {
+      return undefined;
+    }
+    return OptimisticLocalStoreImpl.queryValue(queryResult.result);
+  }
+
+  getAllQueries<
+    Query extends
+      | FunctionReference<"query">
+      | FunctionReference_future<"query">,
+  >(
+    query: Query,
+  ): {
+    args: FunctionArgs<Query>;
+    value: undefined | FunctionReturnType<Query>;
+  }[] {
+    const queriesWithName: {
+      args: FunctionArgs<Query>;
+      value: undefined | FunctionReturnType<Query>;
+    }[] = [];
+    const name = getFunctionName(query);
+    for (const queryResult of this.queryResults.values()) {
+      if (queryResult.udfPath === canonicalizeUdfPath(name)) {
+        queriesWithName.push({
+          args: queryResult.args as FunctionArgs<Query>,
+          value: OptimisticLocalStoreImpl.queryValue(queryResult.result),
+        });
+      }
+    }
+    return queriesWithName;
+  }
+
+  setQuery<
+    QueryReference extends
+      | FunctionReference<"query">
+      | FunctionReference_future<"query">,
+  >(
+    queryReference: QueryReference,
+    args: FunctionArgs<QueryReference>,
+    value: undefined | FunctionReturnType<QueryReference>,
+  ): void {
+    const queryArgs = parseArgs(args);
+    const name = getFunctionName(queryReference);
+    const queryToken = serializePathAndArgs(name, queryArgs);
+
+    let result: FunctionResult | undefined;
+    if (value === undefined) {
+      result = undefined;
+    } else {
+      result = {
+        success: true,
+        value,
+        // It's an optimistic update, so there are no function logs to show.
+        logLines: [],
+      };
+    }
+    const query: Query = {
+      udfPath: name,
+      args: queryArgs,
+      result,
+    };
+    this.queryResults.set(queryToken, query);
+    this.modifiedQueries.push(queryToken);
+  }
+
+  private static queryValue(
+    result: FunctionResult | undefined,
+  ): Value | undefined {
+    if (result === undefined) {
+      return undefined;
+    } else if (result.success) {
+      return result.value;
+    } else {
+      // If the query is an error state, just return `undefined` as though
+      // it's loading. Optimistic updates should already handle `undefined` well
+      // and there isn't a need to break the whole update because it tried
+      // to load a single query that errored.
+      return undefined;
+    }
+  }
+}
+
+type OptimisticUpdateAndId = {
+  update: WrappedOptimisticUpdate;
+  mutationId: RequestId;
+};
+
+type Query = {
+  // undefined means the query was set to be loading (undefined) in an optimistic update.
+  // Note that we can also have queries not present in the QueryResultMap
+  // at all because they are still loading from the server and have no optimistic update
+  // setting an optimistic value in advance.
+  result: FunctionResult | undefined;
+  udfPath: string;
+  args: Record<string, Value>;
+};
+export type QueryResultsMap = Map<QueryToken, Query>;
+
+type ChangedQueries = QueryToken[];
+
+/**
+ * A view of all of our query results with optimistic updates applied on top.
+ */
+export class OptimisticQueryResults {
+  private queryResults: QueryResultsMap;
+  private optimisticUpdates: OptimisticUpdateAndId[];
+
+  constructor() {
+    this.queryResults = new Map();
+    this.optimisticUpdates = [];
+  }
+
+  /**
+   * Apply all optimistic updates on top of server query results
+   */
+  ingestQueryResultsFromServer(
+    serverQueryResults: QueryResultsMap,
+    optimisticUpdatesToDrop: Set<RequestId>,
+  ): ChangedQueries {
+    this.optimisticUpdates = this.optimisticUpdates.filter((updateAndId) => {
+      return !optimisticUpdatesToDrop.has(updateAndId.mutationId);
+    });
+
+    const oldQueryResults = this.queryResults;
+    this.queryResults = new Map(serverQueryResults);
+    const localStore = new OptimisticLocalStoreImpl(this.queryResults);
+    for (const updateAndId of this.optimisticUpdates) {
+      updateAndId.update(localStore);
+    }
+
+    // To find the changed queries, just do a shallow comparison
+    // TODO(CX-733): Change this so we avoid unnecessary rerenders
+    const changedQueries: ChangedQueries = [];
+    for (const [queryToken, query] of this.queryResults) {
+      const oldQuery = oldQueryResults.get(queryToken);
+      if (oldQuery === undefined || oldQuery.result !== query.result) {
+        changedQueries.push(queryToken);
+      }
+    }
+
+    return changedQueries;
+  }
+
+  applyOptimisticUpdate(
+    update: WrappedOptimisticUpdate,
+    mutationId: RequestId,
+  ): ChangedQueries {
+    // Apply the update to our store
+    this.optimisticUpdates.push({
+      update,
+      mutationId,
+    });
+    const localStore = new OptimisticLocalStoreImpl(this.queryResults);
+    update(localStore);
+
+    // Notify about any query results that changed
+    // TODO(CX-733): Change this so we avoid unnecessary rerenders
+    return localStore.modifiedQueries;
+  }
+
+  /**
+   * "Raw" with respect to errors vs values, but query results still have
+   * optimistic updates applied.
+   *
+   * @internal
+   */
+  rawQueryResult(queryToken: QueryToken): FunctionResult | undefined {
+    const query = this.queryResults.get(queryToken);
+    if (query === undefined) {
+      return undefined;
+    }
+    return query.result;
+  }
+
+  queryResult(queryToken: QueryToken): Value | undefined {
+    const query = this.queryResults.get(queryToken);
+    if (query === undefined) {
+      return undefined;
+    }
+    const result = query.result;
+    if (result === undefined) {
+      return undefined;
+    } else if (result.success) {
+      return result.value;
+    } else {
+      if (result.errorData !== undefined) {
+        throw forwardData(
+          result,
+          new ConvexError(
+            createHybridErrorStacktrace("query", query.udfPath, result),
+          ),
+        );
+      }
+      throw new Error(
+        createHybridErrorStacktrace("query", query.udfPath, result),
+      );
+    }
+  }
+
+  hasQueryResult(queryToken: QueryToken): boolean {
+    return this.queryResults.get(queryToken) !== undefined;
+  }
+
+  /**
+   * @internal
+   */
+  queryLogs(queryToken: QueryToken): string[] | undefined {
+    const query = this.queryResults.get(queryToken);
+    return query?.result?.logLines;
+  }
+}
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/codegen-diagnostic-result.json
+{
+  "startedAt": "2026-10-03T14:19:48.278Z",
+  "completedAt": "2026-10-03T14:19:50.231Z",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/node_modules/convex/bin/main.js",
+    "dev",
+    "--once",
+    "--codegen",
+    "enable",
+    "--typecheck",
+    "enable",
+    "--tail-logs",
+    "disable",
+    "--env-file",
+    "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/deploy.env"
+  ],
+  "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture",
+  "deploymentName": "helpful-iguana-708",
+  "code": 1,
+  "signal": null,
+  "stdout": "",
+  "stderr": "▌ Developing against deployment:\n▌ [Development] nicholasgeil:cortex-runtime-disposable-qualification-auth-399781dd7c:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-runtime-disposable-qualification-auth-399781dd7c/helpful-iguana-708)\n▌ └─ https://helpful-iguana-708.convex.cloud\n- Preparing Convex functions...\n\nConvex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.\nNo `tsc` binary found, so skipping typecheck.\nTo ignore failing typecheck, use `--typecheck=disable`.\n",
+  "timedOut": false,
+  "overflow": false,
+  "remainingOwnedGroups": 0,
+  "terminalVerifiedGroups": 1
+}
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/fixture-compiler-preparation.json
+{
+  "operation": "regular-copy-existing-qualified-typescript-package",
+  "version": "6.0.3",
+  "startedAt": "2026-10-03T14:20:35.708918+00:00",
+  "completedAt": "2026-10-03T14:20:35.784667+00:00",
+  "source": "/workspace/Project-Cortex/node_modules/typescript",
+  "destination": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/node_modules/typescript",
+  "reason": "Official CLI resolves compiler only from cwd-relative node_modules, not ancestor dependencies",
+  "files": [
+    {
+      "path": "LICENSE.txt",
+      "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47",
+      "bytes": 9197
+    },
+    {
+      "path": "README.md",
+      "sha256": "73147458477d90cd6236627cdd9b0871df12e6e8a21d2d0fda6d1ad2826bdc0e",
+      "bytes": 2842
+    },
+    {
+      "path": "SECURITY.md",
+      "sha256": "cec829e06ab53bb27e96fa6dcd8daa2b6cc4a6cc08b00ff5965fac1cbb54f7f1",
+      "bytes": 2577
+    },
+    {
+      "path": "ThirdPartyNoticeText.txt",
+      "sha256": "1af3c68039c57e539422da82a4faada506ce6d0ea6f90e0b699d02dbcdb7a90c",
+      "bytes": 37824
+    },
+    {
+      "path": "bin/tsc",
+      "sha256": "8d5fa5bd883fec0979fc2004f1fe1d99aef40570155d550eadc0b03b55513bf0",
+      "bytes": 45
+    },
+    {
+      "path": "bin/tsserver",
+      "sha256": "a088f0c3419bcb2f7b860ad42e4c9f25ead067eda70af6a10d0a7d453954aada",
+      "bytes": 50
+    },
+    {
+      "path": "lib/_tsc.js",
+      "sha256": "1c59e77a54b186ec43fa7f3e0d3c4bb15ca5eb5ba43e96b1d3a267139eddd3e3",
+      "bytes": 6239091
+    },
+    {
+      "path": "lib/_tsserver.js",
+      "sha256": "1992fc3518a4aa5443638a25794281995ec3ce84820692713296262997d5443b",
+      "bytes": 27889
+    },
+    {
+      "path": "lib/_typingsInstaller.js",
+      "sha256": "71515c1c1aa29c8616309f7dea4d3a32eed662df3a4dbcf4345e7522ece56ac1",
+      "bytes": 10364
+    },
+    {
+      "path": "lib/cs/diagnosticMessages.generated.json",
+      "sha256": "a00a333cb5ae58c1b1163bd90b6897eb9a2695de9d31dc12fc4a19c98843b6a7",
+      "bytes": 322179
+    },
+    {
+      "path": "lib/de/diagnosticMessages.generated.json",
+      "sha256": "1df64ca10607a09e7fdd217f06488ab0b107d557157cef81cc2c9496a4439099",
+      "bytes": 345510
+    },
+    {
+      "path": "lib/es/diagnosticMessages.generated.json",
+      "sha256": "85ad4bf3b496a74f37345af5a11c794379902b8d1b0ee68e90a7189222ddedbe",
+      "bytes": 341947
+    },
+    {
+      "path": "lib/fr/diagnosticMessages.generated.json",
+      "sha256": "843a7a314c2ce9b3212c373f2694b7b166a60b8c1881c6651816c547110ae44a",
+      "bytes": 347990
+    },
+    {
+      "path": "lib/it/diagnosticMessages.generated.json",
+      "sha256": "018ff991423a0c2f27f6adabca0bd705ded5ca3406e9cf80b0357d454523e4e6",
+      "bytes": 340423
+    },
+    {
+      "path": "lib/ja/diagnosticMessages.generated.json",
+      "sha256": "8ceafe4cae6fbc9af735427557030269e5419eaed535c923d622967aee2c50f9",
+      "bytes": 383553
+    },
+    {
+      "path": "lib/ko/diagnosticMessages.generated.json",
+      "sha256": "1287462fc976b79a02e82fe4af906004d7d58f7df37b8de54235b77dc5552674",
+      "bytes": 347991
+    },
+    {
+      "path": "lib/lib.d.ts",
+      "sha256": "0e6477e5049e579cc5de741a70ac91235252edc0468b2e569f22de9db3357786",
+      "bytes": 953
+    },
+    {
+      "path": "lib/lib.decorators.d.ts",
+      "sha256": "1ce14b81c5cc821994aa8ec1d42b220dd41b27fcc06373bce3958af7421b77d4",
+      "bytes": 13153
+    },
+    {
+      "path": "lib/lib.decorators.legacy.d.ts",
+      "sha256": "b3a048b3e9302ef9a34ef4ebb9aecfb28b66abb3bce577206a79fee559c230da",
+      "bytes": 1287
+    },
+    {
+      "path": "lib/lib.dom.asynciterable.d.ts",
+      "sha256": "7f57fc4404ff020bc45b9c620aff2b40f700b95fe31164024c453a5e3c163c54",
+      "bytes": 933
+    },
+    {
+      "path": "lib/lib.dom.d.ts",
+      "sha256": "d6b1eba8496bdd0eed6fc8a685768fe01b2da4a0388b5fe7df558290bffcf32f",
+      "bytes": 2349483
+    },
+    {
+      "path": "lib/lib.dom.iterable.d.ts",
+      "sha256": "7f57fc4404ff020bc45b9c620aff2b40f700b95fe31164024c453a5e3c163c54",
+      "bytes": 933
+    },
+    {
+      "path": "lib/lib.es2015.collection.d.ts",
+      "sha256": "105ba8ff7ba746404fe1a2e189d1d3d2e0eb29a08c18dded791af02f29fb4711",
+      "bytes": 5305
+    },
+    {
+      "path": "lib/lib.es2015.core.d.ts",
+      "sha256": "eadcffda2aa84802c73938e589b9e58248d74c59cb7fcbca6474e3435ac15504",
+      "bytes": 22824
+    },
+    {
+      "path": "lib/lib.es2015.d.ts",
+      "sha256": "3f88bedbeb09c6f5a6645cb24c7c55f1aa22d19ae96c8e6959cbd8b85a707bc6",
+      "bytes": 1202
+    },
+    {
+      "path": "lib/lib.es2015.generator.d.ts",
+      "sha256": "00343ca5b2e3d48fa5df1db6e32ea2a59afab09590274a6cccb1dbae82e60c7c",
+      "bytes": 2518
+    },
+    {
+      "path": "lib/lib.es2015.iterable.d.ts",
+      "sha256": "ebd9f816d4002697cb2864bea1f0b70a103124e18a8cd9645eeccc09bdf80ab4",
+      "bytes": 18185
+    },
+    {
+      "path": "lib/lib.es2015.promise.d.ts",
+      "sha256": "2c1afac30a01772cd2a9a298a7ce7706b5892e447bb46bdbeef720f7b5da77ad",
+      "bytes": 3161
+    },
+    {
+      "path": "lib/lib.es2015.proxy.d.ts",
+      "sha256": "7b0225f483e4fa685625ebe43dd584bb7973bbd84e66a6ba7bbe175ee1048b4f",
+      "bytes": 5212
+    },
+    {
+      "path": "lib/lib.es2015.reflect.d.ts",
+      "sha256": "c0a4b8ac6ce74679c1da2b3795296f5896e31c38e888469a8e0f99dc3305de60",
+      "bytes": 6454
+    },
+    {
+      "path": "lib/lib.es2015.symbol.d.ts",
+      "sha256": "3084a7b5f569088e0146533a00830e206565de65cae2239509168b11434cd84f",
+      "bytes": 1610
+    },
+    {
+      "path": "lib/lib.es2015.symbol.wellknown.d.ts",
+      "sha256": "c5079c53f0f141a0698faa903e76cb41cd664e3efb01cc17a5c46ec2eb0bef42",
+      "bytes": 10971
+    },
+    {
+      "path": "lib/lib.es2016.array.include.d.ts",
+      "sha256": "32cafbc484dea6b0ab62cf8473182bbcb23020d70845b406f80b7526f38ae862",
+      "bytes": 5165
+    },
+    {
+      "path": "lib/lib.es2016.d.ts",
+      "sha256": "7fe93b39b810eadd916be8db880dd7f0f7012a5cc6ffb62de8f62a2117fa6f1f",
+      "bytes": 926
+    },
+    {
+      "path": "lib/lib.es2016.full.d.ts",
+      "sha256": "19adadff5144f8f89fef0a10b299d7a96206f4913d4c17d4864171320e9edbd6",
+      "bytes": 993
+    },
+    {
+      "path": "lib/lib.es2016.intl.d.ts",
+      "sha256": "fca4cdcb6d6c5ef18a869003d02c9f0fd95df8cfaf6eb431cd3376bc034cad36",
+      "bytes": 1445
+    },
+    {
+      "path": "lib/lib.es2017.arraybuffer.d.ts",
+      "sha256": "b93ec88115de9a9dc1b602291b85baf825c85666bf25985cc5f698073892b467",
+      "bytes": 876
+    },
+    {
+      "path": "lib/lib.es2017.d.ts",
+      "sha256": "bb0074cc08b84a2374af33d8bf044b80851ccc9e719a5e202eacf40db2c31600",
+      "bytes": 1123
+    },
+    {
+      "path": "lib/lib.es2017.date.d.ts",
+      "sha256": "f5c06dcc3fe849fcb297c247865a161f995cc29de7aa823afdd75aaaddc1419b",
+      "bytes": 1877
+    },
+    {
+      "path": "lib/lib.es2017.full.d.ts",
+      "sha256": "83635f912d414d0c5a855fba3e18418e9db7e73c2e0e170009c48275cc8c1a36",
+      "bytes": 993
+    },
+    {
+      "path": "lib/lib.es2017.intl.d.ts",
+      "sha256": "c7b3542146734342e440a84b213384bfa188835537ddbda50d30766f0593aff9",
+      "bytes": 1410
+    },
+    {
+      "path": "lib/lib.es2017.object.d.ts",
+      "sha256": "b77e16112127a4b169ef0b8c3a4d730edf459c5f25fe52d5e436a6919206c4d7",
+      "bytes": 2434
+    },
+    {
+      "path": "lib/lib.es2017.sharedmemory.d.ts",
+      "sha256": "fbffd9337146eff822c7c00acbb78b01ea7ea23987f6c961eba689349e744f8c",
+      "bytes": 7170
+    },
+    {
+      "path": "lib/lib.es2017.string.d.ts",
+      "sha256": "a995c0e49b721312f74fdfb89e4ba29bd9824c770bbb4021d74d2bf560e4c6bd",
+      "bytes": 2339
+    },
+    {
+      "path": "lib/lib.es2017.typedarrays.d.ts",
+      "sha256": "ce6180fa19b1cccd07ee7f7dbb9a367ac19c0ed160573e4686425060b6df7f57",
+      "bytes": 1503
+    },
+    {
+      "path": "lib/lib.es2018.asyncgenerator.d.ts",
+      "sha256": "3f02e2476bccb9dbe21280d6090f0df17d2f66b74711489415a8aa4df73c9675",
+      "bytes": 2653
+    },
+    {
+      "path": "lib/lib.es2018.asynciterable.d.ts",
+      "sha256": "45e3ab34c1c013c8ab2dc1ba4c80c780744b13b5676800ae2e3be27ae862c40c",
+      "bytes": 2218
+    },
+    {
+      "path": "lib/lib.es2018.d.ts",
+      "sha256": "1a7daebe4f45fb03d9ec53d60008fbf9ac45a697fdc89e4ce218bc94b94f94d6",
+      "bytes": 1049
+    },
+    {
+      "path": "lib/lib.es2018.full.d.ts",
+      "sha256": "63787dbe04141f5d3ebce2e08b64bc9bba589beb0a4d22e7994d3005af1e48a6",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.es2018.intl.d.ts",
+      "sha256": "805c86f6cca8d7702a62a844856dbaa2a3fd2abef0536e65d48732441dde5b5b",
+      "bytes": 2982
+    },
+    {
+      "path": "lib/lib.es2018.promise.d.ts",
+      "sha256": "e42e397f1a5a77994f0185fd1466520691456c772d06bf843e5084ceb879a0ad",
+      "bytes": 1314
+    },
+    {
+      "path": "lib/lib.es2018.regexp.d.ts",
+      "sha256": "f4c2b41f90c95b1c532ecc874bd3c111865793b23aebcc1c3cbbabcd5d76ffb0",
+      "bytes": 1193
+    },
+    {
+      "path": "lib/lib.es2019.array.d.ts",
+      "sha256": "ab26191cfad5b66afa11b8bf935ef1cd88fabfcb28d30b2dfa6fad877d050332",
+      "bytes": 3124
+    },
+    {
+      "path": "lib/lib.es2019.d.ts",
+      "sha256": "f94b133a3cb14a288803be545ac2683e0d0ff6661bcd37e31aaaec54fc382aed",
+      "bytes": 1032
+    },
+    {
+      "path": "lib/lib.es2019.full.d.ts",
+      "sha256": "e3de8409485b0c198a5a075bd4a1d06d8f42dc52b377709d33b131b97de56456",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.es2019.intl.d.ts",
+      "sha256": "689da16f46e647cef0d64b0def88910e818a5877ca5379ede156ca3afb780ac3",
+      "bytes": 919
+    },
+    {
+      "path": "lib/lib.es2019.object.d.ts",
+      "sha256": "2088bc26531e38fb05eedac2951480db5309f6be3fa4a08d2221abb0f5b4200d",
+      "bytes": 1434
+    },
+    {
+      "path": "lib/lib.es2019.string.d.ts",
+      "sha256": "cb9d366c425fea79716a8fb3af0d78e6b22ebbab3bd64d25063b42dc9f531c1e",
+      "bytes": 1489
+    },
+    {
+      "path": "lib/lib.es2019.symbol.d.ts",
+      "sha256": "500934a8089c26d57ebdb688fc9757389bb6207a3c8f0674d68efa900d2abb34",
+      "bytes": 967
+    },
+    {
+      "path": "lib/lib.es2020.bigint.d.ts",
+      "sha256": "bc21cc8b6fee4f4c2440d08035b7ea3c06b3511314c8bab6bef7a92de58a2593",
+      "bytes": 38258
+    },
+    {
+      "path": "lib/lib.es2020.d.ts",
+      "sha256": "f59d0650799f8782fd74cf73c19223730c6d1b9198671b1c5b3a38e1188b5953",
+      "bytes": 1162
+    },
+    {
+      "path": "lib/lib.es2020.date.d.ts",
+      "sha256": "7ca53d13d2957003abb47922a71866ba7cb2068f8d154877c596d63c359fed25",
+      "bytes": 2917
+    },
+    {
+      "path": "lib/lib.es2020.full.d.ts",
+      "sha256": "577cc49be1979782a5a695b46049566d123e2a75382f10bb82f2e5c87e29059a",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.es2020.intl.d.ts",
+      "sha256": "48915f327cd1dea4d7bd358d9dc7732f58f9e1626a29cc0c05c8c692419d9bb7",
+      "bytes": 22399
+    },
+    {
+      "path": "lib/lib.es2020.number.d.ts",
+      "sha256": "b7bf9377723203b5a6a4b920164df22d56a43f593269ba6ae1fdc97774b68855",
+      "bytes": 1548
+    },
+    {
+      "path": "lib/lib.es2020.promise.d.ts",
+      "sha256": "54725f8c4df3d900cb4dac84b64689ce29548da0b4e9b7c2de61d41c79293611",
+      "bytes": 1764
+    },
+    {
+      "path": "lib/lib.es2020.sharedmemory.d.ts",
+      "sha256": "e5594bc3076ac29e6c1ebda77939bc4c8833de72f654b6e376862c0473199323",
+      "bytes": 5089
+    },
+    {
+      "path": "lib/lib.es2020.string.d.ts",
+      "sha256": "2f3eb332c2d73e729f3364fcc0c2b375e72a121e8157d25a82d67a138c83a95c",
+      "bytes": 2451
+    },
+    {
+      "path": "lib/lib.es2020.symbol.wellknown.d.ts",
+      "sha256": "6f4427f9642ce8d500970e4e69d1397f64072ab73b97e476b4002a646ac743b1",
+      "bytes": 1566
+    },
+    {
+      "path": "lib/lib.es2021.d.ts",
+      "sha256": "8a15b4607d9a499e2dbeed9ec0d3c0d7372c850b2d5f1fb259e8f6d41d468a84",
+      "bytes": 997
+    },
+    {
+      "path": "lib/lib.es2021.full.d.ts",
+      "sha256": "e4a70ead7fea07d9abe520cc9e30c04ac035ebceaab28f9e67211610006c65de",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.es2021.intl.d.ts",
+      "sha256": "a917a49ac94cd26b754ab84e113369a75d1a47a710661d7cd25e961cc797065f",
+      "bytes": 8206
+    },
+    {
+      "path": "lib/lib.es2021.promise.d.ts",
+      "sha256": "db9709688f82c9e5f65a119c64d835f906efe5f559d08b11642d56eb85b79357",
+      "bytes": 2223
+    },
+    {
+      "path": "lib/lib.es2021.string.d.ts",
+      "sha256": "4b25b8c874acd1a4cf8444c3617e037d444d19080ac9f634b405583fd10ce1f7",
+      "bytes": 1553
+    },
+    {
+      "path": "lib/lib.es2021.weakref.d.ts",
+      "sha256": "37be57d7c90cf1f8112ee2636a068d8fd181289f82b744160ec56a7dc158a9f5",
+      "bytes": 3132
+    },
+    {
+      "path": "lib/lib.es2022.array.d.ts",
+      "sha256": "6d3261badeb7843d157ef3e6f5d1427d0eeb0af0cf9df84a62cfd29fd47ac86e",
+      "bytes": 4637
+    },
+    {
+      "path": "lib/lib.es2022.d.ts",
+      "sha256": "26e0fe14baee4e127f4365d1ae0b276f400562e45e19e35fd2d4c296684715e6",
+      "bytes": 1069
+    },
+    {
+      "path": "lib/lib.es2022.error.d.ts",
+      "sha256": "195daca651dde22f2167ac0d0a05e215308119a3100f5e6268e8317d05a92526",
+      "bytes": 2340
+    },
+    {
+      "path": "lib/lib.es2022.full.d.ts",
+      "sha256": "01a30f9e8582b369075c0808df71121e6855cb06fd8d3d39511d9ebb66405205",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.es2022.intl.d.ts",
+      "sha256": "8b11e4285cd2bb164a4dc09248bdec69e9842517db4ca47c1ba913011e44ff2f",
+      "bytes": 7653
+    },
+    {
+      "path": "lib/lib.es2022.object.d.ts",
+      "sha256": "0508571a52475e245b02bc50fa1394065a0a3d05277fbf5120c3784b85651799",
+      "bytes": 1046
+    },
+    {
+      "path": "lib/lib.es2022.regexp.d.ts",
+      "sha256": "fc611fea8d30ea72c6bbfb599c9b4d393ce22e2f5bfef2172534781e7d138104",
+      "bytes": 1304
+    },
+    {
+      "path": "lib/lib.es2022.string.d.ts",
+      "sha256": "8f9af488f510c3015af3cc8c267a9e9d96c4dd38a1fdff0e11dc5a544711415b",
+      "bytes": 1116
+    },
+    {
+      "path": "lib/lib.es2023.array.d.ts",
+      "sha256": "0bd714129fca875f7d4c477a1a392200b0bcd13fb2e80928cd334b63830ea047",
+      "bytes": 40197
+    },
+    {
+      "path": "lib/lib.es2023.collection.d.ts",
+      "sha256": "e2c9037ae6cd2c52d80ceef0b3c5ffdb488627d71529cf4f63776daf11161c9a",
+      "bytes": 861
+    },
+    {
+      "path": "lib/lib.es2023.d.ts",
+      "sha256": "1e9332c23e9a907175e0ffc6a49e236f97b48838cc8aec9ce7e4cec21e544b65",
+      "bytes": 960
+    },
+    {
+      "path": "lib/lib.es2023.full.d.ts",
+      "sha256": "821bd6049b8f96b9d24c9fbc49b542dcf7a80d76f9efb330b5ef32c373af83d4",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.es2023.intl.d.ts",
+      "sha256": "135d5cf4d345f59f1a9caadfafcd858d3d9cc68290db616cc85797224448cccc",
+      "bytes": 2854
+    },
+    {
+      "path": "lib/lib.es2024.arraybuffer.d.ts",
+      "sha256": "bc238c3f81c2984751932b6aab223cd5b830e0ac6cad76389e5e9d2ffc03287d",
+      "bytes": 2598
+    },
+    {
+      "path": "lib/lib.es2024.collection.d.ts",
+      "sha256": "4a07f9b76d361f572620927e5735b77d6d2101c23cdd94383eb5b706e7b36357",
+      "bytes": 1185
+    },
+    {
+      "path": "lib/lib.es2024.d.ts",
+      "sha256": "3753fbc1113dc511214802a2342280a8b284ab9094f6420e7aa171e868679f91",
+      "bytes": 1127
+    },
+    {
+      "path": "lib/lib.es2024.full.d.ts",
+      "sha256": "b9f65879de79a7647ad2e5b8089277c215911fa99d4b858d78014df6ba2852f3",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.es2024.object.d.ts",
+      "sha256": "7c4e8dc6ab834cc6baa0227e030606d29e3e8449a9f67cdf5605ea5493c4db29",
+      "bytes": 1220
+    },
+    {
+      "path": "lib/lib.es2024.promise.d.ts",
+      "sha256": "de7ba0fd02e06cd9a5bd4ab441ed0e122735786e67dde1e849cced1cd8b46b78",
+      "bytes": 1350
+    },
+    {
+      "path": "lib/lib.es2024.regexp.d.ts",
+      "sha256": "6148e4e88d720a06855071c3db02069434142a8332cf9c182cda551adedf3156",
+      "bytes": 1034
+    },
+    {
+      "path": "lib/lib.es2024.sharedmemory.d.ts",
+      "sha256": "d63dba625b108316a40c95a4425f8d4294e0deeccfd6c7e59d819efa19e23409",
+      "bytes": 3038
+    },
+    {
+      "path": "lib/lib.es2024.string.d.ts",
+      "sha256": "0568d6befee03dd435bed4fc25c4e46865b24bdcb8c563fdc21f580a2c301904",
+      "bytes": 1155
+    },
+    {
+      "path": "lib/lib.es2025.collection.d.ts",
+      "sha256": "30d62269b05b584741f19a5369852d5d34895aa2ac4fd948956f886d15f9cc0d",
+      "bytes": 3839
+    },
+    {
+      "path": "lib/lib.es2025.d.ts",
+      "sha256": "999ca32883495a866aa5737fe1babc764a469e4cde6ee6b136a4b9ae68853e4b",
+      "bytes": 1079
+    },
+    {
+      "path": "lib/lib.es2025.float16.d.ts",
+      "sha256": "f128dae7c44d8f35ee42e0a437000a57c9f06cc04f8b4fb42eebf44954d53dc8",
+      "bytes": 20489
+    },
+    {
+      "path": "lib/lib.es2025.full.d.ts",
+      "sha256": "e03da518b01b46a4c99a1f88cd727ee98ddf14492c43dae1ae7a63e992971bab",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.es2025.intl.d.ts",
+      "sha256": "ffbe6d7b295306b2ba88030f65b74c107d8d99bdcf596ea99c62a02f606108b0",
+      "bytes": 9390
+    },
+    {
+      "path": "lib/lib.es2025.iterator.d.ts",
+      "sha256": "996fb27b15277369c68a4ba46ed138b4e9e839a02fb4ec756f7997629242fd9f",
+      "bytes": 8637
+    },
+    {
+      "path": "lib/lib.es2025.promise.d.ts",
+      "sha256": "79b712591b270d4778c89706ca2cfc56ddb8c3f895840e477388f1710dc5eda9",
+      "bytes": 1619
+    },
+    {
+      "path": "lib/lib.es2025.regexp.d.ts",
+      "sha256": "20884846cef428b992b9bd032e70a4ef88e349263f63aeddf04dda837a7dba26",
+      "bytes": 1255
+    },
+    {
+      "path": "lib/lib.es5.d.ts",
+      "sha256": "bcd24271a113971ba9eb71ff8cb01bc6b0f872a85c23fdbe5d93065b375933cd",
+      "bytes": 218972
+    },
+    {
+      "path": "lib/lib.es6.d.ts",
+      "sha256": "174a0fa01bb60bcb80e09b0b7bdcdddf688891433d6030244df5b44eb9ebd210",
+      "bytes": 993
+    },
+    {
+      "path": "lib/lib.esnext.array.d.ts",
+      "sha256": "5fcab789c73a97cd43828ee3cc94a61264cf24d4c44472ce64ced0e0f148bdb2",
+      "bytes": 1752
+    },
+    {
+      "path": "lib/lib.esnext.collection.d.ts",
+      "sha256": "db59a81f070c1880ad645b2c0275022baa6a0c4f0acdc58d29d349c6efcf0903",
+      "bytes": 2598
+    },
+    {
+      "path": "lib/lib.esnext.d.ts",
+      "sha256": "17f13ecb98cbc39243f2eee1f16d45cd8ec4706b03ee314f1915f1a8b42f6984",
+      "bytes": 1244
+    },
+    {
+      "path": "lib/lib.esnext.date.d.ts",
+      "sha256": "673294292640f5722b700e7d814e17aaf7d93f83a48a2c9b38f33cbc940ad8b0",
+      "bytes": 917
+    },
+    {
+      "path": "lib/lib.esnext.decorators.d.ts",
+      "sha256": "d786b48f934cbca483b3c6d0a798cb43bbb4ada283e76fb22c28e53ae05b9e69",
+      "bytes": 1031
+    },
+    {
+      "path": "lib/lib.esnext.disposable.d.ts",
+      "sha256": "1ecb8e347cb6b2a8927c09b86263663289418df375f5e68e11a0ae683776978f",
+      "bytes": 6767
+    },
+    {
+      "path": "lib/lib.esnext.error.d.ts",
+      "sha256": "142efd4ce210576f777dc34df121777be89eda476942d6d6663b03dcb53be3ff",
+      "bytes": 990
+    },
+    {
+      "path": "lib/lib.esnext.full.d.ts",
+      "sha256": "ef4a897cd2a3f91000c10264e400b3667c7e51e1b7365f03b62e8081dc53bde6",
+      "bytes": 1035
+    },
+    {
+      "path": "lib/lib.esnext.intl.d.ts",
+      "sha256": "379bc41580c2d774f82e828c70308f24a005b490c25ba34d679d84bcf05c3d9d",
+      "bytes": 5305
+    },
+    {
+      "path": "lib/lib.esnext.sharedmemory.d.ts",
+      "sha256": "ed484fb2aa8a1a23d0277056ec3336e0a0b52f9b8d6a961f338a642faf43235d",
+      "bytes": 1028
+    },
+    {
+      "path": "lib/lib.esnext.temporal.d.ts",
+      "sha256": "4ffedae1d1c2d53fdbca1c96d3c7dda544281f7d262f99b6880634f8fd8d9820",
+      "bytes": 22011
+    },
+    {
+      "path": "lib/lib.esnext.typedarrays.d.ts",
+      "sha256": "83a730b125d477dd264df8ba479afab27a3dae7152b005c214ab94dc7ee44fd3",
+      "bytes": 3350
+    },
+    {
+      "path": "lib/lib.scripthost.d.ts",
+      "sha256": "f13f4b465c99041e912db5c44129a94588e1aafee35a50eab51044833f50b4ee",
+      "bytes": 9412
+    },
+    {
+      "path": "lib/lib.webworker.asynciterable.d.ts",
+      "sha256": "7f57fc4404ff020bc45b9c620aff2b40f700b95fe31164024c453a5e3c163c54",
+      "bytes": 933
+    },
+    {
+      "path": "lib/lib.webworker.d.ts",
+      "sha256": "d52ed68e7eb5881768a55713c9b5c7c443e6b46de15c04e348928b8efd20b110",
+      "bytes": 787076
+    },
+    {
+      "path": "lib/lib.webworker.importscripts.d.ts",
+      "sha256": "2a2de5b9459b3fc44decd9ce6100b72f1b002ef523126c1d3d8b2a4a63d74d78",
+      "bytes": 1002
+    },
+    {
+      "path": "lib/lib.webworker.iterable.d.ts",
+      "sha256": "7f57fc4404ff020bc45b9c620aff2b40f700b95fe31164024c453a5e3c163c54",
+      "bytes": 933
+    },
+    {
+      "path": "lib/pl/diagnosticMessages.generated.json",
+      "sha256": "6b01538b70a7b5198df4fd73bad0b73b2dc677612840b1e57b689889d1af675c",
+      "bytes": 343981
+    },
+    {
+      "path": "lib/pt-br/diagnosticMessages.generated.json",
+      "sha256": "bbe1683efe1d0fa34397a19d89685925f58fd2aa44078bdd35dc4d8431b23b54",
+      "bytes": 332413
+    },
+    {
+      "path": "lib/ru/diagnosticMessages.generated.json",
+      "sha256": "6d74ebb94f11a576ad58c7b798f3fd5d56af31ae96e5f8faeb34560ddb7f76a6",
+      "bytes": 444708
+    },
+    {
+      "path": "lib/tr/diagnosticMessages.generated.json",
+      "sha256": "cfad8d7530b1b75f4724bd3fa2aeadff2b7b981e5e7211b1eaa606506745c237",
+      "bytes": 332492
+    },
+    {
+      "path": "lib/tsc.js",
+      "sha256": "2cffde0b8c6760dfb0b5b0382bbb7e00ba6a8b2d981b9205b256a700a481d983",
+      "bytes": 267
+    },
+    {
+      "path": "lib/tsserver.js",
+      "sha256": "e3ccfeec65ec5c470b8ffc5611878a31182650c7e8a062c38a719f83b523edcb",
+      "bytes": 272
+    },
+    {
+      "path": "lib/tsserverlibrary.d.ts",
+      "sha256": "cee9e9bf9a8f67388ee878afd5e172189421bae6625076b774d68563d036fbfd",
+      "bytes": 866
+    },
+    {
+      "path": "lib/tsserverlibrary.js",
+      "sha256": "6a0b343fa3a3f53cf198c83a18035c104b6990b2a260272654f9a6b2f2380fdf",
+      "bytes": 1013
+    },
+    {
+      "path": "lib/typesMap.json",
+      "sha256": "4143fb8b1c5d4421dfa19a4b80ddf2da375fc0835a349c3b18519fda5955e1d9",
+      "bytes": 16788
+    },
+    {
+      "path": "lib/typescript.d.ts",
+      "sha256": "c967e03c8dbb4770f7e2f0b71b5d13593de679a41cc2b60266c4b69f1342a263",
+      "bytes": 588452
+    },
+    {
+      "path": "lib/typescript.js",
+      "sha256": "569177652966bd528c319171c7dd22860dbf72bde116cbc4f644f1d02bb12e39",
+      "bytes": 9144216
+    },
+    {
+      "path": "lib/typingsInstaller.js",
+      "sha256": "2d48a038523ea7c626fa2796a30fa5fdc07612ea5fab83544423009d7683a213",
+      "bytes": 280
+    },
+    {
+      "path": "lib/watchGuard.js",
+      "sha256": "008f2ceb504ee9b8c5d47054d43033e1ec3f2fef03f18d8aa1b2dd70cba6fc88",
+      "bytes": 2314
+    },
+    {
+      "path": "lib/zh-cn/diagnosticMessages.generated.json",
+      "sha256": "2c30286e82999f53b4dd4f563bbb720d787b79d5f34b8cb404c5ebbb1b858cb5",
+      "bytes": 297608
+    },
+    {
+      "path": "lib/zh-tw/diagnosticMessages.generated.json",
+      "sha256": "166a9c81707df25d337216b1a7d196b268f247430773b832259d3ae8b306bb65",
+      "bytes": 293400
+    },
+    {
+      "path": "package.json",
+      "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9",
+      "bytes": 3527
+    }
+  ],
+  "symlinks": 0,
+  "network": false,
+  "frozenSourceOrPackageChanges": false,
+  "es2021ConfigurationUnchanged": true
+}
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/service/target-retirement.json
+{
+  "version": 1,
+  "operation": "retire-owned-qualification-auth-project",
+  "startedAt": "2026-10-03T14:22:55.972Z",
+  "observedAt": "2026-10-03T14:22:56.112Z",
+  "projectId": 3135311,
+  "deploymentName": "helpful-iguana-708",
+  "verifiedProjectName": "Cortex runtime disposable qualification auth 399781dd7c",
+  "verifiedOnlyDevelopmentCloudDeployment": true,
+  "managementDeleteMethod": "POST",
+  "managementDeletePath": "/projects/3135311/delete",
+  "deletionHttpStatus": 200,
+  "absentProjectHttpStatus": 404,
+  "status": "PASS",
+  "coverage": "Exact owned project destroyed; all its disposable fixtures unreachable. This does not replace per-case qualification, owned control-fence checks or full-goal validation."
+}
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/service/cleanup-35428fff-e2ae-4812-b730-ded81204b2ea.json
+{
+  "operation": "fence-owned-qualification-fixtures",
+  "deploymentName": "helpful-iguana-708",
+  "completed": 24,
+  "failed": 0,
+  "remainingOwnedGroups": 0,
+  "terminalVerifiedGroups": 24,
+  "processCleanup": "REAPED",
+  "retainedTombstones": true,
+  "partialProvisioning": "attempted scopes fenced; principals absent from journal require exact project retirement",
+  "physicalCleanup": "parent must retire/delete this exact qualification project via trusted service tool",
+  "globalPurge": false
+}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/cleanup-owned.command.json
+{
+  "argv": [
+    "node",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/cleanup.mjs",
+    "owned-b72a6d27-50fb-43bb-8442-81ec494125fa.json"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "commandLocalEnvironment": {
+    "NODE_USE_ENV_PROXY": "1",
+    "CORTEX_QUALIFICATION_TARGET_RECEIPT": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/target.json",
+    "CORTEX_QUALIFICATION_DEPLOY_ENV": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/deploy.env"
+  },
+  "startedAt": "2026-10-03T14:22:19.952503+00:00",
+  "status": "COMPLETED",
+  "endedAt": "2026-10-03T14:22:44.818548+00:00",
+  "exitCode": 0
+}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/cleanup-owned.stderr
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/cleanup-owned.stdout
+{"completed":24,"failed":0,"retirement":"pending-parent"}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/codegen-diagnostic.command.json
+{
+  "argv": [
+    "node",
+    "work/backend-runtime/diagnose-auth-codegen.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "commandLocalEnvironment": {
+    "NODE_USE_ENV_PROXY": "1",
+    "CORTEX_QUALIFICATION_TARGET_RECEIPT": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/target.json",
+    "CORTEX_QUALIFICATION_DEPLOY_ENV": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/deploy.env"
+  },
+  "startedAt": "2026-10-03T14:19:48.160580+00:00",
+  "status": "COMPLETED",
+  "endedAt": "2026-10-03T14:19:52.214816+00:00",
+  "exitCode": 1
+}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/codegen-diagnostic.stderr
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/codegen-diagnostic.stdout
+{"operation":"guarded-parent-codegen-diagnostic","exitCode":1,"timedOut":false,"remainingOwnedGroups":0}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/official-codegen-with-local-compiler.command.json
+{
+  "argv": [
+    "node",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/deploy.mjs",
+    "codegen"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "commandLocalEnvironment": {
+    "NODE_USE_ENV_PROXY": "1",
+    "CORTEX_QUALIFICATION_TARGET_RECEIPT": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/target.json",
+    "CORTEX_QUALIFICATION_DEPLOY_ENV": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/deploy.env"
+  },
+  "startedAt": "2026-10-03T14:20:35.812679+00:00",
+  "status": "COMPLETED",
+  "endedAt": "2026-10-03T14:20:42.187477+00:00",
+  "exitCode": 0
+}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/official-codegen-with-local-compiler.stderr
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/official-codegen-with-local-compiler.stdout
+{"mode":"codegen","exitCode":0}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/official-codegen.command.json
+{
+  "argv": [
+    "node",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/deploy.mjs",
+    "codegen"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "commandLocalEnvironment": {
+    "NODE_USE_ENV_PROXY": "1",
+    "CORTEX_QUALIFICATION_TARGET_RECEIPT": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/target.json",
+    "CORTEX_QUALIFICATION_DEPLOY_ENV": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/deploy.env"
+  },
+  "startedAt": "2026-10-03T14:18:08.384790+00:00",
+  "status": "COMPLETED",
+  "endedAt": "2026-10-03T14:18:12.709101+00:00",
+  "exitCode": 1
+}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/official-codegen.stderr
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/official-codegen.stdout
+{"mode":"codegen","exitCode":1}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/provision.stderr
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/provision.stdout
+{"operation":"provisioned-disposable-auth-target","projectId":3135311,"deploymentName":"helpful-iguana-708","type":"dev","kind":"cloud","isolationVerified":true}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/qualification-41.command.json
+{
+  "argv": [
+    "node",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/qualify.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "commandLocalEnvironment": {
+    "NODE_USE_ENV_PROXY": "1",
+    "CORTEX_QUALIFICATION_TARGET_RECEIPT": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/target.json",
+    "CORTEX_QUALIFICATION_DEPLOY_ENV": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/deploy.env"
+  },
+  "startedAt": "2026-10-03T14:20:56.946766+00:00",
+  "status": "COMPLETED",
+  "endedAt": "2026-10-03T14:21:46.293342+00:00",
+  "exitCode": 1
+}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/qualification-41.stderr
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/qualification-41.stdout
+{"status":"FAIL","discovered":41,"passed":39}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/retirement.command.json
+{
+  "argv": [
+    "node",
+    "work/backend-runtime/retire-qualification-auth.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "commandLocalEnvironment": {
+    "NODE_USE_ENV_PROXY": "1",
+    "CORTEX_QUALIFICATION_TARGET_RECEIPT": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/target.json",
+    "CORTEX_QUALIFICATION_DEPLOY_ENV": "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/deploy.env"
+  },
+  "startedAt": "2026-10-03T14:22:55.701839+00:00",
+  "status": "COMPLETED",
+  "endedAt": "2026-10-03T14:22:56.117926+00:00",
+  "exitCode": 0
+}
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/retirement.stderr
+
+
+RAW _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/execution/retirement.stdout
+{"operation":"retire-owned-qualification-auth-project","projectId":3135311,"deploymentName":"helpful-iguana-708","status":"PASS","deletionHttpStatus":200,"absentProjectHttpStatus":404}
+

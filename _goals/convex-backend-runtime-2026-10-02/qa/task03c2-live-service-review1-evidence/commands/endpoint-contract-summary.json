@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python",
+    "-c",
+    "from pathlib import Path;import json,collections;m=json.loads(Path(\"/tmp/task03c2-live-service-review-gkwkb7lc/source-context/original41-independent-requirement-mapping.json\").read_text());print(\"COUNT\",len(m));print(\"GROUPS\",dict(collections.Counter(x[\"path\"].split(\":\")[0] for x in m)));print(\"VISIBILITY\",dict(collections.Counter(x[\"visibility\"] for x in m)));[(print(x[\"path\"],x[\"visibility\"],x[\"requiredCapability\"])) for x in m]"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-03T14:38:01.475975+00:00",
+  "endUtc": "2026-10-03T14:38:01.497354+00:00",
+  "exit": 0,
+  "environment": "inherited for read-only context command; no env dump"
+}

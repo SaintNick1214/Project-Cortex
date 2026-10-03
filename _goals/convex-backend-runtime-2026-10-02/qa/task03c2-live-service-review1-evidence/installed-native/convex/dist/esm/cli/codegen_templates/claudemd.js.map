@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/cli/codegen_templates/claudemd.ts"],
+  "sourcesContent": ["import { convexAiMarkdownBody } from \"./agentsmd.js\";\n\n/**\n * Markers delimiting the Convex-managed section in CLAUDE.md.\n * Everything outside this block is user-owned and left untouched.\n */\nexport const CLAUDE_MD_START_MARKER = \"<!-- convex-ai-start -->\";\nexport const CLAUDE_MD_END_MARKER = \"<!-- convex-ai-end -->\";\n\n/**\n * Returns the Convex section to inject into CLAUDE.md.\n */\nexport function claudeMdConvexSection(convexDir: string): string {\n  return `${CLAUDE_MD_START_MARKER}\n\n${convexAiMarkdownBody(convexDir)}\n\n${CLAUDE_MD_END_MARKER}`;\n}\n"],
+  "mappings": ";AAAA,SAAS,4BAA4B;AAM9B,aAAM,yBAAyB;AAC/B,aAAM,uBAAuB;AAK7B,gBAAS,sBAAsB,WAA2B;AAC/D,SAAO,GAAG,sBAAsB;AAAA;AAAA,EAEhC,qBAAqB,SAAS,CAAC;AAAA;AAAA,EAE/B,oBAAoB;AACtB;",
+  "names": []
+}

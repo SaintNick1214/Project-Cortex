@@ -1,0 +1,104 @@
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/ci-followups/qa-only-ci-20261003/summary.json
+{
+  "observedAt": "2026-10-03T14:28:45.353317+00:00",
+  "head": "a1dcb487a732407d0cc15c2dd99835810ee579be",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "Packed package and browser contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T14:25:50Z",
+      "completed_at": "2026-10-03T14:26:17Z"
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/basic)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T14:25:50Z",
+      "completed_at": "2026-10-03T14:26:29Z"
+    },
+    {
+      "name": "Neo4j and Memgraph contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T14:25:51Z",
+      "completed_at": "2026-10-03T14:26:42Z"
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/chat-sdk-quickstart)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T14:25:50Z",
+      "completed_at": "2026-10-03T14:27:34Z"
+    },
+    {
+      "name": "Detect File Changes",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T14:25:50Z",
+      "completed_at": "2026-10-03T14:26:11Z"
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/vercel-ai-quickstart)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T14:25:50Z",
+      "completed_at": "2026-10-03T14:27:23Z"
+    },
+    {
+      "name": "Build demo (packages/vercel-ai-provider/quickstart)",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T14:25:51Z",
+      "completed_at": "2026-10-03T14:27:35Z"
+    },
+    {
+      "name": "Deploy & Purge Database",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-03T14:26:11Z",
+      "completed_at": "2026-10-03T14:26:11Z"
+    },
+    {
+      "name": "Test TypeScript SDK (Shard ${{ matrix.shard }}/5)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-03T14:26:11Z",
+      "completed_at": "2026-10-03T14:26:11Z"
+    },
+    {
+      "name": "Code Quality (Lint & Type Check)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-03T14:26:11Z",
+      "completed_at": "2026-10-03T14:26:11Z"
+    },
+    {
+      "name": "Test Cortex CLI",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-03T14:26:11Z",
+      "completed_at": "2026-10-03T14:26:11Z"
+    },
+    {
+      "name": "Test Vercel AI Provider",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-03T14:26:11Z",
+      "completed_at": "2026-10-03T14:26:11Z"
+    },
+    {
+      "name": "All Checks Passed",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-03T14:27:37Z",
+      "completed_at": "2026-10-03T14:27:40Z"
+    }
+  ],
+  "coverage": "QA-only path filter skips lint/types, SDK shards, CLI/provider and deployment. Package/browser, graph and demo builds are actual passing affected checks. Not full core/module/service/UI acceptance.",
+  "fullGoalPass": false
+}
+

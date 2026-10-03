@@ -1,0 +1,31 @@
+{
+  "records": 496,
+  "actual47": 47,
+  "frozen58": 58,
+  "sdkRows": 199,
+  "checks": 364,
+  "mismatches": [],
+  "omissions": [
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/initial-direct-provisioning-observation.json"
+    },
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/report.md"
+    },
+    {
+      "kind": "non-file-original-label",
+      "original": "coordinator-auth-service-receipt",
+      "canonical": "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service/source-bindings.json"
+    }
+  ],
+  "changed": null,
+  "git": {
+    "head": "a1dcb487a732407d0cc15c2dd99835810ee579be\n",
+    "status": " M convex-dev/facts.ts\n M convex-dev/memories.ts\n M convex-dev/schema.ts\n?? convex-dev/runtimeDataAuth.ts\n?? tests/unit/runtimeEndpointAuth/\n",
+    "headSignature": "a1dcb487a732407d0cc15c2dd99835810ee579be E test(qa): record actual auth service failure and exact target retirement\n"
+  }
+}

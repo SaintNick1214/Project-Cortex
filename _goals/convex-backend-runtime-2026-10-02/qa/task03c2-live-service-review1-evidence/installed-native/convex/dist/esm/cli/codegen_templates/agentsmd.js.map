@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/cli/codegen_templates/agentsmd.ts"],
+  "sourcesContent": ["export const AGENTS_MD_START_MARKER = \"<!-- convex-ai-start -->\";\nexport const AGENTS_MD_END_MARKER = \"<!-- convex-ai-end -->\";\n\nexport function convexAiMarkdownBody(convexDir: string): string {\n  const normalizedConvexDir = convexDir.replaceAll(\"\\\\\", \"/\");\n  return `This project uses [Convex](https://convex.dev) as its backend.\n\nWhen working on Convex code, **always read\n\\`${normalizedConvexDir}/_generated/ai/guidelines.md\\` first** for important guidelines on\nhow to correctly use Convex APIs and patterns. The file contains rules that\noverride what you may have learned about Convex from training data.\n\nConvex agent skills for common tasks can be installed by running\n\\`npx convex ai-files install\\`.`;\n}\n\n/**\n * Returns the Convex section to inject into AGENTS.md.\n * The section is delimited by markers so it can be identified and updated\n * without clobbering any user-written content in the file.\n */\nexport function agentsMdConvexSection(convexDir: string): string {\n  return `${AGENTS_MD_START_MARKER}\n\n${convexAiMarkdownBody(convexDir)}\n\n${AGENTS_MD_END_MARKER}`;\n}\n"],
+  "mappings": ";AAAO,aAAM,yBAAyB;AAC/B,aAAM,uBAAuB;AAE7B,gBAAS,qBAAqB,WAA2B;AAC9D,QAAM,sBAAsB,UAAU,WAAW,MAAM,GAAG;AAC1D,SAAO;AAAA;AAAA;AAAA,IAGL,mBAAmB;AAAA;AAAA;AAAA;AAAA;AAAA;AAMvB;AAOO,gBAAS,sBAAsB,WAA2B;AAC/D,SAAO,GAAG,sBAAsB;AAAA;AAAA,EAEhC,qBAAqB,SAAS,CAAC;AAAA;AAAA,EAE/B,oBAAoB;AACtB;",
+  "names": []
+}

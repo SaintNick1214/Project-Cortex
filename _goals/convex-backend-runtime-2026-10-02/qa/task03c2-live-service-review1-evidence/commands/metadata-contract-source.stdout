@@ -1,0 +1,421 @@
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03b2a/contracts.md
+# Task03B2A bounded metadata endpoint contract v1
+
+This candidate closes only the reviewed inventory's immutable12/mutable11/users8/sessions10 paths:36 public guards and5 internal maintenance registrations. Task03 and all17 top-level tasks remain ongoing. This contract consumes reviewed03A generic authority only; no pending memory/fact or governance helper is imported. Detached reviewed base is2edd9435a545ecf0f1e3315fe7ae37c22c7b0623.
+
+## Identity, capability and exact scope
+
+Every public handler invokes `runtimeAuth.requireAuthority` through the owned helper with only tenantId/memorySpaceId selectors and its explicit read or write capability. Verified exact issuer/subject, operator principals/memberships/grants, immutable grant generations, scope epochs and retained fences govern admission. Admin implies neither read nor write. Public data/metadata/user profiles cannot mint authority. Public actor labels must match the trusted metadataUserId binding; omitted labels derive it. Own user-profile IDs must equal that binding. Explicit space/tenant access permits cross-principal metadata, with canonical owner still required on every row.
+
+A generic tenant grant may authorize undefined-space metadata. Its omitted memorySpaceId selects exactly undefined-space rows, never all spaces. A concrete grant derives its one space when selectors are omitted. A tenant grant explicitly selecting memorySpaceId pins that registered space/epoch and selects its exact rows. Ambiguous omitted grants/tenants deny. All modern APIs now accept optional tenantId/memorySpaceId selectors. No orphan fallback or ownership adoption exists.
+
+`by_runtime_key` is immutable[tenantId,memorySpaceId,type,id], mutable[tenantId,memorySpaceId,namespace,key], sessions[tenantId,memorySpaceId,sessionId]. Canonical key lookups filter own ownerPrincipalId in the database before hydration and use unique lookup. An exact scoped existence-only conflict query rejects foreign/missing-owner or duplicate canonical keys without using their private fields. This existence check is not a data-return path. `by_runtime_scope`[tenantId,memorySpaceId,ownerPrincipalId] constrains list/search/count/bulk candidates before collect/pagination/count; space/tenant grants omit only its owner suffix. Missing owners and typed row tombstones are filtered before materialization. Control tombstones exclude otherwise retained candidates before data/history/search use. Every permitted row is rechecked through its canonical resource before private use/effect/commit.
+
+## Independent reads and write receipts
+
+Mutations pre-admit independent READ for every target before writes. A distinct tenant READ plus concrete space WRITE is supported. Ineligible READ at initial admission (including a standalone already expired READ, stale scope or own READ for another owner) leaves a valid WRITE capable of returning a safe receipt. The adapter never catches an admitted READ failure or downgrades it to a receipt.
+
+Hydrated mutation results require final pinned READ and WRITE checks. `finalChecks` reloads grants, rechecks every reference/resource in the same mutation and synchronously checks all captured expiry deadlines after the final awaited control read. Convex transactional snapshots supply control-record consistency; the synchronous deadline check handles wall-clock expiry during awaits. Receipts similarly require current final WRITE. Store/update/transaction write-only responses contain caller-supplied selectors and a created database ID only for a newly created record. Bulk write-only responses contain authorized counts, with no unsupplied IDs/keys, private prior value, versions or history.
+
+Transactions authorize and validate the entire batch before its first write, simulate repeated-key numeric operations, reject invalid numeric operands/nonfinite results/undefined replacement values and forbid delete-then-recreate of a retained key. Native mutation rollback is represented by the owned02B-derived fixture's transaction snapshots, and tests assert both zero partial writes after preflight failure and rollback after a later lifecycle failure. Functional increment zero remains zero. Authorized mutable metadata retains explicit-null clearing semantics. Immutable versions/history/purgeVersions remain public authorized operations; keepLatest is a positive safe integer.
+
+## Deletion and source identity
+
+Public deletion retains typed row tombstonedAt and runtimeAuthTombstones; it never deletes control authority or resets fences. New store/set/version generation cannot reuse a fenced ID. Lists/counts/search exclude fences. User deletion affects only the authorized immutable user row. The two purgeAll registrations are trusted deployment-operator internal mutations, retain row/control tombstones and do not expose a global destructive public endpoint. This is fresh-install behavior, with no existing-data migration.
+
+Frozen exported identity function:
+
+```ts
+sourceId(table: "immutable" | "mutable" | "sessions", first: string, second?: string): string
+// immutable: `${"immutable"}:${JSON.stringify([type,id])}`
+// mutable: `${"mutable"}:${JSON.stringify([namespace,key])}`
+// sessions: `${"session"}:${JSON.stringify([sessionId])}`
+```
+
+All three use supported03A resourceType `source`; tenantId and optional memorySpaceId are separate canonical scope fields. JSON array encoding disambiguates colons, percent signs, quotes and unicode. Parent-approved MF integration must replace intermediate `immutable:${type}:${id}`/`mutable:${namespace}:${key}` source-link key construction with this identical contract and check canonical scoped row tombstonedAt. That integration remains separately reviewed; this candidate neither imports nor changes pending MF code, and it does not claim linked MF compatibility before that bridge.
+
+## Sessions and background maintenance
+
+Application sessionId is unique within exact tenant/optional-space scope; create rejects collisions and derives canonical owner/user label. Public create never accepts a reference credential. It stores a server-built immutable authorityReference and strips that internal reference from every public session read/create/list response. End/endAll are application state changes and never revoke trusted grants. Touch cannot restore ended or expired sessions.
+
+expireIdle/incrementMessageCount/incrementMemoryCount are internal mutations. Internal arguments carry a trusted stored reference, not a JWT. Every target must have exactly the same stored immutable reference, canonical scope/owner/resource and active current write authority. Every read/effect/commit rechecks it; expiry validates all targets before effects. Counters reject malformed/overflowing counts and cannot modify ended/expired sessions. Expired/deleted/revoked references cannot bypass a same-ID record in another scope.
+
+## Evidence and remaining gates
+
+`check-receipts.json` contains exact argv/cwd/UTC start/end/exit codes. `checks/` contains unfiltered output. `source-hashes.json` pins candidate schema/backend/tests. `catalog/public-path-inventory.json` is an owned import-aware AST derivative of reviewed03A, limited to this41-path scope; reviewed03A baseline files are unchanged. `framework-registration.json` observes real installed Convex registrations and validators. No codegen/SDK/package build/pack, dependency changes, stage/commit/push/deploy/model call or production mutation occurred.
+
+The registered-handler tests and native registration probe are offline evidence. Actual managed JWT transport/subscriptions/private bytes/callbacks/deployment are03C2 and later tasks, not an offline Task03 PASS. SDK adaptation is03C2/09: full-root types currently report five introduced consumer diagnostics, preserved unfiltered in checks/full-root-types.log and classified in unsupported-downstream-boundaries.json. The baseline in-memory HEAD compiler-host comparison has no diagnostics. Scoped backend/test strict types, scoped lint, selected Jest and exact registration probes must pass separately. Fresh independent judgment and parent integration are pending.
+
+
+## Cycle2 repair clarification
+
+The first independent review rejected cycle1 (3.0/5). Its source, QA, raw probes and69-record preservation manifest remain unchanged in history/cycle1-final/. Cycle2 adds50 outcome regressions while retaining the original139 assertions unchanged.
+
+Independent READ admission now applies user-profile eligibility using each candidate READ grant's resourceAccess and the trusted metadata user binding, including new immutable targets before insertion. An own READ for Bob's profile is ineligible even when explicit space WRITE created that profile under Alice's canonical owner. That WRITE returns a safe receipt. Explicit space/tenant READ can still hydrate cross-principal profiles. Final hydrated response delivery reasserts profile eligibility; admitted READ failures still abort. Own-profile candidate eligibility is also a database predicate before collect, so a Bob profile is not hydrated and then discarded by Alice's own READ list.
+
+All list/bulk candidates now run scoped existence-only canonical-key uniqueness checks before callers can begin effects. Duplicates owned by the same principal, a foreign principal or a missing owner deny preflight. Tests count attempted writes independently of transaction rollback and require zero attempts for these cases across immutable/mutable purges and session endAll/expireIdle.
+
+Session create/touch/counter paths synchronously revalidate application expiry/state immediately after the last awaited authority check before effects and again after final awaited checks before return. An expiry crossing a pre-effect await produces zero write attempts; crossing a post-effect check aborts with rollback. End/endAll/idle-expiry are terminal maintenance paths and may end expired sessions without restoring active state.
+
+Background session reference checks additionally bind the canonical row's ownerPrincipalId, trusted userId, tenantId and exact optional memorySpaceId to the creator authority resolved from the stored immutable reference. The reference identifies the trusted versioned actor principal; broad space/tenant resource access never substitutes for that owner/user relationship. Supplied and stored references must still match every immutable reference field. No new actor/schema column or public reference argument was introduced.
+
+Numeric increment/decrement defaults apply only to undefined, so explicit null is invalid before writes. Immutable store requires a positive safe current version and rejects overflow before patching; MAX_SAFE_INTEGER-1 may increment exactly to MAX_SAFE_INTEGER, which cannot be incremented again.
+
+Cycle2 strict backend/source/test types, lint, retained+added tests, discovery, exact AST/native41=36+5 probes, archive verification and19 replayed observations pass. Full-root remains an honest FAIL with the identical five downstream SDK consumer diagnostics and zero baseline diagnostics. The source-key integration bridge, SDK adaptation, independent cycle2 judgment and actual managed-service03C2 gates remain pending.
+
+## Cycle3 compiler and evidence repair
+
+Cycle2 independent review found no repaired behavior failure across189 retained tests,19 original observations and151 new boundary outcomes, but withheld PASS for two ES2021-incompatible Array.at calls and an ordinary test that rewrote retained inventory evidence. Cycle3 changes only immutable/users timestamp final-index selection and registrations.test.ts disposable inventory output. Endpoint arguments, visibility, scope, ownership, effects and response shapes are unchanged. Both timestamp handlers retain null for a missing row or no qualifying version and select the last qualifying version otherwise.
+
+The actual unchanged convex-dev/tsconfig.json ES2021 project now passes `node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --pretty false`. The narrow backend project inherits that library and the narrow test project explicitly uses ES2021. Ordinary Jest writes its AST output into an OS mkdtemp directory and removes it in finally. Cycle3 evidence proves the retained catalog bytes are unchanged by that test run and no temporary directory remains. An explicit QA inventory command then updates canonical source hashes for the new candidate.
+
+Cycle3 retains189 passing tests with identical test names and zero skips, adds only a separate14-outcome timestamp executor probe, preserves exact41=36+5 registration/dispositions and native validators, and verifies all69 cycle1 plus101 cycle2 archived records unchanged. The actual backend/scoped compiler gates, lint, discovery, AST/native probes and diff checks pass. Full-root remains the identical five downstream diagnostics, with zero virtual-baseline diagnostics. Cycle3 fresh independent judgment, parent integration, the separately reviewed MF source-key bridge and managed-service03C2 gates remain pending. Offline evidence does not establish whole Task03 PASS.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMetadataAuth.ts
+/** Verified generic metadata authority; deliberately independent of memory/fact adapters. */
+import { ConvexError, v } from "convex/values";
+import type { MutationCtx, QueryCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability, RuntimeResource } from "../src/auth/verified";
+import { createAuthorityReader, requireAuthority, recheckAuthority } from "./runtimeAuth";
+
+export const scopeArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
+export interface ScopeSelectors { tenantId?: string; memorySpaceId?: string }
+export type MetadataTable = "immutable" | "mutable" | "sessions";
+export type MetadataRow = Doc<"immutable"> | Doc<"mutable"> | Doc<"sessions">;
+type ReadCtx = Pick<QueryCtx, "db" | "auth">;
+export function denied(): never { throw new ConvexError({ code: "FORBIDDEN", message: "Access denied" }); }
+export function invalid(): never { throw new ConvexError({ code: "INVALID_INPUT", message: "Invalid metadata input" }); }
+export function nonempty(...values: string[]): void { if (values.some((value) => !value.trim())) invalid(); }
+export function page(value: number | undefined, fallback: number): number {
+  const result = value ?? fallback;
+  if (!Number.isSafeInteger(result) || result < 0) invalid();
+  return result;
+}
+/** Frozen v1 linked-source key: JSON array encoding is unambiguous for arbitrary strings. */
+export function sourceId(table: MetadataTable, first: string, second?: string): string {
+  return `${table === "sessions" ? "session" : table}:${JSON.stringify(second === undefined ? [first] : [first, second])}`;
+}
+export function resource(table: MetadataTable, row: MetadataRow): RuntimeResource {
+  if (!row.tenantId || !row.ownerPrincipalId) denied();
+  const id = "type" in row ? sourceId(table, row.type, row.id)
+    : "namespace" in row ? sourceId(table, row.namespace, row.key) : sourceId(table, row.sessionId);
+  return { resourceType: "source", resourceId: id, tenantId: row.tenantId,
+    memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId };
+}
+export async function authority(ctx: ReadCtx, capability: RuntimeCapability, selectors: ScopeSelectors): Promise<RuntimeAuthority> {
+  return await requireAuthority(ctx, { capability, tenantId: selectors.tenantId, memorySpaceId: selectors.memorySpaceId });
+}
+export function actor(authority: RuntimeAuthority, userId?: string): void {
+  if (userId !== undefined && userId !== authority.userId) denied();
+}
+function profileEligible(authority: Pick<RuntimeAuthority, "resourceAccess" | "userId">, type: string, id: string): boolean {
+  return type !== "user" || authority.resourceAccess !== "own" || id === authority.userId;
+}
+export function profile(authority: RuntimeAuthority, type: string, id: string): void {
+  if (!profileEligible(authority, type, id)) denied();
+}
+export async function check(ctx: Pick<QueryCtx, "db">, table: MetadataTable, row: MetadataRow,
+  auth: RuntimeAuthority, capability: RuntimeCapability): Promise<RuntimeAuthority> {
+  if (row.tombstonedAt !== undefined) denied();
+  if ("type" in row) profile(auth, row.type, row.id);
+  await finalChecks(ctx, [{ auth, capability, resource: resource(table, row) }]);
+  return auth;
+}
+function deadline(grant: { expiresAt?: number } | null): void {
+  if (!grant || (grant.expiresAt !== undefined && (!Number.isFinite(grant.expiresAt) || Date.now() >= grant.expiresAt))) denied();
+}
+/** Transaction snapshot control checks plus synchronous lifetime check after the final await. */
+export async function finalChecks(ctx: Pick<QueryCtx, "db">, checks: Array<{ auth: RuntimeAuthorityReference; capability: RuntimeCapability; resource?: RuntimeResource }>): Promise<void> {
+  const grants = await Promise.all(checks.map(({ auth }) => createAuthorityReader(ctx).getGrant(auth.grantId)));
+  for (const { auth, capability, resource: target } of checks) await recheckAuthority(ctx, auth,
+    target ? { capability, resource: target } : { capability, tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId });
+  for (const grant of grants) deadline(grant);
+}
+export async function fresh(ctx: Pick<QueryCtx, "db">, auth: RuntimeAuthority, capability: RuntimeCapability): Promise<void> {
+  await finalChecks(ctx, [{ auth, capability }]);
+}
+export function canonicalFields(auth: RuntimeAuthority) {
+  return { tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId, userId: auth.userId };
+}
+export async function newResource(ctx: Pick<QueryCtx, "db">, auth: RuntimeAuthority, id: string): Promise<void> {
+  await recheckAuthority(ctx, auth, { capability: "write", resource: { resourceType: "source", resourceId: id,
+    tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId } });
+}
+/** Existence-only canonical-key preflight, including foreign/missing-owner duplicates. */
+async function uniqueKey(ctx: Pick<QueryCtx, "db">, table: MetadataTable, row: MetadataRow): Promise<void> {
+  let conflict: MetadataRow | null;
+  if (table === "immutable" && "type" in row) conflict = await ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("type", row.type).eq("id", row.id))
+    .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  else if (table === "mutable" && "namespace" in row) conflict = await ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("namespace", row.namespace).eq("key", row.key))
+    .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  else if (table === "sessions" && "sessionId" in row) conflict = await ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("sessionId", row.sessionId))
+    .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  else denied();
+  if (conflict) denied();
+}
+/** Query candidates are narrowed by trusted scope and owner BEFORE collect/take/count. */
+export function candidates(ctx: Pick<QueryCtx, "db">, table: "immutable", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"immutable">[]>;
+export function candidates(ctx: Pick<QueryCtx, "db">, table: "mutable", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"mutable">[]>;
+export function candidates(ctx: Pick<QueryCtx, "db">, table: "sessions", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"sessions">[]>;
+export async function candidates(ctx: Pick<QueryCtx, "db">, table: MetadataTable,
+  auth: RuntimeAuthority, capability: RuntimeCapability): Promise<MetadataRow[]> {
+  const query = ctx.db.query(table).withIndex("by_runtime_scope", (q) => {
+    const scoped = q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId);
+    return auth.resourceAccess === "own" ? scoped.eq("ownerPrincipalId", auth.principalId) : scoped;
+  }).filter((q) => q.and(q.eq(q.field("tombstonedAt"), undefined), q.neq(q.field("ownerPrincipalId"), undefined),
+    auth.resourceAccess === "own" && table === "immutable"
+      ? q.or(q.neq(q.field("type"), "user"), q.eq(q.field("id"), auth.userId))
+      : q.neq(q.field("ownerPrincipalId"), undefined)));
+  const rows = await query.collect();
+  // Complete canonical uniqueness preflight before any caller can begin bulk effects.
+  for (const row of rows) await uniqueKey(ctx, table, row);
+  const result: MetadataRow[] = [];
+  for (const row of rows) {
+    const target = resource(table, row);
+    const reader = createAuthorityReader(ctx);
+    // Retained control fences exclude rows even when an older row has not been scrubbed yet.
+    if (await reader.hasTombstone({ ...target, tenantId: auth.tenantId })
+      || (row.memorySpaceId !== undefined && await reader.hasTombstone({ ...target, tenantId: auth.tenantId, memorySpaceId: undefined }))) continue;
+    if ("type" in row && row.type === "user" && auth.resourceAccess === "own" && row.id !== auth.userId) continue;
+    await check(ctx, table, row, auth, capability);
+    result.push(row);
+  }
+  await fresh(ctx, auth, capability);
+  return result;
+}
+/** Exact scoped lookup first obtains canonical identity, never a global first match. */
+export async function immutableRow(ctx: ReadCtx, auth: RuntimeAuthority, type: string, id: string, capability: RuntimeCapability) {
+  nonempty(type, id); profile(auth, type, id);
+  const selected = ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("type", type).eq("id", id));
+  const rows = await selected.filter((q) => auth.resourceAccess === "own"
+    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
+  if (rows.length > 1) denied();
+  const row = rows[0] ?? null;
+  if (await ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("type", type).eq("id", id)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+  if (row) await check(ctx, "immutable", row, auth, capability); else await fresh(ctx, auth, capability);
+  return row;
+}
+export async function mutableRow(ctx: ReadCtx, auth: RuntimeAuthority, namespace: string, key: string, capability: RuntimeCapability) {
+  nonempty(namespace, key);
+  const selected = ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("namespace", namespace).eq("key", key));
+  const rows = await selected.filter((q) => auth.resourceAccess === "own"
+    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
+  if (rows.length > 1) denied();
+  const row = rows[0] ?? null;
+  if (await ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("namespace", namespace).eq("key", key)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+  if (row) await check(ctx, "mutable", row, auth, capability); else await fresh(ctx, auth, capability);
+  return row;
+}
+export async function sessionRow(ctx: ReadCtx, auth: RuntimeAuthority, sessionId: string, capability: RuntimeCapability) {
+  nonempty(sessionId);
+  const selected = ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("sessionId", sessionId));
+  const rows = await selected.filter((q) => auth.resourceAccess === "own"
+    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
+  if (rows.length > 1) denied();
+  const row = rows[0] ?? null;
+  if (await ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+    q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("sessionId", sessionId)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+  if (row) await check(ctx, "sessions", row, auth, capability); else await fresh(ctx, auth, capability);
+  return row;
+}
+export async function tombstone(ctx: MutationCtx, table: MetadataTable, row: MetadataRow): Promise<void> {
+  const target = resource(table, row);
+  const key = { resourceType: target.resourceType, resourceId: target.resourceId,
+    tenantId: row.tenantId!, memorySpaceId: row.memorySpaceId };
+  if (!await createAuthorityReader(ctx).hasTombstone(key)) await ctx.db.insert("runtimeAuthTombstones", { ...key, deletedAt: Date.now() });
+  if (row.tombstonedAt === undefined) {
+    if (table === "immutable" && "type" in row) await ctx.db.patch("immutable", row._id, { tombstonedAt: Date.now() });
+    else if (table === "mutable" && "namespace" in row) await ctx.db.patch("mutable", row._id, { tombstonedAt: Date.now() });
+    else if (table === "sessions" && "sessionId" in row) await ctx.db.patch("sessions", row._id, { tombstonedAt: Date.now() });
+  }
+}
+/** Admit eligible READ before mutation; an admitted READ failure never becomes a receipt. */
+export async function readResourceAuthority(ctx: ReadCtx, auth: RuntimeAuthority, target: RuntimeResource, profileKey?: { type: string; id: string }): Promise<RuntimeAuthority | undefined> {
+  const grants = await createAuthorityReader(ctx).listGrants(auth.membershipId);
+  const configured = grants.some((grant) => grant.principalId === auth.principalId && grant.tenantId === auth.tenantId
+    && grant.revokedAt === undefined && grant.deletedAt === undefined && Number.isSafeInteger(grant.version) && grant.version > 0
+    && (grant.expiresAt === undefined || (Number.isFinite(grant.expiresAt) && Date.now() < grant.expiresAt)) && grant.capabilities.includes("read")
+    && (grant.memorySpaceId === undefined || grant.memorySpaceId === target.memorySpaceId)
+    && grant.tenantEpoch === auth.tenantEpoch
+    && (grant.memorySpaceId === undefined || grant.memorySpaceEpoch === auth.memorySpaceEpoch)
+    && (grant.resourceAccess !== "own" || target.ownerPrincipalId === auth.principalId)
+    && (!profileKey || profileEligible({ resourceAccess: grant.resourceAccess, userId: auth.userId }, profileKey.type, profileKey.id))
+    && (grant.resourceAccess !== "space" || (grant.memorySpaceId !== undefined && grant.memorySpaceId === target.memorySpaceId))
+    && (grant.resourceAccess !== "tenant" || grant.memorySpaceId === undefined));
+  if (!configured) return undefined;
+  const read = await requireAuthority(ctx, { capability: "read", resource: target });
+  if (profileKey) profile(read, profileKey.type, profileKey.id);
+  return read;
+}
+export async function readAuthority(ctx: ReadCtx, auth: RuntimeAuthority, table: MetadataTable, row: MetadataRow) {
+  return await readResourceAuthority(ctx, auth, resource(table, row), "type" in row ? { type: row.type, id: row.id } : undefined);
+}
+export function newTarget(auth: RuntimeAuthority, id: string): RuntimeResource {
+  return { resourceType: "source", resourceId: id, tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId };
+}
+export async function response<T, R>(ctx: ReadCtx, auth: RuntimeAuthority, table: MetadataTable, row: MetadataRow,
+  read: RuntimeAuthority | undefined, hydrated: () => T, receipt: () => R): Promise<T | R> {
+  const target = resource(table, row);
+  if (row.tombstonedAt !== undefined) denied();
+  await finalChecks(ctx, [{ auth, capability: "write", resource: target }, ...(read ? [{ auth: read, capability: "read" as const, resource: target }] : [])]);
+  if (read && "type" in row) profile(read, row.type, row.id);
+  return read ? hydrated() : receipt();
+}
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/sessions.ts
+/** Application sessions use verified metadata scope. Ending a session never revokes a runtime grant. */
+import { ConvexError, v } from "convex/values";
+import { mutation, query, internalMutation } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import type { RuntimeAuthority, RuntimeAuthorityReference } from "../src/auth/verified";
+import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+import { recheckAuthority } from "./runtimeAuth";
+import { scopeArgs, authority, actor, sessionRow, candidates, check, fresh, finalChecks, canonicalFields, newResource, sourceId,
+  readAuthority, readResourceAuthority, newTarget, resource, response, page, invalid, denied } from "./runtimeMetadataAuth";
+const keyArgs = { sessionId: v.string(), ...scopeArgs };
+const filterArgs = { ...scopeArgs, userId: v.optional(v.string()), status: v.optional(v.union(v.literal("active"), v.literal("idle"), v.literal("ended"))) };
+function filter(rows: Doc<"sessions">[], args: { userId?: string; status?: string }) { return rows.filter((row) => (args.userId === undefined || row.userId === args.userId) && (args.status === undefined || row.status === args.status)); }
+function activeSession(row: Doc<"sessions">): void {
+  if ((row.status !== "active" && row.status !== "idle") || (row.expiresAt !== undefined
+    && (!Number.isFinite(row.expiresAt) || Date.now() >= row.expiresAt))) denied();
+}
+function creationLifetime(startedAt: number, expiresAt?: number): void {
+  if (!Number.isFinite(startedAt) || (expiresAt !== undefined && (!Number.isFinite(expiresAt) || expiresAt <= Date.now() || expiresAt <= startedAt))) invalid();
+}
+export const create = mutation({ args: { ...keyArgs, userId: v.string(), metadata: v.optional(v.any()), startedAt: v.number(), expiresAt: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); actor(auth, args.userId);
+  creationLifetime(args.startedAt, args.expiresAt);
+  if (await sessionRow(ctx, auth, args.sessionId, "write")) throw new ConvexError("SESSION_ALREADY_EXISTS");
+  const key = sourceId("sessions", args.sessionId); await newResource(ctx, auth, key);
+  const read = await readResourceAuthority(ctx, auth, newTarget(auth, key)); await newResource(ctx, auth, key);
+  const { actorKind: _actorKind, userId: _userId, capabilities: _capabilities, resourceAccess: _resourceAccess, ...reference } = auth;
+  creationLifetime(args.startedAt, args.expiresAt);
+  const id = await ctx.db.insert("sessions", { sessionId: args.sessionId, ...canonicalFields(auth), authorityReference: reference,
+    status: "active", startedAt: args.startedAt, lastActiveAt: args.startedAt, expiresAt: args.expiresAt, metadata: args.metadata, messageCount: 0, memoryCount: 0 });
+  const row = await ctx.db.get("sessions", id); if (!row) throw new ConvexError("SESSION_NOT_FOUND");
+  // Internal maintenance reference is never returned through the public API.
+  const { authorityReference: _reference, ...publicRow } = row;
+  return await response(ctx, auth, "sessions", row, read, () => { activeSession(row); return publicRow; }, () => { activeSession(row); return { createdId: id, sessionId: args.sessionId }; });
+} });
+export const get = query({ args: keyArgs, handler: async (ctx, args) => {
+  const row = await sessionRow(ctx, await authority(ctx, "read", args), args.sessionId, "read");
+  if (!row) return null; const { authorityReference: _reference, ...publicRow } = row; return publicRow;
+} });
+export const touch = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await sessionRow(ctx, auth, args.sessionId, "write"); if (!row) throw new ConvexError("SESSION_NOT_FOUND"); activeSession(row);
+  await check(ctx, "sessions", row, auth, "write"); activeSession(row);
+  await ctx.db.patch("sessions", row._id, { lastActiveAt: Date.now(), status: "active" });
+  await check(ctx, "sessions", row, auth, "write"); activeSession(row);
+} });
+export const end = mutation({ args: keyArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await sessionRow(ctx, auth, args.sessionId, "write"); if (!row) throw new ConvexError("SESSION_NOT_FOUND");
+  await check(ctx, "sessions", row, auth, "write"); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); await check(ctx, "sessions", row, auth, "write");
+} });
+export const endAll = mutation({ args: { ...scopeArgs, userId: v.string() }, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const rows = filter(await candidates(ctx, "sessions", auth, "write"), args).filter((row) => row.status !== "ended");
+  const reads = await Promise.all(rows.map((row) => readAuthority(ctx, auth, "sessions", row)));
+  for (const row of rows) await check(ctx, "sessions", row, auth, "write");
+  for (const row of rows) { await check(ctx, "sessions", row, auth, "write"); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); }
+  await finalChecks(ctx, [{ auth, capability: "write" }, ...reads.flatMap((read, index) => read ? [{ auth: read, capability: "read" as const, resource: resource("sessions", rows[index]!) }] : [])]);
+  return { ended: rows.length, ...(reads.every(Boolean) ? { sessionIds: rows.map((row) => row.sessionId) } : {}) };
+} });
+export const list = query({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const rows = filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args); const offset = page(args.offset, 0);
+  return rows.slice(offset, offset + page(args.limit, 100)).map(({ authorityReference: _reference, ...row }) => row);
+} });
+export const count = query({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args).length });
+function sameReference(a: RuntimeAuthorityReference, b: RuntimeAuthorityReference): boolean {
+  return a.principalId === b.principalId && a.principalVersion === b.principalVersion && a.membershipId === b.membershipId
+    && a.membershipVersion === b.membershipVersion && a.grantId === b.grantId && a.grantVersion === b.grantVersion
+    && a.tenantId === b.tenantId && a.tenantEpoch === b.tenantEpoch && a.memorySpaceId === b.memorySpaceId && a.memorySpaceEpoch === b.memorySpaceEpoch;
+}
+async function backgroundCheck(ctx: MutationCtx, reference: RuntimeAuthorityReference, row: Doc<"sessions">): Promise<RuntimeAuthority> {
+  if (!row.authorityReference || !sameReference(row.authorityReference, reference) || row.tombstonedAt !== undefined) denied();
+  const auth = await recheckAuthority(ctx, row.authorityReference, { capability: "write", resource: resource("sessions", row) });
+  await finalChecks(ctx, [{ auth, capability: "write", resource: resource("sessions", row) }]);
+  // Background effects use the session creator's actor, not breadth of a later space grant.
+  if (row.ownerPrincipalId !== auth.principalId || row.userId !== auth.userId
+    || row.tenantId !== auth.tenantId || row.memorySpaceId !== auth.memorySpaceId) denied();
+  return auth;
+}
+async function backgroundRow(ctx: MutationCtx, reference: RuntimeAuthorityReference, sessionId: string) {
+  const auth = await recheckAuthority(ctx, reference, { capability: "write", tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId });
+  const row = await sessionRow(ctx, auth, sessionId, "write"); if (row) await backgroundCheck(ctx, reference, row); return row;
+}
+const backgroundArgs = { sessionId: v.string(), reference: runtimeAuthorityReference };
+export const incrementMessageCount = internalMutation({ args: backgroundArgs, handler: async (ctx, args) => {
+  const row = await backgroundRow(ctx, args.reference, args.sessionId); if (!row) return; activeSession(row);
+  if (!Number.isSafeInteger(row.messageCount) || row.messageCount < 0 || row.messageCount >= Number.MAX_SAFE_INTEGER) invalid();
+  await backgroundCheck(ctx, args.reference, row); activeSession(row);
+  await ctx.db.patch("sessions", row._id, { messageCount: row.messageCount + 1, lastActiveAt: Date.now() });
+  await backgroundCheck(ctx, args.reference, row); activeSession(row);
+} });
+export const incrementMemoryCount = internalMutation({ args: backgroundArgs, handler: async (ctx, args) => {
+  const row = await backgroundRow(ctx, args.reference, args.sessionId); if (!row) return; activeSession(row);
+  if (!Number.isSafeInteger(row.memoryCount) || row.memoryCount < 0 || row.memoryCount >= Number.MAX_SAFE_INTEGER) invalid();
+  await backgroundCheck(ctx, args.reference, row); activeSession(row);
+  await ctx.db.patch("sessions", row._id, { memoryCount: row.memoryCount + 1, lastActiveAt: Date.now() });
+  await backgroundCheck(ctx, args.reference, row); activeSession(row);
+} });
+export const expireIdle = internalMutation({ args: { reference: runtimeAuthorityReference, idleTimeout: v.number() }, handler: async (ctx, args) => {
+  if (!Number.isFinite(args.idleTimeout) || args.idleTimeout < 0) invalid();
+  const auth = await recheckAuthority(ctx, args.reference, { capability: "write", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
+  const rows = (await candidates(ctx, "sessions", auth, "write")).filter((row) => row.status !== "ended" && row.lastActiveAt < Date.now() - args.idleTimeout);
+  for (const row of rows) await backgroundCheck(ctx, args.reference, row);
+  for (const row of rows) { await backgroundCheck(ctx, args.reference, row); await ctx.db.patch("sessions", row._id, { status: "ended", endedAt: Date.now() }); await backgroundCheck(ctx, args.reference, row); }
+  await fresh(ctx, auth, "write"); return { expired: rows.length };
+} });
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/users.ts
+/** User metadata is immutable data, never a runtime control principal or grant. */
+import { query, mutation } from "./_generated/server";
+import { v } from "convex/values";
+import { versions } from "./immutable";
+import { scopeArgs, authority, immutableRow, candidates, check, fresh, tombstone, page } from "./runtimeMetadataAuth";
+const userArgs = { userId: v.string(), ...scopeArgs };
+export const get = query({ args: userArgs, handler: async (ctx, args) => {
+  const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read");
+  return row ? { id: row.id, data: row.data, version: row.version, createdAt: row.createdAt, updatedAt: row.updatedAt } : null;
+} });
+export const list = query({ args: { ...scopeArgs, limit: v.optional(v.number()) }, handler: async (ctx, args) => {
+  const rows = (await candidates(ctx, "immutable", await authority(ctx, "read", args), "read")).filter((row) => row.type === "user");
+  return rows.slice(0, page(args.limit, rows.length)).map((row) => ({ id: row.id, data: row.data, version: row.version, createdAt: row.createdAt, updatedAt: row.updatedAt }));
+} });
+export const count = query({ args: scopeArgs, handler: async (ctx, args) => (await candidates(ctx, "immutable", await authority(ctx, "read", args), "read")).filter((row) => row.type === "user").length });
+export const getVersion = query({ args: { ...userArgs, version: v.number() }, handler: async (ctx, args) => {
+  const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read"); page(args.version, 1);
+  const version = row ? versions(row).find((value) => value.version === args.version) : undefined;
+  return version ? { version: version.version, data: version.data, timestamp: version.timestamp } : null;
+} });
+export const getHistory = query({ args: userArgs, handler: async (ctx, args) => {
+  const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read");
+  return row ? versions(row).reverse().map((version) => ({ version: version.version, data: version.data, timestamp: version.timestamp })) : [];
+} });
+export const getAtTimestamp = query({ args: { ...userArgs, timestamp: v.number() }, handler: async (ctx, args) => {
+  const row = await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read");
+  const history = row ? versions(row).filter((value) => value.timestamp <= args.timestamp) : [];
+  const version = history[history.length - 1];
+  return version ? { version: version.version, data: version.data, timestamp: version.timestamp } : null;
+} });
+export const exists = query({ args: userArgs, handler: async (ctx, args) => (await immutableRow(ctx, await authority(ctx, "read", args), "user", args.userId, "read")) !== null });
+export const deleteUserProfile = mutation({ args: userArgs, handler: async (ctx, args) => {
+  const auth = await authority(ctx, "write", args); const row = await immutableRow(ctx, auth, "user", args.userId, "write");
+  if (!row) { await fresh(ctx, auth, "write"); return { deleted: false }; }
+  await check(ctx, "immutable", row, auth, "write"); await tombstone(ctx, "immutable", row); await fresh(ctx, auth, "write");
+  return { deleted: true };
+} });
+

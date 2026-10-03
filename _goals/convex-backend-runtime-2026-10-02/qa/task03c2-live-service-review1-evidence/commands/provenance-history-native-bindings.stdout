@@ -1,0 +1,159 @@
+{
+  "sdkGitRows": {
+    "count": 129,
+    "mismatches": []
+  },
+  "tarEntries": {
+    "count": 53,
+    "mismatches": []
+  },
+  "history": [
+    {
+      "cycle": "cycle1",
+      "manifestSha256": "57b40f90400b5d6b52d9656a35194c0a01c7f98e77c8516b2a4f18e224361942",
+      "savedRecords": 280,
+      "mismatches": [],
+      "explicitHistoricalOmissionCount": 199,
+      "historicalOmissionsReread": false
+    },
+    {
+      "cycle": "cycle2-final",
+      "manifestSha256": "2e69693b95c7f2dec576c289fcaa0a8c58259f7c557a2fd691597f7da14a6833",
+      "savedRecords": 1304,
+      "mismatches": [],
+      "explicitHistoricalOmissionCount": 400,
+      "historicalOmissionsReread": false
+    }
+  ],
+  "compilerDependencyCopy": {
+    "regularFiles": 140,
+    "mismatches": [],
+    "installedVersion": "6.0.3"
+  },
+  "officialGeneratedBindings": [
+    {
+      "name": "api.d.ts",
+      "matchesActualOriginal": true
+    },
+    {
+      "name": "api.js",
+      "matchesActualOriginal": true
+    },
+    {
+      "name": "dataModel.d.ts",
+      "matchesActualOriginal": true
+    },
+    {
+      "name": "server.d.ts",
+      "matchesActualOriginal": true
+    },
+    {
+      "name": "server.js",
+      "matchesActualOriginal": true
+    }
+  ],
+  "privateLedger": {
+    "runAndDeploymentMatch": true,
+    "ownedRecords": 17,
+    "attemptedScopes": 8,
+    "operatorOperations": 32,
+    "operationNamesMatchReceipt": true
+  },
+  "serviceCases": {
+    "orderedNames": [
+      "operator-provisioning",
+      "valid-owned-metadata",
+      "missing-identity",
+      "forged-signature",
+      "wrong-issuer",
+      "wrong-audience",
+      "expired-token",
+      "wrong-tenant",
+      "wrong-space",
+      "owner-denied",
+      "explicit-space-read",
+      "admin-alone-read-denied",
+      "admin-alone-write-denied",
+      "ambiguous-omission-denied",
+      "actor-binding-denied",
+      "caller-metadata-no-principal",
+      "public-internal-provision-denied",
+      "public-internal-maintenance-denied",
+      "immutable-delete-read-denied",
+      "immutable-delete-write-denied",
+      "mutable-delete-read-denied",
+      "mutable-delete-write-denied",
+      "negative-effect-counts",
+      "reactive-wrong-tenant",
+      "reactive-wrong-space",
+      "resource-deletion-subscription",
+      "grant-revocation",
+      "principal-deletion",
+      "membership-revocation",
+      "space-deletion",
+      "tenant-deletion",
+      "sdk-metadata-consumers",
+      "sdk-refresh",
+      "sdk-logout",
+      "sdk-labels-no-authority",
+      "background-after-ordinary-logout",
+      "late-credential-fencing",
+      "sanitized-host-callback",
+      "sdk-session-capability",
+      "background-after-revocation",
+      "session-end-not-grant-revocation"
+    ],
+    "multiplicities": {
+      "operator-provisioning": 1,
+      "valid-owned-metadata": 1,
+      "missing-identity": 1,
+      "forged-signature": 1,
+      "wrong-issuer": 1,
+      "wrong-audience": 1,
+      "expired-token": 1,
+      "wrong-tenant": 1,
+      "wrong-space": 1,
+      "owner-denied": 1,
+      "explicit-space-read": 1,
+      "admin-alone-read-denied": 1,
+      "admin-alone-write-denied": 1,
+      "ambiguous-omission-denied": 1,
+      "actor-binding-denied": 1,
+      "caller-metadata-no-principal": 1,
+      "public-internal-provision-denied": 1,
+      "public-internal-maintenance-denied": 1,
+      "immutable-delete-read-denied": 1,
+      "immutable-delete-write-denied": 1,
+      "mutable-delete-read-denied": 1,
+      "mutable-delete-write-denied": 1,
+      "negative-effect-counts": 1,
+      "reactive-wrong-tenant": 1,
+      "reactive-wrong-space": 1,
+      "resource-deletion-subscription": 1,
+      "grant-revocation": 1,
+      "principal-deletion": 1,
+      "membership-revocation": 1,
+      "space-deletion": 1,
+      "tenant-deletion": 1,
+      "sdk-metadata-consumers": 1,
+      "sdk-refresh": 1,
+      "sdk-logout": 1,
+      "sdk-labels-no-authority": 1,
+      "background-after-ordinary-logout": 1,
+      "late-credential-fencing": 1,
+      "sanitized-host-callback": 1,
+      "sdk-session-capability": 1,
+      "background-after-revocation": 1,
+      "session-end-not-grant-revocation": 1
+    },
+    "statusCounts": {
+      "PASS": 39,
+      "FAIL": 1,
+      "BLOCKED": 1
+    },
+    "skipped": 1,
+    "todo": 0,
+    "realLiveReplaysByJudge": 0
+  },
+  "commandsExecutedByThisScript": "Read-only git show and local byte/structure checks; no Node/native execution, service, install, signer or credential file reads"
+}

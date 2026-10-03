@@ -1,0 +1,1077 @@
+
+FILE _research/convex-ai-gateway-2026-10-02/architecture.md:190
+190: 5. Complete CLI/templates/docs, scoped live/UI regressions and independent quality/module audit.
+191: 
+192: Early additive backend installation and text clients precede the later extension tasks. The first slice should prove one authenticated text turn, Cortex recall, a backend tool, reconnect, immediate next-turn continuity and durable ingestion. Media and configurable embedding profiles then build on that same run/security foundation. All approved capabilities remain in the full goal; sequencing is not exclusion.
+193: 
+194: Open technical gates are cross-component transaction/finalization APIs, actual AI SDK 7 tool/stream integration, interrupted execution semantics, Gateway/media eligibility, immutable embedding identifiers, graph runtime/network support and bounded private Convex file delivery. These need bounded prototypes and live evidence; docs/package peers do not certify them.
+195: 
+196: Gateway spend limits can disable the entire deployment; application budgets and distinct operational limits are therefore required. Do not depend on the deployment kill switch as an ordinary inference quota. [Usage and billing](https://docs.convex.dev/ai-gateway/usage-and-billing).
+197: 
+198: No product code changed, dependencies installed, paid models called, tests run, deployments performed or compatibility certified during this architecture research. Implementation remains unauthorized until a later execution request.
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md:120
+120: 
+121: ## HTTP and private-fetch seams
+122: 
+123: Convex 1.46.0's `ConvexHttpClient.setAuth` accepts a static raw token and exposes
+124: `clearAuth`. It has no automatic host getter callback. Use a dedicated HTTP client
+125: and `credentials.withHttpAuth(client, operation, request?)` for each authenticated
+126: invocation. The helper obtains the current token immediately before the operation,
+127: calls `setAuth(token)` or `clearAuth()` for null, and invokes the operation once.
+128: Concurrent operations using the same credential object/client are serialized across
+129: auth attachment and operation completion. Use this helper for all authenticated calls
+130: on that dedicated client; calls outside it or sharing the client among different
+131: credential objects do not participate in its queue.
+132: 
+133: Getter rejection/invalid results cause zero HTTP authentication writes, operation
+134: calls or wire requests. HTTP operation errors propagate unchanged. They do not
+135: refresh and redispatch the operation, and they do not poison later explicit calls.
+136: No silent retry is added for a mutation, paid request or external effect. An explicit
+137: caller request can pass `{ forceRefreshToken: true }` without replaying another call.
+138: 
+139: `getAuthorizationHeaders(request?)` obtains a fresh current host token and returns
+140: `{ Authorization: "Bearer <host JWT>" }`, or `{}` on null. These are auth headers for
+141: one request; never merge a previous Authorization header back into a logout request.
+142: Header creation performs no fetch, follows no redirect and returns no bytes. Task12
+143: must bind actual private fetches to a trusted configured Convex origin/route, reject
+144: untrusted asset URLs and redirects, and enforce independent storage authorization
+145: and the 20,000,000-byte response cap. Never send this bearer credential to a remote
+146: provider, raw storage bearer URL or user-supplied asset origin. Route validation and
+147: private byte lifecycle are intentionally not inferred from a header helper.
+148: 
+149: ## Browser and downstream integration
+150: 
+151: The credential leaf module has only type imports from `convex/browser`. Its bundled
+152: browser implementation has one source input, no Node/provider/backend modules and
+153: no injected credentials. Its browser consumer compiles with `types: []` and only
+154: ES2022/DOM libraries. The root package exports `HostCredentials`, `HostTokenFetcher`
+155: and `HostTokenRequest`, plus `HostAuthFailure`/`HostAuthErrorHandler`. The retained
+156: extracted-package runner now checks the new diagnostic declarations; the coordinator
+157: must rebuild and execute it after this source freeze because shared build ownership
+158: is serialized. Earlier package receipts cover the pre-review source snapshot only.
+159: Task09 can reuse the live bound credential object for thin transports without
+160: reintroducing model keys, token caches or a second client-owned agent loop.
+161: 
+162: Task03C2 must qualify actual signed host JWTs and identity changes against the
+163: verified disposable service: reactive refresh/reconnect, cross-tenant subscription
+164: denial, null/logout identity, forged/expired/missing issuer/audience/signature,
+165: scoped tool execution and grant-revoked/deleted background outcomes. Task12/13 then
+166: provide private byte/upload/storage-reference and authenticated callback negative
+167: cases, trusted route binding and byte-cap outcomes. Mocked constructor tests, actual installed reactive manager/inert WebSocket tests
+168: and HTTP-client requests with synthetic strings are transport plumbing evidence only.
+
+FILE tests/unit/auth/credentials.test.ts:1
+1: import { beforeAll, describe, expect, it, jest } from "@jest/globals";
+2: import { ConvexHttpClient, ConvexClient } from "convex/browser";
+3: import { makeFunctionReference } from "convex/server";
+4: import {
+5:   HostCredentials,
+6:   type HostTokenFetcher,
+7:   type HostTokenRequest,
+8:   type HostAuthFailure,
+9: } from "../../../src/auth/credentials";
+10: 
+11: // Synthetic compact strings test transport plumbing only. No signed identity or
+12: // managed Convex authorization qualification is claimed by this suite.
+13: const firstToken = "header.payload.signatureA";
+14: const refreshedToken = "header.payload.signatureB";
+15: const testQuery = makeFunctionReference<"query", Record<string, never>, string>(
+16:   "test:read",
+17: );
+18: 
+19: function httpFixture() {
+20:   const requests: Array<RequestInit | undefined> = [];
+21:   const fetch: typeof globalThis.fetch = async (_input, init) => {
+22:     requests.push(init);
+23:     return new Response(JSON.stringify({ status: "success", value: "result" }), {
+24:       status: 200,
+25:       headers: { "Content-Type": "application/json" },
+26:     });
+27:   };
+28:   const client = new ConvexHttpClient("https://example.convex.cloud", {
+29:     fetch,
+30:     logger: false,
+31:   });
+32:   return { client, requests };
+33: }
+34: 
+35: describe("HostCredentials", () => {
+36:   it("forwards the exact official force-refresh request and returns changed tokens", async () => {
+37:     let token: string | null = firstToken;
+38:     const getter = jest.fn<HostTokenFetcher>(async () => token);
+39:     const credentials = new HostCredentials(getter);
+40:     const ordinary = { forceRefreshToken: false };
+41:     const forced = { forceRefreshToken: true };
+42: 
+43:     expect(await credentials.fetchToken(ordinary)).toBe(firstToken);
+44:     token = refreshedToken;
+45:     expect(await credentials.fetchToken(forced)).toBe(refreshedToken);
+46:     token = null;
+47:     expect(await credentials.fetchToken(forced)).toBeNull();
+48:     expect(getter.mock.calls.map(([request]) => request)).toEqual([
+49:       ordinary, forced, forced,
+50:     ]);
+51:     expect(getter.mock.calls[0][0]).toBe(ordinary);
+52:     expect(getter.mock.calls[1][0]).toBe(forced);
+53:   });
+54: 
+55:   it.each([undefined, null, "static-token", {}, 42])(
+56:     "rejects a non-function getter (%p) before any client is allocated",
+57:     (getter) => {
+58:       expect(() => new HostCredentials(getter as HostTokenFetcher)).toThrow(
+59:         "fetchAuthToken must be an async function",
+60:       );
+61:     },
+62:   );
+63: 
+64:   it("rejects a synchronous getter result", async () => {
+65:     const getter = (() => firstToken) as unknown as HostTokenFetcher;
+66:     await expect(new HostCredentials(getter).fetchToken({ forceRefreshToken: false }))
+67:       .rejects.toThrow("fetchAuthToken must return a Promise");
+68:   });
+69: 
+70:   it.each([
+71:     undefined, 7, {}, { token: firstToken }, "", " ", "provider-key",
+72:     `Bearer ${firstToken}`, ` ${firstToken}`, `${firstToken}\n`,
+73:     "header.payload.", "header.payload.signature.extra",
+74:   ])("rejects malformed token results (%p) without disclosure or HTTP effects", async (value) => {
+75:     const credentials = new HostCredentials(
+76:       (async () => value) as HostTokenFetcher,
+77:     );
+78:     const { client, requests } = httpFixture();
+79:     const setAuth = jest.spyOn(client, "setAuth");
+80:     const clearAuth = jest.spyOn(client, "clearAuth");
+81:     const operation = jest.fn(async () => "should not run");
+82:     await expect(credentials.withHttpAuth(client, operation)).rejects.toMatchObject({
+83:       name: "TypeError",
+84:       message: "fetchAuthToken must resolve to a raw JWT or null",
+85:     });
+86:     expect(operation).not.toHaveBeenCalled();
+87:     expect(setAuth).not.toHaveBeenCalled();
+88:     expect(clearAuth).not.toHaveBeenCalled();
+89:     expect(requests).toEqual([]);
+90:   });
+91: 
+92:   it("preserves a host getter rejection and never invokes an HTTP operation", async () => {
+93:     const rejection = new Error("host authentication unavailable");
+94:     const credentials = new HostCredentials(async () => { throw rejection; });
+95:     const { client, requests } = httpFixture();
+96:     const setAuth = jest.spyOn(client, "setAuth");
+97:     const clearAuth = jest.spyOn(client, "clearAuth");
+98:     const operation = jest.fn(async () => "should not run");
+99: 
+100:     await expect(credentials.fetchToken({ forceRefreshToken: true }))
+101:       .rejects.toBe(rejection);
+102:     await expect(credentials.withHttpAuth(client, operation)).rejects.toBe(rejection);
+103:     expect(operation).not.toHaveBeenCalled();
+104:     expect(setAuth).not.toHaveBeenCalled();
+105:     expect(clearAuth).not.toHaveBeenCalled();
+106:     expect(requests).toEqual([]);
+107:   });
+108: 
+109:   it("supplies fresh fetch headers, honors forced refresh, and removes auth on null", async () => {
+110:     let token: string | null = firstToken;
+111:     const getter = jest.fn<HostTokenFetcher>(async () => token);
+112:     const credentials = new HostCredentials(getter);
+113:     expect(await credentials.getAuthorizationHeaders()).toEqual({
+114:       Authorization: `Bearer ${firstToken}`,
+115:     });
+116:     token = refreshedToken;
+117:     expect(await credentials.getAuthorizationHeaders({ forceRefreshToken: true }))
+118:       .toEqual({ Authorization: `Bearer ${refreshedToken}` });
+119:     token = null;
+120:     expect(await credentials.getAuthorizationHeaders()).toEqual({});
+121:     expect(getter.mock.calls.map(([request]) => request.forceRefreshToken))
+122:       .toEqual([false, true, false]);
+123:   });
+124: 
+125:   it("propagates a header getter failure instead of returning stale headers", async () => {
+126:     const rejection = new Error("host session expired");
+127:     const credentials = new HostCredentials(async () => { throw rejection; });
+128:     await expect(credentials.getAuthorizationHeaders()).rejects.toBe(rejection);
+129:   });
+130: 
+131:   it("attaches changed JWTs to actual ConvexHttpClient wire requests and clears logout identity", async () => {
+132:     let token: string | null = firstToken;
+133:     const getter = jest.fn<HostTokenFetcher>(async () => token);
+134:     const credentials = new HostCredentials(getter);
+135:     const { client, requests } = httpFixture();
+136:     const operation = (http: ConvexHttpClient) => http.query(testQuery, {});
+137: 
+138:     expect(await credentials.withHttpAuth(client, operation)).toBe("result");
+139:     token = refreshedToken;
+140:     expect(await credentials.withHttpAuth(client, operation, { forceRefreshToken: true }))
+141:       .toBe("result");
+142:     token = null;
+143:     expect(await credentials.withHttpAuth(client, operation)).toBe("result");
+144:     expect(requests.map((request) => new Headers(request?.headers).get("Authorization")))
+145:       .toEqual([`Bearer ${firstToken}`, `Bearer ${refreshedToken}`, null]);
+146:     expect(getter.mock.calls.map(([request]) => request.forceRefreshToken))
+147:       .toEqual([false, true, false]);
+148:   });
+149: 
+150:   it("does not retry an ambiguous operation error and permits the next explicit invocation", async () => {
+151:     const credentials = new HostCredentials(async () => firstToken);
+152:     const { client } = httpFixture();
+153:     const uncertain = new Error("upstream outcome unknown");
+154:     const operation = jest.fn(async () => { throw uncertain; });
+155: 
+156:     await expect(credentials.withHttpAuth(client, operation)).rejects.toBe(uncertain);
+157:     expect(operation).toHaveBeenCalledTimes(1);
+158:     const next = jest.fn(async () => "next explicit request");
+159:     expect(await credentials.withHttpAuth(client, next)).toBe("next explicit request");
+160:     expect(next).toHaveBeenCalledTimes(1);
+161:     expect(operation).toHaveBeenCalledTimes(1);
+162:   });
+163: 
+164:   it("serializes a shared HTTP client without fetching or replacing the next operation's token early", async () => {
+165:     let token = firstToken;
+166:     const getter = jest.fn<HostTokenFetcher>(async () => token);
+167:     const credentials = new HostCredentials(getter);
+168:     const { client, requests } = httpFixture();
+169:     let release!: () => void;
+170:     let entered!: () => void;
+171:     const barrier = new Promise<void>((resolve) => { release = resolve; });
+172:     const started = new Promise<void>((resolve) => { entered = resolve; });
+173:     const first = credentials.withHttpAuth(client, async (http) => {
+174:       entered();
+175:       await barrier;
+176:       return await http.query(testQuery, {});
+177:     });
+178:     await started;
+179:     token = refreshedToken;
+180:     const second = credentials.withHttpAuth(client, (http) => http.query(testQuery, {}));
+181:     await Promise.resolve();
+182:     expect(getter).toHaveBeenCalledTimes(1);
+183:     release();
+184:     expect(await Promise.all([first, second])).toEqual(["result", "result"]);
+185:     expect(requests.map((request) => new Headers(request?.headers).get("Authorization")))
+186:       .toEqual([`Bearer ${firstToken}`, `Bearer ${refreshedToken}`]);
+187:   });
+188: });
+189: 
+190: // Mock only the reactive transport constructor. Domain modules and Cortex's
+191: // constructor execute normally; the captured official callback is invoked below.
+192: class ReactiveClient {
+193:   closed = false;
+194:   readonly client = { hasAuth: () => false, clearAuth: jest.fn() };
+195:   readonly setAuth = jest.fn<ConvexClient["setAuth"]>();
+196:   readonly close = jest.fn(async () => undefined);
+197: }
+198: const reactiveInstances: ReactiveClient[] = [];
+199: const reactiveConstructor = jest.fn((_url: string) => {
+200:   const client = new ReactiveClient();
+201:   reactiveInstances.push(client);
+202:   return client;
+203: });
+204: jest.unstable_mockModule("convex/browser", () => ({
+205:   ConvexClient: reactiveConstructor,
+206:   ConvexHttpClient,
+207: }));
+208: const { Cortex } = await import("../../../src/index");
+209: 
+210: describe("Cortex host credential constructor binding", () => {
+211:   it("binds the real credential callback and observes refresh/logout changes", async () => {
+212:     let token: string | null = firstToken;
+213:     const getter = jest.fn<HostTokenFetcher>(async () => token);
+214:     const metadata = { userId: "caller-label", tenantId: "caller-tenant", claims: { role: "admin" } };
+215:     const cortex = new Cortex({
+216:       convexUrl: "https://example.convex.cloud",
+217:       fetchAuthToken: getter,
+218:       auth: metadata,
+219:       resilience: { enabled: false },
+220:     });
+221:     const reactive = reactiveInstances.at(-1)!;
+222:     expect(reactive.setAuth).toHaveBeenCalledTimes(1);
+223:     expect(reactive.setAuth).toHaveBeenCalledWith(expect.any(Function), expect.any(Function));
+224:     const callback = reactive.setAuth.mock.calls[0][0];
+225:     const force: HostTokenRequest = { forceRefreshToken: true };
+226:     expect(await callback({ forceRefreshToken: false })).toBe(firstToken);
+227:     token = refreshedToken;
+228:     expect(await callback(force)).toBe(refreshedToken);
+229:     expect(getter.mock.calls.at(-1)![0]).toBe(force);
+230:     token = null;
+231:     expect(await callback(force)).toBeNull();
+232:     expect(cortex.auth).toBe(metadata);
+233:     cortex.close();
+234:     expect(reactive.close).toHaveBeenCalledTimes(1);
+235:   });
+236: 
+237:   it("does not set Convex auth from caller user/tenant/claims metadata", () => {
+238:     const cortex = new Cortex({
+239:       convexUrl: "https://example.convex.cloud",
+240:       auth: { userId: "claimed-user", tenantId: "claimed-tenant", claims: { role: "admin", token: firstToken } },
+241:       resilience: { enabled: false },
+242:     });
+243:     const reactive = reactiveInstances.at(-1)!;
+244:     expect(reactive.setAuth).not.toHaveBeenCalled();
+245:     expect(cortex.credentials).toBeUndefined();
+246:     cortex.close();
+247:   });
+248: 
+249:   it("notifies the active binding on logout, login and host identity replacement", async () => {
+250:     let token: string | null = firstToken;
+251:     const getter = jest.fn<HostTokenFetcher>(async () => token);
+252:     const cortex = new Cortex({
+253:       convexUrl: "https://example.convex.cloud",
+254:       fetchAuthToken: getter,
+255:       resilience: { enabled: false },
+256:     });
+257:     const reactive = reactiveInstances.at(-1)!;
+258:     for (const nextToken of [null, firstToken, refreshedToken]) {
+259:       token = nextToken;
+260:       const calls = reactive.setAuth.mock.calls.length;
+261:       cortex.credentials!.notifySessionChanged();
+262:       expect(reactive.setAuth).toHaveBeenCalledTimes(calls + 1);
+263:       const callback = reactive.setAuth.mock.calls.at(-1)![0];
+264:       expect(await callback({ forceRefreshToken: false })).toBe(nextToken);
+265:       expect(getter.mock.calls.at(-1)![0]).toEqual({ forceRefreshToken: true });
+266:       const subsequent = { forceRefreshToken: false };
+267:       expect(await callback(subsequent)).toBe(nextToken);
+268:       expect(getter.mock.calls.at(-1)![0]).toBe(subsequent);
+269:     }
+270:     cortex.close();
+271:   });
+272: 
+273:   it("rejects unbound/closed reactive notifications and prevents multiple active bindings", () => {
+274:     const credentials = new HostCredentials(async () => firstToken);
+275:     expect(() => credentials.notifySessionChanged()).toThrow("No reactive client is bound");
+276:     const first = new ReactiveClient();
+277:     const second = new ReactiveClient();
+278:     credentials.bindReactiveClient(first);
+279:     expect(first.setAuth).toHaveBeenCalledWith(expect.any(Function), expect.any(Function));
+280:     expect(() => credentials.bindReactiveClient(second)).toThrow("already have a bound reactive client");
+281:     expect(second.setAuth).not.toHaveBeenCalled();
+282:     first.closed = true;
+283:     expect(() => credentials.notifySessionChanged()).toThrow("Cannot refresh a closed reactive client");
+284:     expect(first.setAuth).toHaveBeenCalledTimes(1);
+285:     expect(() => credentials.bindReactiveClient(first)).toThrow("Cannot bind a closed reactive client");
+286:     credentials.bindReactiveClient(second);
+287:     expect(second.setAuth).toHaveBeenCalledTimes(1);
+288:   });
+289: 
+290:   it("validates a configured non-function getter before constructing ConvexClient", () => {
+291:     const calls = reactiveConstructor.mock.calls.length;
+292:     expect(() => new Cortex({
+293:       convexUrl: "https://example.convex.cloud",
+294:       fetchAuthToken: "static-token" as unknown as HostTokenFetcher,
+295:     })).toThrow("fetchAuthToken must be an async function");
+296:     expect(reactiveConstructor.mock.calls.length).toBe(calls);
+297:   });
+298: 
+299:   it("fails reactive callback errors closed with a sanitized diagnostic and no metadata credentials", async () => {
+300:     const rejected = new Error("host auth failure");
+301:     const cortex = new Cortex({
+302:       convexUrl: "https://example.convex.cloud",
+303:       fetchAuthToken: async () => { throw rejected; },
+304:       auth: { userId: "claimed-user", claims: { token: firstToken } },
+305:       resilience: { enabled: false },
+306:     });
+307:     const reactive = reactiveInstances.at(-1)!;
+308:     const callback = reactive.setAuth.mock.calls[0][0];
+309:     await expect(callback({ forceRefreshToken: true })).resolves.toBeNull();
+310:     expect(cortex.credentials!.authFailure).toEqual({ code: "HOST_TOKEN_FETCH_FAILED", attemptId: 1 });
+311:     expect(reactive.setAuth).toHaveBeenCalledTimes(1);
+312:     cortex.close();
+313:   });
+314: 
+315:   it("validates a configured diagnostic callback before allocating a client", () => {
+316:     const calls = reactiveConstructor.mock.calls.length;
+317:     expect(() => new Cortex({
+318:       convexUrl: "https://example.convex.cloud",
+319:       fetchAuthToken: async () => null,
+320:       onAuthError: "invalid" as unknown as (failure: HostAuthFailure) => void,
+321:     })).toThrow("onAuthError must be a function");
+322:     expect(reactiveConstructor.mock.calls.length).toBe(calls);
+323:   });
+324: 
+325:   it("auth success notifications cannot hide a getter diagnostic and stale/closed deferred clears are fenced", async () => {
+326:     let rejectHost = true;
+327:     const credentials = new HostCredentials(async () => {
+328:       if (rejectHost) throw new Error("host failure");
+329:       return refreshedToken;
+330:     });
+331:     const reactive = new ReactiveClient();
+332:     credentials.bindReactiveClient(reactive);
+333:     const [oldFetcher, oldStatus] = reactive.setAuth.mock.calls[0];
+334:     await expect(oldFetcher({ forceRefreshToken: false })).resolves.toBeNull();
+335:     const diagnostic = credentials.authFailure;
+336:     oldStatus?.(true);
+337:     expect(credentials.authFailure).toBe(diagnostic);
+338:     oldStatus?.(false);
+339:     rejectHost = false;
+340:     credentials.notifySessionChanged();
+341:     const [newFetcher, newStatus] = reactive.setAuth.mock.calls.at(-1)!;
+342:     await expect(newFetcher({ forceRefreshToken: false })).resolves.toBe(refreshedToken);
+343:     await flushAuthTasks();
+344:     expect(reactive.client.clearAuth).not.toHaveBeenCalled();
+345:     expect(credentials.authFailure).toBeUndefined();
+346:     newStatus?.(false);
+347:     oldStatus?.(false);
+348:     await flushAuthTasks();
+349:     expect(reactive.client.clearAuth).toHaveBeenCalledTimes(1);
+350:     reactive.client.clearAuth.mockClear();
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md:235
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-3.md:1
+1: # Task Judgment: THIRD and last original41 offline Task03C2 harness review
+2: 
+3: ## Verdict: FINAL PASS — bounded offline harness readiness only
+4: 
+5: Requirement Fulfillment5, Code Quality4, Test Quality5, Pattern Adherence4, Completeness5: **average4.6/5**. All dimensions are at least4 and Requirement Fulfillment is5 under the strict judge-task rubric. This is the third review of the original gate, with the original scope and both REJECT2.6 histories retained.
+6: 
+7: The frozen preparation repairs all first-five and second-four findings and includes only the independently accepted two-helper dependency refresh. The fresh independent checks below passed. **All41 real service outcomes remain UNEXECUTED.** Whole Task03/Task09, Task05 run/transcript/tool behavior, private bytes/uploads/assets/connector callbacks, automatic maintenance, UI and the full17-task goal remain PENDING. This PASS does not certify those outcomes or adopt rejected memory/facts/artifact/registry work.
+8: 
+9: ## Evidence review and boundaries
+10: 
+11: Reviewed the bounded third prompt, AGENTS, full runtime/profile, pessimistic-judge role, judge-task and feature workflow; approved implementation prompt, goal, original Tasks03/09, authoritative decisions/architecture, preparation requirements, and both complete FINAL REJECT2.6 reports. Exact first report is qa/task03c2-live-harness-review-1.md. Read active source, README/report/matrix, provenance, inventories/freeze, preserved histories/raw failures and installed Convex1.46 CLI/HTTP/error serialization. Read the accepted metadata SECOND PASS4.6 report, full original41/affected03A mappings and actual-handler/native baseline comparisons as prerequisite evidence.
+12: 
+13: Canonical repository: /workspace/Project-Cortex. HEAD022e2e3d61161766e90e91dd572bb9b7063d5957 is unchanged. Own evidence is exclusively /tmp/task03c2-live-harness-review3-01t5pzfe. No canonical writer or live target/driver/operator/deploy/cleanup invocation, target.env/deploy.env/key-selector acquisition, network/service/model/signing/key-generation/codegen/deployment/project cleanup/retirement, Git mutation, package installation, global configuration change or agent spawn occurred. Own exact module copies ran only through explicit OFFLINE dependency interception. Git use was read-only rev-parse/status/cat-file.
+14: 
+15: The disposable replay contains exact frozen script/fixture/SDK/pack/archive bytes and exact accepted root package.json, with installed dependencies linked. It has no actual target.json, deploy.env or RSA. The source and packed SDK preparation processes use the environment bootstrap before import and at exit; no upstream/provider/cluster/deployment/private-selector names reach them. The live SDK child separately has the endpoint/JWT/test-reference/minimal-environment/IPC code boundary. Same UID filesystem access is not OS isolation.
+16: 
+17: commands.json records actual validation argv/cwd/UTC start/end/exit and separate raw stdout/stderr. The four environment child controls additionally record those fields in results/environment.json; expected exit1 controls are successful rejection assertions. Initial exploratory tool reads/setup failures did not all have explicit UTC/raw-file captures; those limits are stated, without invented timestamps. Original source and failure transcripts/notes are retained, and final successful validators have recorded executions. No failed required harness run was replaced by a later passing run.
+18: 
+19: ## Observed checks
+20: 
+21: | Independent check | Discovery / observed outcome | Evidence |
+22: |---|---|---|
+23: | Original guards |37/37 PASS, skipped0, network/subprocess/output0 |logs/guards.*, replay guards receipt |
+24: | Actual original guarded entrypoint imports |4/4 PASS, network/subprocess/output0 |logs/entrypoints.*, replay entrypoints receipt |
+25: | Original source SDK prep |6/6 PASS, skipped0, maintenance dispatch0, invalid-credential callbacks0 |logs/source-prep.*, replay client-prep receipt |
+26: | Actual packed SDK prep |6/6 PASS, skipped0, dispatch/callback/network0 |logs/packed-prep.*, replay packed-prep receipt |
+27: | Original classifier |28/28 PASS, skipped0, network0 |logs/classifier.*, replay classifier receipt |
+28: | New supplied adversarial classifier |22/22 PASS, skipped0 |logs/adversarial.*, replay adversarial receipt |
+29: | Original three independent second-review counterexamples |3/3 required false predicates now PASS |results/three-original-counterexamples.json; only import/output paths relocated |
+30: | Own actual operator-module composition |20/20 PASS, skipped0, live effects0 |results/operator-integration.json; synthetic preflight and CLI result only |
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts:397
+
+
+SDK metadata relevant methods
+
+FILE work/backend-runtime/task03c2-live-fixture/sdk/src/users/index.ts
+75:   type: string;
+76:   id: string;
+77:   tenantId: string;
+78:   memorySpaceId: string | undefined;
+79:   createdId?: string;
+80: }
+81: 
+82: /** The write committed, but returning a hydrated profile requires read capability. */
+83: export class UserProfileWriteReceiptError extends Error {
+84:   readonly code = "PROFILE_WRITE_COMMITTED_READ_UNAVAILABLE";
+85:   readonly retryable = false;
+86:   readonly outcome = "committed";
+87:   readonly requiredCapability = "read";
+88:   readonly receipt: Readonly<UserProfileWriteReceipt>;
+89: 
+90:   constructor(receipt: UserProfileWriteReceipt) {
+91:     super(
+92:       "The user profile write committed, but the updated profile is unavailable " +
+93:         "without read capability. Do not retry the committed write.",
+94:     );
+95:     this.name = "UserProfileWriteReceiptError";
+96:     this.receipt = Object.freeze({
+97:       updated: receipt.updated,
+98:       type: receipt.type,
+99:       id: receipt.id,
+100:       tenantId: receipt.tenantId,
+101:       memorySpaceId: receipt.memorySpaceId,
+102:       ...(receipt.createdId === undefined ? {} : { createdId: receipt.createdId }),
+103:     });
+104:   }
+105: }
+106: 
+107: // Export validation error for users who want to catch it specifically
+108: export { UserValidationError } from "./validators";
+109: 
+110: import type { ResilienceLayer } from "../resilience";
+111: import type { AuthContext } from "../auth/types";
+112: 
+113: /**
+114:  * Users API
+115:  *
+116:  * Provides convenience wrappers over immutable store (type='user') with the
+117:  * critical feature of GDPR cascade deletion across all layers.
+118:  *
+119:  * Key Principle: Same code for free SDK and Cloud Mode
+120:  * - Free SDK: User provides graph adapter (DIY), cascade works if configured
+121:  * - Cloud Mode: Cortex provides managed graph adapter, cascade always works + legal guarantees
+122:  */
+123: export class UsersAPI {
+124:   constructor(
+125:     private readonly client: ConvexClient,
+126:     private readonly graphAdapter?: GraphAdapter,
+127:     private readonly resilience?: ResilienceLayer,
+128:     private readonly authContext?: AuthContext,
+129:   ) {}
+130: 
+131:   /**
+132:    * Execute an operation through the resilience layer (if available)
+133:    */
+134:   private async executeWithResilience<T>(
+135:     operation: () => Promise<T>,
+136:     operationName: string,
+137:   ): Promise<T> {
+138:     if (this.resilience) {
+139:       return this.resilience.execute(operation, operationName);
+140:     }
+141:     return operation();
+142:   }
+143: 
+144:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+145:   // Core Operations
+146:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+147: 
+148:   /**
+149:    * Get user profile by ID
+150:    *
+151:    * @example
+152:    * ```typescript
+153:    * const user = await cortex.users.get('user-123');
+154:    * if (user) {
+155:    *   console.log(user.data.displayName);
+156:    * }
+157:    * ```
+158:    */
+159:   async get(userId: string): Promise<UserProfile | null> {
+160:     // Client-side validation
+161:     validateUserId(userId);
+162: 
+163:     const result = await this.executeWithResilience(
+164:       () =>
+165:         this.client.query(api.immutable.get, {
+166:           type: "user",
+167:           id: userId,
+168:           tenantId: this.authContext?.tenantId, // Tenant isolation
+169:         }),
+190:       createdAt: result.createdAt,
+191:       updatedAt: result.updatedAt,
+192:     };
+193:   }
+194: 
+195:   /**
+196:    * Update user profile (creates new version by default)
+197:    *
+198:    * Throws UserProfileWriteReceiptError if the write committed but the backend
+199:    * returned a safe receipt because the updated profile could not be read.
+200:    *
+201:    * @param userId - User ID to update
+202:    * @param data - Profile data to store
+203:    * @param options - Update options
+204:    * @param options.skipVersioning - Don't create new version (default: false)
+205:    * @param options.versionReason - Why this update happened (stored in metadata)
+206:    * @param options.merge - Merge with existing data (default: true)
+207:    *
+208:    * @example
+209:    * ```typescript
+210:    * // Basic update (merges with existing, creates new version)
+211:    * const updated = await cortex.users.update('user-123', {
+212:    *   displayName: 'Alex Johnson',
+213:    *   email: 'alex@example.com',
+214:    *   preferences: { theme: 'dark' }
+215:    * });
+216:    *
+217:    * // Skip versioning for routine updates
+218:    * await cortex.users.update('user-123', {
+219:    *   lastSeen: new Date().toISOString()
+220:    * ```
+221:    */
+222:   async update(
+223:     userId: string,
+224:     data: Record<string, unknown>,
+225:   ): Promise<UserProfile> {
+226:     // Client-side validation
+227:     validateUserId(userId);
+228:     validateData(data, "data");
+229: 
+230:     // Default behavior: merge with existing data
+231:     let finalData = data;
+232:     const existing = await this.get(userId);
+233:     if (existing) {
+234:       finalData = this.deepMerge(existing.data, data);
+235:     }
+236: 
+237:     const result = await this.executeWithResilience(
+238:       () =>
+239:         this.client.mutation(api.immutable.store, {
+240:           type: "user",
+241:           id: userId,
+242:           data: finalData,
+243:           tenantId: this.authContext?.tenantId, // Inject tenantId from auth context
+244:         }),
+245:       "users:update",
+246:     );
+247: 
+248:     if (!result) {
+249:       // Use a static error message to avoid leaking user-controlled identifiers into logs
+250:       throw new Error("Failed to store user profile");
+251:     }
+252: 
+253:     // Interpret the committed response after resilience completes so this outcome
+254:     // cannot trigger another mutation attempt or an automatic follow-up read.
+255:     if ("updated" in result) {
+256:       throw new UserProfileWriteReceiptError(result);
+257:     }
+258: 
+259:     return {
+260:       id: result.id,
+261:       tenantId: result.tenantId, // Include tenantId in response
+262:       data: (result.data as Record<string, unknown> | undefined) ?? {},
+263:       version: result.version,
+264:       createdAt: result.createdAt,
+265:       updatedAt: result.updatedAt,
+266:     };
+267:   }
+268: 
+269:   /**
+270:    * Delete user profile with optional cascade deletion across all layers
+271:    *
+272:    * @param userId - User ID to delete
+273:    * @param options - Deletion options
+274:    * @param options.cascade - Enable cascade deletion across all layers (default: false)
+275:    * @param options.verify - Run verification after deletion (default: true)
+276:    * @param options.dryRun - Preview what would be deleted without actually deleting (default: false)
+277:    *
+278:    * @example
+279:    * ```typescript
+280:    * // Simple deletion (user profile only)
+281:    * await cortex.users.delete('user-123');
+282:    *
+283:    * // GDPR cascade deletion (all layers)
+284:    * const result = await cortex.users.delete('user-123', {
+285:    *   cascade: true
+286:    * });
+287:    * console.log(`Deleted ${result.totalDeleted} records across ${result.deletedLayers.length} layers`);
+288:    * ```
+289:    */
+290:   async delete(
+291:     userId: string,
+292:     options?: DeleteUserOptions,
+293:   ): Promise<UserDeleteResult> {
+294:     // Client-side validation
+295:     validateUserId(userId);
+296:     validateDeleteUserOptions(options);
+297: 
+298:     const cascade = options?.cascade ?? false;
+299:     const verify = options?.verify ?? true;
+300:     const dryRun = options?.dryRun ?? false;
+301: 
+302:     if (!cascade) {
+303:       // Simple delete: just user profile from immutable
+304:       if (!dryRun) {
+305:         await this.executeWithResilience(
+306:           () =>
+307:             this.client.mutation(api.immutable.purge, {
+308:               type: "user",
+309:               id: userId,
+310:               tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
+311:             }),
+312:           "users:delete",
+313:         );
+314:       }
+315: 
+316:       return {
+317:         userId,
+318:         deletedAt: Date.now(),
+319:         conversationsDeleted: 0,
+320:         conversationMessagesDeleted: 0,
+321:         immutableRecordsDeleted: 0,
+322:         mutableKeysDeleted: 0,
+323:         vectorMemoriesDeleted: 0,
+324:         factsDeleted: 0,
+325:         graphNodesDeleted: 0,
+326:         verification: {
+327:           complete: true,
+328:           issues: [],
+329:         },
+330:         totalDeleted: dryRun ? 0 : 1,
+1004: 
+1005:   /**
+1006:    * Bulk update multiple users by explicit IDs or filters
+1007:    *
+1008:    * @param userIdsOrFilters - Array of user IDs OR UserFilters object
+1009:    * @param updates - Updates to apply to matching users
+1010:    * @param options - Update options
+1011:    * @returns Update result with count and affected userIds
+1012:    * @throws UserProfileWriteReceiptError if an item committed without a readable
+1013:    * profile. Earlier items may already have committed; do not replay the batch.
+1014:    *
+1015:    * @example
+1016:    * ```typescript
+1017:    * // Update by explicit IDs
+1018:    * const result = await cortex.users.updateMany(
+1019:    *   ['user-1', 'user-2', 'user-3'],
+1020:    *   { data: { status: 'active' } }
+1021:    * );
+1022:    *
+1023:    * // Update by filters (all users created in last 7 days)
+1024:    * const filtered = await cortex.users.updateMany(
+1025:    *   { createdAfter: Date.now() - 7 * 24 * 60 * 60 * 1000 },
+1026:    *   { data: { welcomeEmailSent: true } }
+1027:    * );
+1028:    *
+1029:    * // Dry run to preview
+1030:    * const preview = await cortex.users.updateMany(
+1031:    *   { displayName: 'alex' },
+1032:    *   { data: { verified: true } },
+1033:    *   { dryRun: true }
+1034:    * );
+1035:    * console.log(`Would update ${preview.userIds.length} users`);
+1036:    * ```
+1037:    */
+1038:   async updateMany(
+1039:     userIdsOrFilters: string[] | UserFilters,
+1040:     updates: { data: Record<string, unknown> },
+1041:     options?: { skipVersioning?: boolean; dryRun?: boolean },
+1042:   ): Promise<{ updated: number; userIds: string[] }> {
+1043:     // Runtime validation for potentially untrusted external input
+1044:     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+1045:     if (!updates || !updates.data) {
+1046:       throw new UserValidationError(
+1047:         "updates.data is required",
+1048:         "MISSING_DATA",
+1049:         "updates.data",
+1050:       );
+1051:     }
+1052:     validateData(updates.data, "updates.data");
+1053:     validateBulkUpdateOptions(options);
+1054: 
+1055:     // Determine if we're using userIds array or filters
+1056:     let targetUserIds: string[];
+1057: 
+1058:     if (Array.isArray(userIdsOrFilters)) {
+1059:       // Explicit userIds array
+1060:       validateUserIdsArray(userIdsOrFilters, 1, 100);
+1061:       targetUserIds = userIdsOrFilters;
+1062:     } else {
+1063:       // Filter-based selection - search for matching users
+1064:       validateUserFilters(userIdsOrFilters);
+1065:       const matchingUsers = await this.search(userIdsOrFilters);
+1066:       targetUserIds = matchingUsers.map((u) => u.id);
+1067: 
+1068:       // Limit to 100 users for safety
+1069:       if (targetUserIds.length > 100) {
+1070:         throw new UserValidationError(
+1071:           `Filter matched ${targetUserIds.length} users, maximum is 100. Add more specific filters or use limit.`,
+1072:           "TOO_MANY_MATCHES",
+1073:           "filters",
+1074:         );
+1075:       }
+1076:     }
+1077: 
+1078:     if (options?.dryRun) {
+1079:       return {
+1080:         updated: 0,
+1081:         userIds: targetUserIds,
+1082:       };
+1083:     }
+1084: 
+1085:     const results: string[] = [];
+1086: 
+1087:     for (const userId of targetUserIds) {
+1088:       try {
+1089:         const user = await this.get(userId);
+1090:         if (user) {
+1091:           await this.update(userId, updates.data);
+1092:           results.push(userId);
+1093:         }
+1094:       } catch (error) {
+1095:         // A committed write must not be reported as an unsuccessful bulk item.
+1096:         if (error instanceof UserProfileWriteReceiptError) {
+1097:           throw error;
+1098:         }
+1099:         // Continue on ordinary errors, preserving existing bulk behavior.
+1100:         continue;
+1101:       }
+1102:     }
+1103: 
+1104:     return {
+1105:       updated: results.length,
+1106:       userIds: results,
+1107:     };
+1108:   }
+1109: 
+1110:   /**
+1111:    * Bulk delete multiple users by explicit IDs or filters
+1112:    *
+1113:    * @param userIdsOrFilters - Array of user IDs OR UserFilters object
+1114:    * @param options - Delete options (cascade, dryRun)
+1115:    * @returns Delete result with count and affected userIds
+1116:    *
+1117:    * @example
+1118:    * ```typescript
+1119:    * // Delete by explicit IDs
+1120:    * const result = await cortex.users.deleteMany(
+1121:    *   ['user-1', 'user-2', 'user-3'],
+1122:    *   { cascade: true }
+1123:    * );
+1124:    *
+1125:    * // Delete by filters (inactive users older than 1 year)
+1126:    * const oldUsers = await cortex.users.deleteMany(
+1127:    *   { createdBefore: Date.now() - 365 * 24 * 60 * 60 * 1000 },
+1128:    *   { cascade: true }
+1129:    * );
+1130:    *
+1131:    * // Dry run to preview what would be deleted
+1132:    * const preview = await cortex.users.deleteMany(
+1133:    *   { updatedBefore: Date.now() - 90 * 24 * 60 * 60 * 1000 },
+1134:    *   { dryRun: true }
+1135:    * );
+1136:    * console.log(`Would delete ${preview.userIds.length} users`);
+1137:    * ```
+1138:    */
+1139:   async deleteMany(
+1140:     userIdsOrFilters: string[] | UserFilters,
+1141:     options?: { cascade?: boolean; dryRun?: boolean },
+1142:   ): Promise<{ deleted: number; userIds: string[] }> {
+1143:     validateBulkDeleteOptions(options);
+1144: 
+1145:     // Determine if we're using userIds array or filters
+1146:     let targetUserIds: string[];
+1147: 
+1148:     if (Array.isArray(userIdsOrFilters)) {
+1149:       // Explicit userIds array
+1150:       validateUserIdsArray(userIdsOrFilters, 1, 100);
+1151:       targetUserIds = userIdsOrFilters;
+1152:     } else {
+1153:       // Filter-based selection - search for matching users
+1154:       validateUserFilters(userIdsOrFilters);
+1155:       const matchingUsers = await this.search(userIdsOrFilters);
+1156:       targetUserIds = matchingUsers.map((u) => u.id);
+1157: 
+1158:       // Limit to 100 users for safety
+1159:       if (targetUserIds.length > 100) {
+1160:         throw new UserValidationError(
+1161:           `Filter matched ${targetUserIds.length} users, maximum is 100. Add more specific filters or use limit.`,
+1162:           "TOO_MANY_MATCHES",
+1163:           "filters",
+1164:         );
+1165:       }
+1166:     }
+1167: 
+1168:     if (options?.dryRun) {
+1169:       return {
+1170:         deleted: 0,
+
+FILE work/backend-runtime/task03c2-live-fixture/sdk/src/sessions/index.ts
+38: } from "./types";
+39: 
+40: // Re-export error
+41: export { SessionValidationError } from "./validators";
+42: 
+43: import type { AuthContext } from "../auth/types";
+44: 
+45: /** Idle session expiration requires a trusted backend worker. */
+46: export class SessionCapabilityError extends Error {
+47:   readonly code = "BACKEND_MAINTENANCE_ONLY";
+48:   readonly retryable = false;
+49:   readonly outcome = "not_dispatched";
+50:   readonly requiredExecution = "trusted_backend_worker";
+51: 
+52:   constructor() {
+53:     super(
+54:       "Idle session expiration requires a trusted backend worker. " +
+55:         "No operation was dispatched by this client.",
+56:     );
+57:     this.name = "SessionCapabilityError";
+58:   }
+59: }
+60: 
+61: /**
+62:  * Sessions API
+63:  *
+64:  * Provides native session management for multi-session applications.
+65:  * Session lifecycle is controlled via governance policies.
+66:  */
+67: export class SessionsAPI {
+68:   constructor(
+69:     private readonly client: ConvexClient,
+70:     private readonly graphAdapter?: GraphAdapter,
+71:     private readonly resilience?: ResilienceLayer,
+72:     private readonly authContext?: AuthContext,
+73:   ) {}
+74: 
+75:   /**
+76:    * Execute an operation through the resilience layer (if available)
+77:    */
+78:   private async executeWithResilience<T>(
+79:     operation: () => Promise<T>,
+80:     operationName: string,
+81:   ): Promise<T> {
+82:     if (this.resilience) {
+83:       return this.resilience.execute(operation, operationName);
+84:     }
+85:     return operation();
+86:   }
+87: 
+88:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+89:   // Core Operations
+90:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+91: 
+92:   /**
+93:    * Create a new session for a user.
+94:    *
+95:    * @param params - Session creation parameters
+96:    * @returns Created session
+97:    *
+98:    * @example
+99:    * ```typescript
+100:    * const session = await cortex.sessions.create({
+101:    *   userId: 'user-123',
+102:    *   tenantId: 'tenant-456',
+103:    *   memorySpaceId: 'workspace-abc',
+104:    *   metadata: {
+105:    *     device: 'Chrome on macOS',
+106:    *     browser: 'Chrome 120',
+107:    *     ip: '192.168.1.1',
+108:    *     location: 'San Francisco, CA',
+109:    *   },
+110:    * });
+111:    * ```
+112:    */
+113:   async create(params: CreateSessionParams): Promise<Session> {
+114:     validateCreateSessionParams(params);
+115: 
+116:     const now = Date.now();
+117:     const sessionId = params.sessionId || this.generateSessionId();
+118: 
+119:     const session = await this.executeWithResilience(
+120:       () =>
+121:         this.client.mutation(api.sessions.create, {
+122:           sessionId,
+123:           userId: params.userId,
+124:           tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId), // Fall back to auth context
+125:           memorySpaceId: params.memorySpaceId,
+126:           metadata: params.metadata,
+127:           startedAt: now,
+128:           expiresAt: params.expiresAt,
+129:         }),
+130:       "sessions:create",
+131:     );
+238:    * @param sessionId - Session ID to end
+239:    *
+240:    * @example
+241:    * ```typescript
+242:    * // End session on logout
+243:    * await cortex.sessions.end('sess-123');
+244:    * ```
+245:    */
+246:   async end(sessionId: string): Promise<void> {
+247:     validateSessionId(sessionId);
+248: 
+249:     // Enforce tenant isolation: verify the session belongs to this tenant before ending
+250:     if (this.authContext?.tenantId) {
+251:       const session = await this.get(sessionId);
+252:       if (!session) {
+253:         // Session doesn't exist or belongs to another tenant
+254:         throw new Error(`Session not found: ${sessionId}`);
+255:       }
+256:       // Note: get() already filters by tenantId, so if we reach here, the session is ours
+257:     }
+258: 
+259:     await this.executeWithResilience(
+260:       () =>
+261:         this.client.mutation(api.sessions.end, {
+262:           sessionId,
+263:         }),
+264:       "sessions:end",
+265:     );
+266:   }
+267: 
+268:   /**
+269:    * End all sessions for a user.
+270:    *
+271:    * @param userId - User ID
+272:    * @param options - Optional parameters including tenantId for multi-tenant isolation
+273:    * @returns Result with count of ended sessions
+274:    *
+275:    * @example
+276:    * ```typescript
+277:    * // End all sessions on password change
+278:    * const result = await cortex.sessions.endAll('user-123');
+279:    * console.log(`Ended ${result.ended} sessions`);
+280:    *
+281:    * // End sessions only for a specific tenant (multi-tenant safe)
+282:    * const tenantResult = await cortex.sessions.endAll('admin', {
+283:    *   tenantId: 'tenant-456',
+284:    * });
+285:    * ```
+286:    */
+287:   async endAll(
+288:     userId: string,
+289:     options?: EndAllOptions,
+290:   ): Promise<EndSessionsResult> {
+291:     validateUserId(userId);
+292: 
+293:     // Use explicit tenantId, fall back to auth context for tenant isolation
+294:     const tenantId = resolveTenantId(this.authContext?.tenantId, options?.tenantId);
+295: 
+296:     const result = await this.executeWithResilience(
+297:       () =>
+298:         this.client.mutation(api.sessions.endAll, {
+299:           userId,
+300:           tenantId,
+301:         }),
+302:       "sessions:endAll",
+303:     );
+304: 
+305:     return result as EndSessionsResult;
+306:   }
+307: 
+308:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+309:   // Query Operations
+310:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+311: 
+312:   /**
+313:    * List sessions with filters.
+314:    *
+315:    * @param filters - Filter parameters
+316:    * @returns Array of matching sessions
+317:    *
+318:    * @example
+319:    * ```typescript
+320:    * // List all active sessions for a tenant
+404: 
+405:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+406:   // Maintenance Operations
+407:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+408: 
+409:   /**
+410:    * Request idle session expiration, which requires a trusted backend worker.
+411:    *
+412:    * Valid client requests reject with SessionCapabilityError before dispatch.
+413:    * This method does not perform or schedule automatic session maintenance.
+414:    * Tenant selectors retain the existing SDK auth-context mismatch validation.
+415:    *
+416:    * @param options - Expiration options (idle timeout defaults to 30 minutes)
+417:    * @throws SessionCapabilityError when trusted backend execution is required
+418:    */
+419:   async expireIdle(
+420:     options?: ExpireSessionsOptions,
+421:   ): Promise<{ expired: number }> {
+422:     resolveTenantId(this.authContext?.tenantId, options?.tenantId);
+423:     // Preserve the existing default before reporting the execution boundary.
+424:     const idleTimeout = options?.idleTimeout ?? 30 * 60 * 1000;
+425:     void idleTimeout;
+426:     throw new SessionCapabilityError();
+427:   }
+428: 
+429:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+430:   // Private Helpers
+431:   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+432: 
+433:   /**
+434:    * Generate a cryptographically secure unique session ID
+435:    */
+436:   private generateSessionId(): string {
+437:     const timestamp = Date.now().toString(36);
+438:     const randomPart = Array.from(globalThis.crypto.getRandomValues(new Uint8Array(8)),
+439:       (byte) => byte.toString(16).padStart(2, "0")).join("");
+440:     return `sess-${timestamp}-${randomPart}`;
+441:   }
+442: }
