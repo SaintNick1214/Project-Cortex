@@ -1,0 +1,35 @@
+[
+  {
+    "name": "root-types",
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "exitCode": 0
+  },
+  {
+    "name": "lint-types",
+    "command": "node node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit",
+    "exitCode": 0
+  },
+  {
+    "name": "scoped-eslint",
+    "exitCode": 0,
+    "command": "node node_modules/eslint/bin/eslint.js src/agents/index.ts src/agents/statistics.ts src/memorySpaces/index.ts src/types/index.ts tests/unit/runtimeRegistryClient --max-warnings 0"
+  },
+  {
+    "name": "focused-tests",
+    "exitCode": 0,
+    "command": "CONVEX_URL=https://example.convex.cloud node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=tests/unit/runtimeRegistryClient --runInBand --json --outputFile=work/resume/registry-stats-repair/tests-final.json",
+    "passed": 82,
+    "failed": 0,
+    "skipped": 0
+  },
+  {
+    "name": "build",
+    "command": "node /home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js run build",
+    "exitCode": 0
+  },
+  {
+    "name": "packed-browser-contracts",
+    "command": "node /home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js run test:contracts",
+    "exitCode": 0
+  }
+]

@@ -4,6 +4,8 @@
  * Hive/Collaboration Mode management
  */
 
+import { isRegistryStatisticsUnavailable } from "../agents/statistics";
+import { resolveTenantId } from "../auth/tenant";
 import { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
@@ -547,19 +549,31 @@ export class MemorySpacesAPI {
       validateTimeWindow(options.timeWindow);
     }
 
+    const tenantId = resolveTenantId(this.authContext?.tenantId, options?.tenantId);
     try {
       const result = await this.executeWithResilience(
-        () =>
-          this.client.query(api.memorySpaces.getStats, {
-            memorySpaceId,
-            timeWindow: options?.timeWindow,
-            includeParticipants: options?.includeParticipants,
-          }),
+        async () => {
+          try {
+            return { stats: await this.client.query(api.memorySpaces.getStats, {
+              memorySpaceId,
+              tenantId,
+              timeWindow: options?.timeWindow,
+              includeParticipants: options?.includeParticipants,
+            }) };
+          } catch (error) {
+            if (isRegistryStatisticsUnavailable(error)) {
+              return { unavailable: error };
+            }
+            throw error;
+          }
+        },
         "memorySpaces:getStats",
       );
-
-      return result as MemorySpaceStats;
+      // Capability absence is an explicit outcome, never a fabricated statistics result.
+      if (result.unavailable) throw result.unavailable;
+      return result.stats as MemorySpaceStats;
     } catch (error) {
+      if (isRegistryStatisticsUnavailable(error)) throw error;
       this.handleConvexError(error);
     }
   }

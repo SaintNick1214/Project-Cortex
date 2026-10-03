@@ -1681,7 +1681,6 @@ export interface DeleteMemorySpaceResult {
 }
 
 export interface GetMemorySpaceStatsOptions {
-  tenantId?: string;
   timeWindow?: "24h" | "7d" | "30d" | "90d" | "all";
   includeParticipants?: boolean;
 }

@@ -1,0 +1,91 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    10.3s | 43/43 passed | /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+  ✅     6.5s | 39/39 passed | /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.0%) - explicit stats bridge resilience=absent get returns official readable profile without implicit stats lookup
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.0%) - explicit stats bridge resilience=enabled ordinary native error MEMORY_SPACE_NOT_FOUND retains baseline normalization alongside pending capability
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.0%) - registry bridge resilience=absent register receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=absent export requested stats preserves exact typed unready failure and selected-row scope
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=enabled ordinary native error {"code":"NOT_AUTHORIZED","message":"Access denied"} retains baseline normalization alongside pending capability
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent backend failure remains failure without local poststeps
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=absent export without stats remains a profile-only operation
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=absent explicit export denies configured tenant mismatch without stats transport
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=absent memory-space stats forwards concrete selectors and preserves typed unready
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=absent ordinary native error MEMORY_SPACE_NOT_FOUND retains baseline normalization alongside pending capability
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=absent ordinary native error {"code":"NOT_AUTHORIZED","message":"Access denied"} retains baseline normalization alongside pending capability
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=absent unexpected infrastructure errors remain failures rather than fake stats
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=disabled explicit export denies configured tenant mismatch without stats transport
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=disabled ordinary native error MEMORY_SPACE_NOT_FOUND retains baseline normalization alongside pending capability
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=disabled ordinary native error {"code":"NOT_AUTHORIZED","message":"Access denied"} retains baseline normalization alongside pending capability
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=disabled unexpected infrastructure errors remain failures rather than fake stats
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=enabled get returns official readable profile without implicit stats lookup
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=enabled export requested stats preserves exact typed unready failure and selected-row scope
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=enabled export without stats remains a profile-only operation
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - explicit stats bridge resilience=enabled explicit export denies configured tenant mismatch without stats transport
+    /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.04s (0.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      17.05s
+  Test suites:        2
+  Individual tests:   57
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+

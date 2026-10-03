@@ -1,0 +1,140 @@
+{
+  "freezeAndPriorHashes": true,
+  "outcomes": [
+    {
+      "mode": "absent",
+      "case": "exact-capability",
+      "same": true,
+      "calls": 1
+    },
+    {
+      "mode": "absent",
+      "case": "other-native-string",
+      "same": true,
+      "name": "ConvexError",
+      "message": "MEMORY_SPACE_NOT_FOUND",
+      "baselineActual": {
+        "same": false,
+        "name": "Error",
+        "message": "MEMORY_SPACE_NOT_FOUND"
+      }
+    },
+    {
+      "mode": "absent",
+      "case": "other-native-object",
+      "same": true,
+      "name": "ConvexError",
+      "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}",
+      "baselineActual": {
+        "same": false,
+        "name": "Error",
+        "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}"
+      }
+    },
+    {
+      "mode": "absent",
+      "case": "malformed-data-getter",
+      "same": true,
+      "name": "ConvexError",
+      "message": "{\"code\":\"CAPABILITY_NOT_READY\"}",
+      "getterCalls": 0,
+      "calls": 1
+    },
+    {
+      "mode": "absent",
+      "case": "actual-get-no-implicit-stats",
+      "calls": 1,
+      "profileName": "Official"
+    },
+    {
+      "mode": "disabled",
+      "case": "exact-capability",
+      "same": true,
+      "calls": 1
+    },
+    {
+      "mode": "disabled",
+      "case": "other-native-string",
+      "same": true,
+      "name": "ConvexError",
+      "message": "MEMORY_SPACE_NOT_FOUND",
+      "baselineActual": {
+        "same": false,
+        "name": "Error",
+        "message": "MEMORY_SPACE_NOT_FOUND"
+      }
+    },
+    {
+      "mode": "disabled",
+      "case": "other-native-object",
+      "same": true,
+      "name": "ConvexError",
+      "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}",
+      "baselineActual": {
+        "same": false,
+        "name": "Error",
+        "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}"
+      }
+    },
+    {
+      "mode": "disabled",
+      "case": "malformed-data-getter",
+      "same": true,
+      "name": "ConvexError",
+      "message": "{\"code\":\"CAPABILITY_NOT_READY\"}",
+      "getterCalls": 0,
+      "calls": 1
+    },
+    {
+      "mode": "disabled",
+      "case": "actual-get-no-implicit-stats",
+      "calls": 1,
+      "profileName": "Official"
+    },
+    {
+      "mode": "enabled",
+      "case": "exact-capability",
+      "same": true,
+      "calls": 1
+    },
+    {
+      "mode": "enabled",
+      "case": "other-native-string",
+      "same": false,
+      "name": "Error",
+      "message": "MEMORY_SPACE_NOT_FOUND",
+      "baselineActual": {
+        "same": false,
+        "name": "Error",
+        "message": "MEMORY_SPACE_NOT_FOUND"
+      }
+    },
+    {
+      "mode": "enabled",
+      "case": "other-native-object",
+      "same": false,
+      "name": "Error",
+      "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}",
+      "baselineActual": {
+        "same": false,
+        "name": "Error",
+        "message": "{\"code\":\"NOT_AUTHORIZED\",\"message\":\"Access denied\"}"
+      }
+    },
+    {
+      "mode": "enabled",
+      "case": "malformed-data-getter",
+      "same": false,
+      "name": "Error",
+      "message": "private accessor marker",
+      "getterCalls": 1,
+      "calls": 1
+    },
+    {
+      "mode": "enabled",
+      "case": "actual-get-no-implicit-stats",
+      "calls": 1,
+      "profileName": "Official"
+    }
+  ]
+}

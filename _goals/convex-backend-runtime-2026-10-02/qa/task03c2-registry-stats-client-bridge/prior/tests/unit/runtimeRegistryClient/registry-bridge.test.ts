@@ -17,6 +17,7 @@ const row = {
   status: "active", registeredAt: 10, updatedAt: 20,
 } satisfies Exclude<RegisterResult, null | { accepted: true }>;
 const receipt = { accepted: true, resourceType: "agents", resourceId: "server-agent" } satisfies Extract<RegisterResult, { accepted: true }>;
+const stats = { totalMemories: 2, totalConversations: 3, totalFacts: 4, memorySpacesActive: 1 };
 
 function fixture(mode: "absent" | "disabled" | "enabled") {
   const client = new ConvexClient("https://example.convex.cloud", { disabled: true, logger: false });
@@ -58,12 +59,12 @@ describe.each(["absent", "disabled", "enabled"] as const)("registry bridge resil
   });
 
   it.each(["register", "update"] as const)("%s maps the readable official row and runs poststeps once", async (operation) => {
-    current = fixture(mode); current.mutation.mockResolvedValue(row); current.query.mockRejectedValue(new Error("statistics unavailable"));
+    current = fixture(mode); current.mutation.mockResolvedValue(row); current.query.mockResolvedValue(stats);
     const result = operation === "register"
       ? await current.agents.register({ id: "server-agent", name: "Input" })
       : await current.agents.update("server-agent", { name: "Input" });
-    expect(result).toEqual({ id: row.agentId, tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, name: row.name, description: undefined, metadata: row.metadata, config: row.config, status: row.status, registeredAt: row.registeredAt, updatedAt: row.updatedAt, lastActive: undefined });
-    expect(current.query).not.toHaveBeenCalled();
+    expect(result).toEqual({ id: row.agentId, tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, name: row.name, description: undefined, metadata: row.metadata, config: row.config, status: row.status, registeredAt: row.registeredAt, updatedAt: row.updatedAt, lastActive: undefined, stats });
+    expect(current.query).toHaveBeenCalledWith(api.agents.computeStats, { agentId: "server-agent" });
     expect(current.mutation).toHaveBeenCalledTimes(1);
     expect(current.createNode).toHaveBeenCalledTimes(operation === "register" ? 1 : 0);
   });

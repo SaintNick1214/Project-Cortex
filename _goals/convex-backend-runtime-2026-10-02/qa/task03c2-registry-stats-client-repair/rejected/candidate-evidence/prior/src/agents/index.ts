@@ -7,7 +7,6 @@
  * Registration provides discovery, analytics, and convenient cascade deletion.
  */
 
-import { isRegistryStatisticsUnavailable } from "./statistics";
 import type { AuthContext } from "../auth/types";
 import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
@@ -261,6 +260,9 @@ export class AgentsAPI {
       }
     }
 
+    // Compute stats
+    const stats = await this.getAgentStats(agent.id);
+
     return {
       id: result.agentId,
       tenantId: result.tenantId,
@@ -273,6 +275,7 @@ export class AgentsAPI {
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
       lastActive: result.lastActive,
+      stats,
     };
   }
 
@@ -300,6 +303,9 @@ export class AgentsAPI {
       return null;
     }
 
+    // Compute stats
+    const stats = await this.getAgentStats(agentId);
+
     return {
       id: result.agentId,
       tenantId: result.tenantId,
@@ -312,6 +318,7 @@ export class AgentsAPI {
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
       lastActive: result.lastActive,
+      stats,
     };
   }
 
@@ -431,7 +438,7 @@ export class AgentsAPI {
       );
     }
 
-    // Map readable registry rows; statistics require an explicit export request.
+    // Map to RegisteredAgent format (stats computed on-demand in get())
     return filtered.map((r: ConvexAgentRecord) => ({
       id: r.agentId,
       tenantId: r.tenantId,
@@ -523,6 +530,9 @@ export class AgentsAPI {
       throw new AgentRegistryWriteReceiptError({ ...result, resourceType: "agents" });
     }
 
+    // Compute stats
+    const stats = await this.getAgentStats(agentId);
+
     return {
       id: result.agentId,
       tenantId: result.tenantId,
@@ -535,6 +545,7 @@ export class AgentsAPI {
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
       lastActive: result.lastActive,
+      stats,
     };
   }
 
@@ -924,7 +935,7 @@ export class AgentsAPI {
     if (includeStats) {
       exportData = await Promise.all(
         agents.map(async (agent) => {
-          const stats = await this.getAgentStats(agent.id, { tenantId: agent.tenantId, memorySpaceId: agent.memorySpaceId });
+          const stats = await this.getAgentStats(agent.id);
           return { ...agent, stats } as Record<string, unknown>;
         }),
       );
@@ -1020,27 +1031,12 @@ export class AgentsAPI {
   /**
    * Get agent statistics
    */
-  private async getAgentStats(agentId: string, scope: AgentRegistryScope): Promise<AgentStats> {
-    const result = await this.executeWithResilience(
-      async () => {
-        try {
-          return { stats: await this.client.query(api.agents.computeStats, {
-            agentId,
-            tenantId: resolveTenantId(this.authContext?.tenantId, scope.tenantId),
-            memorySpaceId: scope.memorySpaceId,
-          }) };
-        } catch (error) {
-          if (isRegistryStatisticsUnavailable(error)) {
-            return { unavailable: error };
-          }
-          throw error;
-        }
-      },
+  private async getAgentStats(agentId: string): Promise<AgentStats> {
+    const stats = await this.executeWithResilience(
+      () => this.client.query(api.agents.computeStats, { agentId }),
       "agents:computeStats",
     );
-    // Preserve the typed capability error outside resilience's generic error conversion.
-    if (result.unavailable) throw result.unavailable;
-    return result.stats as AgentStats;
+    return stats as AgentStats;
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

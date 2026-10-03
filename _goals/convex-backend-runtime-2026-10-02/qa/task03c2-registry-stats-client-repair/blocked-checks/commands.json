@@ -1,0 +1,38 @@
+[
+  {
+    "name": "root-types",
+    "exitCode": 2,
+    "command": "node node_modules/typescript/bin/tsc --noEmit",
+    "status": "blocked by concurrent unrelated conversations/factHistory integration"
+  },
+  {
+    "name": "lint-types",
+    "exitCode": 2,
+    "command": "node node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit",
+    "status": "same unrelated blockers"
+  },
+  {
+    "name": "scoped-eslint",
+    "exitCode": 0,
+    "command": "node node_modules/eslint/bin/eslint.js src/agents/index.ts src/agents/statistics.ts src/memorySpaces/index.ts src/types/index.ts tests/unit/runtimeRegistryClient --max-warnings 0"
+  },
+  {
+    "name": "focused-tests",
+    "exitCode": 0,
+    "command": "CONVEX_URL=https://example.convex.cloud node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=tests/unit/runtimeRegistryClient --runInBand --json --outputFile=work/resume/registry-stats-repair/tests.json",
+    "passed": 82,
+    "failed": 0,
+    "skipped": 0
+  },
+  {
+    "name": "build",
+    "exitCode": 1,
+    "command": "node /home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js run build",
+    "status": "ESM/CJS pass; DTS blocked by unrelated factHistory internalization"
+  },
+  {
+    "name": "packed-browser-contracts",
+    "exitCode": null,
+    "status": "not run: failed build produced no declaration artifact"
+  }
+]
