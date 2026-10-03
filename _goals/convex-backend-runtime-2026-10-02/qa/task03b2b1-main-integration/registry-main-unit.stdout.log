@@ -1,0 +1,123 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.0s | 108/108 passed | /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+  ✅     2.7s | 143/143 passed | /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+  ✅     2.1s | 366/366 passed | /tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+  ✅     1.8s | 222/222 passed | /tests/unit/runtimeRegistryAuth/registered.test.ts
+  ✅     1.4s | 7/7 passed | /tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ✅     1.4s | 99/99 passed | /tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts
+  ✅     1.4s | 99/99 passed | /tests/unit/runtimeRegistryAuth/admissionFailure.test.ts
+  ✅     1.2s | 66/66 passed | /tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts
+  ✅     1.2s | 36/36 passed | /tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts
+  ✅     1.2s | 36/36 passed | /tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.36s ( 1.6%) - portable inventory, actual schema exports and preserved sources ordinary inventory reproduction writes only owned temporary outputs and always removes them
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+ 2. [32m✓[0m    0.19s ( 0.9%) - cycle2 F2 resulting graph bound before child insertion 99 nodes with READ=false validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 3. [32m✓[0m    0.19s ( 0.9%) - cycle2 F2 resulting graph bound before child insertion 99 nodes with READ=true validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 4. [32m✓[0m    0.05s ( 0.2%) - native Convex v.any round trips and exact integer/binary witnesses (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } retains native v.any root values instead of silently coercing them to records
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.2%) - cycle2 F2 resulting graph bound before child insertion 100 nodes with READ=true validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.2%) - cycle2 F2 resulting graph bound before child insertion 100 nodes with READ=false validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.2%) - native Convex v.any round trips and exact integer/binary witnesses (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } retains native v.any root values instead of silently coercing them to records
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.2%) - native Convex v.any round trips and exact integer/binary witnesses (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } retains native v.any root values instead of silently coercing them to records
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.1%) - mutation collision and serializable-data preflight native-invalid bulk config denies before all effects
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+10. [32m✓[0m    0.02s ( 0.1%) - cycle2 F1 independent READ before every stored identifier output agent status under none READ returns only eligible identifiers or a count receipt
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+11. [32m✓[0m    0.02s ( 0.1%) - native Convex v.any round trips and exact integer/binary witnesses native (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } values survive create/edit/get and their scoped metadata paths
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+12. [32m✓[0m    0.02s ( 0.1%) - native Convex v.any round trips and exact integer/binary witnesses native (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } values survive create/edit/get and their scoped metadata paths
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - cycle2 F1 independent READ before every stored identifier output agent status under all READ returns only eligible identifiers or a count receipt
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - canonical scope, labels, bulk preflight and independent capabilities scopes (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } before hydration/filter/limit even with foreign rows first
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - retired canonical rows and exact tombstones survive the final deletion barrier late retired row or resource fence changes in (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } deny and roll back
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - native Convex v.any round trips and exact integer/binary witnesses native (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } values survive create/edit/get and their scoped metadata paths
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - cycle2 F1 independent READ before every stored identifier output context update filter under partial READ returns only eligible identifiers or a count receipt
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - portable inventory, actual schema exports and preserved sources space deletion final barrier notices a revoked principal after all intentional fence writes and rolls back
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+19. [32m✓[0m    0.01s ( 0.0%) - canonical scope, labels, bulk preflight and independent capabilities register/create derive owners and privileged user binding without provisioning control records
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+20. [32m✓[0m    0.01s ( 0.0%) - whole-graph links, cross-space grants, deletion and revision attribution orphan deletion repairs all descendant root/depth links and records revisions
+    /tests/unit/runtimeRegistryAuth/adversarial.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.15s (5.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      21.89s
+  Test suites:        10
+  Individual tests:   1017
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 10
+════════════════════════════════════════════════════════════════════════════════
+
