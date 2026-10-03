@@ -1,0 +1,51 @@
+import datetime, hashlib, json, pathlib, subprocess, sys, tarfile
+repo = pathlib.Path('/workspace/Project-Cortex')
+root = repo/'_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture'
+private = repo/'work/backend-runtime/task03c2-live-fixture'
+base = '4fb3482c5e06fcab12ab8513b242a066ef761f2f'
+backend = 'c92d548368791386c62f39895e381ef6bde2dc86'
+digest = lambda data: hashlib.sha256(data).hexdigest()
+source = json.loads((root/'source-provenance.json').read_text())
+assert source['acceptedCommit'] == base
+for row in source['copied']:
+ data = (root/row['fixture']).read_bytes()
+ assert digest(data) == row['sha256']
+ assert data == subprocess.check_output(['git', 'show', f'{base}:{row["source"]}'], cwd=repo)
+ assert data == subprocess.check_output(['git', 'show', f'{backend}:{row["source"]}'], cwd=repo)
+sdk = json.loads((root/'sdk-provenance.json').read_text())
+assert sdk['acceptedCommit'] == base
+archived = 0
+for row in sdk['files']:
+ data = (private/row['path']).read_bytes()
+ assert digest(data) == row['sha256']
+ if row['path'].startswith('sdk/') and not row['path'].startswith('sdk/dist/'):
+  assert data == subprocess.check_output(['git', 'show', f'{base}:{row["path"][4:]}'], cwd=repo)
+  archived += 1
+assert archived == 129
+pack = private/sdk['package']['path']
+assert digest(pack.read_bytes()) == sdk['package']['sha256']
+entries = 0
+with tarfile.open(pack) as handle:
+ for member in handle.getmembers():
+  if member.isfile():
+   assert handle.extractfile(member).read() == (private/'packed-sdk'/member.name).read_bytes()
+   entries += 1
+assert entries == 53
+archives = json.loads((root/'archive-preservation.json').read_text())
+assert len(archives) == 107
+for row in archives: assert digest((repo/row['path']).read_bytes()) == row['sha256']
+history = root/'history/cycle1/preservation-manifest.json'
+assert digest(history.read_bytes()) == '57b40f90400b5d6b52d9656a35194c0a01c7f98e77c8516b2a4f18e224361942'
+records = json.loads(history.read_text())['records']
+assert len(records) == 280
+for row in records: assert digest((repo/row['file']).read_bytes()) == row['sha256']
+old_matrix = root/'history/cycle1/candidate/service-outcomes.json'
+assert (root/'service-outcomes.json').read_bytes() == old_matrix.read_bytes()
+matrix = json.loads((root/'service-outcomes.json').read_text())
+assert len(matrix['cases']) == 41 and all(row['status'] == 'UNEXECUTED' for row in matrix['cases'])
+receipt = dict(verifiedAt=datetime.datetime.now(datetime.timezone.utc).isoformat(), acceptedCommit=base, backendAcceptedCommit=backend,
+ fixtureExactBothCommits=len(source['copied']), sdkSourceExactAcceptedCommit=archived, sdkBuildPackFiles=len(sdk['files']), packEntriesExact=entries,
+ packSha256=sdk['package']['sha256'], archivedQaUnchanged=len(archives), cycle1PreservedRecordsUnchanged=len(records), cycle1ManifestSha256=digest(history.read_bytes()),
+ serviceCases=41, serviceCasesExecuted=0, matrixUnchanged=True, networkCalls=0, signedTokens=0)
+with (root/'evidence/cycle2'/ (sys.argv[1] if len(sys.argv) > 1 else 'provenance.json')).open('x') as handle: json.dump(receipt, handle, indent=2)
+print(json.dumps(receipt))

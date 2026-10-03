@@ -1,0 +1,8 @@
+// Explicit OFFLINE entrypoint dependency interception; never used by live driver.
+export async function resolve(specifier, context, nextResolve) {
+  if (/\/scripts\/(?:deploy|cleanup)\.mjs$/.test(context.parentURL ?? "")) {
+    const stubs = { "./guard.mjs": "receipt-guard.mjs", "./process-owner.mjs": "receipt-owner.mjs", "./operator.mjs": "receipt-operator.mjs" };
+    if (stubs[specifier]) return { url: new URL(stubs[specifier], import.meta.url).href, shortCircuit: true };
+  }
+  return await nextResolve(specifier, context);
+}
