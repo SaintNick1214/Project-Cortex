@@ -1,0 +1,57 @@
+{
+  "recordedAt": "2026-10-03T12:41:03.390903+00:00",
+  "originalCycle1FailureEvidence": "evidence/initial-failures.json",
+  "preservedCycle1": "history/cycle1/preservation-manifest.json",
+  "observations": [
+    {
+      "check": "initial actual SDK child driver probe",
+      "observed": "Expected completed=true, observed false; full 41-case receipt still retained.",
+      "raw": "evidence/cycle2/initial-driver.txt",
+      "receipts": [
+        "evidence/qualify-3a1cca6b-0eea-4800-a3b9-8ed21378e27c.json"
+      ],
+      "correction": "Ready/bootstrap handshake, ordered IPC drain before disconnect termination, and explicit Unix loader IPC allowance in offline network interception."
+    },
+    {
+      "check": "retry1/retry2 driver probe",
+      "observed": "Same completion assertion failed; both raw command receipts and generated 41-case receipts are retained.",
+      "raw": [
+        "evidence/cycle2/retry1-driver.txt",
+        "evidence/cycle2/retry2-driver.txt"
+      ],
+      "correction": "Terminal reason and sanitized audit counters added; final actual SDK child probe passes zero interceptions."
+    },
+    {
+      "check": "retry1/retry2 house and backend-policy lint",
+      "observed": "Four errors: two unused initial assignments, unsafe return from finally, and control-character regex. House also observed 21 accepted-source warnings.",
+      "raw": [
+        "evidence/cycle2/retry1-house-lint.txt",
+        "evidence/cycle2/retry1-backend-policy-lint.txt",
+        "evidence/cycle2/retry2-house-lint.txt",
+        "evidence/cycle2/retry2-backend-policy-lint.txt"
+      ],
+      "correction": "Declare output variables without unused initialization; return after finally; construct ANSI regex without literal control character."
+    },
+    {
+      "check": "early strict client typecheck before command recorder",
+      "observed": "Optional process.disconnect invocation was rejected by strict TypeScript.",
+      "origin": "executor tool transcript; no separate raw file was created",
+      "correction": "Guard process.disconnect before invocation; final strict client project passes."
+    },
+    {
+      "check": "two patch preparation attempts",
+      "observed": "Combined delete/add for operator path and later README context matching were rejected before mutation.",
+      "origin": "executor tool transcript; no source mutation from rejected patches",
+      "correction": "Apply updates against exact existing bytes."
+    },
+    {
+      "check": "first finalization hygiene scan",
+      "observed": "Four preserved archived Task01 literal test-only-placeholder deployment-key standins matched the broad key pattern; no actual key was observed. Finalization stopped before replacing freeze/inventories.",
+      "origin": "executor tool transcript; matched historical files remained unchanged",
+      "correction": "Explicitly allowlist the exact archived test-only-placeholder suffix alongside clearly labeled offline STANDIN controls; scan all other matches fail closed."
+    }
+  ],
+  "finalReplay": "evidence/cycle2/commands-final2.json",
+  "networkCalls": 0,
+  "serviceCasesExecuted": 0
+}

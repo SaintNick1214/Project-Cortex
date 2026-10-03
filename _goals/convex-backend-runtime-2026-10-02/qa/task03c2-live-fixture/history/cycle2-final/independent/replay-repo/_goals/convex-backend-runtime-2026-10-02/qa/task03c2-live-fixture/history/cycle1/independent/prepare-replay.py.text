@@ -1,0 +1,13 @@
+import pathlib,json,shutil,os
+root=pathlib.Path('/workspace/Project-Cortex'); out=pathlib.Path('/tmp/task03c2-live-harness-review1-7m04c8w4'); qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture'; replica=out/'replay-repo'
+replica.mkdir(mode=0o700)
+paths=[p for p in qa.rglob('*') if p.is_file()]
+paths += [root/e['path'] for e in json.loads((qa/'archive-preservation.json').read_text())]
+scratch=root/'work/backend-runtime/task03c2-live-fixture'
+paths += [scratch/e['path'] for e in json.loads((qa/'sdk-provenance.json').read_text())['files']]
+for p in set(paths):
+    dest=replica/p.relative_to(root);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
+for name in ['convex','ws','https-proxy-agent','tsx']:
+    src=root/'node_modules'/name/'package.json';dest=replica/src.relative_to(root);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,dest)
+os.chmod(replica/'work/backend-runtime/task03c2-live-fixture',0o700)
+print(json.dumps({'replica':str(replica),'copiedFiles':len(set(paths)),'method':'byte-exact offline replay; no trusted key/target/environment copied'}))

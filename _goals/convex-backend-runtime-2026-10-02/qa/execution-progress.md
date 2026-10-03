@@ -272,3 +272,26 @@ ambiguityfollowup activeisolated; only6lookups and narrowlyjustified originaltes
 fixture/injection/message corrections afterliteralfailedreceipts. Pureauthority
 policy/resolver/internalregistrations remain frozen. Service staysheld until that
 fix qualifies and acceptedfixturedependency refresh receivesaffectedfreshreview.
+
+2026-10-03T13:03Z: accepted metadata/shared-reader native-error followup FINAL
+executor freeze5e6573ab586f867589835f9f7f3f4ffa32ed0294ccdcbffaee5c7102e0ef756e
+verified5 source/114 QA bindings. Selected787 and separate98 overlap40, yielding
+845 distinct outcomes, zero skips; actual unchanged backendES2021/root types,
+lint/build/packed contracts and qualified historical151/72/19/6 replays pass.
+First fresh original41/affected03A independent judge is ACTIVE. Candidate is
+unintegrated; executor results alone confer no PASS or live-service qualification.
+
+Live harness second fresh FINAL REJECT2.6: three malformed/wrong-function diagnostics
+falsely satisfy operator denial; one real offline driver replay reports REAPED before
+its grandchild is terminal, with two later passes preserved; deploy/cleanup receipts
+repeat key/target preflight; actual driver discovery34 differs from advertised35.
+Exact report task03c2-live-harness-review-2.md and1304 byte-preserved records in
+task03c2-live-fixture/history/cycle2-final retain all failures and later passes.
+Preservation manifest2e69693b95c7f2dec576c289fcaa0a8c58259f7c557a2fd691597f7da14a6833
+checks all511 public/214 private/976 judge records;400 accepted SDK source/build/pack
+dependencies remain immutable private reproducible omissions with exact bindings.
+Third and last harness mechanics repair is authorized; parent alone may refresh the
+two helper dependency copies after metadata FINALPASS/integration and before the
+third final freeze/review. No service/target/deploy/signing occurred;41 live cases
+remain UNEXECUTED. MF/artifact additional-cycle questions and native UI access remain
+pending; Task03, text retrieval slice and whole17-task goal remain incomplete.

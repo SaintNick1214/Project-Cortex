@@ -1,0 +1,3 @@
+import {createRequire,syncBuiltinESMExports} from 'node:module';
+const fs=createRequire(import.meta.url)('node:fs'),original=fs.readFileSync,append=fs.appendFileSync;
+fs.readFileSync=function(path,...args){const value=original.call(this,path,...args);if(/^\/proc\/[0-9]+\/stat$/.test(String(path))){const raw=String(value);append('/tmp/task03c2-live-harness-review2-oj6uebre/proc-audit.jsonl',JSON.stringify({at:new Date().toISOString(),path:String(path),raw})+'\n',{mode:384});}return value;};syncBuiltinESMExports();

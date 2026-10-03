@@ -1,0 +1,47 @@
+from pathlib import Path
+import json,hashlib,subprocess,tarfile,datetime,os,re
+r=Path('/workspace/Project-Cortex');d=Path('/tmp/task03c2-live-harness-review2-oj6uebre');q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture';w=r/'work/backend-runtime/task03c2-live-fixture'
+sha=lambda b:hashlib.sha256(b).hexdigest(); read=lambda p:json.loads(p.read_text()); rows=[]
+def check(name,value,details=None):rows.append({'name':name,'pass':bool(value),'details':details})
+f=read(q/'source-freeze.json');check('final-freeze-binding',sha((q/'source-freeze.json').read_bytes())=='c36c94ff03fd68f74da4d44feb068c155d0c50e80c0199e6e384b07de86f2cf4',f['frozenAt'])
+for field,base in [('files',q),('privateExecutorFiles',r)]:
+ data=f[field];bad=[x['path'] for x in data if sha((base/x['path']).read_bytes())!=x['sha256']];check('freeze-'+field,not bad,{'count':len(data),'bad':bad})
+for name in ('file-inventory.json','private-file-inventory.json','archive-preservation.json'):
+ data=read(q/name);bad=[x['path'] for x in data if sha((r/x['path']).read_bytes())!=x['sha256']];check(name,not bad,{'count':len(data),'bad':bad})
+a=read(q/'source-provenance.json');accepted=a['acceptedCommit'];backend=a['backendAcceptedCommit']
+def gitbytes(commit,p):return subprocess.check_output(['git','show',commit+':'+p],cwd=r)
+backendrows=[]
+for x in a['copied']:
+ b=(q/x['fixture']).read_bytes();backendrows.append({'source':x['source'],'exactAccepted':b==gitbytes(accepted,x['source']),'exactBackend':b==gitbytes(backend,x['source']),'hash':sha(b)==x['sha256']})
+check('14-fixture-copies-exact',len(backendrows)==14 and all(all(v for k,v in x.items() if k!='source') for x in backendrows),backendrows)
+sdk=read(q/'sdk-provenance.json');src=[]
+for x in sdk['files']:
+ b=(w/x['path']).read_bytes();assert sha(b)==x['sha256'],x['path']
+ if x['path'].startswith('sdk/') and not x['path'].startswith('sdk/dist/'):
+  path=x['path'][4:];src.append({'path':path,'exact':b==gitbytes(accepted,path)})
+check('SDK-provenance-199-and-sources129',len(sdk['files'])==199 and len(src)==129 and all(x['exact'] for x in src),{'count':len(sdk['files']),'sources':len(src),'bad':[x for x in src if not x['exact']]})
+pack=w/sdk['package']['path'];entries=[]
+with tarfile.open(pack) as t:
+ for x in t.getmembers():entries.append({'path':x.name,'exact':x.isfile() and t.extractfile(x).read()==(w/'packed-sdk'/x.name).read_bytes()})
+check('pack53-exact',sha(pack.read_bytes())==sdk['package']['sha256'] and len(entries)==53 and all(x['exact'] for x in entries),{'sha256':sha(pack.read_bytes()),'entries':len(entries)})
+pm=read(q/'history/cycle1/preservation-manifest.json');check('preservation-manifest-hash',sha((q/'history/cycle1/preservation-manifest.json').read_bytes())==f['cycle1PreservationManifestSha256'])
+check('cycle1-preserved280',len(pm['records'])==280 and all(sha((r/x['file']).read_bytes())==x['sha256'] and (r/x['file']).stat().st_size==x['bytes'] for x in pm['records']))
+check('cycle1-omission199-current-private-exact',len(pm['omittedPrivateReproducibleSdk'])==199 and all(sha((r/x['path'].removeprefix('replay-repo/')).read_bytes())==x['sha256'] for x in pm['omittedPrivateReproducibleSdk']))
+im=read(q/'history/cycle1/independent/manifest.original.json');origbase='/tmp/task03c2-live-harness-review1-7m04c8w4/';mapped={x['original'].removeprefix(origbase):x for x in pm['records'] if x['original'].startswith(origbase)};omitted={x['path']:x for x in pm['omittedPrivateReproducibleSdk']}
+bad=[]
+for x in im['files']:
+ y=mapped.get(x['path']) or omitted.get(x['path']);
+ if not y or y['sha256']!=x['sha256'] or y['bytes']!=x['bytes']:bad.append(x['path'])
+check('all407-original-independent-manifest-bindings',len(im['files'])==407 and not bad,{'count':len(im['files']),'bad':bad,'preserved':sum(x['path'] in mapped for x in im['files']),'privateOmissions':sum(x['path'] in omitted for x in im['files'])})
+m=read(q/'service-outcomes.json');old=read(q/'history/cycle1/candidate/service-outcomes.json');check('41-live-outcomes-unexecuted-byte-exact',m==old and m['executed']==0 and m['discovered']==41 and len(m['cases'])==41 and all(x['status']=='UNEXECUTED' for x in m['cases']),[x['name'] for x in m['cases']]);check('no-handwritten-generated-api',not (q/'fixture/convex/_generated/api.js').exists() and not (q/'fixture/convex/_generated/api.d.ts').exists())
+check('no-live-target-or-env',not (w/'target.json').exists() and not (w/'deploy.env').exists())
+s=w.stat();k=(r/'work/backend-runtime/qualification/jwt-private.pem').lstat();check('private-0700-and-key0600-owned-unlinked',s.st_mode&0o777==0o700 and k.st_mode&0o777==0o600 and k.st_uid==os.getuid() and k.st_nlink==1 and not (r/'work/backend-runtime/qualification/jwt-private.pem').is_symlink())
+hygiene=[]
+for path in q.rglob('*'):
+ if not path.is_file():continue
+ b=path.read_bytes()
+ if re.search(rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+',b):hygiene.append(str(path.relative_to(q)))
+ for match in re.findall(rb'\b(?:dev|prod):[a-z0-9-]+\|[A-Za-z0-9_=-]{20,}',b):
+  if b'STANDIN' not in match and b'standin' not in match and b'test-only-placeholder' not in match:hygiene.append(str(path.relative_to(q)))
+check('public-secret-patterns',not hygiene,hygiene)
+report={'observedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'checks':rows,'allPass':all(x['pass'] for x in rows)};(d/'integrity.json').write_text(json.dumps(report,indent=2));print(json.dumps({'allPass':report['allPass'],'checks':len(rows),'failures':[x for x in rows if not x['pass']]}))

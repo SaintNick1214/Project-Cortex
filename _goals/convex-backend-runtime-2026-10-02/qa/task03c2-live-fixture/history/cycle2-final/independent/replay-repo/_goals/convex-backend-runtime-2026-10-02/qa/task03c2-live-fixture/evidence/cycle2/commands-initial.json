@@ -1,0 +1,26 @@
+[
+  {
+    "name": "classifier",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/classifier-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T12:30:34.800490+00:00",
+    "completedAt": "2026-10-03T12:30:34.956833+00:00",
+    "exitCode": 0,
+    "evidence": "evidence/cycle2/initial-classifier.txt"
+  },
+  {
+    "name": "driver",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T12:30:34.956990+00:00",
+    "completedAt": "2026-10-03T12:30:35.710542+00:00",
+    "exitCode": 1,
+    "evidence": "evidence/cycle2/initial-driver.txt"
+  }
+]

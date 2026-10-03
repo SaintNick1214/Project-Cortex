@@ -1,0 +1,22 @@
+/** Parse the official CLI invocation and the accepted structured ConvexError.
+ * Diagnostics stay in memory; arbitrary permission words never suffice.
+ */
+export function acceptedOperatorDenial(name, result) {
+  if (result.code !== 1 || result.timedOut || result.overflow || result.signal) return false;
+  const text = result.stderr.replace(new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g"), "");
+  const envelope = `Failed to run function "${name}":`;
+  const start = text.indexOf(envelope);
+  if (start === -1 || text.indexOf(envelope, start + envelope.length) !== -1) return false;
+  const body = text.slice(start + envelope.length).trim();
+  if (!body.startsWith("ConvexError:") || !/\[Request ID: [a-f0-9]+\] Server Error/.test(body)) return false;
+  const match = body.match(/Uncaught ConvexError:\s*(\{[^\n]*\})/);
+  if (!match) return false;
+  let payload;
+  try { payload = JSON.parse(match[1]); } catch { return false; }
+  const boundary = Object.keys(payload).sort().join(",") === "code,message,outcome,retryable,version"
+    && payload.version === 1 && payload.code === "FORBIDDEN" && payload.message === "Access denied"
+    && payload.retryable === false && payload.outcome === "not_dispatched";
+  if (name.startsWith("runtimeAuth:")) return boundary;
+  if (name.startsWith("sessions:")) return boundary || (Object.keys(payload).sort().join(",") === "code,message" && payload.code === "FORBIDDEN" && payload.message === "Access denied");
+  return false;
+}

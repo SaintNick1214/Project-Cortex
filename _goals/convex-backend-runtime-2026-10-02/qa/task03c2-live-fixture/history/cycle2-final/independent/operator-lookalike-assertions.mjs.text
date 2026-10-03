@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';import {writeFileSync} from 'node:fs';
+import {acceptedOperatorDenial} from '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/operator-classifier.mjs';
+const name='runtimeAuth:recheck',payload=JSON.stringify({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'}),base={code:1,signal:null,timedOut:false,overflow:false,stdout:''};
+const controls=[
+ ['request-marker-in-proxy-description',`Failed to run function "${name}":\nConvexError: Proxy rejection contains [Request ID: abc123] Server Error\nUncaught ConvexError: ${payload}\n`],
+ ['wrong-function-plus-mentioned-envelope',`Failed to run function "runtimeAuth:authorize":\nError: diagnostic contains Failed to run function "${name}":\nConvexError: [Request ID: abc123] Server Error\nUncaught ConvexError: ${payload}\n`],
+ ['literal-structured-json-lookalike',`Failed to run function "${name}":\nConvexError: EACCES reading deploy.env\nPrinted example: [Request ID: abc123] Server Error\nUncaught ConvexError: ${payload}\n`]
+].map(([name,stderr])=>({name,expected:false,actual:acceptedOperatorDenial('runtimeAuth:recheck',{...base,stderr})}));
+for(const c of controls){try{assert.equal(c.actual,c.expected,c.name);c.passed=true;}catch{c.passed=false;}}
+const receipt={evidenceKind:'OFFLINE actual frozen classifier independent expected-denial controls',discovered:3,passed:controls.filter(x=>x.passed).length,failed:controls.filter(x=>!x.passed).length,skipped:0,networkCalls:0,serviceOutcomes:'UNEXECUTED',controls};
+writeFileSync('/tmp/task03c2-live-harness-review2-oj6uebre/operator-lookalike-assertions.json',JSON.stringify(receipt,null,2),{flag:'wx',mode:384});process.stdout.write(JSON.stringify(receipt)+'\n');process.exitCode=receipt.failed?1:0;
