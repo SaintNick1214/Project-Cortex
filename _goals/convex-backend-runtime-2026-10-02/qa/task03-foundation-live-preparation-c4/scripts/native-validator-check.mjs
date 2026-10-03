@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { repo, preparation, sha256 } from './guard.mjs';
+const ledger=JSON.parse(readFileSync(resolve(preparation,'path-ledger.json')));
+function nativeSchema(schema){
+ if(schema.type==='objectValidator')return nativeSchema(schema.parameters[0]);
+ if(schema.type==='object')return {type:'object',value:Object.fromEntries(Object.entries(schema.fields).map(([key,child])=>[key,{fieldType:nativeSchema(child.type==='optional'?child.parameters[0]:child),optional:child.type==='optional'}]))};
+ if(schema.type==='array')return {type:'array',value:nativeSchema(schema.parameters[0])};
+ if(schema.type==='union')return {type:'union',value:schema.parameters.map(nativeSchema)};
+ if(schema.type==='literal')return {type:'literal',value:schema.parameters[0].value};
+ if(schema.type==='id')return {type:'id',tableName:schema.parameters[0].value};
+ if(schema.type==='record')return {type:'record',keys:nativeSchema(schema.parameters[0]),values:{fieldType:nativeSchema(schema.parameters[1]),optional:false}};
+ return {type:schema.type==='int64'?'bigint':schema.type==='float64'?'number':schema.type};
+}
+const modules=new Map(), rows=[];
+for(const row of ledger.cases){const path=resolve(repo,row.source);if(!modules.has(path))modules.set(path,await import(pathToFileURL(path).href));const fn=modules.get(path)[row.path.split(':')[1]];
+ assert.ok(fn);assert.equal(fn['is'+row.kind[0].toUpperCase()+row.kind.slice(1)],true);assert.equal(Boolean(fn.isInternal),row.visibility==='internal');
+ const args=JSON.parse(fn.exportArgs());assert.deepEqual(nativeSchema(row.validatorSchema),args,'Native exported args mismatch '+row.path);
+ rows.push({path:row.path,kind:row.kind,visibility:row.visibility,args,exportArgsSha256:sha256(fn.exportArgs())});
+}
+writeFileSync(resolve(preparation,'native-registration-schemas.json'),JSON.stringify({scope:'OFFLINE_NATIVE_CONVEX_REGISTRATIONS',rows},null,2)+'\n');
+console.log(JSON.stringify({status:'PASS',registered:rows.length,public:rows.filter(r=>r.visibility==='public').length,internal:rows.filter(r=>r.visibility==='internal').length,validatorMismatches:0,dispatches:0,signatures:0}));
