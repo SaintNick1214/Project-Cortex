@@ -1,0 +1,91 @@
+[
+  {
+    "name": "backend-ES2021",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "convex-dev/tsconfig.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:41:54.487967+00:00",
+    "finishedAt": "2026-10-03T13:42:01.584860+00:00",
+    "durationSeconds": 7.097,
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/main-integration-cycle2/backend-ES2021.log"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/backend-runtime/metadata-main-1791034914485011617/jest.config.json",
+      "--listTests"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:42:01.585172+00:00",
+    "finishedAt": "2026-10-03T13:42:01.797318+00:00",
+    "durationSeconds": 0.212,
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/main-integration-cycle2/discovery.log"
+  },
+  {
+    "name": "outcomes",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/backend-runtime/metadata-main-1791034914485011617/jest.config.json",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/main-integration-cycle2/outcomes.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:42:01.797622+00:00",
+    "finishedAt": "2026-10-03T13:42:34.871351+00:00",
+    "durationSeconds": 33.074,
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/main-integration-cycle2/outcomes.log"
+  },
+  {
+    "name": "root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:42:34.871660+00:00",
+    "finishedAt": "2026-10-03T13:42:46.761680+00:00",
+    "durationSeconds": 11.89,
+    "exitCode": 2,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/main-integration-cycle2/root-types.log"
+  },
+  {
+    "name": "owned-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeAuth.ts",
+      "convex-dev/runtimeMetadataAuth.ts",
+      "tests/unit/runtimeAuth/provisioning.test.ts",
+      "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+      "tests/unit/runtimeMetadataAuth/native-errors.test.ts",
+      "tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T13:42:46.762003+00:00",
+    "finishedAt": "2026-10-03T13:42:53.009649+00:00",
+    "durationSeconds": 6.248,
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/main-integration-cycle2/owned-lint.log"
+  }
+]

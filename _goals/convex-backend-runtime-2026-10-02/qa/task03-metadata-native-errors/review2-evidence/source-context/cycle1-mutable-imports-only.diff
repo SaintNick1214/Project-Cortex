@@ -1,0 +1,15 @@
+--- cycle1-mutable.raw
++++ cycle1-mutable.executable
+@@ -1,9 +1,9 @@
+ /** Verified mutable metadata. Operations preflight every target and never revive retained keys. */
+ import { ConvexError, v } from "convex/values";
+-import { mutation, query, internalMutation } from "./_generated/server";
+-import type { Doc } from "./_generated/dataModel";
++import { mutation, query, internalMutation } from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/_generated/server";
++import type { Doc } from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/_generated/dataModel";
+ import { scopeArgs, authority, actor, mutableRow, candidates, check, fresh, finalChecks, canonicalFields, newResource, sourceId,
+-  tombstone, readAuthority, readResourceAuthority, newTarget, resource, response, page, invalid } from "./runtimeMetadataAuth";
++  tombstone, readAuthority, readResourceAuthority, newTarget, resource, response, page, invalid } from "./cycle1-runtimeMetadataAuth";
+ const keyArgs = { namespace: v.string(), key: v.string(), ...scopeArgs };
+ const filterArgs = { namespace: v.string(), ...scopeArgs, keyPrefix: v.optional(v.string()), userId: v.optional(v.string()), updatedBefore: v.optional(v.number()), updatedAfter: v.optional(v.number()) };
+ interface Filters { namespace: string; keyPrefix?: string; userId?: string; updatedBefore?: number; updatedAfter?: number }

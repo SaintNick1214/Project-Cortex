@@ -1,0 +1,68 @@
+{
+  "classification": "Parent confirmation of defect in previously accepted metadata slice; not an independent verdict or service exploit proof",
+  "observedAt": "2026-10-03T13:21:28.352Z",
+  "outcomes": [
+    {
+      "table": "immutable",
+      "capability": "write",
+      "actualHandler": true,
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "errorType": "Error",
+      "leaksStoredInternalIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "mutable",
+      "capability": "write",
+      "actualHandler": true,
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "errorType": "Error",
+      "leaksStoredInternalIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "sessions",
+      "capability": "write",
+      "actualHandler": true,
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "errorType": "Error",
+      "leaksStoredInternalIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "immutable",
+      "capability": "read",
+      "actualHandler": true,
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "errorType": "Error",
+      "leaksStoredInternalIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "mutable",
+      "capability": "read",
+      "actualHandler": true,
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "errorType": "Error",
+      "leaksStoredInternalIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "sessions",
+      "capability": "read",
+      "actualHandler": true,
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "errorType": "Error",
+      "leaksStoredInternalIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    }
+  ],
+  "sourceOrQaWrites": 0,
+  "serviceCalls": 0
+}

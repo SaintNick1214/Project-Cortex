@@ -1,0 +1,198 @@
+   1: /** Verified generic metadata authority; deliberately independent of memory/fact adapters. */
+   2: import { ConvexError, v } from "convex/values";
+   3: import type { MutationCtx, QueryCtx } from "./_generated/server";
+   4: import type { Doc } from "./_generated/dataModel";
+   5: import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability, RuntimeResource } from "../src/auth/verified";
+   6: import { createAuthorityReader, requireAuthority, recheckAuthority } from "./runtimeAuth";
+   7: 
+   8: export const scopeArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
+   9: export interface ScopeSelectors { tenantId?: string; memorySpaceId?: string }
+  10: export type MetadataTable = "immutable" | "mutable" | "sessions";
+  11: export type MetadataRow = Doc<"immutable"> | Doc<"mutable"> | Doc<"sessions">;
+  12: type ReadCtx = Pick<QueryCtx, "db" | "auth">;
+  13: export function denied(): never { throw new ConvexError({ code: "FORBIDDEN", message: "Access denied" }); }
+  14: export function invalid(): never { throw new ConvexError({ code: "INVALID_INPUT", message: "Invalid metadata input" }); }
+  15: export function nonempty(...values: string[]): void { if (values.some((value) => !value.trim())) invalid(); }
+  16: export function page(value: number | undefined, fallback: number): number {
+  17:   const result = value ?? fallback;
+  18:   if (!Number.isSafeInteger(result) || result < 0) invalid();
+  19:   return result;
+  20: }
+  21: /** Frozen v1 linked-source key: JSON array encoding is unambiguous for arbitrary strings. */
+  22: export function sourceId(table: MetadataTable, first: string, second?: string): string {
+  23:   return `${table === "sessions" ? "session" : table}:${JSON.stringify(second === undefined ? [first] : [first, second])}`;
+  24: }
+  25: export function resource(table: MetadataTable, row: MetadataRow): RuntimeResource {
+  26:   if (!row.tenantId || !row.ownerPrincipalId) denied();
+  27:   const id = "type" in row ? sourceId(table, row.type, row.id)
+  28:     : "namespace" in row ? sourceId(table, row.namespace, row.key) : sourceId(table, row.sessionId);
+  29:   return { resourceType: "source", resourceId: id, tenantId: row.tenantId,
+  30:     memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId };
+  31: }
+  32: export async function authority(ctx: ReadCtx, capability: RuntimeCapability, selectors: ScopeSelectors): Promise<RuntimeAuthority> {
+  33:   return await requireAuthority(ctx, { capability, tenantId: selectors.tenantId, memorySpaceId: selectors.memorySpaceId });
+  34: }
+  35: export function actor(authority: RuntimeAuthority, userId?: string): void {
+  36:   if (userId !== undefined && userId !== authority.userId) denied();
+  37: }
+  38: function profileEligible(authority: Pick<RuntimeAuthority, "resourceAccess" | "userId">, type: string, id: string): boolean {
+  39:   return type !== "user" || authority.resourceAccess !== "own" || id === authority.userId;
+  40: }
+  41: export function profile(authority: RuntimeAuthority, type: string, id: string): void {
+  42:   if (!profileEligible(authority, type, id)) denied();
+  43: }
+  44: export async function check(ctx: Pick<QueryCtx, "db">, table: MetadataTable, row: MetadataRow,
+  45:   auth: RuntimeAuthority, capability: RuntimeCapability): Promise<RuntimeAuthority> {
+  46:   if (row.tombstonedAt !== undefined) denied();
+  47:   if ("type" in row) profile(auth, row.type, row.id);
+  48:   await finalChecks(ctx, [{ auth, capability, resource: resource(table, row) }]);
+  49:   return auth;
+  50: }
+  51: function deadline(grant: { expiresAt?: number } | null): void {
+  52:   if (!grant || (grant.expiresAt !== undefined && (!Number.isFinite(grant.expiresAt) || Date.now() >= grant.expiresAt))) denied();
+  53: }
+  54: /** Transaction snapshot control checks plus synchronous lifetime check after the final await. */
+  55: export async function finalChecks(ctx: Pick<QueryCtx, "db">, checks: Array<{ auth: RuntimeAuthorityReference; capability: RuntimeCapability; resource?: RuntimeResource }>): Promise<void> {
+  56:   const grants = await Promise.all(checks.map(({ auth }) => createAuthorityReader(ctx).getGrant(auth.grantId)));
+  57:   for (const { auth, capability, resource: target } of checks) await recheckAuthority(ctx, auth,
+  58:     target ? { capability, resource: target } : { capability, tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId });
+  59:   for (const grant of grants) deadline(grant);
+  60: }
+  61: export async function fresh(ctx: Pick<QueryCtx, "db">, auth: RuntimeAuthority, capability: RuntimeCapability): Promise<void> {
+  62:   await finalChecks(ctx, [{ auth, capability }]);
+  63: }
+  64: export function canonicalFields(auth: RuntimeAuthority) {
+  65:   return { tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId, userId: auth.userId };
+  66: }
+  67: export async function newResource(ctx: Pick<QueryCtx, "db">, auth: RuntimeAuthority, id: string): Promise<void> {
+  68:   await recheckAuthority(ctx, auth, { capability: "write", resource: { resourceType: "source", resourceId: id,
+  69:     tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId } });
+  70: }
+  71: /** Existence-only canonical-key preflight, including foreign/missing-owner duplicates. */
+  72: async function uniqueKey(ctx: Pick<QueryCtx, "db">, table: MetadataTable, row: MetadataRow): Promise<void> {
+  73:   let conflict: MetadataRow | null;
+  74:   if (table === "immutable" && "type" in row) conflict = await ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+  75:     q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("type", row.type).eq("id", row.id))
+  76:     .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  77:   else if (table === "mutable" && "namespace" in row) conflict = await ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+  78:     q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("namespace", row.namespace).eq("key", row.key))
+  79:     .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  80:   else if (table === "sessions" && "sessionId" in row) conflict = await ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+  81:     q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("sessionId", row.sessionId))
+  82:     .filter((q) => q.neq(q.field("_id"), row._id)).first();
+  83:   else denied();
+  84:   if (conflict) denied();
+  85: }
+  86: /** Query candidates are narrowed by trusted scope and owner BEFORE collect/take/count. */
+  87: export function candidates(ctx: Pick<QueryCtx, "db">, table: "immutable", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"immutable">[]>;
+  88: export function candidates(ctx: Pick<QueryCtx, "db">, table: "mutable", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"mutable">[]>;
+  89: export function candidates(ctx: Pick<QueryCtx, "db">, table: "sessions", auth: RuntimeAuthority, capability: RuntimeCapability): Promise<Doc<"sessions">[]>;
+  90: export async function candidates(ctx: Pick<QueryCtx, "db">, table: MetadataTable,
+  91:   auth: RuntimeAuthority, capability: RuntimeCapability): Promise<MetadataRow[]> {
+  92:   const query = ctx.db.query(table).withIndex("by_runtime_scope", (q) => {
+  93:     const scoped = q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId);
+  94:     return auth.resourceAccess === "own" ? scoped.eq("ownerPrincipalId", auth.principalId) : scoped;
+  95:   }).filter((q) => q.and(q.eq(q.field("tombstonedAt"), undefined), q.neq(q.field("ownerPrincipalId"), undefined),
+  96:     auth.resourceAccess === "own" && table === "immutable"
+  97:       ? q.or(q.neq(q.field("type"), "user"), q.eq(q.field("id"), auth.userId))
+  98:       : q.neq(q.field("ownerPrincipalId"), undefined)));
+  99:   const rows = await query.collect();
+ 100:   // Complete canonical uniqueness preflight before any caller can begin bulk effects.
+ 101:   for (const row of rows) await uniqueKey(ctx, table, row);
+ 102:   const result: MetadataRow[] = [];
+ 103:   for (const row of rows) {
+ 104:     const target = resource(table, row);
+ 105:     const reader = createAuthorityReader(ctx);
+ 106:     // Retained control fences exclude rows even when an older row has not been scrubbed yet.
+ 107:     if (await reader.hasTombstone({ ...target, tenantId: auth.tenantId })
+ 108:       || (row.memorySpaceId !== undefined && await reader.hasTombstone({ ...target, tenantId: auth.tenantId, memorySpaceId: undefined }))) continue;
+ 109:     if ("type" in row && row.type === "user" && auth.resourceAccess === "own" && row.id !== auth.userId) continue;
+ 110:     await check(ctx, table, row, auth, capability);
+ 111:     result.push(row);
+ 112:   }
+ 113:   await fresh(ctx, auth, capability);
+ 114:   return result;
+ 115: }
+ 116: /** Exact scoped lookup first obtains canonical identity, never a global first match. */
+ 117: export async function immutableRow(ctx: ReadCtx, auth: RuntimeAuthority, type: string, id: string, capability: RuntimeCapability) {
+ 118:   nonempty(type, id); profile(auth, type, id);
+ 119:   const selected = ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+ 120:     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("type", type).eq("id", id));
+ 121:   const rows = await selected.filter((q) => auth.resourceAccess === "own"
+ 122:     ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
+ 123:   if (rows.length > 1) denied();
+ 124:   const row = rows[0] ?? null;
+ 125:   if (await ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+ 126:     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("type", type).eq("id", id)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+ 127:   if (row) await check(ctx, "immutable", row, auth, capability); else await fresh(ctx, auth, capability);
+ 128:   return row;
+ 129: }
+ 130: export async function mutableRow(ctx: ReadCtx, auth: RuntimeAuthority, namespace: string, key: string, capability: RuntimeCapability) {
+ 131:   nonempty(namespace, key);
+ 132:   const selected = ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+ 133:     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("namespace", namespace).eq("key", key));
+ 134:   const rows = await selected.filter((q) => auth.resourceAccess === "own"
+ 135:     ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
+ 136:   if (rows.length > 1) denied();
+ 137:   const row = rows[0] ?? null;
+ 138:   if (await ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+ 139:     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("namespace", namespace).eq("key", key)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+ 140:   if (row) await check(ctx, "mutable", row, auth, capability); else await fresh(ctx, auth, capability);
+ 141:   return row;
+ 142: }
+ 143: export async function sessionRow(ctx: ReadCtx, auth: RuntimeAuthority, sessionId: string, capability: RuntimeCapability) {
+ 144:   nonempty(sessionId);
+ 145:   const selected = ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+ 146:     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("sessionId", sessionId));
+ 147:   const rows = await selected.filter((q) => auth.resourceAccess === "own"
+ 148:     ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
+ 149:   if (rows.length > 1) denied();
+ 150:   const row = rows[0] ?? null;
+ 151:   if (await ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+ 152:     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("sessionId", sessionId)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+ 153:   if (row) await check(ctx, "sessions", row, auth, capability); else await fresh(ctx, auth, capability);
+ 154:   return row;
+ 155: }
+ 156: export async function tombstone(ctx: MutationCtx, table: MetadataTable, row: MetadataRow): Promise<void> {
+ 157:   const target = resource(table, row);
+ 158:   const key = { resourceType: target.resourceType, resourceId: target.resourceId,
+ 159:     tenantId: row.tenantId!, memorySpaceId: row.memorySpaceId };
+ 160:   if (!await createAuthorityReader(ctx).hasTombstone(key)) await ctx.db.insert("runtimeAuthTombstones", { ...key, deletedAt: Date.now() });
+ 161:   if (row.tombstonedAt === undefined) {
+ 162:     if (table === "immutable" && "type" in row) await ctx.db.patch("immutable", row._id, { tombstonedAt: Date.now() });
+ 163:     else if (table === "mutable" && "namespace" in row) await ctx.db.patch("mutable", row._id, { tombstonedAt: Date.now() });
+ 164:     else if (table === "sessions" && "sessionId" in row) await ctx.db.patch("sessions", row._id, { tombstonedAt: Date.now() });
+ 165:   }
+ 166: }
+ 167: /** Admit eligible READ before mutation; an admitted READ failure never becomes a receipt. */
+ 168: export async function readResourceAuthority(ctx: ReadCtx, auth: RuntimeAuthority, target: RuntimeResource, profileKey?: { type: string; id: string }): Promise<RuntimeAuthority | undefined> {
+ 169:   const grants = await createAuthorityReader(ctx).listGrants(auth.membershipId);
+ 170:   const configured = grants.some((grant) => grant.principalId === auth.principalId && grant.tenantId === auth.tenantId
+ 171:     && grant.revokedAt === undefined && grant.deletedAt === undefined && Number.isSafeInteger(grant.version) && grant.version > 0
+ 172:     && (grant.expiresAt === undefined || (Number.isFinite(grant.expiresAt) && Date.now() < grant.expiresAt)) && grant.capabilities.includes("read")
+ 173:     && (grant.memorySpaceId === undefined || grant.memorySpaceId === target.memorySpaceId)
+ 174:     && grant.tenantEpoch === auth.tenantEpoch
+ 175:     && (grant.memorySpaceId === undefined || grant.memorySpaceEpoch === auth.memorySpaceEpoch)
+ 176:     && (grant.resourceAccess !== "own" || target.ownerPrincipalId === auth.principalId)
+ 177:     && (!profileKey || profileEligible({ resourceAccess: grant.resourceAccess, userId: auth.userId }, profileKey.type, profileKey.id))
+ 178:     && (grant.resourceAccess !== "space" || (grant.memorySpaceId !== undefined && grant.memorySpaceId === target.memorySpaceId))
+ 179:     && (grant.resourceAccess !== "tenant" || grant.memorySpaceId === undefined));
+ 180:   if (!configured) return undefined;
+ 181:   const read = await requireAuthority(ctx, { capability: "read", resource: target });
+ 182:   if (profileKey) profile(read, profileKey.type, profileKey.id);
+ 183:   return read;
+ 184: }
+ 185: export async function readAuthority(ctx: ReadCtx, auth: RuntimeAuthority, table: MetadataTable, row: MetadataRow) {
+ 186:   return await readResourceAuthority(ctx, auth, resource(table, row), "type" in row ? { type: row.type, id: row.id } : undefined);
+ 187: }
+ 188: export function newTarget(auth: RuntimeAuthority, id: string): RuntimeResource {
+ 189:   return { resourceType: "source", resourceId: id, tenantId: auth.tenantId, memorySpaceId: auth.memorySpaceId, ownerPrincipalId: auth.principalId };
+ 190: }
+ 191: export async function response<T, R>(ctx: ReadCtx, auth: RuntimeAuthority, table: MetadataTable, row: MetadataRow,
+ 192:   read: RuntimeAuthority | undefined, hydrated: () => T, receipt: () => R): Promise<T | R> {
+ 193:   const target = resource(table, row);
+ 194:   if (row.tombstonedAt !== undefined) denied();
+ 195:   await finalChecks(ctx, [{ auth, capability: "write", resource: target }, ...(read ? [{ auth: read, capability: "read" as const, resource: target }] : [])]);
+ 196:   if (read && "type" in row) profile(read, row.type, row.id);
+ 197:   return read ? hydrated() : receipt();
+ 198: }

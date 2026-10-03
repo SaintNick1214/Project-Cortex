@@ -1,0 +1,100 @@
+(node:80604) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.9s | 80/80 passed | /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.3%) - control ambiguity aborts multi-grant admission instead of pruning to another scope spaces/scope read omitted selectors reject; healthy candidate first=false
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.2%) - control ambiguity aborts multi-grant admission instead of pruning to another scope tenants/tombstone write omitted selectors reject; healthy candidate first=false
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.1%) - control ambiguity aborts multi-grant admission instead of pruning to another scope spaces/scope read omitted selectors reject; healthy candidate first=true
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope spaces/tombstone read omitted selectors reject; healthy candidate first=false
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope spaces/tombstone read omitted selectors reject; healthy candidate first=true
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope spaces/tombstone write omitted selectors reject; healthy candidate first=true
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope tenants/scope read omitted selectors reject; healthy candidate first=false
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope tenants/scope write omitted selectors reject; healthy candidate first=false
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope tenants/scope write omitted selectors reject; healthy candidate first=true
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope tenants/tombstone write omitted selectors reject; healthy candidate first=true
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope spaces/tombstone read explicitly corrupted scope rejects without an alternative result
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope spaces/scope read explicit healthy scope remains available despite unselected corrupt controls
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - control ambiguity aborts multi-grant admission instead of pruning to another scope spaces/scope write explicit healthy scope remains available despite unselected corrupt controls
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - pinned and final control ambiguity never switches scope or returns a WRITE-only receipt spaces/scope public-final aborts with exact nonpermission error and rollback
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - pinned and final control ambiguity never switches scope or returns a WRITE-only receipt spaces/scope pinned-before aborts with exact nonpermission error and rollback
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - pinned and final control ambiguity never switches scope or returns a WRITE-only receipt spaces/scope pinned-final aborts with exact nonpermission error and rollback
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - pinned and final control ambiguity never switches scope or returns a WRITE-only receipt spaces/tombstone public-final aborts with exact nonpermission error and rollback
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - pinned and final control ambiguity never switches scope or returns a WRITE-only receipt spaces/tombstone pinned-before aborts with exact nonpermission error and rollback
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - pinned and final control ambiguity never switches scope or returns a WRITE-only receipt tenants/scope pinned-before aborts with exact nonpermission error and rollback
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - pinned and final control ambiguity never switches scope or returns a WRITE-only receipt tenants/tombstone public-final aborts with exact nonpermission error and rollback
+    /tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.06s (1.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.10s
+  Test suites:        1
+  Individual tests:   65
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 passed, 1 total
+Tests:       80 passed, 80 total
+Snapshots:   0 total
+Time:        5.101 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-cycle2/new-scope-tests-initial.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

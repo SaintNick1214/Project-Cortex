@@ -1,0 +1,9 @@
+# Second accepted-dependency correction scope
+
+Parent authorized SECOND of at most3 accepted metadata/shared-reader QA cycles only after reading the complete FIRST FINAL REJECT3.0. The distinct constant nonpermission boundedSingle envelope is the sole second-cycle production change. The original reader lookup bodies, canonical metadata FORBIDDEN behavior, pure policy/resolver/pruning/internal provisioning and all other production bytes remain unchanged from cycle1.
+
+Explicit compatibility authorization permits only the one duplicated-identity exact provisioning code/message expectation and42 native control-denial expected shapes. It does not permit loosening reached/attempt/commit/rollback/privacy/infrastructure checks, changing original names/counts, or changing old fixtures. The NEW80-case actual-handler scope test addresses omitted tenant/space selectors, both iteration orders, concrete scopes versus ordinary grant pruning, explicit valid positives, WRITE-only privacy and final/pinned rollback.
+
+Original first5 source copies,114QA,490archive records,18private judge omissions and all prior845 outcomes were preserved before expectation changes. Exact first judge collector and four prior denial findings were replayed before repair. The obsolete original finding collector fails after correction and is retained; separate current asserted verification preserves18 fixtures and all six required-denial predicates.
+
+All evidence here is executor verification. No fourth MF/artifact cycle, new gate reset, service operation, source integration, staging/commit, live fixture refresh or PASS verdict occurs. Parent owns later integration and accepted live-fixture two-helper refresh; fresh SECOND original-scope judge must review every original41/affected03A requirement. All writes stop at final freeze.

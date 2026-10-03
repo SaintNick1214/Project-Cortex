@@ -1,0 +1,173 @@
+   1: import { describe, expect, it } from "@jest/globals";
+   2: import { ConvexError, type Value } from "convex/values";
+   3: import * as mutable from "../../../convex-dev/mutable";
+   4: import * as sessions from "../../../convex-dev/sessions";
+   5: import { requireAuthority } from "../../../convex-dev/runtimeAuth";
+   6: import { fixture } from "./fixture";
+   7: 
+   8: type F = ReturnType<typeof fixture>;
+   9: type Row = ReturnType<F["seedMutable"]>;
+  10: type Capability = "read" | "write";
+  11: type Layout = "spaces" | "tenants";
+  12: type Defect = "scope" | "tombstone";
+  13: const capabilities: Capability[] = ["read", "write"];
+  14: const layouts: Layout[] = ["spaces", "tenants"];
+  15: const defects: Defect[] = ["scope", "tombstone"];
+  16: const ambiguous = { version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS", message: "Authority lookup is ambiguous",
+  17:   retryable: false, outcome: "not_dispatched" };
+  18: const forbidden = { version: 1, code: "FORBIDDEN", message: "Access denied", retryable: false, outcome: "not_dispatched" };
+  19: const privateValue = "private-b-value";
+  20: const privateId = "mutable:private-b";
+  21: const nativeModulePath = "../../../node_modules/convex/dist/esm/server/impl/" + "query_impl.js";
+  22: const { QueryImpl } = await import(nativeModulePath) as { QueryImpl: { prototype: {
+  23:   unique(this: { take(limit: number): Promise<Row[]>; tableNameForErrorMessages: string }): Promise<Row | null>;
+  24: } } };
+  25: 
+  26: function setup(layout: Layout, capability: Capability, healthyFirst = false) {
+  27:   const f = fixture({ capabilities: [capability], ...(layout === "spaces" ? { space: "space-a", access: "space" } : { access: "tenant" }) });
+  28:   const a = { tenantId: "tenant-a", memorySpaceId: layout === "spaces" ? "space-a" : undefined };
+  29:   const b = { tenantId: layout === "spaces" ? "tenant-a" : "tenant-b", memorySpaceId: layout === "spaces" ? "space-b" : undefined };
+  30:   const membership = layout === "spaces" ? f.membership : f.db.seed("runtimeAuthMemberships", { ...f.membership,
+  31:     _id: "runtimeAuthMemberships:tenant-b", tenantId: "tenant-b" });
+  32:   f.db.seed("runtimeAuthScopes", { ...b, epoch: 1, createdAt: 1000 });
+  33:   f.db.seed("runtimeAuthGrants", { ...f.grant, ...b, _id: "runtimeAuthGrants:scope-b", membershipId: membership._id });
+  34:   f.seedMutable({ ...b, _id: privateId, value: privateValue });
+  35:   if (healthyFirst) f.db.table(layout === "spaces" ? "runtimeAuthGrants" : "runtimeAuthMemberships").reverse();
+  36:   return { f, a, b, layout };
+  37: }
+  38: type Setup = ReturnType<typeof setup>;
+  39: function corrupt(s: Setup, defect: Defect, scope = s.a) {
+  40:   const table = defect === "scope" ? "runtimeAuthScopes" : "runtimeAuthTombstones";
+  41:   let first: Row;
+  42:   if (defect === "scope") first = s.f.db.table(table).find((row) => row.tenantId === scope.tenantId && row.memorySpaceId === scope.memorySpaceId)!;
+  43:   else first = s.f.db.seed(table, { ...scope, _id: "private-control-one", resourceType: s.layout === "spaces" ? "memorySpace" : "tenant",
+  44:     resourceId: scope.memorySpaceId ?? scope.tenantId, deletedAt: 1000 });
+  45:   s.f.db.seed(table, { ...first, _id: "private-control-two", privateDiagnostic: "private-control-value" });
+  46:   return { table, ids: [first._id, "private-control-two"] };
+  47: }
+  48: function protocol(f: F, beforeTake?: (table: string, keys: [string, unknown][]) => void) {
+  49:   const original = f.db.query.bind(f.db);
+  50:   const traces: Array<{ table: string; index?: string; keys: [string, unknown][]; limit: number; ids: string[] }> = [];
+  51:   let uniqueCalls = 0;
+  52:   f.db.query = (table) => {
+  53:     const q = original(table); const index = q.withIndex.bind(q); const take = q.take.bind(q);
+  54:     const keys: [string, unknown][] = []; let indexName: string | undefined;
+  55:     q.withIndex = (name, callback) => {
+  56:       indexName = name;
+  57:       return index(name, (selector) => {
+  58:         const observed = { eq: (key: string, value: unknown) => { keys.push([key, value]); selector.eq(key, value); return observed; } };
+  59:         return callback(observed);
+  60:       });
+  61:     };
+  62:     q.take = async (limit) => {
+  63:       beforeTake?.(table, keys);
+  64:       const rows = await take(limit); traces.push({ table, index: indexName, keys: [...keys], limit, ids: rows.map((row) => row._id) });
+  65:       return rows;
+  66:     };
+  67:     // Keep the installed native diagnostic if a regression reintroduces unique().
+  68:     // The fixture's inferred non-null signature does not change native null at runtime.
+  69:     q.unique = async () => { uniqueCalls++; return (await QueryImpl.prototype.unique.call({ take: q.take, tableNameForErrorMessages: table }))!; };
+  70:     return q;
+  71:   };
+  72:   return { traces, uniqueCalls: () => uniqueCalls };
+  73: }
+  74: async function failure(operation: Promise<unknown>): Promise<unknown> {
+  75:   try { await operation; } catch (error) { return error; }
+  76:   throw new Error("Expected failure without a result or safe receipt");
+  77: }
+  78: function errorShape(error: unknown, expected: typeof ambiguous | typeof forbidden, ids: string[] = []) {
+  79:   expect(error).toBeInstanceOf(ConvexError); expect(error).toHaveProperty("data", expected);
+  80:   const visible = error instanceof Error ? error.message + error.stack + JSON.stringify((error as ConvexError<Value>).data) : String(error);
+  81:   for (const field of [...ids, privateId, privateValue, "private-control-value"]) expect(visible).not.toContain(field);
+  82: }
+  83: function unchanged(f: F, before: Map<string, Row[]>, attempts = 0) {
+  84:   expect(f.db.attemptedWrites).toBe(attempts); expect(f.db.writes).toBe(0); expect(f.db.rows).toEqual(before);
+  85: }
+  86: function invoke(s: Setup, capability: Capability, selectors: Record<string, unknown> = {}) {
+  87:   return s.f.run(capability === "read" ? mutable.get : mutable.set, { namespace: "counter", key: "one", ...selectors,
+  88:     ...(capability === "write" ? { value: "replacement" } : {}) });
+  89: }
+  90: function success(s: Setup, capability: Capability, result: unknown) {
+  91:   if (capability === "read") expect(result).toMatchObject({ _id: privateId, ...s.b, value: privateValue });
+  92:   else {
+  93:     expect(result).toEqual({ updated: true, namespace: "counter", key: "one" });
+  94:     expect(s.f.db.table("mutable")[0]).toMatchObject({ _id: privateId, ...s.b, value: "replacement" });
+  95:   }
+  96:   expect(s.f.db.attemptedWrites).toBe(capability === "write" ? 1 : 0); expect(s.f.db.writes).toBe(capability === "write" ? 1 : 0);
+  97: }
+  98: const corruptions = layouts.flatMap((layout) => defects.flatMap((defect) => capabilities.map((capability) => ({ layout, defect, capability }))));
+  99: 
+ 100: describe("control ambiguity aborts multi-grant admission instead of pruning to another scope", () => {
+ 101:   it.each(corruptions.flatMap((item) => [false, true].map((healthyFirst) => ({ ...item, healthyFirst }))))("$layout/$defect $capability omitted selectors reject; healthy candidate first=$healthyFirst", async ({ layout, defect, capability, healthyFirst }) => {
+ 102:     const s = setup(layout, capability, healthyFirst); const corruption = corrupt(s, defect); const native = protocol(s.f);
+ 103:     const before = structuredClone(s.f.db.rows);
+ 104:     errorShape(await failure(invoke(s, capability)), ambiguous, corruption.ids);
+ 105:     expect(native.traces.some((trace) => trace.table === corruption.table && trace.limit === 2
+ 106:       && trace.ids.join() === corruption.ids.join())).toBe(true);
+ 107:     expect(native.traces.some((trace) => trace.table === "mutable")).toBe(false);
+ 108:     expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before);
+ 109:   });
+ 110:   it.each(corruptions)("$layout/$defect $capability explicitly corrupted scope rejects without an alternative result", async ({ layout, defect, capability }) => {
+ 111:     const s = setup(layout, capability); const corruption = corrupt(s, defect); const native = protocol(s.f);
+ 112:     const before = structuredClone(s.f.db.rows);
+ 113:     errorShape(await failure(invoke(s, capability, s.a)), ambiguous, corruption.ids);
+ 114:     expect(native.traces.some((trace) => trace.table === corruption.table && trace.limit === 2 && trace.ids.join() === corruption.ids.join())).toBe(true);
+ 115:     expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before);
+ 116:   });
+ 117:   it.each(corruptions)("$layout/$defect $capability explicit healthy scope remains available despite unselected corrupt controls", async ({ layout, defect, capability }) => {
+ 118:     const s = setup(layout, capability); const corruption = corrupt(s, defect); const native = protocol(s.f);
+ 119:     success(s, capability, await invoke(s, capability, s.b));
+ 120:     expect(native.traces.some((trace) => trace.ids.includes("private-control-two"))).toBe(false);
+ 121:     expect(native.traces.filter((trace) => trace.table === "mutable")).toEqual([expect.objectContaining({ limit: 2, ids: [privateId] })]);
+ 122:     expect(s.f.db.table(corruption.table).some((row) => row._id === "private-control-two")).toBe(true);
+ 123:     expect(native.uniqueCalls()).toBe(0);
+ 124:   });
+ 125:   it.each(layouts.flatMap((layout) => capabilities.map((capability) => ({ layout, capability }))))("$layout $capability healthy two-scope omission retains ordinary FORBIDDEN ambiguity", async ({ layout, capability }) => {
+ 126:     const s = setup(layout, capability); const native = protocol(s.f); const before = structuredClone(s.f.db.rows);
+ 127:     errorShape(await failure(invoke(s, capability)), forbidden);
+ 128:     expect(native.traces.filter((trace) => trace.table === "runtimeAuthScopes").length).toBeGreaterThanOrEqual(2);
+ 129:     expect(native.traces.every((trace) => trace.ids.length < 2)).toBe(true); expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before);
+ 130:   });
+ 131:   it.each(layouts.flatMap((layout) => capabilities.flatMap((capability) => ["one", "revoked", "expired", "single-tombstone", "deleted-scope", "missing-scope"].map((pruning) => ({ layout, capability, pruning })))))("$layout $capability ordinary $pruning eligibility still selects the one permitted scope", async ({ layout, capability, pruning }) => {
+ 132:     const s = setup(layout, capability);
+ 133:     if (pruning === "one") s.f.db.rows.set("runtimeAuthGrants", s.f.db.table("runtimeAuthGrants").filter((row) => row._id !== s.f.grant._id));
+ 134:     else if (pruning === "revoked") s.f.grant.revokedAt = 1000;
+ 135:     else if (pruning === "expired") s.f.grant.expiresAt = 1;
+ 136:     else if (pruning === "single-tombstone") s.f.db.seed("runtimeAuthTombstones", { ...s.a,
+ 137:       resourceType: layout === "spaces" ? "memorySpace" : "tenant", resourceId: s.a.memorySpaceId ?? s.a.tenantId, deletedAt: 1000 });
+ 138:     else {
+ 139:       const a = s.f.db.table("runtimeAuthScopes").find((row) => row.tenantId === s.a.tenantId && row.memorySpaceId === s.a.memorySpaceId)!;
+ 140:       if (pruning === "deleted-scope") a.deletedAt = 1000;
+ 141:       else s.f.db.rows.set("runtimeAuthScopes", s.f.db.table("runtimeAuthScopes").filter((row) => row._id !== a._id));
+ 142:     }
+ 143:     const native = protocol(s.f); success(s, capability, await invoke(s, capability));
+ 144:     expect(native.traces.every((trace) => trace.ids.length < 2)).toBe(true); expect(native.uniqueCalls()).toBe(0);
+ 145:   });
+ 146:   it.each(layouts.flatMap((layout) => capabilities.flatMap((capability) => [false, true].map((healthyFirst) => ({ layout, capability, healthyFirst })))))("$layout $capability infrastructure failure remains identical; healthy candidate first=$healthyFirst", async ({ layout, capability, healthyFirst }) => {
+ 147:     const s = setup(layout, capability, healthyFirst); const infrastructure = new Error("scope infrastructure unavailable"); let reached = 0;
+ 148:     const native = protocol(s.f, (table, keys) => { if (table === "runtimeAuthScopes"
+ 149:       && keys.some(([key, value]) => key === "tenantId" && value === s.a.tenantId)
+ 150:       && keys.some(([key, value]) => key === "memorySpaceId" && value === s.a.memorySpaceId)) { reached++; throw infrastructure; } });
+ 151:     const before = structuredClone(s.f.db.rows);
+ 152:     const error = await failure(invoke(s, capability)); expect(error).toBe(infrastructure); expect(error).not.toBeInstanceOf(ConvexError);
+ 153:     expect(reached).toBe(1); expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before);
+ 154:   });
+ 155: });
+ 156: 
+ 157: describe("pinned and final control ambiguity never switches scope or returns a WRITE-only receipt", () => {
+ 158:   it.each(layouts.flatMap((layout) => defects.flatMap((defect) => ["public-final", "pinned-before", "pinned-final"].map((phase) => ({ layout, defect, phase })))))("$layout/$defect $phase aborts with exact nonpermission error and rollback", async ({ layout, defect, phase }) => {
+ 159:     const s = setup(layout, "write");
+ 160:     const auth = await requireAuthority(s.f.ctx, { capability: "write", ...s.b });
+ 161:     const { actorKind: _actorKind, userId: _userId, capabilities: _capabilities, resourceAccess: _resourceAccess, ...reference } = auth;
+ 162:     if (phase !== "public-final") s.f.seedSession({ ...s.b, authorityReference: reference, metadata: { secret: privateValue } });
+ 163:     let corruption: ReturnType<typeof corrupt> | undefined;
+ 164:     if (phase === "pinned-before") corruption = corrupt(s, defect, s.b);
+ 165:     else s.f.db.afterWrite = () => { corruption = corrupt(s, defect, s.b); };
+ 166:     const native = protocol(s.f); const before = structuredClone(s.f.db.rows);
+ 167:     const operation = phase === "public-final" ? invoke(s, "write", s.b)
+ 168:       : s.f.run(sessions.incrementMessageCount, { sessionId: "one", reference });
+ 169:     const error = await failure(operation); expect(corruption).toBeDefined(); errorShape(error, ambiguous, corruption!.ids);
+ 170:     expect(native.traces.some((trace) => trace.table === corruption!.table && trace.limit === 2 && trace.ids.join() === corruption!.ids.join())).toBe(true);
+ 171:     expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before, phase === "pinned-before" ? 0 : 1);
+ 172:   });
+ 173: });

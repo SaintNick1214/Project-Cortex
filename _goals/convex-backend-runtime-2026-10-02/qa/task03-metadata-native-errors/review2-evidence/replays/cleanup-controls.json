@@ -1,0 +1,59 @@
+{
+  "candidateSourceSha256": "d4f59ade4aa9486c6289a8baafec157574d3ee8c45211c286857369b349a491c",
+  "method": "Execute the exact AST-extracted candidate inventory test callback with real fs, real Jest expect and real child inventory success; controlled failures only replace child/reader results. Candidate source is unmodified.",
+  "outcomes": [
+    {
+      "mode": "ordinary-success",
+      "pass": true,
+      "completed": true,
+      "createdDirectory": "/tmp/task03-metadata-native-errors-review2-7ogukSUg/replays/cleanup-temp/cortex-metadata-inventory-MGcZMU",
+      "cleanupObserved": true,
+      "canonicalQAUnchanged": true
+    },
+    {
+      "mode": "child-nonzero",
+      "pass": true,
+      "completed": false,
+      "expectedFailure": "Error: expect(received).toEqual(expected) // deep equality\n\n- Expected  - 2\n+ Received  + 2\n\n  Object {\n-   \"status\": 0,\n-   \"stderr\": \"\",\n+   \"status\": 7,\n+   \"stderr\": \"controlled inventory failure\",\n  }",
+      "createdDirectory": "/tmp/task03-metadata-native-errors-review2-7ogukSUg/replays/cleanup-temp/cortex-metadata-inventory-XqJ8US",
+      "cleanupObserved": true,
+      "canonicalQAUnchanged": true
+    },
+    {
+      "mode": "child-throws",
+      "pass": true,
+      "completed": false,
+      "expectedFailure": "Error: controlled spawn failure",
+      "createdDirectory": "/tmp/task03-metadata-native-errors-review2-7ogukSUg/replays/cleanup-temp/cortex-metadata-inventory-lONHuD",
+      "cleanupObserved": true,
+      "canonicalQAUnchanged": true
+    },
+    {
+      "mode": "catalog-reader-throws",
+      "pass": true,
+      "completed": false,
+      "expectedFailure": "Error: controlled catalog reader failure",
+      "createdDirectory": "/tmp/task03-metadata-native-errors-review2-7ogukSUg/replays/cleanup-temp/cortex-metadata-inventory-MbAlXr",
+      "cleanupObserved": true,
+      "canonicalQAUnchanged": true
+    },
+    {
+      "mode": "catalog-malformed-json",
+      "pass": true,
+      "completed": false,
+      "expectedFailure": "SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+      "createdDirectory": "/tmp/task03-metadata-native-errors-review2-7ogukSUg/replays/cleanup-temp/cortex-metadata-inventory-K1PxQa",
+      "cleanupObserved": true,
+      "canonicalQAUnchanged": true
+    },
+    {
+      "mode": "catalog-assertion-fails",
+      "pass": true,
+      "completed": false,
+      "expectedFailure": "Error: expect(received).toMatchObject(expected)\n\n- Expected  - 1\n+ Received  + 1\n\n  Object {\n    \"internal\": 5,\n    \"public\": 36,\n-   \"registered\": 41,\n+   \"registered\": 0,\n    \"registeredBuilderCalls\": 41,\n    \"resolvedExports\": 41,\n  }",
+      "createdDirectory": "/tmp/task03-metadata-native-errors-review2-7ogukSUg/replays/cleanup-temp/cortex-metadata-inventory-b830WB",
+      "cleanupObserved": true,
+      "canonicalQAUnchanged": true
+    }
+  ]
+}

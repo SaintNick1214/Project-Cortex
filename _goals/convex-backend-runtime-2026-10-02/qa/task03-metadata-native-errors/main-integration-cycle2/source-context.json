@@ -1,0 +1,56 @@
+{
+  "head": "e5655fa5937286058cd17496954eadfeecc74938",
+  "independentReportSha256": "b608adce3d20d8fdac98f8c2541c243dfa72616b6204e21ca1e7cf0dc6d8a94d",
+  "freezeSha256": "a3c4411d7add6a8ebd56d970b2054391856be10a5a9671f509ea9ca82de440a8",
+  "sources": [
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "bytes": 23246,
+      "sha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929"
+    },
+    {
+      "file": "convex-dev/runtimeMetadataAuth.ts",
+      "bytes": 15064,
+      "sha256": "7ba6fe51bb8828a9a18b8486f63e5975b84a99b725b3ffac93ac61fff811428f"
+    },
+    {
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts",
+      "bytes": 15204,
+      "sha256": "54aca98b16f3ffb77d2d7740e986dfc68aa124e8baff56ae33486ccddc07b580"
+    },
+    {
+      "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts",
+      "bytes": 36776,
+      "sha256": "5ad4aa46789786fed26c9fc1b3fda316e16197249c5b5c0e3d79d8f85dff2eb6"
+    },
+    {
+      "file": "tests/unit/runtimeMetadataAuth/native-errors.test.ts",
+      "bytes": 16439,
+      "sha256": "77ad871554240f89860e0fdf9a1d963be8e6238a92308ef37d59d01773dd0984"
+    },
+    {
+      "file": "tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts",
+      "bytes": 13328,
+      "sha256": "b5161f7f1d10380ccec73b6bfb2be653f1b649fdc81b4a6c6c3c11dba7a63e68"
+    }
+  ],
+  "dirtyMF": [
+    {
+      "file": "convex-dev/facts.ts",
+      "sha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92"
+    },
+    {
+      "file": "convex-dev/memories.ts",
+      "sha256": "018011398f85eeb0540120b87e8f73438d7b3f5da35bfb64037cb59d4bac135d"
+    },
+    {
+      "file": "convex-dev/schema.ts",
+      "sha256": "599a305f9899764f2a84e83b498f7117fa5c85cb750de12f5f2e91e7f5292320"
+    },
+    {
+      "file": "convex-dev/runtimeDataAuth.ts",
+      "sha256": "36a804a28b8e3d7809bdca376238de619f17f2a91e6e53edfe1f5c8e91589668"
+    }
+  ],
+  "scope": "Affected accepted metadata/authority/worker/client integration. No live/network coverage or whole03/full17 PASS. Dirty MF is excluded from Jest selection; actual root compiler recorded separately."
+}

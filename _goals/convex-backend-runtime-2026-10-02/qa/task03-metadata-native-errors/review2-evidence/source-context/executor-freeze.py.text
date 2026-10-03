@@ -1,0 +1,40 @@
+from pathlib import Path
+import datetime, hashlib, json
+
+r = Path.cwd()
+q = r / '_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-cycle2'
+started = datetime.datetime.now(datetime.timezone.utc).isoformat()
+digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+source = json.loads((q / 'final-source.json').read_text())['records']
+assert not (q / 'freeze.json').exists()
+for record in source:
+    assert digest(r / record['file']) == record['sha256']
+qa = [{'file': str(p.relative_to(r)), 'bytes': p.stat().st_size, 'sha256': digest(p)}
+      for p in sorted(q.rglob('*')) if p.is_file()]
+freeze = {
+    'frozenAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    'status': 'FROZEN executor candidate; SECOND fresh independent original-scope verdict pending',
+    'acceptedHead': 'c01ea6f06262d3a5eae9d171654e770c694ad409',
+    'cycle': 2, 'maximumAuthorizedCycles': 3,
+    'sourceRecords': source, 'qaRecords': qa,
+    'reportSha256': digest(q / 'report.md'),
+    'sourceManifestSha256': digest(q / 'final-source.json'),
+    'cycle2BeforeManifestSha256': digest(q / 'before-cycle2.json'),
+    'preservationManifestSha256': digest(q / 'preservation.json'),
+    'firstFreezeSha256': digest(q.parent / 'followup/freeze.json'),
+    'firstHistoryManifestSha256': digest(q.parent / 'history/followup-cycle1-final/preservation-manifest.json'),
+    'outcomes': {'selected': 867, 'separateAuth': 98, 'repeatedCredentials': 40,
+                 'uniqueTestcaseOutcomes': 925, 'originalRetained': 845, 'newScopeCases': 80,
+                 'skips': 0, 'discoveredExecutedSuites': 16},
+    'remainingGates': ['fresh SECOND original41/affected03A independent judge',
+                       'parent integration and accepted live-fixture two-helper provenance refresh',
+                       'managed JWT transport/subscriptions/concurrency and live41 service evidence',
+                       'UI', 'whole Task03', 'all17 completion'],
+    'freezeCommand': {'argv': ['python', 'work/native-errors-cycle2/freeze.py'], 'cwd': str(r),
+                      'startedAt': started, 'endedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                      'exitCode': 0, 'confirmation': 'tool exit and final read-only verification independently confirm successful write'},
+    'writesStopAtFinal': True,
+}
+(q / 'freeze.json').write_text(json.dumps(freeze, indent=2) + '\n')
+print(json.dumps({'frozenAt': freeze['frozenAt'], 'sourceRecords': len(source), 'qaRecords': len(qa),
+                  'freezeSha256': digest(q / 'freeze.json'), 'reportSha256': freeze['reportSha256']}))

@@ -1,0 +1,114 @@
+import pathlib,json,hashlib,subprocess,collections,re,shutil,sys,difflib
+sys.path.insert(0,str(pathlib.Path(__file__).parent));from run import *
+F=pathlib.Path('/tmp/task03-metadata-native-errors-review1-7MWpo4Y1');Q1=Q.parent/'followup';checks=[]
+def check(name,value,detail=None):checks.append(dict(name=name,passed=bool(value),detail=detail))
+def load(p):return json.loads(pathlib.Path(p).read_text())
+freeze=load(Q/'freeze.json');check('freeze exact supplied SHA',sha(Q/'freeze.json')=='a3c4411d7add6a8ebd56d970b2054391856be10a5a9671f509ea9ca82de440a8')
+check('report exact supplied SHA',sha(Q/'report.md')=='684ef32b482e4faad19cb827f22ddd17a1e73a523505408d8e0ff73a30fdcf28')
+check('freeze six source / 138 QA',len(freeze['sourceRecords'])==6 and len(freeze['qaRecords'])==138)
+for r in freeze['sourceRecords']+freeze['qaRecords']:check('frozen '+r['file'],sha(C/r['file'])==r['sha256'])
+check('accepted candidate HEAD',subprocess.check_output(['git','rev-parse','HEAD'],cwd=C,env=env()).decode().strip()=='c01ea6f06262d3a5eae9d171654e770c694ad409')
+p=load(Q/'preservation.json');check('preserved cycle2 protected 4061',len(p['protectedRecords'])==4061)
+for r in p['protectedRecords']:check('cycle2-protected '+r['file'],sha(C/r['file'])==r['sha256'])
+p1=load(Q1/'preservation.json');check('original 3453 tracked and 2340 QA',p1['protectedTrackedRecords']==3453 and p1['protectedOriginalQaRecords']==2340 and len(p1['protectedRecords'])==3453)
+for r in p1['protectedRecords']:check('original-protected '+r['file'],sha(C/r['file'])==r['sha256'])
+f1=load(Q1/'freeze.json');check('first freeze SHA intact',sha(Q1/'freeze.json')=='5e6573ab586f867589835f9f7f3f4ffa32ed0294ccdcbffaee5c7102e0ef756e')
+for r in f1['qaRecords']:check('first frozen QA '+r['file'],sha(C/r['file'])==r['sha256'])
+for r in f1['sourceRecords']:check('first source copy preserved '+r['file'],sha(Q/'cycle1-source'/(r['file']+'.text'))==r['sha256'])
+H=Q.parent/'history/followup-cycle1-final';h=load(H/'preservation-manifest.json')
+check('first 490 archive manifest SHA',sha(H/'preservation-manifest.json')=='06c8c4e8b77b059ae3a12a05f5be9bc7a7ac23cbc259f0b4f28438362bbdbd5d' and len(h['records'])==490)
+for r in h['records']:check('first history '+r['file'],sha(C/r['file'])==r['sha256'])
+check('private 18 omissions explicit',len(h['privateReproducibleOmissions'])==18)
+for r in h['privateReproducibleOmissions']:check('original private reproducible '+r['file'],sha(r['original'])==r['sha256'])
+check('first FINALREJECT report preserved',sha(F/'report.md')=='3991298b6270e08c0827003364ac762bd3f18bab878f6bf3c5478b057c11d136')
+check('first judge complete manifest SHA',sha(F/'manifest.json')=='e65a086c489d1717bf2a42a816b2f4b492f9ccc0d2a879f8a4b6e019b315216a')
+for r in load(F/'manifest.json')['records']:check('first independent '+r['file'],sha(F/r['file'])==r['sha256'])
+for n,num in [('cycle1-final',69),('cycle2-final',101)]:
+ d=C/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/history'/n;mf=load(d/'preservation.json');check('older archive size '+n,len(mf['records'])==num)
+ for r in mf['records']:
+  f=d/r['kind']/r.get('path',r.get('file'));f=f if f.exists() else pathlib.Path(str(f)+'.text');check('older archive '+n+'/'+str(f.relative_to(d)),sha(f)==r['sha256'])
+old=lambda n:subprocess.check_output(['git','show','HEAD:'+n],cwd=C,env=env()).decode()
+auth='convex-dev/runtimeAuth.ts';now=(C/auth).read_text();cycle1=(Q/'cycle1-source'/(auth+'.text')).read_text()
+expected=cycle1.replace('  if (rows.length > 1) deny();','  if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",\n    message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });',1)
+check('ONLY cycle2 production difference exact constant envelope',expected==now)
+check('pure policy/resolver/pruning prefix unchanged',old(auth).split('export function createAuthorityReader')[0]==now.split('/** Avoid native unique()')[0])
+check('require/recheck/internal provisioning suffix unchanged',old(auth)[old(auth).index('export async function requireAuthority'):]==now[now.index('export async function requireAuthority'):])
+meta='convex-dev/runtimeMetadataAuth.ts';expected=old(meta)
+pattern='  const row = await selected.filter((q) => auth.resourceAccess === "own"\n    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();'
+replacement='  const rows = await selected.filter((q) => auth.resourceAccess === "own"\n    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);\n  if (rows.length > 1) denied();\n  const row = rows[0] ?? null;'
+check('three metadata replacements exist',expected.count(pattern)==3);expected=expected.replace(pattern,replacement)
+check('cumulative metadata exact three replacements',expected==(C/meta).read_text())
+check('canonical metadata unchanged from FIRST',sha(C/meta)==sha(Q/'cycle1-source'/(meta+'.text')))
+check('handlers unchanged from FIRST',sha(C/'tests/unit/runtimeMetadataAuth/handlers.test.ts')==sha(Q/'cycle1-source/tests/unit/runtimeMetadataAuth/handlers.test.ts.text'))
+changed=subprocess.check_output(['git','diff','--name-only','HEAD'],cwd=C,env=env()).decode().splitlines()
+check('four tracked changes only',set(changed)=={auth,meta,'tests/unit/runtimeAuth/provisioning.test.ts','tests/unit/runtimeMetadataAuth/handlers.test.ts'},changed)
+for n in ['runtimeAuth','runtimeMetadataAuth','mutable','immutable','sessions']:
+ raw=old('convex-dev/'+n+'.ts');check('accepted baseline raw exact '+n,raw==(OUT/('baseline-'+n+'.raw.ts.text')).read_text())
+check('installed native exact SHA',sha(C/'node_modules/convex/dist/esm/server/impl/query_impl.js')=='cb338c5d58d0ffbbdd311954e24456d7fa501f901b205784ce93d67e63206857')
+check('installed native unique actually take2', 'const first_two_array = await this.take(2)' in (C/'node_modules/convex/dist/esm/server/impl/query_impl.js').read_text())
+selected=load(OUT/'selected.json');authr=load(OUT/'auth.json')
+flatten=lambda d:[dict(file=str(pathlib.Path(s['name']).relative_to(C)),name=r['fullName'],status=r['status']) for s in d['testResults'] for r in s['assertionResults']]
+srows=flatten(selected);arows=flatten(authr);keys=lambda rs:collections.Counter((r['file'],r['name']) for r in rs)
+for name,d,rows,num in [('selected',selected,srows,867),('auth',authr,arows,98)]:
+ check(name+' outcome count/all passed/no skips',len(rows)==num and all(r['status']=='passed' for r in rows) and d['numPendingTests']==0 and d['numTodoTests']==0 and d['numFailedTests']==0)
+check('925 testcase multiplicity / overlap40',sum((keys(srows)&keys(arows)).values())==40 and sum((keys(srows)|keys(arows)).values())==925)
+oldselected=flatten(load(F/'selected.json'));oldauth=flatten(load(F/'auth.json'))
+check('all original 845 names/multiplicities retained',(keys(oldselected)|keys(oldauth))==(keys([r for r in srows if not r['file'].endswith('scope-ambiguity.test.ts')])|keys(arows)))
+for name,prefix,num in [('literal-original-metadata','tests/unit/runtimeMetadataAuth/',189),('literal-original-auth','tests/unit/runtimeAuth/',133)]:
+ raw=flatten(load(Q1/(name+'.json')));current=[r for r in srows if r['file'].startswith(prefix) and not r['file'].endswith(('native-errors.test.ts','scope-ambiguity.test.ts'))];check('original '+name+' exact names/multiplicity',len(raw)==num and keys(raw)==keys(current))
+discovery=json.JSONDecoder().raw_decode((OUT/'logs/discovery.stdout').read_text())[0];check('16 discovered suites executed',len(discovery)==16 and set(discovery)=={s['name'] for d in [selected,authr] for s in d['testResults']})
+for n,num in [('boundary-probes',118),('extra-probes',33)]:
+ d=load(OUT/'replays'/(n+'.json'));check('independent '+n,len(d)==num and all(x['pass'] for x in d))
+for n,num in [('cleanup-controls',6),('timestamp-equivalence',72)]:
+ d=load(OUT/'replays'/(n+'.json'));check('independent '+n,len(d['outcomes'])==num and all(x['pass'] for x in d['outcomes']))
+for name in ['current-required18-outcomes','cycle1-results/ambiguity-pruning-outcomes']:
+ d=load(OUT/(name+'.json'));check('18 cases retained '+name,len(d['results'])==18)
+current=load(OUT/'current-required18-outcomes.json')['results'];previous=load(OUT/'cycle1-results/ambiguity-pruning-outcomes.json')['results']
+check('all original four now safe denial',all(not r['accepted'] and r['attempts']==0 and r['writes']==0 for r in current[:6]))
+check('four admissions independently reproduced in FIRST',sum(r['accepted'] for r in previous[:6])==4)
+check('baseline12 unchanged native reached denial',all(not r['accepted'] and r['attempts']==0 and r['writes']==0 and r['duplicateLookupReached']==(0 if r['defect']=='none' else 1) for r in current[6:]))
+check('preserved old collector expected exit1',load(OUT/'receipts/old-exact-finding-collector.json')['exitCode']==1)
+check('six unchanged denial predicates pass',load(OUT/'current-required-denial.json')['failed']==0)
+for name in ['metadata-native-error-confirmation','metadata-control-native-error-confirmation']:
+ d=load(OUT/(name+'-independent-baseline.json'));check('independent original native mechanism6 '+name,len(d['outcomes'])==6 and all(r['attemptedWrites']==0 and r['committedWrites']==0 for r in d['outcomes']))
+check('historical19 checker final pass',load(OUT/'receipts/historical19-check-final.json')['exitCode']==0)
+nativeRegs=load(OUT/'framework-registration.json');check('native41 exact unchanged validators',nativeRegs==load(Q1/'framework-registration.json') and len(nativeRegs)==41)
+cat=load(OUT/'catalog/public-path-inventory.json');check('AST exact41 unchanged semantics',cat['endpoints']==load(Q1/'catalog/public-path-inventory.json')['endpoints'])
+mapping=[]
+for row in load(Q/'original41-requirement-mapping.json'):
+ path=row['path'];base={k:row[k] for k in ['path','visibility','requiredCapability','scope','ownership','backgroundCheck','resourceLookup']};base['nativeRegistration']=next(r for r in nativeRegs if r['path']==path)
+ exact=[r for r in srows if any(r['name']==f'36 registered modern public handlers {path} '+s for s in ['authorized outcomes','rejects missing verified identity without writes','rejects forged tenant without writes'])]
+ if row['visibility']=='public':check('public original triplet '+path,len(exact)==3 and all(r['status']=='passed' for r in exact))
+ else:exact=[r for r in srows if r['file']=='tests/unit/runtimeMetadataAuth/handlers.test.ts' and ('five actual internal registrations' in r['name'] or 'background' in r['name'] or 'idle expiry' in r['name'])]
+ base.update(outcomes=exact,status='PASS bounded offline',sharedEvidence=['original189 + affected03A133 + worker185 + historical151/72/19','native-errors106 exact bounded/private/control/infrastructure','scope-ambiguity80 omitted corruption, explicit healthy scope, eligibility pruning, final/pinned rollback','current-required18-outcomes + six required denial predicates'],liveEvidence='PENDING; no service/JWT/subscription/byte/callback/UI certification')
+ mapping.append(base)
+(OUT/'original41-independent-requirement-mapping.json').write_text(json.dumps(mapping,indent=2)+'\n')
+# Preserve full original affected03A criteria; update evidence from fresh actual executions.
+a=load(F/'affected03A-independent-requirement-mapping.json')
+for r in a:
+ if r['status'].startswith('PENDING'):continue
+ r['status']='PASS bounded offline'
+ r['evidence']='Current original auth133 / metadata189 retained; runtimeAuth pure policies/resolver/pruning/provisioning bytes unchanged; '+ ('current-required18 + scope-ambiguity80 whole-operation denied, exact nonpermission error, healthy explicit positives, normal eligibility pruning, final/pinned rollback' if any(s in r['requirement'].lower() for s in ['omitted','owner/','deletion','reader ambiguity','pure policy']) else 'native-errors106, actual-handler historical151/72/19, worker185, scoped/root quality and exact41 registrations as applicable')
+(OUT/'affected03A-independent-requirement-mapping.json').write_text(json.dumps(a,indent=2)+'\n')
+(OUT/'test-summary.json').write_text(json.dumps(dict(selected=srows,auth=arows,selectedCount=len(srows),authCount=len(arows),overlap=40,distinct=925,discoveredSuites=discovery,suiteCounts={s['name']:len(s['assertionResults']) for d in [selected,authr] for s in d['testResults']}),indent=2)+'\n')
+copyrecords=[]
+for r in load(F/'accepted-copy-source-manifest.json'):
+ f=r.get('file',r.get('path'));check('byte-matched build source '+f,sha(C/f)==sha(OUT/'accepted-copy'/f));copyrecords.append(dict(file=f,sha256=sha(C/f)))
+(OUT/'accepted-copy-source-manifest.json').write_text(json.dumps(copyrecords,indent=2)+'\n')
+check('no temporary pack/inventory outputs',not list((OUT/'accepted-copy/node_modules').glob('.cortex-contract-*')) and not list((OUT/'tmp').glob('cortex-metadata-inventory-*')) and not list((OUT/'replays/cleanup-temp').iterdir()))
+for n in ['selected','auth','backend-types','scoped-types','root-types','scoped-lint','root-lint','discovery','current-required18','current-required-denial','cycle1-original-finding-reproduction-final','boundary-probes','extra-probes','closure-controls','historical19-check-final','native-registration','ast-inventory','root-build','packed-contracts','diff-check','native-baseline-canonical6','native-baseline-control6']:
+ check('actual observed check '+n,load(OUT/'receipts'/(n+'.json'))['exitCode']==0)
+for file in ['convex-dev/runtimeAuth.ts','convex-dev/runtimeMetadataAuth.ts','convex-dev/immutable.ts','convex-dev/mutable.ts','convex-dev/users.ts','convex-dev/sessions.ts','convex-dev/tsconfig.json','convex-dev/runtimeAuthSchema.ts','tests/unit/runtimeMetadataAuth/handlers.test.ts','tests/unit/runtimeMetadataAuth/native-errors.test.ts','tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts','tests/unit/runtimeMetadataAuth/fixture.ts','tests/unit/runtimeMetadataAuth/registrations.test.ts','tests/unit/runtimeAuth/provisioning.test.ts','tests/unit/runtimeAuth/authority.test.ts']:
+ (OUT/'source-context'/(file.replace('/','--')+'.text')).write_text(''.join(f'{i:4}: {line}' for i,line in enumerate((C/file).read_text().splitlines(keepends=True),1)))
+for root,files in [(M,['AGENTS.md','.agents/CODEX-RUNTIME.md','.agents/PROJECT-PROFILE.md','.agents/roles/pessimistic-judge.md','.agents/skills/judge-task/SKILL.md','.agents/skills/feature-orchestrator/SKILL.md','work/backend-runtime/metadata-native-errors-review1-prompt.md','work/backend-runtime/metadata-native-errors-review2-prompt.md','_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md','_goals/convex-backend-runtime-2026-10-02/goal.md','_goals/convex-backend-runtime-2026-10-02/tasks/03-authorization.md','_research/convex-ai-gateway-2026-10-02/decision-gates.md','_research/convex-ai-gateway-2026-10-02/architecture.md']), (C,['_goals/convex-backend-runtime-2026-10-02/qa/task03a/contracts.md','_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/report.md'])]:
+ for f in files:shutil.copy2(root/f,OUT/'source-context'/('required-context--'+f.replace('/','--')))
+for f in ['report.md','manifest.json','ambiguity-pruning-outcomes.json','regression-required-denial.json','commands.json']:
+ shutil.copy2(F/f,OUT/'source-context'/('first-FINALREJECT-'+f))
+for f in Q.glob('*.text'):shutil.copy2(f,OUT/'source-context'/('executor-'+f.name))
+for f in (Q/'checks').iterdir():
+ if f.is_file():shutil.copy2(f,OUT/'source-context'/('executor-check-'+f.name))
+hist=M/'_goals/convex-backend-runtime-2026-10-02/qa/task03c2-a-main-integration'
+for f in ['root-types.log','commands.json','source-context.json']:
+ if (hist/f).exists():shutil.copy2(hist/f,OUT/'source-context'/('historical-main--'+f))
+result=dict(verifiedAt=utc(),checks=checks,total=len(checks),failed=[r for r in checks if not r['passed']])
+(OUT/'verification.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(dict(total=result['total'],failed=result['failed']),indent=2));sys.exit(bool(result['failed']))

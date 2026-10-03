@@ -1,0 +1,2095 @@
+[
+  {
+    "path": "immutable:store",
+    "file": "convex-dev/immutable.ts",
+    "line": 21,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {
+      "data": "v.any()",
+      "userId": "v.optional(v.string())",
+      "metadata": "v.optional(v.any())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [
+      "userId"
+    ],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:store authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:store rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:store rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:get",
+    "file": "convex-dev/immutable.ts",
+    "line": 45,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:getVersion",
+    "file": "convex-dev/immutable.ts",
+    "line": 46,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "version": "v.number()"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:getVersion authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getVersion rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:getHistory",
+    "file": "convex-dev/immutable.ts",
+    "line": 50,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:getHistory authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getHistory rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:getAtTimestamp",
+    "file": "convex-dev/immutable.ts",
+    "line": 53,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "timestamp": "v.number()"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:list",
+    "file": "convex-dev/immutable.ts",
+    "line": 58,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "limit": "v.optional(v.number())",
+      "offset": "v.optional(v.number())",
+      "sortBy": "v.optional(v.string())",
+      "sortOrder": "v.optional(v.string())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:count",
+    "file": "convex-dev/immutable.ts",
+    "line": 64,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:search",
+    "file": "convex-dev/immutable.ts",
+    "line": 65,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "query": "v.string()",
+      "limit": "v.optional(v.number())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:search authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:search rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:search rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:purge",
+    "file": "convex-dev/immutable.ts",
+    "line": 73,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:purge authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purge rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purge rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:purgeMany",
+    "file": "convex-dev/immutable.ts",
+    "line": 80,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:purgeVersions",
+    "file": "convex-dev/immutable.ts",
+    "line": 89,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {
+      "keepLatest": "v.number()"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, type, id); every requested version uses the same trusted scope",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeVersions rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "immutable:purgeAll",
+    "file": "convex-dev/immutable.ts",
+    "line": 101,
+    "kind": "internalMutation",
+    "visibility": "internal",
+    "validators": {},
+    "tables": [
+      "immutable"
+    ],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "retain-internal",
+    "requiredCapability": "trusted deployment-operator internal invocation",
+    "scope": "deployment-operator",
+    "resourceLookup": "immutable deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+    "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+    "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+    "reason": "deployment-wide maintenance must internalize for trusted operator invocation; never public tenant admin or target-grant authorization",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:set",
+    "file": "convex-dev/mutable.ts",
+    "line": 23,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {
+      "value": "v.any()",
+      "userId": "v.optional(v.string())",
+      "metadata": "v.optional(v.any())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [
+      "userId"
+    ],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:set authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:set rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:set rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:update",
+    "file": "convex-dev/mutable.ts",
+    "line": 34,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {
+      "operation": "v.union(v.literal(\"increment\"), v.literal(\"decrement\"), v.literal(\"append\"), v.literal(\"custom\"))",
+      "operand": "v.optional(v.any())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:update authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:update rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:update rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:get",
+    "file": "convex-dev/mutable.ts",
+    "line": 41,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:exists",
+    "file": "convex-dev/mutable.ts",
+    "line": 42,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:exists authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:exists rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:exists rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:list",
+    "file": "convex-dev/mutable.ts",
+    "line": 43,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "limit": "v.optional(v.number())",
+      "offset": "v.optional(v.number())",
+      "sortBy": "v.optional(v.string())",
+      "sortOrder": "v.optional(v.string())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:count",
+    "file": "convex-dev/mutable.ts",
+    "line": 48,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:deleteKey",
+    "file": "convex-dev/mutable.ts",
+    "line": 49,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:deleteKey authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:deleteKey rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:deleteKey rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:purgeMany",
+    "file": "convex-dev/mutable.ts",
+    "line": 54,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeMany authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeMany rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers immutable:purgeMany rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeMany rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions immutable:purgeMany rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeMany rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeMany rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeMany rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:purgeNamespace",
+    "file": "convex-dev/mutable.ts",
+    "line": 62,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {
+      "namespace": "v.string()",
+      "dryRun": "v.optional(v.boolean())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:purgeNamespace authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeNamespace rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:purgeNamespace rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeNamespace rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeNamespace rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions mutable:purgeNamespace rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:transaction",
+    "file": "convex-dev/mutable.ts",
+    "line": 72,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {
+      "operations": "v.array(v.object({ op: v.union(v.literal(\"set\"), v.literal(\"update\"), v.literal(\"delete\"), v.literal(\"increment\"), v.literal(\"decrement\")), namespace: v.string(), key: v.string(), value: v.optional(v.any()), amount: v.optional(v.number()) }))"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, namespace, key); every transaction/purge member checked before effect",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers mutable:transaction authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:transaction rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers mutable:transaction rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "mutable:purgeAll",
+    "file": "convex-dev/mutable.ts",
+    "line": 108,
+    "kind": "internalMutation",
+    "visibility": "internal",
+    "validators": {
+      "tenantId": "v.optional(v.string())"
+    },
+    "tables": [
+      "mutable"
+    ],
+    "indexes": [
+      "by_tenantId"
+    ],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [
+      "tenantId"
+    ],
+    "conditionalScopeFilter": false,
+    "disposition": "retain-internal",
+    "requiredCapability": "trusted deployment-operator internal invocation",
+    "scope": "deployment-operator",
+    "resourceLookup": "mutable deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+    "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+    "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+    "reason": "deployment-wide maintenance must internalize for trusted operator invocation; never public tenant admin or target-grant authorization",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs mutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      },
+      {
+        "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs mutable:purgeAll requires operator maintenance without a target runtime grant",
+        "status": "passed",
+        "file": "tests/unit/runtimeAuth/inventory.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:create",
+    "file": "convex-dev/sessions.ts",
+    "line": 21,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {
+      "userId": "v.string()",
+      "metadata": "v.optional(v.any())",
+      "startedAt": "v.number()",
+      "expiresAt": "v.optional(v.number())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [
+      "userId"
+    ],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:create authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:create rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:create rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:get",
+    "file": "convex-dev/sessions.ts",
+    "line": 36,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:touch",
+    "file": "convex-dev/sessions.ts",
+    "line": 40,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:touch authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:touch rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:touch rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:touch rejects session expiry before-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:touch rejects session expiry after-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:end",
+    "file": "convex-dev/sessions.ts",
+    "line": 46,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:end authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:end rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:end rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:endAll",
+    "file": "convex-dev/sessions.ts",
+    "line": 50,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {
+      "userId": "v.string()"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [
+      "userId"
+    ],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:endAll authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:endAll rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:endAll rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:endAll rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:list",
+    "file": "convex-dev/sessions.ts",
+    "line": 58,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "limit": "v.optional(v.number())",
+      "offset": "v.optional(v.number())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:count",
+    "file": "convex-dev/sessions.ts",
+    "line": 62,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers sessions:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers sessions:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:incrementMessageCount",
+    "file": "convex-dev/sessions.ts",
+    "line": 82,
+    "kind": "internalMutation",
+    "visibility": "internal",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "retain-internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "reason": "background/helper effect must use trusted reference, not public caller IDs",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "cycle2 independent-review regressions sessions:incrementMessageCount rejects session expiry before-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:incrementMessageCount rejects session expiry after-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:incrementMemoryCount",
+    "file": "convex-dev/sessions.ts",
+    "line": 89,
+    "kind": "internalMutation",
+    "visibility": "internal",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "retain-internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "reason": "background/helper effect must use trusted reference, not public caller IDs",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "cycle2 independent-review regressions sessions:incrementMemoryCount rejects session expiry before-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:incrementMemoryCount rejects session expiry after-effect across awaited controls",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "sessions:expireIdle",
+    "file": "convex-dev/sessions.ts",
+    "line": 96,
+    "kind": "internalMutation",
+    "visibility": "internal",
+    "validators": {
+      "reference": "runtimeAuthorityReference",
+      "idleTimeout": "v.number()"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "retain-internal",
+    "requiredCapability": "write",
+    "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+    "resourceLookup": "sessionId -> trusted tenant, optional space and bound principal; userId cannot select another owner",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "reload principal/membership/grant versions, tenant/space epochs, expiry and tombstones before sensitive read/effect/commit; internal visibility alone does not authorize a background job",
+    "reason": "background/helper effect must use trusted reference, not public caller IDs",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "cycle2 independent-review regressions sessions:expireIdle rejects own duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:expireIdle rejects foreign duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "cycle2 independent-review regressions sessions:expireIdle rejects missing-owner duplicate before any effect",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "users:get",
+    "file": "convex-dev/users.ts",
+    "line": 7,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:get authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:get rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:get rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "users:list",
+    "file": "convex-dev/users.ts",
+    "line": 11,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "limit": "v.optional(v.number())"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:list authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:list rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:list rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "users:count",
+    "file": "convex-dev/users.ts",
+    "line": 15,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:count authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:count rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:count rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "users:getVersion",
+    "file": "convex-dev/users.ts",
+    "line": 16,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "version": "v.number()"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:getVersion authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getVersion rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getVersion rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "users:getHistory",
+    "file": "convex-dev/users.ts",
+    "line": 21,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:getHistory authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getHistory rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getHistory rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "users:getAtTimestamp",
+    "file": "convex-dev/users.ts",
+    "line": 25,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {
+      "timestamp": "v.number()"
+    },
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:getAtTimestamp rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "users:exists",
+    "file": "convex-dev/users.ts",
+    "line": 31,
+    "kind": "query",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "read",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:exists authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:exists rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:exists rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  },
+  {
+    "path": "users:deleteUserProfile",
+    "file": "convex-dev/users.ts",
+    "line": 32,
+    "kind": "mutation",
+    "visibility": "public",
+    "validators": {},
+    "tables": [],
+    "indexes": [],
+    "usesStorage": false,
+    "existingVerifiedIdentityCheck": false,
+    "globalIdLookup": false,
+    "callerIdentityFields": [],
+    "conditionalScopeFilter": false,
+    "disposition": "guard",
+    "requiredCapability": "write",
+    "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+    "resourceLookup": "(trusted tenantId, immutable type=user, bound metadataUserId); owner binding or explicit cross-principal grant",
+    "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+    "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+    "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks",
+    "currentOriginalOutcomeTests": [
+      {
+        "name": "36 registered modern public handlers users:deleteUserProfile authorized outcomes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:deleteUserProfile rejects missing verified identity without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      },
+      {
+        "name": "36 registered modern public handlers users:deleteUserProfile rejects forged tenant without writes",
+        "status": "passed",
+        "file": "tests/unit/runtimeMetadataAuth/handlers.test.ts"
+      }
+    ],
+    "nativeRegistrationEvidence": "framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion",
+    "sharedRequirementsEvidence": [
+      "original metadata189 and historical151/72/19",
+      "native-errors106 canonical/control/privacy/infrastructure",
+      "scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback"
+    ],
+    "liveTransportEvidence": "UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending"
+  }
+]

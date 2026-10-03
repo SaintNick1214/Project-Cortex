@@ -1,0 +1,143 @@
+import pathlib,json,hashlib,datetime,collections,subprocess
+O=pathlib.Path(__file__).parent;C=pathlib.Path('/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout');M=pathlib.Path('/workspace/Project-Cortex')
+sha=lambda p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
+a=json.loads((O/'before-snapshot.json').read_text());b=json.loads((O/'final-snapshot.json').read_text());v=json.loads((O/'verification.json').read_text());assert not v['failed']
+assert a['candidateRecords']==b['candidateRecords'] and a['candidateHead']==b['candidateHead'] and a['candidateStatusSha256']==b['candidateStatusSha256'] and a['freezeSha256']==b['freezeSha256']
+x={r['file']:r['sha256'] for r in a['mainTrackedRecords']};y={r['file']:r['sha256'] for r in b['mainTrackedRecords']}
+observation=dict(before=a['observedAt'],after=b['observedAt'],candidateRecords=len(a['candidateRecords']),candidateUnchanged=True,candidateHead=b['candidateHead'],candidateStatusUnchanged=True,freezeSha256=b['freezeSha256'],mainBeforeTracked=len(x),mainAfterTracked=len(y),mainChanged=[p for p in x if x[p]!=y.get(p)],mainAdded=sorted(set(y)-set(x)),mainRemoved=sorted(set(x)-set(y)),mainStatusUnchanged=a['mainStatusSha256']==b['mainStatusSha256'],mainHeadAtFinal=subprocess.check_output(['git','rev-parse','HEAD'],cwd=M).decode().strip(),mainInitialHead='Not separately captured; no claim of main HEAD equality. Tracked bytes and status are independently compared.')
+(O/'preservation-final.json').write_text(json.dumps(observation,indent=2)+'\n')
+receipts=[json.loads(p.read_text()) for p in (O/'receipts').glob('*.json')];receipts.sort(key=lambda r:r['startedAt']);(O/'commands.json').write_text(json.dumps(receipts,indent=2)+'\n')
+regs=json.loads((O/'original41-independent-requirement-mapping.json').read_text())
+pathTable='\n'.join('| '+r['path']+' | '+r['visibility']+' | '+r['requiredCapability']+' | '+('3 exact original public outcomes + shared bounded checks' if r['visibility']=='public' else 'exact internal registration + operator/pinned controls and rollback')+' |' for r in regs)
+report=f'''# Task Judgment: SECOND metadata/shared-reader native ambiguity correction
+
+## Verdict: FINAL PASS — bounded offline original41/affected03A correction only
+
+**Dimension scores: Requirement Fulfillment 5/5; Code Quality 4/5; Test Quality 5/5; Pattern Adherence 4/5; Completeness 5/5. Average 4.6/5.** All dimensions are at least4 and Requirement Fulfillment is5 under the strict judge-task rubric. This is independent original-scope acceptance of the frozen correction, not an executor-awarded verdict or completion of whole Task03/all17.
+
+Candidate `{C}` remains at accepted detached HEAD `c01ea6f06262d3a5eae9d171654e770c694ad409`. Final second freeze SHA256 is `a3c4411d7add6a8ebd56d970b2054391856be10a5a9671f509ea9ca82de440a8` (six source/test and138 QA records); report SHA256 supplied by parent is `684ef32b482e4faad19cb827f22ddd17a1e73a523505408d8e0ff73a30fdcf28`. All records verify against actual bytes before and after review. The first FINAL REJECT3.0 remains immutable: original report `3991298b6270e08c0827003364ac762bd3f18bab878f6bf3c5478b057c11d136`, original complete manifest `e65a086c489d1717bf2a42a816b2f4b492f9ccc0d2a879f8a4b6e019b315216a`.
+
+## Evidence review and corrected failure
+
+I read AGENTS, runtime/profile, pessimistic-judge, judge-task and feature workflow instructions, both bounded review prompts, original approved implementation prompt, goal/Task03, original03A contracts, decision register and architecture. I inspected the complete cumulative/second-only patches, actual helpers/handlers/fixtures/tests, complete mappings, frozen/source/preservation manifests, executor command receipts and raw checks, first rejection report and its actual-handler/baseline outcomes. The authority correction was judged through the existing resolver, not just from the helper's isolated lookup results.
+
+The first candidate emitted `FORBIDDEN` from `boundedSingle`; `runtimeAuth.ts:174-177` deliberately catches that permission code and prunes an ineligible candidate. A duplicated scope or memorySpace fence could therefore leave the other eligible scope as a single candidate under omitted selectors. I independently reconstructed the preserved first candidate with import-only private copies and reproduced all four actual mutable read/write admissions. Its unchanged original18 finding collector passes against those first-cycle bytes. Current candidate runs the exact same fixtures against real registered handlers and preserved accepted-baseline handlers with installed native `QueryImpl.prototype.unique`. All six current actual operations deny; all four formerly admitted operations have0 attempted and0 committed effects, no result/receipt, and no private IDs/value in delivered error evidence. All12 baseline authority/actual-handler comparisons deny with reached native duplicate lookup as appropriate.
+
+Current `boundedSingle` at `convex-dev/runtimeAuth.ts:208` emits the complete constant nonpermission ConvexError envelope:
+
+```json
+{{"version":1,"code":"AUTHORITY_LOOKUP_AMBIGUOUS","message":"Authority lookup is ambiguous","retryable":false,"outcome":"not_dispatched"}}
+```
+
+The unchanged resolver rethrows this error because it only prunes `FORBIDDEN`. Actual traces reach `.take(2)` with both corrupt control IDs, regardless of eligible candidate order. The distinct error also propagates through final exact-reference checks and pinned background checks. There is no generic catch, new READ rule, resolver/pruning edit, additional control lookup or alternative-scope fallback. Unknown infrastructure remains the same object. Canonical immutable/mutable/session duplicate row selection retains the first candidate's static `FORBIDDEN` and exact owner-filtered predicates.
+
+The second-only production difference is exactly that constant-envelope branch. All three bounded reader bodies/index predicates, pure policy/resolver/pruning prefix, require/recheck/internal provisioning suffix and canonical metadata helper remain unchanged from FIRST. Cumulatively there are four tracked source/test edits and two new tests, the six frozen paths only. Schema, dependency manifests/lockfile, generated bindings, SDK/browser contracts, backend compiler config, validators/registrations, original fixtures and other tests remain byte-identical. Provisioning changes one duplicate-identity code/message expectation; native-errors strengthens only42 control expectations to the complete distinct envelope. Canonical privacy/reached/effect/infrastructure assertions stay unchanged. Original handler test compatibility retains names, grant-get thresholds, expiry/state/no-effect/rollback assertions, with take2 and explicit arming at the actually reached hook. No skipped/removed/weakened original test exists in the inspected patch.
+
+## Requirements review
+
+Every exact original endpoint with capability, scope, owner/resource and background contract appears in `original41-independent-requirement-mapping.json`, with actual native registration/validators and exact fresh endpoint test names. The full original affected03A criteria appear in `affected03A-independent-requirement-mapping.json`; downstream requirements are explicitly pending. The original240 public endpoint inventory plus3 existing helpers and8 auth registrations remains the wider03A foundation; the affected metadata boundary is41 endpoints, not a claim that all240 closure gates or whole03 passed.
+
+| Original/affected requirement | Status in this review | Specific independent evidence |
+|---|---|---|
+| Exact immutable12/mutable11/users8/sessions10=41; public36 guarded/internal5; no public reference credential | PASS bounded | AST inventory and installed native registrations/validators equal original; original2 registration outcomes; inventory64 |
+| Verified exact issuer/subject; trusted operator bootstrap; actor/profile/user metadata cannot grant privilege | PASS bounded | Original auth133; public36 authorized+36 missing identity+36 forged tenant cases; pure policy/provisioning unchanged |
+| Explicit independent capabilities; admin not implicit read/write/run/tool/storage | PASS bounded | Original authority54/admin/profile controls; native WRITE-only3 success controls; no new READ requirement |
+| Omitted selectors admit only one eligible scope; corrupt principal/scope/tombstone ambiguity aborts whole operation | PASS corrected | Current18 and six original denial predicates;16 new omitted corruption cases, both grant/membership orders and tenant/space layouts; original42 control cases |
+| Explicit healthy selected scope remains usable when only an unselected scope has corrupt controls | PASS | Eight actual-handler positive read/write cases; corrupt unselected IDs remain present and absent from selected traces |
+| Ordinary revoked/expired/absent/deleted/missing/single-fence eligibility pruning remains | PASS |24 new positives; four healthy two-scope ordinary FORBIDDEN denials; original authority54 |
+| Exact tenant/optional-space/key/owner predicates before hydration/list/count/search/limit | PASS bounded | Three exact bounded row substitutions, original189, installed native traces, eight collection-hydration controls among33 extra probes |
+| Canonical resource owner/profile binding, explicit eligible broader resourceAccess, no orphan/owner adoption | PASS bounded | Original actor/profile tests, unchanged resource/profile code, six initial READ eligibility probes |
+| READ and WRITE independently eligible; WRITE-only safe receipt; later admitted READ failure cannot downgrade to receipt | PASS bounded | Original safe receipt controls;52 historical late read/write barriers; original native3 WRITE-only positives; final corruption/infrastructure rollback |
+| All-key bulk/transaction preflight before any effect, including later invalid/foreign/missing-owner/duplicate keys | PASS bounded | Original bulk/transaction assertions;20 later bulk conflicts+8 transaction replay cases; canonical36 native duplicate/conflict denials |
+| Retained row/control tombstones cannot privilege/revive; exact absent/single/foreign fence semantics | PASS bounded | Original retention/recreation/list/count tests,42 native duplicate controls, fence boolean control,24 normal eligibility cases,16 omitted corruption denials |
+| Active-generation invariant before capability/expiry/ownership/version pruning; raw exact optional scope groups | PASS bounded | Original auth133 retained; pure boundGrants/assertSingleActiveGeneration bytes unchanged |
+| Immutable principal/membership/grant versions, epochs, expiry/currentness and final synchronous deadlines | PASS bounded | Original metadata expiry/attempt/rollback tests with reached take2;151 historical barriers;12 new final/pinned cases |
+| Pinned grant/source/session refs cannot switch scope; trusted creator/actor/resource exactness | PASS bounded | Internal5 actual registrations; original malformed/currentness tests;15 malformed bindings+15 late internal fences;12 ambiguity final/pinned rollback cases |
+| Workers recheck exact stored authority before effects/final commit; internal visibility alone gives no privilege | PASS bounded | Original worker185; original session internal cases; exact creator/owner/user/source scope/ref validation preserved |
+| Collision-safe JSON-array source IDs and optional-space same-ID coexistence | PASS bounded | Original collision/undefined-space tests, native undefined-space6/cross-scope3 positives, historical JSON-array replay; bridge source unchanged |
+| Numeric null/invalid operands deny; omitted defaults/zero and safe counters/versions remain | PASS bounded | Original arithmetic outcomes;151 boundary invalid cases;19 historical observations |
+| Timestamp indexed-last-element ES2021 compatibility preserves missing/null/order/inclusive behavior | PASS bounded |72 current/archived actual-handler equivalence outcomes; original indexed-last-element source unchanged; actual backend project check |
+| Genuine installed native ambiguity mechanism; sanitized constant errors without private control/resource IDs/value | PASS bounded | Six installed diagnostic controls in native106; independent original canonical6+control6 baseline confirmations; current error privacy tests and comparison |
+| Genuine infrastructure preserves object identity; no false permission/success conversion; final rollback/no receipt | PASS bounded | Native15 infrastructure outcomes; eight multi-grant infrastructure cases; direct same-object assertions and reached counters |
+| Original189 metadata+133 auth+all original845 testcase names/multiplicities and assertions retained | PASS | Independent Counter/multiset comparison including repeated display names; no skipped/pending/todo/failed testcase |
+| Unchanged schema/config/ES2021/validators/registrations/SDK/contracts and quality/build/pack | PASS candidate only | Protected3453 including2340 original QA; actual backend ES2021+DOM project, scoped/root quality,151 byte-matched build source records and packed/browser execution |
+| Prior freeze/history/failed raw receipts preserved; inventory callback cleans temp files on all exits | PASS | Original first5 copies/114 QA,490 archive records+18 private reproducible omissions, original386 manifest records and69+101 older archive records; six callback cleanup modes |
+| Managed live41/JWT refresh/subscriptions/private bytes/callbacks/native UI/whole03/full17 | PENDING downstream | No service/JWT/byte/callback/UI execution in this read-only offline review; no broader or live certification |
+
+## Independent test quality and observed checks
+
+| Check | Observed result |
+|---|---|
+| Selected ordinary Jest |867/867 across14 suites;0 failures/skips/pending/todo |
+| Original metadata |189/189=187 handler+2 registration outcomes; all names/multiplicities retained |
+| Accepted03A shared dependency |133/133=54 authority+15 provisioning+64 inventory |
+| Original native errors |106/106=6 diagnostic controls+36 canonical/conflict denials+6 positives+42 control denials+1 fence semantics+15 infrastructure |
+| New scope ambiguity |80/80=16 omitted corruption+8 explicit corrupt denial+8 explicit healthy positives+4 healthy ambiguity+24 pruning positives+8 infrastructure+12 final/pinned rollback |
+| Workers and SDK consumers |185 workers=58 admin+39 governance+88 graph; SDK governance28; SDK metadata106=79 consumers+27 session maintenance |
+| Separate auth replay |98/98=40 credentials+26 context+32 validators; credentials40 overlap selected |
+| Honest testcase/discovery total |925 outcomes=867+98−40;16 exact discovered suites, all reached; original845 retained plus80 new |
+| Original adverse actual-handler/baseline comparison | Current18 pass; six original required-denial predicates fail0; preserved FIRST18 independently reproduces four admissions |
+| Old finding collector after correction | Exit1 preserved on obsolete expected-admission assertion; never relabeled PASS |
+| Installed native accepted-baseline confirmations | Canonical6+control6 actual-handler mechanisms independently reproduced; real native duplicate diagnostics contain stored synthetic IDs,0 effects |
+| Historical replays |118 boundary+33 extra=151,72 timestamp equivalence,19 qualified observations,6 callback cleanup; all pass |
+| Native registration / AST catalog |41 exact paths, public36/internal5, unresolved0; exact validator/catalog identity |
+| Actual backend compiler | `node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --pretty false`, exit0; actual config targetESNext with ES2021+DOM libs, unmodified |
+| Scoped strict types / changed lint |Exit0; lint0 errors/0 warnings |
+| Accepted candidate root types / root lint |Exit0; root lint0 errors/118 pre-existing warnings outside changed scoped files |
+| Independent root build / packed/browser contracts |Exit0 in own151 byte-matched source/config copy; CJS/ESM/declarations, actual npm12.2 pack, consumer types, URL round trips, browser sandbox execution |
+| Independent evidence verifier |{v['total']}/{v['total']} assertions pass, plus final preservation equality assertions |
+
+Counts preserve testcase multiplicity. Duplicate descriptions and the repeated credential suite do not inflate or silently shrink925. The historical151/72/19/6 and baseline/current18/native12 are separate qualification observations, not extra Jest testcase outcomes.
+
+The new80 cases are meaningful actual-handler outcomes using original transactional fixtures and installed native unique as a regression sentinel. They assert exact envelope, private-ID/value absence in message/stack/data, reached take2 traces with both corruption IDs, no mutable hydration on omitted-corruption paths, no alternative result or safe receipt, attempted/committed counters and complete snapshot equality. Final public/pinned cases independently preserve attempted1 versus committed0 and rollback; pinned-before attempts0. Eight explicit healthy-scope and24 normal pruning positives prevent a fix that blanket-denies all multi-grant requests. This is offline protocol/handler evidence, not proof of deployed Convex transaction/JWT transport or cross-service race semantics.
+
+## Replay provenance, honest failures and preservation
+
+All executable probes/scripts and source-context are retained under `{O}`. Accepted runtimeAuth/metadata/mutable/immutable/session baseline raw copies match `git show HEAD` byte-for-byte; executable copies relocate imports only. `source-context/current18-expectation-only.diff` proves the current comparison changes candidate admission expectations to required exact denial/zero attempts/zero commits/private-field absence and relocates output, while fixtures and12 baseline cases stay untouched. The old collector still has its original expected-admission finding assertions; its fresh current run exits1. The original six denial predicates are unchanged except reading the current output destination.
+
+151/72/6 replays retain the prior script assertions and only relocate output/candidate roots. Timestamp equivalence uses archived endpoint bodies with current authority/fixtures, not the complete archived dependency set. Historical19 preserves the first authorized unique→take2 hook compatibility plus explicit reached assertions; it is qualified method-adapted evidence, not byte-exact original archival execution.
+
+First-generation literal185/189 metadata and120/133 auth failures, every retained executor setup/compiler/npm failure and all first rejection raw findings remain canonical and are also represented in reviewer source-context. Reviewer-only harness failures are preserved honestly: an optional first-cycle copy setup assumed `.ts` rather than `.ts.text`, then the recorded missing-script execution exited1; corrected filename selection/import relocation produced FIRST18. Initial historical19 checker used earlier reviewer log labels and exited1 on ENOENT; only three output basenames changed for the final passing checker. `reviewer-harness-notes.txt`, initial checker, failed logs/receipts and corrected sources remain. Pre-run tool reads lack explicit UTC fields; no synthetic execution timestamps are invented. Every validation execution has argv/cwd/start/end UTC/exit and unfiltered stdout/stderr.
+
+Final comparison matches all4204 candidate records, candidate HEAD/status/freeze and all6933 initially tracked main files and main status. No added/removed/changed main tracked record was observed during this review interval. I do not infer main initial HEAD equality, which was not separately recorded, or claim current-main aggregate quality. The canonical candidate/source/history was never written. Protected4061 before-cycle2 records match; original3453 tracked/2340 QA match; first5 source copies/114 frozen QA,490 archived records and18 private reproducible omissions match; original first386-record independent manifest and older69+101 archives match. Final preservation and snapshots retain the exact paths/hashes.
+
+The historical dirty-MAIN root compiler receipt remains an honest exit2 with three rejected-MF maintenance-reference errors: two in tests/helpers/cleanup.ts and one in tests/interactive-runner.ts. It was examined with command/source context, not silently replaced by candidate root success or claimed as a new MAIN run. Rejected MF and artifact/registry gate states remain separate; this is not a fourth MF/artifact repair or recertification.
+
+No agents/model changes, candidate/main/source/config/QA writes, Git staging/commits, network/service/credential/signing/rotation, target/model calls, Docker, codegen/deploy or dependency installation occurred. Own temporary scripts/receipts/cache/build/pack output stayed under this reviewer directory. npm12.2 reused the explicitly authorized scoped cache `work/backend-runtime/npm12-cache`, with distinct empty reviewer user/global configs; no home/global config/package installation occurred. Sentinel URLs are `http://127.0.0.1:1`. Inventory and packed-contract scratch directories are absent after execution.
+
+## Dimension scores
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Requirement Fulfillment |5/5| Every authorized original41/affected03A offline requirement mapped; first failure independently reproduced and corrected across original fixtures; broader criteria explicitly pending |
+| Code Quality |4/5| Minimal constant typed nonpermission state; no resolver/pruning/catch/capability expansion; awaited bounded indexed reads; exact source preservation |
+| Test Quality |5/5|925 real testcase outcomes retained;80 meaningful composition/positive/error/rollback cases; actual installed native diagnostics, baseline comparisons and historical boundaries |
+| Pattern Adherence |4/5| ConvexError static envelope, existing composite indexes/trusted controls/owner predicates and transaction fences retained; complete build/types/lint/packed evidence |
+| Completeness |5/5| Original41 registrations/validators and shared-helper reachability intact; all required independent offline quality/behavior/provenance/preservation checks executed |
+
+**Average4.6/5. FINAL PASS for the bounded correction.**
+
+## Issues found and recommendation
+
+Critical: none found within authorized offline correction scope. Important source repairs: none required. Minor source repairs: none required. Root118 warnings are retained existing diagnostics and do not occur in scoped changed-file lint. Known pending broader/service gates are limitations, not silently passed requirements or automatic rejection of this authorized offline correction.
+
+Parent may integrate this exact accepted correction. **Parent integration and exact two-helper registry/live-fixture dependency provenance refresh, followed by affected independent review, must precede any real41 service execution.** Managed JWT refresh/subscriptions/private bytes/callbacks/live41/nativeUI/whole03/full17 remain PENDING; this report certifies none of them. Separate failed/in-progress MF/artifact/registry states persist.
+
+Evidence root: `{O}`. Full raw executions: `commands.json`, `receipts/`, `logs/`. Source/probe context: `source-context/`, `replays/`, baseline/cycle1 raw and executable copies. Requirement mappings: `original41-independent-requirement-mapping.json`, `affected03A-independent-requirement-mapping.json`. Outcomes: `test-summary.json`, `selected.json`, `auth.json`, `current-required18-outcomes.json`, `cycle1-results/ambiguity-pruning-outcomes.json`. Integrity: `verification.json`, `before-snapshot.json`, `after-snapshot.json`, `final-snapshot.json`, `preservation-final.json`, `manifest.json`, `manifest.sha256`. Report SHA and manifest SHA are sent with FINAL; manifest covers this report and all retained reviewer evidence except explicitly disposable dependency links/caches/tmp.
+
+## Exact original endpoint mapping
+
+| Path | Visibility | Required capability | Fresh retained endpoint evidence |
+|---|---|---|---|
+{pathTable}
+'''
+(O/'report.md').write_text(report)
+records=[]
+excluded={'node_modules','jest-cache','jest-auth-cache','jest-discovery-cache','tmp','__pycache__'}
+for p in sorted(O.rglob('*')):
+ rel=p.relative_to(O)
+ if p.is_symlink() or not p.is_file() or set(rel.parts)&excluded or p.name in ['manifest.json','manifest.sha256']:continue
+ records.append(dict(file=str(rel),bytes=p.stat().st_size,sha256=sha(p)))
+(O/'manifest.sha256').write_text(''.join(r['sha256']+'  '+r['file']+'\n' for r in records))
+(O/'manifest.json').write_text(json.dumps(dict(createdAt=datetime.datetime.now(datetime.timezone.utc).isoformat(),status='FINAL PASS bounded offline original41/affected03A',evidenceRoot=str(O),recordCount=len(records),excluded='Dependency symlinks and disposable Jest/tmp/Python caches only; accepted-copy build artifacts retained',reportSha256=sha(O/'report.md'),sha256ListSha256=sha(O/'manifest.sha256'),records=records),indent=2)+'\n')
+print(json.dumps(dict(report=str(O/'report.md'),reportSha256=sha(O/'report.md'),manifest=str(O/'manifest.json'),manifestSha256=sha(O/'manifest.json'),sha256List=str(O/'manifest.sha256'),sha256ListSha256=sha(O/'manifest.sha256'),records=len(records),verificationAssertions=v['total'],commands=len(receipts),verdict='FINAL PASS',scores=[5,4,5,4,5],average=4.6),indent=2))

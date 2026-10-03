@@ -1,0 +1,22 @@
+--- ambiguity-pruning-probe.mjs
++++ current-required18-probe.mjs
+@@ -22,9 +22,10 @@
+   const {f,reached}=setup(capability,defect);
+   const result=await run(f,()=>f.run(capability==='read'?mutable.get:mutable.set,{namespace:'counter',key:'one',...(capability==='write'?{value:'replacement'}:{})}));
+   results.push({capability,defect,kind:'actual registered handler omitted selectors',duplicateLookupReached:reached(),...result});
+-  assert.equal(result.accepted,defect!=='none');
++  assert.equal(result.accepted,false);assert.equal(result.attempts,0);assert.equal(result.writes,0);
++  if(defect!=='none') { assert.deepEqual(result.errorData,{version:1,code:'AUTHORITY_LOOKUP_AMBIGUOUS',message:'Authority lookup is ambiguous',retryable:false,outcome:'not_dispatched'});for(const secret of ['mutable:private-b','private-b-value','runtimeAuthScopes:duplicate-a','runtimeAuthTombstones:private-one','runtimeAuthTombstones:private-two'])assert.equal(JSON.stringify(result).includes(secret),false); }
+   assert.equal(reached(),defect==='none'?0:1);
+-  if(result.accepted)assert.equal(result.writes,capability==='write'?1:0);
++  
+ }
+ const {requireAuthority:original}=await import('./baseline-runtimeAuth.ts');
+ for(const capability of ['read','write'])for(const defect of ['none','scope','space-tombstone']){
+@@ -40,5 +41,5 @@
+   results.push({capability,defect,kind:'accepted baseline actual registered handler with native unique protocol',duplicateLookupReached:reached(),...result});
+   assert.equal(result.accepted,false);assert.equal(reached(),defect==='none'?0:1);assert.equal(result.attempts,0);assert.equal(result.writes,0);
+ }
+-fs.writeFileSync(OUT+'/ambiguity-pruning-outcomes.json',JSON.stringify({method:'Independent actual registered metadata handlers and byte-preserved accepted baseline authority share identical fixtures; installed QueryImpl.unique drives baseline diagnostics. No selectors are supplied; two independent concrete grants exist. Observation assertions characterize the behavior and retain actual results.',results},null,2)+'\n');
++fs.writeFileSync(OUT+'/current-required18-outcomes.json',JSON.stringify({method:'Independent actual registered metadata handlers and byte-preserved accepted baseline authority share identical fixtures; installed QueryImpl.unique drives baseline diagnostics. No selectors are supplied; two independent concrete grants exist. Current candidate requires whole-operation denial; preserved case fixtures and accepted baseline actual native protocol comparisons retained.',results},null,2)+'\n');
+ console.log(JSON.stringify(results,null,2));

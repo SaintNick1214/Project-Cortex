@@ -319,3 +319,44 @@ or gate reset. Initial admission must abort control ambiguity; pinned references
 cannot select alternatives. Current metadata dependency remains unaccepted; parent
 will coordinate accepted helper refresh before final third registry/harness judgment.
 All41 real service cases and whole03/text/full17 remain incomplete.
+
+2026-10-03T13:30Z: native-error SECOND executor FINALfreeze
+a3c4411d7add6a8ebd56d970b2054391856be10a5a9671f509ea9ca82de440a8 verified
+6 source/138 QA;925 testcase outcomes=original845+80 new,0 skips. Static
+AUTHORITY_LOOKUP_AMBIGUOUS preserves ordinary FORBIDDEN eligibility pruning while
+aborting duplicate controls across omitted/explicit spaces/tenants and final/pinned
+references. Original18 comparison/six denial predicates now pass; the obsolete
+finding collector's expected exit1 is retained. Full backendES2021/scoped/root
+quality/build/pack and151/72/19/6 historical replays pass. Fresh SECOND original41/
+affected03A judge is ACTIVE; no integration or accepted-dependency copy yet.
+
+Registry current-base READY1110 checkpoint is preserved. Inspection confirms
+low-level authority-reader operations cannot originate legitimate permission
+decisions; the third repair therefore treats their exceptions as operation failures,
+retaining pinned-reference ambiguity denial only. New exact-safe-looking read-error
+controls are being checked with every original outcome preserved. Final dependency
+refresh/freeze/third review remain pending. Harness original37/4/6+6/28/34/76 and
+new22 parser/25 group/13 initial-bound receipt controls/types/lint/preservation pass;
+its third FINALfreeze waits for metadata acceptance and parent-only two-helper refresh.
+MF/artifact extra-cycle questions, native browser access and all41 actual service
+outcomes remain pending. Whole03/text/all17 remain incomplete.
+
+2026-10-03T13:43Z: metadata/native-ambiguity SECOND fresh FINAL PASS4.6 for exact
+original41/affected03A offline correction. Full report followup-review-2.md hash
+b608adce3d20d8fdac98f8c2541c243dfa72616b6204e21ca1e7cf0dc6d8a94d read;
+all552 independent raw records verified,537 archived with17 reproducible compiled
+SDK outputs kept as exact private bindings. Parent copied6 frozen source/test and138
+QA records without modifying MF/schema; main actual925/16 suites/0 skips, backend
+ES2021/discovery/owned lint PASS. Actual main root compiler remains exit2 solely at
+the three documented rejected-MF maintenance fixture references; marked
+BLOCKED_DIRTY_MF, not replaced by isolated root PASS. No live service execution.
+
+Registry same-third READY1146/9 suites/0 skips now includes36 exact-safe-looking
+low-level read-error controls. All reader exceptions abort admission; only exact
+ambiguity in pinned-reference checks retains opaque denial. Source/core refresh and
+FINALfreeze/original46 third review still pending. Harness mechanics3 original/new
+checks pass after command-local upstream/deploy/private-selector environment
+sanitization; inherited-name initial finding remains preserved and0 network/model
+calls observed. Required final helper/provenance refresh and third review precede
+41 real service cases. MF/artifact extra-cycle questions and native UI access remain
+pending. Whole03, Tasks01-09 text slice and full17 goal remain incomplete.

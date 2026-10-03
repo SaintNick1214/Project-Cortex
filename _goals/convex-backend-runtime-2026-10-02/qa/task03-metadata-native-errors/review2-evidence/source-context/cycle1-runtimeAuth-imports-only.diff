@@ -1,0 +1,23 @@
+--- cycle1-runtimeAuth.raw
++++ cycle1-runtimeAuth.executable
+@@ -1,16 +1,16 @@
+ /** Trusted authorization boundary. Registered functions in this module are internal only. */
+ import { ConvexError, v } from "convex/values";
+ import type { UserIdentity } from "convex/server";
+-import { internalMutation, internalQuery } from "./_generated/server";
+-import type { MutationCtx, QueryCtx } from "./_generated/server";
++import { internalMutation, internalQuery } from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/_generated/server";
++import type { MutationCtx, QueryCtx } from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/_generated/server";
+ import type {
+   RuntimeActorKind, RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement,
+   RuntimeCapability, RuntimeResource, RuntimeResourceAccess, RuntimeResourceType,
+-} from "../src/auth/verified";
++} from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/src/auth/verified";
+ import {
+   runtimeActorKind, runtimeAuthorityReference, runtimeAuthorityRequirement,
+   runtimeCapability, runtimeResourceAccess, runtimeResourceType,
+-} from "./runtimeAuthSchema";
++} from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/runtimeAuthSchema";
+ 
+ type Lifecycle = { version: number; revokedAt?: number; deletedAt?: number };
+ export interface PrincipalRecord extends Lifecycle {

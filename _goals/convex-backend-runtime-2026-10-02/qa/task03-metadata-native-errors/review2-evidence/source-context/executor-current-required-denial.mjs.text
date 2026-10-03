@@ -1,0 +1,7 @@
+import fs from 'node:fs';
+const root='/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/work/native-errors-cycle2/judge-replays';
+const data=JSON.parse(fs.readFileSync(root+'/current-required18-outcomes.json','utf8'));
+const outcomes=data.results.filter(r=>r.kind==='actual registered handler omitted selectors').map(r=>({...r,requirement:'Control-table ambiguity must fail closed, never silently narrow omitted selector authority or permit private reads/effects',expectedAccepted:false,pass:r.accepted===false&&r.attempts===0&&r.writes===0}));
+fs.writeFileSync(root+'/current-required-denial.json',JSON.stringify({outcomes,failed:outcomes.filter(r=>!r.pass).length},null,2)+'\n');
+console.log(JSON.stringify({outcomes:outcomes.length,failed:outcomes.filter(r=>!r.pass).length,failures:outcomes.filter(r=>!r.pass)},null,2));
+process.exitCode=outcomes.some(r=>!r.pass)?1:0;

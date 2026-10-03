@@ -42,6 +42,7 @@ class MemoryDb {
         callback(q); return result;
       },
       unique: async () => { const values = selected(); if (values.length > 1) throw new Error("Duplicate unique control record"); return values[0] ?? null; },
+      take: async (limit: number) => selected().slice(0, limit),
       collect: async () => selected(),
     };
     return result;
@@ -227,6 +228,10 @@ describe("internal bootstrap and trusted control table adapters", () => {
     expect(await reader.listMemberships("forged-principal")).toEqual([]);
     expect(await reader.listGrants("forged-membership")).toEqual([]);
     await h.db.insert("runtimeAuthPrincipals", { issuer: identity.issuer, subject: identity.subject, actorKind: "user", version: 1 });
-    await expect(requireAuthority(h.ctx, requirement)).rejects.toThrow("Duplicate unique control record");
+    const writes = [...h.db.writes];
+    await expect(requireAuthority(h.ctx, requirement)).rejects.toHaveProperty("data", {
+      version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS", message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched",
+    });
+    expect(h.db.writes).toEqual(writes);
   });
 });

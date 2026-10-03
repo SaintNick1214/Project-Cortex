@@ -1,0 +1,237 @@
+   1: import { describe, expect, it } from "@jest/globals";
+   2: import {
+   3:   authorize, createAuthorityReader, deletePrincipal, deleteScope, provision, recheck,
+   4:   recheckAuthority, requireAuthority, revokeGrant, revokeMembership, tombstoneResource,
+   5: } from "../../../convex-dev/runtimeAuth";
+   6: import type { MutationCtx } from "../../../convex-dev/_generated/server";
+   7: import type { Id } from "../../../convex-dev/_generated/dataModel";
+   8: import type { RuntimeActorKind, RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement, RuntimeCapability, RuntimeResourceAccess, RuntimeResourceType } from "../../../src/auth/verified";
+   9: 
+  10: /** Convex exposes this runtime test hook but strips it from its published .d.ts. */
+  11: function handler<Args, Result>(registration: unknown): (ctx: MutationCtx, args: Args) => Promise<Result> {
+  12:   return (registration as { _handler: (ctx: MutationCtx, args: Args) => Promise<Result> })._handler;
+  13: }
+  14: type ProvisionArgs = {
+  15:   issuer: string; subject: string; actorKind: RuntimeActorKind; metadataUserId?: string;
+  16:   tenantId: string; memorySpaceId?: string; capabilities: RuntimeCapability[];
+  17:   resourceAccess: RuntimeResourceAccess; expiresAt?: number;
+  18: };
+  19: const provisionHandler = handler<ProvisionArgs, RuntimeAuthority>(provision);
+  20: const authorizeHandler = handler<{ requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>(authorize);
+  21: const recheckHandler = handler<{ reference: RuntimeAuthorityReference; requirement: RuntimeAuthorityRequirement }, RuntimeAuthority>(recheck);
+  22: const revokeGrantHandler = handler<{ grantId: Id<"runtimeAuthGrants"> }, void>(revokeGrant);
+  23: const revokeMembershipHandler = handler<{ membershipId: Id<"runtimeAuthMemberships"> }, void>(revokeMembership);
+  24: const deletePrincipalHandler = handler<{ principalId: Id<"runtimeAuthPrincipals"> }, void>(deletePrincipal);
+  25: const deleteScopeHandler = handler<{ tenantId: string; memorySpaceId?: string }, void>(deleteScope);
+  26: const tombstoneHandler = handler<{ tenantId: string; memorySpaceId?: string; resourceType: RuntimeResourceType; resourceId: string }, void>(tombstoneResource);
+  27: 
+  28: type Row = { _id: string; [field: string]: unknown };
+  29: /** In-memory adapter harness, not a substitute for Convex transaction/live endpoint QA in 03B. */
+  30: class MemoryDb {
+  31:   readonly rows = new Map<string, Row[]>();
+  32:   readonly writes: string[] = [];
+  33:   private next = 1;
+  34: 
+  35:   normalizeId(table: string, id: string) { return id.startsWith(`${table}/`) ? id : null; }
+  36:   query(table: string) {
+  37:     const predicates: Array<[string, unknown]> = [];
+  38:     const selected = () => (this.rows.get(table) ?? []).filter((row) => predicates.every(([key, value]) => row[key] === value));
+  39:     const result = {
+  40:       withIndex: (_name: string, callback: (q: { eq: (field: string, value: unknown) => unknown }) => unknown) => {
+  41:         const q = { eq: (field: string, value: unknown) => { predicates.push([field, value]); return q; } };
+  42:         callback(q); return result;
+  43:       },
+  44:       unique: async () => { const values = selected(); if (values.length > 1) throw new Error("Duplicate unique control record"); return values[0] ?? null; },
+  45:       take: async (limit: number) => selected().slice(0, limit),
+  46:       collect: async () => selected(),
+  47:     };
+  48:     return result;
+  49:   }
+  50:   async get(table: string, id: string) { return (this.rows.get(table) ?? []).find((row) => row._id === id) ?? null; }
+  51:   async insert(table: string, fields: Record<string, unknown>) {
+  52:     const _id = `${table}/${this.next++}`;
+  53:     this.rows.set(table, [...(this.rows.get(table) ?? []), { ...fields, _id }]);
+  54:     this.writes.push(`insert:${table}`); return _id;
+  55:   }
+  56:   async patch(table: string, id: string, fields: Record<string, unknown>) {
+  57:     const row = await this.get(table, id);
+  58:     if (!row) throw new Error("Missing row");
+  59:     Object.assign(row, fields); this.writes.push(`patch:${table}`);
+  60:   }
+  61: }
+  62: 
+  63: const identity = { issuer: "https://host.test", subject: "alice", tokenIdentifier: "ignored-token-identifier" };
+  64: const provisionArgs = {
+  65:   issuer: identity.issuer, subject: identity.subject, actorKind: "user" as const, metadataUserId: "metadata-alice",
+  66:   tenantId: "tenant-a", memorySpaceId: "space-a", capabilities: ["read", "write", "run"] as Array<"read" | "write" | "run">,
+  67:   resourceAccess: "own" as const,
+  68: };
+  69: const requirement = { capability: "read" as const, tenantId: "tenant-a", memorySpaceId: "space-a" };
+  70: const forbidden = { data: { code: "FORBIDDEN" } };
+  71: function harness(verified: Record<string, unknown> | null = identity) {
+  72:   const db = new MemoryDb();
+  73:   let identityReads = 0;
+  74:   // The harness implements only operations consumed by these handlers; production ctx is Convex-owned.
+  75:   const ctx = { db, auth: { getUserIdentity: async () => { identityReads++; return verified; } } } as unknown as MutationCtx;
+  76:   return { db, ctx, identityReads: () => identityReads };
+  77: }
+  78: 
+  79: describe("internal bootstrap and trusted control table adapters", () => {
+  80:   it("exposes no public provisioning, revocation, deletion, or action authority resolver", () => {
+  81:     for (const registration of [authorize, recheck, provision, revokeGrant, revokeMembership, deletePrincipal, deleteScope, tombstoneResource]) {
+  82:       expect(registration.isInternal).toBe(true);
+  83:       expect("isPublic" in registration).toBe(false);
+  84:     }
+  85:   });
+  86: 
+  87:   it("provisions only trusted control records, returns immutable references and is idempotent", async () => {
+  88:     const h = harness(null);
+  89:     const first = await provisionHandler(h.ctx, provisionArgs);
+  90:     const writeCount = h.db.writes.length;
+  91:     const second = await provisionHandler(h.ctx, provisionArgs);
+  92:     expect(second).toEqual(first);
+  93:     expect(h.db.writes).toHaveLength(writeCount);
+  94:     expect(first).toMatchObject({ principalVersion: 1, membershipVersion: 1, grantVersion: 1, tenantEpoch: 1, memorySpaceEpoch: 1, userId: "metadata-alice" });
+  95:     expect(h.db.rows.get("runtimeAuthGrants")).toHaveLength(1);
+  96:     expect(h.identityReads()).toBe(0); // Operator internal invocation does not impersonate a public JWT admin.
+  97:   });
+  98: 
+  99:   it("resolves public identity through Convex auth and never uses tokenIdentifier or admin metadata", async () => {
+ 100:     const h = harness({ ...identity, tenantId: "tenant-forged", userId: "forged", roles: ["admin"] });
+ 101:     await provisionHandler(h.ctx, provisionArgs);
+ 102:     const writeCount = h.db.writes.length;
+ 103:     const resolved = await requireAuthority(h.ctx, requirement);
+ 104:     expect(resolved).toMatchObject({ tenantId: "tenant-a", userId: "metadata-alice" });
+ 105:     expect(h.identityReads()).toBe(1);
+ 106:     expect(h.db.writes).toHaveLength(writeCount);
+ 107:     await expect(requireAuthority(h.ctx, { ...requirement, capability: "admin" })).rejects.toMatchObject(forbidden);
+ 108:     const attacker = harness({ ...identity, subject: "attacker", tokenIdentifier: `${identity.issuer}|alice`, userId: "metadata-alice", roles: ["admin"] });
+ 109:     await provisionHandler(attacker.ctx, provisionArgs);
+ 110:     await expect(requireAuthority(attacker.ctx, requirement)).rejects.toMatchObject(forbidden);
+ 111:   });
+ 112: 
+ 113:   it("returns UNAUTHENTICATED for missing auth without self-provisioning", async () => {
+ 114:     const h = harness(null);
+ 115:     await expect(authorizeHandler(h.ctx, { requirement })).rejects.toMatchObject({ data: { code: "UNAUTHENTICATED" } });
+ 116:     expect(h.db.writes).toEqual([]);
+ 117:     expect(h.db.rows.size).toBe(0);
+ 118:   });
+ 119: 
+ 120:   it("adapts internal action authorization and sessionless background rechecks without mutating authority", async () => {
+ 121:     const h = harness(); const reference = await provisionHandler(h.ctx, provisionArgs);
+ 122:     expect(await authorizeHandler(h.ctx, { requirement })).toEqual(reference);
+ 123:     const reads = h.identityReads();
+ 124:     expect(await recheckAuthority(h.ctx, reference, requirement)).toEqual(reference);
+ 125:     expect(await recheckHandler(h.ctx, { reference, requirement })).toEqual(reference);
+ 126:     expect(h.identityReads()).toBe(reads);
+ 127:     await expect(recheckHandler(h.ctx, { reference: { ...reference, grantVersion: 999 }, requirement })).rejects.toMatchObject(forbidden);
+ 128:   });
+ 129: 
+ 130:   it("replaces changed capabilities with a new grant generation and invalidates pending old work", async () => {
+ 131:     const h = harness(); const first = await provisionHandler(h.ctx, provisionArgs);
+ 132:     const second = await provisionHandler(h.ctx, { ...provisionArgs, capabilities: ["read"] });
+ 133:     expect(second.grantId).not.toBe(first.grantId);
+ 134:     expect(second.grantVersion).toBe(2);
+ 135:     expect(second.capabilities).toEqual(["read"]);
+ 136:     expect(h.db.rows.get("runtimeAuthGrants")?.[0]?.revokedAt).toEqual(expect.any(Number));
+ 137:     await expect(recheckAuthority(h.ctx, first, requirement)).rejects.toMatchObject(forbidden);
+ 138:     expect(await recheckAuthority(h.ctx, second, requirement)).toEqual(second);
+ 139:     await expect(requireAuthority(h.ctx, { ...requirement, capability: "run" })).rejects.toMatchObject(forbidden);
+ 140:   });
+ 141: 
+ 142:   it("revokes an exact grant permanently; only an explicit trusted new generation can issue later authority", async () => {
+ 143:     const h = harness(); const first = await provisionHandler(h.ctx, provisionArgs);
+ 144:     await revokeGrantHandler(h.ctx, { grantId: first.grantId as Id<"runtimeAuthGrants"> });
+ 145:     const writes = h.db.writes.length;
+ 146:     await revokeGrantHandler(h.ctx, { grantId: first.grantId as Id<"runtimeAuthGrants"> });
+ 147:     expect(h.db.writes).toHaveLength(writes);
+ 148:     await expect(requireAuthority(h.ctx, requirement)).rejects.toMatchObject(forbidden);
+ 149:     const second = await provisionHandler(h.ctx, provisionArgs);
+ 150:     expect(second.grantVersion).toBe(2);
+ 151:     await expect(recheckAuthority(h.ctx, first, requirement)).rejects.toMatchObject(forbidden);
+ 152:     expect(await requireAuthority(h.ctx, requirement)).toEqual(second);
+ 153:   });
+ 154: 
+ 155:   it("retains membership revocation fences and refuses to re-provision the same membership", async () => {
+ 156:     const h = harness(); const first = await provisionHandler(h.ctx, provisionArgs);
+ 157:     await revokeMembershipHandler(h.ctx, { membershipId: first.membershipId as Id<"runtimeAuthMemberships"> });
+ 158:     await expect(recheckAuthority(h.ctx, first, requirement)).rejects.toMatchObject(forbidden);
+ 159:     await expect(provisionHandler(h.ctx, provisionArgs)).rejects.toMatchObject(forbidden);
+ 160:     const writes = h.db.writes.length;
+ 161:     await revokeMembershipHandler(h.ctx, { membershipId: first.membershipId as Id<"runtimeAuthMemberships"> });
+ 162:     expect(h.db.writes).toHaveLength(writes);
+ 163:     expect(h.db.rows.get("runtimeAuthMemberships")).toHaveLength(1);
+ 164:   });
+ 165: 
+ 166:   it("retains principal deletion fences and refuses issuer/subject recreation", async () => {
+ 167:     const h = harness(); const first = await provisionHandler(h.ctx, provisionArgs);
+ 168:     await deletePrincipalHandler(h.ctx, { principalId: first.principalId as Id<"runtimeAuthPrincipals"> });
+ 169:     await expect(recheckAuthority(h.ctx, first, requirement)).rejects.toMatchObject(forbidden);
+ 170:     await expect(provisionHandler(h.ctx, provisionArgs)).rejects.toMatchObject(forbidden);
+ 171:     const writes = h.db.writes.length;
+ 172:     await deletePrincipalHandler(h.ctx, { principalId: first.principalId as Id<"runtimeAuthPrincipals"> });
+ 173:     expect(h.db.writes).toHaveLength(writes);
+ 174:     expect(h.db.rows.get("runtimeAuthPrincipals")).toHaveLength(1);
+ 175:   });
+ 176: 
+ 177:   it.each([undefined, "space-a"])("fences deleted scope %s and prevents bootstrap recreation", async (memorySpaceId) => {
+ 178:     const h = harness(); const first = await provisionHandler(h.ctx, provisionArgs);
+ 179:     await deleteScopeHandler(h.ctx, { tenantId: "tenant-a", memorySpaceId });
+ 180:     await expect(recheckAuthority(h.ctx, first, requirement)).rejects.toMatchObject(forbidden);
+ 181:     await expect(provisionHandler(h.ctx, provisionArgs)).rejects.toMatchObject(forbidden);
+ 182:     const writes = h.db.writes.length;
+ 183:     await deleteScopeHandler(h.ctx, { tenantId: "tenant-a", memorySpaceId });
+ 184:     expect(h.db.writes).toHaveLength(writes);
+ 185:     const deleted = h.db.rows.get("runtimeAuthScopes")?.find((row) => row.memorySpaceId === memorySpaceId);
+ 186:     expect(deleted).toMatchObject({ epoch: 2, deletedAt: expect.any(Number) });
+ 187:     expect(h.db.rows.get("runtimeAuthTombstones")).toHaveLength(1);
+ 188:   });
+ 189: 
+ 190:   it("records deletion even before a scope is provisioned, preventing later resurrection", async () => {
+ 191:     const h = harness();
+ 192:     await deleteScopeHandler(h.ctx, { tenantId: "tenant-a", memorySpaceId: "space-a" });
+ 193:     await expect(provisionHandler(h.ctx, provisionArgs)).rejects.toMatchObject(forbidden);
+ 194:     expect(h.db.rows.get("runtimeAuthPrincipals")).toBeUndefined();
+ 195:   });
+ 196: 
+ 197:   it("tombstones a resource idempotently and rejects its delayed read/commit", async () => {
+ 198:     const h = harness(); const first = await provisionHandler(h.ctx, provisionArgs);
+ 199:     const key = { tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "memory" as const, resourceId: "memory-a" };
+ 200:     await tombstoneHandler(h.ctx, key);
+ 201:     const writes = h.db.writes.length;
+ 202:     await tombstoneHandler(h.ctx, key);
+ 203:     expect(h.db.writes).toHaveLength(writes);
+ 204:     await expect(recheckAuthority(h.ctx, first, { ...requirement, resource: { ...key, ownerPrincipalId: first.principalId } })).rejects.toMatchObject(forbidden);
+ 205:     expect(h.db.rows.get("runtimeAuthTombstones")).toHaveLength(1);
+ 206:     await expect(tombstoneHandler(h.ctx, { ...key, resourceId: " " })).rejects.toMatchObject({ data: { code: "INVALID_INPUT" } });
+ 207:   });
+ 208: 
+ 209:   it("rejects invalid provisioning, actor rebinding and metadata-user rebinding", async () => {
+ 210:     const h = harness();
+ 211:     for (const args of [
+ 212:       { ...provisionArgs, issuer: " " }, { ...provisionArgs, capabilities: [] },
+ 213:       { ...provisionArgs, resourceAccess: "space" as const, memorySpaceId: undefined },
+ 214:       { ...provisionArgs, resourceAccess: "tenant" as const }, { ...provisionArgs, expiresAt: 1 },
+ 215:     ]) await expect(provisionHandler(h.ctx, args)).rejects.toMatchObject({ data: { code: "INVALID_INPUT" } });
+ 216:     expect(h.db.writes).toEqual([]);
+ 217:     await provisionHandler(h.ctx, provisionArgs);
+ 218:     await expect(provisionHandler(h.ctx, { ...provisionArgs, actorKind: "service" })).rejects.toMatchObject(forbidden);
+ 219:     await expect(provisionHandler(h.ctx, { ...provisionArgs, metadataUserId: "metadata-bob" })).rejects.toMatchObject(forbidden);
+ 220:   });
+ 221: 
+ 222:   it("uses table-specific ID normalization and rejects duplicate exact issuer/subject records", async () => {
+ 223:     const h = harness(); await provisionHandler(h.ctx, provisionArgs);
+ 224:     const reader = createAuthorityReader(h.ctx);
+ 225:     expect(await reader.getPrincipal("forged-principal")).toBeNull();
+ 226:     expect(await reader.getMembership("forged-membership")).toBeNull();
+ 227:     expect(await reader.getGrant("forged-grant")).toBeNull();
+ 228:     expect(await reader.listMemberships("forged-principal")).toEqual([]);
+ 229:     expect(await reader.listGrants("forged-membership")).toEqual([]);
+ 230:     await h.db.insert("runtimeAuthPrincipals", { issuer: identity.issuer, subject: identity.subject, actorKind: "user", version: 1 });
+ 231:     const writes = [...h.db.writes];
+ 232:     await expect(requireAuthority(h.ctx, requirement)).rejects.toHaveProperty("data", {
+ 233:       version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS", message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched",
+ 234:     });
+ 235:     expect(h.db.writes).toEqual(writes);
+ 236:   });
+ 237: });

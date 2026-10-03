@@ -1,0 +1,63 @@
+   1: /** Additive fresh-install fragment. Host auth.config and HTTP routes remain host-owned. */
+   2: import { defineTable } from "convex/server";
+   3: import { v } from "convex/values";
+   4: 
+   5: export const runtimeCapability = v.union(
+   6:   v.literal("read"), v.literal("write"), v.literal("run"), v.literal("admin"),
+   7:   v.literal("tool"), v.literal("storage:read"), v.literal("storage:write"),
+   8: );
+   9: export const runtimeResourceAccess = v.union(v.literal("own"), v.literal("space"), v.literal("tenant"));
+  10: export const runtimeActorKind = v.union(v.literal("user"), v.literal("service"));
+  11: export const runtimeResourceType = v.union(
+  12:   v.literal("tenant"), v.literal("memorySpace"), v.literal("conversation"),
+  13:   v.literal("memory"), v.literal("fact"), v.literal("artifact"), v.literal("attachment"),
+  14:   v.literal("source"), v.literal("run"), v.literal("context"), v.literal("storage"),
+  15: );
+  16: 
+  17: export const runtimeAuthorityReference = v.object({
+  18:   principalId: v.string(), principalVersion: v.number(),
+  19:   membershipId: v.string(), membershipVersion: v.number(),
+  20:   grantId: v.string(), grantVersion: v.number(),
+  21:   tenantId: v.string(), tenantEpoch: v.number(),
+  22:   memorySpaceId: v.optional(v.string()), memorySpaceEpoch: v.optional(v.number()),
+  23: });
+  24: export const runtimeResource = v.object({
+  25:   resourceType: runtimeResourceType, resourceId: v.string(),
+  26:   tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()),
+  27:   ownerPrincipalId: v.optional(v.string()),
+  28: });
+  29: export const runtimeAuthorityRequirement = v.object({
+  30:   capability: runtimeCapability, tenantId: v.optional(v.string()),
+  31:   memorySpaceId: v.optional(v.string()), resource: v.optional(runtimeResource),
+  32:   actorKind: v.optional(runtimeActorKind),
+  33: });
+  34: 
+  35: export const runtimeAuthTables = {
+  36:   runtimeAuthPrincipals: defineTable({
+  37:     issuer: v.string(), subject: v.string(), actorKind: runtimeActorKind,
+  38:     metadataUserId: v.optional(v.string()), version: v.number(), createdAt: v.number(),
+  39:     revokedAt: v.optional(v.number()), deletedAt: v.optional(v.number()),
+  40:   }).index("by_issuer_subject", ["issuer", "subject"]),
+  41:   runtimeAuthMemberships: defineTable({
+  42:     principalId: v.id("runtimeAuthPrincipals"), tenantId: v.string(),
+  43:     version: v.number(), createdAt: v.number(),
+  44:     revokedAt: v.optional(v.number()), deletedAt: v.optional(v.number()),
+  45:   }).index("by_principal_tenant", ["principalId", "tenantId"]),
+  46:   runtimeAuthScopes: defineTable({
+  47:     tenantId: v.string(), memorySpaceId: v.optional(v.string()), epoch: v.number(),
+  48:     createdAt: v.number(), deletedAt: v.optional(v.number()),
+  49:   }).index("by_tenant_space", ["tenantId", "memorySpaceId"]),
+  50:   runtimeAuthGrants: defineTable({
+  51:     principalId: v.id("runtimeAuthPrincipals"), membershipId: v.id("runtimeAuthMemberships"),
+  52:     tenantId: v.string(), memorySpaceId: v.optional(v.string()),
+  53:     tenantEpoch: v.number(), memorySpaceEpoch: v.optional(v.number()),
+  54:     capabilities: v.array(runtimeCapability), resourceAccess: runtimeResourceAccess,
+  55:     version: v.number(), createdAt: v.number(), expiresAt: v.optional(v.number()),
+  56:     revokedAt: v.optional(v.number()), deletedAt: v.optional(v.number()),
+  57:   }).index("by_membership", ["membershipId"])
+  58:     .index("by_membership_scope_version", ["membershipId", "memorySpaceId", "version"]),
+  59:   runtimeAuthTombstones: defineTable({
+  60:     tenantId: v.string(), memorySpaceId: v.optional(v.string()),
+  61:     resourceType: runtimeResourceType, resourceId: v.string(), deletedAt: v.number(),
+  62:   }).index("by_resource", ["tenantId", "memorySpaceId", "resourceType", "resourceId"]),
+  63: };
