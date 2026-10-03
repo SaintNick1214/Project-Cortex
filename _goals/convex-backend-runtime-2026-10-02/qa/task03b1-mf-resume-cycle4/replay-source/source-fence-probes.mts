@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {harness} from '/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts';
+import * as memories from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts';
+import * as facts from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts';
+const results:any[]=[];
+for(const kind of ['memory','fact'] as const)for(const mode of ['source-tombstone','source-revision'] as const){
+ const h=harness();const owner=await h.provisionScope();await h.seedData(kind==='memory'?'memories':'facts',owner,'private',{tags:['archived']});const before=structuredClone(h.db.rows);h.db.attemptedWrites=[];
+ let admitted=false,hashes=0,injected=false;h.setAuthHook(async()=>{if(h.db.attemptedWrites.some(w=>w.startsWith(kind==='memory'?'patch:memories/':'patch:facts/')))admitted=true;});
+ const digest=crypto.subtle.digest.bind(crypto.subtle);crypto.subtle.digest=async(a:any,b:any)=>{if(admitted && ++hashes===2){injected=true;const source=h.db.rows.get('runtimeMemorySources')![0];await h.db.patch(source._id,mode==='source-tombstone'?{tombstonedAt:Date.now()}:{lineage:{...(source.lineage as any),sourceRevision:(source.lineage as any).sourceRevision+1}});}return await digest(a,b);};
+ try{const result:any=await h.invoke(kind==='memory'?memories.restoreFromArchive:facts.updateInPlace,{memorySpaceId:'space-a',memoryId:'private',factId:'private',confidence:90});assert(injected);results.push({name:`${kind}-${mode}`,status:'FAIL',injected,result});}catch(e:any){results.push({name:`${kind}-${mode}`,status:e.data?.code==='STALE_SOURCE'?'PASS':'FAIL',injected,error:e.data??e.stack});}finally{crypto.subtle.digest=digest;}
+}
+for(const mode of ['independent-tenant-tombstone','independent-source-tombstone'] as const){
+ const h=harness();const owner=await h.provisionScope();await h.seedData('memories',owner,'private');h.db.attemptedWrites=[];const patch=h.db.patch.bind(h.db);let injected=false;
+ h.db.patch=async(...args:any[])=>{await (patch as any)(...args);const id=typeof args[1]==='string'?args[1]:args[0];if(!injected && String(id).startsWith('memories/')){injected=true;if(mode==='independent-tenant-tombstone')await h.db.insert('runtimeAuthTombstones',{tenantId:'tenant-a',resourceType:'memory',resourceId:'private',deletedAt:Date.now()});else await patch(h.db.rows.get('runtimeMemorySources')![0]._id,{tombstonedAt:Date.now()});}};
+ try{const result=await h.invoke(memories.deleteMany,{memorySpaceId:'space-a'});assert(injected);results.push({name:`bulk-${mode}`,status:'FAIL',injected,result});}catch(e:any){results.push({name:`bulk-${mode}`,status:['STALE_SOURCE','FORBIDDEN'].includes(e.data?.code)?'PASS':'FAIL',injected,error:e.data??e.stack});}
+}
+console.log(JSON.stringify({observedAt:new Date().toISOString(),node:process.version,results},null,2));process.exitCode=results.some(r=>r.status==='FAIL')?1:0;

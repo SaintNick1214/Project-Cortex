@@ -1,0 +1,688 @@
+{
+  "results": [
+    {
+      "kind": "memories",
+      "mode": "none",
+      "injected": false,
+      "rollback": true,
+      "matched": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473375
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473375,
+          "updatedAt": 1791057473375,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057473375,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/16",
+          "_creationTime": 17
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473375
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473375,
+          "updatedAt": 1791057473375,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057473375,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/14",
+          "_creationTime": 15
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"linked-memory\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"linked-memory\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "linked-memory"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473374
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473374,
+          "updatedAt": 1791057473374,
+          "memoryId": "linked-memory",
+          "content": "tenant-a private linked-memory",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057473374,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/12",
+          "_creationTime": 13
+        }
+      ]
+    },
+    {
+      "kind": "memories",
+      "mode": "late-immutable-owner",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "late-mutable-space",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "late-peer-lineage",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "late-linked-storage-id",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "late-tenant-conversation-tombstone",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "late-source-memory-anchor",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "none",
+      "injected": false,
+      "rollback": true,
+      "matched": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"peer\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"peer\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "peer"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473468
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473468,
+          "updatedAt": 1791057473468,
+          "factId": "peer",
+          "fact": "tenant-a private peer",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "_id": "facts/10",
+          "_creationTime": 11
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473468
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473468,
+          "updatedAt": 1791057473468,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/14",
+          "_creationTime": 15
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473468
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473468,
+          "updatedAt": 1791057473468,
+          "factId": "second",
+          "fact": "tenant-a private second",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "_id": "facts/16",
+          "_creationTime": 17
+        }
+      ]
+    },
+    {
+      "kind": "facts",
+      "mode": "late-immutable-owner",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "late-mutable-space",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "late-peer-lineage",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "late-linked-storage-id",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "late-tenant-conversation-tombstone",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "late-source-memory-anchor",
+      "injected": true,
+      "rollback": true,
+      "matched": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "final-link-none",
+      "injected": false,
+      "rollback": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473536
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473536,
+          "updatedAt": 1791057473536,
+          "memoryId": "second",
+          "content": "tenant-a private second",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057473536,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "_id": "memories/10",
+          "_creationTime": 11
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "memory",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473535
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473535,
+          "updatedAt": 1791057473535,
+          "memoryId": "first",
+          "content": "tenant-a private first",
+          "contentType": "raw",
+          "sourceType": "system",
+          "sourceTimestamp": 1791057473535,
+          "importance": 50,
+          "accessCount": 0,
+          "previousVersions": [],
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "memories/8",
+          "_creationTime": 9
+        }
+      ]
+    },
+    {
+      "kind": "memories",
+      "mode": "final-link-expiry",
+      "injected": true,
+      "rollback": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "memories",
+      "mode": "final-link-source-replacement",
+      "injected": true,
+      "rollback": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "final-link-none",
+      "injected": false,
+      "rollback": true,
+      "success": true,
+      "result": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"first\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "first"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473565
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473565,
+          "updatedAt": 1791057473565,
+          "factId": "first",
+          "fact": "tenant-a private first",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "conversationRef": {
+            "conversationId": "canon",
+            "messageIds": [
+              "anchor"
+            ]
+          },
+          "_id": "facts/8",
+          "_creationTime": 9
+        },
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals/3",
+          "lineage": {
+            "sourceId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"fact\",\"second\"]",
+            "sourceRevision": 1,
+            "role": "user",
+            "trust": "user_assertion"
+          },
+          "manualSourceBinding": {
+            "resourceType": "fact",
+            "resourceId": "second"
+          },
+          "runtimeEditor": {
+            "principalId": "runtimeAuthPrincipals/3",
+            "userId": "metadata-alice",
+            "editedAt": 1791057473565
+          },
+          "userId": "metadata-alice",
+          "participantId": "metadata-alice",
+          "tags": [],
+          "version": 1,
+          "createdAt": 1791057473565,
+          "updatedAt": 1791057473565,
+          "factId": "second",
+          "fact": "tenant-a private second",
+          "factType": "preference",
+          "confidence": 80,
+          "extractionPolicyVersion": "manual-assertion-v1",
+          "sourceType": "manual",
+          "subject": "alice",
+          "predicate": "prefers",
+          "object": "dark",
+          "_id": "facts/10",
+          "_creationTime": 11
+        }
+      ]
+    },
+    {
+      "kind": "facts",
+      "mode": "final-link-expiry",
+      "injected": true,
+      "rollback": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    },
+    {
+      "kind": "facts",
+      "mode": "final-link-source-replacement",
+      "injected": true,
+      "rollback": true,
+      "success": false,
+      "data": {
+        "version": 1,
+        "code": "STALE_SOURCE",
+        "message": "Canonical source changed after hashing",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      }
+    }
+  ],
+  "summary": {
+    "normal": 14,
+    "matched": 14,
+    "failures": []
+  }
+}
