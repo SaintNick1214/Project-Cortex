@@ -100,7 +100,7 @@ export function registerMemoryCommands(
             // Format memories for display
             const displayData = memories.map((m) => {
               // Handle both MemoryEntry and EnrichedMemory types
-              const memory = "memory" in m ? m.memory : m;
+              const memory = m;
               return {
                 id: memory.memoryId,
                 content:
@@ -195,7 +195,7 @@ export function registerMemoryCommands(
 
             // Format memories for display
             const displayData = memories.map((m) => {
-              const memory = "memory" in m ? m.memory : m;
+              const memory = m;
               return {
                 id: memory.memoryId,
                 content:
@@ -513,10 +513,7 @@ export function registerMemoryCommands(
               });
 
               if (recentMemories.length > 0) {
-                const lastMemory =
-                  "memory" in recentMemories[0]
-                    ? recentMemories[0].memory
-                    : recentMemories[0];
+                const lastMemory = recentMemories[0];
                 console.log(
                   `  Last Activity: ${formatTimestamp(lastMemory.createdAt)}`,
                 );
@@ -566,7 +563,7 @@ export function registerMemoryCommands(
           { deployment: selection.name },
           async (client) => {
             const result = await client.memory.get(options.space, memoryId, {
-              includeConversation: options.includeConversation,
+              includeConversation: Boolean(options.includeConversation),
             });
 
             spinner.stop();

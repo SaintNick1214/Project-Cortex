@@ -22,7 +22,7 @@ import type {
   Message as CortexMessage,
 } from "@cortexmemory/sdk";
 import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { makeFunctionReference } from "convex/server";
 import { getAgentId, getCortex, getMemorySpaceId } from "@/lib/cortex";
 import type { Chat, DBMessage, Document, Suggestion, Vote } from "@/lib/types";
 
@@ -31,6 +31,12 @@ import type { Chat, DBMessage, Document, Suggestion, Vote } from "@/lib/types";
 // ============================================================================
 
 let convexClient: ConvexHttpClient | null = null;
+// This function belongs to the SDK backend deployed by the CLI, rather than
+// the app-only schema. Refer to it without requiring local generated bindings.
+const setConversationMetadata = makeFunctionReference<
+  "mutation",
+  { conversationId: string; metadata: Record<string, unknown>; userId: string }
+>("conversations:setMetadata");
 
 function getConvexClient(): ConvexHttpClient {
   if (!convexClient) {
@@ -314,7 +320,7 @@ export async function updateChatTitleById({
 
   // Update the conversation metadata with the new title
   // userId is required for ownership verification
-  await client.mutation(api.conversations.setMetadata, {
+  await client.mutation(setConversationMetadata, {
     conversationId: chatId,
     metadata: { title },
     userId,

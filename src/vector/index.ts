@@ -36,12 +36,15 @@ import {
   validateUpdateManyInputs,
 } from "./validators";
 import type { ResilienceLayer } from "../resilience";
+import type { AuthContext } from "../auth/types";
+import { resolveTenantId } from "../auth/tenant";
 
 export class VectorAPI {
   constructor(
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**
@@ -117,7 +120,7 @@ export class VectorAPI {
       () =>
         this.client.mutation(api.memories.store, {
           memorySpaceId,
-          tenantId: input.tenantId, // Multi-tenancy: SaaS platform isolation
+          tenantId: resolveTenantId(this.authContext?.tenantId, input.tenantId),
           participantId: input.participantId, // NEW: Hive Mode
           content: input.content,
           contentType: input.contentType,
@@ -181,6 +184,7 @@ export class VectorAPI {
         this.client.query(api.memories.get, {
           memorySpaceId,
           memoryId,
+          tenantId: this.authContext?.tenantId,
         }),
       "vector:get",
     );

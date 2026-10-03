@@ -5,7 +5,7 @@
  * Sessions are stored in Convex for real-time reactivity.
  */
 
-import { randomBytes } from "crypto";
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
@@ -105,7 +105,7 @@ export class SessionsAPI {
         this.client.mutation(api.sessions.create, {
           sessionId,
           userId: params.userId,
-          tenantId: params.tenantId ?? this.authContext?.tenantId, // Fall back to auth context
+          tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId), // Fall back to auth context
           memorySpaceId: params.memorySpaceId,
           metadata: params.metadata,
           startedAt: now,
@@ -275,7 +275,7 @@ export class SessionsAPI {
     validateUserId(userId);
 
     // Use explicit tenantId, fall back to auth context for tenant isolation
-    const tenantId = options?.tenantId ?? this.authContext?.tenantId;
+    const tenantId = resolveTenantId(this.authContext?.tenantId, options?.tenantId);
 
     const result = await this.executeWithResilience(
       () =>
@@ -419,7 +419,7 @@ export class SessionsAPI {
     const result = await this.executeWithResilience(
       () =>
         this.client.mutation(api.sessions.expireIdle, {
-          tenantId: options?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, options?.tenantId),
           idleTimeout: options?.idleTimeout ?? 30 * 60 * 1000, // Default 30 min
         }),
       "sessions:expireIdle",
@@ -437,7 +437,8 @@ export class SessionsAPI {
    */
   private generateSessionId(): string {
     const timestamp = Date.now().toString(36);
-    const randomPart = randomBytes(8).toString("hex");
+    const randomPart = Array.from(globalThis.crypto.getRandomValues(new Uint8Array(8)),
+      (byte) => byte.toString(16).padStart(2, "0")).join("");
     return `sess-${timestamp}-${randomPart}`;
   }
 }

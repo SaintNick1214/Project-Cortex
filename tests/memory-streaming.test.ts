@@ -558,10 +558,10 @@ describe("Memory Streaming: rememberStream() Integration", () => {
       const memories2 = await cortex.memory.search(space2, "space");
 
       const space1Content = memories1
-        .map((m) => ("content" in m ? m.content : m.memory.content))
+        .map((m) => m.content)
         .join(" ");
       const space2Content = memories2
-        .map((m) => ("content" in m ? m.content : m.memory.content))
+        .map((m) => m.content)
         .join(" ");
 
       expect(space1Content).toContain("space 1");
