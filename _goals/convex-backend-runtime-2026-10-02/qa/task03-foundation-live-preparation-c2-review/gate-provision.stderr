@@ -1,0 +1,15 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/guard.mjs:11
+const reject = () => { throw new Error('Current foundation preflight rejected; no operation dispatched'); };
+                             ^
+
+Error: Current foundation preflight rejected; no operation dispatched
+    at reject (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/guard.mjs:11:30)
+    at canonical (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/guard.mjs:17:72)
+    at json (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/guard.mjs:26:46)
+    at preparationReviewed (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/guard.mjs:70:69)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/provision.mjs:6:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0

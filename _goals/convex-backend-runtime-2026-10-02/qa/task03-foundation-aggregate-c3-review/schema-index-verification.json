@@ -1,0 +1,1569 @@
+{
+  "method": "Independent TypeScript AST literal defineSchema/defineTable index chain",
+  "sourceSha256": "4329334be57feac9085f793e2b78492b2ba04ec1a4319df09f00c06434f7ff5c",
+  "tables": 17,
+  "totalIndexes": 162,
+  "duplicateTables": [
+    {
+      "table": "artifacts",
+      "indexes": [
+        {
+          "name": "by_lastAccessed",
+          "fields": [
+            "lastAccessedAt"
+          ],
+          "line": 1262
+        },
+        {
+          "name": "by_updated",
+          "fields": [
+            "updatedAt"
+          ],
+          "line": 1261
+        },
+        {
+          "name": "by_created",
+          "fields": [
+            "createdAt"
+          ],
+          "line": 1260
+        },
+        {
+          "name": "by_memorySpace_streaming",
+          "fields": [
+            "memorySpaceId",
+            "streamingState",
+            "updatedAt"
+          ],
+          "line": 1253
+        },
+        {
+          "name": "by_streamingState",
+          "fields": [
+            "streamingState"
+          ],
+          "line": 1252
+        },
+        {
+          "name": "by_participantId",
+          "fields": [
+            "participantId"
+          ],
+          "line": 1249
+        },
+        {
+          "name": "by_memorySpace_agent",
+          "fields": [
+            "memorySpaceId",
+            "agentId"
+          ],
+          "line": 1248
+        },
+        {
+          "name": "by_memorySpace_user",
+          "fields": [
+            "memorySpaceId",
+            "userId"
+          ],
+          "line": 1247
+        },
+        {
+          "name": "by_agentId",
+          "fields": [
+            "agentId"
+          ],
+          "line": 1246
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 1245
+        },
+        {
+          "name": "by_memorySpace_conversation",
+          "fields": [
+            "memorySpaceId",
+            "conversationRef.conversationId"
+          ],
+          "line": 1239
+        },
+        {
+          "name": "by_conversation",
+          "fields": [
+            "conversationRef.conversationId"
+          ],
+          "line": 1238
+        },
+        {
+          "name": "by_tenant_space_kind",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "kind"
+          ],
+          "line": 1235
+        },
+        {
+          "name": "by_tenant_artifactId",
+          "fields": [
+            "tenantId",
+            "artifactId"
+          ],
+          "line": 1234
+        },
+        {
+          "name": "by_tenant_space",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 1233
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 1232
+        },
+        {
+          "name": "by_memorySpace_state",
+          "fields": [
+            "memorySpaceId",
+            "streamingState"
+          ],
+          "line": 1229
+        },
+        {
+          "name": "by_memorySpace_kind",
+          "fields": [
+            "memorySpaceId",
+            "kind"
+          ],
+          "line": 1228
+        },
+        {
+          "name": "by_memorySpace_updated",
+          "fields": [
+            "memorySpaceId",
+            "updatedAt"
+          ],
+          "line": 1227
+        },
+        {
+          "name": "by_memorySpace_created",
+          "fields": [
+            "memorySpaceId",
+            "createdAt"
+          ],
+          "line": 1226
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 1225
+        },
+        {
+          "name": "by_artifactId",
+          "fields": [
+            "artifactId"
+          ],
+          "line": 1222
+        },
+        {
+          "name": "by_runtime_key",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "artifactId"
+          ],
+          "line": 1219
+        },
+        {
+          "name": "by_runtime_scope",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 1218
+        }
+      ],
+      "duplicates": [
+        [
+          {
+            "name": "by_tenant_space",
+            "fields": [
+              "tenantId",
+              "memorySpaceId"
+            ],
+            "line": 1233
+          },
+          {
+            "name": "by_runtime_scope",
+            "fields": [
+              "tenantId",
+              "memorySpaceId"
+            ],
+            "line": 1218
+          }
+        ]
+      ]
+    }
+  ],
+  "allTables": [
+    {
+      "table": "conversations",
+      "indexes": [
+        {
+          "name": "by_memorySpace_visibility",
+          "fields": [
+            "memorySpaceId",
+            "visibility"
+          ],
+          "line": 145
+        },
+        {
+          "name": "by_visibility",
+          "fields": [
+            "visibility"
+          ],
+          "line": 144
+        },
+        {
+          "name": "by_created",
+          "fields": [
+            "createdAt"
+          ],
+          "line": 143
+        },
+        {
+          "name": "by_memorySpace_agent",
+          "fields": [
+            "memorySpaceId",
+            "participants.agentId"
+          ],
+          "line": 142
+        },
+        {
+          "name": "by_memorySpace_user",
+          "fields": [
+            "memorySpaceId",
+            "participants.userId"
+          ],
+          "line": 141
+        },
+        {
+          "name": "by_agent",
+          "fields": [
+            "participants.agentId"
+          ],
+          "line": 140
+        },
+        {
+          "name": "by_user",
+          "fields": [
+            "participants.userId"
+          ],
+          "line": 139
+        },
+        {
+          "name": "by_type",
+          "fields": [
+            "type"
+          ],
+          "line": 138
+        },
+        {
+          "name": "by_tenant_space",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 137
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 136
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 135
+        },
+        {
+          "name": "by_conversationId",
+          "fields": [
+            "conversationId"
+          ],
+          "line": 134
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "conversationShares",
+      "indexes": [
+        {
+          "name": "by_tenant_conversation",
+          "fields": [
+            "tenantId",
+            "conversationId"
+          ],
+          "line": 207
+        },
+        {
+          "name": "by_tenant_shareId",
+          "fields": [
+            "tenantId",
+            "shareId"
+          ],
+          "line": 206
+        },
+        {
+          "name": "by_status",
+          "fields": [
+            "status"
+          ],
+          "line": 205
+        },
+        {
+          "name": "by_grantedBy",
+          "fields": [
+            "grantedBy"
+          ],
+          "line": 204
+        },
+        {
+          "name": "by_grantedTo",
+          "fields": [
+            "grantedTo"
+          ],
+          "line": 203
+        },
+        {
+          "name": "by_conversation",
+          "fields": [
+            "conversationId"
+          ],
+          "line": 202
+        },
+        {
+          "name": "by_shareId",
+          "fields": [
+            "shareId"
+          ],
+          "line": 201
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "conversationSnapshots",
+      "indexes": [
+        {
+          "name": "by_tenant_snapshotId",
+          "fields": [
+            "tenantId",
+            "snapshotId"
+          ],
+          "line": 304
+        },
+        {
+          "name": "by_status",
+          "fields": [
+            "status"
+          ],
+          "line": 303
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 302
+        },
+        {
+          "name": "by_createdBy",
+          "fields": [
+            "createdBy"
+          ],
+          "line": 301
+        },
+        {
+          "name": "by_conversation",
+          "fields": [
+            "conversationId"
+          ],
+          "line": 300
+        },
+        {
+          "name": "by_snapshotId",
+          "fields": [
+            "snapshotId"
+          ],
+          "line": 299
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "immutable",
+      "indexes": [
+        {
+          "name": "by_created",
+          "fields": [
+            "createdAt"
+          ],
+          "line": 351
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 350
+        },
+        {
+          "name": "by_tenant_type_id",
+          "fields": [
+            "tenantId",
+            "type",
+            "id"
+          ],
+          "line": 349
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 348
+        },
+        {
+          "name": "by_type",
+          "fields": [
+            "type"
+          ],
+          "line": 347
+        },
+        {
+          "name": "by_type_id",
+          "fields": [
+            "type",
+            "id"
+          ],
+          "line": 346
+        },
+        {
+          "name": "by_runtime_key",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "type",
+            "id"
+          ],
+          "line": 345
+        },
+        {
+          "name": "by_runtime_scope",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "ownerPrincipalId"
+          ],
+          "line": 344
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "mutable",
+      "indexes": [
+        {
+          "name": "by_updated",
+          "fields": [
+            "updatedAt"
+          ],
+          "line": 388
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 387
+        },
+        {
+          "name": "by_tenant_namespace_key",
+          "fields": [
+            "tenantId",
+            "namespace",
+            "key"
+          ],
+          "line": 386
+        },
+        {
+          "name": "by_tenant_namespace",
+          "fields": [
+            "tenantId",
+            "namespace"
+          ],
+          "line": 385
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 384
+        },
+        {
+          "name": "by_namespace",
+          "fields": [
+            "namespace"
+          ],
+          "line": 383
+        },
+        {
+          "name": "by_namespace_key",
+          "fields": [
+            "namespace",
+            "key"
+          ],
+          "line": 382
+        },
+        {
+          "name": "by_runtime_key",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "namespace",
+            "key"
+          ],
+          "line": 381
+        },
+        {
+          "name": "by_runtime_scope",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "ownerPrincipalId"
+          ],
+          "line": 380
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "memories",
+      "indexes": [
+        {
+          "name": "by_participantId",
+          "fields": [
+            "participantId"
+          ],
+          "line": 515
+        },
+        {
+          "name": "by_memorySpace_agentId",
+          "fields": [
+            "memorySpaceId",
+            "agentId"
+          ],
+          "line": 514
+        },
+        {
+          "name": "by_memorySpace_userId",
+          "fields": [
+            "memorySpaceId",
+            "userId"
+          ],
+          "line": 513
+        },
+        {
+          "name": "by_memorySpace_created",
+          "fields": [
+            "memorySpaceId",
+            "createdAt"
+          ],
+          "line": 512
+        },
+        {
+          "name": "by_agentId",
+          "fields": [
+            "agentId"
+          ],
+          "line": 511
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 510
+        },
+        {
+          "name": "by_tenant_space",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 509
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 508
+        },
+        {
+          "name": "by_runtime_scope_memoryId",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "memoryId"
+          ],
+          "line": 507
+        },
+        {
+          "name": "by_memoryId",
+          "fields": [
+            "memoryId"
+          ],
+          "line": 506
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 505
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "facts",
+      "indexes": [
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 648
+        },
+        {
+          "name": "by_participantId",
+          "fields": [
+            "participantId"
+          ],
+          "line": 647
+        },
+        {
+          "name": "by_memorySpace_subject",
+          "fields": [
+            "memorySpaceId",
+            "subject"
+          ],
+          "line": 646
+        },
+        {
+          "name": "by_tenant_space",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 645
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 644
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 643
+        },
+        {
+          "name": "by_runtime_scope_factId",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "factId"
+          ],
+          "line": 642
+        },
+        {
+          "name": "by_factId",
+          "fields": [
+            "factId"
+          ],
+          "line": 641
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "factHistory",
+      "indexes": [
+        {
+          "name": "by_timestamp",
+          "fields": [
+            "timestamp"
+          ],
+          "line": 711
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 710
+        },
+        {
+          "name": "by_action",
+          "fields": [
+            "action"
+          ],
+          "line": 709
+        },
+        {
+          "name": "by_memorySpace_timestamp",
+          "fields": [
+            "memorySpaceId",
+            "timestamp"
+          ],
+          "line": 708
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 707
+        },
+        {
+          "name": "by_factId",
+          "fields": [
+            "factId"
+          ],
+          "line": 706
+        },
+        {
+          "name": "by_eventId",
+          "fields": [
+            "eventId"
+          ],
+          "line": 705
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "memorySpaces",
+      "indexes": [
+        {
+          "name": "by_created",
+          "fields": [
+            "createdAt"
+          ],
+          "line": 759
+        },
+        {
+          "name": "by_type",
+          "fields": [
+            "type"
+          ],
+          "line": 758
+        },
+        {
+          "name": "by_status",
+          "fields": [
+            "status"
+          ],
+          "line": 757
+        },
+        {
+          "name": "by_tenant_status",
+          "fields": [
+            "tenantId",
+            "status"
+          ],
+          "line": 756
+        },
+        {
+          "name": "by_tenant_memorySpaceId",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 755
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 754
+        },
+        {
+          "name": "by_memorySpaceId",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 753
+        },
+        {
+          "name": "by_runtime_scope_owner",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "ownerPrincipalId"
+          ],
+          "line": 752
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "contexts",
+      "indexes": [
+        {
+          "name": "by_created",
+          "fields": [
+            "createdAt"
+          ],
+          "line": 853
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 852
+        },
+        {
+          "name": "by_memorySpace_status",
+          "fields": [
+            "memorySpaceId",
+            "status"
+          ],
+          "line": 851
+        },
+        {
+          "name": "by_status",
+          "fields": [
+            "status"
+          ],
+          "line": 850
+        },
+        {
+          "name": "by_rootId",
+          "fields": [
+            "rootId"
+          ],
+          "line": 849
+        },
+        {
+          "name": "by_parentId",
+          "fields": [
+            "parentId"
+          ],
+          "line": 848
+        },
+        {
+          "name": "by_tenant_space",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 847
+        },
+        {
+          "name": "by_tenant_contextId",
+          "fields": [
+            "tenantId",
+            "contextId"
+          ],
+          "line": 846
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 845
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 844
+        },
+        {
+          "name": "by_contextId",
+          "fields": [
+            "contextId"
+          ],
+          "line": 843
+        },
+        {
+          "name": "by_runtime_scope_owner",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "ownerPrincipalId"
+          ],
+          "line": 842
+        },
+        {
+          "name": "by_runtime_scope_context",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "contextId"
+          ],
+          "line": 841
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "agents",
+      "indexes": [
+        {
+          "name": "by_registered",
+          "fields": [
+            "registeredAt"
+          ],
+          "line": 894
+        },
+        {
+          "name": "by_status",
+          "fields": [
+            "status"
+          ],
+          "line": 893
+        },
+        {
+          "name": "by_tenant_status",
+          "fields": [
+            "tenantId",
+            "status"
+          ],
+          "line": 892
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 891
+        },
+        {
+          "name": "by_agentId",
+          "fields": [
+            "agentId"
+          ],
+          "line": 890
+        },
+        {
+          "name": "by_runtime_scope_owner",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "ownerPrincipalId"
+          ],
+          "line": 889
+        },
+        {
+          "name": "by_runtime_scope_agent",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "agentId"
+          ],
+          "line": 888
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "sessions",
+      "indexes": [
+        {
+          "name": "by_tenant_status",
+          "fields": [
+            "tenantId",
+            "status"
+          ],
+          "line": 936
+        },
+        {
+          "name": "by_lastActive",
+          "fields": [
+            "lastActiveAt"
+          ],
+          "line": 935
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 934
+        },
+        {
+          "name": "by_status",
+          "fields": [
+            "status"
+          ],
+          "line": 933
+        },
+        {
+          "name": "by_tenant_user",
+          "fields": [
+            "tenantId",
+            "userId"
+          ],
+          "line": 932
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 931
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 930
+        },
+        {
+          "name": "by_sessionId",
+          "fields": [
+            "sessionId"
+          ],
+          "line": 929
+        },
+        {
+          "name": "by_runtime_key",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "sessionId"
+          ],
+          "line": 928
+        },
+        {
+          "name": "by_runtime_scope",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "ownerPrincipalId"
+          ],
+          "line": 927
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "governancePolicies",
+      "indexes": [
+        {
+          "name": "by_runtime_scope_active",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "isActive"
+          ],
+          "line": 965
+        },
+        {
+          "name": "by_updated",
+          "fields": [
+            "updatedAt"
+          ],
+          "line": 964
+        },
+        {
+          "name": "by_active",
+          "fields": [
+            "isActive",
+            "organizationId"
+          ],
+          "line": 963
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 962
+        },
+        {
+          "name": "by_organization",
+          "fields": [
+            "organizationId"
+          ],
+          "line": 961
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "governanceEnforcement",
+      "indexes": [
+        {
+          "name": "by_runtime_policy",
+          "fields": [
+            "policyId"
+          ],
+          "line": 999
+        },
+        {
+          "name": "by_runtime_scope_executed",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "executedAt"
+          ],
+          "line": 998
+        },
+        {
+          "name": "by_executed",
+          "fields": [
+            "executedAt"
+          ],
+          "line": 997
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId",
+            "executedAt"
+          ],
+          "line": 996
+        },
+        {
+          "name": "by_organization",
+          "fields": [
+            "organizationId",
+            "executedAt"
+          ],
+          "line": 995
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "graphSyncQueue",
+      "indexes": [
+        {
+          "name": "by_runtime_worker_state",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "authority.grantId",
+            "synced",
+            "priority"
+          ],
+          "line": 1049
+        },
+        {
+          "name": "by_runtime_worker_entity",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "authority.grantId",
+            "table",
+            "entityId"
+          ],
+          "line": 1048
+        },
+        {
+          "name": "by_created",
+          "fields": [
+            "createdAt"
+          ],
+          "line": 1047
+        },
+        {
+          "name": "by_priority",
+          "fields": [
+            "priority",
+            "synced"
+          ],
+          "line": 1046
+        },
+        {
+          "name": "by_table_entity",
+          "fields": [
+            "table",
+            "entityId"
+          ],
+          "line": 1045
+        },
+        {
+          "name": "by_table",
+          "fields": [
+            "table"
+          ],
+          "line": 1044
+        },
+        {
+          "name": "by_synced",
+          "fields": [
+            "synced"
+          ],
+          "line": 1043
+        }
+      ],
+      "duplicates": []
+    },
+    {
+      "table": "artifacts",
+      "indexes": [
+        {
+          "name": "by_lastAccessed",
+          "fields": [
+            "lastAccessedAt"
+          ],
+          "line": 1262
+        },
+        {
+          "name": "by_updated",
+          "fields": [
+            "updatedAt"
+          ],
+          "line": 1261
+        },
+        {
+          "name": "by_created",
+          "fields": [
+            "createdAt"
+          ],
+          "line": 1260
+        },
+        {
+          "name": "by_memorySpace_streaming",
+          "fields": [
+            "memorySpaceId",
+            "streamingState",
+            "updatedAt"
+          ],
+          "line": 1253
+        },
+        {
+          "name": "by_streamingState",
+          "fields": [
+            "streamingState"
+          ],
+          "line": 1252
+        },
+        {
+          "name": "by_participantId",
+          "fields": [
+            "participantId"
+          ],
+          "line": 1249
+        },
+        {
+          "name": "by_memorySpace_agent",
+          "fields": [
+            "memorySpaceId",
+            "agentId"
+          ],
+          "line": 1248
+        },
+        {
+          "name": "by_memorySpace_user",
+          "fields": [
+            "memorySpaceId",
+            "userId"
+          ],
+          "line": 1247
+        },
+        {
+          "name": "by_agentId",
+          "fields": [
+            "agentId"
+          ],
+          "line": 1246
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 1245
+        },
+        {
+          "name": "by_memorySpace_conversation",
+          "fields": [
+            "memorySpaceId",
+            "conversationRef.conversationId"
+          ],
+          "line": 1239
+        },
+        {
+          "name": "by_conversation",
+          "fields": [
+            "conversationRef.conversationId"
+          ],
+          "line": 1238
+        },
+        {
+          "name": "by_tenant_space_kind",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "kind"
+          ],
+          "line": 1235
+        },
+        {
+          "name": "by_tenant_artifactId",
+          "fields": [
+            "tenantId",
+            "artifactId"
+          ],
+          "line": 1234
+        },
+        {
+          "name": "by_tenant_space",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 1233
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 1232
+        },
+        {
+          "name": "by_memorySpace_state",
+          "fields": [
+            "memorySpaceId",
+            "streamingState"
+          ],
+          "line": 1229
+        },
+        {
+          "name": "by_memorySpace_kind",
+          "fields": [
+            "memorySpaceId",
+            "kind"
+          ],
+          "line": 1228
+        },
+        {
+          "name": "by_memorySpace_updated",
+          "fields": [
+            "memorySpaceId",
+            "updatedAt"
+          ],
+          "line": 1227
+        },
+        {
+          "name": "by_memorySpace_created",
+          "fields": [
+            "memorySpaceId",
+            "createdAt"
+          ],
+          "line": 1226
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 1225
+        },
+        {
+          "name": "by_artifactId",
+          "fields": [
+            "artifactId"
+          ],
+          "line": 1222
+        },
+        {
+          "name": "by_runtime_key",
+          "fields": [
+            "tenantId",
+            "memorySpaceId",
+            "artifactId"
+          ],
+          "line": 1219
+        },
+        {
+          "name": "by_runtime_scope",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 1218
+        }
+      ],
+      "duplicates": [
+        [
+          {
+            "name": "by_tenant_space",
+            "fields": [
+              "tenantId",
+              "memorySpaceId"
+            ],
+            "line": 1233
+          },
+          {
+            "name": "by_runtime_scope",
+            "fields": [
+              "tenantId",
+              "memorySpaceId"
+            ],
+            "line": 1218
+          }
+        ]
+      ]
+    },
+    {
+      "table": "attachments",
+      "indexes": [
+        {
+          "name": "by_updated",
+          "fields": [
+            "updatedAt"
+          ],
+          "line": 1361
+        },
+        {
+          "name": "by_created",
+          "fields": [
+            "createdAt"
+          ],
+          "line": 1360
+        },
+        {
+          "name": "by_memorySpace_user",
+          "fields": [
+            "memorySpaceId",
+            "userId"
+          ],
+          "line": 1357
+        },
+        {
+          "name": "by_userId",
+          "fields": [
+            "userId"
+          ],
+          "line": 1356
+        },
+        {
+          "name": "by_artifact",
+          "fields": [
+            "artifactId"
+          ],
+          "line": 1353
+        },
+        {
+          "name": "by_memory",
+          "fields": [
+            "memoryId"
+          ],
+          "line": 1352
+        },
+        {
+          "name": "by_message",
+          "fields": [
+            "messageId"
+          ],
+          "line": 1351
+        },
+        {
+          "name": "by_conversation",
+          "fields": [
+            "conversationId"
+          ],
+          "line": 1350
+        },
+        {
+          "name": "by_tenant_attachmentId",
+          "fields": [
+            "tenantId",
+            "attachmentId"
+          ],
+          "line": 1347
+        },
+        {
+          "name": "by_tenant_space",
+          "fields": [
+            "tenantId",
+            "memorySpaceId"
+          ],
+          "line": 1346
+        },
+        {
+          "name": "by_tenantId",
+          "fields": [
+            "tenantId"
+          ],
+          "line": 1345
+        },
+        {
+          "name": "by_memorySpace_created",
+          "fields": [
+            "memorySpaceId",
+            "createdAt"
+          ],
+          "line": 1342
+        },
+        {
+          "name": "by_memorySpace_type",
+          "fields": [
+            "memorySpaceId",
+            "type"
+          ],
+          "line": 1341
+        },
+        {
+          "name": "by_memorySpace",
+          "fields": [
+            "memorySpaceId"
+          ],
+          "line": 1340
+        },
+        {
+          "name": "by_attachmentId",
+          "fields": [
+            "attachmentId"
+          ],
+          "line": 1337
+        }
+      ],
+      "duplicates": []
+    }
+  ]
+}

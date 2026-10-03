@@ -1,0 +1,200 @@
+[
+  {
+    "label": "native",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c2-review/native-validator-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:52.573029+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "preflight",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c2-review/offline-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:52.811614+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "offline-arguments-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/offline-arguments-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:53.145259+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "offline-closure-check",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/offline-closure-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:53.209367+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "auth-classifier-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/auth-classifier-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:53.358494+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "callback-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/callback-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:53.468819+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "management-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/management-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:53.722539+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "forwarded-native-check",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/forwarded-native-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:53.768660+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "first-preservation-check",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/first-preservation-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:54.167504+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "contracts",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--strict",
+      "--skipLibCheck",
+      "--moduleResolution",
+      "Bundler",
+      "--module",
+      "ESNext",
+      "--target",
+      "ES2022",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/contracts.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:54.253427+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "fixture-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c2-review/offline-fixture/convex/tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:56:54.702348+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "--config",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/eslint.config.mjs",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/cases"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:57:02.525511+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "mwd",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c2-review/offline-mwd.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:57:03.705778+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "mf",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c2-review/offline-mra.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:57:03.993741+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "mf-negatives",
+    "argv": [
+      "node",
+      "-e",
+      "import('/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/cases/mf-registry-artifacts.mjs').then(m=>console.log(JSON.stringify(m.offlineDenialControls())))"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:57:04.462771+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "process",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/current-guard-preparation-c2-review/process-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:57:04.574075+00:00",
+    "exitCode": 0
+  },
+  {
+    "label": "freeze-readonly",
+    "argv": [
+      "node",
+      "-e",
+      "import('/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/scripts/guard.mjs').then(m=>{m.sourcePreflight();console.log(m.sha256(require('fs').readFileSync('/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c2/runtime-freeze.json')))})"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAtUtc": "2026-10-03T21:57:07.840702+00:00",
+    "exitCode": 0
+  }
+]
