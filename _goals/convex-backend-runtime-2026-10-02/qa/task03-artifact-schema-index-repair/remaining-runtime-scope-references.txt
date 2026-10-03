@@ -1,0 +1,33 @@
+convex-dev/runtimeWorkerAuth.ts:92:  return await ctx.db.query("facts").withIndex("by_runtime_scope_factId", (q) =>
+convex-dev/runtimeMetadataAuth.ts:92:  const query = ctx.db.query(table).withIndex("by_runtime_scope", (q) => {
+convex-dev/runtimeRegistryAuth.ts:331:  return await access.ctx.db.query("agents").withIndex("by_runtime_scope_owner", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId))
+convex-dev/runtimeRegistryAuth.ts:336:  const load = async () => await access.ctx.db.query("agents").withIndex("by_runtime_scope_agent", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId).eq("agentId", id))
+convex-dev/runtimeRegistryAuth.ts:387:    const load = async () => await access.ctx.db.query("contexts").withIndex("by_runtime_scope_context", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", scope.memorySpaceId!).eq("contextId", id))
+convex-dev/runtimeRegistryAuth.ts:397:    const rows = await access.ctx.db.query("contexts").withIndex("by_runtime_scope_owner", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId!))
+convex-dev/runtimeRegistryAuth.ts:416:    .withIndex("by_runtime_scope_agent", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId).eq("agentId", id)).unique()) !== null
+convex-dev/runtimeRegistryAuth.ts:420:      .withIndex("by_runtime_scope_context", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId!).eq("contextId", id)).unique()) !== null;
+convex-dev/runtimeRegistryAuth.ts:430:    .withIndex("by_runtime_scope_agent", (q) => q.eq("tenantId", value.tenantId).eq("memorySpaceId", value.memorySpaceId).eq("agentId", value.agentId!))
+convex-dev/runtimeRegistryAuth.ts:436:      .withIndex("by_runtime_scope_context", (q) => q.eq("tenantId", value.tenantId).eq("memorySpaceId", value.memorySpaceId!).eq("contextId", value.contextId!))
+convex-dev/runtimeRegistryAuth.ts:452:    .withIndex("by_runtime_scope_agent", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId).eq("agentId", id)).first()) !== null
+convex-dev/runtimeRegistryAuth.ts:456:      .withIndex("by_runtime_scope_context", (q) => q.eq("tenantId", a.tenantId).eq("memorySpaceId", a.memorySpaceId!).eq("contextId", id)).first()) !== null;
+convex-dev/runtimeDataAuth.ts:132:      const fact = await ctx.db.query("facts").withIndex("by_runtime_scope_factId", q => q.eq("tenantId", authority.tenantId)
+convex-dev/runtimeDataAuth.ts:136:      const memory = await ctx.db.query("memories").withIndex("by_runtime_scope_memoryId", q => q.eq("tenantId", authority.tenantId)
+convex-dev/runtimeDataAuth.ts:345:  const row = await ctx.db.query("memories").withIndex("by_runtime_scope_memoryId", q => q.eq("tenantId", authority.tenantId)
+convex-dev/runtimeDataAuth.ts:354:  const row = await ctx.db.query("facts").withIndex("by_runtime_scope_factId", q => q.eq("tenantId", authority.tenantId)
+convex-dev/runtimeDataAuth.ts:520:  const row = await ctx.db.query("facts").withIndex("by_runtime_scope_factId", q => q.eq("tenantId", authority.tenantId)
+convex-dev/runtimeMemoryRepository.ts:158:      const existing = await db.query("facts").withIndex("by_runtime_scope_factId", (q) =>
+convex-dev/runtimeMemoryRepository.ts:177:      const existing = await db.query("facts").withIndex("by_runtime_scope_factId", (q) =>
+convex-dev/schema.ts:344:    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+convex-dev/schema.ts:380:    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+convex-dev/schema.ts:507:    .index("by_runtime_scope_memoryId", ["tenantId", "memorySpaceId", "memoryId"])
+convex-dev/schema.ts:642:    .index("by_runtime_scope_factId", ["tenantId", "memorySpaceId", "factId"])
+convex-dev/schema.ts:752:    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+convex-dev/schema.ts:841:    .index("by_runtime_scope_context", ["tenantId", "memorySpaceId", "contextId"])
+convex-dev/schema.ts:842:    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+convex-dev/schema.ts:888:    .index("by_runtime_scope_agent", ["tenantId", "memorySpaceId", "agentId"])
+convex-dev/schema.ts:889:    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+convex-dev/schema.ts:927:    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+convex-dev/schema.ts:965:    .index("by_runtime_scope_active", ["tenantId", "memorySpaceId", "isActive"]),
+convex-dev/schema.ts:998:    .index("by_runtime_scope_executed", ["tenantId", "memorySpaceId", "executedAt"])
+convex-dev/governance.ts:301:  const rows = await ctx.db.query("governancePolicies").withIndex("by_runtime_scope_active", (q) =>
+convex-dev/governance.ts:405:  const logs = await ctx.db.query("governanceEnforcement").withIndex("by_runtime_scope_executed", (q) =>

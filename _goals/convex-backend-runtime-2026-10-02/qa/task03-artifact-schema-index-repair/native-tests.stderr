@@ -1,0 +1,234 @@
+(node:44565) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeArtifactAuth/handlers.test.ts (6.808 s)
+PASS tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+PASS tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Current approved declaration purgeAll
++ actual - expected
+... Skipped lines
+
+  'purgeAll = internalMutation({\n' +
+    '  args: {\n' +
+    '    memorySpaceId: v.optional(v.string()),\n' +
+    '    tenantId: v.optional(v.string()), // Limit to tenant if provided\n' +
+    '  },\n' +
+...
+    '    if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");\n' +
++   '    const rows = await ctx.db.query("artifacts").withIndex("by_tenant_space", (q) =>\n' +
+-   '    const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>\n' +
+    '      q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();\n' +
+    '    // Full preflight, including retained history, before the first mutation.\n' +
+    '    for (const row of rows) {\n' +
+    '      if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");\n' +
+    '      if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");\n' +
+
+    at verify (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs:34:10)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs:41:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'purgeAll = internalMutation({\n' +
+    '  args: {\n' +
+    '    memorySpaceId: v.optional(v.string()),\n' +
+    '    tenantId: v.optional(v.string()), // Limit to tenant if provided\n' +
+    '  },\n' +
+    '  handler: async (ctx, args) => artifactHandler(async () => {\n' +
+    '    // Only authenticated Convex deployment-operator internal tooling may invoke\n' +
+    '    // this registration. URL/environment names and public JWT admin labels are\n' +
+    '    // never operator credentials. This does not remove other control tables.\n' +
+    '    if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");\n' +
+    '    const rows = await ctx.db.query("artifacts").withIndex("by_tenant_space", (q) =>\n' +
+    '      q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();\n' +
+    '    // Full preflight, including retained history, before the first mutation.\n' +
+    '    for (const row of rows) {\n' +
+    '      if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");\n' +
+    '      if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");\n' +
+    '      if (!row.isDeleted && row.tombstonedAt === undefined) validateArtifact(row);\n' +
+    '    }\n' +
+    '    const now = Date.now();\n' +
+    '    let deleted = 0;\n' +
+    '    for (const row of rows) {\n' +
+    '      if (row.isDeleted || row.tombstonedAt !== undefined) continue;\n' +
+    '      await ctx.db.patch(row._id, { isDeleted: true, deletedAt: now, tombstonedAt: now,\n' +
+    '        deletedBy: "trusted-deployment-operator", updatedAt: now });\n' +
+    '      const target = { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId,\n' +
+    '        resourceType: "artifact" as const, resourceId: row.artifactId };\n' +
+    '      const existing = await ctx.db.query("runtimeAuthTombstones").withIndex("by_resource", (q) =>\n' +
+    '        q.eq("tenantId", target.tenantId).eq("memorySpaceId", target.memorySpaceId)\n' +
+    '          .eq("resourceType", target.resourceType).eq("resourceId", target.resourceId)).unique();\n' +
+    '      if (!existing) await ctx.db.insert("runtimeAuthTombstones", { ...target, deletedAt: now });\n' +
+    '      deleted += 1;\n' +
+    '    }\n' +
+    '    return { deleted };\n' +
+    '  }),\n' +
+    '})',
+  expected: 'purgeAll = internalMutation({\n' +
+    '  args: {\n' +
+    '    memorySpaceId: v.optional(v.string()),\n' +
+    '    tenantId: v.optional(v.string()), // Limit to tenant if provided\n' +
+    '  },\n' +
+    '  handler: async (ctx, args) => artifactHandler(async () => {\n' +
+    '    // Only authenticated Convex deployment-operator internal tooling may invoke\n' +
+    '    // this registration. URL/environment names and public JWT admin labels are\n' +
+    '    // never operator credentials. This does not remove other control tables.\n' +
+    '    if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");\n' +
+    '    const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>\n' +
+    '      q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();\n' +
+    '    // Full preflight, including retained history, before the first mutation.\n' +
+    '    for (const row of rows) {\n' +
+    '      if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");\n' +
+    '      if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");\n' +
+    '      if (!row.isDeleted && row.tombstonedAt === undefined) validateArtifact(row);\n' +
+    '    }\n' +
+    '    const now = Date.now();\n' +
+    '    let deleted = 0;\n' +
+    '    for (const row of rows) {\n' +
+    '      if (row.isDeleted || row.tombstonedAt !== undefined) continue;\n' +
+    '      await ctx.db.patch(row._id, { isDeleted: true, deletedAt: now, tombstonedAt: now,\n' +
+    '        deletedBy: "trusted-deployment-operator", updatedAt: now });\n' +
+    '      const target = { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId,\n' +
+    '        resourceType: "artifact" as const, resourceId: row.artifactId };\n' +
+    '      const existing = await ctx.db.query("runtimeAuthTombstones").withIndex("by_resource", (q) =>\n' +
+    '        q.eq("tenantId", target.tenantId).eq("memorySpaceId", target.memorySpaceId)\n' +
+    '          .eq("resourceType", target.resourceType).eq("resourceId", target.resourceId)).unique();\n' +
+    '      if (!existing) await ctx.db.insert("runtimeAuthTombstones", { ...target, deletedAt: now });\n' +
+    '      deleted += 1;\n' +
+    '    }\n' +
+    '    return { deleted };\n' +
+    '  }),\n' +
+    '})',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+FAIL tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● native catalog composes accepted selected22 and later five file closures while preserving historical inventory
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node _goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs /tmp/cortex-artifact-inventory-5NZUBw
+    node:internal/modules/run_main:107
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Current approved declaration purgeAll
+    + actual - expected
+    ... Skipped lines
+
+      'purgeAll = internalMutation({\n' +
+        '  args: {\n' +
+        '    memorySpaceId: v.optional(v.string()),\n' +
+        '    tenantId: v.optional(v.string()), // Limit to tenant if provided\n' +
+        '  },\n' +
+    ...
+        '    if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");\n' +
+    +   '    const rows = await ctx.db.query("artifacts").withIndex("by_tenant_space", (q) =>\n' +
+    -   '    const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>\n' +
+        '      q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();\n' +
+        '    // Full preflight, including retained history, before the first mutation.\n' +
+        '    for (const row of rows) {\n' +
+        '      if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");\n' +
+        '      if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");\n' +
+
+      32 |  const names=new Set(accepted22.map(row=>row.path.split(':')[1]));
+      33 |  for(const row of artifacts) {
+    > 34 |   assert.equal(row.text,expected.find(x=>x.name===row.name)?.text,`Current approved declaration ${row.name}`);
+         |          ^
+      35 |   if(names.has(row.name))assert.equal(row.statement,accepted22.find(x=>x.path===`artifacts:${row.name}`)?.declaration,`Selected22 preservation ${row.name}`);
+      36 |  }
+      37 |  assert.equal(artifacts.filter(x=>names.has(x.name)).length,22);assert.equal(artifacts.filter(x=>!names.has(x.name)).length,5);
+
+      at verify (file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs:34:10)
+      at file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs:41:14
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        generatedMessage: false,
+        code: 'ERR_ASSERTION',
+        actual: 'purgeAll = internalMutation({\n' +
+          '  args: {\n' +
+          '    memorySpaceId: v.optional(v.string()),\n' +
+          '    tenantId: v.optional(v.string()), // Limit to tenant if provided\n' +
+          '  },\n' +
+          '  handler: async (ctx, args) => artifactHandler(async () => {\n' +
+          '    // Only authenticated Convex deployment-operator internal tooling may invoke\n' +
+          '    // this registration. URL/environment names and public JWT admin labels are\n' +
+          '    // never operator credentials. This does not remove other control tables.\n' +
+          '    if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");\n' +
+          '    const rows = await ctx.db.query("artifacts").withIndex("by_tenant_space", (q) =>\n' +
+          '      q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();\n' +
+          '    // Full preflight, including retained history, before the first mutation.\n' +
+          '    for (const row of rows) {\n' +
+          '      if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");\n' +
+          '      if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");\n' +
+          '      if (!row.isDeleted && row.tombstonedAt === undefined) validateArtifact(row);\n' +
+          '    }\n' +
+          '    const now = Date.now();\n' +
+          '    let deleted = 0;\n' +
+          '    for (const row of rows) {\n' +
+          '      if (row.isDeleted || row.tombstonedAt !== undefined) continue;\n' +
+          '      await ctx.db.patch(row._id, { isDeleted: true, deletedAt: now, tombstonedAt: now,\n' +
+          '        deletedBy: "trusted-deployment-operator", updatedAt: now });\n' +
+          '      const target = { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId,\n' +
+          '        resourceType: "artifact" as const, resourceId: row.artifactId };\n' +
+          '      const existing = await ctx.db.query("runtimeAuthTombstones").withIndex("by_resource", (q) =>\n' +
+          '        q.eq("tenantId", target.tenantId).eq("memorySpaceId", target.memorySpaceId)\n' +
+          '          .eq("resourceType", target.resourceType).eq("resourceId", target.resourceId)).unique();\n' +
+          '      if (!existing) await ctx.db.insert("runtimeAuthTombstones", { ...target, deletedAt: now });\n' +
+          '      deleted += 1;\n' +
+          '    }\n' +
+          '    return { deleted };\n' +
+          '  }),\n' +
+          '})',
+        expected: 'purgeAll = internalMutation({\n' +
+          '  args: {\n' +
+          '    memorySpaceId: v.optional(v.string()),\n' +
+          '    tenantId: v.optional(v.string()), // Limit to tenant if provided\n' +
+          '  },\n' +
+          '  handler: async (ctx, args) => artifactHandler(async () => {\n' +
+          '    // Only authenticated Convex deployment-operator internal tooling may invoke\n' +
+          '    // this registration. URL/environment names and public JWT admin labels are\n' +
+          '    // never operator credentials. This does not remove other control tables.\n' +
+          '    if (!args.tenantId || !args.memorySpaceId) artifactDeny("INVALID_ARGUMENT");\n' +
+          '    const rows = await ctx.db.query("artifacts").withIndex("by_runtime_scope", (q) =>\n' +
+          '      q.eq("tenantId", args.tenantId!).eq("memorySpaceId", args.memorySpaceId!)).collect();\n' +
+          '    // Full preflight, including retained history, before the first mutation.\n' +
+          '    for (const row of rows) {\n' +
+          '      if (row.fileRef || row.versionHistory.some((entry) => entry.fileRef)) artifactDeny("CAPABILITY_NOT_READY");\n' +
+          '      if (row.conversationRef || row.memoryRefs?.length) artifactDeny("CAPABILITY_NOT_READY");\n' +
+          '      if (!row.isDeleted && row.tombstonedAt === undefined) validateArtifact(row);\n' +
+          '    }\n' +
+          '    const now = Date.now();\n' +
+          '    let deleted = 0;\n' +
+          '    for (const row of rows) {\n' +
+          '      if (row.isDeleted || row.tombstonedAt !== undefined) continue;\n' +
+          '      await ctx.db.patch(row._id, { isDeleted: true, deletedAt: now, tombstonedAt: now,\n' +
+          '        deletedBy: "trusted-deployment-operator", updatedAt: now });\n' +
+          '      const target = { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId,\n' +
+          '        resourceType: "artifact" as const, resourceId: row.artifactId };\n' +
+          '      const existing = await ctx.db.query("runtimeAuthTombstones").withIndex("by_resource", (q) =>\n' +
+          '        q.eq("tenantId", target.tenantId).eq("memorySpaceId", target.memorySpaceId)\n' +
+          '          .eq("resourceType", target.resourceType).eq("resourceId", target.resourceId)).unique();\n' +
+          '      if (!existing) await ctx.db.insert("runtimeAuthTombstones", { ...target, deletedAt: now });\n' +
+          '      deleted += 1;\n' +
+          '    }\n' +
+          '    return { deleted };\n' +
+          '  }),\n' +
+          '})',
+        operator: 'strictEqual',
+        diff: 'simple'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (tests/unit/runtimeArtifactAuth/inventory.test.ts:11:20)
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 360 passed, 361 total
+Snapshots:   0 total
+Time:        9.571 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/native-tests.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

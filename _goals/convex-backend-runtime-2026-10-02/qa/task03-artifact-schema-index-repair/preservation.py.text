@@ -1,0 +1,21 @@
+import json,pathlib,hashlib
+r=pathlib.Path.cwd();q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair';before=json.loads((q/'pre-edit-native.json').read_text());after=json.loads((q/'post-edit-native.json').read_text()); hashes=json.loads((q/'pre-edit-hashes.json').read_text());results={}
+for name in ['convex-dev/schema.ts','convex-dev/runtimeArtifactAuth.ts','convex-dev/artifacts.ts']:
+ old=(q/'archive'/name).read_text();expected=old.replace('    .index("by_runtime_scope", ["tenantId", "memorySpaceId"])\n','') if name.endswith('schema.ts') else old.replace('.withIndex("by_runtime_scope",','.withIndex("by_tenant_space",')
+ results[name+' exact minimal edit']=(r/name).read_text()==expected
+for name,h in hashes.items():
+ if name not in ['convex-dev/schema.ts','convex-dev/runtimeArtifactAuth.ts','convex-dev/artifacts.ts','tests/unit/runtimeArtifactAuth/inventory.test.ts']:results[name+' unchanged']=hashlib.sha256((r/name).read_bytes()).hexdigest()==h
+expected=json.loads(json.dumps(before))
+for d in expected['definitions']:
+ if d['table']=='artifacts':
+  d['indexes']=[i for i in d['indexes'] if i['indexDescriptor']!='by_runtime_scope']
+  d['exported']['indexes']=[i for i in d['exported']['indexes'] if i['indexDescriptor']!='by_runtime_scope']
+old=(q/'archive/tests/unit/runtimeArtifactAuth/inventory.test.ts').read_text(); new=old.replace('_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs','_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs'); results['inventory test sole composer path edit; all assertions preserved']=(r/'tests/unit/runtimeArtifactAuth/inventory.test.ts').read_text()==new
+results['all native validators, other table/index definitions and search/vector indexes preserved']=expected['definitions']==after['definitions']
+results['all registered artifacts args/returns/visibility preserved']=before['registrations']==after['registrations']
+results['pre-edit only actual duplicate']=before['duplicates']==[{'table':'artifacts','indexes':['by_runtime_scope','by_tenant_space'],'fields':['tenantId','memorySpaceId']}]
+results['post-edit no duplicates']=after['duplicates']==[]
+(q/'preservation.json').write_text(json.dumps(results,indent=2)+'\n');assert all(results.values()),results
+files=['convex-dev/schema.ts','convex-dev/runtimeArtifactAuth.ts','convex-dev/artifacts.ts','tests/unit/runtimeArtifactAuth/schema-indexes.test.ts','tests/unit/runtimeArtifactAuth/inventory.test.ts','_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs']
+(q/'final-hashes.json').write_text(json.dumps({n:hashlib.sha256((r/n).read_bytes()).hexdigest() for n in files},indent=2)+'\n')
+print('All',len(results),'preservation comparisons hold')
