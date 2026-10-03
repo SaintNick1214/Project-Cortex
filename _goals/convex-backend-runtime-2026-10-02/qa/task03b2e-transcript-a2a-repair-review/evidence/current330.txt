@@ -1,0 +1,58 @@
+jest-haste-map: Haste module naming collision: @cortexmemory/sdk
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/package.json
+    * <rootDir>/work/resume/artifact/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/vercel-ai-quickstart
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/vercel-ai-provider/quickstart/package.json
+    * <rootDir>/packages/cortex-cli/templates/vercel-ai-quickstart/package.json
+
+jest-haste-map: Haste module naming collision: cortex-task03c2-identity-qualification
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/package.json
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/cli
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/vercel-ai-provider
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/vercel-ai-provider/package.json
+    * <rootDir>/work/resume/artifact/packages/vercel-ai-provider/package.json
+
+jest-haste-map: Haste module naming collision: {{PROJECT_NAME}}
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/templates/basic/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/templates/basic/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/chat-sdk-quickstart
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/templates/chat-sdk-quickstart/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/templates/chat-sdk-quickstart/package.json
+
+jest-haste-map: Haste module naming collision: cortex-backend-runtime-task01-qualification
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package.json
+    * <rootDir>/work/resume/registry/candidate/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package.json
+
+  console.log
+    FOREIGN_TOMBSTONE_ORACLE {"memorySpaceId":"space-a","absent":{"version":1,"code":"CAPABILITY_NOT_READY","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"},"present":{"version":1,"code":"CAPABILITY_NOT_READY","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}}
+
+      at work/resume/transcript-repair-judge/original330.test.ts:28:10
+
+  console.log
+    FOREIGN_TOMBSTONE_ORACLE {"memorySpaceId":"tenant-wide","absent":{"version":1,"code":"CAPABILITY_NOT_READY","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"},"present":{"version":1,"code":"CAPABILITY_NOT_READY","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}}
+
+      at work/resume/transcript-repair-judge/original330.test.ts:28:10
+
+(node:29292) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Test Suites: 1 passed, 1 total
+Tests:       330 passed, 330 total
+Snapshots:   0 total
+Time:        13.271 s
+Ran all test suites.
+Test results written to: work/resume/transcript-repair-judge/current330.json

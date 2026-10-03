@@ -1,0 +1,68 @@
+  console.log
+    FOREIGN_TOMBSTONE_ORACLE {"memorySpaceId":"space-a","absent":{"version":1,"code":"CAPABILITY_NOT_READY","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"},"present":{"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}}
+
+      at work/resume/transcript-safety-review/probes.test.ts:28:10
+
+  console.log
+    FOREIGN_TOMBSTONE_ORACLE {"memorySpaceId":"tenant-wide","absent":{"version":1,"code":"CAPABILITY_NOT_READY","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"},"present":{"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}}
+
+      at work/resume/transcript-safety-review/probes.test.ts:28:10
+
+(node:27432) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL work/resume/transcript-safety-review/probes.test.ts (5.957 s)
+  ● foreign source tombstone oracle at space-a
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "FORBIDDEN",
+    +   "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      27 |  const a=await result(c,absent,args),b=await result(c,present,args);
+      28 |  console.log('FOREIGN_TOMBSTONE_ORACLE',JSON.stringify({memorySpaceId:memorySpaceId??'tenant-wide',absent:a,present:b}));
+    > 29 |  expect(a).toEqual(b);
+         |            ^
+      30 | });
+      31 |
+
+      at work/resume/transcript-safety-review/probes.test.ts:29:12
+
+  ● foreign source tombstone oracle at undefined
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "FORBIDDEN",
+    +   "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1,
+      }
+
+      27 |  const a=await result(c,absent,args),b=await result(c,present,args);
+      28 |  console.log('FOREIGN_TOMBSTONE_ORACLE',JSON.stringify({memorySpaceId:memorySpaceId??'tenant-wide',absent:a,present:b}));
+    > 29 |  expect(a).toEqual(b);
+         |            ^
+      30 | });
+      31 |
+
+      at work/resume/transcript-safety-review/probes.test.ts:29:12
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 328 passed, 330 total
+Snapshots:   0 total
+Time:        6.186 s, estimated 10 s
+Ran all test suites.
