@@ -1,0 +1,12 @@
+import subprocess,datetime,pathlib,json,os,concurrent.futures
+root=pathlib.Path('/workspace/Project-Cortex');qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03-domain-foreground-repair-c2-review'
+config='work/resume/domain-foreground-repair-c2-review/jest.config.mjs'
+jest=['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',config,'--testPathPatterns=tests/unit/(runtimeMemory|domain)','--runInBand']
+commands={'native-tests':jest+['--json','--outputFile='+str(qa/'native-tests.json')],'discovery':jest+['--listTests'],'root-types':['node','node_modules/typescript/bin/tsc','--noEmit'],'backend-types':['node','node_modules/typescript/bin/tsc','--project','convex-dev/tsconfig.json','--noEmit'],'lint-types':['node','node_modules/typescript/bin/tsc','--project','tsconfig.lint.json','--noEmit'],'scoped-lint':['node','node_modules/eslint/bin/eslint.js','convex-dev/runtimeMemory.ts','tests/unit/runtimeMemory/public-boundary.test.ts','tests/unit/runtimeMemory/public-closure.test.ts','--report-unused-disable-directives','--max-warnings','0']}
+def run(item):
+ name,argv=item;start=datetime.datetime.now(datetime.timezone.utc).isoformat();env=dict(os.environ,CONVEX_URL='http://127.0.0.1:1')
+ with (qa/(name+'.stdout')).open('w') as out,(qa/(name+'.stderr')).open('w') as err: result=subprocess.run(argv,cwd=root,env=env,stdout=out,stderr=err)
+ receipt={'argv':argv,'cwd':str(root),'started':start,'ended':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exit_code':result.returncode,'setupFiles':[],'inert_CONVEX_URL':env['CONVEX_URL']};(qa/(name+'.receipt.json')).write_text(json.dumps(receipt,indent=2));return name,result.returncode
+commands={k:v for k,v in commands.items() if k in ['native-tests','discovery']}
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+ for result in pool.map(run,commands.items()):print(result,flush=True)

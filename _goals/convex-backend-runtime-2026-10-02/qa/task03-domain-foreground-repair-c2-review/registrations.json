@@ -1,0 +1,1608 @@
+[
+  {
+    "name": "checkAuthority",
+    "isAction": false,
+    "isQuery": true,
+    "isMutation": false,
+    "isPublic": false,
+    "isInternal": true,
+    "args": {
+      "type": "object",
+      "value": {
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "capability": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "read"
+              },
+              {
+                "type": "literal",
+                "value": "write"
+              }
+            ]
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "name": "readFacts",
+    "isAction": false,
+    "isQuery": true,
+    "isMutation": false,
+    "isPublic": false,
+    "isInternal": true,
+    "args": {
+      "type": "object",
+      "value": {
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "capability": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "read"
+              },
+              {
+                "type": "literal",
+                "value": "write"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "query": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "subject": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "factType": {
+                "fieldType": {
+                  "type": "union",
+                  "value": [
+                    {
+                      "type": "literal",
+                      "value": "preference"
+                    },
+                    {
+                      "type": "literal",
+                      "value": "identity"
+                    },
+                    {
+                      "type": "literal",
+                      "value": "knowledge"
+                    },
+                    {
+                      "type": "literal",
+                      "value": "relationship"
+                    },
+                    {
+                      "type": "literal",
+                      "value": "event"
+                    },
+                    {
+                      "type": "literal",
+                      "value": "observation"
+                    },
+                    {
+                      "type": "literal",
+                      "value": "custom"
+                    }
+                  ]
+                },
+                "optional": true
+              },
+              "limit": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              }
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "name": "readSource",
+    "isAction": false,
+    "isQuery": true,
+    "isMutation": false,
+    "isPublic": false,
+    "isInternal": true,
+    "args": {
+      "type": "object",
+      "value": {
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "capability": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "read"
+              },
+              {
+                "type": "literal",
+                "value": "write"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "sourceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "name": "readVectorMatches",
+    "isAction": false,
+    "isQuery": true,
+    "isMutation": false,
+    "isPublic": false,
+    "isInternal": true,
+    "args": {
+      "type": "object",
+      "value": {
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "capability": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "read"
+              },
+              {
+                "type": "literal",
+                "value": "write"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "hits": {
+          "fieldType": {
+            "type": "array",
+            "value": {
+              "type": "object",
+              "value": {
+                "id": {
+                  "fieldType": {
+                    "type": "id",
+                    "tableName": "runtimeMemoryVectors"
+                  },
+                  "optional": false
+                },
+                "score": {
+                  "fieldType": {
+                    "type": "number"
+                  },
+                  "optional": false
+                }
+              }
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "name": "recall",
+    "isAction": true,
+    "isQuery": false,
+    "isMutation": false,
+    "isPublic": true,
+    "isInternal": false,
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "text": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "requestId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "limit": {
+          "fieldType": {
+            "type": "number"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
+    "name": "remember",
+    "isAction": true,
+    "isQuery": false,
+    "isMutation": false,
+    "isPublic": true,
+    "isInternal": false,
+    "args": {
+      "type": "object",
+      "value": {
+        "tenantId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "memorySpaceId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "text": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        },
+        "requestId": {
+          "fieldType": {
+            "type": "string"
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "name": "writeDerived",
+    "isAction": false,
+    "isQuery": false,
+    "isMutation": true,
+    "isPublic": false,
+    "isInternal": true,
+    "args": {
+      "type": "object",
+      "value": {
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "capability": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "read"
+              },
+              {
+                "type": "literal",
+                "value": "write"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "input": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "source": {
+                "fieldType": {
+                  "type": "object",
+                  "value": {
+                    "sourceId": {
+                      "fieldType": {
+                        "type": "string"
+                      },
+                      "optional": false
+                    },
+                    "sourceEventId": {
+                      "fieldType": {
+                        "type": "string"
+                      },
+                      "optional": false
+                    },
+                    "sourceRevision": {
+                      "fieldType": {
+                        "type": "number"
+                      },
+                      "optional": false
+                    }
+                  }
+                },
+                "optional": false
+              },
+              "identity": {
+                "fieldType": {
+                  "type": "object",
+                  "value": {
+                    "sourceId": {
+                      "fieldType": {
+                        "type": "string"
+                      },
+                      "optional": false
+                    },
+                    "sourceEventId": {
+                      "fieldType": {
+                        "type": "string"
+                      },
+                      "optional": false
+                    },
+                    "sourceRevision": {
+                      "fieldType": {
+                        "type": "number"
+                      },
+                      "optional": false
+                    },
+                    "stage": {
+                      "fieldType": {
+                        "type": "union",
+                        "value": [
+                          {
+                            "type": "literal",
+                            "value": "extract"
+                          },
+                          {
+                            "type": "literal",
+                            "value": "facts"
+                          },
+                          {
+                            "type": "literal",
+                            "value": "vectors"
+                          }
+                        ]
+                      },
+                      "optional": false
+                    },
+                    "semanticPolicyVersion": {
+                      "fieldType": {
+                        "type": "string"
+                      },
+                      "optional": false
+                    }
+                  }
+                },
+                "optional": false
+              },
+              "chunks": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "object",
+                    "value": {
+                      "sourceId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "sourceEventId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "sourceRevision": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "chunkId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "tenantId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "memorySpaceId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "profileId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "ordinal": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "start": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "end": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "text": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "textHash": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      }
+                    }
+                  }
+                },
+                "optional": true
+              },
+              "vectors": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "object",
+                    "value": {
+                      "sourceId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "sourceEventId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "sourceRevision": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "vectorId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "chunkId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "tenantId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "memorySpaceId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "profile": {
+                        "fieldType": {
+                          "type": "object",
+                          "value": {
+                            "profileId": {
+                              "fieldType": {
+                                "type": "string"
+                              },
+                              "optional": false
+                            },
+                            "modelId": {
+                              "fieldType": {
+                                "type": "string"
+                              },
+                              "optional": false
+                            },
+                            "dimensions": {
+                              "fieldType": {
+                                "type": "number"
+                              },
+                              "optional": false
+                            },
+                            "normalization": {
+                              "fieldType": {
+                                "type": "string"
+                              },
+                              "optional": false
+                            },
+                            "chunking": {
+                              "fieldType": {
+                                "type": "string"
+                              },
+                              "optional": false
+                            },
+                            "indexName": {
+                              "fieldType": {
+                                "type": "string"
+                              },
+                              "optional": false
+                            }
+                          }
+                        },
+                        "optional": false
+                      },
+                      "embedding": {
+                        "fieldType": {
+                          "type": "array",
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "optional": false
+                      },
+                      "processingReceiptId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      }
+                    }
+                  }
+                },
+                "optional": true
+              },
+              "facts": {
+                "fieldType": {
+                  "type": "array",
+                  "value": {
+                    "type": "object",
+                    "value": {
+                      "_id": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "factId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "tenantId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "memorySpaceId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "ownerPrincipalId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "lineage": {
+                        "fieldType": {
+                          "type": "union",
+                          "value": [
+                            {
+                              "type": "object",
+                              "value": {
+                                "sourceId": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                },
+                                "sourceEventId": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                },
+                                "sourceRevision": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "role": {
+                                  "fieldType": {
+                                    "type": "literal",
+                                    "value": "user"
+                                  },
+                                  "optional": false
+                                },
+                                "trust": {
+                                  "fieldType": {
+                                    "type": "literal",
+                                    "value": "user_assertion"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "object",
+                              "value": {
+                                "sourceId": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                },
+                                "sourceEventId": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                },
+                                "sourceRevision": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "role": {
+                                  "fieldType": {
+                                    "type": "literal",
+                                    "value": "assistant"
+                                  },
+                                  "optional": false
+                                },
+                                "trust": {
+                                  "fieldType": {
+                                    "type": "literal",
+                                    "value": "assistant_claim"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            },
+                            {
+                              "type": "object",
+                              "value": {
+                                "sourceId": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                },
+                                "sourceEventId": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                },
+                                "sourceRevision": {
+                                  "fieldType": {
+                                    "type": "number"
+                                  },
+                                  "optional": false
+                                },
+                                "role": {
+                                  "fieldType": {
+                                    "type": "literal",
+                                    "value": "tool"
+                                  },
+                                  "optional": false
+                                },
+                                "trust": {
+                                  "fieldType": {
+                                    "type": "literal",
+                                    "value": "verified_tool_evidence"
+                                  },
+                                  "optional": false
+                                },
+                                "operationId": {
+                                  "fieldType": {
+                                    "type": "string"
+                                  },
+                                  "optional": false
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "optional": false
+                      },
+                      "extractionPolicyVersion": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "fact": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": false
+                      },
+                      "factType": {
+                        "fieldType": {
+                          "type": "union",
+                          "value": [
+                            {
+                              "type": "literal",
+                              "value": "preference"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "identity"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "knowledge"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "relationship"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "event"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "observation"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "custom"
+                            }
+                          ]
+                        },
+                        "optional": false
+                      },
+                      "subject": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "predicate": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "object": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "confidence": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "sourceType": {
+                        "fieldType": {
+                          "type": "union",
+                          "value": [
+                            {
+                              "type": "literal",
+                              "value": "conversation"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "system"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "tool"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "manual"
+                            },
+                            {
+                              "type": "literal",
+                              "value": "a2a"
+                            }
+                          ]
+                        },
+                        "optional": false
+                      },
+                      "tags": {
+                        "fieldType": {
+                          "type": "array",
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "optional": false
+                      },
+                      "version": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "createdAt": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "updatedAt": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": false
+                      },
+                      "validFrom": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": true
+                      },
+                      "validUntil": {
+                        "fieldType": {
+                          "type": "number"
+                        },
+                        "optional": true
+                      },
+                      "supersededBy": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "supersedes": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "userId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "participantId": {
+                        "fieldType": {
+                          "type": "string"
+                        },
+                        "optional": true
+                      },
+                      "entities": {
+                        "fieldType": {
+                          "type": "array",
+                          "value": {
+                            "type": "object",
+                            "value": {
+                              "name": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              },
+                              "type": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              },
+                              "fullValue": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": true
+                              }
+                            }
+                          }
+                        },
+                        "optional": true
+                      },
+                      "relations": {
+                        "fieldType": {
+                          "type": "array",
+                          "value": {
+                            "type": "object",
+                            "value": {
+                              "subject": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              },
+                              "predicate": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              },
+                              "object": {
+                                "fieldType": {
+                                  "type": "string"
+                                },
+                                "optional": false
+                              }
+                            }
+                          }
+                        },
+                        "optional": true
+                      }
+                    }
+                  }
+                },
+                "optional": true
+              },
+              "expectedFactVersions": {
+                "fieldType": {
+                  "type": "record",
+                  "keys": {
+                    "type": "string"
+                  },
+                  "values": {
+                    "fieldType": {
+                      "type": "number"
+                    },
+                    "optional": false
+                  }
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  },
+  {
+    "name": "writeSource",
+    "isAction": false,
+    "isQuery": false,
+    "isMutation": true,
+    "isPublic": false,
+    "isInternal": true,
+    "args": {
+      "type": "object",
+      "value": {
+        "reference": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "principalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "principalVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "membershipId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "membershipVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "grantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "grantVersion": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "tenantEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": true
+              },
+              "memorySpaceEpoch": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        },
+        "capability": {
+          "fieldType": {
+            "type": "union",
+            "value": [
+              {
+                "type": "literal",
+                "value": "read"
+              },
+              {
+                "type": "literal",
+                "value": "write"
+              }
+            ]
+          },
+          "optional": false
+        },
+        "source": {
+          "fieldType": {
+            "type": "object",
+            "value": {
+              "tenantId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "memorySpaceId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "ownerPrincipalId": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "lineage": {
+                "fieldType": {
+                  "type": "union",
+                  "value": [
+                    {
+                      "type": "object",
+                      "value": {
+                        "sourceId": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        },
+                        "sourceEventId": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        },
+                        "sourceRevision": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "role": {
+                          "fieldType": {
+                            "type": "literal",
+                            "value": "user"
+                          },
+                          "optional": false
+                        },
+                        "trust": {
+                          "fieldType": {
+                            "type": "literal",
+                            "value": "user_assertion"
+                          },
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "value": {
+                        "sourceId": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        },
+                        "sourceEventId": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        },
+                        "sourceRevision": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "role": {
+                          "fieldType": {
+                            "type": "literal",
+                            "value": "assistant"
+                          },
+                          "optional": false
+                        },
+                        "trust": {
+                          "fieldType": {
+                            "type": "literal",
+                            "value": "assistant_claim"
+                          },
+                          "optional": false
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "value": {
+                        "sourceId": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        },
+                        "sourceEventId": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        },
+                        "sourceRevision": {
+                          "fieldType": {
+                            "type": "number"
+                          },
+                          "optional": false
+                        },
+                        "role": {
+                          "fieldType": {
+                            "type": "literal",
+                            "value": "tool"
+                          },
+                          "optional": false
+                        },
+                        "trust": {
+                          "fieldType": {
+                            "type": "literal",
+                            "value": "verified_tool_evidence"
+                          },
+                          "optional": false
+                        },
+                        "operationId": {
+                          "fieldType": {
+                            "type": "string"
+                          },
+                          "optional": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                "optional": false
+              },
+              "content": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "contentHash": {
+                "fieldType": {
+                  "type": "string"
+                },
+                "optional": false
+              },
+              "createdAt": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": false
+              },
+              "tombstonedAt": {
+                "fieldType": {
+                  "type": "number"
+                },
+                "optional": true
+              }
+            }
+          },
+          "optional": false
+        }
+      }
+    }
+  }
+]

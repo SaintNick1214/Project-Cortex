@@ -1,0 +1,142 @@
+[
+  {
+    "name": "remember",
+    "serializedReferenceKeys": [
+      "grantId",
+      "grantVersion",
+      "membershipId",
+      "membershipVersion",
+      "memorySpaceEpoch",
+      "memorySpaceId",
+      "principalId",
+      "principalVersion",
+      "tenantEpoch",
+      "tenantId"
+    ],
+    "nativeAcceptedReferenceKeys": [
+      "principalId",
+      "principalVersion",
+      "membershipId",
+      "membershipVersion",
+      "grantId",
+      "grantVersion",
+      "tenantId",
+      "tenantEpoch",
+      "memorySpaceId",
+      "memorySpaceEpoch"
+    ],
+    "extraFields": [],
+    "fixtureReturnedError": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    }
+  },
+  {
+    "name": "recall",
+    "serializedReferenceKeys": [
+      "grantId",
+      "grantVersion",
+      "membershipId",
+      "membershipVersion",
+      "memorySpaceEpoch",
+      "memorySpaceId",
+      "principalId",
+      "principalVersion",
+      "tenantEpoch",
+      "tenantId"
+    ],
+    "nativeAcceptedReferenceKeys": [
+      "principalId",
+      "principalVersion",
+      "membershipId",
+      "membershipVersion",
+      "grantId",
+      "grantVersion",
+      "tenantId",
+      "tenantEpoch",
+      "memorySpaceId",
+      "memorySpaceEpoch"
+    ],
+    "extraFields": [],
+    "fixtureReturnedError": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    }
+  }
+]
+[
+  {
+    "name": "remember",
+    "location": "runtimeAuth:authorize",
+    "reached": true,
+    "result": {
+      "data": {
+        "version": 1,
+        "code": "INTERNAL_FAILURE",
+        "message": "Memory control failed.",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "message": "{\"version\":1,\"code\":\"INTERNAL_FAILURE\",\"message\":\"Memory control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    "writes": 0,
+    "sourceCount": 0
+  },
+  {
+    "name": "remember",
+    "location": "runtimeMemory:checkAuthority",
+    "reached": true,
+    "result": {
+      "data": {
+        "version": 1,
+        "code": "INTERNAL_FAILURE",
+        "message": "Memory control failed.",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "message": "{\"version\":1,\"code\":\"INTERNAL_FAILURE\",\"message\":\"Memory control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    "writes": 0,
+    "sourceCount": 0
+  },
+  {
+    "name": "recall",
+    "location": "runtimeAuth:authorize",
+    "reached": true,
+    "result": {
+      "data": {
+        "version": 1,
+        "code": "INTERNAL_FAILURE",
+        "message": "Memory control failed.",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "message": "{\"version\":1,\"code\":\"INTERNAL_FAILURE\",\"message\":\"Memory control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    "writes": 0,
+    "sourceCount": 0
+  },
+  {
+    "name": "recall",
+    "location": "runtimeMemory:checkAuthority",
+    "reached": true,
+    "result": {
+      "data": {
+        "version": 1,
+        "code": "INTERNAL_FAILURE",
+        "message": "Memory control failed.",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "message": "{\"version\":1,\"code\":\"INTERNAL_FAILURE\",\"message\":\"Memory control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+    },
+    "writes": 0,
+    "sourceCount": 0
+  }
+]

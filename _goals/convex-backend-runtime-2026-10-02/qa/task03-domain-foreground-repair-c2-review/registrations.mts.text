@@ -1,0 +1,4 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import * as memory from '../../../convex-dev/runtimeMemory.ts';
+const rows=Object.entries(memory).map(([name,registration])=>{const r=registration as any;return {name,isAction:!!r.isAction,isQuery:!!r.isQuery,isMutation:!!r.isMutation,isPublic:!!r.isPublic,isInternal:!!r.isInternal,args:JSON.parse(r.exportArgs())};});
+assert.equal(rows.length,8);for(const row of rows){if(['remember','recall'].includes(row.name)){assert(row.isAction&&row.isPublic&&!row.isInternal);}else{assert(row.isInternal&&!row.isPublic);assert.equal(row.isMutation,['writeSource','writeDerived'].includes(row.name));}}
+fs.writeFileSync('_goals/convex-backend-runtime-2026-10-02/qa/task03-domain-foreground-repair-c2-review/registrations.json',JSON.stringify(rows,null,2));console.log('8 native registrations verified: public2 actions, internal4 queries +2 mutations.');

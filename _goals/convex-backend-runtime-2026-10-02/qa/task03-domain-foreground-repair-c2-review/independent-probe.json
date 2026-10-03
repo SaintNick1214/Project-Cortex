@@ -1,0 +1,1538 @@
+[
+  {
+    "operation": "remember",
+    "scenario": "healthy",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-principal-delete",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-membership-delete",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-grant-delete",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-tenant-epoch",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-space-epoch",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-grant-expired",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "late-capability-remove",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "mutate-original-authority",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "recheck-reference-mismatch",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "null-prototype-authority",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "only-space-id",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "A concrete authorized memory space is required",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "only-space-epoch",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "A concrete authorized memory space is required",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "nonfinite-version",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "known-diagnostic-getters",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "unknown-serialized-authorize",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "unknown-serialized-recheck",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "write",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "safe-plus-private-field",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "nonenumerable-result",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "remember",
+    "scenario": "revoked-proxy-result",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "write",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "healthy",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-principal-delete",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-membership-delete",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-grant-delete",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-tenant-epoch",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-space-epoch",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-grant-expired",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "late-capability-remove",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "mutate-original-authority",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "recheck-reference-mismatch",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "null-prototype-authority",
+    "data": {
+      "version": 1,
+      "code": "CAPABILITY_UNAVAILABLE",
+      "message": "Memory capability unavailable.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "only-space-id",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "A concrete authorized memory space is required",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "only-space-epoch",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "A concrete authorized memory space is required",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "nonfinite-version",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "known-diagnostic-getters",
+    "data": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "unknown-serialized-authorize",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "unknown-serialized-recheck",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      },
+      {
+        "name": "runtimeMemory:checkAuthority",
+        "json": {
+          "capability": "read",
+          "reference": {
+            "grantId": "runtimeAuthGrants:5",
+            "grantVersion": 1,
+            "membershipId": "runtimeAuthMemberships:2",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "space-a",
+            "principalId": "runtimeAuthPrincipals:1",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": true
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "safe-plus-private-field",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "nonenumerable-result",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  },
+  {
+    "operation": "recall",
+    "scenario": "revoked-proxy-result",
+    "data": {
+      "version": 1,
+      "code": "INTERNAL_FAILURE",
+      "message": "Memory control failed.",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "trace": [
+      {
+        "name": "runtimeAuth:authorize",
+        "json": {
+          "requirement": {
+            "capability": "read",
+            "memorySpaceId": "space-a",
+            "tenantId": "tenant-a"
+          }
+        },
+        "frozen": null
+      }
+    ],
+    "businessReads": [],
+    "writes": 0,
+    "diagnosticReads": 0
+  }
+]
