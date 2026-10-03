@@ -1,0 +1,25 @@
+
+> @cortexmemory/sdk@0.37.0 test:contracts
+> node scripts/verify-public-contracts.mjs
+
+node_modules/.cortex-contract-2ikB8Z/consumer.mts(2,67): error TS7016: Could not find a declaration file for module '@cortexmemory/sdk'. '/workspace/Project-Cortex/dist/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/cortexmemory__sdk` if it exists or add a new declaration (.d.ts) file containing `declare module '@cortexmemory/sdk';`
+node:internal/errors:985
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /workspace/Project-Cortex/node_modules/.bin/tsc --ignoreConfig --noEmit --strict --skipLibCheck --module NodeNext --moduleResolution NodeNext --target ES2022 /workspace/Project-Cortex/node_modules/.cortex-contract-2ikB8Z/consumer.mts
+    at genericNodeError (node:internal/errors:985:15)
+    at wrappedFn (node:internal/errors:539:14)
+    at checkExecSyncError (node:child_process:942:11)
+    at execFileSync (node:child_process:978:15)
+    at file:///workspace/Project-Cortex/scripts/verify-public-contracts.mjs:50:3 {
+  status: 2,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 17976,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v24.19.0

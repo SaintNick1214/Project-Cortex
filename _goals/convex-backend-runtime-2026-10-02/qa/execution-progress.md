@@ -44,9 +44,10 @@ record historical authorship and do not supersede this request.
 | 02A | Complete/PASS | Fresh cycle2 judge task02a_review_2,4.4/5;137 tests/211 independent assertions;02B pending trusted authority freeze. |
 | 03A | Complete/PASS | Fresh final cycle3 judge task03a_review_3,4.2/5;133 tests/38 independent outcomes. Raw duplicate grant checks corrected within open review. Existing endpoint closure remains03B. |
 | 02B | Complete/PASS bounded | Fresh task02b_review_1,4.4/5;53 retained tests/78 independent assertions; scoped adapters/source-vector stores/remember-recall. Whole02 deployed Gateway wiring pending04/06/09. |
-| 03B1-MF | In progress | Bounded executor task03b1_memory_facts; shared scoped helpers and memories/facts39public+3internal paths. |
-| 03C1 | Open first review/fix | Official Convex reactive callback rejection leaves transport paused/unhandled; executor fixing fail-closed behavior and explicit diagnostics. Live03C2 remainspending. |
-| 03B1-T/03B2/03C2/04–09 | Pending | Remaining endpoint closure and ordered text slice. |
+| 03B1-MF | Loop1 REJECT/fix active | Fresh judge3.0/5: write-only response leaks, missing canonical hash checks, shared manual-source rewrite, cycle/version bypass, unanchored messages. Historical evidence retained; bounded executor repairing before fresh cycle2. |
+| 03C1 | Complete/PASS bounded | Fresh task03c1_review_1,4.2/5;98 tests/53 independent reactive assertions; official paused rejection and wire logout fixed. Reviewed-foundation snapshot build/packed/browser PASS npm12.2. Live03C2 remainspending. |
+| 03B2D | Independent implementation active | Governance/graphSync/admin25-path closure in isolated worktree6939678; depends only on reviewed03A/02B, consumes no rejectedMF helper. Main schema/other modules untouched. |
+| 03B1-T/03B2A–C/03C2/04–09 | Pending | Remaining endpoint closure and ordered text slice. |
 | 10–15 | Pending | Text slice and per-extension service gates. |
 | 16–17 | Pending | Complete implementation, outcome matrix and independent final audit. |
 

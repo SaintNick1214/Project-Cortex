@@ -23,6 +23,7 @@ import { SessionsAPI } from "./sessions";
 import { ArtifactsAPI } from "./artifacts";
 import { AttachmentsAPI } from "./attachments";
 import type { AuthContext } from "./auth/types";
+import { HostCredentials, type HostTokenFetcher, type HostAuthErrorHandler } from "./auth/credentials";
 import type { GraphAdapter } from "./graph/types";
 import { CypherGraphAdapter } from "./graph";
 import {
@@ -209,10 +210,11 @@ export interface CortexConfig {
   embedding?: EmbeddingConfig;
 
   /**
-   * Optional authentication context for multi-tenant applications.
+   * Optional caller metadata and scope selectors for multi-tenant applications.
    *
-   * When provided, all operations are automatically scoped to the
-   * userId and tenantId from the auth context.
+   * Operations inject these userId/tenantId labels as selectors. This context,
+   * including claims/roles, does not authenticate a request or grant access.
+   * Verified identity and trusted memberships/grants are resolved by the backend.
    *
    * @example
    * ```typescript
@@ -224,6 +226,33 @@ export interface CortexConfig {
    * ```
    */
   auth?: AuthContext;
+
+  /**
+   * Get the current host-issued JWT for Convex authentication, or null on logout.
+   * Forward forceRefreshToken to the host provider's cache-bypass/refresh option.
+   * Convex calls this again to refresh credentials for active subscriptions.
+   * Never return a model provider key or derive a token from AuthContext metadata.
+   * Host auth.config.ts remains responsible for issuer/audience verification.
+   *
+   * Logout/null clears transport identity; stop private observers on host logout.
+   * Call cortex.credentials?.notifySessionChanged() after login/logout/identity
+   * changes to update active transport credentials immediately.
+   * Stored background grants require explicit backend revocation or deletion.
+   *
+   * @example
+   * ```typescript
+   * fetchAuthToken: async ({ forceRefreshToken }) =>
+   *   hostAuth.getToken({ skipCache: forceRefreshToken }),
+   * ```
+   */
+  fetchAuthToken?: HostTokenFetcher;
+
+  /**
+   * Observe sanitized reactive authentication failures. Reactive auth fails closed
+   * to null; inspect credentials.authFailure for the latest diagnostic. Direct
+   * token/header/HTTP helpers still reject host errors. Observer errors are isolated.
+   */
+  onAuthError?: HostAuthErrorHandler;
 
   /**
    * Resilience/overload protection configuration
@@ -259,6 +288,9 @@ export class Cortex {
   private readonly llmConfig?: LLMConfig;
   private readonly embeddingConfig?: EmbeddingConfig;
   private readonly authContext?: AuthContext;
+
+  /** Host credential seam for HTTP/private fetch transports; absent without a getter. */
+  public readonly credentials?: HostCredentials;
 
   /**
    * Auto-configure embedding from environment variables.
@@ -487,8 +519,16 @@ export class Cortex {
   public attachments: AttachmentsAPI;
 
   constructor(config: CortexConfig) {
+    // Validate the host credential getter before allocating a transport.
+    this.credentials = config.fetchAuthToken === undefined
+      ? undefined
+      : new HostCredentials(config.fetchAuthToken, config.onAuthError);
+
     // Initialize Convex client
     this.client = new ConvexClient(config.convexUrl);
+    if (this.credentials) {
+      this.credentials.bindReactiveClient(this.client);
+    }
 
     // Store LLM config for fact extraction
     // Use explicit config if provided, otherwise auto-configure from environment
@@ -618,10 +658,10 @@ export class Cortex {
   }
 
   /**
-   * Get the authentication context (if configured)
+   * Get the caller metadata and scope selectors (if configured).
    *
    * Returns the AuthContext that was passed during initialization.
-   * Useful for checking the current user/tenant context.
+   * These labels do not establish verified identity or trusted access grants.
    *
    * @example
    * ```typescript
@@ -753,6 +793,8 @@ export { MemoryValidationError } from "./memory/validators";
 
 // Re-export auth module
 export { createAuthContext, validateAuthContext } from "./auth";
+export { HostCredentials } from "./auth/credentials";
+export type { HostTokenFetcher, HostTokenRequest, HostAuthFailure, HostAuthErrorHandler } from "./auth/credentials";
 export type { AuthContext, AuthContextParams, AuthMethod } from "./auth/types";
 
 // Re-export sharing utilities (Shareable Chats Phase 2)

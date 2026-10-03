@@ -1,0 +1,7 @@
+import { HostCredentials, type HostTokenFetcher } from "../../../src/auth/credentials";
+const fetchAuthToken: HostTokenFetcher = async ({ forceRefreshToken }) => {
+  void forceRefreshToken;
+  return null;
+};
+const credentials = new HostCredentials(fetchAuthToken);
+void credentials.getAuthorizationHeaders({ forceRefreshToken: true });

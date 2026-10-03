@@ -1,0 +1,32 @@
+
+> @cortexmemory/sdk@0.37.0 build
+> tsup src/index.ts --format cjs,esm --dts --clean
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2022
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+CJS dist/index.cjs 782.08 KB
+CJS ⚡️ Build success in 176ms
+ESM dist/api-FDLQT46H.js                       145.00 B
+ESM dist/ChunkingStrategies-GIZC5TDJ.js        8.03 KB
+ESM dist/StreamMetrics-YNNJGIZN.js             119.00 B
+ESM dist/StreamProcessor-NL3NUOFP.js           5.76 KB
+ESM dist/chunk-EOYUOIQS.js                     5.83 KB
+ESM dist/FactExtractor-F42FAMZE.js             7.98 KB
+ESM dist/ProgressiveStorageHandler-KJ4VPM3O.js 5.22 KB
+ESM dist/chunk-VEHCF6HD.js                     6.28 KB
+ESM dist/ErrorRecovery-XMWRFTO3.js             7.36 KB
+ESM dist/chunk-24X3JR4G.js                     215.00 B
+ESM dist/AdaptiveProcessor-SHAPUARM.js         6.65 KB
+ESM dist/chunk-3RG5ZIWI.js                     390.00 B
+ESM dist/ProgressiveGraphSync-RKOWEMT5.js      4.35 KB
+ESM dist/index.js                              710.40 KB
+ESM ⚡️ Build success in 187ms
+DTS Build start
+DTS ⚡️ Build success in 9461ms
+DTS dist/index.d.cts 328.15 KB
+DTS dist/index.d.ts  328.15 KB

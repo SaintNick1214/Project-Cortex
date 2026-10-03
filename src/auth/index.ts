@@ -8,3 +8,5 @@
 export { createAuthContext, validateAuthContext } from "./context";
 export { AuthValidationError } from "./validators";
 export type { AuthContext, AuthContextParams, AuthMethod } from "./types";
+export { HostCredentials } from "./credentials";
+export type { HostTokenFetcher, HostTokenRequest, HostAuthFailure, HostAuthErrorHandler } from "./credentials";

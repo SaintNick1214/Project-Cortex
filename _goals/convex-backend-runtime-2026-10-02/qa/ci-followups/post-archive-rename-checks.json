@@ -1,0 +1,177 @@
+{
+  "head": "de618fa6408d4ec8da163151061d1c5da8aaffa3",
+  "observedAt": "2026-10-03T09:33:18.905802+00:00",
+  "checkRuns": [
+    {
+      "name": "All Checks Passed",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Security Checks Summary",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "CodeQL",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 1/5)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 2/5)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 4/5)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 3/5)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 5/5)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Code Quality (Lint & Type Check)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Test Cortex CLI",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Test Vercel AI Provider",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Trivy",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Socket Security: Pull Request Alerts",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Deploy & Purge Database",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Socket Security: Project Report",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Supply Chain Security (Scorecard)",
+      "conclusion": "skipped",
+      "status": "completed"
+    },
+    {
+      "name": "Dependency Review",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/basic)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "License Compliance",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Build demo (packages/vercel-ai-provider/quickstart)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "OpenAPI Security Audit",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/chat-sdk-quickstart)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Commit Signature Verification",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Secret Scanning",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Neo4j and Memgraph contracts",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "API Security Scan (Semgrep)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/vercel-ai-quickstart)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "CodeQL Analysis (javascript-typescript)",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Packed package and browser contracts",
+      "conclusion": "success",
+      "status": "completed"
+    },
+    {
+      "name": "Detect File Changes",
+      "conclusion": "success",
+      "status": "completed"
+    }
+  ],
+  "codeQL": [
+    {
+      "id": 111174281391,
+      "conclusion": "success",
+      "summary": "### New alerts in code changed by this pull request\n\nSecurity Alerts:\n * 1 medium\n\n\n_Alerts not introduced by this pull request might have been detected because the code changes were too large._\n\nSee annotations below for details.\n\n[View all branch alerts](/SaintNick1214/Project-Cortex/security/code-scanning?query=pr%3A132+tool%3ACodeQL+is%3Aopen).",
+      "annotations": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/qualify.mjs",
+          "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/de618fa6408d4ec8da163151061d1c5da8aaffa3/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/qualify.mjs",
+          "start_line": 43,
+          "start_column": 28,
+          "end_line": 43,
+          "end_column": 92,
+          "annotation_level": "warning",
+          "title": "File data in outbound network request",
+          "message": "Outbound network request depends on [file data](1).",
+          "raw_details": null
+        }
+      ]
+    }
+  ]
+}
