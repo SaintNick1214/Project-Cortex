@@ -8,7 +8,7 @@
  * Full integration tests would require a test database and more setup.
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { auth } from "@/app/(auth)/auth";
 
 // Mock auth module
@@ -16,15 +16,15 @@ const mockAuth = auth as ReturnType<typeof vi.fn>;
 
 // Mock db queries to avoid database dependencies
 vi.mock("@/lib/db/queries", () => ({
+  createStreamId: vi.fn(),
+  deleteChatById: vi.fn(),
   getChatById: vi.fn(),
-  getMessagesByChatId: vi.fn(),
   getMessageCountByUserId: vi.fn(),
+  getMessagesByChatId: vi.fn(),
   saveChat: vi.fn(),
   saveMessages: vi.fn(),
   updateChatTitleById: vi.fn(),
   updateMessage: vi.fn(),
-  deleteChatById: vi.fn(),
-  createStreamId: vi.fn(),
 }));
 
 // Mock Cortex memory provider
@@ -38,23 +38,24 @@ vi.mock("ai", () => ({
   createUIMessageStream: vi.fn().mockReturnValue({
     toDataStreamResponse: vi.fn(),
   }),
-  createUIMessageStreamResponse: vi.fn().mockReturnValue(
-    new Response("mock stream", { status: 200 }),
-  ),
+  createUIMessageStreamResponse: vi
+    .fn()
+    .mockReturnValue(new Response("mock stream", { status: 200 })),
   generateId: vi.fn().mockReturnValue("test-id"),
   stepCountIs: vi.fn(),
   streamText: vi.fn().mockReturnValue({
     toUIMessageStream: vi.fn().mockReturnValue(new ReadableStream()),
   }),
+  tool: vi.fn((definition) => definition),
 }));
 
 // Mock Vercel functions
 vi.mock("@vercel/functions", () => ({
   geolocation: vi.fn().mockReturnValue({
-    longitude: -122.4194,
-    latitude: 37.7749,
     city: "San Francisco",
     country: "US",
+    latitude: 37.7749,
+    longitude: -122.4194,
   }),
 }));
 
@@ -75,10 +76,7 @@ vi.mock("@/lib/cortex-memory-config", () => ({
 }));
 
 // Import mocked query functions
-import {
-  getChatById,
-  getMessageCountByUserId,
-} from "@/lib/db/queries";
+import { getChatById, getMessageCountByUserId } from "@/lib/db/queries";
 
 const mockGetChatById = getChatById as ReturnType<typeof vi.fn>;
 const mockGetMessageCountByUserId = getMessageCountByUserId as ReturnType<
@@ -92,8 +90,8 @@ describe("Chat API Route", () => {
     // Default: user is authenticated
     mockAuth.mockResolvedValue({
       user: {
-        id: "user-123",
         email: "test@example.com",
+        id: "user-123",
         name: "Test User",
         type: "regular",
       },
@@ -113,17 +111,17 @@ describe("Chat API Route", () => {
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
-        method: "POST",
         body: JSON.stringify({
-          id: "chat-123",
+          id: "00000000-0000-4000-8000-000000000001",
           message: {
-            id: "msg-1",
+            id: "00000000-0000-4000-8000-000000000002",
+            parts: [{ text: "Hello", type: "text" }],
             role: "user",
-            parts: [{ type: "text", text: "Hello" }],
           },
           selectedChatModel: "gpt-4",
           selectedVisibilityType: "private",
         }),
+        method: "POST",
       });
 
       const response = await POST(request);
@@ -135,8 +133,8 @@ describe("Chat API Route", () => {
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
-        method: "POST",
         body: "invalid json{",
+        method: "POST",
       });
 
       const response = await POST(request);
@@ -148,11 +146,11 @@ describe("Chat API Route", () => {
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
-        method: "POST",
         body: JSON.stringify({
           // Missing required fields: id, selectedChatModel
-          message: { role: "user", parts: [] },
+          message: { parts: [], role: "user" },
         }),
+        method: "POST",
       });
 
       const response = await POST(request);
@@ -163,25 +161,25 @@ describe("Chat API Route", () => {
     it("returns 403 when accessing another user's chat", async () => {
       // Chat exists but belongs to different user
       mockGetChatById.mockResolvedValue({
-        id: "chat-123",
-        userId: "different-user",
+        id: "00000000-0000-4000-8000-000000000001",
         title: "Another user's chat",
+        userId: "different-user",
       });
 
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
-        method: "POST",
         body: JSON.stringify({
-          id: "chat-123",
+          id: "00000000-0000-4000-8000-000000000001",
           message: {
-            id: "msg-1",
+            id: "00000000-0000-4000-8000-000000000002",
+            parts: [{ text: "Hello", type: "text" }],
             role: "user",
-            parts: [{ type: "text", text: "Hello" }],
           },
           selectedChatModel: "gpt-4",
           selectedVisibilityType: "private",
         }),
+        method: "POST",
       });
 
       const response = await POST(request);
@@ -191,22 +189,22 @@ describe("Chat API Route", () => {
 
     it("returns 429 when user exceeds rate limit", async () => {
       // User has exceeded daily message limit
-      mockGetMessageCountByUserId.mockResolvedValue(10000);
+      mockGetMessageCountByUserId.mockResolvedValue(10_000);
 
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
-        method: "POST",
         body: JSON.stringify({
-          id: "chat-123",
+          id: "00000000-0000-4000-8000-000000000001",
           message: {
-            id: "msg-1",
+            id: "00000000-0000-4000-8000-000000000002",
+            parts: [{ text: "Hello", type: "text" }],
             role: "user",
-            parts: [{ type: "text", text: "Hello" }],
           },
           selectedChatModel: "gpt-4",
           selectedVisibilityType: "private",
         }),
+        method: "POST",
       });
 
       const response = await POST(request);
@@ -221,9 +219,12 @@ describe("Chat API Route", () => {
 
       const { DELETE } = await import("@/app/(chat)/api/chat/route");
 
-      const request = new Request("http://localhost/api/chat?id=chat-123", {
-        method: "DELETE",
-      });
+      const request = new Request(
+        "http://localhost/api/chat?id=00000000-0000-4000-8000-000000000001",
+        {
+          method: "DELETE",
+        }
+      );
 
       const response = await DELETE(request);
 
@@ -244,16 +245,19 @@ describe("Chat API Route", () => {
 
     it("returns 403 when deleting another user's chat", async () => {
       mockGetChatById.mockResolvedValue({
-        id: "chat-123",
-        userId: "different-user",
+        id: "00000000-0000-4000-8000-000000000001",
         title: "Another user's chat",
+        userId: "different-user",
       });
 
       const { DELETE } = await import("@/app/(chat)/api/chat/route");
 
-      const request = new Request("http://localhost/api/chat?id=chat-123", {
-        method: "DELETE",
-      });
+      const request = new Request(
+        "http://localhost/api/chat?id=00000000-0000-4000-8000-000000000001",
+        {
+          method: "DELETE",
+        }
+      );
 
       const response = await DELETE(request);
 

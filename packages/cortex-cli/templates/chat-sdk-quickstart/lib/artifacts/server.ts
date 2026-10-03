@@ -54,51 +54,47 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
     kind: config.kind,
     onCreateDocument: async (args: CreateDocumentCallbackProps) => {
       const draftContent = await config.onCreateDocument({
-        id: args.id,
-        title: args.title,
-        dataStream: args.dataStream,
-        session: args.session,
         conversationId: args.conversationId,
+        dataStream: args.dataStream,
+        id: args.id,
         messageId: args.messageId,
+        session: args.session,
+        title: args.title,
       });
 
       if (args.session?.user?.id) {
         await saveDocument({
-          id: args.id,
-          title: args.title,
           content: draftContent,
-          kind: config.kind,
-          userId: args.session.user.id,
           conversationId: args.conversationId,
+          id: args.id,
+          kind: config.kind,
           messageId: args.messageId,
+          title: args.title,
+          userId: args.session.user.id,
         });
       }
-
-      return;
     },
     onUpdateDocument: async (args: UpdateDocumentCallbackProps) => {
       const draftContent = await config.onUpdateDocument({
-        document: args.document,
-        description: args.description,
-        dataStream: args.dataStream,
-        session: args.session,
         conversationId: args.conversationId,
+        dataStream: args.dataStream,
+        description: args.description,
+        document: args.document,
         messageId: args.messageId,
+        session: args.session,
       });
 
       if (args.session?.user?.id) {
         await saveDocument({
-          id: args.document.id,
-          title: args.document.title,
           content: draftContent,
-          kind: config.kind,
-          userId: args.session.user.id,
           conversationId: args.conversationId,
+          id: args.document.id,
+          kind: config.kind,
           messageId: args.messageId,
+          title: args.document.title,
+          userId: args.session.user.id,
         });
       }
-
-      return;
     },
   };
 }

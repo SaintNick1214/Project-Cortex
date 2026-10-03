@@ -8,7 +8,7 @@
     "dev": "next dev --webpack -H 0.0.0.0",
     "build": "next build --webpack",
     "start": "next start -H 0.0.0.0",
-    "lint": "next lint",
+    "lint": "eslint . --report-unused-disable-directives",
     "test": "jest --selectProjects unit integration",
     "test:unit": "jest --selectProjects unit",
     "test:integration": "jest --selectProjects integration",
@@ -19,33 +19,37 @@
     "convex:deploy": "convex deploy"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^3.0.19",
-    "@ai-sdk/react": "^3.0.52",
-    "@anthropic-ai/sdk": "^0.71.2",
+    "@ai-sdk/openai": "^4.0.83",
+    "@ai-sdk/react": "^4.0.130",
+    "@anthropic-ai/sdk": "^0.131.0",
     "@cortexmemory/sdk": "file:../../..",
     "@cortexmemory/vercel-ai-provider": "file:..",
-    "ai": "^6.0.50",
-    "convex": "^1.31.6",
-    "framer-motion": "^12.29.2",
-    "neo4j-driver": "^6.0.1",
-    "next": "^16.1.5",
-    "openai": "^6.16.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "zod": "^4.3.6"
+    "ai": "^7.0.127",
+    "convex": "^1.46.0",
+    "framer-motion": "^14.0.0",
+    "neo4j-driver": "^6.2.0",
+    "next": "^16.3.8",
+    "openai": "^7.27.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.18",
+    "@eslint/compat": "^2.1.1",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/jest": "^30.0.0",
-    "@types/node": "^25.0.10",
-    "@types/react": "^19.2.9",
-    "@types/react-dom": "^19.2.3",
-    "autoprefixer": "^10.4.23",
-    "jest": "^30.2.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18",
-    "ts-jest": "^29.4.6",
-    "typescript": "^5.9.3"
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@typescript-eslint/parser": "^8.71.0",
+    "autoprefixer": "^10.6.1",
+    "eslint": "^10.11.0",
+    "eslint-config-next": "^16.3.8",
+    "jest": "^30.5.2",
+    "postcss": "^8.5.28",
+    "tailwindcss": "^4.3.3",
+    "ts-jest": "^29.4.14",
+    "typescript": "~6.0.3"
   },
   "main": "jest.config.js",
   "directories": {
@@ -53,5 +57,20 @@
     "test": "tests"
   },
   "keywords": [],
-  "author": ""
+  "author": "",
+  "engines": {
+    "node": ">=24.15.0"
+  },
+  "packageManager": "npm@12.2.0",
+  "overrides": {
+    "eslint-plugin-import": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-react": {
+      "eslint": "$eslint"
+    },
+    "eslint-plugin-jsx-a11y": {
+      "eslint": "$eslint"
+    }
+  }
 }

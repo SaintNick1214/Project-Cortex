@@ -15,7 +15,7 @@ Thank you for your interest in contributing to Cortex! This document provides gu
 
 ### Prerequisites
 
-- Node.js 18+ and npm 9+
+- Node.js 24+ and npm 9+
 - TypeScript 5.0+
 - A Convex account (free tier works great)
 - Git
@@ -220,7 +220,7 @@ Branch naming:
 - Write clear, focused commits
 - Follow code standards
 - Add tests for new functionality
-- Update documentation if needed
+- Update guides and API references in `cortexmemory.dev/docs-site/docs/`, the sole SDK documentation source. Project-Cortex links to https://docs.cortexmemory.dev; do not add a mirrored documentation tree or internal audit reports here.
 
 ### 3. Test Locally
 

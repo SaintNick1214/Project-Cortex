@@ -17,35 +17,31 @@ export const createDocument = ({ session, dataStream }: CreateDocumentProps) =>
   tool({
     description:
       "Create a document for a writing or content creation activities. This tool will call other functions that will generate the contents of the document based on the title and kind.",
-    inputSchema: z.object({
-      title: z.string(),
-      kind: z.enum(artifactKinds),
-    }),
     execute: async ({ title, kind }) => {
       const id = generateUUID();
 
       dataStream.write({
-        type: "data-kind",
         data: kind,
         transient: true,
+        type: "data-kind",
       });
 
       dataStream.write({
-        type: "data-id",
         data: id,
         transient: true,
+        type: "data-id",
       });
 
       dataStream.write({
-        type: "data-title",
         data: title,
         transient: true,
+        type: "data-title",
       });
 
       dataStream.write({
-        type: "data-clear",
         data: null,
         transient: true,
+        type: "data-clear",
       });
 
       const documentHandler = documentHandlersByArtifactKind.find(
@@ -58,19 +54,23 @@ export const createDocument = ({ session, dataStream }: CreateDocumentProps) =>
       }
 
       await documentHandler.onCreateDocument({
-        id,
-        title,
         dataStream,
+        id,
         session,
+        title,
       });
 
-      dataStream.write({ type: "data-finish", data: null, transient: true });
+      dataStream.write({ data: null, transient: true, type: "data-finish" });
 
       return {
-        id,
-        title,
-        kind,
         content: "A document was created and is now visible to the user.",
+        id,
+        kind,
+        title,
       };
     },
+    inputSchema: z.object({
+      kind: z.enum(artifactKinds),
+      title: z.string(),
+    }),
   });

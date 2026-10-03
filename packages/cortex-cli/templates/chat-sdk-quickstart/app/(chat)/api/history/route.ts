@@ -24,10 +24,10 @@ export async function GET(request: NextRequest) {
   }
 
   const chats = await getChatsByUserId({
+    endingBefore,
     id: session.user.id,
     limit: limit + 1, // Fetch one extra to determine hasMore
     startingAfter,
-    endingBefore,
   });
 
   // Determine if there are more results

@@ -7,9 +7,9 @@ import { useWindowSize } from "usehooks-ts";
 import { SidebarToggle } from "@/components/sidebar-toggle";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, VercelIcon } from "./icons";
+import { ShareButton } from "./share-button";
 import { useSidebar } from "./ui/sidebar";
 import { VisibilitySelector, type VisibilityType } from "./visibility-selector";
-import { ShareButton } from "./share-button";
 
 function PureChatHeader({
   chatId,
@@ -78,10 +78,10 @@ function PureChatHeader({
   );
 }
 
-export const ChatHeader = memo(PureChatHeader, (prevProps, nextProps) => {
-  return (
+export const ChatHeader = memo(
+  PureChatHeader,
+  (prevProps, nextProps) =>
     prevProps.chatId === nextProps.chatId &&
     prevProps.selectedVisibilityType === nextProps.selectedVisibilityType &&
     prevProps.isReadonly === nextProps.isReadonly
-  );
-});
+);

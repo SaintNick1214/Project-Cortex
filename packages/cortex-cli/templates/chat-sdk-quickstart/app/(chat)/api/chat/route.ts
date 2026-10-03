@@ -1,3 +1,5 @@
+import type { LayerObserver } from "@cortexmemory/vercel-ai-provider";
+import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
 import { geolocation } from "@vercel/functions";
 import {
   convertToModelMessages,
@@ -9,8 +11,6 @@ import {
 } from "ai";
 import { after } from "next/server";
 import { createResumableStreamContext } from "resumable-stream";
-import { createCortexMemoryAsync } from "@cortexmemory/vercel-ai-provider";
-import type { LayerObserver } from "@cortexmemory/vercel-ai-provider";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { entitlementsByUserType } from "@/lib/ai/entitlements";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
@@ -34,9 +34,8 @@ import {
   updateChatTitleById,
   updateMessage,
 } from "@/lib/db/queries";
-import type { DBMessage } from "@/lib/types";
 import { ChatSDKError } from "@/lib/errors";
-import type { ChatMessage } from "@/lib/types";
+import type { ChatMessage, DBMessage } from "@/lib/types";
 import { convertToUIMessages, generateUUID } from "@/lib/utils";
 import { generateTitleFromUserMessage } from "../../actions";
 import { type PostRequestBody, postRequestBodySchema } from "./schema";
@@ -46,12 +45,10 @@ export const maxDuration = 60;
 function getStreamContext() {
   try {
     return createResumableStreamContext({ waitUntil: after });
-  } catch (_) {
+  } catch {
     return null;
   }
 }
-
-export { getStreamContext };
 
 export async function POST(request: Request) {
   let requestBody: PostRequestBody;
@@ -59,7 +56,7 @@ export async function POST(request: Request) {
   try {
     const json = await request.json();
     requestBody = postRequestBodySchema.parse(json);
-  } catch (_) {
+  } catch {
     return new ChatSDKError("bad_request:api").toResponse();
   }
 
@@ -76,8 +73,8 @@ export async function POST(request: Request) {
     const userType: UserType = session.user.type;
 
     const messageCount = await getMessageCountByUserId({
-      id: session.user.id,
       differenceInHours: 24,
+      id: session.user.id,
     });
 
     if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
@@ -100,8 +97,8 @@ export async function POST(request: Request) {
     } else if (message?.role === "user") {
       await saveChat({
         id,
-        userId: session.user.id,
         title: "New chat",
+        userId: session.user.id,
         visibility: selectedVisibilityType,
       });
       titlePromise = generateTitleFromUserMessage({ message });
@@ -114,10 +111,10 @@ export async function POST(request: Request) {
     const { longitude, latitude, city, country } = geolocation(request);
 
     const requestHints: RequestHints = {
-      longitude,
-      latitude,
       city,
       country,
+      latitude,
+      longitude,
     };
 
     // Note: User message storage is handled by Cortex Memory's rememberStream()
@@ -131,7 +128,6 @@ export async function POST(request: Request) {
     const modelMessages = await convertToModelMessages(uiMessages);
 
     const stream = createUIMessageStream({
-      originalMessages: isToolApprovalFlow ? uiMessages : undefined,
       execute: async ({ writer: dataStream }) => {
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         // Layer Observer - emits phase-aware events for real-time UI visualization
@@ -145,14 +141,14 @@ export async function POST(request: Request) {
         // Helper: Map layer names to display names
         const getLayerDisplayName = (layer: string): string => {
           const displayNames: Record<string, string> = {
-            memorySpace: "Memory Space",
-            user: "User Profile",
             agent: "Agent Context",
             context: "Context Assembly",
             conversation: "Conversation",
-            vector: "Vector Search",
             facts: "Facts Engine",
             graph: "Knowledge Graph",
+            memorySpace: "Memory Space",
+            user: "User Profile",
+            vector: "Vector Search",
           };
           return displayNames[layer] || layer;
         };
@@ -183,125 +179,6 @@ export async function POST(request: Request) {
         };
 
         const layerObserver: LayerObserver = {
-          // Phase-aware callbacks (v0.35.1+)
-          onRecallStart: (orchestrationId) => {
-            currentRecallOrchestrationId = orchestrationId;
-            try {
-              // Emit reasoning-start for recall phase (AI SDK 6 Protocol)
-              // Use providerMetadata to pass memory phase since id isn't exposed to UI
-              dataStream.write({
-                type: "reasoning-start",
-                id: `memory-recall-${orchestrationId}`,
-                providerMetadata: { cortex: { memoryPhase: "recall" } },
-              });
-              // Keep existing transient event for backward compatibility
-              dataStream.write({
-                type: "data-recall-start",
-                data: { orchestrationId },
-                transient: true,
-              });
-            } catch (error) {
-              console.error("Error in onRecallStart:", error);
-              // Ensure reasoning-end is emitted even on error
-              try {
-                dataStream.write({
-                  type: "reasoning-end",
-                  id: `memory-recall-${orchestrationId}`,
-                });
-              } catch {
-                // Ignore secondary errors
-              }
-            }
-          },
-          onRecallComplete: (summary) => {
-            // IMPORTANT: Use currentRecallOrchestrationId (set by onRecallStart) first
-            // This ensures the reasoning-end ID matches the reasoning-start ID
-            const orchestrationId =
-              currentRecallOrchestrationId || summary?.orchestrationId;
-            try {
-              // Emit reasoning-end for recall phase (AI SDK 6 Protocol)
-              dataStream.write({
-                type: "reasoning-end",
-                id: `memory-recall-${orchestrationId}`,
-              });
-              // Keep existing transient event for backward compatibility
-              dataStream.write({
-                type: "data-recall-complete",
-                data: summary,
-                transient: true,
-              });
-            } catch (error) {
-              console.error("Error in onRecallComplete:", error);
-              // Attempt to emit reasoning-end even on error
-              try {
-                dataStream.write({
-                  type: "reasoning-end",
-                  id: `memory-recall-${orchestrationId}`,
-                });
-              } catch {
-                // Ignore secondary errors
-              }
-            }
-          },
-          onRememberStart: (orchestrationId) => {
-            currentRememberOrchestrationId = orchestrationId;
-            try {
-              // Emit reasoning-start for storage phase (AI SDK 6 Protocol)
-              // Use providerMetadata to pass memory phase since id isn't exposed to UI
-              dataStream.write({
-                type: "reasoning-start",
-                id: `memory-storage-${orchestrationId}`,
-                providerMetadata: { cortex: { memoryPhase: "storage" } },
-              });
-              // Keep existing transient event for backward compatibility
-              dataStream.write({
-                type: "data-remember-start",
-                data: { orchestrationId },
-                transient: true,
-              });
-            } catch (error) {
-              console.error("Error in onRememberStart:", error);
-              // Ensure reasoning-end is emitted even on error
-              try {
-                dataStream.write({
-                  type: "reasoning-end",
-                  id: `memory-storage-${orchestrationId}`,
-                });
-              } catch {
-                // Ignore secondary errors
-              }
-            }
-          },
-          onRememberComplete: (summary) => {
-            // IMPORTANT: Use currentRememberOrchestrationId (set by onRememberStart) first
-            // The summary.orchestrationId may be different due to internal remember() call
-            const orchestrationId =
-              currentRememberOrchestrationId || summary?.orchestrationId;
-            try {
-              // Emit reasoning-end for storage phase (AI SDK 6 Protocol)
-              dataStream.write({
-                type: "reasoning-end",
-                id: `memory-storage-${orchestrationId}`,
-              });
-              // Keep existing transient event for backward compatibility
-              dataStream.write({
-                type: "data-remember-complete",
-                data: summary,
-                transient: true,
-              });
-            } catch (error) {
-              console.error("Error in onRememberComplete:", error);
-              // Attempt to emit reasoning-end even on error
-              try {
-                dataStream.write({
-                  type: "reasoning-end",
-                  id: `memory-storage-${orchestrationId}`,
-                });
-              } catch {
-                // Ignore secondary errors
-              }
-            }
-          },
           // Layer updates include phase information
           onLayerUpdate: (event) => {
             try {
@@ -312,8 +189,18 @@ export async function POST(request: Request) {
               // Determine phase - use explicit phase if available, otherwise infer from layer
               // Recall layers: memorySpace, user, agent, vector, facts, graph
               // Storage layers: conversation (after response)
-              const recallLayers = ["memorySpace", "user", "agent", "vector", "facts", "graph", "context"];
-              const inferredPhase = recallLayers.includes(event.layer) ? "recall" : "remember";
+              const recallLayers = [
+                "memorySpace",
+                "user",
+                "agent",
+                "vector",
+                "facts",
+                "graph",
+                "context",
+              ];
+              const inferredPhase = recallLayers.includes(event.layer)
+                ? "recall"
+                : "remember";
               const phase = event.phase || inferredPhase;
 
               let orchestrationId =
@@ -328,16 +215,16 @@ export async function POST(request: Request) {
                 if (phase === "recall") {
                   currentRecallOrchestrationId = orchestrationId;
                   dataStream.write({
-                    type: "reasoning-start",
                     id: `memory-recall-${orchestrationId}`,
                     providerMetadata: { cortex: { memoryPhase: "recall" } },
+                    type: "reasoning-start",
                   });
                 } else {
                   currentRememberOrchestrationId = orchestrationId;
                   dataStream.write({
-                    type: "reasoning-start",
                     id: `memory-storage-${orchestrationId}`,
                     providerMetadata: { cortex: { memoryPhase: "storage" } },
+                    type: "reasoning-start",
                   });
                 }
               }
@@ -354,26 +241,145 @@ export async function POST(request: Request) {
                 const layerDisplayName = getLayerDisplayName(event.layer);
                 const statusText = formatLayerStatus(event);
                 dataStream.write({
-                  type: "reasoning-delta",
-                  id: reasoningId,
                   delta: `- **${layerDisplayName}**: ${statusText}\n`,
+                  id: reasoningId,
+                  type: "reasoning-delta",
                 });
               }
 
               // Keep existing transient event for backward compatibility (all statuses)
               dataStream.write({
-                type: "data-layer-update",
                 data: event,
                 transient: true,
+                type: "data-layer-update",
               });
             } catch (error) {
               console.error("Error in onLayerUpdate:", error);
               // Still emit the transient event even if reasoning-delta fails
               try {
                 dataStream.write({
-                  type: "data-layer-update",
                   data: event,
                   transient: true,
+                  type: "data-layer-update",
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
+          },
+          onRecallComplete: (summary) => {
+            // IMPORTANT: Use currentRecallOrchestrationId (set by onRecallStart) first
+            // This ensures the reasoning-end ID matches the reasoning-start ID
+            const orchestrationId =
+              currentRecallOrchestrationId || summary?.orchestrationId;
+            try {
+              // Emit reasoning-end for recall phase (AI SDK 6 Protocol)
+              dataStream.write({
+                id: `memory-recall-${orchestrationId}`,
+                type: "reasoning-end",
+              });
+              // Keep existing transient event for backward compatibility
+              dataStream.write({
+                data: summary,
+                transient: true,
+                type: "data-recall-complete",
+              });
+            } catch (error) {
+              console.error("Error in onRecallComplete:", error);
+              // Attempt to emit reasoning-end even on error
+              try {
+                dataStream.write({
+                  id: `memory-recall-${orchestrationId}`,
+                  type: "reasoning-end",
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
+          },
+          // Phase-aware callbacks (v0.35.1+)
+          onRecallStart: (orchestrationId) => {
+            currentRecallOrchestrationId = orchestrationId;
+            try {
+              // Emit reasoning-start for recall phase (AI SDK 6 Protocol)
+              // Use providerMetadata to pass memory phase since id isn't exposed to UI
+              dataStream.write({
+                id: `memory-recall-${orchestrationId}`,
+                providerMetadata: { cortex: { memoryPhase: "recall" } },
+                type: "reasoning-start",
+              });
+              // Keep existing transient event for backward compatibility
+              dataStream.write({
+                data: { orchestrationId },
+                transient: true,
+                type: "data-recall-start",
+              });
+            } catch (error) {
+              console.error("Error in onRecallStart:", error);
+              // Ensure reasoning-end is emitted even on error
+              try {
+                dataStream.write({
+                  id: `memory-recall-${orchestrationId}`,
+                  type: "reasoning-end",
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
+          },
+          onRememberComplete: (summary) => {
+            // IMPORTANT: Use currentRememberOrchestrationId (set by onRememberStart) first
+            // The summary.orchestrationId may be different due to internal remember() call
+            const orchestrationId =
+              currentRememberOrchestrationId || summary?.orchestrationId;
+            try {
+              // Emit reasoning-end for storage phase (AI SDK 6 Protocol)
+              dataStream.write({
+                id: `memory-storage-${orchestrationId}`,
+                type: "reasoning-end",
+              });
+              // Keep existing transient event for backward compatibility
+              dataStream.write({
+                data: summary,
+                transient: true,
+                type: "data-remember-complete",
+              });
+            } catch (error) {
+              console.error("Error in onRememberComplete:", error);
+              // Attempt to emit reasoning-end even on error
+              try {
+                dataStream.write({
+                  id: `memory-storage-${orchestrationId}`,
+                  type: "reasoning-end",
+                });
+              } catch {
+                // Ignore secondary errors
+              }
+            }
+          },
+          onRememberStart: (orchestrationId) => {
+            currentRememberOrchestrationId = orchestrationId;
+            try {
+              // Emit reasoning-start for storage phase (AI SDK 6 Protocol)
+              // Use providerMetadata to pass memory phase since id isn't exposed to UI
+              dataStream.write({
+                id: `memory-storage-${orchestrationId}`,
+                providerMetadata: { cortex: { memoryPhase: "storage" } },
+                type: "reasoning-start",
+              });
+              // Keep existing transient event for backward compatibility
+              dataStream.write({
+                data: { orchestrationId },
+                transient: true,
+                type: "data-remember-start",
+              });
+            } catch (error) {
+              console.error("Error in onRememberStart:", error);
+              // Ensure reasoning-end is emitted even on error
+              try {
+                dataStream.write({
+                  id: `memory-storage-${orchestrationId}`,
+                  type: "reasoning-end",
                 });
               } catch {
                 // Ignore secondary errors
@@ -391,7 +397,7 @@ export async function POST(request: Request) {
           getMemorySpaceId(),
           session.user.id, // userId from authenticated JWT session
           id, // conversationId (chat ID)
-          layerObserver,
+          layerObserver
         );
 
         // Create Cortex memory wrapper
@@ -401,11 +407,7 @@ export async function POST(request: Request) {
         // Stream with Cortex Memory-wrapped model
         // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         const result = streamText({
-          model: cortexMemory(getLanguageModel(selectedChatModel)),
-          system: systemPrompt({ selectedChatModel, requestHints }),
-          messages: modelMessages,
-          stopWhen: stepCountIs(5),
-          experimental_activeTools: isReasoningModel
+          activeTools: isReasoningModel
             ? []
             : [
                 "getWeather",
@@ -413,22 +415,26 @@ export async function POST(request: Request) {
                 "updateDocument",
                 "requestSuggestions",
               ],
+          experimental_telemetry: {
+            functionId: "stream-text",
+            isEnabled: isProductionEnvironment,
+          },
+          messages: modelMessages,
+          model: cortexMemory(getLanguageModel(selectedChatModel)),
           providerOptions: isReasoningModel
             ? {
                 anthropic: {
-                  thinking: { type: "enabled", budgetTokens: 10_000 },
+                  thinking: { budgetTokens: 10_000, type: "enabled" },
                 },
               }
             : undefined,
+          stopWhen: stepCountIs(5),
+          system: systemPrompt({ requestHints, selectedChatModel }),
           tools: {
+            createDocument: createDocument({ dataStream, session }),
             getWeather,
-            createDocument: createDocument({ session, dataStream }),
-            updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({ session, dataStream }),
-          },
-          experimental_telemetry: {
-            isEnabled: isProductionEnvironment,
-            functionId: "stream-text",
+            requestSuggestions: requestSuggestions({ dataStream, session }),
+            updateDocument: updateDocument({ dataStream, session }),
           },
         });
 
@@ -439,20 +445,25 @@ export async function POST(request: Request) {
           // IMPORTANT: Save title to database FIRST, then notify client
           // This ensures when client re-fetches, the new title is already in Convex
           try {
-            await updateChatTitleById({ chatId: id, title, userId: session.user.id });
+            await updateChatTitleById({
+              chatId: id,
+              title,
+              userId: session.user.id,
+            });
           } catch (error) {
             console.error("Error updating chat title:", error);
           }
           // Now notify client to refresh - title is already saved in Convex
-          dataStream.write({ type: "data-chat-title", data: title });
+          dataStream.write({ data: title, type: "data-chat-title" });
         }
       },
       generateId: generateUUID,
+      onError: () => "Oops, an error occurred!",
       onFinish: async ({ messages: finishedMessages }) => {
         // Note: Message storage is handled by Cortex Memory's rememberStream()
         // to avoid duplicate messages in conversation history.
         // rememberStream stores both user and assistant messages with ACID guarantees.
-        // 
+        //
         // Tool approval flow may still need message updates for tool state changes:
         if (isToolApprovalFlow) {
           for (const finishedMsg of finishedMessages) {
@@ -473,11 +484,10 @@ export async function POST(request: Request) {
         }
         // Normal flow: rememberStream handles all message storage
       },
-      onError: () => "Oops, an error occurred!",
+      originalMessages: isToolApprovalFlow ? uiMessages : undefined,
     });
 
     return createUIMessageStreamResponse({
-      stream,
       async consumeSseStream({ stream: sseStream }) {
         if (!process.env.REDIS_URL) {
           return;
@@ -486,16 +496,17 @@ export async function POST(request: Request) {
           const streamContext = getStreamContext();
           if (streamContext) {
             const streamId = generateId();
-            await createStreamId({ streamId, chatId: id });
+            await createStreamId({ chatId: id, streamId });
             await streamContext.createNewResumableStream(
               streamId,
               () => sseStream
             );
           }
-        } catch (_) {
+        } catch {
           // ignore redis errors
         }
       },
+      stream,
     });
   } catch (error) {
     const vercelId = request.headers.get("x-vercel-id");

@@ -28,6 +28,9 @@ const EXCLUDE = [
   ".next",
   ".env.local",
   "tsconfig.tsbuildinfo",
+  "coverage",
+  "test-results",
+  "playwright-report",
 ];
 
 /**
@@ -67,6 +70,7 @@ function removeDir(dir) {
 
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
+    if (EXCLUDE.includes(entry.name)) continue;
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       removeDir(fullPath);
@@ -74,7 +78,7 @@ function removeDir(dir) {
       fs.unlinkSync(fullPath);
     }
   }
-  fs.rmdirSync(dir);
+  if (fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
 }
 
 /**
@@ -102,11 +106,36 @@ function sync() {
   // Copy files
   copyDir(SOURCE, DEST);
 
+  const manifestPath = path.join(DEST, "package.json");
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  manifest.dependencies["@cortexmemory/sdk"] = "file:../../../..";
+  manifest.dependencies["@cortexmemory/vercel-ai-provider"] = "file:../../../vercel-ai-provider";
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
+
+  // Keep standalone source installs reproducible after moving the template.
+  const sourceLock = path.join(SOURCE, "package-lock.json");
+  if (fs.existsSync(sourceLock)) {
+    const lock = JSON.parse(fs.readFileSync(sourceLock, "utf8"));
+    const rebase = (relativePath) =>
+      path.relative(DEST, path.resolve(SOURCE, relativePath)).split(path.sep).join("/");
+    lock.packages = Object.fromEntries(
+      Object.entries(lock.packages).map(([key, value]) => [
+        key && !key.startsWith("node_modules/") ? rebase(key) : key,
+        value.link ? { ...value, resolved: rebase(value.resolved) } : value,
+      ]),
+    );
+    lock.packages[""].dependencies = manifest.dependencies;
+    lock.packages[""].devDependencies = manifest.devDependencies;
+    lock.packages[""].engines = manifest.engines;
+    fs.writeFileSync(path.join(DEST, "package-lock.json"), JSON.stringify(lock, null, 2) + "\n");
+  }
+
   // Count files copied
   let fileCount = 0;
   function countFiles(dir) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
+      if (EXCLUDE.includes(entry.name)) continue;
       if (entry.isDirectory()) {
         countFiles(path.join(dir, entry.name));
       } else {

@@ -32,15 +32,6 @@ async function geocodeCity(
 export const getWeather = tool({
   description:
     "Get the current weather at a location. You can provide either coordinates or a city name.",
-  inputSchema: z.object({
-    latitude: z.number().optional(),
-    longitude: z.number().optional(),
-    city: z
-      .string()
-      .describe("City name (e.g., 'San Francisco', 'New York', 'London')")
-      .optional(),
-  }),
-  needsApproval: true,
   execute: async (input) => {
     let latitude: number;
     let longitude: number;
@@ -76,4 +67,13 @@ export const getWeather = tool({
 
     return weatherData;
   },
+  inputSchema: z.object({
+    city: z
+      .string()
+      .describe("City name (e.g., 'San Francisco', 'New York', 'London')")
+      .optional(),
+    latitude: z.number().optional(),
+    longitude: z.number().optional(),
+  }),
+  needsApproval: true,
 });

@@ -38,12 +38,12 @@ export async function POST(request: Request) {
     await updateChatVisibilityById({ chatId, visibility });
 
     return Response.json({
-      success: true,
-      visibility,
       shareUrl:
         visibility === "public"
           ? `${process.env.NEXT_PUBLIC_APP_URL || ""}/share/${chatId}`
           : null,
+      success: true,
+      visibility,
     });
   } catch (error) {
     console.error("Error updating chat visibility:", error);
@@ -67,7 +67,7 @@ export async function GET(request: Request) {
 
   return Response.json({
     chatId: chat.id,
-    visibility: chat.visibility,
     isPublic: chat.visibility === "public",
+    visibility: chat.visibility,
   });
 }

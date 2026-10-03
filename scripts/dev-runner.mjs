@@ -39,7 +39,9 @@ const explicitMode = args.includes("--local")
 
 // Detect available configurations
 const hasLocalConfig = Boolean(
-  process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT,
+  process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT ||
+    process.env.CONVEX_URL?.includes("localhost") ||
+    process.env.CONVEX_URL?.includes("127.0.0.1"),
 );
 const hasCloudConfig = Boolean(
   process.env.CLOUD_CONVEX_URL ||
@@ -58,7 +60,9 @@ function startConvexDev(mode, useLocal) {
     // Configure deployment URL based on mode
     let deploymentUrl = null;
     if (useLocal) {
-      deploymentUrl = process.env.LOCAL_CONVEX_URL || "http://127.0.0.1:3210";
+      deploymentUrl = process.env.LOCAL_CONVEX_URL ||
+      (hasLocalConfig ? process.env.CONVEX_URL : undefined) ||
+      "http://127.0.0.1:3210";
       convexArgs.push("--url", deploymentUrl);
     } else {
       // Cloud mode - will use CONVEX_DEPLOYMENT from env
@@ -109,7 +113,9 @@ function openDashboard(mode, useLocal) {
     const dashboardArgs = ["dashboard"];
     if (useLocal) {
       const deploymentUrl =
-        process.env.LOCAL_CONVEX_URL || "http://127.0.0.1:3210";
+        process.env.LOCAL_CONVEX_URL ||
+      (hasLocalConfig ? process.env.CONVEX_URL : undefined) ||
+      "http://127.0.0.1:3210";
       dashboardArgs.push("--url", deploymentUrl);
     } else {
       dashboardArgs.push("--prod");
@@ -208,7 +214,9 @@ async function main() {
   // Set up environment variables for SDK and tests
   if (useLocal) {
     process.env.CONVEX_URL =
-      process.env.LOCAL_CONVEX_URL || "http://127.0.0.1:3210";
+      process.env.LOCAL_CONVEX_URL ||
+      (hasLocalConfig ? process.env.CONVEX_URL : undefined) ||
+      "http://127.0.0.1:3210";
     process.env.CONVEX_DEPLOYMENT = process.env.LOCAL_CONVEX_DEPLOYMENT;
   } else {
     process.env.CONVEX_URL =
@@ -247,7 +255,9 @@ async function main() {
     const watchArgs = ["dev"];
     if (useLocal) {
       const deploymentUrl =
-        process.env.LOCAL_CONVEX_URL || "http://127.0.0.1:3210";
+        process.env.LOCAL_CONVEX_URL ||
+      (hasLocalConfig ? process.env.CONVEX_URL : undefined) ||
+      "http://127.0.0.1:3210";
       watchArgs.push("--url", deploymentUrl);
     }
 

@@ -173,7 +173,7 @@ export async function copyTemplate(
     });
   } catch (error) {
     console.error(pc.red(`   fs.copy error: ${error}`));
-    throw new Error(`fs.copy failed: ${error}`);
+    throw new Error(`fs.copy failed: ${error}`, { cause: error });
   }
 
   // Verify key files were copied (template-specific validation)
@@ -207,6 +207,14 @@ export async function copyTemplate(
       console.log(
         pc.dim(`   Using Convex ${convexVersion} (from SDK metadata)`),
       );
+    }
+
+    // Source templates link local packages; generated apps use the published SDK.
+    if (packageJson.dependencies?.["@cortexmemory/sdk"]?.startsWith("file:")) {
+      const sdkPath = getSDKPath();
+      if (!sdkPath) throw new Error("Could not locate SDK package metadata");
+      const sdkPackage = await fs.readJson(path.join(sdkPath, "package.json"));
+      packageJson.dependencies["@cortexmemory/sdk"] = `^${sdkPackage.version}`;
     }
 
     // Write back with proper formatting

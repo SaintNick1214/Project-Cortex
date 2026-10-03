@@ -3,12 +3,12 @@ import type { ArtifactKind } from "@/components/artifact";
 import {
   deleteDocumentsByIdAfterTimestamp,
   getDocumentById,
+  getDocumentsByConversationId,
   getDocumentsById,
   getDocumentVersion,
-  getDocumentsByConversationId,
+  redoDocumentChange,
   saveDocument,
   undoDocumentChange,
-  redoDocumentChange,
 } from "@/lib/db/queries";
 import { ChatSDKError } from "@/lib/errors";
 
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     const documents = await getDocumentsByConversationId({ conversationId });
     // Filter to only documents owned by the user
     const userDocuments = documents.filter(
-      (doc) => doc.userId === session.user!.id
+      (doc) => doc.userId === session.user?.id
     );
     return Response.json(userDocuments, { status: 200 });
   }
@@ -45,7 +45,7 @@ export async function GET(request: Request) {
   if (version) {
     const document = await getDocumentVersion({
       id,
-      version: parseInt(version, 10),
+      version: Number.parseInt(version, 10),
     });
 
     if (!document) {
@@ -144,13 +144,13 @@ export async function POST(request: Request) {
   }
 
   const document = await saveDocument({
-    id,
     content,
-    title,
-    kind,
-    userId: session.user.id,
     conversationId,
+    id,
+    kind,
     messageId,
+    title,
+    userId: session.user.id,
   });
 
   return Response.json(document, { status: 200 });

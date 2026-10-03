@@ -112,7 +112,7 @@ export function createCortexMemory(
       logger.debug(`Wrapping model: ${underlyingModel.modelId}`);
 
       // Create memory-augmented provider
-      return new CortexMemoryProvider(underlyingModel, config);
+      return new CortexMemoryProvider(underlyingModel, config, cortex);
     },
     {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -243,6 +243,8 @@ export function createCortexMemory(
           throw error;
         }
       },
+
+      close: async (): Promise<void> => { cortex.close(); },
 
       getConfig: (): Readonly<CortexMemoryConfig> => {
         return Object.freeze({ ...config });
@@ -426,6 +428,8 @@ export async function createCortexMemoryAsync(
           throw error;
         }
       },
+
+      close: async (): Promise<void> => { cortex.close(); },
 
       getConfig: (): Readonly<CortexMemoryConfig> => {
         return Object.freeze({ ...config });

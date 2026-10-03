@@ -34,10 +34,10 @@ function createMockClient(): MockConvexClient {
 
 function createMockGraphAdapter(): MockGraphAdapter {
   return {
-    createNode: jest.fn<any>().mockResolvedValue(undefined),
-    updateNode: jest.fn<any>().mockResolvedValue(undefined),
-    deleteNode: jest.fn<any>().mockResolvedValue(undefined),
-    createEdge: jest.fn<any>().mockResolvedValue(undefined),
+    createNode: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
+    updateNode: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
+    deleteNode: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
+    createEdge: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
   };
 }
 

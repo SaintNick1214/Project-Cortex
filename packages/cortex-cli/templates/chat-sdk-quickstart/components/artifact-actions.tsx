@@ -37,11 +37,11 @@ function PureArtifactActions({
 
   const actionContext: ArtifactActionContext = {
     content: artifact.content,
-    handleVersionChange,
     currentVersionIndex,
+    handleVersionChange,
     isCurrentVersion,
-    mode,
     metadata,
+    mode,
     setMetadata,
   };
 
@@ -67,7 +67,7 @@ function PureArtifactActions({
 
                 try {
                   await Promise.resolve(action.onClick(actionContext));
-                } catch (_error) {
+                } catch {
                   toast.error("Failed to execute action");
                 } finally {
                   setIsLoading(false);

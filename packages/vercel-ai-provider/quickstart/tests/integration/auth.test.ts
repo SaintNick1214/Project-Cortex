@@ -316,7 +316,7 @@ describe("Auth API Routes", () => {
       const { status, data } = await parseResponse(response);
 
       expect(status).toBe(400);
-      expect(data.error).toBe("Username is required");
+      expect(data.error).toBe("Username and password are required");
     });
 
     it("should return 400 if password is missing", async () => {
@@ -325,7 +325,7 @@ describe("Auth API Routes", () => {
       const { status, data } = await parseResponse(response);
 
       expect(status).toBe(400);
-      expect(data.error).toBe("Password is required");
+      expect(data.error).toBe("Username and password are required");
     });
 
     it("should return 401 for non-existent user", async () => {

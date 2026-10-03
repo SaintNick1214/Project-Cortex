@@ -28,7 +28,6 @@ jobs:
   #   - CodeQL Analysis
   #   - Dependency Vulnerability Scan
   #   - Secret Scanning
-  #   - Python Security Scan
   #   - API Security Scan
   #   - Commit Signature Verification (blocks unsigned commits)
   #
@@ -91,8 +90,6 @@ jobs:
       vercel-ai-provider-new-version: ${{ steps.check-vercel-ai-provider.outputs.version }}
       cli-version-changed: ${{ steps.check-cli.outputs.changed }}
       cli-new-version: ${{ steps.check-cli.outputs.version }}
-      python-version-changed: ${{ steps.check-python.outputs.changed }}
-      python-new-version: ${{ steps.check-python.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -100,11 +97,6 @@ jobs:
           # Must specify ref for workflow_run trigger - github.sha is not the triggering commit
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 2
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
 
       - name: Check SDK version
         id: check-sdk
@@ -169,29 +161,6 @@ jobs:
             echo "⏭️  CLI already published at $CURRENT_VERSION, skipping"
           fi
 
-      - name: Check Python SDK version
-        id: check-python
-        run: |
-          # Get current version from pyproject.toml
-          cd cortex-sdk-python
-          CURRENT_VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
-          echo "📦 Python SDK version: $CURRENT_VERSION"
-
-          # Get published version from PyPI (or 0.0.0 if not published yet)
-          pip install --upgrade pip > /dev/null 2>&1
-          PYPI_VERSION=$(pip index versions cortex-memory 2>/dev/null | grep "cortex-memory" | head -1 | sed 's/.*(\(.*\))/\1/' || echo "0.0.0")
-          echo "📚 PyPI version: $PYPI_VERSION"
-
-          # Compare versions (create tag if pyproject.toml > PyPI)
-          if [ "$CURRENT_VERSION" != "$PYPI_VERSION" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
-            echo "✅ New Python SDK version detected: $PYPI_VERSION → $CURRENT_VERSION"
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "⏭️  Python SDK already published at $CURRENT_VERSION, skipping"
-          fi
-
   publish-sdk:
     needs: check-version
     if: needs.check-version.outputs.sdk-version-changed == 'true'
@@ -209,7 +178,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
           # Note: Do NOT set registry-url - it creates .npmrc with token auth
           # that conflicts with OIDC trusted publishing
 
@@ -306,8 +275,11 @@ jobs:
           echo ""
 
   publish-vercel-ai-provider:
-    needs: check-version
-    if: needs.check-version.outputs.vercel-ai-provider-version-changed == 'true'
+    needs: [check-version, publish-sdk]
+    if: >-
+      always() && needs.check-version.result == 'success' &&
+      needs.check-version.outputs.vercel-ai-provider-version-changed == 'true' &&
+      (needs.publish-sdk.result == 'success' || needs.publish-sdk.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -322,7 +294,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Ensure npm 11.5.1+ for trusted publishing
         run: |
@@ -408,8 +380,8 @@ jobs:
           \`\`\`
 
           ### Documentation
-          - [Getting Started](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation/08-integrations/vercel-ai-sdk/getting-started.md)
-          - [API Reference](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation/08-integrations/vercel-ai-sdk/api-reference.md)
+          - [Getting Started](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/getting-started)
+          - [API Reference](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/api-reference)
           - [Examples](https://github.com/SaintNick1214/Project-Cortex/tree/main/packages/vercel-ai-provider/examples)"
 
       - name: Verify npm publish
@@ -442,8 +414,12 @@ jobs:
           echo ""
 
   publish-cli:
-    needs: check-version
-    if: needs.check-version.outputs.cli-version-changed == 'true'
+    needs: [check-version, publish-sdk, publish-vercel-ai-provider]
+    if: >-
+      always() && needs.check-version.result == 'success' &&
+      needs.check-version.outputs.cli-version-changed == 'true' &&
+      (needs.publish-sdk.result == 'success' || needs.publish-sdk.result == 'skipped') &&
+      (needs.publish-vercel-ai-provider.result == 'success' || needs.publish-vercel-ai-provider.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -456,7 +432,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Ensure npm 11.5.1+ for trusted publishing
         run: |
@@ -721,68 +697,3 @@ jobs:
             -f contents="$ENCODED_CONTENT"
 
           echo "✅ Pushed formula update to homebrew-tap (verified commit)"
-
-  publish-python:
-    needs: check-version
-    if: needs.check-version.outputs.python-version-changed == 'true'
-    runs-on: ubuntu-latest
-    environment: pypi # Protected environment (configure in GitHub settings)
-    permissions:
-      contents: write # Required to create tags
-      id-token: write # Required for trusted publishing to PyPI
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Install build dependencies
-        run: |
-          cd cortex-sdk-python
-          python -m pip install --upgrade pip
-          pip install build twine
-
-      - name: Build package
-        run: |
-          cd cortex-sdk-python
-          python -m build
-
-      - name: Check distribution
-        run: |
-          cd cortex-sdk-python
-          twine check dist/*
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: cortex-sdk-python/dist/
-          skip-existing: true
-          verbose: true
-
-      - name: Create Git Tag
-        run: |
-          VERSION=${{ needs.check-version.outputs.python-new-version }}
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "py-v$VERSION" -m "Release Python SDK v$VERSION"
-          git push origin "py-v$VERSION"
-
-      - name: Post-publish summary
-        run: |
-          VERSION=${{ needs.check-version.outputs.python-new-version }}
-          echo "════════════════════════════════════════════════════════════"
-          echo "  ✅ PYTHON SDK PUBLISHED!"
-          echo "════════════════════════════════════════════════════════════"
-          echo ""
-          echo "📦 Package: cortex-memory@$VERSION"
-          echo "📚 PyPI: https://pypi.org/project/cortex-memory/"
-          echo "🏷️  Tag: py-v$VERSION"
-          echo ""
-          echo "🚀 Try it: pip install cortex-memory"
-          echo ""

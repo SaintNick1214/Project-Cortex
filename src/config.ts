@@ -14,7 +14,7 @@ import type { RecallLimits } from "./types";
 /**
  * Default models by usage area.
  *
- * Based on benchmarks from Documentation/core-features/fact-extraction.mdx:
+ * Based on benchmarks from https://docs.cortexmemory.dev/core-features/fact-extraction:
  * - gpt-4o-2024-11-20: Best balance (13 facts, 11.6s latency)
  * - gpt-4o-mini: Budget option (11 facts, 16s latency)
  * - gpt-5-mini: Best quality but 5x latency cost
