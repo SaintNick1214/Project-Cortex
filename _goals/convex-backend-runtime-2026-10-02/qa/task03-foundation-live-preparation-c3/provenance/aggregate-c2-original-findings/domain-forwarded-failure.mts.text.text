@@ -1,0 +1,13 @@
+import {memoryFixture,registeredHandler} from '../../../tests/unit/runtimeMemory/fixture.ts';
+import {remember,recall} from '../../../convex-dev/runtimeMemory.ts';
+import {ConvexError} from 'convex/values';
+import {getFunctionName} from 'convex/server';
+import fs from 'node:fs';
+const rows=[];
+for(const [name,registration] of [['remember',remember],['recall',recall]] as const) for(const location of ['runtimeAuth:authorize','runtimeMemory:checkAuthority']) {
+ const f=memoryFixture(); const original=f.actionCtx.runQuery.bind(f.actionCtx);let reached=false;
+ f.actionCtx.runQuery=async(ref,input)=>{if(getFunctionName(ref)===location){reached=true;throw new ConvexError({code:'UNKNOWN_BACKEND_FAILURE',message:'PRIVATE_DIAGNOSTIC_MARKER',privateControl:'PRIVATE_CONTROL_MARKER'});}return await original(ref,input);};
+ let result;try{await registeredHandler(registration)(f.actionCtx as never,{tenantId:'tenant-a',memorySpaceId:'space-a',requestId:'aggregate-transport',text:'owned input'});}catch(e){result={data:(e as {data:unknown}).data,message:(e as Error).message};}
+ rows.push({name,location,reached,result,writes:f.db.writes,sourceCount:f.db.table('runtimeMemorySources').length});
+}
+fs.writeFileSync('_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-aggregate-c2-review/domain-forwarded-failure.json',JSON.stringify(rows,null,2));console.log(JSON.stringify(rows,null,2));
