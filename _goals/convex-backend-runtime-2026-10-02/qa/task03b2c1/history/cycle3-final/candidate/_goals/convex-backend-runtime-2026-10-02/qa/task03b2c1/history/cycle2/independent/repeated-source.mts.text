@@ -1,0 +1,26 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { fixture } from '/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/fixture.ts';
+const results: any[] = [];
+for (const mutation of ['none', 'anchor', 'content', 'version'] as const) {
+ const f = fixture(); const source = f.conversation({ version: 1, messages: [
+  { id: 'message-a', role: 'user', content: 'source one', timestamp: 1 },
+  { id: 'message-b', role: 'user', content: 'source two', timestamp: 2 }
+ ] });
+ f.row({ artifactId: 'first', conversationRef: { conversationId: 'conversation-a', messageId: 'message-a' } });
+ f.row({ artifactId: 'second', conversationRef: { conversationId: 'conversation-a', messageId: 'message-b' } });
+ let sourceQueries = 0; let injections = 0;
+ f.db.hook = (event: any) => { if (event.action === 'query' && event.table === 'conversations' && ++sourceQueries === 2 && mutation !== 'none') {
+  injections++;
+  if (mutation === 'anchor') source.messages[0].id = 'replacement';
+  if (mutation === 'content') source.messages[0].content = 'replaced first source';
+  if (mutation === 'version') source.version = 2;
+ } };
+ let outcome: string, output: any, error: any;
+ try { output = await f.invoke('list', {}); outcome = 'resolved'; } catch (caught: any) { outcome = 'rejected'; error = caught.data ?? String(caught); }
+ assert.equal(sourceQueries, 2); assert.equal(injections, mutation === 'none' ? 0 : 1);
+ const matched = outcome === (mutation === 'none' ? 'resolved' : 'rejected');
+ results.push({ mutation, matched, outcome, error, output, sourceQueries, injections, attempts: f.db.attempts, sourceRow: source, reads: f.db.reads });
+}
+fs.writeFileSync('/tmp/task03b2c1-review2-3it_0vsh/repeated-source-results.json', JSON.stringify(results, null, 2)+'\n');
+for (const { mutation, matched, outcome, sourceQueries, injections, attempts } of results) console.log(JSON.stringify({ mutation, matched, outcome, sourceQueries, injections, attempts: attempts.length }));

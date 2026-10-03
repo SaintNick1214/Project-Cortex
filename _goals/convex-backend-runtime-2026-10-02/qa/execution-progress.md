@@ -248,3 +248,27 @@ unchanged; source repair and fresh independent gate remain pending. Exact additi
 proof, source hash and inert replay source are in task03-metadata-native-errors/.
 Both artifact third and registry second judges report preliminary unexpected-error
 classification concerns; FINAL reports are awaited, no repair or acceptance is inferred.
+
+
+2026-10-03T12:51:21.703298+00:00: artifact third FINALREJECT3.0 confirms8
+malformed initial-READ/control diagnostics commit safeReceipt effects and6 unknown
+failures becomeFORBIDDEN. All218/nativechecks pass;625protectedfiles unchanged.
+Parent verified fullreport/raw79records and preserved703 exactcandidate/judge records
+in task03b2c1/history/cycle3-final, manifest5fc71e383ac3b3ea25a9cd9831213d8e135cf3ce635417a822fad4763789b516.
+The max3cycle limit is exhausted; concrete additional-cycle proposal is recorded,
+no fourthartifactrepair begins. MFextra-cyclequestion is separatelypending.
+
+Registry second FINALREJECT3.2 confirms88getterescapes,9private-code structurederrors
+and3hiddenextraREAD faults adopted into successfulwrites; all480/4suites/backend
+checks and originalF1–F4 repairs pass. Parent verifies67rawrecords andpreserves970
+exactcandidate/judge records in both main/isolated history/cycle2-final, manifest
+a145d0c03c61ddfce0915ec330a276d0f2a06e397a7ac1d12fbc96c9eadebbf2.
+Third and last boundedoriginal46repair is authorized/active, preserving all480
+outcomes/schema13/450+970archives. No sourceintegration beforefreshFINALPASS.
+
+Liveharness second FINALoffline freeze511public/214private hashes verified; fresh
+second offlinejudge active. All41livecases UNEXECUTED. Acceptedmetadata/sharedreader
+ambiguityfollowup activeisolated; only6lookups and narrowlyjustified originaltest
+fixture/injection/message corrections afterliteralfailedreceipts. Pureauthority
+policy/resolver/internalregistrations remain frozen. Service staysheld until that
+fix qualifies and acceptedfixturedependency refresh receivesaffectedfreshreview.

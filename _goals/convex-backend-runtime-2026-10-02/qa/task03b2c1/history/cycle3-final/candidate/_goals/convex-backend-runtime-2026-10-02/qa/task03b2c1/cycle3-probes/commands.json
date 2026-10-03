@@ -1,0 +1,140 @@
+[
+  {
+    "name": "probes",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T12:18:51.590928+00:00",
+    "finishedAtUtc": "2026-10-03T12:18:53.493826+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/probes.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/probes.stderr",
+    "expectationQualification": "unchanged original probe expectations; inspect actual result fields, not process exit alone"
+  },
+  {
+    "name": "adversarial",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/adversarial.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T12:18:53.494471+00:00",
+    "finishedAtUtc": "2026-10-03T12:18:55.392291+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/adversarial.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/adversarial.stderr",
+    "expectationQualification": "unchanged original probe expectations; inspect actual result fields, not process exit alone"
+  },
+  {
+    "name": "repeated-source",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/repeated-source.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T12:18:55.392671+00:00",
+    "finishedAtUtc": "2026-10-03T12:18:57.090557+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/repeated-source.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/repeated-source.stderr",
+    "expectationQualification": "unchanged original probe expectations; inspect actual result fields, not process exit alone"
+  },
+  {
+    "name": "additional",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/additional.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T12:18:57.090943+00:00",
+    "finishedAtUtc": "2026-10-03T12:18:58.682429+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/additional.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/additional.stderr",
+    "expectationQualification": "unchanged original probe expectations; inspect actual result fields, not process exit alone"
+  },
+  {
+    "name": "write-error-output",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T12:18:58.682765+00:00",
+    "finishedAtUtc": "2026-10-03T12:19:00.354702+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output.stderr",
+    "expectationQualification": "unchanged original probe expectations; inspect actual result fields, not process exit alone"
+  },
+  {
+    "name": "write-error-output-controls",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output-controls.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T12:19:00.355316+00:00",
+    "finishedAtUtc": "2026-10-03T12:19:02.030452+00:00",
+    "exitCode": 1,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output-controls.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output-controls.stderr",
+    "expectationQualification": "original defect-finding expectedSessionId assertion should fail after redaction; failure is retained, not rewritten as PASS"
+  }
+]

@@ -1,0 +1,181 @@
+{
+  "cases": 36,
+  "matched": 21,
+  "failedExpectations": 14,
+  "unreached": 1,
+  "processExitQualification": "exploratory collector exit0 records failures; this is not a PASS",
+  "failed": [
+    {
+      "name": "create independent initial READ identity code-private",
+      "identityCalls": 2,
+      "injections": 1,
+      "output": {
+        "success": true,
+        "artifactId": "fresh"
+      },
+      "attempts": 1,
+      "committed": 1
+    },
+    {
+      "name": "create independent initial READ identity auth-extra",
+      "identityCalls": 2,
+      "injections": 1,
+      "output": {
+        "success": true,
+        "artifactId": "fresh"
+      },
+      "attempts": 1,
+      "committed": 1
+    },
+    {
+      "name": "update independent initial READ identity code-private",
+      "identityCalls": 2,
+      "injections": 1,
+      "output": {
+        "success": true,
+        "artifactId": "artifact-a"
+      },
+      "attempts": 1,
+      "committed": 1
+    },
+    {
+      "name": "update independent initial READ identity auth-extra",
+      "identityCalls": 2,
+      "injections": 1,
+      "output": {
+        "success": true,
+        "artifactId": "artifact-a"
+      },
+      "attempts": 1,
+      "committed": 1
+    },
+    {
+      "name": "get initial authority scope reader 1 code-private",
+      "scopeCalls": 1,
+      "injections": 1,
+      "error": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "attempts": 0,
+      "committed": 0
+    },
+    {
+      "name": "get initial authority scope reader 1 auth-extra",
+      "scopeCalls": 1,
+      "injections": 1,
+      "error": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "attempts": 0,
+      "committed": 0
+    },
+    {
+      "name": "create initial authority scope reader 1 code-private",
+      "scopeCalls": 1,
+      "injections": 1,
+      "error": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "attempts": 0,
+      "committed": 0
+    },
+    {
+      "name": "create initial authority scope reader 1 auth-extra",
+      "scopeCalls": 1,
+      "injections": 1,
+      "error": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "attempts": 0,
+      "committed": 0
+    },
+    {
+      "name": "create initial authority scope reader 3 code-private",
+      "scopeCalls": 11,
+      "injections": 1,
+      "output": {
+        "success": true,
+        "artifactId": "fresh"
+      },
+      "attempts": 1,
+      "committed": 1
+    },
+    {
+      "name": "create initial authority scope reader 3 auth-extra",
+      "scopeCalls": 11,
+      "injections": 1,
+      "output": {
+        "success": true,
+        "artifactId": "fresh"
+      },
+      "attempts": 1,
+      "committed": 1
+    },
+    {
+      "name": "update initial authority scope reader 1 code-private",
+      "scopeCalls": 1,
+      "injections": 1,
+      "error": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "attempts": 0,
+      "committed": 0
+    },
+    {
+      "name": "update initial authority scope reader 1 auth-extra",
+      "scopeCalls": 1,
+      "injections": 1,
+      "error": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "attempts": 0,
+      "committed": 0
+    },
+    {
+      "name": "update initial authority scope reader 3 code-private",
+      "scopeCalls": 9,
+      "injections": 1,
+      "output": {
+        "success": true,
+        "artifactId": "artifact-a"
+      },
+      "attempts": 1,
+      "committed": 1
+    },
+    {
+      "name": "update initial authority scope reader 3 auth-extra",
+      "scopeCalls": 9,
+      "injections": 1,
+      "output": {
+        "success": true,
+        "artifactId": "artifact-a"
+      },
+      "attempts": 1,
+      "committed": 1
+    }
+  ]
+}

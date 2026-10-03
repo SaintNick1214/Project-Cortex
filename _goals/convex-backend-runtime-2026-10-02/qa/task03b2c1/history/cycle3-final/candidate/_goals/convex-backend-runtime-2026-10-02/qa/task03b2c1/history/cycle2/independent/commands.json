@@ -1,0 +1,154 @@
+[
+  {
+    "name": "backend-types",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "convex-dev/tsconfig.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:25.888766+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:34.946853+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/backend-types.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/backend-types.stderr"
+  },
+  {
+    "name": "scoped-types",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/tsconfig.scoped.json",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:25.889115+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:29.629955+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/scoped-types.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/scoped-types.stderr"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/artifacts.ts",
+      "convex-dev/runtimeArtifactAuth.ts",
+      "tests/unit/runtimeArtifactAuth",
+      "--max-warnings=0"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:25.889411+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:34.445471+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/lint.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/lint.stderr"
+  },
+  {
+    "name": "root-types",
+    "command": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:29.630106+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:44.021882+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/root-types.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/root-types.stderr"
+  },
+  {
+    "name": "baseline-types",
+    "command": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/baseline-types.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:34.445597+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:48.513273+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/baseline-types.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/baseline-types.stderr"
+  },
+  {
+    "name": "discovery",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/jest.scoped.cjs",
+      "--listTests",
+      "--runInBand",
+      "--cacheDirectory",
+      "/tmp/task03b2c1-review2-3it_0vsh/jest-cache"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:34.946988+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:35.224800+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/discovery.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/discovery.stderr"
+  },
+  {
+    "name": "native-tests",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/jest.scoped.cjs",
+      "--runInBand",
+      "--cacheDirectory",
+      "/tmp/task03b2c1-review2-3it_0vsh/jest-cache",
+      "--json",
+      "--outputFile",
+      "/tmp/task03b2c1-review2-3it_0vsh/native-tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:35.224915+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:42.261367+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/native-tests.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/native-tests.stderr"
+  },
+  {
+    "name": "inventory",
+    "command": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/inventory.mjs",
+      "/tmp/task03b2c1-review2-3it_0vsh/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:42.261480+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:42.619802+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/inventory.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/inventory.stderr"
+  },
+  {
+    "name": "whitespace",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:58:42.619916+00:00",
+    "finishedAtUtc": "2026-10-03T11:58:42.628237+00:00",
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2c1-review2-3it_0vsh/whitespace.stdout",
+    "stderr": "/tmp/task03b2c1-review2-3it_0vsh/whitespace.stderr"
+  }
+]

@@ -1,0 +1,25 @@
+from pathlib import Path
+import subprocess,datetime,json,os
+root=Path.cwd();qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1';out=qa/'checks';out.mkdir(exist_ok=True)
+env=os.environ.copy();env['npm_config_cache']='/workspace/Project-Cortex/work/backend-runtime/npm12-cache'
+wrapper=['npx','--yes','--package=npm@12.2.0','--','npm']
+checks=[
+ ('tools',wrapper+['exec','--','node','-e','console.log(JSON.stringify({node:process.version,npmExecutable:process.env.npm_execpath,npm:require(require("node:path").resolve(require("node:path").dirname(process.env.npm_execpath),"../package.json")).version,outerLauncherUserAgent:process.env.npm_config_user_agent,typescript:require("typescript/package.json").version,convex:require("convex/package.json").version,jest:require("jest/package.json").version}))']),
+ ('backend-types',wrapper+['exec','--','tsc','--project','convex-dev/tsconfig.json','--noEmit','--pretty','false']),
+ ('scoped-types',wrapper+['exec','--','tsc','--project',str(qa.relative_to(root)/'tsconfig.scoped.json'),'--noEmit','--pretty','false']),
+ ('lint',wrapper+['exec','--','eslint','convex-dev/artifacts.ts','convex-dev/runtimeArtifactAuth.ts','tests/unit/runtimeArtifactAuth','--max-warnings=0']),
+ ('discovery',wrapper+['exec','--','node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',str(qa.relative_to(root)/'jest.scoped.cjs'),'--listTests','--runInBand']),
+ ('unit',wrapper+['exec','--','node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',str(qa.relative_to(root)/'jest.scoped.cjs'),'--runInBand','--json','--outputFile',str(qa/'tests-final.json')]),
+ ('inventory',wrapper+['exec','--','node',str(qa.relative_to(root)/'inventory.mjs'),str(qa/'catalog')]),
+ ('root-types',wrapper+['exec','--','tsc','--noEmit','--pretty','false']),
+ ('baseline-root-types',wrapper+['exec','--','node',str(qa.relative_to(root)/'baseline-types.mjs')]),
+ ('whitespace',['git','diff','--check']),
+]
+records=[]
+for name,command in checks:
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ result=subprocess.run(command,cwd=root,env=env,capture_output=True,text=True)
+ (out/(name+'.stdout')).write_text(result.stdout);(out/(name+'.stderr')).write_text(result.stderr)
+ records.append(dict(name=name,command=command,cwd=str(root),startedAtUtc=start,finishedAtUtc=datetime.datetime.now(datetime.timezone.utc).isoformat(),exitCode=result.returncode,stdout=str((out/(name+'.stdout')).relative_to(root)),stderr=str((out/(name+'.stderr')).relative_to(root))))
+ (qa/'commands.json').write_text(json.dumps(records,indent=2)+'\n')
+ print(name,result.returncode,flush=True)

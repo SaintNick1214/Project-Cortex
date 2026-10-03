@@ -1,0 +1,189 @@
+{
+  "auditedAtUtc": "2026-10-03T12:20:34.734Z",
+  "sourceSha256": "15ebec7f79d4917d1db4a075598c3e6c5a6690dafd584552c3afe62d38ed8c81",
+  "selected": 22,
+  "public": 21,
+  "internal": 1,
+  "rows": [
+    {
+      "name": "create",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "update",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "deleteArtifact",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "undo",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "UNDO_NOT_AVAILABLE"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "redo",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "REDO_NOT_AVAILABLE"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "setStreamingState",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "purgeVersions",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "KEEP_LATEST_MUST_BE_POSITIVE"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "purgeAll",
+      "nativeRegistration": "internalMutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "get",
+      "nativeRegistration": "query",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "getByConversation",
+      "nativeRegistration": "query",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "list",
+      "nativeRegistration": "query",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "count",
+      "nativeRegistration": "query",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "getVersion",
+      "nativeRegistration": "query",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "getHistory",
+      "nativeRegistration": "query",
+      "errorBoundary": true,
+      "directConvexErrorData": [],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "startStreaming",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "appendContent",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "pauseStreaming",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "resumeStreaming",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "cancelStreaming",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "finalizeStreaming",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "setStreamingError",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    },
+    {
+      "name": "retryFromError",
+      "nativeRegistration": "mutation",
+      "errorBoundary": true,
+      "directConvexErrorData": [
+        "ARTIFACT_IS_DELETED"
+      ],
+      "privateErrorFieldsAbsent": true
+    }
+  ],
+  "helperDisposition": "exact static accepted authority/input/capability error data only; unexpected runtime/codec/database diagnostics become BACKEND_OPERATION_FAILED with not_committed; no new READ or success downgrade",
+  "codec": "official Convex native payload codec errors are sanitized before effects; unchanged cycle2 native-value tests retained"
+}

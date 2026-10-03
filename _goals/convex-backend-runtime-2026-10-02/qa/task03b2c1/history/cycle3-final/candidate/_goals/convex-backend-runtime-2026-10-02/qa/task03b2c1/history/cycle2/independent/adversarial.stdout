@@ -1,0 +1,40 @@
+{"name":"create positive initial absent READ safe receipt","matched":true,"outcome":"resolved","context":{},"attempts":1}
+{"name":"create positive admitted READ payload","matched":true,"outcome":"resolved","context":{},"attempts":1}
+{"name":"create independently admitted READ revocation after effect","matched":true,"outcome":"rejected","code":"FORBIDDEN","context":{"injections":1},"attempts":1}
+{"name":"update independently admitted READ revocation after effect","matched":true,"outcome":"rejected","code":"FORBIDDEN","context":{"injections":1},"attempts":1}
+{"name":"earlier linked resource invalidation during later admission","matched":true,"outcome":"rejected","code":"FORBIDDEN","context":{"injections":1},"attempts":0}
+{"name":"earlier linked anchor invalidation during later admission","matched":true,"outcome":"rejected","code":"FORBIDDEN","context":{"injections":1},"attempts":0}
+{"name":"earlier linked state invalidation during later admission","matched":true,"outcome":"rejected","code":"FORBIDDEN","context":{"injections":1},"attempts":0}
+{"name":"earlier linked resource invalidation at measured final DB await","matched":false,"outcome":"resolved","context":{"finalAwait":67,"finalEvent":{"action":"query","table":"runtimeAuthTombstones"},"calls":67,"injections":1,"finalRead":{"table":"runtimeAuthTombstones","ids":[],"index":"by_resource","filters":[["tenantId","tenant-a"],["memorySpaceId",null],["resourceType","artifact"],["resourceId","second"]]},"qualification":"Synthetic mutable fixture. Cross-transaction external mutation cannot alter a real Convex transaction snapshot."},"attempts":0}
+{"name":"earlier linked anchor invalidation at measured final DB await","matched":false,"outcome":"resolved","context":{"finalAwait":67,"finalEvent":{"action":"query","table":"runtimeAuthTombstones"},"calls":67,"injections":1,"finalRead":{"table":"runtimeAuthTombstones","ids":[],"index":"by_resource","filters":[["tenantId","tenant-a"],["memorySpaceId",null],["resourceType","artifact"],["resourceId","second"]]},"qualification":"Synthetic mutable fixture. Cross-transaction external mutation cannot alter a real Convex transaction snapshot."},"attempts":0}
+{"name":"earlier linked state invalidation at measured final DB await","matched":false,"outcome":"resolved","context":{"finalAwait":67,"finalEvent":{"action":"query","table":"runtimeAuthTombstones"},"calls":67,"injections":1,"finalRead":{"table":"runtimeAuthTombstones","ids":[],"index":"by_resource","filters":[["tenantId","tenant-a"],["memorySpaceId",null],["resourceType","artifact"],["resourceId","second"]]},"qualification":"Synthetic mutable fixture. Cross-transaction external mutation cannot alter a real Convex transaction snapshot."},"attempts":0}
+{"name":"conversation deletedAt before private source hydrate","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{"hydrated":false,"expectedHydrated":false,"qualification":"Typed fresh owner seam, not current-schema live transcript evidence."},"attempts":0}
+{"name":"conversation tombstonedAt before private source hydrate","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{"hydrated":false,"expectedHydrated":false,"qualification":"Typed fresh owner seam, not current-schema live transcript evidence."},"attempts":0}
+{"name":"conversation isDeleted before private source hydrate","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{"hydrated":false,"expectedHydrated":false,"qualification":"Typed fresh owner seam, not current-schema live transcript evidence."},"attempts":0}
+{"name":"retained file history update","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history deleteArtifact","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history undo","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history redo","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history setStreamingState","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history purgeVersions","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history get","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history getByConversation","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history list","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history count","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history getVersion","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history getHistory","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history startStreaming","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history appendContent","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history pauseStreaming","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history resumeStreaming","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history cancelStreaming","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history finalizeStreaming","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history setStreamingError","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"retained file history retryFromError","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"operator whole batch file-current preflight","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"operator whole batch file-history preflight","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"operator whole batch linked preflight","matched":true,"outcome":"rejected","code":"CAPABILITY_NOT_READY","context":{},"attempts":0}
+{"name":"operator whole batch malformed preflight","matched":true,"outcome":"rejected","code":"INVALID_ARGUMENT","context":{},"attempts":0}
+{"name":"operator unlinked positive rows/control retention","matched":true,"outcome":"resolved","context":{},"attempts":4}
+{"name":"admin-only cannot get","matched":true,"outcome":"rejected","code":"FORBIDDEN","context":{},"attempts":0}
+{"name":"admin-only cannot update","matched":true,"outcome":"rejected","code":"FORBIDDEN","context":{},"attempts":0}

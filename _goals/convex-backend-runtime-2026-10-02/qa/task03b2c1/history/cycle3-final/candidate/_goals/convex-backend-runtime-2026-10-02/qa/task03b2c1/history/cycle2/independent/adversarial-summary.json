@@ -1,0 +1,117 @@
+{
+  "total": 40,
+  "matched": 37,
+  "failedExpectations": [
+    {
+      "name": "earlier linked resource invalidation at measured final DB await",
+      "outcome": "resolved",
+      "context": {
+        "finalAwait": 67,
+        "finalEvent": {
+          "action": "query",
+          "table": "runtimeAuthTombstones"
+        },
+        "calls": 67,
+        "injections": 1,
+        "finalRead": {
+          "table": "runtimeAuthTombstones",
+          "ids": [],
+          "index": "by_resource",
+          "filters": [
+            [
+              "tenantId",
+              "tenant-a"
+            ],
+            [
+              "memorySpaceId",
+              null
+            ],
+            [
+              "resourceType",
+              "artifact"
+            ],
+            [
+              "resourceId",
+              "second"
+            ]
+          ]
+        },
+        "qualification": "Synthetic mutable fixture. Cross-transaction external mutation cannot alter a real Convex transaction snapshot."
+      }
+    },
+    {
+      "name": "earlier linked anchor invalidation at measured final DB await",
+      "outcome": "resolved",
+      "context": {
+        "finalAwait": 67,
+        "finalEvent": {
+          "action": "query",
+          "table": "runtimeAuthTombstones"
+        },
+        "calls": 67,
+        "injections": 1,
+        "finalRead": {
+          "table": "runtimeAuthTombstones",
+          "ids": [],
+          "index": "by_resource",
+          "filters": [
+            [
+              "tenantId",
+              "tenant-a"
+            ],
+            [
+              "memorySpaceId",
+              null
+            ],
+            [
+              "resourceType",
+              "artifact"
+            ],
+            [
+              "resourceId",
+              "second"
+            ]
+          ]
+        },
+        "qualification": "Synthetic mutable fixture. Cross-transaction external mutation cannot alter a real Convex transaction snapshot."
+      }
+    },
+    {
+      "name": "earlier linked state invalidation at measured final DB await",
+      "outcome": "resolved",
+      "context": {
+        "finalAwait": 67,
+        "finalEvent": {
+          "action": "query",
+          "table": "runtimeAuthTombstones"
+        },
+        "calls": 67,
+        "injections": 1,
+        "finalRead": {
+          "table": "runtimeAuthTombstones",
+          "ids": [],
+          "index": "by_resource",
+          "filters": [
+            [
+              "tenantId",
+              "tenant-a"
+            ],
+            [
+              "memorySpaceId",
+              null
+            ],
+            [
+              "resourceType",
+              "artifact"
+            ],
+            [
+              "resourceId",
+              "second"
+            ]
+          ]
+        },
+        "qualification": "Synthetic mutable fixture. Cross-transaction external mutation cannot alter a real Convex transaction snapshot."
+      }
+    }
+  ]
+}

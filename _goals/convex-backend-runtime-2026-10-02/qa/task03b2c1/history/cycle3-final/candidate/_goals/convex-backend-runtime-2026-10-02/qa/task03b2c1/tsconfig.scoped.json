@@ -1,0 +1,6 @@
+{
+  "extends": "../../../../convex-dev/tsconfig.json",
+  "compilerOptions": { "target": "ES2021", "lib": ["ES2021", "dom"], "types": ["node", "jest"] },
+  "include": ["../../../../convex-dev/artifacts.ts", "../../../../convex-dev/runtimeArtifactAuth.ts", "../../../../tests/unit/runtimeArtifactAuth/**/*.ts"],
+  "exclude": []
+}

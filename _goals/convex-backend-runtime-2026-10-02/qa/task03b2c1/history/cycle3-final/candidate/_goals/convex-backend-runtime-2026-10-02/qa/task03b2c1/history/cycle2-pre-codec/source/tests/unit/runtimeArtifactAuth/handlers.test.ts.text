@@ -1,0 +1,384 @@
+import { describe, expect, test, jest } from "@jest/globals";
+import { fixture, happyCase, native, selected } from "./fixture";
+
+for (const name of selected) {
+  describe(`native artifacts:${name}`, () => {
+    test("requires verified identity before artifact hydration or effects", async () => {
+      const f = happyCase(name); f.identity(null);
+      await expect(f.invoke(name, f.args)).rejects.toMatchObject({ data: { code: "UNAUTHENTICATED" } });
+      expect(f.db.reads.filter((event) => event.table === "artifacts")).toEqual([]);
+      expect(f.db.writes).toEqual([]);
+      expect(native[name].isPublic).toBe(true);
+    });
+    test("preserves the admitted text operation's actual outcome", async () => {
+      const f = happyCase(name); const result = await f.invoke(name, f.args);
+      const row = f.db.rows("artifacts")[0];
+      switch (name) {
+        case "create": expect(row).toMatchObject({ artifactId: "created-a", content: "created content", ownerPrincipalId: f.principal._id, userId: "trusted-user" }); expect(result.versionHistory[0].changedBy).toBe(f.principal._id); break;
+        case "update": expect(row.content).toBe("updated content"); expect(row.version).toBe(3); expect(result.versionHistory[2].changedBy).toBe(f.principal._id); break;
+        case "deleteArtifact": expect(row.isDeleted).toBe(true); expect(row.tombstonedAt).toBeGreaterThan(0); expect(f.db.rows("runtimeAuthTombstones")[0].resourceId).toBe("artifact-a"); expect(result.restorable).toBe(false); break;
+        case "undo": expect(row.versionPointer).toBe(1); expect(row.content).toBe("first"); expect(result.canRedo).toBe(true); break;
+        case "redo": expect(row.versionPointer).toBe(2); expect(row.content).toBe("second"); expect(result.canUndo).toBe(true); break;
+        case "setStreamingState": case "startStreaming": case "resumeStreaming": expect(row.streamingState).toBe("streaming"); expect(result.currentState).toBe("streaming"); break;
+        case "purgeVersions": expect(row.versionHistory.map((entry: { version: number }) => entry.version)).toEqual([1, 2]); expect(result.versionsRemaining).toBe(2); break;
+        case "get": expect(result.artifactId).toBe("artifact-a"); expect(result.versionHistory.length).toBe(2); break;
+        case "getByConversation": expect(result.map((entry: { artifactId: string }) => entry.artifactId)).toEqual(["artifact-a"]); expect(JSON.stringify(result)).not.toContain("Private canonical message"); break;
+        case "list": expect(result.total).toBe(1); expect(result.artifacts[0].artifactId).toBe("artifact-a"); break;
+        case "count": expect(result).toBe(1); break;
+        case "getVersion": expect(result).toMatchObject({ version: 1, content: "first", isCurrent: false }); break;
+        case "getHistory": expect(result.history.length).toBe(2); expect(result.currentVersion).toBe(2); break;
+        case "appendContent": expect(row.content).toBe("first 😀"); expect(result.totalBytesReceived).toBe(5); break;
+        case "pauseStreaming": expect(row.streamingState).toBe("paused"); expect(result.contentPreserved).toBe(true); break;
+        case "cancelStreaming": expect(row.streamingState).toBe("draft"); expect(row.content).toBe("first"); break;
+        case "finalizeStreaming": expect(row.streamingState).toBe("final"); expect(row.versionHistory[2].content).toBe("first"); expect(result.versionCreated).toBe(true); break;
+        case "setStreamingError": expect(row.streamingState).toBe("error"); expect(row.streamingMetadata.errorCode).toBe("manual-error"); expect(row.content).toBe("first"); break;
+        case "retryFromError": expect(row.streamingState).toBe("draft"); expect(row.content).toBe("first"); expect(result.contentCleared).toBe(false); break;
+      }
+    });
+  });
+}
+
+describe("independent03A resource and lifecycle boundary", () => {
+  test("foreign same ID inserted first is never hydrated or written", async () => {
+    const f = fixture(); const foreign = f.row({ tenantId: "foreign", content: "foreign secret" }); const own = f.row();
+    await f.invoke("update", { artifactId: "artifact-a", content: "ours" });
+    expect(f.db.rows("artifacts").find((row) => row._id === own._id)?.content).toBe("ours");
+    expect(f.db.rows("artifacts").find((row) => row._id === foreign._id)?.content).toBe("foreign secret");
+    expect(f.db.reads.filter((event) => event.table === "artifacts").every((event) => !event.ids.includes(foreign._id))).toBe(true);
+  });
+  test("own excludes another principal before hydration, pagination and count", async () => {
+    const f = fixture(); const foreign = f.row({ ownerPrincipalId: "foreign-owner", userId: "trusted-user" }); f.row({ artifactId: "own" });
+    expect(await f.invoke("count", {})).toBe(1);
+    expect((await f.invoke("list", { limit: 1 })).artifacts.map((row: { artifactId: string }) => row.artifactId)).toEqual(["own"]);
+    await expect(f.invoke("get", { artifactId: "artifact-a", userId: "trusted-user" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.reads.filter((event) => event.table === "artifacts").every((event) => !event.ids.includes(foreign._id))).toBe(true);
+  });
+  test("caller ownership, participants and nested metadata do not grant privilege", async () => {
+    const f = fixture(); const result = await f.invoke("create", { content: "manual", memorySpaceId: "space-a",
+      userId: "forged-owner", participantId: "forged-admin", metadata: { admin: true, tenantId: "foreign" } });
+    expect(result.ownerPrincipalId).toBe(f.principal._id); expect(result.userId).toBe("trusted-user");
+    expect(f.db.rows("runtimeAuthGrants")).toHaveLength(1);
+    f.identity({ issuer: "https://issuer.example/", subject: "verified-subject", userId: "trusted-user", roles: ["admin"] });
+    await expect(f.invoke("count", {})).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+  });
+  test("wrong tenant and space and ambiguous omission deny", async () => {
+    const f = fixture(); f.row();
+    for (const args of [{ tenantId: "foreign" }, { memorySpaceId: "foreign-space" }]) {
+      await expect(f.invoke("count", args)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    }
+    f.db.add("runtimeAuthScopes", { tenantId: "tenant-a", memorySpaceId: "space-b", epoch: 1 });
+    f.db.add("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:second", memorySpaceId: "space-b" });
+    await expect(f.invoke("count", {})).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(await f.invoke("count", { memorySpaceId: "space-a" })).toBe(1);
+  });
+  test("exact scoped collision returns opaque conflict without inspecting foreign ownership", async () => {
+    const f = fixture(); const foreign = f.row({ ownerPrincipalId: "foreign-owner", content: "secret" });
+    await expect(f.invoke("create", { artifactId: "artifact-a", memorySpaceId: "space-a", content: "manual" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.writes).toEqual([]); expect(f.db.rows("artifacts")[0]._id).toBe(foreign._id);
+    expect(f.db.reads.filter((event) => event.table === "artifacts")[0].filters).toEqual([
+      ["tenantId", "tenant-a"], ["memorySpaceId", "space-a"], ["artifactId", "artifact-a"]]);
+  });
+  test("unowned legacy row is denied without adoption", async () => {
+    const f = fixture(); f.row({ ownerPrincipalId: undefined });
+    expect(await f.invoke("count", {})).toBe(0);
+    await expect(f.invoke("update", { artifactId: "artifact-a", content: "adoption" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.writes).toEqual([]);
+  });
+  test("space grant admits explicit cross-principal text reads", async () => {
+    const f = fixture(["read", "write"], "space"); f.row({ ownerPrincipalId: "other-owner" });
+    expect((await f.invoke("get", { artifactId: "artifact-a" })).content).toBe("first");
+  });
+  test("initially ineligible READ yields only a safe write receipt", async () => {
+    const f = fixture(["write"]); f.row();
+    expect(await f.invoke("update", { artifactId: "artifact-a", content: "updated" })).toEqual({ success: true, artifactId: "artifact-a" });
+    expect(f.db.rows("artifacts")[0].content).toBe("updated");
+  });
+  test.each(["read", "write"] as const)("admitted %s revoked after effect denies and rolls back", async (capability) => {
+    const f = fixture(); f.row();
+    f.db.hook = (event) => { if (event.action === "patch") f.grant.capabilities = f.grant.capabilities.filter((item: string) => item !== capability); };
+    await expect(f.invoke("update", { artifactId: "artifact-a", content: "do not commit" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.rows("artifacts")[0].content).toBe("first"); expect(f.db.writes).toEqual([]);
+  });
+  test("expiry after the last control await blocks delivery", async () => {
+    const measured = fixture(); measured.row(); await measured.invoke("get", { artifactId: "artifact-a" });
+    const finalReadCount = measured.db.reads.filter((event) => event.table === "runtimeAuthTombstones").length;
+    expect(finalReadCount).toBeGreaterThan(0);
+    const f = fixture(); f.row(); const now = Date.now(); f.grant.expiresAt = now + 500;
+    const clock = jest.spyOn(Date, "now").mockReturnValue(now);
+    let calls = 0;
+    f.db.hook = (event) => { if (event.table === "runtimeAuthTombstones" && ++calls === finalReadCount) clock.mockReturnValue(now + 1000); };
+    try { await expect(f.invoke("get", { artifactId: "artifact-a" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } }); }
+    finally { clock.mockRestore(); }
+    expect(calls).toBe(finalReadCount);
+    expect(f.db.reads[f.db.reads.length - 1]).toMatchObject({ table: "runtimeAuthTombstones", filters: [
+      ["tenantId", "tenant-a"], ["memorySpaceId", undefined], ["resourceType", "artifact"], ["resourceId", "artifact-a"]] });
+    expect(f.db.attempts).toEqual([]);
+  });
+  test("canonical resource tombstones block update and retained IDs cannot resurrect", async () => {
+    const f = fixture(); f.row(); await f.invoke("deleteArtifact", { artifactId: "artifact-a", deletedBy: "forged" });
+    expect(f.db.rows("artifacts")[0].deletedBy).toBe(f.principal._id);
+    await expect(f.invoke("create", { artifactId: "artifact-a", memorySpaceId: "space-a", content: "resurrect" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    await expect(f.invoke("update", { artifactId: "artifact-a", content: "resurrect" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+  });
+  test.each(["update", "undo", "redo", "purgeVersions", "deleteArtifact", "get", "getHistory"])("%s rejects retained file history before effects", async (name) => {
+    const f = fixture(); const row = f.row(); row.versionHistory[0].fileRef = { storageId: "_storage:foreign", mimeType: "image/png", size: 2 };
+    await expect(f.invoke(name, { artifactId: "artifact-a", keepLatest: 1 })).rejects.toMatchObject({ data: { code: "CAPABILITY_NOT_READY" } });
+    expect(f.db.writes).toEqual([]);
+  });
+  test("bulk list and count preflight every linked candidate before delivery", async () => {
+    const f = fixture(); f.conversation(); f.row({ artifactId: "first", conversationRef: { conversationId: "conversation-a", messageId: "message-a" } });
+    f.row({ artifactId: "second", conversationRef: { conversationId: "conversation-a", messageId: "missing" } });
+    for (const name of ["list", "count"]) await expect(f.invoke(name, {})).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.writes).toEqual([]);
+  });
+  test("getByConversation requires a real canonical owner and exact anchor", async () => {
+    const f = fixture(); f.conversation({ ownerPrincipalId: undefined }); f.row({ conversationRef: { conversationId: "conversation-a" } });
+    await expect(f.invoke("getByConversation", { conversationId: "conversation-a" })).rejects.toMatchObject({ data: { code: "CAPABILITY_NOT_READY" } });
+    expect(f.db.reads.filter((event) => event.table === "conversations").flatMap((event) => event.ids)).toEqual([]);
+  });
+  test("earlier linked controls remain pinned through later list candidates", async () => {
+    const f = fixture(); const conversation = f.conversation(); f.row({ artifactId: "first", conversationRef: { conversationId: "conversation-a", messageId: "message-a" } }); f.row({ artifactId: "second" });
+    let seen = false;
+    f.db.hook = (event) => {
+      if (event.table === "conversations") seen = true;
+      if (seen && event.table === "runtimeAuthGrants" && !f.db.rows("runtimeAuthTombstones").length) f.db.add("runtimeAuthTombstones", {
+        tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "conversation", resourceId: conversation.conversationId, deletedAt: 1 });
+    };
+    await expect(f.invoke("list", {})).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+  });
+  test("full canonical snapshot detects stale version, owner and linked anchor after awaits", async () => {
+    for (const mutation of ["version", "owner", "anchor"] as const) {
+      const f = fixture(); const conversation = f.conversation(); const row = f.row({ conversationRef: { conversationId: "conversation-a", messageId: "message-a" } });
+      let changed = false;
+      f.db.hook = (event) => { if (!changed && event.table === "runtimeAuthGrants" && f.db.reads.some((read) => read.table === "conversations")) {
+        changed = true; if (mutation === "version") row.version = 7;
+        if (mutation === "owner") row.ownerPrincipalId = "other";
+        if (mutation === "anchor") conversation.messages[0].content = "replaced source";
+      } };
+      await expect(f.invoke("update", { artifactId: "artifact-a", content: "stale" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+      expect(f.db.writes).toEqual([]);
+    }
+  });
+  test("version safe integer overflow and malformed history deny before mutation", async () => {
+    const f = fixture(); f.row({ version: Number.MAX_SAFE_INTEGER, versionPointer: Number.MAX_SAFE_INTEGER,
+      versionHistory: [{ version: Number.MAX_SAFE_INTEGER, content: "first", timestamp: 1, changeType: "create" }] });
+    await expect(f.invoke("update", { artifactId: "artifact-a", content: "overflow" })).rejects.toMatchObject({ data: { code: "INVALID_ARGUMENT" } }); expect(f.db.writes).toEqual([]);
+    f.db.rows("artifacts")[0].versionHistory.push({ version: 1, timestamp: 2, changeType: "update" });
+    await expect(f.invoke("get", { artifactId: "artifact-a" })).rejects.toMatchObject({ data: { code: "INVALID_VERSION_STATE" } });
+  });
+  test("fractional pagination, negative counts and illegal stream state deny", async () => {
+    const f = fixture(); f.row();
+    for (const [name, args] of [["list", { offset: 0.5 }], ["purgeVersions", { artifactId: "artifact-a", keepLatest: -1 }],
+      ["setStreamingState", { artifactId: "artifact-a", streamingState: "final" }]] as const) await expect(f.invoke(name, args)).rejects.toBeDefined();
+    expect(f.db.writes).toEqual([]);
+  });
+  test("undo/redo preserve gaps; branching discards only future text versions", async () => {
+    const f = fixture(); f.row({ version: 5, versionPointer: 5,
+      versionHistory: [1, 3, 5].map((version) => ({ version, content: String(version), timestamp: version, changeType: "update" })) });
+    expect((await f.invoke("undo", { artifactId: "artifact-a" })).currentVersion).toBe(3);
+    expect((await f.invoke("redo", { artifactId: "artifact-a" })).currentVersion).toBe(5);
+    await f.invoke("undo", { artifactId: "artifact-a" });
+    await f.invoke("update", { artifactId: "artifact-a", content: "branch" });
+    expect(f.db.rows("artifacts")[0].versionHistory.map((entry: { version: number }) => entry.version)).toEqual([1, 3, 4]);
+  });
+  test("trusted internal purge retains rows/controls and never deletes foreign storage", async () => {
+    const f = fixture(); f.identity(null); f.row(); const foreign = f.row({ tenantId: "foreign" });
+    expect(native.purgeAll.isInternal).toBe(true); expect(native.purgeAll.isPublic).not.toBe(true);
+    expect(await f.invoke("purgeAll", { tenantId: "tenant-a", memorySpaceId: "space-a" })).toEqual({ deleted: 1 });
+    expect(f.db.rows("artifacts")).toHaveLength(2); expect(f.db.rows("artifacts").find((row) => row._id === foreign._id)?.isDeleted).toBeUndefined();
+    expect(f.db.rows("runtimeAuthGrants")).toHaveLength(1); expect(f.db.writes.every((event) => event.action !== "delete")).toBe(true);
+  });
+  test("internal purge completes whole batch preflight before first effect", async () => {
+    const f = fixture(); f.row(); f.row({ artifactId: "file-bearing", fileRef: { storageId: "_storage:foreign", mimeType: "image/png", size: 1 } });
+    await expect(f.invoke("purgeAll", { tenantId: "tenant-a", memorySpaceId: "space-a" })).rejects.toMatchObject({ data: { code: "CAPABILITY_NOT_READY" } }); expect(f.db.writes).toEqual([]); expect(f.db.attempts).toEqual([]);
+  });
+});
+
+
+describe("retained admission and transactional source witnesses", () => {
+  test("an initially unavailable READ is never newly adopted after a write", async () => {
+    const f = fixture(["write"]); f.row();
+    f.db.hook = (event) => { if (event.action === "patch") f.grant.capabilities.push("read"); };
+    expect(await f.invoke("update", { artifactId: "artifact-a", content: "manual" })).toEqual({ success: true, artifactId: "artifact-a" });
+    expect(f.db.rows("artifacts")[0].content).toBe("manual");
+  });
+  test.each(["principal", "membership", "scope", "resource"] as const)("late %s control failure rolls back the admitted text mutation", async (control) => {
+    const f = fixture(); f.row();
+    f.db.hook = (event) => { if (event.action !== "patch") return;
+      if (control === "principal") f.principal.deletedAt = 1;
+      if (control === "membership") f.membership.revokedAt = 1;
+      if (control === "scope") f.db.rows("runtimeAuthScopes").find((row) => row.memorySpaceId === "space-a")!.epoch = 2;
+      if (control === "resource") f.db.add("runtimeAuthTombstones", { tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "artifact", resourceId: "artifact-a", deletedAt: 1 });
+    };
+    await expect(f.invoke("update", { artifactId: "artifact-a", content: "unsafe" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.rows("artifacts")[0].content).toBe("first"); expect(f.db.writes).toEqual([]); expect(f.db.attempts).toHaveLength(1);
+  });
+  test("never adopt changed inserted payload after effects", async () => {
+    const f = fixture(); f.db.hook = (event) => { if (event.action === "insert" && event.table === "artifacts") f.db.rows("artifacts")[0].content = "changed after insert"; };
+    await expect(f.invoke("create", { memorySpaceId: "space-a", content: "expected" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.rows("artifacts")).toEqual([]); expect(f.db.writes).toEqual([]);
+  });
+  test("linked anchor changed after effect is denied with full rollback", async () => {
+    const f = fixture(); const conversation = f.conversation(); f.row({ conversationRef: { conversationId: "conversation-a", messageId: "message-a" } });
+    f.db.hook = (event) => { if (event.action === "patch") conversation.messages[0].id = "replacement"; };
+    await expect(f.invoke("update", { artifactId: "artifact-a", content: "unsafe" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.rows("artifacts")[0].content).toBe("first"); expect(f.db.writes).toEqual([]);
+  });
+  test("file-bearing current row is rejected by all applicable selected public APIs before effects", async () => {
+    for (const name of selected.filter((name) => name !== "create")) {
+      const f = happyCase(name); f.db.rows("artifacts")[0].fileRef = { storageId: "_storage:foreign", mimeType: "image/png", size: 1 };
+      await expect(f.invoke(name, f.args)).rejects.toMatchObject({ data: { code: "CAPABILITY_NOT_READY" } });
+      expect(f.db.attempts).toEqual([]);
+    }
+  });
+  test("canonical memory source owner and lifecycle are required", async () => {
+    const f = fixture(); f.row({ memoryRefs: [{ memoryId: "memory-a" }] });
+    f.db.add("memories", { memoryId: "memory-a", tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.principal._id,
+      content: "private source", version: 1 });
+    expect((await f.invoke("get", { artifactId: "artifact-a" })).artifactId).toBe("artifact-a");
+    f.db.rows("memories")[0].tombstonedAt = 1;
+    await expect(f.invoke("update", { artifactId: "artifact-a", content: "unsafe" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } }); expect(f.db.attempts).toEqual([]);
+  });
+  test("completed streaming keeps version history; cancellation and retry preserve selected content behavior", async () => {
+    const f = fixture(); f.row();
+    const started = await f.invoke("startStreaming", { artifactId: "artifact-a", streamSource: "ai_generation", metadata: { verifiedTool: true } });
+    await f.invoke("appendContent", { artifactId: "artifact-a", sessionId: started.sessionId, chunk: " body" });
+    await f.invoke("pauseStreaming", { artifactId: "artifact-a", sessionId: started.sessionId });
+    await f.invoke("finalizeStreaming", { artifactId: "artifact-a", sessionId: started.sessionId });
+    expect(f.db.rows("artifacts")[0].versionHistory[2]).toMatchObject({ version: 3, content: "first body", changedBy: f.principal._id });
+    expect(f.db.rows("artifacts")[0].streamingMetadata.sessionId).toBeUndefined();
+    expect(f.db.rows("artifacts")[0].metadata).toBeUndefined();
+  });
+});
+
+
+describe("pre-hydration source and resource control checks", () => {
+  test("retained artifact control prevents payload hydration and list/count exclude it before processing", async () => {
+    const f = fixture(); const row = f.row(); f.db.add("runtimeAuthTombstones", { tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "artifact", resourceId: "artifact-a", deletedAt: 1 });
+    await expect(f.invoke("get", { artifactId: "artifact-a" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.reads.filter((event) => event.table === "artifacts")).toEqual([]);
+    expect(await f.invoke("count", {})).toBe(0); expect((await f.invoke("list", {})).artifacts).toEqual([]);
+    expect(f.db.reads.filter((event) => event.table === "artifacts").every((event) => !event.ids.includes(row._id))).toBe(true);
+  });
+  test("independent linked READ is required before private canonical source hydration", async () => {
+    const f = fixture(["write"]); f.conversation(); f.row({ conversationRef: { conversationId: "conversation-a", messageId: "message-a" } });
+    await expect(f.invoke("update", { artifactId: "artifact-a", content: "unsafe" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.reads.filter((event) => event.table === "conversations")).toEqual([]); expect(f.db.attempts).toEqual([]);
+  });
+  test("canonical source tombstone denies before message payload hydration", async () => {
+    const f = fixture(); f.conversation(); f.row({ conversationRef: { conversationId: "conversation-a", messageId: "message-a" } });
+    f.db.add("runtimeAuthTombstones", { tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "conversation", resourceId: "conversation-a", deletedAt: 1 });
+    await expect(f.invoke("getByConversation", { conversationId: "conversation-a" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(f.db.reads.filter((event) => event.table === "conversations")).toEqual([]); expect(f.db.attempts).toEqual([]);
+  });
+});
+
+describe("cycle2 retained create admission and immutable repeated sources", () => {
+  test.each(["same-grant-capability", "distinct-grant-revocation"] as const)("create %s after insert rejects with reached injection and rollback", async (change) => {
+    const f = fixture(change === "same-grant-capability" ? ["read", "write"] : ["write"]);
+    const readGrant = change === "same-grant-capability" ? f.grant : f.db.add("runtimeAuthGrants", {
+      principalId: f.principal._id, membershipId: f.membership._id, tenantId: "tenant-a", tenantEpoch: 1,
+      capabilities: ["read"], resourceAccess: "own", version: 1,
+    });
+    let injections = 0;
+    f.db.hook = (event) => { if (event.action === "insert" && event.table === "artifacts") {
+      injections += 1;
+      if (change === "same-grant-capability") readGrant.capabilities = ["write"];
+      else readGrant.revokedAt = 1;
+    } };
+    await expect(f.invoke("create", { artifactId: "created", memorySpaceId: "space-a", content: "rollback" }))
+      .rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(injections).toBe(1); expect(f.db.attempts).toHaveLength(1);
+    expect(f.db.attempts[0]).toMatchObject({ action: "insert", table: "artifacts" });
+    expect(f.db.rows("artifacts")).toEqual([]); expect(f.db.writes).toEqual([]);
+  });
+  test("create initially absent READ remains a safe receipt after later READ availability", async () => {
+    const f = fixture(["write"]); let injections = 0;
+    f.db.hook = (event) => { if (event.action === "insert" && event.table === "artifacts") { injections += 1; f.grant.capabilities.push("read"); } };
+    expect(await f.invoke("create", { artifactId: "created", memorySpaceId: "space-a", content: "manual" }))
+      .toEqual({ success: true, artifactId: "created" });
+    expect(injections).toBe(1); expect(f.db.rows("artifacts")[0].content).toBe("manual"); expect(f.db.attempts).toHaveLength(1);
+  });
+  test.each([false, true])("initial resource READ owner denial retains the independent scope pin, lateRevocation=%s", async (revoke) => {
+    const f = fixture(["write"], "space"); f.row({ ownerPrincipalId: "other-canonical-owner" });
+    const readGrant = f.db.add("runtimeAuthGrants", { principalId: f.principal._id, membershipId: f.membership._id,
+      tenantId: "tenant-a", tenantEpoch: 1, capabilities: ["read"], resourceAccess: "own", version: 1 });
+    let injections = 0;
+    f.db.hook = (event) => { if (revoke && event.action === "patch") { injections += 1; readGrant.revokedAt = 1; } };
+    const operation = f.invoke("update", { artifactId: "artifact-a", content: "new manual content" });
+    if (revoke) {
+      await expect(operation).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+      expect(injections).toBe(1); expect(f.db.rows("artifacts")[0].content).toBe("first"); expect(f.db.writes).toEqual([]);
+    } else {
+      expect(await operation).toEqual({ success: true, artifactId: "artifact-a" });
+      expect(f.db.rows("artifacts")[0].content).toBe("new manual content");
+    }
+    expect(f.db.attempts).toHaveLength(1);
+  });
+
+  for (const kind of ["conversation", "memory"] as const) {
+    test.each(["none", "anchor", "content", "version", "owner", "isDeleted", "deletedAt", "tombstonedAt"] as const)
+      (`repeated ${kind} preserves every first source/anchor witness for change=%s`, async (change) => {
+        // Explicit space READ admits both canonical owners, so the owner-change
+        // case tests witness retention as well as the own-selection negatives.
+        const f = fixture(["read", "write"], "space");
+        const source = kind === "conversation" ? f.conversation({ version: 1, messages: [
+          { id: "message-a", role: "user", content: "first canonical", timestamp: 1 },
+          { id: "message-b", role: "user", content: "second canonical", timestamp: 2 },
+        ] }) : f.db.add("memories", { memoryId: "memory-a", tenantId: "tenant-a", memorySpaceId: "space-a",
+          ownerPrincipalId: f.principal._id, content: "first canonical", version: 1 });
+        f.row({ artifactId: "first", ...(kind === "conversation" ? { conversationRef: { conversationId: "conversation-a", messageId: "message-a" } } : { memoryRefs: [{ memoryId: "memory-a" }] }) });
+        f.row({ artifactId: "second", ...(kind === "conversation" ? { conversationRef: { conversationId: "conversation-a", messageId: "message-b" } } : { memoryRefs: [{ memoryId: "memory-a" }] }) });
+        let sourceQueries = 0; let injections = 0;
+        const table = kind === "conversation" ? "conversations" : "memories";
+        f.db.hook = (event) => { if (event.action === "query" && event.table === table && ++sourceQueries === 2 && change !== "none") {
+          injections += 1;
+          if (change === "anchor") { if (kind === "conversation") source.messages[0].id = "replacement"; else source.memoryId = "replacement"; }
+          if (change === "content") { if (kind === "conversation") source.messages[0].content = "replaced first canonical"; else source.content = "replaced first canonical"; }
+          if (change === "version") source.version = 2;
+          if (change === "owner") source.ownerPrincipalId = "replacement-owner";
+          if (change === "isDeleted") source.isDeleted = true;
+          if (change === "deletedAt") source.deletedAt = 1;
+          if (change === "tombstonedAt") source.tombstonedAt = 1;
+        } };
+        if (change === "none") {
+          const result = await f.invoke("list", {});
+          expect(result.total).toBe(2); expect(result.artifacts.map((row: { artifactId: string }) => row.artifactId)).toEqual(["first", "second"]);
+        } else {
+          await expect(f.invoke("list", {})).rejects.toBeDefined();
+        }
+        expect(sourceQueries).toBe(2); expect(injections).toBe(change === "none" ? 0 : 1);
+        expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
+        if (["isDeleted", "deletedAt", "tombstonedAt"].includes(change)) {
+          expect(f.db.reads.filter((event) => event.table === table)[1].ids).toEqual([]);
+        }
+      });
+    test.each(["isDeleted", "deletedAt", "tombstonedAt"] as const)(`${kind} %s denies before private hydration`, async (marker) => {
+      const f = fixture();
+      const source = kind === "conversation" ? f.conversation({ [marker]: marker === "isDeleted" ? true : 1 })
+        : f.db.add("memories", { memoryId: "memory-a", tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.principal._id,
+          content: "deleted private source", version: 1, [marker]: marker === "isDeleted" ? true : 1 });
+      f.row(kind === "conversation" ? { conversationRef: { conversationId: "conversation-a", messageId: "message-a" } }
+        : { memoryRefs: [{ memoryId: "memory-a" }] });
+      await expect(f.invoke("get", { artifactId: "artifact-a" })).rejects.toBeDefined();
+      const table = kind === "conversation" ? "conversations" : "memories";
+      expect(f.db.reads.filter((event) => event.table === table).flatMap((event) => event.ids)).not.toContain(source._id);
+      expect(f.db.reads.filter((event) => event.table === table).every((event) => event.ids.length === 0)).toBe(true);
+      expect(f.db.attempts).toEqual([]);
+    });
+    test(`${kind} foreign ID/owner inserted first never hydrates`, async () => {
+      const f = fixture(); const table = kind === "conversation" ? "conversations" : "memories";
+      const addSource = (overrides: Record<string, unknown> = {}) => kind === "conversation" ? f.conversation(overrides)
+        : f.db.add("memories", { memoryId: "memory-a", tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.principal._id,
+          content: "canonical", version: 1, ...overrides });
+      const wrongTenant = addSource({ tenantId: "foreign", content: "foreign private" });
+      const wrongOwner = addSource({ ownerPrincipalId: "foreign-owner", content: "foreign private" });
+      const own = addSource();
+      f.row(kind === "conversation" ? { conversationRef: { conversationId: "conversation-a", messageId: "message-a" } }
+        : { memoryRefs: [{ memoryId: "memory-a" }] });
+      expect((await f.invoke("get", { artifactId: "artifact-a" })).artifactId).toBe("artifact-a");
+      const hydrated = f.db.reads.filter((event) => event.table === table).flatMap((event) => event.ids);
+      expect(hydrated).toContain(own._id); expect(hydrated).not.toContain(wrongTenant._id); expect(hydrated).not.toContain(wrongOwner._id);
+    });
+  }
+});

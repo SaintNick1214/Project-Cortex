@@ -1,0 +1,22 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --import tsx /workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output-controls.mts
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 'private-owner-stream-session'
+
+    at <anonymous> (/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle3-probes/write-error-output-controls.mts:10:63) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: 'private-owner-stream-session',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
