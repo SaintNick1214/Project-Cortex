@@ -1,0 +1,203 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against MANAGED Convex: https://example.convex.cloud
+
+      at tests/env.ts:62:17
+
+  console.log
+       Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:63:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:19795) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeRegistryClient/registry-bridge.test.ts (22.495 s)
+  registry bridge resilience=absent
+    ✓ register receipt is committed, exact and never retried or hydrated (8 ms)
+    ✓ update receipt is committed, exact and never retried or hydrated (2 ms)
+    ✓ register maps the readable official row and runs poststeps once (2 ms)
+    ✓ update maps the readable official row and runs poststeps once (1 ms)
+    ✓ invalid input and conflicting tenant reject before transport (2 ms)
+    ✓ backend failure remains failure without local poststeps (14 ms)
+    ✓ single and bulk cascade fail before discovering or deleting children (1 ms)
+    ✓ unexpected missing bulk IDs reports committed count without invented IDs (1 ms)
+    ✓ get and exists propagate verified-selector requests without metadata impersonation (2 ms)
+    ✓ list, count and configure propagate scope; readable list keeps official scope (1 ms)
+    ✓ explicit bulk IDs and simple unregister preserve server-confirmed results (1 ms)
+  registry bridge resilience=disabled
+    ✓ register receipt is committed, exact and never retried or hydrated (1 ms)
+    ✓ update receipt is committed, exact and never retried or hydrated
+    ✓ register maps the readable official row and runs poststeps once
+    ✓ update maps the readable official row and runs poststeps once (1 ms)
+    ✓ invalid input and conflicting tenant reject before transport (1 ms)
+    ✓ backend failure remains failure without local poststeps
+    ✓ single and bulk cascade fail before discovering or deleting children
+    ✓ unexpected missing bulk IDs reports committed count without invented IDs (1 ms)
+    ✓ get and exists propagate verified-selector requests without metadata impersonation
+    ✓ list, count and configure propagate scope; readable list keeps official scope (1 ms)
+    ✓ explicit bulk IDs and simple unregister preserve server-confirmed results (1 ms)
+  registry bridge resilience=enabled
+    ✓ register receipt is committed, exact and never retried or hydrated (1 ms)
+    ✓ update receipt is committed, exact and never retried or hydrated (1 ms)
+    ✓ register maps the readable official row and runs poststeps once (1 ms)
+    ✓ update maps the readable official row and runs poststeps once
+    ✓ invalid input and conflicting tenant reject before transport (1 ms)
+    ✓ backend failure remains failure without local poststeps (1 ms)
+    ✓ single and bulk cascade fail before discovering or deleting children
+    ✓ unexpected missing bulk IDs reports committed count without invented IDs (1 ms)
+    ✓ get and exists propagate verified-selector requests without metadata impersonation (1 ms)
+    ✓ list, count and configure propagate scope; readable list keeps official scope
+    ✓ explicit bulk IDs and simple unregister preserve server-confirmed results (1 ms)
+  global cleanup public-client capability
+    ✓ purgeMemories fails before any transport (1 ms)
+    ✓ purgeFacts fails before any transport
+    ✓ purgeContexts fails before any transport (1 ms)
+    ✓ purgeMemorySpaces fails before any transport
+    ✓ purgeAll fails before any transport (1 ms)
+    ✓ scoped memory cleanup deletes only owned per-ID targets (1 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    22.5s | 39/39 passed | /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.1%) - registry bridge resilience=absent backend failure remains failure without local poststeps
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.0%) - registry bridge resilience=absent register receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent update receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent register maps the readable official row and runs poststeps once
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent invalid input and conflicting tenant reject before transport
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent get and exists propagate verified-selector requests without metadata impersonation
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent update maps the readable official row and runs poststeps once
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent single and bulk cascade fail before discovering or deleting children
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent unexpected missing bulk IDs reports committed count without invented IDs
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent list, count and configure propagate scope; readable list keeps official scope
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent explicit bulk IDs and simple unregister preserve server-confirmed results
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled register receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled update maps the readable official row and runs poststeps once
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled invalid input and conflicting tenant reject before transport
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled unexpected missing bulk IDs reports committed count without invented IDs
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled list, count and configure propagate scope; readable list keeps official scope
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled explicit bulk IDs and simple unregister preserve server-confirmed results
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=enabled register receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=enabled update receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=enabled register maps the readable official row and runs poststeps once
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.04s (0.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      22.93s
+  Test suites:        1
+  Individual tests:   29
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       39 passed, 39 total
+Snapshots:   0 total
+Time:        22.929 s
+Ran all test suites matching tests/unit/runtimeRegistryClient.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03c2-registry-resume-bridge-review/focused.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -602,6 +602,7 @@ export class Cortex {
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext,
     );
     this.governance = new GovernanceAPI(
       this.client,
@@ -866,3 +867,6 @@ export type {
   /** Observer interface for real-time orchestration monitoring */
   OrchestrationObserver,
 } from "./types";
+
+export { AgentRegistryWriteReceiptError, AgentRegistryCapabilityError, AgentRegistryCommittedResultError } from "./agents";
+export type { AgentRegistryWriteReceipt, AgentRegistryScope } from "./agents";

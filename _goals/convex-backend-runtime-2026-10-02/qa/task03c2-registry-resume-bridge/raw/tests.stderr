@@ -1,0 +1,113 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against MANAGED Convex: https://example.convex.cloud
+
+      at tests/env.ts:62:17
+
+  console.log
+       Note: Vector search fully supported in managed mode
+
+      at tests/env.ts:63:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:19234) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeRegistryClient/registry-bridge.test.ts (11.508 s)
+  registry bridge resilience=absent
+    ✓ register receipt is committed, exact and never retried or hydrated (7 ms)
+    ✓ update receipt is committed, exact and never retried or hydrated (1 ms)
+    ✓ register maps the readable official row and runs poststeps once (1 ms)
+    ✓ update maps the readable official row and runs poststeps once (1 ms)
+    ✓ invalid input and conflicting tenant reject before transport (2 ms)
+    ✓ backend failure remains failure without local poststeps (8 ms)
+    ✓ single and bulk cascade fail before discovering or deleting children (1 ms)
+    ✓ unexpected missing bulk IDs reports committed count without invented IDs (1 ms)
+    ✓ get and exists propagate verified-selector requests without metadata impersonation (2 ms)
+    ✓ list, count and configure propagate scope; readable list keeps official scope (1 ms)
+    ✓ explicit bulk IDs and simple unregister preserve server-confirmed results (1 ms)
+  registry bridge resilience=disabled
+    ✓ register receipt is committed, exact and never retried or hydrated (1 ms)
+    ✓ update receipt is committed, exact and never retried or hydrated (1 ms)
+    ✓ register maps the readable official row and runs poststeps once
+    ✓ update maps the readable official row and runs poststeps once (1 ms)
+    ✓ invalid input and conflicting tenant reject before transport (1 ms)
+    ✓ backend failure remains failure without local poststeps (1 ms)
+    ✓ single and bulk cascade fail before discovering or deleting children
+    ✓ unexpected missing bulk IDs reports committed count without invented IDs (1 ms)
+    ✓ get and exists propagate verified-selector requests without metadata impersonation (1 ms)
+    ✓ list, count and configure propagate scope; readable list keeps official scope
+    ✓ explicit bulk IDs and simple unregister preserve server-confirmed results (1 ms)
+  registry bridge resilience=enabled
+    ✓ register receipt is committed, exact and never retried or hydrated (1 ms)
+    ✓ update receipt is committed, exact and never retried or hydrated (1 ms)
+    ✓ register maps the readable official row and runs poststeps once (1 ms)
+    ✓ update maps the readable official row and runs poststeps once (1 ms)
+    ✓ invalid input and conflicting tenant reject before transport (1 ms)
+    ✓ backend failure remains failure without local poststeps (1 ms)
+    ✓ single and bulk cascade fail before discovering or deleting children
+    ✓ unexpected missing bulk IDs reports committed count without invented IDs
+    ✓ get and exists propagate verified-selector requests without metadata impersonation (1 ms)
+    ✓ list, count and configure propagate scope; readable list keeps official scope (1 ms)
+    ✓ explicit bulk IDs and simple unregister preserve server-confirmed results (1 ms)
+  global cleanup public-client capability
+    ✓ purgeMemories fails before any transport
+    ✓ purgeFacts fails before any transport (1 ms)
+    ✓ purgeContexts fails before any transport
+    ✓ purgeMemorySpaces fails before any transport (1 ms)
+    ✓ purgeAll fails before any transport
+    ✓ scoped memory cleanup deletes only owned per-ID targets (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       39 passed, 39 total
+Snapshots:   0 total
+Time:        11.757 s
+Ran all test suites matching tests/unit/runtimeRegistryClient.
+Test results written to: work/resume/registry-sdk/tests.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

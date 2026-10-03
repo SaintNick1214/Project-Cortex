@@ -1,0 +1,64 @@
+[
+  {
+    "name": "root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": "2026-10-03T20:09:21.677197+00:00",
+    "end": "2026-10-03T20:09:44.261253+00:00",
+    "exit": 0
+  },
+  {
+    "name": "lint-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": "2026-10-03T20:09:21.677989+00:00",
+    "end": "2026-10-03T20:09:38.924637+00:00",
+    "exit": 0
+  },
+  {
+    "name": "eslint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "src/agents/index.ts",
+      "src/index.ts",
+      "src/types/index.ts",
+      "tests/helpers/cleanup.ts",
+      "tests/interactive-runner.ts",
+      "tests/unit/runtimeRegistryClient/registry-bridge.test.ts",
+      "--max-warnings",
+      "0"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": "2026-10-03T20:09:21.678503+00:00",
+    "end": "2026-10-03T20:09:39.655420+00:00",
+    "exit": 0
+  },
+  {
+    "name": "focused",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeRegistryClient",
+      "--runInBand",
+      "--no-cache",
+      "--json",
+      "--outputFile=/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-registry-resume-bridge-review/focused.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": "2026-10-03T20:09:21.681372+00:00",
+    "end": "2026-10-03T20:09:45.106683+00:00",
+    "exit": 0
+  }
+]

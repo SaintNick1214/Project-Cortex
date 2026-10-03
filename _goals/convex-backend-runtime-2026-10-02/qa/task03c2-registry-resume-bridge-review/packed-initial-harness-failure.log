@@ -1,0 +1,11 @@
+file:///workspace/Project-Cortex/work/resume/sdk-bridge-review/packed.mjs:12
+const [packed]=JSON.parse(execFileSync('node',[npm,'pack','--workspaces=false','--ignore-scripts','--json','--pack-destination',target],{cwd:root,encoding:'utf8'}));
+               ^
+
+TypeError: object is not iterable (cannot read property Symbol(Symbol.iterator))
+    at file:///workspace/Project-Cortex/work/resume/sdk-bridge-review/packed.mjs:12:16
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
