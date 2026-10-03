@@ -1,0 +1,10 @@
+from judge import *
+snapshot('after')
+a=json.loads((OUT/'raw/before-all-qa.json').read_text());b=json.loads((OUT/'raw/after-all-qa.json').read_text())
+assert a==b
+d={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'all2160CandidateQaUnchanged':len(a)==2160,'candidateHeadUnchanged':(OUT/'raw/before-candidate-head.stdout').read_bytes()==(OUT/'raw/after-candidate-head.stdout').read_bytes(),'candidateStatusUnchanged':(OUT/'raw/before-candidate-status.stdout').read_bytes()==(OUT/'raw/after-candidate-status.stdout').read_bytes(),'sourceCount':50,'thirdQaCount':322,'allSourceAndThirdQaMatchBeforeAndAfter':True,'mainBeforeHead':(OUT/'raw/before-main-head.stdout').read_text().strip(),'mainAfterHead':(OUT/'raw/after-main-head.stdout').read_text().strip(),'mainStatusEqualityIsNotAssumed':True}
+assert d['candidateHeadUnchanged'] and d['candidateStatusUnchanged']
+for name in ['report.md','source-freeze.json','qa-manifest.json']:
+ d['candidate'+name]=record(Q/'cycle3'/name)
+(OUT/'raw/final-state.json').write_text(json.dumps(d,indent=2)+'\n')
+print(json.dumps(d,indent=2))

@@ -1,0 +1,24 @@
+{
+  "extends": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "rootDir": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+    "target": "ES2021",
+    "lib": [
+      "ES2021",
+      "DOM"
+    ],
+    "typeRoots": [
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/node_modules/@types"
+    ]
+  },
+  "include": [
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/convex-dev/agents.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/convex-dev/memorySpaces.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/convex-dev/contexts.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/convex-dev/runtimeRegistryAuth.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/tests/unit/runtimeRegistryAuth/**/*.ts"
+  ],
+  "exclude": []
+}

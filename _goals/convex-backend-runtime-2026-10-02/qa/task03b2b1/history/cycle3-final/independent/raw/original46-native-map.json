@@ -1,0 +1,1785 @@
+{
+  "count": 46,
+  "records": [
+    {
+      "path": "agents:count",
+      "kind": "query",
+      "source": "convex-dev/agents.ts",
+      "line": 25,
+      "argsExpression": "args: { ...selectors, status: v.optional(status) }",
+      "original": {
+        "path": "agents:count",
+        "file": "convex-dev/agents.ts",
+        "line": 80,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"inactive\"),\n        v.literal(\"archived\"),\n      ),\n    )"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_status"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "agents:exists",
+      "kind": "query",
+      "source": "convex-dev/agents.ts",
+      "line": 16,
+      "argsExpression": "args: { ...selectors, agentId: v.string() }",
+      "original": {
+        "path": "agents:exists",
+        "file": "convex-dev/agents.ts",
+        "line": 109,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "agentId": "v.string()"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "agents:get",
+      "kind": "query",
+      "source": "convex-dev/agents.ts",
+      "line": 12,
+      "argsExpression": "args: { ...selectors, agentId: v.string() }",
+      "original": {
+        "path": "agents:get",
+        "file": "convex-dev/agents.ts",
+        "line": 18,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "agentId": "v.string()"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "agents:list",
+      "kind": "query",
+      "source": "convex-dev/agents.ts",
+      "line": 20,
+      "argsExpression": "args: { ...selectors, status: v.optional(status), limit: v.optional(v.number()), offset: v.optional(v.number()) }",
+      "original": {
+        "path": "agents:list",
+        "file": "convex-dev/agents.ts",
+        "line": 35,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"inactive\"),\n        v.literal(\"archived\"),\n      ),\n    )",
+          "limit": "v.optional(v.number())",
+          "offset": "v.optional(v.number())"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_status",
+          "by_registered"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "agents:purgeAll",
+      "kind": "internalMutation",
+      "source": "convex-dev/agents.ts",
+      "line": 82,
+      "argsExpression": "args: {}",
+      "original": {
+        "path": "agents:purgeAll",
+        "file": "convex-dev/agents.ts",
+        "line": 432,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {},
+        "tables": [
+          "agents"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "internalize",
+        "requiredCapability": "trusted deployment-operator internal invocation",
+        "scope": "deployment-operator",
+        "resourceLookup": "agents deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+        "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+        "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+        "reason": "deployment-wide maintenance must internalize for trusted operator invocation; never public tenant admin or target-grant authorization"
+      }
+    },
+    {
+      "path": "agents:register",
+      "kind": "mutation",
+      "source": "convex-dev/agents.ts",
+      "line": 29,
+      "argsExpression": "args: { ...selectors, agentId: v.string(), name: v.string(), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()) }",
+      "original": {
+        "path": "agents:register",
+        "file": "convex-dev/agents.ts",
+        "line": 194,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "agentId": "v.string()",
+          "name": "v.string()",
+          "description": "v.optional(v.string())",
+          "metadata": "v.optional(v.any())",
+          "config": "v.optional(v.any())"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "agents:unregister",
+      "kind": "mutation",
+      "source": "convex-dev/agents.ts",
+      "line": 59,
+      "argsExpression": "args: { ...selectors, agentId: v.string() }",
+      "original": {
+        "path": "agents:unregister",
+        "file": "convex-dev/agents.ts",
+        "line": 330,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "agentId": "v.string()"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "agents:unregisterMany",
+      "kind": "mutation",
+      "source": "convex-dev/agents.ts",
+      "line": 67,
+      "argsExpression": "args: { ...selectors, status: v.optional(status), agentIds: v.optional(v.array(v.string())) }",
+      "original": {
+        "path": "agents:unregisterMany",
+        "file": "convex-dev/agents.ts",
+        "line": 356,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"inactive\"),\n        v.literal(\"archived\"),\n      ),\n    )",
+          "agentIds": "v.optional(v.array(v.string()))"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId",
+          "by_status"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentIds"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "agents:update",
+      "kind": "mutation",
+      "source": "convex-dev/agents.ts",
+      "line": 46,
+      "argsExpression": "args: { ...selectors, agentId: v.string(), name: v.optional(v.string()), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()), status: v.optional(status) }",
+      "original": {
+        "path": "agents:update",
+        "file": "convex-dev/agents.ts",
+        "line": 234,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "agentId": "v.string()",
+          "name": "v.optional(v.string())",
+          "description": "v.optional(v.string())",
+          "metadata": "v.optional(v.any())",
+          "config": "v.optional(v.any())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"inactive\"),\n        v.literal(\"archived\"),\n      ),\n    )"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "agents:updateMany",
+      "kind": "mutation",
+      "source": "convex-dev/agents.ts",
+      "line": 52,
+      "argsExpression": "args: { ...selectors, agentIds: v.array(v.string()), name: v.optional(v.string()), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()) }",
+      "original": {
+        "path": "agents:updateMany",
+        "file": "convex-dev/agents.ts",
+        "line": 283,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "agentIds": "v.array(v.string())",
+          "name": "v.optional(v.string())",
+          "description": "v.optional(v.string())",
+          "metadata": "v.optional(v.any())",
+          "config": "v.optional(v.any())"
+        },
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentIds"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant; explicitly space-scoped if resource/policy supports it",
+        "resourceLookup": "(trusted tenantId, agentId); immutable deployed configuration version; metadata is not authority",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:addParticipant",
+      "kind": "mutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 98,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), participantId: v.string() }",
+      "original": {
+        "path": "contexts:addParticipant",
+        "file": "convex-dev/contexts.ts",
+        "line": 393,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "participantId": "v.string()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "write",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:count",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 174,
+      "argsExpression": "args: filters",
+      "original": {
+        "path": "contexts:count",
+        "file": "convex-dev/contexts.ts",
+        "line": 736,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.optional(v.string())",
+          "userId": "v.optional(v.string())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_memorySpace_status",
+          "by_memorySpace",
+          "by_status"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:create",
+      "kind": "mutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 74,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), purpose: v.string(), description: v.optional(v.string()), userId: v.optional(v.string()), parentId: v.optional(v.string()), conversationRef: v.optional(v.object({ conversationId: v.string(), messageIds: v.optional(v.array(v.string())) })), data: v.optional(v.any()), status: v.optional(status) }",
+      "original": {
+        "path": "contexts:create",
+        "file": "convex-dev/contexts.ts",
+        "line": 36,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "purpose": "v.string()",
+          "memorySpaceId": "v.string()",
+          "tenantId": "v.optional(v.string())",
+          "description": "v.optional(v.string())",
+          "userId": "v.optional(v.string())",
+          "parentId": "v.optional(v.string())",
+          "conversationRef": "v.optional(\n      v.object({\n        conversationId: v.string(),\n        messageIds: v.optional(v.array(v.string())),\n      }),\n    )",
+          "data": "v.optional(v.any())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "write",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:deleteContext",
+      "kind": "mutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 143,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), cascadeChildren: v.optional(v.boolean()), orphanChildren: v.optional(v.boolean()) }",
+      "original": {
+        "path": "contexts:deleteContext",
+        "file": "convex-dev/contexts.ts",
+        "line": 227,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "tenantId": "v.optional(v.string())",
+          "cascadeChildren": "v.optional(v.boolean())",
+          "orphanChildren": "v.optional(v.boolean())"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_tenant_contextId",
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "write",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:deleteMany",
+      "kind": "mutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 157,
+      "argsExpression": "args: { ...filters, completedBefore: v.optional(v.number()), cascadeChildren: v.optional(v.boolean()) }",
+      "original": {
+        "path": "contexts:deleteMany",
+        "file": "convex-dev/contexts.ts",
+        "line": 1079,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.optional(v.string())",
+          "userId": "v.optional(v.string())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )",
+          "completedBefore": "v.optional(v.number())",
+          "cascadeChildren": "v.optional(v.boolean())"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "write",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:exportContexts",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 209,
+      "argsExpression": "args: { ...filters, format: v.union(v.literal(\"json\"), v.literal(\"csv\")), includeChain: v.optional(v.boolean()), includeVersionHistory: v.optional(v.boolean()) }",
+      "original": {
+        "path": "contexts:exportContexts",
+        "file": "convex-dev/contexts.ts",
+        "line": 1368,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.optional(v.string())",
+          "userId": "v.optional(v.string())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )",
+          "format": "v.union(v.literal(\"json\"), v.literal(\"csv\"))",
+          "includeChain": "v.optional(v.boolean())",
+          "includeVersionHistory": "v.optional(v.boolean())"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:findOrphaned",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 192,
+      "argsExpression": "args: selectors",
+      "original": {
+        "path": "contexts:findOrphaned",
+        "file": "convex-dev/contexts.ts",
+        "line": 1203,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {},
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:get",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 161,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), includeChain: v.optional(v.boolean()), includeConversation: v.optional(v.boolean()) }",
+      "original": {
+        "path": "contexts:get",
+        "file": "convex-dev/contexts.ts",
+        "line": 468,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "tenantId": "v.optional(v.string())",
+          "includeChain": "v.optional(v.boolean())",
+          "includeConversation": "v.optional(v.boolean())"
+        },
+        "tables": [
+          "contexts",
+          "conversations"
+        ],
+        "indexes": [
+          "by_tenant_contextId",
+          "by_contextId",
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:getAtTimestamp",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 205,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), timestamp: v.number() }",
+      "original": {
+        "path": "contexts:getAtTimestamp",
+        "file": "convex-dev/contexts.ts",
+        "line": 1311,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "timestamp": "v.number()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:getByConversation",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 187,
+      "argsExpression": "args: { ...selectors, conversationId: v.string() }",
+      "original": {
+        "path": "contexts:getByConversation",
+        "file": "convex-dev/contexts.ts",
+        "line": 1185,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "conversationId": "v.string()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:getChain",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 177,
+      "argsExpression": "args: { ...selectors, contextId: v.string() }",
+      "original": {
+        "path": "contexts:getChain",
+        "file": "convex-dev/contexts.ts",
+        "line": 789,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:getChildren",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 183,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), status: v.optional(status), recursive: v.optional(v.boolean()) }",
+      "original": {
+        "path": "contexts:getChildren",
+        "file": "convex-dev/contexts.ts",
+        "line": 837,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )",
+          "recursive": "v.optional(v.boolean())"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:getHistory",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 204,
+      "argsExpression": "args: { ...selectors, contextId: v.string() }",
+      "original": {
+        "path": "contexts:getHistory",
+        "file": "convex-dev/contexts.ts",
+        "line": 1274,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:getRoot",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 180,
+      "argsExpression": "args: { ...selectors, contextId: v.string() }",
+      "original": {
+        "path": "contexts:getRoot",
+        "file": "convex-dev/contexts.ts",
+        "line": 810,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:getVersion",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 201,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), version: v.number() }",
+      "original": {
+        "path": "contexts:getVersion",
+        "file": "convex-dev/contexts.ts",
+        "line": 1232,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "version": "v.number()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:grantAccess",
+      "kind": "mutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 102,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), targetMemorySpaceId: v.string(), scope: v.string() }",
+      "original": {
+        "path": "contexts:grantAccess",
+        "file": "convex-dev/contexts.ts",
+        "line": 424,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "targetMemorySpaceId": "v.string()",
+          "scope": "v.string()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "targetMemorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "write",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:list",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 168,
+      "argsExpression": "args: { ...filters, parentId: v.optional(v.string()), rootId: v.optional(v.string()), depth: v.optional(v.number()), limit: v.optional(v.number()) }",
+      "original": {
+        "path": "contexts:list",
+        "file": "convex-dev/contexts.ts",
+        "line": 636,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.optional(v.string())",
+          "tenantId": "v.optional(v.string())",
+          "userId": "v.optional(v.string())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )",
+          "parentId": "v.optional(v.string())",
+          "rootId": "v.optional(v.string())",
+          "depth": "v.optional(v.number())",
+          "limit": "v.optional(v.number())"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_tenant_space",
+          "by_tenantId",
+          "by_memorySpace_status",
+          "by_memorySpace",
+          "by_status",
+          "by_parentId",
+          "by_rootId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:purgeAll",
+      "kind": "internalMutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 220,
+      "argsExpression": "args: {}",
+      "original": {
+        "path": "contexts:purgeAll",
+        "file": "convex-dev/contexts.ts",
+        "line": 1468,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {},
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "internalize",
+        "requiredCapability": "trusted deployment-operator internal invocation",
+        "scope": "deployment-operator",
+        "resourceLookup": "contexts deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+        "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+        "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+        "reason": "deployment-wide maintenance must internalize for trusted operator invocation; never public tenant admin or target-grant authorization"
+      }
+    },
+    {
+      "path": "contexts:removeParticipant",
+      "kind": "mutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 101,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), participantId: v.string() }",
+      "original": {
+        "path": "contexts:removeParticipant",
+        "file": "convex-dev/contexts.ts",
+        "line": 1156,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "participantId": "v.string()"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "write",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:search",
+      "kind": "query",
+      "source": "convex-dev/contexts.ts",
+      "line": 171,
+      "argsExpression": "args: { ...filters, limit: v.optional(v.number()) }",
+      "original": {
+        "path": "contexts:search",
+        "file": "convex-dev/contexts.ts",
+        "line": 920,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.optional(v.string())",
+          "userId": "v.optional(v.string())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )",
+          "limit": "v.optional(v.number())"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:update",
+      "kind": "mutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 93,
+      "argsExpression": "args: { ...selectors, contextId: v.string(), status: v.optional(status), description: v.optional(v.string()), data: v.optional(v.any()), completedAt: v.optional(v.number()) }",
+      "original": {
+        "path": "contexts:update",
+        "file": "convex-dev/contexts.ts",
+        "line": 133,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "contextId": "v.string()",
+          "tenantId": "v.optional(v.string())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )",
+          "description": "v.optional(v.string())",
+          "data": "v.optional(v.any())",
+          "completedAt": "v.optional(v.number())"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_tenant_contextId",
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "write",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "contexts:updateMany",
+      "kind": "mutation",
+      "source": "convex-dev/contexts.ts",
+      "line": 148,
+      "argsExpression": "args: { ...filters, parentId: v.optional(v.string()), rootId: v.optional(v.string()), updates: v.object({ status: v.optional(status), data: v.optional(v.any()) }) }",
+      "original": {
+        "path": "contexts:updateMany",
+        "file": "convex-dev/contexts.ts",
+        "line": 973,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.optional(v.string())",
+          "userId": "v.optional(v.string())",
+          "status": "v.optional(\n      v.union(\n        v.literal(\"active\"),\n        v.literal(\"completed\"),\n        v.literal(\"cancelled\"),\n        v.literal(\"blocked\"),\n      ),\n    )",
+          "parentId": "v.optional(v.string())",
+          "rootId": "v.optional(v.string())",
+          "updates": "v.object({\n      status: v.optional(\n        v.union(\n          v.literal(\"active\"),\n          v.literal(\"completed\"),\n          v.literal(\"cancelled\"),\n          v.literal(\"blocked\"),\n        ),\n      ),\n      data: v.optional(v.any()),\n    })"
+        },
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "write",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId, contextId); parent/root/children/participants and every cross-space link",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:addParticipant",
+      "kind": "mutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 34,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), participant }",
+      "original": {
+        "path": "memorySpaces:addParticipant",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 126,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "participant": "v.object({\n      id: v.string(),\n      type: v.string(),\n      joinedAt: v.number(),\n    })"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:archive",
+      "kind": "mutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 38,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), reason: v.optional(v.string()), metadata: v.optional(v.any()) }",
+      "original": {
+        "path": "memorySpaces:archive",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 197,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "reason": "v.optional(v.string())",
+          "metadata": "v.optional(v.any())"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:count",
+      "kind": "query",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 82,
+      "argsExpression": "args: filters",
+      "original": {
+        "path": "memorySpaces:count",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 500,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "type": "v.optional(\n      v.union(\n        v.literal(\"personal\"),\n        v.literal(\"team\"),\n        v.literal(\"project\"),\n        v.literal(\"custom\"),\n      ),\n    )",
+          "status": "v.optional(v.union(v.literal(\"active\"), v.literal(\"archived\")))"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:deleteSpace",
+      "kind": "mutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 50,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), cascade: v.boolean(), reason: v.string(), confirmId: v.optional(v.string()) }",
+      "original": {
+        "path": "memorySpaces:deleteSpace",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 261,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "tenantId": "v.optional(v.string())",
+          "cascade": "v.boolean()",
+          "reason": "v.string()",
+          "confirmId": "v.optional(v.string())"
+        },
+        "tables": [
+          "memorySpaces",
+          "conversations",
+          "memories",
+          "facts"
+        ],
+        "indexes": [
+          "by_tenant_memorySpaceId",
+          "by_memorySpaceId",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:findByParticipant",
+      "kind": "query",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 85,
+      "argsExpression": "args: { ...selectors, participantId: v.string() }",
+      "original": {
+        "path": "memorySpaces:findByParticipant",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 755,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "participantId": "v.string()"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:get",
+      "kind": "query",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 68,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string() }",
+      "original": {
+        "path": "memorySpaces:get",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 371,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "tenantId": "v.optional(v.string())"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_tenant_memorySpaceId",
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:list",
+      "kind": "query",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 76,
+      "argsExpression": "args: { ...filters, participant: v.optional(v.string()), limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.union(v.literal(\"createdAt\"), v.literal(\"updatedAt\"), v.literal(\"name\"))), sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))) }",
+      "original": {
+        "path": "memorySpaces:list",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 407,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "type": "v.optional(\n      v.union(\n        v.literal(\"personal\"),\n        v.literal(\"team\"),\n        v.literal(\"project\"),\n        v.literal(\"custom\"),\n      ),\n    )",
+          "status": "v.optional(v.union(v.literal(\"active\"), v.literal(\"archived\")))",
+          "participant": "v.optional(v.string())",
+          "limit": "v.optional(v.number())",
+          "offset": "v.optional(v.number())",
+          "sortBy": "v.optional(\n      v.union(\n        v.literal(\"createdAt\"),\n        v.literal(\"updatedAt\"),\n        v.literal(\"name\"),\n      ),\n    )",
+          "sortOrder": "v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\")))",
+          "tenantId": "v.optional(v.string())"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:purgeAll",
+      "kind": "internalMutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 94,
+      "argsExpression": "args: {}",
+      "original": {
+        "path": "memorySpaces:purgeAll",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 885,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {},
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "internalize",
+        "requiredCapability": "trusted deployment-operator internal invocation",
+        "scope": "deployment-operator",
+        "resourceLookup": "memorySpaces deployment-wide Cortex records and owned references; retain lifecycle/tombstone fences and reference-aware cleanup",
+        "ownership": "trusted deployment operator controls deployment-wide Cortex maintenance targets; tenant runtime capabilities and resource-owner claims cannot authorize invocation",
+        "backgroundCheck": "trusted operator maintenance does not authenticate through a target's current tenant/background grant, which may already be revoked/deleted; preserve deletion fences and reference-aware cleanup; no runtime admin/write/tool/storage prerequisite",
+        "reason": "deployment-wide maintenance must internalize for trusted operator invocation; never public tenant admin or target-grant authorization"
+      }
+    },
+    {
+      "path": "memorySpaces:reactivate",
+      "kind": "mutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 42,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string() }",
+      "original": {
+        "path": "memorySpaces:reactivate",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 233,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:register",
+      "kind": "mutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 19,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), name: v.optional(v.string()), type: spaceType, participants: v.optional(v.array(participant)), metadata: v.optional(v.any()) }",
+      "original": {
+        "path": "memorySpaces:register",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 18,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "name": "v.optional(v.string())",
+          "type": "v.union(\n      v.literal(\"personal\"),\n      v.literal(\"team\"),\n      v.literal(\"project\"),\n      v.literal(\"custom\"),\n    )",
+          "tenantId": "v.optional(v.string())",
+          "participants": "v.optional(\n      v.array(\n        v.object({\n          id: v.string(),\n          type: v.string(), // \"user\", \"agent\", \"tool\", etc.\n          joinedAt: v.number(),\n        }),\n      ),\n    )",
+          "metadata": "v.optional(v.any())"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_tenant_memorySpaceId",
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:removeParticipant",
+      "kind": "mutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 37,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), participantId: v.string() }",
+      "original": {
+        "path": "memorySpaces:removeParticipant",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 164,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "participantId": "v.string()"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:search",
+      "kind": "query",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 88,
+      "argsExpression": "args: { ...filters, query: v.string(), limit: v.optional(v.number()) }",
+      "original": {
+        "path": "memorySpaces:search",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 771,
+        "kind": "query",
+        "visibility": "public",
+        "validators": {
+          "query": "v.string()",
+          "type": "v.optional(\n      v.union(\n        v.literal(\"personal\"),\n        v.literal(\"team\"),\n        v.literal(\"project\"),\n        v.literal(\"custom\"),\n      ),\n    )",
+          "status": "v.optional(v.union(v.literal(\"active\"), v.literal(\"archived\")))",
+          "limit": "v.optional(v.number())"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "read",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:update",
+      "kind": "mutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 31,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), name: v.optional(v.string()), metadata: v.optional(v.any()), status: v.optional(status) }",
+      "original": {
+        "path": "memorySpaces:update",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 93,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "name": "v.optional(v.string())",
+          "metadata": "v.optional(v.any())",
+          "status": "v.optional(v.union(v.literal(\"active\"), v.literal(\"archived\")))"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    },
+    {
+      "path": "memorySpaces:updateParticipants",
+      "kind": "mutation",
+      "source": "convex-dev/memorySpaces.ts",
+      "line": 43,
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), add: v.optional(v.array(participant)), remove: v.optional(v.array(v.string())) }",
+      "original": {
+        "path": "memorySpaces:updateParticipants",
+        "file": "convex-dev/memorySpaces.ts",
+        "line": 828,
+        "kind": "mutation",
+        "visibility": "public",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "add": "v.optional(\n      v.array(\n        v.object({\n          id: v.string(),\n          type: v.string(),\n          joinedAt: v.number(),\n        }),\n      ),\n    )",
+          "remove": "v.optional(v.array(v.string()))"
+        },
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "disposition": "guard",
+        "requiredCapability": "admin",
+        "scope": "trusted tenant + memorySpace; omitted selectors derive one eligible scope or deny ambiguity",
+        "resourceLookup": "(trusted tenantId, memorySpaceId); participant metadata never a membership grant",
+        "ownership": "ownerPrincipalId must match for own access; cross-principal access within a tenant requires explicit space/tenant resourceAccess; admin never implies read/write/run",
+        "backgroundCheck": "check verified identity and current authority on every invocation/subscription reevaluation; scheduled follow-up stores immutable reference",
+        "reason": "retain modern direct API with verified scoped grants; replace conditional caller filters/global ID lookup with trusted scope and row checks"
+      }
+    }
+  ]
+}

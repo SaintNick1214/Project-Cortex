@@ -1,0 +1,38 @@
+{
+  "rootDir": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+  "roots": [
+    "<rootDir>/tests/unit/runtimeAuth"
+  ],
+  "testEnvironment": "node",
+  "testMatch": [
+    "<rootDir>/tests/unit/runtimeAuth/**/*.test.ts"
+  ],
+  "extensionsToTreatAsEsm": [
+    ".ts"
+  ],
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "transform": {
+    "^.+\\.(ts|js)$": [
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/node_modules/ts-jest",
+      {
+        "useESM": true,
+        "tsconfig": {
+          "allowJs": true,
+          "module": "ESNext",
+          "moduleResolution": "bundler",
+          "target": "ES2021",
+          "lib": [
+            "ES2021",
+            "DOM"
+          ]
+        }
+      }
+    ]
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!(convex))"
+  ],
+  "cacheDirectory": "/tmp/task03b2b1-review3-20261003/core-cache"
+}

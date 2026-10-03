@@ -1,0 +1,13 @@
+f495671dae76d9813245b8f8ae0ea230
+"use strict";
+import { performAsyncSyscall } from "./syscall.js";
+export function setupAuth(requestId) {
+    return {
+        getUserIdentity: async () => {
+            return await performAsyncSyscall("1.0/getUserIdentity", {
+                requestId
+            });
+        }
+    };
+}
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiL3dvcmtzcGFjZS9Qcm9qZWN0LUNvcnRleC9ub2RlX21vZHVsZXMvY29udmV4L2Rpc3QvZXNtL3NlcnZlci9pbXBsL2F1dGhlbnRpY2F0aW9uX2ltcGwuanMiLCJtYXBwaW5ncyI6IkFBQUEsWUFBWSxDQUFDO0FBQ2IsT0FBTyxFQUFFLG1CQUFtQixFQUFFLE1BQU0sY0FBYyxDQUFDO0FBQ25ELE1BQU0sVUFBVSxTQUFTLENBQUMsU0FBUztJQUNqQyxPQUFPO1FBQ0wsZUFBZSxFQUFFLEtBQUssSUFBSSxFQUFFO1lBQzFCLE9BQU8sTUFBTSxtQkFBbUIsQ0FBQyxxQkFBcUIsRUFBRTtnQkFDdEQsU0FBUzthQUNWLENBQUMsQ0FBQztRQUNMLENBQUM7S0FDRixDQUFDO0FBQ0osQ0FBQyIsIm5hbWVzIjpbXSwic291cmNlcyI6WyIvd29ya3NwYWNlL1Byb2plY3QtQ29ydGV4L25vZGVfbW9kdWxlcy9jb252ZXgvZGlzdC9lc20vc2VydmVyL2ltcGwvYXV0aGVudGljYXRpb25faW1wbC5qcyJdLCJzb3VyY2VzQ29udGVudCI6WyJcInVzZSBzdHJpY3RcIjtcbmltcG9ydCB7IHBlcmZvcm1Bc3luY1N5c2NhbGwgfSBmcm9tIFwiLi9zeXNjYWxsLmpzXCI7XG5leHBvcnQgZnVuY3Rpb24gc2V0dXBBdXRoKHJlcXVlc3RJZCkge1xuICByZXR1cm4ge1xuICAgIGdldFVzZXJJZGVudGl0eTogYXN5bmMgKCkgPT4ge1xuICAgICAgcmV0dXJuIGF3YWl0IHBlcmZvcm1Bc3luY1N5c2NhbGwoXCIxLjAvZ2V0VXNlcklkZW50aXR5XCIsIHtcbiAgICAgICAgcmVxdWVzdElkXG4gICAgICB9KTtcbiAgICB9XG4gIH07XG59XG4vLyMgc291cmNlTWFwcGluZ1VSTD1hdXRoZW50aWNhdGlvbl9pbXBsLmpzLm1hcFxuIl0sInZlcnNpb24iOjN9

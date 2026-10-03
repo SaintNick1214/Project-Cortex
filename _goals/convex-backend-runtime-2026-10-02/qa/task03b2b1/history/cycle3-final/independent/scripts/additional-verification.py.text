@@ -1,0 +1,26 @@
+from judge import *
+import difflib,collections,re
+src=C/'node_modules/convex/src/server/impl/authentication_impl.ts'
+(OUT/'context/native-authentication_impl.ts').write_bytes(src.read_bytes())
+(OUT/'context/review3-bounded-prompt.md').write_bytes((ROOT/'work/backend-runtime/task03b2b1-review3-prompt.md').read_bytes())
+p=Q/'cycle3/provenance/pre-admission-fix/admission-finding.stdout.json'
+d=json.loads(p.read_text());rows=d['outcomes'];assert len(rows)==44
+print('historical44',len(rows),sum(r['success'] for r in rows),sum(r['writes'] for r in rows))
+assert sum(r['success'] for r in rows)==34 and sum(r['writes'] for r in rows)==16
+cur=json.loads((OUT/'raw/required-admission.stdout').read_text());assert len(cur['outcomes'])==44
+assert all(r['reached'] and r['writes']==0 and r['attempts']==0 and not r['success'] for r in cur['outcomes'])
+old=(Q/'cycle3/core-replay/legacy-fixture/provisioning.test.ts.text').read_text();new=(C/'tests/unit/runtimeAuth/provisioning.test.ts').read_text()
+(OUT/'raw/accepted-provisioning.diff').write_text(''.join(difflib.unified_diff(old.splitlines(True),new.splitlines(True),fromfile='literal-legacy',tofile='accepted-54aca')))
+old=(Q/'history/cycle2-final/candidate/source/convex-dev/runtimeAuth.ts.text').read_text();new=(C/'convex-dev/runtimeAuth.ts').read_text()
+(OUT/'raw/accepted-core.diff').write_text(''.join(difflib.unified_diff(old.splitlines(True),new.splitlines(True),fromfile='original-f298',tofile='accepted-03ec')))
+# Assert the unchanged pure policy block before boundedSingle.
+assert old[:old.index('export function createAuthorityReader')].replace('/** Avoid native unique() diagnostics containing trusted control document IDs. */\n','') in new or old[:old.index('export function createAuthorityReader')]==new[:new.index('/** Avoid native unique()')]
+cat=json.loads((OUT/'catalog/selected-path-inventory.json').read_text())
+original=json.loads((C/'_goals/convex-backend-runtime-2026-10-02/qa/task03a/public-path-inventory.json').read_text())
+original={r['path']:r for r in original['endpoints']}
+records=[{'path':r['path'],'kind':r['kind'],'source':r['file'],'line':r['line'],'argsExpression':r['argsExpression'],'original':original[r['path']]} for r in cat['endpoints']]
+(OUT/'raw/original46-native-map.json').write_text(json.dumps({'count':len(records),'records':records},indent=2)+'\n')
+# All first/later mutations in the bounded public/internal modules call effect.
+for name in ['agents.ts','memorySpaces.ts','contexts.ts']:
+ text=(C/'convex-dev'/name).read_text();print(name,'effects',text.count('await effect('))
+print('additional provenance verification complete')

@@ -1,0 +1,938 @@
+{
+  "count": 36,
+  "reached": 36,
+  "mismatches": 36,
+  "committedReceipts": 3,
+  "observations": [
+    {
+      "table": "agents",
+      "stage": "initial",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "initial",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'FORBIDDEN',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "initial",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "initial",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "initial",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "initial",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'FORBIDDEN',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "initial",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "initial",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "initial",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "initial",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'FORBIDDEN',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "initial",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "initial",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 1,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "optionalRead",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "optionalRead",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 1,
+      "commits": 1,
+      "result": {
+        "accepted": true,
+        "resourceType": "agents",
+        "resourceId": "agent-a"
+      },
+      "actualErrorData": null,
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "The expression evaluated to a falsy value:\n\n  assert(error instanceof ConvexError)\n"
+    },
+    {
+      "table": "agents",
+      "stage": "optionalRead",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "optionalRead",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "optionalRead",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 5,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "optionalRead",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 5,
+      "attempts": 1,
+      "commits": 1,
+      "result": {
+        "accepted": true,
+        "resourceType": "memorySpaces",
+        "resourceId": "space-a"
+      },
+      "actualErrorData": null,
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "The expression evaluated to a falsy value:\n\n  assert(error instanceof ConvexError)\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "optionalRead",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 5,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "optionalRead",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 5,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "optionalRead",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "optionalRead",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 6,
+      "attempts": 1,
+      "commits": 1,
+      "result": {
+        "accepted": true,
+        "resourceType": "contexts",
+        "resourceId": "context-a"
+      },
+      "actualErrorData": null,
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "The expression evaluated to a falsy value:\n\n  assert(error instanceof ConvexError)\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "optionalRead",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "optionalRead",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 0,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "not_dispatched"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "failed"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n+   outcome: 'not_dispatched',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n-   outcome: 'failed',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "postInsert",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "postInsert",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'FORBIDDEN',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "postInsert",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "agents",
+      "stage": "postInsert",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 4,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "postInsert",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 5,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "postInsert",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 5,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'FORBIDDEN',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "postInsert",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 5,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "memorySpaces",
+      "stage": "postInsert",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 5,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "postInsert",
+      "injectedCode": "UNAUTHENTICATED",
+      "reached": true,
+      "identityCalls": 7,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "UNAUTHENTICATED",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'UNAUTHENTICATED',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "postInsert",
+      "injectedCode": "FORBIDDEN",
+      "reached": true,
+      "identityCalls": 7,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "FORBIDDEN",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'FORBIDDEN',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "postInsert",
+      "injectedCode": "INVALID_INPUT",
+      "reached": true,
+      "identityCalls": 7,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "INVALID_INPUT",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'INVALID_INPUT',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    },
+    {
+      "table": "contexts",
+      "stage": "postInsert",
+      "injectedCode": "CAPABILITY_NOT_READY",
+      "reached": true,
+      "identityCalls": 7,
+      "attempts": 1,
+      "commits": 0,
+      "result": null,
+      "actualErrorData": {
+        "version": 1,
+        "code": "CAPABILITY_NOT_READY",
+        "message": "Access denied or invalid registry input",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "expectedErrorData": {
+        "version": 1,
+        "code": "REGISTRY_OPERATION_FAILED",
+        "message": "Registry operation failed",
+        "retryable": false,
+        "outcome": "rolled_back"
+      },
+      "requiredOutcomeSatisfied": false,
+      "assertionFailure": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   code: 'CAPABILITY_NOT_READY',\n+   message: 'Access denied or invalid registry input',\n-   code: 'REGISTRY_OPERATION_FAILED',\n-   message: 'Registry operation failed',\n    outcome: 'rolled_back',\n    retryable: false,\n    version: 1\n  }\n"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+--- original-f298
++++ accepted-03ec
+@@ -202,10 +202,18 @@
+   return await materialize(reader, principal, membership, grant, requirement, now, reference);
+ }
+ 
++/** Avoid native unique() diagnostics containing trusted control document IDs. */
++async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
++  const rows = await query.take(2);
++  if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
++    message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
++  return rows[0] ?? null;
++}
++
+ export function createAuthorityReader(ctx: Pick<QueryCtx, "db">): AuthorityReader {
+   return {
+-    findPrincipal: async (issuer, subject) => await ctx.db.query("runtimeAuthPrincipals")
+-      .withIndex("by_issuer_subject", (q) => q.eq("issuer", issuer).eq("subject", subject)).unique(),
++    findPrincipal: async (issuer, subject) => await boundedSingle(ctx.db.query("runtimeAuthPrincipals")
++      .withIndex("by_issuer_subject", (q) => q.eq("issuer", issuer).eq("subject", subject))),
+     getPrincipal: async (id) => {
+       const normalized = ctx.db.normalizeId("runtimeAuthPrincipals", id);
+       return normalized ? await ctx.db.get("runtimeAuthPrincipals", normalized) : null;
+@@ -228,11 +236,11 @@
+       const normalized = ctx.db.normalizeId("runtimeAuthGrants", id);
+       return normalized ? await ctx.db.get("runtimeAuthGrants", normalized) : null;
+     },
+-    getScope: async (tenantId, memorySpaceId) => await ctx.db.query("runtimeAuthScopes")
+-      .withIndex("by_tenant_space", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId)).unique(),
+-    hasTombstone: async (key) => (await ctx.db.query("runtimeAuthTombstones")
++    getScope: async (tenantId, memorySpaceId) => await boundedSingle(ctx.db.query("runtimeAuthScopes")
++      .withIndex("by_tenant_space", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId))),
++    hasTombstone: async (key) => (await boundedSingle(ctx.db.query("runtimeAuthTombstones")
+       .withIndex("by_resource", (q) => q.eq("tenantId", key.tenantId).eq("memorySpaceId", key.memorySpaceId)
+-        .eq("resourceType", key.resourceType).eq("resourceId", key.resourceId)).unique()) !== null,
++        .eq("resourceType", key.resourceType).eq("resourceId", key.resourceId)))) !== null,
+   };
+ }
+ 

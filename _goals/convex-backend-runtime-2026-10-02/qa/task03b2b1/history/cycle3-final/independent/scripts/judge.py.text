@@ -1,0 +1,33 @@
+import pathlib,json,hashlib,subprocess,datetime,os,sys
+OUT=pathlib.Path('/tmp/task03b2b1-review3-20261003');ROOT=pathlib.Path('/workspace/Project-Cortex');C=ROOT/'work/backend-runtime/task03b2b1-checkout';Q=C/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+def record(p):
+ b=p.read_bytes();return {'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
+def run(name,argv,cwd=C):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();env=dict(os.environ)
+ for k in list(env):
+  if any(t in k for t in ['TOKEN','SECRET','PASSWORD','API_KEY','DEPLOY_KEY']):env.pop(k,None)
+ env.update({'CONVEX_URL':'http://127.0.0.1:1','NEXT_PUBLIC_CONVEX_URL':'http://127.0.0.1:1','npm_config_offline':'true','npm_config_cache':str(OUT/'npm-cache')})
+ p=subprocess.run(argv,cwd=cwd,env=env,capture_output=True)
+ (OUT/'raw'/f'{name}.stdout').write_bytes(p.stdout);(OUT/'raw'/f'{name}.stderr').write_bytes(p.stderr)
+ d={'argv':argv,'cwd':str(cwd),'startUTC':start,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exit':p.returncode,'stdout':record(OUT/'raw'/f'{name}.stdout'),'stderr':record(OUT/'raw'/f'{name}.stderr')}
+ (OUT/'raw'/f'{name}.command.json').write_text(json.dumps(d,indent=2)+'\n');print(name,p.returncode,flush=True);return p
+
+def verify(name,base,records):
+ rows=[]
+ if isinstance(records,list):items=[(r.get('path',r.get('relativePath')),r) for r in records]
+ else:items=records.items()
+ for path,want in items:
+  p=pathlib.Path(path);p=p if p.is_absolute() else base/p
+  got=record(p) if p.is_file() else None
+  if isinstance(want,str):same=bool(got and got['sha256']==want)
+  else:same=bool(got and got['sha256']==want.get('sha256',want.get('hash')) and (want.get('bytes',want.get('size')) is None or got['bytes']==want.get('bytes',want.get('size'))))
+  rows.append({'path':str(p),'wanted':want,'actual':got,'matches':same})
+ d={'records':len(rows),'mismatchCount':sum(not r['matches'] for r in rows),'rows':rows};(OUT/'raw'/f'{name}.json').write_text(json.dumps(d,indent=2)+'\n');print(name,d['records'],d['mismatchCount']);return d
+
+def snapshot(name):
+ sf=json.loads((Q/'cycle3/source-freeze.json').read_text());mf=json.loads((Q/'cycle3/qa-manifest.json').read_text());verify(name+'-freeze',C,sf['sourceRecords']);verify(name+'-qa',Q/'cycle3',mf['files'])
+ files={str(p.relative_to(Q)):record(p) for p in Q.rglob('*') if p.is_file()}
+ (OUT/'raw'/f'{name}-all-qa.json').write_text(json.dumps(files,indent=2)+'\n')
+ run(name+'-candidate-head',['git','rev-parse','HEAD']);run(name+'-candidate-status',['git','status','--porcelain=v1','--untracked-files=all']);run(name+'-main-head',['git','rev-parse','HEAD'],ROOT);run(name+'-main-status',['git','status','--porcelain=v1','--untracked-files=all'],ROOT)
+ print('total QA',len(files))
+if __name__=='__main__':snapshot(sys.argv[1])
