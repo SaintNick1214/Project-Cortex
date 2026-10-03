@@ -1,0 +1,32 @@
+from pathlib import Path
+import json,subprocess,datetime,hashlib,concurrent.futures
+root=Path('/workspace/Project-Cortex'); base=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c3'; scratch=root/'work/resume/current-guard-preparation-c3-review'
+def adapt(name,text):
+ for mod in ['guard','native-engine']:
+  text=text.replace("from './"+mod+".mjs'", "from '"+str(base/'scripts'/f'{mod}.mjs')+"'")
+ p=scratch/name;p.write_text(text);return str(p.relative_to(root))
+s=(base/'scripts/native-validator-check.mjs').read_text();s=s.replace("writeFileSync(resolve(preparation,'native-registration-schemas.json'),JSON.stringify({scope:'OFFLINE_NATIVE_CONVEX_REGISTRATIONS',rows},null,2)+'\\n');", "assert.deepEqual(JSON.parse(readFileSync(resolve(preparation,'native-registration-schemas.json'))),{scope:'OFFLINE_NATIVE_CONVEX_REGISTRATIONS',rows});")
+native=adapt('native-validator-readonly.mjs',s)
+g=(base/'scripts/guard.mjs').read_text();g=g.replace("export const preparation = resolve(dirname(fileURLToPath(import.meta.url)), '..');", "export const preparation = "+json.dumps(str(base))+";");g=g.replace("return selected;}\nconst json", "if(directory===resolve(fixture,'fixture/convex'))selected.push(relative(repo,resolve(directory,'qualificationUnreviewed.ts')));return selected;}\nconst json")
+(scratch/'injected-topology-guard.mjs').write_text(g)
+s=(base/'scripts/offline-check.mjs').read_text();s=s.replace("resolve(repo,'work/resume/current-guard-live-c3/preflight-')", "resolve(repo,'work/resume/current-guard-preparation-c3-review/preflight-')")
+a=s.index('const extra=');b=s.index('assert.equal(lstatSync(scratch)',a)
+s=s[:a]+"const {sourcePreflight: injectedPreflight}=await import('./injected-topology-guard.mjs');assert.throws(()=>injectedPreflight());negatives++;\n"+s[b:];guard=adapt('offline-check-readonly.mjs',s)
+s=(base/'scripts/freeze.mjs').read_text().replace("import { readdirSync", "import assert from 'node:assert/strict';\nimport { readdirSync")
+s=s.replace("writeFileSync(resolve(preparation,'runtime-freeze.json'),JSON.stringify({version:1,state:'FROZEN_CANDIDATE_AWAITING_INDEPENDENT_REVIEW',generatedBindings:'ABSENT_UNTIL_OFFICIAL_CODEGEN_SEPARATE_PRIVATE_RECEIPT',privateArtifactsExcluded:true,files},null,2)+'\\n');", "assert.equal(readFileSync(resolve(preparation,'runtime-freeze.json'),'utf8'),JSON.stringify({version:1,state:'FROZEN_CANDIDATE_AWAITING_INDEPENDENT_REVIEW',generatedBindings:'ABSENT_UNTIL_OFFICIAL_CODEGEN_SEPARATE_PRIVATE_RECEIPT',privateArtifactsExcluded:true,files},null,2)+'\\n');")
+freeze=adapt('freeze-readonly.mjs',s)
+s=(root/'work/resume/current-guard-live-c3/offline-mwd.ts').read_text();s=s.replace("work/resume/current-guard-live-c3/mwd-revised-offline-receipt.json", "work/resume/current-guard-preparation-c3-review/mwd-receipt.json");mwd=adapt('offline-mwd.ts',s)
+s=(root/'work/resume/current-guard-live-c3/offline-mra.mjs').read_text().replace("/work/resume/current-guard-live-c3/mra-revised/", "/work/resume/current-guard-preparation-c3-review/mra/");(scratch/'mra').mkdir(exist_ok=True);mra=adapt('offline-mra.mjs',s)
+checks=json.loads((base/'offline-receipts.json').read_text())['checks']; tasks=[]
+for i,c in enumerate(checks):
+ argv=c['argv'][:]
+ if i==0:argv[-1]=native
+ if i==1:argv[-1]=guard
+ if i==10:argv[-1]=mwd
+ if i==11:argv[-1]=mra
+ if i==17:argv[-1]=freeze
+ tasks.append((i,argv))
+def run(t):
+ i,argv=t;start=datetime.datetime.now(datetime.timezone.utc).isoformat();r=subprocess.run(argv,cwd=root,text=True,capture_output=True,timeout=90);row={'selection':i+1,'argv':argv,'startedAt':start,'finishedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':r.returncode,'stdout':r.stdout,'stderr':r.stderr};return row
+with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool: results=list(pool.map(run,tasks[:-1]))
+results.append(run(tasks[-1]));(scratch/'offline-checks.json').write_text(json.dumps(results,indent=2)+'\n');print(json.dumps([{'selection':r['selection'],'exitCode':r['exitCode'],'output':r['stdout']+r['stderr']} for r in results],indent=2))

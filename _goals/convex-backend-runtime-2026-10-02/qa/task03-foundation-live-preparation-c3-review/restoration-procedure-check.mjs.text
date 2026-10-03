@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import {canonical} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c3/scripts/guard.mjs';
+const scratch=resolve('work/resume/current-guard-preparation-c3-review'),test=fs.mkdtempSync(scratch+'/restoration-');fs.chmodSync(test,0o700);
+const path=resolve(test,'.env.local'),preserved=resolve(test,'preserved.bin');const sha=b=>createHash('sha256').update(b).digest('hex');
+// Reviewer reference for documented preconditions. It is not an added wrapper or C3 proof.
+function validate(p,proof={absentBefore:true,ownedGroupsRemaining:0,frozen:false}){assert.equal(proof.absentBefore,true);assert.equal(proof.ownedGroupsRemaining,0);assert.equal(proof.frozen,false);assert.ok(['.env.local','.gitignore'].includes(p.split('/').at(-1)));canonical(p,test);const stat=fs.lstatSync(p);assert.ok(stat.isFile());assert.equal(stat.nlink,1);assert.equal(stat.uid,process.getuid());assert.ok(stat.size<=65536);return stat;}
+let negative=0;try{fs.writeFileSync(path,'synthetic noncredential fixture',{mode:0o600,flag:'wx'});validate(path);for(const proof of [{absentBefore:false,ownedGroupsRemaining:0,frozen:false},{absentBefore:true,ownedGroupsRemaining:1,frozen:false},{absentBefore:true,ownedGroupsRemaining:0,frozen:true}]){assert.throws(()=>validate(path,proof));negative++;}
+fs.linkSync(path,test+'/link');assert.throws(()=>validate(path));negative++;fs.unlinkSync(test+'/link');fs.renameSync(path,test+'/target');fs.symlinkSync(test+'/target',path);assert.throws(()=>validate(path));negative++;fs.unlinkSync(path);fs.renameSync(test+'/target',path);
+fs.writeFileSync(path,Buffer.alloc(65537));assert.throws(()=>validate(path));negative++;fs.writeFileSync(path,'synthetic bounded preservation');const bytes=fs.readFileSync(path);fs.writeFileSync(preserved,bytes,{mode:0o600,flag:'wx'});assert.equal(fs.statSync(preserved).mode&0o777,0o600);assert.equal(sha(fs.readFileSync(preserved)),sha(bytes));assert.deepEqual(fs.readFileSync(preserved),bytes);assert.throws(()=>fs.writeFileSync(preserved,bytes,{flag:'wx'}));negative++;fs.unlinkSync(path);assert.equal(fs.existsSync(path),false);assert.deepEqual(fs.readFileSync(preserved),bytes);
+fs.mkdirSync(path);assert.throws(()=>validate(path));negative++;fs.rmdirSync(path);
+const report={scope:'OFFLINE_DOCUMENTED_PROCEDURE_REFERENCE_ONLY',negativeControls:negative,bytePreservationAndPrivateModeVerified:true,sourceOrFixtureWrites:0,futureC3AbsenceOwnershipProcessRestoration:'NOT_OBSERVED_REQUIRES_PARENT_ACTUAL_PROOF',specialFileAndWrongUid:'documented hard rejection; not created in reviewer execution',strictPreflight:'unchanged; synthetic extra operational-file negative separately observed'};fs.writeFileSync(scratch+'/restoration-procedure-check.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
+}finally{fs.rmSync(test,{recursive:true});}
