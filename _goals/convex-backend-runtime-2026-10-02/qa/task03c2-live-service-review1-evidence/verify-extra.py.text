@@ -1,0 +1,54 @@
+from pathlib import Path
+import hashlib,json,subprocess,tarfile,shutil,collections
+p=Path('/workspace/Project-Cortex');r=Path(__file__).parent;q=p/'_goals/convex-backend-runtime-2026-10-02/qa';h=q/'task03c2-live-fixture';w=p/'work/backend-runtime/task03c2-live-fixture';a=q/'task03c2-live-service'
+def sha(b):return hashlib.sha256(b).hexdigest()
+results={};bindings=[]
+def bind(f):
+ b=f.read_bytes();bindings.append({'path':str(f.relative_to(p)),'sha256':sha(b),'bytes':len(b)})
+def copy(f,target):target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(f.read_bytes())
+sp=json.loads((h/'sdk-provenance.json').read_text());gitRows=[]
+for row in sp['files']:
+ f=w/row['path'];copy(f,r/'sdk-provenance-files'/row['path']);bind(f)
+ if row['path'].startswith('sdk/'):
+  relative=row['path'][4:];obj=subprocess.run(['git','show',sp['acceptedCommit']+':'+relative],cwd=p,capture_output=True)
+  if obj.returncode==0:gitRows.append({'path':relative,'match':sha(obj.stdout)==row['sha256']})
+results['sdkGitRows']={'count':len(gitRows),'mismatches':[x for x in gitRows if not x['match']]}
+tgz=w/sp['package']['path'];copy(tgz,r/'sdk-provenance-files'/sp['package']['path']);bind(tgz)
+tarRows=[]
+with tarfile.open(tgz) as tar:
+ for m in tar.getmembers():
+  assert m.isfile();b=tar.extractfile(m).read();f=w/'packed-sdk'/m.name;tarRows.append({'path':m.name,'match':sha(b)==sha(f.read_bytes())});copy(f,r/'packed-sdk'/m.name);bind(f)
+results['tarEntries']={'count':len(tarRows),'mismatches':[x for x in tarRows if not x['match']]}
+history=[]
+for name in ['cycle1','cycle2-final']:
+ f=h/'history'/name/'preservation-manifest.json';m=json.loads(f.read_text());bind(f);bad=[]
+ for row in m['records']:
+  target=p/row['file'];b=target.read_bytes();bind(target)
+  if sha(b)!=row['sha256'] or len(b)!=row['bytes']:bad.append(row['file'])
+ omitted=m.get('omittedPrivateReproducibleSdk',m.get('privateReproducibleOmissions',[]))
+ history.append({'cycle':name,'manifestSha256':sha(f.read_bytes()),'savedRecords':len(m['records']),'mismatches':bad,'explicitHistoricalOmissionCount':len(omitted),'historicalOmissionsReread':False})
+results['history']=history
+for f in (p/'node_modules/convex/dist/esm').rglob('*'):
+ if f.is_file():copy(f,r/'installed-native/convex/dist/esm'/f.relative_to(p/'node_modules/convex/dist/esm'));bind(f)
+for name in ['convex','typescript','tsx','ws','https-proxy-agent']:
+ f=p/'node_modules'/name/'package.json';bind(f);copy(f,r/'installed-native'/name/'package.json')
+prep=json.loads((a/'execution/fixture-compiler-preparation.json').read_text());bad=[]
+for row in prep['files']:
+ f=Path(prep['destination'])/row['path'];source=Path(prep['source'])/row['path'];b=f.read_bytes();bind(f)
+ if f.is_symlink() or sha(b)!=row['sha256'] or len(b)!=row['bytes'] or b!=source.read_bytes():bad.append(row['path'])
+results['compilerDependencyCopy']={'regularFiles':len(prep['files']),'mismatches':bad,'installedVersion':json.loads((p/'node_modules/typescript/package.json').read_text())['version']}
+gen=[]
+for f in sorted((a/'official-generated').glob('*.text')):
+ original=h/'fixture/convex/_generated'/f.name.removesuffix('.text');bind(original);gen.append({'name':original.name,'matchesActualOriginal':f.read_bytes()==original.read_bytes()})
+results['officialGeneratedBindings']=gen
+ledger=json.loads((w/'owned-b72a6d27-50fb-43bb-8442-81ec494125fa.json').read_text());receipt=json.loads((a/'service/qualify-b72a6d27-50fb-43bb-8442-81ec494125fa.json').read_text())
+results['privateLedger']={'runAndDeploymentMatch':ledger['runId']==receipt['runId'] and ledger['deploymentName']==receipt['deploymentName'],'ownedRecords':len(ledger['owned']),'attemptedScopes':len(ledger['attemptedScopes']),'operatorOperations':len(ledger['operations']),'operationNamesMatchReceipt':[x['name'] for x in ledger['operations']]==[x['name'] for x in receipt['operatorEffects']]}
+results['serviceCases']={'orderedNames': [x['name'] for x in receipt['results']],'multiplicities':dict(collections.Counter(x['name'] for x in receipt['results'])),'statusCounts':dict(collections.Counter(x['status'] for x in receipt['results'])),'skipped':receipt['skipped'],'todo':0,'realLiveReplaysByJudge':0}
+assert all(v==1 for v in results['serviceCases']['multiplicities'].values())
+mapping=q/'task03c2-live-harness-review3-evidence/source-context/original41-independent-requirement-mapping.json'
+copy(mapping,r/'source-context/original41-independent-requirement-mapping.json');bind(mapping)
+for f in [p/'tests/unit/runtimeWorkerClient/metadata-consumers.test.ts',p/'tests/unit/sessions/maintenance-boundary.test.ts',p/'work/backend-runtime/task03c2-live-service-review-prompt.md']:
+ if f.exists():copy(f,r/'source-context'/f.relative_to(p));bind(f)
+results['commandsExecutedByThisScript']='Read-only git show and local byte/structure checks; no Node/native execution, service, install, signer or credential file reads'
+(r/'extra-before-bindings.json').write_text(json.dumps(bindings,indent=2)+'\n');(r/'integrity-extra.json').write_text(json.dumps(results,indent=2)+'\n')
+print(json.dumps(results,indent=2))

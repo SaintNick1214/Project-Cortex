@@ -1,0 +1,44 @@
+import { readFileSync, writeFileSync, lstatSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { canonical, root, scratch, receiptFile } from '../../_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs';
+// Parent-owned exact retirement; verified created disposable dev project only.
+const target = JSON.parse(readFileSync(canonical(receiptFile, scratch, {privateFile:true,existing:true}), 'utf8'));
+const ownership = JSON.parse(readFileSync(canonical(resolve(scratch,'created-project.json'),scratch,{privateFile:true,existing:true}),'utf8'));
+const request = JSON.parse(readFileSync(canonical(resolve(root,'project-request.json'),root,{existing:true}),'utf8'));
+if (target.purpose!=='qualification-auth' || target.projectName!==request.projectName
+ || target.projectSlug!==request.projectSlug || target.projectId!==ownership.id
+ || target.deploymentName!==ownership.deploymentName || ownership.requestedName!==request.projectName
+ || !target.isolationVerified || target.kind!=='cloud' || target.deploymentType!=='dev'
+ || target.sharedCiTarget!==false || target.productionDeployment!==false
+ || target.active!==true || target.retired!==false || target.deleted!==false) throw new Error('Owned disposable retirement identity mismatch');
+const key=process.env.CONVEX_TEAM_API_KEY;
+if (!key) throw new Error('Missing team management credential');
+const api=async(path,method='GET')=>{
+ const response=await fetch(`https://api.convex.dev/v1${path}`,{method,headers:{Authorization:`Bearer ${key}`},signal:AbortSignal.timeout(30_000)});
+ return {status:response.status,body:await response.text()};
+};
+const before=await api(`/projects/${target.projectId}`);
+if(before.status!==200) throw new Error(`Owned project verification HTTP${before.status}`);
+const project=JSON.parse(before.body);
+if(project.id!==target.projectId || project.slug!==request.projectSlug || project.name!==request.projectName) throw new Error('Actual owned project identity mismatch');
+const deployments=await api(`/projects/${target.projectId}/list_deployments`);
+if(deployments.status!==200)throw new Error(`Deployment verification HTTP${deployments.status}`);
+const rows=JSON.parse(deployments.body);
+if(!Array.isArray(rows)||rows.length!==1||rows[0].name!==target.deploymentName
+ ||rows[0].projectId!==target.projectId||rows[0].deploymentType!=='dev')throw new Error('Actual project has unexpected deployment; retirement halted');
+const observedDeployment=await api(`/deployments/${encodeURIComponent(target.deploymentName)}`);
+if(observedDeployment.status!==200)throw new Error(`Named deployment verification HTTP${observedDeployment.status}`);
+const deployment=JSON.parse(observedDeployment.body);
+if(deployment.name!==target.deploymentName||deployment.projectId!==target.projectId
+ ||deployment.kind!=='cloud'||deployment.deploymentType!=='dev'||deployment.deploymentUrl!==target.deploymentUrl)throw new Error('Named deployment is not the exact owned development cloud target');
+const destination=canonical(resolve(root,'evidence','target-retirement.json'),root);
+if(lstatSync(destination,{throwIfNoEntry:false}))throw new Error('Retirement receipt already exists');
+const startedAt=new Date().toISOString();
+const deletion=await api(`/projects/${target.projectId}/delete`,'POST');
+if(deletion.status!==200)throw new Error(`Owned project retirement HTTP${deletion.status}`);
+const after=await api(`/projects/${target.projectId}`);
+if(after.status!==404)throw new Error(`Owned retirement confirmation HTTP${after.status}`);
+const receipt={version:1,operation:'retire-owned-qualification-auth-project',startedAt,observedAt:new Date().toISOString(),projectId:target.projectId,deploymentName:target.deploymentName,verifiedProjectName:target.projectName,verifiedOnlyDevelopmentCloudDeployment:true,managementDeleteMethod:'POST',managementDeletePath:`/projects/${target.projectId}/delete`,deletionHttpStatus:deletion.status,absentProjectHttpStatus:after.status,status:'PASS',coverage:'Exact owned project destroyed; all its disposable fixtures unreachable. This does not replace per-case qualification, owned control-fence checks or full-goal validation.'};
+writeFileSync(destination,JSON.stringify(receipt,null,2)+'\n',{flag:'wx',mode:0o600});
+writeFileSync(receiptFile,JSON.stringify({...target,active:false,retired:true,deleted:true,retiredAt:receipt.observedAt},null,2)+'\n',{mode:0o600});
+process.stdout.write(JSON.stringify({operation:receipt.operation,projectId:receipt.projectId,deploymentName:receipt.deploymentName,status:receipt.status,deletionHttpStatus:receipt.deletionHttpStatus,absentProjectHttpStatus:receipt.absentProjectHttpStatus})+'\n');

@@ -1,0 +1,20 @@
+import { resolve } from 'node:path';
+import { writeFileSync } from 'node:fs';
+import { livePreflight, fixture, repo } from '../../_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs';
+import { ProcessOwner } from '../../_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-owner.mjs';
+
+// Parent-only diagnostic of the observed CLI failure. The accepted fixture,
+// source/provenance guards, target validation and process ownership are unchanged.
+const { target, envFile, env } = livePreflight();
+const args = [resolve(repo, 'node_modules/convex/bin/main.js'), 'dev', '--once', '--codegen', 'enable', '--typecheck', 'enable', '--tail-logs', 'disable', '--env-file', envFile];
+const startedAt = new Date().toISOString();
+const owner = new ProcessOwner();
+let result;
+try { result = await owner.run(args, { cwd: fixture, env }, 120_000); }
+finally { await owner.reapAll(); }
+const privateOutput = resolve(repo, 'work/backend-runtime/auth-live-execution/codegen-diagnostic-result.json');
+writeFileSync(privateOutput, JSON.stringify({ startedAt, completedAt: new Date().toISOString(),
+  argv: [process.execPath, ...args], cwd: fixture, deploymentName: target.deploymentName,
+  ...result, remainingOwnedGroups: owner.records.size, terminalVerifiedGroups: owner.verifiedGroups }, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
+process.stdout.write(JSON.stringify({ operation: 'guarded-parent-codegen-diagnostic', exitCode: result.code, timedOut: result.timedOut, remainingOwnedGroups: owner.records.size }) + '\n');
+process.exitCode = result.code === 0 && !result.timedOut && !owner.records.size ? 0 : 1;

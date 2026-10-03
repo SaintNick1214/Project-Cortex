@@ -1,0 +1,220 @@
+import { describe, expect, it } from "@jest/globals";
+import { ConvexError, type Value } from "convex/values";
+import * as immutable from "../../../convex-dev/immutable";
+import * as mutable from "../../../convex-dev/mutable";
+import * as sessions from "../../../convex-dev/sessions";
+import { createAuthorityReader } from "../../../convex-dev/runtimeAuth";
+import { sourceId } from "../../../convex-dev/runtimeMetadataAuth";
+import { fixture } from "./fixture";
+
+type F = ReturnType<typeof fixture>;
+type Row = ReturnType<F["seedMutable"]>;
+type Table = "immutable" | "mutable" | "sessions";
+type Capability = "read" | "write";
+type Access = "own" | "space" | "tenant";
+type NativeReceiver = { take(limit: number): Promise<Row[]>; tableNameForErrorMessages: string };
+// The installed implementation has no published declaration. Assert only the protocol exercised here.
+const nativeModulePath = "../../../node_modules/convex/dist/esm/server/impl/" + "query_impl.js";
+const { QueryImpl } = await import(nativeModulePath) as {
+  QueryImpl: { prototype: { unique(this: NativeReceiver): Promise<Row | null> } };
+};
+const tables: Table[] = ["immutable", "mutable", "sessions"];
+const capabilities: Capability[] = ["write", "read"];
+const accesses: Access[] = ["own", "space", "tenant"];
+const scope = { tenantId: "tenant-a", memorySpaceId: "space-a" };
+const privateOne = "private-native-id-one";
+const privateTwo = "private-native-id-two";
+const privateValue = "private-native-value";
+
+function scopedFixture(capability: Capability, access: Access = "own") {
+  const f = fixture({ capabilities: [capability], access, ...(access === "tenant" ? {} : { space: "space-a" }) });
+  if (access === "tenant") f.db.seed("runtimeAuthScopes", { ...scope, epoch: 1, createdAt: 1000 });
+  return f;
+}
+function seed(f: F, table: Table, fields: Record<string, unknown> = {}) {
+  const row = { memorySpaceId: "space-a", data: { secret: privateValue }, value: privateValue,
+    metadata: { secret: privateValue }, ...fields };
+  return table === "immutable" ? f.seedImmutable(row) : table === "mutable" ? f.seedMutable(row) : f.seedSession(row);
+}
+function action(table: Table, capability: Capability) {
+  return table === "immutable" ? capability === "write" ? immutable.store : immutable.get
+    : table === "mutable" ? capability === "write" ? mutable.set : mutable.get
+      : capability === "write" ? sessions.touch : sessions.get;
+}
+function args(table: Table, capability: Capability, selectors: Record<string, unknown> = scope) {
+  return table === "immutable" ? { ...selectors, type: "note", id: "one", ...(capability === "write" ? { data: "replacement" } : {}) }
+    : table === "mutable" ? { ...selectors, namespace: "counter", key: "one", ...(capability === "write" ? { value: 6 } : {}) }
+      : { ...selectors, sessionId: "one" };
+}
+function nativeProtocol(f: F) {
+  const original = f.db.query.bind(f.db);
+  const traces: Array<{ table: string; index?: string; keys: [string, unknown][]; limit: number; ids: string[] }> = [];
+  let uniqueCalls = 0;
+  f.db.query = (table) => {
+    const query = original(table);
+    const index = query.withIndex.bind(query);
+    const take = query.take.bind(query);
+    const keys: [string, unknown][] = [];
+    let indexName: string | undefined;
+    // Retain the original database selector as well as the observation.
+    query.withIndex = (name, callback) => {
+      indexName = name;
+      return index(name, (selector) => {
+        const observed = { eq: (key: string, value: unknown) => { keys.push([key, value]); selector.eq(key, value); return observed; } };
+        return callback(observed);
+      });
+    };
+    query.take = async (limit) => {
+      const rows = await take(limit);
+      traces.push({ table, index: indexName, keys: [...keys], limit, ids: rows.map((row) => row._id) });
+      return rows;
+    };
+    query.unique = async () => {
+      uniqueCalls++;
+      // The old fixture infers unique as non-null Row; this assertion preserves native null at runtime.
+      return (await QueryImpl.prototype.unique.call({ take: query.take, tableNameForErrorMessages: table }))!;
+    };
+    return query;
+  };
+  return { traces, uniqueCalls: () => uniqueCalls };
+}
+async function caught(operation: Promise<unknown>): Promise<unknown> {
+  try { await operation; } catch (error) { return error; }
+  throw new Error("Expected operation to fail");
+}
+function opaque(error: unknown, privateFields: string[], controlAmbiguity = false) {
+  expect(error).toBeInstanceOf(ConvexError);
+  if (controlAmbiguity) expect(error).toHaveProperty("data", { version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
+    message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
+  else expect((error as ConvexError<Value>).data).toMatchObject({ code: "FORBIDDEN", message: "Access denied" });
+  const visible = error instanceof Error ? error.message + error.stack + JSON.stringify((error as ConvexError<Value>).data) : String(error);
+  for (const field of privateFields) expect(visible).not.toContain(field);
+}
+function noEffects(f: F, before: Map<string, Row[]>) {
+  expect(f.db.attemptedWrites).toBe(0); expect(f.db.writes).toBe(0); expect(f.db.rows).toEqual(before);
+}
+
+describe("installed native unique diagnostic and bounded metadata ambiguity", () => {
+  it.each([...tables, "runtimeAuthPrincipals", "runtimeAuthScopes", "runtimeAuthTombstones"])("real QueryImpl.unique exposes both stored IDs for %s; protocol control", async (table) => {
+    const f = fixture();
+    f.db.seed(table, { _id: privateOne, value: privateValue });
+    f.db.seed(table, { _id: privateTwo, value: privateValue });
+    const native = nativeProtocol(f);
+    const before = structuredClone(f.db.rows);
+    const error = await caught(f.db.query(table).filter((q) => q.eq(q.field("value"), privateValue)).unique());
+    expect(error).toBeInstanceOf(Error); expect(error).not.toBeInstanceOf(ConvexError);
+    expect((error as Error).message).toContain(privateOne); expect((error as Error).message).toContain(privateTwo);
+    expect(native.uniqueCalls()).toBe(1);
+    expect(native.traces).toEqual([{ table, index: undefined, keys: [], limit: 2, ids: [privateOne, privateTwo] }]);
+    noEffects(f, before);
+  });
+  it.each(tables.flatMap((table) => capabilities.flatMap((capability) => accesses.map((access) => ({ table, capability, access })))))("$table $capability/$access duplicate canonical rows produce opaque denial before effects", async ({ table, capability, access }) => {
+    const f = scopedFixture(capability, access);
+    seed(f, table, { _id: privateOne }); seed(f, table, { _id: privateTwo });
+    seed(f, table, { _id: "outside-scope", tenantId: "tenant-foreign" });
+    const native = nativeProtocol(f); const before = structuredClone(f.db.rows);
+    opaque(await caught(f.run(action(table, capability), args(table, capability))), [privateOne, privateTwo, privateValue, "outside-scope"]);
+    const selected = native.traces.find((trace) => trace.table === table);
+    expect(selected).toMatchObject({ index: "by_runtime_key", limit: 2, ids: [privateOne, privateTwo] });
+    expect(selected!.keys.slice(0, 2)).toEqual([["tenantId", "tenant-a"], ["memorySpaceId", "space-a"]]);
+    expect(native.uniqueCalls()).toBe(0); noEffects(f, before);
+  });
+  it.each(tables.flatMap((table) => capabilities.flatMap((capability) => ["foreign", "missing-owner"].map((conflict) => ({ table, capability, conflict })))))("$table $capability detects $conflict exact-key collision after owner-filtered selection", async ({ table, capability, conflict }) => {
+    const f = scopedFixture(capability);
+    seed(f, table, { _id: privateOne }); seed(f, table, { _id: privateTwo, ownerPrincipalId: conflict === "foreign" ? "foreign-principal" : undefined });
+    const native = nativeProtocol(f); const before = structuredClone(f.db.rows);
+    opaque(await caught(f.run(action(table, capability), args(table, capability))), [privateOne, privateTwo, privateValue]);
+    expect(native.traces.find((trace) => trace.table === table)).toMatchObject({ limit: 2, ids: [privateOne] });
+    expect(native.uniqueCalls()).toBe(0); noEffects(f, before);
+  });
+  it.each(tables.flatMap((table) => capabilities.map((capability) => ({ table, capability }))))("$table $capability undefined-space ambiguity stays exact and opaque", async ({ table, capability }) => {
+    const f = fixture({ capabilities: [capability] });
+    seed(f, table, { _id: privateOne, memorySpaceId: undefined }); seed(f, table, { _id: privateTwo, memorySpaceId: undefined });
+    seed(f, table, { _id: "other-space", memorySpaceId: "space-a" });
+    const native = nativeProtocol(f); const before = structuredClone(f.db.rows);
+    opaque(await caught(f.run(action(table, capability), args(table, capability, { tenantId: "tenant-a" }))), [privateOne, privateTwo, privateValue]);
+    expect(native.traces.find((trace) => trace.table === table)).toMatchObject({ limit: 2, ids: [privateOne, privateTwo],
+      keys: expect.arrayContaining([["tenantId", "tenant-a"], ["memorySpaceId", undefined]]) });
+    expect(native.uniqueCalls()).toBe(0); noEffects(f, before);
+  });
+  it.each(tables)("%s same external ID in another exact space/tenant does not shadow normal write/read", async (table) => {
+    const f = fixture({ space: "space-a" });
+    seed(f, table, { _id: "foreign-space", memorySpaceId: "space-b" });
+    seed(f, table, { _id: "foreign-tenant", tenantId: "tenant-b" }); seed(f, table, { _id: "own-record", value: 5 });
+    const native = nativeProtocol(f); const foreign = structuredClone(f.db.table(table).slice(0, 2));
+    const result = await f.run(action(table, "write"), args(table, "write"));
+    if (table === "immutable") expect(result).toMatchObject({ data: "replacement", version: 2 });
+    else if (table === "mutable") expect(result).toMatchObject({ value: 6 });
+    else { expect(result).toBeUndefined(); expect(f.db.table(table)[2]!.lastActiveAt).toBeGreaterThan(1000); }
+    const read = await f.run(action(table, "read"), args(table, "read"));
+    expect(read).toMatchObject({ _id: "own-record" });
+    if (table === "sessions") expect(read).not.toHaveProperty("authorityReference");
+    expect(f.db.table(table).slice(0, 2)).toEqual(foreign); expect(f.db.writes).toBe(1);
+    expect(native.uniqueCalls()).toBe(0); expect(native.traces.filter((trace) => trace.table === table).every((trace) => trace.limit === 2 && trace.ids.join() === "own-record")).toBe(true);
+  });
+  it.each(tables)("%s WRITE-only retains safe response semantics with single unambiguous row", async (table) => {
+    const f = scopedFixture("write"); seed(f, table, { _id: privateOne }); const native = nativeProtocol(f);
+    const result = await f.run(action(table, "write"), args(table, "write"));
+    expect(result).toEqual(table === "immutable" ? { updated: true, type: "note", id: "one", ...scope }
+      : table === "mutable" ? { updated: true, namespace: "counter", key: "one" } : undefined);
+    const visible = result === undefined ? "undefined" : JSON.stringify(result);
+    expect(visible).not.toContain(privateOne); expect(visible).not.toContain(privateValue);
+    expect(f.db.attemptedWrites).toBe(1); expect(f.db.writes).toBe(1); expect(native.uniqueCalls()).toBe(0);
+  });
+});
+
+type Control = "principal" | "tenant-scope" | "space-scope" | "tenant-tombstone" | "space-tombstone" | "resource-tombstone" | "tenant-resource-tombstone";
+const controls: Control[] = ["principal", "tenant-scope", "space-scope", "tenant-tombstone", "space-tombstone", "resource-tombstone", "tenant-resource-tombstone"];
+function controlDuplicate(f: F, control: Control) {
+  const table = control === "principal" ? "runtimeAuthPrincipals" : control.endsWith("scope") ? "runtimeAuthScopes" : "runtimeAuthTombstones";
+  let first: Row;
+  if (control === "principal") first = f.principal;
+  else if (control.endsWith("scope")) first = f.db.table(table).find((row) => row.memorySpaceId === (control === "space-scope" ? "space-a" : undefined))!;
+  else first = f.db.seed(table, { _id: privateOne, tenantId: "tenant-a",
+    memorySpaceId: control === "space-tombstone" || control === "resource-tombstone" ? "space-a" : undefined,
+    resourceType: control === "tenant-tombstone" ? "tenant" : control === "space-tombstone" ? "memorySpace" : "source",
+    resourceId: control === "tenant-tombstone" ? "tenant-a" : control === "space-tombstone" ? "space-a" : sourceId("mutable", "counter", "one"), deletedAt: 1000 });
+  f.db.seed(table, { ...first, _id: privateTwo, privateDiagnostic: privateValue });
+  return { table, first };
+}
+describe("accepted shared authority reader native ambiguity and infrastructure distinction", () => {
+  it.each(controls.flatMap((control) => capabilities.flatMap((capability) => accesses.map((access) => ({ control, capability, access })))))("$control $capability/$access duplicate control lookup denies with zero effects", async ({ control, capability, access }) => {
+    const f = scopedFixture(capability, access); f.seedMutable({ memorySpaceId: "space-a" });
+    const { table, first } = controlDuplicate(f, control);
+    const native = nativeProtocol(f); const before = structuredClone(f.db.rows);
+    opaque(await caught(f.run(action("mutable", capability), args("mutable", capability))), [first._id, privateTwo, privateValue], true);
+    expect(native.traces.some((trace) => trace.table === table && trace.limit === 2 && trace.ids.includes(first._id) && trace.ids.includes(privateTwo))).toBe(true);
+    expect(native.uniqueCalls()).toBe(0); noEffects(f, before);
+  });
+  it("hasTombstone distinguishes absent and one matching fence from a foreign scope fence", async () => {
+    const f = scopedFixture("read"); const native = nativeProtocol(f); const reader = createAuthorityReader(f.ctx);
+    const key = { ...scope, resourceType: "source" as const, resourceId: sourceId("mutable", "counter", "one") };
+    expect(await reader.hasTombstone(key)).toBe(false);
+    f.db.seed("runtimeAuthTombstones", { ...key, _id: privateOne, memorySpaceId: "space-b", deletedAt: 1000 });
+    expect(await reader.hasTombstone(key)).toBe(false);
+    f.db.seed("runtimeAuthTombstones", { ...key, _id: privateTwo, deletedAt: 1000 });
+    expect(await reader.hasTombstone(key)).toBe(true);
+    expect(native.traces.filter((trace) => trace.table === "runtimeAuthTombstones").map((trace) => trace.ids)).toEqual([[], [], [privateTwo]]);
+    expect(f.db.attemptedWrites).toBe(0); expect(f.db.writes).toBe(0); expect(native.uniqueCalls()).toBe(0);
+  });
+  it.each(["runtimeAuthPrincipals", "runtimeAuthScopes", "runtimeAuthTombstones", ...tables].flatMap((table) => capabilities.map((capability) => ({ table, capability }))))("$table $capability infrastructure exception remains the same infrastructure failure", async ({ table, capability }) => {
+    const f = scopedFixture(capability); for (const dataTable of tables) seed(f, dataTable);
+    const failure = new Error("unavailable database infrastructure"); let reached = 0;
+    const original = f.db.query.bind(f.db); f.db.query = (name) => { const query = original(name);
+      if (name === table) query.take = async () => { reached++; throw failure; }; return query; };
+    const before = structuredClone(f.db.rows);
+    const target = tables.includes(table as Table) ? table as Table : "mutable";
+    const error = await caught(f.run(action(target, capability), args(target, capability)));
+    expect(reached).toBe(1); expect(error).toBe(failure); expect(error).not.toBeInstanceOf(ConvexError); noEffects(f, before);
+  });
+  it.each(tables)("%s final WRITE-only infrastructure failure aborts without receipt and rolls back", async (table) => {
+    const f = scopedFixture("write"); seed(f, table); let armed = false; let reached = 0;
+    const failure = new Error("final control read unavailable");
+    f.db.afterWrite = () => { armed = true; };
+    const original = f.db.query.bind(f.db); f.db.query = (name) => { const query = original(name); const take = query.take.bind(query);
+      query.take = async (limit) => { if (armed && name === "runtimeAuthScopes") { reached++; throw failure; } return await take(limit); }; return query; };
+    const before = structuredClone(f.db.rows);
+    expect(await caught(f.run(action(table, "write"), args(table, "write")))).toBe(failure);
+    expect(reached).toBe(1); expect(f.db.attemptedWrites).toBe(1); expect(f.db.writes).toBe(0); expect(f.db.rows).toEqual(before);
+  });
+});

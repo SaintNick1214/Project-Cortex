@@ -1,0 +1,75 @@
+import { readFileSync, writeFileSync, lstatSync } from "node:fs";
+import { resolve } from "node:path";
+import {
+  localPreflight, canonical, root, scratch, receiptFile, envFile, validateTarget,
+} from "../../_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs";
+
+// Parent-owned management operation. Run only after the frozen harness review PASS.
+localPreflight();
+const team = process.env.CONVEX_TEAM_ID;
+const token = process.env.CONVEX_TEAM_API_KEY;
+if (!team || !token) throw new Error("Missing configured Convex team credentials");
+const request = JSON.parse(readFileSync(resolve(root, "project-request.json"), "utf8"));
+const ownershipFile = resolve(scratch, "created-project.json");
+for (const path of [receiptFile, envFile, ownershipFile]) {
+  canonical(path, scratch);
+  if (lstatSync(path, { throwIfNoEntry: false })) throw new Error("Owned provisioning path already exists");
+}
+if (request.purpose !== "qualification-auth" || request.deploymentType !== "dev"
+  || request.kind !== "cloud" || request.productionDeployment !== false
+  || request.sharedCiTarget !== false) throw new Error("Invalid disposable target request");
+const api = async (path, method = "GET", body) => {
+  const response = await fetch(`https://api.convex.dev/v1${path}`, {
+    method,
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!response.ok) throw new Error(`Convex management request failed: HTTP ${response.status}`);
+  return response.json();
+};
+const startedAt = new Date().toISOString();
+const project = await api(`/teams/${encodeURIComponent(team)}/create_project`, "POST", {
+  projectName: request.projectName, deploymentType: "dev",
+});
+// Save ownership before further management calls, for partial-provision recovery.
+writeFileSync(ownershipFile, JSON.stringify({
+  id: project.id, slug: project.slug, requestedName: request.projectName,
+  deploymentName: project.deploymentName, startedAt,
+}, null, 2) + "\n", { flag: "wx", mode: 0o600 });
+if (!Number.isSafeInteger(project.id) || project.id <= 0
+  || project.slug !== request.projectSlug || !project.deploymentName
+  || project.deploymentUrl !== `https://${project.deploymentName}.convex.cloud`) {
+  throw new Error("Created project did not match exact disposable request; owned receipt retained");
+}
+const observedProject = await api(`/projects/${project.id}`);
+if (observedProject.id !== project.id || observedProject.slug !== request.projectSlug
+  || observedProject.name !== request.projectName) throw new Error("Observed project identity mismatch");
+const deployment = await api(`/deployments/${encodeURIComponent(project.deploymentName)}`);
+if (deployment.name !== project.deploymentName || deployment.projectId !== project.id
+  || deployment.deploymentType !== "dev" || deployment.kind !== "cloud"
+  || deployment.deploymentUrl !== project.deploymentUrl) throw new Error("Observed deployment mismatch");
+const key = await api(`/deployments/${encodeURIComponent(deployment.name)}/create_deploy_key`, "POST", {
+  name: "cortex-runtime-qualification-auth", expiresAt: Date.now() + 3 * 24 * 60 * 60 * 1000,
+});
+const values = {
+  CONVEX_DEPLOY_KEY: key.deployKey,
+  CONVEX_DEPLOYMENT: `dev:${deployment.name}`,
+  CONVEX_URL: deployment.deploymentUrl,
+};
+const target = {
+  ...request, projectId: project.id, deploymentName: deployment.name,
+  deploymentUrl: deployment.deploymentUrl,
+  active: true, retired: false, deleted: false, isolationVerified: true,
+  createdAt: startedAt, userAuthorization: "create a fresh instance, no cap",
+  privateEnvironmentFile: "work/backend-runtime/task03c2-live-fixture/deploy.env",
+};
+validateTarget(target, request, values, process.env);
+writeFileSync(envFile, Object.entries(values).map(([name, value]) => `${name}=${value}`).join("\n") + "\n", { flag: "wx", mode: 0o600 });
+writeFileSync(receiptFile, JSON.stringify(target, null, 2) + "\n", { flag: "wx", mode: 0o600 });
+canonical(envFile, scratch, { privateFile: true, existing: true });
+canonical(receiptFile, scratch, { privateFile: true, existing: true });
+process.stdout.write(JSON.stringify({
+  operation: "provisioned-disposable-auth-target", projectId: project.id,
+  deploymentName: deployment.name, type: "dev", kind: "cloud", isolationVerified: true,
+}) + "\n");
