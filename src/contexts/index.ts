@@ -291,6 +291,22 @@ export class ContextsAPI {
    */
   async get(
     contextId: string,
+    options?: { includeChain?: false; includeConversation?: boolean },
+  ): Promise<Context | null>;
+  async get(
+    contextId: string,
+    options: { includeChain: true; includeConversation: true },
+  ): Promise<ContextChain | ContextWithConversation | null>;
+  async get(
+    contextId: string,
+    options: { includeChain: true; includeConversation?: false },
+  ): Promise<ContextChain | null>;
+  async get(
+    contextId: string,
+    options: { includeChain?: boolean; includeConversation?: boolean },
+  ): Promise<Context | ContextChain | ContextWithConversation | null>;
+  async get(
+    contextId: string,
     options?: { includeChain?: boolean; includeConversation?: boolean },
   ): Promise<Context | ContextChain | ContextWithConversation | null> {
     // Client-side validation

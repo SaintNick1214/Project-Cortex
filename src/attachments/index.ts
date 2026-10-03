@@ -12,6 +12,7 @@
  * - Multi-tenancy support
  */
 
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type {
@@ -162,7 +163,7 @@ export class AttachmentsAPI {
             dimensions: params.dimensions,
             duration: params.duration,
             metadata: params.metadata,
-            tenantId: params.tenantId ?? this.authContext?.tenantId,
+            tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId),
           }),
         "attachments:attach",
       );
@@ -268,7 +269,7 @@ export class AttachmentsAPI {
       () =>
         this.client.query(api.attachments.list, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,
           messageId: filter.messageId,
           memoryId: filter.memoryId,
@@ -364,7 +365,7 @@ export class AttachmentsAPI {
       () =>
         this.client.query(api.attachments.count, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,
           messageId: filter.messageId,
           userId: filter.userId,

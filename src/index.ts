@@ -5,6 +5,7 @@
  * Built on Convex for reactive TypeScript queries
  */
 
+import { runtimeEnv } from "./runtime";
 import { ConvexClient } from "convex/browser";
 import { ConversationsAPI } from "./conversations";
 import { ImmutableAPI } from "./immutable";
@@ -39,7 +40,7 @@ import {
  * Graph database configuration
  */
 export interface GraphConfig {
-  /** Pre-configured graph adapter */
+  /** Pre-configured graph adapter. The caller owns it and must disconnect it. */
   adapter: GraphAdapter;
 
   /** Enable orphan cleanup on deletes (default: true) */
@@ -271,17 +272,17 @@ export class Cortex {
    * @returns EmbeddingConfig if both gates pass, undefined otherwise
    */
   private static autoConfigureEmbedding(): EmbeddingConfig | undefined {
-    const embeddingEnabled = process.env.CORTEX_EMBEDDING === "true";
+    const embeddingEnabled = runtimeEnv.CORTEX_EMBEDDING === "true";
 
     if (!embeddingEnabled) {
       return undefined;
     }
 
     // Check for OpenAI API key
-    if (process.env.OPENAI_API_KEY) {
+    if (runtimeEnv.OPENAI_API_KEY) {
       return {
         provider: "openai",
-        apiKey: process.env.OPENAI_API_KEY,
+        apiKey: runtimeEnv.OPENAI_API_KEY,
         model: "text-embedding-3-small",
       };
     }
@@ -307,24 +308,24 @@ export class Cortex {
    * @returns LLMConfig if both gates pass, undefined otherwise
    */
   private static autoConfigureLLM(): LLMConfig | undefined {
-    const factExtractionEnabled = process.env.CORTEX_FACT_EXTRACTION === "true";
+    const factExtractionEnabled = runtimeEnv.CORTEX_FACT_EXTRACTION === "true";
 
     if (!factExtractionEnabled) {
       return undefined;
     }
 
     // Check providers in priority order
-    if (process.env.OPENAI_API_KEY) {
+    if (runtimeEnv.OPENAI_API_KEY) {
       return {
         provider: "openai",
-        apiKey: process.env.OPENAI_API_KEY,
+        apiKey: runtimeEnv.OPENAI_API_KEY,
       };
     }
 
-    if (process.env.ANTHROPIC_API_KEY) {
+    if (runtimeEnv.ANTHROPIC_API_KEY) {
       return {
         provider: "anthropic",
-        apiKey: process.env.ANTHROPIC_API_KEY,
+        apiKey: runtimeEnv.ANTHROPIC_API_KEY,
       };
     }
 
@@ -349,15 +350,15 @@ export class Cortex {
    * @returns GraphConfig if both gates pass, undefined otherwise
    */
   private static async autoConfigureGraph(): Promise<GraphConfig | undefined> {
-    const graphSyncEnabled = process.env.CORTEX_GRAPH_SYNC === "true";
+    const graphSyncEnabled = runtimeEnv.CORTEX_GRAPH_SYNC === "true";
 
     if (!graphSyncEnabled) {
       return undefined;
     }
 
     // Check providers in priority order
-    const neo4jUri = process.env.NEO4J_URI;
-    const memgraphUri = process.env.MEMGRAPH_URI;
+    const neo4jUri = runtimeEnv.NEO4J_URI;
+    const memgraphUri = runtimeEnv.MEMGRAPH_URI;
 
     if (neo4jUri && memgraphUri) {
       console.warn(
@@ -370,8 +371,8 @@ export class Cortex {
         const adapter = new CypherGraphAdapter();
         await adapter.connect({
           uri: neo4jUri,
-          username: process.env.NEO4J_USERNAME || "neo4j",
-          password: process.env.NEO4J_PASSWORD || "",
+          username: runtimeEnv.NEO4J_USERNAME || "neo4j",
+          password: runtimeEnv.NEO4J_PASSWORD || "",
         });
         return { adapter, autoSync: true };
       } catch (error) {
@@ -388,8 +389,8 @@ export class Cortex {
         const adapter = new CypherGraphAdapter();
         await adapter.connect({
           uri: memgraphUri,
-          username: process.env.MEMGRAPH_USERNAME || "memgraph",
-          password: process.env.MEMGRAPH_PASSWORD || "",
+          username: runtimeEnv.MEMGRAPH_USERNAME || "memgraph",
+          password: runtimeEnv.MEMGRAPH_PASSWORD || "",
         });
         return { adapter, autoSync: true };
       } catch (error) {
@@ -531,6 +532,7 @@ export class Cortex {
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext,
     );
     this.facts = new FactsAPI(
       this.client,
@@ -709,7 +711,7 @@ export class Cortex {
    *
    * Waits for pending operations to complete before closing.
    *
-   * @param timeoutMs Maximum time to wait (default: 30000ms)
+   * @param timeoutMs Maximum time to drain pending operations (default: 30000ms)
    */
   async shutdown(timeoutMs: number = 30000): Promise<void> {
     // Stop graph sync worker
@@ -718,10 +720,12 @@ export class Cortex {
     }
 
     // Gracefully shutdown resilience layer
-    await this.resilienceLayer.shutdown(timeoutMs);
-
-    // Close Convex client
-    void this.client.close();
+    try {
+      await this.resilienceLayer.shutdown(timeoutMs);
+    } finally {
+      // Wait for transport closure even when draining fails.
+      await this.client.close();
+    }
   }
 }
 
@@ -745,6 +749,7 @@ export { SessionValidationError } from "./sessions";
 export { AuthValidationError } from "./auth";
 export { ArtifactValidationError } from "./artifacts";
 export { AttachmentValidationError } from "./attachments";
+export { MemoryValidationError } from "./memory/validators";
 
 // Re-export auth module
 export { createAuthContext, validateAuthContext } from "./auth";
@@ -778,6 +783,7 @@ export type { StandardUserProfile, ValidationPreset } from "./users/schemas";
 export {
   ResilienceLayer,
   ResiliencePresets,
+  getPresetForPlan,
   TokenBucket,
   Semaphore,
   PriorityQueue,
