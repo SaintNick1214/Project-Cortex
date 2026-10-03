@@ -35,8 +35,8 @@ record historical authorship and do not supersede this request.
 | Tasks | State | Dependency / evidence |
 |---|---|---|
 | 01 | Complete/PASS | Fresh judge task01_review,4.2/5;10 live checks,Gateway Chat,strict typed UI protocol. |
-| 02A | In progress | task02a_domain;pure modules and frozen02B adapter contracts. |
-| 03A | In progress | task03a_authority;public endpoint inventory and trusted authority contracts. |
+| 02A | Complete/PASS | Fresh cycle2 judge task02a_review_2,4.4/5;137 tests/211 independent assertions;02B pending trusted authority freeze. |
+| 03A | Fix cycle2 | task03a_review cycle1 NEEDS FIXES3.8/5; correct8 internal auth inventory rules; helpers independently pass55tests. |
 | 02B/03B/03C/04–09 | Pending | Foundation interface freezes/reviews,then ordered text slice. |
 | 10–15 | Pending | Text slice and per-extension service gates. |
 | 16–17 | Pending | Complete implementation, outcome matrix and independent final audit. |

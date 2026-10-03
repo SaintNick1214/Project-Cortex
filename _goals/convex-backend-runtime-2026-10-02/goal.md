@@ -1,12 +1,12 @@
 # Goal: Cortex-owned agent runs on Convex
 
 **Created:** 2026-10-02 (America/Los_Angeles)
-**Status:** Execution in progress — fresh goal review PASS; Task 01 technical qualification underway.
+**Status:** Execution in progress — fresh goal review PASS; Task01 and bounded02A independently PASS;03A inventory review active. [Current receipts](qa/execution-progress.md).
 **Authorization:** The user sent the implementation prompt, authorizing implementation, incremental commits/pushes and a draft PR against dev. The user subsequently authorized a fresh disposable instance and inference without a spend cap. Historical planning-only statements record the artifacts' creation phase.
 **Cloud handoff:** [Copy-paste implementation prompt](implementation-prompt.md).
 **Research:** [Architecture and evidence](../../_research/convex-ai-gateway-2026-10-02/architecture.md)
 **Supersedes:** The earlier transport-only proposal; historical findings in the Gateway report do not govern this scope.
-**Current authority:** [User decision register](../../_research/convex-ai-gateway-2026-10-02/decision-gates.md). The [earlier planning PASS](qa/planning-review-2.md) covered a broader superseded scope; current revision requires independent goal review before execution. Live compatibility is unverified.
+**Current authority:** [User decision register](../../_research/convex-ai-gateway-2026-10-02/decision-gates.md). The [earlier planning PASS](qa/planning-review-2.md) covered broader superseded scope. Current [execution goal review](qa/execution-goal-review-2.md) passed before execution; [Task01 review](qa/task01-review-1.md) qualifies the core text stack. Production runtime and extension compatibility remain pending.
 **Confirmed direction:** Indexed memory plus eligible pending context, queued mutating runs within a conversation, tracked transcript unlocks and the remaining tool/retry/default policies are aligned. Embeddings use a clean-slate design; previous models, dimensions and schema layouts impose no constraints. No product decision question remains pending.
 **Target:** This `Project-Cortex` repository; resolve all paths against the cloud checkout root.
 **Branch prerequisite:** COMPLETE: #130/#131 merged; remote dev `3341d64ddc06f1de26ed525312ef2c1b89b16952` contains current main and matches the CI-qualified reconciliation tree; [reconciliation report](../../_research/branch-reconciliation-2026-10-02/report.md). Refresh manifests, runtime floor and canonical documentation paths on that baseline before execution. Planning files were excluded from the reconciliation merge. The implementation handoff is on `feat/convex-backend-runtime`, based on that reconciled dev commit; no product implementation has started.

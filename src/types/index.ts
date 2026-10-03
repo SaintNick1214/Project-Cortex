@@ -3047,7 +3047,7 @@ export type {
   FactCandidate,
   DuplicateResult,
   StoreWithDedupResult,
-} from "../facts/deduplication";
+} from "../domain/deduplication";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Orchestration Observer Types (Integration-Agnostic Monitoring)

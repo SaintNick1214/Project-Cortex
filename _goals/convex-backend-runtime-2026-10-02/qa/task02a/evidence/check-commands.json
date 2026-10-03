@@ -1,0 +1,92 @@
+{
+  "recordedAt": "2026-10-03T08:36:09.833Z",
+  "cwd": "/workspace/Project-Cortex",
+  "checks": [
+    {
+      "command": "node --version; npx --yes npm@12.2.0 --version",
+      "exitCode": 0,
+      "log": "runtime.log"
+    },
+    {
+      "command": "npx --yes npm@12.2.0 exec -- tsc --noEmit",
+      "exitCode": 0,
+      "log": "root-typecheck.log"
+    },
+    {
+      "command": "npx --yes npm@12.2.0 exec -- tsc --project tsconfig.lint.json --noEmit",
+      "exitCode": 0,
+      "log": "lint-typecheck.log"
+    },
+    {
+      "command": "npx --yes npm@12.2.0 exec -- tsc --project work/backend-runtime/task02a/tsconfig.json --noEmit",
+      "exitCode": 0,
+      "log": "domain-browser-typecheck.log"
+    },
+    {
+      "command": "npx --yes npm@12.2.0 exec -- eslint src/domain src/llm/index.ts src/memory/recall/resultProcessor.ts src/facts/conflict-prompts.ts src/facts/slot-matching.ts src/facts/deduplication.ts src/types/index.ts tests/unit/domain --report-unused-disable-directives",
+      "exitCode": 0,
+      "log": "scoped-eslint.log",
+      "warnings": 32,
+      "errors": 0,
+      "note": "Warnings remain in existing client code; pure domain emits none."
+    },
+    {
+      "command": "CONVEX_URL=http://127.0.0.1:1 npx --yes npm@12.2.0 exec -- node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/domain/profile.test.ts tests/unit/domain/sources.test.ts tests/unit/domain/outcomes.test.ts tests/unit/memory/recall/resultProcessor.test.ts tests/facts-conflict-resolution.test.ts tests/facts-slot-matching.test.ts tests/llm-fact-extraction.test.ts --runInBand --forceExit",
+      "exitCode": 0,
+      "log": "domain-outcomes-tests.log",
+      "suites": 7,
+      "tests": 137,
+      "skipped": 0,
+      "note": "Only pure/mocked selected suites; no live inference/service mutation."
+    },
+    {
+      "command": "npx --yes npm@12.2.0 exec -- node work/backend-runtime/task02a/check-import-graph.mjs",
+      "exitCode": 0,
+      "log": "import-graph.log"
+    },
+    {
+      "command": "npx --yes npm@12.2.0 run build",
+      "exitCode": 0,
+      "log": "sdk-build.log"
+    },
+    {
+      "command": "npx --yes npm@12.2.0 run test:contracts",
+      "exitCode": 0,
+      "log": "public-contracts.log"
+    },
+    {
+      "command": "git diff --check -- src/domain src/facts/conflict-prompts.ts src/facts/deduplication.ts src/facts/slot-matching.ts src/llm/index.ts src/memory/recall/resultProcessor.ts src/types/index.ts tests/unit/domain",
+      "exitCode": 0,
+      "note": "Observed no output; no whitespace errors.",
+      "log": "diff-check.log"
+    },
+    {
+      "command": "npx --yes npm@12.2.0 exec -- node work/backend-runtime/task02a/check-type-graph.mjs",
+      "exitCode": 0,
+      "log": "type-import-graph.log",
+      "note": "Strict browser type graph contains no backend/generated/Node declarations."
+    }
+  ],
+  "retainedFailureHistory": [
+    {
+      "log": "domain-browser-typecheck-initial.log",
+      "exitCode": 2,
+      "reason": "Scratch tsconfig rootDir default needed an explicit repository root."
+    },
+    {
+      "log": "domain-browser-typecheck-type-graph.log",
+      "exitCode": 2,
+      "reason": "SDK type reexport traversed the client/generated API graph; corrected by moving pure dedup types and changing only its src/types reexport path."
+    }
+  ],
+  "cycle": 2,
+  "reviewFixes": {
+    "initialVerdict": "NEEDS FIXES",
+    "initialScore": 3.8,
+    "review": "cycle1/review.md",
+    "sourceAndScopeMetadata": "FIXED",
+    "invalidCurrentRevision": "FIXED",
+    "sparseCosineAndStrictArrays": "FIXED",
+    "frozenSignaturesChanged": false
+  }
+}
