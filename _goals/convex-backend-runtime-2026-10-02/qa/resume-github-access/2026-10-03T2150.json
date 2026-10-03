@@ -1,0 +1,24 @@
+{
+  "observedAt": "2026-10-03T21:50:35Z",
+  "pendingCommitExpectedHead": "c406ead4dde73b5eeca4462ff88b2cd00961d9f3",
+  "commitRequest": "docs(qa): preserve native control findings and second repair gates",
+  "commitObservedExit": 1,
+  "failure": "HTTP 503: No server is currently available to service your request",
+  "authenticatedReadChecks": [
+    "branch head TimeoutError",
+    "draft PR TimeoutError",
+    "third bounded branch-head check TimeoutError after12.03s"
+  ],
+  "unauthenticatedApiRootStatus": 200,
+  "prPatch": "observed exit1 HTTP503; remote state not confirmed",
+  "action": "remote head verified unchanged; one transient commit retry active, PR update waits",
+  "recoveryRead": {
+    "status": 200,
+    "head": "c406ead4dde73b5eeca4462ff88b2cd00961d9f3",
+    "seconds": 0.73
+  },
+  "recoveredCommit": {
+    "sha": "9ae06cd5074a8e5d9514eac701f042899082025a",
+    "signatureVerified": true
+  }
+}
