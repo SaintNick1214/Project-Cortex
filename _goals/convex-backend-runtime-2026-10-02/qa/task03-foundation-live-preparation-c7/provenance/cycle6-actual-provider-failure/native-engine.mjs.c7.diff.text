@@ -1,0 +1,11 @@
+--- immutable-c6/native-engine.mjs
++++ new-c7/native-engine.mjs
+@@ -13,7 +13,7 @@
+ export function rememberPlatformWire(status,body){
+  platformWireMessages.clear();
+  if(![400,401,403].includes(status)||typeof body!=='string')return false;
+- try{const parsed=JSON.parse(body);if(!parsed||typeof parsed!=='object'||!(['InvalidAuth','Unauthenticated'].includes(parsed.code)||(status===401&&parsed.code==='InvalidAuthHeader'))||typeof parsed.message!=='string'||Object.keys(parsed).some(key=>!['code','message'].includes(key)))return false;
++ try{const parsed=JSON.parse(body);if(!parsed||typeof parsed!=='object'||!(['InvalidAuth','Unauthenticated'].includes(parsed.code)||(status===401&&['InvalidAuthHeader','NoAuthProvider'].includes(parsed.code)))||typeof parsed.message!=='string'||Object.keys(parsed).some(key=>!['code','message'].includes(key)))return false;
+  if(/ArgumentValidationError|Could not find.*function|Server Error|Uncaught/i.test(parsed.message))return false;platformWireMessages.add(body);return true;
+  }catch{return false;}
+ }
