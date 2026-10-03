@@ -1,0 +1,16 @@
+import json,pathlib,subprocess,datetime,concurrent.futures,os
+root=pathlib.Path('/workspace/Project-Cortex'); out=pathlib.Path('/tmp/task03c2-live-harness-review1-7m04c8w4'); scope='_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture'
+commands=[('backend-types',['node','node_modules/typescript/bin/tsc','--noEmit','--project',scope+'/fixture/convex/tsconfig.json']),('client-types',['node','node_modules/typescript/bin/tsc','--noEmit','--project',scope+'/client-tsconfig.json'])]
+files=sorted(str(p.relative_to(root)) for p in (root/scope).rglob('*') if p.suffix in ['.mjs','.ts'] and '/_generated/' not in str(p) and not p.name.endswith('.d.mts'))
+commands.append(('scoped-house-lint',['node','node_modules/eslint/bin/eslint.js','--no-ignore','--format','json',*files]))
+def run(item):
+    name,args=item; start=datetime.datetime.now(datetime.timezone.utc)
+    proc=subprocess.run(args,cwd=root,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=90,env={**os.environ,'npm_config_cache':str(root/'work/backend-runtime/npm12-cache')})
+    finish=datetime.datetime.now(datetime.timezone.utc); (out/(name+'.txt')).write_text(proc.stdout)
+    result={'name':name,'argv':args,'cwd':str(root),'startedAt':start.isoformat(),'completedAt':finish.isoformat(),'exitCode':proc.returncode,'output':name+'.txt'}
+    if name=='scoped-house-lint':
+        raw=json.loads(proc.stdout); result.update(files=len(raw),errors=sum(e['errorCount'] for e in raw),warnings=sum(e['warningCount'] for e in raw),fatal=sum(e['fatalErrorCount'] for e in raw))
+    return result
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor: results=list(executor.map(run,commands))
+(out/'commands.json').write_text(json.dumps(results,indent=2)+'\n')
+print(json.dumps(results))

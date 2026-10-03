@@ -1,0 +1,22 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(["Z", "X"].includes(stat.slice(stat.lastIndexOf(")") + 2).split(" ")[0]))
+
+    at noRunningDescendant (file:///tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs:80:65)
+    at file:///tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs:88:92
+    at check (file:///tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs:12:31)
+    at file:///tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-check.mjs:85:1
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

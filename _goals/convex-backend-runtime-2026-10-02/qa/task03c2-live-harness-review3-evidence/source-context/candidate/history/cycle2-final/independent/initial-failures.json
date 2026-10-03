@@ -1,0 +1,13 @@
+{
+  "observedAt": "2026-10-03T12:50:09.567936+00:00",
+  "judgeOnlyReplaySetup": {
+    "missing": "replay root package.json type=module",
+    "impact": "actual SDK child and original prep transformed as CJS; no service effects; 41-case driver crash receipt retained",
+    "raw": [
+      "driver-check.log",
+      "client-prep.log"
+    ],
+    "correction": "copy exact accepted root manifest only; leave all canonical files untouched"
+  },
+  "exploratoryMissingFile": "historical independent manifest is manifest.original.json, not manifest.json"
+}

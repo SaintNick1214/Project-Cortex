@@ -1,0 +1,27 @@
+{
+  "sourceSha256": "7df16b2322b0ed8e174266f0ddc096444f11d783e70657254fdcac219d9b4db4",
+  "exactPredicate": "const authorizationDenied = code === 1 && /\\bFORBIDDEN\\b|Access denied/.test(stderr);",
+  "offlinePredicateAnalysis": [
+    {
+      "kind": "non-authority permission failure",
+      "exitCode": 1,
+      "operatorClassifiesAsAuthorizationDenial": true
+    },
+    {
+      "kind": "non-authority permission failure",
+      "exitCode": 1,
+      "operatorClassifiesAsAuthorizationDenial": true
+    },
+    {
+      "kind": "non-authority permission failure",
+      "exitCode": 1,
+      "operatorClassifiesAsAuthorizationDenial": true
+    },
+    {
+      "kind": "accepted backend denial",
+      "exitCode": 1,
+      "operatorClassifiesAsAuthorizationDenial": true
+    }
+  ],
+  "serviceCalls": 0
+}

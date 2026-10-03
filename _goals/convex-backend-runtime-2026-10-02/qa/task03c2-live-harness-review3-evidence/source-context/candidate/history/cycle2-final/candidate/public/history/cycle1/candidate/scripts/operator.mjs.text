@@ -1,0 +1,37 @@
+import { spawn } from "node:child_process";
+import { resolve } from "node:path";
+import { livePreflight, fixture, repo } from "./guard.mjs";
+
+const allowed = new Set([
+  "runtimeAuth:provision", "runtimeAuth:recheck", "runtimeAuth:revokeGrant", "runtimeAuth:revokeMembership",
+  "runtimeAuth:deletePrincipal", "runtimeAuth:deleteScope", "runtimeAuth:tombstoneResource",
+  "sessions:incrementMessageCount", "sessions:incrementMemoryCount", "sessions:expireIdle",
+]);
+export async function operator(name, args) {
+  const { env, envFile } = livePreflight();
+  if (!allowed.has(name)) throw new Error("Operator function rejected before dispatch.");
+  // Official 1.46 CLI sets admin auth internally and outputs JSON on piped stdout.
+  // No admin key, JWT, or private payload appears in argv. Args are fixture-owned
+  // control references/selectors only; never pass data records or fake identities.
+  return await new Promise((resolveResult, reject) => {
+    const child = spawn(process.execPath, [resolve(repo, "node_modules/convex/bin/main.js"), "run", name, JSON.stringify(args), "--env-file", envFile], {
+      cwd: fixture, env, stdio: ["ignore", "pipe", "pipe"],
+    });
+    let stdout = "", stderr = "", bytes = 0;
+    const timer = setTimeout(() => { child.kill("SIGKILL"); }, 25_000);
+    child.stdout.on("data", (chunk) => { bytes += chunk.length; if (bytes > 256_000) child.kill("SIGKILL"); else stdout += chunk; });
+    // Inspect bounded diagnostics in memory only to distinguish an actual accepted
+    // authorization denial from timeout/network/CLI failures. Never persist them.
+    child.stderr.on("data", (chunk) => { bytes += chunk.length; if (bytes > 256_000) child.kill("SIGKILL"); else stderr += chunk; });
+    child.once("error", () => { clearTimeout(timer); reject(new Error("Operator invocation unavailable.")); });
+    child.once("close", (code) => {
+      clearTimeout(timer);
+      if (code !== 0) {
+        const authorizationDenied = code === 1 && /\bFORBIDDEN\b|Access denied/.test(stderr);
+        reject(new Error(authorizationDenied ? "Operator authorization denied." : "Operator invocation unavailable.")); return;
+      }
+      try { resolveResult(stdout.trim() ? JSON.parse(stdout) : null); }
+      catch { reject(new Error("Operator JSON result unavailable.")); }
+    });
+  });
+}
