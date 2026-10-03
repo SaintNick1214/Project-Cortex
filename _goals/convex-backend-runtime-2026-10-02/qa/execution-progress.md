@@ -218,3 +218,33 @@ assumption:26consumer diagnostics plus2cleanup, separately from the archived25+2
 Live harness second repair remains OFFLINE with all41servicecases UNEXECUTED. No
 preliminary check has been converted into acceptance. Native browser access remains
 unavailable; all17 implementation/validation tasks remain incomplete.
+
+
+2026-10-03T12:38Z: registrycycle2 FINALfreeze37source/864QA records verified by
+parent (source79d07762b40acc137bdf267632c5588c4979bb9655ebc2e9308ccdd2933b4b3f;
+evidence13b7ed4d511ac782bb5d173767b08e4a07b1fc929cb57c3a4be4d41825bde072).
+Fresh second original46judge is active. Artifactcycle3 FINALfreeze622records verified
+by parent (4aec358642d0d01f4e668fe09d6ec1c49482148e5ffb3813c4a23d0f565d9675);
+fresh third original22judge active. No source integration before actualFINALPASS.
+Parent six-case metadata native-error confirmation is pushed in signed a793b406;
+bounded helper followup awaits an executor slot.
+
+Latest observed4fb3482c CI:6failedjobs,2inprogress,21success,1ScorecardSKIP.
+The five newly fetched failing live jobs are SDKshards1/3/5,CLI andprovider. All show
+UNAUTHENTICATED diagnostics on newlyguarded paths called without verifiedidentity;
+other assertion failures/timeouts/skips remain unresolved. CLI168unit andprovider
+202unit+71mockedintegration pass; their actualE2E jobs fail. No aggregate live or
+cleanupproof follows from mocked/unit successes. Fullprivate raw connectorlogs and
+publicsha256/count/suite summaries are retained in ci-followups/sdk-metadata-live-ci-failure-summary.json.
+Task16 owns modern JWT/operator fixtures and meaningful missing service coverage;
+no authority checks will be removed merely to restore old unauthenticated tests.
+
+
+2026-10-03T12:42Z: six additional actual mutable.set/get parent probes using native
+Convex1.46 unique confirm duplicate principal/tenant-scope/tenant-tombstone control
+IDs disclose before effects. Proposed native-error followup includes only the three
+createAuthorityReader lookup bodies, with original auth policy/registrations/resolver
+unchanged; source repair and fresh independent gate remain pending. Exact additional
+proof, source hash and inert replay source are in task03-metadata-native-errors/.
+Both artifact third and registry second judges report preliminary unexpected-error
+classification concerns; FINAL reports are awaited, no repair or acceptance is inferred.

@@ -30,3 +30,14 @@ UNEXECUTED, and whole03 must not pass while this follow-up is unresolved. Before
 later fixture dependency update, qualify the changed helper, refresh exact provenance
 and rerun the affected frozen-harness review. No product/shared/production deployment
 was performed. Native browser access and MF additional-cycle permission remain pending.
+
+Additional parent native proof (12:40:53Z) confirms the same actual dependency error
+through accepted mutable.set/get on duplicate runtimeAuthPrincipals, tenant scopes
+and tenant tombstones: six reached lookups disclose stored control IDs, all zero
+attempts/commits. The shared createAuthorityReader's three public-dependency unique
+lookups therefore need the same minimal bounded take(2)/opaque ambiguity treatment.
+This widens the proposed executable scope only to those three runtimeAuth.ts reader
+lookups, with original03A133 and metadata189 outcomes and protected contracts retained.
+It does not change pure authority policy, resolver pruning, internal registrations,
+MF or artifact rejected candidates, schema, SDK or live harness. Independent judge
+and affected dependency replays remain required before integration/fixture refresh.

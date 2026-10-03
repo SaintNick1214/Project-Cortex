@@ -1,0 +1,68 @@
+{
+  "classification": "Parent read-only confirmation in accepted shared authority dependency; not an independent verdict or deployed exploit proof",
+  "observedAt": "2026-10-03T12:40:53.576Z",
+  "outcomes": [
+    {
+      "table": "runtimeAuthPrincipals",
+      "capability": "write",
+      "actualHandler": "mutable:set",
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "reachedNativeControlLookup": 1,
+      "leaksStoredControlIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "runtimeAuthScopes",
+      "capability": "write",
+      "actualHandler": "mutable:set",
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "reachedNativeControlLookup": 1,
+      "leaksStoredControlIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "runtimeAuthTombstones",
+      "capability": "write",
+      "actualHandler": "mutable:set",
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "reachedNativeControlLookup": 1,
+      "leaksStoredControlIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "runtimeAuthPrincipals",
+      "capability": "read",
+      "actualHandler": "mutable:get",
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "reachedNativeControlLookup": 1,
+      "leaksStoredControlIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "runtimeAuthScopes",
+      "capability": "read",
+      "actualHandler": "mutable:get",
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "reachedNativeControlLookup": 1,
+      "leaksStoredControlIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    },
+    {
+      "table": "runtimeAuthTombstones",
+      "capability": "read",
+      "actualHandler": "mutable:get",
+      "nativeUnique": "installed Convex1.46 QueryImpl.prototype.unique",
+      "reachedNativeControlLookup": 1,
+      "leaksStoredControlIds": true,
+      "attemptedWrites": 0,
+      "committedWrites": 0
+    }
+  ],
+  "sourceOrQaWrites": 0,
+  "serviceCalls": 0
+}
