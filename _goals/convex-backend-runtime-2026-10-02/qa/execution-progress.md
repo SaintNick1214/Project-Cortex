@@ -16,7 +16,13 @@ record historical authorship and do not supersede this request.
   alone is not interpreted as ready. Actual Convex team-access read returned HTTP 200.
 - User response to live target/budget question: **"create a fresh instance, no cap"**.
   Create an isolated disposable development deployment; no shared CI/production targets.
-- No model call, backend deployment or application test has run at this stage.
+- Fresh cloud dev target efficient-ox-979 / project 3133325 is verified owned and
+  disposable; see disposable-target.json. Private credentials remain in ignored work/.
+- Task 01 standalone Agent/Workflow/Workpool fixture is deployed there. Actual Gateway
+  Chat, structured output, Responses and backend tool calls have succeeded. Final
+  Task 01 report and independent task review are still pending; no task PASS yet.
+- Baseline active-package offline quality receipts are in baseline-quality.md.
+  Live core module/runtime/UI certification remains pending.
 
 ## Task state
 

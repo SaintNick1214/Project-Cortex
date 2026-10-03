@@ -1,8 +1,8 @@
 # Goal: Cortex-owned agent runs on Convex
 
 **Created:** 2026-10-02 (America/Los_Angeles)
-**Status:** Planning — product scope and runtime defaults aligned; implementation not started.
-**Authorization:** Creating, committing and pushing this planning branch is authorized. Product implementation starts only when the implementation prompt is sent to the dedicated agent.
+**Status:** Execution in progress — fresh goal review PASS; Task 01 technical qualification underway.
+**Authorization:** The user sent the implementation prompt, authorizing implementation, incremental commits/pushes and a draft PR against dev. The user subsequently authorized a fresh disposable instance and inference without a spend cap. Historical planning-only statements record the artifacts' creation phase.
 **Cloud handoff:** [Copy-paste implementation prompt](implementation-prompt.md).
 **Research:** [Architecture and evidence](../../_research/convex-ai-gateway-2026-10-02/architecture.md)
 **Supersedes:** The earlier transport-only proposal; historical findings in the Gateway report do not govern this scope.

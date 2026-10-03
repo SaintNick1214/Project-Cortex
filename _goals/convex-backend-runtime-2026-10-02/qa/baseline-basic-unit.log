@@ -1,0 +1,13 @@
+npm notice run {{PROJECT_NAME}}@1.0.0 test:unit
+npm notice run vitest run --config vitest.config.ts
+
+ RUN  v5.0.3 /workspace/Project-Cortex/packages/cortex-cli/templates/basic
+
+
+ Test Files  4 passed (4)
+      Tests  87 passed (87)
+   Start at  07:56:20
+   Duration  2.08s (tests 70%, transform 20%, import 7%, worker 3%)
+
+    Isolate  4 workers spawned · ~167ms startup each (spawn + environment, per file)
+             at least ~501ms faster with isolate: false — reuses workers across files instead of one per file

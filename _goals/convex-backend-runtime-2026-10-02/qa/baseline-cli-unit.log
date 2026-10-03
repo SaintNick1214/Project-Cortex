@@ -1,0 +1,651 @@
+npm notice run @cortexmemory/cli@0.37.0 test:unit
+npm notice run node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects unit --runInBand
+Running one project: unit
+  console.error
+    ◇ injected env (0) from .env.local
+
+      17 | // Note: dotenv@17+ auto-injects env vars on import, so .env files may already be loaded
+      18 | // by the time this code runs. We need to handle this carefully.
+    > 19 |
+         | ^
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+      22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:19:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      31 | // Check if CONVEX_URL is already set from CONVEX_URL_CLI
+      32 | const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL_CLI);
+    > 33 |
+         | ^
+      34 | // Only try to load .env files if CONVEX_URL is not already set
+      35 | if (!convexUrlAlreadySet) {
+      36 |   // Load from monorepo root
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:33:12
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      33 |
+      34 | // Only try to load .env files if CONVEX_URL is not already set
+    > 35 | if (!convexUrlAlreadySet) {
+         |            ^
+      36 |   // Load from monorepo root
+      37 |   const rootDir = resolve(process.cwd(), "../..");
+      38 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:35:12
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      35 | if (!convexUrlAlreadySet) {
+      36 |   // Load from monorepo root
+    > 37 |   const rootDir = resolve(process.cwd(), "../..");
+         |            ^
+      38 |
+      39 |   // Load .env.test first (test defaults)
+      40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:37:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      36 |   // Load from monorepo root
+      37 |   const rootDir = resolve(process.cwd(), "../..");
+    > 38 |
+         | ^
+      39 |   // Load .env.test first (test defaults)
+      40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+      41 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:38:12
+
+(node:3364) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.error
+    ◇ injected env (0) from .env.local
+
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+    > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+         |        ^
+      23 |
+      24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+      25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:22:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      38 |
+      39 |   // Load .env.test first (test defaults)
+    > 40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+         |          ^
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+      43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:40:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+    > 43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+         |          ^
+      44 |
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:43:10
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      44 |
+      45 |   // Also try loading from CLI package directory
+    > 46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      48 | }
+      49 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:46:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      48 | }
+      49 |
+      50 | // Determine which Convex deployment to test against
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:47:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+    > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+         |        ^
+      23 |
+      24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+      25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:22:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      38 |
+      39 |   // Load .env.test first (test defaults)
+    > 40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+         |          ^
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+      43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:40:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+    > 43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+         |          ^
+      44 |
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:43:10
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      44 |
+      45 |   // Also try loading from CLI package directory
+    > 46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      48 | }
+      49 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:46:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      48 | }
+      49 |
+      50 | // Determine which Convex deployment to test against
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:47:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+    > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+         |        ^
+      23 |
+      24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+      25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:22:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      38 |
+      39 |   // Load .env.test first (test defaults)
+    > 40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+         |          ^
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+      43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:40:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+    > 43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+         |          ^
+      44 |
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:43:10
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      44 |
+      45 |   // Also try loading from CLI package directory
+    > 46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      48 | }
+      49 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:46:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      48 | }
+      49 |
+      50 | // Determine which Convex deployment to test against
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:47:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+    > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+         |        ^
+      23 |
+      24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+      25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:22:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      38 |
+      39 |   // Load .env.test first (test defaults)
+    > 40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+         |          ^
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+      43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:40:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+    > 43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+         |          ^
+      44 |
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:43:10
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      44 |
+      45 |   // Also try loading from CLI package directory
+    > 46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      48 | }
+      49 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:46:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      48 | }
+      49 |
+      50 | // Determine which Convex deployment to test against
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:47:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+    > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+         |        ^
+      23 |
+      24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+      25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:22:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      38 |
+      39 |   // Load .env.test first (test defaults)
+    > 40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+         |          ^
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+      43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:40:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+    > 43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+         |          ^
+      44 |
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:43:10
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      44 |
+      45 |   // Also try loading from CLI package directory
+    > 46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      48 | }
+      49 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:46:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      48 | }
+      49 |
+      50 | // Determine which Convex deployment to test against
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:47:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+    > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+         |        ^
+      23 |
+      24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+      25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:22:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      38 |
+      39 |   // Load .env.test first (test defaults)
+    > 40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+         |          ^
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+      43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:40:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+    > 43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+         |          ^
+      44 |
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:43:10
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      44 |
+      45 |   // Also try loading from CLI package directory
+    > 46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      48 | }
+      49 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:46:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      48 | }
+      49 |
+      50 | // Determine which Convex deployment to test against
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:47:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+      21 | // This must happen BEFORE we check CONVEX_URL_CLI
+    > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+         |        ^
+      23 |
+      24 | // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+      25 | // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:22:8
+
+  console.error
+    ◇ injected env (0) from ../../.env.test
+
+      38 |
+      39 |   // Load .env.test first (test defaults)
+    > 40 |   dotenv.config({ path: resolve(rootDir, ".env.test") });
+         |          ^
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+      43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:40:10
+
+  console.error
+    ◇ injected env (0) from ../../.env.local
+
+      41 |
+      42 |   // Load .env.local second with override=true (local development overrides)
+    > 43 |   dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+         |          ^
+      44 |
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:43:10
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      44 |
+      45 |   // Also try loading from CLI package directory
+    > 46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |          ^
+      47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      48 | }
+      49 |
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:46:10
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      45 |   // Also try loading from CLI package directory
+      46 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    > 47 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |          ^
+      48 | }
+      49 |
+      50 | // Determine which Convex deployment to test against
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:47:10
+
+Test Suites: 8 passed, 8 total
+Tests:       168 passed, 168 total
+Snapshots:   0 total
+Time:        3.019 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

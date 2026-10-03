@@ -1,6 +1,6 @@
 # Task 01: Stack and execution-boundary qualification
 
-**Status:** Planning only — pending execution authorization.
+**Status:** In progress — execution authorized; fresh independent goal review PASS. Qualification evidence: [qa/task01](../qa/task01/).
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** Later execution request and verified disposable prerequisites
 

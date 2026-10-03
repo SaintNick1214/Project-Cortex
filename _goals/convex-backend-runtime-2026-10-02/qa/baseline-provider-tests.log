@@ -1,0 +1,639 @@
+Running 3 projects:
+- integration
+- unit
+- unit-react
+(node:3248) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit tests/unit/provider.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: jest is not defined
+
+      58 | };
+      59 |
+    > 60 | jest.mock("@cortexmemory/sdk", () => ({
+         | ^
+      61 |   Cortex: jest.fn().mockImplementation(() => mockCortex),
+      62 |   CypherGraphAdapter: jest.fn().mockImplementation(() => ({
+      63 |     connect: jest.fn().mockResolvedValue(undefined),
+
+      at tests/unit/provider.test.ts:60:1
+
+FAIL integration tests/integration/memory-flow.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: jest is not defined
+
+      69 | };
+      70 |
+    > 71 | jest.mock("@cortexmemory/sdk", () => ({
+         | ^
+      72 |   Cortex: jest.fn().mockImplementation(() => mockCortex),
+      73 |   CypherGraphAdapter: jest.fn().mockImplementation(() => ({
+      74 |     connect: jest.fn().mockResolvedValue(undefined),
+
+      at tests/integration/memory-flow.test.ts:71:1
+
+FAIL integration tests/integration/streaming-flow.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: jest is not defined
+
+      47 | };
+      48 |
+    > 49 | jest.mock("@cortexmemory/sdk", () => ({
+         | ^
+      50 |   Cortex: jest.fn().mockImplementation(() => mockCortex),
+      51 |   CypherGraphAdapter: jest.fn().mockImplementation(() => ({
+      52 |     connect: jest.fn().mockResolvedValue(undefined),
+
+      at tests/integration/streaming-flow.test.ts:49:1
+
+FAIL unit tests/unit/index.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: jest is not defined
+
+      17 |
+      18 | // Create mock Cortex SDK
+    > 19 | jest.mock("@cortexmemory/sdk", () => {
+         | ^
+      20 |   const mockMemory = {
+      21 |     search: jest.fn().mockImplementation(() => mockStorage.searchResult),
+      22 |     remember: jest.fn().mockResolvedValue({
+
+      at tests/unit/index.test.ts:19:1
+
+FAIL integration tests/integration/layer-streaming.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: jest is not defined
+
+      88 | };
+      89 |
+    > 90 | jest.mock("@cortexmemory/sdk", () => ({
+         | ^
+      91 |   Cortex: jest.fn().mockImplementation(() => mockCortex),
+      92 |   CypherGraphAdapter: jest.fn().mockImplementation(() => ({
+      93 |     connect: jest.fn().mockResolvedValue(undefined),
+
+      at tests/integration/layer-streaming.test.ts:90:1
+
+FAIL unit tests/unit/streaming-helpers.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from .env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from ../../.env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from ../../.env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from ../../../../.env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from ../../../../.env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+  ● Streaming Helpers › createLayerStreamObserver › should emit events after emitTo is called
+
+    ReferenceError: jest is not defined
+
+      88 |       const { observer, emitTo } = createLayerStreamObserver();
+      89 |       const mockWriter: StreamWriter = {
+    > 90 |         write: jest.fn(),
+         |                ^
+      91 |       };
+      92 |
+      93 |       emitTo(mockWriter);
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:90:16)
+
+  ● Streaming Helpers › createLayerStreamObserver › should allow multiple emitTo calls, using the latest writer
+
+    ReferenceError: jest is not defined
+
+      101 |       const { observer, emitTo } = createLayerStreamObserver();
+      102 |
+    > 103 |       const mockWriter1: StreamWriter = { write: jest.fn() };
+          |                                                  ^
+      104 |       const mockWriter2: StreamWriter = { write: jest.fn() };
+      105 |
+      106 |       emitTo(mockWriter1);
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:103:50)
+
+  ● Streaming Helpers › onRecallStart › should write correct event format
+
+    ReferenceError: jest is not defined
+
+      126 |     it("should write correct event format", () => {
+      127 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 128 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      129 |       emitTo(mockWriter);
+      130 |
+      131 |       observer.onRecallStart?.("orch-123");
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:128:49)
+
+  ● Streaming Helpers › onRecallStart › should set transient flag to true
+
+    ReferenceError: jest is not defined
+
+      140 |     it("should set transient flag to true", () => {
+      141 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 142 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      143 |       emitTo(mockWriter);
+      144 |
+      145 |       observer.onRecallStart?.("test-id");
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:142:49)
+
+  ● Streaming Helpers › onRecallStart › should use correct event type constant
+
+    ReferenceError: jest is not defined
+
+      151 |     it("should use correct event type constant", () => {
+      152 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 153 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      154 |       emitTo(mockWriter);
+      155 |
+      156 |       observer.onRecallStart?.("test-id");
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:153:49)
+
+  ● Streaming Helpers › onLayerUpdate › should write correct event format for minimal event
+
+    ReferenceError: jest is not defined
+
+      168 |     it("should write correct event format for minimal event", () => {
+      169 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 170 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      171 |       emitTo(mockWriter);
+      172 |
+      173 |       const event: LayerEvent = {
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:170:49)
+
+  ● Streaming Helpers › onLayerUpdate › should include all optional fields when provided
+
+    ReferenceError: jest is not defined
+
+      198 |     it("should include all optional fields when provided", () => {
+      199 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 200 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      201 |       emitTo(mockWriter);
+      202 |
+      203 |       const event: LayerEvent = {
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:200:49)
+
+  ● Streaming Helpers › onLayerUpdate › should include error field when provided
+
+    ReferenceError: jest is not defined
+
+      230 |     it("should include error field when provided", () => {
+      231 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 232 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      233 |       emitTo(mockWriter);
+      234 |
+      235 |       const event: LayerEvent = {
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:232:49)
+
+  ● Streaming Helpers › onLayerUpdate › should use correct event type constant
+
+    ReferenceError: jest is not defined
+
+      255 |     it("should use correct event type constant", () => {
+      256 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 257 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      258 |       emitTo(mockWriter);
+      259 |
+      260 |       observer.onLayerUpdate?.(createTestLayerEvent("vector", "complete", "recall"));
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:257:49)
+
+  ● Streaming Helpers › onLayerUpdate › should handle all layer types
+
+    ReferenceError: jest is not defined
+
+      266 |     it("should handle all layer types", () => {
+      267 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 268 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      269 |       emitTo(mockWriter);
+      270 |
+      271 |       const layers = [
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:268:49)
+
+  ● Streaming Helpers › onRememberComplete › should write correct event format for minimal summary
+
+    ReferenceError: jest is not defined
+
+      300 |     it("should write correct event format for minimal summary", () => {
+      301 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 302 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      303 |       emitTo(mockWriter);
+      304 |
+      305 |       const summary = createTestSummary({
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:302:49)
+
+  ● Streaming Helpers › onRememberComplete › should include createdIds when provided
+
+    ReferenceError: jest is not defined
+
+      324 |     it("should include createdIds when provided", () => {
+      325 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 326 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      327 |       emitTo(mockWriter);
+      328 |
+      329 |       const summary = createTestSummary({
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:326:49)
+
+  ● Streaming Helpers › onRememberComplete › should use correct event type constant
+
+    ReferenceError: jest is not defined
+
+      349 |     it("should use correct event type constant", () => {
+      350 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 351 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      352 |       emitTo(mockWriter);
+      353 |
+      354 |       observer.onRememberComplete?.(createTestSummary({
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:351:49)
+
+  ● Streaming Helpers › full orchestration lifecycle › should emit events in correct order
+
+    ReferenceError: jest is not defined
+
+      369 |     it("should emit events in correct order", () => {
+      370 |       const { observer, emitTo } = createLayerStreamObserver();
+    > 371 |       const mockWriter: StreamWriter = { write: jest.fn() };
+          |                                                 ^
+      372 |       emitTo(mockWriter);
+      373 |
+      374 |       // Simulate full orchestration using phase-aware API
+
+      at Object.<anonymous> (tests/unit/streaming-helpers.test.ts:371:49)
+
+FAIL unit tests/unit/streaming.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from .env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from ../../.env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from ../../.env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from ../../../../.env.local
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.error
+      ◇ injected env (0) from ../../../../.env
+
+      32 |
+      33 | for (const envPath of envPaths) {
+    > 34 |   dotenv.config({ path: envPath });
+         |          ^
+      35 | }
+      36 |
+      37 | // Extend Jest timeout for E2E tests (individual tests can override)
+
+      at se (../../node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (../../node_modules/dotenv/dist/index.cjs:7:1059)
+      at Module.ae (../../node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/helpers/setup.ts:34:10
+
+    console.debug
+      [Cortex Memory] Stream completed: 6 characters
+
+      at Object.debug (src/types.ts:622:17)
+
+  ● Streaming Utilities › createObservableStream › should call onChunk for each chunk
+
+    ReferenceError: jest is not defined
+
+      39 |
+      40 |     it("should call onChunk for each chunk", async () => {
+    > 41 |       const onChunk = jest.fn();
+         |                       ^
+      42 |       const transform = createObservableStream(onChunk);
+      43 |
+      44 |       const input = new ReadableStream<string>({
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:41:23)
+
+  ● Streaming Utilities › createObservableStream › should call onComplete with full text when stream ends
+
+    ReferenceError: jest is not defined
+
+      60 |
+      61 |     it("should call onComplete with full text when stream ends", async () => {
+    > 62 |       const onComplete = jest.fn();
+         |                          ^
+      63 |       const transform = createObservableStream(undefined, onComplete);
+      64 |
+      65 |       const input = new ReadableStream<string>({
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:62:26)
+
+  ● Streaming Utilities › createObservableStream › should await async onComplete
+
+    ReferenceError: jest is not defined
+
+      79 |     it("should await async onComplete", async () => {
+      80 |       let completionValue = "";
+    > 81 |       const onComplete = jest.fn(async (text: string) => {
+         |                          ^
+      82 |         await new Promise((resolve) => setTimeout(resolve, 10));
+      83 |         completionValue = text;
+      84 |       });
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:81:26)
+
+  ● Streaming Utilities › createObservableStream › should call onError when transform throws
+
+    ReferenceError: jest is not defined
+
+       98 |
+       99 |     it("should call onError when transform throws", async () => {
+    > 100 |       const onError = jest.fn();
+          |                       ^
+      101 |       const onChunk = jest.fn(() => {
+      102 |         throw new Error("Chunk error");
+      103 |       });
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:100:23)
+
+  ● Streaming Utilities › createObservableStream › should call onError when onComplete throws
+
+    ReferenceError: jest is not defined
+
+      118 |
+      119 |     it("should call onError when onComplete throws", async () => {
+    > 120 |       const onError = jest.fn();
+          |                       ^
+      121 |       const onComplete = jest.fn(() => {
+      122 |         throw new Error("Complete error");
+      123 |       });
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:120:23)
+
+  ● Streaming Utilities › createObservableStream › should handle empty stream
+
+    ReferenceError: jest is not defined
+
+      142 |
+      143 |     it("should handle empty stream", async () => {
+    > 144 |       const onComplete = jest.fn();
+          |                          ^
+      145 |       const transform = createObservableStream(undefined, onComplete);
+      146 |
+      147 |       const input = new ReadableStream<string>({
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:144:26)
+
+  ● Streaming Utilities › createCompletionStream › should call onComplete with full text
+
+    ReferenceError: jest is not defined
+
+      326 |   describe("createCompletionStream", () => {
+      327 |     it("should call onComplete with full text", async () => {
+    > 328 |       const onComplete = jest.fn();
+          |                          ^
+      329 |       const transform = createCompletionStream(onComplete);
+      330 |
+      331 |       const input = new ReadableStream<string>({
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:328:26)
+
+  ● Streaming Utilities › createCompletionStream › should forward all chunks
+
+    ReferenceError: jest is not defined
+
+      343 |
+      344 |     it("should forward all chunks", async () => {
+    > 345 |       const transform = createCompletionStream(jest.fn());
+          |                                                ^
+      346 |
+      347 |       const input = new ReadableStream<string>({
+      348 |         start(controller) {
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:345:48)
+
+  ● Streaming Utilities › createCompletionStream › should await async onComplete
+
+    ReferenceError: jest is not defined
+
+      360 |     it("should await async onComplete", async () => {
+      361 |       let completed = false;
+    > 362 |       const onComplete = jest.fn(async () => {
+          |                          ^
+      363 |         await new Promise((resolve) => setTimeout(resolve, 10));
+      364 |         completed = true;
+      365 |       });
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:362:26)
+
+  ● Streaming Utilities › createCompletionStream › should call onError when onComplete throws
+
+    ReferenceError: jest is not defined
+
+      379 |
+      380 |     it("should call onError when onComplete throws", async () => {
+    > 381 |       const onError = jest.fn();
+          |                       ^
+      382 |       const onComplete = jest.fn(() => {
+      383 |         throw new Error("Completion error");
+      384 |       });
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:381:23)
+
+  ● Streaming Utilities › createCompletionStream › should handle empty stream
+
+    ReferenceError: jest is not defined
+
+      399 |
+      400 |     it("should handle empty stream", async () => {
+    > 401 |       const onComplete = jest.fn();
+          |                          ^
+      402 |       const transform = createCompletionStream(onComplete);
+      403 |
+      404 |       const input = new ReadableStream<string>({
+
+      at Object.<anonymous> (tests/unit/streaming.test.ts:401:26)
+
+Test Suites: 7 failed, 3 passed, 10 total
+Tests:       25 failed, 134 passed, 159 total
+Snapshots:   0 total
+Time:        8.956 s
+Ran all test suites in 3 projects.
