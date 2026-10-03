@@ -405,3 +405,25 @@ its transport failure is preserved honestly. Proxy retry has actual command/UTC
 receipts, exit0. Guarded official codegen exits1, no timeout, owned group REAPED.
 Parent diagnostic retains raw CLI streams privately with unchanged source/target
 guards. Actual41 service cases have not started. All17 goal remains incomplete.
+
+2026-10-03T14:29:42.366228+00:00: first ACTUAL auth/metadata/client service qualification
+FAIL. Signed/pushed a1dcb487 preserves47 exact records plus manifest8659d4de0a9c8929e3fefd4065944026decc54cd07e9683eeb8d4b6b6038014d.
+41 discovered,40 executed,39 pass,1 fail sanitized-host-callback/unexpected_unauthenticated,
+1 dependency-blocked session-end-not-grant-revocation;0 todos. No all41 PASS.
+Actual official guarded codegen/deploy exits0 with mandatory typecheck after
+140 regular files of existing pinnedTypeScript6.0.3 supplied locally for the CLI
+cwd-only lookup. Frozen58 public source and199 SDK provenance rows unchanged;
+no package/source/backend library edit. Original CLI failure/diagnostic retained.
+Qualification33 groups terminal verified/0 remain. Owned cleanup24 completed/0 fail.
+Exact sole development cloud project3135311/helpful-iguana-708 deleted HTTP200,
+absence GET404 verified; no auth target active. Fresh independent actual-service
+review ACTIVE, no source correction or passing rerun inferred. Collector shape/
+129-versus199 count assumptions were corrected without changing candidate evidence.
+
+QA-only CI on a1dcb487 completed:13 jobs,8 success/5 skipped. Package/browser,
+graph contracts and4 demo builds pass; lint/types,SDK shards,CLI/providerE2E and
+deployment are skipped. Raw API command/UTC/stream receipts stored in
+ci-followups/qa-only-ci-20261003. Historical full-module CI failures remain pending.
+Outcome matrix and draftPR132 updated; all17 goal incomplete. Three exhausted
+REJECT gates and native UI access questions remain unanswered. No user authorization
+for production, merging or releases is inferred.
