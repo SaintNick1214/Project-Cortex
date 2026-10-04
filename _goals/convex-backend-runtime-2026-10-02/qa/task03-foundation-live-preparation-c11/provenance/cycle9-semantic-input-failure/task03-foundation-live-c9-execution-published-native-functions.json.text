@@ -1,0 +1,1363 @@
+{
+  "scope": "ACTUAL_NATIVE_PUBLICATION_READ_ONLY",
+  "startedAtUtc": "2026-10-03T23:48:13.360Z",
+  "observedAtUtc": "2026-10-03T23:48:13.914Z",
+  "operation": "1db845fd-9a79-4b4e-919d-8292e5000995",
+  "projectId": 3138005,
+  "deploymentName": "superb-armadillo-617",
+  "status": "PASS",
+  "serviceCalls": 1,
+  "productionRegistrations": 259,
+  "fixtureOnlyInternal": 10,
+  "public": 200,
+  "internal": 69,
+  "HTTP": 0,
+  "aliasesOrDuplicates": 0,
+  "tuples": [
+    {
+      "path": "a2a:broadcast",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "a2a:getConversation",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "a2a:request",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "a2a:send",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "admin:clearTable",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "admin:countTable",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "admin:deleteRecord",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "admin:getAllCounts",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "admin:listTable",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "agents:computeStats",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:exists",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "agents:register",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:unregister",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:unregisterMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:update",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "agents:updateMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:appendContent",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:cancelStreaming",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:completeArtifactUpload",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:create",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:deleteArtifact",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:detachFile",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:finalizeStreaming",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:generateArtifactUploadUrl",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "artifacts:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:getArtifactFileUrl",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "artifacts:getByConversation",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:getHistory",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:getVersion",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:pauseStreaming",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "artifacts:purgeVersions",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:redo",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:resumeStreaming",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:retryFromError",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:setFileRef",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "artifacts:setStreamingError",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:setStreamingState",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:startStreaming",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:undo",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "artifacts:update",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:attach",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:generateUploadUrl",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "attachments:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:getByConversation",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:getByIds",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:getByMessage",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:getUrl",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "attachments:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "attachments:remove",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "attachments:removeMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:addParticipant",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:create",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:deleteContext",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:deleteMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:exportContexts",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:findOrphaned",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:getAtTimestamp",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:getByConversation",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:getChain",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:getChildren",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:getHistory",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:getRoot",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:getVersion",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:grantAccess",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "contexts:removeParticipant",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:search",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:update",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "contexts:updateMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:addMessage",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:approveMessage",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:checkAccess",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:create",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:deleteByIds",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:deleteConversation",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:deleteMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:exportConversations",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:findConversation",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:getHistory",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:getMessage",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:getMessagesByIds",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:getOrCreate",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "conversations:rejectMessage",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:search",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:setMetadata",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversations:setVisibility",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationShares:checkAccess",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationShares:create",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationShares:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationShares:incrementViewCount",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "conversationShares:listByConversation",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationShares:listByGranter",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationShares:revoke",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationSnapshots:create",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationSnapshots:deleteSnapshot",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationSnapshots:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationSnapshots:listByConversation",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "conversationSnapshots:listByUser",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "factHistory:countByAction",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "factHistory:deleteByFactId",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "factHistory:deleteByMemorySpace",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "factHistory:deleteByUserId",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "factHistory:getActivitySummary",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "factHistory:getChangesByTimeRange",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "factHistory:getEvent",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "factHistory:getHistory",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "factHistory:getSupersessionChain",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "factHistory:logEvent",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "factHistory:purgeOldEvents",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "facts:consolidate",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:deleteByIds",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:deleteFact",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:deleteMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:exportFacts",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:fetchFactsByIds",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "facts:findByStructure",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:getHistory",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "facts:queryByRelationship",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:queryBySubject",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:search",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:semanticSearch",
+      "kind": "action",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:store",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:supersede",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:update",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "facts:updateInPlace",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "governance:enforce",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "governance:getComplianceReport",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "governance:getEnforcementStats",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "governance:getPolicy",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "governance:getTemplate",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "governance:purgeAllEnforcement",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "governance:purgeAllPolicies",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "governance:setAgentOverride",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "governance:setPolicy",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "governance:simulate",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "graphSync:clearSyncedItems",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:deleteSyncItem",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:getFailedItems",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:getHighPriorityItems",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:getSyncStats",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:getUnsyncedItems",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:markFailed",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:markSynced",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "graphSync:queueForSync",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "immutable:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:getAtTimestamp",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:getHistory",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:getVersion",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:purge",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "immutable:purgeMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:purgeVersions",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:search",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "immutable:store",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:archive",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:deleteByIds",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:deleteMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:deleteMemory",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:exportMemories",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:fetchMemoriesByIds",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "memories:finalizePartialMemory",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:getAtTimestamp",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:getHistory",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:getVersion",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:keywordSearchMemories",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "memories:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "memories:restoreFromArchive",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:search",
+      "kind": "action",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:store",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:storePartialMemory",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:update",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:updateMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memories:updatePartialMemory",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:addParticipant",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:archive",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:deleteSpace",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:findByParticipant",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:getStats",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "memorySpaces:reactivate",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:register",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:removeParticipant",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:search",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:update",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "memorySpaces:updateParticipants",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:deleteKey",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:exists",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:purgeAll",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "mutable:purgeMany",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:purgeNamespace",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:set",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:transaction",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "mutable:update",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "qualificationOwned:cleanup",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:cleanupStorage",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:discoverOwnedEffects",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:ownedTombstones",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:registerStorage",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:seed",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:snapshot",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:storageCatalog",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:storageSnapshot",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "qualificationOwned:storeTiny",
+      "kind": "action",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeAuth:authorize",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeAuth:deletePrincipal",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeAuth:deleteScope",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeAuth:provision",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeAuth:recheck",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeAuth:revokeGrant",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeAuth:revokeMembership",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeAuth:tombstoneResource",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeMemory:checkAuthority",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeMemory:readFacts",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeMemory:readSource",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeMemory:readVectorMatches",
+      "kind": "query",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeMemory:recall",
+      "kind": "action",
+      "visibility": "public"
+    },
+    {
+      "path": "runtimeMemory:remember",
+      "kind": "action",
+      "visibility": "public"
+    },
+    {
+      "path": "runtimeMemory:writeDerived",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "runtimeMemory:writeSource",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "sessions:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "sessions:create",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "sessions:end",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "sessions:endAll",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "sessions:expireIdle",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "sessions:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "sessions:incrementMemoryCount",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "sessions:incrementMessageCount",
+      "kind": "mutation",
+      "visibility": "internal"
+    },
+    {
+      "path": "sessions:list",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "sessions:touch",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "users:count",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "users:deleteUserProfile",
+      "kind": "mutation",
+      "visibility": "public"
+    },
+    {
+      "path": "users:exists",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "users:get",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "users:getAtTimestamp",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "users:getHistory",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "users:getVersion",
+      "kind": "query",
+      "visibility": "public"
+    },
+    {
+      "path": "users:list",
+      "kind": "query",
+      "visibility": "public"
+    }
+  ]
+}
