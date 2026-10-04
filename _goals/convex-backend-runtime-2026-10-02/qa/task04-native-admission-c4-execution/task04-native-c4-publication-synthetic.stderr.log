@@ -1,0 +1,10 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts/guard.mjs:14
+export function exclusive(path,value,privateFile=true,maxBytes=limits.resultBytes){canonical(dirname(path),repo);const encoded=JSON.stringify(value,null,2)+'\n';if(Buffer.byteLength(encoded)>maxBytes)throw Error('QA_BYTES');const fd=openSync(path,'wx',privateFile?0o600:0o644);try{writeSync(fd,encoded);fsyncSync(fd);}finally{closeSync(fd);}}
+                                                                                                                                                                                                              ^
+
+Error: QA_BYTES
+    at exclusive (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts/guard.mjs:14:207)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts/publication.mjs:10:1
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.19.0
