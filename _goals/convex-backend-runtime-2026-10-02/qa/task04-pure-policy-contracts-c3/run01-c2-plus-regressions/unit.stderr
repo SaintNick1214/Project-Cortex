@@ -1,0 +1,94 @@
+(node:72092) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/domain/model-policy.test.ts
+  ● lossless own JSON keys at arbitrary record boundaries › preserves an own __proto__ key in tool definition and keeps its request identity distinct
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "{\"__proto__\":{\"cortexC3Marker\":\"retained\"}}"
+    Received: "{}"
+
+      366 |       const record = family === "tool call input" && selected && "input" in selected ? selected.input
+      367 |         : family === "tool result output" && selected && "output" in selected ? selected.output : selected;
+    > 368 |       expect(canonicalModelJson(record)).toBe('{"__proto__":{"cortexC3Marker":"retained"}}');
+          |                                          ^
+      369 |       expect(Object.hasOwn(record as object, "__proto__")).toBe(true);
+      370 |       expect(Object.getPrototypeOf(record)).toBe(Object.prototype);
+      371 |       expect(Object.isFrozen(record)).toBe(true);
+
+      at tests/unit/domain/model-policy.test.ts:368:42
+
+  ● lossless own JSON keys at arbitrary record boundaries › preserves an own __proto__ key in output schema and keeps its request identity distinct
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "{\"__proto__\":{\"cortexC3Marker\":\"retained\"}}"
+    Received: "{}"
+
+      366 |       const record = family === "tool call input" && selected && "input" in selected ? selected.input
+      367 |         : family === "tool result output" && selected && "output" in selected ? selected.output : selected;
+    > 368 |       expect(canonicalModelJson(record)).toBe('{"__proto__":{"cortexC3Marker":"retained"}}');
+          |                                          ^
+      369 |       expect(Object.hasOwn(record as object, "__proto__")).toBe(true);
+      370 |       expect(Object.getPrototypeOf(record)).toBe(Object.prototype);
+      371 |       expect(Object.isFrozen(record)).toBe(true);
+
+      at tests/unit/domain/model-policy.test.ts:368:42
+
+  ● lossless own JSON keys at arbitrary record boundaries › preserves an own __proto__ key in tool call input and keeps its request identity distinct
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "{\"__proto__\":{\"cortexC3Marker\":\"retained\"}}"
+    Received: "{}"
+
+      366 |       const record = family === "tool call input" && selected && "input" in selected ? selected.input
+      367 |         : family === "tool result output" && selected && "output" in selected ? selected.output : selected;
+    > 368 |       expect(canonicalModelJson(record)).toBe('{"__proto__":{"cortexC3Marker":"retained"}}');
+          |                                          ^
+      369 |       expect(Object.hasOwn(record as object, "__proto__")).toBe(true);
+      370 |       expect(Object.getPrototypeOf(record)).toBe(Object.prototype);
+      371 |       expect(Object.isFrozen(record)).toBe(true);
+
+      at tests/unit/domain/model-policy.test.ts:368:42
+
+  ● lossless own JSON keys at arbitrary record boundaries › preserves an own __proto__ key in tool result output and keeps its request identity distinct
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "{\"__proto__\":{\"cortexC3Marker\":\"retained\"}}"
+    Received: "{}"
+
+      366 |       const record = family === "tool call input" && selected && "input" in selected ? selected.input
+      367 |         : family === "tool result output" && selected && "output" in selected ? selected.output : selected;
+    > 368 |       expect(canonicalModelJson(record)).toBe('{"__proto__":{"cortexC3Marker":"retained"}}');
+          |                                          ^
+      369 |       expect(Object.hasOwn(record as object, "__proto__")).toBe(true);
+      370 |       expect(Object.getPrototypeOf(record)).toBe(Object.prototype);
+      371 |       expect(Object.isFrozen(record)).toBe(true);
+
+      at tests/unit/domain/model-policy.test.ts:368:42
+
+  ● lossless own JSON keys at arbitrary record boundaries › preserves hostile-looking own keys at multiple depths without prototype mutation or aliasing
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "{\"__proto__\":{\"cortexC3Marker\":\"root\"},\"array\":[{\"__proto__\":{\"cortexC3Marker\":\"array\"}}],\"constructor\":{\"prototype\":{\"cortexC3Marker\":\"constructor\"}},\"prototype\":{\"__proto__\":{\"cortexC3Marker\":\"nested\"}}}"
+    Received: "{\"array\":[{\"__proto__\":{\"cortexC3Marker\":\"array\"}}],\"constructor\":{\"prototype\":{\"cortexC3Marker\":\"constructor\"}},\"prototype\":{\"__proto__\":{\"cortexC3Marker\":\"nested\"}}}"
+
+      388 |     const admitted = validateModelRequest(snapshot(), { ...request, toolSteps: 1, tools: [{ name: "lookup", definition }] });
+      389 |     const output = admitted.request.tools[0].definition;
+    > 390 |     expect(canonicalModelJson(output)).toBe(before);
+          |                                        ^
+      391 |     expect(Object.keys(output).sort()).toEqual(["__proto__", "array", "constructor", "prototype"]);
+      392 |     const ownDescriptor = Object.getOwnPropertyDescriptor(output, "__proto__");
+      393 |     expect(ownDescriptor).toMatchObject({ enumerable: true, writable: false, configurable: false });
+
+      at Object.<anonymous> (tests/unit/domain/model-policy.test.ts:390:40)
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 30 passed, 35 total
+Snapshots:   0 total
+Time:        2.681 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c3/run01-c2-plus-regressions/unit.result.json

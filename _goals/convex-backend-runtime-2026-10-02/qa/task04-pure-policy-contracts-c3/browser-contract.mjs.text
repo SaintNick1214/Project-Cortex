@@ -1,0 +1,10 @@
+import { build } from 'esbuild';
+import { strict as assert } from 'node:assert';
+const result = await build({entryPoints:['src/domain/index.ts'],bundle:true,platform:'browser',format:'esm',outfile:'work/resume/task04-pure-policy-c3/browser-domain.mjs',metafile:true});
+const inputs = Object.keys(result.metafile.inputs);
+assert(!inputs.some(path => /(?:@convex-dev\/|openai\/|anthropic|neo4j|src\/config\.ts|src\/index\.ts)/.test(path)));
+const domain = await import('./browser-domain.mjs');
+for (const name of ['resolveModelPolicy','validateModelRequest','canFallbackModel','assertModelRequestIdentity','createModelRequestIdentity']) assert.equal(typeof domain[name], 'function');
+assert.equal(domain.MODEL_OPERATION_KEYS.length,13);
+assert(Object.isFrozen(domain.MODEL_OPERATION_REGISTRY));
+console.log(JSON.stringify({result:'PASS',exportCount:Object.keys(domain).length,inputs:inputs.length,providerOrCredentialModules:0,operationCount:13}));

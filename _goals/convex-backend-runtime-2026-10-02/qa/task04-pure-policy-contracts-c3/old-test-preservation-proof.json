@@ -1,0 +1,61 @@
+{
+  "observedAtUTC": "2026-10-04T01:33:13.827470+00:00",
+  "originalC2TestFile": {
+    "bytes": 28011,
+    "sha256": "1bfb874dc2fe4bac9900c2c699e2985c4925129f55aad03b2f84a1f738acf714"
+  },
+  "currentC3TestFile": {
+    "bytes": 32786,
+    "sha256": "d5a65043cb6c1dc2af851df866c5881fea67a0677c79ce3c5fe99d79f62700fc"
+  },
+  "originalIsExactBytePrefix": true,
+  "oldPrefixSha256": "1bfb874dc2fe4bac9900c2c699e2985c4925129f55aad03b2f84a1f738acf714",
+  "all30OriginalAssertionNames": [
+    "trusted pure model policy registers every approved operation and leaves media unavailable",
+    "trusted pure model policy defaults to qualified gpt-4o-mini Chat and requires explicit Responses receipt",
+    "trusted pure model policy resolves ordered scope specialization independent of database arrival order",
+    "trusted pure model policy selects distinct per-function models only from explicitly supplied qualified receipts",
+    "trusted pure model policy intersects restrictions and never broadens deployment hard bounds",
+    "trusted pure model policy allows only exact versioned authorized overrides within hard bounds",
+    "trusted pure model policy fails ambiguous, incomplete, unknown, cross-scope and stale-agent records closed",
+    "trusted pure model policy requires exact qualified capability/price/bound and rejects ambiguous receipts",
+    "trusted pure model policy rejects invalid integer monetary bound NaN",
+    "trusted pure model policy rejects invalid integer monetary bound Infinity",
+    "trusted pure model policy rejects invalid integer monetary bound -1",
+    "trusted pure model policy rejects invalid integer monetary bound 0.1",
+    "trusted pure model policy rejects invalid integer monetary bound 9007199254740992",
+    "trusted pure model policy rejects zero positive caps, inconsistent ceilings and unqualified model IDs",
+    "trusted pure model policy pins and deeply freezes snapshots without freezing or retaining caller objects",
+    "exact dispatch request identity normalizes text and hashes exact canonical scope/source/policy/request",
+    "exact dispatch request identity rejects invalid options, retries, headers, versions, token/time/cost/tool caps",
+    "exact dispatch request identity enforces combined context capacity independently of individual input/output ceilings",
+    "exact dispatch request identity requires structured operation schema and validates tool definitions",
+    "exact dispatch request identity canonicalizes key order but rejects coercion, cycles, sparse arrays and accessor values",
+    "immutable default embedding policy requires actual qualified embedding receipt and every immutable profile field",
+    "immutable default embedding policy pins batch ordinal/range and prohibits language/tool options or changed profiles",
+    "conservative fallback eligibility permits only registered qualified candidates with positive predispatch/rejection proof",
+    "conservative fallback eligibility forbids visible text/tools, committed effects, ambiguous paid/cancelled and unchecked replay",
+    "detached canonical request data and effect-free fallback evidence detaches nested tool definition without changing or freezing caller-owned data",
+    "detached canonical request data and effect-free fallback evidence detaches nested output schema without changing or freezing caller-owned data",
+    "detached canonical request data and effect-free fallback evidence detaches nested tool call input without changing or freezing caller-owned data",
+    "detached canonical request data and effect-free fallback evidence detaches nested tool result output without changing or freezing caller-owned data",
+    "detached canonical request data and effect-free fallback evidence rejects fallback accessor evidence without evaluating counting or throwing getters",
+    "detached canonical request data and effect-free fallback evidence rejects symbolic, nonplain, nonenumerable and iterator fallback evidence with zero effects"
+  ],
+  "all30OriginalAssertionsPassed": true,
+  "domainIndexUnchanged": true,
+  "newRedAttempt": {
+    "numTotalTests": 35,
+    "numPassedTests": 30,
+    "numFailedTests": 5,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  },
+  "newGreenAttempt": {
+    "numTotalTests": 35,
+    "numPassedTests": 35,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "numTodoTests": 0
+  }
+}
