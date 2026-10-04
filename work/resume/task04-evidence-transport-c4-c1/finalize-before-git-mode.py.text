@@ -1,0 +1,88 @@
+import datetime,hashlib,importlib.util,json,os,shutil
+from pathlib import Path
+Q=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1');S=Path('work/resume/task04-evidence-transport-c4-c1');T=Path('/tmp/cortex-evidence-transport-c4-c1')
+spec=importlib.util.spec_from_file_location('helper',Q/'materialize.py');h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h);idx,m,rows,byhash=h.load(Q)
+for tag in ['prepare','clean-materialize','idempotence','readonly','adversarial','adversarial-extra','source-after-corrected','mode-audit-corrected','source-topology-proof','cleanup-mirror']:
+ h.require(json.loads((Q/(tag+'.command.json')).read_bytes())['exit']==0,'finalize prerequisite '+tag)
+def aggregate(parts):
+ digest=hashlib.sha256();total=0
+ for p in parts:
+  b=h.exactread(Q,p['path'],p['bytes'],p['sha256']);digest.update(b);total+=len(b)
+ return {'sha256':digest.hexdigest(),'bytes':total,'parts':len(parts)}
+archive=aggregate(idx['archiveParts']);maps=aggregate(idx['mapParts']);rowmap={r['path']:r for r in rows}
+references=[];(Q/'reference-reports').mkdir()
+for i,root in enumerate(h.ROOTS):
+ r=rowmap.get(root+'/report.md')
+ if r:
+  b=h.exactread(Path.cwd(),r['path'],r['bytes'],r['sha256'],r['mode']);dst=Q/'reference-reports'/('root-%02d-report.md'%i);dst.write_bytes(b);os.chmod(dst,r['mode']);references.append({'source':r['path'],'copy':str(dst.relative_to(Q)),'sha256':r['sha256'],'bytes':r['bytes'],'mode':r['mode']})
+(Q/'execution-inputs').mkdir()
+for p in sorted(S.iterdir()):
+ if p.is_file() and p.name!='work-manifest.json':shutil.copyfile(p,Q/'execution-inputs'/p.name)
+(Q/'preimages').mkdir();shutil.copyfile(S/'helper-before-pins.py.text',Q/'preimages/helper-before-pins.py.text')
+gaps={'status':'NOT_CAPTURED_WHERE_SPECIFIED','historicalGaps':['Initial read-only discovery/mkdir/first script construction outside child recorder; no fabricated raw filesystem capture','Wrong guessed C2 fresh-review path failed; exact error/argv exist only in tool transcript, UTC filesystem fields NOT_CAPTURED','A tail status command used unsupported legacy option syntax for multiple files and failed; tool transcript only','Exploratory validation-chain outer wrapper exception has tool raw output, inner failed source-after child has complete genuine retained receipt','An exploratory helper import lacked PYTHONDONTWRITEBYTECODE and replaced owned generated QA __pycache__/materialize*.pyc; old bytecode SHA/size in prior receipts but exact overwritten bytecode backing NOT_CAPTURED. Current actual bytecode is sealed; helper .py pre-pin backing is retained exact','Read-only discovery/status commands outside the recorder are not retroactively described as captured source custody'], 'capturedFailures':['source-after wrongly required source original nlink1; raw/receipt retained exit1','mode-audit wrongly required source original nlink1; raw/receipt retained exit1'],'limits':'No source/custody/timing/native/Git acceptance; no retrospective preimages or times are fabricated.'}
+(Q/'bootstrap-and-gaps.json').write_text(json.dumps(gaps,indent=2)+'\n')
+commands=[{'tag':p.name[:-13],'exit':json.loads(p.read_bytes())['exit']} for p in sorted(Q.glob('*.command.json'))]
+summary={'status':'FROZEN_IMPLEMENTATION_CANDIDATE_INDEPENDENT_REVIEW_REQUIRED','sourceAcceptance':False,'nativeAcceptance':False,'timingAcceptance':False,'gitTransportAcceptance':False,'rowsIncludingOriginalManifests':len(rows),'originalManifestRows':m['manifestRows'],'originalManifests':idx['sourcePins'],'literalLinks':m['literalLinks'],'regularRows':sum(r['kind']=='file' for r in rows),'uniqueRegularObjects':len(m['contents']),'uniqueRegularBytes':sum(m['contents'].values()),'mapDecodedExactBytes':h.MAP_LIMIT,'archiveDecodedExactBytes':h.STREAM_LIMIT,'maxObjectExactBytes':h.OBJECT_LIMIT,'encodedPartCeiling':h.PART_LIMIT,'archiveEncoded':archive,'mapEncoded':maps,'indexSha256':h.INDEX_SHA,'helperSha256':h.sha((Q/'materialize.py').read_bytes()),'sourcePRE':str(Q/'source-before.json'),'sourcePOST':str(Q/'source-topology-results.json'),'originalReportCopies':references,'commands':commands,'adversarialControlsPassed':58,'sourceNegativeHardlinkFixtures':32,'operativeOriginalNlink1':735,'restoredAllRegularNlink1':True,'originalHardlinkTopologyNotPreserved':True,'temporaryExecutorMirrorRemovedAfterVerifiedBacking':True,'cleanMaterializationMustPrecedePhysicalClosureClaim':True,'freshIndependentJudge':'PENDING_COORDINATOR_GATE'}
+(Q/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
+readme='''# Frozen C4 evidence transport candidate
+
+Keep this whole packet. It represents eight exact immutable source roots; source/native/timing acceptance stays held. `index.json` pins every bounded archive/map part. `materialize.py` pins the exact index and generated decoded ceilings. Five exact original top-level QA reports are also retained in `reference-reports/`.
+
+Use the existing Python 3 standard library helper. No dependencies or services are needed. In a clean repository checkout, with an existing repository directory and all eight original roots absent, run:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 _goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py --target "$PWD" --materialize
+PYTHONDONTWRITEBYTECODE=1 python3 _goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py --target "$PWD"
+```
+
+The target directory must already exist and every absolute ancestor must be an ordinary directory. The helper creates only the eight exact namespaces and necessary ordinary directory containers. It validates the complete map and archive before writes, exclusively creates missing files, and denies wrong existing content/type/mode/nlink or linked ancestors. Preexisting exact compatible files verify idempotently. Git tracks executable status only; existing retained original files checked out as0644 may conflict with required original0600. Put standalone report access in this packet's reference copies and materialize the original roots completely before any full original physical closure claim.
+
+Every restored regular row gets its own inode, nlink1 and exact original mode; original negativefixture hardlink topology is intentionally not reconstructed. Every symlink is a terminal literal-byte entry and never a writable ancestor or followed read target. The map and all eight original manifests are exact byte backing. This packet is not a representation of an already materialized remote checkout.
+
+Executor's temporary clean mirror was fully verified and then removed under prospective permission after lossless archive revalidation. Fresh independent review must create its own clean mirror; it cannot relabel the executor's run as independent. Archive/map/index and all original sources remain intact. `bootstrap-and-gaps.json` preserves honest NOT_CAPTURED history and two captured mistaken source-nlink check failures.
+'''
+(Q/'README.md').write_text(readme)
+report=f'''# Task Completion Report
+
+## Status: PARTIAL — implementation verified; independent fresh review pending
+
+The new bounded transport preserves the rejected frozen C4 evidence and both completed SOURCE/PARENT review closures without granting source, custody, timing, native, default, paid, Task04 or Git acceptance. Writes stayed within the newly assigned QA/scratch/temporary roots. The eight original roots and all their original manifests remain unchanged in exact bytes, literal membership and modes.
+
+## Changes Made
+
+- `materialize.py`: descriptor-relative O_NOFOLLOW reads, ancestry, exclusive writes and literal link creation; custom SHA256/uint64/raw object records avoid extraction APIs. Fixed authentic helper index hash binds the complete exact path/kind/size/hash/mode/literal map and ordered archive/map parts.
+- `index.json`, `archiveParts/`, `mapParts/`: {len(rows):,} exact terminal rows = {m['manifestRows']:,} original manifest rows plus8 original manifest bodies. {len(m['contents']):,} SHA-unique regular objects total{sum(m['contents'].values()):,} bytes. All32 encoded parts are at most5,242,880 bytes; encoded map+archive+index total160,447,659 bytes. Original manifests were not normalized.
+- Exact generated new limits: object49,217,478; decoded map48,104,635; decoded raw record stream1,216,981,953. These limits derive from immutable actual inputs and fixed72-byte headers. Original30C2/native/data/media limits remain unchanged.
+- `source-before.json`, `source-after-corrected-results.json`, `source-topology-results.json`: whole original bytes/literals/modes preserved. New prospective exact inode/mode/nlink PRE/POST captures735 pinned operative nlink1 rows and32 nonoperative original negativefixture hardlink paths in16 DUMMY pairs. Only those32 paths are exempt from original nlink1 in the dedicated source proof. Every148,295 restored regular row remains nlink1. Original hardlink topology is not reconstructed; no initial inode/access-time history is invented.
+- Full genuine child argv/cwd/UTC/raw stdout/stderr/exit/pre/post metadata receipts; exact helper before-pin source backing; immutable frozen original manifests/full byte closure as source prebyte backing; all actual scripts copied under `execution-inputs/`; five exact original top-level QA reports copied under `reference-reports/`.
+
+## Requirements Checklist
+
+- [x] Lossless complete eight-root original QA/referenced scratch closure, including raw/prebyte/receipt/history and frozen rejected reports; exact source full before/after audits.
+- [x] Complete initially absent clean restoration of148,325 rows including all30 exact terminal literal links and all8 original manifest bodies; `clean-materialize.stdout`.
+- [x] Idempotent and read-only validations: zero creations and148,325 exact existing entries each; `idempotence.stdout`, `readonly.stdout`.
+- [x] Original/private/public mode semantics restored; `mode-corrected-results.json`; no hardlink deduplication of restored files.
+- [x] Checked bounded positive reads/writes, fstat exact regular descriptors before and after reads, exact hash/length, bounded decompress maximum-plus-one, corrupt/duplicate/missing/unknown/path/kind/link/bomb/trailing rejection and no overwrite.
+- [x]58 meaningful adversarial controls pass; `adversarial-results.json`, `adversarial-extra-results.json`. Positive partial writes complete; failed/invalid writes leave owned partial files and reruns deny them. Partial-write rollback is not claimed.
+- [x] OWN temporary pack/materialization first; validated final packet copied after overlay space reserve check. Complete OWN generated executor mirror verified against immutable archive then removed under explicit prospective cleanup scope; all originals/parts/index/map/raw/preimages/failures remain. Temporary mirror is not sealed physical backing. Fresh judge must create its own complete mirror.
+- [x] Recursive exact-self-only own QA/work seals are produced after final evidence bytes. No original deletion, source/product/default/private/key/environment/network/Git/paid/service/dependency operation. Node24.19.0/npm12.2.0 existing shim checked, no installation; Python is offline stdlib evidence tooling only.
+- [ ] Independent fresh materializer judge and full Git transport acceptance: coordinator gate remains PENDING. Executor does not self-certify this.
+
+## Verification
+
+Observed full clean materialization, idempotence, readonly,58 adversarial controls, full original source bytes/literals/modes, guarded operative735 nlink1, and exact prospective32 negativefixture inode/mode/nlink preservation passed. Application builds/lint/services are outside this transport-only change and were not run. Two recorded check runs genuinely failed because the executor mistakenly applied restored nlink1 to nonoperative original hardlink fixtures. Both raw receipts remain; separate corrected audits preserve the restored/operative nlink1 requirement.
+
+## Pins and materialization
+
+Final helper SHA256 `{summary['helperSha256']}`; index SHA256 `{h.INDEX_SHA}`. Ordered archive concatenation SHA256 `{archive['sha256']}` ({archive['bytes']:,} encoded bytes); ordered encoded map SHA256 `{maps['sha256']}` ({maps['bytes']:,} bytes). `index.json` contains every individual part hash/size and eight exact original manifest pins/counts; `README.md` gives explicit materialization instructions. Require materialization before any literal whole physical closure claim.
+
+## Failure history and review boundary
+
+`bootstrap-and-gaps.json` explicitly marks exploratory discovery/script construction/wrapper-status/raw time gaps and the unrecorded replacement of generated own .pyc beforebyte backing NOT_CAPTURED. Metadata of the overwritten own bytecode remains in prior receipts; no reconstructed before image or fake timestamp was produced. Source `.py` helper before-pin bytes remain exact. These history limitations supply no source/custody/semantic qualification. The source candidate remains rejected/held. Independent review must judge actual final packet and create its own complete clean restoration.
+
+## Files Modified
+
+Created only new assigned QA/scratch/temporary transport files. Original eight roots were read only; all exact original manifests, source/archive data and failed history were retained. No Git operations were performed.
+'''
+(Q/'report.md').write_text(report)
+print(json.dumps({'finalized':True,'helperSha256':summary['helperSha256'],'indexSha256':h.INDEX_SHA,'reviewPending':True,'archiveSha256':archive['sha256']}))

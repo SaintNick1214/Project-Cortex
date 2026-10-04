@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/restore-directory-modes.py", line 100, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/restore-directory-modes.py", line 99, in main
+    p=argparse.ArgumentParser();p.add_argument('--target',required=True,type=Path);p.add_argument('--packet',type=Path,default=Path(__file__).absolute().parent);p.add_argument('--prepare-roots',action='store_true');a=p.parse_args();print(json.dumps(restore(a.packet,a.target,a.prepare_roots)))
+                                                                                                                                                                                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/restore-directory-modes.py", line 63, in restore
+    f=h.directory(target/p)
+      ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 28, in directory
+    n=os.open(c,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=fd);os.close(fd);fd=n
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 24] Too many open files: 'tmp'

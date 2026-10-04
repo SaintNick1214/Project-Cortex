@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "total": 12,
+  "controls": [
+    {
+      "control": "exact-Git644-to-original600",
+      "pass": true
+    },
+    {
+      "control": "exact600-idempotent-zero-chmod",
+      "pass": true
+    },
+    {
+      "control": "wrong-mode-anywhere-denies-before-any-chmod",
+      "rejected": true,
+      "reason": "only explicit exact Git0644 to frozen0600 allowed"
+    },
+    {
+      "control": "wrong-bytes-before-chmod",
+      "rejected": true,
+      "reason": "normalizer exact original content/identity changed"
+    },
+    {
+      "control": "wrong-size-before-chmod",
+      "rejected": true,
+      "reason": "existing regular ownership/size/nlink mismatch"
+    },
+    {
+      "control": "nlink2-before-chmod",
+      "rejected": true,
+      "reason": "existing regular ownership/size/nlink mismatch"
+    },
+    {
+      "control": "unknown-filelike-before-chmod",
+      "rejected": true,
+      "reason": "unknown existing filelike entry before chmod"
+    },
+    {
+      "control": "wrong-type-terminal-link-no-follow-no-chmod",
+      "rejected": true,
+      "reason": "[Errno 40] Too many levels of symbolic links: 'c3-source-finding-map.json'"
+    },
+    {
+      "control": "existing-owner-mismatch",
+      "rejected": true,
+      "reason": "existing regular ownership/size/nlink mismatch"
+    },
+    {
+      "control": "ordinary-ancestor-required",
+      "rejected": true,
+      "reason": "[Errno 20] Not a directory: '_goals'"
+    },
+    {
+      "control": "no600-to644-or-other-transition",
+      "rejected": true,
+      "reason": "only explicit exact Git0644 to frozen0600 allowed"
+    },
+    {
+      "control": "literal-exact-link-idempotent-no-chmod-no-follow",
+      "pass": true
+    }
+  ],
+  "normalizerSourceSha256": "187c3950f02caa16f0671a615faa93d0657377e8b84da95b7ea28e7069da48cf",
+  "materializerSourceSha256": "78a512af1a003f3275b66e014a949ac77a5a961df01c9957d04d950b84348067",
+  "ownBytecodeRead": "NO_DIRECT_SOURCE_COMPILE"
+}

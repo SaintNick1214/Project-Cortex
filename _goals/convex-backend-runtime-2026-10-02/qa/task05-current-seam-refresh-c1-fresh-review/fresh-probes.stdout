@@ -1,0 +1,22 @@
+PASS 1: nested text accessor denied with zero calls/effects
+PASS 2: unknown deep getter graph validated before whitelist denied with zero calls/effects
+PASS 3: array symbol method denied with zero calls/effects
+PASS 4: toJSON method denied with zero calls/effects
+PASS 5: hidden array index denied with zero calls/effects
+PASS 6: array nonenumerable extra denied with zero calls/effects
+PASS 7: cyclic unknown graph denied with zero calls/effects
+PASS 8: negative zero version denied with zero calls/effects
+PASS 9: bigint nested graph denied with zero calls/effects
+PASS 10: undefined array part denied with zero calls/effects
+PASS 11: part inherited prototype denied with zero calls/effects
+PASS 12: lone surrogate ID denied with zero calls/effects
+PASS 13: both copied payload graphs detached from caller and each other
+PASS 14: actual canonical serializer explicitly accepts null prototype JSON records
+PASS 15: 128 Unicode scalars and512 bytes accepted;129 scalar denied
+PASS 16: 128 exact whitespace/decomposed Unicode parts accepted;129 denied
+PASS 17: quote multibyte escaping exact180000 accept180001 deny before effect
+PASS 18: backslash multibyte escaping exact180000 accept180001 deny before effect
+PASS 19: newline multibyte escaping exact180000 accept180001 deny before effect
+PASS 20: text/boundary changes conflict canonical bytes while preserving identity
+PASS 21: sole wrapper exact frozen fields and unhashed scoped identity
+{"assertedOutcomeGroups":21,"effects":3,"skips":[],"classification":"independent exact C3 function prefix with actual frozen serializer; fake effects only; no product/native proof"}

@@ -1,0 +1,1310 @@
+{
+  "candidateSeals": [
+    {
+      "root": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1",
+      "rows": 237,
+      "sha256": "c8612ba3a6e8507485c7d47f364059397be23e56456f8b8d8f8c804a6fadeb5c",
+      "exactSelfOnly": true
+    },
+    {
+      "root": "/workspace/Project-Cortex/work/resume/task04-evidence-transport-c4-c1",
+      "rows": 47,
+      "sha256": "362a6aced0e6540f07c767aeccacc01f9a3803c930abccdecca4faee34417593",
+      "exactSelfOnly": true
+    }
+  ],
+  "allEightManifestMappings": [
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4",
+      "allOriginalRowsMappedExactly": 3853,
+      "rawBytes": 874160,
+      "sha256": "5f68caca72ff8b5792efabe135d31430451cd4b9147fc672393a750bceddf53f"
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c4",
+      "allOriginalRowsMappedExactly": 2073,
+      "rawBytes": 445215,
+      "sha256": "c7c6c1ace7b2df60ab29181dcf007ed0805956ed10282410d7598abc1447c552"
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c4",
+      "allOriginalRowsMappedExactly": 2322,
+      "rawBytes": 491271,
+      "sha256": "56cc58bf63375ef7913fe38ef59ecf19947dfeeb205983e0cb941b27efc19c8f"
+    },
+    {
+      "root": "work/resume/task04-model-drift-native-preparation-c4",
+      "allOriginalRowsMappedExactly": 133251,
+      "rawBytes": 39219107,
+      "sha256": "0e3575cdb2978556896a4fa41e78a370d417d2b3352367717ad0a274b81e1901"
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-source-fresh-review",
+      "allOriginalRowsMappedExactly": 17,
+      "rawBytes": 2933,
+      "sha256": "f6b00a579905f0898ae60d3fff607e653bf1ad200b5f49946c64af2abb1d1652"
+    },
+    {
+      "root": "work/resume/task04-native-c4-source-fresh-review",
+      "allOriginalRowsMappedExactly": 4709,
+      "rawBytes": 1296702,
+      "sha256": "a9ef43a05de4b25a713eef6ddfcb6137cdea7e47fb6b07d59967f24429a01be7"
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-parent-fresh-review",
+      "allOriginalRowsMappedExactly": 2009,
+      "rawBytes": 471146,
+      "sha256": "d272d087eea1a19c6fb7bde2e38c674a89f9d4314d3cba9d6898b2225291a711"
+    },
+    {
+      "root": "work/resume/task04-native-c4-parent-fresh-review",
+      "allOriginalRowsMappedExactly": 83,
+      "rawBytes": 15872,
+      "sha256": "1862d87f668a6dee35500a52c00bf01d3a05fd017a7ba8d6a0d92c9e6ceaf804"
+    }
+  ],
+  "boundedParts": [
+    {
+      "category": "mapParts",
+      "count": 1,
+      "encodedBytes": 3027090,
+      "sha256": "bdcd96a750ba26fdc85e6f259ee6457a7f8525c00f6cb0dac185f71ccbfa7c6f"
+    },
+    {
+      "category": "archiveParts",
+      "count": 31,
+      "encodedBytes": 157412564,
+      "sha256": "291df9c9034a5354c8550b833a3e88a12a3fcc2e59433bd273ae352974af248c"
+    }
+  ],
+  "derivedObjectCeiling": 49217478,
+  "derivedStreamCeiling": 1216981953,
+  "mapExactDecodedCeiling": 48104635,
+  "allGenuineReceipts": [
+    {
+      "command": "adversarial-extra.command.json",
+      "utcPRE": "2026-10-04T15:15:57.170515+00:00",
+      "utcPOST": "2026-10-04T15:15:57.211808+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/adversarial-extra.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 55,
+          "sha256": "c1e9cea6e3aa3683b9b098c8ca12d7be8c08d3532576d904ead19152eb776071"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "adversarial.command.json",
+      "utcPRE": "2026-10-04T15:13:17.029274+00:00",
+      "utcPOST": "2026-10-04T15:13:24.621138+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/adversarial.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 46,
+          "sha256": "d2fa180c7133976b13439c4732e70f8f560db970d9e98a38a1f89d3b4c4ee28c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "clean-materialize.command.json",
+      "utcPRE": "2026-10-04T15:12:45.215728+00:00",
+      "utcPOST": "2026-10-04T15:14:08.266708+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/run-restoration.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 295,
+          "sha256": "64323bdc89c3c3e19efb4b07f2be5149db8e147e093232a3bee54d63cb26cd39"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "cleanup-mirror-git.command.json",
+      "utcPRE": "2026-10-04T15:32:32.757409+00:00",
+      "utcPOST": "2026-10-04T15:32:34.397103+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/cleanup-mirror-git.py"
+      ],
+      "exit": 1,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 705,
+          "sha256": "2b583843315ca23e0497229133a62e0e322fadcf1ef277deadd5e2141067b765"
+        }
+      }
+    },
+    {
+      "command": "cleanup-mirror.command.json",
+      "utcPRE": "2026-10-04T15:21:16.198809+00:00",
+      "utcPOST": "2026-10-04T15:21:37.910723+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/cleanup-mirror.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 1209,
+          "sha256": "55fbceb3e85543d624b6a930aed2c8f95725a0e2c21413489ee40d1edc53b8ae"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "cleanup-post-incident.command.json",
+      "utcPRE": "2026-10-04T15:56:59.446877+00:00",
+      "utcPOST": "2026-10-04T15:57:21.259638+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/cleanup-post-incident.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 1527,
+          "sha256": "329fa5c520ce48b77d024d441f3e69f671f28193ad54b3588a0a99d3013c5736"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "create-directory-helper.command.json",
+      "utcPRE": "2026-10-04T15:41:05.132059+00:00",
+      "utcPOST": "2026-10-04T15:41:05.160612+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/create-directory-helper.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "create-helper.command.json",
+      "utcPRE": "2026-10-04T15:10:40.342611+00:00",
+      "utcPOST": "2026-10-04T15:10:40.364064+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/create-helper.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "create-normalizer.command.json",
+      "utcPRE": "2026-10-04T15:25:05.742990+00:00",
+      "utcPOST": "2026-10-04T15:25:05.769617+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/create-normalizer.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "directory-controls-git-complete.command.json",
+      "utcPRE": "2026-10-04T15:50:20.939515+00:00",
+      "utcPOST": "2026-10-04T15:50:26.210875+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/directory-controls-git-complete.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 43,
+          "sha256": "849d508bf9d3c00520de5a4520ecb20fc5bfd9cb11fb02aa9920f3464c8710a4"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "directory-controls-git.command.json",
+      "utcPRE": "2026-10-04T15:48:50.167876+00:00",
+      "utcPOST": "2026-10-04T15:48:53.026594+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/directory-controls-git.py"
+      ],
+      "exit": 1,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 607,
+          "sha256": "05ba0349bfc76234f74702001949097484871fe64be2d10b0675294294e5217a"
+        }
+      }
+    },
+    {
+      "command": "directory-controls.command.json",
+      "utcPRE": "2026-10-04T15:46:37.433544+00:00",
+      "utcPOST": "2026-10-04T15:46:38.637408+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/directory-controls.py"
+      ],
+      "exit": 1,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 590,
+          "sha256": "db3e90aca46dd9131622715bc1866b5fd50bf68d860104ed78524b8214a4afe9"
+        }
+      }
+    },
+    {
+      "command": "directory-idempotence.command.json",
+      "utcPRE": "2026-10-04T15:51:13.243139+00:00",
+      "utcPOST": "2026-10-04T15:51:24.935626+00:00",
+      "argv": [
+        "python3",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/restore-directory-modes.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 781,
+          "sha256": "c27a717eaa53000ede30758c09197cf2e01b335e10efc7eba80f1116531cf78f"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "directory-inventory.command.json",
+      "utcPRE": "2026-10-04T15:38:46.986869+00:00",
+      "utcPOST": "2026-10-04T15:38:53.364920+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/directory-inventory.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 2507,
+          "sha256": "ebccb76e2bd961fff9fdbad776082d970868118e240504b352ed41faa920845a"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "directory-restore-full-bounded.command.json",
+      "utcPRE": "2026-10-04T15:45:01.951072+00:00",
+      "utcPOST": "2026-10-04T15:45:13.642988+00:00",
+      "argv": [
+        "python3",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/restore-directory-modes.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 38702,
+          "sha256": "8e5ca8229426daac8f3058d84931fec4844512065ba2393005fb4b08c2abe635"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "directory-restore-full.command.json",
+      "utcPRE": "2026-10-04T15:42:17.239497+00:00",
+      "utcPOST": "2026-10-04T15:42:20.437869+00:00",
+      "argv": [
+        "python3",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/restore-directory-modes.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout"
+      ],
+      "exit": 1,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 1573,
+          "sha256": "59ca321c7073c742ae5e69bff0afac3507c927b1b11791ee0fd4effcff0e2056"
+        }
+      }
+    },
+    {
+      "command": "directory-verify.command.json",
+      "utcPRE": "2026-10-04T15:53:45.120187+00:00",
+      "utcPOST": "2026-10-04T15:54:00.482282+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/directory-verify.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 443,
+          "sha256": "4e48dcacac596110b542f11af012ac961090983f575c799753d28cb599ba6ddf"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "finalize.command.json",
+      "utcPRE": "2026-10-04T16:01:45.098113+00:00",
+      "utcPOST": "2026-10-04T16:01:46.833506+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/finalize.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 295,
+          "sha256": "56c866fe4c207ea7dffd735a912d06536b00129776bd8822ec75a481a08575b5"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "fix-directory-fd-bound.command.json",
+      "utcPRE": "2026-10-04T15:45:01.631006+00:00",
+      "utcPOST": "2026-10-04T15:45:01.655281+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/fix-directory-fd-bound.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "git-clean-materialize.command.json",
+      "utcPRE": "2026-10-04T15:26:51.149032+00:00",
+      "utcPOST": "2026-10-04T15:27:51.774453+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout",
+        "--materialize"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 296,
+          "sha256": "de2f19943ac6d95ed7ee4b5fa0b12a6524c3eeec872441d41390c8f54fe1d33f"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "git-idempotence.command.json",
+      "utcPRE": "2026-10-04T15:27:52.057652+00:00",
+      "utcPOST": "2026-10-04T15:28:29.135754+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout",
+        "--materialize"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 295,
+          "sha256": "b36e4a846ff2c67615d024ea4cd1564c1539ff0330c2544bf714bbb7cdee879a"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "git-mode-controls-final.command.json",
+      "utcPRE": "2026-10-04T15:29:15.200024+00:00",
+      "utcPOST": "2026-10-04T15:29:32.733990+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/git-mode-controls-final.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 42,
+          "sha256": "b2408e2afc5fa1f288a9799e78e51d47c4c79c175ec5d32875e43c8c64bde491"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "git-mode-controls.command.json",
+      "utcPRE": "2026-10-04T15:26:29.703146+00:00",
+      "utcPOST": "2026-10-04T15:26:47.505474+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "work/resume/task04-evidence-transport-c4-c1/git-mode-controls.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 42,
+          "sha256": "b2408e2afc5fa1f288a9799e78e51d47c4c79c175ec5d32875e43c8c64bde491"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "git-mode-loader-controls.command.json",
+      "utcPRE": "2026-10-04T15:35:51.212025+00:00",
+      "utcPOST": "2026-10-04T15:35:51.245931+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/git-mode-loader-controls.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 50,
+          "sha256": "018ea48aa61cbe3da54f1b3e83e0d08350b284cd0bd0fceaca0020936179c961"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "git-mode-normalize.command.json",
+      "utcPRE": "2026-10-04T15:26:49.495139+00:00",
+      "utcPOST": "2026-10-04T15:26:50.866058+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/restore-git-modes.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 10827,
+          "sha256": "d2e81c0cedf5691eb0a094d52e62fce33710bf1b3ffffad1c7c8ab0443c0f1a6"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "git-readonly.command.json",
+      "utcPRE": "2026-10-04T15:28:29.428850+00:00",
+      "utcPOST": "2026-10-04T15:29:02.683532+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 295,
+          "sha256": "b36e4a846ff2c67615d024ea4cd1564c1539ff0330c2544bf714bbb7cdee879a"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "git-seed.command.json",
+      "utcPRE": "2026-10-04T15:26:47.822585+00:00",
+      "utcPOST": "2026-10-04T15:26:49.209149+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "work/resume/task04-evidence-transport-c4-c1/git-seed.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 96,
+          "sha256": "885eeae1ddd88e75e78c45b2c855404202b5ac04856418c3db0ba060d163446c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "idempotence.command.json",
+      "utcPRE": "2026-10-04T15:14:49.507175+00:00",
+      "utcPOST": "2026-10-04T15:15:29.423481+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout",
+        "--materialize"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 295,
+          "sha256": "b36e4a846ff2c67615d024ea4cd1564c1539ff0330c2544bf714bbb7cdee879a"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "mode-audit-corrected.command.json",
+      "utcPRE": "2026-10-04T15:18:14.596012+00:00",
+      "utcPOST": "2026-10-04T15:18:27.048724+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/mode-audit-corrected.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 38,
+          "sha256": "7466d731947f91f810df58ba2f934ace60bf71c8c4413619fcf245b894e73252"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "mode-audit-final.command.json",
+      "utcPRE": "2026-10-04T15:31:08.297535+00:00",
+      "utcPOST": "2026-10-04T15:31:20.278127+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/mode-audit-final.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 38,
+          "sha256": "7466d731947f91f810df58ba2f934ace60bf71c8c4413619fcf245b894e73252"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "mode-audit.command.json",
+      "utcPRE": "2026-10-04T15:16:51.771904+00:00",
+      "utcPOST": "2026-10-04T15:17:00.437124+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/mode-audit.py"
+      ],
+      "exit": 1,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 572,
+          "sha256": "c34cd4c015812104142366446e882291a8765b887ce9bdf7299a8175b7bf6d28"
+        }
+      }
+    },
+    {
+      "command": "post-incident-source-proof.command.json",
+      "utcPRE": "2026-10-04T15:36:12.455796+00:00",
+      "utcPOST": "2026-10-04T15:36:47.670656+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/post-incident-source-proof.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 105,
+          "sha256": "70bcc05586541987fbb6cf6e0b4b180b11a559322c798087d514d846864b83e6"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "post-repair-materializer-readonly.command.json",
+      "utcPRE": "2026-10-04T15:55:19.753735+00:00",
+      "utcPOST": "2026-10-04T15:55:57.259133+00:00",
+      "argv": [
+        "python3",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 295,
+          "sha256": "b36e4a846ff2c67615d024ea4cd1564c1539ff0330c2544bf714bbb7cdee879a"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "prepare.command.json",
+      "utcPRE": "2026-10-04T15:11:26.671074+00:00",
+      "utcPOST": "2026-10-04T15:12:12.360883+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/prepare.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 1237,
+          "sha256": "5eb6a4aa61d2e0c0d331211e8ebcdfe1952924130bf080dcef0ab122155b8769"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "readonly.command.json",
+      "utcPRE": "2026-10-04T15:15:29.702619+00:00",
+      "utcPOST": "2026-10-04T15:16:04.540802+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py",
+        "--target",
+        "/tmp/cortex-evidence-transport-c4-c1/clean-checkout"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 295,
+          "sha256": "b36e4a846ff2c67615d024ea4cd1564c1539ff0330c2544bf714bbb7cdee879a"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "refine-normalizer.command.json",
+      "utcPRE": "2026-10-04T15:29:14.842348+00:00",
+      "utcPOST": "2026-10-04T15:29:14.894957+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/refine-normalizer.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "source-after-corrected.command.json",
+      "utcPRE": "2026-10-04T15:17:47.163482+00:00",
+      "utcPOST": "2026-10-04T15:18:22.669668+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/source-after-corrected.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 715,
+          "sha256": "20274f81c2423758e548559b00323c6a79ad30b53282556f2a4bd82942c7eff8"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "source-after.command.json",
+      "utcPRE": "2026-10-04T15:16:04.822064+00:00",
+      "utcPOST": "2026-10-04T15:16:20.640156+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex"
+      ],
+      "exit": 1,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 1404,
+          "sha256": "d94ace8d43b695f9ba5419a403cc73a8c3eba02a7f750e3ce3050aa0ed079951"
+        }
+      }
+    },
+    {
+      "command": "source-drift-diagnostic.command.json",
+      "utcPRE": "2026-10-04T15:33:26.137781+00:00",
+      "utcPOST": "2026-10-04T15:33:43.583350+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/source-drift-diagnostic.py"
+      ],
+      "exit": 1,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 893,
+          "sha256": "761350d2bd5ae00f54388f962294818602f7d28433c48bc7dd17ec8edc7f365c"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "source-topology-final.command.json",
+      "utcPRE": "2026-10-04T15:30:03.849173+00:00",
+      "utcPOST": "2026-10-04T15:30:21.285517+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/source-topology-final.py"
+      ],
+      "exit": 1,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stderr": {
+          "bytes": 1203,
+          "sha256": "341682e67d79f07e212db11e9857bc9f9aca64f6cbd0354b15a7a0673c7bbabf"
+        }
+      }
+    },
+    {
+      "command": "source-topology-proof.command.json",
+      "utcPRE": "2026-10-04T15:20:23.861711+00:00",
+      "utcPOST": "2026-10-04T15:20:48.442744+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/source-topology-proof.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 105,
+          "sha256": "70bcc05586541987fbb6cf6e0b4b180b11a559322c798087d514d846864b83e6"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "command": "toolchain.command.json",
+      "utcPRE": "2026-10-04T15:14:26.811202+00:00",
+      "utcPOST": "2026-10-04T15:14:26.978166+00:00",
+      "argv": [
+        "python3",
+        "work/resume/task04-evidence-transport-c4-c1/toolchain.py"
+      ],
+      "exit": 0,
+      "rawStreams": {
+        "stdout": {
+          "bytes": 16,
+          "sha256": "bbb1e15be9a5916ef9cc1da1cb2a125b1a2ccd0a92d7ea6dc21077ebc867ae2d"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "structuredEvidenceFullyRead": {
+    "adversarial-extra-results.json": {
+      "bytes": 1316,
+      "sha256": "2001786e9ff9bfef1b4d89c9c8d28c6e2dace364558d7bd9b1d63f11198bfabb",
+      "topLevelKeys": [
+        "status",
+        "total",
+        "controls"
+      ]
+    },
+    "adversarial-results.json": {
+      "bytes": 7339,
+      "sha256": "0ffef07d06689b9a531291125d71202975f3ca5e3a4decfc0f1f1a67f678005a",
+      "topLevelKeys": [
+        "controls",
+        "total",
+        "status",
+        "fixtures"
+      ]
+    },
+    "bootstrap-and-gaps.json": {
+      "bytes": 1935,
+      "sha256": "e6705dc04971e804ec037ae23739b3c2136c6d18c982b2086a77f9bb63744d07",
+      "topLevelKeys": [
+        "status",
+        "historicalGaps",
+        "capturedFailures",
+        "limits"
+      ]
+    },
+    "cleanup-post-incident-results.json": {
+      "bytes": 1593,
+      "sha256": "b2cba81e930852f59169ee50875a35aaa6d88fd787d78afb820df7ef3fea448c",
+      "topLevelKeys": [
+        "status",
+        "utcPRE",
+        "utcPOST",
+        "pre",
+        "postOwnedTargetAbsent",
+        "originalEightRootsPresent",
+        "historicalIncident",
+        "retained",
+        "physicalBacking",
+        "authorization"
+      ]
+    },
+    "cleanup-results.json": {
+      "bytes": 1273,
+      "sha256": "60dcfdb1fe0ecf7d6da5afaa9a617e74a0c2bde6056731fda5ef055c8f2a68a8",
+      "topLevelKeys": [
+        "status",
+        "utcPRE",
+        "utcPOST",
+        "pre",
+        "postOwnedTargetAbsent",
+        "originalEightRootsPresent",
+        "retained",
+        "physicalBacking",
+        "authorization"
+      ]
+    },
+    "directory-controls-git-complete-results.json": {
+      "bytes": 1370,
+      "sha256": "40c9683d44066991b5d32f04f3b242664aaacd772174299ba7e8e8e14c547601",
+      "topLevelKeys": [
+        "status",
+        "total",
+        "controls",
+        "scope"
+      ]
+    },
+    "directory-source-before.json": {
+      "bytes": 2861,
+      "sha256": "b8816c713a23f09b4b8fe0ecc359607da944bae069801b668ea903cfb4e43bf1",
+      "topLevelKeys": [
+        "utcPRE",
+        "utcPOST",
+        "count",
+        "modes",
+        "encodedBytes",
+        "encodedSha256",
+        "decodedExactBytes",
+        "decodedSha256",
+        "eightOriginalManifestPinsUnchanged",
+        "limitation"
+      ]
+    },
+    "directory-verify-results.json": {
+      "bytes": 459,
+      "sha256": "2434b0e3a403de6e8a2598642f5732652a2955144d1e0fc663a1d55ac679a208",
+      "topLevelKeys": [
+        "status",
+        "sourceAndRestoredDirectoryRows",
+        "sourceDirectoryMetadataExactSinceCurrentRecoveredSnapshot",
+        "restoredDirectoriesAll0700CurrentUid",
+        "missingOriginalEmptyDirectoriesRestored",
+        "sourceDirectoryInodeTimeNotReconstructed",
+        "historicalIncident"
+      ]
+    },
+    "git-mode-controls-final-results.json": {
+      "bytes": 1959,
+      "sha256": "62433c28b2cf91e329a5adcde33a5328276acc98a0c152b1a6c10ecadcf10e2c",
+      "topLevelKeys": [
+        "status",
+        "total",
+        "controls",
+        "normalizerSourceSha256",
+        "materializerSourceSha256",
+        "ownBytecodeRead"
+      ]
+    },
+    "git-mode-controls-results.json": {
+      "bytes": 1959,
+      "sha256": "21368a58eb9904ce723c03a9400e0af274393549e614883621ed80f615d0e388",
+      "topLevelKeys": [
+        "status",
+        "total",
+        "controls",
+        "normalizerSourceSha256",
+        "materializerSourceSha256",
+        "ownBytecodeRead"
+      ]
+    },
+    "git-mode-loader-controls-results.json": {
+      "bytes": 823,
+      "sha256": "861c596f888dcf63a2d8401c4685115e48eee8e849ec960d98eb5f6485266456",
+      "topLevelKeys": [
+        "status",
+        "total",
+        "controls",
+        "normalizerSourceSha256",
+        "ownCachedBytecodeRead"
+      ]
+    },
+    "git-seed-results.json": {
+      "bytes": 6263,
+      "sha256": "7660781a60dcb58f24fca78d20c6af57fb539f3b94ea502125a2a8d0cdb26f98",
+      "topLevelKeys": [
+        "status",
+        "target",
+        "files",
+        "ownCachedBytecodeRead"
+      ]
+    },
+    "mode-corrected-results.json": {
+      "bytes": 256,
+      "sha256": "d7ae74b532ace053abb51af45283504d4abeca6b1047eb795acec537ce028010",
+      "topLevelKeys": [
+        "status",
+        "sourceAndRestorationModesExact",
+        "restoredRegularNlink1",
+        "sourceLiteralModes",
+        "basis"
+      ]
+    },
+    "mode-final-results.json": {
+      "bytes": 256,
+      "sha256": "d7ae74b532ace053abb51af45283504d4abeca6b1047eb795acec537ce028010",
+      "topLevelKeys": [
+        "status",
+        "sourceAndRestorationModesExact",
+        "restoredRegularNlink1",
+        "sourceLiteralModes",
+        "basis"
+      ]
+    },
+    "pack-result.json": {
+      "bytes": 674,
+      "sha256": "f8221ad5e35d6b136750572078c4535ddd07f68be3c8ec5497bc96198dba1cfc",
+      "topLevelKeys": [
+        "utcPOST",
+        "sourceRoots",
+        "originalManifestRows",
+        "restoredRowsIncludingManifests",
+        "literalLinks",
+        "maxObjectBytes",
+        "mapDecodedExactBytes",
+        "archiveDecodedExactBytes",
+        "uniqueContents",
+        "uniqueBytes",
+        "encodedParts",
+        "encodedBytes",
+        "maxEncodedPartBytes",
+        "overlayFreeBeforeCopy",
+        "indexSha256",
+        "helperSha256",
+        "status"
+      ]
+    },
+    "post-incident-source-results.json": {
+      "bytes": 559448,
+      "sha256": "c36019c92aa7bf1902bba384200d411978aa77477d41d9deedb455a54818a3ce",
+      "topLevelKeys": [
+        "status",
+        "utcPRE",
+        "utcPOST",
+        "scope",
+        "before",
+        "after",
+        "wholeRows",
+        "operativeNlink1",
+        "nonoperativeNlink2",
+        "allRestoredRegularNlink1Mandatory",
+        "originalHardlinkTopologyNotReconstructed",
+        "acceptance",
+        "historicalIncident"
+      ]
+    },
+    "source-after-corrected-results.json": {
+      "bytes": 769,
+      "sha256": "b40641a35522f98d0b0494b7abbed24e9c4e44d18e2dded3a3e0e322653c07a0",
+      "topLevelKeys": [
+        "status",
+        "utcPRE",
+        "utcPOST",
+        "rows",
+        "manifestRows",
+        "originalManifests",
+        "literalLinks",
+        "originalRegularNlinkObservedPOST",
+        "originalModesObservedPOST",
+        "restorationNlinkRuleUnchanged",
+        "earlierFailure",
+        "limits"
+      ]
+    },
+    "source-before.json": {
+      "bytes": 4162,
+      "sha256": "bd154e513a2553e630c197fd3b3348c01ebf1f1b7747c9b2ba59a60200c02932",
+      "topLevelKeys": [
+        "utcPRE",
+        "utcPOST",
+        "status",
+        "observations",
+        "sourcePrebyteBacking",
+        "sourceAcceptance",
+        "nativeAcceptance"
+      ]
+    },
+    "source-drift-diagnostic-results.json": {
+      "bytes": 1270,
+      "sha256": "7641c6088920f63e3ed5714215ba311eb0fa92d7a392c3fd5b98c0d423889c56",
+      "topLevelKeys": [
+        "utc",
+        "mismatches",
+        "count",
+        "rowsScanned",
+        "noRepin",
+        "noOriginalWrites"
+      ]
+    },
+    "source-topology-results.json": {
+      "bytes": 559149,
+      "sha256": "2c1829d2b9330617a2fbaa7f166018212c0f89941579828266f42d4d99c28c59",
+      "topLevelKeys": [
+        "status",
+        "utcPRE",
+        "utcPOST",
+        "scope",
+        "before",
+        "after",
+        "wholeRows",
+        "operativeNlink1",
+        "nonoperativeNlink2",
+        "allRestoredRegularNlink1Mandatory",
+        "originalHardlinkTopologyNotReconstructed",
+        "acceptance"
+      ]
+    },
+    "summary.json": {
+      "bytes": 11666,
+      "sha256": "4f1f5310df8078be354fc29ec0f47427ef0217fff4d429ea5e3d309d2f40b5c2",
+      "topLevelKeys": [
+        "status",
+        "sourceAcceptance",
+        "nativeAcceptance",
+        "sourceByteState",
+        "timingAcceptance",
+        "gitTransportAcceptance",
+        "rowsIncludingOriginalManifests",
+        "originalManifestRows",
+        "originalManifests",
+        "literalLinks",
+        "regularRows",
+        "uniqueRegularObjects",
+        "uniqueRegularBytes",
+        "mapDecodedExactBytes",
+        "archiveDecodedExactBytes",
+        "maxObjectExactBytes",
+        "encodedPartCeiling",
+        "archiveEncoded",
+        "mapEncoded",
+        "indexSha256",
+        "helperSha256",
+        "gitModeNormalizerSha256",
+        "directoryHelperSha256",
+        "directorySidecar",
+        "sourceCustodyContinuityThroughIncident",
+        "gitModeNormalizerHelperSourcePin",
+        "finalOwnHelperPycReads",
+        "sourcePRE",
+        "sourcePOST",
+        "originalReportCopies",
+        "commands",
+        "adversarialControlsPassed",
+        "sourceNegativeHardlinkFixtures",
+        "operativeOriginalNlink1",
+        "restoredAllRegularNlink1",
+        "originalHardlinkTopologyNotPreserved",
+        "temporaryExecutorMirrorRemovedAfterVerifiedBacking",
+        "cleanMaterializationMustPrecedePhysicalClosureClaim",
+        "freshIndependentJudge"
+      ]
+    }
+  },
+  "fullReferenceReportsRead": [
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/reference-reports/root-00-report.md",
+      "bytes": 11487,
+      "sha256": "25cf302167ad4bd7036998fec90f77731ae12f2e412e66950162758c86fdd42f",
+      "fullUTF8Read": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/reference-reports/root-01-report.md",
+      "bytes": 11488,
+      "sha256": "565b2044e70762adb4dc51e497c01ef6ff637acc0b5771431ca83618bdfefd8e",
+      "fullUTF8Read": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/reference-reports/root-02-report.md",
+      "bytes": 11483,
+      "sha256": "32581ebc5fb4e346eba6d32a82bd1bc70c31890e197cfdcf127d7c84a3d3d87c",
+      "fullUTF8Read": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/reference-reports/root-04-report.md",
+      "bytes": 20200,
+      "sha256": "4dd2df52ea843dc544b9f6129662b86b16e186f8038f08d70b32ca10b3229d0b",
+      "fullUTF8Read": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/reference-reports/root-06-report.md",
+      "bytes": 15106,
+      "sha256": "45edca2e6eebb07ac9d99f7bccc93e4d9f4a2311d8b07578feb284f01331f7b5",
+      "fullUTF8Read": true
+    }
+  ],
+  "historicalNonzeroExits": [
+    "cleanup-mirror-git.command.json",
+    "directory-controls-git.command.json",
+    "directory-controls.command.json",
+    "directory-restore-full.command.json",
+    "mode-audit.command.json",
+    "source-after.command.json",
+    "source-drift-diagnostic.command.json",
+    "source-topology-final.command.json"
+  ],
+  "incidentContinuity": false,
+  "ownCachedPycRead": false
+}

@@ -976,3 +976,26 @@ Fresh recovery review PASS4.6 full report fcd6e47fa1b605b3b292adc588355178da3f7a
 Checkpoint32 latest CI firstpage jobs: packed/browser and Neo4j/Memgraph contracts plusfourdemo builds PASS; SDK/CLI/provider/lint-type/deploy-purge SKIPPED, signaturesFAIL, CodeQLIN_PROGRESS, scorecardSKIPPED, OpenAPI actualauditSKIPPED. WrapperSUCCESS is notfullcorePASS.
 
 Checkpoint33 selects accepted isolated metadataC2 and full676/664 QA +12/8 literal work closure, preserved incident archive/recovery/freshreview/ROOTdisposition,32receipts/CI andsmallROOThelpers. MutableC5/eight-roottransport excluded; no current default/sourcekey/native/paid/product installation or Task04 completion. Progress freezes until expectedtree/source/remotecommit/ref checks complete.
+
+
+Checkpoint33 verified and progress thawed. Commit c62f6160ba009073dfaed5a6b71ee6de7dedd00b / tree2f55d562dad39f1f7a8ffb621472b50d8d0281c5, parent773e9532f1958de45ecfee0206486e525c35f543. All1391selectedpaths hashchecked,376binarySHAs and10boundedtrees verified; forcefalsepush, independentbranchcomparisonidentical0ahead0behind andPR134draft/dev/currenthead confirmed. LiveHEAD/index unchanged. PRbody explicitly records realincident/brokenhistoricalcustody and remainingqualification/transport/fullcore/live/UI/signing/billing gaps.
+
+
+### 2026-10-04 15:56 UTC — closed launcher and independent next-seam preparation
+
+ROOT read full C5 output-route audit report04d2285dff4de8b1b23142c773ef54805ece39f98495b85d849383bbadeb21a8 and verified420exact self-only files/seal936881a4656f2fcbcfa47e216c80253b687ce82aa3a1a62f75f89eff44b77c47. Audit covers1539code modules/3068lexical sinks/32+6process sites; these are indexes, not confinement proof. Proposed122commands remain HELD. Original prepare/initialize/compile mutators and generated evidence are nonlaunchable history. New closed-launcher C1 implementation/synthetic controls authorized ONLY in new owned namespaces; original qualification controls remain blocked until a concrete nested VM/fs/esbuild bridge and fresh independent review. ROOT read-only Landlock version query returned ENOSYS38; no kernel policy/system change or kernel confinement claim.
+
+Independent Task05 current-seam preparation delegated read-only against frozen policy c8279d4496eb9b6eb5763732dbb7e54cefe27e028f285fe3e31a639af1535710 and Gatewaye796e43aafe70c37d8af7330a969e5b643eb58e86be7621cc7c08991ff1224be. AcceptedC3 contracts/assertions preserved; preparation does not satisfy Task04 dependency or authorize Task05 product implementation. Final current-seam recheck and full prerequisite acceptance remain required. ROOT+three active agents respects runtime4 cap.
+
+
+### 2026-10-04 16:04 UTC — transport and text-seam fresh gates active
+
+ROOT full transport report5cf43284d60e7ccd4b716ad9768ffc733f8315f90d090f6f93f98d7867b56238 read;237QA/47work exactselfonly bytes/modes/nlink verified. Base/index/archive pins unchanged, directory sidecar newly capturedafterincident. Fresh independent transport judge must create its OWN full umask022/Git644/0755 SOURCE17 seed; no executor mirror inherited. Require148325 filelike entries/148295 regular nlink1/30literal symlinks/62205 exact0700 dirs incl186empty, sourceoriginal8 unchanged andhistorical32nonoperativehardlinkpaths preserved. No source/native/timing/custody continuity acceptance.
+
+ROOT full Task05 seam preparation report8c580c5b53347e625cd3138a3b1cb76ddbf01506a27539d4563e5af368e87503 read (initialfulltoolreadtruncated84tokens, focused9000:17000 re-readcoversmissingtext). Combined139QA/work and8work exactselfonlybytes verified. Fresh independent text-seam reviewer active.57behavioral/14static observedgroups, six admission/Agent AST signatures unchanged; current capture/attachment/owned-lifecycle downstream mapping refreshed. OldGatewayexactpreimage andcomplete installed transitiveexecutiongraph NOT_CAPTURED, all728 historicalrows unchanged. Task05 product/native release remainsheld untilTask04/currentseam/prereqs; preparation is notgate satisfaction.
+
+Closed-launcher23syntheticcontrols passed withgenuine all8 fullrecoveredstate before/post, but122original qualification entries stillheld onconcrete nested VM/fs/esbuild/FD import bridges. Launcheronlynewscopes, no originalassertion edits/private/native/paid. RuntimeROOT+launcherexec+twofreshjudges=4.
+
+### 2026-10-04T16:21:31.617455+00:00 — transport accepted; launcher component rejected
+
+ROOT read full fresh reports and verified exact self-only QA/work/tmp seals. Eight-root lossless transport PASS_TRANSPORT_ONLY 4.8 (148325 literal entries, 91 controls); current-seam Task05 refresh PASS_SOURCE_PREPARATION_ONLY 4.4 remains dependency-held. Closed launcher C1 REJECT 2.6: original25 PASS, extra9 PASS/3 FAIL (two foreign reused-descriptor closes, one accessor compiler dispatch). Original122 remain HELD. Closed launcher C2 repair delegated in a new scope preserving all failures/assertions/caps. Historical C4 custody remains BROKEN despite exact recovered bytes. No new native target or paid call; billing/browser/signature coverage remains incomplete. Checkpoint34 will publish frozen transport and preparation/review packets using isolated /tmp Git objects, without moving local HEAD/index.

@@ -1,0 +1,10 @@
+{
+  "utcObserved": "2026-10-04T16:16:08.392862+00:00",
+  "command": "python work/resume/task04-native-c5-closed-launcher-c1-fresh-review/record-review.py",
+  "exitCode": 1,
+  "failure": "AssertionError at record-review.py:14, comparison of complete stat_result included read-updated atime",
+  "childDispatched": false,
+  "sourcePREComplete": false,
+  "original8CaptureStarted": false,
+  "toolOutput": "Traceback (most recent call last):\n  File record-review.py, line 42, in <module>\n    pre=[row(p,True) for p in sorted(files)]\n  File record-review.py, line 14, in row\n    assert a==os.fstat(fd)==p.lstat()\nAssertionError\n"
+}

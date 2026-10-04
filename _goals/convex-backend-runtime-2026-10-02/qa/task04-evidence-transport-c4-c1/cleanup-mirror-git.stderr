@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-evidence-transport-c4-c1/cleanup-mirror-git.py", line 9, in <module>
+    receipt=json.loads((Q/(name+'.command.json')).read_bytes());h.require(receipt['exit']==0,'required verified cleanup prerequisite '+name)
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 14, in require
+    if not ok:raise ValueError(msg)
+              ^^^^^^^^^^^^^^^^^^^^^
+ValueError: required verified cleanup prerequisite source-topology-final
