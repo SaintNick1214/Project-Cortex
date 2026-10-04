@@ -1,0 +1,56 @@
+import { describe, it, expect, jest } from '@jest/globals';
+import { readFileSync } from 'node:fs';
+import assert from 'node:assert/strict';
+import { isDeepStrictEqual } from 'node:util';
+import type { ConvexClient } from 'convex/browser';
+import { ConvexError } from 'convex/values';
+import * as memories from '../../../convex-dev/memories';
+import { harness, identity } from '../../../tests/unit/runtimeEndpointAuth/sharedfixtures';
+import { semanticHash } from '../../../src/domain/profile';
+import { ProgressiveStorageHandler } from '../../../src/memory/streaming/ProgressiveStorageHandler';
+import { isRetryableError, isNonSystemFailure } from '../../../src/resilience/index';
+const denial={version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'};
+const engine=readFileSync('/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c8/scripts/native-engine.mjs','utf8');
+const classifier=engine.slice(engine.indexOf('export function authDenial'),engine.indexOf('export function opaqueInternalFailure')).replace('export function','function');
+const authDenial=Function('assert','isDeepStrictEqual','platformWireMessages',classifier+';return authDenial;')(assert,isDeepStrictEqual,new Set()) as (result: unknown,error:unknown)=>void;
+describe('independent actual partial-memory probes',()=>{
+ for(const operation of ['updatePartialMemory','finalizePartialMemory'] as const){
+  it.each(['foreign-space','ownerless','deleted-absent','resource-tombstone'] as const)(operation+' rejects %s with no writes or source hydration',async variant=>{
+   const h=harness();const owner=await h.provisionScope();const id=await h.seedData('memories',owner,'owned',{isPartial:true});
+   if(variant==='foreign-space'){await h.provisionScope({subject:'bob',memorySpaceId:'space-b'});h.setIdentity({...identity,subject:'bob'});}
+   if(variant==='ownerless')await h.db.patch(id,{ownerPrincipalId:undefined});
+   if(variant==='deleted-absent')await h.db.delete(id);
+   if(variant==='resource-tombstone')await h.db.insert('runtimeAuthTombstones',{tenantId:'tenant-a',memorySpaceId:'space-a',resourceType:'memory',resourceId:'owned',deletedAt:Date.now()});
+   const before=structuredClone(h.db.rows);h.db.reads=[];h.db.attemptedWrites=[];
+   let error:unknown;try{await h.invoke(memories[operation],{memoryId:'owned',content:'MUST NOT WRITE',metadata:{}});}catch(e){error=e;}
+   expect(error).toBeInstanceOf(ConvexError);expect((error as ConvexError<never>).data).toEqual(denial);authDenial(undefined,error);
+   expect(h.db.rows).toEqual(before);expect(h.db.attemptedWrites).toEqual([]);expect(h.db.reads.filter(r=>r.table==='runtimeMemorySources')).toEqual([]);
+   if(variant!=='resource-tombstone')expect(h.db.reads.filter(r=>r.table==='memories')).toEqual([{table:'memories',index:'by_runtime_scope_memoryId',ids:[]}]);
+   expect(h.vectorCalls()).toBe(0);
+  });
+ }
+ it('owner updates twice then finalizes without losing source, tags, revision or metadata',async()=>{
+  const h=harness();const owner=await h.provisionScope();const id=await h.seedData('memories',owner,'owned',{isPartial:true,tags:['keep','partial','streaming','partial']});
+  for(const [i,operation] of (['updatePartialMemory','updatePartialMemory','finalizePartialMemory'] as const).entries()){
+   const content=i===0?'':`Owner content ${i}`;
+   expect(await h.invoke(memories[operation],{memoryId:'owned',content,metadata:{i}})).toEqual({success:true});
+   const row=await h.db.get(id);expect(row).toMatchObject({content,version:i+2,lineage:{sourceRevision:i+2},partialMetadata:{i},ownerPrincipalId:owner.principalId,isPartial:i<2});
+   const source=h.db.rows.get('runtimeMemorySources')!;expect(source).toHaveLength(1);expect(source[0]).toMatchObject({content,contentHash:await semanticHash(content),lineage:{sourceRevision:i+2},ownerPrincipalId:owner.principalId});
+  }
+  expect((await h.db.get(id))?.tags).toEqual(['keep']);
+ });
+ it('actual progressive helper handles both error forms identically and does not retry',async()=>{
+  for(const error of [new ConvexError('MEMORY_NOT_FOUND'),new ConvexError(denial)]){
+   let calls=0;const client={mutation:async()=>{if(++calls===1)return {memoryId:'partial'};throw error;}} as unknown as ConvexClient;
+   const helper=new ProgressiveStorageHandler(client,'space','conversation','user');await helper.initializePartialMemory({userMessage:'test'});
+   const warning=jest.spyOn(console,'warn').mockImplementation(()=>{});
+   try{expect(await helper.updatePartialContent('updated',1,true)).toBe(false);expect(calls).toBe(2);await expect(helper.finalizeMemory('finished')).rejects.toThrow('Failed to finalize partial memory:');expect(calls).toBe(3);}finally{warning.mockRestore();}
+  }
+ });
+ it('unchanged generic resilience and exact classifier preserve the documented terminal semantic',()=>{
+  const oldError=new ConvexError('MEMORY_NOT_FOUND');const newError=new ConvexError(denial);
+  expect(isRetryableError(oldError)).toBe(true);expect(isRetryableError(newError)).toBe(false);expect(isNonSystemFailure(oldError)).toBe(true);expect(isNonSystemFailure(newError)).toBe(true);
+  expect(()=>authDenial(undefined,oldError)).toThrow();expect(()=>authDenial(undefined,newError)).not.toThrow();
+  for(const data of [{...denial,retryable:true},{...denial,outcome:'unknown'},{...denial,secret:'unexpected'},{...denial,message:'private'},{code:'FORBIDDEN'}])expect(()=>authDenial(undefined,new ConvexError(data))).toThrow();
+ });
+});
