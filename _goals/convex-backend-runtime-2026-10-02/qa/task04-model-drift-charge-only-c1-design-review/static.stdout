@@ -1,0 +1,34 @@
+{
+  "result": "PASS_STATIC_INTEGRITY_ONLY",
+  "packets": [
+    {
+      "name": "task04-model-drift-charge-only-repair-preparation-c1",
+      "rows": 2
+    },
+    {
+      "name": "task04-gateway-terminal-composition-c1-review",
+      "rows": 71
+    },
+    {
+      "name": "task04-gateway-capture-composition-preparation-c2",
+      "rows": 147
+    },
+    {
+      "name": "task04-gateway-capture-composition-c2-design-review",
+      "rows": 120
+    }
+  ],
+  "sourceEvidenceRows": 8,
+  "sourceStable": true,
+  "controls": {
+    "capture_rejects_drift_before_known_cost": true,
+    "ordinary_captured_route_rejects_drift": true,
+    "production_manifest_registry_empty": true,
+    "terminal_cost_contract_not_k_bound": true,
+    "existing_tables": 5,
+    "existing_indexes": 11,
+    "internal_registrations": 16,
+    "unknown_transition_has_no_overrun_latch": true,
+    "attachment_predicate_has_no_observed_model_guard": true
+  }
+}

@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+0 !== 1
+
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/scripts/offline-check.mjs:98:434
+    at async test (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/scripts/offline-check.mjs:29:36)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/scripts/offline-check.mjs:97:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

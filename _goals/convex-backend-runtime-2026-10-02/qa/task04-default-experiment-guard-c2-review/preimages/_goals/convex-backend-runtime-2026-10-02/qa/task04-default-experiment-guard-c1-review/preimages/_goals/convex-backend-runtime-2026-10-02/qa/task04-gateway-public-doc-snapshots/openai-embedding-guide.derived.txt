@@ -1,0 +1,3665 @@
+               
+  Vector embeddings | OpenAI API
+                                        
+For the complete documentation index, see llms.txt. Markdown versions of documentation pages are available by appending
+.md to the page URL.
+           ChatGPT        Start searching     API Dashboard  Try ChatGPT                   Home      API         Overview    Get started with the OpenAI API      Models    Explore models and compare capabilities      Agents    Build persistent agents on hosted infrastructure      Tools    Connect models to tools and data      Audio & voice    Build speech and realtime voice experiences      Production    Deploy and scale your API integrations      API reference    Explore endpoints, parameters, and responses         ChatGPT         Sign in with ChatGPT    Apps powered by your user's ChatGPT plan      Plugins    Extend ChatGPT and Codex      Workspace Agents    Trigger published ChatGPT workspace agents      Commerce    Build commerce flows in ChatGPT      Ads    Publish and measure ads in ChatGPT      ChatGPT + Codex user docs    Guides and product docs for ChatGPT and Codex      Use cases    Example workflows and tasks teams can take on with ChatGPT or Codex         Docs      Use cases      Training      Resources      Resources         Showcase    Demo apps to get inspired      Blog    Learnings and experiences from developers      Cookbook    Notebook examples for building with OpenAI models      Learn    Docs, videos, and demo apps for building with OpenAI      Community    Programs, meetups, and support for builders                Overview      Models      Agents      Tools      Audio & voice      Production      API reference           
+ Search the API docs      Search docs
+Suggestedresponses createreasoning_effortrealtimeprompt caching         Primary navigation     API  ChatGPT  Docs  Use cases  Training  Resources  Resources              Search docs
+Suggestedresponses createreasoning_effortrealtimeprompt caching      Overview  Models  Agents  Tools  Audio & voice  Production  API reference    OverviewModelsAgentsToolsAudio & voiceProductionAPI referenceDocsModels       
+  Home       
+ Get started   
+  Quickstart    
+  Using GPT-6    
+  Key concepts       
+ Core concepts   
+  Responses API    
+  Conversation state    
+  Background mode    
+  Streaming    
+  WebSocket mode    
+  Mid-turn steering    
+  Multi-agent    
+  Webhooks    
+  File inputs    
+  Compaction    
+  Counting tokens       
+ SDKs and CLI   
+  OpenAI SDK    
+  OpenAI CLI       
+ Resources   
+  Changelog    
+  Deprecations    
+  Supported countries    
+  OpenAI Crawlers    
+  Terms and policies       
+ Legacy APIs   
+   Agent Builder    
+  Overview    
+  Migration guide    
+  Node reference    
+  Safety in building agents       
+   Evals    
+  Getting started    
+  Working with evals    
+  Prompt optimizer    
+  External models    
+  Best practices    
+  Graders       
+   Fine-tuning    
+  Optimization cycle    
+  Supervised fine-tuning    
+  Vision fine-tuning    
+  Direct preference optimization    
+  Reinforcement fine-tuning    
+  RFT use cases    
+  Best practices       
+   Assistants API    
+  Migration guide              
+  Model catalog       
+ Choose a model   
+  Pricing    
+  Model selection       
+ Text and code   
+  Text generation    
+  Code generation    
+  Structured output       
+ Prompting   
+  Overview    
+  Prompt engineering    
+  Citation formatting    
+  Migration guide    
+  Prompt generation    
+  Frontend prompting       
+ Reasoning   
+  Reasoning models    
+  Reasoning best practices       
+ Images   
+    Images and vision      
+  Image input cost calculator       
+    Image generation      
+  Overview    
+  Image prompting          
+ Realtime and audio   
+  Audio and speech    
+  Getting started    
+  Voice agents       
+ Specialized models   
+  Deep research    
+  Embeddings    
+  Moderation           
+  Overview       
+ Agents API   
+  Overview    
+  Quickstart    
+  Architecture    
+  Configuring Agents    
+   Sessions    
+  Run and continue sessions    
+  Events and items    
+  Manage sessions    
+  Webhooks       
+   Environments and sandboxes    
+  OpenAI-hosted sandboxes    
+  Self-hosted sandboxes    
+  Sandbox lifecycle    
+  Sandbox security    
+  Files and artifacts       
+   Tools and integrations    
+  Web search    
+  Computer use    
+  Functions    
+  MCP connections    
+  Plugins    
+  Vaults       
+  Multi-agent    
+  Observability and usage    
+  Tracing    
+  Errors and recovery    
+  API reference    
+  Bedrock Managed Agents       
+ Agents SDK   
+  Overview    
+  Quickstart    
+  Agent definitions    
+  Models and providers    
+  Running agents    
+  Sandbox agents    
+  Orchestration    
+  Guardrails    
+  Results and state    
+  Integrations and observability    
+  Evaluate agent workflows       
+ ChatKit   
+  Overview    
+  Customize    
+  Widgets    
+  Actions    
+  Advanced integrations           
+  Overview    
+  Function calling       
+ Search and retrieval   
+  Web search    
+  File search    
+  Retrieval       
+ Connect tools and data   
+  MCP servers    
+  Secure MCP Tunnel       
+ Build tool workflows   
+  Skills    
+  Tool search    
+  Programmatic tool calling    
+  Async tool calling       
+ Computer and code   
+  Shell    
+  Computer use    
+  Apply Patch    
+  Local shell    
+  Code interpreter       
+ Media   
+  Image generation           
+  Overview       
+ GPT-Live   
+  Getting started    
+  Prompting    
+  Managing sessions    
+  Delegation and tools    
+  Migrate to GPT-Live    
+  Partner integrations       
+ Realtime API   
+  Getting started    
+  Prompting    
+  Managing conversations    
+  Voice activity detection    
+  Tools and MCP       
+ Build with voice   
+  Voice agents    
+  Custom voices    
+  Cost optimization       
+ Connections   
+  WebRTC    
+  WebRTC with WARP    
+  WebSockets    
+  Telephony and SIP    
+  Server-side controls       
+ Audio processing   
+  File transcription    
+  Live transcription    
+  Live translation    
+  Text to speech    
+  Audio in Chat Completions         
+ Go live   
+  Production best practices    
+  Deployment checklist       
+ Performance and quality   
+  Fast mode    
+  Ultrafast mode    
+  Latency optimization    
+  Predicted Outputs    
+  Accuracy optimization       
+ Cost and throughput   
+  Cost optimization    
+    Prompt caching      
+  Prompt cache diagnostics       
+  Batch    
+  Flex processing       
+ Safety and governance   
+  Safety best practices    
+  Red teaming    
+  Daybreak    
+   Safety checks    
+  Safety classifiers    
+  Cybersecurity checks    
+  Misalignment monitoring       
+  Enforcement notifications    
+  Under-18 guidance    
+  CSAM guidance    
+  Content provenance    
+  Your data    
+  Private Safety Processing    
+  Permissions       
+ Infrastructure and access   
+    Terraform provider      
+  Overview    
+  Projects and access    
+  Service accounts    
+  Rate limits and spend    
+  Model, tool, and data controls    
+  Import and reconciliation       
+  Private Link    
+  IP allowlist    
+  Organization blocking    
+  Mutual TLS    
+    Workload identity federation      
+  Federation rules    
+  X.509 certificates    
+  Kubernetes    
+  AWS    
+  Microsoft Azure    
+  Google Cloud    
+  Oracle Cloud Infrastructure    
+  GitHub Actions    
+  SPIFFE       
+  IP egress ranges    
+  Amazon Bedrock       
+ Operations   
+  Rate limits    
+  Spend limits    
+  Admin APIs    
+  Error codes              Overview   Sign in with ChatGPT  Plugins  Workspace Agents  Commerce  Ads  ChatGPT + Codex user docs   Use cases     OverviewSign in with ChatGPTPluginsWorkspace AgentsCommerceAdsChatGPT + Codex user docsUse casesDocsOverview         
+  Home    
+  Quickstart    
+  Request a client ID       
+ Identity   
+  On your website    
+  In your ChatGPT plugin       
+ ChatGPT plan usage   
+  Overview    
+  UI/UX guidelines    
+  Registration and sign-in    
+  Accounts and sessions    
+  Models and inference    
+  Codex app-server    
+  Self-hosted VMs    
+  Token reference    
+  Errors and recovery    
+  Preview limitations           
+  Home    
+  Quickstart       
+ Core concepts   
+  Plugin architecture    
+  Skills    
+  MCP server       
+ Plan   
+  Brainstorm use cases    
+  Define tools       
+ Build   
+  Build an MCP server    
+  Add UI to your MCP server (optional)    
+  Add events to your MCP server (optional)    
+  Extensions    
+  Authenticate users    
+  Build skills    
+  Package your plugin    
+  Examples       
+ Test and publish   
+  Connect and test your plugin    
+  Submit and publish    
+  Submission error reference       
+ Conversion specs   
+  Restaurant reservation spec    
+  Get Quote spec    
+  Product checkout spec       
+ Guides   
+  UI guidelines    
+  Optimize Metadata    
+  Submit a Claude Code plugin    
+  Security & Privacy    
+  Troubleshooting       
+ Resources   
+  Changelog    
+  Plugin guidelines    
+  MCP server review requirements    
+  Plugin UI reference    
+  Checkout API reference           
+  Home       
+ Get started   
+  Trigger workspace agent runs    
+  Authenticate with Workspace Agent access tokens           
+  Home       
+ Guides   
+  Get started    
+  Best practices       
+ File Upload   
+  Overview    
+  Products       
+ API   
+  Overview    
+  Feeds    
+  Products    
+  Promotions           
+  Ads Overview       
+ Measurement   
+  Measurement Pixel    
+  Multiple Pixels (Advanced)    
+  Image Tag    
+  Conversions API    
+  Supported Events       
+ Advertiser API   
+  Overview    
+  API Partner Setup    
+  Campaign Management    
+  Bidding & Budgets    
+  Targeting    
+  Product Feeds    
+  Hotel Feeds (limited beta)    
+  Conversion Tracking    
+  Reporting    
+  Troubleshooting    
+  Account Management       
+ API Reference   
+  Authentication    
+  Ad Account    
+  Audit Logs    
+  Campaigns    
+  Ad Groups    
+  Ads    
+  Insights    
+  Files    
+  Conversion Setup                Overview  Features  Configuration  Developers  Security  Administration  Use Cases  Resources    OverviewFeaturesConfigurationDevelopersSecurityAdministrationUse CasesResourcesDocsOverview       
+  Home       
+ Get started   
+  Quickstart    
+  Use ChatGPT    
+  Get started with Work    
+  Meet dots    
+  Import from another agent       
+ Foundations   
+  Prompting    
+  Model selection    
+  Personalize ChatGPT    
+  Skills & Plugins    
+  Permissions       
+ Explore   
+  What's new    
+  Models    
+  Pricing    
+  Glossary       
+ Available on   
+  ChatGPT desktop app    
+  Remote    
+  ChatGPT on the web    
+  Codex CLI    
+  Codex IDE extension    
+  Codex Cloud       
+ Releases   
+  Changelog    
+  Feature Maturity    
+  Open Source           
+  Overview       
+ Workflows   
+  Projects and chats    
+  Sites    
+  Build plugins    
+  Visualizations    
+  Scheduled tasks    
+  Long-running work    
+  Notifications    
+  Pets    
+  Codex Micro       
+ Capabilities   
+  Browser    
+  Computer use    
+  Voice    
+  Plugins    
+  Sign in with ChatGPT    
+  Web search    
+  Image generation    
+  Image inputs    
+  Appshots    
+  Browser extension    
+  Work with files       
+ dots   
+  Meet dots    
+  Getting started    
+  Messaging    
+  Tasks and memory    
+  Computers and apps    
+  Controls       
+ ChatGPT Space   
+  Overview    
+  Getting started    
+  Pages    
+  Work with agents    
+  Collaboration       
+ Reference   
+  Commands    
+  Slash commands    
+  Settings    
+  Troubleshooting           
+  Overview       
+ Customization   
+  Overview    
+  Memories    
+  Computer History       
+ Config file   
+  Config Basics    
+  Advanced Config    
+  Config Reference    
+  Environment Variables    
+  Sample Config       
+ Agent configuration   
+  AGENTS.md    
+  Subagents    
+  Speed    
+  Rules       
+ Extend ChatGPT and Codex   
+  Record & Replay    
+  MCP       
+ Linux   
+  Desktop app       
+ Windows   
+  Desktop app    
+  Windows sandbox    
+  WSL           
+  Overview       
+ Development workflows   
+  Code review    
+  Integrated terminal       
+ Extend and automate   
+  Build skills    
+  Site tools (WebMCP)    
+  Annotations Extensibility    
+  Hooks       
+ Environments   
+  Modes    
+  Local environments    
+  Git worktrees       
+ Codex Cloud   
+  Cloud environments       
+ Build with Codex   
+  Codex SDK    
+  App Server    
+  GitHub Action    
+  Non-interactive mode       
+ Third-party integrations   
+  GitHub    
+  GitLab (Beta)    
+  Slack    
+  Linear       
+ Reference   
+  CLI customization    
+  Developer commands    
+  Developer settings           
+  Overview       
+ Permissions   
+  Profiles    
+  Sandboxing    
+  Auto-review    
+  Agent approvals & security       
+ Codex Security   
+  Overview    
+   Codex Security plugin    
+  Quickstart    
+  Run a security scan    
+  Run a deep scan    
+  Review code changes    
+  Use the Security workbench    
+  Triage a backlog    
+  Fix findings    
+  Propose security hardening    
+  Write vulnerability reports    
+  Export and track findings    
+  Changelog       
+   Codex Security CLI    
+  Quickstart    
+  Run bulk scans    
+  Run scans in CI    
+  GitLab CI/CD    
+  Reference    
+  FAQ       
+  TypeScript SDK    
+   Codex Security Cloud    
+  Setup    
+  Security Review    
+  Improving the threat model    
+  FAQ          
+ Cyber safety   
+  Models & Trusted Access    
+  Recommended configuration           
+  Overview       
+ Getting started   
+  Admin rollout guide    
+  Admin plugin         
+   Feature setup    
+  Dots    
+  Space    
+  Teams and Team Tasks    
+  ChatGPT in Slack and Teams    
+  Workspace connections    
+  Local computer access for Work Cloud and dots    
+  Sites          
+ Identity and access   
+  Authentication overview    
+  Groups and provisioning    
+  User lifecycle management    
+  Roles and workspace permissions    
+  Personal access tokens    
+  Service accounts       
+ Deployment and configuration   
+  Windows app deployment    
+  Manage app updates    
+  Managed configuration    
+  Remote connections    
+  Workspace model availability    
+  Amazon Bedrock    
+  Bedrock GovCloud configuration    
+  Connect to a gateway    
+  Deploy Codex through a gateway    
+  Gateway compatibility    
+  Bedrock through LiteLLM       
+ ChatGPT Work   
+  Overview    
+  Cloud security    
+  Local security    
+  Usage and cost    
+  Admin FAQ       
+ Collaboration and sharing   
+  GPTs and sharing       
+ Plugins and connections   
+  Plugin controls    
+  Plugin management    
+  Skill controls    
+  Migrate custom GPTs to plugins       
+ Usage and analytics   
+  Workspace analytics    
+  Usage Insights    
+  Analytics API       
+ Security and compliance   
+  Governance    
+  Agent security    
+  Prisma AIRS    
+  HIPAA configuration    
+  Compliance API and audit events           
+  Explore use cases    
+  Collections           
+  Home    
+  Videos    
+  Showcase    
+  OpenAI Academy    
+  Online trainings       
+ Community   
+  Codex Ambassadors    
+  Codex for Students    
+  Codex for Open Source    
+  Events       
+ Blog   
+  Company blog    
+  Developer blog              
+  Explore use cases    
+  Collections              
+  Home    
+  Videos    
+  Showcase    
+  OpenAI Academy    
+  Online trainings       
+ Community   
+  Codex Ambassadors    
+  Codex for Students    
+  Codex for Open Source    
+  Events       
+ Blog   
+  Company blog    
+  Developer blog            Showcase   Blog  Cookbook  Learn  Community    ShowcaseBlogCookbookLearnCommunityDocsSelect...           
+  All posts       
+ Recent   
+  Bringing my LED display to life with GPT-Live-1 and Codex    
+  Rethinking skills and prompts for GPT-6 Astra    
+  Architectural visualization with Astra    
+  Building games with Astra    
+  Meet Rosalind Workbench: Empowering every scientist to be their own research team       
+ Topics   
+  General    
+  API    
+  Apps SDK    
+  Audio    
+  Codex    
+  Life sciences           
+  Home       
+ Topics   
+  Sign-in with ChatGPT    
+  Agents    
+  Evals    
+  Multimodal    
+  Text    
+  Guardrails    
+  Optimization    
+  ChatGPT    
+  Codex    
+  gpt-oss       
+ Contribute   
+  Cookbook on GitHub           
+  Home    
+  OpenAI Developers plugin    
+  Docs MCP       
+ Categories   
+  Demo apps    
+  Videos       
+ Topics   
+  Agents    
+  Audio & Voice    
+  Computer Use    
+  Codex    
+  Evals    
+  gpt-oss    
+  Fine-tuning    
+  Image generation    
+  Scaling    
+  Tools    
+  Video generation           
+  Community       
+ Programs   
+  Codex Ambassadors    
+  Codex for Students    
+  Codex for Open Source    
+  OpenAI for Startups       
+ Spaces   
+  Events    
+  Developer Forum    
+  Discord    
+  Reddit    
+  X             API Dashboard  Try ChatGPT                   
+   Model catalog        
+Choose a model  
+   Pricing     
+   Model selection        
+Text and code  
+   Text generation     
+   Code generation     
+   Structured output        
+Prompting  
+   Overview     
+   Prompt engineering     
+   Citation formatting     
+   Migration guide     
+   Prompt generation     
+   Frontend prompting        
+Reasoning  
+   Reasoning models     
+   Reasoning best practices        
+Images  
+     Images and vision        
+   Image input cost calculator        
+     Image generation        
+   Overview     
+   Image prompting           
+Realtime and audio  
+   Audio and speech     
+   Getting started     
+   Voice agents        
+Specialized models  
+   Deep research     
+   Embeddings     
+   Moderation                            Copy Page             
+Vector embeddings   
+Learn how to turn text into numbers, unlocking use cases like search.              Copy Page          New embedding modelstext-embedding-3-small and text-embedding-3-large, our newest and most performant embedding models, are now available. They feature lower costs, higher multilingual performance, and new parameters to control the overall size.
+
+What are embeddings?
+
+OpenAI’s text embeddings measure the relatedness of text strings. Embeddings are commonly used for:
+
+
+Search (where results are ranked by relevance to a query string)
+
+Clustering (where text strings are grouped by similarity)
+
+Recommendations (where items with related text strings are recommended)
+
+Anomaly detection (where outliers with little relatedness are identified)
+
+Diversity measurement (where similarity distributions are analyzed)
+
+Classification (where text strings are classified by their most similar label)
+
+
+An embedding is a vector (list) of floating point numbers. The distance between two vectors measures their relatedness. Small distances suggest high relatedness and large distances suggest low relatedness.
+
+Visit our pricing page to learn about embeddings pricing. Requests are billed based on the number of tokens in the input.
+
+How to get embeddings
+
+To get an embedding, send your text string to the embeddings API endpoint along with the embedding model name (e.g., text-embedding-3-small):
+Example: Getting embeddingsJavaScript1
+2
+3
+4
+5
+6
+7
+8
+9
+10import OpenAI from "openai";
+const openai = new OpenAI();
+
+const embedding = await openai.embeddings.create({
+  model: "text-embedding-3-small",
+  input: "Your text string goes here",
+  encoding_format: "float",
+});
+
+console.log(embedding);1
+2
+3
+4
+5
+6
+7
+8
+9from openai import OpenAI
+
+client = OpenAI()
+
+response = client.embeddings.create(
+    input="Your text string goes here", model="text-embedding-3-small"
+)
+
+print(response.data[0].embedding)1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	client := openai.NewClient()
+
+	embedding, err := client.Embeddings.New(context.Background(), openai.EmbeddingNewParams{
+		Model: openai.EmbeddingModelTextEmbedding3Small,
+		Input: openai.EmbeddingNewParamsInputUnion{
+			OfString: openai.String("Your text string goes here."),
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(len(embedding.Data[0].Embedding))
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+
+var embedding =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .input("The food was delicious and the waiter...")
+                .build());
+
+System.out.println(embedding.data().get(0).embedding());1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+OpenAIEmbedding embedding = await client.GenerateEmbeddingAsync(
+    "The food was delicious and the waiter was friendly."
+);
+
+Console.WriteLine($"Dimensions: {embedding.ToFloats().Length}");1
+2
+3
+4
+5
+6
+7
+8
+9
+10require "openai"
+
+client = OpenAI::Client.new
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: "The food was delicious and the waiter..."
+)
+
+puts(response.data.fetch(0).embedding)1
+2
+3
+4
+5
+6
+7curl https://api.openai.com/v1/embeddings \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "input": "Your text string goes here",
+    "model": "text-embedding-3-small"
+  }'
+
+The response contains the embedding vector (list of floating point numbers) along with some additional metadata. You can extract the embedding vector, save it in a vector database, and use for many different use cases.
+123456789101112131415161718{
+  "object": "list",
+  "data": [
+    {
+      "object": "embedding",
+      "index": 0,
+      "embedding": [
+        -0.006929283495992422, -0.005336422007530928, -4.547132266452536e-5,
+        -0.024047505110502243
+      ]
+    }
+  ],
+  "model": "text-embedding-3-small",
+  "usage": {
+    "prompt_tokens": 5,
+    "total_tokens": 5
+  }
+}
+
+By default, the length of the embedding vector is 1536 for text-embedding-3-small or 3072 for text-embedding-3-large. To reduce the embedding’s dimensions without losing its concept-representing properties, pass in the dimensions parameter. Find more detail on embedding dimensions in the embedding use case section.
+
+Embedding models
+
+OpenAI offers two powerful third-generation embedding model (denoted by -3 in the model ID). Read the embedding v3 announcement blog post for more details.
+
+Usage is priced per input token. Below is an example of pricing pages of text per US dollar (assuming ~800 tokens per page):
+
+
+
+
+
+Model
+
+~ Pages per dollar
+
+Performance on MTEB eval
+
+Max input
+
+
+
+
+
+
+text-embedding-3-small
+
+62,500
+
+62.3%
+
+8192
+
+
+
+
+text-embedding-3-large
+
+9,615
+
+64.6%
+
+8192
+
+
+
+
+text-embedding-ada-002
+
+12,500
+
+61.0%
+
+8192
+
+
+
+
+Use cases
+
+Here we show some representative use cases, using the Amazon fine-food reviews dataset.
+
+Obtaining the embeddings
+
+The dataset contains a total of 568,454 food reviews left by Amazon users up to October 2012. We use a subset of the 1000 most recent reviews for illustration purposes. The reviews are in English and tend to be positive or negative. Each review has a ProductId, UserId, Score, review title (Summary) and review body (Text). For example:
+
+
+
+
+
+Product Id
+
+User Id
+
+Score
+
+Summary
+
+Text
+
+
+
+
+
+
+B001E4KFG0
+
+A3SGXH7AUHU8GW
+
+5
+
+Good Quality Dog Food
+
+I have bought several of the Vitality canned…
+
+
+
+
+B00813GRG4
+
+A1D87F6ZCVE5NK
+
+1
+
+Not as Advertised
+
+Product arrived labeled as Jumbo Salted Peanut…
+
+
+
+
+Below, we combine the review summary and review text into a single combined text. The model encodes this combined text and output a single vector embedding.
+Get_embeddings_from_dataset.ipynb
+JavaScript1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21import { mkdir, writeFile } from "node:fs/promises";
+import OpenAI from "openai";
+
+const client = new OpenAI();
+const reviews = ["A rich cup of coffee.", "A bright herbal tea."];
+
+const response = await client.embeddings.create({
+  model: "text-embedding-3-small",
+  input: reviews.map((review) => review.replaceAll("\n", " ")),
+});
+
+const csvField = (value) => `"${value.replaceAll('"', '""')}"`;
+const rows = response.data.map(({ embedding }, index) =>
+  [csvField(reviews[index]), csvField(JSON.stringify(embedding))].join(",")
+);
+
+await mkdir("output", { recursive: true });
+await writeFile(
+  "output/embedded_1k_reviews.csv",
+  ["combined,ada_embedding", ...rows].join("\n") + "\n"
+);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14from openai import OpenAI
+
+client = OpenAI()
+
+
+def get_embedding(text, model="text-embedding-3-small"):
+    text = text.replace("\n", " ")
+    return client.embeddings.create(input=[text], model=model).data[0].embedding
+
+
+df["ada_embedding"] = df.combined.apply(
+    lambda x: get_embedding(x, model="text-embedding-3-small")
+)
+df.to_csv("output/embedded_1k_reviews.csv", index=False)1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68import (
+	"context"
+	"encoding/csv"
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+	"strings"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	client := openai.NewClient()
+	ctx := context.Background()
+	reviews := []string{"A rich cup of coffee.", "A bright herbal tea."}
+	if err := os.MkdirAll("output", 0755); err != nil {
+		return err
+	}
+	file, err := os.Create("output/embedded_1k_reviews.csv")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	writer := csv.NewWriter(file)
+	if err := writer.Write([]string{"combined", "ada_embedding"}); err != nil {
+		return err
+	}
+	for _, review := range reviews {
+		vector, err := embedding(ctx, &client, strings.ReplaceAll(review, "\n", " "))
+		if err != nil {
+			return err
+		}
+		encoded, err := json.Marshal(vector)
+		if err != nil {
+			return err
+		}
+		if err := writer.Write([]string{review, string(encoded)}); err != nil {
+			return err
+		}
+	}
+	writer.Flush()
+	if err := writer.Error(); err != nil {
+		return err
+	}
+	if err := file.Close(); err != nil {
+		return err
+	}
+	fmt.Println("Saved output/embedded_1k_reviews.csv")
+	return nil
+}
+
+func embedding(ctx context.Context, client *openai.Client, text string) ([]float64, error) {
+	response, err := client.Embeddings.New(ctx, openai.EmbeddingNewParams{
+		Model: openai.EmbeddingModelTextEmbedding3Small,
+		Input: openai.EmbeddingNewParamsInputUnion{OfString: openai.String(text)},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return response.Data[0].Embedding, nil
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+static String csvField(String value) {
+  return "\"" + value.replace("\"", "\"\"") + "\"";
+}
+
+List<String> reviews = List.of("A rich cup of coffee.", "A bright herbal tea.");
+Path output = Path.of("output", "embedded_1k_reviews.csv");
+Files.createDirectories(output.getParent());
+try (var writer = Files.newBufferedWriter(output)) {
+  writer.write("combined,ada_embedding\n");
+  for (String review : reviews) {
+    var embedding =
+        client
+            .embeddings()
+            .create(
+                EmbeddingCreateParams.builder()
+                    .model("text-embedding-3-small")
+                    .inputOfArrayOfStrings(List.of(review.replace("\n", " ")))
+                    .build())
+            .data()
+            .get(0)
+            .embedding();
+    writer.write(csvField(review) + "," + csvField(embedding.toString()) + "\n");
+  }
+}
+System.out.println(output);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26using System.Text.Json;
+using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+string[] reviews = ["A rich cup of coffee.", "A bright herbal tea."];
+Directory.CreateDirectory("output");
+using StreamWriter writer = new("output/embedded_1k_reviews.csv");
+await writer.WriteLineAsync("combined,ada_embedding");
+foreach (string review in reviews)
+{
+    float[] vector = await EmbedAsync(client, review.Replace("\n", " ", StringComparison.Ordinal));
+    string encoded = JsonSerializer.Serialize(vector);
+    await writer.WriteLineAsync($"{CsvField(review)},{CsvField(encoded)}");
+}
+Console.WriteLine("Saved output/embedded_1k_reviews.csv");
+
+static async Task<float[]> EmbedAsync(EmbeddingClient client, string text)
+{
+    OpenAIEmbedding result = await client.GenerateEmbeddingAsync(text);
+    return result.ToFloats().ToArray();
+}
+
+static string CsvField(string value) => "\"" + value.Replace("\"", "\"\"", StringComparison.Ordinal) + "\"";1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20require "csv"
+require "fileutils"
+require "json"
+require "openai"
+
+client = OpenAI::Client.new
+reviews = ["A rich cup of coffee.", "A bright herbal tea."]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: reviews.map { |review| review.tr("\n", " ") }
+)
+
+FileUtils.mkdir_p("output")
+CSV.open("output/embedded_1k_reviews.csv", "w") do |csv|
+  csv << ["combined", "ada_embedding"]
+  response.data.each do |embedding|
+    csv << [reviews.fetch(embedding.index), JSON.generate(embedding.embedding)]
+  end
+end
+
+To load the data from a saved file, you can run the following:
+1
+2
+3
+4import pandas as pd
+
+df = pd.read_csv("output/embedded_1k_reviews.csv")
+df["ada_embedding"] = df.ada_embedding.apply(eval).apply(np.array)
+Reducing embedding dimensions
+Using larger embeddings, for example storing them in a vector store for retrieval, generally costs more and consumes more compute, memory and storage than using smaller embeddings.
+Both of our new embedding models were trained with a technique that allows developers to trade-off performance and cost of using embeddings. Specifically, developers can shorten embeddings (i.e. remove some numbers from the end of the sequence) without the embedding losing its concept-representing properties by passing in the dimensions API parameter. For example, on the MTEB benchmark, a text-embedding-3-large embedding can be shortened to a size of 256 while still outperforming an unshortened text-embedding-ada-002 embedding with a size of 1536. You can read more about how changing the dimensions impacts performance in our embeddings v3 launch blog post.
+In general, using the dimensions parameter when creating the embedding is the suggested approach. In certain cases, you may need to change the embedding dimension after you generate it. When you change the dimension manually, you need to be sure to normalize the dimensions of the embedding as is shown below.JavaScript1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17import OpenAI from "openai";
+
+const client = new OpenAI();
+
+const response = await client.embeddings.create({
+  model: "text-embedding-3-small",
+  input: "Testing 123",
+  encoding_format: "float",
+});
+
+const shortened = response.data[0].embedding.slice(0, 256);
+const magnitude = Math.hypot(...shortened);
+const normalized = shortened.map((value) =>
+  magnitude === 0 ? 0 : value / magnitude
+);
+
+console.log(normalized);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26from openai import OpenAI
+import numpy as np
+
+client = OpenAI()
+
+
+def normalize_l2(x):
+    x = np.array(x)
+    if x.ndim == 1:
+        norm = np.linalg.norm(x)
+        if norm == 0:
+            return x
+        return x / norm
+    else:
+        norm = np.linalg.norm(x, 2, axis=1, keepdims=True)
+        return np.where(norm == 0, x, x / norm)
+
+
+response = client.embeddings.create(
+    model="text-embedding-3-small", input="Testing 123", encoding_format="float"
+)
+
+cut_dim = response.data[0].embedding[:256]
+norm_dim = normalize_l2(cut_dim)
+
+print(norm_dim)1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.List;
+
+private static List<Double> normalizeL2(List<Float> embedding) {
+  double norm = Math.sqrt(embedding.stream().mapToDouble(value -> value * value).sum());
+  return embedding.stream().map(value -> norm == 0 ? 0.0 : value / norm).toList();
+}
+
+var embedding =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .input("Testing 123")
+                .encodingFormat(EmbeddingCreateParams.EncodingFormat.FLOAT)
+                .build());
+
+List<Float> shortened = embedding.data().get(0).embedding().subList(0, 256);
+System.out.println(normalizeL2(shortened));1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+OpenAIEmbedding embedding = await client.GenerateEmbeddingAsync("Testing 123");
+
+float[] shortened = embedding.ToFloats().Span[..256].ToArray();
+double magnitude = Math.Sqrt(shortened.Sum(value => value * value));
+float[] normalized =
+    magnitude == 0
+        ? shortened
+        : shortened.Select(value => (float)(value / magnitude)).ToArray();
+
+Console.WriteLine($"Dimensions: {normalized.Length}");
+Console.WriteLine($"First value: {normalized[0]:F6}");
+Console.WriteLine(
+    $"L2 norm: {Math.Sqrt(normalized.Sum(value => value * value)):F3}"
+);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15require "openai"
+
+client = OpenAI::Client.new
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: "Testing 123",
+  encoding_format: :float
+)
+
+shortened = response.data.fetch(0).embedding.first(256)
+magnitude = Math.sqrt(shortened.sum { |value| value**2 })
+normalized = shortened.map { |value| magnitude.zero? ? 0 : value / magnitude }
+
+puts(normalized)
+Dynamically changing the dimensions enables very flexible usage. For example, when using a vector data store that only supports embeddings up to 1024 dimensions long, developers can now still use our best embedding model text-embedding-3-large and specify a value of 1024 for the dimensions API parameter, which will shorten the embedding down from 3072 dimensions, trading off some accuracy in exchange for the smaller vector size.
+Question answering using embeddings-based search
+Question_answering_using_embeddings.ipynb
+There are many common cases where the model is not trained on data which contains key facts and information you want to make accessible when generating responses to a user query. One way of solving this, as shown below, is to put additional information into the context window of the model. This is effective in many use cases but leads to higher token costs. In this notebook, we explore the tradeoff between this approach and embeddings bases search.JavaScript1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25import OpenAI from "openai";
+
+const client = new OpenAI();
+const article =
+  "At the 2022 Winter Olympics, Great Britain won women's curling and Sweden won men's curling.";
+const question = `Use the article below to answer the question. If the answer cannot be found, say "I don't know."
+
+Article:
+${article}
+
+Question: Which athletes won the gold medal in curling at the 2022 Winter Olympics?`;
+
+const response = await client.chat.completions.create({
+  model: "gpt-4.1-mini",
+  messages: [
+    {
+      role: "system",
+      content: "You answer questions about the 2022 Winter Olympics.",
+    },
+    { role: "user", content: question },
+  ],
+  temperature: 0,
+});
+
+console.log(response.choices[0].message.content);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22query = f"""Use the below article on the 2022 Winter Olympics to answer the subsequent question. If the answer cannot be found, write "I don't know."
+
+Article:
+\"\"\"
+{wikipedia_article_on_curling}
+\"\"\"
+
+Question: Which athletes won the gold medal in curling at the 2022 Winter Olympics?"""
+
+response = client.chat.completions.create(
+    messages=[
+        {
+            "role": "system",
+            "content": "You answer questions about the 2022 Winter Olympics.",
+        },
+        {"role": "user", "content": query},
+    ],
+    model=GPT_MODEL,
+    temperature=0,
+)
+
+print(response.choices[0].message.content)1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	client := openai.NewClient()
+	completion, err := client.Chat.Completions.New(context.Background(), openai.ChatCompletionNewParams{
+		Model: "gpt-4.1-mini", Temperature: openai.Float(0), Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.SystemMessage("You answer questions about the 2022 Winter Olympics."),
+			openai.UserMessage("Use the article to answer the question. If the answer cannot be found, write \"I don't know.\"\n\nArticle: At the 2022 Winter Olympics, Great Britain won women's curling and Sweden won men's curling.\n\nQuestion: Which athletes won the gold medal in curling at the 2022 Winter Olympics?")},
+	})
+	if err != nil {
+		return err
+	}
+	fmt.Println(completion.Choices[0].Message.Content)
+	return nil
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+
+String article =
+    "At the 2022 Winter Olympics, Great Britain won women's curling and Sweden won men's curling.";
+String question =
+    "Use the below article on the 2022 Winter Olympics to answer the subsequent question. "
+        + "If the answer cannot be found, write \"I don't know.\"\n\n"
+        + "Article:\n"
+        + article
+        + "\n\nQuestion: Which athletes won the gold medal in curling at the 2022 Winter Olympics?";
+
+ChatCompletionCreateParams params =
+    ChatCompletionCreateParams.builder()
+        .model("gpt-4.1-mini")
+        .addSystemMessage("You answer questions about the 2022 Winter Olympics.")
+        .addUserMessage(question)
+        .temperature(0)
+        .build();
+
+client.chat().completions().create(params).choices().stream()
+    .flatMap(choice -> choice.message().content().stream())
+    .forEach(System.out::println);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12using OpenAI.Chat;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "gpt-4.1-mini";
+ChatClient client = new(model, key);
+
+string article = "At the 2022 Winter Olympics, Great Britain won women's curling and Sweden won men's curling.";
+string query = $"Use the article to answer the question. If the answer cannot be found, write I don't know.\nArticle: {article}\nQuestion: Which athletes won the gold medal in curling at the 2022 Winter Olympics?";
+ChatCompletion result = await client.CompleteChatAsync(
+    [new SystemChatMessage("You answer questions about the 2022 Winter Olympics."), new UserChatMessage(query)],
+    new ChatCompletionOptions { Temperature = 0 });
+Console.WriteLine(result.Content[0].Text);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29require "openai"
+
+client = OpenAI::Client.new
+article = "At the 2022 Winter Olympics, Great Britain won women's curling and Sweden won men's curling."
+question = <<~QUESTION
+  Use the article below to answer the question. If the answer cannot be found, say "I don't know."
+
+  Article:
+  #{article}
+
+  Question: Which athletes won the gold medal in curling at the 2022 Winter Olympics?
+QUESTION
+
+response = client.chat.completions.create(
+  model: "gpt-4.1-mini",
+  messages: [
+    {
+      role: :system,
+      content: "You answer questions about the 2022 Winter Olympics."
+    },
+    {
+      role: :user,
+      content: question
+    }
+  ],
+  temperature: 0
+)
+
+puts(response.choices.fetch(0).message.content)
+Text search using embeddings
+Semantic_text_search_using_embeddings.ipynb
+To retrieve the most relevant documents we use the cosine similarity between the embedding vectors of the query and each document, and return the highest scored documents.JavaScript1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32import OpenAI from "openai";
+
+const client = new OpenAI();
+const reviews = [
+  "A rich cup of coffee.",
+  "Smooth beans in tomato sauce.",
+  "Dark chocolate with orange.",
+];
+
+const { data } = await client.embeddings.create({
+  model: "text-embedding-3-small",
+  input: [...reviews, "delicious beans"],
+});
+
+const query = data.at(-1).embedding;
+const similarity = (embedding) => {
+  const dotProduct = embedding.reduce(
+    (total, value, index) => total + value * query[index],
+    0
+  );
+  return dotProduct / (Math.hypot(...embedding) * Math.hypot(...query));
+};
+
+const results = reviews
+  .map((review, index) => ({
+    review,
+    score: similarity(data[index].embedding),
+  }))
+  .sort((left, right) => right.score - left.score)
+  .slice(0, 3);
+
+console.log(results);1
+2
+3
+4
+5
+6
+7
+8
+9
+10def search_reviews(df, product_description, n=3, pprint=True):
+    embedding = get_embedding(product_description, model="text-embedding-3-small")
+    df["similarities"] = df.ada_embedding.apply(
+        lambda x: cosine_similarity(x, embedding)
+    )
+    res = df.sort_values("similarities", ascending=False).head(n)
+    return res
+
+
+res = search_reviews(df, "delicious beans", n=3)1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73import (
+	"context"
+	"fmt"
+	"log"
+	"math"
+	"sort"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	client := openai.NewClient()
+	ctx := context.Background()
+	texts := []string{"A rich cup of coffee.", "Crunchy crackers with sea salt.", "Dark chocolate with orange.", "A bright herbal tea.", "Smooth beans in tomato sauce.", "A mild cheese with herbs.", "Spicy roasted nuts.", "A crisp sparkling water."}
+	vectors := make([][]float64, len(texts))
+	for i, text := range texts {
+		vector, err := embedding(ctx, &client, text)
+		if err != nil {
+			return err
+		}
+		vectors[i] = vector
+	}
+	query, err := embedding(ctx, &client, "delicious beans")
+	if err != nil {
+		return err
+	}
+	matches := nearest(query, vectors)
+	for _, match := range matches[:min(3, len(matches))] {
+		fmt.Printf("%0.3f: %s\n", match.Similarity, texts[match.Index])
+	}
+	return nil
+}
+
+func embedding(ctx context.Context, client *openai.Client, text string) ([]float64, error) {
+	response, err := client.Embeddings.New(ctx, openai.EmbeddingNewParams{
+		Model: openai.EmbeddingModelTextEmbedding3Small,
+		Input: openai.EmbeddingNewParamsInputUnion{OfString: openai.String(text)},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return response.Data[0].Embedding, nil
+}
+
+func cosineSimilarity(a, b []float64) float64 {
+	var dot, left, right float64
+	for i := range a {
+		dot += a[i] * b[i]
+		left += a[i] * a[i]
+		right += b[i] * b[i]
+	}
+	return dot / math.Sqrt(left*right)
+}
+
+type match struct {
+	Index      int
+	Similarity float64
+}
+
+func nearest(query []float64, vectors [][]float64) []match {
+	matches := make([]match, len(vectors))
+	for i, vector := range vectors {
+		matches[i] = match{Index: i, Similarity: cosineSimilarity(query, vector)}
+	}
+	sort.SliceStable(matches, func(i, j int) bool { return matches[i].Similarity > matches[j].Similarity })
+	return matches
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.IntStream;
+
+List<String> reviews =
+    List.of(
+        "A rich cup of coffee.",
+        "Smooth beans in tomato sauce.",
+        "Dark chocolate with orange.");
+var reviewEmbeddings =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(reviews)
+                .build())
+        .data();
+List<Float> query =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(List.of("delicious beans"))
+                .build())
+        .data()
+        .get(0)
+        .embedding();
+
+IntStream.range(0, reviews.size())
+    .boxed()
+    .sorted(
+        Comparator.comparingDouble(
+                (Integer index) ->
+                    cosineSimilarity(query, reviewEmbeddings.get(index).embedding()))
+            .reversed())
+    .limit(3)
+    .map(reviews::get)
+    .forEach(System.out::println);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+string[] texts = ["A rich cup of coffee.", "Crunchy crackers with sea salt.", "Dark chocolate with orange.", "A bright herbal tea.", "Smooth beans in tomato sauce.", "A mild cheese with herbs.", "Spicy roasted nuts.", "A crisp sparkling water."];
+OpenAIEmbeddingCollection batch = await client.GenerateEmbeddingsAsync(texts);
+float[][] vectors = batch.Select(item => item.ToFloats().ToArray()).ToArray();
+float[] query = await EmbedAsync(client, "delicious beans");
+var ranked = vectors.Select((vector, index) => new { Index = index, Similarity = CosineSimilarity(query, vector) }).OrderByDescending(match => match.Similarity);
+foreach (var match in ranked.Take(3))
+{
+    Console.WriteLine($"{match.Similarity:F3}: {texts[match.Index]}");
+}
+
+static async Task<float[]> EmbedAsync(EmbeddingClient client, string text)
+{
+    OpenAIEmbedding result = await client.GenerateEmbeddingAsync(text);
+    return result.ToFloats().ToArray();
+}
+
+static double CosineSimilarity(float[] left, float[] right)
+{
+    double dot = 0, leftNorm = 0, rightNorm = 0;
+    for (int i = 0; i < left.Length; i++)
+    {
+        dot += left[i] * right[i];
+        leftNorm += left[i] * left[i];
+        rightNorm += right[i] * right[i];
+    }
+    return dot / Math.Sqrt(leftNorm * rightNorm);
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30require "openai"
+
+client = OpenAI::Client.new
+reviews = [
+  "A rich cup of coffee.",
+  "Smooth beans in tomato sauce.",
+  "Dark chocolate with orange."
+]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: reviews + ["delicious beans"]
+)
+
+query = response.data.fetch(-1).embedding
+similarity = lambda do |embedding|
+  dot_product = embedding.zip(query).sum { |value, query_value| value * query_value }
+  magnitude = Math.sqrt(embedding.sum { |value| value**2 })
+  query_magnitude = Math.sqrt(query.sum { |value| value**2 })
+  dot_product / (magnitude * query_magnitude)
+end
+
+results = reviews.map.with_index do |review, index|
+  {
+    review: review,
+    score: similarity.call(response.data.fetch(index).embedding)
+  }
+end.sort_by { |result| -result.fetch(:score) }.first(3)
+
+puts(results)
+Code search using embeddings
+Code_search.ipynb
+Code search works similarly to embedding-based text search. We provide a method to extract Python functions from all the Python files in a given repository. Each function is then indexed by the text-embedding-3-small model.
+To perform a code search, we embed the query in natural language using the same model. Then we calculate cosine similarity between the resulting query embedding and each of the function embeddings. The highest cosine similarity results are most relevant.JavaScript1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30import OpenAI from "openai";
+
+const client = new OpenAI();
+const functions = [
+  "function add(a, b) { return a + b; }",
+  "function complete(prompt) { return prompt; }",
+];
+
+const { data } = await client.embeddings.create({
+  model: "text-embedding-3-small",
+  input: [...functions, "Completions API tests"],
+});
+
+const query = data.at(-1).embedding;
+const similarity = (embedding) => {
+  const dotProduct = embedding.reduce(
+    (total, value, index) => total + value * query[index],
+    0
+  );
+  return dotProduct / (Math.hypot(...embedding) * Math.hypot(...query));
+};
+
+const results = functions
+  .map((source, index) => ({
+    source,
+    score: similarity(data[index].embedding),
+  }))
+  .sort((left, right) => right.score - left.score);
+
+console.log(results);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16df["code_embedding"] = df["code"].apply(
+    lambda x: get_embedding(x, model="text-embedding-3-small")
+)
+
+
+def search_functions(df, code_query, n=3, pprint=True, n_lines=7):
+    embedding = get_embedding(code_query, model="text-embedding-3-small")
+    df["similarities"] = df.code_embedding.apply(
+        lambda x: cosine_similarity(x, embedding)
+    )
+
+    res = df.sort_values("similarities", ascending=False).head(n)
+    return res
+
+
+res = search_functions(df, "Completions API tests", n=3)1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73import (
+	"context"
+	"fmt"
+	"log"
+	"math"
+	"sort"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	client := openai.NewClient()
+	ctx := context.Background()
+	texts := []string{"def add(a, b): return a + b", "def complete(prompt): return prompt"}
+	vectors := make([][]float64, len(texts))
+	for i, text := range texts {
+		vector, err := embedding(ctx, &client, text)
+		if err != nil {
+			return err
+		}
+		vectors[i] = vector
+	}
+	query, err := embedding(ctx, &client, "Completions API tests")
+	if err != nil {
+		return err
+	}
+	matches := nearest(query, vectors)
+	for _, match := range matches[:min(3, len(matches))] {
+		fmt.Printf("%0.3f: %s\n", match.Similarity, texts[match.Index])
+	}
+	return nil
+}
+
+func embedding(ctx context.Context, client *openai.Client, text string) ([]float64, error) {
+	response, err := client.Embeddings.New(ctx, openai.EmbeddingNewParams{
+		Model: openai.EmbeddingModelTextEmbedding3Small,
+		Input: openai.EmbeddingNewParamsInputUnion{OfString: openai.String(text)},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return response.Data[0].Embedding, nil
+}
+
+func cosineSimilarity(a, b []float64) float64 {
+	var dot, left, right float64
+	for i := range a {
+		dot += a[i] * b[i]
+		left += a[i] * a[i]
+		right += b[i] * b[i]
+	}
+	return dot / math.Sqrt(left*right)
+}
+
+type match struct {
+	Index      int
+	Similarity float64
+}
+
+func nearest(query []float64, vectors [][]float64) []match {
+	matches := make([]match, len(vectors))
+	for i, vector := range vectors {
+		matches[i] = match{Index: i, Similarity: cosineSimilarity(query, vector)}
+	}
+	sort.SliceStable(matches, func(i, j int) bool { return matches[i].Similarity > matches[j].Similarity })
+	return matches
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.IntStream;
+
+List<String> functions =
+    List.of("def add(a, b): return a + b", "def complete(prompt): return prompt");
+var functionEmbeddings =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(functions)
+                .build())
+        .data();
+List<Float> query =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .input("Completions API tests")
+                .build())
+        .data()
+        .get(0)
+        .embedding();
+IntStream.range(0, functions.size())
+    .boxed()
+    .sorted(
+        Comparator.comparingDouble(
+                (Integer index) ->
+                    cosineSimilarity(query, functionEmbeddings.get(index).embedding()))
+            .reversed())
+    .map(functions::get)
+    .forEach(System.out::println);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+string[] texts = ["def add(a, b): return a + b", "def complete(prompt): return prompt"];
+List<float[]> vectors = [];
+foreach (string text in texts)
+{
+    vectors.Add(await EmbedAsync(client, text));
+}
+float[] query = await EmbedAsync(client, "Completions API tests");
+var ranked = vectors.Select((vector, index) => new { Index = index, Similarity = CosineSimilarity(query, vector) }).OrderByDescending(match => match.Similarity);
+foreach (var match in ranked.Take(3))
+{
+    Console.WriteLine($"{match.Similarity:F3}: {texts[match.Index]}");
+}
+
+static async Task<float[]> EmbedAsync(EmbeddingClient client, string text)
+{
+    OpenAIEmbedding result = await client.GenerateEmbeddingAsync(text);
+    return result.ToFloats().ToArray();
+}
+
+static double CosineSimilarity(float[] left, float[] right)
+{
+    double dot = 0, leftNorm = 0, rightNorm = 0;
+    for (int i = 0; i < left.Length; i++)
+    {
+        dot += left[i] * right[i];
+        leftNorm += left[i] * left[i];
+        rightNorm += right[i] * right[i];
+    }
+    return dot / Math.Sqrt(leftNorm * rightNorm);
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29require "openai"
+
+client = OpenAI::Client.new
+functions = [
+  "function add(a, b) { return a + b; }",
+  "function complete(prompt) { return prompt; }"
+]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: functions + ["Completions API tests"]
+)
+
+query = response.data.fetch(-1).embedding
+similarity = lambda do |embedding|
+  dot_product = embedding.zip(query).sum { |value, query_value| value * query_value }
+  magnitude = Math.sqrt(embedding.sum { |value| value**2 })
+  query_magnitude = Math.sqrt(query.sum { |value| value**2 })
+  dot_product / (magnitude * query_magnitude)
+end
+
+results = functions.map.with_index do |source, index|
+  {
+    source: source,
+    score: similarity.call(response.data.fetch(index).embedding)
+  }
+end.sort_by { |result| -result.fetch(:score) }
+
+puts(results)
+Recommendations using embeddings
+Recommendation_using_embeddings.ipynb
+Because shorter distances between embedding vectors represent greater similarity, embeddings can be useful for recommendation.
+Below, we illustrate a basic recommender. It takes in a list of strings and one ‘source’ string, computes their embeddings, and then returns a ranking of the strings, ranked from most similar to least similar. As a concrete example, the linked notebook below applies a version of this function to the AG news dataset (sampled down to 2,000 news article descriptions) to return the top 5 most similar articles to any given source article.JavaScript1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28import OpenAI from "openai";
+
+const client = new OpenAI();
+const strings = [
+  "A cheetah is a fast land animal.",
+  "A peregrine falcon is a fast bird.",
+  "A tortoise moves slowly.",
+];
+
+const { data } = await client.embeddings.create({
+  model: "text-embedding-3-small",
+  input: strings,
+});
+
+const query = data[0].embedding;
+const recommendations = data
+  .map(({ embedding }, index) => {
+    const dotProduct = embedding.reduce(
+      (total, value, dimension) => total + value * query[dimension],
+      0
+    );
+    const similarity =
+      dotProduct / (Math.hypot(...embedding) * Math.hypot(...query));
+    return { index, text: strings[index], similarity };
+  })
+  .sort((left, right) => right.similarity - left.similarity);
+
+console.log(recommendations);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23def recommendations_from_strings(
+    strings: list[str],
+    index_of_source_string: int,
+    model="text-embedding-3-small",
+) -> list[int]:
+    """Return nearest neighbors of a given string."""
+
+    # get embeddings for all strings
+    embeddings = [embedding_from_string(string, model=model) for string in strings]
+
+    # get the embedding of the source string
+    query_embedding = embeddings[index_of_source_string]
+
+    # get distances between the source embedding and other embeddings (function from embeddings_utils.py)
+    distances = distances_from_embeddings(
+        query_embedding, embeddings, distance_metric="cosine"
+    )
+
+    # get indices of nearest neighbors (function from embeddings_utils.py)
+    indices_of_nearest_neighbors = indices_of_nearest_neighbors_from_distances(
+        distances
+    )
+    return indices_of_nearest_neighbors1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70import (
+	"context"
+	"fmt"
+	"log"
+	"math"
+	"sort"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	client := openai.NewClient()
+	ctx := context.Background()
+	texts := []string{"A cheetah is a fast land animal.", "A peregrine falcon is a fast bird.", "A tortoise moves slowly."}
+	vectors := make([][]float64, len(texts))
+	for i, text := range texts {
+		vector, err := embedding(ctx, &client, text)
+		if err != nil {
+			return err
+		}
+		vectors[i] = vector
+	}
+	query := vectors[0]
+	matches := nearest(query, vectors)
+	for _, match := range matches {
+		fmt.Println(match.Index)
+	}
+	return nil
+}
+
+func embedding(ctx context.Context, client *openai.Client, text string) ([]float64, error) {
+	response, err := client.Embeddings.New(ctx, openai.EmbeddingNewParams{
+		Model: openai.EmbeddingModelTextEmbedding3Small,
+		Input: openai.EmbeddingNewParamsInputUnion{OfString: openai.String(text)},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return response.Data[0].Embedding, nil
+}
+
+func cosineSimilarity(a, b []float64) float64 {
+	var dot, left, right float64
+	for i := range a {
+		dot += a[i] * b[i]
+		left += a[i] * a[i]
+		right += b[i] * b[i]
+	}
+	return dot / math.Sqrt(left*right)
+}
+
+type match struct {
+	Index      int
+	Similarity float64
+}
+
+func nearest(query []float64, vectors [][]float64) []match {
+	matches := make([]match, len(vectors))
+	for i, vector := range vectors {
+		matches[i] = match{Index: i, Similarity: cosineSimilarity(query, vector)}
+	}
+	sort.SliceStable(matches, func(i, j int) bool { return matches[i].Similarity > matches[j].Similarity })
+	return matches
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.IntStream;
+
+List<String> strings =
+    List.of(
+        "A cheetah is a fast land animal.",
+        "A peregrine falcon is a fast bird.",
+        "A tortoise moves slowly.");
+
+var embeddings =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(strings)
+                .build())
+        .data();
+
+List<Float> query = embeddings.get(0).embedding();
+var nearestNeighbors =
+    IntStream.range(0, embeddings.size())
+        .boxed()
+        .sorted(
+            Comparator.comparingDouble(
+                (Integer index) -> {
+                  List<Float> candidate = embeddings.get(index).embedding();
+                  double dotProduct = 0;
+                  double queryMagnitude = 0;
+                  double candidateMagnitude = 0;
+                  for (int dimension = 0; dimension < query.size(); dimension++) {
+                    dotProduct += query.get(dimension) * candidate.get(dimension);
+                    queryMagnitude += query.get(dimension) * query.get(dimension);
+                    candidateMagnitude += candidate.get(dimension) * candidate.get(dimension);
+                  }
+                  return 1 - dotProduct / Math.sqrt(queryMagnitude * candidateMagnitude);
+                }))
+        .toList();
+
+System.out.println(nearestNeighbors);1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+string[] texts = ["A cheetah is a fast land animal.", "A peregrine falcon is a fast bird.", "A tortoise moves slowly."];
+List<float[]> vectors = [];
+foreach (string text in texts)
+{
+    vectors.Add(await EmbedAsync(client, text));
+}
+float[] query = vectors[0];
+var ranked = vectors.Select((vector, index) => new { Index = index, Similarity = CosineSimilarity(query, vector) }).OrderByDescending(match => match.Similarity);
+foreach (var match in ranked)
+{
+    Console.WriteLine(match.Index);
+}
+
+static async Task<float[]> EmbedAsync(EmbeddingClient client, string text)
+{
+    OpenAIEmbedding result = await client.GenerateEmbeddingAsync(text);
+    return result.ToFloats().ToArray();
+}
+
+static double CosineSimilarity(float[] left, float[] right)
+{
+    double dot = 0, leftNorm = 0, rightNorm = 0;
+    for (int i = 0; i < left.Length; i++)
+    {
+        dot += left[i] * right[i];
+        leftNorm += left[i] * left[i];
+        rightNorm += right[i] * right[i];
+    }
+    return dot / Math.Sqrt(leftNorm * rightNorm);
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31require "openai"
+
+client = OpenAI::Client.new
+strings = [
+  "A cheetah is a fast land animal.",
+  "A peregrine falcon is a fast bird.",
+  "A tortoise moves slowly."
+]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: strings
+)
+
+query = response.data.fetch(0).embedding
+similarity = lambda do |embedding|
+  dot_product = embedding.zip(query).sum { |value, query_value| value * query_value }
+  magnitude = Math.sqrt(embedding.sum { |value| value**2 })
+  query_magnitude = Math.sqrt(query.sum { |value| value**2 })
+  dot_product / (magnitude * query_magnitude)
+end
+
+recommendations = response.data.map.with_index do |embedding, index|
+  {
+    index: index,
+    text: strings.fetch(index),
+    similarity: similarity.call(embedding.embedding)
+  }
+end.sort_by { |recommendation| -recommendation.fetch(:similarity) }
+
+puts(recommendations)
+Data visualization in 2D
+Visualizing_embeddings_in_2D.ipynb
+The size of the embeddings varies with the complexity of the underlying model. In order to visualize this high dimensional data we use the t-SNE algorithm to transform the data into two dimensions.
+We color the individual reviews based on the star rating which the reviewer has given:
+
+1-star: red
+
+2-star: dark orange
+
+3-star: gold
+
+4-star: turquoise
+
+5-star: dark green
+
+The visualization seems to have produced roughly 3 clusters, one of which has mostly negative reviews.1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23import numpy as np
+import pandas as pd
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+import matplotlib
+
+df = pd.read_csv("output/embedded_1k_reviews.csv")
+matrix = np.array(df.ada_embedding.apply(eval).to_list())
+
+# Create a t-SNE model and transform the data
+tsne = TSNE(
+    n_components=2, perplexity=15, random_state=42, init="random", learning_rate=200
+)
+vis_dims = tsne.fit_transform(matrix)
+
+colors = ["red", "darkorange", "gold", "turquoise", "darkgreen"]
+x = [x for x, y in vis_dims]
+y = [y for x, y in vis_dims]
+color_indices = df.Score.values - 1
+
+colormap = matplotlib.colors.ListedColormap(colors)
+plt.scatter(x, y, c=color_indices, cmap=colormap, alpha=0.3)
+plt.title("Amazon ratings visualized in language using t-SNE")
+Embedding as a text feature encoder for ML algorithms
+Regression_using_embeddings.ipynb
+An embedding can be used as a general free-text feature encoder within a machine learning model. Incorporating embeddings will improve the performance of any machine learning model, if some of the relevant inputs are free text. An embedding can also be used as a categorical feature encoder within a ML model. This adds most value if the names of categorical variables are meaningful and numerous, such as job titles. Similarity embeddings generally perform better than search embeddings for this task.
+We observed that generally the embedding representation is very rich and information dense. For example, reducing the dimensionality of the inputs using SVD or PCA, even by 10%, generally results in worse downstream performance on specific tasks.
+This code splits the data into a training set and a testing set, which will be used by the following two use cases, namely regression and classification.1
+2
+3
+4
+5from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    list(df.ada_embedding.values), df.Score, test_size=0.2, random_state=42
+)Regression using the embedding features
+Embeddings present an elegant way of predicting a numerical value. In this example we predict the reviewer’s star rating, based on the text of their review. Because the semantic information contained within embeddings is high, the prediction is decent even with very few reviews.
+We assume the score is a continuous variable between 1 and 5, and allow the algorithm to predict any floating point value. The ML algorithm minimizes the distance of the predicted value to the true score, and achieves a mean absolute error of 0.39, which means that on average the prediction is off by less than half a star.1
+2
+3
+4
+5from sklearn.ensemble import RandomForestRegressor
+
+rfr = RandomForestRegressor(n_estimators=100)
+rfr.fit(X_train, y_train)
+preds = rfr.predict(X_test)
+Classification using the embedding features
+Classification_using_embeddings.ipynb
+This time, instead of having the algorithm predict a value anywhere between 1 and 5, we will attempt to classify the exact number of stars for a review into 5 buckets, ranging from 1 to 5 stars.
+After the training, the model learns to predict 1 and 5-star reviews much better than the more nuanced reviews (2-4 stars), likely due to more extreme sentiment expression.1
+2
+3
+4
+5
+6from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, accuracy_score
+
+clf = RandomForestClassifier(n_estimators=100)
+clf.fit(X_train, y_train)
+preds = clf.predict(X_test)
+Zero-shot classification
+Zero-shot_classification_with_embeddings.ipynb
+We can use embeddings for zero shot classification without any labeled training data. For each class, we embed the class name or a short description of the class. To classify some new text in a zero-shot manner, we compare its embedding to all class embeddings and predict the class with the highest similarity.JavaScript1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21import OpenAI from "openai";
+
+const client = new OpenAI();
+const labels = ["negative", "positive"];
+
+const { data } = await client.embeddings.create({
+  model: "text-embedding-3-small",
+  input: [...labels, "The coffee arrived quickly and tastes great."],
+});
+
+const review = data.at(-1).embedding;
+const similarity = (embedding) => {
+  const dotProduct = embedding.reduce(
+    (total, value, index) => total + value * review[index],
+    0
+  );
+  return dotProduct / (Math.hypot(...embedding) * Math.hypot(...review));
+};
+
+const [negative, positive] = data.map(({ embedding }) => similarity(embedding));
+console.log(positive > negative ? "positive" : "negative");1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18df = df[df.Score != 3]
+df["sentiment"] = df.Score.replace(
+    {1: "negative", 2: "negative", 4: "positive", 5: "positive"}
+)
+
+labels = ["negative", "positive"]
+label_embeddings = [get_embedding(label, model=model) for label in labels]
+
+
+def label_score(review_embedding, label_embeddings):
+    return cosine_similarity(review_embedding, label_embeddings[1]) - cosine_similarity(
+        review_embedding, label_embeddings[0]
+    )
+
+
+prediction = (
+    "positive" if label_score(get_embedding("Sample Review", model=model), label_embeddings) > 0 else "negative"
+)1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59import (
+	"context"
+	"fmt"
+	"log"
+	"math"
+
+	"github.com/openai/openai-go/v3"
+)
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	client := openai.NewClient()
+	ctx := context.Background()
+	negative, err := embedding(ctx, &client, "negative")
+	if err != nil {
+		return err
+	}
+	positive, err := embedding(ctx, &client, "positive")
+	if err != nil {
+		return err
+	}
+	review, err := embedding(ctx, &client, "Sample Review")
+	if err != nil {
+		return err
+	}
+	score := cosineSimilarity(review, positive) - cosineSimilarity(review, negative)
+	prediction := "negative"
+	if score > 0 {
+		prediction = "positive"
+	}
+	fmt.Println(prediction)
+	return nil
+}
+
+func embedding(ctx context.Context, client *openai.Client, text string) ([]float64, error) {
+	response, err := client.Embeddings.New(ctx, openai.EmbeddingNewParams{
+		Model: openai.EmbeddingModelTextEmbedding3Small,
+		Input: openai.EmbeddingNewParamsInputUnion{OfString: openai.String(text)},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return response.Data[0].Embedding, nil
+}
+
+func cosineSimilarity(a, b []float64) float64 {
+	var dot, left, right float64
+	for i := range a {
+		dot += a[i] * b[i]
+		left += a[i] * a[i]
+		right += b[i] * b[i]
+	}
+	return dot / math.Sqrt(left*right)
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.embeddings.EmbeddingCreateParams;
+import java.util.List;
+
+var embeddings =
+    client
+        .embeddings()
+        .create(
+            EmbeddingCreateParams.builder()
+                .model("text-embedding-3-small")
+                .inputOfArrayOfStrings(List.of("negative", "positive", "Sample Review"))
+                .build())
+        .data();
+
+List<Float> review = embeddings.get(2).embedding();
+double negative = cosineSimilarity(review, embeddings.get(0).embedding());
+double positive = cosineSimilarity(review, embeddings.get(1).embedding());
+System.out.println(positive > negative ? "positive" : "negative");1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29using OpenAI.Embeddings;
+
+string key = Environment.GetEnvironmentVariable("OPENAI_API_KEY")!;
+string model = "text-embedding-3-small";
+EmbeddingClient client = new(model, key);
+
+float[] negative = await EmbedAsync(client, "negative");
+float[] positive = await EmbedAsync(client, "positive");
+float[] review = await EmbedAsync(client, "Sample Review");
+double score = CosineSimilarity(review, positive) - CosineSimilarity(review, negative);
+Console.WriteLine(score > 0 ? "positive" : "negative");
+
+static async Task<float[]> EmbedAsync(EmbeddingClient client, string text)
+{
+    OpenAIEmbedding result = await client.GenerateEmbeddingAsync(text);
+    return result.ToFloats().ToArray();
+}
+
+static double CosineSimilarity(float[] left, float[] right)
+{
+    double dot = 0, leftNorm = 0, rightNorm = 0;
+    for (int i = 0; i < left.Length; i++)
+    {
+        dot += left[i] * right[i];
+        leftNorm += left[i] * left[i];
+        rightNorm += right[i] * right[i];
+    }
+    return dot / Math.Sqrt(leftNorm * rightNorm);
+}1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22require "openai"
+
+client = OpenAI::Client.new
+labels = ["negative", "positive"]
+
+response = client.embeddings.create(
+  model: "text-embedding-3-small",
+  input: labels + ["The coffee arrived quickly and tastes great."]
+)
+
+review = response.data.fetch(-1).embedding
+similarity = lambda do |embedding|
+  dot_product = embedding.zip(review).sum { |value, review_value| value * review_value }
+  magnitude = Math.sqrt(embedding.sum { |value| value**2 })
+  review_magnitude = Math.sqrt(review.sum { |value| value**2 })
+  dot_product / (magnitude * review_magnitude)
+end
+
+negative, positive = response.data.first(2).map do |embedding|
+  similarity.call(embedding.embedding)
+end
+puts((positive > negative) ? "positive" : "negative")
+Obtaining user and product embeddings for cold-start recommendation
+User_and_product_embeddings.ipynb
+We can obtain a user embedding by averaging over all of their reviews. Similarly, we can obtain a product embedding by averaging over all the reviews about that product. In order to showcase the usefulness of this approach we use a subset of 50k reviews to cover more reviews per user and per product.
+We evaluate the usefulness of these embeddings on a separate test set, where we plot similarity of the user and product embedding as a function of the rating. Interestingly, based on this approach, even before the user receives the product we can predict better than random whether they would like the product.user_embeddings = df.groupby("UserId").ada_embedding.apply(np.mean)
+prod_embeddings = df.groupby("ProductId").ada_embedding.apply(np.mean)
+Clustering
+Clustering.ipynb
+Clustering is one way of making sense of a large volume of textual data. Embeddings are useful for this task, as they provide semantically meaningful vector representations of each text. Thus, in an unsupervised way, clustering will uncover hidden groupings in our dataset.
+In this example, we discover four distinct clusters: one focusing on dog food, one on negative reviews, and two on positive reviews.1
+2
+3
+4
+5
+6
+7
+8
+9import numpy as np
+from sklearn.cluster import KMeans
+
+matrix = np.vstack(df.ada_embedding.values)
+n_clusters = 4
+
+kmeans = KMeans(n_clusters=n_clusters, init="k-means++", random_state=42)
+kmeans.fit(matrix)
+df["Cluster"] = kmeans.labels_
+
+FAQ
+
+How can I tell how many tokens a string has before I embed it?
+
+In Python, you can split a string into tokens with OpenAI’s tokenizer tiktoken.
+
+Example code:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11import tiktoken
+
+
+def num_tokens_from_string(string: str, encoding_name: str) -> int:
+    """Returns the number of tokens in a text string."""
+    encoding = tiktoken.get_encoding(encoding_name)
+    num_tokens = len(encoding.encode(string))
+    return num_tokens
+
+
+num_tokens_from_string("tiktoken is great!", "cl100k_base")
+
+For third-generation embedding models like text-embedding-3-small, use the cl100k_base encoding.
+
+More details and example code are in the OpenAI Cookbook guide how to count tokens with tiktoken.
+
+How can I retrieve K nearest embedding vectors quickly?
+
+For searching over many vectors quickly, we recommend using a vector database. You can find examples of working with vector databases and the OpenAI API in our Cookbook on GitHub.
+
+Which distance function should I use?
+
+We recommend cosine similarity. The choice of distance function typically doesn’t matter much.
+
+OpenAI embeddings are normalized to length 1, which means that:
+
+
+Cosine similarity can be computed slightly faster using just a dot product
+
+Cosine similarity and Euclidean distance will result in the identical rankings
+
+
+Can I share my embeddings online?
+
+Yes, customers own their input and output from our models, including in the case of embeddings. You are responsible for ensuring that the content you input to our API does not violate any applicable law or our Terms of Use.
+
+Do V3 embedding models know about recent events?
+
+No, the text-embedding-3-large and text-embedding-3-small models lack knowledge of events that occurred after September 2021. This is generally not as much of a limitation as it would be for text generation models but in certain edge cases it can reduce performance.                Previous   Deep research       Next   Moderation                   Ask AI    
+
+Docs agent
+           
+
+Loading docs agent...
+             

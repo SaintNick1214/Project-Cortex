@@ -1,0 +1,60 @@
+{
+  "utc": "2026-10-04T09:08:59.008571+00:00",
+  "verdict": "ACCEPT_PASS_NATIVE_CAPTURE_ONLY",
+  "freshJudgeScore": 4.2,
+  "reportSHA256": "69a015922cecc065c8065b5656250f317f8c39d41cf872bd3039c90fb3ba3803",
+  "manifestSHA256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+  "judgeCompleteRows": 22,
+  "rootReadFullReport": true,
+  "rootVerifiedEveryJudgeRow": true,
+  "rootSubjectVerification": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-c4-execution",
+      "rows": 2761,
+      "manifestSHA256": "4a434d5eb08888ae8ad99afc78bfb21471acd6935d541fec8e59f3a2447e870e",
+      "complete": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-c4-private-supplement",
+      "rows": 3,
+      "manifestSHA256": "aa1fb67eed050177d55354ea4e6a92e2479def3a1c51021c82f1f2e5f632687a",
+      "complete": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-regression-c4-execution",
+      "rows": 2981,
+      "manifestSHA256": "1b11943ae992b96b2d5e874f89e66a796e239c0d1a39dc5c2674d820c11e48c8",
+      "complete": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-regression-c4-private-supplement",
+      "rows": 12,
+      "manifestSHA256": "b3f564b4c50d6a8c4888216bd1b589a5338e583fde661fb6920a26373204e669",
+      "complete": true
+    }
+  ],
+  "bothPhysicallyRetired": true,
+  "unlocks": "Bounded Gateway composition implementation under accepted C2 design and immutable historical78 catalog",
+  "doesNotComplete": [
+    "Task04",
+    "full03",
+    "actual provider/default qualification",
+    "text slice",
+    "UI",
+    "all17",
+    "goal"
+  ],
+  "limits": [
+    "Costs synthetic only",
+    "Transient native read faults offline only",
+    "Signing CI blocked",
+    "Required native UI tool unavailable"
+  ],
+  "preservedCoordinatorFailure": {
+    "exception": "AssertionError multiple manifest-name candidates",
+    "cause": "Discovery included raw publication manifests; corrected to actual root qa-manifest.json",
+    "subjectWrites": false,
+    "checksWeakened": false
+  },
+  "cycleLimitWaiver": "Ignore cycle limits; requirements and finite execution caps preserved"
+}

@@ -1,0 +1,19 @@
+import {spawnSync} from 'node:child_process';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {resolve,relative,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+const root='/workspace/Project-Cortex',q=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const source=JSON.parse(readFileSync(resolve(q,'source-evidence.json')));
+const pre=source.files.map(row=>{const bytes=readFileSync(resolve(root,row.path));return {...row,currentBytes:bytes.length,currentSHA256:hash(bytes),unchanged:hash(bytes)===row.sha256};});
+writeFileSync(resolve(q,'pre-check-fingerprints.json'),JSON.stringify(pre,null,2)+'\n');
+mkdirSync(resolve(q,'raw'),{recursive:true});
+const commands=[['toolchain',process.execPath,['--version']],['npm','/workspace/Project-Cortex/work/resume/toolchain-bin/npm',['--version']],['typecheck',process.execPath,['node_modules/typescript/bin/tsc','--project',relative(root,resolve(q,'fixture/tsconfig.json'))]],['lint',process.execPath,['node_modules/eslint/bin/eslint.js','--config',relative(root,resolve(q,'eslint.config.mjs')),...['canonical','compiled','guard','runner','schema'].map(name=>relative(root,resolve(q,`fixture/convex/${name}.ts`))),...['offline-check','refinement-check','verify','finalize'].map(name=>relative(root,resolve(q,`scripts/${name}.mjs`)))]],['offline-handler-outcomes',process.execPath,['--experimental-strip-types',relative(root,resolve(q,'scripts/offline-check.mjs'))]]];
+const receipts=[];
+for(const [name,cmd,argv]of commands){const start=new Date().toISOString(),out=spawnSync(cmd,argv,{cwd:root,encoding:'utf8',env:{...process.env,PATH:'/workspace/Project-Cortex/work/resume/toolchain-bin:'+process.env.PATH}});writeFileSync(resolve(q,`raw/${name}.stdout`),out.stdout??'');writeFileSync(resolve(q,`raw/${name}.stderr`),out.stderr??'');receipts.push({name,argv:[cmd,...argv],cwd:root,utcStart:start,utcEnd:new Date().toISOString(),exit:out.status,signal:out.signal,stdoutSHA256:hash(out.stdout??''),stderrSHA256:hash(out.stderr??'')});if(out.status!==0){writeFileSync(resolve(q,'command-receipts.json'),JSON.stringify(receipts,null,2)+'\n');throw Error(`CHECK_FAILED:${name}`);}}
+writeFileSync(resolve(q,'command-receipts.json'),JSON.stringify(receipts,null,2)+'\n');
+const outcome=JSON.parse(readFileSync(resolve(q,'raw/offline-handler-outcomes.stdout'),'utf8'));writeFileSync(resolve(q,'test-discovery.json'),JSON.stringify({discovered:outcome.tests,executed:outcome.testsDetail.length,skipped:outcome.skipped,names:outcome.testsDetail.map(x=>x.name)},null,2)+'\n');
+const post=source.files.map(row=>{const bytes=readFileSync(resolve(root,row.path));return {path:row.path,bytes:bytes.length,sha256:hash(bytes),unchanged:hash(bytes)===row.sha256};});writeFileSync(resolve(q,'post-check-fingerprints.json'),JSON.stringify(post,null,2)+'\n');if(post.some(x=>!x.unchanged))throw Error('REFERENCE_CHANGED');
+writeFileSync(resolve(q,'installed-pins.json'),JSON.stringify({node:process.version,npm:readFileSync(resolve(q,'raw/npm.stdout'),'utf8').trim(),pins:['convex','typescript','eslint','@eslint/js','@typescript-eslint/parser','@typescript-eslint/eslint-plugin','globals'].map(name=>{const bytes=readFileSync(resolve(root,'node_modules',name,'package.json'));const pkg=JSON.parse(bytes);return {name,installed:pkg.version,declared:JSON.parse(readFileSync(resolve(q,'fixture/package.json')))[name==='convex'?'dependencies':'devDependencies'][name],manifestSHA256:hash(bytes)};}),standaloneInstall:'NOT_RUN; existing installed repository dependency resolution; no install/dependency changes',officialCodegen:'NOT_RUN'},null,2)+'\n');
+console.log(JSON.stringify({status:'PASS_OFFLINE_SCOPE',tests:outcome.tests,skipped:outcome.skipped,referenceRows:post.length,referenceChanges:0}));

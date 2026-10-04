@@ -1,0 +1,174 @@
+Usage Accounting - Track AI Model Token Usage
+Documentation Index
+Fetch the complete documentation index at: /docs/llms.txt
+Use this file to discover all available pages before exploring further.Skip to main contentOpenRouter | Documentation home pageSearch...⌘KAsk Assistant⌘I
+Models
+Benchmarks
+Chat
+Rankings
+Apps
+Ori
+Pricing
+Sign In
+Sign InSearch...NavigationAdministrationUsage AccountingDocsAPI ReferenceClient SDKsAgent SDKCookbook
+Get Started
+Quickstart: Build a Chat App
+Migrate to OpenRouter in One Prompt
+Enterprise Onboarding Journey
+Enterprise Quickstart
+Free Models Router
+Working with Coding Agents
+Auto-Approve Coding Agent Permission Prompts with Jev
+Automatic Code Review
+Claude Code
+Claude Desktop
+Codex CLI
+Codex Desktop App
+Cursor
+Hermes Agent
+Junie CLI
+Using MCP Servers with OpenRouter
+OpenClaw 🦞
+OpenCode
+Building Agents
+Add Human-in-the-Loop Controls to an Agent SDK Agent
+Gate Agent Tool Calls with Jev
+Build a Long-Horizon Agent
+Build a Token-Efficient Review Agent
+Delegate Routine Work to Cheaper Models
+Build Your Own Agent TUI
+Build Your Own Headless Agent
+Video Generation
+Choose a Video Generation Model
+Generate and Download a Video from Text
+Get Video Results with Webhooks
+Guide a Video with Reference Images
+Turn an Image into a Video
+Use Provider-Specific Video Options
+Image Generation
+Enhance Image Generation with Presets
+Evaluate & Optimize
+Distillation
+Model Migrations
+RAG with Embeddings & Rerank
+Cut LLM Cost with a Jev-Verified Cascade
+Classify Reddit and YouTube Comments with Jev and ScrapeCreators
+Classify and Tag Text at Scale with Jev
+Red Teaming
+Administration
+Activity Export
+API Key Rotation
+Control Costs with the Analytics API
+Crypto API
+Data API
+Organization Management
+Adding a Tax ID to Your Invoices
+Usage Accounting
+User Tracking
+On this page
+Usage Information
+Response Format
+Cost Breakdown
+Benefits
+Best Practices
+Alternative: Getting Usage via Generation ID
+Examples
+Basic Usage with Token Tracking
+Streaming with Usage InformationAdministration
+Usage AccountingCopy pageCopy pageCopy pageCopy pageThe OpenRouter API provides built-in Usage Accounting that allows you to track AI model usage without making additional API calls. This feature provides detailed information about token counts, costs, and caching status directly in your API responses.
+
+​Usage Information
+OpenRouter automatically returns detailed usage information with every response, including:
+
+
+Prompt and completion token counts using the model’s native tokenizer
+
+Cost in credits
+
+Reasoning token counts (if applicable)
+
+Cached token counts (if available)
+
+This information is included in the last SSE message for streaming responses, or in the complete response for non-streaming requests. No additional parameters are required.
+Deprecated ParametersThe usage: { include: true } and stream_options: { include_usage: true } parameters are deprecated and have no effect. Full usage details are now always included automatically in every response.
+
+​Response Format
+Every response includes a usage object with detailed token information:
+{
+  "object": "chat.completion.chunk",
+  "usage": {
+    "completion_tokens": 2,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "cost": 0.95,
+    "cost_details": {
+      "upstream_inference_cost": 19
+    },
+    "prompt_tokens": 194,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 100,
+      "audio_tokens": 0
+    },
+    "total_tokens": 196
+  }
+}
+
+cached_tokens is the number of tokens that were read from the cache. cache_write_tokens is the number of tokens that were written to the cache (only returned for models with explicit caching and cache write pricing).
+
+​Cost Breakdown
+The usage response includes detailed cost information:
+
+
+cost: The total amount charged to your account
+
+cost_details.upstream_inference_cost: The actual cost charged by the upstream AI provider
+
+
+​Benefits
+
+
+Efficiency: Get usage information without making separate API calls
+
+Accuracy: Token counts are calculated using the model’s native tokenizer
+
+Transparency: Track costs and cached token usage in real-time
+
+Detailed Breakdown: Separate counts for prompt, completion, reasoning, and cached tokens
+
+
+​Best Practices
+
+
+Use the usage data to monitor token consumption and costs
+
+Consider tracking usage in development to optimize token usage before production
+
+Use the cached token information to optimize your application’s performance
+
+
+​Alternative: Getting Usage via Generation ID
+You can also retrieve usage information asynchronously by using the generation ID returned from your API calls. This is particularly useful when you want to fetch usage statistics after the completion has finished or when you need to audit historical usage.
+To use this method:
+
+
+Make your chat completion request as normal
+
+Note the id field in the response
+
+Use that ID to fetch usage information via the /generation endpoint
+
+For more details on this approach, see the Get a Generation documentation.
+When obtaining usage information via generation ID, the upstream_inference_cost field is only available for BYOK (Bring Your Own Key) requests. For all other requests it will be 0 or null.
+
+​Examples
+
+​Basic Usage with Token Tracking
+
+
+
+
+​Streaming with Usage Information
+This example shows how to handle usage information in streaming mode:
+Adding a Tax ID to Your InvoicesUser TrackingAssistantResponses are generated using AI and may contain mistakes.

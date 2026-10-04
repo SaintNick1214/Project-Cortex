@@ -1,0 +1,123 @@
+Usage and Billing | Convex Developer Hub
+
+
+Skip to main content
+            Docs
+            
+          Ask AIDashboardBlogGitHubDiscordDocs
+Home
+Dashboard
+Blog
+GitHub
+Discord
+
+Get Started
+Tutorial
+Quickstarts
+Understand Convex
+
+Platform
+Functions
+Database
+Realtime
+Authentication
+Scheduling
+File Storage
+Search
+Components
+
+Guides
+AI Code Gen
+Agents
+AI Gateway
+Overview
+Getting started
+Models
+Usage & Billing
+HTTP API
+Images and videos
+Testing
+Production
+Self Hosting
+Platform APIs
+
+Client Libraries
+React
+Next.js
+TanStack
+React Native
+JavaScript
+Vue
+Svelte
+Python
+Swift
+Android Kotlin
+Rust
+OpenAPI
+
+Tools
+Dashboard
+CLI
+Team Management
+
+API Reference
+Configuration Files
+Convex API
+Generated Code
+Deployment API
+Management API
+Errors
+ESLint
+Home
+AI Gateway
+Usage & BillingCopy as MarkdownCopied!On this page
+Usage and BillingFor AI agents: see llms.txt for the complete documentation index. Markdown versions are available by adding .md to a page URL or requesting Accept: text/markdown.
+The gateway records the project and function behind every request automatically.
+You don't need to set anything up.
+
+Seeing your usage​
+
+The team usage page has an
+AI Gateway section that shows daily spend per project. Open it from the AI
+Gateway card on the usage summary.
+
+
+To see which functions spent the money, scroll to the breakdown by function and
+pick the AI tab. It lists spend per function.
+
+See the usage page docs for the rest of the
+page.
+
+Usage limits​
+
+Set daily or monthly AI Gateway limits for a cloud deployment from Settings →
+Usage Limits. Choose the AI Gateway metric and set a disable threshold in
+dollars. Production and preview deployments also support warning thresholds.
+Reaching the disable threshold disables the whole deployment, not just AI
+Gateway requests.
+
+
+See Usage limits for thresholds and reset
+windows.
+
+How billing works​
+
+We charge the same rates as OpenRouter. Price
+per token depends on the model, when you use it, and whether the tokens are
+cached. Image and video prices depend on the model and generation options, such
+as resolution and duration. Cancelling a video request after submission can
+still incur its generation cost. The charge appears as an AI Gateway line item
+on your Convex invoice, in dollars.
+
+Spending limits apply to AI
+Gateway spend like any other usage. Set a limit on the team billing page to cap
+what your team pays per month.
+
+Requests from a project-connected local deployment are attributed to that
+project's team and count toward the same team spending limit. Local deployments
+do not have a separate deployment-level live usage meter. Spending-limit state
+is checked when the gateway credential is minted, so an in-flight request or an
+already issued short-lived credential may finish after the limit is reached.PreviousModelsNextHTTP API
+Seeing your usage
+Usage limits
+How billing works

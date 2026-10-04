@@ -1,0 +1,94 @@
+{
+  "utc": "2026-10-04T09:32:16.059822+00:00",
+  "scope": "PASS_STATIC_INTEGRITY_ONLY",
+  "sourceRows": 26,
+  "packets": [
+    {
+      "packet": "task04-model-drift-charge-only-repair-preparation-c2",
+      "rows": 2,
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-repair-preparation-c2/manifest.json",
+        "bytes": 357,
+        "sha256": "bbd320746870d2756199c597af7fbcb0bbdd5b8f8d7453a89fa79daf9043c18a"
+      },
+      "complete": true,
+      "nestedManifestsIncluded": true
+    },
+    {
+      "packet": "task04-model-drift-charge-only-repair-preparation-c1",
+      "rows": 2,
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-repair-preparation-c1/manifest.json",
+        "bytes": 356,
+        "sha256": "c656e9dda6748433afe445a4cb5dad308d9eec8d256a96b39f47c2900fa5d73c"
+      },
+      "complete": true,
+      "nestedManifestsIncluded": true
+    },
+    {
+      "packet": "task04-model-drift-charge-only-c1-design-review",
+      "rows": 8,
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-c1-design-review/manifest.json",
+        "bytes": 1267,
+        "sha256": "f1ddd99ab8b5f9d52a9b9e5567e66ab8f1adde5623f6ce23bfaf6a3cff0a75f7"
+      },
+      "complete": true,
+      "nestedManifestsIncluded": true
+    },
+    {
+      "packet": "task04-gateway-terminal-composition-c1-review",
+      "rows": 71,
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-c1-review/manifest.json",
+        "bytes": 11854,
+        "sha256": "a4cb72af203cd02da097ec0b99da58a760bf043954855c80d1a5fef93fd46d07"
+      },
+      "complete": true,
+      "nestedManifestsIncluded": true
+    },
+    {
+      "packet": "task04-gateway-capture-composition-preparation-c2",
+      "rows": 147,
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-capture-composition-preparation-c2/manifest.json",
+        "bytes": 28386,
+        "sha256": "0f46ab1caa4616c5cc3200671dac1b5451aed8ef13b9c37e9bca5f2f18fd1732"
+      },
+      "complete": true,
+      "nestedManifestsIncluded": true
+    },
+    {
+      "packet": "task04-gateway-capture-composition-c2-design-review",
+      "rows": 120,
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-capture-composition-c2-design-review/manifest.json",
+        "bytes": 24100,
+        "sha256": "6a343de298ef9088cb9e4657bc9e549c1cedcb5123af6daa87832e710509f88e"
+      },
+      "complete": true,
+      "nestedManifestsIncluded": true
+    }
+  ],
+  "checks": {
+    "subject_exact": true,
+    "mandatory_money_independent_predicate": true,
+    "original_OR_latches": true,
+    "defensive_initial_final_attempt": true,
+    "false_latches_attached_pending": true,
+    "unexpected_errors_propagate": true,
+    "conditional_whole_money": true,
+    "duplicate_before_mutation": true,
+    "source_capture_drift_before_cost": true,
+    "source_immutable_facts": true,
+    "production_roots_empty": true,
+    "schema_unchanged": true
+  },
+  "productTests": "NOT_RUN",
+  "nativeServices": "NOT_RUN",
+  "actualMoney": "UNQUALIFIED",
+  "failures": [],
+  "skips": [
+    "All application/native/provider/paid/UI execution deliberately outside read-only design scope"
+  ]
+}
