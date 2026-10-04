@@ -1,0 +1,53 @@
+{
+  "candidate": "C4",
+  "prior": [
+    {
+      "candidate": "c1",
+      "freezeSha256": "222473222323c6b7948fe093cf9a5d0ac987366f01aad48caa64cfe2f154afd6",
+      "manifestSha256": "7f2c3bf55431804d865dd4feb2a283167eb051d7041a330d1f2b6af888120391",
+      "reviewSha256": "fc039781f797051cd61c44c3c74fc7e89b46a9c3be3c858bfd36f99598e882df"
+    },
+    {
+      "candidate": "c2",
+      "freezeSha256": "f5ee7dc86a258c2e5c49ccd8f3e6200b6d7b6390d190ce32909fc5a3aff2dfc9",
+      "manifestSha256": "182f270af595de0a0d2f284728172a0028ec64aa2a23c63847660e35ea0cbd00",
+      "reviewSha256": "88bafcd99665997f823c415b479db913909f4b0836ba3caefd8a402ac64a3770"
+    },
+    {
+      "candidate": "c3",
+      "freezeSha256": "c53108ab96aa64a29f294b5c23a66ca543838a673ad5e094c6c5f46fd0a1a3c6",
+      "manifestSha256": "d917358dc6bf704fce98011573b7164cec464a8f44e659d7085f266c0783862d",
+      "reviewSha256": "011d0dc420ec6d77d75d18c1b9af151bcbd4d7a0a1a233fa8275bae8fee10915"
+    }
+  ],
+  "C3Preparation": "HISTORICAL_PASS4.6_NOT_NATIVE_QUALIFICATION",
+  "C3Execution": {
+    "reportPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c3-execution/report.md",
+    "reportSha256": "79f8a2038fc1236f7daed662a08d3c953fde31105e0f3d950f39faac4253af2e",
+    "manifestPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c3-execution/manifest.json",
+    "manifestSha256": "383cd97be751b57c5447483d24489c36ae33484f7be2c83a2fcbcfa95e2797db",
+    "outcome": "FAILED_OFFICIAL_DEPLOY_BEFORE_PUBLICATION;retirementPASS;nativeTickets0;ownedRows0;storage0;oneCLIgroupTerminal"
+  },
+  "newExecutionIdentity": {
+    "version": 1,
+    "operation": "a1cd41e5-b99e-4d87-b42b-0da540ccff01",
+    "purpose": "task04-native-admission-c4",
+    "projectName": "cortex-task04-admission-disposable-114e54087987",
+    "projectSlug": "cortex-task04-admission-disposable-114e54087987",
+    "kind": "cloud",
+    "deploymentType": "dev",
+    "productionDeployment": false,
+    "sharedCiTarget": false,
+    "privateEnvironmentFile": "work/backend-runtime/task04-native-admission-c4/deploy.env",
+    "provisionCalls": 5,
+    "provisionDeadlineMs": 150000,
+    "retirementCalls": 5,
+    "retirementDeadlineMs": 180000,
+    "runId": "admission-97ea32244cbac194fc22f88bf115d968"
+  },
+  "retiredPriorIdentityForbidden": {
+    "projectId": 3138926,
+    "deploymentName": "kindhearted-dalmatian-90",
+    "oldRunId": "admission-68061eae2f544b359edc485d5b2ae889"
+  }
+}

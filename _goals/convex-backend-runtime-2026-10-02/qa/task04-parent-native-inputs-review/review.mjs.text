@@ -1,0 +1,69 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+const repo=process.cwd(),out=path.resolve('_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-review'),work=path.resolve('work/resume/task04-parent-native-inputs-review');
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const paths=['work/resume/task04-native-c3-parent-inputs.mjs','work/resume/task04-native-current-inputs.mjs','_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c3-execution/parent-inputs.mjs'];
+const before=paths.map(p=>({path:p,sha256:hash(fs.readFileSync(p)),bytes:fs.statSync(p).size}));
+fs.writeFileSync(path.join(out,'protected-pre.json'),JSON.stringify(before,null,2));
+const source=fs.readFileSync(paths[1],'utf8');
+const guardSource=fs.readFileSync('_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c3/scripts/guard.mjs','utf8');
+const canonicalSource=guardSource.slice(guardSource.indexOf('export function canonical'),guardSource.indexOf('export function json')).replace('export ','');
+const body=source.replace(/^import .*;\n/gm,'').replace(/const guard=await import\([^\n]+\);/,'const guard=providedGuard;').replace(/const generator=await import\([^\n]+\);/,'const generator=providedGenerator;');
+const checks=[];
+async function probe(name,change={},expected='reject'){
+ const scratch=fs.mkdtempSync(path.join(work,'case-'));fs.chmodSync(scratch,0o700);
+ const target={operation:'current-operation',runId:'current-run'},ids={_storage:'historical-storage',facts:'historical-facts'};
+ const history={operation:target.operation,runId:target.runId,ids,...change.history};
+ const put=(n,v,mode=0o600)=>(fs.writeFileSync(path.join(scratch,n),typeof v==='string'?v:JSON.stringify(v)+'\n',{mode}),fs.chmodSync(path.join(scratch,n),mode));
+ put('historical-native-locators.json',history);put('initial-physical-id-provenance.json',{operation:change.proofOperation??target.operation});
+ const rows=change.rows??['runtimeModelOperations','runtimeModelAttempts'].map((table,i)=>({operation:target.operation,kind:'created',table,id:'native-'+i,observedAt:new Date().toISOString()}));
+ for(const row of rows){const n='owned-created-'+hash(row.table+':'+row.id)+'.json';put(change.badName?'owned-created-'+'a'.repeat(64)+'.json':n,change.partial?JSON.stringify(row):row,change.mode??0o600);}
+ if(change.symlink){fs.unlinkSync(path.join(scratch,'historical-native-locators.json'));fs.symlinkSync(path.join(scratch,'initial-physical-id-provenance.json'),path.join(scratch,'historical-native-locators.json'));}
+ let calls=0,clock=0,writes=[],printed='';
+ const context={assert,readFileSync:fs.readFileSync,readdirSync:fs.readdirSync,resolve:path.resolve,lstatSync:fs.lstatSync,realpathSync:fs.realpathSync,sep:path.sep,Buffer,process:{argv:['node','watcher','task04-native-admission-fixture-c4'],getuid:()=>process.getuid(),stdout:{write:s=>printed+=s}},Date:class extends Date{static now(){clock+=60001;return clock;}},setTimeout:f=>{f();},providedGenerator:{argumentsFor:()=>({})},fetch:()=>{throw Error('FORBIDDEN_NETWORK');}};
+ vm.createContext(context);vm.runInContext(canonicalSource,context);
+ context.providedGuard={scratch,root:scratch,sha256:hash,canonical:context.canonical,json:(p,b=scratch,priv=false)=>JSON.parse(fs.readFileSync(context.canonical(p,b,priv))),exclusive:(p,v)=>{fs.writeFileSync(p,JSON.stringify(v)+'\n',{flag:'wx',mode:0o600});writes.push(path.basename(p));},livePreflight:()=>{calls++;return {target:change.changedTarget&&calls>1?{...target,runId:'other-run'}:target};}};
+ put('registration-inventory.json',{registrations:[]});if(change.preexisting)put('current-physical-id-input-receipt.json',{});
+ let error;try{await vm.runInContext('(async()=>{'+body+'})()',context,{timeout:1000});}catch(e){error=e.message;}
+ const accepted=!error;
+ assert.equal(accepted,expected==='accept',name+': unexpected outcome '+error);
+ checks.push({name,outcome:accepted?'ACCEPTED':'REJECTED',expected,diagnostic:error??null,writes,preflightCalls:calls,printed,proof:accepted?JSON.parse(fs.readFileSync(path.join(scratch,'current-physical-id-input-receipt.json'))):null});
+}
+await probe('legitimate-two-current-receipts',{},'accept');
+await probe('foreign-history-operation',{history:{operation:'foreign'}});
+await probe('foreign-history-run',{history:{runId:'foreign'}});
+await probe('foreign-current-operation',{rows:[{operation:'foreign',kind:'created',table:'runtimeModelOperations',id:'x'}]});
+await probe('missing-current-receipts',{rows:[]});
+await probe('partial-current-receipts',{partial:true});
+await probe('misnamed-current-receipt',{badName:true});
+await probe('insecure-current-receipt-permissions',{mode:0o644});
+await probe('symlink-history',{symlink:true});
+await probe('preexisting-proof-exclusive',{preexisting:true});
+await probe('stale-core-IDs-in-history-bypass-receipts',{history:{ids:{runtimeModelOperations:'old-op',runtimeModelAttempts:'old-attempt'}},rows:[]},'accept');
+await probe('foreign-provenance-proof-not-validated',{proofOperation:'foreign'},'accept');
+await probe('changed-run-from-repeat-preflight-ignored',{changedTarget:true},'accept');
+await probe('nonstring-current-ID-rejected',{rows:['runtimeModelOperations','runtimeModelAttempts'].map(table=>({operation:'current-operation',kind:'created',table,id:7}))});
+const validateSource=guardSource.slice(guardSource.indexOf('export function validateTarget'),guardSource.indexOf('export function livePreflight')).replace('export ','');
+const vc={sha256:hash};vm.createContext(vc);vm.runInContext(validateSource,vc);
+const request={operation:'test-op',projectSlug:'cortex-task04-admission-disposable-123456abcdef',projectName:'test-only',privateEnvironmentFile:'dummy-only',runId:'frozen-run'};
+const fakeTarget={...request,requestSha256:hash(JSON.stringify(request)),purpose:'task04-native-admission-c1',projectId:99,kind:'cloud',deploymentType:'dev',productionDeployment:false,sharedCiTarget:false,isolationVerified:true,active:true,retired:false,deleted:false,deploymentName:'dummy-only',deploymentUrl:'https://dummy-only.convex.cloud',runId:'foreign-run'};
+vc.validateTarget(fakeTarget,request,{CONVEX_DEPLOYMENT:'dev:dummy-only',CONVEX_URL:fakeTarget.deploymentUrl,CONVEX_DEPLOY_KEY:'dev:dummy-only|NOT_A_CREDENTIAL'});
+checks.push({name:'actual-guard-foreign-run-accepted',outcome:'ACCEPTED',expected:'accept',network:0});
+const keyTest=fs.mkdtempSync(path.join(work,'dummy-private-path-'));fs.chmodSync(keyTest,0o700);
+const dummy=path.join(keyTest,'dummy.pem'),linked=path.join(keyTest,'linked.pem');fs.writeFileSync(dummy,'noncredential dummy',{mode:0o600});fs.symlinkSync(dummy,linked);
+const modeSnippet=fs.readFileSync(paths[0],'utf8').split('\n')[24];
+const kc={assert,statSync:fs.statSync,resolve:path.resolve,keyPath:linked};vm.createContext(kc);vm.runInContext(modeSnippet,kc);
+checks.push({name:'actual-parent-private-key-mode-check-accepts-symlink',outcome:'ACCEPTED',expected:'accept',readPrivateKey:false});
+const old=path.resolve('work/backend-runtime/task03-foundation-live-c11'),exec=path.resolve('_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c3-execution');
+const proof=JSON.parse(fs.readFileSync(path.join(exec,'initial-physical-id-provenance.json'))),verification=[];
+for(const [name,row] of Object.entries(proof.sources)){const b=fs.readFileSync(path.join(old,name));assert.equal(hash(b),row.sha256);assert.equal(b.length,row.bytes);verification.push({name,sha256:hash(b),bytes:b.length,matched:true});}
+const owned=JSON.parse(fs.readFileSync(path.join(old,Object.keys(proof.sources).find(n=>n.startsWith('owned-foundation')))));
+const journal=fs.readFileSync(path.join(old,Object.keys(proof.sources).find(n=>n.startsWith('owned-journal'))),'utf8').trimEnd().split('\n').map(JSON.parse);
+const locatorChecks=proof.locators.map(row=>{const id=row.table==='_storage'?owned.files[0].id:owned.refs.find(r=>r.table===row.table).id;assert.equal(hash(id),row.locatorSHA256);const witnessed=journal.some(j=>j.run===owned.run&&(row.table==='_storage'?j.files?.some(f=>f.id===id):j.refs?.some(r=>r.table===row.table&&r.id===id)));assert.equal(witnessed,true);return {table:row.table,locatorSHA256:hash(id),journalWitnessed:true};});
+const after=paths.map(p=>({path:p,sha256:hash(fs.readFileSync(p)),bytes:fs.statSync(p).size}));assert.deepEqual(after,before);assert.equal(before[0].sha256,before[2].sha256);
+fs.writeFileSync(path.join(out,'protected-post.json'),JSON.stringify(after,null,2));
+fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({utc:new Date().toISOString(),argv:process.argv,cwd:repo,actualSourceExecution:'Watcher import bindings replaced by credential-free VM dependencies; unchanged executable watcher body, actual canonical function. Never ran real parent top-level.',checks,sourceVerification:verification,locatorChecks,sourceUnchanged:true,historicalSourceEqualsArchived:true,network:0,signing:0,realRPC:0,realRows:0,realStorage:0},null,2)+'\n');
+console.log(JSON.stringify({checks:checks.length,expectedBoundaries:11,acceptedCounterexamples:5,historicalSourcesVerified:verification.length,locatorWitnesses:locatorChecks.length,sourceUnchanged:true}));

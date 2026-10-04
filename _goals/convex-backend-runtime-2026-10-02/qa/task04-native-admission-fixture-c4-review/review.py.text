@@ -1,0 +1,40 @@
+import pathlib,hashlib,json,subprocess,datetime,os
+repo=pathlib.Path('/workspace/Project-Cortex'); q=repo/'_goals/convex-backend-runtime-2026-10-02/qa'; cand=q/'task04-native-admission-fixture-c4'; out=q/'task04-native-admission-fixture-c4-review'; work=repo/'work/resume/task04-native-admission-c4-review'; scripts=work/'scripts'; scripts.mkdir()
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def write(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
+protected=set()
+for d in [cand,*[q/f'task04-native-admission-fixture-c{x}' for x in [1,2,3]],*[q/f'task04-native-admission-fixture-c{x}-review' for x in [1,2,3]],q/'task04-native-admission-c3-execution',repo/'convex-dev',repo/'src']:
+ protected.update(p for p in d.rglob('*') if p.is_file())
+for n in ['package.json','package-lock.json','convex.json','tsconfig.json']:protected.add(repo/n)
+for r in json.loads((cand/'toolchain-evidence.json').read_text())['files']:protected.add(repo/r['path'])
+protected.update(repo/r['path'] for r in json.loads((cand/'source-inventory.json').read_text())['acceptedGateHashes'])
+pre={str(p.relative_to(repo)):sha(p) for p in sorted(protected)};write(out/'protected-pre.json',pre)
+checks=[]
+def run(name,argv,cwd=repo):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat(); env={'PATH':str(repo/'work/resume/toolchain-bin')+':'+os.defpath,'LANG':'C.UTF-8','HOME':str(work)}
+ p=subprocess.run(argv,cwd=cwd,env=env,capture_output=True,timeout=110)
+ (out/f'{name}.stdout').write_bytes(p.stdout);(out/f'{name}.stderr').write_bytes(p.stderr)
+ r={'name':name,'argv':argv,'cwd':str(cwd),'startedAt':start,'completedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'stdoutSha256':sha(out/f'{name}.stdout'),'stderrSha256':sha(out/f'{name}.stderr'),'environment':'only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)'};checks.append(r);write(out/'checks.json',checks);print(name,p.returncode,flush=True);return p
+integrity={}
+for tag in ['c1','c2','c3','c4']:
+ d=q/f'task04-native-admission-fixture-{tag}'; frozen=json.loads((d/'runtime-freeze.json').read_text());manifest=json.loads((d/'qa-manifest.json').read_text())
+ for r in frozen['files']:assert sha(d/r['path'])==r['sha256'],r
+ for r in manifest['files']:assert sha(d/r['path'])==r['sha256'],r
+ actual=sorted(str(p.relative_to(d)) for p in d.rglob('*') if p.is_file());assert sorted(r['path'] for r in manifest['files'])==[p for p in actual if p!='qa-manifest.json']
+ integrity[tag]={'freezeSha256':sha(d/'runtime-freeze.json'),'freezeRows':len(frozen['files']),'manifestSha256':sha(d/'qa-manifest.json'),'selfExcludedRows':len(manifest['files']),'actualFiles':len(actual)}
+assert integrity['c4']['freezeSha256']=='be6217eea447b0e9b7d85ab3b0b099c61cd4e85af1235f066293c71092ed31ab'
+assert integrity['c4']['manifestSha256']=='1884c3129dcd7bb69f3f9b4429036feb4e3bbf5ba75c00d0ed35771fd6d99ffd'
+write(out/'integrity.json',integrity)
+transforms=[]
+for src in (cand/'scripts').glob('*.mjs'):
+ s=src.read_text();t=s.replace('work/resume/task04-native-admission-fixture-c4','work/resume/task04-native-admission-c4-review')
+ if src.name=='guard.mjs':t=t.replace("export const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),repo=resolve(root,'../../../..'),fixture=resolve(root,'fixture');",f"export const root={json.dumps(str(cand))},repo={json.dumps(str(repo))},fixture=resolve(root,'fixture');").replace('work/backend-runtime/task04-native-admission-c4','work/resume/task04-native-admission-c4-review/native-unused')
+ dest=scripts/src.name;dest.write_text(t);transforms.append({'source':str(src.relative_to(repo)),'sourceSha256':sha(src),'reviewCopy':str(dest.relative_to(repo)),'reviewSha256':sha(dest),'changed':s!=t})
+write(out/'replay-transforms.json',transforms)
+run('versions',['node','-e',"console.log(JSON.stringify({node:process.version,convex:require('convex/package.json').version,typescript:require('typescript/package.json').version,nodeTypes:require('@types/node/package.json').version}))"])
+run('npm',['npm','--version']);run('npx',['npx','--version'])
+run('original-source-preflight',['node','--input-type=module','-e',f"import {{sourcePreflight}} from {json.dumps((cand/'scripts/guard.mjs').as_uri())};console.log(JSON.stringify({{status:'PASS',rows:sourcePreflight().files.length}}));"])
+run('offline',['node','--experimental-vm-modules','--test',*[str(scripts/n) for n in ['offline-check.mjs','offline-regressions.mjs','offline-public-semantic.mjs','offline-cli-prerequisites.mjs']]])
+run('inventory',['node',str(scripts/'inventory.mjs'),'--verify'])
+run('syntax',['node','--input-type=module','-e',"import{spawnSync}from'node:child_process';import{readdirSync}from'node:fs';const d="+json.dumps(str(cand/'scripts'))+";for(const n of readdirSync(d).filter(n=>n.endsWith('.mjs'))){const r=spawnSync(process.execPath,['--check',d+'/'+n]);if(r.status)throw Error(n);}console.log('PASS '+readdirSync(d).filter(n=>n.endsWith('.mjs')).length+' scripts');"])
+post={str(p.relative_to(repo)):sha(p) for p in sorted(protected)};write(out/'protected-post.json',post);assert pre==post;write(out/'protection-result.json',{'status':'PASS','files':len(pre),'noMutations':pre==post})

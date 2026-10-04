@@ -1,0 +1,126 @@
+[
+  {
+    "name": "versions",
+    "argv": [
+      "node",
+      "-e",
+      "console.log(JSON.stringify({node:process.version,convex:require('convex/package.json').version,typescript:require('typescript/package.json').version,nodeTypes:require('@types/node/package.json').version}))"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:54:08.013338+00:00",
+    "completedAt": "2026-10-04T03:54:08.047586+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "664f46634da39122a64cacbc66bed865f0797ae0a3db670a83a459128f20d84d",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment": "only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)"
+  },
+  {
+    "name": "npm",
+    "argv": [
+      "npm",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:54:08.047834+00:00",
+    "completedAt": "2026-10-04T03:54:08.131414+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment": "only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)"
+  },
+  {
+    "name": "npx",
+    "argv": [
+      "npx",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:54:08.131749+00:00",
+    "completedAt": "2026-10-04T03:54:08.214057+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment": "only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)"
+  },
+  {
+    "name": "original-source-preflight",
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import {sourcePreflight} from \"file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts/guard.mjs\";console.log(JSON.stringify({status:'PASS',rows:sourcePreflight().files.length}));"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:54:08.214428+00:00",
+    "completedAt": "2026-10-04T03:54:08.322054+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "10417fec1b28d6c2cafde0519a6c818e6f0daa4dfbb7ebfe4b6e68b9b6377528",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment": "only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)"
+  },
+  {
+    "name": "offline",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "--test",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-c4-review/scripts/offline-check.mjs",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-c4-review/scripts/offline-regressions.mjs",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-c4-review/scripts/offline-public-semantic.mjs",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-c4-review/scripts/offline-cli-prerequisites.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:54:08.322415+00:00",
+    "completedAt": "2026-10-04T03:54:17.776494+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "34ffea1379c9660f054766f2fa79978e63b4554c139c20b67a21cd4222f3fad7",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment": "only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)"
+  },
+  {
+    "name": "inventory",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-c4-review/scripts/inventory.mjs",
+      "--verify"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:54:17.776869+00:00",
+    "completedAt": "2026-10-04T03:54:18.484880+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment": "only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)"
+  },
+  {
+    "name": "syntax",
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "import{spawnSync}from'node:child_process';import{readdirSync}from'node:fs';const d=\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts\";for(const n of readdirSync(d).filter(n=>n.endsWith('.mjs'))){const r=spawnSync(process.execPath,['--check',d+'/'+n]);if(r.status)throw Error(n);}console.log('PASS '+readdirSync(d).filter(n=>n.endsWith('.mjs')).length+' scripts');"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:54:18.485414+00:00",
+    "completedAt": "2026-10-04T03:54:19.319878+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "67cbf697bcdeff0e6d2cace97162367b0d82895c58bbe76fa3017ebf82f495d6",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment": "only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)"
+  },
+  {
+    "name": "adversarial",
+    "argv": [
+      "node",
+      "--test",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-c4-review/adversarial.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:54:42.809863+00:00",
+    "completedAt": "2026-10-04T03:54:48.252490+00:00",
+    "exitCode": 0,
+    "stdoutSha256": "0ba4a4f9e779eaf5cc5e58b2bae95f523d78fe1d6256521061031ce89c5c194c",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment": "only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)"
+  }
+]

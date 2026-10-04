@@ -165,3 +165,7 @@ Reviewed Gateway helper product and preserved qualification evidence pushed37f14
 ## Task04 C3 native deployment failure preserved and target retired
 
 Preparation PASS4.6 was followed by actual official deployment failure: fixture manifest omitted convex dependency. No functions published/native tickets/owned rows/storage created. The one CLI group is terminal; owned project3138926 was retired with five calls/delete200/absence404. Target-only credentials were removed afterward; original failure, source-bound inputs and all236 freeze rows are preserved. C4 QA-only manifest repair and fresh review require a new execution identity. B native/whole04/goal remain incomplete. See task04-native-admission-c3-execution/report.md.
+
+## Persistent inference authorization reconciled
+
+Original goal and contemporaneous execution records bind the user response to the live target/budget question: "create a fresh instance, no cap". Fresh disposable targets and inference without a spend cap are already authorized. Recent preparation summaries saying no paid budget approval were too narrow; original frozen artifacts remain preserved, with this current correction. Use finite engineering bounds and independent technical/target gates, without requesting the same authorization again. No new paid call has run. See task04-authorization-reconciliation.json.
