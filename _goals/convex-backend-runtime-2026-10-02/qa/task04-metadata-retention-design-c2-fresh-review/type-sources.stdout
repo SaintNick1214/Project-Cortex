@@ -1,0 +1,123 @@
+FILE node_modules/@ai-sdk/provider/src/shared/v4/shared-v4-provider-metadata.ts 
+ import type { JSONObject } from '../../json-value/json-value';
+
+/**
+ * Additional provider-specific metadata.
+ * Metadata are additional outputs from the provider.
+ * They are passed through to the provider from the AI SDK
+ * and enable provider-specific functionality
+ * that can be fully encapsulated in the provider.
+ *
+ * This enables us to quickly ship provider-specific functionality
+ * without affecting the core AI SDK.
+ *
+ * The outer record is keyed by the provider name, and the inner
+ * record is keyed by the provider-specific metadata key.
+ *
+ * ```ts
+ * {
+ *   "anthropic": {
+ *     "cacheControl": { "type": "ephemeral" }
+ *   }
+ * }
+ * ```
+ */
+export type SharedV4ProviderMetadata = Record<string, JSONObject>;
+
+FILE node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-generate-result.ts 
+ import type { SharedV4Headers, SharedV4Warning } from '../../shared';
+import type { SharedV4ProviderMetadata } from '../../shared/v4/shared-v4-provider-metadata';
+import type { LanguageModelV4Content } from './language-model-v4-content';
+import type { LanguageModelV4FinishReason } from './language-model-v4-finish-reason';
+import type { LanguageModelV4ResponseMetadata } from './language-model-v4-response-metadata';
+import type { LanguageModelV4Usage } from './language-model-v4-usage';
+
+/**
+ * The result of a language model doGenerate call.
+ */
+export type LanguageModelV4GenerateResult = {
+  /**
+   * Ordered content that the model has generated.
+   */
+  content: Array<LanguageModelV4Content>;
+
+  /**
+   * The finish reason.
+   */
+  finishReason: LanguageModelV4FinishReason;
+
+  /**
+   * The usage information.
+   */
+  usage: LanguageModelV4Usage;
+
+  /**
+   * Additional provider-specific metadata. They are passed through
+   * from the provider to the AI SDK and enable provider-specific
+   * results that can be fully encapsulated in the provider.
+   */
+  providerMetadata?: SharedV4ProviderMetadata;
+
+  /**
+   * Optional request information for telemetry and debugging purposes.
+   */
+  request?: {
+    /**
+     * Request HTTP body that was sent to the provider API.
+     */
+    body?: unknown;
+  };
+
+  /**
+   * Optional response information for telemetry and debugging purposes.
+   */
+  response?: LanguageModelV4ResponseMetadata & {
+    /**
+     * Response headers.
+     */
+    headers?: SharedV4Headers;
+
+    /**
+     * Response HTTP body.
+     */
+    body?: unknown;
+  };
+
+  /**
+   * Warnings for the call, e.g. unsupported settings.
+   */
+  warnings: Array<SharedV4Warning>;
+};
+
+FINISH nished:
+  | {
+      type: 'finish';
+      usage: LanguageModelV4Usage;
+      finishReason: LanguageModelV4FinishReason;
+      providerMetadata?: SharedV4ProviderMetadata;
+    }
+
+  // raw chunks if enabled
+  | {
+      type: 'raw';
+      rawValue: unknown;
+    }
+
+  // error parts are streamed, allowing for multiple errors
+  | {
+      type: 'error';
+      error: unknown;
+    };
+
+EMBED    warnings,
+      embeddings: response.data.map(item => item.embedding),
+      usage: response.usage
+        ? { tokens: response.usage.prompt_tokens }
+        : undefined,
+      providerMetadata: response.providerMetadata,
+      response: { headers: responseHeaders, body: rawValue },
+    };
+  }
+}
+
+// minimal version of the schema, focussed on what is neede

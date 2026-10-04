@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path; p=Path(\"node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts\"); print(\"\\n\".join(f\"{i+1}: {s}\" for i,s in enumerate(p.read_text().splitlines()) if 389<=i<=421 or 557<=i<=610 or 694<=i<=726)); print(Path(\"node_modules/@ai-sdk/provider/src/shared/v4/shared-v4-provider-metadata.ts\").read_text()); p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c4/contracts/observer-proofs.md\"); print(\"\\n\".join(p.read_text().splitlines()[70:78])); print(Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/canonical.ts\").read_text())"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T13:46:39.565799+00:00",
+  "endUtc": "2026-10-04T13:46:39.588371+00:00",
+  "exit": 0
+}

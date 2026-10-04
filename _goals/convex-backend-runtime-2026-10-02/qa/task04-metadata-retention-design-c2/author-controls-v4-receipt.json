@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('work/resume/task04-metadata-retention-design-c2/resource-controls-v3.mjs'); s=p.read_text()\ns=s.replace(\"const hash=x=>\", \"const {canonical:frozenCanonical}=await import('../../../_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/canonical.ts');\\nconst hash=x=>\")\ns=s.replace('function resource(x){','function localResource(x){')\nneedle='function validateWitnesses(x)'\nwrapper=\"\"\"let frozenComparisons=0;\nfunction resource(x){let local,error,official,officialError;try{local=localResource(x)}catch(e){error=e}try{official=frozenCanonical(x,180000)}catch(e){officialError=e}assert.equal(Boolean(error),Boolean(officialError),'local/frozen acceptance mismatch');frozenComparisons++;if(error)throw error;assert.equal(local.text,official,'exact frozen canonical bytes');return local}\n\"\"\"\nassert needle in s;s=s.replace(needle,wrapper+needle)\ns=s.replace('controls:n,getters,kind:','controls:n,getters,frozenComparisons,kind:')\nPath('work/resume/task04-metadata-retention-design-c2/resource-controls-v4.mjs').write_text(s)\n"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:09:05.002081+00:00",
+  "endUtc": "2026-10-04T14:09:05.024795+00:00",
+  "exit": 0
+}

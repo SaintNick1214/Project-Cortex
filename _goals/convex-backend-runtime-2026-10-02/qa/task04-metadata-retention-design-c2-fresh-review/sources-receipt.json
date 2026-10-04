@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "import pathlib; ranges={\"node_modules/@convex-dev/ai-sdk-provider/src/index.ts\":[(45,100)],\"node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts\":[(390,430),(560,585),(695,730)],\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/canonical.ts\":[(1,120)],\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/observer.ts\":[(1,140)],\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/proofs.ts\":[(1,150)],\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/lifecycle.ts\":[(1,150)]};[(print(\"FILE\",f),[print(str(i)+\":\"+s) for lo,hi in rr for i,s in enumerate(pathlib.Path(f).read_text().splitlines(),1) if lo<=i<=hi]) for f,rr in ranges.items()]"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:12:42.277131+00:00",
+  "endUtc": "2026-10-04T14:12:42.313217+00:00",
+  "exit": 0
+}

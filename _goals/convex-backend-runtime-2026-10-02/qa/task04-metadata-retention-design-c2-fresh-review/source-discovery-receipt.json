@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "import pathlib,json;r=pathlib.Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-design-c1\");[(print(p.name,list(json.loads(p.read_text()).get(\"files\",{})))) for p in r.glob(\"*-pre.json\")]; print(\"related contracts\",*[str(p) for p in pathlib.Path(\"_goals/convex-backend-runtime-2026-10-02\").rglob(\"*observer*contract*\")],sep=\"\\n\")"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:13:03.340013+00:00",
+  "endUtc": "2026-10-04T14:13:04.950720+00:00",
+  "exit": 0
+}

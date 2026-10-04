@@ -1,0 +1,61 @@
+# Task Judgment: Metadata retention design C1
+
+## Verdict: NEEDS FIXES — DESIGN ONLY
+
+The proposed original-number retention and raw/native correlation are supported by the pinned provider/adapter source. One deterministic resource/capture boundary needs clarification before implementation. No positive actual qualification was performed: ACTUAL_PROOFS and actual money domain remain EMPTY; UNKNOWN/fullK/STOP and embed UNKNOWN remain required.
+
+## Evidence review
+
+Applied AGENTS.md, CODEX-RUNTIME, PROJECT-PROFILE, pessimistic-judge and judge-task to a bounded independent design review. Read original Task04, observer/proof contract, money-domain clarification, frozen C2 observer/canonical/proofs/runner, exact C1 proposal, installed provider/adapter/v4 type sources and accepted C3 public-source review. Did not execute supplied helper scripts or modify frozen artifacts.
+
+Independent verification found exact recursive closure: subject qa-seal SHA256 740e47f2a34bacd634b732da7840139bd085d924caaa718def3bea1e77db1a6e, 100 rows; proposal SHA256 0a195bcf19b1f3e7c0d75001d5f63ee5559ecfb42ecb25af767e7ea6ef4ab8e8; scratch-seal SHA256 fa8f39b222a68aff35a2381681b1eaffd714a5346a905473ddb94b8e48264a39, four rows. Every listed size/hash matches; no unlisted file except each exact self seal. Six source-map pins match installed current bytes and frozen source preimages. Accepted public review hash f113623b7ac61dad661f1f39bca02435848608dbdb37de6aeddf221cc33ed4f3 matches its C1 preimage.
+
+## Requirements review
+
+| Contract | Assessment and evidence |
+|---|---|
+| Original numeric mapper/type feasibility | Supported. provider index.ts:56–60 copies the same cost number and aliases cost_details separately. Chat mapper:395–424 supplies rawResponse to extractor and retains it in response.body; :566–578 emits raw before extractor processing; :701–724 supplies finish metadata. V4 metadata is generic JSONObject, requiring explicit runtime checks. |
+| Own-data and scalar snapshot | Appropriate. proposal:23–27 excludes getters, unsupported prototypes, symbols and ancestor aliases; snapshots the number synchronously and freezes new projection. Unused costDetails sharing must be ignored to avoid rejecting the mapper's legitimate alias. Owned DUMMY assertions confirm getter count zero, unchanged scalar after mutation and ignored alias. Arbitrary Proxy traps are expressly outside accepted plain-data provenance. |
+| Exact monetary arithmetic | Preserved. proposal:55 agrees with frozen validate.ts:19–20 upper-neighbor rational outward microceil: numeric .000001 converts to two microUSD. No rounded nano field replaces the original number; zero does not establish complete money. Large unsupported conversion still requires UNKNOWN, never clipping. |
+| Raw/native/context correlation | Explicit. proposal:31–39 requires raw own finite cost, Object.is agreement, same raw ID/model, unchanged content/token/finish predicates, stable stream duplicates, no postfinish usage and no missing-final-cost reuse. Dispatch/source remain closed Context. Stable drift stays private and unsupported for delivery. |
+| Categories, attempts, finality and embed | Correctly unqualified. No inference category, currency raw-field fabrication, absent zero, all-attempt completeness, ledger finality or embedding mapping is invented. New extraction identifier does not match current raw-usage-cost-v1 money proof and cannot enter EMPTY resolver. |
+| Parser/compiler/version | Feasible after explicit implementation changes. Frozen observer.ts:7/:20 only accepts version1 and exact old data keys; proposed version2 requires new closed method/version union, exact key validators, reducer, runner prefix constructors and stage/capture consumers. A small owned TypeScript 6.0.3 strict noEmit probe using installed V4 types and a version/method union passed. This proves language/type feasibility only, not any implementation or loaded native closure. |
+| Source, stage, purge and history | Appropriate design gates. proposal:45–49 requires new installation pins across observer/capture/issuer/verifier, new digest, unchanged raw prefix event identity and firsteligible semantics, immutable historicalV1, no old key/manifest reuse, and purged backing denial. Full stage outcomes remain subsequent implementation gates. |
+| Limits and capture replay | Needs clarification at proposal:25/:45/:47/:66. Discarded original parent descriptor work is counted in a combined observation ledger, but the exact retained projection and transcript lack information to reproduce that portion. See issue below. |
+| Existing operational envelope | Preserved as requirements: 512 events, 180000 bytes, 4096 nodes/depth16, raw8, finish1, one reader, fourteen request order/hashes, profile1536/U/M/K314310 and original 1000ms stage phase. No paid/native/network/dependency work or second observer is introduced. |
+
+## Issues found
+
+### Important — blocks design PASS
+
+**Define the replay boundary and combined resource accounting exactly.** proposal:25 charges immediate own descriptor keys and cumulative selector visits of original result/finish, providerMetadata and convexGateway to the same ledger as the canonical transcript; :45 asks capture to rerun selector projection validation from the retained transcript. Yet :18/:21/:41 retain only {state,cost,reason} plus the existing selected fields. Unselected parent keys, descriptor inspection outcomes and their visit/byte charges are discarded. They cannot be reconstructed by that parser.
+
+Owned adversaries.mjs demonstrates two ordinary inputs differing only by an unused metadata key. Both retain identical present-number projections, while original parent key visits are three versus four and key-byte work differs. At a combined ledger boundary with 4093 other charged visits, the first fits and the second exceeds 4096. The retained projection alone cannot reproduce which original work occurred. This is an information-loss/design-boundary result, not a production exploit or actual source qualification.
+
+Specify deterministic charge units, root/depth treatment, string/key bytes, repeated prefix validation accounting and whether capture revalidates only the detached reduced transcript while original descriptor inspection is an initial trusted-source runtime check. If capture truly must reproduce the original combined ledger, define a bounded, source-bound retained representation and exact replay rules; a caller-supplied count/assertion is insufficient. Preserve the existing numerical limits, avoid a second allowance, and include exact-boundary and capture adversaries. Explicitly distinguish revalidation of the retained projection's shape/number/raw correlation from re-execution of original parent ownership/prototype/accessor inspection, which cannot be done after those parents have been discarded.
+
+This gap is localized and resolvable without changing original-number semantics or accepting money. I have not treated missing actual billing proofs as a defect in this partial design.
+
+### Critical
+
+None established within this bounded DESIGN scope. Positive actual billing, serving, lifetime or native-compatibility assertions would remain unsupported.
+
+### Minor
+
+The review bootstrap commands before creation of the recorder lack persisted raw command/UTC/source brackets; no timestamps are invented for them. A guessed stage.ts path was absent during stage-parser receipt (stderr retained); actual stage capability code is runner.ts:56 onward. The bash read command continued and returned zero, so its zero exit does not erase that missing-path failure. Tool displays of long reads truncated, but full captured stdout/stderr remain in owned receipts. No test result was inferred from reading code.
+
+## Dimension scores
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Requirement fulfillment for bounded design | 4/5 | Supported retention/correlation/scope; replay accounting boundary unresolved |
+| Design/type quality | 4/5 | Closed projection, exact source ID and discriminated version feasibility |
+| Evidence/adversary quality | 4/5 | Exact recursive pins; meaningful owned DUMMY outcomes; explicit bootstrap limits |
+| Pattern adherence | 5/5 | Historical subject untouched, no authority/proof/category shortcuts |
+| Design completeness | 3/5 | Original discarded selector resource work versus capture replay needs explicit contract |
+
+**Average: 4.0/5.** Implementation test/build/native dimensions are not applicable; the miniature compiler probe does not count as a fixture build or production check.
+
+## Recommendation
+
+Resolve the resource/replay boundary in a new reviewable design revision and obtain fresh independent DESIGN judgment before implementation. Then implement only a new closed source installation and execute the stated projection/correlation/capture/stage/purge outcome gates. Preserve EMPTY resolver and all actual qualification blockers. Numeric review-cycle waiver changes cycle count only; it does not waive acceptance or permit actual positive admission.

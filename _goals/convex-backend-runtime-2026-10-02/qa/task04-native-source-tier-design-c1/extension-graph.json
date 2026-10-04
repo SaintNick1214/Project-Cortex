@@ -1,0 +1,1024 @@
+{
+  "base": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4",
+  "groups": {
+    "capsule": {
+      "rows": 210,
+      "bytes": 4219895
+    },
+    "external": {
+      "rows": 0,
+      "bytes": 0
+    },
+    "accepted": {
+      "rows": 12,
+      "bytes": 465706
+    },
+    "product": {
+      "rows": 131,
+      "bytes": 2243995
+    },
+    "dependencies": {
+      "rows": 0,
+      "bytes": 0
+    },
+    "rpcRunner": {
+      "rows": 98,
+      "bytes": 9845467
+    },
+    "rpcTools": {
+      "rows": 4,
+      "bytes": 20793
+    },
+    "boundaryRunner": {
+      "rows": 18,
+      "bytes": 125546
+    },
+    "boundaryTools": {
+      "rows": 14,
+      "bytes": 12368002
+    }
+  },
+  "rpcUniqueFiles": 420,
+  "rpcUniqueBytes": 16447781,
+  "fullUniqueFiles": 435,
+  "fullUniqueBytes": 28826303,
+  "runtimeEntries": [
+    "driver.mjs",
+    "qualify-owned.mjs",
+    "fault-child.mjs",
+    "fault-driver.mjs",
+    "fault-ledger.mjs",
+    "fault-setup.mjs",
+    "fault-recovery.mjs",
+    "cleanup.mjs",
+    "reconcile.mjs",
+    "current-inputs.mjs",
+    "parent-inputs.mjs",
+    "task04-native-c8-parent-inputs.mjs",
+    "publication.mjs",
+    "provision.mjs",
+    "retire.mjs",
+    "deploy.mjs"
+  ],
+  "dispatchEntries": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualify-owned.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-child.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-driver.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-ledger.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-setup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-recovery.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cleanup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/reconcile.mjs"
+  ],
+  "dispatchGraph": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/bounded-response.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cases.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cleanup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-child.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-driver.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-ledger.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-recovery.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-setup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/ownership.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/peer.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-terminal.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-artifacts.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualifier-diagnostics.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualify-owned.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/reconcile.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs",
+    "node_modules/convex/dist/esm/browser/http_client.js",
+    "node_modules/convex/dist/esm/browser/index-node.js",
+    "node_modules/convex/dist/esm/browser/logging.js",
+    "node_modules/convex/dist/esm/browser/query_options.js",
+    "node_modules/convex/dist/esm/browser/simple_client-node.js",
+    "node_modules/convex/dist/esm/browser/simple_client.js",
+    "node_modules/convex/dist/esm/browser/sync/authentication_manager.js",
+    "node_modules/convex/dist/esm/browser/sync/client.js",
+    "node_modules/convex/dist/esm/browser/sync/local_state.js",
+    "node_modules/convex/dist/esm/browser/sync/metrics.js",
+    "node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js",
+    "node_modules/convex/dist/esm/browser/sync/paginated_query_client.js",
+    "node_modules/convex/dist/esm/browser/sync/pagination.js",
+    "node_modules/convex/dist/esm/browser/sync/protocol.js",
+    "node_modules/convex/dist/esm/browser/sync/remote_query_set.js",
+    "node_modules/convex/dist/esm/browser/sync/request_manager.js",
+    "node_modules/convex/dist/esm/browser/sync/session.js",
+    "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+    "node_modules/convex/dist/esm/browser/sync/web_socket_manager.js",
+    "node_modules/convex/dist/esm/common/index.js",
+    "node_modules/convex/dist/esm/index.js",
+    "node_modules/convex/dist/esm/server/api.js",
+    "node_modules/convex/dist/esm/server/audit_logging.js",
+    "node_modules/convex/dist/esm/server/components/index.js",
+    "node_modules/convex/dist/esm/server/components/paths.js",
+    "node_modules/convex/dist/esm/server/cron.js",
+    "node_modules/convex/dist/esm/server/database.js",
+    "node_modules/convex/dist/esm/server/filter_builder.js",
+    "node_modules/convex/dist/esm/server/functionName.js",
+    "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+    "node_modules/convex/dist/esm/server/impl/authentication_impl.js",
+    "node_modules/convex/dist/esm/server/impl/database_impl.js",
+    "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/meta_impl.js",
+    "node_modules/convex/dist/esm/server/impl/query_impl.js",
+    "node_modules/convex/dist/esm/server/impl/registration_impl.js",
+    "node_modules/convex/dist/esm/server/impl/scheduler_impl.js",
+    "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/storage_impl.js",
+    "node_modules/convex/dist/esm/server/impl/syscall.js",
+    "node_modules/convex/dist/esm/server/impl/validate.js",
+    "node_modules/convex/dist/esm/server/impl/vector_search_impl.js",
+    "node_modules/convex/dist/esm/server/index.js",
+    "node_modules/convex/dist/esm/server/index_range_builder.js",
+    "node_modules/convex/dist/esm/server/log.js",
+    "node_modules/convex/dist/esm/server/logVars.js",
+    "node_modules/convex/dist/esm/server/pagination.js",
+    "node_modules/convex/dist/esm/server/router.js",
+    "node_modules/convex/dist/esm/server/schema.js",
+    "node_modules/convex/dist/esm/server/search_filter_builder.js",
+    "node_modules/convex/dist/esm/server/storage.js",
+    "node_modules/convex/dist/esm/server/vector_search.js",
+    "node_modules/convex/dist/esm/values/base64.js",
+    "node_modules/convex/dist/esm/values/compare.js",
+    "node_modules/convex/dist/esm/values/compare_utf8.js",
+    "node_modules/convex/dist/esm/values/errors.js",
+    "node_modules/convex/dist/esm/values/index.js",
+    "node_modules/convex/dist/esm/values/size.js",
+    "node_modules/convex/dist/esm/values/validator.js",
+    "node_modules/convex/dist/esm/values/validators.js",
+    "node_modules/convex/dist/esm/values/value.js",
+    "node_modules/convex/dist/esm/vendor/jwt-decode/index.js",
+    "node_modules/convex/dist/esm/vendor/long.js"
+  ],
+  "fullGraph": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/arguments.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/bounded-response.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cases.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cleanup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/current-inputs.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/deploy.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-child.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-driver.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-ledger.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-recovery.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-setup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/inventory.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/key-check.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-contract.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-transport.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-check.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-cli-prerequisites.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-diagnostics.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-error-boundary.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-exclusive-boundary.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-extension.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-history-supplement.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-installation.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-public-semantic.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-publication-artifacts.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-regressions.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-runtime-freeze.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-stage-path.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-window.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/ownership.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/parent-inputs.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/peer.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-terminal.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/provision.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-artifacts.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualifier-diagnostics.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualify-owned.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/reconcile.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/retire.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/task04-native-c8-parent-inputs.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/task04-native-current-inputs-c6.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts/guard.mjs",
+    "node_modules/convex/dist/esm/browser/http_client.js",
+    "node_modules/convex/dist/esm/browser/index-node.js",
+    "node_modules/convex/dist/esm/browser/logging.js",
+    "node_modules/convex/dist/esm/browser/query_options.js",
+    "node_modules/convex/dist/esm/browser/simple_client-node.js",
+    "node_modules/convex/dist/esm/browser/simple_client.js",
+    "node_modules/convex/dist/esm/browser/sync/authentication_manager.js",
+    "node_modules/convex/dist/esm/browser/sync/client.js",
+    "node_modules/convex/dist/esm/browser/sync/local_state.js",
+    "node_modules/convex/dist/esm/browser/sync/metrics.js",
+    "node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js",
+    "node_modules/convex/dist/esm/browser/sync/paginated_query_client.js",
+    "node_modules/convex/dist/esm/browser/sync/pagination.js",
+    "node_modules/convex/dist/esm/browser/sync/protocol.js",
+    "node_modules/convex/dist/esm/browser/sync/remote_query_set.js",
+    "node_modules/convex/dist/esm/browser/sync/request_manager.js",
+    "node_modules/convex/dist/esm/browser/sync/session.js",
+    "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+    "node_modules/convex/dist/esm/browser/sync/web_socket_manager.js",
+    "node_modules/convex/dist/esm/common/index.js",
+    "node_modules/convex/dist/esm/index.js",
+    "node_modules/convex/dist/esm/server/api.js",
+    "node_modules/convex/dist/esm/server/audit_logging.js",
+    "node_modules/convex/dist/esm/server/components/index.js",
+    "node_modules/convex/dist/esm/server/components/paths.js",
+    "node_modules/convex/dist/esm/server/cron.js",
+    "node_modules/convex/dist/esm/server/database.js",
+    "node_modules/convex/dist/esm/server/filter_builder.js",
+    "node_modules/convex/dist/esm/server/functionName.js",
+    "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+    "node_modules/convex/dist/esm/server/impl/authentication_impl.js",
+    "node_modules/convex/dist/esm/server/impl/database_impl.js",
+    "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/meta_impl.js",
+    "node_modules/convex/dist/esm/server/impl/query_impl.js",
+    "node_modules/convex/dist/esm/server/impl/registration_impl.js",
+    "node_modules/convex/dist/esm/server/impl/scheduler_impl.js",
+    "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/storage_impl.js",
+    "node_modules/convex/dist/esm/server/impl/syscall.js",
+    "node_modules/convex/dist/esm/server/impl/validate.js",
+    "node_modules/convex/dist/esm/server/impl/vector_search_impl.js",
+    "node_modules/convex/dist/esm/server/index.js",
+    "node_modules/convex/dist/esm/server/index_range_builder.js",
+    "node_modules/convex/dist/esm/server/log.js",
+    "node_modules/convex/dist/esm/server/logVars.js",
+    "node_modules/convex/dist/esm/server/pagination.js",
+    "node_modules/convex/dist/esm/server/router.js",
+    "node_modules/convex/dist/esm/server/schema.js",
+    "node_modules/convex/dist/esm/server/search_filter_builder.js",
+    "node_modules/convex/dist/esm/server/storage.js",
+    "node_modules/convex/dist/esm/server/vector_search.js",
+    "node_modules/convex/dist/esm/values/base64.js",
+    "node_modules/convex/dist/esm/values/compare.js",
+    "node_modules/convex/dist/esm/values/compare_utf8.js",
+    "node_modules/convex/dist/esm/values/errors.js",
+    "node_modules/convex/dist/esm/values/index.js",
+    "node_modules/convex/dist/esm/values/size.js",
+    "node_modules/convex/dist/esm/values/validator.js",
+    "node_modules/convex/dist/esm/values/validators.js",
+    "node_modules/convex/dist/esm/values/value.js",
+    "node_modules/convex/dist/esm/vendor/jwt-decode/index.js",
+    "node_modules/convex/dist/esm/vendor/long.js",
+    "node_modules/esbuild/lib/main.js",
+    "node_modules/typescript/lib/typescript.js"
+  ],
+  "runtimeUnionGraph": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/arguments.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/bounded-response.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cases.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cleanup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/current-inputs.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/deploy.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-child.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-driver.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-ledger.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-recovery.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-setup.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-contract.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-transport.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/ownership.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/parent-inputs.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/peer.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-terminal.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/provision.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-artifacts.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualifier-diagnostics.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualify-owned.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/reconcile.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/retire.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/task04-native-c8-parent-inputs.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs",
+    "node_modules/convex/dist/esm/browser/http_client.js",
+    "node_modules/convex/dist/esm/browser/index-node.js",
+    "node_modules/convex/dist/esm/browser/logging.js",
+    "node_modules/convex/dist/esm/browser/query_options.js",
+    "node_modules/convex/dist/esm/browser/simple_client-node.js",
+    "node_modules/convex/dist/esm/browser/simple_client.js",
+    "node_modules/convex/dist/esm/browser/sync/authentication_manager.js",
+    "node_modules/convex/dist/esm/browser/sync/client.js",
+    "node_modules/convex/dist/esm/browser/sync/local_state.js",
+    "node_modules/convex/dist/esm/browser/sync/metrics.js",
+    "node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js",
+    "node_modules/convex/dist/esm/browser/sync/paginated_query_client.js",
+    "node_modules/convex/dist/esm/browser/sync/pagination.js",
+    "node_modules/convex/dist/esm/browser/sync/protocol.js",
+    "node_modules/convex/dist/esm/browser/sync/remote_query_set.js",
+    "node_modules/convex/dist/esm/browser/sync/request_manager.js",
+    "node_modules/convex/dist/esm/browser/sync/session.js",
+    "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+    "node_modules/convex/dist/esm/browser/sync/web_socket_manager.js",
+    "node_modules/convex/dist/esm/common/index.js",
+    "node_modules/convex/dist/esm/index.js",
+    "node_modules/convex/dist/esm/server/api.js",
+    "node_modules/convex/dist/esm/server/audit_logging.js",
+    "node_modules/convex/dist/esm/server/components/index.js",
+    "node_modules/convex/dist/esm/server/components/paths.js",
+    "node_modules/convex/dist/esm/server/cron.js",
+    "node_modules/convex/dist/esm/server/database.js",
+    "node_modules/convex/dist/esm/server/filter_builder.js",
+    "node_modules/convex/dist/esm/server/functionName.js",
+    "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+    "node_modules/convex/dist/esm/server/impl/authentication_impl.js",
+    "node_modules/convex/dist/esm/server/impl/database_impl.js",
+    "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/meta_impl.js",
+    "node_modules/convex/dist/esm/server/impl/query_impl.js",
+    "node_modules/convex/dist/esm/server/impl/registration_impl.js",
+    "node_modules/convex/dist/esm/server/impl/scheduler_impl.js",
+    "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js",
+    "node_modules/convex/dist/esm/server/impl/storage_impl.js",
+    "node_modules/convex/dist/esm/server/impl/syscall.js",
+    "node_modules/convex/dist/esm/server/impl/validate.js",
+    "node_modules/convex/dist/esm/server/impl/vector_search_impl.js",
+    "node_modules/convex/dist/esm/server/index.js",
+    "node_modules/convex/dist/esm/server/index_range_builder.js",
+    "node_modules/convex/dist/esm/server/log.js",
+    "node_modules/convex/dist/esm/server/logVars.js",
+    "node_modules/convex/dist/esm/server/pagination.js",
+    "node_modules/convex/dist/esm/server/router.js",
+    "node_modules/convex/dist/esm/server/schema.js",
+    "node_modules/convex/dist/esm/server/search_filter_builder.js",
+    "node_modules/convex/dist/esm/server/storage.js",
+    "node_modules/convex/dist/esm/server/vector_search.js",
+    "node_modules/convex/dist/esm/values/base64.js",
+    "node_modules/convex/dist/esm/values/compare.js",
+    "node_modules/convex/dist/esm/values/compare_utf8.js",
+    "node_modules/convex/dist/esm/values/errors.js",
+    "node_modules/convex/dist/esm/values/index.js",
+    "node_modules/convex/dist/esm/values/size.js",
+    "node_modules/convex/dist/esm/values/validator.js",
+    "node_modules/convex/dist/esm/values/validators.js",
+    "node_modules/convex/dist/esm/values/value.js",
+    "node_modules/convex/dist/esm/vendor/jwt-decode/index.js",
+    "node_modules/convex/dist/esm/vendor/long.js",
+    "node_modules/esbuild/lib/main.js",
+    "node_modules/typescript/lib/typescript.js"
+  ],
+  "edges": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs": [],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/arguments.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/bounded-response.mjs": [],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/peer.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/bounded-response.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs": [],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cases.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/peer.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs"
+    ],
+    "node_modules/convex/dist/esm/values/base64.js": [],
+    "node_modules/convex/dist/esm/common/index.js": [],
+    "node_modules/convex/dist/esm/values/value.js": [
+      "node_modules/convex/dist/esm/values/base64.js",
+      "node_modules/convex/dist/esm/common/index.js"
+    ],
+    "node_modules/convex/dist/esm/values/validators.js": [
+      "node_modules/convex/dist/esm/values/value.js"
+    ],
+    "node_modules/convex/dist/esm/values/validator.js": [
+      "node_modules/convex/dist/esm/values/validators.js"
+    ],
+    "node_modules/convex/dist/esm/values/errors.js": [
+      "node_modules/convex/dist/esm/values/value.js"
+    ],
+    "node_modules/convex/dist/esm/values/compare_utf8.js": [],
+    "node_modules/convex/dist/esm/values/compare.js": [
+      "node_modules/convex/dist/esm/values/value.js",
+      "node_modules/convex/dist/esm/values/compare_utf8.js"
+    ],
+    "node_modules/convex/dist/esm/values/size.js": [
+      "node_modules/convex/dist/esm/values/value.js",
+      "node_modules/convex/dist/esm/common/index.js"
+    ],
+    "node_modules/convex/dist/esm/values/index.js": [
+      "node_modules/convex/dist/esm/values/value.js",
+      "node_modules/convex/dist/esm/values/validator.js",
+      "node_modules/convex/dist/esm/values/base64.js",
+      "node_modules/convex/dist/esm/values/errors.js",
+      "node_modules/convex/dist/esm/values/compare.js",
+      "node_modules/convex/dist/esm/values/size.js"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-artifacts.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/bounded-response.mjs",
+      "node_modules/convex/dist/esm/values/index.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "node_modules/convex/dist/esm/index.js": [],
+    "node_modules/convex/dist/esm/browser/logging.js": [],
+    "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js": [
+      "node_modules/convex/dist/esm/values/index.js"
+    ],
+    "node_modules/convex/dist/esm/browser/sync/local_state.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js"
+    ],
+    "node_modules/convex/dist/esm/browser/sync/request_manager.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/browser/logging.js"
+    ],
+    "node_modules/convex/dist/esm/server/functionName.js": [],
+    "node_modules/convex/dist/esm/server/components/paths.js": [
+      "node_modules/convex/dist/esm/server/functionName.js"
+    ],
+    "node_modules/convex/dist/esm/server/api.js": [
+      "node_modules/convex/dist/esm/server/functionName.js",
+      "node_modules/convex/dist/esm/server/components/paths.js"
+    ],
+    "node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js": [
+      "node_modules/convex/dist/esm/server/api.js",
+      "node_modules/convex/dist/esm/common/index.js",
+      "node_modules/convex/dist/esm/browser/logging.js",
+      "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+      "node_modules/convex/dist/esm/values/errors.js"
+    ],
+    "node_modules/convex/dist/esm/vendor/long.js": [],
+    "node_modules/convex/dist/esm/browser/sync/remote_query_set.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/vendor/long.js",
+      "node_modules/convex/dist/esm/browser/logging.js"
+    ],
+    "node_modules/convex/dist/esm/browser/sync/protocol.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/vendor/long.js"
+    ],
+    "node_modules/convex/dist/esm/browser/sync/web_socket_manager.js": [
+      "node_modules/convex/dist/esm/browser/sync/protocol.js"
+    ],
+    "node_modules/convex/dist/esm/browser/sync/session.js": [],
+    "node_modules/convex/dist/esm/vendor/jwt-decode/index.js": [],
+    "node_modules/convex/dist/esm/browser/sync/authentication_manager.js": [
+      "node_modules/convex/dist/esm/vendor/jwt-decode/index.js"
+    ],
+    "node_modules/convex/dist/esm/browser/sync/metrics.js": [],
+    "node_modules/convex/dist/esm/browser/sync/client.js": [
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/browser/logging.js",
+      "node_modules/convex/dist/esm/browser/sync/local_state.js",
+      "node_modules/convex/dist/esm/browser/sync/request_manager.js",
+      "node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js",
+      "node_modules/convex/dist/esm/browser/sync/remote_query_set.js",
+      "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+      "node_modules/convex/dist/esm/browser/sync/web_socket_manager.js",
+      "node_modules/convex/dist/esm/browser/sync/session.js",
+      "node_modules/convex/dist/esm/browser/sync/authentication_manager.js",
+      "node_modules/convex/dist/esm/browser/sync/metrics.js",
+      "node_modules/convex/dist/esm/common/index.js",
+      "node_modules/convex/dist/esm/values/errors.js",
+      "node_modules/convex/dist/esm/vendor/jwt-decode/index.js"
+    ],
+    "node_modules/convex/dist/esm/browser/sync/pagination.js": [],
+    "node_modules/convex/dist/esm/browser/sync/paginated_query_client.js": [
+      "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js",
+      "node_modules/convex/dist/esm/browser/sync/pagination.js",
+      "node_modules/convex/dist/esm/vendor/long.js"
+    ],
+    "node_modules/convex/dist/esm/browser/simple_client.js": [
+      "node_modules/convex/dist/esm/common/index.js",
+      "node_modules/convex/dist/esm/server/api.js",
+      "node_modules/convex/dist/esm/browser/sync/client.js",
+      "node_modules/convex/dist/esm/browser/sync/paginated_query_client.js",
+      "node_modules/convex/dist/esm/browser/sync/udf_path_utils.js"
+    ],
+    "node_modules/convex/dist/esm/browser/simple_client-node.js": [
+      "node_modules/convex/dist/esm/browser/simple_client.js"
+    ],
+    "node_modules/convex/dist/esm/browser/http_client.js": [
+      "node_modules/convex/dist/esm/server/api.js",
+      "node_modules/convex/dist/esm/common/index.js",
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/browser/logging.js"
+    ],
+    "node_modules/convex/dist/esm/browser/query_options.js": [],
+    "node_modules/convex/dist/esm/browser/index-node.js": [
+      "node_modules/convex/dist/esm/browser/sync/client.js",
+      "node_modules/convex/dist/esm/browser/simple_client-node.js",
+      "node_modules/convex/dist/esm/browser/http_client.js",
+      "node_modules/convex/dist/esm/browser/query_options.js"
+    ],
+    "node_modules/convex/dist/esm/server/database.js": [],
+    "node_modules/convex/dist/esm/server/impl/syscall.js": [
+      "node_modules/convex/dist/esm/values/errors.js",
+      "node_modules/convex/dist/esm/values/value.js"
+    ],
+    "node_modules/convex/dist/esm/server/impl/validate.js": [],
+    "node_modules/convex/dist/esm/server/impl/actions_impl.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/common/index.js",
+      "node_modules/convex/dist/esm/server/components/paths.js",
+      "node_modules/convex/dist/esm/server/impl/validate.js"
+    ],
+    "node_modules/convex/dist/esm/server/vector_search.js": [],
+    "node_modules/convex/dist/esm/server/impl/vector_search_impl.js": [
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/server/vector_search.js",
+      "node_modules/convex/dist/esm/server/impl/validate.js",
+      "node_modules/convex/dist/esm/values/value.js"
+    ],
+    "node_modules/convex/dist/esm/server/impl/authentication_impl.js": [
+      "node_modules/convex/dist/esm/server/impl/syscall.js"
+    ],
+    "node_modules/convex/dist/esm/server/filter_builder.js": [],
+    "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js": [
+      "node_modules/convex/dist/esm/values/value.js",
+      "node_modules/convex/dist/esm/server/filter_builder.js"
+    ],
+    "node_modules/convex/dist/esm/server/index_range_builder.js": [],
+    "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js": [
+      "node_modules/convex/dist/esm/values/value.js",
+      "node_modules/convex/dist/esm/server/index_range_builder.js"
+    ],
+    "node_modules/convex/dist/esm/server/search_filter_builder.js": [],
+    "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js": [
+      "node_modules/convex/dist/esm/values/value.js",
+      "node_modules/convex/dist/esm/server/search_filter_builder.js",
+      "node_modules/convex/dist/esm/server/impl/validate.js"
+    ],
+    "node_modules/convex/dist/esm/server/impl/query_impl.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js",
+      "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js",
+      "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js",
+      "node_modules/convex/dist/esm/server/impl/validate.js",
+      "node_modules/convex/dist/esm/index.js"
+    ],
+    "node_modules/convex/dist/esm/server/impl/database_impl.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/server/impl/query_impl.js",
+      "node_modules/convex/dist/esm/server/impl/validate.js",
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/values/value.js"
+    ],
+    "node_modules/convex/dist/esm/server/impl/scheduler_impl.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/common/index.js",
+      "node_modules/convex/dist/esm/server/impl/validate.js",
+      "node_modules/convex/dist/esm/server/components/paths.js"
+    ],
+    "node_modules/convex/dist/esm/server/impl/storage_impl.js": [
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/server/impl/validate.js"
+    ],
+    "node_modules/convex/dist/esm/server/impl/meta_impl.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js"
+    ],
+    "node_modules/convex/dist/esm/server/impl/registration_impl.js": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+      "node_modules/convex/dist/esm/server/impl/vector_search_impl.js",
+      "node_modules/convex/dist/esm/server/impl/authentication_impl.js",
+      "node_modules/convex/dist/esm/server/impl/database_impl.js",
+      "node_modules/convex/dist/esm/server/impl/query_impl.js",
+      "node_modules/convex/dist/esm/server/impl/scheduler_impl.js",
+      "node_modules/convex/dist/esm/server/impl/storage_impl.js",
+      "node_modules/convex/dist/esm/common/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/values/validator.js",
+      "node_modules/convex/dist/esm/server/components/paths.js",
+      "node_modules/convex/dist/esm/server/impl/meta_impl.js"
+    ],
+    "node_modules/convex/dist/esm/server/pagination.js": [
+      "node_modules/convex/dist/esm/values/validator.js"
+    ],
+    "node_modules/convex/dist/esm/server/storage.js": [],
+    "node_modules/convex/dist/esm/server/cron.js": [
+      "node_modules/convex/dist/esm/server/api.js",
+      "node_modules/convex/dist/esm/common/index.js",
+      "node_modules/convex/dist/esm/values/index.js",
+      "node_modules/convex/dist/esm/server/components/paths.js"
+    ],
+    "node_modules/convex/dist/esm/server/router.js": [
+      "node_modules/convex/dist/esm/server/impl/syscall.js"
+    ],
+    "node_modules/convex/dist/esm/server/components/index.js": [
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/server/components/paths.js",
+      "node_modules/convex/dist/esm/values/validator.js",
+      "node_modules/convex/dist/esm/server/components/paths.js"
+    ],
+    "node_modules/convex/dist/esm/server/logVars.js": [],
+    "node_modules/convex/dist/esm/server/audit_logging.js": [
+      "node_modules/convex/dist/esm/index.js",
+      "node_modules/convex/dist/esm/server/impl/syscall.js",
+      "node_modules/convex/dist/esm/server/logVars.js"
+    ],
+    "node_modules/convex/dist/esm/server/log.js": [
+      "node_modules/convex/dist/esm/server/audit_logging.js",
+      "node_modules/convex/dist/esm/server/logVars.js"
+    ],
+    "node_modules/convex/dist/esm/server/schema.js": [
+      "node_modules/convex/dist/esm/values/validator.js"
+    ],
+    "node_modules/convex/dist/esm/server/index.js": [
+      "node_modules/convex/dist/esm/server/database.js",
+      "node_modules/convex/dist/esm/server/impl/registration_impl.js",
+      "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+      "node_modules/convex/dist/esm/server/pagination.js",
+      "node_modules/convex/dist/esm/server/search_filter_builder.js",
+      "node_modules/convex/dist/esm/server/storage.js",
+      "node_modules/convex/dist/esm/server/cron.js",
+      "node_modules/convex/dist/esm/server/router.js",
+      "node_modules/convex/dist/esm/server/api.js",
+      "node_modules/convex/dist/esm/server/components/index.js",
+      "node_modules/convex/dist/esm/server/components/index.js",
+      "node_modules/convex/dist/esm/server/components/index.js",
+      "node_modules/convex/dist/esm/server/log.js",
+      "node_modules/convex/dist/esm/server/schema.js"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/ownership.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-artifacts.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-artifacts.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs",
+      "node_modules/convex/dist/esm/browser/index-node.js",
+      "node_modules/convex/dist/esm/server/index.js",
+      "node_modules/convex/dist/esm/values/index.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/peer.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/ownership.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cases.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cleanup.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "node_modules/typescript/lib/typescript.js": [],
+    "node_modules/esbuild/lib/main.js": [],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs": [
+      "node_modules/typescript/lib/typescript.js",
+      "node_modules/esbuild/lib/main.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/parent-inputs.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/current-inputs.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/arguments.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/parent-inputs.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-terminal.mjs": [],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-terminal.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/deploy.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-child.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cases.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/peer.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-driver.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-ledger.mjs": [],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-recovery.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-ledger.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-setup.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/ownership.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cases.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/inventory.mjs": [
+      "node_modules/typescript/lib/typescript.js",
+      "node_modules/esbuild/lib/main.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/key-check.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-contract.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-transport.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-contract.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/bounded-response.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-check.mjs": [
+      "node_modules/esbuild/lib/main.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/arguments.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/peer.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-cli-prerequisites.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-diagnostics.mjs": [
+      "node_modules/convex/dist/esm/values/index.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-error-boundary.mjs": [
+      "node_modules/esbuild/lib/main.js",
+      "node_modules/convex/dist/esm/values/index.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cases.mjs",
+      "node_modules/convex/dist/esm/server/impl/registration_impl.js"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-exclusive-boundary.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-extension.mjs": [
+      "node_modules/esbuild/lib/main.js",
+      "node_modules/convex/dist/esm/server/index.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-history-supplement.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-installation.mjs": [
+      "node_modules/esbuild/lib/main.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-public-semantic.mjs": [
+      "node_modules/esbuild/lib/main.js",
+      "node_modules/convex/dist/esm/server/index.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/arguments.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts/guard.mjs": [],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-publication-artifacts.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs",
+      "node_modules/convex/dist/esm/values/index.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-regressions.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-ledger.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-runtime-freeze.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-stage-path.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-window.mjs": [
+      "node_modules/esbuild/lib/main.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/original-b-cases.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/window-evidence.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/provision.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-transport.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-contract.mjs",
+      "node_modules/convex/dist/esm/browser/index-node.js",
+      "node_modules/convex/dist/esm/server/index.js",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-artifacts.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualifier-diagnostics.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/publication-artifacts.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualify-owned.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualifier-diagnostics.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/driver.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/reconcile.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/retire.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-transport.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/management-contract.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/task04-native-c8-parent-inputs.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/parent-inputs.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/parent-inputs.mjs"
+    ],
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/task04-native-current-inputs-c6.mjs": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/arguments.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/task04-native-c8-parent-inputs.mjs"
+    ]
+  },
+  "compilerParents": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/inventory.mjs"
+  ],
+  "compilerInDispatchClosure": false,
+  "compilerInUnionClosure": true,
+  "dynamicAndRequireAndProcessSites": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs",
+      "line": 4,
+      "text": "const localRequire=createRequire(path.resolve(repo,'node_modules/convex/package.json'));const z=localRequire('zod').z;"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs",
+      "line": 7,
+      "text": "export function installedImplementations(){reviewed();const utility=definitions('node_modules/convex/src/cli/lib/utils/utils.ts',['loadPackageJson','ensureHasConvexDependency','functionsDir']);const configuration=definitions('node_modules/convex/src/cli/lib/config.ts',['DEFAULT_FUNCTIONS_PATH','ParseError','AuthKitConfigureSchema','AuthKitLocalEnvVarsSchema','AuthKitEnvironmentConfigSchema','AuthKitConfigSchema','NodeSchema','CodegenSchema','BundlerSchema','AiFilesSchema','refineToObject','createProjectConfigSchema','ProjectConfigSchema','ProjectConfigSchemaStrict','warnedUnknownKeys','parseProjectConfig','configName','configFilepath','readProjectConfig']);const types=definitions('node_modules/convex/src/cli/lib/typecheck.ts',['findTypeScriptCompilerPath','typeCheckFunctions','runTsc','runTscInner']);const compiled=ts.transpileModule(utility+'\\n'+configuration+'\\n'+types,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText;const noop=()=>{};return new Function('path','z','logMessage','logError','logFailure','chalkStderr','Sentry','semver','spawnAsync',compiled+'\\nreturn{ensureHasConvexDependency,readProjectConfig,functionsDir,parseProjectConfig,findTypeScriptCompilerPath,typeCheckFunctions};')(path,z,noop,noop,noop,{yellow:String,gray:String,red:String},{captureException(){throw Error('QA_OFFLINE_TELEMETRY_FORBIDDEN');}},localRequire('semver'),async(ctx,command,args)=>{if(command!==process.execPath||args[0]!==path.join('node_modules','typescript','bin','tsc')||!['--version','--project'].includes(args[1]))throw Error('QA_COMPILER_COMMAND');reviewed();const run=spawnSync(command,args,{cwd:ctx.qualificationCwd,env:{PATH:process.env.PATH,LANG:'C.UTF-8',CORTEX_QA_TASK04_REVIEW_SHA256:reviewPin()},timeout:30000,maxBuffer:1048576,encoding:'utf8'});ctx.compilerCommands.push(args);return {stdout:run.stdout??'',stderr:run.stderr??'',status:run.status,error:run.error};});}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/cli-prerequisites.mjs",
+      "line": 12,
+      "text": "export async function observedHttpRouter(stage,work){reviewed();const output=path.resolve(work,'router-'+randomUUID()+'.mjs');await build({stdin:{contents:'export {default as router} from '+JSON.stringify(path.resolve(stage,'convex/http.ts'))+';export {effect} from '+JSON.stringify(path.resolve(stage,'convex/qualificationPeer.ts'))+';',resolveDir:stage,sourcefile:'source-bound-router.ts',loader:'ts'},bundle:true,format:'esm',platform:'node',packages:'external',outfile:output,logLevel:'silent'});const {router,effect}=await import(pathToFileURL(output));const routes=router.getRoutes();if(routes.length!==1||routes[0][0]!=='/qa/task04-peer/effect'||routes[0][1]!=='POST'||routes[0][2]!==effect)throw Error('QA_OFFICIAL_HTTP_ROUTER');return {basis:'actual official HttpRouter.getRoutes over exact stage bytes; not actual server API wire',routes:routes.map(([path,method])=>({path,method,handler:'qualificationPeer:effect',handlerExportIdentityMatched:true})),sourceHashes:['convex/http.ts','convex/qualificationPeer.ts'].map(name=>({path:name,sha256:sha256(fs.readFileSync(path.resolve(stage,name)))})),nativePeerBehavior:'NOT_RUN'};}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/deploy.mjs",
+      "line": 14,
+      "text": "try {await reserveTicket('process',6);const result=await owner.run([resolve(repo,'node_modules/convex/bin/main.js'),'dev','--once','--codegen','enable','--typecheck','enable','--tail-logs','disable','--env-file',resolve(scratch,'deploy.env')],{cwd:stage,env:{PATH:process.env.PATH,LANG:'C.UTF-8',CI:'1',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime,...values}},limits.cliMs);"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/fault-driver.mjs",
+      "line": 3,
+      "text": "const mode=process.argv[2];if(!['before-peer','lost-receipt','before-settle'].includes(mode))throw Error('QA_FAULT_MODE');const {target}=livePreflight('synthetic');const owner=new ProcessOwner();await reserveTicket('process',6);const runtime={};for(const name of ['HTTPS_PROXY','HTTP_PROXY','NO_PROXY','https_proxy','http_proxy','no_proxy','NODE_EXTRA_CA_CERTS'])if(process.env[name])runtime[name]=process.env[name];const record=owner.spawn([resolve(root,'scripts/fault-child.mjs'),mode],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NO_COLOR:'1',NODE_USE_ENV_PROXY:'1',...runtime},stdio:['ignore','ignore','ignore']});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/guard.mjs",
+      "line": 56,
+      "text": " try{trustedReview();if(kind==='native'){const window=resolve(scratch,'qualifier-window.json');if(!lstatSync(window,{throwIfNoEntry:false}))exclusive(window,{startedAt:new Date().toISOString(),deadlineMs:1200000});const recorded=json(window,scratch,true);if(Date.now()-Date.parse(recorded.startedAt)>=1200000||recorded.deadlineMs!==1200000)throw Error('QA_TOTAL_TIME_BUDGET');}const count=readdirSync(scratch).filter(name=>name.startsWith('ticket-'+kind+'-')).length;if(count>=max-(kind==='native'&&!cleanup?12:0))throw Error('QA_TOTAL_BUDGET');const path=resolve(scratch,`ticket-${kind}-${String(count+1).padStart(4,'0')}.json`);exclusive(path,{kind,sequence:count+1,observedAt:new Date().toISOString()});return Object.freeze({kind,sequence:count+1});}finally{closeSync(fd);const {unlinkSync}=await import('node:fs');unlinkSync(lock);}}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/inventory.mjs",
+      "line": 15,
+      "text": " const output=resolve(destination,'inventory-bundle.mjs');await build({entryPoints:[entry],bundle:true,platform:'node',format:'esm',outfile:output,packages:'external',logLevel:'silent'});const inspected=await import(pathToFileURL(output));"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-check.mjs",
+      "line": 8,
+      "text": "check('fixed synthetic root identity and deeply frozen graph; production root remains empty',async()=>{const entry=resolve(scratch,'bootstrap-entry.ts');writeFileSync(entry,`export * as synthetic from ${JSON.stringify(resolve(fixture,'convex/runtimeModelPolicyBootstrap.ts'))};export * as production from ${JSON.stringify(resolve(repo,'convex-dev/runtimeModelPolicyBootstrap.ts'))};export { DEFAULT_EMBEDDING_PROFILE as profile } from ${JSON.stringify(resolve(repo,'src/domain/profile.ts'))};`);const output=resolve(scratch,'bootstrap.mjs');await build({entryPoints:[entry],bundle:true,format:'esm',platform:'node',packages:'external',outfile:output,logLevel:'silent'});const loaded=await import(pathToFileURL(output)),m=loaded.synthetic.lookupDeploymentManifest('qa-task04-synthetic-v1',1);assert.ok(m);assert.equal(m.classification,'fixture-synthetic');assert.ok(Object.isFrozen(m));assert.ok(Object.isFrozen(m.qualifications[0].costBound));assert.equal(loaded.synthetic.isTrustedDeploymentManifest(m),true);assert.equal(loaded.synthetic.isTrustedDeploymentManifest({...m}),false);assert.equal(loaded.synthetic.lookupDeploymentManifest('qa-task04-synthetic-v1',2),undefined);assert.equal(loaded.production.lookupDeploymentManifest('qa-task04-synthetic-v1',1),undefined);assert.equal(loaded.production.isTrustedDeploymentManifest(m),false);const e=loaded.synthetic.lookupDeploymentManifest('qa-task04-synthetic-embedding-v1',1);assert.ok(e);assert.ok(Object.isFrozen(e));assert.ok(Object.isFrozen(e.qualifications[0].costBound));assert.equal(loaded.synthetic.isTrustedDeploymentManifest(e),true);assert.equal(loaded.synthetic.isTrustedDeploymentManifest({...e}),false);assert.equal(loaded.synthetic.lookupDeploymentManifest(e.manifestId,2),undefined);assert.equal(loaded.production.lookupDeploymentManifest(e.manifestId,1),undefined);assert.equal(loaded.production.isTrustedDeploymentManifest(e),false);assert.equal(e.policies.length,1);assert.equal(e.qualifications.length,1);assert.deepEqual(e.policies[0].rules.fallbackModels,[]);if(!lstatSync(resolve(root,'profile.json'),{throwIfNoEntry:false}))exclusive(resolve(root,'profile.json'),loaded.profile,false);});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-check.mjs",
+      "line": 16,
+      "text": "check('owned process waits leader and verifies terminal process group',async()=>{const owner=new ProcessOwner();const result=await owner.run(['-e','process.stdout.write(\"owned-ok\")'],{cwd:scratch,env:{PATH:process.env.PATH}},2000);assert.equal(result.code,0);assert.equal(result.stdout,'owned-ok');assert.equal(owner.records.size,0);assert.equal(owner.verifiedGroups,1);});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-check.mjs",
+      "line": 17,
+      "text": "check('owned process timeout kills descendants and retains honest timeout evidence',async()=>{const owner=new ProcessOwner();const result=await owner.run(['-e','require(\"node:child_process\").spawn(process.execPath,[\"-e\",\"setInterval(()=>{},1000)\"],{stdio:\"inherit\"});setInterval(()=>{},1000)'],{cwd:scratch,env:{PATH:process.env.PATH}},100);assert.equal(result.timedOut,true);assert.equal(owner.records.size,0);assert.equal(owner.verifiedGroups,1);});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-check.mjs",
+      "line": 22,
+      "text": " const loaded=await import(pathToFileURL(output)),old=JSON.parse(loaded.default.export()),now=JSON.parse(readFileSync(resolve(root,'schema-evidence.json'))).product;"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-diagnostics.mjs",
+      "line": 5,
+      "text": "test('actual ProcessOwner overflow retains EXACT combined256000-byte prefix/overflow failure and verified terminal group',async()=>{const owner=new ProcessOwner();const result=await owner.run(['-e','process.stdout.write(Buffer.alloc(300000,0x61))'],{cwd:work,env:{PATH:process.env.PATH,LANG:'C.UTF-8'}},3000);assert.equal(result.overflow,true);assert.equal(result.stdoutBytes.length+result.stderrBytes.length,256000);assert.equal(result.stdoutBytes.toString(),'a'.repeat(256000));assert.equal(owner.records.size,0);assert.equal(owner.verifiedGroups,1);assert.ok(result.observedBytes>256000);});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-error-boundary.mjs",
+      "line": 4,
+      "text": "test('actual accepted B registered admit and installed Convex codec retain closed denial and complete NO_EFFECT after earlier reservation',async()=>{const output=resolve(work,'actual-handler.mjs');await build({stdin:{contents:'export * as ledger from '+JSON.stringify(resolve(fixture,'convex/runtimeModelPolicy.ts'))+';export {memoryFixture} from '+JSON.stringify(resolve(repo,'tests/unit/runtimeMemory/fixture.ts'))+';',resolveDir:fixture,loader:'ts'},bundle:true,format:'esm',platform:'node',packages:'external',outfile:output,logLevel:'silent'});const {ledger,memoryFixture}=await import(pathToFileURL(output)),f=memoryFixture();f.grant.capabilities=['read','write','run','admin'];f.db.patch=async(table,id,updates)=>{const row=await f.db.get(table,id);assert.ok(row);f.db.writes++;Object.assign(row,JSON.parse(JSON.stringify(updates)));};f.db.insert=async(table,value)=>{f.db.writes++;return f.db.seed(table,JSON.parse(JSON.stringify(value)))._id;};const invoke=(name,args)=>ledger[name]._handler(f.ctx,args);await invoke('installDeploymentPolicy',{manifestId:'qa-task04-synthetic-v1',expectedRevision:1});const bound=await invoke('ensureBudget',{reference:f.reference,operationKey:'agent.respond',requestId:'codec-control',requestCanonical:canonical({text:'hello'})}),args={reference:f.reference,operationKey:'agent.respond',runBudgetId:bound.runBudgetId,semanticId:'semantic',ordinal:0,requestCanonical:canonical(request('hello'))};await invoke('admit',args);const before=canonical([...f.db.rows]),writes=f.db.writes;let caught;try{await invokeFunction(ledger.admit._handler,f.ctx,[{...args,requestCanonical:canonical(request('changed private request'))}]);}catch(error){caught=error;}assert.ok(caught);assert.equal(typeof caught.data,'string');assert.deepEqual(jsonToConvex(JSON.parse(caught.data)),{version:1,code:'IDEMPOTENCY_CONFLICT',message:'Model operation control failed.',retryable:false,outcome:'not_dispatched'});assert.equal(canonical([...f.db.rows]),before);assert.equal(f.db.writes,writes);assert.equal(f.db.table('runtimeModelAttempts').length,1);for(const row of f.db.table('runtimeBudgetAccounts')){assert.equal(row.reservedUnits,100);assert.equal(row.settledUnits,0);assert.equal(row.uncertainUnits,0);assert.equal(row.activeConcurrency,1);}writeFileSync(resolve(work,'actual-codec-denial.json'),JSON.stringify({data:jsonToConvex(JSON.parse(caught.data)),beforeSHA256:sha256(before),afterSHA256:sha256(canonical([...f.db.rows])),writesBefore:writes,writesAfter:f.db.writes},null,2)+'\\n',{flag:'wx',mode:0o600});process.stdout.write(JSON.stringify({case:'actual-B-admit-installed-codec',status:'PASS',noEffect:true,priorReservationUnits:100,native:'NOT_RUN',services:0})+'\\n');});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-exclusive-boundary.mjs",
+      "line": 4,
+      "text": " const DummyDate=class extends Date{static now(){return now;}},DummyBuffer={...Buffer,from(...args){if(kind==='encoding-expiry')now=120001;return Buffer.from(...args);}},context=vm.createContext({process,Buffer:DummyBuffer,Date:DummyDate,setTimeout}),url=pathToFileURL(resolve(base,'scripts/guard.mjs')).href,module=new vm.SourceTextModule(fs.readFileSync(resolve(base,'scripts/guard.mjs'),'utf8'),{context,initializeImportMeta(meta){meta.url=url;}});await module.link(async spec=>{const values=spec==='node:fs'?mock:await import(spec),m=new vm.SyntheticModule(Object.keys(values),function(){for(const k of Object.keys(values))this.setExport(k,values[k]);},{context});return m;});await module.evaluate();const value=kind==='serialization-expiry'?{toJSON(){now=120001;return{dummy:true};}}:{dummy:true},control={deadlineMs:120000,beforeCreate(){if(kind==='gate-expiry')now=120001;},observe(stage){events.push(stage);}};let error;try{module.namespace.exclusive(path,value,true,256000,kind==='legacy-compatible'?undefined:control);}catch(e){error=e;}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-extension.mjs",
+      "line": 8,
+      "text": "await build({entryPoints:[entry],outfile:out,bundle:true,platform:'node',format:'esm',packages:'external',logLevel:'silent'});const compiled=await import(pathToFileURL(out));"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-extension.mjs",
+      "line": 22,
+      "text": " const originalCases=await import('./original-b-cases.mjs');"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-extension.mjs",
+      "line": 23,
+      "text": " const window=await import('./window-evidence.mjs');"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-history-supplement.mjs",
+      "line": 5,
+      "text": " const context=vm.createContext({process,Buffer,Date,setTimeout}),url=pathToFileURL(resolve(base,'scripts/guard.mjs')).href,module=new vm.SourceTextModule(fs.readFileSync(resolve(base,'scripts/guard.mjs'),'utf8'),{context,initializeImportMeta(meta){meta.url=url;}});await module.link(async spec=>{const values=spec==='node:fs'?mock:await import(spec),names=Object.keys(values),m=new vm.SyntheticModule(names,function(){for(const name of names)this.setExport(name,values[name]);},{context});return m;});await module.evaluate();return module.namespace.verifyHistoricalPacket(packet);}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-installation.mjs",
+      "line": 3,
+      "text": "async function compile(candidate){const base=resolve(root,'../'+candidate+'/fixture');const output=resolve(work,candidate+'.mjs');await build({stdin:{contents:'export {installDeploymentPolicy} from '+JSON.stringify(resolve(base,'convex/runtimeModelPolicy.ts'))+';export * from '+JSON.stringify(resolve(base,'convex/qualificationManifest.ts'))+';export {resolveModelPolicy} from '+JSON.stringify(resolve(base,'src/domain/model-policy.ts'))+';export {DEFAULT_EMBEDDING_PROFILE} from '+JSON.stringify(resolve(base,'src/domain/profile.ts'))+';',resolveDir:base,loader:'ts'},bundle:true,platform:'node',format:'esm',packages:'external',outfile:output,logLevel:'silent'});return import(pathToFileURL(output));}"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-public-semantic.mjs",
+      "line": 5,
+      "text": "const work=resolve(repo,'work/resume/task04-model-drift-native-preparation-c4/extension/semantic-'+randomUUID());mkdirSync(work,{mode:0o700});const registration=JSON.parse(readFileSync(resolve(root,'registration-inventory.json')));const rows=registration.registrations.filter(row=>row.visibility==='public');const sources=[...new Set([...rows.map(row=>row.source),'convex-dev/runtimeAuth.ts'])];const entry=resolve(work,'actual-handlers.ts'),output=resolve(work,'actual-handlers.mjs');writeFileSync(entry,sources.map((source,i)=>`import * as m${i} from ${JSON.stringify(resolve(repo,source))};`).join('\\n')+'\\nexport default {'+sources.map((source,i)=>JSON.stringify(source)+`:m${i}`).join(',')+'};');await build({entryPoints:[entry],bundle:true,platform:'node',format:'esm',packages:'external',outfile:output,logLevel:'silent'});const modules=(await import(pathToFileURL(output))).default;"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-public-semantic.mjs",
+      "line": 13,
+      "text": "test('qualified C11 optional tenant/space selectors remain bound and basename-collision import cannot execute management entry',()=>{for(const row of rows){const args=argumentsFor(row,scope);for(const key of ['tenantId','memorySpaceId'])if(row.args.value[key])assert.equal(args[key],scope[key]);}const entry=resolve(work,'semantic-arguments.mjs');writeFileSync(entry,'import '+JSON.stringify(pathToFileURL(resolve(root,'scripts/arguments.mjs')).href)+';process.stdout.write(\"ENTRY_IMPORT_ONLY\\\\n\");');const child=spawnSync(process.execPath,[entry],{env:{PATH:process.env.PATH,LANG:'C.UTF-8'},timeout:5000,maxBuffer:65536,encoding:'utf8'});assert.equal(child.error,undefined);assert.equal(child.status,0,child.stderr);assert.equal(child.stdout,'ENTRY_IMPORT_ONLY\\n');});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-runtime-freeze.mjs",
+      "line": 27,
+      "text": "test('actual ProcessOwner entry blocks missing/wrong pin without spawn; healthy owned child propagates exact ROOT pin',async()=>{for(const mode of['missing','wrong','healthy','conflicting-child']){const h=await context();approval(h);if(mode==='missing')delete h.env.CORTEX_QA_TASK04_REVIEW_SHA256;if(mode==='wrong')h.env.CORTEX_QA_TASK04_REVIEW_SHA256='0'.repeat(64);let calls=0,received;const c=createContext({process:{execPath:'DUMMY',env:h.env},setTimeout});const source=fs.readFileSync(path.resolve(root,'scripts/process-owner.mjs'),'utf8');const mod=new SourceTextModule(source,{context:c});const ports={'./guard.mjs':{reviewed:h.module.reviewed,reviewPin:h.module.reviewPin},'node:child_process':{spawn:(_exe,_args,options)=>{calls++;received=options.env;return{once(){}};}},'./process-terminal.mjs':{linuxGroupMembers(){throw Error('NO_ACTUAL_PROCESS');},terminal(){throw Error('NO_ACTUAL_PROCESS');}}};await mod.link(n=>{const obj=ports[n];assert.ok(obj);return new SyntheticModule(Object.keys(obj),function(){for(const[k,v]of Object.entries(obj))this.setExport(k,v);},{context:c});});await mod.evaluate();const owner=new mod.namespace.ProcessOwner(),options={env:{PATH:'DUMMY'}};if(mode==='conflicting-child')options.env.CORTEX_QA_TASK04_REVIEW_SHA256='0'.repeat(64);if(mode==='healthy'){owner.spawn(['DUMMY'],options);assert.equal(calls,1);assert.equal(received.CORTEX_QA_TASK04_REVIEW_SHA256,h.env.CORTEX_QA_TASK04_REVIEW_SHA256);assert.equal(owner.spawned,1);}else{assert.throws(()=>owner.spawn(['DUMMY'],options),/QA_(REVIEW_EXPECTED|CHILD_REVIEW_PIN)/);assert.equal(calls,0);assert.equal(owner.spawned,0);assert.equal(owner.records.size,0);}}});"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/offline-window.mjs",
+      "line": 2,
+      "text": "const work=resolve(repo,'work/resume/task04-model-drift-native-preparation-c4/extension/window-'+randomUUID());mkdirSync(work,{mode:0o700});const output=resolve(work,'actual-handlers.mjs');await build({stdin:{contents:'export * as ledger from '+JSON.stringify(resolve(fixture,'convex/runtimeModelPolicy.ts'))+';export * as owned from '+JSON.stringify(resolve(fixture,'convex/qualificationOwned.ts'))+';export {MemoryTestDb} from '+JSON.stringify(resolve(repo,'tests/unit/runtimeMemory/fixture.ts'))+';',resolveDir:fixture,loader:'ts'},bundle:true,format:'esm',platform:'node',packages:'external',outfile:output,logLevel:'silent'});const{ledger,owned,MemoryTestDb}=await import(pathToFileURL(output));const realNow=Date.now,minute=Date.parse('2026-10-04T05:39:00.000Z'),round=v=>JSON.parse(JSON.stringify(v));"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+      "line": 37,
+      "text": "  spawn(args, options) {"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+      "line": 40,
+      "text": "    const expected=reviewPin();if(options.env?.CORTEX_QA_TASK04_REVIEW_SHA256!==undefined&&options.env.CORTEX_QA_TASK04_REVIEW_SHA256!==expected)throw Error('QA_CHILD_REVIEW_PIN');const child = spawn(process.execPath, args, { ...options, env:{...(options.env??process.env),CORTEX_QA_TASK04_REVIEW_SHA256:expected}, detached: true });"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/process-owner.mjs",
+      "line": 50,
+      "text": "    const record = this.spawn(args, { ...options, stdio: [\"ignore\", \"pipe\", \"pipe\"] });"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/scripts/qualify-owned.mjs",
+      "line": 4,
+      "text": "try{if(phase==='synthetic'){await reserveTicket('process',6);result=await owner.run([resolve(root,'scripts/driver.mjs'),phase],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NODE_USE_ENV_PROXY:'1',...runtime}},limits.driverMs);captureAttempted=true;diagnostic=captureQualifier(target,phase,result);status=diagnostic.status;}else{const{session,qualify}=await import('./driver.mjs');const outcome=await qualify(await session('empty'),'empty');result={code:outcome.status==='PASS'&&outcome.cleanupComplete?0:1,stdout:JSON.stringify(outcome),stderr:'',timedOut:false,overflow:false};captureAttempted=true;diagnostic=captureQualifier(target,phase,result);status=diagnostic.status;}}"
+    }
+  ],
+  "minimumCandidateRows": [
+    {
+      "path": "node_modules/typescript/lib/typescript.js",
+      "bytes": 9144216,
+      "sha256": "569177652966bd528c319171c7dd22860dbf72bde116cbc4f644f1d02bb12e39",
+      "preimage": "preimages/569177652966bd528c319171c7dd22860dbf72bde116cbc4f644f1d02bb12e39.gz"
+    }
+  ],
+  "retainedFullGraphUnchanged": true
+}
