@@ -1,0 +1,1 @@
+Use ONLY NEW work/resume/task04-native-c6-parent-inputs.mjs and task04-native-current-inputs-c4.mjs after fresh review. Packet snapshots are byte-identical to external sources. C6 request/freeze/complete manifest source hashes are in source-evidence.json. Historical acceptance never authorizes this new target. Real credentials/actions remain parent-only.

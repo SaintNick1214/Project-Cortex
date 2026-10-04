@@ -1,0 +1,262 @@
+{
+  "candidate": "C6",
+  "acceptedB16": [
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "7fa65fbfa96d8709cd834b09133440e3f189b9ac9b717b96545a3b89085a7c23",
+      "bytes": 5153
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "sha256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+      "bytes": 54581
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "2a499e50107e6ba0064368c6d84c5ecce596bb420114336c3a2bdb86d0be9aa8",
+      "bytes": 71602
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed",
+      "bytes": 2659
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "0e2ed1e2d0910b9d341139b32bd2321b69a68c3734a84b17ccaf7e13a477005b",
+      "bytes": 44765
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+      "bytes": 28083
+    },
+    {
+      "path": "src/domain/index.ts",
+      "sha256": "b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648",
+      "bytes": 406
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "sha256": "d5a65043cb6c1dc2af851df866c5881fea67a0677c79ce3c5fe99d79f62700fc",
+      "bytes": 32786
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "bytes": 23246
+    },
+    {
+      "path": "convex-dev/runtimeAuthSchema.ts",
+      "sha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "bytes": 3515
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833",
+      "bytes": 24131
+    },
+    {
+      "path": "convex-dev/runtimeWorkerAuth.ts",
+      "sha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+      "bytes": 13928
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "sha256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+      "bytes": 3259
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "bytes": 2759
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-token-cost-technical-review/report.md",
+      "sha256": "879b15111c30766200e592a274e0a254eb5fe6f465e8f6885d8ae7392553937d",
+      "bytes": 22078
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-c3-acceptance.json",
+      "sha256": "d8712ba0485b3f0fc1a8f8957592289ed6e86d010429a6c5e9ad160f4ca21ba0",
+      "bytes": 912
+    }
+  ],
+  "sourceInventory": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/source-inventory.json",
+    "sha256": "895af1a46976ff80efefd5219e875b5936e19ad2e6ae715acc1f8662f3bc9b86",
+    "bytes": 33633
+  },
+  "soleUnequalCopiedProduct": [
+    "convex-dev/runtimeModelPolicyBootstrap.ts"
+  ],
+  "copiedProductionUnchanged": true,
+  "candidateOnlyChanges": [
+    {
+      "path": "bootstrap.diff",
+      "priorSha256": "00c4a93b1b4143a63f43fd6e0d966457602c99f65270afea5be1a0e2ad629d30",
+      "sha256": "ca014681d8f12c20b42ba00dcd9150f404dafc9b03006d24d7c80eb8d98913e1"
+    },
+    {
+      "path": "divergence.json",
+      "priorSha256": "08e62106f691adeba4e26fb64a3df47e82cde8fd09d50464270030abd8f5c906",
+      "sha256": "78b94240fb0cb200bfc66173959c746dacadb57dba87e8a5e15434d55ee3c951"
+    },
+    {
+      "path": "fixture/convex/qualificationManifest.ts",
+      "priorSha256": "33ab90e0806f2b0f49a0b8aa506fb92a592eda90f57a51c9351962b534590849",
+      "sha256": "7f6475d59ecd466d3c493619412406ff6e574d094718894dd4de000b7b2de4ed"
+    },
+    {
+      "path": "fixture/convex/qualificationOwned.ts",
+      "priorSha256": "b2e89e9a2c9eee6a681a3474441f647bd738fbe5f71affa3ed03c8cd1d7aa4f5",
+      "sha256": "4f47150f6c1027200c520d6985b977a1a4add0b66ea06461e9e7b607c2cf3881"
+    },
+    {
+      "path": "fixture/convex/qualificationPeer.ts",
+      "priorSha256": "c11fe0e23e4d5ddf7d0e3c5105be1b55fd23e4edb733ab77456ee631169cd9d6",
+      "sha256": "177255e95e3977f5e433a0354e8fd4ec50000388ba166e83c99834d48b6b5828"
+    },
+    {
+      "path": "fixture/convex/runtimeModelPolicyBootstrap.ts",
+      "priorSha256": "51f02b9917720ebe66a5a3ef66583685ea75006a282445243aebc64202dd4075",
+      "sha256": "4910bcc8fb68ab88b3dc14a8642964b48e8bb39e575a305c85e4ab242f463aa2"
+    },
+    {
+      "path": "project-request.json",
+      "priorSha256": "7ec7e5194a299f371f9cc7373ee320598b123edf34293e8dff0e1c8cd25dd9ab",
+      "sha256": "d16165aca16da89433024dd38ec7841e0ad60fd08da49295a09d469e7e05bd4e"
+    },
+    {
+      "path": "registration-inventory.json",
+      "priorSha256": "e8536598dc192250606869a860c03bf6ba7b5e6c2e802a955d1377389d2a5a5f",
+      "sha256": "8a8400f09f7c9d8242bf7eaa4b002db540c5b3df9432b7194eafe6ab59c5cb48"
+    },
+    {
+      "path": "scripts/cases.mjs",
+      "priorSha256": "a7aa7acd24e3d8fcfd2903474a893d5a1fc028cbf9f66831260c8f8a83eab313",
+      "sha256": "1b2e387f1c5407b2a43e550ec2f5ff23042448460ca877e2ec05f79c245d8490"
+    },
+    {
+      "path": "scripts/cleanup.mjs",
+      "priorSha256": "6639353ff1f26ff1551beeb1e85334e24d73570aa4aaaed2b2a0ec5433e993d5",
+      "sha256": "a812124efc15c819d4272f95bca97e1f033eff80d710b22e885d2d124d52cf30"
+    },
+    {
+      "path": "scripts/cli-prerequisites.mjs",
+      "priorSha256": "26a36b3f50bfc4f38f911b2040de9eaf125e7cde18ca76d285295bd1bd2c8cb6",
+      "sha256": "ac7c6d5d6ac4717c5fcfa3a1ae8d6308d1ff4fff0502149dbf309defa205522f"
+    },
+    {
+      "path": "scripts/driver.mjs",
+      "priorSha256": "0c8fa2f016f847ebe268cc8d36dfff928de9997fd34875ae89a7db27748da096",
+      "sha256": "a0add4c9e4dd695a7227761085ae8d989b847a3af0e177c3f62176dc52e1675d"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "priorSha256": "2c91a4022f500bd3bb90a459c69a9063dd72388862d18ab6bab4143c1096d8a3",
+      "sha256": "a2d8e327b1f0c1bddedfdab7f544f50ffdbd801d468ff5d74c595cab30b4fc22"
+    },
+    {
+      "path": "scripts/inventory.mjs",
+      "priorSha256": "23674cf2e59a21db24ea2a07ea90dcaea3ac234322927803a6b3509e593df462",
+      "sha256": "1350ca33eb4f98ad14424878428013c0f5fc57b7ddc8d460170717b31ee1a298"
+    },
+    {
+      "path": "scripts/management-contract.mjs",
+      "priorSha256": "bca4dfc09d872ed49ec21b127a411c34b94b4f76d47cda5111162be2b5d256a5",
+      "sha256": "39e9455914bedc999f5a98083f376edf668351a5fa7a79bfe1c8c764e299de5a"
+    },
+    {
+      "path": "scripts/offline-check.mjs",
+      "priorSha256": "3a9de14988796275adc590bd2394ac519a1f4f812da57af9570e942206ce743b",
+      "sha256": "b7fb43dc4510d151f2f5610de466c43b3efb8701fdca1e3ff1647656a8e2dfd0"
+    },
+    {
+      "path": "scripts/offline-cli-prerequisites.mjs",
+      "priorSha256": "79d1ac5e16e2b22ebca71a50a199527e31dcc415a8e65f5b754bcf1793edce8c",
+      "sha256": "54daac82ff4835294010768a40b4b5ab8b185c595c18614e39a04f59e59e2f5c"
+    },
+    {
+      "path": "scripts/offline-public-semantic.mjs",
+      "priorSha256": "40bdac7e87ea30e93dea268dbaaa608f0d5db989f1ff8b36009c7fd8a81956f0",
+      "sha256": "208c2f4a50f440957b66051a529a88f9dc9cf126deb860c7956de83e4c74fcfc"
+    },
+    {
+      "path": "scripts/offline-publication-artifacts.mjs",
+      "priorSha256": "b0a2218da66806c45b694fea5395bef323b9097ed56afcc6d3b06785caec70eb",
+      "sha256": "b87e5d92de11be44a3602b5b24bbc4b5d29d6cc6fa17fd57be9f0ba9433fe920"
+    },
+    {
+      "path": "scripts/offline-regressions.mjs",
+      "priorSha256": "df727e38ce7e200b02399554edef64bef3542940eb269748b9a0d90cb8d4cbdc",
+      "sha256": "07d3a1e40f72ddfd790bf8f5c0457b95f3130346d82a1fa030fb74b32a2de0d2"
+    },
+    {
+      "path": "scripts/ownership.mjs",
+      "priorSha256": "207f88b9c5fce9bc1be445cd216f110b0070606b11cdb761930d57bb66c6f881",
+      "sha256": "aa2cbf1d1ae94517571a42f7b1c1a6a539a15c2108b28a8ea5e546aafa49e933"
+    },
+    {
+      "path": "scripts/process-owner.mjs",
+      "priorSha256": "5b685053178163fb04c212538f9c122ae0f01dde0b8e5a19bed7bd3cd8a386f6",
+      "sha256": "0d529622c10124e19cbef353afb3e0880e6b0344657e7e5a0e9ccc6c3d2d0c36"
+    },
+    {
+      "path": "scripts/provision.mjs",
+      "priorSha256": "665a36b320fd90fea2769e4bdb3f0e26a3466db510cfb87caf5392e494102721",
+      "sha256": "2f2a9df6fbf9d8dbee560db3478e9586df41755c82780b27555ff1a2ce8d7f9e"
+    },
+    {
+      "path": "scripts/publication-artifacts.mjs",
+      "priorSha256": "44322f23de6f2bd4ec8a9d5e8047918d1f25177b5c2d011d096d46eb8b22cfce",
+      "sha256": "94254cd32b42f9006978a3d9007a5b94437bc36a394f1b3021f5e4f3f0425c42"
+    },
+    {
+      "path": "scripts/qualify-owned.mjs",
+      "priorSha256": "b9816a276876760d1854364ae6d40655871c047db258b20423c8f8b776feb490",
+      "sha256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49"
+    }
+  ],
+  "parentSources": [
+    {
+      "path": "work/resume/task04-native-c6-parent-inputs.mjs",
+      "sha256": "020a4fdc7cf46c87db8a0176cd08f6ccc19c8e5c3218d25501b69e2cdf8a266c",
+      "bytes": 11190
+    },
+    {
+      "path": "work/resume/task04-native-current-inputs-c4.mjs",
+      "sha256": "d2d090ee398be69b61dd1dcd4b12f7bdf10c3cee18cf2023e2370197b18a84b7",
+      "bytes": 5769
+    }
+  ],
+  "currentGate": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/current-gates.md",
+    "sha256": "80559a1f79b9441aad4c1c9f45b47b863e45662e5725a9a86c9d2f4897753631",
+    "bytes": 40166
+  },
+  "parentCompositionDecision": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c6-fixture-decision.json",
+    "sha256": "d223638dba111b53c21c05d74a50c60d058dcf5aa103b842469241744ebf10e7",
+    "bytes": 1314
+  },
+  "priorC5Failure": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c5-execution/report.md",
+      "sha256": "f2722bad0f69d251a352b4dbd748bc659ac198483fd1616843655f67b0bab184",
+      "bytes": 1743
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c5-execution/qa-manifest.json",
+      "sha256": "b69716a0b959f4731e5c1cffc6e18665e836e03314d170e6012dea0aef8bda76",
+      "bytes": 11976
+    }
+  ],
+  "native": "NOT_RUN",
+  "network": 0,
+  "signing": 0,
+  "credentialReads": 0,
+  "RPC": 0,
+  "storage": 0,
+  "model": 0
+}
