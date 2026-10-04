@@ -1,0 +1,27 @@
+from pathlib import Path
+import subprocess,datetime,time,hashlib,json,sys,shutil
+repo=Path('/workspace/Project-Cortex');w=repo/'work/resume/task04-model-drift-native-preparation-c3';q=repo/'_goals/convex-backend-runtime-2026-10-02/qa';name=sys.argv[1];argv=sys.argv[2:];source=next((repo/a for a in argv[1:] if (repo/a).is_file()),None);kinds=[argv[-1]] if argv[-1] in ['extension','regression','extra'] else ['extension','regression','extra'];area=w/'operation-source-preimages'/name
+if area.exists():
+ n=1
+ while (w/'prior-runs'/f'{name}-{n}').exists():n+=1
+ dest=w/'prior-runs'/f'{name}-{n}';dest.mkdir(parents=True);shutil.move(str(area),str(dest/'preimages'))
+ for ext in ['stdout','stderr','receipt.json']:
+  f=w/f'{name}.{ext}'
+  if f.exists():shutil.move(str(f),str(dest/f.name))
+area.mkdir(parents=True);files={source} if source else set()
+for k in kinds:
+ root=q/f'task04-model-drift-native-{k}-preparation-c3'
+ for folder in ['scripts','fixture','runtime','runtime-source']:
+  files.update(p for p in (root/folder).rglob('*') if p.is_file())
+ for inventoryName,key,field in [('source-inventory.json','files','source'),('source-inventory.json','acceptedGateHashes','path'),('runner-dependency-inventory.json','inputs','path'),('dependency-inventory.json','inputs','path'),('toolchain-evidence.json','files','path')]:
+  data=json.loads((root/inventoryName).read_text()) if (root/inventoryName).exists() else {}
+  files.update(repo/row[field] for row in data.get(key,[]) if (repo/row[field]).is_file())
+ files.update(p for p in root.glob('*.json'))
+files.update(repo/p for p in ['convex-dev/runtimeModelPolicy.ts','src/runtime/ExecutionGateway.ts'] if (repo/p).is_file())
+def record():return [{'path':str(p.relative_to(repo)),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(files)]
+pre=[];store=w/'source-byte-store';store.mkdir(exist_ok=True)
+for p in sorted(files):
+ b=p.read_bytes();digest=hashlib.sha256(b).hexdigest();row={'path':str(p.relative_to(repo)),'bytes':len(b),'sha256':digest};pre.append(row);dest=store/(digest+'.bytes')
+ if not dest.exists():dest.write_bytes(b)
+(area/'index.json').write_text(json.dumps({'scope':'ALL_THREE_PROFILE_OPERATIVE_FIXTURE_RUNTIME_PRODUCT_ACCEPTED_TOOL_FULL_GRAPH_PUBLIC_BYTES','files':pre},indent=2)+'\n')
+start=datetime.datetime.now(datetime.timezone.utc).isoformat();t=time.monotonic();r=subprocess.run(argv,cwd=repo,capture_output=True,text=True,timeout=120);(w/f'{name}.stdout').write_text(r.stdout);(w/f'{name}.stderr').write_text(r.stderr);(w/f'{name}.receipt.json').write_text(json.dumps({'argv':argv,'cwd':str(repo),'startedAt':start,'observedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'elapsedMs':round((time.monotonic()-t)*1000),'sourcePath':str(source) if source else None,'sourcePreimages':str(area.relative_to(repo)),'sourceByteStore':str(store.relative_to(repo)),'sourceBeforeScope':'FULL_DECLARED_PUBLIC_SOURCE_GRAPH_AND_ALL_OPERATIVE_PATHS_NO_ACTUAL_PRIVATE_INPUTS','sourceBefore':pre,'sourceAfter':record(),'exitCode':r.returncode,'native':'NOT_RUN'},indent=2)+'\n');print(name,r.returncode,r.stdout[-1000:],r.stderr[-2000:]);sys.exit(r.returncode)

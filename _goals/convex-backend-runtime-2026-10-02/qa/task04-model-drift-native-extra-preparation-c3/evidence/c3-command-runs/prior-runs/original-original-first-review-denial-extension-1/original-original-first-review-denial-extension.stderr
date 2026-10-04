@@ -1,0 +1,17 @@
+node:fs:1411
+  const result = binding.mkdir(
+                         ^
+
+Error: ENOENT: no such file or directory, mkdir '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/source-review-proof/runtime-proof-288d6fa4-a633-4db8-afb3-4a41a26dd967'
+    at Module.mkdirSync (node:fs:1411:26)
+    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/same-source-review-denial.mjs:2:144
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'mkdir',
+  path: '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/source-review-proof/runtime-proof-288d6fa4-a633-4db8-afb3-4a41a26dd967'
+}
+
+Node.js v24.19.0

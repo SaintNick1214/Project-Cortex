@@ -1,0 +1,153 @@
+{
+  "subject": "regression",
+  "sourceReviewC2": "REJECT2.2",
+  "parentC2": "PASS4.2_LIMITED_COMBINED_HOLD",
+  "findings": [
+    {
+      "finding": 1,
+      "source": [
+        "peer.mjs",
+        "driver.mjs"
+      ],
+      "controls": "c3-peer-dispatch-controls.json",
+      "closure": "Fresh actual livePreflight RPC tier, original pin, target/env/publication/window before effects and again after reserveTicket; late denial consumes ticket and zero fetch",
+      "sourcePins": [
+        {
+          "path": "scripts/peer.mjs",
+          "sha256": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69"
+        },
+        {
+          "path": "scripts/driver.mjs",
+          "sha256": "c0aadff2e278023e4877840b2f4a6ddcbba6cae2c30bc22445bd5ebee610bf7e"
+        }
+      ],
+      "claim": "EXECUTOR_SOURCE_REPAIR_AND_OFFLINE_EVIDENCE_ONLY_FRESH_INDEPENDENT_REVIEW_PENDING"
+    },
+    {
+      "finding": 2,
+      "source": [
+        "bounded-response.mjs",
+        "peer.mjs"
+      ],
+      "controls": "c3-body-controls.json",
+      "closure": "Incremental finite owned reader, original absolute deadline, cap before allocation; cancel/release primary/secondary retained independently",
+      "sourcePins": [
+        {
+          "path": "scripts/bounded-response.mjs",
+          "sha256": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841"
+        },
+        {
+          "path": "scripts/peer.mjs",
+          "sha256": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69"
+        }
+      ],
+      "claim": "EXECUTOR_SOURCE_REPAIR_AND_OFFLINE_EVIDENCE_ONLY_FRESH_INDEPENDENT_REVIEW_PENDING"
+    },
+    {
+      "finding": 3,
+      "source": [
+        "bounded-response.mjs",
+        "publication-artifacts.mjs"
+      ],
+      "controls": "c3-body-controls.json",
+      "closure": "Same owned reader at existing256000 raw cap, deadline never renewed",
+      "sourcePins": [
+        {
+          "path": "scripts/bounded-response.mjs",
+          "sha256": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841"
+        },
+        {
+          "path": "scripts/publication-artifacts.mjs",
+          "sha256": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334"
+        }
+      ],
+      "claim": "EXECUTOR_SOURCE_REPAIR_AND_OFFLINE_EVIDENCE_ONLY_FRESH_INDEPENDENT_REVIEW_PENDING"
+    },
+    {
+      "finding": 4,
+      "source": [
+        "publication.mjs"
+      ],
+      "controls": "c3-publication-dispatch-controls.json",
+      "closure": "Fresh FULL binding after native ticket before query; fresh again immediately before HTTP, source/target/env/stage/codegen/pub/window/pin drift zero dispatch",
+      "sourcePins": [
+        {
+          "path": "scripts/publication.mjs",
+          "sha256": "dd195975bce659e82ac54aa1fce71a9e75499bb1e97c397aebb4b6812fd5bb7a"
+        }
+      ],
+      "claim": "EXECUTOR_SOURCE_REPAIR_AND_OFFLINE_EVIDENCE_ONLY_FRESH_INDEPENDENT_REVIEW_PENDING"
+    },
+    {
+      "finding": 5,
+      "source": [
+        "provision.mjs",
+        "management-transport.mjs",
+        "management-contract.mjs"
+      ],
+      "controls": "c3-management-guards.json and c3-management-entry-controls.json",
+      "closure": "Every one of original five requests guarded FULL and finite16384 owned body; partial ownership retained",
+      "sourcePins": [
+        {
+          "path": "scripts/provision.mjs",
+          "sha256": "0985bb3d9a229c055098dff9b6a55161279fa0ac6740a9bf5c80c92aaa062598"
+        },
+        {
+          "path": "scripts/management-transport.mjs",
+          "sha256": "aca98de01dedc1d6447d3aee5578a600caa62660d28dca47a0001c396ab74d04"
+        },
+        {
+          "path": "scripts/management-contract.mjs",
+          "sha256": "dd97e75dba40b6b36c8052cf98f5fc9a08efddf585e782210bda7f6299ffd98c"
+        }
+      ],
+      "claim": "EXECUTOR_SOURCE_REPAIR_AND_OFFLINE_EVIDENCE_ONLY_FRESH_INDEPENDENT_REVIEW_PENDING"
+    },
+    {
+      "finding": 6,
+      "source": [
+        "retire.mjs",
+        "management-transport.mjs",
+        "management-contract.mjs"
+      ],
+      "controls": "c3-management-guards.json and c3-management-entry-controls.json",
+      "closure": "Every original five retirement requests guarded FULL; FULLY_VERIFIED and REQUEST_OWNED_PARTIAL_RECOVERY both retain exact ownership; deadline/cap/no retry",
+      "sourcePins": [
+        {
+          "path": "scripts/retire.mjs",
+          "sha256": "d9c3b24abc3afb715f842dd7122827f8f4c1d582662145b18ddddd890e36e304"
+        },
+        {
+          "path": "scripts/management-transport.mjs",
+          "sha256": "aca98de01dedc1d6447d3aee5578a600caa62660d28dca47a0001c396ab74d04"
+        },
+        {
+          "path": "scripts/management-contract.mjs",
+          "sha256": "dd97e75dba40b6b36c8052cf98f5fc9a08efddf585e782210bda7f6299ffd98c"
+        }
+      ],
+      "claim": "EXECUTOR_SOURCE_REPAIR_AND_OFFLINE_EVIDENCE_ONLY_FRESH_INDEPENDENT_REVIEW_PENDING"
+    },
+    {
+      "finding": 7,
+      "source": [
+        "task04-native-c8-parent-inputs.mjs",
+        "parent-inputs.mjs"
+      ],
+      "controls": "c3-legacy-parent-controls.json and dependency-tiers.json",
+      "closure": "Callable legacy forwards exact current guarded parent; explicit entry in freshly derived complete graph; no assumed unused escape",
+      "sourcePins": [
+        {
+          "path": "scripts/task04-native-c8-parent-inputs.mjs",
+          "sha256": "423fdd99b4801c4740fa39d6acf3b14cdf93df8f129e6c2819fc1ef20914bbdd"
+        },
+        {
+          "path": "scripts/parent-inputs.mjs",
+          "sha256": "8d8d4c24bc3636589ed10328b1a932febe574fb999d1fc4d988478515d396f13"
+        }
+      ],
+      "claim": "EXECUTOR_SOURCE_REPAIR_AND_OFFLINE_EVIDENCE_ONLY_FRESH_INDEPENDENT_REVIEW_PENDING"
+    }
+  ],
+  "native": "NOT_RUN"
+}

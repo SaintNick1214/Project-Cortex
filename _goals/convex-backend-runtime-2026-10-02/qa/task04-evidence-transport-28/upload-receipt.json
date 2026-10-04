@@ -1,0 +1,73 @@
+{
+  "utc": {
+    "current_time": "2026-10-04 12:29:15 UTC"
+  },
+  "failedRawUpload": {
+    "content": [
+      {
+        "type": "text",
+        "text": "tool call error: tool call failed for `codex_apps/github.create_blob`\n\nCaused by:\n    Transport send error: Transport [codex_rmcp_client::event_notification_transport::EventNotificationTransport<rmcp::transport::worker::WorkerTransport<rmcp::transport::streamable_http_client::StreamableHttpClientWorker<codex_rmcp_client::http_client_adapter::StreamableHttpClientAdapter>>>] error: unexpected server response: HTTP 400: {\"detail\":\"MCP request body is invalid or exceeds the 16 MiB limit\"}"
+      }
+    ],
+    "isError": true
+  },
+  "successfulRawCanary": [
+    {
+      "i": 0,
+      "started": {
+        "current_time": "2026-10-04 12:20:43 UTC"
+      },
+      "bytes": 6239091,
+      "expected": "9a9c0ac10f26d2027778f3350d9b62a5fa26ad1f",
+      "returned": "9a9c0ac10f26d2027778f3350d9b62a5fa26ad1f",
+      "ended": {
+        "current_time": "2026-10-04 12:20:58 UTC"
+      }
+    }
+  ],
+  "archiveUploads": [
+    {
+      "i": 0,
+      "start": {
+        "current_time": "2026-10-04 12:28:41 UTC"
+      },
+      "end": {
+        "current_time": "2026-10-04 12:28:44 UTC"
+      },
+      "bytes": 7186456,
+      "expected": "6e5d98f66da720db9131e76abfeedb1e024ef6ae",
+      "returned": "6e5d98f66da720db9131e76abfeedb1e024ef6ae"
+    },
+    {
+      "i": 1,
+      "start": {
+        "current_time": "2026-10-04 12:28:51 UTC"
+      },
+      "end": {
+        "current_time": "2026-10-04 12:28:55 UTC"
+      },
+      "bytes": 7186457,
+      "expected": "ac83fe07b4f52589f7625766c0f5663fbaf1e522",
+      "returned": "ac83fe07b4f52589f7625766c0f5663fbaf1e522"
+    },
+    {
+      "i": 2,
+      "start": {
+        "current_time": "2026-10-04 12:29:01 UTC"
+      },
+      "end": {
+        "current_time": "2026-10-04 12:29:03 UTC"
+      },
+      "bytes": 7186456,
+      "expected": "378746091363f886db440ff17222d26adc36c759",
+      "returned": "378746091363f886db440ff17222d26adc36c759"
+    }
+  ],
+  "ownOrchestrationFailure": {
+    "error": "top-level await in direct eval",
+    "effect": "no tool calls executed",
+    "correction": "async wrapper, original retained in transcript"
+  },
+  "status": "LOSSLESS_TRANSPORT_NOT_QUALIFICATION",
+  "noBranchMutationYet": true
+}

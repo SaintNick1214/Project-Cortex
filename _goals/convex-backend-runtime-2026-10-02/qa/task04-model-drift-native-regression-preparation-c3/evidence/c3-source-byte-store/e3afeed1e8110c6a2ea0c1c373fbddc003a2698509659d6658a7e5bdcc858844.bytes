@@ -1,0 +1,981 @@
+{
+  "utc": "2026-10-04T09:02:00.654782+00:00",
+  "profiles": [
+    {
+      "profile": "extension",
+      "operation": "344b098e-e2bf-4260-a46e-3c143472d70a",
+      "projectId": 3140295,
+      "completeMatrices": {
+        "published-arguments-equal": 2,
+        "rpc-complete": 946,
+        "rpc-rejected": 1633,
+        "null": 2,
+        "outcome-asserted": 22,
+        "nonempty-public-control": 1,
+        "authorization-denied": 1400,
+        "whole-state-equal": 200,
+        "published-internal-inaccessible": 174
+      },
+      "nativeClient": 2581,
+      "nestedUpper": 37,
+      "createdDeleted": 411,
+      "processTickets": 3,
+      "processRecords": [
+        {
+          "path": "process-deploy-synthetic-f6de2b1b-f912-46f7-af06-eaaa9c6ccbf9.json",
+          "record": {
+            "phase": "synthetic",
+            "status": "PASS",
+            "startedAt": "2026-10-04T08:24:17.620Z",
+            "observedAt": "2026-10-04T08:24:30.450Z",
+            "spawned": 1,
+            "verifiedTerminalGroups": 1,
+            "remaining": 0
+          }
+        },
+        {
+          "path": "process-deploy-empty-81fe6b95-c988-4194-9acb-4c740a6bf0ee.json",
+          "record": {
+            "phase": "empty",
+            "status": "PASS",
+            "startedAt": "2026-10-04T08:36:17.611Z",
+            "observedAt": "2026-10-04T08:36:30.781Z",
+            "spawned": 1,
+            "verifiedTerminalGroups": 1,
+            "remaining": 0
+          }
+        },
+        {
+          "path": "qualifier-process-synthetic-353248a9-ad15-432a-8b35-fbe0dc9b1dd3.json",
+          "record": {
+            "operation": "344b098e-e2bf-4260-a46e-3c143472d70a",
+            "phase": "synthetic",
+            "status": "PASS",
+            "counts": {
+              "spawned": 1,
+              "verifiedTerminalGroups": 1,
+              "remaining": 0
+            },
+            "exitCode": 0,
+            "diagnostic": {
+              "path": "qualifier-diagnostic-synthetic-d8ec524b-0a8b-4393-8cdd-44448c9ceec1.json",
+              "bytes": 1078,
+              "sha256": "19f69fc60ebcac98cc6de896fa3304f13b880dce5fb256a1ac472f410569d150"
+            },
+            "failureClass": "NONE",
+            "cleanupComplete": true
+          }
+        },
+        {
+          "path": "qualifier-process-empty-50448ee6-33a1-4b67-8cb0-a27a98d82eaa.json",
+          "record": {
+            "operation": "344b098e-e2bf-4260-a46e-3c143472d70a",
+            "phase": "empty",
+            "status": "PASS",
+            "counts": {
+              "spawned": 0,
+              "verifiedTerminalGroups": 0,
+              "remaining": 0
+            },
+            "exitCode": 0,
+            "diagnostic": {
+              "path": "qualifier-diagnostic-empty-227605b5-c1b0-426f-9973-82e23d3d0c50.json",
+              "bytes": 1064,
+              "sha256": "5e3fbb269660a957e8ad4754c849fee186259f960ac53a0beac6c125f29576de"
+            },
+            "failureClass": "NONE",
+            "cleanupComplete": true
+          }
+        }
+      ],
+      "commands": [
+        {
+          "path": "task04-capture-c4-extension-current-inputs.receipt.json",
+          "startedAt": "2026-10-04T08:25:42.600Z",
+          "endedAt": "2026-10-04T08:26:10.283Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/current-inputs-extension.mjs",
+              "sha256": "e5713cdcdafe5a059edbab4f9f67f7bdec3d379ce1faaaf2fdc1c694c7e31ba1"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-deploy-empty.receipt.json",
+          "startedAt": "2026-10-04T08:36:09.330Z",
+          "endedAt": "2026-10-04T08:36:32.749Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/deploy.mjs",
+              "sha256": "ff786184fb8fa0f08856dffcb4355da17e9adc8eda4afe7dcc32473574f1276f"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-deploy-synthetic.receipt.json",
+          "startedAt": "2026-10-04T08:24:09.502Z",
+          "endedAt": "2026-10-04T08:24:32.422Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/deploy.mjs",
+              "sha256": "ff786184fb8fa0f08856dffcb4355da17e9adc8eda4afe7dcc32473574f1276f"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-key-match.receipt.json",
+          "startedAt": "2026-10-04T08:23:33.117Z",
+          "endedAt": "2026-10-04T08:23:33.255Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/key-check.mjs",
+              "sha256": "20ae9a0bc72aab86c63d13e54e8c1f52dbc94394a535d2b4192c738e93bf5d2b"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-parent-inputs.receipt.json",
+          "startedAt": "2026-10-04T08:25:05.913Z",
+          "endedAt": "2026-10-04T08:25:28.315Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/parent-inputs-extension.mjs",
+              "sha256": "f04a6235683612610dc1ee144d25ff589c0f98c0dd88a08a0aa59a88a0372dd2"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-provision.receipt.json",
+          "startedAt": "2026-10-04T08:23:52.647Z",
+          "endedAt": "2026-10-04T08:23:57.528Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/provision.mjs",
+              "sha256": "64ed8f299ecd16803a86a931b4e3024de824b0bd991254da1f1ada656ba217a7"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-publication-empty.receipt.json",
+          "startedAt": "2026-10-04T08:36:42.580Z",
+          "endedAt": "2026-10-04T08:36:50.422Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/publication.mjs",
+              "sha256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-publication-synthetic.receipt.json",
+          "startedAt": "2026-10-04T08:24:48.882Z",
+          "endedAt": "2026-10-04T08:24:56.686Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/publication.mjs",
+              "sha256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-qualify-empty.receipt.json",
+          "startedAt": "2026-10-04T08:37:05.580Z",
+          "endedAt": "2026-10-04T08:37:23.748Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/qualify-owned.mjs",
+              "sha256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-qualify-synthetic.receipt.json",
+          "startedAt": "2026-10-04T08:25:42.601Z",
+          "endedAt": "2026-10-04T08:35:51.046Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/qualify-owned.mjs",
+              "sha256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-reconcile.receipt.json",
+          "startedAt": "2026-10-04T08:37:54.385Z",
+          "endedAt": "2026-10-04T08:37:54.523Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/reconcile.mjs",
+              "sha256": "e6fe43e6173d9769fd9bb4d0a296a76edaaa42a6573b380a8ab86c4a23c7bd16"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-extension-retire.receipt.json",
+          "startedAt": "2026-10-04T08:37:55.032Z",
+          "endedAt": "2026-10-04T08:37:55.965Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/scripts/retire.mjs",
+              "sha256": "008913657397cb31c1e5b144e87ba60673301a590c8b8bb15ed801cefb723ee4"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        }
+      ],
+      "keyMatch": {
+        "operation": "344b098e-e2bf-4260-a46e-3c143472d70a",
+        "status": "PASS",
+        "publicKeyMatches": true,
+        "freezeSha256": "6b84895b917abfed98f6892fd8a639fbed4d18827ea3e1e6570d24041e504c68",
+        "authConfigSha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+        "observedAt": "2026-10-04T08:23:33.247Z",
+        "keysCreated": 0,
+        "signatures": 0
+      },
+      "journalBytes": 1862496,
+      "retirement": {
+        "version": 1,
+        "operation": "344b098e-e2bf-4260-a46e-3c143472d70a",
+        "phase": "exact-owned-project-retirement",
+        "status": "PASS",
+        "startedAt": "2026-10-04T08:37:55.661Z",
+        "observedAt": "2026-10-04T08:37:55.959Z",
+        "projectId": 3140295,
+        "deploymentName": "modest-puffin-359",
+        "deploymentUrl": "https://modest-puffin-359.convex.cloud",
+        "provisionState": "FULLY_VERIFIED",
+        "verifiedOnlyDevelopmentCloudDeployment": true,
+        "deletionHttpStatus": 200,
+        "absentProjectHttpStatus": 404,
+        "managementCalls": 5
+      },
+      "currentProvenance": "BOTH operation/attempt hashes agree with owned created witnesses",
+      "sourceFreezeFiles": 202
+    },
+    {
+      "profile": "regression",
+      "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+      "projectId": 3140351,
+      "completeMatrices": {
+        "published-arguments-equal": 12,
+        "rpc-complete": 1062,
+        "rpc-rejected": 1635,
+        "outcome-asserted": 43,
+        "nonempty-public-control": 1,
+        "authorization-denied": 1400,
+        "whole-state-equal": 200,
+        "published-internal-inaccessible": 174,
+        "null": 3,
+        "full-liability-and-slot": 7,
+        "real-peer-crash-accounting": 3
+      },
+      "nativeClient": 2699,
+      "nestedUpper": 37,
+      "createdDeleted": 736,
+      "processTickets": 6,
+      "processRecords": [
+        {
+          "path": "process-deploy-synthetic-871b1e0b-577e-4562-9926-4ce77dfcd0a7.json",
+          "record": {
+            "phase": "synthetic",
+            "status": "PASS",
+            "startedAt": "2026-10-04T08:38:56.851Z",
+            "observedAt": "2026-10-04T08:39:09.141Z",
+            "spawned": 1,
+            "verifiedTerminalGroups": 1,
+            "remaining": 0
+          }
+        },
+        {
+          "path": "process-deploy-empty-09ada3f5-df61-4160-b421-d8be8706ca1d.json",
+          "record": {
+            "phase": "empty",
+            "status": "PASS",
+            "startedAt": "2026-10-04T08:56:35.209Z",
+            "observedAt": "2026-10-04T08:56:47.746Z",
+            "spawned": 1,
+            "verifiedTerminalGroups": 1,
+            "remaining": 0
+          }
+        },
+        {
+          "path": "qualifier-process-synthetic-1a9bdbd8-5878-4d14-961d-f91d72b60715.json",
+          "record": {
+            "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+            "phase": "synthetic",
+            "status": "PASS",
+            "counts": {
+              "spawned": 1,
+              "verifiedTerminalGroups": 1,
+              "remaining": 0
+            },
+            "exitCode": 0,
+            "diagnostic": {
+              "path": "qualifier-diagnostic-synthetic-99bedaa9-88ee-4bd6-9656-d47aeab48f6c.json",
+              "bytes": 1078,
+              "sha256": "cfc0defc220b0e1085521f0f9b278bab8e7d7dc50fecb1588654060a05726e9f"
+            },
+            "failureClass": "NONE",
+            "cleanupComplete": true
+          }
+        },
+        {
+          "path": "qualifier-process-empty-42171d59-8905-42e4-82d9-bccb08bf7e7c.json",
+          "record": {
+            "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+            "phase": "empty",
+            "status": "PASS",
+            "counts": {
+              "spawned": 0,
+              "verifiedTerminalGroups": 0,
+              "remaining": 0
+            },
+            "exitCode": 0,
+            "diagnostic": {
+              "path": "qualifier-diagnostic-empty-7ed8fc2f-2a5c-4929-9e9b-411f78a51099.json",
+              "bytes": 1064,
+              "sha256": "4ed14479d12412f0edb467412921c5c405e1ffbcb9f62dbdcabea78e6beff983"
+            },
+            "failureClass": "NONE",
+            "cleanupComplete": true
+          }
+        },
+        {
+          "path": "fault-process-before-settle.json",
+          "record": {
+            "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+            "mode": "before-settle",
+            "directChildWaited": true,
+            "remaining": 0,
+            "parentForcedKill": true,
+            "terminalMembers": 0,
+            "observedAt": "2026-10-04T08:55:36.938Z"
+          }
+        },
+        {
+          "path": "fault-process-before-peer.json",
+          "record": {
+            "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+            "mode": "before-peer",
+            "directChildWaited": true,
+            "remaining": 0,
+            "parentForcedKill": true,
+            "terminalMembers": 0,
+            "observedAt": "2026-10-04T08:52:31.023Z"
+          }
+        },
+        {
+          "path": "fault-process-lost-receipt.json",
+          "record": {
+            "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+            "mode": "lost-receipt",
+            "directChildWaited": true,
+            "remaining": 0,
+            "parentForcedKill": true,
+            "terminalMembers": 0,
+            "observedAt": "2026-10-04T08:53:29.440Z"
+          }
+        }
+      ],
+      "commands": [
+        {
+          "path": "task04-capture-c4-regression-cleanup-faults.receipt.json",
+          "startedAt": "2026-10-04T08:56:07.323Z",
+          "endedAt": "2026-10-04T08:56:14.825Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/cleanup.mjs",
+              "sha256": "759ecc04b67a8bfc614ebe3a724da6ed16ed3c0847d8e8146e8e4001d2d00c14"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-current-inputs.receipt.json",
+          "startedAt": "2026-10-04T08:40:57.326Z",
+          "endedAt": "2026-10-04T08:41:12.786Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/current-inputs-regression.mjs",
+              "sha256": "ffdb4364b734873bc95cf051f2192ce12e9b0fa2b56a4951ea82891d3720722d"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-deploy-empty.receipt.json",
+          "startedAt": "2026-10-04T08:56:28.365Z",
+          "endedAt": "2026-10-04T08:56:49.725Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/deploy.mjs",
+              "sha256": "ff786184fb8fa0f08856dffcb4355da17e9adc8eda4afe7dcc32473574f1276f"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-deploy-synthetic.receipt.json",
+          "startedAt": "2026-10-04T08:38:49.851Z",
+          "endedAt": "2026-10-04T08:39:11.116Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/deploy.mjs",
+              "sha256": "ff786184fb8fa0f08856dffcb4355da17e9adc8eda4afe7dcc32473574f1276f"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-before-peer-driver.receipt.json",
+          "startedAt": "2026-10-04T08:52:23.980Z",
+          "endedAt": "2026-10-04T08:52:32.995Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-driver.mjs",
+              "sha256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-before-peer-recovery.receipt.json",
+          "startedAt": "2026-10-04T08:52:41.099Z",
+          "endedAt": "2026-10-04T08:52:49.312Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-recovery.mjs",
+              "sha256": "7fa4c579f9a425600667f8dd919b56d64c0bec5d854c6764979ad7d26dd920c1"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-before-peer-setup.receipt.json",
+          "startedAt": "2026-10-04T08:51:56.365Z",
+          "endedAt": "2026-10-04T08:52:04.066Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-setup.mjs",
+              "sha256": "bc4f1013087e15837a3ed315fc490a0b71dc0d4cecaa8969846c0d09d2d84937"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-before-settle-driver.receipt.json",
+          "startedAt": "2026-10-04T08:55:29.112Z",
+          "endedAt": "2026-10-04T08:55:38.910Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-driver.mjs",
+              "sha256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-before-settle-recovery.receipt.json",
+          "startedAt": "2026-10-04T08:55:49.347Z",
+          "endedAt": "2026-10-04T08:55:58.738Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-recovery.mjs",
+              "sha256": "7fa4c579f9a425600667f8dd919b56d64c0bec5d854c6764979ad7d26dd920c1"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-before-settle-setup.receipt.json",
+          "startedAt": "2026-10-04T08:54:26.589Z",
+          "endedAt": "2026-10-04T08:55:01.354Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-setup.mjs",
+              "sha256": "bc4f1013087e15837a3ed315fc490a0b71dc0d4cecaa8969846c0d09d2d84937"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-lost-receipt-driver.receipt.json",
+          "startedAt": "2026-10-04T08:53:21.617Z",
+          "endedAt": "2026-10-04T08:53:31.411Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-driver.mjs",
+              "sha256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-lost-receipt-recovery.receipt.json",
+          "startedAt": "2026-10-04T08:53:50.263Z",
+          "endedAt": "2026-10-04T08:53:58.284Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-recovery.mjs",
+              "sha256": "7fa4c579f9a425600667f8dd919b56d64c0bec5d854c6764979ad7d26dd920c1"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-fault-lost-receipt-setup.receipt.json",
+          "startedAt": "2026-10-04T08:53:10.369Z",
+          "endedAt": "2026-10-04T08:53:17.803Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/fault-setup.mjs",
+              "sha256": "bc4f1013087e15837a3ed315fc490a0b71dc0d4cecaa8969846c0d09d2d84937"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-key-match.receipt.json",
+          "startedAt": "2026-10-04T08:38:05.880Z",
+          "endedAt": "2026-10-04T08:38:06.034Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/key-check.mjs",
+              "sha256": "20ae9a0bc72aab86c63d13e54e8c1f52dbc94394a535d2b4192c738e93bf5d2b"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-parent-inputs.receipt.json",
+          "startedAt": "2026-10-04T08:40:16.184Z",
+          "endedAt": "2026-10-04T08:40:35.581Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/parent-inputs-regression.mjs",
+              "sha256": "10cd4e624ef782d07a81adb62698bc1f9cd811e208ad97b58f613208ac5028ba"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-provision.receipt.json",
+          "startedAt": "2026-10-04T08:38:24.662Z",
+          "endedAt": "2026-10-04T08:38:25.978Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/provision.mjs",
+              "sha256": "d4dce61c29f43674ceb2f9e0969be7fd802d997b0340a62cc0b8d7f1c8652ddc"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-publication-empty.receipt.json",
+          "startedAt": "2026-10-04T08:57:08.749Z",
+          "endedAt": "2026-10-04T08:57:15.514Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/publication.mjs",
+              "sha256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-publication-synthetic.receipt.json",
+          "startedAt": "2026-10-04T08:39:41.155Z",
+          "endedAt": "2026-10-04T08:39:48.190Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/publication.mjs",
+              "sha256": "d34bd6458364e219d7fd92b5520718200aa7807fe447cee8d7338baeb99b743c"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-qualify-empty.receipt.json",
+          "startedAt": "2026-10-04T08:57:33.418Z",
+          "endedAt": "2026-10-04T08:57:49.421Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/qualify-owned.mjs",
+              "sha256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-qualify-synthetic.receipt.json",
+          "startedAt": "2026-10-04T08:40:57.335Z",
+          "endedAt": "2026-10-04T08:51:41.691Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/qualify-owned.mjs",
+              "sha256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-reconcile.receipt.json",
+          "startedAt": "2026-10-04T08:58:08.800Z",
+          "endedAt": "2026-10-04T08:58:08.942Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/reconcile.mjs",
+              "sha256": "e6fe43e6173d9769fd9bb4d0a296a76edaaa42a6573b380a8ab86c4a23c7bd16"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        },
+        {
+          "path": "task04-capture-c4-regression-retire.receipt.json",
+          "startedAt": "2026-10-04T08:58:09.449Z",
+          "endedAt": "2026-10-04T08:58:10.751Z",
+          "sourcePre": [
+            {
+              "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/scripts/retire.mjs",
+              "sha256": "008913657397cb31c1e5b144e87ba60673301a590c8b8bb15ed801cefb723ee4"
+            },
+            {
+              "path": "/workspace/Project-Cortex/work/resume/task04-capture-record-command.mjs",
+              "sha256": "3db2c7138184df290230fb009e7011eb22b1a2c472feb7f5037a8ce5a936c389"
+            }
+          ]
+        }
+      ],
+      "keyMatch": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "status": "PASS",
+        "publicKeyMatches": true,
+        "freezeSha256": "f39f5f95f389e9e1e5f59a9d2dfaa5491dd444098ee39c9d9d839ab60483e68c",
+        "authConfigSha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+        "observedAt": "2026-10-04T08:38:06.022Z",
+        "keysCreated": 0,
+        "signatures": 0
+      },
+      "journalBytes": 1930496,
+      "retirement": {
+        "version": 1,
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "phase": "exact-owned-project-retirement",
+        "status": "PASS",
+        "startedAt": "2026-10-04T08:58:10.205Z",
+        "observedAt": "2026-10-04T08:58:10.744Z",
+        "projectId": 3140351,
+        "deploymentName": "quaint-goldfish-866",
+        "deploymentUrl": "https://quaint-goldfish-866.convex.cloud",
+        "provisionState": "FULLY_VERIFIED",
+        "verifiedOnlyDevelopmentCloudDeployment": true,
+        "deletionHttpStatus": 200,
+        "absentProjectHttpStatus": 404,
+        "managementCalls": 5
+      },
+      "currentProvenance": "BOTH operation/attempt hashes agree with owned created witnesses",
+      "sourceFreezeFiles": 199
+    }
+  ],
+  "faults": [
+    {
+      "mode": "before-peer",
+      "result": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "before-peer",
+        "status": "PASS",
+        "counts": {
+          "effectCount": 0,
+          "requestCount": 0
+        },
+        "boundary": {
+          "stage": "parent-killed",
+          "reservedUnits": 100,
+          "uncertainUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 1,
+          "attempts": 1,
+          "operations": 1,
+          "accounts": 2
+        },
+        "unknown": {
+          "stage": "unknown-recovered",
+          "reservedUnits": 0,
+          "uncertainUnits": 100,
+          "settledUnits": 0,
+          "activeConcurrency": 1,
+          "attempts": 1,
+          "operations": 1,
+          "accounts": 2
+        },
+        "actualInference": "NOT_RUN",
+        "chargeEvidence": "SYNTHETIC_ONLY"
+      },
+      "checkpoint": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "before-peer",
+        "attemptId": "<physical-id-sha256:29ac412ee82a8b8ffffaf5751440f6b93f0bdd0fb79f0021a20dadc304e24233>",
+        "dispatchIdentity": "827db451fa61dd59e54846f462bef4f7776a3f925fdae51373cff76b396c30f2",
+        "phase": "checkpoint-committed",
+        "observedAt": "2026-10-04T08:52:30.961Z"
+      },
+      "process": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "before-peer",
+        "directChildWaited": true,
+        "remaining": 0,
+        "parentForcedKill": true,
+        "terminalMembers": 0,
+        "observedAt": "2026-10-04T08:52:31.023Z"
+      },
+      "start": "2026-10-04T08:51:56.365Z",
+      "end": "2026-10-04T08:52:49.312Z"
+    },
+    {
+      "mode": "lost-receipt",
+      "result": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "lost-receipt",
+        "status": "PASS",
+        "counts": {
+          "effectCount": 1,
+          "requestCount": 1
+        },
+        "boundary": {
+          "stage": "parent-killed",
+          "reservedUnits": 100,
+          "uncertainUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 1,
+          "attempts": 1,
+          "operations": 1,
+          "accounts": 2
+        },
+        "unknown": {
+          "stage": "unknown-recovered",
+          "reservedUnits": 0,
+          "uncertainUnits": 100,
+          "settledUnits": 0,
+          "activeConcurrency": 1,
+          "attempts": 1,
+          "operations": 1,
+          "accounts": 2
+        },
+        "actualInference": "NOT_RUN",
+        "chargeEvidence": "SYNTHETIC_ONLY"
+      },
+      "checkpoint": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "lost-receipt",
+        "attemptId": "<physical-id-sha256:f90742eebe498f44820833807b2a1ce7c0b0aa6485ad0529302e1a7706af22d9>",
+        "dispatchIdentity": "279833a3b22fd96a9a6472226f7057651b1d3ac55b81cc3411ed3177b81c9378",
+        "phase": "checkpoint-committed",
+        "observedAt": "2026-10-04T08:53:28.714Z"
+      },
+      "process": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "lost-receipt",
+        "directChildWaited": true,
+        "remaining": 0,
+        "parentForcedKill": true,
+        "terminalMembers": 0,
+        "observedAt": "2026-10-04T08:53:29.440Z"
+      },
+      "start": "2026-10-04T08:53:10.369Z",
+      "end": "2026-10-04T08:53:58.284Z"
+    },
+    {
+      "mode": "before-settle",
+      "result": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "before-settle",
+        "status": "PASS",
+        "counts": {
+          "effectCount": 1,
+          "requestCount": 1
+        },
+        "boundary": {
+          "stage": "parent-killed",
+          "reservedUnits": 100,
+          "uncertainUnits": 0,
+          "settledUnits": 0,
+          "activeConcurrency": 1,
+          "attempts": 1,
+          "operations": 1,
+          "accounts": 2
+        },
+        "unknown": {
+          "stage": "unknown-recovered",
+          "reservedUnits": 0,
+          "uncertainUnits": 100,
+          "settledUnits": 0,
+          "activeConcurrency": 1,
+          "attempts": 1,
+          "operations": 1,
+          "accounts": 2
+        },
+        "actualInference": "NOT_RUN",
+        "chargeEvidence": "SYNTHETIC_ONLY"
+      },
+      "checkpoint": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "before-settle",
+        "attemptId": "<physical-id-sha256:4aa9a478ca62693fdb7101dda3a9f9410d29eab4c21dc5d3ce9e0158bc517033>",
+        "dispatchIdentity": "4a47c1662f31154e43a3d86b1ea2cb83a2d135202528e862862f8324873e2202",
+        "phase": "checkpoint-committed",
+        "observedAt": "2026-10-04T08:55:36.236Z"
+      },
+      "process": {
+        "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+        "mode": "before-settle",
+        "directChildWaited": true,
+        "remaining": 0,
+        "parentForcedKill": true,
+        "terminalMembers": 0,
+        "observedAt": "2026-10-04T08:55:36.938Z"
+      },
+      "start": "2026-10-04T08:54:26.589Z",
+      "end": "2026-10-04T08:55:58.738Z"
+    }
+  ],
+  "knownSettled": [
+    {
+      "version": 1,
+      "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+      "runId": "admission-46832d1ebf244c8dbd8419041b423559",
+      "sequence": 12,
+      "previousDigest": "ce5b576cb38f84964a51a3d896cb8d289d1c15a3c11aad0bdfb826e8071999f1",
+      "phase": "fault",
+      "caseId": "before-settle-known-settled",
+      "status": "PASS",
+      "observedCategory": "full-liability-and-slot",
+      "counts": {
+        "reservedUnits": 0,
+        "uncertainUnits": 0,
+        "settledUnits": 40,
+        "activeConcurrency": 0
+      },
+      "receiptDigest": "52e694a57fcfd0716e405b45d66ee74fa5a8698962183da9daf354a8ef0184cc"
+    }
+  ],
+  "windows": [
+    "held-current-concurrency",
+    "held-current-run",
+    "held-current-tenant",
+    "held-current-operation"
+  ],
+  "skips": [],
+  "paidInference": 0,
+  "privateReads": 0
+}

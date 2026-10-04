@@ -800,3 +800,29 @@ Current-catalog isolated four-test copies report454/454PASS across4suites/zero s
 ROOT read the complete fresh implementation report401fa876a06bbfb5f6ae66a13702e13a5b4ce91488f9a5409680f6d4c852768e and verified exact314QA/64scratch closures. REJECT2.4 confirms six required repairs: retained receipt/Attempt linkage, owned persistence rejection, complete ordered stream terminal, owned-observer staging capability, original shorter stage-persistence window and numeric-key UTF16 canonical ordering. Related exact runtime-reader resource control and missing real closed-resolver money category pipeline also require resolution; DUMMY category diagnostics are not accepted provider schema/proof. All failures and C1/provisional/history bytes remain immutable. NEW bounded C2 executor has disjoint QA/scratch-only ownership and must independently clarify any missing finite contract before dependent implementation, preserve all original assertions/caps/hashes and obtain fresh review. No native/default-paid/fullTask04/all17 release. Runtime4active includingROOT.
 
 C3 calibration reports observed FULL113.07ms/RPC101.50ms maxima on expanded graph; declared estimate leaves roughly51s before unchanged20m window. Observation is not feasibility acceptance; no time/call cap or retry-headroom increase. Added management files are explicitly counted within existing4800/7143424 allocation (4776rows estimate), subject to exhaustive fresh audit.
+
+
+### 2026-10-04 12:02 UTC — checkpoint27 pushed; concrete staging clarification queued
+
+QA-only commit9dc57e83855b0e62bf987cc6eee1a0bc27664133/tree77a1f0e10bb488efced6c4a795c1eee0b604d813 preserves5,409paths including defaultC1 implementation5076/freshreview314/ROOTrejection/fullhistoricalfailures, C3helper syntax/preimages and26receipts. Fifty-five bounded tree requests succeeded without failed calls;368newblobs5,070,940bytes. Allsourcebytes/fulltemporary-index tree and unchanged liveHEAD were verified. DraftPR134 exactnewhead/open/dev verified after one metadata-lag reread, no refretry. Receipt27 remains outside27 for nextcheckpoint; mutableC2/C3/catalog excluded.
+
+ROOT read complete new C2 staging HMAC/prefix/originalphase proposal and present EMPTY money-domain clarification, verified3-file exactclosure387dd064242a6d339a964730f2f75a84948f1e98ccf73220b6af2c122e01e935. NOT_ACCEPTED; freshdesignreview queued under max4runtime. No key/env/privateinstallation/proof/native action. Ultimate supported category extraction/fullmoneypipeline remains required, not waived. Catalog independent review is testing reported scratch/symlink/preexisting-replica/network escape risks; no actual4testsplice.
+
+
+### 2026-10-04 12:06 UTC — catalog C1 rejected; staging design review active
+
+ROOT read full catalog review4d10de240cd631cb5083408820492fd650871d6eccd933f3c52cbe35476d0d8b and verified exact2177QA (20 literal symlinks, never traversed)/5scratch closures. REJECT2.8: symlink ancestor escape, replica symlink overwrite, source guards after mkdir, direct Socket connect bypass and missing owned all-error cleanup. Catalog/native preservation4suites454/0skip+30controls/types/lint stillPASS; extraJS execution was NOT_REPRODUCED. Actualfourfilepatch remainsSOURCE_SERIALIZED_HOLD. NEW C2repair queued untilruntime slotavailable, no assertion weakening.
+
+Fresh none staging/money clarification judge is active on immutable3-file387dd0 proposal only. Current C2 driver independent repairs pass meaningful original/fresh tests; server capability/expiry changes paused fordesign gate. C3 finalrecorder fullgraph naming collision preserved with explicit overwritten historicalFULLraw/UTC NOT_CAPTURED; corrected unique per-operation fullpre/post/raw/UTC reruns are in progress. No key/env/actualapproval/native/paid action.
+
+
+### 2026-10-04 12:09 UTC — catalog C2 active; staging design final admission issue observed
+
+Bounded catalog executor has NEW C2only ownership, repairing all5 reproduced containment issues with unchanged454case identities/26baseline+5approvedaddition/16internal/current275/31/184 authority contracts; actualfourtestsplice remainsheld. DefaultC2executor completed independent repairs and endedPARTIAL tofree runtime slot; staging servercapability remainspaused. Fresh design reviewer observed timestamp check BEFOREsealing cancross expiry beforefirstRPC and is testing finalpost-seal currentclock+localauthority fence; no designacceptanceyet. ROOTwill readfinalreview/verifyclosures beforeboundednewproposalrepair. C3 fullgraph correctedrecordingreruns remaininprogress; no nativekey/env/actualapproval/service/paid action.
+
+
+### 2026-10-04 12:13 UTC — three C3 closures verified; exhaustive source audit active
+
+ROOT fullread all3reports and independently verified6,197QA+735operational entries/self-only exactclosure/pins; no preparation acceptance. Fresh none SOURCE C3 audit is active on fullstatic/dynamic/budget/assertion/create/error/journal scope and the newly disclosed installedConvexSDK mutationqueue asyncdispatch freshness seam. PARENT C3 remainsqueued under4agent runtime; no actualROOTreceipt/pin/native action. EarlierC1/C2earlyrejects nevercertifiedexhaustivebounds; C3review mustexplicitlycompleteorreportpending.
+
+ROOT fullread stagingC2design NEEDS3.4 and exact42QA/2scratch closures verified. NEW immutableclarificationC3 revision assigned requiringfinalpost-seal clock+authority+cancel/admission check; late previouslyadmittedpending effects remainallowed. PresentEMPTYmoney semantics resolvesfailcloseddisclosureonly; ultimatepositive officialcategory/wholecharge pipeline remainsmandatoryblocked. Defaultfullimplementation staysPARTIALuntilaccepteddesign/dependentrepair/freshreview. CatalogC2containment repairactive; source-spliceheld.

@@ -1,0 +1,22 @@
+{"when":"before","mode":"healthy","tickets":1,"queries":1,"fetches":1}
+{"when":"before","mode":"source","tickets":0,"queries":0,"fetches":0,"error":"QA_SOURCE_DRIFT"}
+{"when":"before","mode":"target","tickets":0,"queries":0,"fetches":0,"error":"QA_TARGET"}
+{"when":"before","mode":"env","tickets":0,"queries":0,"fetches":0,"error":"QA_SELECTOR"}
+{"when":"before","mode":"publication","tickets":0,"queries":0,"fetches":0,"error":"Expected values to be strictly equal:\n\ntrue !== false\n"}
+{"when":"before","mode":"pin","tickets":0,"queries":0,"fetches":0,"error":"QA_REVIEW_EXPECTED_PIN_DRIFT"}
+{"when":"before","mode":"window","tickets":0,"queries":0,"fetches":0,"error":"QA_TOTAL_TIME_BUDGET"}
+{"when":"after-ticket","mode":"healthy","tickets":1,"queries":1,"fetches":1}
+{"when":"after-ticket","mode":"source","tickets":1,"queries":0,"fetches":0,"error":"QA_SOURCE_DRIFT"}
+{"when":"after-ticket","mode":"target","tickets":1,"queries":0,"fetches":0,"error":"QA_TARGET_DRIFT"}
+{"when":"after-ticket","mode":"env","tickets":1,"queries":0,"fetches":0,"error":"QA_PRIVATE_SELECTOR_DRIFT"}
+{"when":"after-ticket","mode":"publication","tickets":1,"queries":0,"fetches":0,"error":"QA_PUBLICATION_DRIFT"}
+{"when":"after-ticket","mode":"pin","tickets":1,"queries":0,"fetches":0,"error":"QA_REVIEW_EXPECTED_PIN_DRIFT"}
+{"when":"after-ticket","mode":"window","tickets":1,"queries":0,"fetches":0,"error":"QA_TOTAL_TIME_BUDGET"}
+{"when":"after-query-entry","mode":"healthy","tickets":1,"queries":1,"fetches":1}
+{"when":"after-query-entry","mode":"source","tickets":1,"queries":1,"fetches":0,"error":"QA_SOURCE_DRIFT"}
+{"when":"after-query-entry","mode":"target","tickets":1,"queries":1,"fetches":0,"error":"QA_TARGET_DRIFT"}
+{"when":"after-query-entry","mode":"env","tickets":1,"queries":1,"fetches":0,"error":"QA_PRIVATE_SELECTOR_DRIFT"}
+{"when":"after-query-entry","mode":"publication","tickets":1,"queries":1,"fetches":0,"error":"QA_PUBLICATION_DRIFT"}
+{"when":"after-query-entry","mode":"pin","tickets":1,"queries":1,"fetches":0,"error":"QA_REVIEW_EXPECTED_PIN_DRIFT"}
+{"when":"after-query-entry","mode":"window","tickets":1,"queries":1,"fetches":0,"error":"QA_TOTAL_TIME_BUDGET"}
+extra 21 publication dispatch controls PASS

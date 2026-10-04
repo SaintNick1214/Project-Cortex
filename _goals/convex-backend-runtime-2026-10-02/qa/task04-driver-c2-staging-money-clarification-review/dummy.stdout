@@ -1,0 +1,10 @@
+1: all DUMMY payload fields independently seal-sensitive
+2: domain and key separation
+3: UTF16 lexical integer keys differ from ordinary JSON property order
+4: first eligible vs later shaped nominee
+5: full repeated JSON string escaping counts against transport caps; individual child bound insufficient
+6: decoded child and outer graph must be combined, metadata cannot bypass graph bound
+7: pre-sign check at999 + synchronous sign work2ms -> RPC at1001; sealed submittedAt999 still passes. No async yield is needed for counterexample
+8: final post-seal trusted-clock fence rejects genuinely new expired invocation; no refreshed S/P/phase
+9: atomic stage winner, replay/collision before live fences, closed fresh denial
+10: present empty extraction domain never proves zero/full money

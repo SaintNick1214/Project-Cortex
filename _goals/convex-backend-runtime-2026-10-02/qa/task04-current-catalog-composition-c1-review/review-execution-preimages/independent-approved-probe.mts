@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import {runtimePolicyTables} from '../../../../convex-dev/runtimePolicySchema';
+import * as policy from '../../../../convex-dev/runtimeModelPolicy';
+const root='/workspace/Project-Cortex';
+for(const [name,expected] of [['runtimePolicySchema.ts','4467a4d4e424fa57cd07de95bce702108765747cfb6afa8a0756fea253926534'],['runtimeModelPolicy.ts','c8279d4496eb9b6eb5763732dbb7e54cefe27e028f285fe3e31a639af1535710']])assert.equal(crypto.createHash('sha256').update(fs.readFileSync(root+'/convex-dev/'+name)).digest('hex'),expected);
+const accepted=JSON.parse(fs.readFileSync(root+'/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/approved-additions.json','utf8'));
+const tables=Object.entries(runtimePolicyTables).map(([table,value])=>{const exporter=Reflect.get(value,'export');assert.equal(typeof exporter,'function');const exported=Reflect.apply(exporter,value,[]);assert.equal(typeof exported.documentType,'object');assert.equal(exported.documentType.type,'object');assert.equal(typeof exported.documentType.value,'object');assert.ok(Array.isArray(exported.indexes));assert.ok(Array.isArray(exported.searchIndexes));assert.ok(Array.isArray(exported.vectorIndexes));return {table,indexes:value[' indexes'](),exported}});
+const registrations=Object.fromEntries(Object.entries(policy).filter(([,value])=>typeof Reflect.get(value,'exportArgs')==='function').map(([name,value])=>[name,{isPublic:Reflect.get(value,'isPublic'),isInternal:Reflect.get(value,'isInternal'),args:Reflect.apply(Reflect.get(value,'exportArgs'),value,[]),returns:Reflect.apply(Reflect.get(value,'exportReturns'),value,[])}]));
+for(const table of tables)assert.equal(table.exported.stagedDocumentType,undefined);assert.deepEqual(JSON.parse(JSON.stringify(tables)),accepted.tables);assert.deepEqual(JSON.parse(JSON.stringify(registrations)),accepted.registrations);
+const bad=structuredClone(accepted);bad.tables[0].exported.documentType+=' ';assert.throws(()=>assert.deepEqual(tables,bad.tables));
+console.log(JSON.stringify({scope:'SOURCE_PINNED_INSTALLED_1_46_INTERNAL_REFLECTION_OFFLINE_ONLY',tables:tables.length,registrations:Object.keys(registrations).length,exactApprovedMetadata:true,falseExpectedValidatorRejected:true}));

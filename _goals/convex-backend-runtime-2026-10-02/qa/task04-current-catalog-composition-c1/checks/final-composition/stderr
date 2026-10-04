@@ -1,0 +1,187 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Every16 additive native validator/returns/visibility exact
++ actual - expected
+
++ {}
+- {
+-   admit: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"operationKey":{"fieldType":{"type":"union","value":[{"type":"literal","value":"agent.respond"},{"type":"literal","value":"memory.extract"},{"type":"literal","value":"facts.resolve"},{"type":"literal","value":"memory.summarize"},{"type":"literal","value":"conversation.title"},{"type":"literal","value":"artifact.text"},{"type":"literal","value":"artifact.code"},{"type":"literal","value":"artifact.sheet"},{"type":"literal","value":"artifact.suggestions"},{"type":"literal","value":"embedding.query"},{"type":"literal","value":"embedding.memory"},{"type":"literal","value":"media.image.generate"},{"type":"literal","value":"media.video.generate"}]},"optional":false},"runBudgetId":{"fieldType":{"type":"string"},"optional":false},"source":{"fieldType":{"type":"object","value":{"sourceId":{"fieldType":{"type":"string"},"optional":false},"sourceEventId":{"fieldType":{"type":"string"},"optional":false},"sourceRevision":{"fieldType":{"type":"number"},"optional":false},"contentHash":{"fieldType":{"type":"string"},"optional":false}}},"optional":true},"semanticId":{"fieldType":{"type":"string"},"optional":false},"ordinal":{"fieldType":{"type":"number"},"optional":false},"requestCanonical":{"fieldType":{"type":"string"},"optional":false},"parentOperationId":{"fieldType":{"type":"id","tableName":"runtimeModelOperations"},"optional":true}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   admitFallback: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"candidateModelId":{"fieldType":{"type":"string"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   attachTerminalResult: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"evidenceId":{"fieldType":{"type":"string"},"optional":false},"privateResultCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   cancelBudget: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"runBudgetId":{"fieldType":{"type":"string"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   captureTerminalEvidence: {
+-     args: '{"type":"object","value":{"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"dispatchIdentity":{"fieldType":{"type":"string"},"optional":false},"receiptCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   checkFallback: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"candidateModelId":{"fieldType":{"type":"string"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   checkpoint: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"requestCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   ensureBudget: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"operationKey":{"fieldType":{"type":"union","value":[{"type":"literal","value":"agent.respond"},{"type":"literal","value":"memory.extract"},{"type":"literal","value":"facts.resolve"},{"type":"literal","value":"memory.summarize"},{"type":"literal","value":"conversation.title"},{"type":"literal","value":"artifact.text"},{"type":"literal","value":"artifact.code"},{"type":"literal","value":"artifact.sheet"},{"type":"literal","value":"artifact.suggestions"},{"type":"literal","value":"embedding.query"},{"type":"literal","value":"embedding.memory"},{"type":"literal","value":"media.image.generate"},{"type":"literal","value":"media.video.generate"}]},"optional":false},"requestId":{"fieldType":{"type":"string"},"optional":false},"requestCanonical":{"fieldType":{"type":"string"},"optional":false},"agentId":{"fieldType":{"type":"string"},"optional":true},"agentVersion":{"fieldType":{"type":"number"},"optional":true}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   installDeploymentPolicy: {
+-     args: '{"type":"object","value":{"manifestId":{"fieldType":{"type":"string"},"optional":false},"expectedRevision":{"fieldType":{"type":"number"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   markVisible: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"outputVisible":{"fieldType":{"type":"boolean"},"optional":false},"toolInputVisible":{"fieldType":{"type":"boolean"},"optional":false},"toolResultVisible":{"fieldType":{"type":"boolean"},"optional":false},"toolEffectCommitted":{"fieldType":{"type":"boolean"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   provisionTenantPolicy: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"policyCanonical":{"fieldType":{"type":"string"},"optional":false},"overrideRequested":{"fieldType":{"type":"boolean"},"optional":true}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   reconcileDeploymentLiability: {
+-     args: '{"type":"object","value":{"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"receiptCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   recover: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"receiptCanonical":{"fieldType":{"type":"string"},"optional":true}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   releaseNotDispatched: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   resolve: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"operationKey":{"fieldType":{"type":"union","value":[{"type":"literal","value":"agent.respond"},{"type":"literal","value":"memory.extract"},{"type":"literal","value":"facts.resolve"},{"type":"literal","value":"memory.summarize"},{"type":"literal","value":"conversation.title"},{"type":"literal","value":"artifact.text"},{"type":"literal","value":"artifact.code"},{"type":"literal","value":"artifact.sheet"},{"type":"literal","value":"artifact.suggestions"},{"type":"literal","value":"embedding.query"},{"type":"literal","value":"embedding.memory"},{"type":"literal","value":"media.image.generate"},{"type":"literal","value":"media.video.generate"}]},"optional":false},"runBudgetId":{"fieldType":{"type":"string"},"optional":false},"source":{"fieldType":{"type":"object","value":{"sourceId":{"fieldType":{"type":"string"},"optional":false},"sourceEventId":{"fieldType":{"type":"string"},"optional":false},"sourceRevision":{"fieldType":{"type":"number"},"optional":false},"contentHash":{"fieldType":{"type":"string"},"optional":false}}},"optional":true}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   },
+-   settle: {
+-     args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"receiptCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+-     isInternal: true,
+-     returns: 'null'
+-   }
+- }
+
+    at verifyNative (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/current-compose.mjs:44:9)
+    at compose (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/current-compose.mjs:69:114)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/current-compose.mjs:82:108
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: {},
+  expected: {
+    admit: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"operationKey":{"fieldType":{"type":"union","value":[{"type":"literal","value":"agent.respond"},{"type":"literal","value":"memory.extract"},{"type":"literal","value":"facts.resolve"},{"type":"literal","value":"memory.summarize"},{"type":"literal","value":"conversation.title"},{"type":"literal","value":"artifact.text"},{"type":"literal","value":"artifact.code"},{"type":"literal","value":"artifact.sheet"},{"type":"literal","value":"artifact.suggestions"},{"type":"literal","value":"embedding.query"},{"type":"literal","value":"embedding.memory"},{"type":"literal","value":"media.image.generate"},{"type":"literal","value":"media.video.generate"}]},"optional":false},"runBudgetId":{"fieldType":{"type":"string"},"optional":false},"source":{"fieldType":{"type":"object","value":{"sourceId":{"fieldType":{"type":"string"},"optional":false},"sourceEventId":{"fieldType":{"type":"string"},"optional":false},"sourceRevision":{"fieldType":{"type":"number"},"optional":false},"contentHash":{"fieldType":{"type":"string"},"optional":false}}},"optional":true},"semanticId":{"fieldType":{"type":"string"},"optional":false},"ordinal":{"fieldType":{"type":"number"},"optional":false},"requestCanonical":{"fieldType":{"type":"string"},"optional":false},"parentOperationId":{"fieldType":{"type":"id","tableName":"runtimeModelOperations"},"optional":true}}}',
+      returns: 'null'
+    },
+    admitFallback: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"candidateModelId":{"fieldType":{"type":"string"},"optional":false}}}',
+      returns: 'null'
+    },
+    attachTerminalResult: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"evidenceId":{"fieldType":{"type":"string"},"optional":false},"privateResultCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+      returns: 'null'
+    },
+    cancelBudget: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"runBudgetId":{"fieldType":{"type":"string"},"optional":false}}}',
+      returns: 'null'
+    },
+    captureTerminalEvidence: {
+      isInternal: true,
+      args: '{"type":"object","value":{"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"dispatchIdentity":{"fieldType":{"type":"string"},"optional":false},"receiptCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+      returns: 'null'
+    },
+    checkFallback: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"candidateModelId":{"fieldType":{"type":"string"},"optional":false}}}',
+      returns: 'null'
+    },
+    checkpoint: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"requestCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+      returns: 'null'
+    },
+    ensureBudget: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"operationKey":{"fieldType":{"type":"union","value":[{"type":"literal","value":"agent.respond"},{"type":"literal","value":"memory.extract"},{"type":"literal","value":"facts.resolve"},{"type":"literal","value":"memory.summarize"},{"type":"literal","value":"conversation.title"},{"type":"literal","value":"artifact.text"},{"type":"literal","value":"artifact.code"},{"type":"literal","value":"artifact.sheet"},{"type":"literal","value":"artifact.suggestions"},{"type":"literal","value":"embedding.query"},{"type":"literal","value":"embedding.memory"},{"type":"literal","value":"media.image.generate"},{"type":"literal","value":"media.video.generate"}]},"optional":false},"requestId":{"fieldType":{"type":"string"},"optional":false},"requestCanonical":{"fieldType":{"type":"string"},"optional":false},"agentId":{"fieldType":{"type":"string"},"optional":true},"agentVersion":{"fieldType":{"type":"number"},"optional":true}}}',
+      returns: 'null'
+    },
+    installDeploymentPolicy: {
+      isInternal: true,
+      args: '{"type":"object","value":{"manifestId":{"fieldType":{"type":"string"},"optional":false},"expectedRevision":{"fieldType":{"type":"number"},"optional":false}}}',
+      returns: 'null'
+    },
+    markVisible: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"outputVisible":{"fieldType":{"type":"boolean"},"optional":false},"toolInputVisible":{"fieldType":{"type":"boolean"},"optional":false},"toolResultVisible":{"fieldType":{"type":"boolean"},"optional":false},"toolEffectCommitted":{"fieldType":{"type":"boolean"},"optional":false}}}',
+      returns: 'null'
+    },
+    provisionTenantPolicy: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"policyCanonical":{"fieldType":{"type":"string"},"optional":false},"overrideRequested":{"fieldType":{"type":"boolean"},"optional":true}}}',
+      returns: 'null'
+    },
+    reconcileDeploymentLiability: {
+      isInternal: true,
+      args: '{"type":"object","value":{"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"receiptCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+      returns: 'null'
+    },
+    recover: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"receiptCanonical":{"fieldType":{"type":"string"},"optional":true}}}',
+      returns: 'null'
+    },
+    releaseNotDispatched: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false}}}',
+      returns: 'null'
+    },
+    resolve: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"operationKey":{"fieldType":{"type":"union","value":[{"type":"literal","value":"agent.respond"},{"type":"literal","value":"memory.extract"},{"type":"literal","value":"facts.resolve"},{"type":"literal","value":"memory.summarize"},{"type":"literal","value":"conversation.title"},{"type":"literal","value":"artifact.text"},{"type":"literal","value":"artifact.code"},{"type":"literal","value":"artifact.sheet"},{"type":"literal","value":"artifact.suggestions"},{"type":"literal","value":"embedding.query"},{"type":"literal","value":"embedding.memory"},{"type":"literal","value":"media.image.generate"},{"type":"literal","value":"media.video.generate"}]},"optional":false},"runBudgetId":{"fieldType":{"type":"string"},"optional":false},"source":{"fieldType":{"type":"object","value":{"sourceId":{"fieldType":{"type":"string"},"optional":false},"sourceEventId":{"fieldType":{"type":"string"},"optional":false},"sourceRevision":{"fieldType":{"type":"number"},"optional":false},"contentHash":{"fieldType":{"type":"string"},"optional":false}}},"optional":true}}}',
+      returns: 'null'
+    },
+    settle: {
+      isInternal: true,
+      args: '{"type":"object","value":{"reference":{"fieldType":{"type":"object","value":{"principalId":{"fieldType":{"type":"string"},"optional":false},"principalVersion":{"fieldType":{"type":"number"},"optional":false},"membershipId":{"fieldType":{"type":"string"},"optional":false},"membershipVersion":{"fieldType":{"type":"number"},"optional":false},"grantId":{"fieldType":{"type":"string"},"optional":false},"grantVersion":{"fieldType":{"type":"number"},"optional":false},"tenantId":{"fieldType":{"type":"string"},"optional":false},"tenantEpoch":{"fieldType":{"type":"number"},"optional":false},"memorySpaceId":{"fieldType":{"type":"string"},"optional":true},"memorySpaceEpoch":{"fieldType":{"type":"number"},"optional":true}}},"optional":false},"attemptId":{"fieldType":{"type":"id","tableName":"runtimeModelAttempts"},"optional":false},"receiptCanonical":{"fieldType":{"type":"string"},"optional":false}}}',
+      returns: 'null'
+    }
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

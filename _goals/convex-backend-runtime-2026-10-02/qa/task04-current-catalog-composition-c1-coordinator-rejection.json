@@ -1,0 +1,24 @@
+{
+  "utc": "2026-10-04T12:06:27.812486+00:00",
+  "verdict": "REJECT_OFFLINE_COMPOSITION_PROPOSAL_ONLY",
+  "score": 2.8,
+  "fullReportRead": true,
+  "reportSha256": "4d10de240cd631cb5083408820492fd650871d6eccd933f3c52cbe35476d0d8b",
+  "qaManifestSha256": "919ddf36c08c15e0de5638a0a380b69ed57dc0387790b70cfbdfde44ad26507f",
+  "qaRowsVerified": 2177,
+  "literalQASymlinksVerifiedWithoutFollowing": 20,
+  "scratchManifestSha256": "dc3d4498aed564ef852f5eee97d0e9a9eaedf711c04187129c5488d19dcba215",
+  "scratchRowsVerified": 5,
+  "observedPassingCases": 454,
+  "skips": 0,
+  "blockers": [
+    "real ancestor containment before any write",
+    "exclusive replica creation rejecting existing symlink entries",
+    "source pin verification before mkdir/effects",
+    "net.Socket.prototype.connect network interception",
+    "owned runner cleanup on every failure preserving caller files"
+  ],
+  "notReproduced": "extra JS import execution; do not label confirmed exploit",
+  "actualFourFileSplice": "SOURCE_SERIALIZED_HOLD",
+  "next": "NEW C2 catalog containment repair queued under max4, preserve all original assertion/catalog/native metadata and C1 failures; fresh review mandatory"
+}

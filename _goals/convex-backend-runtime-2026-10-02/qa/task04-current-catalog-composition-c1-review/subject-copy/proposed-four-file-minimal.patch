@@ -1,0 +1,100 @@
+--- a/tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
++++ b/tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+@@ -8,7 +8,6 @@
+ import crypto from 'node:crypto';
+ import ts from 'typescript';
+ import { execFileSync } from 'node:child_process';
+-import os from 'node:os';
+ import path from 'node:path';
+ 
+ type Native = { isPublic?: boolean; isInternal?: boolean; isQuery?: boolean; exportArgs(): string };
+@@ -206,10 +205,11 @@
+   expect(crypto.createHash('sha256').update(fs.readFileSync(archivedArtifact)).digest('hex')).toBe('15959b6cbc5126425c40a16d7a473cf0c353211b78b677e51660720abe7a9c14');
+   const current = declarations(fs.readFileSync(archivedArtifact, 'utf8')); expect(accepted).toHaveLength(22);
+   for (const row of accepted) { const text = current.get(row.path.split(':')[1])!.declaration; expect(text).toBe(row.declaration); expect(crypto.createHash('sha256').update(text).digest('hex')).toBe(row.sha256); }
+-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'cortex-asset-index-preservation-'));
++  fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-composition-c1/test-scratch"), { recursive: true });
++  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-composition-c1/test-scratch"), 'cortex-asset-index-preservation-'));
+   try {
+     const composition = JSON.parse(execFileSync(process.execPath,
+-      ['_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs', directory],
++      ['_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/current-compose.mjs', directory],
+       { encoding: 'utf8' }));
+     expect(composition.exactCurrentRepair.wholeByteAuthorizedEdits).toBe(3);
+     expect(composition.exactCurrentRepair.postHashes).toEqual({
+--- a/tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
++++ b/tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+@@ -1,6 +1,5 @@
+ import { describe, expect, it } from "@jest/globals";
+ import fs from "node:fs";
+-import os from "node:os";
+ import { defineSchema, defineTable } from "convex/server";
+ import { v } from "convex/values";
+ import path from "node:path";
+@@ -148,9 +147,10 @@
+     expect(args(governance.setPolicy).value.policy).toMatchObject({ optional: false });
+   });
+   it("AST inventory resolves exact 25 frozen paths with seven public and eighteen internal", () => {
+-    const target = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-task03b2d-catalog-"));
++    fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-composition-c1/test-scratch"), { recursive: true });
++    const target = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-composition-c1/test-scratch"), "cortex-task03b2d-catalog-"));
+     try {
+-      const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
++      const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/current-compose.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
+       expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
+       const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
+         completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];
+--- a/tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
++++ b/tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+@@ -3,6 +3,10 @@
+ import { defineTable } from "convex/server";
+ import { v } from "convex/values";
+ import schema from "../../../convex-dev/schema";
++import fs from "node:fs";
++import path from "node:path";
++import { execFileSync } from "node:child_process";
++
+ 
+ import { fixture, native } from "./fixture";
+ 
+@@ -22,7 +26,19 @@
+   });
+ 
+   test("all exported tables, including runtime schema fragments, have unique index field sequences", () => {
+-    expect(Object.keys(schema.tables)).toHaveLength(26);
++    fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-composition-c1/test-scratch"), { recursive: true });
++  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-composition-c1/test-scratch"), "cortex-current-schema-composition-"));
++    let baselineNames: string[];
++    try {
++      const composition = JSON.parse(execFileSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/current-compose.mjs", directory], { encoding: "utf8" }));
++      const baseline = JSON.parse(fs.readFileSync(composition.exactCurrentRepair.nativeWitness, "utf8"));
++      baselineNames = baseline.definitions.map((row: { table: string }) => row.table);
++      expect(composition.currentComposition.baselineProjectionHash).toBe("07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d");
++      expect(composition.currentComposition.totals).toEqual({ baselineTables: 26, additiveTables: 5, currentTables: 31, indexes: 184, policyInternal: 16 });
++    } finally { fs.rmSync(directory, { recursive: true, force: true }); }
++    expect(fs.existsSync(directory)).toBe(false);
++    expect(baselineNames!).toHaveLength(26);
++    expect(Object.keys(schema.tables).filter(table => baselineNames!.includes(table))).toEqual(baselineNames!);
+     for (const [table, definition] of Object.entries(schema.tables)) {
+       expect({ table, duplicates: duplicateIndexes(definition[" indexes"]()) })
+         .toEqual({ table, duplicates: [] });
+--- a/tests/unit/runtimeArtifactAuth/inventory.test.ts
++++ b/tests/unit/runtimeArtifactAuth/inventory.test.ts
+@@ -1,14 +1,14 @@
+ import "./accepted-reader-compat";
+ import { expect, test } from "@jest/globals";
+ import fs from "node:fs";
+-import os from "node:os";
+ import path from "node:path";
+ import { execFileSync } from "node:child_process";
+ 
+ test("native catalog composes accepted selected22 and later five file closures while preserving historical inventory", () => {
+-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-artifact-inventory-"));
++  fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-composition-c1/test-scratch"), { recursive: true });
++  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-composition-c1/test-scratch"), "cortex-artifact-inventory-"));
+   try {
+-    const output = execFileSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs", directory], { encoding: "utf8" });
++    const output = execFileSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/current-compose.mjs", directory], { encoding: "utf8" });
+     const composition = JSON.parse(output);
+     expect(composition.counts).toEqual({ selected22: 22, approvedLaterFileDeclarations: 5, approvedLaterStats: 2, artifactModuleRegistrations: 27, registryModuleRegistrations: 48 });
+     expect(composition.negativeControls).toBe(4);

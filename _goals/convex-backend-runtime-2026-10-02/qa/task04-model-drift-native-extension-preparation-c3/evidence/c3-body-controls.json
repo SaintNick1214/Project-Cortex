@@ -1,0 +1,410 @@
+{
+  "results": [
+    {
+      "entry": "shared",
+      "mode": "success",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "shared",
+      "mode": "exact-limit",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "shared",
+      "mode": "chunked-limit",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "shared",
+      "mode": "overflow",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_CEILING"
+    },
+    {
+      "entry": "shared",
+      "mode": "read-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "shared",
+      "mode": "read-cancel-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "shared",
+      "mode": "read-release-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "shared",
+      "mode": "overflow-cancel-release",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_CEILING"
+    },
+    {
+      "entry": "shared",
+      "mode": "release-only",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_SECONDARY"
+    },
+    {
+      "entry": "shared",
+      "mode": "expired-entry",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "shared",
+      "mode": "slow-read",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "shared",
+      "mode": "late-read",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "shared",
+      "mode": "no-body",
+      "reads": 0,
+      "cancels": 0,
+      "releases": 0,
+      "acquired": 0,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "publication",
+      "mode": "success",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "publication",
+      "mode": "exact-limit",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "publication",
+      "mode": "chunked-limit",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "publication",
+      "mode": "overflow",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_CEILING"
+    },
+    {
+      "entry": "publication",
+      "mode": "read-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "publication",
+      "mode": "read-cancel-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "publication",
+      "mode": "read-release-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "publication",
+      "mode": "overflow-cancel-release",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_CEILING"
+    },
+    {
+      "entry": "publication",
+      "mode": "release-only",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_SECONDARY"
+    },
+    {
+      "entry": "publication",
+      "mode": "expired-entry",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "publication",
+      "mode": "slow-read",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "publication",
+      "mode": "late-read",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "publication",
+      "mode": "no-body",
+      "reads": 0,
+      "cancels": 0,
+      "releases": 0,
+      "acquired": 0,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "management",
+      "mode": "success",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "management",
+      "mode": "exact-limit",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "management",
+      "mode": "chunked-limit",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "entry": "management",
+      "mode": "overflow",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_CEILING"
+    },
+    {
+      "entry": "management",
+      "mode": "read-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "management",
+      "mode": "read-cancel-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "management",
+      "mode": "read-release-error",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_PRIMARY_READ"
+    },
+    {
+      "entry": "management",
+      "mode": "overflow-cancel-release",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_CEILING"
+    },
+    {
+      "entry": "management",
+      "mode": "release-only",
+      "reads": 2,
+      "cancels": 0,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "DUMMY_SECONDARY"
+    },
+    {
+      "entry": "management",
+      "mode": "expired-entry",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "management",
+      "mode": "slow-read",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "management",
+      "mode": "late-read",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "acquired": 1,
+      "status": "PASS",
+      "error": "QA_RESPONSE_DEADLINE"
+    },
+    {
+      "entry": "management",
+      "mode": "no-body",
+      "reads": 0,
+      "cancels": 0,
+      "releases": 0,
+      "acquired": 0,
+      "status": "PASS",
+      "error": "QA_RESPONSE_BODY"
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "scripts/peer.mjs",
+      "sha256": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69"
+    },
+    {
+      "path": "scripts/publication-artifacts.mjs",
+      "sha256": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334"
+    },
+    {
+      "path": "scripts/bounded-response.mjs",
+      "sha256": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841"
+    }
+  ],
+  "scope": "EXACT_HELPERS_VM_DUMMY_STREAMS_ONLY_NO_NETWORK_PRIVATE_OR_NATIVE",
+  "native": "NOT_RUN"
+}
