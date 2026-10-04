@@ -1,0 +1,9 @@
+{
+  "status": "RETAINED_ROOT_READER_SCHEMA_ERROR",
+  "traceback": "Traceback <string> line33 AssertionError",
+  "reason": "ROOT reader incorrectly excluded own seal from root directory members. Seal excludes its content row but records exact literal root membership including selfseal.",
+  "subjectMutation": false,
+  "childrenExecuted": 0,
+  "oldScriptStandaloneBacking": "NOT_CAPTURED_INLINE_TOOL_SOURCE_ONLY",
+  "correction": "Current helper checks all literal directory names and excludes only own seal row from traversal set."
+}
