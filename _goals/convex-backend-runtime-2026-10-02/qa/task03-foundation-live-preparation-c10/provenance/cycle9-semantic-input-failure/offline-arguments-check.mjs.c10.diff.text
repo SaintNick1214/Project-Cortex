@@ -1,0 +1,8 @@
+--- C9/offline-arguments-check.mjs
++++ C10/offline-arguments-check.mjs
+@@ -60,3 +60,5 @@
+ }
+ for(const row of ledger.cases)validate(native.rows.find(r=>r.path===row.path).args,argumentsFor(row,ctx));
+ console.log(JSON.stringify({scope:'OFFLINE_NATIVE_VALIDATOR_SHAPES',status:'PASS',registered:259,arrayBearingPublicPaths:audit.arrayBearingPublicPaths,nonemptyBatchPaths:2,partialMutationBindingPaths:partialRows.length,partialBindingNegatives,healthyMockGetters:healthy.length,bindingNegatives,seedRowsFromActualFamily:seedRows.length,realIdEncoding:'NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS',dispatches:0,signatures:0}));
++
++export {ctx as offlineCandidateContext};

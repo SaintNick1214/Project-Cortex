@@ -1,0 +1,53 @@
+{
+  "source": "convex-dev/memories.ts",
+  "preimageSha256": "3208cb25973aa032fc4b22c62b21eefaf60ab91016ab9eb608d2a1e25037ecc4",
+  "postimageSha256": "988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554",
+  "exactTwoReplacementEquality": true,
+  "replacements": [
+    {
+      "operation": "updatePartialMemory",
+      "originalByteOffsetZeroBased": 8435,
+      "originalLine": 221,
+      "removed": "      throw new ConvexError(\"MEMORY_NOT_FOUND\");",
+      "added": "      dataDenied();"
+    },
+    {
+      "operation": "finalizePartialMemory",
+      "originalByteOffsetZeroBased": 9593,
+      "originalLine": 257,
+      "removed": "      throw new ConvexError(\"MEMORY_NOT_FOUND\");",
+      "added": "      dataDenied();"
+    }
+  ],
+  "preservedOriginalTests": [
+    {
+      "path": "tests/unit/runtimeEndpointAuth/facts.test.ts",
+      "sha256": "d59923d0f765f641b93c87844d3734e951ff3d8a5f307f4575c546fd30d4272c",
+      "equalsGitHEAD": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/memory.test.ts",
+      "sha256": "f2fd7ae91745fb7a7e8c3eb98d0ab9527b638cd434801a3cbb389925a190f4ff",
+      "equalsGitHEAD": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts",
+      "sha256": "93732164d708380c9ca34b8483756890164d4733c440f3de56a1063e6b28f8dd",
+      "equalsGitHEAD": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts",
+      "sha256": "137ef88917f4d40a2c228157e9bdc818da0a973e762fd65427132c4ee191c724",
+      "equalsGitHEAD": true
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+      "sha256": "ac53e94b7c783ce4d82223f9aa3b5b83f1daa27fcf41c843c7dd3ac8c5455c0f",
+      "equalsGitHEAD": true
+    }
+  ],
+  "newTest": {
+    "path": "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts",
+    "sha256": "6315c0c571ac9ae3e940f2fab2905e5de900100b207101c2f6e266588b514732"
+  }
+}
