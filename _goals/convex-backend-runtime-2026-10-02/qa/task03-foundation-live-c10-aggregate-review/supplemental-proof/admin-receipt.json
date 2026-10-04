@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "work/resume/foundation-jest.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+    "--json",
+    "--outputFile=work/resume/current-foundation-c10-aggregate-review/jest-admin-result.json"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUTC": "2026-10-04T00:28:07.597409+00:00",
+  "endUTC": "2026-10-04T00:28:11.173678+00:00",
+  "exitCode": 0,
+  "stdout": "admin.stdout",
+  "stderr": "admin.stderr"
+}

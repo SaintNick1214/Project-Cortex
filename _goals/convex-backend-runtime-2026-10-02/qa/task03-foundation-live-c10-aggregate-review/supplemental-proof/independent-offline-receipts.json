@@ -1,0 +1,53 @@
+[
+  {
+    "mode": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "work/resume/foundation-jest.config.mjs",
+      "--runInBand",
+      "--runTestsByPath",
+      "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts",
+      "tests/unit/runtimeMemory/public-closure.test.ts",
+      "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "tests/unit/runtimeArtifactAuth/admission-errors.test.ts",
+      "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts",
+      "tests/unit/auth/credentials.test.ts",
+      "--listTests"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T00:13:37.357563+00:00",
+    "endUTC": "2026-10-04T00:13:37.558563+00:00",
+    "exitCode": 0,
+    "stdout": "discovery.stdout",
+    "stderr": "discovery.stderr"
+  },
+  {
+    "mode": "execute",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "work/resume/foundation-jest.config.mjs",
+      "--runInBand",
+      "--runTestsByPath",
+      "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts",
+      "tests/unit/runtimeMemory/public-closure.test.ts",
+      "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "tests/unit/runtimeArtifactAuth/admission-errors.test.ts",
+      "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts",
+      "tests/unit/auth/credentials.test.ts",
+      "--json",
+      "--outputFile=work/resume/current-foundation-c10-aggregate-review/jest-result.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T00:13:37.558829+00:00",
+    "endUTC": "2026-10-04T00:13:42.308656+00:00",
+    "exitCode": 0,
+    "stdout": "execute.stdout",
+    "stderr": "execute.stderr"
+  }
+]

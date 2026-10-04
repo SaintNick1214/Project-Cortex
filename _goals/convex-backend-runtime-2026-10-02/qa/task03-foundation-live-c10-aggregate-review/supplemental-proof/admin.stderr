@@ -1,0 +1,71 @@
+(node:64458) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  internal deployment-operator maintenance
+    ✓ listTable/countTable/getAllCounts operate without target grants and stay on the fixed Cortex allowlist (4 ms)
+    ✓ listTable rejects forged/control table selectors with typed invalid input (2 ms)
+    ✓ countTable rejects forged/control table selectors with typed invalid input (1 ms)
+    ✓ clearTable rejects forged/control table selectors with typed invalid input (1 ms)
+    ✓ deleteRecord rejects forged/control table selectors with typed invalid input (1 ms)
+    ✓ deleteRecord validates table-ID equality before any deletion (1 ms)
+    ✓ deleteRecord cleans policy log references and preserves auth/source/tombstone fences (4 ms)
+    ✓ clearTable removes bounded queue metadata, leaves canonical data and reports hasMore (1 ms)
+    ✓ unsafe agents deletion/clear has a typed unsupported lifecycle outcome (1 ms)
+    ✓ unsafe artifacts deletion/clear has a typed unsupported lifecycle outcome (1 ms)
+    ✓ unsafe contexts deletion/clear has a typed unsupported lifecycle outcome (1 ms)
+    ✓ unsafe conversations deletion/clear has a typed unsupported lifecycle outcome (1 ms)
+    ✓ unsafe factHistory deletion/clear has a typed unsupported lifecycle outcome (1 ms)
+    ✓ unsafe facts deletion/clear has a typed unsupported lifecycle outcome
+    ✓ unsafe immutable deletion/clear has a typed unsupported lifecycle outcome
+    ✓ unsafe memories deletion/clear has a typed unsupported lifecycle outcome (1 ms)
+    ✓ unsafe memorySpaces deletion/clear has a typed unsupported lifecycle outcome
+    ✓ unsafe mutable deletion/clear has a typed unsupported lifecycle outcome
+    ✓ unsafe sessions deletion/clear has a typed unsupported lifecycle outcome (1 ms)
+    ✓ invalid maintenance limit 0 performs no destructive work
+    ✓ invalid maintenance limit -1 performs no destructive work
+    ✓ invalid maintenance limit 1001 performs no destructive work (1 ms)
+    ✓ invalid maintenance limit NaN performs no destructive work
+    ✓ invalid maintenance limit Infinity performs no destructive work (1 ms)
+    ✓ invalid maintenance limit 1.5 performs no destructive work
+    ✓ operator purge cleans only selected metadata despite revoked target (1 ms)
+    ✓ operator purge cleans only selected metadata despite revoked target (1 ms)
+    ✓ operator purge cleans only selected metadata despite revoked target
+    ✓ clearTable rolls back earlier metadata deletions on a later database failure (9 ms)
+  actual registered visibility and canonical schema/AST catalog
+    ✓ admin:clearTable has internal registration visibility, unavailable through api
+    ✓ admin:countTable has internal registration visibility, unavailable through api (1 ms)
+    ✓ admin:deleteRecord has internal registration visibility, unavailable through api
+    ✓ admin:getAllCounts has internal registration visibility, unavailable through api
+    ✓ admin:listTable has internal registration visibility, unavailable through api
+    ✓ graphSync:clearSyncedItems has internal registration visibility, unavailable through api
+    ✓ graphSync:deleteSyncItem has internal registration visibility, unavailable through api (1 ms)
+    ✓ graphSync:getFailedItems has internal registration visibility, unavailable through api
+    ✓ graphSync:getHighPriorityItems has internal registration visibility, unavailable through api (1 ms)
+    ✓ graphSync:getSyncStats has internal registration visibility, unavailable through api
+    ✓ graphSync:getUnsyncedItems has internal registration visibility, unavailable through api (1 ms)
+    ✓ graphSync:markFailed has internal registration visibility, unavailable through api
+    ✓ graphSync:markSynced has internal registration visibility, unavailable through api
+    ✓ graphSync:purgeAll has internal registration visibility, unavailable through api (1 ms)
+    ✓ graphSync:queueForSync has internal registration visibility, unavailable through api
+    ✓ governance:enforce has internal registration visibility, unavailable through api (1 ms)
+    ✓ governance:purgeAllPolicies has internal registration visibility, unavailable through api
+    ✓ governance:purgeAllEnforcement has internal registration visibility, unavailable through api
+    ✓ governance:setPolicy stays public with guarded handler (1 ms)
+    ✓ governance:setAgentOverride stays public with guarded handler
+    ✓ governance:getPolicy stays public with guarded handler
+    ✓ governance:getTemplate stays public with guarded handler
+    ✓ governance:simulate stays public with guarded handler
+    ✓ governance:getComplianceReport stays public with guarded handler
+    ✓ governance:getEnforcementStats stays public with guarded handler (1 ms)
+    ✓ native Convex schema export retains all 02B/auth/host tables and scoped indexes (4 ms)
+    ✓ composing D metadata definitions preserves controlled host validators/indexes and trusted control tables (8 ms)
+    ✓ native public/internal validators reject caller entity/admin metadata and require worker references (1 ms)
+    ✓ AST inventory resolves exact 25 frozen paths with seven public and eighteen internal (539 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       58 passed, 58 total
+Snapshots:   0 total
+Time:        3.35 s
+Ran all test suites within paths "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts".
+Test results written to: work/resume/current-foundation-c10-aggregate-review/jest-admin-result.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?
