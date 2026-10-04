@@ -135,3 +135,7 @@ Fresh scoped DESIGN PASS 4.4 (requirements 5) closes the rejected revoked-live-s
 ## Task04 Gateway helper C1 rejection
 
 Fresh offline helper REJECT 2.8: cancellation during an awaited visibility RPC permits later delivery, and the native-reader deadline leaves completion suspended on that RPC. Candidate 56 tests/types/lint passed but two hostile outcome probes failed. Parent verified all 48 recursive review manifest rows; original setup failures and candidate history remain. A bounded two-file C2 repair must fence every delivery and bound authority/persistence waits without dropping known charge or replaying inference. Capture remains an unwired capture-only port. Accepted B C2 is unchanged; full Task04 remains incomplete. See task04-gateway-middleware-c1-rejection.json.
+
+## Task04 nonpaid native preparation C1 rejection
+
+Fresh preparation REJECT 2.8: mandatory retirement uses an undefined/wrong containment base; publication compares tuples without validators; two real crash-recovery branches omit full money/slot outcome assertions. Parent verified all 26 self-excluded review rows. Twelve independent offline outcomes and four hostile investigations passed, but no target was created and native behavior is NOT_RUN. A separate QA-only C2 repair preserves the frozen original packet, original assertions and failed receipts, with affected executable regressions and recomputed finite budgets. Accepted ledger product C2 and its 16 source fingerprints remain unchanged. See task04-native-admission-c1-preparation-rejection.json.

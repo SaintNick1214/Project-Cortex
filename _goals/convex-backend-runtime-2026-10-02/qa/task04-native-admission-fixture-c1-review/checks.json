@@ -1,0 +1,91 @@
+[
+  {
+    "name": "offline",
+    "argv": [
+      "node",
+      "--test",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c1-review/offline-review.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:02:56.062024+00:00",
+    "endedAt": "2026-10-04T03:02:58.462167+00:00",
+    "exitCode": 0,
+    "network": false,
+    "native": false
+  },
+  {
+    "name": "retire-checkjs",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--ignoreConfig",
+      "--noEmit",
+      "--allowJs",
+      "--checkJs",
+      "--skipLibCheck",
+      "--target",
+      "ES2022",
+      "--module",
+      "NodeNext",
+      "--moduleResolution",
+      "NodeNext",
+      "--types",
+      "node",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/retire.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:02:58.462194+00:00",
+    "endedAt": "2026-10-04T03:02:59.273479+00:00",
+    "exitCode": 2,
+    "network": false,
+    "native": false
+  },
+  {
+    "name": "hostile",
+    "argv": [
+      "node",
+      "--test",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c1-review/hostile-review.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:04:11.271507+00:00",
+    "endedAt": "2026-10-04T03:04:11.387354+00:00",
+    "exitCode": 0,
+    "fingerprintsPreserved": true,
+    "network": false,
+    "native": false
+  },
+  {
+    "name": "inventory",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c1-review/inventory-review.mjs",
+      "--verify"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:04:11.470942+00:00",
+    "endedAt": "2026-10-04T03:04:12.182192+00:00",
+    "exitCode": 0,
+    "fingerprintsPreserved": true,
+    "network": false,
+    "native": false
+  },
+  {
+    "name": "scoped-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/tsconfig.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-04T03:04:12.256623+00:00",
+    "endedAt": "2026-10-04T03:04:20.913546+00:00",
+    "exitCode": 0,
+    "fingerprintsPreserved": true,
+    "network": false,
+    "native": false
+  }
+]
