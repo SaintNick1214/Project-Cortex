@@ -1,0 +1,13 @@
+{
+  "provenance": "CONVERSATION_TOOL_OUTPUT_VERBATIM",
+  "chunk_id": "e02110",
+  "wall_time_seconds": 6.691652522,
+  "exit_code": 1,
+  "original_token_count": 6046,
+  "completeOutputPreserved": false,
+  "outputWasTruncated": true,
+  "warningFragment": "jest-haste-map: Haste module naming collision: @cortexmemory/sdk\n  The following files share their name; please adjust your hasteImpl:\n    * <rootDir>/package.json\n    * <rootDir>/work/resume/artifact/package.json\n",
+  "failureFragment": "FAIL tests/unit/domain/model-policy.test.ts\n  \u25cf trusted pure model policy \u203a registers every approved operation and leaves media unavailable\n\n    expect(received).toThrow(expected)\n\n    Expected substring: \"CAPABILITY_UNAVAILABLE\"\n    Received message:   \"INVALID_INPUT: nonplain array\"\n",
+  "finalSummaryFragment": "Test Suites: 1 failed, 1 total\nTests:       14 failed, 8 passed, 22 total\nSnapshots:   0 total\nTime:        2.376 s\nRan all test suites.\n",
+  "qualification": "Only these exact visible output fragments and response metadata are preserved. No reconstructed missing output or invented separate stdout/stderr."
+}

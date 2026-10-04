@@ -1,0 +1,36 @@
+{
+  "domainBrowser": {
+    "exports": 60,
+    "inputs": 106,
+    "nodeGlobalsAbsent": true,
+    "webCrypto": true
+  },
+  "positiveChecks": "scope/run/parent identities,collision,accessor-array,qualified ceiling,safe integers",
+  "findings": [
+    {
+      "probe": "fallback getter must not execute",
+      "effects": 1,
+      "allowed": true,
+      "pass": false
+    },
+    {
+      "probe": "nested tool definition detached without freezing input",
+      "sameReference": true,
+      "callerFrozen": true,
+      "pass": false
+    },
+    {
+      "probe": "nested output schema detached",
+      "sameReference": true,
+      "callerFrozen": true,
+      "pass": false
+    },
+    {
+      "probe": "nested tool call and result detached",
+      "callSame": true,
+      "resultSame": true,
+      "callerFrozen": true,
+      "pass": false
+    }
+  ]
+}

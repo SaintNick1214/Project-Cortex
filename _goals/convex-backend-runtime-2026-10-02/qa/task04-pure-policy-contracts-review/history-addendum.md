@@ -1,0 +1,9 @@
+# Final provenance addendum
+
+The parent created `../task04-pure-policy-contracts-initial-history/` before this final verdict. Its gap-report/provenance were inspected. This is a partial conversation archive:22-test pass output and initial config creation inputs are preserved as newly archived visible conversation bytes; initial14failure output is truncated fragments. Full initial stdout/stderr/product/test preimages and overwritten22-test receipt files remain unavailable. Hashes of new archive bytes do not establish original filesystem bytes. This accurately documents the history limitation; it neither fabricates complete preservation nor changes the two demonstrated candidate defects.
+
+The parent's `../task04-pure-policy-contracts-c1-candidate/manifest.json` and all three inert candidate preimages independently hash-match this review's exact SHA256 candidate. Thus the reviewed/failing24-test candidate is preserved before repair. Its manifest PENDING verdict was a recording state at inspection, not acceptance.
+
+For reproduction, use the exact argv/cwd in each recorded receipt against the saved isolated mirror, directing any outputs into a NEW directory. The setup script creates a mirror and symlink only once; do not rerun that creation unchanged against its existing mirror. The runner scripts contain fixed historical output paths; copy/adapt those output destinations before a new run to preserve these receipts. This clarifies the report's fresh-directory instruction without claiming unchanged setup is repeatable over an existing mirror.
+
+An initial source inspection requested initial-history/report.md and observed its absence; the actual gap-report.md was immediately read successfully. This was a read-path correction, not a failed product check or missing evidence artifact.

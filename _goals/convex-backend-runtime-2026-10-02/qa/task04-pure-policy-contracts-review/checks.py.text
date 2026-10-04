@@ -1,0 +1,14 @@
+import subprocess,json,datetime,pathlib,os
+root=pathlib.Path('/workspace/Project-Cortex'); scratch=root/'work/resume/task04-pure-policy-review/mirror'; out=root/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-review'
+def run(name,args):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat(); env=os.environ.copy();env['npm_config_offline']='true'
+ r=subprocess.run(args,cwd=scratch,capture_output=True,text=True,env=env)
+ (out/(name+'.stdout')).write_text(r.stdout);(out/(name+'.stderr')).write_text(r.stderr)
+ (out/(name+'.receipt.json')).write_text(json.dumps({'command':args,'cwd':str(scratch),'startedAtUTC':start,'finishedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':r.returncode,'environmentLoaders':False,'npmOffline':True},indent=2)+'\n'); print(name,r.returncode,flush=True)
+run('node',['node','--version'])
+run('npm',['node','/home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js','--version'])
+run('types',['node','node_modules/typescript/bin/tsc','--project','tsconfig.scoped.json','--noEmit'])
+run('lint',['node','node_modules/eslint/bin/eslint.js','src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts','--report-unused-disable-directives','--max-warnings=0'])
+run('discovery',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','jest.scoped.mjs','--listTests','--runInBand'])
+run('unit',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config','jest.scoped.mjs','--runInBand','--json','--outputFile',str(out/'unit.result.json')])
+run('public-contracts',['node','verify-public-contracts.mjs'])

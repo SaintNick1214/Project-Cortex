@@ -1,0 +1,14 @@
+from pathlib import Path
+import shutil,json,hashlib
+r=Path('/workspace/Project-Cortex'); s=r/'work/resume/task04-pure-policy-review/mirror'; s.mkdir(exist_ok=True)
+for p in ['src','tests/unit/domain','dist','convex-dev']:
+ shutil.copytree(r/p,s/p,dirs_exist_ok=True)
+for p in ['package.json','tsconfig.json','eslint.config.js','tsconfig.lint.json','README.md','LICENSE.md']:
+ shutil.copy2(r/p,s/p)
+(s/'node_modules').symlink_to(r/'node_modules',target_is_directory=True)
+(s/'tsconfig.scoped.json').write_text(json.dumps({'extends':'./tsconfig.json','compilerOptions':{'noEmit':True},'include':['src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts']}))
+(s/'jest.scoped.mjs').write_text("export default {rootDir:'.',roots:['<rootDir>/src','<rootDir>/tests/unit/domain'],preset:'ts-jest/presets/default-esm',testEnvironment:'node',testMatch:['<rootDir>/tests/unit/domain/model-policy.test.ts'],setupFiles:[],setupFilesAfterEnv:[],extensionsToTreatAsEsm:['.ts'],moduleNameMapper:{'^(\\\\.{1,2}/.*)\\\\.js$':'$1'},transform:{'^.+\\\\.ts$':['ts-jest',{useESM:true,tsconfig:'tsconfig.scoped.json'}]}};\n")
+script=(r/'scripts/verify-public-contracts.mjs').read_text().replace("resolve('node_modules/.cortex-contract-')","resolve('contracts-')")
+(s/'verify-public-contracts.mjs').write_text(script)
+paths=['src/domain/model-policy.ts','src/domain/index.ts','tests/unit/domain/model-policy.test.ts','package.json','tsconfig.json','eslint.config.js','_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts/report.md','_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c11-aggregate-review/report.md']
+(r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-review/source-evidence.json').write_text(json.dumps([{ 'path':p,'sha256':hashlib.sha256((r/p).read_bytes()).hexdigest(),'bytes':(r/p).stat().st_size} for p in paths],indent=2)+'\n')
