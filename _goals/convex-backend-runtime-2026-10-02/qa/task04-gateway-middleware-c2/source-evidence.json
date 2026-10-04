@@ -1,0 +1,722 @@
+{
+  "version": 2,
+  "UTC": "2026-10-04T03:10:55.587602+00:00",
+  "scope": "C2_FIRST_HELPER_OFFLINE_REPAIR_ONLY",
+  "acceptedB16ExactAndUnchanged": true,
+  "acceptedPrerequisites": [
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "7fa65fbfa96d8709cd834b09133440e3f189b9ac9b717b96545a3b89085a7c23",
+      "bytes": 5153,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "sha256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+      "bytes": 54581,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "2a499e50107e6ba0064368c6d84c5ecce596bb420114336c3a2bdb86d0be9aa8",
+      "bytes": 71602,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed",
+      "bytes": 2659,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "0e2ed1e2d0910b9d341139b32bd2321b69a68c3734a84b17ccaf7e13a477005b",
+      "bytes": 44765,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+      "bytes": 28083,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "src/domain/index.ts",
+      "sha256": "b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648",
+      "bytes": 406,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "sha256": "d5a65043cb6c1dc2af851df866c5881fea67a0677c79ce3c5fe99d79f62700fc",
+      "bytes": 32786,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "bytes": 23246,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeAuthSchema.ts",
+      "sha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "bytes": 3515,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833",
+      "bytes": 24131,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeWorkerAuth.ts",
+      "sha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+      "bytes": 13928,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "sha256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+      "bytes": 3259,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "bytes": 2759,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-token-cost-technical-review/report.md",
+      "sha256": "879b15111c30766200e592a274e0a254eb5fe6f465e8f6885d8ae7392553937d",
+      "bytes": 22078,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-c3-acceptance.json",
+      "sha256": "d8712ba0485b3f0fc1a8f8957592289ed6e86d010429a6c5e9ad160f4ca21ba0",
+      "bytes": 912,
+      "matchesAcceptedB16": true
+    }
+  ],
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "4fbaf846434518261f72e3b1911e2146b508b736e7c46b76261fa8c6fd67724e",
+      "bytes": 4486
+    },
+    {
+      "path": ".agents/CODEX-RUNTIME.md",
+      "sha256": "8d60140b54b93fa29f388d9608c0b17d9993e1a48f7ec0788e993690ac456895",
+      "bytes": 5824
+    },
+    {
+      "path": ".agents/PROJECT-PROFILE.md",
+      "sha256": "04ac20437bc36af9202ad748da57a07bfb824cdb92834fd365edfa5a00207a12",
+      "bytes": 14706
+    },
+    {
+      "path": ".agents/roles/implementation-executor.md",
+      "sha256": "935934e4ae2df19e1b109cd797efa52567b88faf5099e0bfe96f0f403702babd",
+      "bytes": 5881
+    },
+    {
+      "path": ".agents/skills/feature-orchestrator/SKILL.md",
+      "sha256": "dd08e0e3a828f152ad743e857297c5383741f413f7a3f0e87be04b69dbd5c8f5",
+      "bytes": 3868
+    },
+    {
+      "path": "package.json",
+      "sha256": "a684600bd22363a6c4127c4dd65e95afa1ffe6659b574a5ea74e0e0a3219f3d6",
+      "bytes": 4593
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "d85a63567c0340a07eed9655cd8ce9d932f4871a0660350e8e0d25739662abf5",
+      "bytes": 347061
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "cd150cbae2e9a5140c069877d2b101b453a7a54aad5db7fca330d1c68d5018d7",
+      "bytes": 649
+    },
+    {
+      "path": "eslint.config.js",
+      "sha256": "30e22133974638bafc6658b34f560d9b2dc3b08ce5bc1a8ca43e3399fb637168",
+      "bytes": 7817
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+      "sha256": "4667290be427310c4d6988c666925344b8f86b043c09db392542991de0ce0104",
+      "bytes": 3682
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/goal.md",
+      "sha256": "e54d694d7026ee3b58827dcc80a19156c8b0f141f613c569d3e3637698e1a655",
+      "bytes": 16007
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+      "sha256": "1e12e1cc36f2446acabd6d3ff8464ebbd2a9d17582b17603aff8293ba48cdac4",
+      "bytes": 11937
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "sha256": "d53e18355904cfd7d9db43951468bc4b0aca0de568008ac4c27d7fa783390c8e",
+      "bytes": 30372
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-c2-acceptance.json",
+      "sha256": "015cea6ce1539f27449e6dddd1f7cabedb7077b3e2aa742462e02ac7b5e37a81",
+      "bytes": 943
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2/final-source-evidence.json",
+      "sha256": "093308f5cf264791f82dbf9e41140f45d169d94a3e76ac9f7752b7f33461a975",
+      "bytes": 3114
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c1/native-api.md",
+      "sha256": "b84a883522ca1d3ba7e539ab9f69568c6a87a08f1963cf04dc071b75f4b35e15",
+      "bytes": 6523
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2/native-api.md",
+      "sha256": "94552b5876c2293071c6b5dae2d2651e0f67e40fe686eb28f30fe5c1f53d60de",
+      "bytes": 1625
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/report.md",
+      "sha256": "bd4d066faaee188e58291d788d0976c58648e9e93d59135c9e8119705512e433",
+      "bytes": 7452
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-preparation/report.md",
+      "sha256": "42ddc9e5b6662a04dfa5736a906b037cf14febb86cad89c35354967e39fadea9",
+      "bytes": 9892
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "5bd197802f21a6419ed98b8988809c61106de4bd11f21fb9ab51678c978c2ff4",
+      "bytes": 47392
+    },
+    {
+      "path": "tests/unit/runtime/gateway-dispatch.test.ts",
+      "sha256": "fc58a25d9c5cf9526e65838ab1b25c4fcf5cda024885082a560e3cf6faa029f2",
+      "bytes": 52836
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/01-qualification.md",
+      "sha256": "0fb9f04f8f4722ac6faa23e15f15ddb8948159f91fcfb228ca7361460bf4dc7b",
+      "bytes": 2992
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/02-domain-services.md",
+      "sha256": "26aa4660f9c535e45cb93f3881c4c90e8097862b310ae96721a723ce27f76a76",
+      "bytes": 2627
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/03-authorization.md",
+      "sha256": "3b6df253e472d466a656d46e366fd754038615081a73ee8d64508d842e231d58",
+      "bytes": 4254
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "bytes": 2759,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/05-transcripts-runs.md",
+      "sha256": "3e7745d7bd863cb6b417224e46dd1867637b1d28a30cc336071de21e5a723115",
+      "bytes": 3340
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/06-additive-installation.md",
+      "sha256": "e2d7bae8a7d31bf5b941c91a925342c17c945a17ec04125b3aa103dfc5cb60dc",
+      "bytes": 3398
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/07-agent-streams.md",
+      "sha256": "62905783d2dc2deab0d2e758c2ea95a24e76c99796b59256d540eab0b361028e",
+      "bytes": 3094
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/08-memory-pipeline.md",
+      "sha256": "2f883577b0f3a43f969c5f7783803de0a4976a85e530ee7e34b6edfd4719cccf",
+      "bytes": 3992
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/09-text-client-slice.md",
+      "sha256": "dd483a6a14a266482b92d8c79a4943cff812544c3fed20b4ffde13c0fe738a6d",
+      "bytes": 3588
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/10-embedding-profiles.md",
+      "sha256": "d7d374add02f9441b74b1320a9e7956f91e714ea705b0b98d702d787078fb12c",
+      "bytes": 3550
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/11-graph-outbox.md",
+      "sha256": "17d99dd1b34f3d06bda4be2d776da9072a5c8e5fcea15a74331a1e63427d5f10",
+      "bytes": 3246
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/12-asset-lifecycle.md",
+      "sha256": "8e7b0430d76f589db0b7d1eb7d4dc4022226e4b93ab59f55fbb78065ce5ebd82",
+      "bytes": 3744
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/13-media-jobs.md",
+      "sha256": "8455cc9fd5ba41db0a4219937439b3d21fb51aaa7054dbe2552d544cda6fa28e",
+      "bytes": 3354
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/14-client-extensions.md",
+      "sha256": "cfe2c8020b31c4862cca2e09dcc490b037bac6b383114ebac7e710d966925ba9",
+      "bytes": 2789
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/15-product-integration.md",
+      "sha256": "177e956574ecc9ac5a517ddf98b0d4cc55e1f1b574cc49aaede4423c1445b411",
+      "bytes": 2919
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/16-outcome-validation.md",
+      "sha256": "d0ca25e342cb4d8496dc8cb7443ebf8d4edeb472161fbf45dc89692ed3d581c7",
+      "bytes": 3620
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/17-docs-audit.md",
+      "sha256": "6eb1501238c50e6d9d4c0780141a7948345a3e80958daa00fdf4930257ec14fa",
+      "bytes": 3188
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/src/index.ts",
+      "sha256": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613",
+      "bytes": 6787
+    },
+    {
+      "path": "node_modules/ai/src/middleware/wrap-language-model.ts",
+      "sha256": "94d4337a89bf50b3ee030c76c4effdb4925a0a8820915fed675fee5b4e4b1b4a",
+      "bytes": 3776
+    },
+    {
+      "path": "node_modules/ai/src/middleware/wrap-embedding-model.ts",
+      "sha256": "1fbce0c2e1279057b179fa38960faae389b681f4fc605c0e1c62cb79b125efdc",
+      "bytes": 3864
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts",
+      "sha256": "8cedc84f1a015f63c5c0a76ddba664562a1301adb1ed0d8c858e0b740f65a79a",
+      "bytes": 26119
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/embedding/openai-compatible-embedding-model.ts",
+      "sha256": "24012af5f3fd8f93ec6c6d48690b40bbfc26f907afd4f6b21ee487c8dc225e36",
+      "bytes": 5494
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai/src/responses/openai-responses-language-model.ts",
+      "sha256": "819980a2396a64fd5d2ee6dacfea1b528ddb40c30c88c1ba9c66a12af9124ba8",
+      "bytes": 111956
+    },
+    {
+      "path": "node_modules/ai/package.json",
+      "sha256": "5864a68d58bd8caa46b91fbb0f1e39ae3ba0f3179f38e00581f4428fc7bf1110",
+      "bytes": 3259
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/package.json",
+      "sha256": "900a8cfaddb8008b36b340e57c83b2e6a89c6dd4d0a0599147470a3cbe3943f8",
+      "bytes": 1375
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai/package.json",
+      "sha256": "e19ef10de815d33fe4039c2f05c65efc69e01eef5ef7344b648c625617c66d24",
+      "bytes": 1991
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/package.json",
+      "sha256": "53f8b9c6f892042380831ac67f4532301214141ed75f1f23014099fc11577c65",
+      "bytes": 2041
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/package.json",
+      "sha256": "1067266430ffd373f4200d8cbfb4fce1586eca00642fcde9f3aa88de68c25c8e",
+      "bytes": 1763
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/package.json",
+      "sha256": "cd92b767cf7a504505a15fccd304d55f0eb9540de3c1969dd9fd7070ada835ee",
+      "bytes": 5401
+    },
+    {
+      "path": "node_modules/typescript/package.json",
+      "sha256": "9332e97c30d3e53ed54910b89207ed657fb444066484df6e5b6965bf130865e9",
+      "bytes": 3527
+    },
+    {
+      "path": "node_modules/eslint/package.json",
+      "sha256": "a747df3db3905b18b2acb3a6b12ef49659a8fc9055ce2a48057316b4aadf4248",
+      "bytes": 7789
+    },
+    {
+      "path": "node_modules/jest/package.json",
+      "sha256": "4df6c2fc24e5017d0e6f54cbd9ad3203551c00f4b1d08f50007cf18f8754cd4d",
+      "bytes": 1467
+    },
+    {
+      "path": "node_modules/ts-jest/package.json",
+      "sha256": "a1e0c2406857ad720d0f69ce4b27e5343969504f244c0094ce8b56d6ed19fb15",
+      "bytes": 4237
+    },
+    {
+      "path": "node_modules/convex/package.json",
+      "sha256": "bafaba6990e5e8107400da04a66dfde18dd7fa81471c123695779d234717f290",
+      "bytes": 9067
+    },
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "7fa65fbfa96d8709cd834b09133440e3f189b9ac9b717b96545a3b89085a7c23",
+      "bytes": 5153,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "sha256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+      "bytes": 54581,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "2a499e50107e6ba0064368c6d84c5ecce596bb420114336c3a2bdb86d0be9aa8",
+      "bytes": 71602,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed",
+      "bytes": 2659,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "0e2ed1e2d0910b9d341139b32bd2321b69a68c3734a84b17ccaf7e13a477005b",
+      "bytes": 44765,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+      "bytes": 28083,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "src/domain/index.ts",
+      "sha256": "b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648",
+      "bytes": 406,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "sha256": "d5a65043cb6c1dc2af851df866c5881fea67a0677c79ce3c5fe99d79f62700fc",
+      "bytes": 32786,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "bytes": 23246,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeAuthSchema.ts",
+      "sha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "bytes": 3515,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833",
+      "bytes": 24131,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "convex-dev/runtimeWorkerAuth.ts",
+      "sha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+      "bytes": 13928,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "sha256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+      "bytes": 3259,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-token-cost-technical-review/report.md",
+      "sha256": "879b15111c30766200e592a274e0a254eb5fe6f465e8f6885d8ae7392553937d",
+      "bytes": 22078,
+      "matchesAcceptedB16": true
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-c3-acceptance.json",
+      "sha256": "d8712ba0485b3f0fc1a8f8957592289ed6e86d010429a6c5e9ad160f4ca21ba0",
+      "bytes": 912,
+      "matchesAcceptedB16": true
+    }
+  ],
+  "installedVersions": {
+    "ai": "7.0.127",
+    "@ai-sdk/provider": "4.0.21",
+    "@ai-sdk/openai": "4.0.83",
+    "@ai-sdk/openai-compatible": "3.0.14",
+    "@convex-dev/ai-sdk-provider": "0.2.1",
+    "@convex-dev/agent": "0.7.3",
+    "typescript": "6.0.3",
+    "eslint": "10.11.0",
+    "jest": "30.5.2",
+    "ts-jest": "29.4.14",
+    "convex": "1.46.0",
+    "node": {
+      "argv": [
+        "node",
+        "--version"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "UTC": "2026-10-04T03:10:55.483283+00:00",
+      "environmentKeys": [
+        "PATH",
+        "TMPDIR",
+        "NO_COLOR"
+      ],
+      "exitCode": 0,
+      "version": "v24.19.0"
+    },
+    "npm": {
+      "argv": [
+        "npm",
+        "--version"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "UTC": "2026-10-04T03:10:55.488111+00:00",
+      "environmentKeys": [
+        "PATH",
+        "TMPDIR",
+        "NO_COLOR"
+      ],
+      "exitCode": 0,
+      "version": "11.9.0"
+    }
+  },
+  "original56AssertionsByteIdenticalPrefix": true,
+  "checks": {
+    "discovery": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/discovery.json",
+        "sha256": "47f0c1670cae1dbf705080fd9834fa1d8d765e62f7444abf6d66fb24f52ff75b",
+        "bytes": 3760
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/discovery.stdout",
+        "sha256": "fcbafe16d7a2d3a63aa02701406d957d7d2c433b7962ec52ef13b6f6ed3c49c3",
+        "bytes": 70
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/discovery.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "exitCode": 0
+    },
+    "unit": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/unit.json",
+        "sha256": "0c6bb6f9ae7f2034045bb6366e40a206d5249c4b224a708b9a0b842db0890dde",
+        "bytes": 3906
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/unit.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/unit.stderr",
+        "sha256": "c88078a8e77f0061e87d30567ef803432b8aec6aa5516c9ef671222401fd791b",
+        "bytes": 477
+      },
+      "exitCode": 0
+    },
+    "hostile-discovery": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/hostile-discovery.json",
+        "sha256": "508f870fe5fe8f686ed5ffdb95cdb983d55907147680a9941cd31defb811b7ae",
+        "bytes": 3761
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/hostile-discovery.stdout",
+        "sha256": "be2623488ab8d3588ed20191029d62dc9673b2a545b65425ad2faa8bf7a83686",
+        "bytes": 134
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/hostile-discovery.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "exitCode": 0
+    },
+    "hostile-unit": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/hostile-unit.json",
+        "sha256": "9d0e901720fcb2f884741201ef19b6fc62b68d0bfdce40943e8651419e426bf3",
+        "bytes": 3894
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/hostile-unit.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/hostile-unit.stderr",
+        "sha256": "19217176faabddcc8bf43be46a3a4330b385844c93a87c68ffc7633786ae943e",
+        "bytes": 710
+      },
+      "exitCode": 0
+    },
+    "deadline-discovery": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/deadline-discovery.json",
+        "sha256": "928bc1c6a06794faf1f025c4f64791e7ef610481feb1df6d2cd31457fe4152a7",
+        "bytes": 3762
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/deadline-discovery.stdout",
+        "sha256": "504462b3e41f5d71fbe709a5d6e09711e9a826281101786624184ebc364a3403",
+        "bytes": 517
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/deadline-discovery.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "exitCode": 0
+    },
+    "deadline-unit": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/deadline-unit.json",
+        "sha256": "39de2b3b121203071963a7060173cabc6132d2bb63cd378e624452b201afdf69",
+        "bytes": 3896
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/deadline-unit.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/deadline-unit.stderr",
+        "sha256": "6ec96c01ba703f157d1063929dd496854fd8672244c4a7c3be91ee36a45ad423",
+        "bytes": 691
+      },
+      "exitCode": 0
+    },
+    "scoped-types": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/scoped-types.json",
+        "sha256": "1a797e84f623ca1df550b3db7ac6bf10bb92f51e8bc923b5726fb84de7b22fb6",
+        "bytes": 3706
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/scoped-types.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/scoped-types.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "exitCode": 0
+    },
+    "root-types": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/root-types.json",
+        "sha256": "18b50072d079863201699d3baa639f1d35adbf72e92997232a85ea4bff770e33",
+        "bytes": 3595
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/root-types.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/root-types.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "exitCode": 0
+    },
+    "owned-lint": {
+      "receipt": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/owned-lint.json",
+        "sha256": "4be010e57e88afe9a3fa4f7c1621cea4d1999da123ed58f00bd16fa2449aff84",
+        "bytes": 3699
+      },
+      "stdout": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/owned-lint.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "stderr": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/owned-lint.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "exitCode": 0
+    }
+  },
+  "results": {
+    "unit": {
+      "result": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/unit-results.json",
+        "sha256": "7b12ceb457213fa9591231e3f6e59b696eb9e1d9f7d471d58353f92319e68356",
+        "bytes": 35713
+      },
+      "passed": 74,
+      "skipped": 0,
+      "todo": 0,
+      "discoveredFiles": 1
+    },
+    "hostile": {
+      "result": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/hostile-results.json",
+        "sha256": "5421bca77376530d7079dd6643bd9eee304f0d4cfe276d2b9b2e3422ada425c0",
+        "bytes": 1330
+      },
+      "passed": 1,
+      "skipped": 0,
+      "todo": 0,
+      "discoveredFiles": 1
+    },
+    "deadline": {
+      "result": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2/candidate-freeze/deadline-results.json",
+        "sha256": "b4ae6fb983732c885414ae45127453412780d0c3cf36eb797cb2f062b975a794",
+        "bytes": 1286
+      },
+      "passed": 1,
+      "skipped": 0,
+      "todo": 0,
+      "discoveredFiles": 1
+    }
+  },
+  "sourceVersionsAndPricingProvenance": "Installed pinned source plus synthetic offline fixtures only; no actual model/currency/token/all-charge qualification",
+  "productionRoot": "EMPTY",
+  "productionCaller": "UNWIRED",
+  "requiredSink": "CAPTURE_ONLY_SERVER_CODE_PORT_UNWIRED",
+  "futureAtomicCaptureAttachIntegration": "PENDING_SEPARATE_NATIVE_AND_C_SLICE",
+  "actualGatewayNativeModelCurrencyTokenPrice": "NOT_RUN",
+  "wholeTask04": "INCOMPLETE"
+}
