@@ -1,0 +1,16 @@
+{
+  "originalPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline.test.ts",
+  "acceptedRunnerPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline-c2.test.ts",
+  "exactSingleFixtureReplacement": true,
+  "before": "const f=fixture(); f.r.snapshot.limits.timeoutMs=20;",
+  "after": "const f=fixture(); f.r.snapshot={...f.r.snapshot,limits:{...f.r.snapshot.limits,timeoutMs:20}};",
+  "assertionsUnchanged": true,
+  "originalFingerprint": {
+    "bytes": 10759,
+    "sha256": "8dda6ffa41604312ceb68da245419c56be58a2cb5d059e0c4a0590646b777e09"
+  },
+  "acceptedFingerprint": {
+    "bytes": 10802,
+    "sha256": "440d8006b3dcb3880bc008c32f4b3a848162830d8a773c51d0976bffb7d3a99f"
+  }
+}

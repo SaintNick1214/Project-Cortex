@@ -1,0 +1,13 @@
+file:///workspace/Project-Cortex/work/resume/task04-gateway-historical-catalog-c1-review/owned-packet/guard.mjs:6
+export function inventory(folder){const out=[];for(const d of fs.readdirSync(folder,{withFileTypes:true})){const p=path.join(folder,d.name);if(d.isSymbolicLink())throw Error('SYMLINK_DENIED');if(d.isDirectory())out.push(...inventory(p));else if(d.isFile())out.push(p);else throw Error('FILE_TYPE_DENIED');}return out.sort();}
+                                                                                                                                                                        ^
+
+Error: SYMLINK_DENIED
+    at inventory (file:///workspace/Project-Cortex/work/resume/task04-gateway-historical-catalog-c1-review/owned-packet/guard.mjs:6:169)
+    at verify (file:///workspace/Project-Cortex/work/resume/task04-gateway-historical-catalog-c1-review/owned-packet/guard.mjs:9:198)
+    at file:///workspace/Project-Cortex/work/resume/task04-gateway-historical-catalog-c1-review/owned-packet/run-historical.mjs:4:15
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
