@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "scope": "PROPOSED_NONPAID_DRIFT_ONLY_NATIVE_PROFILE",
+  "status": "DESIGN_ONLY_NOT_IMPLEMENTED_NOT_RUN",
+  "cases": [
+    {
+      "id": "known-drift-40",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "R100; requested model exact, truthful different actualModel, terminal known C40. Original operation/run/tenant S40/U0/R0, slot0 once, all three overrun latches TRUE even for C40. Initial bytes/hash/evidenceId immutable, actualModel exact, no private output/eligible attachment. Initial duplicate whole-state equality. Healthy original-owner ensureBudget/admit-child/admitFallback/checkpoint replay denials tested before any cancellation; two admission forms may share the same operation/root but may not create new accounts or reset the obligation."
+    },
+    {
+      "id": "known-drift-150",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "R100; requested model exact, truthful different actualModel, terminal known C150. Original operation/run/tenant S150/U0/R0, slot0 once, all three overrun latches TRUE even for C40. Initial bytes/hash/evidenceId immutable, actualModel exact, no private output/eligible attachment. Initial duplicate whole-state equality. Healthy original-owner ensureBudget/admit-child/admitFallback/checkpoint replay denials tested before any cancellation; two admission forms may share the same operation/root but may not create new accounts or reset the obligation."
+    },
+    {
+      "id": "unknown-drift-terminal",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Genuine supported terminal, money unavailable: R0/U100/S0, slot0 once, model drift exact, original three latches TRUE, attachment closed/private absent; duplicate zero writes. Compatible known40 refinement fully charges once and leaves guards/closure TRUE."
+    },
+    {
+      "id": "unknown-lifetime",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "After original genuine checkpoint, unsupported/no-terminal-proof candidate carrying drift and token facts is denied with complete state equality. No fabricated terminal observation, no terminal hash/private bytes/money release; R100/slot1 remains. Existing recovery without receipt records conservative U100/slot1 and denies checkpoint/replay. Do not claim latch storage for rejected untrusted observation. Accepted source must confirm exact existing recovery contract."
+    },
+    {
+      "id": "token-input-unknown",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Same actual/requested model; supplied input usage exactly stored measuredInputTokens+1 or maximumOutputTokens+1; other fact within bound. Genuine terminal, unknown money: unknown R0/U100/S0 or known R0/U0/S40, slot0; immutable usage exact; all original latches TRUE, closed/private absent. Duplicate exact zero writes, no clipping. Unknown case refines to known40 once with unchanged usage; healthy guard/admission replay denied."
+    },
+    {
+      "id": "token-input-known40",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Same actual/requested model; supplied input usage exactly stored measuredInputTokens+1 or maximumOutputTokens+1; other fact within bound. Genuine terminal, known40 money: unknown R0/U100/S0 or known R0/U0/S40, slot0; immutable usage exact; all original latches TRUE, closed/private absent. Duplicate exact zero writes, no clipping. Unknown case refines to known40 once with unchanged usage; healthy guard/admission replay denied."
+    },
+    {
+      "id": "token-output-unknown",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Same actual/requested model; supplied output usage exactly stored measuredInputTokens+1 or maximumOutputTokens+1; other fact within bound. Genuine terminal, unknown money: unknown R0/U100/S0 or known R0/U0/S40, slot0; immutable usage exact; all original latches TRUE, closed/private absent. Duplicate exact zero writes, no clipping. Unknown case refines to known40 once with unchanged usage; healthy guard/admission replay denied."
+    },
+    {
+      "id": "token-output-known40",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Same actual/requested model; supplied output usage exactly stored measuredInputTokens+1 or maximumOutputTokens+1; other fact within bound. Genuine terminal, known40 money: unknown R0/U100/S0 or known R0/U0/S40, slot0; immutable usage exact; all original latches TRUE, closed/private absent. Duplicate exact zero writes, no clipping. Unknown case refines to known40 once with unchanged usage; healthy guard/admission replay denied."
+    },
+    {
+      "id": "refinement-add-absent-model",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "First unknown supported terminal has ABSENT actualModel; preserve that absence in initial bytes. Compatible known40 adds truthful drift model only to final evidence; full40 once, slot0, all latches TRUE, no attachment. Initial/final duplicates zero writes; removal/change of now-present observed model denies with whole-state equality."
+    },
+    {
+      "id": "refinement-add-absent-tokens",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "First unknown terminal has ABSENT usage; known40 adds both input=measured+1 and output=max+1, actualModel equal requested. Initial bytes preserve absence, final facts exact; once40/slot0/closed/all latches TRUE. Supplied usage cannot later disappear/change; duplicate/denial whole-state equality."
+    },
+    {
+      "id": "captured-parity-settle",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Capture unknown drift; original evidence immutable. Existing positive owner settle authority refines to known150 using the SAME truthful drift evidence with private payload supplied. Full150 original accounts once; slot0; all guards remain TRUE; resultWithheld true/private absent. Exact ordinary-route repeat and capture initial/final duplicates whole-state equality; changed present model/usage denies. Invalid authority still denies. No new operator/public authority."
+    },
+    {
+      "id": "captured-parity-recover",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Capture unknown drift; original evidence immutable. Existing positively authorized scoped administrator recover authority refines to known150 using the SAME truthful drift evidence with private payload supplied. Full150 original accounts once; slot0; all guards remain TRUE; resultWithheld true/private absent. Exact ordinary-route repeat and capture initial/final duplicates whole-state equality; changed present model/usage denies. Invalid authority still denies. No new operator/public authority."
+    },
+    {
+      "id": "captured-parity-operator",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 17,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Capture unknown drift; original evidence immutable. Existing root-only operator reconcile denied before retirement with zero writes; positive original tenant tombstone then permitted refines to known150 using the SAME truthful drift evidence with private payload supplied. Full150 original accounts once; slot0; all guards remain TRUE; resultWithheld true/private absent. Exact ordinary-route repeat and capture initial/final duplicates whole-state equality; changed present model/usage denies. Invalid authority still denies. No new operator/public authority."
+    },
+    {
+      "id": "defensive-initial-model-pending",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored initial observation of model violation, inconsistent pending privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-initial-model-attached",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored initial observation of model violation, inconsistent attached privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-initial-token-pending",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored initial observation of token violation, inconsistent pending privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-initial-token-attached",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored initial observation of token violation, inconsistent attached privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-final-model-pending",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored final observation of model violation, inconsistent pending privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-final-model-attached",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored final observation of model violation, inconsistent attached privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-final-token-pending",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored final observation of token violation, inconsistent pending privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-final-token-attached",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored final observation of token violation, inconsistent attached privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "gateway-native-drift-40",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Actual frozen governGatewayLanguageModel source runs in ROOT-only server runner with deterministic synthetic terminal raw model drift/C40; trusted synthetic qualification explicitly marked NONPAID. Its ledger.resolve/admit/checkpoint/markVisible/attach adapter and terminalSink.capture use actual registered native handlers on current owned IDs. Exactly one fake-native invocation, actual capture fullC/slot0/latches/closure, Gateway QUALIFICATION_OVERRUN with no delivered private result. No fake accounting sink, direct DB mutation or public proxy. Native duplicate persistence adds no charge/call; rejected re-admission never invokes native source again. Sink result whole-account witness, no paid provider truth."
+    },
+    {
+      "id": "gateway-native-drift-150",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Actual frozen governGatewayLanguageModel source runs in ROOT-only server runner with deterministic synthetic terminal raw model drift/C150; trusted synthetic qualification explicitly marked NONPAID. Its ledger.resolve/admit/checkpoint/markVisible/attach adapter and terminalSink.capture use actual registered native handlers on current owned IDs. Exactly one fake-native invocation, actual capture fullC/slot0/latches/closure, Gateway QUALIFICATION_OVERRUN with no delivered private result. No fake accounting sink, direct DB mutation or public proxy. Native duplicate persistence adds no charge/call; rejected re-admission never invokes native source again. Sink result whole-account witness, no paid provider truth."
+    },
+    {
+      "id": "gateway-native-healthy-attachment",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Same actual frozen Gateway-source/native-handler adapter, deterministic requested model and within-bound usage/C40. Genuine registered capture produces pending; genuine attach stores one private result and marks visibility, delivers once, identical retry zero writes. This positively proves attach wiring rather than inferring it from drift path which may exit before attach. One synthetic native invocation only."
+    },
+    {
+      "id": "late-drift-refinement-revoked-cancelled",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Unknown captured drift/U100 closes and latches first; revoke ONLY original grant while scopes LIVE, then cancel original run via finite owned fixture fault. Known150 charge-only capture after both fences succeeds original accounts once and slot stays0, exact initial evidence/actualModel retained, closed/private absent. Capture duplicates zero writes and all latches TRUE. No scope revival or alternate ownerRun."
+    },
+    {
+      "id": "late-drift-refinement-original-window",
+      "status": "DESIGN_ONLY_NOT_RUN",
+      "createdRowsUpper": 16,
+      "clientRpcUpperIncludingThreeCleanupCalls": 32,
+      "outcomes": "Unknown drift/U100 first, retain original account IDs/windows. Genuine bounded server window transition with original uncertainty margin; old obligation blocks current ensureBudget before capture. Known150 charges old original operation/run/tenant windows only; no newer account created by denied successor; old guards remain latched. No time/mock reset or new run to launder old uncertain money. Original late-window22 and original43 remain unchanged."
+    }
+  ],
+  "doNotWeaken": "Original43 and22 remain exact, separately rerun after source acceptance; original133/current Gateway160 and historical78 unchanged offline. Synthetic receipt money is never actual provider truth."
+}

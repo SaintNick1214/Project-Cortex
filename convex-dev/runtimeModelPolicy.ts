@@ -488,7 +488,8 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
       const priorSnapshot = attemptSnapshot(existing, operation, manifest);
       const incoming = validateModelRequest(priorSnapshot, { ...validated.request, inputTokens: deriveQualifiedInputBound(evidence(manifest, priorSnapshot), validated.request), reservationUnits: priorSnapshot.costBound.maximumCostUnits });
       assertModelRequestIdentity({ canonical: existing.canonical, hash: existing.hash }, { canonical: incoming.canonical, hash: await semanticHash(incoming.canonical) });
-      if (existing.state === "settled" && existing.privateResultCanonical && !existing.resultWithheld) return { status: "replay" as const, operationId: operation._id, resultCanonical: existing.privateResultCanonical };
+      if (existing.state === "settled" && existing.privateResultCanonical && !existing.resultWithheld
+        && !storedObservationViolation(existing, priorSnapshot)) return { status: "replay" as const, operationId: operation._id, resultCanonical: existing.privateResultCanonical };
       if (existing.state === "settled" || existing.state === "confirmed_rejected" || existing.state === "not_dispatched") fail("CAPABILITY_UNAVAILABLE");
       if (existing.state === "uncertain" || existing.state === "dispatch_pending") return { status: "uncertain" as const, operationId: operation._id, attemptId: existing._id, replayAllowed: false as const };
       return { status: "inflight" as const, operationId: operation._id, attemptId: existing._id };
@@ -593,11 +594,13 @@ export const markVisible = internalMutation({ args: { ...attemptArgs, ...visibil
     toolEffectCommitted: attempt.toolEffectCommitted || args.toolEffectCommitted });
   return { recorded: true };
 } });
-const receiptSchema = z.object({ version: z.literal(1), dispatchIdentity: z.string(), receiptId: z.string().min(1), modelId: z.string(),
+const terminalIdentifier = z.string().min(1).max(256).refine((value) => value.trim() === value
+  && ![...value].some((point) => { const code = point.codePointAt(0)!; return code >= 0xd800 && code <= 0xdfff; }));
+const receiptSchema = z.object({ version: z.literal(1), dispatchIdentity: terminalIdentifier, receiptId: terminalIdentifier, modelId: terminalIdentifier,
   nativeInterface, outcome: z.enum(["confirmed", "confirmed_rejected"]), proof: z.literal("provider-terminal-v1"),
   costSource: z.enum(["gateway-aggregate-usd-v1", "unavailable"]), aggregateCostUsd: z.string().regex(/^\d+(?:\.\d+)?$/).optional(),
   usage: z.object({ inputTokens: count.optional(), outputTokens: count.optional(), totalTokens: count.optional(), cachedInputTokens: count.optional(), reasoningTokens: count.optional() }).strict().optional(),
-  actualModel: z.string().optional(), privateResultCanonical: z.string().optional() }).strict();
+  actualModel: terminalIdentifier.optional(), privateResultCanonical: z.string().optional() }).strict();
 /** Decimal exact arithmetic, round liability upward to a micro-USD. */
 export function costMicroUnits(usd: string): number {
   if (!/^\d+(?:\.\d+)?$/.test(usd) || usd.length > 80) fail("INVALID_INPUT");
@@ -619,17 +622,20 @@ async function writeUnknown(ctx: WriteCtx, state: Awaited<ReturnType<typeof atte
   if (attempt.state === "reserved") fail("POLICY_DENIED");
   const newlyUnknown = attempt.state !== "uncertain";
   const release = Boolean(terminalCanonical) && !attempt.slotReleased;
+  const observation = terminalCanonical ? receiptSchema.safeParse(decode(terminalCanonical)) : undefined;
+  const overrun = observation?.success === true && observationViolation(attempt, state.snapshot, observation.data);
   for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
     reservedUnits: newlyUnknown ? subtract(account.reservedUnits, attempt.reservationUnits) : account.reservedUnits,
     uncertainUnits: newlyUnknown ? add(account.uncertainUnits, attempt.reservationUnits) : account.uncertainUnits,
-    activeConcurrency: release ? subtract(account.activeConcurrency, 1) : account.activeConcurrency, version: add(account.version, 1),
+    activeConcurrency: release ? subtract(account.activeConcurrency, 1) : account.activeConcurrency, overrun: account.overrun || overrun, version: add(account.version, 1),
   });
   await ctx.db.patch("runtimeModelOperations", operation._id, {
     reservedUnits: newlyUnknown ? subtract(operation.reservedUnits, attempt.reservationUnits) : operation.reservedUnits,
-    uncertainUnits: newlyUnknown ? add(operation.uncertainUnits, attempt.reservationUnits) : operation.uncertainUnits,
+    uncertainUnits: newlyUnknown ? add(operation.uncertainUnits, attempt.reservationUnits) : operation.uncertainUnits, overrun: operation.overrun || overrun,
   });
   await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: "uncertain", resultWithheld: true, slotReleased: attempt.slotReleased || release,
-    ...(terminalCanonical ? { terminalEvidenceCanonical: terminalCanonical } : {}) });
+    ...(terminalCanonical ? { terminalEvidenceCanonical: terminalCanonical } : {}),
+    ...(observation?.success === true && observation.data.actualModel !== undefined ? { actualModel: observation.data.actualModel } : {}) });
   return { state: "uncertain" as const, replayAllowed: false as const };
 }
 async function liabilityAuthority(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation) {
@@ -658,6 +664,29 @@ function validatedPrivateResult(snapshot: ModelPolicySnapshotV1, attempt: Attemp
 }
 type TerminalReceipt = z.infer<typeof receiptSchema>;
 type AttemptContext = Awaited<ReturnType<typeof attemptContext>>;
+/** Serving observations are qualification facts independently of monetary support. */
+function observationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1, receipt: Pick<TerminalReceipt, "actualModel" | "usage">): boolean {
+  integer(attempt.measuredInputTokens, 1); integer(attempt.maximumOutputTokens);
+  return (receipt.actualModel !== undefined && receipt.actualModel !== snapshot.modelId)
+    || (receipt.usage?.inputTokens !== undefined && receipt.usage.inputTokens > attempt.measuredInputTokens)
+    || (receipt.usage?.outputTokens !== undefined && receipt.usage.outputTokens > attempt.maximumOutputTokens);
+}
+/** Defense in depth for captured rows: neither privacy markers nor false account flags
+ * can hide initial/final serving observations. Corrupt evidence grants no privilege.
+ * Inspection is local; unexpected authority/repository read errors still propagate.
+ */
+function storedObservationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1): boolean {
+  if (observationViolation(attempt, snapshot, { actualModel: attempt.actualModel })
+    || (attempt.settledCostUnits !== undefined && attempt.settledCostUnits > attempt.reservationUnits)) return true;
+  for (const encoded of [attempt.terminalEvidenceCanonical, attempt.receiptCanonical]) {
+    if (encoded === undefined) continue;
+    const parsed = receiptSchema.omit({ privateResultCanonical: true }).safeParse(decode(encoded));
+    if (!parsed.success || parsed.data.dispatchIdentity !== attempt.dispatchIdentity || parsed.data.modelId !== snapshot.modelId
+      || parsed.data.nativeInterface !== snapshot.nativeInterface || observationViolation(attempt, snapshot, parsed.data)) return true;
+  }
+  return false;
+}
+
 /** A partial capture marker is corruption, never a legacy privilege bypass. */
 function capturedAttempt(attempt: Attempt): boolean {
   const hashPresent = attempt.terminalEvidenceHash !== undefined;
@@ -704,11 +733,9 @@ async function capturedDuplicate(attempt: Attempt, chargeCanonical: string, rece
 async function accountKnown(ctx: WriteCtx, state: AttemptContext, receipt: TerminalReceipt, chargeCanonical: string, receiptHash: string,
   cost: number, privateResult?: string) {
   const { attempt, operation, snapshot, proof, tenant, run } = state;
-  const deliverResult = privateResult !== undefined;
+  const overrun = cost > attempt.reservationUnits || observationViolation(attempt, snapshot, receipt);
+  const deliverResult = privateResult !== undefined && !overrun && !operation.overrun && !tenant.overrun && !run.overrun;
   const fromUnknown = attempt.state === "uncertain";
-  integer(attempt.measuredInputTokens, 1); integer(attempt.maximumOutputTokens);
-  const overrun = cost > attempt.reservationUnits || (receipt.usage?.inputTokens !== undefined && receipt.usage.inputTokens > attempt.measuredInputTokens)
-    || (receipt.usage?.outputTokens !== undefined && receipt.usage.outputTokens > attempt.maximumOutputTokens);
   for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
     reservedUnits: fromUnknown ? account.reservedUnits : subtract(account.reservedUnits, attempt.reservationUnits),
     uncertainUnits: fromUnknown ? subtract(account.uncertainUnits, attempt.reservationUnits) : account.uncertainUnits,
@@ -721,7 +748,8 @@ async function accountKnown(ctx: WriteCtx, state: AttemptContext, receipt: Termi
   const finalState = receipt.outcome === "confirmed_rejected" ? "confirmed_rejected" as const : "settled" as const;
   await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: finalState, slotReleased: true, receiptCanonical: chargeCanonical, receiptHash, settledCostUnits: cost,
     costProvenance: canonical([proof.evidenceHash, snapshot.pins.priceRevision, receipt.costSource]), resultWithheld: !deliverResult,
-    ...(receipt.actualModel ? { actualModel: receipt.actualModel } : {}), ...(deliverResult ? { privateResultCanonical: privateResult } : {}) });
+    ...(receipt.actualModel !== undefined ? { actualModel: receipt.actualModel } : {}),
+    ...(capturedAttempt(attempt) && overrun ? { resultAttachmentState: "closed" as const } : {}), ...(deliverResult ? { privateResultCanonical: privateResult } : {}) });
   return { state: finalState, settledCostUnits: cost, resultWithheld: !deliverResult, overrun };
 }
 async function settleAttempt(ctx: WriteCtx, reference: RuntimeAuthorityReference, attemptId: Id<"runtimeModelAttempts">, receiptCanonical: string, liabilityOnly: boolean, deploymentRetirement = false) {
@@ -736,10 +764,10 @@ async function settleAttempt(ctx: WriteCtx, reference: RuntimeAuthorityReference
   if (!parsed.success) return await writeUnknown(ctx, state);
   const receipt = parsed.data;
   if (receipt.dispatchIdentity !== attempt.dispatchIdentity || receipt.modelId !== snapshot.modelId || receipt.nativeInterface !== snapshot.nativeInterface
-    || (captured && receipt.actualModel !== undefined && receipt.actualModel !== snapshot.modelId)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+    || receipt.proof !== proof.terminalProof) fail("IDEMPOTENCY_CONFLICT", "uncertain");
   const chargeCanonical = chargeOnly(receipt); const receiptHash = await semanticHash(chargeCanonical);
   if (captured) {
-    if (await capturedDuplicate(attempt, chargeCanonical, receiptHash)) return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver };
+    if (await capturedDuplicate(attempt, chargeCanonical, receiptHash)) return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver || storedObservationViolation(attempt, snapshot) };
     if (attempt.state !== "uncertain") fail("IDEMPOTENCY_CONFLICT", "uncertain");
     compatibleRefinement(attempt.terminalEvidenceCanonical!, receipt, proof);
   } else if (attempt.receiptCanonical) {
@@ -774,6 +802,7 @@ function attachmentDenied(error: unknown): boolean {
 }
 async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityReference, state: AttemptContext): Promise<boolean> {
   try {
+    if (storedObservationViolation(state.attempt, state.snapshot)) return false;
     const checked = await currentOperation(ctx, reference, state.operation);
     const current = checked.current.snapshot;
     if (state.proof.checkedAt > Date.now() || Date.now() >= state.proof.expiresAt) return false;
@@ -799,7 +828,7 @@ export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.i
   if (!parsed.success) fail("INVALID_INPUT", "uncertain");
   const receipt = parsed.data;
   if (receipt.dispatchIdentity !== attempt.dispatchIdentity || receipt.modelId !== snapshot.modelId || receipt.nativeInterface !== snapshot.nativeInterface
-    || receipt.proof !== proof.terminalProof || (receipt.actualModel !== undefined && receipt.actualModel !== snapshot.modelId)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+    || receipt.proof !== proof.terminalProof) fail("IDEMPOTENCY_CONFLICT", "uncertain");
   const chargeCanonical = canonical(receipt); const receiptHash = await semanticHash(chargeCanonical);
   const result = async () => ({ evidenceId: await captureIdentity(attempt), state: attempt.state as "settled" | "confirmed_rejected" | "uncertain",
     ...(attempt.settledCostUnits !== undefined ? { settledCostUnits: attempt.settledCostUnits } : {}), overrun: operation.overrun });
@@ -823,8 +852,7 @@ export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.i
   const cost = knownCost(receipt, proof);
   if (captured && cost === undefined) fail("IDEMPOTENCY_CONFLICT", "uncertain");
   const deliverable = !captured && !attempt.terminalEvidenceCanonical && cost !== undefined && cost <= attempt.reservationUnits && receipt.outcome === "confirmed"
-    && (receipt.usage?.inputTokens === undefined || receipt.usage.inputTokens <= attempt.measuredInputTokens)
-    && (receipt.usage?.outputTokens === undefined || receipt.usage.outputTokens <= attempt.maximumOutputTokens)
+    && !observationViolation(attempt, snapshot, receipt)
     && await permittedAttachment(ctx, operation.reference, state);
   const accounted = cost === undefined ? await writeUnknown(ctx, state, chargeCanonical)
     : await accountKnown(ctx, state, receipt, chargeCanonical, receiptHash, cost);
@@ -908,7 +936,7 @@ export const cancelBudget = internalMutation({ args: { reference: runtimeAuthori
   return { cancelled: true };
 } });
 function fallbackAllowed(attempt: Attempt, operation: Operation, snapshot: ModelPolicySnapshotV1, candidateModelId: string): boolean {
-  return candidateModelId !== snapshot.modelId && canFallbackModel(snapshot, candidateModelId, {
+  return !operation.overrun && candidateModelId !== snapshot.modelId && canFallbackModel(snapshot, candidateModelId, {
     outcome: attempt.state === "not_dispatched" ? "not_dispatched" : attempt.state === "confirmed_rejected" ? "confirmed_rejected" : "uncertain",
     proof: attempt.state === "not_dispatched" ? "pre_dispatch" : attempt.state === "confirmed_rejected" && attempt.receiptCanonical ? "qualified_rejection" : "none",
     outputVisible: attempt.outputVisible, toolInputVisible: attempt.toolInputVisible, toolResultVisible: attempt.toolResultVisible, toolEffectCommitted: attempt.toolEffectCommitted,

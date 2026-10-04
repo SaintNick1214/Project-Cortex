@@ -1,0 +1,45 @@
+{
+  "rootDir": "/workspace/Project-Cortex",
+  "roots": [
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog"
+  ],
+  "testEnvironment": "node",
+  "testMatch": [
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/tests/unit/runtime/gateway-dispatch.test.ts",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/hostile.test.ts",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline-c2.test.ts",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2-review/additional.test.ts"
+  ],
+  "extensionsToTreatAsEsm": [
+    ".ts"
+  ],
+  "transform": {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        "useESM": true,
+        "diagnostics": false,
+        "tsconfig": {
+          "target": "ES2022",
+          "module": "ESNext",
+          "moduleResolution": "bundler",
+          "esModuleInterop": true,
+          "skipLibCheck": true,
+          "isolatedModules": true,
+          "ignoreDeprecations": "6.0"
+        }
+      }
+    ]
+  },
+  "moduleNameMapper": {
+    "^/workspace/Project-Cortex/convex-dev/runtimeGateway$": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/convex-dev/runtimeGateway.ts",
+    "^/workspace/Project-Cortex/src/domain/model-policy$": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/src/domain/model-policy.ts",
+    "^/workspace/Project-Cortex/src/domain/profile$": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/src/domain/profile.ts",
+    "^\\./profile\\.js$": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical/catalog/src/domain/profile.ts"
+  },
+  "setupFiles": [],
+  "setupFilesAfterEnv": [],
+  "resolver": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-c1-product-review/historical/resolver.cjs",
+  "cache": false,
+  "maxWorkers": 1
+}

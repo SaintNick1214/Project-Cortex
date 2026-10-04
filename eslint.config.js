@@ -35,6 +35,10 @@ export default [
       "Internal Docs/**/*", // Exclude internal docs
       "work/**/*", // Private scratch files and generated qualification probes
       "_goals/**/qa/**/*", // Frozen evidence and standalone fixtures use their scoped lint configs
+      // Immutable old Gateway assertions run separately under the mandatory guarded
+      // historical 78-outcome catalog, outside this current typed parser project.
+      // gateway-terminal-composition.test.ts still checks the actual Gateway here.
+      "tests/unit/runtime/gateway-dispatch.test.ts",
     ],
   },
 

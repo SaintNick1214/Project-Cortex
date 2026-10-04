@@ -1,0 +1,12 @@
+import datetime,hashlib,json,os,pathlib,subprocess,sys
+q=pathlib.Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-coherent-source-root-quality'); name=sys.argv[1]; assert name in ['lint','build','contracts']
+paths=['convex-dev/runtimeModelPolicy.ts','convex-dev/runtimeGateway.ts','tests/unit/runtime/model-policy-model-drift.test.ts','tests/unit/runtime/gateway-terminal-composition.test.ts','tsconfig.json','jest.config.mjs','eslint.config.js','tests/unit/runtime/convex-schema-test-types.d.ts','package.json','package-lock.json','tsconfig.lint.json','scripts/verify-public-contracts.mjs','src/domain/model-policy.ts','convex-dev/runtimePolicySchema.ts','convex-dev/runtimeModelPolicyBootstrap.ts']
+def pins():return {p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() for p in paths}
+pre=pins(); cmd=['/workspace/Project-Cortex/work/resume/toolchain-bin/npm','run',{'contracts':'test:contracts'}.get(name,name)];start=datetime.datetime.now(datetime.timezone.utc).isoformat();e=os.environ.copy();e['PATH']='/workspace/Project-Cortex/work/resume/toolchain-bin:'+e['PATH'];e['NO_COLOR']='1';e['NODE_USE_ENV_PROXY']='1'
+with (q/(name+'.stdout')).open('xb') as out,(q/(name+'.stderr')).open('xb') as err:
+ try: r=subprocess.run(cmd,cwd='/workspace/Project-Cortex',env=e,stdout=out,stderr=err,timeout=120);code=r.returncode
+ except subprocess.TimeoutExpired:code=124
+post=pins();receipt={'argv':cmd,'cwd':'/workspace/Project-Cortex','startedAtUTC':start,'endedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exit':code,'timeoutMs':120000,'sourcePre':pre,'sourcePost':post,'sourcesStable':pre==post,'environmentOverrides':{'PATHPrefix':'work/resume/toolchain-bin (ambientNode)','NO_COLOR':'1','NODE_USE_ENV_PROXY':'1'},'scope':'Offline affected coherent-source root quality; no service/native/UI/paid acceptance.','streams':{}}
+for ext in ['stdout','stderr']:
+ b=(q/(name+'.'+ext)).read_bytes();receipt['streams'][ext]={'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+(q/(name+'-receipt.json')).open('x').write(json.dumps(receipt,indent=2)+'\n');print(json.dumps({'check':name,'exit':code,'stable':pre==post}));sys.exit(code if pre==post else 2)

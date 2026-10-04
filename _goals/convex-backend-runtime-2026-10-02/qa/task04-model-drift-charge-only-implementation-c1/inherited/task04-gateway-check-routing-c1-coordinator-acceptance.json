@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-04T09:27:12.544165+00:00",
+  "verdict": "ACCEPT_PASS_CHECK_ROUTING_ONLY",
+  "score": 4.4,
+  "reportSHA256": "0d166a1d91070af0a30fb26911aed9660a3802944d4dbbf1e4104d8ca672cf61",
+  "reviewManifestSHA256": "2f69bbefdefc71f50aba45bae8f28c44cc113c21042cc9a3af16926e1902862e",
+  "rootReadFullReport": true,
+  "rootVerifiedAllReviewRows": 23,
+  "rootVerifiedAllSubjectRows": 62,
+  "subjectManifestSHA256": "d08bddddc5fedf20c165c93f3d0a8c963755fd31b174b7c350962af83120e861",
+  "mandatoryOutcomeGates": [
+    "historical78 exact74+1+1+2 guarded oldsource",
+    "currentactualGateway tests and ordinaryunits"
+  ],
+  "rootTypes": "PASS",
+  "rootLint": {
+    "status": "PASS",
+    "errors": 0,
+    "warnings": 115
+  },
+  "GatewayBehaviorAccepted": false,
+  "doesNotComplete": [
+    "native modeldrift accounting",
+    "provider/default readiness",
+    "Task04",
+    "full03",
+    "text",
+    "UI",
+    "all17",
+    "goal"
+  ],
+  "allOriginalAssertionsUnchanged": true,
+  "sourcePublishingHeldUntilCoherentProductReview": true
+}

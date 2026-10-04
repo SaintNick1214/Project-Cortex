@@ -1,6 +1,7 @@
 /** Backend-only governed native middleware. No caller is wired and the actual trust root is empty.
  * Production composition MUST supply a private durable terminal sink; no missing RPC is invented.
  * Tools/schema/Responses and typed native replay remain later qualification gates. */
+import { ConvexError } from "convex/values";
 import { convexGateway } from "@convex-dev/ai-sdk-provider";
 import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
 import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Result, LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4StreamPart, LanguageModelV4Usage } from "@ai-sdk/provider";
@@ -32,20 +33,16 @@ export interface GatewayLedgerPort {
     { dispatchPermit: true; dispatchIdentity: string; snapshot: ModelPolicySnapshotV1; requestCanonical: string }
     | { dispatchPermit: false; state: string; replayAllowed: false }>;
   markVisible(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; outputVisible: boolean; toolInputVisible: boolean; toolResultVisible: boolean; toolEffectCommitted: boolean }): Promise<{ recorded: true }>;
-  settle(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; receiptCanonical: string }): Promise<{
-    state: string; resultWithheld?: boolean; settledCostUnits?: number; overrun?: boolean; replayAllowed?: false }>;
+  attachTerminalResult(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; evidenceId: string; privateResultCanonical: string }): Promise<TerminalAttachmentAcknowledgment>;
 }
-/** Server code composition only: never a public JSON argument, tenant capability or admin key.
- * FIRST-SLICE CAPTURE-ONLY CONTRACT: capture durably stores sanitized charge evidence
- * independently of delivery authority and deduplicates exact receipts. It MUST NOT settle
- * money, release the attempt slot, change visibility or attach results before returning.
- * No such native capture-only registration is installed; this required port is UNWIRED.
- * The proposed future atomic capture+accounting registration is INCOMPATIBLE with this
- * terminal order. Before wiring it, replace postcapture markVisible+settle with a separately
- * reviewed current-authority attachTerminalResult port. No nonexistent RPC is referenced.
- * Original-window no-delivery liability reconciliation is still a native follow-up. */
+export interface TerminalAttachmentAcknowledgment { attached: boolean; resultWithheld: boolean }
+export type TerminalCaptureAcknowledgment = { evidenceId: string } | { evidenceId: string; state: "settled" | "confirmed_rejected" | "uncertain"; settledCostUnits?: number; overrun: boolean };
+/** Trusted server composition only, currently UNWIRED. Capture atomically records charge-only
+ * evidence and accounts known/uncertain liability independently of delivery rights. It never
+ * carries private output. Required current attachment atomically fences private result/visibility.
+ * A minimum evidenceId acknowledgment is structural compatibility, never accounting truth. */
 export interface DurableTerminalEvidenceSink {
-  capture(evidence: { attemptId: AttemptId; dispatchIdentity: string; receiptCanonical: string }): Promise<{ evidenceId: string }>;
+  capture(evidence: { attemptId: AttemptId; dispatchIdentity: string; receiptCanonical: string }): Promise<TerminalCaptureAcknowledgment>;
 }
 /** Finite server-code composition bounds, independent of model price/token qualifications. */
 export interface GatewayOwnedTiming { terminalObservationMs: number; terminalPersistenceMs: number; cleanupMs: number }
@@ -66,6 +63,9 @@ export interface GatewayLifecycle {
   /** Server owner may retry only the retained idempotent capture; never inference or delivery.
    * This in-memory slot is not a durable outbox and does not survive action termination. */
   retryPendingTerminalEvidence(): Promise<boolean>;
+  /** Only an already-issued exact attachment tuple may be retried/joined. Bookkeeping only:
+   * no new private payload, inference, token lookup or revival of failed output. */
+  retryPendingTerminalAttachment(): Promise<TerminalAttachmentAcknowledgment | undefined>;
   /** Explicit narrow authorized replay payload; never a fabricated native provider result. */
   consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
 }
@@ -97,6 +97,72 @@ function arrayValues(input: unknown): unknown[] {
   for (let i = 0; i < input.length; i++) { const d = descriptors[String(i)]; if (!d || !d.enumerable || !("value" in d)) fail("INVALID_NATIVE_REQUEST"); values.push(d.value); }
   if (Object.keys(descriptors).length !== values.length + 1) fail("INVALID_NATIVE_REQUEST");
   return values;
+}
+function stableId(value: unknown): value is string {
+  if (typeof value !== "string" || value.length < 1 || value.length > 256 || value.trim() !== value) return false;
+  utf8(value); return true;
+}
+/** Source is detached before any await; never normalized or inferred from prompt/model claims. */
+function detachedBinding(input: GatewayBinding): GatewayBinding {
+  const fields = record(input, ["reference", "operationKey", "runBudgetId", "semanticId", "ordinal", "source", "parentOperationId"]);
+  if ("source" in fields) {
+    const source = record(fields.source, ["sourceId", "sourceEventId", "sourceRevision", "contentHash"]);
+    if (Object.keys(source).length !== 4 || !stableId(source.sourceId) || !stableId(source.sourceEventId)
+      || !count(source.sourceRevision) || source.sourceRevision < 1 || typeof source.contentHash !== "string" || !/^[a-f0-9]{64}$/.test(source.contentHash)) fail("INVALID_SOURCE");
+  }
+  return detached(fields) as unknown as GatewayBinding;
+}
+function checkedResolution(input: unknown): GatewayResolution {
+  const fields = record(input, ["snapshot", "dispatchEvidence", "storageLimits"]);
+  if (Object.keys(fields).length !== 3) fail("CAPABILITY_UNAVAILABLE");
+  return detached(fields) as unknown as GatewayResolution;
+}
+function checkedAdmission(input: unknown): GatewayAdmission {
+  const fields = record(input, ["status", "operationId", "attemptId", "snapshot", "requestCanonical", "resultCanonical", "replayAllowed"]);
+  if (!stableId(fields.operationId)) fail("ADMITTED_REQUEST_MISMATCH");
+  const keys = Reflect.ownKeys(input as object);
+  const exact = (allowed: readonly string[], required: readonly string[]) => keys.every((key) => typeof key === "string" && allowed.includes(key)) && required.every((key) => key in fields);
+  if (fields.status === "reserved" && exact(["status", "operationId", "attemptId", "snapshot", "requestCanonical"], ["attemptId", "snapshot", "requestCanonical"])
+    && stableId(fields.attemptId) && typeof fields.requestCanonical === "string") return detached(fields) as unknown as GatewayAdmission;
+  if (fields.status === "replay" && exact(["status", "operationId", "resultCanonical"], ["resultCanonical"]) && typeof fields.resultCanonical === "string") return detached(fields) as unknown as GatewayAdmission;
+  if (["uncertain", "inflight"].includes(fields.status as string) && exact(["status", "operationId", "attemptId", "replayAllowed"], ["attemptId"])
+    && stableId(fields.attemptId) && (!keys.includes("replayAllowed") || fields.replayAllowed === false)) return detached(fields) as unknown as GatewayAdmission;
+  return fail("ADMITTED_REQUEST_MISMATCH");
+}
+function checkedPermit(input: unknown): Awaited<ReturnType<GatewayLedgerPort["checkpoint"]>> {
+  const fields = record(input, ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical", "state", "replayAllowed"]);
+  const keys = Reflect.ownKeys(input as object);
+  if (fields.dispatchPermit === true && keys.length === 4 && ["dispatchPermit", "dispatchIdentity", "snapshot", "requestCanonical"].every((key) => key in fields)
+    && stableId(fields.dispatchIdentity) && typeof fields.requestCanonical === "string") return detached(fields) as unknown as Awaited<ReturnType<GatewayLedgerPort["checkpoint"]>>;
+  if (fields.dispatchPermit === false && keys.length === 3 && typeof fields.state === "string" && fields.replayAllowed === false) return { dispatchPermit: false, state: fields.state, replayAllowed: false };
+  return fail("CHECKPOINT_MISMATCH");
+}
+function captureAcknowledgment(input: unknown): TerminalCaptureAcknowledgment {
+  const ack = record(input, ["evidenceId", "state", "settledCostUnits", "overrun"]);
+  if (!stableId(ack.evidenceId)) fail("TERMINAL_CAPTURE_PENDING");
+  // Missing accounting fields are not projected to a fabricated settled state.
+  if (Reflect.ownKeys(input as object).length === 1) return { evidenceId: ack.evidenceId };
+  if (!["settled", "confirmed_rejected", "uncertain"].includes(ack.state as string) || typeof ack.overrun !== "boolean"
+    || ("settledCostUnits" in ack && !count(ack.settledCostUnits))) fail("TERMINAL_CAPTURE_PENDING");
+  // Explicit undefined is not a valid optional native accounting value.
+  if (Object.getOwnPropertyDescriptor(input, "settledCostUnits") && !count(ack.settledCostUnits)) fail("TERMINAL_CAPTURE_PENDING");
+  return ack as unknown as TerminalCaptureAcknowledgment;
+}
+function attachmentAcknowledgment(input: unknown): TerminalAttachmentAcknowledgment {
+  const ack = record(input, ["attached", "resultWithheld"]);
+  if (Reflect.ownKeys(input as object).length !== 2 || typeof ack.attached !== "boolean" || typeof ack.resultWithheld !== "boolean"
+    || (!ack.attached && !ack.resultWithheld)) fail("TERMINAL_RECONCILIATION_PENDING");
+  return { attached: ack.attached, resultWithheld: ack.resultWithheld };
+}
+/** Only the exact native structured conflict is definitive, never remote message text. */
+function attachmentConflict(error: unknown): boolean {
+  try {
+    if (!(error instanceof ConvexError) || Object.getPrototypeOf(error) !== ConvexError.prototype) return false;
+    const descriptor = Object.getOwnPropertyDescriptor(error, "data");
+    if (!descriptor || !("value" in descriptor)) return false;
+    const data = record(descriptor.value, ["version", "code", "message", "retryable", "outcome"]);
+    return data.version === 1 && data.code === "IDEMPOTENCY_CONFLICT" && data.retryable === false;
+  } catch { return false; }
 }
 function detached<T>(value: T): T { return JSON.parse(canonicalModelJson(value)) as T; }
 function exactJSON(encoded: string, maximum: number): unknown {
@@ -203,7 +269,7 @@ function providerJSON(input: unknown): Record<string, unknown> | undefined {
 }
 export async function createGovernedGatewayModel(composition: GatewayComposition, inputBinding: GatewayBinding): Promise<{ model: LanguageModelV4 | EmbeddingModelV4; lifecycle: GatewayLifecycle }> {
   requireSink(composition);
-  const binding = detached(inputBinding); const resolution = await composition.ledger.resolve(resolveArgs(binding)); proofFor(resolution, (composition.now ?? Date.now)());
+  const binding = detachedBinding(inputBinding); const resolution = checkedResolution(await composition.ledger.resolve(resolveArgs(binding))); proofFor(resolution, (composition.now ?? Date.now)());
   return resolution.snapshot.nativeInterface === "embedding"
     ? governGatewayEmbeddingModel(convexGateway.embeddingModel(resolution.snapshot.modelId), composition, binding, resolution)
     : governGatewayLanguageModel(convexGateway(resolution.snapshot.modelId), composition, binding, resolution);
@@ -211,11 +277,14 @@ export async function createGovernedGatewayModel(composition: GatewayComposition
 function resolveArgs(binding: GatewayBinding): Pick<GatewayBinding, "reference" | "operationKey" | "runBudgetId" | "source"> {
   return { reference: binding.reference, operationKey: binding.operationKey, runBudgetId: binding.runBudgetId, ...(binding.source ? { source: binding.source } : {}) };
 }
-function requireSink(composition: GatewayComposition): void { if (!composition.terminalSink || typeof composition.terminalSink.capture !== "function") fail("DURABLE_TERMINAL_SINK_REQUIRED"); }
+function requireSink(composition: GatewayComposition): void {
+  if (!composition.terminalSink || typeof composition.terminalSink.capture !== "function") fail("DURABLE_TERMINAL_SINK_REQUIRED");
+  if (!composition.ledger || typeof composition.ledger.attachTerminalResult !== "function") fail("TERMINAL_ATTACHMENT_REQUIRED");
+}
 function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding, inputResolution: GatewayResolution) {
-  requireSink(composition); const binding = detached(inputBinding); const resolution = detached(inputResolution);
+  requireSink(composition); const binding = detachedBinding(inputBinding); const resolution = checkedResolution(inputResolution);
   proofFor(resolution, (composition.now ?? Date.now)());
-  if (!count(binding.ordinal) || !binding.semanticId || binding.semanticId.length > 256) fail("INVALID_BINDING");
+  if (!count(binding.ordinal) || !stableId(binding.semanticId) || !stableId(binding.runBudgetId)) fail("INVALID_BINDING");
   const timing = detached(composition.ownedTiming ?? DEFAULT_GATEWAY_OWNED_TIMING);
   for (const value of [timing.terminalObservationMs, timing.terminalPersistenceMs, timing.cleanupMs]) if (!count(value) || value < 1 || value > 1000) fail("INVALID_OWNED_TIMING");
   const controller = new AbortController(); const tasks: Promise<unknown>[] = []; let replay: string | undefined;
@@ -272,11 +341,6 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     if (Date.now() >= observationDeadline) fail("MODEL_INTERRUPTED");
     return await wait(track(kind, invoke), () => observationDeadline, "MODEL_INTERRUPTED", "observation");
   }
-  async function persist<T>(kind: "capture" | "settlement", invoke: () => PromiseLike<T>, deadline: number, code: string): Promise<T> {
-    if (Date.now() >= deadline) fail(code);
-    try { return await wait(track(kind, invoke), () => deadline, code, "persistence"); }
-    catch { return fail(code); }
-  }
   async function cleanup(invoke: () => PromiseLike<unknown>): Promise<void> {
     try { await wait(track("cleanup", invoke), () => Date.now() + timing.cleanupMs, "CLEANUP_PENDING", "persistence"); }
     catch { /* Exposed pending RPC remains handled; no rollback/termination inference. */ }
@@ -284,7 +348,8 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
   const capture = composition.terminalSink.capture.bind(composition.terminalSink);
   let pendingEvidence: Parameters<DurableTerminalEvidenceSink["capture"]>[0] | undefined;
   let reconciliationPending = false;
-  type CaptureOutcome = { confirmed: true; evidenceId: string } | { confirmed: false };
+  type CaptureOutcome = { confirmed: true; acknowledgment: TerminalCaptureAcknowledgment } | { confirmed: false };
+  let capturedAcknowledgment: TerminalCaptureAcknowledgment | undefined;
   let captureFlight: { evidenceCanonical: string; outcome: "pending" | "confirmed" | "failed"; promise: Promise<CaptureOutcome> } | undefined;
   async function capturePending(deadline = Date.now() + timing.terminalPersistenceMs): Promise<boolean> {
     if (!pendingEvidence) return false;
@@ -292,12 +357,16 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     if (captureFlight && captureFlight.evidenceCanonical !== evidenceCanonical) fail("TERMINAL_EVIDENCE_CONFLICT");
     if (!captureFlight || captureFlight.outcome === "failed") {
       if (Date.now() >= deadline) fail("TERMINAL_CAPTURE_PENDING");
+      const evidence = pendingEvidence;
       const flight = { evidenceCanonical, outcome: "pending" as "pending" | "confirmed" | "failed", promise: Promise.resolve<CaptureOutcome>({ confirmed: false }) };
-      // Keep one capture flight across timeout/retry. Rejected/invalid acknowledgments alone
-      // permit an exact idempotent persistence retry; a merely slow flight never duplicates it.
-      flight.promise = track("capture", () => capture(pendingEvidence!)).then((ack): CaptureOutcome => {
-        if (typeof ack.evidenceId !== "string" || !ack.evidenceId || ack.evidenceId.length > 256) { flight.outcome = "failed"; return { confirmed: false }; }
-        flight.outcome = "confirmed"; return { confirmed: true, evidenceId: ack.evidenceId };
+      // Both branches are total: hostile late acknowledgments never create an unobserved rejection.
+      flight.promise = track("capture", () => capture(detached(evidence))).then((input): CaptureOutcome => {
+        try {
+          const acknowledgment = captureAcknowledgment(input); flight.outcome = "confirmed";
+          capturedAcknowledgment = acknowledgment;
+          if (pendingEvidence === evidence) pendingEvidence = undefined;
+          return { confirmed: true, acknowledgment };
+        } catch { flight.outcome = "failed"; return { confirmed: false }; }
       }, (): CaptureOutcome => { flight.outcome = "failed"; return { confirmed: false }; });
       captureFlight = flight;
     }
@@ -305,17 +374,52 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     try { outcome = await wait(captureFlight.promise, () => deadline, "TERMINAL_CAPTURE_PENDING", "persistence"); }
     catch { return fail("TERMINAL_CAPTURE_PENDING"); }
     if (!outcome.confirmed) fail("TERMINAL_CAPTURE_PENDING");
-    pendingEvidence = undefined; return true;
+    return true;
+  }
+  type AttachmentTuple = Parameters<GatewayLedgerPort["attachTerminalResult"]>[0];
+  type AttachmentOutcome = { acknowledgment: TerminalAttachmentAcknowledgment } | { failed: true; conflict: boolean };
+  let pendingAttachment: AttachmentTuple | undefined;
+  let attachmentFlight: { canonical: string; outcome: "pending" | "confirmed" | "failed"; promise: Promise<AttachmentOutcome> } | undefined;
+  async function attachPending(deadline = Date.now() + timing.terminalPersistenceMs): Promise<TerminalAttachmentAcknowledgment | undefined> {
+    if (!pendingAttachment) return undefined;
+    const tuple = pendingAttachment; const canonical = canonicalModelJson(tuple);
+    if (attachmentFlight && attachmentFlight.canonical !== canonical) fail("TERMINAL_RESULT_WITHHELD");
+    if (!attachmentFlight || attachmentFlight.outcome === "failed") {
+      if (Date.now() >= deadline) {
+        // An unissued tuple cannot become an attachment retry after the output deadline.
+        if (!attachmentFlight) { pendingAttachment = undefined; reconciliationPending = false; }
+        fail("TERMINAL_RECONCILIATION_PENDING");
+      }
+      const flight = { canonical, outcome: "pending" as "pending" | "confirmed" | "failed", promise: Promise.resolve<AttachmentOutcome>({ failed: true, conflict: false }) };
+      // Settlement counter now denotes atomic-lane attachment RPCs, not ordinary settlement.
+      flight.promise = track("settlement", () => composition.ledger.attachTerminalResult(detached(tuple))).then((input): AttachmentOutcome => {
+        try {
+          const acknowledgment = attachmentAcknowledgment(input); flight.outcome = "confirmed";
+          if (pendingAttachment === tuple) { pendingAttachment = undefined; reconciliationPending = false; }
+          return { acknowledgment };
+        } catch { flight.outcome = "failed"; reconciliationPending = true; return { failed: true, conflict: false }; }
+      }, (error: unknown): AttachmentOutcome => {
+        const conflict = attachmentConflict(error); flight.outcome = "failed";
+        if (conflict && pendingAttachment === tuple) pendingAttachment = undefined;
+        reconciliationPending = !conflict; return { failed: true, conflict };
+      });
+      attachmentFlight = flight;
+    }
+    let outcome: AttachmentOutcome;
+    try { outcome = await wait(attachmentFlight.promise, () => deadline, "TERMINAL_RECONCILIATION_PENDING", "persistence"); }
+    catch { reconciliationPending = pendingAttachment !== undefined; return fail("TERMINAL_RECONCILIATION_PENDING"); }
+    if ("failed" in outcome) fail(outcome.conflict ? "TERMINAL_RESULT_WITHHELD" : "TERMINAL_RECONCILIATION_PENDING");
+    return outcome.acknowledgment;
   }
   const lifecycle: GatewayLifecycle = { signal: controller.signal, pendingWork: () => {
     const counts = { authority: 0, capture: 0, settlement: 0, native: 0, reader: 0, cleanup: 0 };
     pendingRPCs.forEach((slot) => { counts[slot.kind]++; }); return Object.freeze(counts);
   }, cancel: () => controller.abort(), complete: async () => { let joined = 0; while (joined < tasks.length) { const batch = tasks.slice(joined); joined = tasks.length; await Promise.all(batch); } if (pendingEvidence) fail("TERMINAL_CAPTURE_PENDING"); if (reconciliationPending) fail("TERMINAL_RECONCILIATION_PENDING"); },
-  retryPendingTerminalEvidence: () => capturePending(), consumeReplay: () => own(async () => {
-    if (!replay) return undefined; assertDelivery(); await authority(() => composition.ledger.resolve(resolveArgs(binding)));
+  retryPendingTerminalEvidence: () => own(() => capturePending()), retryPendingTerminalAttachment: () => own(() => attachPending()), consumeReplay: () => own(async () => {
+    if (!replay) return undefined; assertDelivery(); proofFor(checkedResolution(await authority(() => composition.ledger.resolve(resolveArgs(binding)))), (composition.now ?? Date.now)());
     const result = providerJSON(exactJSON(replay, resolution.storageLimits.privateResultBytes));
     if (!result) fail("INVALID_REPLAY");
-    if (resolution.snapshot.nativeInterface === "chat") { const item = record(result, ["text"]); if (typeof item.text !== "string" || !item.text) fail("INVALID_REPLAY"); assertDelivery(); return { text: item.text }; }
+    if (resolution.snapshot.nativeInterface === "chat") { const item = record(result, ["text"]); if (typeof item.text !== "string" || !item.text) fail("INVALID_REPLAY"); utf8(item.text); assertDelivery(); return { text: item.text }; }
     const item = record(result, ["profile", "vectors"]); assertProfileMatches(item.profile as typeof DEFAULT_EMBEDDING_PROFILE);
     if (!Array.isArray(item.vectors) || item.vectors.length !== 1) fail("INVALID_REPLAY"); item.vectors.forEach((v: number[]) => assertEmbeddingVector(v));
     assertDelivery(); return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: item.vectors as number[][] };
@@ -323,19 +427,20 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
   async function admit(request: ModelCallRequest): Promise<Reserved & { dispatchIdentity: string }> {
     proofFor(resolution, (composition.now ?? Date.now)()); assertDelivery();
     const incoming = json(request, resolution.storageLimits.canonicalBytes);
-    const admitted = await authority(() => composition.ledger.admit({ ...binding, requestCanonical: incoming }));
+    const admitted = checkedAdmission(await authority(() => composition.ledger.admit({ ...binding, requestCanonical: incoming })));
     if (admitted.status !== "reserved") { if (admitted.status === "replay") replay = admitted.resultCanonical; fail(admitted.status === "replay" ? "REPLAY_AVAILABLE" : "UNCERTAIN_OR_INFLIGHT"); }
     const flat = exactJSON(admitted.requestCanonical, resolution.storageLimits.canonicalBytes);
     const validated = validateModelRequest(admitted.snapshot, flat).request;
     const comparable = { ...validated, semanticId: request.semanticId, childCallId: request.childCallId };
     if (canonicalModelJson(comparable) !== canonicalModelJson(request) || canonicalModelJson(admitted.snapshot) !== canonicalModelJson(resolution.snapshot)) fail("ADMITTED_REQUEST_MISMATCH");
-    const permit = await authority(() => composition.ledger.checkpoint({ reference: binding.reference, attemptId: admitted.attemptId, requestCanonical: admitted.requestCanonical }));
+    const permit = checkedPermit(await authority(() => composition.ledger.checkpoint({ reference: binding.reference, attemptId: admitted.attemptId, requestCanonical: admitted.requestCanonical })));
     if (!permit.dispatchPermit) fail("DISPATCH_NOT_PERMITTED");
     if (permit.requestCanonical !== admitted.requestCanonical || canonicalModelJson(permit.snapshot) !== canonicalModelJson(admitted.snapshot)) fail("CHECKPOINT_MISMATCH");
     assertDelivery(); return { ...admitted, dispatchIdentity: permit.dispatchIdentity };
   }
   const visible = async (attempt: Reserved, outputVisible = false, hardDeadline = Infinity) => {
-    assertDelivery(); await authority(() => composition.ledger.markVisible({ reference: binding.reference, attemptId: attempt.attemptId, outputVisible, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false }), hardDeadline); assertDelivery();
+    assertDelivery(); const acknowledgment = record(await authority(() => composition.ledger.markVisible({ reference: binding.reference, attemptId: attempt.attemptId, outputVisible, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false }), hardDeadline), ["recorded"]);
+    if (Object.keys(acknowledgment).length !== 1 || acknowledgment.recorded !== true) fail("DELIVERY_AUTHORITY_REVOKED"); assertDelivery();
   };
   async function terminal(attempt: Reserved & { dispatchIdentity: string }, raw: Record<string, unknown>, privateResult?: string): Promise<void> {
     const deadline = Date.now() + timing.terminalPersistenceMs;
@@ -355,22 +460,16 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     const receiptCanonical = json(receipt, resolution.storageLimits.canonicalBytes);
     pendingEvidence = { attemptId: attempt.attemptId, dispatchIdentity: attempt.dispatchIdentity, receiptCanonical };
     await capturePending(deadline);
-    // Capture-only port: B visibility still precedes settlement. Cancellation/expiry suppress
-    // result work while known charge continues within its separate finite persistence budget.
-    let deliveryRevoked = false;
-    if (privateResult && canDeliver()) { try { await visible(attempt, resolution.snapshot.nativeInterface === "chat", deadline); } catch { deliveryRevoked = true; } }
-    if (!canDeliver()) privateResult = undefined;
-    let settled: Awaited<ReturnType<GatewayLedgerPort["settle"]>>;
-    try {
-      settled = await persist("settlement", () => {
-        const rpc = composition.ledger.settle({ reference: binding.reference, attemptId: attempt.attemptId,
-          receiptCanonical: json({ ...receipt, ...(privateResult && !deliveryRevoked ? { privateResultCanonical: privateResult } : {}) }, resolution.storageLimits.canonicalBytes) });
-        rpc.then(() => { reconciliationPending = false; }, () => { reconciliationPending = true; }); return rpc;
-      }, deadline, "TERMINAL_RECONCILIATION_PENDING");
-    } catch { reconciliationPending = true; return fail("TERMINAL_RECONCILIATION_PENDING"); }
-    if (deliveryRevoked) fail("DELIVERY_AUTHORITY_REVOKED");
-    if (settled.overrun || nativeBoundViolation) fail("QUALIFICATION_OVERRUN");
-    if (settled.state !== "settled" || settled.resultWithheld !== false) fail("TERMINAL_RESULT_WITHHELD");
+    const ack = capturedAcknowledgment!;
+    if (nativeBoundViolation || ("overrun" in ack && ack.overrun)) fail("QUALIFICATION_OVERRUN");
+    if (!canDeliver()) assertDelivery();
+    if (!privateResult || ("state" in ack && ack.state !== "settled")) fail("TERMINAL_RESULT_WITHHELD");
+    // Retain private bytes only when attachment is actually issued within the ORIGINAL deadline.
+    if (Date.now() >= deadline) fail("TERMINAL_RECONCILIATION_PENDING");
+    pendingAttachment = detached({ reference: binding.reference, attemptId: attempt.attemptId, evidenceId: ack.evidenceId, privateResultCanonical: privateResult });
+    reconciliationPending = true;
+    const attached = await attachPending(deadline);
+    if (!attached || !attached.attached || attached.resultWithheld) fail("TERMINAL_RESULT_WITHHELD");
     assertDelivery();
   }
   return { binding, resolution, controller, lifecycle, tasks, admit, visible, terminal, startLifetime, endLifetime, assertDelivery, canDeliver, observe, cleanup, own };
@@ -394,13 +493,12 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
       try {
       const raw = providerJSON(result.response?.body); const choices = raw?.choices;
       if (!raw || !Array.isArray(choices) || choices.length !== 1 || !terminalReasons.includes((choices[0] as { finish_reason?: string }).finish_reason ?? "")) fail("UNQUALIFIED_TERMINAL");
-      const text = result.content.filter((part) => part.type === "text").map((part) => part.text).join("");
-      let privateResult: string | undefined;
-      try { if (text && result.content.every((part) => ["text", "reasoning"].includes(part.type))) privateResult = json({ text }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)); } catch { /* Capture observed charge even when output violated its bound. */ }
+      let text = ""; let supported = false; let privateResult: string | undefined;
+      try { const content = detached(result.content); text = content.filter((part) => part.type === "text").map((part) => part.text).join(""); supported = content.every((part) => ["text", "reasoning"].includes(part.type)); if (text && supported) privateResult = json({ text }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)); } catch { /* Capture observed charge even when output violated its bound. */ }
       try { await state.terminal(attempt, raw, state.canDeliver() ? privateResult : undefined); } finally { state.endLifetime(); }
       state.assertDelivery();
       if (!privateResult || state.controller.signal.aborted) fail("RESULT_BOUND_EXCEEDED");
-      if (!text || result.content.some((part) => !["text", "reasoning"].includes(part.type))) fail("UNSUPPORTED_MODEL_OUTPUT");
+      if (!text || !supported) fail("UNSUPPORTED_MODEL_OUTPUT");
       return { content: [{ type: "text", text }], finishReason: { unified: (choices[0] as { finish_reason: string }).finish_reason === "length" ? "length" : (choices[0] as { finish_reason: string }).finish_reason === "content_filter" ? "content-filter" : "stop", raw: (choices[0] as { finish_reason: string }).finish_reason }, usage: nativeUsage(providerJSON(raw.usage)), warnings: [] };
       } finally { state.endLifetime(); }
     }),
@@ -439,7 +537,7 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
                 }
               }
               const choices = raw.choices; if (Array.isArray(choices) && choices.length === 1 && terminalReasons.includes((choices[0] as { finish_reason?: string }).finish_reason ?? "")) terminalReason = (choices[0] as { finish_reason: string }).finish_reason;
-              if (providerJSON(raw.usage)) rawTerminal = { id, model: actualModel, usage: raw.usage };
+              if (terminalReason || providerJSON(raw.usage)) rawTerminal = { id, model: actualModel, ...(rawTerminal?.usage ? { usage: rawTerminal.usage } : {}), ...(providerJSON(raw.usage) ? { usage: raw.usage } : {}) };
               continue;
             }
             if (part.type === "error") fail("STREAM_INTERRUPTED");
@@ -465,7 +563,7 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
           }
           if (!terminalReason || !rawTerminal) fail("UNQUALIFIED_TERMINAL");
           terminalAttempted = true;
-          await state.terminal(attempt, rawTerminal, text && !deliveryError && !state.controller.signal.aborted ? json({ text }, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes) : undefined);
+          await state.terminal(attempt, rawTerminal, text && !deliveryError && !state.controller.signal.aborted ? json({ text }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)) : undefined);
           if (deliveryError) throw deliveryError;
           if (!state.canDeliver()) interrupted();
           if (!observerClosed && !deliveryError) { if (textStarted) emit({ type: "text-end", id: "governed-text" }); emit({ type: "finish", finishReason: { unified: terminalReason === "length" ? "length" : terminalReason === "content_filter" ? "content-filter" : "stop", raw: terminalReason }, usage: nativeUsage(providerJSON(rawTerminal.usage)) }); if (!observerClosed) { state.assertDelivery(); observer!.close(); observerClosed = true; } }
@@ -511,7 +609,7 @@ export function governGatewayEmbeddingModel(model: EmbeddingModelV4, composition
       const raw = providerJSON(result.response?.body);
       if (!raw || !Array.isArray(raw.data) || raw.data.length !== 1 || result.embeddings.length !== 1) fail("UNQUALIFIED_TERMINAL");
       let payload: string | undefined;
-      try { assertEmbeddingVector(result.embeddings[0]!); payload = json({ profile: DEFAULT_EMBEDDING_PROFILE, vectors: result.embeddings }, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes); }
+      try { const vectors = detached(result.embeddings); assertEmbeddingVector(vectors[0]!); payload = json({ profile: DEFAULT_EMBEDDING_PROFILE, vectors }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)); }
       catch { /* Invalid output never discards terminal charge. */ }
       try { await state.terminal(attempt, raw, state.canDeliver() ? payload : undefined); } finally { state.endLifetime(); }
       state.assertDelivery();

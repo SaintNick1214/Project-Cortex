@@ -1,0 +1,37 @@
+{
+  "rootDir": "/workspace/Project-Cortex",
+  "roots": [
+    "/workspace/Project-Cortex/tests/unit/runtime"
+  ],
+  "testEnvironment": "node",
+  "testMatch": [
+    "/workspace/Project-Cortex/tests/unit/runtime/gateway-terminal-composition.test.ts"
+  ],
+  "extensionsToTreatAsEsm": [
+    ".ts"
+  ],
+  "transform": {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        "useESM": true,
+        "diagnostics": false,
+        "tsconfig": {
+          "target": "ES2022",
+          "module": "ESNext",
+          "moduleResolution": "bundler",
+          "esModuleInterop": true,
+          "skipLibCheck": true,
+          "isolatedModules": true,
+          "ignoreDeprecations": "6.0"
+        }
+      }
+    ]
+  },
+  "moduleNameMapper": {},
+  "setupFiles": [],
+  "setupFilesAfterEnv": [],
+  "resolver": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-c1-product-review/resolver.cjs",
+  "cache": false,
+  "maxWorkers": 1
+}

@@ -1,0 +1,24 @@
+(node:202556) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS _goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-c1-product-review/independent-probe.test.ts
+  ✓ independent actual adapter drift40 persists charge without private delivery (424 ms)
+  ✓ independent actual adapter drift150 persists charge without private delivery (28 ms)
+  ✓ independent actual adapter driftNoCost persists charge without private delivery (29 ms)
+  ✓ independent actual adapter driftUnsupported persists charge without private delivery (27 ms)
+  ✓ independent actual adapter sameInputKnown persists charge without private delivery (30 ms)
+  ✓ independent actual adapter sameOutputUnknown persists charge without private delivery (27 ms)
+  ✓ independent shared settle below monetary ceiling withholds model drift (19 ms)
+  ✓ independent shared recover below monetary ceiling withholds model drift (15 ms)
+  ✓ independent shared reconcileDeploymentLiability below monetary ceiling withholds model drift (18 ms)
+  ✓ independent healthy-rights pending refuses final-token observation despite false flags (50 ms)
+  ✓ independent healthy-rights attached refuses final-token observation despite false flags (35 ms)
+  ✓ independent real adapter healthy capture then actual current attachment (32 ms)
+  ✓ independent real adapter revoked capture then actual current attachment (27 ms)
+  ✓ independent real adapter cancelled capture then actual current attachment (30 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       14 passed, 14 total
+Snapshots:   0 total
+Time:        2.441 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-c1-product-review/probe-results.json
