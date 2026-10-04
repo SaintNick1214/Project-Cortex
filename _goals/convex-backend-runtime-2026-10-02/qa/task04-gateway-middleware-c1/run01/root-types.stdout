@@ -1,0 +1,52 @@
+convex-dev/runtimeGateway.ts(81,23): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'object'.
+convex-dev/runtimeGateway.ts(83,23): error TS18046: 'input' is of type 'unknown'.
+convex-dev/runtimeGateway.ts(152,72): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+convex-dev/runtimeGateway.ts(153,113): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+convex-dev/runtimeGateway.ts(158,3): error TS2322: Type 'unknown' is not assignable to type 'number'.
+convex-dev/runtimeGateway.ts(204,155): error TS2322: Type '() => Promise<{ text: unknown; profile?: undefined; vectors?: undefined; } | { profile: Readonly<EmbeddingProfile>; vectors: number[][]; text?: undefined; } | undefined>' is not assignable to type '() => Promise<{ text: string; } | { profile: Readonly<EmbeddingProfile>; vectors: number[][]; } | undefined>'.
+  Type 'Promise<{ text: unknown; profile?: undefined; vectors?: undefined; } | { profile: Readonly<EmbeddingProfile>; vectors: number[][]; text?: undefined; } | undefined>' is not assignable to type 'Promise<{ text: string; } | { profile: Readonly<EmbeddingProfile>; vectors: number[][]; } | undefined>'.
+    Type '{ text: unknown; profile?: undefined; vectors?: undefined; } | { profile: Readonly<EmbeddingProfile>; vectors: number[][]; text?: undefined; } | undefined' is not assignable to type '{ text: string; } | { profile: Readonly<EmbeddingProfile>; vectors: number[][]; } | undefined'.
+      Type '{ text: unknown; profile?: undefined; vectors?: undefined; }' is not assignable to type '{ text: string; } | { profile: Readonly<EmbeddingProfile>; vectors: number[][]; } | undefined'.
+        Type '{ text: unknown; profile?: undefined; vectors?: undefined; }' is not assignable to type '{ profile: Readonly<EmbeddingProfile>; vectors: number[][]; }'.
+          Types of property 'profile' are incompatible.
+            Type 'undefined' is not assignable to type 'Readonly<EmbeddingProfile>'.
+convex-dev/runtimeGateway.ts(210,92): error TS18046: 'item.vectors' is of type 'unknown'.
+convex-dev/runtimeGateway.ts(219,37): error TS2339: Property 'requestCanonical' does not exist on type 'GatewayAdmission'.
+  Property 'requestCanonical' does not exist on type '{ status: "replay"; operationId: OperationId; resultCanonical: string; }'.
+convex-dev/runtimeGateway.ts(220,53): error TS2339: Property 'snapshot' does not exist on type 'GatewayAdmission'.
+  Property 'snapshot' does not exist on type '{ status: "replay"; operationId: OperationId; resultCanonical: string; }'.
+convex-dev/runtimeGateway.ts(222,103): error TS2339: Property 'snapshot' does not exist on type 'GatewayAdmission'.
+  Property 'snapshot' does not exist on type '{ status: "replay"; operationId: OperationId; resultCanonical: string; }'.
+convex-dev/runtimeGateway.ts(223,108): error TS2339: Property 'attemptId' does not exist on type 'GatewayAdmission'.
+  Property 'attemptId' does not exist on type '{ status: "replay"; operationId: OperationId; resultCanonical: string; }'.
+convex-dev/runtimeGateway.ts(223,146): error TS2339: Property 'requestCanonical' does not exist on type 'GatewayAdmission'.
+  Property 'requestCanonical' does not exist on type '{ status: "replay"; operationId: OperationId; resultCanonical: string; }'.
+convex-dev/runtimeGateway.ts(225,16): error TS2339: Property 'requestCanonical' does not exist on type '{ dispatchPermit: true; dispatchIdentity: string; snapshot: ModelPolicySnapshotV1; requestCanonical: string; } | { dispatchPermit: false; state: string; replayAllowed: false; }'.
+  Property 'requestCanonical' does not exist on type '{ dispatchPermit: false; state: string; replayAllowed: false; }'.
+convex-dev/runtimeGateway.ts(225,46): error TS2339: Property 'requestCanonical' does not exist on type 'GatewayAdmission'.
+  Property 'requestCanonical' does not exist on type '{ status: "replay"; operationId: OperationId; resultCanonical: string; }'.
+convex-dev/runtimeGateway.ts(225,92): error TS2339: Property 'snapshot' does not exist on type '{ dispatchPermit: true; dispatchIdentity: string; snapshot: ModelPolicySnapshotV1; requestCanonical: string; } | { dispatchPermit: false; state: string; replayAllowed: false; }'.
+  Property 'snapshot' does not exist on type '{ dispatchPermit: false; state: string; replayAllowed: false; }'.
+convex-dev/runtimeGateway.ts(225,134): error TS2339: Property 'snapshot' does not exist on type 'GatewayAdmission'.
+  Property 'snapshot' does not exist on type '{ status: "replay"; operationId: OperationId; resultCanonical: string; }'.
+convex-dev/runtimeGateway.ts(227,5): error TS2322: Type '{ dispatchIdentity: any; status: "reserved"; operationId: OperationId; attemptId: AttemptId; snapshot: ModelPolicySnapshotV1; requestCanonical: string; } | { ...; } | { ...; }' is not assignable to type 'Reserved & { dispatchIdentity: string; }'.
+  Type '{ dispatchIdentity: any; status: "replay"; operationId: OperationId; resultCanonical: string; }' is not assignable to type 'Reserved & { dispatchIdentity: string; }'.
+    Type '{ dispatchIdentity: any; status: "replay"; operationId: OperationId; resultCanonical: string; }' is missing the following properties from type 'Reserved': attemptId, snapshot, requestCanonical
+convex-dev/runtimeGateway.ts(227,52): error TS2339: Property 'dispatchIdentity' does not exist on type '{ dispatchPermit: true; dispatchIdentity: string; snapshot: ModelPolicySnapshotV1; requestCanonical: string; } | { dispatchPermit: false; state: string; replayAllowed: false; }'.
+  Property 'dispatchIdentity' does not exist on type '{ dispatchPermit: false; state: string; replayAllowed: false; }'.
+convex-dev/runtimeGateway.ts(272,37): error TS2345: Argument of type 'Record<string, unknown> | undefined' is not assignable to parameter of type 'Record<string, unknown>'.
+  Type 'undefined' is not assignable to type 'Record<string, unknown>'.
+convex-dev/runtimeGateway.ts(276,169): error TS18048: 'raw' is possibly 'undefined'.
+convex-dev/runtimeGateway.ts(310,41): error TS2345: Argument of type 'Record<string, unknown> | undefined' is not assignable to parameter of type 'Record<string, unknown>'.
+  Type 'undefined' is not assignable to type 'Record<string, unknown>'.
+convex-dev/runtimeGateway.ts(312,256): error TS18048: 'rawTerminal' is possibly 'undefined'.
+convex-dev/runtimeGateway.ts(339,36): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+convex-dev/runtimeGateway.ts(339,82): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+convex-dev/runtimeGateway.ts(354,37): error TS2345: Argument of type 'Record<string, unknown> | undefined' is not assignable to parameter of type 'Record<string, unknown>'.
+  Type 'undefined' is not assignable to type 'Record<string, unknown>'.
+convex-dev/runtimeGateway.ts(356,34): error TS18048: 'raw' is possibly 'undefined'.
+tests/unit/runtime/gateway-dispatch.test.ts(74,12): error TS2345: Argument of type '() => Mock<() => Promise<string>>' is not assignable to parameter of type 'TestFn'.
+  Type '() => Mock<() => Promise<string>>' is not assignable to type 'PromiseReturningTestFn'.
+    Type 'Mock<() => Promise<string>>' is not assignable to type 'TestReturnValue'.
+tests/unit/runtime/gateway-dispatch.test.ts(140,64): error TS2540: Cannot assign to 'expiresAt' because it is a read-only property.
+tests/unit/runtime/gateway-dispatch.test.ts(157,47): error TS2540: Cannot assign to 'terminalCost' because it is a read-only property.
