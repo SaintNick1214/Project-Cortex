@@ -88,3 +88,7 @@ Independent source-contract assessment126 tests confirms both partial-memory wri
 ## C9 actual qualification, 2026-10-03
 
 C9 FINAL a653cec5eb42a2a2e48e204d4cb31f2c948dc5383a9d4a3a5652101552aa8ad3 passed independent preparation4.8, then actual qualification FAILED:854 identity negatives PASS/122 complete no-effect snapshots; noJWT governance:setPolicy INVALID_INPUT from semantically invalid fixture duration strings.545 public negatives and all later stages NOT_RUN. Physical retirement200/404 confirmed. New C10 fixture repair delegated; assertions/product unchanged. Foundation and Task04 held. User waived numeric cycle limits only; acceptance and fresh independent review remain required. See task03-foundation-live-c9-execution/README.md.
+
+## C10 actual qualification, 2026-10-04
+
+C10 preparation add765ab1aca3ee385a55e632801672c9587d37458a99826feb2fddb7622bf88 passed fresh independent4.4. Actual run FAILED after1400 public identity checks/200 complete no-effect snapshots,262 closures,118 internal visibility,122 MRA plus4 MWD functional cases passed. Next governance/admin scenario incorrectly expected boolean true from native admin:deleteRecord object receipt. Exact old failure retained; native outcome regression and remaining functional fixture audit delegated for NEW C11 only. Normal cleanuptrue/recovery1/2terminalgroups0remaining; physical retirement3138098 bright-donkey-547 DELETE200GET404 verified. Foundation/Task03 andTask04 held; later domain/authority/SDK coverage incomplete. See task03-foundation-live-c10-execution/README.md.
