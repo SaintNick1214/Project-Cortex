@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {mkdirSync,readdirSync,lstatSync,readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {createWireDiagnostics,boundedWireBody} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c4/scripts/wire-diagnostics.mjs';
+import {rememberPlatformWire,authDenial} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c4/scripts/native-engine.mjs';
+const directory=new URL('./boundary-records-final',import.meta.url).pathname;mkdirSync(directory,{mode:0o700});
+const hash=x=>createHash('sha256').update(x).digest('hex');
+const trial=JSON.stringify({version:1,observedAt:new Date().toISOString(),kind:'caught_native_error',messageSha256:hash(''),cachedWire:false,privateDiagnostic:JSON.stringify({message:''})});
+const n=65536-Buffer.byteLength(trial);let error;
+try{createWireDiagnostics(directory,'https://diagnostic.invalid').error(new Error('x'.repeat(n)),false);}catch(e){error=e.message;}
+const files=readdirSync(directory).map(name=>({name,bytes:lstatSync(directory+'/'+name).size}));assert.equal(files[0].bytes,65537);assert.equal(error,'Diagnostic receipt rejected');
+const wire='\uFEFF'+JSON.stringify({code:'InvalidAuth',message:'known-BOM-boundary-message'});const response=new Response(wire,{status:401});const original=await response.clone().text();const captured=await boundedWireBody(response);const baseline=await import('../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c4/scripts/native-engine.mjs?baseline-probe');const candidate=await import('../../../_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c4/scripts/native-engine.mjs?candidate-probe');
+const originalAccepted=baseline.rememberPlatformWire(401,original),newAccepted=candidate.rememberPlatformWire(401,captured.body);let originalDenial=false,newDenial=false;try{baseline.authDenial(undefined,new Error(original));originalDenial=true;}catch{}try{candidate.authDenial(undefined,new Error(original));newDenial=true;}catch{}
+assert.equal(originalAccepted,true);assert.equal(newAccepted,false);assert.equal(originalDenial,true);assert.equal(newDenial,false);console.log(JSON.stringify({recordBoundary:{n,error,files},utf8:{same:original===captured.body,originalAccepted,newAccepted,originalDenial,newDenial,originalPrefix:original.codePointAt(0),capturedPrefix:captured.body.codePointAt(0)}}));
