@@ -1,0 +1,114 @@
+(node:76522) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL work/resume/task04-admission-c1-review/hostile.test.ts
+  native private policy ledger — offline logic only
+    ○ skipped production root is empty, and arbitrary operator manifest selectors cannot attest prices
+    ○ skipped installs the exact compiled root idempotently and refuses mutated same-version evidence
+    ○ skipped rejects an invalid root classification before accounts/dispatch
+    ○ skipped rejects an invalid root acceptance before accounts/dispatch
+    ○ skipped rejects an invalid root expiry before accounts/dispatch
+    ○ skipped rejects an invalid root model before accounts/dispatch
+    ○ skipped rejects an invalid root proof before accounts/dispatch
+    ○ skipped binds one backend account per exact trusted request and rejects changed request/owner
+    ○ skipped forced account-key hash collisions compare the complete trusted binding tuple
+    ○ skipped derives actual normalized input and full trusted ceiling, overriding untrusted estimates
+    ○ skipped same child canonical replay does not reserve again; changed text/hash collision rejects
+    ○ skipped one checkpoint winner returns a permit and subsequent attempts cannot dispatch
+    ○ skipped changed final native request/proof and expired qualifications deny checkpoint
+    ○ skipped last operation/concurrency capacity applies across distinct children without partial rejection writes
+    ○ skipped different backend request accounts share one tenant quota and concurrency
+    ○ skipped known cost settles exactly once and eligible result replay needs no new reservation
+    ○ skipped invalid private results are withheld without erasing a known complete charge
+    ○ skipped overrun accounts full spend and blocks further admission without rollback of charge
+    ○ skipped malformed/missing cost remains unknown liability; qualified terminal proof releases slot only
+    ○ skipped postcheckpoint crash recovery cannot claim no dispatch or zero cost
+    ○ skipped proved precheckpoint refusal releases balances and slots exactly once
+    ○ skipped current admin may release proved precheckpoint liability after origin revocation without delivery
+    ○ skipped unknown liability blocks rollover; late receipt charges original immutable window
+    ○ skipped revoked originating grant requires current admin liability-only recovery
+    ○ skipped monotone visibility flags and cancellation prevent later dispatch and safe fallback
+    ○ skipped space admin cannot change global/root policy or install own tenant-wide constraints
+    ○ skipped healthy tenant admin may narrow own rules but cannot forge prices or broaden caps
+    ○ skipped trusted own tenant override is backend-versioned and never broadens deployment hard bounds
+    ○ skipped a current source tombstone blocks replay/delivery but retains already incurred charge
+    ○ skipped source revision changes before checkpoint cannot dispatch or recreate source
+    ○ skipped child operation inherits exact parent account and cancellation/current authority fences
+    ○ skipped trusted compiled versioned agent specialization is consumed only by its matching tenant/version
+    ○ skipped native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider
+    ○ skipped embedding bound treats per-value and aggregate caps separately and counts normalized UTF8
+    ○ skipped invalid terminal cost overflow remains unknown without refund or invented zero
+    ○ skipped post-admission source/account corruption fails closed before checkpoint
+    ○ skipped explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    ○ skipped visible output, unknown outcome and unqualified candidates deny fallback reservation
+    ○ skipped storage bounds deny multi-vector calls and unbounded output before reservation
+    ○ skipped usage exceeding trusted input/output caps fully charges and blocks the faulty qualification
+    ○ skipped retired tenant blocks scoped actors while operator records full private overrun exactly once
+    ○ skipped retired memorySpace blocks scoped actors while operator records full private overrun exactly once
+    ○ skipped deployment liability route refuses live scopes and preserves retired unknown charge liability
+    ○ skipped all registrations are internal and their native argument schemas have no arbitrary payload escape
+    ○ skipped all five additive native tables have unique index field configurations
+    ○ skipped rounds authoritative 0 USD upward to 0 microUSD
+    ○ skipped rounds authoritative 0.0000001 USD upward to 1 microUSD
+    ○ skipped rounds authoritative 0.000001 USD upward to 1 microUSD
+    ○ skipped rounds authoritative 1.23456789 USD upward to 1234568 microUSD
+    ○ skipped rejects invalid or overflowing money NaN
+    ○ skipped rejects invalid or overflowing money Infinity
+    ○ skipped rejects invalid or overflowing money -1
+    ○ skipped rejects invalid or overflowing money 1e4
+    ○ skipped rejects invalid or overflowing money 9007199254740992
+  independent hostile fallback currentness
+    ✕ new narrowed operation budget denies fallback that would exceed current cumulative ceiling (80 ms)
+    ✕ current removed fallback permission denies fresh fallback even if model remains generally allowed (37 ms)
+
+  ● independent hostile fallback currentness › new narrowed operation budget denies fallback that would exceed current cumulative ceiling
+
+    expect(received).resolves.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "dispatchPermit": false,
+    +   "dispatchPermit": true,
+      }
+
+      418 |     expect(f.db.writes).toBeGreaterThan(before);
+      419 |     expect(f.account("tenant")).toMatchObject({settledUnits:40,reservedUnits:80});
+    > 420 |     await expect(f.checkpoint(fallback)).resolves.toMatchObject({dispatchPermit:false});
+          |                                                   ^
+      421 |   });
+      422 |   it("current removed fallback permission denies fresh fallback even if model remains generally allowed",async()=>{
+      423 |     const {f,a,reference}=await setupFallback();
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2140:20)
+      at Object.<anonymous> (work/resume/task04-admission-c1-review/hostile.test.ts:420:51)
+
+  ● independent hostile fallback currentness › current removed fallback permission denies fresh fallback even if model remains generally allowed
+
+    expect(received).resolves.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "dispatchPermit": false,
+    +   "dispatchPermit": true,
+      }
+
+      427 |     expect(f.db.writes).toBeGreaterThan(before);
+      428 |     expect(f.account("tenant")).toMatchObject({settledUnits:40,reservedUnits:80});
+    > 429 |     await expect(f.checkpoint(fallback)).resolves.toMatchObject({dispatchPermit:false});
+          |                                                   ^
+      430 |   });
+      431 | });
+      432 |
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2140:20)
+      at Object.<anonymous> (work/resume/task04-admission-c1-review/hostile.test.ts:429:51)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 54 skipped, 56 total
+Snapshots:   0 total
+Time:        4.858 s, estimated 5 s
+Ran all test suites with tests matching "independent hostile".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c1-review/hostile-dispatch03/jest-result.json
