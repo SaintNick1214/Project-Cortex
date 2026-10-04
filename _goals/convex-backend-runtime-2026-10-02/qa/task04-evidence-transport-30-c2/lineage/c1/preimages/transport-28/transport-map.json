@@ -1,0 +1,46 @@
+{
+  "utc": "2026-10-04T12:23:01.269928+00:00",
+  "status": "EXACT_LOSSLESS_FROZEN_EVIDENCE_TRANSPORT_ONLY",
+  "connectorRequestLimitBytes": 16777216,
+  "originalFrozenFilesModified": false,
+  "originalQualificationOrManifestHashesChanged": false,
+  "cleanCheckoutRequirement": "Materialize the three original paths from these lossless archives and verify original SHA256/bytes before full frozen closure or any native input preflight; remote raw path absence is NOT full direct-file closure.",
+  "files": [
+    {
+      "originalPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3/evidence/c3-command-custody-index.json",
+      "originalBytes": 49217478,
+      "originalSha256": "516534e04d40346a6c6aadc977a87882ac386a5086ca531241332cf585aff809",
+      "originalGitBlob": "a415f803f4c54128f6c5dfa5625fa9c6300f1d54",
+      "archivePath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-28/a415f803f4c54128f6c5dfa5625fa9c6300f1d54.json.gz",
+      "archiveBytes": 7186456,
+      "archiveSha256": "63f3e3821f83e0af06f2baba119c0899e2e2f1b61150979e72d7cd52a0d1397d",
+      "archiveGitBlob": "6e5d98f66da720db9131e76abfeedb1e024ef6ae",
+      "encoding": "gzip(lossless,mtime=0)+Git blob base64 transport",
+      "roundTripByteEquality": true
+    },
+    {
+      "originalPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/evidence/c3-command-custody-index.json",
+      "originalBytes": 49217478,
+      "originalSha256": "ccb66276067e787a54d4ffadabe92858d7d64d5abe970c1e3c9991b4a1145a35",
+      "originalGitBlob": "2aa7a7dad77533db41fc1907dbefc07544452caf",
+      "archivePath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-28/2aa7a7dad77533db41fc1907dbefc07544452caf.json.gz",
+      "archiveBytes": 7186457,
+      "archiveSha256": "56fa6a341af51fd8aedaac55cd13efd3c6b71ea51f3c3de0c61deb30d135c2f7",
+      "archiveGitBlob": "ac83fe07b4f52589f7625766c0f5663fbaf1e522",
+      "encoding": "gzip(lossless,mtime=0)+Git blob base64 transport",
+      "roundTripByteEquality": true
+    },
+    {
+      "originalPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/evidence/c3-command-custody-index.json",
+      "originalBytes": 49217478,
+      "originalSha256": "8adfc9f9dfb8147b9ec488094763bc7c87d6cf5c7ae19849335fe6e49fed2670",
+      "originalGitBlob": "eacc7746d1592254aeca5dd2d2e911470c4a74bf",
+      "archivePath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-28/eacc7746d1592254aeca5dd2d2e911470c4a74bf.json.gz",
+      "archiveBytes": 7186456,
+      "archiveSha256": "a21b53b6247fc255254989af99d9050bfd671da80e750109cfee4dc24b49208f",
+      "archiveGitBlob": "378746091363f886db440ff17222d26adc36c759",
+      "encoding": "gzip(lossless,mtime=0)+Git blob base64 transport",
+      "roundTripByteEquality": true
+    }
+  ]
+}

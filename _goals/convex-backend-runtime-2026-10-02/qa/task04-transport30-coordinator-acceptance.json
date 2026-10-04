@@ -1,0 +1,20 @@
+{
+  "utc": "2026-10-04T13:35:25.644932+00:00",
+  "verdict": "PASS_BOUNDED_C1_LOSSLESS_TRANSPORT_ONLY",
+  "score": 4.6,
+  "reviewFullRead": true,
+  "reviewManifest": "edc4c99290a670577fedd21fc07a45b302592dc12f8a46bf62f56935b9cd15e3",
+  "reviewRows": 35,
+  "subjectRows": 52,
+  "subjectFilesIncludingSelf": 53,
+  "originalFiles": 63544,
+  "originalBytes": 2296620105,
+  "independent": "Complete clean restoration/exact map/436contents/archive-map deterministic recompression/idempotence/read-only/25meaningful negative controls PASS.",
+  "limitations": [
+    "Unbounded read allocation for corrupted local files; NEWC2 repair underway and will require fresh acceptance before ROOTpreferredcheckpoint use.",
+    "Owned new partial file may persist after failed write; foreignbytes preserved, no transactionalrollback claimed.",
+    "Initial escaped-literal interpretation wrong; AST[92]/[0] and probes prove safe alreadycorrect, all reviewer failures retained.",
+    "Reviewbootstrap firstwrongpath commandUTC NOT_CAPTURED, no retrospective claim."
+  ],
+  "release": "TransportrepresentationONLY, no application/source/native/default/private/paid/task/goalrelease; no Git mutation by this note."
+}

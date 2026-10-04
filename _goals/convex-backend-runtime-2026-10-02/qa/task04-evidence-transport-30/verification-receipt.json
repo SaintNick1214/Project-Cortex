@@ -1,0 +1,53 @@
+{
+  "argv": [
+    "work/resume/task04-evidence-transport-30/verify.py"
+  ],
+  "utcPre": "2026-10-04T13:23:20.127257+00:00",
+  "failures": [],
+  "checks": [
+    {
+      "name": "clean-materialize",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30/replica",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:23:20.127293+00:00",
+      "utcPost": "2026-10-04T13:24:45.851685+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "idempotence",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30/replica",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:24:45.851725+00:00",
+      "utcPost": "2026-10-04T13:25:03.502456+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "readonly",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30/replica"
+      ],
+      "utcPre": "2026-10-04T13:25:03.502514+00:00",
+      "utcPost": "2026-10-04T13:25:20.441168+00:00",
+      "exitCode": 0
+    }
+  ],
+  "fullReplicaExactClosure": true,
+  "originalManifestSha256": "0b3f7f43fdfbd1b2e71cb420b7a24d1255773b3ca6973df0775dc4d1c0c5179d",
+  "files": 63544,
+  "frozenSourceUnchanged": true,
+  "exitCode": 0,
+  "utcPost": "2026-10-04T13:25:38.248949+00:00"
+}

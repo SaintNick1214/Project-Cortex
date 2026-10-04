@@ -1,0 +1,619 @@
+FILE node_modules/@ai-sdk/gateway/src/gateway-language-model.ts
+import type {
+  LanguageModelV4,
+  LanguageModelV4CallOptions,
+  LanguageModelV4StreamPart,
+  LanguageModelV4GenerateResult,
+  LanguageModelV4StreamResult,
+} from '@ai-sdk/provider';
+import {
+  combineHeaders,
+  createEventSourceResponseHandler,
+  createJsonErrorResponseHandler,
+  createJsonResponseHandler,
+  getErrorMessage,
+  postJsonToApi,
+  resolve,
+  serializeModelOptions,
+  WORKFLOW_SERIALIZE,
+  WORKFLOW_DESERIALIZE,
+  type ParseResult,
+  type Resolvable,
+} from '@ai-sdk/provider-utils';
+import { z } from './zod';
+import type { GatewayConfig } from './gateway-config';
+import type { GatewayModelId } from './gateway-language-model-settings';
+import { asGatewayError } from './errors';
+import { parseAuthMethod } from './errors/parse-auth-method';
+
+export type GatewayChatConfig = GatewayConfig & {
+  provider: string;
+  o11yHeaders: Resolvable<Record<string, string>>;
+};
+
+export class GatewayLanguageModel implements LanguageModelV4 {
+  readonly specificationVersion = 'v4';
+  readonly supportedUrls = { '*/*': [/.*/] };
+
+  static [WORKFLOW_SERIALIZE](model: GatewayLanguageModel) {
+    return serializeModelOptions({
+      modelId: model.modelId,
+      config: model.config,
+    });
+  }
+
+  static [WORKFLOW_DESERIALIZE](options: {
+    modelId: GatewayModelId;
+    config: GatewayChatConfig;
+  }) {
+    return new GatewayLanguageModel(options.modelId, options.config);
+  }
+
+  constructor(
+    readonly modelId: GatewayModelId,
+    protected readonly config: GatewayChatConfig,
+  ) {}
+
+  get provider(): string {
+    return this.config.provider;
+  }
+
+  private async getArgs(options: LanguageModelV4CallOptions) {
+    const { abortSignal: _abortSignal, ...optionsWithoutSignal } = options;
+
+    return {
+      args: this.maybeEncodeFileParts(optionsWithoutSignal),
+      warnings: [],
+    };
+  }
+
+  async doGenerate(
+    options: LanguageModelV4CallOptions,
+  ): Promise<LanguageModelV4GenerateResult> {
+    const { args, warnings } = await this.getArgs(options);
+    const { abortSignal } = options;
+
+    const resolvedHeaders = this.config.headers
+      ? await resolve(this.config.headers)
+      : undefined;
+
+    try {
+      const {
+        responseHeaders,
+        value: responseBody,
+        rawValue: rawResponse,
+      } = await postJsonToApi({
+        url: this.getUrl(),
+        headers: combineHeaders(
+          resolvedHeaders,
+          options.headers,
+          this.getModelConfigHeaders(this.modelId, false),
+          await resolve(this.config.o11yHeaders),
+        ),
+        body: args,
+        successfulResponseHandler: createJsonResponseHandler(z.any()),
+        failedResponseHandler: createJsonErrorResponseHandler({
+          errorSchema: z.any(),
+          errorToMessage: data => getErrorMessage(data) ?? 'unknown error',
+        }),
+        ...(abortSignal && { abortSignal }),
+        fetch: this.config.fetch,
+      });
+
+      return {
+        ...responseBody,
+        request: { body: args },
+        response: { headers: responseHeaders, body: rawResponse },
+        warnings: [...(responseBody.warnings ?? []), ...warnings],
+      };
+    } catch (error) {
+      throw await asGatewayError(
+        error,
+        await parseAuthMethod(resolvedHeaders ?? {}),
+      );
+    }
+  }
+
+  async doStream(
+    options: LanguageModelV4CallOptions,
+  ): Promise<LanguageModelV4StreamResult> {
+    const { args, warnings } = await this.getArgs(options);
+    const { abortSignal } = options;
+
+    const resolvedHeaders = this.config.headers
+      ? await resolve(this.config.headers)
+      : undefined;
+
+    try {
+      const { value: response, responseHeaders } = await postJsonToApi({
+        url: this.getUrl(),
+        headers: combineHeaders(
+          resolvedHeaders,
+          options.headers,
+          this.getModelConfigHeaders(this.modelId, true),
+          await resolve(this.config.o11yHeaders),
+        ),
+        body: args,
+        successfulResponseHandler: createEventSourceResponseHandler(z.any()),
+        failedResponseHandler: createJsonErrorResponseHandler({
+          errorSchema: z.any(),
+          errorToMessage: data => getErrorMessage(data) ?? 'unknown error',
+        }),
+        ...(abortSignal && { abortSignal }),
+        fetch: this.config.fetch,
+      });
+
+      return {
+        stream: response.pipeThrough(
+          new TransformStream<
+            ParseResult<LanguageModelV4StreamPart>,
+            LanguageModelV4StreamPart
+          >({
+            start(controller) {
+              if (warnings.length > 0) {
+                controller.enqueue({ type: 'stream-start', warnings });
+              }
+            },
+            transform(chunk, controller) {
+              if (chunk.success) {
+                const streamPart = chunk.value;
+
+                // Handle raw chunks: if this is a raw chunk from the gateway API,
+                // only emit it if includeRawChunks is true
+                if (streamPart.type === 'raw' && !options.includeRawChunks) {
+                  return; // Skip raw chunks if not requested
+                }
+
+                if (
+                  streamPart.type === 'response-metadata' &&
+                  streamPart.timestamp &&
+                  typeof streamPart.timestamp === 'string'
+                ) {
+                  streamPart.timestamp = new Date(streamPart.timestamp);
+                }
+
+                controller.enqueue(streamPart);
+              } else {
+                controller.error(
+                  (chunk as { success: false; error: unknown }).error,
+                );
+              }
+            },
+          }),
+        ),
+        request: { body: args },
+        response: { headers: responseHeaders },
+      };
+    } catch (error) {
+      throw await asGatewayError(
+        error,
+        await parseAuthMethod(resolvedHeaders ?? {}),
+      );
+    }
+  }
+
+  /**
+   * Encodes inline `Uint8Array` file data to a base64 string in place.
+   * @param options - The options to encode.
+   * @returns The options with the file data encoded.
+   */
+  protected maybeEncodeFileParts<
+    T extends Pick<LanguageModelV4CallOptions, 'prompt'>,
+  >(options: T): T {
+    for (const message of options.prompt) {
+      if (!Array.isArray(message.content)) {
+        continue;
+      }
+      for (const part of message.content) {
+        if (part.type === 'file' || part.type === 'reasoning-file') {
+          part.data = maybeBase64EncodeFileData(part.data);
+        } else if (
+          part.type === 'tool-result' &&
+          part.output.type === 'content'
+        ) {
+          for (const contentPart of part.output.value) {
+            if (contentPart.type === 'file') {
+              contentPart.data = maybeBase64EncodeFileData(contentPart.data);
+            }
+          }
+        }
+      }
+    }
+    return options;
+  }
+
+  private getUrl() {
+    return `${this.config.baseURL}/language-model`;
+  }
+
+  private getModelConfigHeaders(modelId: string, streaming: boolean) {
+    return {
+      'ai-language-model-specification-version': '4',
+      'ai-language-model-id': modelId,
+      'ai-language-model-streaming': String(streaming),
+    };
+  }
+}
+
+function maybeBase64EncodeFileData<T extends { type: string }>(data: T): T {
+  if (data.type === 'data') {
+    const bytes = (data as { data?: unknown }).data;
+    if (bytes instanceof Uint8Array) {
+      return { ...data, data: Buffer.from(bytes).toString('base64') } as T;
+    }
+  }
+  return data;
+}
+
+FILE node_modules/@ai-sdk/gateway/src/gateway-embedding-model.ts
+import type {
+  EmbeddingModelV4,
+  SharedV4ProviderMetadata,
+} from '@ai-sdk/provider';
+import {
+  combineHeaders,
+  createJsonErrorResponseHandler,
+  createJsonResponseHandler,
+  getErrorMessage,
+  lazySchema,
+  postJsonToApi,
+  resolve,
+  serializeModelOptions,
+  WORKFLOW_SERIALIZE,
+  WORKFLOW_DESERIALIZE,
+  zodSchema,
+  type Resolvable,
+} from '@ai-sdk/provider-utils';
+import { z } from './zod';
+import { asGatewayError } from './errors';
+import { parseAuthMethod } from './errors/parse-auth-method';
+import type { GatewayConfig } from './gateway-config';
+
+type GatewayEmbeddingConfig = GatewayConfig & {
+  provider: string;
+  o11yHeaders: Resolvable<Record<string, string>>;
+};
+
+export class GatewayEmbeddingModel implements EmbeddingModelV4 {
+  readonly specificationVersion = 'v4';
+  readonly maxEmbeddingsPerCall = 2048;
+  readonly supportsParallelCalls = true;
+
+  static [WORKFLOW_SERIALIZE](model: GatewayEmbeddingModel) {
+    return serializeModelOptions({
+      modelId: model.modelId,
+      config: model.config,
+    });
+  }
+
+  static [WORKFLOW_DESERIALIZE](options: {
+    modelId: string;
+    config: GatewayEmbeddingConfig;
+  }) {
+    return new GatewayEmbeddingModel(options.modelId, options.config);
+  }
+
+  constructor(
+    readonly modelId: string,
+    private readonly config: GatewayEmbeddingConfig,
+  ) {}
+
+  get provider(): string {
+    return this.config.provider;
+  }
+
+  async doEmbed({
+    values,
+    headers,
+    abortSignal,
+    providerOptions,
+  }: Parameters<EmbeddingModelV4['doEmbed']>[0]): Promise<
+    Awaited<ReturnType<EmbeddingModelV4['doEmbed']>>
+  > {
+    const resolvedHeaders = this.config.headers
+      ? await resolve(this.config.headers)
+      : undefined;
+    try {
+      const {
+        responseHeaders,
+        value: responseBody,
+        rawValue,
+      } = await postJsonToApi({
+        url: this.getUrl(),
+        headers: combineHeaders(
+          resolvedHeaders,
+          headers ?? {},
+          this.getModelConfigHeaders(),
+          await resolve(this.config.o11yHeaders),
+        ),
+        body: {
+          values,
+          ...(providerOptions ? { providerOptions } : {}),
+        },
+        successfulResponseHandler: createJsonResponseHandler(
+          gatewayEmbeddingResponseSchema,
+        ),
+        failedResponseHandler: createJsonErrorResponseHandler({
+          errorSchema: z.any(),
+          errorToMessage: data => getErrorMessage(data) ?? 'unknown error',
+        }),
+        ...(abortSignal && { abortSignal }),
+        fetch: this.config.fetch,
+      });
+
+      return {
+        embeddings: responseBody.embeddings,
+        usage: responseBody.usage ?? undefined,
+        providerMetadata:
+          responseBody.providerMetadata as unknown as SharedV4ProviderMetadata,
+        response: { headers: responseHeaders, body: rawValue },
+        warnings: responseBody.warnings ?? [],
+      };
+    } catch (error) {
+      throw await asGatewayError(
+        error,
+        await parseAuthMethod(resolvedHeaders ?? {}),
+      );
+    }
+  }
+
+  private getUrl() {
+    return `${this.config.baseURL}/embedding-model`;
+  }
+
+  private getModelConfigHeaders() {
+    return {
+      'ai-embedding-model-specification-version': '4',
+      'ai-model-id': this.modelId,
+    };
+  }
+}
+
+const gatewayEmbeddingWarningSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('unsupported'),
+    feature: z.string(),
+    details: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal('compatibility'),
+    feature: z.string(),
+    details: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal('deprecated'),
+    setting: z.string(),
+    message: z.string(),
+  }),
+  z.object({
+    type: z.literal('other'),
+    message: z.string(),
+  }),
+]);
+
+const gatewayEmbeddingResponseSchema = lazySchema(() =>
+  zodSchema(
+    z.object({
+      embeddings: z.array(z.array(z.number())),
+      usage: z.object({ tokens: z.number() }).nullish(),
+      warnings: z.array(gatewayEmbeddingWarningSchema).optional(),
+      providerMetadata: z
+        .record(z.string(), z.record(z.string(), z.unknown()))
+        .optional(),
+    }),
+  ),
+);
+
+FILE node_modules/@convex-dev/ai-sdk-provider/src/index.ts
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { createOpenAI } from "@ai-sdk/openai";
+import {
+  createOpenAICompatible,
+  type MetadataExtractor,
+} from "@ai-sdk/openai-compatible";
+import {
+  defaultSettingsMiddleware,
+  wrapEmbeddingModel,
+  wrapLanguageModel,
+} from "ai";
+import { getServiceToken } from "convex/server";
+import { createEvaluationModel } from "./evaluation-model.js";
+import { createVideoModel } from "./video-model.js";
+
+type Provider = ReturnType<typeof createOpenAICompatible>;
+type ChatModel = ReturnType<Provider>;
+type EmbeddingModel = ReturnType<typeof wrapEmbeddingModel>;
+type ProviderMetadata = NonNullable<
+  Awaited<ReturnType<MetadataExtractor["extractMetadata"]>>
+>;
+type ImageModel = ReturnType<Provider["imageModel"]>;
+type LanguageModel = Parameters<typeof wrapLanguageModel>[0]["model"];
+type GatewayLanguageModel = ReturnType<typeof wrapLanguageModel>;
+
+const maxEmbeddingsPerCall = 512;
+// Official providers require a credential before gatewayFetch replaces it with a deployment JWT.
+const placeholderCredential = "convex-gateway";
+
+/**
+ * A deployment can set `CONVEX_INTERNAL_AI_GATEWAY_HOST` to reach a different
+ * gateway, which is how internal apps use staging.
+ */
+const productionGatewayHost = "https://ai-gateway.convex.dev";
+
+function gatewayBaseURL(version: "v1" | "alpha" = "v1"): string {
+  return `${process.env.CONVEX_INTERNAL_AI_GATEWAY_HOST || productionGatewayHost}/${version}`;
+}
+
+async function gatewayFetch(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<Response> {
+  const token = await getServiceToken("ai-gateway");
+  const headers = new Headers(init?.headers);
+  // Deployment JWT is the only accepted credential for the hosted gateway.
+  headers.set("Authorization", `Bearer ${token}`);
+  return globalThis.fetch(input, { ...init, headers });
+}
+
+// The SDK's standard usage mapping omits the gateway's dollar costs.
+function convexGatewayUsageMetadata(
+  usage: unknown,
+): ProviderMetadata | undefined {
+  if (!usage || typeof usage !== "object") return undefined;
+  const { cost, cost_details } = usage as ProviderMetadata[string];
+  const metadata: ProviderMetadata[string] = {};
+  if (typeof cost === "number") metadata.cost = cost;
+  if (cost_details && typeof cost_details === "object") {
+    metadata.costDetails = cost_details;
+  }
+  return Object.keys(metadata).length > 0
+    ? { convexGateway: metadata }
+    : undefined;
+}
+
+const costMetadataExtractor: MetadataExtractor = {
+  extractMetadata: async ({ parsedBody }) =>
+    convexGatewayUsageMetadata(
+      (parsedBody as { usage?: unknown } | undefined)?.usage,
+    ),
+  createStreamExtractor: () => {
+    // Streamed responses deliver usage (incl. cost) on the final chunk.
+    let usage: unknown;
+    return {
+      processChunk(parsedChunk: unknown) {
+        const chunk = parsedChunk as { usage?: unknown } | undefined;
+        if (chunk?.usage) usage = chunk.usage;
+      },
+      buildMetadata: () => convexGatewayUsageMetadata(usage),
+    };
+  },
+};
+
+function createGatewayProvider(): Provider {
+  return createOpenAICompatible({
+    name: "convexGateway",
+    baseURL: gatewayBaseURL(),
+    fetch: gatewayFetch,
+    metadataExtractor: costMetadataExtractor,
+    supportsStructuredOutputs: true,
+    supportedUrls: () => ({ "image/*": [/^https?:\/\/.*$/] }),
+  });
+}
+
+function sdkModelId(
+  gatewayModelId: string,
+  provider: "anthropic" | "openai",
+): string {
+  const prefix = `${provider}/`;
+  const modelId = gatewayModelId.startsWith(prefix)
+    ? gatewayModelId.slice(prefix.length)
+    : gatewayModelId;
+  // OpenRouter uses dots in Anthropic versions; the Anthropic SDK's capability lookup uses hyphens.
+  return provider === "anthropic" ? modelId.replaceAll(".", "-") : modelId;
+}
+
+function gatewayModelFetch(
+  gatewayModelId: string,
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<Response> {
+  const body = JSON.parse(init?.body as string);
+  body.model = gatewayModelId;
+  return gatewayFetch(input, { ...init, body: JSON.stringify(body) });
+}
+
+function gatewayLanguageModel(
+  modelId: string,
+  model: LanguageModel,
+  middleware?: Parameters<typeof wrapLanguageModel>[0]["middleware"],
+): GatewayLanguageModel {
+  return wrapLanguageModel({
+    model,
+    modelId,
+    // The gateway does not expose the providers' batch APIs.
+    middleware: middleware ?? { specificationVersion: "v4" },
+  });
+}
+
+/**
+ * The recommended model interface for text generation through the Convex AI gateway.
+ * Use `messages` or `responses` only for endpoint-specific features.
+ *
+ * `getServiceToken` caches and refreshes credentials within the current action,
+ * so calling this more than once in the same action is fine.
+ */
+export function convexGateway(modelId: string): ChatModel {
+  return createGatewayProvider()(modelId);
+}
+
+convexGateway.messages = function (modelId: string): GatewayLanguageModel {
+  const provider = createAnthropic({
+    name: "convexGateway.messages",
+    baseURL: gatewayBaseURL(),
+    authToken: placeholderCredential,
+    fetch: (input, init) => gatewayModelFetch(modelId, input, init),
+  });
+  return gatewayLanguageModel(
+    modelId,
+    provider.messages(sdkModelId(modelId, "anthropic")),
+  );
+};
+
+convexGateway.responses = function (modelId: string): GatewayLanguageModel {
+  const provider = createOpenAI({
+    name: "convexGateway.responses",
+    baseURL: gatewayBaseURL(),
+    apiKey: placeholderCredential,
+    fetch: (input, init) => gatewayModelFetch(modelId, input, init),
+  });
+  return gatewayLanguageModel(
+    modelId,
+    provider.responses(sdkModelId(modelId, "openai")),
+    defaultSettingsMiddleware({
+      settings: { providerOptions: { openai: { store: false } } },
+    }),
+  );
+};
+
+/** Evaluate typed questions through the alpha Decisions API. */
+convexGateway.evaluationModel = function (modelId: string) {
+  return createEvaluationModel(
+    modelId,
+    gatewayBaseURL("alpha"),
+    gatewayFetch,
+    convexGatewayUsageMetadata,
+  );
+};
+
+convexGateway.embeddingModel = function (modelId: string): EmbeddingModel {
+  return wrapEmbeddingModel({
+    model: createGatewayProvider().embeddingModel(modelId),
+    middleware: {
+      specificationVersion: "v4",
+      overrideMaxEmbeddingsPerCall: () => maxEmbeddingsPerCall,
+    },
+  });
+};
+
+/** Image model for the AI SDK's `generateImage`. */
+convexGateway.imageModel = function (modelId: string): ImageModel {
+  return createGatewayProvider().imageModel(modelId);
+};
+
+/** Video generation for the AI SDK's `experimental_generateVideo`. */
+convexGateway.videoModel = function (modelId: string) {
+  return createVideoModel(
+    modelId,
+    gatewayBaseURL(),
+    gatewayFetch,
+    convexGatewayUsageMetadata,
+  );
+};
+
+export { verifyVideoWebhook, type VideoWebhookEvent } from "./video-webhook.js";
+
+RUNNER /** Supported modelId-only factory closure. No token lookup, custom fetch, high-level retry,
+export const OFFICIAL_DRIVER:Driver=Object.freeze({async execute(c:Case,ctx:Context,signal:AbortSignal,onEvents:(events:Event[])=>Promise<boolean>){const native=REQUESTS[c.scenarioId].native;if(c.method==='embed'){const model=convexGateway.embeddingModel(c.modelId);if(!('values'in native))fail('REQUEST_INTERFACE');return observeEmbed(ctx,await model.doEmbed({values:[...native.values],abortSignal:signal}))}if(!('prompt'in native))fail('REQUEST_INTERFACE');const params={maxOutputTokens:native.maxOutputTokens,prompt:native.prompt.map(m=>{if(m.role==='system')return {role:'system' as const,content:m.content};if(m.role==='user')return {role:'user' as const,content:m.content.map(p=>({...p}))};return {role:'assistant' as const,content:m.content.map(p=>({...p}))}}),abortSignal:signal};const model=convexGateway(c.modelId);if(c.method==='generate')return observeGenerate(ctx,await model.doGenerate(params));const events:Event[]=[];let ended:Transcript['ended']='reader-done';const stream=await model.doStream({...params,includeRawChunks:true}),reader=stream.stream.getReader(),readerOwner=new Ownership();let readerDone=false;try{while(true){const item=await readerOwner.before(readerOwner.track(reader.read()),ctx.originalDeadline);if(item.done){readerDone=true;break;}const event=await nativeEvent(events.length,item.value);if(events.length>=512)fail('STREAM_BOUND');canonical({version:1,method:'stream',events:[...events,event],ended:'reader-done'},180000);events.push(event);if(await onEvents(events)){ended='abort';break}}}catch(primaryError){readerOwner.failures.push(primaryError);ended=signal.aborted?'abort':'error';if(!signal.aborted){const marker=await makeEvent(events.length,'unsupported',{type:'malformed-or-unbounded-native-part'});try{canonical({version:1,method:'stream',events:[...events,marker],ended},180000);if(events.length>=512)fail('STREAM_BOUND');events.push(marker)}catch{events.length=0;events.push(await makeEvent(0,'unsupported',{type:'observation-bound-violation'}))}}}finally{if(!readerDone){const cancelling=readerOwner.track(Promise.resolve().then(()=>reader.cancel('EXPERIMENT_READER_CLOSED')));try{await readerOwner.before(cancelling,ctx.originalDeadline)}catch(error){readerOwner.failures.push(error)}}try{reader.releaseLock()}catch(error){readerOwner.failures.push(error)}}const observed=await observeStream(ctx,events,ended);return {...observed,readerOwnership:readerOwner}}});
+export async function validateRequest(c:Case){const r=REQUESTS[c.scenarioId];same(await digest(canonical({method:c.method,modelId:c.modelId,params:r.native},180000)),c.normalizedNativeRequestHash);same(await digest(canonical(r.wireExpected,180000)),c.expectedWireBodyHash)}
+ if(driver!==OFFICIAL_DRIVER||!['C09','C10'].includes(c.scenarioId)||triggerAttempted||life.closed||abort.signal.aborted||Date.now()>=nativeDeadline)return false;
+export const run=actionGeneric({args:{scenarioId:v.string(),ownerRunId:v.string()},handler:buildRunner(NATIVE_INSTALLATION_ENABLED?OFFICIAL_DRIVER:null)});

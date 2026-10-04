@@ -1,0 +1,392 @@
+# HTTP API
+
+> For AI agents: see [llms.txt](/llms.txt) for the complete documentation index. Markdown versions are available by adding .md to a page URL or requesting Accept: text/markdown.
+
+Base URL: `https://ai-gateway.convex.dev`. To send a request from an action, see [Getting started](/ai-gateway/setup.md).
+
+## Authentication[​](#authentication "Direct link to Authentication")
+
+```
+Authorization: Bearer <token>
+```
+
+Get the token in an action with `getServiceToken("ai-gateway")`. The action runtime caches and refreshes it as needed. Token rules and errors: [Getting started](/ai-gateway/setup.md#token-and-timeouts).
+
+Missing or invalid token:
+
+```
+{
+
+  "error": {
+
+    "message": "Invalid authentication credentials",
+
+    "type": "invalid_request_error",
+
+    "code": "invalid_api_key"
+
+  }
+
+}
+```
+
+## GET `/v1/models`[​](#get-v1models "Direct link to get-v1models")
+
+No query parameters or body.
+
+```
+{
+
+  "object": "list",
+
+  "data": [
+
+    {
+
+      "id": "openai/gpt-4o-mini",
+
+      "object": "model",
+
+      "created": 1715620800,
+
+      "owned_by": "openai"
+
+    }
+
+  ]
+
+}
+```
+
+`owned_by` is the provider prefix of `id`.
+
+## POST `/v1/chat/completions`[​](#post-v1chatcompletions "Direct link to post-v1chatcompletions")
+
+[OpenAI Chat Completions](https://platform.openai.com/docs/api-reference/chat/create) body. Set `stream: true` for [SSE](https://platform.openai.com/docs/api-reference/chat/streaming).
+
+| Field    | Type    | Required | Description                          |
+| -------- | ------- | -------- | ------------------------------------ |
+| model    | string  | y        | `provider/model` id                  |
+| messages | array   | y        | OpenAI messages                      |
+| stream   | boolean | n        | SSE when `true`. Defaults to `false` |
+
+Other OpenAI fields (`temperature`, `max_tokens`, `tools`, `response_format`, …) are forwarded. Body must be JSON, max 16 MiB.
+
+These fields are rejected. Convex chooses how the request is served: `provider`, `route`, `models`, `transforms`, `plugins`, `preset`.
+
+```
+{
+
+  "error": {
+
+    "message": "The `provider` parameter is not supported. Convex selects how a request is served.",
+
+    "type": "invalid_request_error",
+
+    "code": "unsupported_parameter",
+
+    "param": "provider"
+
+  }
+
+}
+```
+
+### Response[​](#response "Direct link to Response")
+
+`id` is assigned by Convex. Non-streaming is `application/json`:
+
+```
+{
+
+  "id": "3f1c8a2e-9b14-4d6a-a7e2-0c5b8d1e4f90",
+
+  "object": "chat.completion",
+
+  "created": 1715367049,
+
+  "model": "openai/gpt-4o-mini",
+
+  "choices": [
+
+    {
+
+      "index": 0,
+
+      "message": { "role": "assistant", "content": "Hello!" },
+
+      "finish_reason": "stop",
+
+      "logprobs": null
+
+    }
+
+  ],
+
+  "system_fingerprint": "fp_123",
+
+  "usage": {
+
+    "prompt_tokens": 12,
+
+    "completion_tokens": 5,
+
+    "total_tokens": 17,
+
+    "prompt_tokens_details": { "cached_tokens": 0 },
+
+    "completion_tokens_details": { "reasoning_tokens": 0 }
+
+  }
+
+}
+```
+
+Streaming is `text/event-stream`. Chunks use `"object": "chat.completion.chunk"` and `choices[].delta` instead of `choices[].message`:
+
+```
+data: {"id":"3f1c8a2e-9b14-4d6a-a7e2-0c5b8d1e4f90","object":"chat.completion.chunk","created":1715367049,"model":"openai/gpt-4o-mini","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+
+
+
+data: [DONE]
+```
+
+`Retry-After` is forwarded when present.
+
+## POST `/v1/embeddings`[​](#post-v1embeddings "Direct link to post-v1embeddings")
+
+[OpenAI Embeddings](https://platform.openai.com/docs/api-reference/embeddings/create) body. `model` and `input` are required. `input` may be one string, one token-ID array, or a batch of up to 512 strings or token-ID arrays. Other OpenAI fields are forwarded. The body must be JSON and no larger than 16 MiB.
+
+Convex rejects the same routing controls as `/v1/chat/completions`, assigns the response `id`, and removes fields that identify the serving provider. The response otherwise uses the OpenAI embeddings shape.
+
+## POST `/v1/images/generations`[​](#post-v1imagesgenerations "Direct link to post-v1imagesgenerations")
+
+Image generation is in alpha
+
+The request and response format may change during alpha.
+
+Send a JSON body with `model` and `prompt`, plus model-supported image options such as `size` and `n`. The response contains `data` entries with image URLs or `b64_json`, depending on the model and requested format. Streaming is rejected. The same routing controls as `/v1/chat/completions` are rejected. The body limit is 16 MiB.
+
+## POST `/v1/videos/generations`[​](#post-v1videosgenerations "Direct link to post-v1videosgenerations")
+
+Video generation is in alpha
+
+The request and response format may change during alpha.
+
+Send `model` and `prompt`, with optional `duration`, `aspect_ratio`, `size`, `resolution`, `seed`, `generate_audio`, `frame_images`, or `input_references`. Supported values depend on the model. Each request generates one video; `n`, `stream`, and `callback_url` are rejected, along with gateway routing controls. The body limit is 16 MiB.
+
+This request waits for completion and downloads the video, with a default ten-minute timeout and a 64 MiB video limit. The JSON response contains a Convex-assigned `id`, `data: [{ b64_json, media_type }]`, and `usage` when available. Cancelling the HTTP request does not cancel generation or its cost.
+
+## Async video routes[​](#async-video-routes "Direct link to Async video routes")
+
+These routes are in alpha. For availability and local development, see [Async videos](/ai-gateway/images-and-videos.md#async-videos). All three routes require a deployment token. Save the opaque `operation` value returned at submission and use a fresh token from the same deployment for later requests. Operations expire after seven days; video retention may be shorter.
+
+### POST `/v1/videos`[​](#post-v1videos "Direct link to post-v1videos")
+
+Accepts the same generation options as `/v1/videos/generations`, plus an optional `webhook_url` on the deployment's HTTPS `<deployment>.convex.site` origin. Returns HTTP 202:
+
+```
+{
+
+  "id": "convex-inference-id",
+
+  "operation": "opaque-operation-handle",
+
+  "webhook_secret": "per-job-signing-secret"
+
+}
+```
+
+`webhook_secret` is null when `webhook_url` is omitted. Store it privately. A lost response can still mean the job was accepted and charged; automatically retrying submission can create another paid job.
+
+### POST `/v1/videos/status`[​](#post-v1videosstatus "Direct link to post-v1videosstatus")
+
+Send `{ "operation": "opaque-operation-handle" }`. Returns `status` as `pending`, `completed`, or `error`, with an error message for failed jobs and usage when available.
+
+### POST `/v1/videos/download`[​](#post-v1videosdownload "Direct link to post-v1videosdownload")
+
+Send the same operation body. Returns the video in the same `data` shape as `/v1/videos/generations`. Returns 409 if the video is not ready. Each call fetches the video again; save it in application storage.
+
+### Application callbacks[​](#application-callbacks "Direct link to Application callbacks")
+
+The gateway posts a signed JSON event to `webhook_url` with `id`, `operation`, `status`, and `type` (`video.generation.<status>`). Terminal statuses are `completed`, `failed`, `cancelled`, and `expired`.
+
+Verify the raw body and `x-convex-video-signature` header with `verifyVideoWebhook` before changing application state. Match the event's `id` to the saved inference ID, and deduplicate by `(id, status)` when saving it. See [receiving a callback](/ai-gateway/images-and-videos.md#receive-a-callback). Callbacks can repeat; check unfinished jobs periodically as a fallback.
+
+## POST `/alpha/decisions`[​](#post-alphadecisions "Direct link to post-alphadecisions")
+
+Decisions is in alpha
+
+The request and response format may change during alpha.
+
+[Jev](https://docs.typesafe.ai/introduction) is TypeSafe's model for making structured decisions. It returns values your code can use to choose an option, rank results, or decide what to do next.
+
+Provide the context to evaluate in `state` and the questions to answer in `questions`. You can ask several questions about the same state in one request. Each question is evaluated independently and has a name that identifies its answer in the response.
+
+`model`, `state`, and `questions` are required. Use `typesafe/jev-1.13` as the model ID; Decisions models are not listed by `GET /v1/models`. Streaming is not supported.
+
+With the [AI SDK provider](/ai-gateway/setup.md), use `evaluate({ model: convexGateway.evaluationModel("typesafe/jev-1.13"), ... })`. The SDK calls the yes-or-no question type `boolean` and returns `probability`; the HTTP API uses `noul` for both.
+
+For example, classify a support ticket by priority:
+
+```
+{
+
+  "model": "typesafe/jev-1.13",
+
+  "state": {
+
+    "ticket": "All users are unable to sign in. There is no workaround."
+
+  },
+
+  "questions": {
+
+    "priority": {
+
+      "type": "choice",
+
+      "instructions": "Choose the support ticket's priority.",
+
+      "criteria": {
+
+        "urgent": "An outage is blocking users.",
+
+        "normal": "A bug affects users but has a workaround."
+
+      }
+
+    }
+
+  }
+
+}
+```
+
+`state` and each question's `instructions` accept a string, object, or array. Each question must specify one of these types:
+
+| `type`   | Purpose                              | Required fields                  | Result field              |
+| -------- | ------------------------------------ | -------------------------------- | ------------------------- |
+| `choice` | Select an option                     | `instructions`, `criteria` map   | `choice`                  |
+| `score`  | Evaluate the state against a rubric  | `instructions`, `criteria` array | `score`                   |
+| `noul`   | Evaluate whether a statement is true | `instructions`                   | `noul`, a number from 0–1 |
+
+Keep each question focused on one decision. For decisions involving several factors, ask about each factor separately and combine the answers in your code.
+
+A `noul` question may include `criteria` with `true` and `false` guidance. Choice criteria values may be strings, objects, arrays, or `null`. Score criteria are an ordered array of strings, objects, or arrays.
+
+The body must be JSON and no larger than 16 MiB. These fields are not supported: `provider`, `route`, `models`, `transforms`, `plugins`, `preset`, `fallbacks`, `speed`, `trace`, `session_id`, `user`, and `stream`.
+
+### Response[​](#response-1 "Direct link to Response")
+
+The answer keys match the request's question keys. Convex assigns `id` and removes fields that identify the serving provider.
+
+`choice` and `score` answers may also include `confidence` and `probabilities`.
+
+```
+{
+
+  "id": "3f1c8a2e-9b14-4d6a-a7e2-0c5b8d1e4f90",
+
+  "model": "typesafe/jev-1.13",
+
+  "answers": {
+
+    "priority": {
+
+      "type": "choice",
+
+      "choice": "urgent",
+
+      "confidence": 0.9,
+
+      "probabilities": { "urgent": 0.9, "normal": 0.1 }
+
+    }
+
+  },
+
+  "usage": {
+
+    "input_tokens": 21,
+
+    "output_tokens": 3,
+
+    "cost": 0.0042
+
+  }
+
+}
+```
+
+`usage` contains the input and output token counts. `usage.cost`, when present, is the request cost in US dollars.
+
+## POST `/v1/messages`[​](#post-v1messages "Direct link to post-v1messages")
+
+[Anthropic Messages](https://docs.anthropic.com/en/api/messages) body. Model IDs use the `provider/model` form. `model`, `messages`, and `max_tokens` are required. Set `stream: true` for Anthropic-compatible server-sent events.
+
+```
+{
+
+  "model": "anthropic/claude-haiku-4.5",
+
+  "max_tokens": 128,
+
+  "messages": [{ "role": "user", "content": "Hello!" }]
+
+}
+```
+
+Other Anthropic fields are forwarded. The body must be JSON and no larger than 16 MiB. These OpenRouter routing controls are rejected because Convex chooses how the request is served: `provider`, `route`, `models`, `plugins`, `fallbacks`, `session_id`, and `speed`.
+
+The response uses the Anthropic Messages shape. Convex replaces upstream `id` and `request_id` values with Convex-generated IDs and removes fields that identify the serving provider. Local errors, including authentication errors, also use the Anthropic error shape:
+
+```
+{
+
+  "type": "error",
+
+  "error": {
+
+    "type": "authentication_error",
+
+    "message": "Invalid authentication credentials"
+
+  },
+
+  "request_id": "3f1c8a2e-9b14-4d6a-a7e2-0c5b8d1e4f90"
+
+}
+```
+
+## POST `/v1/responses`[​](#post-v1responses "Direct link to post-v1responses")
+
+[OpenAI Responses](https://platform.openai.com/docs/api-reference/responses/create) body. Model IDs use the `provider/model` form. `model` and `input` are required. Set `stream: true` for server-sent events.
+
+```
+{
+
+  "model": "openai/gpt-5-mini",
+
+  "input": "Hello!"
+
+}
+```
+
+Other OpenAI Responses fields are forwarded. The body must be JSON and no larger than 16 MiB. These OpenRouter routing controls are rejected because Convex chooses how the request is served: `provider`, `route`, `models`, `transforms`, `plugins`, `preset`, and `session_id`.
+
+The endpoint is stateless. OpenRouter rejects `store: true` and a non-null `previous_response_id`. Convex replaces upstream response IDs with Convex-generated IDs and removes fields that identify the serving provider. Caller-supplied `metadata` on a response is preserved.
+
+## Errors[​](#errors "Direct link to Errors")
+
+| Status    | code                    | When                               |
+| --------- | ----------------------- | ---------------------------------- |
+| 401       | `invalid_api_key`       | Missing or invalid `Authorization` |
+| 400       | `unsupported_endpoint`  | Unknown path                       |
+| 400       | `unsupported_parameter` | Rejected routing field             |
+| 400       | `too_many_inputs`       | Over 512 embedding inputs          |
+| 413       | `request_too_large`     | Body over 16 MiB                   |
+| 502 / 503 | `upstream_error`        | Provider temporarily unavailable   |
+
+Provider validation errors (unknown model, bad args) keep the provider status. The error object has `message`, `type`, `code`, and `param` when present.

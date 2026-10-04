@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/audit.py", line 130, in <module>
+    check('independent-negative-controls',adverse)
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/audit.py", line 14, in check
+    try:r['result']=fn();r['exitCode']=0
+                    ^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/audit.py", line 94, in adverse
+    assert ns['safe']('a\\b')=='a\\b';results.append({'name':'single-backslash-validation-gap','accepted':True,'sealedMapAffected':False})
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 12, in safe
+    require(isinstance(path,str) and path and '\\' not in path and '\x00' not in path,'unsafe path')
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 10, in require
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: unsafe path

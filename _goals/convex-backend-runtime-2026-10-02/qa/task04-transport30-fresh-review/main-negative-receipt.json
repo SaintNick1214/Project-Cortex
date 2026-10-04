@@ -1,0 +1,66 @@
+{
+  "argv": [
+    "-"
+  ],
+  "utcPre": "2026-10-04T13:31:32.687500+00:00",
+  "checks": [
+    {
+      "name": "main-existing-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/mismatch",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:31:32.768667+00:00",
+      "utcPost": "2026-10-04T13:31:33.358981+00:00",
+      "exitCode": 1,
+      "expectedNonzero": true
+    },
+    {
+      "name": "main-target-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/link/child",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:31:33.359638+00:00",
+      "utcPost": "2026-10-04T13:31:33.994886+00:00",
+      "exitCode": 1,
+      "expectedNonzero": true
+    },
+    {
+      "name": "main-map-corruption",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-map-corruption/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-map-corruption/target",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:31:33.997236+00:00",
+      "utcPost": "2026-10-04T13:31:34.034155+00:00",
+      "exitCode": 1,
+      "expectedNonzero": true
+    },
+    {
+      "name": "main-chunk-corruption",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-chunk-corruption/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-chunk-corruption/target",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:31:34.039220+00:00",
+      "utcPost": "2026-10-04T13:31:34.523290+00:00",
+      "exitCode": 1,
+      "expectedNonzero": true
+    }
+  ],
+  "utcPost": "2026-10-04T13:31:34.523577+00:00",
+  "exitCode": 0
+}

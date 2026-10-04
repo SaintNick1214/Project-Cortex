@@ -1,6 +1,5 @@
 import { describe, expect, it } from "@jest/globals";
 import fs from "node:fs";
-import os from "node:os";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import path from "node:path";
@@ -148,9 +147,10 @@ describe("actual registered visibility and canonical schema/AST catalog", () => 
     expect(args(governance.setPolicy).value.policy).toMatchObject({ optional: false });
   });
   it("AST inventory resolves exact 25 frozen paths with seven public and eighteen internal", () => {
-    const target = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-task03b2d-catalog-"));
+    fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
+    const target = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), "cortex-task03b2d-catalog-"));
     try {
-      const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
+      const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
       expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
       const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
         completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];

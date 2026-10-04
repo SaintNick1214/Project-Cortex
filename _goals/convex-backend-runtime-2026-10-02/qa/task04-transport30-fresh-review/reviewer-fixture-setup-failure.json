@@ -1,0 +1,12 @@
+{
+  "utcPre": "2026-10-04T13:31:14Z",
+  "utcPost": "2026-10-04T13:31:14Z",
+  "argv": [
+    "python3",
+    "-B",
+    "-"
+  ],
+  "exitCode": 1,
+  "failure": "FileExistsError at path.parent.mkdir(parents=True) because first row is in already-created target root. Only reviewer-owned empty fixtures created; no subject-helper execution reached. Corrected with exist_ok=True and new fixture root.",
+  "rawStderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 8, in <module>\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 1311, in mkdir\n    os.mkdir(self, mode)\nFileExistsError: [Errno 17] File exists: '/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative/mismatch'\n"
+}

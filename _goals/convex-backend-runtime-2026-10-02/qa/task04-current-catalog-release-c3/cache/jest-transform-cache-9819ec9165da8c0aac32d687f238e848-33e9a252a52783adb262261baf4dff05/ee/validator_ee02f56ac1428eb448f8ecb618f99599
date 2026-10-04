@@ -1,0 +1,285 @@
+71a60c3171aa4826991f1dbed9f7d2e5
+"use strict";
+import { VAny, VArray, VBoolean, VBytes, VFloat64, VId, VCommitTs, VInt64, VLiteral, VNull, VObject, VRecord, VString, VUnion } from "./validators.js";
+export function isValidator(v2) {
+    return v2?.isConvexValidator === true;
+}
+export function asObjectValidator(obj) {
+    if (isValidator(obj)) {
+        return obj;
+    }
+    else {
+        return v.object(obj);
+    }
+}
+export const v = {
+    /**
+     * Validates that the value is a document ID for the given table.
+     *
+     * IDs are strings at runtime but are typed as `Id<"tableName">` in
+     * TypeScript for type safety.
+     *
+     * @example
+     * ```typescript
+     * args: { userId: v.id("users") }
+     * ```
+     *
+     * @param tableName The name of the table.
+     */
+    id: (tableName) => {
+        return new VId({
+            isOptional: "required",
+            tableName
+        });
+    },
+    /**
+     * Validates that the value is `null`.
+     *
+     * Use `returns: v.null()` for functions that don't return a meaningful value.
+     * JavaScript `undefined` is not a valid Convex value, it is automatically
+     * converted to `null`.
+     */
+    null: () => {
+        return new VNull({ isOptional: "required" });
+    },
+    /**
+     * Validates that the value is a JavaScript `number` (Convex Float64).
+     *
+     * Supports all IEEE-754 double-precision floating point numbers including
+     * NaN and Infinity.
+     *
+     * Alias for `v.float64()`.
+     */
+    number: () => {
+        return new VFloat64({ isOptional: "required" });
+    },
+    /**
+     * Validates that the value is a JavaScript `number` (Convex Float64).
+     *
+     * Supports all IEEE-754 double-precision floating point numbers.
+     */
+    float64: () => {
+        return new VFloat64({ isOptional: "required" });
+    },
+    /**
+     * @deprecated Use `v.int64()` instead.
+     */
+    bigint: () => {
+        return new VInt64({ isOptional: "required" });
+    },
+    /**
+     * Validates that the value is a JavaScript `bigint` (Convex Int64).
+     *
+     * Supports BigInts between -2^63 and 2^63-1.
+     *
+     * @example
+     * ```typescript
+     * args: { timestamp: v.int64() }
+     * // Usage: createDoc({ timestamp: 1234567890n })
+     * ```
+     */
+    int64: () => {
+        return new VInt64({ isOptional: "required" });
+    },
+    /**
+     * Validates that the value is a commit timestamp: an int64 (`bigint`)
+     * assigned from the transaction's commit timestamp.
+     *
+     * An index on a field with this validator orders documents by commit order.
+     * Accepts any int64 value; write `db.vars.commitTs` to have the field
+     * resolve to the commit timestamp when the mutation commits.
+     */
+    commitTs: () => {
+        return new VCommitTs({ isOptional: "required" });
+    },
+    /**
+     * Validates that the value is a `boolean`.
+     */
+    boolean: () => {
+        return new VBoolean({ isOptional: "required" });
+    },
+    /**
+     * Validates that the value is a `string`.
+     *
+     * Strings are stored as UTF-8 and their storage size is calculated as their
+     * UTF-8 encoded size.
+     */
+    string: () => {
+        return new VString({ isOptional: "required" });
+    },
+    /**
+     * Validates that the value is an `ArrayBuffer` (Convex Bytes).
+     *
+     * Use for binary data.
+     */
+    bytes: () => {
+        return new VBytes({ isOptional: "required" });
+    },
+    /**
+     * Validates that the value is exactly equal to the given literal.
+     *
+     * Useful for discriminated unions and enum-like patterns.
+     *
+     * @example
+     * ```typescript
+     * // Discriminated union pattern:
+     * v.union(
+     *   v.object({ kind: v.literal("error"), message: v.string() }),
+     *   v.object({ kind: v.literal("success"), value: v.number() }),
+     * )
+     * ```
+     *
+     * @param literal The literal value to compare against.
+     */
+    literal: (literal) => {
+        return new VLiteral({ isOptional: "required", value: literal });
+    },
+    /**
+     * Validates that the value is an `Array` where every element matches the
+     * given validator.
+     *
+     * Arrays can have at most 8192 elements.
+     *
+     * @example
+     * ```typescript
+     * args: { tags: v.array(v.string()) }
+     * args: { coordinates: v.array(v.number()) }
+     * args: { items: v.array(v.object({ name: v.string(), qty: v.number() })) }
+     * ```
+     *
+     * @param element The validator for the elements of the array.
+     */
+    array: (element) => {
+        return new VArray({ isOptional: "required", element });
+    },
+    /**
+     * Validates that the value is an `Object` with the specified properties.
+     *
+     * Objects can have at most 1024 entries. Field names must be non-empty and
+     * must not start with `"$"` or `"_"` (`_` is reserved for system fields
+     * like `_id` and `_creationTime`; `$` is reserved for Convex internal use).
+     *
+     * @example
+     * ```typescript
+     * args: {
+     *   user: v.object({
+     *     name: v.string(),
+     *     email: v.string(),
+     *     age: v.optional(v.number()),
+     *   })
+     * }
+     * ```
+     *
+     * @param fields An object mapping property names to their validators.
+     */
+    object: (fields) => {
+        return new VObject({ isOptional: "required", fields });
+    },
+    /**
+     * Validates that the value is a `Record` (object with dynamic keys).
+     *
+     * Records are objects at runtime but allow dynamic keys, unlike `v.object()`
+     * which requires known property names. Keys must be ASCII characters only,
+     * non-empty, and not start with `"$"` or `"_"`.
+     *
+     * @example
+     * ```typescript
+     * // Map of user IDs to scores:
+     * args: { scores: v.record(v.id("users"), v.number()) }
+     *
+     * // Map of string keys to string values:
+     * args: { metadata: v.record(v.string(), v.string()) }
+     * ```
+     *
+     * @param keys The validator for the keys of the record.
+     * @param values The validator for the values of the record.
+     */
+    record: (keys, values) => {
+        return new VRecord({
+            isOptional: "required",
+            key: keys,
+            value: values
+        });
+    },
+    /**
+     * Validates that the value matches at least one of the given validators.
+     *
+     * @example
+     * ```typescript
+     * // Allow string or number:
+     * args: { value: v.union(v.string(), v.number()) }
+     *
+     * // Discriminated union (recommended pattern):
+     * v.union(
+     *   v.object({ kind: v.literal("text"), body: v.string() }),
+     *   v.object({ kind: v.literal("image"), url: v.string() }),
+     * )
+     *
+     * // Nullable value:
+     * returns: v.union(v.object({ ... }), v.null())
+     * ```
+     *
+     * @param members The validators to match against.
+     */
+    union: (...members) => {
+        return new VUnion({
+            isOptional: "required",
+            members
+        });
+    },
+    /**
+     * A validator that accepts any Convex value without validation.
+     *
+     * Prefer using specific validators when possible for better type safety
+     * and runtime validation.
+     */
+    any: () => {
+        return new VAny({ isOptional: "required" });
+    },
+    /**
+     * Makes a property optional in an object validator.
+     *
+     * An optional property can be omitted entirely when creating a document or
+     * calling a function. This is different from `v.nullable()` which requires
+     * the property to be present but allows `null`.
+     *
+     * @example
+     * ```typescript
+     * v.object({
+     *   name: v.string(),              // required
+     *   nickname: v.optional(v.string()), // can be omitted
+     * })
+     *
+     * // Valid: { name: "Alice" }
+     * // Valid: { name: "Alice", nickname: "Ali" }
+     * // Invalid: { name: "Alice", nickname: null }  - use v.nullable() for this
+     * ```
+     *
+     * @param value The property value validator to make optional.
+     */
+    optional: (value) => {
+        return value.asOptional();
+    },
+    /**
+     * Allows a value to be either the given type or `null`.
+     *
+     * This is shorthand for `v.union(value, v.null())`. Unlike `v.optional()`,
+     * the property must still be present, but may be `null`.
+     *
+     * @example
+     * ```typescript
+     * v.object({
+     *   name: v.string(),
+     *   deletedAt: v.nullable(v.number()), // must be present, can be null
+     * })
+     *
+     * // Valid: { name: "Alice", deletedAt: null }
+     * // Valid: { name: "Alice", deletedAt: 1234567890 }
+     * // Invalid: { name: "Alice" }  - deletedAt is required
+     * ```
+     */
+    nullable: (value) => {
+        return v.union(value, v.null());
+    }
+};
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJmaWxlIjoiL3dvcmtzcGFjZS9Qcm9qZWN0LUNvcnRleC9ub2RlX21vZHVsZXMvY29udmV4L2Rpc3QvZXNtL3ZhbHVlcy92YWxpZGF0b3IuanMiLCJtYXBwaW5ncyI6IkFBQUEsWUFBWSxDQUFDO0FBQ2IsT0FBTyxFQUNMLElBQUksRUFDSixNQUFNLEVBQ04sUUFBUSxFQUNSLE1BQU0sRUFDTixRQUFRLEVBQ1IsR0FBRyxFQUNILFNBQVMsRUFDVCxNQUFNLEVBQ04sUUFBUSxFQUNSLEtBQUssRUFDTCxPQUFPLEVBQ1AsT0FBTyxFQUNQLE9BQU8sRUFDUCxNQUFNLEVBQ1AsTUFBTSxpQkFBaUIsQ0FBQztBQUN6QixNQUFNLFVBQVUsV0FBVyxDQUFDLEVBQUU7SUFDNUIsT0FBTyxFQUFFLEVBQUUsaUJBQWlCLEtBQUssSUFBSSxDQUFDO0FBQ3hDLENBQUM7QUFDRCxNQUFNLFVBQVUsaUJBQWlCLENBQUMsR0FBRztJQUNuQyxJQUFJLFdBQVcsQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDO1FBQ3JCLE9BQU8sR0FBRyxDQUFDO0lBQ2IsQ0FBQztTQUFNLENBQUM7UUFDTixPQUFPLENBQUMsQ0FBQyxNQUFNLENBQUMsR0FBRyxDQUFDLENBQUM7SUFDdkIsQ0FBQztBQUNILENBQUM7QUFDRCxNQUFNLENBQUMsTUFBTSxDQUFDLEdBQUc7SUFDZjs7Ozs7Ozs7Ozs7O09BWUc7SUFDSCxFQUFFLEVBQUUsQ0FBQyxTQUFTLEVBQUUsRUFBRTtRQUNoQixPQUFPLElBQUksR0FBRyxDQUFDO1lBQ2IsVUFBVSxFQUFFLFVBQVU7WUFDdEIsU0FBUztTQUNWLENBQUMsQ0FBQztJQUNMLENBQUM7SUFDRDs7Ozs7O09BTUc7SUFDSCxJQUFJLEVBQUUsR0FBRyxFQUFFO1FBQ1QsT0FBTyxJQUFJLEtBQUssQ0FBQyxFQUFFLFVBQVUsRUFBRSxVQUFVLEVBQUUsQ0FBQyxDQUFDO0lBQy9DLENBQUM7SUFDRDs7Ozs7OztPQU9HO0lBQ0gsTUFBTSxFQUFFLEdBQUcsRUFBRTtRQUNYLE9BQU8sSUFBSSxRQUFRLENBQUMsRUFBRSxV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LENBQUM7SUFDRDs7Ozs7Ozs7Ozs7Ozs7Ozs7T0FpQkc7SUFDSCxRQUFRLEVBQUUsQ0FBQyxLQUFLLEVBQUUsRUFBRTtRQUNsQixPQUFPLENBQUMsQ0FBQyxLQUFLLENBQUMsS0FBSyxFQUFFLENBQUMsQ0FBQyxJQUFJLEVBQUUsQ0FBQyxDQUFDO0lBQ2xDLENBQUM7Q0FDRixDQUFDIiwibmFtZXMiOltdLCJzb3VyY2VzIjpbIi93b3Jrc3BhY2UvUHJvamVjdC1Db3J0ZXgvbm9kZV9tb2R1bGVzL2NvbnZleC9kaXN0L2VzbS92YWx1ZXMvdmFsaWRhdG9yLmpzIl0sInNvdXJjZXNDb250ZW50IjpbIlwidXNlIHN0cmljdFwiO1xuaW1wb3J0IHtcbiAgVkFueSxcbiAgVkFycmF5LFxuICBWQm9vbGVhbixcbiAgVkJ5dGVzLFxuICBWRmxvYXQ2NCxcbiAgVklkLFxuICBWQ29tbWl0VHMsXG4gIFZJbnQ2NCxcbiAgVkxpdGVyYWwsXG4gIFZOdWxsLFxuICBWT2JqZWN0LFxuICBWUmVjb3JkLFxuICBWU3RyaW5nLFxuICBWVW5pb25cbn0gZnJvbSBcIi4vdmFsaWRhdG9ycy5qc1wiO1xuZXhwb3J0IGZ1bmN0aW9uIGlzVmFsaWRhdG9yKHYyKSB7XG4gIHJldHVybiB2Mj8uaXNDb252ZXhWYWxpZGF0b3IgPT09IHRydWU7XG59XG5leHBvcnQgZnVuY3Rpb24gYXNPYmplY3RWYWxpZGF0b3Iob2JqKSB7XG4gIGlmIChpc1ZhbGlkYXRvcihvYmopKSB7XG4gICAgcmV0dXJuIG9iajtcbiAgfSBlbHNlIHtcbiAgICByZXR1cm4gdi5vYmplY3Qob2JqKTtcbiAgfVxufVxuZXhwb3J0IGNvbnN0IHYgPSB7XG4gIC8qKlxuICAgKiBWYWxpZGF0ZXMgdGhhdCB0aGUgdmFsdWUgaXMgYSBkb2N1bWVudCBJRCBmb3IgdGhlIGdpdmVuIHRhYmxlLlxuICAgKlxuICAgKiBJRHMgYXJlIHN0cmluZ3MgYXQgcnVudGltZSBidXQgYXJlIHR5cGVkIGFzIGBJZDxcInRhYmxlTmFtZVwiPmAgaW5cbiAgICogVHlwZVNjcmlwdCBmb3IgdHlwZSBzYWZldHkuXG4gICAqXG4gICAqIEBleGFtcGxlXG4gICAqIGBgYHR5cGVzY3JpcHRcbiAgICogYXJnczogeyB1c2VySWQ6IHYuaWQoXCJ1c2Vyc1wiKSB9XG4gICAqIGBgYFxuICAgKlxuICAgKiBAcGFyYW0gdGFibGVOYW1lIFRoZSBuYW1lIG9mIHRoZSB0YWJsZS5cbiAgICovXG4gIGlkOiAodGFibGVOYW1lKSA9PiB7XG4gICAgcmV0dXJuIG5ldyBWSWQoe1xuICAgICAgaXNPcHRpb25hbDogXCJyZXF1aXJlZFwiLFxuICAgICAgdGFibGVOYW1lXG4gICAgfSk7XG4gIH0sXG4gIC8qKlxuICAgKiBWYWxpZGF0ZXMgdGhhdCB0aGUgdmFsdWUgaXMgYG51bGxgLlxuICAgKlxuICAgKiBVc2UgYHJldHVybnM6IHYubnVsbCgpYCBmb3IgZnVuY3Rpb25zIHRoYXQgZG9uJ3QgcmV0dXJuIGEgbWVhbmluZ2Z1bCB2YWx1ZS5cbiAgICogSmF2YVNjcmlwdCBgdW5kZWZpbmVkYCBpcyBub3QgYSB2YWxpZCBDb252ZXggdmFsdWUsIGl0IGlzIGF1dG9tYXRpY2FsbHlcbiAgICogY29udmVydGVkIHRvIGBudWxsYC5cbiAgICovXG4gIG51bGw6ICgpID0+IHtcbiAgICByZXR1cm4gbmV3IFZOdWxsKHsgaXNPcHRpb25hbDogXCJyZXF1aXJlZFwiIH0pO1xuICB9LFxuICAvKipcbiAgICogVmFsaWRhdGVzIHRoYXQgdGhlIHZhbHVlIGlzIGEgSmF2YVNjcmlwdCBgbnVtYmVyYCAoQ29udmV4IEZsb2F0NjQpLlxuICAgKlxuICAgKiBTdXBwb3J0cyBhbGwgSUVFRS03NTQgZG91YmxlLXByZWNpc2lvbiBmbG9hdGluZyBwb2ludCBudW1iZXJzIGluY2x1ZGluZ1xuICAgKiBOYU4gYW5kIEluZmluaXR5LlxuICAgKlxuICAgKiBBbGlhcyBmb3IgYHYuZmxvYXQ2NCgpYC5cbiAgICovXG4gIG51bWJlcjogKCkgPT4ge1xuICAgIHJldHVybiBuZXcgVkZsb2F0NjQoeyBpc09wdGlvbmFsOiBcInJlcXVpcmVkXCIgfSk7XG4gIH0sXG4gIC8qKlxuICAgKiBWYWxpZGF0ZXMgdGhhdCB0aGUgdmFsdWUgaXMgYSBKYXZhU2NyaXB0IGBudW1iZXJgIChDb252ZXggRmxvYXQ2NCkuXG4gICAqXG4gICAqIFN1cHBvcnRzIGFsbCBJRUVFLTc1NCBkb3VibGUtcHJlY2lzaW9uIGZsb2F0aW5nIHBvaW50IG51bWJlcnMuXG4gICAqL1xuICBmbG9hdDY0OiAoKSA9PiB7XG4gICAgcmV0dXJuIG5ldyBWRmxvYXQ2NCh7IGlzT3B0aW9uYWw6IFwicmVxdWlyZWRcIiB9KTtcbiAgfSxcbiAgLyoqXG4gICAqIEBkZXByZWNhdGVkIFVzZSBgdi5pbnQ2NCgpYCBpbnN0ZWFkLlxuICAgKi9cbiAgYmlnaW50OiAoKSA9PiB7XG4gICAgcmV0dXJuIG5ldyBWSW50NjQoeyBpc09wdGlvbmFsOiBcInJlcXVpcmVkXCIgfSk7XG4gIH0sXG4gIC8qKlxuICAgKiBWYWxpZGF0ZXMgdGhhdCB0aGUgdmFsdWUgaXMgYSBKYXZhU2NyaXB0IGBiaWdpbnRgIChDb252ZXggSW50NjQpLlxuICAgKlxuICAgKiBTdXBwb3J0cyBCaWdJbnRzIGJldHdlZW4gLTJeNjMgYW5kIDJeNjMtMS5cbiAgICpcbiAgICogQGV4YW1wbGVcbiAgICogYGBgdHlwZXNjcmlwdFxuICAgKiBhcmdzOiB7IHRpbWVzdGFtcDogdi5pbnQ2NCgpIH1cbiAgICogLy8gVXNhZ2U6IGNyZWF0ZURvYyh7IHRpbWVzdGFtcDogMTIzNDU2Nzg5MG4gfSlcbiAgICogYGBgXG4gICAqL1xuICBpbnQ2NDogKCkgPT4ge1xuICAgIHJldHVybiBuZXcgVkludDY0KHsgaXNPcHRpb25hbDogXCJyZXF1aXJlZFwiIH0pO1xuICB9LFxuICAvKipcbiAgICogVmFsaWRhdGVzIHRoYXQgdGhlIHZhbHVlIGlzIGEgY29tbWl0IHRpbWVzdGFtcDogYW4gaW50NjQgKGBiaWdpbnRgKVxuICAgKiBhc3NpZ25lZCBmcm9tIHRoZSB0cmFuc2FjdGlvbidzIGNvbW1pdCB0aW1lc3RhbXAuXG4gICAqXG4gICAqIEFuIGluZGV4IG9uIGEgZmllbGQgd2l0aCB0aGlzIHZhbGlkYXRvciBvcmRlcnMgZG9jdW1lbnRzIGJ5IGNvbW1pdCBvcmRlci5cbiAgICogQWNjZXB0cyBhbnkgaW50NjQgdmFsdWU7IHdyaXRlIGBkYi52YXJzLmNvbW1pdFRzYCB0byBoYXZlIHRoZSBmaWVsZFxuICAgKiByZXNvbHZlIHRvIHRoZSBjb21taXQgdGltZXN0YW1wIHdoZW4gdGhlIG11dGF0aW9uIGNvbW1pdHMuXG4gICAqL1xuICBjb21taXRUczogKCkgPT4ge1xuICAgIHJldHVybiBuZXcgVkNvbW1pdFRzKHsgaXNPcHRpb25hbDogXCJyZXF1aXJlZFwiIH0pO1xuICB9LFxuICAvKipcbiAgICogVmFsaWRhdGVzIHRoYXQgdGhlIHZhbHVlIGlzIGEgYGJvb2xlYW5gLlxuICAgKi9cbiAgYm9vbGVhbjogKCkgPT4ge1xuICAgIHJldHVybiBuZXcgVkJvb2xlYW4oeyBpc09wdGlvbmFsOiBcInJlcXVpcmVkXCIgfSk7XG4gIH0sXG4gIC8qKlxuICAgKiBWYWxpZGF0ZXMgdGhhdCB0aGUgdmFsdWUgaXMgYSBgc3RyaW5nYC5cbiAgICpcbiAgICogU3RyaW5ncyBhcmUgc3RvcmVkIGFzIFVURi04IGFuZCB0aGVpciBzdG9yYWdlIHNpemUgaXMgY2FsY3VsYXRlZCBhcyB0aGVpclxuICAgKiBVVEYtOCBlbmNvZGVkIHNpemUuXG4gICAqL1xuICBzdHJpbmc6ICgpID0+IHtcbiAgICByZXR1cm4gbmV3IFZTdHJpbmcoeyBpc09wdGlvbmFsOiBcInJlcXVpcmVkXCIgfSk7XG4gIH0sXG4gIC8qKlxuICAgKiBWYWxpZGF0ZXMgdGhhdCB0aGUgdmFsdWUgaXMgYW4gYEFycmF5QnVmZmVyYCAoQ29udmV4IEJ5dGVzKS5cbiAgICpcbiAgICogVXNlIGZvciBiaW5hcnkgZGF0YS5cbiAgICovXG4gIGJ5dGVzOiAoKSA9PiB7XG4gICAgcmV0dXJuIG5ldyBWQnl0ZXMoeyBpc09wdGlvbmFsOiBcInJlcXVpcmVkXCIgfSk7XG4gIH0sXG4gIC8qKlxuICAgKiBWYWxpZGF0ZXMgdGhhdCB0aGUgdmFsdWUgaXMgZXhhY3RseSBlcXVhbCB0byB0aGUgZ2l2ZW4gbGl0ZXJhbC5cbiAgICpcbiAgICogVXNlZnVsIGZvciBkaXNjcmltaW5hdGVkIHVuaW9ucyBhbmQgZW51bS1saWtlIHBhdHRlcm5zLlxuICAgKlxuICAgKiBAZXhhbXBsZVxuICAgKiBgYGB0eXBlc2NyaXB0XG4gICAqIC8vIERpc2NyaW1pbmF0ZWQgdW5pb24gcGF0dGVybjpcbiAgICogdi51bmlvbihcbiAgICogICB2Lm9iamVjdCh7IGtpbmQ6IHYubGl0ZXJhbChcImVycm9yXCIpLCBtZXNzYWdlOiB2LnN0cmluZygpIH0pLFxuICAgKiAgIHYub2JqZWN0KHsga2luZDogdi5saXRlcmFsKFwic3VjY2Vzc1wiKSwgdmFsdWU6IHYubnVtYmVyKCkgfSksXG4gICAqIClcbiAgICogYGBgXG4gICAqXG4gICAqIEBwYXJhbSBsaXRlcmFsIFRoZSBsaXRlcmFsIHZhbHVlIHRvIGNvbXBhcmUgYWdhaW5zdC5cbiAgICovXG4gIGxpdGVyYWw6IChsaXRlcmFsKSA9PiB7XG4gICAgcmV0dXJuIG5ldyBWTGl0ZXJhbCh7IGlzT3B0aW9uYWw6IFwicmVxdWlyZWRcIiwgdmFsdWU6IGxpdGVyYWwgfSk7XG4gIH0sXG4gIC8qKlxuICAgKiBWYWxpZGF0ZXMgdGhhdCB0aGUgdmFsdWUgaXMgYW4gYEFycmF5YCB3aGVyZSBldmVyeSBlbGVtZW50IG1hdGNoZXMgdGhlXG4gICAqIGdpdmVuIHZhbGlkYXRvci5cbiAgICpcbiAgICogQXJyYXlzIGNhbiBoYXZlIGF0IG1vc3QgODE5MiBlbGVtZW50cy5cbiAgICpcbiAgICogQGV4YW1wbGVcbiAgICogYGBgdHlwZXNjcmlwdFxuICAgKiBhcmdzOiB7IHRhZ3M6IHYuYXJyYXkodi5zdHJpbmcoKSkgfVxuICAgKiBhcmdzOiB7IGNvb3JkaW5hdGVzOiB2LmFycmF5KHYubnVtYmVyKCkpIH1cbiAgICogYXJnczogeyBpdGVtczogdi5hcnJheSh2Lm9iamVjdCh7IG5hbWU6IHYuc3RyaW5nKCksIHF0eTogdi5udW1iZXIoKSB9KSkgfVxuICAgKiBgYGBcbiAgICpcbiAgICogQHBhcmFtIGVsZW1lbnQgVGhlIHZhbGlkYXRvciBmb3IgdGhlIGVsZW1lbnRzIG9mIHRoZSBhcnJheS5cbiAgICovXG4gIGFycmF5OiAoZWxlbWVudCkgPT4ge1xuICAgIHJldHVybiBuZXcgVkFycmF5KHsgaXNPcHRpb25hbDogXCJyZXF1aXJlZFwiLCBlbGVtZW50IH0pO1xuICB9LFxuICAvKipcbiAgICogVmFsaWRhdGVzIHRoYXQgdGhlIHZhbHVlIGlzIGFuIGBPYmplY3RgIHdpdGggdGhlIHNwZWNpZmllZCBwcm9wZXJ0aWVzLlxuICAgKlxuICAgKiBPYmplY3RzIGNhbiBoYXZlIGF0IG1vc3QgMTAyNCBlbnRyaWVzLiBGaWVsZCBuYW1lcyBtdXN0IGJlIG5vbi1lbXB0eSBhbmRcbiAgICogbXVzdCBub3Qgc3RhcnQgd2l0aCBgXCIkXCJgIG9yIGBcIl9cImAgKGBfYCBpcyByZXNlcnZlZCBmb3Igc3lzdGVtIGZpZWxkc1xuICAgKiBsaWtlIGBfaWRgIGFuZCBgX2NyZWF0aW9uVGltZWA7IGAkYCBpcyByZXNlcnZlZCBmb3IgQ29udmV4IGludGVybmFsIHVzZSkuXG4gICAqXG4gICAqIEBleGFtcGxlXG4gICAqIGBgYHR5cGVzY3JpcHRcbiAgICogYXJnczoge1xuICAgKiAgIHVzZXI6IHYub2JqZWN0KHtcbiAgICogICAgIG5hbWU6IHYuc3RyaW5nKCksXG4gICAqICAgICBlbWFpbDogdi5zdHJpbmcoKSxcbiAgICogICAgIGFnZTogdi5vcHRpb25hbCh2Lm51bWJlcigpKSxcbiAgICogICB9KVxuICAgKiB9XG4gICAqIGBgYFxuICAgKlxuICAgKiBAcGFyYW0gZmllbGRzIEFuIG9iamVjdCBtYXBwaW5nIHByb3BlcnR5IG5hbWVzIHRvIHRoZWlyIHZhbGlkYXRvcnMuXG4gICAqL1xuICBvYmplY3Q6IChmaWVsZHMpID0+IHtcbiAgICByZXR1cm4gbmV3IFZPYmplY3QoeyBpc09wdGlvbmFsOiBcInJlcXVpcmVkXCIsIGZpZWxkcyB9KTtcbiAgfSxcbiAgLyoqXG4gICAqIFZhbGlkYXRlcyB0aGF0IHRoZSB2YWx1ZSBpcyBhIGBSZWNvcmRgIChvYmplY3Qgd2l0aCBkeW5hbWljIGtleXMpLlxuICAgKlxuICAgKiBSZWNvcmRzIGFyZSBvYmplY3RzIGF0IHJ1bnRpbWUgYnV0IGFsbG93IGR5bmFtaWMga2V5cywgdW5saWtlIGB2Lm9iamVjdCgpYFxuICAgKiB3aGljaCByZXF1aXJlcyBrbm93biBwcm9wZXJ0eSBuYW1lcy4gS2V5cyBtdXN0IGJlIEFTQ0lJIGNoYXJhY3RlcnMgb25seSxcbiAgICogbm9uLWVtcHR5LCBhbmQgbm90IHN0YXJ0IHdpdGggYFwiJFwiYCBvciBgXCJfXCJgLlxuICAgKlxuICAgKiBAZXhhbXBsZVxuICAgKiBgYGB0eXBlc2NyaXB0XG4gICAqIC8vIE1hcCBvZiB1c2VyIElEcyB0byBzY29yZXM6XG4gICAqIGFyZ3M6IHsgc2NvcmVzOiB2LnJlY29yZCh2LmlkKFwidXNlcnNcIiksIHYubnVtYmVyKCkpIH1cbiAgICpcbiAgICogLy8gTWFwIG9mIHN0cmluZyBrZXlzIHRvIHN0cmluZyB2YWx1ZXM6XG4gICAqIGFyZ3M6IHsgbWV0YWRhdGE6IHYucmVjb3JkKHYuc3RyaW5nKCksIHYuc3RyaW5nKCkpIH1cbiAgICogYGBgXG4gICAqXG4gICAqIEBwYXJhbSBrZXlzIFRoZSB2YWxpZGF0b3IgZm9yIHRoZSBrZXlzIG9mIHRoZSByZWNvcmQuXG4gICAqIEBwYXJhbSB2YWx1ZXMgVGhlIHZhbGlkYXRvciBmb3IgdGhlIHZhbHVlcyBvZiB0aGUgcmVjb3JkLlxuICAgKi9cbiAgcmVjb3JkOiAoa2V5cywgdmFsdWVzKSA9PiB7XG4gICAgcmV0dXJuIG5ldyBWUmVjb3JkKHtcbiAgICAgIGlzT3B0aW9uYWw6IFwicmVxdWlyZWRcIixcbiAgICAgIGtleToga2V5cyxcbiAgICAgIHZhbHVlOiB2YWx1ZXNcbiAgICB9KTtcbiAgfSxcbiAgLyoqXG4gICAqIFZhbGlkYXRlcyB0aGF0IHRoZSB2YWx1ZSBtYXRjaGVzIGF0IGxlYXN0IG9uZSBvZiB0aGUgZ2l2ZW4gdmFsaWRhdG9ycy5cbiAgICpcbiAgICogQGV4YW1wbGVcbiAgICogYGBgdHlwZXNjcmlwdFxuICAgKiAvLyBBbGxvdyBzdHJpbmcgb3IgbnVtYmVyOlxuICAgKiBhcmdzOiB7IHZhbHVlOiB2LnVuaW9uKHYuc3RyaW5nKCksIHYubnVtYmVyKCkpIH1cbiAgICpcbiAgICogLy8gRGlzY3JpbWluYXRlZCB1bmlvbiAocmVjb21tZW5kZWQgcGF0dGVybik6XG4gICAqIHYudW5pb24oXG4gICAqICAgdi5vYmplY3QoeyBraW5kOiB2LmxpdGVyYWwoXCJ0ZXh0XCIpLCBib2R5OiB2LnN0cmluZygpIH0pLFxuICAgKiAgIHYub2JqZWN0KHsga2luZDogdi5saXRlcmFsKFwiaW1hZ2VcIiksIHVybDogdi5zdHJpbmcoKSB9KSxcbiAgICogKVxuICAgKlxuICAgKiAvLyBOdWxsYWJsZSB2YWx1ZTpcbiAgICogcmV0dXJuczogdi51bmlvbih2Lm9iamVjdCh7IC4uLiB9KSwgdi5udWxsKCkpXG4gICAqIGBgYFxuICAgKlxuICAgKiBAcGFyYW0gbWVtYmVycyBUaGUgdmFsaWRhdG9ycyB0byBtYXRjaCBhZ2FpbnN0LlxuICAgKi9cbiAgdW5pb246ICguLi5tZW1iZXJzKSA9PiB7XG4gICAgcmV0dXJuIG5ldyBWVW5pb24oe1xuICAgICAgaXNPcHRpb25hbDogXCJyZXF1aXJlZFwiLFxuICAgICAgbWVtYmVyc1xuICAgIH0pO1xuICB9LFxuICAvKipcbiAgICogQSB2YWxpZGF0b3IgdGhhdCBhY2NlcHRzIGFueSBDb252ZXggdmFsdWUgd2l0aG91dCB2YWxpZGF0aW9uLlxuICAgKlxuICAgKiBQcmVmZXIgdXNpbmcgc3BlY2lmaWMgdmFsaWRhdG9ycyB3aGVuIHBvc3NpYmxlIGZvciBiZXR0ZXIgdHlwZSBzYWZldHlcbiAgICogYW5kIHJ1bnRpbWUgdmFsaWRhdGlvbi5cbiAgICovXG4gIGFueTogKCkgPT4ge1xuICAgIHJldHVybiBuZXcgVkFueSh7IGlzT3B0aW9uYWw6IFwicmVxdWlyZWRcIiB9KTtcbiAgfSxcbiAgLyoqXG4gICAqIE1ha2VzIGEgcHJvcGVydHkgb3B0aW9uYWwgaW4gYW4gb2JqZWN0IHZhbGlkYXRvci5cbiAgICpcbiAgICogQW4gb3B0aW9uYWwgcHJvcGVydHkgY2FuIGJlIG9taXR0ZWQgZW50aXJlbHkgd2hlbiBjcmVhdGluZyBhIGRvY3VtZW50IG9yXG4gICAqIGNhbGxpbmcgYSBmdW5jdGlvbi4gVGhpcyBpcyBkaWZmZXJlbnQgZnJvbSBgdi5udWxsYWJsZSgpYCB3aGljaCByZXF1aXJlc1xuICAgKiB0aGUgcHJvcGVydHkgdG8gYmUgcHJlc2VudCBidXQgYWxsb3dzIGBudWxsYC5cbiAgICpcbiAgICogQGV4YW1wbGVcbiAgICogYGBgdHlwZXNjcmlwdFxuICAgKiB2Lm9iamVjdCh7XG4gICAqICAgbmFtZTogdi5zdHJpbmcoKSwgICAgICAgICAgICAgIC8vIHJlcXVpcmVkXG4gICAqICAgbmlja25hbWU6IHYub3B0aW9uYWwodi5zdHJpbmcoKSksIC8vIGNhbiBiZSBvbWl0dGVkXG4gICAqIH0pXG4gICAqXG4gICAqIC8vIFZhbGlkOiB7IG5hbWU6IFwiQWxpY2VcIiB9XG4gICAqIC8vIFZhbGlkOiB7IG5hbWU6IFwiQWxpY2VcIiwgbmlja25hbWU6IFwiQWxpXCIgfVxuICAgKiAvLyBJbnZhbGlkOiB7IG5hbWU6IFwiQWxpY2VcIiwgbmlja25hbWU6IG51bGwgfSAgLSB1c2Ugdi5udWxsYWJsZSgpIGZvciB0aGlzXG4gICAqIGBgYFxuICAgKlxuICAgKiBAcGFyYW0gdmFsdWUgVGhlIHByb3BlcnR5IHZhbHVlIHZhbGlkYXRvciB0byBtYWtlIG9wdGlvbmFsLlxuICAgKi9cbiAgb3B0aW9uYWw6ICh2YWx1ZSkgPT4ge1xuICAgIHJldHVybiB2YWx1ZS5hc09wdGlvbmFsKCk7XG4gIH0sXG4gIC8qKlxuICAgKiBBbGxvd3MgYSB2YWx1ZSB0byBiZSBlaXRoZXIgdGhlIGdpdmVuIHR5cGUgb3IgYG51bGxgLlxuICAgKlxuICAgKiBUaGlzIGlzIHNob3J0aGFuZCBmb3IgYHYudW5pb24odmFsdWUsIHYubnVsbCgpKWAuIFVubGlrZSBgdi5vcHRpb25hbCgpYCxcbiAgICogdGhlIHByb3BlcnR5IG11c3Qgc3RpbGwgYmUgcHJlc2VudCwgYnV0IG1heSBiZSBgbnVsbGAuXG4gICAqXG4gICAqIEBleGFtcGxlXG4gICAqIGBgYHR5cGVzY3JpcHRcbiAgICogdi5vYmplY3Qoe1xuICAgKiAgIG5hbWU6IHYuc3RyaW5nKCksXG4gICAqICAgZGVsZXRlZEF0OiB2Lm51bGxhYmxlKHYubnVtYmVyKCkpLCAvLyBtdXN0IGJlIHByZXNlbnQsIGNhbiBiZSBudWxsXG4gICAqIH0pXG4gICAqXG4gICAqIC8vIFZhbGlkOiB7IG5hbWU6IFwiQWxpY2VcIiwgZGVsZXRlZEF0OiBudWxsIH1cbiAgICogLy8gVmFsaWQ6IHsgbmFtZTogXCJBbGljZVwiLCBkZWxldGVkQXQ6IDEyMzQ1Njc4OTAgfVxuICAgKiAvLyBJbnZhbGlkOiB7IG5hbWU6IFwiQWxpY2VcIiB9ICAtIGRlbGV0ZWRBdCBpcyByZXF1aXJlZFxuICAgKiBgYGBcbiAgICovXG4gIG51bGxhYmxlOiAodmFsdWUpID0+IHtcbiAgICByZXR1cm4gdi51bmlvbih2YWx1ZSwgdi5udWxsKCkpO1xuICB9XG59O1xuLy8jIHNvdXJjZU1hcHBpbmdVUkw9dmFsaWRhdG9yLmpzLm1hcFxuIl0sInZlcnNpb24iOjN9

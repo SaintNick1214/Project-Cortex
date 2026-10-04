@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path; fs=[\"node_modules/@ai-sdk/gateway/src/gateway-language-model.ts\",\"node_modules/@ai-sdk/gateway/src/gateway-embedding-model.ts\",\"node_modules/@convex-dev/ai-sdk-provider/src/index.ts\"]; [(print(\"FILE \"+f),print(Path(f).read_text())) for f in fs]; p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/runner.ts\"); print(\"RUNNER\", \"\\n\".join(s for s in p.read_text().splitlines() if any(k in s for k in [\"OFFICIAL_DRIVER\",\"createGateway\",\"factory(\",\"getGenerationInfo\",\"modelId\"])))"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T13:10:15.244518+00:00",
+  "endUtc": "2026-10-04T13:10:15.268346+00:00",
+  "exit": 0
+}

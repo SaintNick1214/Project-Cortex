@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 116, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 107, in main
+    target=Path(os.path.abspath(a.target));fd=directory(target,a.materialize);os.close(fd)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30/materialize.py", line 24, in directory
+    new=os.open(component,os.O_RDONLY|os.O_DIRECTORY|os.O_NOFOLLOW,dir_fd=fd)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NotADirectoryError: [Errno 20] Not a directory: 'link'

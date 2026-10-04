@@ -1,0 +1,16 @@
+{
+  "coreMinimalChanges": [
+    "version-owned QA/work scope",
+    "source-runtime.json name and hardcoded exact digest",
+    "diagnostic destination workRoot/diagnostics only"
+  ],
+  "coreDiff": "source-binding.diff",
+  "POSTManifestSHA256": "410dd9bc4624ebe4e63590a829342874dfa8c47749048ce15b81875a75dc47be",
+  "sourceBeforeSHA256": "81f5aa3db369433a701b64aea0a613cdb3a0fa01e43211f9b214abeb2d881a50",
+  "fourExactPatchSHA256": "d5da19a77e0ddbf3cd2ada1ca8cc34dddf37465bfe3b5684a8eee98940bf94f5",
+  "fixedTestWrapper": "fixture-entry.mjs: constant owned staged136 POST sourceRoot via preexisting composeForControls; normal production-test CLI has no root argument/override",
+  "preconditionAPI": "verifyReleaseState(PRE|POST): hard-pinned transition, exact136 actualroot phase+patch/postimages; zero writes; no BOTH/mixed/hash whitelists",
+  "all15NonPOSTMixedDenied": true,
+  "eachOneBytePostimageDenied": true,
+  "actualRootApplied": false
+}

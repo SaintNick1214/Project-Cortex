@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "/workspace/Project-Cortex/work/resume/task04-actual-catalog-root-c1-fresh-review/jest.config.mjs",
+    "--runInBand",
+    "--no-cache",
+    "--json",
+    "--outputFile",
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-actual-catalog-root-c1-fresh-review/actual-four-observed.json",
+    "--runTestsByPath",
+    "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+    "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+    "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+    "tests/unit/runtimeArtifactAuth/inventory.test.ts"
+  ],
+  "recorderArgv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/Project-Cortex/work/resume/task04-actual-catalog-root-c1-fresh-review/observed-replay.py"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "start": "2026-10-04T13:27:37.370959+00:00",
+  "end": "2026-10-04T13:28:04.894789+00:00",
+  "exit": 0,
+  "sourceStable": true,
+  "sharedBeforeAfterExact": true,
+  "environment": {
+    "PATH": "/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/override:/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin:/opt/codex/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/agent/.local/bin:/opt/codex/runtimes/codex-primary-runtime/dependencies/bin/fallback",
+    "LANG": "C.UTF-8",
+    "TZ": "UTC",
+    "CI": "1",
+    "NO_COLOR": "1",
+    "NODE_OPTIONS": "--import /workspace/Project-Cortex/work/resume/task04-actual-catalog-root-c1-fresh-review/fs-audit.mjs"
+  }
+}

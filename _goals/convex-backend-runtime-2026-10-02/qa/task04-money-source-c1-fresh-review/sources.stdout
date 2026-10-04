@@ -1,0 +1,694 @@
+     1	import { createAnthropic } from "@ai-sdk/anthropic";
+     2	import { createOpenAI } from "@ai-sdk/openai";
+     3	import {
+     4	  createOpenAICompatible,
+     5	  type MetadataExtractor,
+     6	} from "@ai-sdk/openai-compatible";
+     7	import {
+     8	  defaultSettingsMiddleware,
+     9	  wrapEmbeddingModel,
+    10	  wrapLanguageModel,
+    11	} from "ai";
+    12	import { getServiceToken } from "convex/server";
+    13	import { createEvaluationModel } from "./evaluation-model.js";
+    14	import { createVideoModel } from "./video-model.js";
+    15	
+    16	type Provider = ReturnType<typeof createOpenAICompatible>;
+    17	type ChatModel = ReturnType<Provider>;
+    18	type EmbeddingModel = ReturnType<typeof wrapEmbeddingModel>;
+    19	type ProviderMetadata = NonNullable<
+    20	  Awaited<ReturnType<MetadataExtractor["extractMetadata"]>>
+    21	>;
+    22	type ImageModel = ReturnType<Provider["imageModel"]>;
+    23	type LanguageModel = Parameters<typeof wrapLanguageModel>[0]["model"];
+    24	type GatewayLanguageModel = ReturnType<typeof wrapLanguageModel>;
+    25	
+    26	const maxEmbeddingsPerCall = 512;
+    27	// Official providers require a credential before gatewayFetch replaces it with a deployment JWT.
+    28	const placeholderCredential = "convex-gateway";
+    29	
+    30	/**
+    31	 * A deployment can set `CONVEX_INTERNAL_AI_GATEWAY_HOST` to reach a different
+    32	 * gateway, which is how internal apps use staging.
+    33	 */
+    34	const productionGatewayHost = "https://ai-gateway.convex.dev";
+    35	
+    36	function gatewayBaseURL(version: "v1" | "alpha" = "v1"): string {
+    37	  return `${process.env.CONVEX_INTERNAL_AI_GATEWAY_HOST || productionGatewayHost}/${version}`;
+    38	}
+    39	
+    40	async function gatewayFetch(
+    41	  input: RequestInfo | URL,
+    42	  init?: RequestInit,
+    43	): Promise<Response> {
+    44	  const token = await getServiceToken("ai-gateway");
+    45	  const headers = new Headers(init?.headers);
+    46	  // Deployment JWT is the only accepted credential for the hosted gateway.
+    47	  headers.set("Authorization", `Bearer ${token}`);
+    48	  return globalThis.fetch(input, { ...init, headers });
+    49	}
+    50	
+    51	// The SDK's standard usage mapping omits the gateway's dollar costs.
+    52	function convexGatewayUsageMetadata(
+    53	  usage: unknown,
+    54	): ProviderMetadata | undefined {
+    55	  if (!usage || typeof usage !== "object") return undefined;
+    56	  const { cost, cost_details } = usage as ProviderMetadata[string];
+    57	  const metadata: ProviderMetadata[string] = {};
+    58	  if (typeof cost === "number") metadata.cost = cost;
+    59	  if (cost_details && typeof cost_details === "object") {
+    60	    metadata.costDetails = cost_details;
+    61	  }
+    62	  return Object.keys(metadata).length > 0
+    63	    ? { convexGateway: metadata }
+    64	    : undefined;
+    65	}
+    66	
+    67	const costMetadataExtractor: MetadataExtractor = {
+    68	  extractMetadata: async ({ parsedBody }) =>
+    69	    convexGatewayUsageMetadata(
+    70	      (parsedBody as { usage?: unknown } | undefined)?.usage,
+    71	    ),
+    72	  createStreamExtractor: () => {
+    73	    // Streamed responses deliver usage (incl. cost) on the final chunk.
+    74	    let usage: unknown;
+    75	    return {
+    76	      processChunk(parsedChunk: unknown) {
+    77	        const chunk = parsedChunk as { usage?: unknown } | undefined;
+    78	        if (chunk?.usage) usage = chunk.usage;
+    79	      },
+    80	      buildMetadata: () => convexGatewayUsageMetadata(usage),
+    81	    };
+    82	  },
+    83	};
+    84	
+    85	function createGatewayProvider(): Provider {
+    86	  return createOpenAICompatible({
+    87	    name: "convexGateway",
+    88	    baseURL: gatewayBaseURL(),
+    89	    fetch: gatewayFetch,
+    90	    metadataExtractor: costMetadataExtractor,
+    91	    supportsStructuredOutputs: true,
+    92	    supportedUrls: () => ({ "image/*": [/^https?:\/\/.*$/] }),
+    93	  });
+    94	}
+    95	
+    96	function sdkModelId(
+    97	  gatewayModelId: string,
+    98	  provider: "anthropic" | "openai",
+    99	): string {
+   100	  const prefix = `${provider}/`;
+   101	  const modelId = gatewayModelId.startsWith(prefix)
+   102	    ? gatewayModelId.slice(prefix.length)
+   103	    : gatewayModelId;
+   104	  // OpenRouter uses dots in Anthropic versions; the Anthropic SDK's capability lookup uses hyphens.
+   105	  return provider === "anthropic" ? modelId.replaceAll(".", "-") : modelId;
+   106	}
+   107	
+   108	function gatewayModelFetch(
+   109	  gatewayModelId: string,
+   110	  input: RequestInfo | URL,
+   111	  init?: RequestInit,
+   112	): Promise<Response> {
+   113	  const body = JSON.parse(init?.body as string);
+   114	  body.model = gatewayModelId;
+   115	  return gatewayFetch(input, { ...init, body: JSON.stringify(body) });
+   116	}
+   117	
+   118	function gatewayLanguageModel(
+   119	  modelId: string,
+   120	  model: LanguageModel,
+   121	  middleware?: Parameters<typeof wrapLanguageModel>[0]["middleware"],
+   122	): GatewayLanguageModel {
+   123	  return wrapLanguageModel({
+   124	    model,
+   125	    modelId,
+   126	    // The gateway does not expose the providers' batch APIs.
+   127	    middleware: middleware ?? { specificationVersion: "v4" },
+   128	  });
+   129	}
+   130	
+   131	/**
+   132	 * The recommended model interface for text generation through the Convex AI gateway.
+   133	 * Use `messages` or `responses` only for endpoint-specific features.
+   134	 *
+   135	 * `getServiceToken` caches and refreshes credentials within the current action,
+   136	 * so calling this more than once in the same action is fine.
+   137	 */
+   138	export function convexGateway(modelId: string): ChatModel {
+   139	  return createGatewayProvider()(modelId);
+   140	}
+   141	
+   142	convexGateway.messages = function (modelId: string): GatewayLanguageModel {
+   143	  const provider = createAnthropic({
+   144	    name: "convexGateway.messages",
+   145	    baseURL: gatewayBaseURL(),
+   146	    authToken: placeholderCredential,
+   147	    fetch: (input, init) => gatewayModelFetch(modelId, input, init),
+   148	  });
+   149	  return gatewayLanguageModel(
+   150	    modelId,
+   151	    provider.messages(sdkModelId(modelId, "anthropic")),
+   152	  );
+   153	};
+   154	
+   155	convexGateway.responses = function (modelId: string): GatewayLanguageModel {
+   156	  const provider = createOpenAI({
+   157	    name: "convexGateway.responses",
+   158	    baseURL: gatewayBaseURL(),
+   159	    apiKey: placeholderCredential,
+   160	    fetch: (input, init) => gatewayModelFetch(modelId, input, init),
+   161	  });
+   162	  return gatewayLanguageModel(
+   163	    modelId,
+   164	    provider.responses(sdkModelId(modelId, "openai")),
+   165	    defaultSettingsMiddleware({
+   166	      settings: { providerOptions: { openai: { store: false } } },
+   167	    }),
+   168	  );
+   169	};
+   170	
+   171	/** Evaluate typed questions through the alpha Decisions API. */
+   172	convexGateway.evaluationModel = function (modelId: string) {
+   173	  return createEvaluationModel(
+   174	    modelId,
+   175	    gatewayBaseURL("alpha"),
+   176	    gatewayFetch,
+   177	    convexGatewayUsageMetadata,
+   178	  );
+   179	};
+   180	
+   181	convexGateway.embeddingModel = function (modelId: string): EmbeddingModel {
+   182	  return wrapEmbeddingModel({
+   183	    model: createGatewayProvider().embeddingModel(modelId),
+   184	    middleware: {
+   185	      specificationVersion: "v4",
+   186	      overrideMaxEmbeddingsPerCall: () => maxEmbeddingsPerCall,
+   187	    },
+   188	  });
+   189	};
+   190	
+   191	/** Image model for the AI SDK's `generateImage`. */
+   192	convexGateway.imageModel = function (modelId: string): ImageModel {
+   193	  return createGatewayProvider().imageModel(modelId);
+   194	};
+   195	
+   196	/** Video generation for the AI SDK's `experimental_generateVideo`. */
+   197	convexGateway.videoModel = function (modelId: string) {
+   198	  return createVideoModel(
+   199	    modelId,
+   200	    gatewayBaseURL(),
+   201	    gatewayFetch,
+   202	    convexGatewayUsageMetadata,
+   203	  );
+   204	};
+   205	
+   206	export { verifyVideoWebhook, type VideoWebhookEvent } from "./video-webhook.js";
+     1	import {
+     2	  createJsonErrorResponseHandler,
+     3	  createJsonResponseHandler,
+     4	  getErrorMessage,
+     5	  getFromApi,
+     6	  lazySchema,
+     7	  resolve,
+     8	  zodSchema,
+     9	} from '@ai-sdk/provider-utils';
+    10	import { z } from './zod';
+    11	import { asGatewayError } from './errors';
+    12	import type { GatewayConfig } from './gateway-config';
+    13	
+    14	export interface GatewayGenerationInfoParams {
+    15	  /** The generation ID to look up (format: gen_<ulid>) */
+    16	  id: string;
+    17	}
+    18	
+    19	export interface GatewayGenerationInfo {
+    20	  /** The generation ID */
+    21	  id: string;
+    22	  /** Total cost in USD */
+    23	  totalCost: number;
+    24	  /** Upstream inference cost in USD (BYOK only) */
+    25	  upstreamInferenceCost: number;
+    26	  /** Usage cost in USD (same as totalCost) */
+    27	  usage: number;
+    28	  /** ISO 8601 timestamp when the generation was created */
+    29	  createdAt: string;
+    30	  /** Model identifier */
+    31	  model: string;
+    32	  /** Whether BYOK credentials were used */
+    33	  isByok: boolean;
+    34	  /** Provider that served this generation */
+    35	  providerName: string;
+    36	  /** Whether streaming was used */
+    37	  streamed: boolean;
+    38	  /** Finish reason (e.g. 'stop') */
+    39	  finishReason: string;
+    40	  /** Time to first token in milliseconds */
+    41	  latency: number;
+    42	  /** Total generation time in milliseconds */
+    43	  generationTime: number;
+    44	  /** Number of prompt tokens */
+    45	  promptTokens: number;
+    46	  /** Number of completion tokens */
+    47	  completionTokens: number;
+    48	  /** Reasoning tokens used */
+    49	  reasoningTokens: number;
+    50	  /** Cached tokens used */
+    51	  cachedTokens: number;
+    52	  /** Cache creation input tokens */
+    53	  cacheCreationTokens: number;
+    54	  /** Billable web search calls */
+    55	  billableWebSearchCalls: number;
+    56	}
+    57	
+    58	export class GatewayGenerationInfoFetcher {
+    59	  constructor(private readonly config: GatewayConfig) {}
+    60	
+    61	  async getGenerationInfo(
+    62	    params: GatewayGenerationInfoParams,
+    63	  ): Promise<GatewayGenerationInfo> {
+    64	    try {
+    65	      const baseUrl = new URL(this.config.baseURL);
+    66	
+    67	      const { value } = await getFromApi({
+    68	        url: `${baseUrl.origin}/v1/generation?id=${encodeURIComponent(params.id)}`,
+    69	        validateUrl: false,
+    70	        headers: this.config.headers
+    71	          ? await resolve(this.config.headers)
+    72	          : undefined,
+    73	        successfulResponseHandler: createJsonResponseHandler(
+    74	          gatewayGenerationInfoResponseSchema,
+    75	        ),
+    76	        failedResponseHandler: createJsonErrorResponseHandler({
+    77	          errorSchema: z.any(),
+    78	          errorToMessage: data => getErrorMessage(data) ?? 'unknown error',
+    79	        }),
+    80	        fetch: this.config.fetch,
+    81	      });
+    82	
+    83	      return value;
+    84	    } catch (error) {
+    85	      throw await asGatewayError(error);
+    86	    }
+    87	  }
+    88	}
+    89	
+    90	const gatewayGenerationInfoResponseSchema = lazySchema(() =>
+    91	  zodSchema(
+    92	    z
+    93	      .object({
+    94	        data: z
+    95	          .object({
+    96	            id: z.string(),
+    97	            total_cost: z.number(),
+    98	            upstream_inference_cost: z.number(),
+    99	            usage: z.number(),
+   100	            created_at: z.string(),
+   101	            model: z.string(),
+   102	            is_byok: z.boolean(),
+   103	            provider_name: z.string(),
+   104	            streamed: z.boolean(),
+   105	            finish_reason: z.string(),
+   106	            latency: z.number(),
+   107	            generation_time: z.number(),
+   108	            native_tokens_prompt: z.number(),
+   109	            native_tokens_completion: z.number(),
+   110	            native_tokens_reasoning: z.number(),
+   111	            native_tokens_cached: z.number(),
+   112	            native_tokens_cache_creation: z.number(),
+   113	            billable_web_search_calls: z.number(),
+   114	          })
+   115	          .transform(
+   116	            ({
+   117	              total_cost,
+   118	              upstream_inference_cost,
+   119	              created_at,
+   120	              is_byok,
+   121	              provider_name,
+   122	              finish_reason,
+   123	              generation_time,
+   124	              native_tokens_prompt,
+   125	              native_tokens_completion,
+   126	              native_tokens_reasoning,
+   127	              native_tokens_cached,
+   128	              native_tokens_cache_creation,
+   129	              billable_web_search_calls,
+   130	              ...rest
+   131	            }) => ({
+   132	              ...rest,
+   133	              totalCost: total_cost,
+   134	              upstreamInferenceCost: upstream_inference_cost,
+   135	              createdAt: created_at,
+   136	              isByok: is_byok,
+   137	              providerName: provider_name,
+   138	              finishReason: finish_reason,
+   139	              generationTime: generation_time,
+   140	              promptTokens: native_tokens_prompt,
+   141	              completionTokens: native_tokens_completion,
+   142	              reasoningTokens: native_tokens_reasoning,
+   143	              cachedTokens: native_tokens_cached,
+   144	              cacheCreationTokens: native_tokens_cache_creation,
+   145	              billableWebSearchCalls: billable_web_search_calls,
+   146	            }),
+   147	          ),
+   148	      })
+   149	      .transform(({ data }) => data),
+   150	  ),
+   151	);
+     1	import {
+     2	  createJsonErrorResponseHandler,
+     3	  createJsonResponseHandler,
+     4	  getErrorMessage,
+     5	  loadOptionalSetting,
+     6	  postJsonToApi,
+     7	  withoutTrailingSlash,
+     8	  withUserAgentSuffix,
+     9	  type FetchFunction,
+    10	  type WebSocketConstructor,
+    11	} from '@ai-sdk/provider-utils';
+    12	import { z } from './zod';
+    13	import { asGatewayError, GatewayAuthenticationError } from './errors';
+    14	import {
+    15	  GATEWAY_AUTH_METHOD_HEADER,
+    16	  VERCEL_AI_GATEWAY_TEAM_HEADER,
+    17	} from './gateway-headers';
+    18	import { parseAuthMethod } from './errors/parse-auth-method';
+    19	import {
+    20	  GatewayFetchMetadata,
+    21	  type GatewayFetchMetadataResponse,
+    22	  type GatewayCreditsResponse,
+    23	} from './gateway-fetch-metadata';
+    24	import {
+    25	  GatewaySpendReport,
+    26	  type GatewaySpendReportParams,
+    27	  type GatewaySpendReportResponse,
+    28	} from './gateway-spend-report';
+    29	import {
+    30	  GatewayGenerationInfoFetcher,
+    31	  type GatewayGenerationInfoParams,
+    32	  type GatewayGenerationInfo,
+    33	} from './gateway-generation-info';
+    34	import { GatewayBatch } from './gateway-batch';
+    35	import { GatewayLanguageModel } from './gateway-language-model';
+    36	import { GatewayEmbeddingModel } from './gateway-embedding-model';
+    37	import { GatewayImageModel } from './gateway-image-model';
+    38	import { GatewayVideoModel } from './gateway-video-model';
+    39	import { GatewayEvaluationModel } from './gateway-evaluation-model';
+    40	import { GatewayRerankingModel } from './gateway-reranking-model';
+    41	import { GatewaySpeechModel } from './gateway-speech-model';
+    42	import {
+    43	  GatewayTranscriptionModel,
+    44	  toGatewayTranscriptionUrl,
+    45	} from './gateway-transcription-model';
+    46	import { GatewayRealtimeModel } from './gateway-realtime-model';
+    47	import type { GatewayEmbeddingModelId } from './gateway-embedding-model-settings';
+    48	import type { GatewayEvaluationModelId } from './gateway-evaluation-model-settings';
+    49	import type { GatewayImageModelId } from './gateway-image-model-settings';
+    50	import type { GatewayRerankingModelId } from './gateway-reranking-model-settings';
+    51	import type { GatewaySpeechModelId } from './gateway-speech-model-settings';
+    52	import type { GatewayTranscriptionModelId } from './gateway-transcription-model-settings';
+    53	import type { GatewayRealtimeModelId } from './gateway-realtime-model-settings';
+    54	import type { GatewayVideoModelId } from './gateway-video-model-settings';
+    55	import { gatewayTools } from './gateway-tools';
+    56	import { getVercelOidcToken, getVercelRequestId } from './vercel-environment';
+    57	import type { GatewayModelId } from './gateway-language-model-settings';
+    58	import type {
+    59	  EmbeddingModelV4,
+    60	  Experimental_BatchV4 as BatchV4,
+    61	  ImageModelV4,
+    62	  RerankingModelV4,
+    63	  SpeechModelV4,
+    64	  TranscriptionModelV4,
+    65	  Experimental_VideoModelV4,
+    66	  Experimental_EvaluationModelV4,
+    67	  Experimental_RealtimeFactoryV4 as RealtimeFactoryV4,
+    68	  Experimental_RealtimeFactoryV4GetTokenOptions as RealtimeFactoryV4GetTokenOptions,
+    69	  ProviderV4,
+    70	  LanguageModelV4,
+    71	} from '@ai-sdk/provider';
+    72	import { VERSION } from './version';
+    73	
+    74	export interface GatewayProvider extends ProviderV4 {
+    75	  (modelId: GatewayModelId): LanguageModelV4;
+    76	
+    77	  /**
+    78	   * Creates a model for text generation.
+    79	   */
+    80	  chat(modelId: GatewayModelId): LanguageModelV4;
+    81	
+    82	  /**
+    83	   * Creates a model for text generation.
+    84	   */
+    85	  languageModel(modelId: GatewayModelId): LanguageModelV4;
+    86	
+    87	  /** Returns a BatchV4 interface for processing batches with AI Gateway. */
+    88	  experimental_batch(): BatchV4<{ text: GatewayModelId }>;
+    89	
+    90	  /**
+    91	   * Returns available providers and models for use with the remote provider.
+    92	   */
+    93	  getAvailableModels(): Promise<GatewayFetchMetadataResponse>;
+    94	
+    95	  /**
+    96	   * Returns credit information for the authenticated user.
+    97	   */
+    98	  getCredits(): Promise<GatewayCreditsResponse>;
+    99	
+   100	  /**
+   101	   * Returns a spend report with cost, token, and request count data,
+   102	   * aggregated by the specified dimension.
+   103	   */
+   104	  getSpendReport(
+   105	    params: GatewaySpendReportParams,
+   106	  ): Promise<GatewaySpendReportResponse>;
+   107	
+   108	  /**
+   109	   * Returns detailed information about a specific generation by its ID,
+   110	   * including cost, token usage, latency, and provider details.
+   111	   */
+   112	  getGenerationInfo(
+   113	    params: GatewayGenerationInfoParams,
+   114	  ): Promise<GatewayGenerationInfo>;
+   115	
+   116	  /**
+   117	   * Creates a model for generating text embeddings.
+   118	   */
+   119	  embedding(modelId: GatewayEmbeddingModelId): EmbeddingModelV4;
+   120	
+   121	  /**
+   122	   * Creates a model for generating text embeddings.
+   123	   */
+   124	  embeddingModel(modelId: GatewayEmbeddingModelId): EmbeddingModelV4;
+   125	
+   126	  /**
+   127	   * @deprecated Use `embeddingModel` instead.
+   128	   */
+   129	  textEmbeddingModel(modelId: GatewayEmbeddingModelId): EmbeddingModelV4;
+   130	
+   131	  /**
+   132	   * Creates a model for generating images.
+   133	   */
+   134	  image(modelId: GatewayImageModelId): ImageModelV4;
+   135	
+   136	  /**
+   137	   * Creates a model for generating images.
+   138	   */
+   139	  imageModel(modelId: GatewayImageModelId): ImageModelV4;
+   140	
+   141	  /**
+   142	   * Creates a model for generating videos.
+   143	   */
+   144	  video(modelId: GatewayVideoModelId): Experimental_VideoModelV4;
+   145	
+   146	  /**
+   147	   * Creates a model for generating videos.
+   148	   */
+   149	  videoModel(modelId: GatewayVideoModelId): Experimental_VideoModelV4;
+   150	
+   151	  /**
+   152	   * Creates a model for reranking documents.
+   153	   */
+   154	  reranking(modelId: GatewayRerankingModelId): RerankingModelV4;
+   155	
+   156	  /**
+   157	   * Creates a model for reranking documents.
+   158	   */
+   159	  rerankingModel(modelId: GatewayRerankingModelId): RerankingModelV4;
+   160	
+   161	  /**
+   162	   * Creates a model for evaluating state against questions.
+   163	   */
+   164	  evaluation(modelId: GatewayEvaluationModelId): Experimental_EvaluationModelV4;
+   165	
+   166	  /**
+   167	   * Creates a model for evaluating state against questions.
+   168	   */
+   169	  evaluationModel(
+   170	    modelId: GatewayEvaluationModelId,
+   171	  ): Experimental_EvaluationModelV4;
+   172	
+   173	  /**
+   174	   * Creates a model for text-to-speech generation.
+   175	   */
+   176	  speech(modelId: GatewaySpeechModelId): SpeechModelV4;
+   177	
+   178	  /**
+   179	   * Creates a model for text-to-speech generation.
+   180	   */
+   590	
+   591	console.log(`Team balance: ${credits.balance} credits`);
+   592	console.log(`Team total used: ${credits.total_used} credits`);
+   593	```
+   594	
+   595	The `getCredits()` method returns your team's credit information based on the authenticated API key or OIDC token:
+   596	
+   597	- **balance** *number* - Your team's current available credit balance
+   598	- **total\_used** *number* - Total credits consumed by your team
+   599	
+   600	## Generation Lookup
+   601	
+   602	Look up detailed information about a specific generation by its ID, including cost, token usage, latency, and provider details. Generation IDs are available in `providerMetadata.gateway.generationId` on both `generateText` and `streamText` responses.
+   603	
+   604	When streaming, the generation ID is injected on the first content chunk, so you can capture it early in the stream without waiting for completion. This is especially useful in cases where a network interruption or mid-stream error could prevent you from receiving the final response — since the gateway records the final status server-side, you can use the generation ID to look up the results (including cost, token usage, and finish reason) later via `getGenerationInfo()`.
+   605	
+   606	```ts
+   607	import { gateway, generateText } from 'ai';
+   608	
+   609	// Make a request
+   610	const result = await generateText({
+   611	  model: gateway('anthropic/claude-sonnet-5.5'),
+   612	  prompt: 'Explain quantum entanglement briefly',
+   613	});
+   614	
+   615	// Get the generation ID from provider metadata
+   616	const generationId = result.providerMetadata?.gateway?.generationId as
+   617	  | string
+   618	  | undefined;
+   619	
+   620	// Look up detailed generation info
+   621	if (generationId) {
+   622	  const generation = await gateway.getGenerationInfo({ id: generationId });
+   623	
+   624	  console.log(`Model: ${generation.model}`);
+   625	  console.log(`Cost: $${generation.totalCost.toFixed(6)}`);
+   626	  console.log(`Latency: ${generation.latency}ms`);
+   627	  console.log(`Prompt tokens: ${generation.promptTokens}`);
+   628	  console.log(`Completion tokens: ${generation.completionTokens}`);
+   629	}
+   630	```
+   631	
+   632	With `streamText`, you can capture the generation ID from the first chunk via `stream`:
+   633	
+   634	```ts
+   635	import { gateway, streamText } from 'ai';
+   636	
+   637	const result = streamText({
+   638	  model: gateway('anthropic/claude-sonnet-5.5'),
+   639	  prompt: 'Explain quantum entanglement briefly',
+   640	});
+   641	
+   642	let generationId: string | undefined;
+   643	
+   644	for await (const part of result.stream) {
+   645	  if (!generationId && part.providerMetadata?.gateway?.generationId) {
+   646	    generationId = part.providerMetadata.gateway.generationId as string;
+   647	    console.log(`Generation ID (early): ${generationId}`);
+   648	  }
+   649	}
+   650	
+   651	// Look up cost and usage after the stream completes
+   652	if (generationId) {
+   653	  const generation = await gateway.getGenerationInfo({ id: generationId });
+   654	  console.log(`Cost: $${generation.totalCost.toFixed(6)}`);
+   655	  console.log(`Finish reason: ${generation.finishReason}`);
+   656	}
+   657	```
+   658	
+   659	You can also capture the generation ID for every completed model call with
+   660	`onLanguageModelCallEnd`. The callback runs before client-side tools execute,
+   661	so the metadata remains available even if the operation is later aborted while
+   662	a tool is running:
+   663	
+   664	```ts
+   665	import { gateway, generateText } from 'ai';
+   666	
+   667	await generateText({
+   668	  model: gateway('anthropic/claude-sonnet-5.5'),
+   669	  prompt: 'Explain quantum entanglement briefly',
+   670	  onLanguageModelCallEnd({ providerMetadata }) {
+   671	    const generationId = providerMetadata?.gateway?.generationId as
+   672	      | string
+   673	      | undefined;
+   674	
+   675	    if (generationId) {
+   676	      console.log(`Completed Gateway generation: ${generationId}`);
+   677	    }
+   678	  },
+   679	});
+   680	```
+   681	
+   682	The `getGenerationInfo()` method accepts:
+   683	
+   684	- **id** *string* - The generation ID to look up (format: `gen_<ulid>`, required)
+   685	
+   686	It returns a `GatewayGenerationInfo` object with the following fields:
+   687	
+   688	- **id** *string* - The generation ID
+   689	- **totalCost** *number* - Total cost in USD
+   690	- **upstreamInferenceCost** *number* - Upstream inference cost in USD (relevant for BYOK)
+   691	- **usage** *number* - Usage cost in USD (same as totalCost)
+   692	- **createdAt** *string* - ISO 8601 timestamp when the generation was created
+   693	- **model** *string* - Model identifier used
+   694	- **isByok** *boolean* - Whether Bring Your Own Key credentials were used
+   695	- **providerName** *string* - The provider that served this generation
+   696	- **streamed** *boolean* - Whether streaming was used
+   697	- **finishReason** *string* - Finish reason (e.g. `'stop'`)
+   698	- **latency** *number* - Time to first token in milliseconds
+   699	- **generationTime** *number* - Total generation time in milliseconds
+   700	- **promptTokens** *number* - Number of prompt tokens
+   701	- **completionTokens** *number* - Number of completion tokens
+   702	- **reasoningTokens** *number* - Reasoning tokens used (if applicable)
+   703	- **cachedTokens** *number* - Cached tokens used (if applicable)
+   704	- **cacheCreationTokens** *number* - Cache creation input tokens
+   705	- **billableWebSearchCalls** *number* - Number of billable web search calls
+   706	
+   707	## Examples
+   708	
+   709	### Basic Text Generation
+   710	
+   711	```ts
+   712	import { generateText } from 'ai';
+   713	
+   714	const { text } = await generateText({
+   715	  model: 'anthropic/claude-sonnet-5.5',
+  1650	              },
+  1651	            ],
+  1652	          },
+  1653	        },
+  1654	      ],
+  1655	    } satisfies GatewayProviderOptions,
+  1656	  },
+  1657	});
+  1658	
+  1659	// The model that produced the answers, the fallback when the condition matched.
+  1660	console.log(result.response.modelId);
+  1661	console.log(JSON.stringify(result.providerMetadata?.gateway?.routing, null, 2));
+  1662	```
+  1663	
+  1664	When the condition matches, `result.response.modelId` names the fallback model,
+  1665	and `providerMetadata.gateway.routing.modelAttempts` lists the primary and
+  1666	fallback attempts. The successful attempt of each stage carries its own
+  1667	`generationId`, `usage`, and cost fields, and the first fallback attempt lists
+  1668	the questions that triggered it in `triggeredBy`.
+  1669	
+  1670	#### Zero Data Retention Example
+  1671	
+  1672	Set `zeroDataRetention` to true to route requests to providers with zero data retention agreements with Vercel for AI Gateway. BYOK credentials are skipped by default, since your provider agreements differ from Vercel's. When this filter is on, AI Gateway routes only to providers Vercel has ZDR agreements with for the model. If you have BYOK keys marked as ZDR, those keys are tried first, then AI Gateway falls back to its system credentials. You are responsible for the accuracy of that marking. Applies to both account-wide and request-level ZDR. The request fails if no ZDR-eligible credentials are available. When `zeroDataRetention` is `false` or not specified, there is no enforcement of restricting routing. Request-level ZDR is only available for Vercel Pro and Enterprise plans.
+  1673	
+  1674	```ts
+  1675	import type { GatewayProviderOptions } from '@ai-sdk/gateway';
+  1676	import { generateText } from 'ai';
+  1677	
+  1678	const { text } = await generateText({
+  1679	  model: 'anthropic/claude-sonnet-5.5',
+  1680	  prompt: 'Analyze this sensitive document...',

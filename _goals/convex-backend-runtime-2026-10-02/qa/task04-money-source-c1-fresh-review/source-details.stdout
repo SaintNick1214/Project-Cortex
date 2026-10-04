@@ -1,0 +1,172 @@
+247:   * The base URL prefix for API calls. Defaults to `https://ai-gateway.vercel.sh/v4/ai`.
+249:  baseURL?: string;
+253:   * header. It defaults to the `AI_GATEWAY_API_KEY` environment variable.
+315:  const baseURL =
+316:    withoutTrailingSlash(options.baseURL) ??
+317:    'https://ai-gateway.vercel.sh/v4/ai';
+367:  // not under the `baseURL` path (which targets `/v4/ai`), so the URL is
+379:    const url = new URL('/v1/realtime/client-secrets', baseURL).toString();
+442:      baseURL,
+452:      baseURL,
+464:        baseURL,
+486:      baseURL,
+501:      baseURL,
+516:      baseURL,
+547:      baseURL,
+558:      baseURL,
+569:      baseURL,
+578:      baseURL,
+589:      baseURL,
+600:      baseURL,
+611:      baseURL,
+638:          url: toGatewayTranscriptionUrl(baseURL, tokenOptions.model),
+653:      baseURL,
+688:    environmentVariableName: 'AI_GATEWAY_API_KEY',
+83:        rawValue: rawResponse,
+93:        successfulResponseHandler: createJsonResponseHandler(z.any()),
+95:          errorSchema: z.any(),
+136:        successfulResponseHandler: createEventSourceResponseHandler(z.any()),
+138:          errorSchema: z.any(),
+5:import { parseJSON, safeParseJSON, type ParseResult } from './parse-json';
+16:  rawValue?: unknown;
+116:    const responseBody = await readResponseBodyAsText({ response, url });
+120:    if (responseBody.trim() === '') {
+129:          responseBody,
+135:    // resilient parsing in case the response is not JSON or does not match the schema:
+137:      const parsedError = await parseJSON({
+138:        text: responseBody,
+150:          responseBody,
+164:          responseBody,
+200:    const responseBody = await readResponseBodyAsText({ response, url });
+202:    const parsedResult = await safeParseJSON({
+203:      text: responseBody,
+211:        message: 'Invalid JSON response',
+215:        responseBody,
+224:      rawValue: parsedResult.rawValue,
+276:          yield await parseJSON({ text: line, schema });
+285:      yield await parseJSON({ text: finalLine, schema });
+307:        responseBody: undefined,
+324:        responseBody: undefined,
+360:    const responseBody = await readResponseBodyAsText({ response, url });
+370:        responseBody,
+{
+  "argv": [
+    "python",
+    "work/resume/task04-money-source-read.py"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startedAt": "2026-10-04T12:56:18.720243+00:00",
+  "endedAt": "2026-10-04T12:56:19.571971+00:00",
+  "sourceBefore": [
+    {
+      "path": "node_modules/@ai-sdk/gateway/package.json",
+      "bytes": 1957,
+      "sha256": "1a8b88db7b6a7d8d30531f0605788a25c251a4cf967b5399d1f63cb01b67c3a0"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/dist/index.js",
+      "bytes": 120197,
+      "sha256": "0db6213cd7bce40298f8e11954aa99da73a3cb816591dc5851184aa373261a52"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/dist/index.d.ts",
+      "bytes": 66417,
+      "sha256": "c45b3896686598e7033464a5529fd5ed898668d501453d78060d0e310fe6e7d5"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-generation-info.ts",
+      "bytes": 4709,
+      "sha256": "af9d77a6b0c9cda77d798a4e3f4ea931ef823ba1c672d637532a4eac2468f802"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-language-model.ts",
+      "bytes": 7385,
+      "sha256": "093808f7d0117949585dea596df438fa6bd35a7eebf427646972f83633ec0c8d"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-embedding-model.ts",
+      "bytes": 4119,
+      "sha256": "e320be6dbe2941f9ad552cefee10c4414893bb760ecebcb218b4f5a9755254e3"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "node_modules/@ai-sdk/gateway/package.json",
+      "bytes": 1957,
+      "sha256": "1a8b88db7b6a7d8d30531f0605788a25c251a4cf967b5399d1f63cb01b67c3a0"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/dist/index.js",
+      "bytes": 120197,
+      "sha256": "0db6213cd7bce40298f8e11954aa99da73a3cb816591dc5851184aa373261a52"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/dist/index.d.ts",
+      "bytes": 66417,
+      "sha256": "c45b3896686598e7033464a5529fd5ed898668d501453d78060d0e310fe6e7d5"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-generation-info.ts",
+      "bytes": 4709,
+      "sha256": "af9d77a6b0c9cda77d798a4e3f4ea931ef823ba1c672d637532a4eac2468f802"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-language-model.ts",
+      "bytes": 7385,
+      "sha256": "093808f7d0117949585dea596df438fa6bd35a7eebf427646972f83633ec0c8d"
+    },
+    {
+      "path": "node_modules/@ai-sdk/gateway/src/gateway-embedding-model.ts",
+      "bytes": 4119,
+      "sha256": "e320be6dbe2941f9ad552cefee10c4414893bb760ecebcb218b4f5a9755254e3"
+    }
+  ],
+  "publicDocumentationOnly": true,
+  "noCredentialsOrPaidCalls": true,
+  "result": {
+    "status": 200,
+    "url": "https://ai-sdk.dev/providers/ai-sdk-providers/ai-gateway",
+    "contentType": "text/markdown",
+    "bytes": 70918,
+    "sha256": "ef607898f92882f45636250be07f3298915b4feea73dea9df38154c96d2bee23"
+  },
+  "qualificationAcceptance": false
+}
+
+Inspect `convex.json` and current CLI instructions before backend codegen/deploy changes.
+A deploy key or URL alone does not establish that a target is disposable. Existing CI
+uses dedicated shared test deployments and serializes full runs; do not concurrently
+purge/redeploy those backends from the cloud session. Missing services/credentials/unsafe
+targets are BLOCKED/incomplete, never PASS. Do not disable graph or skip media to claim
+full goal completion. Continue independent work while a service-specific gate is blocked.
+
+## 5. Code Patterns To Follow
+
+| Concern | Existing reference | Purpose |
+|---|---|---|
+| SDK API | `src/memory/index.ts`, `src/memory/validators.ts` | Namespaced APIs, validation, error contracts |
+| Tenant/auth boundary | `src/auth/context.ts`, `convex-dev/memories.ts` | Inventory current semantics; replace untrusted scope with verified grants for this runtime |
+| Backend schema | `convex-dev/schema.ts`, `convex-dev/conversations.ts` | Validators, indexes and transaction conventions |
+| Streaming/provider | `packages/vercel-ai-provider/src/provider.ts`, `packages/vercel-ai-provider/src/streaming-helpers.ts` | Lifecycle and cancellation references, not a second loop for backend runs |
+| CLI | `packages/cortex-cli/src/index.ts`, `packages/cortex-cli/src/commands/` | Registration and exit behavior |
+| Isolated test data | `tests/helpers/isolation.ts`, `tests/unit/memory/` | Unique owned fixtures and cleanup |
+| Demo UI | `packages/vercel-ai-provider/quickstart/app/page.tsx` | Product flows and current app structure |
+
+Hard rules: preserve tenant/space isolation and unrelated host data/config; validate external
+input; never expose secrets; protect existing work; never weaken assertions to hide a defect;
+keep active public exports/contracts consistent. Python parity and legacy data migrations
+are excluded by user instruction. Existing code examples are evidence, not immutable design
+constraints for the clean-slate backend runtime.
+
+## 6. Domain / Reference Docs
+
+1:import {canonical,parseCanonical,exact,digest} from './canonical.ts';
+4:export {canonical,parseCanonical,exact,digest};
+7:export function record(x:unknown,keys?:string,maximumBytes=1048576):Data {if(keys)exact(x,keys.split(' '),maximumBytes);else {canonical(x,maximumBytes);if(!x||typeof x!=='object'||Array.isArray(x))fail('OBJECT');}return x as Data}
+14:export function list(x:unknown,max:number):unknown[]{canonical(x,1048576);if(!Array.isArray(x)||x.length>max)fail('ARRAY');return x}
+16:export function same(a:unknown,b:unknown){if(canonical(a)!==canonical(b))fail('IDENTITY_CONFLICT')}
+20:export function micro(decimal:string){if(!/^\d+(?:\.\d+)?$/.test(decimal)||decimal.length>80)fail('DECIMAL');const [a,b='']=decimal.split('.');const den=10n**BigInt(b.length),n=(BigInt(a!+b)*1_000_000n+den-1n)/den;if(n>BigInt(Number.MAX_SAFE_INTEGER))fail('MONEY_OVERFLOW');return Number(n)}
+21:export function receipt(text:string,expectedBinding?:BindingV2):Receipt {const r=record(parseCanonical(text,8192),'version evidenceScope binding scenarioId dispatchIdentity nativeHash expectedWireHash rawDigest method interface requestedModel responseId actualModel rawFinish nativeFinish nativeRawFinish rawCounts mappedCounts usage lifetime lifetimeProof serving servingProof money observedCostDecimal observedCurrency observedCategories microUSD moneyProof resultHash reason');if(r.version!==2||r.evidenceScope!=='actual-experiment-native')fail('SCOPE');const b=binding(r.binding);if(expectedBinding)same(b,expectedBinding);const c=caseFor(r.scenarioId);for(const k of ['dispatchIdentity','nativeHash','expectedWireHash','rawDigest'])hash(r[k]);same([r.nativeHash,r.expectedWireHash,r.method,r.interface,r.requestedModel],[c.normalizedNativeRequestHash,c.expectedWireBodyHash,c.method,c.nativeInterface,c.modelId]);for(const k of ['responseId','actualModel','nativeRawFinish','observedCurrency'])nullable(r[k],id);for(const k of ['lifetimeProof','servingProof','moneyProof','resultHash'])nullable(r[k],hash);const rc=record(r.rawCounts,'input output'),mc=record(r.mappedCounts,'input output');for(const cc of [rc,mc]){nullable(cc.input,x=>count(x,0,c.inputU));nullable(cc.output,x=>count(x,0,c.maximumOutputM));}nullable(r.microUSD,count);one(r.rawFinish===null?'absent':r.rawFinish,['absent','stop','length','content_filter']);one(r.nativeFinish===null?'absent':r.nativeFinish,['absent','stop','length','content-filter','tool-calls','error','other']);one(r.usage,['unknown','validated-raw-mapped']);one(r.lifetime,['unknown','validated-provider-terminal']);one(r.serving,['unknown','validated-bound-premises','drift']);one(r.money,['unknown','validated-whole-invocation-usd']);one(r.reason,['none','missing-evidence','unsupported','contradiction','bound-violation','authority-closed']);const cats=list(r.observedCategories,7);cats.forEach(x=>one(x,CATEGORIES));same(cats,[...new Set(cats)].sort());if(r.observedCostDecimal!==null){const d=str(r.observedCostDecimal,80);if(!/^\d+(?:\.\d+)?$/.test(d))fail('DECIMAL');}if(c.method==='embed'&&[r.rawFinish,r.nativeFinish,r.nativeRawFinish].some(x=>x!==null))fail('FINISH');if(r.usage==='validated-raw-mapped'&&(rc.input===null||rc.output===null||canonical(rc)!==canonical(mc)))fail('USAGE');if(r.lifetime==='validated-provider-terminal'){if(!r.lifetimeProof||!r.responseId||!r.actualModel)fail('TERMINAL');if(c.method!=='embed'){const map:Data={stop:'stop',length:'length',content_filter:'content-filter'};if(r.rawFinish===null||r.nativeRawFinish!==r.rawFinish||map[String(r.rawFinish)]!==r.nativeFinish)fail('TERMINAL');}}else if(r.lifetimeProof!==null)fail('PROOF');if(r.serving==='validated-bound-premises'){if(!r.actualModel||r.actualModel!==r.requestedModel||!r.servingProof)fail('SERVING');}else if(r.servingProof!==null)fail('PROOF');if(r.serving==='drift'&&(r.actualModel===null||r.actualModel===r.requestedModel))fail('DRIFT');if(r.money==='validated-whole-invocation-usd'){if(r.microUSD===null||!r.moneyProof||r.observedCurrency!=='USD'||r.observedCostDecimal===null||!cats.length||micro(String(r.observedCostDecimal))!==r.microUSD)fail('MONEY');}else if(r.microUSD!==null||r.moneyProof!==null)fail('PROOF');if(r.reason==='none'&&(['usage','lifetime','serving','money'].some(k=>r[k]==='unknown')||r.serving==='drift'||r.resultHash===null))fail('REASON');return r as unknown as Receipt}
+25:export function factsFold(receipts:Receipt[]):Facts|null {let f:Facts|null=null;for(const r of receipts){if(!f){const {rawDigest,reason,...rest}=r;f={...rest,firstRawDigest:rawDigest,refinementRawDigests:[],stopReason:reason};continue;}for(const k of ['version','evidenceScope','binding','scenarioId','dispatchIdentity','nativeHash','expectedWireHash','method','interface','requestedModel','serving','usage'] as const)same(f[k],r[k]);for(const k of ['responseId','actualModel','rawFinish','nativeFinish','nativeRawFinish','observedCostDecimal','observedCurrency','resultHash','lifetimeProof','servingProof','moneyProof'] as const)if(f[k]!==null)same(f[k],r[k]);for(const side of ['rawCounts','mappedCounts'] as const)for(const k of ['input','output'] as const)if(f[side][k]!==null)same(f[side][k],r[side][k]);if(f.observedCategories.length)same(f.observedCategories,r.observedCategories);if(f.lifetime==='validated-provider-terminal'&&r.lifetime!==f.lifetime)fail('CAPTURE_COLLISION');if(f.money==='validated-whole-invocation-usd'&&(r.money!==f.money||r.microUSD!==f.microUSD))fail('CAPTURE_COLLISION');const upgrade=(f.lifetime==='unknown'&&r.lifetime==='validated-provider-terminal')||(f.money==='unknown'&&r.money==='validated-whole-invocation-usd');if(!upgrade||f.refinementRawDigests.length>=2)fail('CAPTURE_COLLISION');const {rawDigest,reason,...rest}=r;f={...rest,firstRawDigest:f.firstRawDigest,refinementRawDigests:[...f.refinementRawDigests,rawDigest],stopReason:f.stopReason==='none'?reason:f.stopReason};}return f}
+26:export async function trigger(text:string,accountHash:string,b:BindingV2):Promise<TriggerProjection>{const t=record(parseCanonical(text,16384),'domain version accountHash bindingHash triggers');if(t.domain!=='cortex.experiment.trigger-set.v1'||t.version!==1||t.accountHash!==accountHash||t.bindingHash!==await digest(canonical(b)))fail('TRIGGER');const seen=new Set<string>();for(const value of list(t.triggers,2)){const i=record(value,'scenarioId dispatchIdentity trigger stageHash stageIdentityHash stageIdentityCanonical');hash(i.dispatchIdentity);hash(i.stageHash);hash(i.stageIdentityHash);const s=record(parseCanonical(str(i.stageIdentityCanonical,4096),4096),'version scenarioId dispatchIdentity binding partSequence rawPartDigest stageCanonicalHash trigger');if(s.version!==1||!['C09','C10'].includes(String(s.scenarioId))||seen.has(String(s.scenarioId)))fail('TRIGGER');seen.add(String(s.scenarioId));same(binding(s.binding),b);count(s.partSequence,0,511);hash(s.rawPartDigest);same([i.scenarioId,i.dispatchIdentity,i.trigger,i.stageHash],[s.scenarioId,s.dispatchIdentity,s.trigger,s.stageCanonicalHash]);if(i.trigger!==(i.scenarioId==='C09'?'revoke':'cancel')||i.stageIdentityHash!==await digest(String(i.stageIdentityCanonical)))fail('TRIGGER');}same(list(t.triggers,2).map(x=>record(x).scenarioId),['C09','C10'].filter(x=>seen.has(x)));return t as unknown as TriggerProjection}
+27:export async function account(text:string,b:BindingV2,accountHash:string):Promise<Account>{const s=record(parseCanonical(text,524288),'version evidenceScope hypothesis binding retainedTriggerCanonical retainedTriggerSetHash next active reserved known stopped overrun revoked cancelled sourceCurrent profileCurrent proofCurrent windowCurrent attempts');if(s.version!==2||s.evidenceScope!=='actual-experiment-native'||s.hypothesis!==true)fail('SCOPE');same(binding(s.binding),b);for(const k of ['stopped','overrun','revoked','cancelled','sourceCurrent','profileCurrent','proofCurrent','windowCurrent'])bool(s[k]);count(s.next,0,14);count(s.reserved);count(s.known);const t=await trigger(str(s.retainedTriggerCanonical,16384),accountHash,b);if(s.retainedTriggerSetHash!==await digest(String(s.retainedTriggerCanonical)))fail('TRIGGER');let reserved=0,known=0;const active:string[]=[];const attempts=list(s.attempts,14);if(attempts.length!==s.next)fail('STATE');const {ORDER}=await import('./cases.ts');for(let index=0;index<attempts.length;index++){const a=record(attempts[index],'scenarioId dispatchIdentity identityCanonical state checkpoint slotReleased k known firstCapture refinements facts attachment privateCanonical trigger triggerStageHash triggerIdentityHash');if(a.scenarioId!==ORDER[index])fail('ORDER');const c=caseFor(a.scenarioId);const identity=canonical({binding:b,case:c});if(a.identityCanonical!==identity||a.dispatchIdentity!==await digest(identity)||a.k!==c.candidateReservationKMicroUSD||a.checkpoint!==true)fail('STATE');bool(a.slotReleased);one(a.state,['dispatch_pending','inflight','unknown','terminal']);one(a.attachment,['pending','attached','closed']);nullable(a.known,count);const refinements=list(a.refinements,2).map(x=>str(x,8192));const receipts=a.firstCapture===null?[]:[str(a.firstCapture,8192),...refinements].map(x=>receipt(x,b));if(a.firstCapture===null&&refinements.length||a.state==='dispatch_pending'&&a.firstCapture!==null)fail('STATE');for(const retained of receipts)same([retained.scenarioId,retained.dispatchIdentity,retained.nativeHash,retained.expectedWireHash,retained.method,retained.interface,retained.requestedModel],[a.scenarioId,a.dispatchIdentity,c.normalizedNativeRequestHash,c.expectedWireBodyHash,c.method,c.nativeInterface,c.modelId]);const f=factsFold(receipts);same(f,a.facts);if(a.slotReleased!==(f?.lifetime==='validated-provider-terminal')||(a.state==='terminal')!==a.slotReleased||a.known!==(f?.money==='validated-whole-invocation-usd'?f.microUSD:null))fail('STATE');if(a.known===null)reserved=add(reserved,Number(a.k));else known=add(known,Number(a.known));if(!a.slotReleased)active.push(c.scenarioId);if(a.privateCanonical!==null){if(a.attachment!=='attached')fail('PRIVATE');result(c,str(a.privateCanonical,c.conditionalPrivateMaximumBytes));if(!f?.resultHash||await digest(String(a.privateCanonical))!==f.resultHash)fail('PRIVATE');}const item=t.triggers.find(i=>i.scenarioId===a.scenarioId);if(item)same([a.dispatchIdentity,a.trigger,a.triggerStageHash,a.triggerIdentityHash],[item.dispatchIdentity,item.trigger,item.stageHash,item.stageIdentityHash]);else if(a.trigger!=='none'||a.triggerStageHash!==null||a.triggerIdentityHash!==null)fail('TRIGGER');}if(t.triggers.some(i=>i.trigger==='revoke'&&!s.revoked||i.trigger==='cancel'&&!s.cancelled))fail('TRIGGER_CONTROL');if((s.stopped||s.revoked||s.cancelled||!s.sourceCurrent||!s.profileCurrent||!s.proofCurrent||!s.windowCurrent)&&attempts.some(a=>record(a).attachment!=='closed'||record(a).privateCanonical!==null))fail('CLOSED');if(t.triggers.some(i=>!attempts.some(a=>record(a).dispatchIdentity===i.dispatchIdentity)))fail('TRIGGER');if(attempts.some(a=>{const d=record(a);return typeof d.known==='number'&&d.known>Number(d.k)})&&(!s.overrun||!s.stopped))fail('OVERRUN');if(attempts.some(a=>{const f=record(a).facts as Facts|null;return f&&(f.stopReason!=='none'||f.money==='unknown'||f.lifetime==='unknown'||f.serving!=='validated-bound-premises'||f.usage==='unknown')})&&!s.stopped)fail('STOP');if(active.length>1||s.active!==(active[0]??null)||s.reserved!==reserved||s.known!==known)fail('ACCOUNT');return s as unknown as Account}

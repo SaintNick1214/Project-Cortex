@@ -1,0 +1,72 @@
+{
+  "utc": {
+    "current_time": "2026-10-04 13:03:35 UTC"
+  },
+  "status": "PUSHED_QA_ONLY",
+  "commit": "11cb57b81e2ce933a576444a981631cf0cc990c3",
+  "parent": "25efa41e9c40bd4e1cf6f03307a71368de8587ae",
+  "tree": "c1509b1825ce1a7811295312787fedad64a3b0c2",
+  "selectedPaths": 21046,
+  "literalGitSymlinks": 2,
+  "successfulTreeCalls": 219,
+  "binaryBlobs": [
+    {
+      "expected": "a338fe279857e63940c5b64cbfc2aceeefa59ae6",
+      "returned": "a338fe279857e63940c5b64cbfc2aceeefa59ae6",
+      "started": {
+        "current_time": "2026-10-04 12:41:40 UTC"
+      },
+      "ended": {
+        "current_time": "2026-10-04 12:41:41 UTC"
+      }
+    },
+    {
+      "expected": "37eacc2613b3a8ceb7d274a30057330678ff4a45",
+      "returned": "37eacc2613b3a8ceb7d274a30057330678ff4a45",
+      "started": {
+        "current_time": "2026-10-04 12:41:41 UTC"
+      },
+      "ended": {
+        "current_time": "2026-10-04 12:41:41 UTC"
+      }
+    }
+  ],
+  "archiveBlobs": [
+    {
+      "i": 0,
+      "start": {
+        "current_time": "2026-10-04 12:41:16 UTC"
+      },
+      "end": {
+        "current_time": "2026-10-04 12:41:17 UTC"
+      },
+      "bytes": 2034648,
+      "expected": "2f3deff18349866c8ee5ed3935b0c20b0ac0f9b1",
+      "returned": "2f3deff18349866c8ee5ed3935b0c20b0ac0f9b1"
+    }
+  ],
+  "parentReviewManifestBlob": {
+    "expected": "281a08fde230e6e8293a0983e584c95d7c15c17b",
+    "returned": "281a08fde230e6e8293a0983e584c95d7c15c17b",
+    "started": {
+      "current_time": "2026-10-04 12:42:42 UTC"
+    },
+    "ended": {
+      "current_time": "2026-10-04 12:42:46 UTC"
+    }
+  },
+  "localTransportTreeExact": true,
+  "allSelectedBytesReverified": true,
+  "liveLocalHeadAndIndexUntouched": true,
+  "draftPr": 134,
+  "base": "dev",
+  "prHeadSnapshotLagObservedThenFreshReadVerified": true,
+  "rawMissingPaths": "one SOURCE closureaudit exact archive materialization required, plus checkpoint28 for original custody indexes; no direct-file closure claim",
+  "actualNativeOrPaidCalls": 0,
+  "sourceQualificationGranted": false,
+  "plan": "work/resume/connector-transfer-plan-29-transport.json",
+  "orchestrationFailuresRetained": [
+    "encoded single-entry5MiB bound blocked parent manifest before remote treecalls; failed partialbatch files and script preserved; blob transport with exact hash fixes size",
+    "two early metadata reads before batch writer completion failed; no remote changes from those reads"
+  ]
+}

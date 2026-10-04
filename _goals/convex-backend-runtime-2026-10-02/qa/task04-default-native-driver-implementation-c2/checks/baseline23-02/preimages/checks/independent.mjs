@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {Harness} from './harness.mjs';
+import * as guard from '../convex/guard.ts';
+import {BINDING,ACCOUNT_HASH} from '../convex/installed.ts';
+import {CASES} from '../convex/cases.ts';
+import {canonical,account,factsFold} from '../convex/validate.ts';
+import {observeGenerate} from '../convex/observer.ts';
+const h=await new Harness().setup();await h.reserve();await h.enter();const a=h.state().attempts[0];const now=Date.now();const ctx={binding:BINDING,scenarioId:'C01',dispatchIdentity:a.dispatchIdentity,enteredAt:now,now,originalDeadline:now+15000,sourceClosureHash:BINDING.installedClosureHash};
+const native={content:[{type:'text',text:'DUMMY'}],finishReason:{unified:'stop',raw:'stop'},usage:{inputTokens:{total:1},outputTokens:{total:1}},response:{id:'DUMMY-response',modelId:'openai/gpt-4o-mini',body:{id:'DUMMY-response',model:'openai/gpt-4o-mini',choices:[{index:0,message:{content:'DUMMY'},finish_reason:'stop'}],usage:{prompt_tokens:1,completion_tokens:1,total_tokens:2,cost:'0'}}}};
+const obs=await observeGenerate(ctx,native);await h.mutation(guard.capture,{scenarioId:'C01',dispatchIdentity:a.dispatchIdentity,observationCanonical:canonical(obs.receipt,8192),contextCanonical:canonical(ctx),transcriptCanonical:obs.transcriptCanonical});
+assert.equal((await account(canonical(h.state(),524288),BINDING,ACCOUNT_HASH)).active,'C01');
+const results=[{name:'valid unknown C01 retained account positive control',observed:'accepted',expected:'accepted',pass:true}];
+async function trial(name,change){const s=h.state();change(s);try{await account(canonical(s,524288),BINDING,ACCOUNT_HASH);results.push({name,observed:'accepted',expected:'rejected',pass:false})}catch(e){results.push({name,observed:'rejected',error:String(e),expected:'rejected',pass:true})}}
+await trial('negative arithmetic known corruption',s=>s.known++);
+await trial('foreign receipt scenario/dispatch moved into C01 attempt',s=>{const c=CASES.find(x=>x.scenarioId==='C02');const r={...JSON.parse(s.attempts[0].firstCapture),scenarioId:'C02',dispatchIdentity:'b'.repeat(64),nativeHash:c.normalizedNativeRequestHash,expectedWireHash:c.expectedWireBodyHash,method:c.method,interface:c.nativeInterface,requestedModel:c.modelId};s.attempts[0].firstCapture=canonical(r,8192);s.attempts[0].facts=factsFold([r]);});
+await trial('foreign dispatch only moved into C01 receipt',s=>{const r={...JSON.parse(s.attempts[0].firstCapture),dispatchIdentity:'b'.repeat(64)};s.attempts[0].firstCapture=canonical(r,8192);s.attempts[0].facts=factsFold([r]);});
+await trial('unknown retained capture with impossible dispatch_pending state',s=>{s.attempts[0].state='dispatch_pending'});
+await trial('attached status without privateCanonical/result delivery',s=>{s.stopped=false;s.attempts[0].attachment='attached';s.attempts[0].privateCanonical=null;});
+console.log(JSON.stringify({scope:'DUMMY_ONLY_INDEPENDENT_EXACT_SOURCE',results}));
+assert.equal(results.filter(r=>!r.pass).length,0,'semantic account adversaries must reject');

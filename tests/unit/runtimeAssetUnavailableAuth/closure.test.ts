@@ -8,7 +8,6 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import ts from 'typescript';
 import { execFileSync } from 'node:child_process';
-import os from 'node:os';
 import path from 'node:path';
 
 type Native = { isPublic?: boolean; isInternal?: boolean; isQuery?: boolean; exportArgs(): string };
@@ -206,10 +205,11 @@ it('accepted22 declarations stay literal-identical;17 original validators unchan
   expect(crypto.createHash('sha256').update(fs.readFileSync(archivedArtifact)).digest('hex')).toBe('15959b6cbc5126425c40a16d7a473cf0c353211b78b677e51660720abe7a9c14');
   const current = declarations(fs.readFileSync(archivedArtifact, 'utf8')); expect(accepted).toHaveLength(22);
   for (const row of accepted) { const text = current.get(row.path.split(':')[1])!.declaration; expect(text).toBe(row.declaration); expect(crypto.createHash('sha256').update(text).digest('hex')).toBe(row.sha256); }
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'cortex-asset-index-preservation-'));
+  fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
+  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), 'cortex-asset-index-preservation-'));
   try {
     const composition = JSON.parse(execFileSync(process.execPath,
-      ['_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs', directory],
+      ['_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs', directory],
       { encoding: 'utf8' }));
     expect(composition.exactCurrentRepair.wholeByteAuthorizedEdits).toBe(3);
     expect(composition.exactCurrentRepair.postHashes).toEqual({

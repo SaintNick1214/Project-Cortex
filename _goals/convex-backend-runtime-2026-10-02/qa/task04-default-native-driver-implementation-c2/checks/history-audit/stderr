@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/../scripts/audit-history.py", line 5, in <module>
+    p=q/name;manifest=p/'qa-manifest.json';m=json.loads(manifest.read_text());rows=m['rows'];expected={row['path']:(row['bytes'],row['sha256']) for row in rows};actual={}
+                                                                                   ~^^^^^^^^
+KeyError: 'rows'

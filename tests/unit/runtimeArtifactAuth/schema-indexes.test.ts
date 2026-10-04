@@ -3,6 +3,10 @@ import { describe, expect, test } from "@jest/globals";
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import schema from "../../../convex-dev/schema";
+import fs from "node:fs";
+import path from "node:path";
+import { execFileSync } from "node:child_process";
+
 
 import { fixture, native } from "./fixture";
 
@@ -22,7 +26,19 @@ describe("deployable native schema indexes", () => {
   });
 
   test("all exported tables, including runtime schema fragments, have unique index field sequences", () => {
-    expect(Object.keys(schema.tables)).toHaveLength(26);
+    fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
+  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), "cortex-current-schema-composition-"));
+    let baselineNames: string[];
+    try {
+      const composition = JSON.parse(execFileSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs", directory], { encoding: "utf8" }));
+      const baseline = JSON.parse(fs.readFileSync(composition.exactCurrentRepair.nativeWitness, "utf8"));
+      baselineNames = baseline.definitions.map((row: { table: string }) => row.table);
+      expect(composition.currentComposition.baselineProjectionHash).toBe("07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d");
+      expect(composition.currentComposition.totals).toEqual({ baselineTables: 26, additiveTables: 5, currentTables: 31, indexes: 184, policyInternal: 16 });
+    } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+    expect(fs.existsSync(directory)).toBe(false);
+    expect(baselineNames!).toHaveLength(26);
+    expect(Object.keys(schema.tables).filter(table => baselineNames!.includes(table))).toEqual(baselineNames!);
     for (const [table, definition] of Object.entries(schema.tables)) {
       expect({ table, duplicates: duplicateIndexes(definition[" indexes"]()) })
         .toEqual({ table, duplicates: [] });

@@ -1,0 +1,27 @@
+import pathlib,json,hashlib,os,subprocess,datetime
+root=pathlib.Path.cwd();subject=root/'_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4';qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-root-execution-c1';qa.mkdir()
+transition=json.loads((subject/'source-transition.json').read_text());pre=json.loads((subject/'source-before.json').read_text())['sources'];post=json.loads((subject/'source-runtime.json').read_text())['sources'];assert len(pre)==len(post)==136
+assert hashlib.sha256((subject/'proposed-four-file-exact.patch').read_bytes()).hexdigest()=='404dcbff1fbe2fdf783dcd46c03d3baa9c4b8fff4c6e9d3eb7128873b6c3c223'
+archive=qa/'source-pre';archive.mkdir();before=[]
+for row in pre:
+ p=root/row['path'];b=p.read_bytes();h=hashlib.sha256(b).hexdigest();assert h==row['sha256'];(archive/h).write_bytes(b);before.append(dict(path=row['path'],bytes=len(b),sha256=h))
+for p in [pathlib.Path(__file__),*subject.glob('*.mjs'),subject/'source-before.json',subject/'source-runtime.json',subject/'source-transition.json',subject/'proposed-four-file-exact.patch']:
+ b=p.read_bytes();h=hashlib.sha256(b).hexdigest();(archive/h).write_bytes(b);before.append(dict(path=str(p.relative_to(root)),bytes=len(b),sha256=h))
+(qa/'source-before.json').write_text(json.dumps(before,indent=2)+'\n')
+def command(phase):
+ argv=['node',str(subject/'release-preconditions.mjs'),phase];start=datetime.datetime.now(datetime.timezone.utc).isoformat();r=subprocess.run(argv,cwd=root,capture_output=True);end=datetime.datetime.now(datetime.timezone.utc).isoformat();(qa/(phase+'.stdout')).write_bytes(r.stdout);(qa/(phase+'.stderr')).write_bytes(r.stderr);(qa/(phase+'-receipt.json')).write_text(json.dumps(dict(argv=argv,cwd=str(root),startedAt=start,endedAt=end,exit=r.returncode),indent=2)+'\n');assert r.returncode==0
+command('PRE');events=[]
+for row in transition['changedOnly']:
+ p=root/row['path'];b=(subject/'postimages'/row['path']).read_bytes();assert len(b)==row['afterBytes'] and hashlib.sha256(b).hexdigest()==row['afterSHA256'];assert hashlib.sha256(p.read_bytes()).hexdigest()==row['beforeSHA256'];assert not p.is_symlink() and p.stat().st_nlink==1
+ fd=os.open(p,os.O_WRONLY|os.O_TRUNC|os.O_NOFOLLOW)
+ try:
+  offset=0
+  while offset<len(b):
+   n=os.write(fd,b[offset:]);assert n>0;offset+=n
+  os.fsync(fd)
+ finally:os.close(fd)
+ events.append(dict(path=row['path'],beforeSHA256=row['beforeSHA256'],afterSHA256=hashlib.sha256(p.read_bytes()).hexdigest(),utc=datetime.datetime.now(datetime.timezone.utc).isoformat()))
+command('POST');after=[]
+for row in post:
+ p=root/row['path'];b=p.read_bytes();h=hashlib.sha256(b).hexdigest();assert h==row['sha256'] and len(b)==row['bytes'];after.append(dict(path=row['path'],bytes=len(b),sha256=h))
+(qa/'source-after.json').write_text(json.dumps(after,indent=2)+'\n');(qa/'splice-receipt.json').write_text(json.dumps(dict(status='EXACT_FOUR_POSTIMAGES_APPLIED',events=events,unchangedOtherRows=132,all136PREAndPOSTVerified=True,rootProductOrConfigModified=False,actualNativeOrPaidCalls=0,actual454='NEXT_REQUIRED'),indent=2)+'\n');print(json.dumps(dict(status='EXACT_FOUR_POSTIMAGES_APPLIED',files=4,all136PREAndPOSTVerified=True)))
