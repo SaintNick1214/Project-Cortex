@@ -1,0 +1,92 @@
+{
+  "candidate": "C5",
+  "previous": [
+    {
+      "candidate": "c1",
+      "freeze": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/runtime-freeze.json",
+        "sha256": "222473222323c6b7948fe093cf9a5d0ac987366f01aad48caa64cfe2f154afd6",
+        "bytes": 54420
+      },
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/qa-manifest.json",
+        "sha256": "7f2c3bf55431804d865dd4feb2a283167eb051d7041a330d1f2b6af888120391",
+        "bytes": 48050
+      }
+    },
+    {
+      "candidate": "c2",
+      "freeze": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2/runtime-freeze.json",
+        "sha256": "f5ee7dc86a258c2e5c49ccd8f3e6200b6d7b6390d190ce32909fc5a3aff2dfc9",
+        "bytes": 45505
+      },
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2/qa-manifest.json",
+        "sha256": "182f270af595de0a0d2f284728172a0028ec64aa2a23c63847660e35ea0cbd00",
+        "bytes": 39691
+      }
+    },
+    {
+      "candidate": "c3",
+      "freeze": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c3/runtime-freeze.json",
+        "sha256": "c53108ab96aa64a29f294b5c23a66ca543838a673ad5e094c6c5f46fd0a1a3c6",
+        "bytes": 46750
+      },
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c3/qa-manifest.json",
+        "sha256": "d917358dc6bf704fce98011573b7164cec464a8f44e659d7085f266c0783862d",
+        "bytes": 40871
+      }
+    },
+    {
+      "candidate": "c4",
+      "freeze": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/runtime-freeze.json",
+        "sha256": "be6217eea447b0e9b7d85ab3b0b099c61cd4e85af1235f066293c71092ed31ab",
+        "bytes": 48262
+      },
+      "manifest": {
+        "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/qa-manifest.json",
+        "sha256": "1884c3129dcd7bb69f3f9b4429036feb4e3bbf5ba75c00d0ed35771fd6d99ffd",
+        "bytes": 42136
+      }
+    }
+  ],
+  "C4ActualFailure": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c4-execution/report.md",
+      "sha256": "f3f5c7d119168f1829a8a6f74ccbcb40f63efa139c7ebf3ee3b164a0cb176148",
+      "bytes": 1051
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c4-execution/qa-manifest.json",
+      "sha256": "043c668f30681e292640126a0246a8d305bc1ab45a69ceea7e01d3e68dbcf346",
+      "bytes": 6695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c4-execution/codegen-synthetic.json",
+      "sha256": "328e64332c23e181c3254e497620c728264c25c472db852524a480a3b79e6b36",
+      "bytes": 1918
+    }
+  ],
+  "C4Failure": "official deploy/codegen/enabled typecheckPASS;sole native apiSpec ticket assertions complete thenformatted publication writeQA_BYTES;rawfullspecNOT_RETAINED;no behavioral suite/rows/storage/model;project3139060helpful-possum-136 physicallyretired delete200GET404in5calls;oneCLIgroupterminal",
+  "newIdentity": {
+    "version": 1,
+    "operation": "ab31702e-0cbc-4dbc-ac89-42c9c4c65411",
+    "purpose": "task04-native-admission-c5",
+    "projectName": "cortex-task04-admission-disposable-c0edc422e0fa",
+    "projectSlug": "cortex-task04-admission-disposable-c0edc422e0fa",
+    "kind": "cloud",
+    "deploymentType": "dev",
+    "productionDeployment": false,
+    "sharedCiTarget": false,
+    "privateEnvironmentFile": "work/backend-runtime/task04-native-admission-c5/deploy.env",
+    "provisionCalls": 5,
+    "provisionDeadlineMs": 150000,
+    "retirementCalls": 5,
+    "retirementDeadlineMs": 180000,
+    "runId": "admission-fedba17b5e0bd25fe858b396256b698c"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "candidate": "C5",
+  "actualServiceEvidence": false,
+  "measurements": [
+    {
+      "case": "preserved-C4-writer-red",
+      "basis": "SYNTHETIC_FULL281_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE",
+      "registrations": 281,
+      "rawBaselineBytes": 198852,
+      "rawWorstBytes": 256000,
+      "functionsCompactBytes": 191397,
+      "equalityCompactBytes": 56265,
+      "C4FormattedReceiptBytes": 564697,
+      "perArtifactCeiling": 256000,
+      "worstBundleUpperBoundBytes": 503719
+    },
+    {
+      "case": "full281-publication-writer-reader",
+      "phase": "synthetic",
+      "source": "OFFLINE_SYNTHETIC_NOT_NATIVE",
+      "basis": "SYNTHETIC_FULL281_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE",
+      "registrations": 281,
+      "rawBaselineBytes": 198852,
+      "rawWorstBytes": 256000,
+      "functionsCompactBytes": 191397,
+      "equalityCompactBytes": 56265,
+      "C4FormattedReceiptBytes": 564697,
+      "perArtifactCeiling": 256000,
+      "worstBundleUpperBoundBytes": 503719,
+      "bundleBytes": 304972,
+      "chunks": [
+        128000,
+        128000,
+        48972
+      ],
+      "receiptBytes": 1279,
+      "phaseEvidenceBytes": 564074
+    },
+    {
+      "case": "full281-publication-writer-reader",
+      "phase": "empty",
+      "source": "OFFLINE_SYNTHETIC_NOT_NATIVE",
+      "basis": "SYNTHETIC_FULL281_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE",
+      "registrations": 281,
+      "rawBaselineBytes": 198852,
+      "rawWorstBytes": 256000,
+      "functionsCompactBytes": 191397,
+      "equalityCompactBytes": 56265,
+      "C4FormattedReceiptBytes": 564697,
+      "perArtifactCeiling": 256000,
+      "worstBundleUpperBoundBytes": 503719,
+      "bundleBytes": 304968,
+      "chunks": [
+        128000,
+        128000,
+        48968
+      ],
+      "receiptBytes": 1267,
+      "phaseEvidenceBytes": 1128104
+    }
+  ],
+  "rawResponseBody": "exact bytes delivered by fetch Response.body BEFORE UTF8/Convex decoding; never reserialized raw",
+  "bundleCap": 512000,
+  "chunkCap": 128000,
+  "maxChunks": 4,
+  "perArtifactCap": 256000,
+  "metadataManifestReceiptCap": 16384,
+  "bothPhaseReservedBytes": 1634304,
+  "bothPhaseReservedRows": 16,
+  "sharedJournalEvidenceCap": 8388608,
+  "sharedRowsCap": 6000,
+  "sourceBoundProtocol": [
+    {
+      "path": "node_modules/convex/src/browser/http_client.ts",
+      "sha256": "dc60f9b2b2dbb322c4c70c6237aafdc596aa5f04c96c74205e2125d15a44b0f0",
+      "bytes": 19078
+    },
+    {
+      "path": "node_modules/convex/src/values/value.ts",
+      "sha256": "421dc6427bbf5dcac24c8dce63188fe78e04ea77a35b59161698c5332777bca5",
+      "bytes": 15232
+    }
+  ]
+}

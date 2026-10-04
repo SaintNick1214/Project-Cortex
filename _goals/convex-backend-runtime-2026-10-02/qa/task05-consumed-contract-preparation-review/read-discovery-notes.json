@@ -1,0 +1,19 @@
+{
+  "readOnlyDiscoveryErrors": [
+    {
+      "operation": "initial rg path discovery",
+      "result": "qa, roles, skills shorthand paths absent; corrected to .agents and goal qa",
+      "rawAvailable": "session tool transcript; no filesystem raw capture"
+    },
+    {
+      "operation": "read guessed qa/task04-budget-ledger-b16-review/report.md",
+      "result": "path absent; found actual task04-admission-implementation-c2-review/report.md",
+      "stderr": "sed: can't read _goals/convex-backend-runtime-2026-10-02/qa/task04-budget-ledger-b16-review/report.md: No such file or directory",
+      "rawAvailable": "session tool transcript; no filesystem raw full capture"
+    }
+  ],
+  "behavioralRuns": 0,
+  "testDiscovery": "NOT_RUN",
+  "testSkips": "N/A",
+  "networkServicesGitCredentialsUI": "NOT_RUN"
+}

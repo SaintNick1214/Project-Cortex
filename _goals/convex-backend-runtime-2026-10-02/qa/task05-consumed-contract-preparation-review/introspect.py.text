@@ -1,0 +1,44 @@
+from pathlib import Path
+import json,hashlib,datetime
+R=Path('/workspace/Project-Cortex'); Q=R/'_goals/convex-backend-runtime-2026-10-02/qa/task05-consumed-contract-preparation-review'
+P=R/'_goals/convex-backend-runtime-2026-10-02/qa/task05-canonical-transcript-preparation'
+ranges={
+'node_modules/@convex-dev/agent/package.json':[(1,95)],
+'node_modules/@convex-dev/agent/src/vercel/client/messages.ts':[(1,136)],
+'node_modules/@convex-dev/agent/src/client/messages.ts':[(1,150)],
+'node_modules/@convex-dev/agent/src/component/messages.ts':[(51,112),(133,180),(184,212),(235,325),(537,583),(731,802)],
+'node_modules/@convex-dev/agent/src/vercel/client/saveInputMessages.ts':[(1,125)],
+'node_modules/@convex-dev/agent/src/validators.ts':[(525,555),(580,595)],
+'node_modules/@convex-dev/agent/dist/vercel/client/messages.js':[(1,48)],
+'node_modules/@convex-dev/agent/dist/client/messages.js':[(1,75)],
+'node_modules/@convex-dev/agent/dist/component/messages.js':[(14,70),(145,190),(393,430),(543,597)],
+'node_modules/@convex-dev/agent/dist/vercel/index.js':[(24,46),(335,374)],
+'convex-dev/runtimeModelPolicy.ts':[(173,208),(256,301),(377,390)],
+'convex-dev/runtimeGateway.ts':[(1,67),(199,216)],
+'convex-dev/runtimeMemoryRepository.ts':[(78,140),(225,265),(274,293)],
+'src/domain/sources.ts':[(18,39),(120,143),(230,249)],
+'_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/convex/runtime.ts':[(93,120)],
+'_research/convex-ai-gateway-2026-10-02/architecture.md':[(77,110),(172,182)],
+'_goals/convex-backend-runtime-2026-10-02/goal.md':[(18,43)],
+'convex-dev/conversations.ts':[(150,170),(411,450)],
+'convex-dev/a2a.ts':[(21,48),(640,677),(746,763)],
+'convex-dev/agents.ts':[(87,113)],
+'convex-dev/memorySpaces.ts':[(102,128)],
+'convex-dev/runtimeRegistryStats.ts':[(1,99)]}
+full=['.agents/roles/pessimistic-judge.md','.agents/skills/judge-task/SKILL.md','_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md','_research/convex-ai-gateway-2026-10-02/decision-gates.md','_goals/convex-backend-runtime-2026-10-02/qa/task01/contracts.md','_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c2-review/report.md']
+full+=['_goals/convex-backend-runtime-2026-10-02/tasks/'+f for f in ['03-authorization.md','05-transcripts-runs.md','06-additive-installation.md','07-agent-streams.md','08-memory-pipeline.md','09-text-client-slice.md']]
+rows=[]; snippets=[]
+for path in list(ranges)+full:
+ b=(R/path).read_bytes(); rows.append({'path':path,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}); lines=b.decode().splitlines()
+ snippets.append('\nSOURCE '+path+'\n')
+ for start,end in ranges.get(path,[(1,len(lines))]):
+  snippets.extend(f'{n}: {lines[n-1]}' for n in range(start,min(end,len(lines))+1))
+(Q/'raw-source-context.txt').write_text('\n'.join(snippets)+'\n')
+(Q/'additional-source-hashes.json').write_text(json.dumps(rows,indent=2)+'\n')
+j=json.loads((P/'source-evidence.json').read_text()); verified=[]
+for e in j['sourceEvidence']:
+ b=(R/e['path']).read_bytes(); verified.append({'path':e['path'],'bytesMatch':len(b)==e['bytes'],'sha256Match':hashlib.sha256(b).hexdigest()==e['sha256']})
+assert len(verified)==55 and all(v['bytesMatch'] and v['sha256Match'] for v in verified)
+assert hashlib.sha256((P/'report.md').read_bytes()).hexdigest()==j['reportSha256']
+(Q/'post-source-verification.json').write_text(json.dumps({'checkedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sources':verified,'matched':55,'reportSelfHashMatches':True},indent=2)+'\n')
+print(json.dumps({'scope':'offline source introspection only','historicalHashesVerified':55,'additionalSources':len(rows),'componentApi':'save/update/delete/list inspected in src and resolved dist','nativeSemanticProbe':'NOT_RUN','productTests':'NOT_RUN','discovery':'NOT_RUN; no application test suite selected','skippedTests':'N/A; no tests executed'}))
