@@ -1,0 +1,941 @@
+{
+  "inputs": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/_generated/server.js": {
+      "bytes": 3872,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuthSchema.ts": {
+      "bytes": 3515,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuth.ts": {
+      "bytes": 23246,
+      "imports": [
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/_generated/server.js",
+          "kind": "import-statement",
+          "original": "./_generated/server"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuthSchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuthSchema"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts": {
+      "bytes": 3259,
+      "imports": [],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/extraction.ts": {
+      "bytes": 10991,
+      "imports": [],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/sources.ts": {
+      "bytes": 13583,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/extraction.ts",
+          "kind": "import-statement",
+          "original": "./extraction.js"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "./profile.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeMemoryRepository.ts": {
+      "bytes": 24131,
+      "imports": [
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/sources.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/sources"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuth.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuth"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeWorkerAuth.ts": {
+      "bytes": 13928,
+      "imports": [
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuth.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuth"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/sources.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/sources"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeMemoryRepository.ts",
+          "kind": "import-statement",
+          "original": "./runtimeMemoryRepository"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/model-policy.ts": {
+      "bytes": 28083,
+      "imports": [
+        {
+          "path": "zod",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "./profile.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationManifest.ts": {
+      "bytes": 4302,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeModelPolicyBootstrap.ts": {
+      "bytes": 2795,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationManifest.ts",
+          "kind": "import-statement",
+          "original": "./qualificationManifest"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimePolicySchema.ts": {
+      "bytes": 5313,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuthSchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuthSchema"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/model-policy.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/model-policy"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeModelPolicy.ts": {
+      "bytes": 88676,
+      "imports": [
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "zod",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/_generated/server.js",
+          "kind": "import-statement",
+          "original": "./_generated/server"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuthSchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuthSchema"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuth.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuth"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeMemoryRepository.ts",
+          "kind": "import-statement",
+          "original": "./runtimeMemoryRepository"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeWorkerAuth.ts",
+          "kind": "import-statement",
+          "original": "./runtimeWorkerAuth"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/model-policy.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/model-policy"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeModelPolicyBootstrap.ts",
+          "kind": "import-statement",
+          "original": "./runtimeModelPolicyBootstrap"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimePolicySchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimePolicySchema"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeMemorySchema.ts": {
+      "bytes": 4630,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/productionSchema.ts": {
+      "bytes": 54581,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuthSchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuthSchema"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeMemorySchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeMemorySchema"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimePolicySchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimePolicySchema"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/schema.ts": {
+      "bytes": 613,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/productionSchema.ts",
+          "kind": "import-statement",
+          "original": "./productionSchema"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationOwned.ts": {
+      "bytes": 13957,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/_generated/server.js",
+          "kind": "import-statement",
+          "original": "./_generated/server"
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuthSchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuthSchema"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/model-policy.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/model-policy"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/schema.ts",
+          "kind": "import-statement",
+          "original": "./schema"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationManifest.ts",
+          "kind": "import-statement",
+          "original": "./qualificationManifest"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeModelPolicy.ts",
+          "kind": "import-statement",
+          "original": "./runtimeModelPolicy"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationCapture.ts": {
+      "bytes": 7955,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/_generated/server.js",
+          "kind": "import-statement",
+          "original": "./_generated/server"
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuthSchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuthSchema"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/model-policy.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/model-policy"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        }
+      ],
+      "format": "esm"
+    },
+    "convex-dev/_generated/server.js": {
+      "bytes": 3872,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "convex-dev/runtimeAuthSchema.ts": {
+      "bytes": 3515,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "convex-dev/runtimeMemorySchema.ts": {
+      "bytes": 4630,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/profile.ts": {
+      "bytes": 3259,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/domain/extraction.ts": {
+      "bytes": 10991,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/domain/sources.ts": {
+      "bytes": 13583,
+      "imports": [
+        {
+          "path": "src/domain/extraction.ts",
+          "kind": "import-statement",
+          "original": "./extraction.js"
+        },
+        {
+          "path": "src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "./profile.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "convex-dev/runtimeAuth.ts": {
+      "bytes": 23246,
+      "imports": [
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex-dev/_generated/server.js",
+          "kind": "import-statement",
+          "original": "./_generated/server"
+        },
+        {
+          "path": "convex-dev/runtimeAuthSchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuthSchema"
+        }
+      ],
+      "format": "esm"
+    },
+    "convex-dev/runtimeMemoryRepository.ts": {
+      "bytes": 24131,
+      "imports": [
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        },
+        {
+          "path": "src/domain/sources.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/sources"
+        },
+        {
+          "path": "convex-dev/runtimeAuth.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuth"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/domain/recall.ts": {
+      "bytes": 16404,
+      "imports": [],
+      "format": "esm"
+    },
+    "convex-dev/runtimeMemoryServices.ts": {
+      "bytes": 8399,
+      "imports": [
+        {
+          "path": "src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        },
+        {
+          "path": "src/domain/sources.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/sources"
+        },
+        {
+          "path": "src/domain/recall.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/recall"
+        },
+        {
+          "path": "convex-dev/runtimeMemoryRepository.ts",
+          "kind": "import-statement",
+          "original": "./runtimeMemoryRepository"
+        }
+      ],
+      "format": "esm"
+    },
+    "convex-dev/runtimeMemory.ts": {
+      "bytes": 11674,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex-dev/_generated/server.js",
+          "kind": "import-statement",
+          "original": "./_generated/server"
+        },
+        {
+          "path": "convex-dev/runtimeAuthSchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeAuthSchema"
+        },
+        {
+          "path": "convex-dev/runtimeMemorySchema.ts",
+          "kind": "import-statement",
+          "original": "./runtimeMemorySchema"
+        },
+        {
+          "path": "convex-dev/runtimeMemoryRepository.ts",
+          "kind": "import-statement",
+          "original": "./runtimeMemoryRepository"
+        },
+        {
+          "path": "convex-dev/runtimeMemoryServices.ts",
+          "kind": "import-statement",
+          "original": "./runtimeMemoryServices"
+        }
+      ],
+      "format": "esm"
+    },
+    "tests/unit/runtimeMemory/fixture.ts": {
+      "bytes": 6359,
+      "imports": [
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex-dev/runtimeMemory.ts",
+          "kind": "import-statement",
+          "original": "../../../convex-dev/runtimeMemory"
+        },
+        {
+          "path": "convex-dev/runtimeAuth.ts",
+          "kind": "import-statement",
+          "original": "../../../convex-dev/runtimeAuth"
+        }
+      ],
+      "format": "esm"
+    },
+    "work/resume/task04-model-drift-native-design-correction-c2-review/entry.ts": {
+      "bytes": 636,
+      "imports": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeModelPolicy.ts",
+          "kind": "import-statement",
+          "original": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeModelPolicy.ts"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationOwned.ts",
+          "kind": "import-statement",
+          "original": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationOwned.ts"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationCapture.ts",
+          "kind": "import-statement",
+          "original": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationCapture.ts"
+        },
+        {
+          "path": "tests/unit/runtimeMemory/fixture.ts",
+          "kind": "import-statement",
+          "original": "/workspace/Project-Cortex/tests/unit/runtimeMemory/fixture.ts"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-design-correction-c2-review/discovery-handlers.mjs": {
+      "imports": [
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "zod",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "zod",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/server",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "convex/values",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "MemoryTestDb",
+        "capture",
+        "owned",
+        "policy"
+      ],
+      "entryPoint": "work/resume/task04-model-drift-native-design-correction-c2-review/entry.ts",
+      "inputs": {
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeModelPolicy.ts": {
+          "bytesInOutput": 81007
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/_generated/server.js": {
+          "bytesInOutput": 294
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuthSchema.ts": {
+          "bytesInOutput": 3460
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeAuth.ts": {
+          "bytesInOutput": 18359
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeMemoryRepository.ts": {
+          "bytesInOutput": 18471
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/profile.ts": {
+          "bytesInOutput": 2099
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/sources.ts": {
+          "bytesInOutput": 5579
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeWorkerAuth.ts": {
+          "bytesInOutput": 928
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/src/domain/model-policy.ts": {
+          "bytesInOutput": 22848
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationManifest.ts": {
+          "bytesInOutput": 4008
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeModelPolicyBootstrap.ts": {
+          "bytesInOutput": 572
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimePolicySchema.ts": {
+          "bytesInOutput": 5531
+        },
+        "work/resume/task04-model-drift-native-design-correction-c2-review/entry.ts": {
+          "bytesInOutput": 0
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationOwned.ts": {
+          "bytesInOutput": 14093
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/schema.ts": {
+          "bytesInOutput": 584
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/productionSchema.ts": {
+          "bytesInOutput": 51592
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/runtimeMemorySchema.ts": {
+          "bytesInOutput": 4722
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/fixture/convex/qualificationCapture.ts": {
+          "bytesInOutput": 8081
+        },
+        "tests/unit/runtimeMemory/fixture.ts": {
+          "bytesInOutput": 2555
+        },
+        "convex-dev/runtimeMemory.ts": {
+          "bytesInOutput": 9578
+        },
+        "convex-dev/_generated/server.js": {
+          "bytesInOutput": 484
+        },
+        "convex-dev/runtimeAuthSchema.ts": {
+          "bytesInOutput": 3708
+        },
+        "convex-dev/runtimeMemorySchema.ts": {
+          "bytesInOutput": 4899
+        },
+        "convex-dev/runtimeMemoryRepository.ts": {
+          "bytesInOutput": 20337
+        },
+        "src/domain/profile.ts": {
+          "bytesInOutput": 2109
+        },
+        "src/domain/extraction.ts": {
+          "bytesInOutput": 6227
+        },
+        "src/domain/sources.ts": {
+          "bytesInOutput": 10808
+        },
+        "convex-dev/runtimeAuth.ts": {
+          "bytesInOutput": 18508
+        },
+        "src/domain/recall.ts": {
+          "bytesInOutput": 7135
+        },
+        "convex-dev/runtimeMemoryServices.ts": {
+          "bytesInOutput": 7028
+        }
+      },
+      "bytes": 339310
+    }
+  }
+}

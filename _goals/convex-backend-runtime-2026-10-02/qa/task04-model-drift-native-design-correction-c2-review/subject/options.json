@@ -1,0 +1,35 @@
+{
+  "status": "PROPOSED_REQUIRES_FRESH_DESIGN_JUDGMENT",
+  "preferred": "stronger-new-binding-no-dispatch-witness",
+  "minimalOption": {
+    "affectedCases": 4,
+    "rpcCaseUpper": 32,
+    "targetTotalUpper": 2945,
+    "createdUpper": 444,
+    "outcome": "original idempotent bind and original guarded admissions; no new account"
+  },
+  "strongerOption": {
+    "affectedCases": 4,
+    "rpcCaseUpper": 36,
+    "other22CaseUpper": 32,
+    "targetTotalUpper": 2961,
+    "targetClientUpper": 2924,
+    "createdUpper": 444,
+    "caseCreatedUpperUnchanged": 16,
+    "actualAffectedCaseCreated": 16,
+    "actualAffectedCaseRPCIncludingCleanup": 36,
+    "journalRowsUpper": 4800,
+    "journalLineUpper": 1024,
+    "journalBytesUpper": 7143424,
+    "outcome": "original guards plus NEW bind creates exactlyONEownedemptyrun account; tenant latched admit denies and every original row byteequal; no reset/permit/providercall"
+  },
+  "capsUnchanged": {
+    "RPC": 3000,
+    "created": 465,
+    "live": 320,
+    "journalRows": 6000,
+    "bytes": 8388608
+  },
+  "sourcePolicySha256": "c8279d4496eb9b6eb5763732dbb7e54cefe27e028f285fe3e31a639af1535710",
+  "underlyingOperativeGuardRows": "RED_UNCHANGED_PENDING_DESIGN_ACCEPTANCE"
+}
