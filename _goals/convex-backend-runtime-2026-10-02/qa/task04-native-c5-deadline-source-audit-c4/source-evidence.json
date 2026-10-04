@@ -1,0 +1,1326 @@
+{
+  "status": "READ_ONLY_IMPLEMENTATION_AID_NOT_GATE_VERDICT",
+  "archiveManifestSHA256": "936881a4656f2fcbcfa47e216c80253b687ce82aa3a1a62f75f89eff44b77c47",
+  "sources": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/cleanup.mjs",
+      "bytes": 1189,
+      "sourceSHA256": "a107ba9df54f916d61639a126ed549c6b4206843af4aa79e555ecbd0300dc1cc",
+      "encodedPath": "source-byte-gzip/a107ba9df54f916d61639a126ed549c6b4206843af4aa79e555ecbd0300dc1cc.gz",
+      "sourceLines": [
+        {
+          "line": 3,
+          "exactSourceLine": "const s=await session(process.argv[2]??'synthetic');s.cleanupMode=true;let complete=false;try{for(let pass=0;pass<2&&!complete;pass++){await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const rows=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});complete=s.custodyComplete()&&!rows.some(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId));}assert.equal(complete,true);}finally{s.journal.append({phase:'recovery',caseId:'owned-cleanup',status:complete?'PASS':'FAIL',cleanupComplete:complete});s.close();exclusive(resolve(scratch,'cleanup-'+randomUUID()+'.json'),{operation:s.target.operation,status:complete?'PASS':'FAIL',cleanupComplete:complete,counts:s.counts()});}",
+          "lineSHA256": "96ce55607cdb0f8202ec8a1a2f29daa76b2e614b757ed5f29200ba489208acb7"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sourceSHA256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071",
+      "encodedPath": "source-byte-gzip/8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071.gz",
+      "sourceLines": [
+        {
+          "line": 8,
+          "exactSourceLine": "import {currentTarget,historicalEvidence,validateHistoricalInputs,exactKeys,boundedId,readPrivate,strictProfile,candidateArgument,parentDeadline} from './parent-inputs.mjs';",
+          "lineSHA256": "e5dc2a51f2e17c322c4e922097730d2b57e914c7cbd8758f78e3b98f3a41bf79"
+        },
+        {
+          "line": 11,
+          "exactSourceLine": "export async function main(){assert.equal(watcherStarted,false,'PARENT_WATCHER_ALREADY_STARTED');watcherStarted=true;const deadline=Date.now()+120000;const effects={privateOutputs:[],privateOutputStates:[]};let recheck=()=>parentDeadline(deadline);const output=(name,value)=>{",
+          "lineSHA256": "588a561f818242b7d47acbf41a19721f1b15f12b6dba20f800d1d994770c65e6"
+        },
+        {
+          "line": 13,
+          "exactSourceLine": "  exclusive(path,value,true,undefined,{deadlineMs:deadline,beforeCreate:()=>{parentDeadline(deadline);recheck();},observe:phase=>{",
+          "lineSHA256": "d036f1b09e5450de80193b316ebffb1597a530953140201fcbd16aed1ab1d3ac"
+        },
+        {
+          "line": 17,
+          "exactSourceLine": "  parentDeadline(deadline);",
+          "lineSHA256": "9b3a1750fc3fd8a7444e9ba4fb493ad644b13b0916f664450ba41aab28b49954"
+        },
+        {
+          "line": 18,
+          "exactSourceLine": " };try{strictProfile();preservationPreflight();if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');if(process.argv[2]!==undefined)assert.equal(process.argv[2],candidateArgument,'PARENT_CANDIDATE');const {target,identity}=currentTarget('synthetic');const historyPath=resolve(scratch,'historical-native-locators.json'),proofPath=resolve(scratch,'initial-physical-id-provenance.json'),historyBytes=readPrivate(historyPath,scratch),proofBytes=readPrivate(proofPath,scratch),history=JSON.parse(historyBytes),initial=JSON.parse(proofBytes),evidence=historicalEvidence();validateHistoricalInputs(target,history,initial,evidence);",
+          "lineSHA256": "72e8327d39b1332a5318d9b007fa6e777b5dc6bb75e27b674d2168068517adf4"
+        },
+        {
+          "line": 19,
+          "exactSourceLine": " const windowPath=resolve(scratch,'qualifier-window.json'),windowBytes=readPrivate(windowPath,scratch),window=JSON.parse(windowBytes);exactKeys(window,['startedAt','deadlineMs']);assert.equal(window.deadlineMs,1200000,'PARENT_WINDOW_LIMIT');const windowStart=Date.parse(window.startedAt);assert.ok(Number.isFinite(windowStart),'PARENT_WINDOW_START');const windowEnd=windowStart+window.deadlineMs;const checkWindow=()=>{assert.equal(sha256(readPrivate(windowPath,scratch)),sha256(windowBytes),'PARENT_WINDOW_CHANGED');assert.ok(Date.now()>=windowStart&&Date.now()<windowEnd,'PARENT_WINDOW_EXPIRED_OR_FUTURE');};checkWindow();",
+          "lineSHA256": "fdce0887112771ca42263b7e5ac83a982a93cd2223c39516dc3e70174ab27f73"
+        },
+        {
+          "line": 21,
+          "exactSourceLine": " while(!receipts.runtimeModelOperations||!receipts.runtimeModelAttempts){if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_OWNERSHIP_NOT_OBSERVED');currentTarget('synthetic',identity);checkWindow();const names=readdirSync(scratch).filter(name=>name.startsWith('owned-created-')).sort();assert.ok(names.length<=783,'PARENT_RECEIPT_BUDGET');for(const name of names){assert.match(name,/^owned-created-[a-f0-9]{64}\\.json$/,'PARENT_RECEIPT_NAME');const path=resolve(scratch,name),bytes=readPrivate(path,scratch);assert.ok(bytes.length<=16384,'PARENT_RECEIPT_BYTES');if(!bytes.toString().endsWith('\\n'))continue;const row=JSON.parse(bytes);exactKeys(row,['operation','kind','table','id','observedAt']);assert.equal(row.operation,target.operation,'PARENT_RECEIPT_OPERATION');assert.equal(row.kind,'created','PARENT_RECEIPT_KIND');assert.equal(typeof row.table,'string');assert.match(row.table,/^[a-zA-Z][a-zA-Z0-9]*$/);boundedId(row.id);assert.equal(typeof row.observedAt,'string');assert.ok(Number.isFinite(Date.parse(row.observedAt)),'PARENT_RECEIPT_TIMESTAMP');assert.ok(Date.parse(row.observedAt)>=windowStart&&Date.parse(row.observedAt)<windowEnd&&Date.parse(row.observedAt)<=Date.now(),'PARENT_RECEIPT_WINDOW');assert.equal(name,'owned-created-'+sha256(row.table+':'+row.id)+'.json','PARENT_RECEIPT_HASH');if(['runtimeModelOperations','runtimeModelAttempts'].includes(row.table)&&!receipts[row.table]){ids[row.table]=row.id;receipts[row.table]={path,sha256:sha256(bytes),locatorSHA256:sha256(row.id),bytes:bytes.length,operation:row.operation,table:row.table,kind:row.kind};}}receiptFiles=names.length;if(!receipts.runtimeModelOperations||!receipts.runtimeModelAttempts)await new Promise(done=>setTimeout(done,100));}",
+          "lineSHA256": "82896f8d3635afb3d00203ff75909eff6c4016a8a80d6963f0936b42545c94cb"
+        },
+        {
+          "line": 26,
+          "exactSourceLine": " if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');const proof={operation:target.operation,runId:target.runId,targetIdentity:identity,observedAt:new Date().toISOString(),status:'SOURCE_BOUND_NATIVE_ISSUANCE_PROVENANCE',historicalProvenanceSHA256:sha256(proofBytes),historicalProvenanceCompactSHA256:sha256(JSON.stringify(initial)),currentCoreOwnership:receipts,scopeSHA256:sha256(JSON.stringify(scope)),storageCreated:0,currentPublicStorageDecoding:'NOT_RUN; requires actual handler auth denial on the two existing noJWT sweep observations',extraRPC:0,extraRows:0,observedCreationReceipts:receiptFiles};",
+          "lineSHA256": "79b56facdd88f459e3af0f1f3b4bc3863f449b8edcdd35a84f91de8860f64c06"
+        },
+        {
+          "line": 27,
+          "exactSourceLine": " recheck=()=>{parentDeadline(deadline);currentTarget('synthetic',identity);checkWindow();preservationPreflight();assert.equal(sha256(readFileSync(canonical(inventoryPath,root))),sha256(inventoryBytes),'PARENT_INVENTORY_CHANGED');assert.equal(sha256(readPrivate(historyPath,scratch)),sha256(historyBytes),'PARENT_HISTORY_CHANGED');assert.equal(sha256(readPrivate(proofPath,scratch)),sha256(proofBytes),'PARENT_PROOF_CHANGED');validateHistoricalInputs(target,history,initial,historicalEvidence());for(const receipt of Object.values(receipts))assert.equal(sha256(readPrivate(receipt.path,scratch)),receipt.sha256,'PARENT_RECEIPT_CHANGED');};recheck();",
+          "lineSHA256": "2e08b7a0f500c55e0de6d7721aa35eedde0497f8eb354feb0c6ecf87fc5eb270"
+        },
+        {
+          "line": 28,
+          "exactSourceLine": " preservationPreflight();if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('current-physical-id-input-receipt.json',proof);currentTarget('synthetic',identity);if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('argument-scope.json',scope);currentTarget('synthetic',identity);if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('public-arguments.json',{operation:target.operation,inventorySha256:sha256(inventoryBytes),arguments:publicArgs,internalArguments:internalArgs,modelAttemptId:ids.runtimeModelAttempts});recheck();parentDeadline(deadline);process.stdout.write(JSON.stringify({status:'PASS_SOURCE_BOUND_INPUTS',extraRPC:0,extraRows:0,storageCreated:0,currentCoreIDTables:Object.keys(receipts).sort(),currentPublicStorageDecoding:'NOT_RUN'})+'\\n');}catch(error){if(error&&typeof error==='object'){try{Object.defineProperty(error,'parentCurrentInputEffects',{value:Object.freeze({status:'FAIL',privateOutputs:Object.freeze([...effects.privateOutputs]),privateOutputStates:Object.freeze(effects.privateOutputStates.map(state=>Object.freeze({...state})))}),enumerable:true});}catch{}}throw error;}}",
+          "lineSHA256": "92c8425a263b599fa4c8f2b86a2d14d4f8670e27180e1ba887bd440daad7190f"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/driver.mjs",
+      "bytes": 21086,
+      "sourceSHA256": "8982de1bb9ef59780d6bdf87ef74a8a97f0dee9840a5b350bb423cbf1e427829",
+      "encodedPath": "source-byte-gzip/8982de1bb9ef59780d6bdf87ef74a8a97f0dee9840a5b350bb423cbf1e427829.gz",
+      "sourceLines": [
+        {
+          "line": 14,
+          "exactSourceLine": "import {livePreflight,root,scratch,json,limits,Journal,sha256,exclusive,reviewed,reviewPin,reserveTicket,qualifierDeadline,preservationPreflight,creationDispatched,creationSettled,uncertainCreationCount,creationResponseKnown,creationSettlementCandidates,creationAcknowledge,creationCustodyCounts} from './guard.mjs';",
+          "lineSHA256": "717152620685e72fb83058ada7b3ee2c55d64a0dc38088894f94cc9e7426a91f"
+        },
+        {
+          "line": 21,
+          "exactSourceLine": " let rpc=0,cleanupRpc=0,active=0;const start=Date.now(),journal=new Journal(parent.runId,target.operation);journal.append({phase,caseId:'publication-arguments',status:'PASS',observedCategory:'published-arguments-equal',apiSpecDigest:publicationEquality.argumentsSha256});const clients=new WeakMap();const wire=new Set();let originalWindowDigest;",
+          "lineSHA256": "dd30274ae625b4281db6bcf718678596e502321917cf1d1e7d2f6b9eb108d93f"
+        },
+        {
+          "line": 22,
+          "exactSourceLine": " const freshDispatch=()=>{if(reviewPin()!==s.expectedReviewPin)throw Error('QA_REVIEW_EXPECTED_PIN_DRIFT');const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');const windowDigest=sha256(readFileSync(resolve(scratch,'qualifier-window.json')));if(windowDigest!==originalWindowDigest)throw Error('QA_WINDOW_DRIFT');return qualifierDeadline();};",
+          "lineSHA256": "3f5e274ff90f634addca725ef4ed3ea78f5f2cfc8518be43e094613c3b5f1cf0"
+        },
+        {
+          "line": 23,
+          "exactSourceLine": " const create=(jwt,admin=false)=>{const lanes=[];const handle=Object.freeze(Object.create(null));const boundedFetch=async(url,options)=>{const parsed=new URL(url);if(parsed.origin!==target.deploymentUrl||options?.method!=='POST')throw Error('QA_ORIGIN');const type=parsed.pathname.replace('/api/','');if(!['query','mutation','action'].includes(type)||parsed.pathname!=='/api/'+type||typeof options.body!=='string')throw Error('QA_RPC_CALLBACK_BOUND');const lane=lanes.find(l=>!l.entered&&l.type===type&&l.body===options.body);if(!lane||!lane.ticket||lane.closed)throw Error('QA_RPC_CALLBACK_BOUND');lane.entered=true;if(lane.creationCapable){creationDispatched(lane.ticket,Math.min(lane.deadline,qualifierDeadline()));lane.creationPending=true;}const deadline=Math.min(freshDispatch(),lane.deadline);if(lane.path==='qualificationOwned:snapshot'&&lane.ownedSnapshot)lane.creationCandidates=creationSettlementCandidates();if(Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');const response=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(Math.max(1,deadline-Date.now()))});const body=await boundedBody(response,limits.resultBytes,deadline);if(lane.type==='mutation'&&response.status===560){try{const envelope=JSON.parse(body);if(envelope.status==='error'&&typeof envelope.errorMessage==='string')lane.authoritativeRollback=true;}catch{}}if([400,401,403].includes(response.status)){try{const envelope=JSON.parse(body);if(['InvalidAuth','Unauthenticated','InvalidAuthHeader','NoAuthProvider'].includes(envelope.code)&&typeof envelope.message==='string'&&Object.keys(envelope).every(k=>['code','message'].includes(k))){wire.add(body);lane.authoritativeRollback=true;}}catch{}}if(lane.internalMutation&&[400,404].includes(response.status)&&/Could not find public function for ['\"]|Cannot call internal function|Function is internal/.test(body))lane.authoritativeRollback=true;return new Response(body,{status:response.status,statusText:response.statusText,headers:response.headers});};const client=new ConvexHttpClient(target.deploymentUrl,{logger:false,fetch:boundedFetch});if(admin)client.setAdminAuth(values.CONVEX_DEPLOY_KEY);else if(jwt)client.setAuth(jwt);clients.set(handle,{client,lanes});return handle;};const operator=create(undefined,true);",
+          "lineSHA256": "4d4e13da48c92fd95c3b8dc4a62b7a34e6fe1d0c567df8009373fb752241bf14"
+        },
+        {
+          "line": 24,
+          "exactSourceLine": " let windowProofs=0;const s={async recordWindowEvidence(proof,status){if(++windowProofs>4)throw Error('QA_WINDOW_PROOF_BUDGET');const receipt={operation:target.operation,runId:parent.runId,phase,status,...proof};const bytes=Buffer.byteLength(JSON.stringify(receipt,null,2)+'\\n');if(bytes>4096)throw Error('QA_WINDOW_PROOF_BYTES');reservePublicationEvidence(bytes);exclusive(resolve(scratch,'window-proof-'+String(windowProofs)+'-'+randomUUID()+'.json'),receipt,true,4096);},runId:parent.runId,target,values,publicationReceipt,expectedReviewPin:reviewPin(),phase,parent,publication,publicationEquality,journal,peerCalls:0,peerEffects:0,peerOther:0,profile:json(resolve(root,'profile.json')),async rpc(type,path,args,client=operator){if(!['query','mutation','action'].includes(type)||typeof path!=='string'||!clients.has(client))throw Error('QA_RPC_METHOD_BOUND');if(++rpc>limits.rpc||Date.now()-start>limits.qualifierMs||++active>limits.concurrency)throw Error('QA_RPC_BUDGET');if(s.caseRPCMax!==undefined&&rpc>s.caseRPCMax)throw Error('QA_CASE_RPC_BUDGET');if(path.startsWith('qualificationOwned:cleanup')){if(++cleanupRpc>limits.cleanupRpc)throw Error('QA_CLEANUP_BUDGET');await reserveTicket('cleanup',limits.cleanupRpc);}const nativeTicket=await reserveTicket('native',limits.nativeClientRpc,s.cleanupMode===true);const windowDigest=sha256(readFileSync(resolve(scratch,'qualifier-window.json')));if(originalWindowDigest===undefined)originalWindowDigest=windowDigest;else if(originalWindowDigest!==windowDigest)throw Error('QA_WINDOW_DRIFT');if(client===operator&&['qualificationOwned:parentRollback','qualificationCapture:parentRefinementRollback'].includes(path))await reserveTicket('nested-parent',1);if(['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path))await reserveTicket('nested-auth',28);const begun=Date.now();let custodyLane;try{const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');wire.clear();const owned=clients.get(client);const lane={type,path,ownedSnapshot:path==='qualificationOwned:snapshot'&&args.run===parent.runId,creationCapable:type==='mutation'&&!['admin:deleteRecord','admin:clearTable','qualificationOwned:cleanup','qualificationCapture:partialMarker'].includes(path)||type==='action'&&!['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path),internalMutation:type==='mutation'&&json(resolve(root,'registration-inventory.json')).registrations.some(row=>row.path===path&&row.visibility==='internal'),body:JSON.stringify({path,format:'convex_encoded_json',args:[convexToJson(args)]}),ticket:nativeTicket,deadline:begun+limits.rpcMs,entered:false,closed:false};custodyLane=lane;owned.lanes.push(lane);let value;try{value=await owned.client[type](makeFunctionReference(path),args);if(!lane.entered)throw Error('QA_RPC_CALLBACK_MISSING');}finally{lane.closed=true;const index=owned.lanes.indexOf(lane);if(index!==-1)owned.lanes.splice(index,1);}const custodyDeadline=Math.min(lane.deadline,qualifierDeadline());if(Date.now()>=custodyDeadline)throw Error('QA_RPC_TIME_BUDGET');if(Buffer.byteLength(JSON.stringify(value))>limits.resultBytes)throw Error('QA_RESULT_BYTES');if(value?.createdRefs)track(value.createdRefs,'created',target.operation,custodyDeadline);if(value?.deletedRefs){if(path==='qualificationOwned:cleanup'&&type==='mutation'&&client===operator&&args.run===parent.runId)track(value.deletedRefs,'created',target.operation,custodyDeadline);track(value.deletedRefs,'deleted',target.operation,custodyDeadline);}if(path==='qualificationOwned:snapshot'){track(ownedSnapshot(value,parent.runId),'created',target.operation,custodyDeadline);if(lane.ownedSnapshot)durableOwnership(target.operation,custodyDeadline);}journal.append({phase,caseId:path.replace(':','-'),status:'PASS',observedCategory:'rpc-complete',elapsedMs:Date.now()-begun});if(lane.creationPending){if(path==='qualificationOwned:seed'&&Array.isArray(value?.createdRefs)&&value.createdRefs.length===7)creationSettled(lane.ticket,custodyDeadline);else creationResponseKnown(lane.ticket,custodyDeadline);lane.creationPending=false;}if(lane.ownedSnapshot){for(const ticket of lane.creationCandidates??[])creationAcknowledge(ticket,custodyDeadline);}return value;}catch(error){try{journal.append({phase,caseId:path.replace(':','-'),status:'FAIL',observedCategory:'rpc-rejected',failureClass:error?.data?.code&&/^[A-Z_]+$/.test(error.data.code)?error.data.code.toLowerCase():'native_or_transport'});if(custodyLane?.creationPending&&custodyLane.authoritativeRollback){creationSettled(custodyLane.ticket,Math.min(custodyLane.deadline,qualifierDeadline()));custodyLane.creationPending=false;}}catch(journalFailure){retainSecondary(error,'qaJournalFailure',journalFailure);}throw error;}finally{active--;}}",
+          "lineSHA256": "edfe6c49e08b47b4581e7d704401cb33728e56895600e19fa8d8b7ebd29e28cb"
+        },
+        {
+          "line": 25,
+          "exactSourceLine": " ,create,authDenied(error){return ['FORBIDDEN','UNAUTHENTICATED'].includes(error?.data?.code)||wire.has(error?.message);},custodyComplete:()=>uncertainCreationCount()===0,counts:()=>({rpc,cleanupRpc,...creationCustodyCounts(),peerEffects:s.peerEffects,peerOther:s.peerOther,...ownershipCounts()}),close:()=>journal.close()};return s;}",
+          "lineSHA256": "3ccdc76ff7975c7ffe18e51c1459a5b0239d41f3cc60219ec1a8ab5c49023cb5"
+        },
+        {
+          "line": 37,
+          "exactSourceLine": "export async function qualify(s,phase){let complete=false,status='FAIL',primaryFailure,cleanupFailure;try{if(phase==='synthetic'){for(const [id,kind]of definitions){reviewed();await scheduleCase(kind,{deadline:qualifierDeadline});",
+          "lineSHA256": "ac0c018fb650e8f6c3de122cc26f00e662363e8447b47cabb2c7d4a1b5af8b45"
+        },
+        {
+          "line": 38,
+          "exactSourceLine": " const expectedCase=json(resolve(root,'cases.json')).scenarios.find(row=>row.id===id);await allocateRows(id,expectedCase.maximumCommittedCreatedRows,s.target.operation);const scenarioBefore=s.counts().rpc;s.caseRPCMax=scenarioBefore+Math.min(expectedCase.rpcCeiling,expectedCase.sourceBoundRpcCeiling??expectedCase.rpcCeiling);await scenario(s,id,kind);if(s.counts().rpc-scenarioBefore>Math.min(expectedCase.rpcCeiling,expectedCase.sourceBoundRpcCeiling??expectedCase.rpcCeiling))throw Error('QA_CASE_RPC_BUDGET');s.caseRPCMax=undefined;s.journal.append({phase:'case',caseId:id,status:'PASS',observedCategory:'outcome-asserted'});await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const left=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});assert.equal(left.filter(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId)).length,0);}",
+          "lineSHA256": "4fac81896207481ab1668bd3ea50172cbc60531e486dc6746ceb107154585183"
+        },
+        {
+          "line": 41,
+          "exactSourceLine": " status='PASS';}catch(error){primaryFailure=error;rawOwnedFailure(phase,'scenario-before-cleanup',error);throw error;}finally{try{s.caseRPCMax=undefined;s.cleanupMode=true;for(let attempt=0;attempt<2&&!complete;attempt++){await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const rows=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});complete=s.custodyComplete()&&!rows.some(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId));}try{reviewed();preservationPreflight();}catch(error){status='FAIL';rawOwnedFailure(phase,'full-boundary-source',error);}if(!complete)status='FAIL';s.journal.append({phase:'final',caseId:'native-qualifier',status:status==='PASS'&&complete?'PASS':'FAIL',cleanupComplete:complete,counts:s.counts()});}catch(error){cleanupFailure=error;status='FAIL';rawOwnedFailure(phase,'cleanup-secondary',error);if(primaryFailure)retainSecondary(primaryFailure,'qaCleanupFailure',error);else throw error;}finally{try{s.close();}catch(error){status='FAIL';rawOwnedFailure(phase,'close-secondary',error);if(primaryFailure)retainSecondary(primaryFailure,'qaCloseFailure',error);else if(cleanupFailure)retainSecondary(cleanupFailure,'qaCloseFailure',error);else throw error;}}}return {status,cleanupComplete:complete,counts:s.counts()};}",
+          "lineSHA256": "fc2dae7db2e4b1441ca485d49b46fe7f9a8904b7ce960daa84c82e931538cff5"
+        },
+        {
+          "line": 42,
+          "exactSourceLine": "if(process.argv[1]?.endsWith('driver.mjs')){const phase=process.argv[2];if(!['synthetic','empty'].includes(phase))throw Error('QA_PHASE');const s=await session(phase);const result=await qualify(s,phase);exclusive(resolve(scratch,'result-'+phase+'-'+randomUUID()+'.json'),result);process.stdout.write(JSON.stringify(result)+'\\n');process.exitCode=result.status==='PASS'&&result.cleanupComplete?0:1;}",
+          "lineSHA256": "011a7e6dbeaf567b282db0ebede18d0ada3c5d15628bc4a2688f6819be2704c6"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/guard.mjs",
+      "bytes": 30196,
+      "sourceSHA256": "2e6f01de9c6337a7490a9c737838468a35b01bedcbcadc8022b9db44425ecb86",
+      "encodedPath": "source-byte-gzip/2e6f01de9c6337a7490a9c737838468a35b01bedcbcadc8022b9db44425ecb86.gz",
+      "sourceLines": [
+        {
+          "line": 9,
+          "exactSourceLine": "export const limits=Object.freeze({rpc:3000,nativeClientRpc:2963,nestedNativeInvocations:37,cleanupRpc:256,concurrency:4,qualifierMs:1200000,driverMs:1440000,rpcMs:12000,scenarios:64,rows:320,storage:0,peerEffects:8,peerOther:24,resultBytes:256000,evidenceBytes:8388608,receiptBytes:16384,journalBytes:4096,journalRows:6000,processes:6,groups:2,cliMs:120000});",
+          "lineSHA256": "9b16dde80a5f0fbdbb30e29ca81cbc4e2dcc249222e3b5616f69ee1da29d000b"
+        },
+        {
+          "line": 14,
+          "exactSourceLine": "export function exclusive(path,value,privateFile=true,maxBytes=limits.resultBytes,control){if(control!==undefined&&(!control||Object.keys(control).some(key=>!['deadlineMs','beforeCreate','observe'].includes(key))||!Number.isSafeInteger(control.deadlineMs)||control.deadlineMs<1||typeof control.beforeCreate!=='function'||typeof control.observe!=='function'))throw Error('QA_EXCLUSIVE_CONTROL');canonical(dirname(path),repo);if(control&&privateFile){const parent=lstatSync(dirname(path));if(!parent.isDirectory()||parent.uid!==process.getuid()||(parent.mode&511)!==448)throw Error('QA_PRIVATE_PARENT');}const encoded=Buffer.from(JSON.stringify(value,null,2)+'\\n');if(encoded.length>maxBytes)throw Error('QA_BYTES');if(control)control.beforeCreate();if(control&&Date.now()>=control.deadlineMs)throw Error('QA_EXCLUSIVE_DEADLINE');const fd=openSync(path,'wx',privateFile?0o600:0o644);let primary,hasPrimary=false;const observe=stage=>{if(control)control.observe(stage);};try{observe('created');let offset=0;while(offset<encoded.length){const wrote=writeSync(fd,encoded,offset,encoded.length-offset);if(!Number.isSafeInteger(wrote)||wrote<1||wrote>encoded.length-offset)throw Error('QA_EXCLUSIVE_SHORT_WRITE');offset+=wrote;}observe('written');fsyncSync(fd);observe('durable');}catch(error){primary=error;hasPrimary=true;}let closed=false;for(let attempt=0;attempt<2&&!closed;attempt++){try{closeSync(fd);closed=true;}catch(error){if(!hasPrimary){primary=error;hasPrimary=true;}if(attempt===1&&error?.code==='EBADF')closed=true;}}if(closed)try{observe('closed');}catch(error){if(!hasPrimary){primary=error;hasPrimary=true;}}if(hasPrimary)throw primary;}",
+          "lineSHA256": "728f71cd344df534d7b0ce38ea2558ae61fcf6f26d37308ca097bad4a3ccdaa8"
+        },
+        {
+          "line": 36,
+          "exactSourceLine": "export function qualifierDeadline(){const window=json(resolve(scratch,'qualifier-window.json'),scratch,true),start=Date.parse(window.startedAt);if(!Number.isFinite(start)||window.deadlineMs!==limits.qualifierMs)throw Error('QA_TOTAL_TIME_BUDGET');const end=start+limits.qualifierMs;if(Date.now()>=end)throw Error('QA_TOTAL_TIME_BUDGET');return end;}",
+          "lineSHA256": "9debca6ad868a9c55c86a69b982455177bf3f7070f68152b4c3c3cd87a4ef297"
+        },
+        {
+          "line": 49,
+          "exactSourceLine": "const safeKeys=new Set(['version','operation','runId','phase','caseId','sequence','previousDigest','sourceDigest','fixtureDigest','bootstrapDigest','apiSpecDigest','targetReceiptDigest','startedAt','observedAt','elapsedMs','status','expectedCategory','observedCategory','counts','noEffect','cleanupComplete','processTerminal','exitCode','failureClass','receiptDigest']);",
+          "lineSHA256": "4db0a41f50c2bf2fa7c0195c18c67e7e5c1a84aea62bc5495b05258efe5d05a4"
+        },
+        {
+          "line": 55,
+          "exactSourceLine": "export async function reserveTicket(kind,max,cleanup=false){const maxima={native:limits.nativeClientRpc,cleanup:limits.cleanupRpc,'peer-effect':limits.peerEffects,'peer-other':limits.peerOther,process:limits.processes,'nested-parent':1,'nested-auth':28};if(max!==maxima[kind]||typeof cleanup!=='boolean'||cleanup&&kind!=='native')throw Error('QA_TICKET_MAX');if(!['native','cleanup','peer-effect','peer-other','process','nested-parent','nested-auth'].includes(kind)||!Number.isSafeInteger(max)||max<1)throw Error('QA_TICKET');trustedReview();const lock=resolve(scratch,'dispatch-budget.lock');const deadline=Date.now()+12000;let fd;while(fd===undefined){try{fd=openSync(lock,'wx',0o600);}catch(error){if(error.code!=='EEXIST'||Date.now()>=deadline)throw Error('QA_BUDGET_LOCK');await new Promise(done=>setTimeout(done,10));}}",
+          "lineSHA256": "74dc49c8e3056752cacf8c3ec98421c58e893f8e9317be28401d27a16b50a9b6"
+        },
+        {
+          "line": 56,
+          "exactSourceLine": " try{trustedReview();if(kind==='native'){const window=resolve(scratch,'qualifier-window.json');if(!lstatSync(window,{throwIfNoEntry:false}))exclusive(window,{startedAt:new Date().toISOString(),deadlineMs:1200000});const recorded=json(window,scratch,true);if(Date.now()-Date.parse(recorded.startedAt)>=1200000||recorded.deadlineMs!==1200000)throw Error('QA_TOTAL_TIME_BUDGET');}const count=readdirSync(scratch).filter(name=>name.startsWith('ticket-'+kind+'-')).length;if(count>=max-(kind==='native'&&!cleanup?12:0))throw Error('QA_TOTAL_BUDGET');const path=resolve(scratch,`ticket-${kind}-${String(count+1).padStart(4,'0')}.json`);exclusive(path,{kind,sequence:count+1,observedAt:new Date().toISOString()});return Object.freeze({kind,sequence:count+1});}finally{closeSync(fd);const {unlinkSync}=await import('node:fs');unlinkSync(lock);}}",
+          "lineSHA256": "8ecba4f1d892e5d885e0ecadd4c1942a72518d6f3adbda36ad9a37af4f7bbd38"
+        },
+        {
+          "line": 60,
+          "exactSourceLine": "export function durableExistingPrivate(path,validate,maxBytes=16384,deadline=qualifierDeadline()){const check=()=>{if(!Number.isSafeInteger(deadline)||Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');};check();trustedReview();check();const bounded=canonical(path,scratch,true),initial=lstatSync(bounded);let fd,primary,body;try{check();if(!initial.isFile()||initial.size>maxBytes)throw Error('QA_DURABLE_BYTES');fd=openSync(bounded,constants.O_RDONLY|constants.O_NOFOLLOW);const opened=fstatSync(fd);if(!opened.isFile()||opened.dev!==initial.dev||opened.ino!==initial.ino||opened.nlink!==1||opened.uid!==process.getuid()||(opened.mode&511)!==384||opened.size>maxBytes)throw Error('QA_DURABLE_BINDING');check();body=readFileSync(fd);check();if(body.length!==opened.size||body.length>maxBytes)throw Error('QA_DURABLE_BYTES');validate(body);check();const beforeSync=lstatSync(canonical(bounded,scratch,true));if(beforeSync.dev!==opened.dev||beforeSync.ino!==opened.ino||beforeSync.size!==body.length||sha256(readFileSync(bounded))!==sha256(body))throw Error('QA_DURABLE_BINDING');check();fsyncSync(fd);check();}catch(error){primary=error;}finally{if(fd!==undefined)try{closeSync(fd);}catch(error){if(primary)Object.defineProperty(primary,'qaDurableCloseFailure',{value:error,enumerable:false});else primary=error;}}if(primary)throw primary;check();const final=lstatSync(canonical(bounded,scratch,true));if(final.dev!==initial.dev||final.ino!==initial.ino||final.size!==body.length||sha256(readFileSync(bounded))!==sha256(body))throw Error('QA_DURABLE_BINDING');check();return body;}",
+          "lineSHA256": "8797ebe71dacab57a28d65f5b1d0ccedd54f96d1a75b04b6765343406b8f40ba"
+        },
+        {
+          "line": 66,
+          "exactSourceLine": "function creationTransition(ticket,from,to,deadline=qualifierDeadline()){const check=()=>{if(!Number.isSafeInteger(deadline)||Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');};check();trustedReview();check();const path=creationTicketPath(ticket);if(creationState(ticket)!==from)throw Error('QA_CREATION_STATE');const marker=Buffer.from(to===1?creationPendingMarker:to===3?creationResponseMarker:creationSettledMarker);let fd,primary;try{check();fd=openSync(path,'a');let offset=0;while(offset<marker.length){check();const written=writeSync(fd,marker.subarray(offset));if(!Number.isSafeInteger(written)||written<1||written>marker.length-offset)throw Error('QA_CREATION_WRITE');offset+=written;check();}fsyncSync(fd);check();}catch(error){primary=error;}finally{if(fd!==undefined)try{closeSync(fd);}catch(error){if(primary)Object.defineProperty(primary,'qaCreationCloseFailure',{value:error,enumerable:false});else primary=error;}}if(primary)throw primary;check();}",
+          "lineSHA256": "2dcc18adb56694f743c38020cab9bc9c6f837e0ac528bb47f2c50d554aece12c"
+        },
+        {
+          "line": 67,
+          "exactSourceLine": "export const creationDispatched=(ticket,deadline)=>creationTransition(ticket,0,1,deadline);",
+          "lineSHA256": "49e27866fd2b10d4598da393317673bfd65f7953f7d0cd3b174b6e081f805a9e"
+        },
+        {
+          "line": 68,
+          "exactSourceLine": "export function creationSettled(ticket,deadline){creationTransition(ticket,creationState(ticket)===3?3:1,2,deadline);durableCreationAcknowledgments.add(creationKey(ticket));}",
+          "lineSHA256": "b9e896fa6113ca29c0391fd87839a7dd0906452ca689a50adeb65071635aaf8c"
+        },
+        {
+          "line": 70,
+          "exactSourceLine": "export function creationAcknowledge(ticket,deadline){const state=creationState(ticket);if(state===3)creationSettled(ticket,deadline);else if(state===2){durableExistingPrivate(creationTicketPath(ticket),body=>{if(parsedCreationState(body.toString('utf8'),ticket)!==2)throw Error('QA_CREATION_UNKNOWN');},1024,deadline);durableCreationAcknowledgments.add(creationKey(ticket));}else throw Error('QA_CREATION_UNKNOWN');}",
+          "lineSHA256": "64ff6bc1929ab55551a79b3d0dc2a82ba448a7182f90fc079098b29515914c6c"
+        },
+        {
+          "line": 71,
+          "exactSourceLine": "export const creationResponseKnown=(ticket,deadline)=>creationTransition(ticket,1,3,deadline);",
+          "lineSHA256": "26d4faec921bb38646f717cf652da37871a994f931e4c85201e3a8f747235c38"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/parent-inputs.mjs",
+      "bytes": 19205,
+      "sourceSHA256": "425d3d17fec02d2d8c88971d6eba2a80ba1ee60260a902fa25e0f5ca509503f5",
+      "encodedPath": "source-byte-gzip/425d3d17fec02d2d8c88971d6eba2a80ba1ee60260a902fa25e0f5ca509503f5.gz",
+      "sourceLines": [
+        {
+          "line": 10,
+          "exactSourceLine": "export const profileContract=Object.freeze({\"version\":1,\"operation\":\"a7b008a7-8acc-437a-8f9a-9ca45536758e\",\"purpose\":\"task04-model-drift-native-extension-c5\",\"projectName\":\"cortex-task04-admission-disposable-f04a8035c371\",\"projectSlug\":\"cortex-task04-admission-disposable-f04a8035c371\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-model-drift-native-extension-c5/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-095e15b0afe74e82ac89d28c75fde810\"});",
+          "lineSHA256": "37866521060ee42865bd79e99ab90798eb033ab6bf2809c21b36509aea185582"
+        },
+        {
+          "line": 14,
+          "exactSourceLine": "export function parentDeadline(deadline){assert.ok(Date.now()<deadline,'PARENT_TOTAL_TIME_BUDGET');}",
+          "lineSHA256": "f569c2ae8eee6d069c276bc89e5ee168257a8adf82607a7f61d3a63de895e607"
+        },
+        {
+          "line": 31,
+          "exactSourceLine": " const names=Object.keys(historicalSources),owned=JSON.parse(original[names[0]]),qualified=JSON.parse(original[names[2]]),retired=JSON.parse(original[names[3]]);assert.equal(qualified.status,'PASS');assert.equal(qualified.cleanupComplete,true);assert.equal(qualified.counts.failed,0);assert.equal(qualified.counts.skipped,0);assert.equal(qualified.counts.blocked,0);assert.equal(retired.status,'PASS');assert.equal(retired.deletionHttpStatus,200);assert.equal(retired.absentProjectHttpStatus,404);assert.equal(retired.projectId,3138249);assert.equal(retired.verifiedOnlyDevelopmentCloudDeployment,true);assert.equal(retired.managementCalls,5);assert.equal(owned.files.length,2);assert.equal(typeof owned.run,'string');assert.ok(original[names[1]].toString().endsWith('\\n'),'HISTORICAL_PARTIAL_JOURNAL');",
+          "lineSHA256": "1c28791f2d4a46f12c601f739b7c240294e8afb5993659b42b1631ad7808e227"
+        },
+        {
+          "line": 37,
+          "exactSourceLine": "export function initialProof(target,evidence,observedAt=new Date().toISOString()){return {operation:target.operation,runId:target.runId,observedAt,historicalTargetProjectId:3138249,historicalQualification:'PASS',historicalOwnedCleanup:true,historicalProjectDeletion:200,historicalProjectAbsence:404,storageCreatedHere:0,currentTargetDecoder:'NOT_RUN',newOperationAttemptIDs:'PENDING_CURRENT_CORE_OWNERSHIP',sources:evidence.sources,historicalOwnedRunSHA256:evidence.historicalOwnedRunSHA256,journalWitnesses:evidence.journalWitnesses,locators:Object.entries(evidence.ids).map(([table,id])=>({table,locatorSHA256:sha256(id),provenance:'previously native-issued owned locator; original target cleaned and retired; current decoding not claimed'}))};}",
+          "lineSHA256": "86d96cdaedff0e31fa8ef46fe8415cb4d556a563d0049b4e2109f55a438bdfdf"
+        },
+        {
+          "line": 39,
+          "exactSourceLine": "export async function boundedParentBody(response,deadline){",
+          "lineSHA256": "21f526236bae76f48df36ed3da823a1db186e4e1dfa3b7bef3db64db2215edcc"
+        },
+        {
+          "line": 42,
+          "exactSourceLine": " const bounded=async pending=>{let timer;try{return await Promise.race([pending,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('PARENT_RESPONSE_DEADLINE')),Math.max(1,deadline-Date.now()));})]);}finally{clearTimeout(timer);}};",
+          "lineSHA256": "04a9b8b952dc437bb48cbbafeb5aefef2d7b3dfe54d40f15c068231ea4cc8ab1"
+        },
+        {
+          "line": 43,
+          "exactSourceLine": " try{parentDeadline(deadline);assert.equal(response.status,200,'owned peer environment update');while(true){parentDeadline(deadline);const {done,value}=await bounded(reader.read());parentDeadline(deadline);if(done)break;size+=value.byteLength;if(size>16384)throw Error('PARENT_RESPONSE_BYTES');}return size;}",
+          "lineSHA256": "7e0e38160c6646bbe98489c4578431461fcec983d03197e2d3f9b430eb15a739"
+        },
+        {
+          "line": 50,
+          "exactSourceLine": " const deadline=Date.now()+120000;",
+          "lineSHA256": "b788a6b546adf031c2585a5690105876240a9d32869f698a959fde4a127fbfe1"
+        },
+        {
+          "line": 54,
+          "exactSourceLine": "  exclusive(path,value,true,undefined,{deadlineMs:deadline,beforeCreate:()=>parentDeadline(deadline),observe:phase=>{",
+          "lineSHA256": "018ceac74915c4192038fb92c5e89a229f7bafb79f0045be0bc899d9cf6112a1"
+        },
+        {
+          "line": 58,
+          "exactSourceLine": "  parentDeadline(deadline);",
+          "lineSHA256": "9b3a1750fc3fd8a7444e9ba4fb493ad644b13b0916f664450ba41aab28b49954"
+        },
+        {
+          "line": 62,
+          "exactSourceLine": "  strictProfile();preservationPreflight();parentDeadline(deadline);",
+          "lineSHA256": "808ceed91e74212c1c8decc898d44ae617ee4d5d36e388e3f8c7f1928c2fac16"
+        },
+        {
+          "line": 66,
+          "exactSourceLine": "  const evidence=historicalEvidence();parentDeadline(deadline);",
+          "lineSHA256": "e3409b80d74ff0dc7c463e5f6d7fa43947c7c40814ba313e192a22a29329dab7"
+        },
+        {
+          "line": 76,
+          "exactSourceLine": "   parentDeadline(deadline);const signature=sign('RSA-SHA256',bytes,privateKey);effects.signatures++;",
+          "lineSHA256": "8a506d972722c48ab58df28c8faddb999850f7b2665bf55b80f98f29865008ed"
+        },
+        {
+          "line": 87,
+          "exactSourceLine": "  parentDeadline(deadline);const peerSecret=randomBytes(32).toString('hex');effects.peerSecrets++;",
+          "lineSHA256": "11b0939c1b3850a75ab3b369fdefefb9095331f02de964240665563154418b58"
+        },
+        {
+          "line": 90,
+          "exactSourceLine": "  const startedAt=new Date().toISOString(),url=target.deploymentUrl+'/api/update_environment_variables',options={method:'POST',redirect:'error',headers:{Authorization:'Convex '+values.CONVEX_DEPLOY_KEY,'Content-Type':'application/json'},body:JSON.stringify({changes:[{name:'CORTEX_QA_TASK04_PEER_SECRET',value:peerSecret}]}),signal:AbortSignal.timeout(Math.max(1,Math.min(30000,deadline-Date.now())))};",
+          "lineSHA256": "6e8bf56784ab1e5cc0d0045df8decbb8f6e5f43f4c8c70d4a69ff08b055d1765"
+        },
+        {
+          "line": 91,
+          "exactSourceLine": "  parentDeadline(deadline);effects.configurationCalls++;const response=await fetch(url,options);",
+          "lineSHA256": "39b1527cf74808635b50adefe15fc063f971a6926bd051deec4ea14d5e77b8ef"
+        },
+        {
+          "line": 92,
+          "exactSourceLine": "  await boundedParentBody(response,deadline);",
+          "lineSHA256": "bc828271b685ec409af2db9ca5ef965a41d6c43161b85804ca34e818488833b4"
+        },
+        {
+          "line": 94,
+          "exactSourceLine": "  const receipt={operation:target.operation,runId:target.runId,status:'PASS',startedAt,observedAt:new Date().toISOString(),adapterSourceSHA256:sha256(readFileSync(canonical(fileURLToPath(import.meta.url),repo))),keysCreated:0,signatures:effects.signatures,identityNegativeCount:7,storageCreated:0,configurationCalls:effects.configurationCalls,configurationVariable:'CORTEX_QA_TASK04_PEER_SECRET',configurationHTTPStatus:response.status,historicalProvenanceSHA256:sha256(readPrivate(resolve(scratch,'initial-physical-id-provenance.json'),scratch)),currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'};",
+          "lineSHA256": "3041710456443ad1ab9066af7c860d0bb904a3185f081dfb54b1042d4063217f"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/process-owner.mjs",
+      "bytes": 4395,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "encodedPath": "source-byte-gzip/539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624.gz",
+      "sourceLines": [
+        {
+          "line": 4,
+          "exactSourceLine": "const delay = (ms) => new Promise((done) => setTimeout(done, ms));",
+          "lineSHA256": "b038ca0f32d9f44f6c1b3c76948165cd242f7edf06381a4f37ef597555d701b8"
+        },
+        {
+          "line": 8,
+          "exactSourceLine": "  spawned = 0;",
+          "lineSHA256": "590caf57392208bb81038d245c55af47c15aafcc1afb02a0cb852c84302547fd"
+        },
+        {
+          "line": 15,
+          "exactSourceLine": "      signal(\"SIGTERM\"); await Promise.race([record.closed, delay(100)]);",
+          "lineSHA256": "42911881b2011dc688e1036e0cebad424219079c59aff535da36bff34721f449"
+        },
+        {
+          "line": 17,
+          "exactSourceLine": "      signal(\"SIGKILL\"); await Promise.race([record.closed, delay(2_000)]);",
+          "lineSHA256": "08ca7aad541d2922b090fa6cc67b671fae0cb43ef181073cf09208a5e28ec454"
+        },
+        {
+          "line": 19,
+          "exactSourceLine": "      const deadline = Date.now() + 2_000;",
+          "lineSHA256": "fe6ef344a7967f3147dc601901b6d153803404beaaaa425c5c5cac82bc192f87"
+        },
+        {
+          "line": 22,
+          "exactSourceLine": "        members = linuxGroupMembers(record.child.pid, deadline);",
+          "lineSHA256": "fba77bdb7ae37aa8052a64fc3d696b21bc6981d4145a1810b891fcef4b073668"
+        },
+        {
+          "line": 24,
+          "exactSourceLine": "        else { confirmed = false; signal(\"SIGKILL\"); }",
+          "lineSHA256": "1e255dae884ad73f6c23c4e98758af17101749e89a23a71997960157c45bf66e"
+        },
+        {
+          "line": 25,
+          "exactSourceLine": "        if (Date.now() >= deadline) throw new Error(\"OWNED_GROUP_NOT_TERMINAL\");",
+          "lineSHA256": "dc7c271484b2939b9198635f93a040e0cec493211981743625c4ab0be80c7e6e"
+        },
+        {
+          "line": 27,
+          "exactSourceLine": "      } while (Date.now() <= deadline);",
+          "lineSHA256": "84b12f8cb476a0a6cc186b46b915180710b332c6bf8f0e0e40cbe52af821e59c"
+        },
+        {
+          "line": 39,
+          "exactSourceLine": "    if (this.spawned >= 6 || this.records.size >= 2) throw new Error(\"QA_PROCESS_BUDGET\");",
+          "lineSHA256": "41350855a19924c000046a81928c51f1f7d75314a1cacdf924e868d4f0c59703"
+        },
+        {
+          "line": 44,
+          "exactSourceLine": "    this.records.add(record); this.spawned++;",
+          "lineSHA256": "55a58b46432536717d3b9eda3a170176896e5730332512b23087a1d0148ee0f3"
+        },
+        {
+          "line": 61,
+          "exactSourceLine": "    const timer = setTimeout(() => { timedOut = true; void this.reap(record).finally(() => timeout({ code: -1, signal: \"timeout\" })).catch(() => {}); }, timeoutMs);",
+          "lineSHA256": "c957a5b3cd747ad14fb856fe392d0b84079b00acd89e1ac10dd6457ce2ce8617"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/process-terminal.mjs",
+      "bytes": 1316,
+      "sourceSHA256": "2f04fa9969468e62f93a8a6b38ee25c9904b48cfa558d2116d693e8b63ec9e46",
+      "encodedPath": "source-byte-gzip/2f04fa9969468e62f93a8a6b38ee25c9904b48cfa558d2116d693e8b63ec9e46.gz",
+      "sourceLines": [
+        {
+          "line": 5,
+          "exactSourceLine": "export function linuxGroupMembers(groupId, deadline) {",
+          "lineSHA256": "7d94960e2f9f7f9482c87e4c764a263b55e8930bc45aa2e4914afbdd9e66aa1d"
+        },
+        {
+          "line": 10,
+          "exactSourceLine": "    if (Date.now() > deadline) throw new Error(\"OWNED_GROUP_VERIFICATION_TIMEOUT\");",
+          "lineSHA256": "a0bf0e571a61806291d925f9e162f22c5dd0b18ad03f606e6d85416d43b69bf4"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/qualifier-diagnostics.mjs",
+      "bytes": 3812,
+      "sourceSHA256": "3b10d7c9605062d4555672b3047de9636414aab66acf86fe2457c8feef705edb",
+      "encodedPath": "source-byte-gzip/3b10d7c9605062d4555672b3047de9636414aab66acf86fe2457c8feef705edb.gz",
+      "sourceLines": [
+        {
+          "line": 5,
+          "exactSourceLine": "function cleanupWitness(target,phase){const matches=[];for(const name of readdirSync(scratch).filter(n=>/^journal-.*\\.jsonl$/.test(n))){const bytes=readFileSync(canonical(resolve(scratch,name),scratch,true));if(!bytes.toString().endsWith('\\n'))continue;const lines=bytes.toString().trimEnd().split('\\n');if(JSON.parse(lines[0]).phase!==phase)continue;let previous='0'.repeat(64),sequence=0;for(const line of lines){const row=JSON.parse(line),{receiptDigest,...body}=row;assert.equal(row.operation,target.operation);assert.equal(row.runId,target.runId);assert.equal(row.sequence,++sequence);assert.equal(row.previousDigest,previous);assert.equal(receiptDigest,sha256(JSON.stringify(body)));previous=receiptDigest;if(row.phase==='final'&&row.caseId==='native-qualifier')matches.push({journalPath:name,journalSha256:sha256(bytes),sequence,status:row.status,cleanupComplete:row.cleanupComplete===true,receiptDigest});}}return matches.length===1?matches[0]:{status:'NOT_OBSERVED',cleanupComplete:false};}",
+          "lineSHA256": "da440386aab41470dbd9e6b27df3116652b25cfc147209f9ef7f36515b354785"
+        },
+        {
+          "line": 7,
+          "exactSourceLine": "export function captureQualifier(target,phase,result){assert.ok(['synthetic','empty'].includes(phase));const stdout=result.stdoutBytes??Buffer.from(result.stdout??''),stderr=result.stderrBytes??Buffer.from(result.stderr??'');assert.ok(stdout.length+stderr.length<=diagnosticBounds.stdioBytes);const name='qualifier-diagnostic-'+phase+'-'+randomUUID(),out=write(name+'-stdout.bin',stdout,256000),err=write(name+'-stderr.bin',stderr,256000);let cleanup;try{cleanup=cleanupWitness(target,phase);}catch{cleanup={status:'INVALID_JOURNAL',cleanupComplete:false};}const message=stderr.toString('utf8'),failureClass=['CAPABILITY_UNSUPPORTED','CAPABILITY_UNAVAILABLE','POLICY_DENIED','QA_RESULT_BYTES','QA_RPC_BUDGET'].find(code=>message.includes(code))??(result.timedOut?'TIMEOUT':result.overflow?'STDIO_OVERFLOW':result.code===0?'NONE':'UNCAUGHT_CHILD_FAILURE');const metadata={operation:target.operation,runId:target.runId,phase,freezeSha256:sha256(readFileSync(canonical(resolve(root,'runtime-freeze.json'),root))),status:result.code===0&&!result.timedOut&&!result.overflow?'PASS':'FAIL',exitCode:result.code??-1,signal:result.signal??null,timedOut:result.timedOut===true,overflow:result.overflow===true,capturedBytes:stdout.length+stderr.length,observedBytes:result.observedBytes??stdout.length+stderr.length,complete:!result.overflow,stdout:out,stderr:err,failureClass,cleanup};const record=write(name+'.json',Buffer.from(JSON.stringify(metadata)+'\\n'),16384);return {record,failureClass,status:metadata.status,cleanupComplete:cleanup.cleanupComplete};}",
+          "lineSHA256": "feafc8a9f91b6977850ff2bb1d27b62d16b824f008399d6914fc789c3e9961d3"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/qualify-owned.mjs",
+      "bytes": 2404,
+      "sourceSHA256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49",
+      "encodedPath": "source-byte-gzip/095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49.gz",
+      "sourceLines": [
+        {
+          "line": 1,
+          "exactSourceLine": "/** Parent-only qualifier, captures bounded private diagnostics BEFORE cleanup/finally can lose it. */",
+          "lineSHA256": "621b7a23ebee653544005c52092baf059d44539709fdd5ee62c09822cbe47cc7"
+        },
+        {
+          "line": 4,
+          "exactSourceLine": "try{if(phase==='synthetic'){await reserveTicket('process',6);result=await owner.run([resolve(root,'scripts/driver.mjs'),phase],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NODE_USE_ENV_PROXY:'1',...runtime}},limits.driverMs);captureAttempted=true;diagnostic=captureQualifier(target,phase,result);status=diagnostic.status;}else{const{session,qualify}=await import('./driver.mjs');const outcome=await qualify(await session('empty'),'empty');result={code:outcome.status==='PASS'&&outcome.cleanupComplete?0:1,stdout:JSON.stringify(outcome),stderr:'',timedOut:false,overflow:false};captureAttempted=true;diagnostic=captureQualifier(target,phase,result);status=diagnostic.status;}}",
+          "lineSHA256": "cddd98e4166a381365659ee248b701d8b861327ec0b1ad8b4543c133cc4c01f3"
+        },
+        {
+          "line": 6,
+          "exactSourceLine": "finally{await owner.reapAll();if(owner.records.size)status='FAIL';exclusive(resolve(scratch,'qualifier-process-'+phase+'-'+randomUUID()+'.json'),{operation:target.operation,phase,status,counts:{spawned:owner.spawned,verifiedTerminalGroups:owner.verifiedGroups,remaining:owner.records.size},exitCode:result?.code??1,diagnostic:diagnostic?.record,failureClass:diagnostic?.failureClass??'UNKNOWN',cleanupComplete:diagnostic?.cleanupComplete===true},true,16384);}",
+          "lineSHA256": "b155a7e7d2b9899e905799ea739bcca0bc695bd851a388a51ce8fd28dc46b317"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/window-evidence.mjs",
+      "bytes": 2883,
+      "sourceSHA256": "3f2bfc652523383f45c734170d0ab307104317978d62bec3b4fb4ee1288b7255",
+      "encodedPath": "source-byte-gzip/3f2bfc652523383f45c734170d0ab307104317978d62bec3b4fb4ee1288b7255.gz",
+      "sourceLines": [
+        {
+          "line": 4,
+          "exactSourceLine": "export async function scheduleCase(kind,{now=Date.now,wait=ms=>new Promise(done=>setTimeout(done,ms)),deadline}){assert.equal(typeof deadline,'function');let steps=0;while(true){const current=now(),end=deadline();assert.ok(Number.isFinite(end)&&current<end,'QA_TOTAL_TIME_BUDGET');const offset=((current%60000)+60000)%60000;if(kind==='window'?offset>=30000:offset>=1000&&offset<30000)return{kind,startMs:current,deadlineMs:end,waitSteps:steps,minimumLeadMs:kind==='window'?0:60000-offset};assert.ok(++steps<=121,'QA_SCHEDULING_BUDGET');await wait(Math.min(250,end-current));}}",
+          "lineSHA256": "cfa093c117d763a21c356f09190d1cb6ec27f539f7782c16c65921552565582c"
+        },
+        {
+          "line": 5,
+          "exactSourceLine": "function accounts(rows,reference,runBudgetId){const selected=rows.filter(x=>x.table==='runtimeBudgetAccounts'&&x.row.tenantId===reference.tenantId&&(x.row.kind==='tenant'||x.row.kind==='run'&&x.row.runBudgetId===runBudgetId));assert.equal(selected.length,2,'QA_WINDOW_EVIDENCE_MISSING');assert.equal(selected.filter(x=>x.row.kind==='tenant').length,1);assert.equal(selected.filter(x=>x.row.kind==='run').length,1);return selected.map(({row})=>({kind:row.kind,windowStart:row.windowStart,windowEnd:row.windowEnd,current:row.current,reservedUnits:row.reservedUnits,settledUnits:row.settledUnits,uncertainUnits:row.uncertainUnits,activeConcurrency:row.activeConcurrency})).sort((a,b)=>a.kind.localeCompare(b.kind));}",
+          "lineSHA256": "f9271c53964a1f3a78aab011f57aa8f3583859da44c74a401c8626230b38147d"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/cleanup.mjs",
+      "bytes": 1189,
+      "sourceSHA256": "a107ba9df54f916d61639a126ed549c6b4206843af4aa79e555ecbd0300dc1cc",
+      "encodedPath": "source-byte-gzip/a107ba9df54f916d61639a126ed549c6b4206843af4aa79e555ecbd0300dc1cc.gz",
+      "sourceLines": [
+        {
+          "line": 3,
+          "exactSourceLine": "const s=await session(process.argv[2]??'synthetic');s.cleanupMode=true;let complete=false;try{for(let pass=0;pass<2&&!complete;pass++){await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const rows=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});complete=s.custodyComplete()&&!rows.some(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId));}assert.equal(complete,true);}finally{s.journal.append({phase:'recovery',caseId:'owned-cleanup',status:complete?'PASS':'FAIL',cleanupComplete:complete});s.close();exclusive(resolve(scratch,'cleanup-'+randomUUID()+'.json'),{operation:s.target.operation,status:complete?'PASS':'FAIL',cleanupComplete:complete,counts:s.counts()});}",
+          "lineSHA256": "96ce55607cdb0f8202ec8a1a2f29daa76b2e614b757ed5f29200ba489208acb7"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sourceSHA256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071",
+      "encodedPath": "source-byte-gzip/8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071.gz",
+      "sourceLines": [
+        {
+          "line": 8,
+          "exactSourceLine": "import {currentTarget,historicalEvidence,validateHistoricalInputs,exactKeys,boundedId,readPrivate,strictProfile,candidateArgument,parentDeadline} from './parent-inputs.mjs';",
+          "lineSHA256": "e5dc2a51f2e17c322c4e922097730d2b57e914c7cbd8758f78e3b98f3a41bf79"
+        },
+        {
+          "line": 11,
+          "exactSourceLine": "export async function main(){assert.equal(watcherStarted,false,'PARENT_WATCHER_ALREADY_STARTED');watcherStarted=true;const deadline=Date.now()+120000;const effects={privateOutputs:[],privateOutputStates:[]};let recheck=()=>parentDeadline(deadline);const output=(name,value)=>{",
+          "lineSHA256": "588a561f818242b7d47acbf41a19721f1b15f12b6dba20f800d1d994770c65e6"
+        },
+        {
+          "line": 13,
+          "exactSourceLine": "  exclusive(path,value,true,undefined,{deadlineMs:deadline,beforeCreate:()=>{parentDeadline(deadline);recheck();},observe:phase=>{",
+          "lineSHA256": "d036f1b09e5450de80193b316ebffb1597a530953140201fcbd16aed1ab1d3ac"
+        },
+        {
+          "line": 17,
+          "exactSourceLine": "  parentDeadline(deadline);",
+          "lineSHA256": "9b3a1750fc3fd8a7444e9ba4fb493ad644b13b0916f664450ba41aab28b49954"
+        },
+        {
+          "line": 18,
+          "exactSourceLine": " };try{strictProfile();preservationPreflight();if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');if(process.argv[2]!==undefined)assert.equal(process.argv[2],candidateArgument,'PARENT_CANDIDATE');const {target,identity}=currentTarget('synthetic');const historyPath=resolve(scratch,'historical-native-locators.json'),proofPath=resolve(scratch,'initial-physical-id-provenance.json'),historyBytes=readPrivate(historyPath,scratch),proofBytes=readPrivate(proofPath,scratch),history=JSON.parse(historyBytes),initial=JSON.parse(proofBytes),evidence=historicalEvidence();validateHistoricalInputs(target,history,initial,evidence);",
+          "lineSHA256": "72e8327d39b1332a5318d9b007fa6e777b5dc6bb75e27b674d2168068517adf4"
+        },
+        {
+          "line": 19,
+          "exactSourceLine": " const windowPath=resolve(scratch,'qualifier-window.json'),windowBytes=readPrivate(windowPath,scratch),window=JSON.parse(windowBytes);exactKeys(window,['startedAt','deadlineMs']);assert.equal(window.deadlineMs,1200000,'PARENT_WINDOW_LIMIT');const windowStart=Date.parse(window.startedAt);assert.ok(Number.isFinite(windowStart),'PARENT_WINDOW_START');const windowEnd=windowStart+window.deadlineMs;const checkWindow=()=>{assert.equal(sha256(readPrivate(windowPath,scratch)),sha256(windowBytes),'PARENT_WINDOW_CHANGED');assert.ok(Date.now()>=windowStart&&Date.now()<windowEnd,'PARENT_WINDOW_EXPIRED_OR_FUTURE');};checkWindow();",
+          "lineSHA256": "fdce0887112771ca42263b7e5ac83a982a93cd2223c39516dc3e70174ab27f73"
+        },
+        {
+          "line": 21,
+          "exactSourceLine": " while(!receipts.runtimeModelOperations||!receipts.runtimeModelAttempts){if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_OWNERSHIP_NOT_OBSERVED');currentTarget('synthetic',identity);checkWindow();const names=readdirSync(scratch).filter(name=>name.startsWith('owned-created-')).sort();assert.ok(names.length<=783,'PARENT_RECEIPT_BUDGET');for(const name of names){assert.match(name,/^owned-created-[a-f0-9]{64}\\.json$/,'PARENT_RECEIPT_NAME');const path=resolve(scratch,name),bytes=readPrivate(path,scratch);assert.ok(bytes.length<=16384,'PARENT_RECEIPT_BYTES');if(!bytes.toString().endsWith('\\n'))continue;const row=JSON.parse(bytes);exactKeys(row,['operation','kind','table','id','observedAt']);assert.equal(row.operation,target.operation,'PARENT_RECEIPT_OPERATION');assert.equal(row.kind,'created','PARENT_RECEIPT_KIND');assert.equal(typeof row.table,'string');assert.match(row.table,/^[a-zA-Z][a-zA-Z0-9]*$/);boundedId(row.id);assert.equal(typeof row.observedAt,'string');assert.ok(Number.isFinite(Date.parse(row.observedAt)),'PARENT_RECEIPT_TIMESTAMP');assert.ok(Date.parse(row.observedAt)>=windowStart&&Date.parse(row.observedAt)<windowEnd&&Date.parse(row.observedAt)<=Date.now(),'PARENT_RECEIPT_WINDOW');assert.equal(name,'owned-created-'+sha256(row.table+':'+row.id)+'.json','PARENT_RECEIPT_HASH');if(['runtimeModelOperations','runtimeModelAttempts'].includes(row.table)&&!receipts[row.table]){ids[row.table]=row.id;receipts[row.table]={path,sha256:sha256(bytes),locatorSHA256:sha256(row.id),bytes:bytes.length,operation:row.operation,table:row.table,kind:row.kind};}}receiptFiles=names.length;if(!receipts.runtimeModelOperations||!receipts.runtimeModelAttempts)await new Promise(done=>setTimeout(done,100));}",
+          "lineSHA256": "82896f8d3635afb3d00203ff75909eff6c4016a8a80d6963f0936b42545c94cb"
+        },
+        {
+          "line": 26,
+          "exactSourceLine": " if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');const proof={operation:target.operation,runId:target.runId,targetIdentity:identity,observedAt:new Date().toISOString(),status:'SOURCE_BOUND_NATIVE_ISSUANCE_PROVENANCE',historicalProvenanceSHA256:sha256(proofBytes),historicalProvenanceCompactSHA256:sha256(JSON.stringify(initial)),currentCoreOwnership:receipts,scopeSHA256:sha256(JSON.stringify(scope)),storageCreated:0,currentPublicStorageDecoding:'NOT_RUN; requires actual handler auth denial on the two existing noJWT sweep observations',extraRPC:0,extraRows:0,observedCreationReceipts:receiptFiles};",
+          "lineSHA256": "79b56facdd88f459e3af0f1f3b4bc3863f449b8edcdd35a84f91de8860f64c06"
+        },
+        {
+          "line": 27,
+          "exactSourceLine": " recheck=()=>{parentDeadline(deadline);currentTarget('synthetic',identity);checkWindow();preservationPreflight();assert.equal(sha256(readFileSync(canonical(inventoryPath,root))),sha256(inventoryBytes),'PARENT_INVENTORY_CHANGED');assert.equal(sha256(readPrivate(historyPath,scratch)),sha256(historyBytes),'PARENT_HISTORY_CHANGED');assert.equal(sha256(readPrivate(proofPath,scratch)),sha256(proofBytes),'PARENT_PROOF_CHANGED');validateHistoricalInputs(target,history,initial,historicalEvidence());for(const receipt of Object.values(receipts))assert.equal(sha256(readPrivate(receipt.path,scratch)),receipt.sha256,'PARENT_RECEIPT_CHANGED');};recheck();",
+          "lineSHA256": "2e08b7a0f500c55e0de6d7721aa35eedde0497f8eb354feb0c6ecf87fc5eb270"
+        },
+        {
+          "line": 28,
+          "exactSourceLine": " preservationPreflight();if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('current-physical-id-input-receipt.json',proof);currentTarget('synthetic',identity);if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('argument-scope.json',scope);currentTarget('synthetic',identity);if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('public-arguments.json',{operation:target.operation,inventorySha256:sha256(inventoryBytes),arguments:publicArgs,internalArguments:internalArgs,modelAttemptId:ids.runtimeModelAttempts});recheck();parentDeadline(deadline);process.stdout.write(JSON.stringify({status:'PASS_SOURCE_BOUND_INPUTS',extraRPC:0,extraRows:0,storageCreated:0,currentCoreIDTables:Object.keys(receipts).sort(),currentPublicStorageDecoding:'NOT_RUN'})+'\\n');}catch(error){if(error&&typeof error==='object'){try{Object.defineProperty(error,'parentCurrentInputEffects',{value:Object.freeze({status:'FAIL',privateOutputs:Object.freeze([...effects.privateOutputs]),privateOutputStates:Object.freeze(effects.privateOutputStates.map(state=>Object.freeze({...state})))}),enumerable:true});}catch{}}throw error;}}",
+          "lineSHA256": "92c8425a263b599fa4c8f2b86a2d14d4f8670e27180e1ba887bd440daad7190f"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/driver.mjs",
+      "bytes": 21200,
+      "sourceSHA256": "1f210078884b32d49ca42a48cd347516663daba516f6d23c257c1fc8d005f4f4",
+      "encodedPath": "source-byte-gzip/1f210078884b32d49ca42a48cd347516663daba516f6d23c257c1fc8d005f4f4.gz",
+      "sourceLines": [
+        {
+          "line": 14,
+          "exactSourceLine": "import {livePreflight,root,scratch,json,limits,Journal,sha256,exclusive,reviewed,reviewPin,reserveTicket,qualifierDeadline,preservationPreflight,creationDispatched,creationSettled,uncertainCreationCount,creationResponseKnown,creationSettlementCandidates,creationAcknowledge,creationCustodyCounts} from './guard.mjs';",
+          "lineSHA256": "717152620685e72fb83058ada7b3ee2c55d64a0dc38088894f94cc9e7426a91f"
+        },
+        {
+          "line": 21,
+          "exactSourceLine": " let rpc=0,cleanupRpc=0,active=0;const start=Date.now(),journal=new Journal(parent.runId,target.operation);journal.append({phase,caseId:'publication-arguments',status:'PASS',observedCategory:'published-arguments-equal',apiSpecDigest:publicationEquality.argumentsSha256});const clients=new WeakMap();const wire=new Set();let originalWindowDigest;",
+          "lineSHA256": "dd30274ae625b4281db6bcf718678596e502321917cf1d1e7d2f6b9eb108d93f"
+        },
+        {
+          "line": 22,
+          "exactSourceLine": " const freshDispatch=()=>{if(reviewPin()!==s.expectedReviewPin)throw Error('QA_REVIEW_EXPECTED_PIN_DRIFT');const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');const windowDigest=sha256(readFileSync(resolve(scratch,'qualifier-window.json')));if(windowDigest!==originalWindowDigest)throw Error('QA_WINDOW_DRIFT');return qualifierDeadline();};",
+          "lineSHA256": "3f5e274ff90f634addca725ef4ed3ea78f5f2cfc8518be43e094613c3b5f1cf0"
+        },
+        {
+          "line": 23,
+          "exactSourceLine": " const create=(jwt,admin=false)=>{const lanes=[];const handle=Object.freeze(Object.create(null));const boundedFetch=async(url,options)=>{const parsed=new URL(url);if(parsed.origin!==target.deploymentUrl||options?.method!=='POST')throw Error('QA_ORIGIN');const type=parsed.pathname.replace('/api/','');if(!['query','mutation','action'].includes(type)||parsed.pathname!=='/api/'+type||typeof options.body!=='string')throw Error('QA_RPC_CALLBACK_BOUND');const lane=lanes.find(l=>!l.entered&&l.type===type&&l.body===options.body);if(!lane||!lane.ticket||lane.closed)throw Error('QA_RPC_CALLBACK_BOUND');lane.entered=true;if(lane.creationCapable){creationDispatched(lane.ticket,Math.min(lane.deadline,qualifierDeadline()));lane.creationPending=true;}const deadline=Math.min(freshDispatch(),lane.deadline);if(lane.path==='qualificationOwned:snapshot'&&lane.ownedSnapshot)lane.creationCandidates=creationSettlementCandidates();if(Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');const response=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(Math.max(1,deadline-Date.now()))});const body=await boundedBody(response,limits.resultBytes,deadline);if(lane.type==='mutation'&&response.status===560){try{const envelope=JSON.parse(body);if(envelope.status==='error'&&typeof envelope.errorMessage==='string')lane.authoritativeRollback=true;}catch{}}if([400,401,403].includes(response.status)){try{const envelope=JSON.parse(body);if(['InvalidAuth','Unauthenticated','InvalidAuthHeader','NoAuthProvider'].includes(envelope.code)&&typeof envelope.message==='string'&&Object.keys(envelope).every(k=>['code','message'].includes(k))){wire.add(body);lane.authoritativeRollback=true;}}catch{}}if(lane.internalMutation&&[400,404].includes(response.status)&&/Could not find public function for ['\"]|Cannot call internal function|Function is internal/.test(body))lane.authoritativeRollback=true;return new Response(body,{status:response.status,statusText:response.statusText,headers:response.headers});};const client=new ConvexHttpClient(target.deploymentUrl,{logger:false,fetch:boundedFetch});if(admin)client.setAdminAuth(values.CONVEX_DEPLOY_KEY);else if(jwt)client.setAuth(jwt);clients.set(handle,{client,lanes});return handle;};const operator=create(undefined,true);",
+          "lineSHA256": "4d4e13da48c92fd95c3b8dc4a62b7a34e6fe1d0c567df8009373fb752241bf14"
+        },
+        {
+          "line": 24,
+          "exactSourceLine": " let windowProofs=0;const s={async recordWindowEvidence(proof,status){if(++windowProofs>4)throw Error('QA_WINDOW_PROOF_BUDGET');const receipt={operation:target.operation,runId:parent.runId,phase,status,...proof};const bytes=Buffer.byteLength(JSON.stringify(receipt,null,2)+'\\n');if(bytes>4096)throw Error('QA_WINDOW_PROOF_BYTES');reservePublicationEvidence(bytes);exclusive(resolve(scratch,'window-proof-'+String(windowProofs)+'-'+randomUUID()+'.json'),receipt,true,4096);},runId:parent.runId,target,values,publicationReceipt,expectedReviewPin:reviewPin(),phase,parent,publication,publicationEquality,journal,peerCalls:0,peerEffects:0,peerOther:0,profile:json(resolve(root,'profile.json')),async rpc(type,path,args,client=operator){if(!['query','mutation','action'].includes(type)||typeof path!=='string'||!clients.has(client))throw Error('QA_RPC_METHOD_BOUND');if(++rpc>limits.rpc||Date.now()-start>limits.qualifierMs||++active>limits.concurrency)throw Error('QA_RPC_BUDGET');if(s.caseRPCMax!==undefined&&rpc>s.caseRPCMax)throw Error('QA_CASE_RPC_BUDGET');if(path.startsWith('qualificationOwned:cleanup')){if(++cleanupRpc>limits.cleanupRpc)throw Error('QA_CLEANUP_BUDGET');await reserveTicket('cleanup',limits.cleanupRpc);}const nativeTicket=await reserveTicket('native',limits.nativeClientRpc,s.cleanupMode===true);const windowDigest=sha256(readFileSync(resolve(scratch,'qualifier-window.json')));if(originalWindowDigest===undefined)originalWindowDigest=windowDigest;else if(originalWindowDigest!==windowDigest)throw Error('QA_WINDOW_DRIFT');if(client===operator&&['qualificationOwned:parentRollback','qualificationCapture:parentRefinementRollback'].includes(path))await reserveTicket('nested-parent',1);if(['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path))await reserveTicket('nested-auth',28);const begun=Date.now();let custodyLane;try{const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');wire.clear();const owned=clients.get(client);const lane={type,path,ownedSnapshot:path==='qualificationOwned:snapshot'&&args.run===parent.runId,creationCapable:type==='mutation'&&!['admin:deleteRecord','admin:clearTable','qualificationOwned:cleanup','qualificationCapture:partialMarker'].includes(path)||type==='action'&&!['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path),internalMutation:type==='mutation'&&json(resolve(root,'registration-inventory.json')).registrations.some(row=>row.path===path&&row.visibility==='internal'),body:JSON.stringify({path,format:'convex_encoded_json',args:[convexToJson(args)]}),ticket:nativeTicket,deadline:begun+limits.rpcMs,entered:false,closed:false};custodyLane=lane;owned.lanes.push(lane);let value;try{value=await owned.client[type](makeFunctionReference(path),args);if(!lane.entered)throw Error('QA_RPC_CALLBACK_MISSING');}finally{lane.closed=true;const index=owned.lanes.indexOf(lane);if(index!==-1)owned.lanes.splice(index,1);}const custodyDeadline=Math.min(lane.deadline,qualifierDeadline());if(Date.now()>=custodyDeadline)throw Error('QA_RPC_TIME_BUDGET');if(Buffer.byteLength(JSON.stringify(value))>limits.resultBytes)throw Error('QA_RESULT_BYTES');if(value?.createdRefs)track(value.createdRefs,'created',target.operation,custodyDeadline);if(value?.deletedRefs){if(path==='qualificationOwned:cleanup'&&type==='mutation'&&client===operator&&args.run===parent.runId)track(value.deletedRefs,'created',target.operation,custodyDeadline);track(value.deletedRefs,'deleted',target.operation,custodyDeadline);}if(path==='qualificationOwned:snapshot'){track(ownedSnapshot(value,parent.runId),'created',target.operation,custodyDeadline);if(lane.ownedSnapshot)durableOwnership(target.operation,custodyDeadline);}journal.append({phase,caseId:path.replace(':','-'),status:'PASS',observedCategory:'rpc-complete',elapsedMs:Date.now()-begun});if(lane.creationPending){if(path==='qualificationOwned:seed'&&Array.isArray(value?.createdRefs)&&value.createdRefs.length===7)creationSettled(lane.ticket,custodyDeadline);else creationResponseKnown(lane.ticket,custodyDeadline);lane.creationPending=false;}if(lane.ownedSnapshot){for(const ticket of lane.creationCandidates??[])creationAcknowledge(ticket,custodyDeadline);}return value;}catch(error){try{journal.append({phase,caseId:path.replace(':','-'),status:'FAIL',observedCategory:'rpc-rejected',failureClass:typeof error?.data?.code==='string'&&/^[A-Z_]{1,64}$/.test(error.data.code)?error.data.code.toLowerCase():'native_or_transport'});if(custodyLane?.creationPending&&custodyLane.authoritativeRollback){creationSettled(custodyLane.ticket,Math.min(custodyLane.deadline,qualifierDeadline()));custodyLane.creationPending=false;}}catch(journalFailure){retainSecondary(error,'qaJournalFailure',journalFailure);}throw error;}finally{active--;}}",
+          "lineSHA256": "ca0b2a3c8de43514a12251b61bd31c730c6c7c366be42fa4494c38cd9a569030"
+        },
+        {
+          "line": 25,
+          "exactSourceLine": " ,create,authDenied(error){return ['FORBIDDEN','UNAUTHENTICATED'].includes(error?.data?.code)||wire.has(error?.message);},custodyComplete:()=>uncertainCreationCount()===0,counts:()=>({rpc,cleanupRpc,...creationCustodyCounts(),peerEffects:s.peerEffects,peerOther:s.peerOther,...ownershipCounts()}),close:()=>journal.close()};return s;}",
+          "lineSHA256": "3ccdc76ff7975c7ffe18e51c1459a5b0239d41f3cc60219ec1a8ab5c49023cb5"
+        },
+        {
+          "line": 37,
+          "exactSourceLine": "export async function qualify(s,phase){let complete=false,status='FAIL',primaryFailure,cleanupFailure;try{if(phase==='synthetic'){for(const [id,kind]of definitions){reviewed();await scheduleCase(kind,{deadline:qualifierDeadline});",
+          "lineSHA256": "ac0c018fb650e8f6c3de122cc26f00e662363e8447b47cabb2c7d4a1b5af8b45"
+        },
+        {
+          "line": 38,
+          "exactSourceLine": " const expectedCase=json(resolve(root,'cases.json')).scenarios.find(row=>row.id===id);await allocateRows(id,expectedCase.maximumCommittedCreatedRows,s.target.operation);const scenarioBefore=s.counts().rpc;s.caseRPCMax=scenarioBefore+Math.min(expectedCase.rpcCeiling,expectedCase.sourceBoundRpcCeiling??expectedCase.rpcCeiling);await scenario(s,id,kind);if(s.counts().rpc-scenarioBefore>Math.min(expectedCase.rpcCeiling,expectedCase.sourceBoundRpcCeiling??expectedCase.rpcCeiling))throw Error('QA_CASE_RPC_BUDGET');s.journal.append({phase:'case',caseId:id,status:'PASS',observedCategory:'outcome-asserted'});await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const left=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});assert.equal(left.filter(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId)).length,0);if(s.counts().rpc-scenarioBefore>expectedCase.rpcCeiling)throw Error('QA_CASE_RPC_BUDGET');s.caseRPCMax=undefined;}",
+          "lineSHA256": "a0a6f721d4b1b7f8085c901ff05875a857f87c16a0a5bbcd67ab7d5ebeceb8b1"
+        },
+        {
+          "line": 41,
+          "exactSourceLine": " status='PASS';}catch(error){primaryFailure=error;rawOwnedFailure(phase,'scenario-before-cleanup',error);throw error;}finally{try{s.caseRPCMax=undefined;s.cleanupMode=true;for(let attempt=0;attempt<2&&!complete;attempt++){await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const rows=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});complete=s.custodyComplete()&&!rows.some(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId));}try{reviewed();preservationPreflight();}catch(error){status='FAIL';rawOwnedFailure(phase,'full-boundary-source',error);}if(!complete)status='FAIL';s.journal.append({phase:'final',caseId:'native-qualifier',status:status==='PASS'&&complete?'PASS':'FAIL',cleanupComplete:complete,counts:s.counts()});}catch(error){cleanupFailure=error;status='FAIL';rawOwnedFailure(phase,'cleanup-secondary',error);if(primaryFailure)retainSecondary(primaryFailure,'qaCleanupFailure',error);else throw error;}finally{try{s.close();}catch(error){status='FAIL';rawOwnedFailure(phase,'close-secondary',error);if(primaryFailure)retainSecondary(primaryFailure,'qaCloseFailure',error);else if(cleanupFailure)retainSecondary(cleanupFailure,'qaCloseFailure',error);else throw error;}}}return {status,cleanupComplete:complete,counts:s.counts()};}",
+          "lineSHA256": "fc2dae7db2e4b1441ca485d49b46fe7f9a8904b7ce960daa84c82e931538cff5"
+        },
+        {
+          "line": 42,
+          "exactSourceLine": "if(process.argv[1]?.endsWith('driver.mjs')){const phase=process.argv[2];if(!['synthetic','empty'].includes(phase))throw Error('QA_PHASE');const s=await session(phase);const result=await qualify(s,phase);exclusive(resolve(scratch,'result-'+phase+'-'+randomUUID()+'.json'),result);process.stdout.write(JSON.stringify(result)+'\\n');process.exitCode=result.status==='PASS'&&result.cleanupComplete?0:1;}",
+          "lineSHA256": "011a7e6dbeaf567b282db0ebede18d0ada3c5d15628bc4a2688f6819be2704c6"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/guard.mjs",
+      "bytes": 30657,
+      "sourceSHA256": "fd14dfaf0fa205d62db37617eaf358195a0eb2c28206946cc3d2f5a270ba726f",
+      "encodedPath": "source-byte-gzip/fd14dfaf0fa205d62db37617eaf358195a0eb2c28206946cc3d2f5a270ba726f.gz",
+      "sourceLines": [
+        {
+          "line": 9,
+          "exactSourceLine": "export const limits=Object.freeze({rpc:3000,nativeClientRpc:2963,nestedNativeInvocations:37,cleanupRpc:40,concurrency:4,qualifierMs:1200000,driverMs:1440000,rpcMs:12000,scenarios:64,rows:320,storage:0,peerEffects:8,peerOther:24,resultBytes:256000,evidenceBytes:8388608,receiptBytes:16384,journalBytes:4096,journalRows:6000,processes:6,groups:2,cliMs:120000});",
+          "lineSHA256": "8db95ee2feffdacb7e4a203d89115e523ffb96eac5e301176702f7b0c65dcbca"
+        },
+        {
+          "line": 14,
+          "exactSourceLine": "export function exclusive(path,value,privateFile=true,maxBytes=limits.resultBytes,control){if(control!==undefined&&(!control||Object.keys(control).some(key=>!['deadlineMs','beforeCreate','observe'].includes(key))||!Number.isSafeInteger(control.deadlineMs)||control.deadlineMs<1||typeof control.beforeCreate!=='function'||typeof control.observe!=='function'))throw Error('QA_EXCLUSIVE_CONTROL');canonical(dirname(path),repo);if(control&&privateFile){const parent=lstatSync(dirname(path));if(!parent.isDirectory()||parent.uid!==process.getuid()||(parent.mode&511)!==448)throw Error('QA_PRIVATE_PARENT');}const encoded=Buffer.from(JSON.stringify(value,null,2)+'\\n');if(encoded.length>maxBytes)throw Error('QA_BYTES');if(control)control.beforeCreate();if(control&&Date.now()>=control.deadlineMs)throw Error('QA_EXCLUSIVE_DEADLINE');const fd=openSync(path,'wx',privateFile?0o600:0o644);let primary,hasPrimary=false;const observe=stage=>{if(control)control.observe(stage);};try{observe('created');let offset=0;while(offset<encoded.length){const wrote=writeSync(fd,encoded,offset,encoded.length-offset);if(!Number.isSafeInteger(wrote)||wrote<1||wrote>encoded.length-offset)throw Error('QA_EXCLUSIVE_SHORT_WRITE');offset+=wrote;}observe('written');fsyncSync(fd);observe('durable');}catch(error){primary=error;hasPrimary=true;}let closed=false;for(let attempt=0;attempt<2&&!closed;attempt++){try{closeSync(fd);closed=true;}catch(error){if(!hasPrimary){primary=error;hasPrimary=true;}if(attempt===1&&error?.code==='EBADF')closed=true;}}if(closed)try{observe('closed');}catch(error){if(!hasPrimary){primary=error;hasPrimary=true;}}if(hasPrimary)throw primary;}",
+          "lineSHA256": "728f71cd344df534d7b0ce38ea2558ae61fcf6f26d37308ca097bad4a3ccdaa8"
+        },
+        {
+          "line": 37,
+          "exactSourceLine": "export function qualifierDeadline(){const window=json(resolve(scratch,'qualifier-window.json'),scratch,true),start=Date.parse(window.startedAt);if(!Number.isFinite(start)||window.deadlineMs!==limits.qualifierMs)throw Error('QA_TOTAL_TIME_BUDGET');const end=start+limits.qualifierMs;if(Date.now()>=end)throw Error('QA_TOTAL_TIME_BUDGET');return end;}",
+          "lineSHA256": "9debca6ad868a9c55c86a69b982455177bf3f7070f68152b4c3c3cd87a4ef297"
+        },
+        {
+          "line": 50,
+          "exactSourceLine": "const safeKeys=new Set(['version','operation','runId','phase','caseId','sequence','previousDigest','sourceDigest','fixtureDigest','bootstrapDigest','apiSpecDigest','targetReceiptDigest','startedAt','observedAt','elapsedMs','status','expectedCategory','observedCategory','counts','noEffect','cleanupComplete','processTerminal','exitCode','failureClass','receiptDigest']);",
+          "lineSHA256": "4db0a41f50c2bf2fa7c0195c18c67e7e5c1a84aea62bc5495b05258efe5d05a4"
+        },
+        {
+          "line": 56,
+          "exactSourceLine": "export async function reserveTicket(kind,max,cleanup=false){const maxima={native:limits.nativeClientRpc,cleanup:limits.cleanupRpc,'peer-effect':limits.peerEffects,'peer-other':limits.peerOther,process:limits.processes,'nested-parent':1,'nested-auth':28};if(max!==maxima[kind]||typeof cleanup!=='boolean'||cleanup&&kind!=='native')throw Error('QA_TICKET_MAX');if(!['native','cleanup','peer-effect','peer-other','process','nested-parent','nested-auth'].includes(kind)||!Number.isSafeInteger(max)||max<1)throw Error('QA_TICKET');trustedReview();const lock=resolve(scratch,'dispatch-budget.lock');const deadline=Date.now()+12000;let fd;while(fd===undefined){try{fd=openSync(lock,'wx',0o600);}catch(error){if(error.code!=='EEXIST'||Date.now()>=deadline)throw Error('QA_BUDGET_LOCK');await new Promise(done=>setTimeout(done,10));}}",
+          "lineSHA256": "74dc49c8e3056752cacf8c3ec98421c58e893f8e9317be28401d27a16b50a9b6"
+        },
+        {
+          "line": 57,
+          "exactSourceLine": " try{trustedReview();if(kind==='native'){const window=resolve(scratch,'qualifier-window.json');if(!lstatSync(window,{throwIfNoEntry:false}))exclusive(window,{startedAt:new Date().toISOString(),deadlineMs:1200000});const recorded=json(window,scratch,true);if(Date.now()-Date.parse(recorded.startedAt)>=1200000||recorded.deadlineMs!==1200000)throw Error('QA_TOTAL_TIME_BUDGET');}const count=readdirSync(scratch).filter(name=>name.startsWith('ticket-'+kind+'-')).length;if(count>=max-(kind==='native'&&!cleanup?12:0))throw Error('QA_TOTAL_BUDGET');const path=resolve(scratch,`ticket-${kind}-${String(count+1).padStart(4,'0')}.json`);exclusive(path,{kind,sequence:count+1,observedAt:new Date().toISOString()});return Object.freeze({kind,sequence:count+1});}finally{closeSync(fd);const {unlinkSync}=await import('node:fs');unlinkSync(lock);}}",
+          "lineSHA256": "8ecba4f1d892e5d885e0ecadd4c1942a72518d6f3adbda36ad9a37af4f7bbd38"
+        },
+        {
+          "line": 61,
+          "exactSourceLine": "export function durableExistingPrivate(path,validate,maxBytes=16384,deadline=qualifierDeadline()){const check=()=>{if(!Number.isSafeInteger(deadline)||Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');};check();trustedReview();check();const bounded=canonical(path,scratch,true),initial=lstatSync(bounded);let fd,primary,body;try{check();if(!initial.isFile()||initial.size>maxBytes)throw Error('QA_DURABLE_BYTES');fd=openSync(bounded,constants.O_RDONLY|constants.O_NOFOLLOW);const opened=fstatSync(fd);if(!opened.isFile()||opened.dev!==initial.dev||opened.ino!==initial.ino||opened.nlink!==1||opened.uid!==process.getuid()||(opened.mode&511)!==384||opened.size>maxBytes)throw Error('QA_DURABLE_BINDING');check();body=readFileSync(fd);check();if(body.length!==opened.size||body.length>maxBytes)throw Error('QA_DURABLE_BYTES');validate(body);check();const beforeSync=lstatSync(canonical(bounded,scratch,true));if(beforeSync.dev!==opened.dev||beforeSync.ino!==opened.ino||beforeSync.size!==body.length||sha256(readFileSync(bounded))!==sha256(body))throw Error('QA_DURABLE_BINDING');check();fsyncSync(fd);check();}catch(error){primary=error;}finally{if(fd!==undefined)try{closeSync(fd);}catch(error){if(primary)Object.defineProperty(primary,'qaDurableCloseFailure',{value:error,enumerable:false});else primary=error;}}if(primary)throw primary;check();const final=lstatSync(canonical(bounded,scratch,true));if(final.dev!==initial.dev||final.ino!==initial.ino||final.size!==body.length||sha256(readFileSync(bounded))!==sha256(body))throw Error('QA_DURABLE_BINDING');check();return body;}",
+          "lineSHA256": "8797ebe71dacab57a28d65f5b1d0ccedd54f96d1a75b04b6765343406b8f40ba"
+        },
+        {
+          "line": 67,
+          "exactSourceLine": "function creationTransition(ticket,from,to,deadline=qualifierDeadline()){const check=()=>{if(!Number.isSafeInteger(deadline)||Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');};check();trustedReview();check();const path=creationTicketPath(ticket);if(creationState(ticket)!==from)throw Error('QA_CREATION_STATE');const marker=Buffer.from(to===1?creationPendingMarker:to===3?creationResponseMarker:creationSettledMarker);let fd,primary;try{check();fd=openSync(path,'a');let offset=0;while(offset<marker.length){check();const written=writeSync(fd,marker.subarray(offset));if(!Number.isSafeInteger(written)||written<1||written>marker.length-offset)throw Error('QA_CREATION_WRITE');offset+=written;check();}fsyncSync(fd);check();}catch(error){primary=error;}finally{if(fd!==undefined)try{closeSync(fd);}catch(error){if(primary)Object.defineProperty(primary,'qaCreationCloseFailure',{value:error,enumerable:false});else primary=error;}}if(primary)throw primary;check();}",
+          "lineSHA256": "2dcc18adb56694f743c38020cab9bc9c6f837e0ac528bb47f2c50d554aece12c"
+        },
+        {
+          "line": 68,
+          "exactSourceLine": "export const creationDispatched=(ticket,deadline)=>creationTransition(ticket,0,1,deadline);",
+          "lineSHA256": "49e27866fd2b10d4598da393317673bfd65f7953f7d0cd3b174b6e081f805a9e"
+        },
+        {
+          "line": 69,
+          "exactSourceLine": "export function creationSettled(ticket,deadline){creationTransition(ticket,creationState(ticket)===3?3:1,2,deadline);durableCreationAcknowledgments.add(creationKey(ticket));}",
+          "lineSHA256": "b9e896fa6113ca29c0391fd87839a7dd0906452ca689a50adeb65071635aaf8c"
+        },
+        {
+          "line": 71,
+          "exactSourceLine": "export function creationAcknowledge(ticket,deadline){const state=creationState(ticket);if(state===3)creationSettled(ticket,deadline);else if(state===2){durableExistingPrivate(creationTicketPath(ticket),body=>{if(parsedCreationState(body.toString('utf8'),ticket)!==2)throw Error('QA_CREATION_UNKNOWN');},1024,deadline);durableCreationAcknowledgments.add(creationKey(ticket));}else throw Error('QA_CREATION_UNKNOWN');}",
+          "lineSHA256": "64ff6bc1929ab55551a79b3d0dc2a82ba448a7182f90fc079098b29515914c6c"
+        },
+        {
+          "line": 72,
+          "exactSourceLine": "export const creationResponseKnown=(ticket,deadline)=>creationTransition(ticket,1,3,deadline);",
+          "lineSHA256": "26d4faec921bb38646f717cf652da37871a994f931e4c85201e3a8f747235c38"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/parent-inputs.mjs",
+      "bytes": 19189,
+      "sourceSHA256": "047777bc4a661e2fd818e9ed1360434cc4d5118520d732dc9c18c3a24ddeab52",
+      "encodedPath": "source-byte-gzip/047777bc4a661e2fd818e9ed1360434cc4d5118520d732dc9c18c3a24ddeab52.gz",
+      "sourceLines": [
+        {
+          "line": 10,
+          "exactSourceLine": "export const profileContract=Object.freeze({\"version\":1,\"operation\":\"5b2f8bda-0a7e-4ef5-8f82-5d9b21bf6d39\",\"purpose\":\"task04-model-drift-native-extra-c5\",\"projectName\":\"cortex-task04-admission-disposable-8fe647808d27\",\"projectSlug\":\"cortex-task04-admission-disposable-8fe647808d27\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-model-drift-native-extra-c5/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-948c02eab86a4722a3ce3485d3fa9c73\"});",
+          "lineSHA256": "ebe69d58e14924f4ea5c3a52ff2db7e007615dc967ed62e4acc269b84f17003b"
+        },
+        {
+          "line": 14,
+          "exactSourceLine": "export function parentDeadline(deadline){assert.ok(Date.now()<deadline,'PARENT_TOTAL_TIME_BUDGET');}",
+          "lineSHA256": "f569c2ae8eee6d069c276bc89e5ee168257a8adf82607a7f61d3a63de895e607"
+        },
+        {
+          "line": 31,
+          "exactSourceLine": " const names=Object.keys(historicalSources),owned=JSON.parse(original[names[0]]),qualified=JSON.parse(original[names[2]]),retired=JSON.parse(original[names[3]]);assert.equal(qualified.status,'PASS');assert.equal(qualified.cleanupComplete,true);assert.equal(qualified.counts.failed,0);assert.equal(qualified.counts.skipped,0);assert.equal(qualified.counts.blocked,0);assert.equal(retired.status,'PASS');assert.equal(retired.deletionHttpStatus,200);assert.equal(retired.absentProjectHttpStatus,404);assert.equal(retired.projectId,3138249);assert.equal(retired.verifiedOnlyDevelopmentCloudDeployment,true);assert.equal(retired.managementCalls,5);assert.equal(owned.files.length,2);assert.equal(typeof owned.run,'string');assert.ok(original[names[1]].toString().endsWith('\\n'),'HISTORICAL_PARTIAL_JOURNAL');",
+          "lineSHA256": "1c28791f2d4a46f12c601f739b7c240294e8afb5993659b42b1631ad7808e227"
+        },
+        {
+          "line": 37,
+          "exactSourceLine": "export function initialProof(target,evidence,observedAt=new Date().toISOString()){return {operation:target.operation,runId:target.runId,observedAt,historicalTargetProjectId:3138249,historicalQualification:'PASS',historicalOwnedCleanup:true,historicalProjectDeletion:200,historicalProjectAbsence:404,storageCreatedHere:0,currentTargetDecoder:'NOT_RUN',newOperationAttemptIDs:'PENDING_CURRENT_CORE_OWNERSHIP',sources:evidence.sources,historicalOwnedRunSHA256:evidence.historicalOwnedRunSHA256,journalWitnesses:evidence.journalWitnesses,locators:Object.entries(evidence.ids).map(([table,id])=>({table,locatorSHA256:sha256(id),provenance:'previously native-issued owned locator; original target cleaned and retired; current decoding not claimed'}))};}",
+          "lineSHA256": "86d96cdaedff0e31fa8ef46fe8415cb4d556a563d0049b4e2109f55a438bdfdf"
+        },
+        {
+          "line": 39,
+          "exactSourceLine": "export async function boundedParentBody(response,deadline){",
+          "lineSHA256": "21f526236bae76f48df36ed3da823a1db186e4e1dfa3b7bef3db64db2215edcc"
+        },
+        {
+          "line": 42,
+          "exactSourceLine": " const bounded=async pending=>{let timer;try{return await Promise.race([pending,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('PARENT_RESPONSE_DEADLINE')),Math.max(1,deadline-Date.now()));})]);}finally{clearTimeout(timer);}};",
+          "lineSHA256": "04a9b8b952dc437bb48cbbafeb5aefef2d7b3dfe54d40f15c068231ea4cc8ab1"
+        },
+        {
+          "line": 43,
+          "exactSourceLine": " try{parentDeadline(deadline);assert.equal(response.status,200,'owned peer environment update');while(true){parentDeadline(deadline);const {done,value}=await bounded(reader.read());parentDeadline(deadline);if(done)break;size+=value.byteLength;if(size>16384)throw Error('PARENT_RESPONSE_BYTES');}return size;}",
+          "lineSHA256": "7e0e38160c6646bbe98489c4578431461fcec983d03197e2d3f9b430eb15a739"
+        },
+        {
+          "line": 50,
+          "exactSourceLine": " const deadline=Date.now()+120000;",
+          "lineSHA256": "b788a6b546adf031c2585a5690105876240a9d32869f698a959fde4a127fbfe1"
+        },
+        {
+          "line": 54,
+          "exactSourceLine": "  exclusive(path,value,true,undefined,{deadlineMs:deadline,beforeCreate:()=>parentDeadline(deadline),observe:phase=>{",
+          "lineSHA256": "018ceac74915c4192038fb92c5e89a229f7bafb79f0045be0bc899d9cf6112a1"
+        },
+        {
+          "line": 58,
+          "exactSourceLine": "  parentDeadline(deadline);",
+          "lineSHA256": "9b3a1750fc3fd8a7444e9ba4fb493ad644b13b0916f664450ba41aab28b49954"
+        },
+        {
+          "line": 62,
+          "exactSourceLine": "  strictProfile();preservationPreflight();parentDeadline(deadline);",
+          "lineSHA256": "808ceed91e74212c1c8decc898d44ae617ee4d5d36e388e3f8c7f1928c2fac16"
+        },
+        {
+          "line": 66,
+          "exactSourceLine": "  const evidence=historicalEvidence();parentDeadline(deadline);",
+          "lineSHA256": "e3409b80d74ff0dc7c463e5f6d7fa43947c7c40814ba313e192a22a29329dab7"
+        },
+        {
+          "line": 76,
+          "exactSourceLine": "   parentDeadline(deadline);const signature=sign('RSA-SHA256',bytes,privateKey);effects.signatures++;",
+          "lineSHA256": "8a506d972722c48ab58df28c8faddb999850f7b2665bf55b80f98f29865008ed"
+        },
+        {
+          "line": 87,
+          "exactSourceLine": "  parentDeadline(deadline);const peerSecret=randomBytes(32).toString('hex');effects.peerSecrets++;",
+          "lineSHA256": "11b0939c1b3850a75ab3b369fdefefb9095331f02de964240665563154418b58"
+        },
+        {
+          "line": 90,
+          "exactSourceLine": "  const startedAt=new Date().toISOString(),url=target.deploymentUrl+'/api/update_environment_variables',options={method:'POST',redirect:'error',headers:{Authorization:'Convex '+values.CONVEX_DEPLOY_KEY,'Content-Type':'application/json'},body:JSON.stringify({changes:[{name:'CORTEX_QA_TASK04_PEER_SECRET',value:peerSecret}]}),signal:AbortSignal.timeout(Math.max(1,Math.min(30000,deadline-Date.now())))};",
+          "lineSHA256": "6e8bf56784ab1e5cc0d0045df8decbb8f6e5f43f4c8c70d4a69ff08b055d1765"
+        },
+        {
+          "line": 91,
+          "exactSourceLine": "  parentDeadline(deadline);effects.configurationCalls++;const response=await fetch(url,options);",
+          "lineSHA256": "39b1527cf74808635b50adefe15fc063f971a6926bd051deec4ea14d5e77b8ef"
+        },
+        {
+          "line": 92,
+          "exactSourceLine": "  await boundedParentBody(response,deadline);",
+          "lineSHA256": "bc828271b685ec409af2db9ca5ef965a41d6c43161b85804ca34e818488833b4"
+        },
+        {
+          "line": 94,
+          "exactSourceLine": "  const receipt={operation:target.operation,runId:target.runId,status:'PASS',startedAt,observedAt:new Date().toISOString(),adapterSourceSHA256:sha256(readFileSync(canonical(fileURLToPath(import.meta.url),repo))),keysCreated:0,signatures:effects.signatures,identityNegativeCount:7,storageCreated:0,configurationCalls:effects.configurationCalls,configurationVariable:'CORTEX_QA_TASK04_PEER_SECRET',configurationHTTPStatus:response.status,historicalProvenanceSHA256:sha256(readPrivate(resolve(scratch,'initial-physical-id-provenance.json'),scratch)),currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'};",
+          "lineSHA256": "3041710456443ad1ab9066af7c860d0bb904a3185f081dfb54b1042d4063217f"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/process-owner.mjs",
+      "bytes": 4395,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "encodedPath": "source-byte-gzip/539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624.gz",
+      "sourceLines": [
+        {
+          "line": 4,
+          "exactSourceLine": "const delay = (ms) => new Promise((done) => setTimeout(done, ms));",
+          "lineSHA256": "b038ca0f32d9f44f6c1b3c76948165cd242f7edf06381a4f37ef597555d701b8"
+        },
+        {
+          "line": 8,
+          "exactSourceLine": "  spawned = 0;",
+          "lineSHA256": "590caf57392208bb81038d245c55af47c15aafcc1afb02a0cb852c84302547fd"
+        },
+        {
+          "line": 15,
+          "exactSourceLine": "      signal(\"SIGTERM\"); await Promise.race([record.closed, delay(100)]);",
+          "lineSHA256": "42911881b2011dc688e1036e0cebad424219079c59aff535da36bff34721f449"
+        },
+        {
+          "line": 17,
+          "exactSourceLine": "      signal(\"SIGKILL\"); await Promise.race([record.closed, delay(2_000)]);",
+          "lineSHA256": "08ca7aad541d2922b090fa6cc67b671fae0cb43ef181073cf09208a5e28ec454"
+        },
+        {
+          "line": 19,
+          "exactSourceLine": "      const deadline = Date.now() + 2_000;",
+          "lineSHA256": "fe6ef344a7967f3147dc601901b6d153803404beaaaa425c5c5cac82bc192f87"
+        },
+        {
+          "line": 22,
+          "exactSourceLine": "        members = linuxGroupMembers(record.child.pid, deadline);",
+          "lineSHA256": "fba77bdb7ae37aa8052a64fc3d696b21bc6981d4145a1810b891fcef4b073668"
+        },
+        {
+          "line": 24,
+          "exactSourceLine": "        else { confirmed = false; signal(\"SIGKILL\"); }",
+          "lineSHA256": "1e255dae884ad73f6c23c4e98758af17101749e89a23a71997960157c45bf66e"
+        },
+        {
+          "line": 25,
+          "exactSourceLine": "        if (Date.now() >= deadline) throw new Error(\"OWNED_GROUP_NOT_TERMINAL\");",
+          "lineSHA256": "dc7c271484b2939b9198635f93a040e0cec493211981743625c4ab0be80c7e6e"
+        },
+        {
+          "line": 27,
+          "exactSourceLine": "      } while (Date.now() <= deadline);",
+          "lineSHA256": "84b12f8cb476a0a6cc186b46b915180710b332c6bf8f0e0e40cbe52af821e59c"
+        },
+        {
+          "line": 39,
+          "exactSourceLine": "    if (this.spawned >= 6 || this.records.size >= 2) throw new Error(\"QA_PROCESS_BUDGET\");",
+          "lineSHA256": "41350855a19924c000046a81928c51f1f7d75314a1cacdf924e868d4f0c59703"
+        },
+        {
+          "line": 44,
+          "exactSourceLine": "    this.records.add(record); this.spawned++;",
+          "lineSHA256": "55a58b46432536717d3b9eda3a170176896e5730332512b23087a1d0148ee0f3"
+        },
+        {
+          "line": 61,
+          "exactSourceLine": "    const timer = setTimeout(() => { timedOut = true; void this.reap(record).finally(() => timeout({ code: -1, signal: \"timeout\" })).catch(() => {}); }, timeoutMs);",
+          "lineSHA256": "c957a5b3cd747ad14fb856fe392d0b84079b00acd89e1ac10dd6457ce2ce8617"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/process-terminal.mjs",
+      "bytes": 1316,
+      "sourceSHA256": "2f04fa9969468e62f93a8a6b38ee25c9904b48cfa558d2116d693e8b63ec9e46",
+      "encodedPath": "source-byte-gzip/2f04fa9969468e62f93a8a6b38ee25c9904b48cfa558d2116d693e8b63ec9e46.gz",
+      "sourceLines": [
+        {
+          "line": 5,
+          "exactSourceLine": "export function linuxGroupMembers(groupId, deadline) {",
+          "lineSHA256": "7d94960e2f9f7f9482c87e4c764a263b55e8930bc45aa2e4914afbdd9e66aa1d"
+        },
+        {
+          "line": 10,
+          "exactSourceLine": "    if (Date.now() > deadline) throw new Error(\"OWNED_GROUP_VERIFICATION_TIMEOUT\");",
+          "lineSHA256": "a0bf0e571a61806291d925f9e162f22c5dd0b18ad03f606e6d85416d43b69bf4"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/qualifier-diagnostics.mjs",
+      "bytes": 3812,
+      "sourceSHA256": "3b10d7c9605062d4555672b3047de9636414aab66acf86fe2457c8feef705edb",
+      "encodedPath": "source-byte-gzip/3b10d7c9605062d4555672b3047de9636414aab66acf86fe2457c8feef705edb.gz",
+      "sourceLines": [
+        {
+          "line": 5,
+          "exactSourceLine": "function cleanupWitness(target,phase){const matches=[];for(const name of readdirSync(scratch).filter(n=>/^journal-.*\\.jsonl$/.test(n))){const bytes=readFileSync(canonical(resolve(scratch,name),scratch,true));if(!bytes.toString().endsWith('\\n'))continue;const lines=bytes.toString().trimEnd().split('\\n');if(JSON.parse(lines[0]).phase!==phase)continue;let previous='0'.repeat(64),sequence=0;for(const line of lines){const row=JSON.parse(line),{receiptDigest,...body}=row;assert.equal(row.operation,target.operation);assert.equal(row.runId,target.runId);assert.equal(row.sequence,++sequence);assert.equal(row.previousDigest,previous);assert.equal(receiptDigest,sha256(JSON.stringify(body)));previous=receiptDigest;if(row.phase==='final'&&row.caseId==='native-qualifier')matches.push({journalPath:name,journalSha256:sha256(bytes),sequence,status:row.status,cleanupComplete:row.cleanupComplete===true,receiptDigest});}}return matches.length===1?matches[0]:{status:'NOT_OBSERVED',cleanupComplete:false};}",
+          "lineSHA256": "da440386aab41470dbd9e6b27df3116652b25cfc147209f9ef7f36515b354785"
+        },
+        {
+          "line": 7,
+          "exactSourceLine": "export function captureQualifier(target,phase,result){assert.ok(['synthetic','empty'].includes(phase));const stdout=result.stdoutBytes??Buffer.from(result.stdout??''),stderr=result.stderrBytes??Buffer.from(result.stderr??'');assert.ok(stdout.length+stderr.length<=diagnosticBounds.stdioBytes);const name='qualifier-diagnostic-'+phase+'-'+randomUUID(),out=write(name+'-stdout.bin',stdout,256000),err=write(name+'-stderr.bin',stderr,256000);let cleanup;try{cleanup=cleanupWitness(target,phase);}catch{cleanup={status:'INVALID_JOURNAL',cleanupComplete:false};}const message=stderr.toString('utf8'),failureClass=['CAPABILITY_UNSUPPORTED','CAPABILITY_UNAVAILABLE','POLICY_DENIED','QA_RESULT_BYTES','QA_RPC_BUDGET'].find(code=>message.includes(code))??(result.timedOut?'TIMEOUT':result.overflow?'STDIO_OVERFLOW':result.code===0?'NONE':'UNCAUGHT_CHILD_FAILURE');const metadata={operation:target.operation,runId:target.runId,phase,freezeSha256:sha256(readFileSync(canonical(resolve(root,'runtime-freeze.json'),root))),status:result.code===0&&!result.timedOut&&!result.overflow?'PASS':'FAIL',exitCode:result.code??-1,signal:result.signal??null,timedOut:result.timedOut===true,overflow:result.overflow===true,capturedBytes:stdout.length+stderr.length,observedBytes:result.observedBytes??stdout.length+stderr.length,complete:!result.overflow,stdout:out,stderr:err,failureClass,cleanup};const record=write(name+'.json',Buffer.from(JSON.stringify(metadata)+'\\n'),16384);return {record,failureClass,status:metadata.status,cleanupComplete:cleanup.cleanupComplete};}",
+          "lineSHA256": "feafc8a9f91b6977850ff2bb1d27b62d16b824f008399d6914fc789c3e9961d3"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/qualify-owned.mjs",
+      "bytes": 2404,
+      "sourceSHA256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49",
+      "encodedPath": "source-byte-gzip/095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49.gz",
+      "sourceLines": [
+        {
+          "line": 1,
+          "exactSourceLine": "/** Parent-only qualifier, captures bounded private diagnostics BEFORE cleanup/finally can lose it. */",
+          "lineSHA256": "621b7a23ebee653544005c52092baf059d44539709fdd5ee62c09822cbe47cc7"
+        },
+        {
+          "line": 4,
+          "exactSourceLine": "try{if(phase==='synthetic'){await reserveTicket('process',6);result=await owner.run([resolve(root,'scripts/driver.mjs'),phase],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NODE_USE_ENV_PROXY:'1',...runtime}},limits.driverMs);captureAttempted=true;diagnostic=captureQualifier(target,phase,result);status=diagnostic.status;}else{const{session,qualify}=await import('./driver.mjs');const outcome=await qualify(await session('empty'),'empty');result={code:outcome.status==='PASS'&&outcome.cleanupComplete?0:1,stdout:JSON.stringify(outcome),stderr:'',timedOut:false,overflow:false};captureAttempted=true;diagnostic=captureQualifier(target,phase,result);status=diagnostic.status;}}",
+          "lineSHA256": "cddd98e4166a381365659ee248b701d8b861327ec0b1ad8b4543c133cc4c01f3"
+        },
+        {
+          "line": 6,
+          "exactSourceLine": "finally{await owner.reapAll();if(owner.records.size)status='FAIL';exclusive(resolve(scratch,'qualifier-process-'+phase+'-'+randomUUID()+'.json'),{operation:target.operation,phase,status,counts:{spawned:owner.spawned,verifiedTerminalGroups:owner.verifiedGroups,remaining:owner.records.size},exitCode:result?.code??1,diagnostic:diagnostic?.record,failureClass:diagnostic?.failureClass??'UNKNOWN',cleanupComplete:diagnostic?.cleanupComplete===true},true,16384);}",
+          "lineSHA256": "b155a7e7d2b9899e905799ea739bcca0bc695bd851a388a51ce8fd28dc46b317"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/window-evidence.mjs",
+      "bytes": 2883,
+      "sourceSHA256": "3f2bfc652523383f45c734170d0ab307104317978d62bec3b4fb4ee1288b7255",
+      "encodedPath": "source-byte-gzip/3f2bfc652523383f45c734170d0ab307104317978d62bec3b4fb4ee1288b7255.gz",
+      "sourceLines": [
+        {
+          "line": 4,
+          "exactSourceLine": "export async function scheduleCase(kind,{now=Date.now,wait=ms=>new Promise(done=>setTimeout(done,ms)),deadline}){assert.equal(typeof deadline,'function');let steps=0;while(true){const current=now(),end=deadline();assert.ok(Number.isFinite(end)&&current<end,'QA_TOTAL_TIME_BUDGET');const offset=((current%60000)+60000)%60000;if(kind==='window'?offset>=30000:offset>=1000&&offset<30000)return{kind,startMs:current,deadlineMs:end,waitSteps:steps,minimumLeadMs:kind==='window'?0:60000-offset};assert.ok(++steps<=121,'QA_SCHEDULING_BUDGET');await wait(Math.min(250,end-current));}}",
+          "lineSHA256": "cfa093c117d763a21c356f09190d1cb6ec27f539f7782c16c65921552565582c"
+        },
+        {
+          "line": 5,
+          "exactSourceLine": "function accounts(rows,reference,runBudgetId){const selected=rows.filter(x=>x.table==='runtimeBudgetAccounts'&&x.row.tenantId===reference.tenantId&&(x.row.kind==='tenant'||x.row.kind==='run'&&x.row.runBudgetId===runBudgetId));assert.equal(selected.length,2,'QA_WINDOW_EVIDENCE_MISSING');assert.equal(selected.filter(x=>x.row.kind==='tenant').length,1);assert.equal(selected.filter(x=>x.row.kind==='run').length,1);return selected.map(({row})=>({kind:row.kind,windowStart:row.windowStart,windowEnd:row.windowEnd,current:row.current,reservedUnits:row.reservedUnits,settledUnits:row.settledUnits,uncertainUnits:row.uncertainUnits,activeConcurrency:row.activeConcurrency})).sort((a,b)=>a.kind.localeCompare(b.kind));}",
+          "lineSHA256": "f9271c53964a1f3a78aab011f57aa8f3583859da44c74a401c8626230b38147d"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/cleanup.mjs",
+      "bytes": 1189,
+      "sourceSHA256": "a107ba9df54f916d61639a126ed549c6b4206843af4aa79e555ecbd0300dc1cc",
+      "encodedPath": "source-byte-gzip/a107ba9df54f916d61639a126ed549c6b4206843af4aa79e555ecbd0300dc1cc.gz",
+      "sourceLines": [
+        {
+          "line": 3,
+          "exactSourceLine": "const s=await session(process.argv[2]??'synthetic');s.cleanupMode=true;let complete=false;try{for(let pass=0;pass<2&&!complete;pass++){await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const rows=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});complete=s.custodyComplete()&&!rows.some(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId));}assert.equal(complete,true);}finally{s.journal.append({phase:'recovery',caseId:'owned-cleanup',status:complete?'PASS':'FAIL',cleanupComplete:complete});s.close();exclusive(resolve(scratch,'cleanup-'+randomUUID()+'.json'),{operation:s.target.operation,status:complete?'PASS':'FAIL',cleanupComplete:complete,counts:s.counts()});}",
+          "lineSHA256": "96ce55607cdb0f8202ec8a1a2f29daa76b2e614b757ed5f29200ba489208acb7"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sourceSHA256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071",
+      "encodedPath": "source-byte-gzip/8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071.gz",
+      "sourceLines": [
+        {
+          "line": 8,
+          "exactSourceLine": "import {currentTarget,historicalEvidence,validateHistoricalInputs,exactKeys,boundedId,readPrivate,strictProfile,candidateArgument,parentDeadline} from './parent-inputs.mjs';",
+          "lineSHA256": "e5dc2a51f2e17c322c4e922097730d2b57e914c7cbd8758f78e3b98f3a41bf79"
+        },
+        {
+          "line": 11,
+          "exactSourceLine": "export async function main(){assert.equal(watcherStarted,false,'PARENT_WATCHER_ALREADY_STARTED');watcherStarted=true;const deadline=Date.now()+120000;const effects={privateOutputs:[],privateOutputStates:[]};let recheck=()=>parentDeadline(deadline);const output=(name,value)=>{",
+          "lineSHA256": "588a561f818242b7d47acbf41a19721f1b15f12b6dba20f800d1d994770c65e6"
+        },
+        {
+          "line": 13,
+          "exactSourceLine": "  exclusive(path,value,true,undefined,{deadlineMs:deadline,beforeCreate:()=>{parentDeadline(deadline);recheck();},observe:phase=>{",
+          "lineSHA256": "d036f1b09e5450de80193b316ebffb1597a530953140201fcbd16aed1ab1d3ac"
+        },
+        {
+          "line": 17,
+          "exactSourceLine": "  parentDeadline(deadline);",
+          "lineSHA256": "9b3a1750fc3fd8a7444e9ba4fb493ad644b13b0916f664450ba41aab28b49954"
+        },
+        {
+          "line": 18,
+          "exactSourceLine": " };try{strictProfile();preservationPreflight();if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');if(process.argv[2]!==undefined)assert.equal(process.argv[2],candidateArgument,'PARENT_CANDIDATE');const {target,identity}=currentTarget('synthetic');const historyPath=resolve(scratch,'historical-native-locators.json'),proofPath=resolve(scratch,'initial-physical-id-provenance.json'),historyBytes=readPrivate(historyPath,scratch),proofBytes=readPrivate(proofPath,scratch),history=JSON.parse(historyBytes),initial=JSON.parse(proofBytes),evidence=historicalEvidence();validateHistoricalInputs(target,history,initial,evidence);",
+          "lineSHA256": "72e8327d39b1332a5318d9b007fa6e777b5dc6bb75e27b674d2168068517adf4"
+        },
+        {
+          "line": 19,
+          "exactSourceLine": " const windowPath=resolve(scratch,'qualifier-window.json'),windowBytes=readPrivate(windowPath,scratch),window=JSON.parse(windowBytes);exactKeys(window,['startedAt','deadlineMs']);assert.equal(window.deadlineMs,1200000,'PARENT_WINDOW_LIMIT');const windowStart=Date.parse(window.startedAt);assert.ok(Number.isFinite(windowStart),'PARENT_WINDOW_START');const windowEnd=windowStart+window.deadlineMs;const checkWindow=()=>{assert.equal(sha256(readPrivate(windowPath,scratch)),sha256(windowBytes),'PARENT_WINDOW_CHANGED');assert.ok(Date.now()>=windowStart&&Date.now()<windowEnd,'PARENT_WINDOW_EXPIRED_OR_FUTURE');};checkWindow();",
+          "lineSHA256": "fdce0887112771ca42263b7e5ac83a982a93cd2223c39516dc3e70174ab27f73"
+        },
+        {
+          "line": 21,
+          "exactSourceLine": " while(!receipts.runtimeModelOperations||!receipts.runtimeModelAttempts){if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_OWNERSHIP_NOT_OBSERVED');currentTarget('synthetic',identity);checkWindow();const names=readdirSync(scratch).filter(name=>name.startsWith('owned-created-')).sort();assert.ok(names.length<=783,'PARENT_RECEIPT_BUDGET');for(const name of names){assert.match(name,/^owned-created-[a-f0-9]{64}\\.json$/,'PARENT_RECEIPT_NAME');const path=resolve(scratch,name),bytes=readPrivate(path,scratch);assert.ok(bytes.length<=16384,'PARENT_RECEIPT_BYTES');if(!bytes.toString().endsWith('\\n'))continue;const row=JSON.parse(bytes);exactKeys(row,['operation','kind','table','id','observedAt']);assert.equal(row.operation,target.operation,'PARENT_RECEIPT_OPERATION');assert.equal(row.kind,'created','PARENT_RECEIPT_KIND');assert.equal(typeof row.table,'string');assert.match(row.table,/^[a-zA-Z][a-zA-Z0-9]*$/);boundedId(row.id);assert.equal(typeof row.observedAt,'string');assert.ok(Number.isFinite(Date.parse(row.observedAt)),'PARENT_RECEIPT_TIMESTAMP');assert.ok(Date.parse(row.observedAt)>=windowStart&&Date.parse(row.observedAt)<windowEnd&&Date.parse(row.observedAt)<=Date.now(),'PARENT_RECEIPT_WINDOW');assert.equal(name,'owned-created-'+sha256(row.table+':'+row.id)+'.json','PARENT_RECEIPT_HASH');if(['runtimeModelOperations','runtimeModelAttempts'].includes(row.table)&&!receipts[row.table]){ids[row.table]=row.id;receipts[row.table]={path,sha256:sha256(bytes),locatorSHA256:sha256(row.id),bytes:bytes.length,operation:row.operation,table:row.table,kind:row.kind};}}receiptFiles=names.length;if(!receipts.runtimeModelOperations||!receipts.runtimeModelAttempts)await new Promise(done=>setTimeout(done,100));}",
+          "lineSHA256": "82896f8d3635afb3d00203ff75909eff6c4016a8a80d6963f0936b42545c94cb"
+        },
+        {
+          "line": 26,
+          "exactSourceLine": " if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');const proof={operation:target.operation,runId:target.runId,targetIdentity:identity,observedAt:new Date().toISOString(),status:'SOURCE_BOUND_NATIVE_ISSUANCE_PROVENANCE',historicalProvenanceSHA256:sha256(proofBytes),historicalProvenanceCompactSHA256:sha256(JSON.stringify(initial)),currentCoreOwnership:receipts,scopeSHA256:sha256(JSON.stringify(scope)),storageCreated:0,currentPublicStorageDecoding:'NOT_RUN; requires actual handler auth denial on the two existing noJWT sweep observations',extraRPC:0,extraRows:0,observedCreationReceipts:receiptFiles};",
+          "lineSHA256": "79b56facdd88f459e3af0f1f3b4bc3863f449b8edcdd35a84f91de8860f64c06"
+        },
+        {
+          "line": 27,
+          "exactSourceLine": " recheck=()=>{parentDeadline(deadline);currentTarget('synthetic',identity);checkWindow();preservationPreflight();assert.equal(sha256(readFileSync(canonical(inventoryPath,root))),sha256(inventoryBytes),'PARENT_INVENTORY_CHANGED');assert.equal(sha256(readPrivate(historyPath,scratch)),sha256(historyBytes),'PARENT_HISTORY_CHANGED');assert.equal(sha256(readPrivate(proofPath,scratch)),sha256(proofBytes),'PARENT_PROOF_CHANGED');validateHistoricalInputs(target,history,initial,historicalEvidence());for(const receipt of Object.values(receipts))assert.equal(sha256(readPrivate(receipt.path,scratch)),receipt.sha256,'PARENT_RECEIPT_CHANGED');};recheck();",
+          "lineSHA256": "2e08b7a0f500c55e0de6d7721aa35eedde0497f8eb354feb0c6ecf87fc5eb270"
+        },
+        {
+          "line": 28,
+          "exactSourceLine": " preservationPreflight();if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('current-physical-id-input-receipt.json',proof);currentTarget('synthetic',identity);if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('argument-scope.json',scope);currentTarget('synthetic',identity);if(Date.now()>=deadline)throw Error('CURRENT_NATIVE_ID_TOTAL_TIME_BUDGET');output('public-arguments.json',{operation:target.operation,inventorySha256:sha256(inventoryBytes),arguments:publicArgs,internalArguments:internalArgs,modelAttemptId:ids.runtimeModelAttempts});recheck();parentDeadline(deadline);process.stdout.write(JSON.stringify({status:'PASS_SOURCE_BOUND_INPUTS',extraRPC:0,extraRows:0,storageCreated:0,currentCoreIDTables:Object.keys(receipts).sort(),currentPublicStorageDecoding:'NOT_RUN'})+'\\n');}catch(error){if(error&&typeof error==='object'){try{Object.defineProperty(error,'parentCurrentInputEffects',{value:Object.freeze({status:'FAIL',privateOutputs:Object.freeze([...effects.privateOutputs]),privateOutputStates:Object.freeze(effects.privateOutputStates.map(state=>Object.freeze({...state})))}),enumerable:true});}catch{}}throw error;}}",
+          "lineSHA256": "92c8425a263b599fa4c8f2b86a2d14d4f8670e27180e1ba887bd440daad7190f"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/driver.mjs",
+      "bytes": 21086,
+      "sourceSHA256": "8982de1bb9ef59780d6bdf87ef74a8a97f0dee9840a5b350bb423cbf1e427829",
+      "encodedPath": "source-byte-gzip/8982de1bb9ef59780d6bdf87ef74a8a97f0dee9840a5b350bb423cbf1e427829.gz",
+      "sourceLines": [
+        {
+          "line": 14,
+          "exactSourceLine": "import {livePreflight,root,scratch,json,limits,Journal,sha256,exclusive,reviewed,reviewPin,reserveTicket,qualifierDeadline,preservationPreflight,creationDispatched,creationSettled,uncertainCreationCount,creationResponseKnown,creationSettlementCandidates,creationAcknowledge,creationCustodyCounts} from './guard.mjs';",
+          "lineSHA256": "717152620685e72fb83058ada7b3ee2c55d64a0dc38088894f94cc9e7426a91f"
+        },
+        {
+          "line": 21,
+          "exactSourceLine": " let rpc=0,cleanupRpc=0,active=0;const start=Date.now(),journal=new Journal(parent.runId,target.operation);journal.append({phase,caseId:'publication-arguments',status:'PASS',observedCategory:'published-arguments-equal',apiSpecDigest:publicationEquality.argumentsSha256});const clients=new WeakMap();const wire=new Set();let originalWindowDigest;",
+          "lineSHA256": "dd30274ae625b4281db6bcf718678596e502321917cf1d1e7d2f6b9eb108d93f"
+        },
+        {
+          "line": 22,
+          "exactSourceLine": " const freshDispatch=()=>{if(reviewPin()!==s.expectedReviewPin)throw Error('QA_REVIEW_EXPECTED_PIN_DRIFT');const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');const windowDigest=sha256(readFileSync(resolve(scratch,'qualifier-window.json')));if(windowDigest!==originalWindowDigest)throw Error('QA_WINDOW_DRIFT');return qualifierDeadline();};",
+          "lineSHA256": "3f5e274ff90f634addca725ef4ed3ea78f5f2cfc8518be43e094613c3b5f1cf0"
+        },
+        {
+          "line": 23,
+          "exactSourceLine": " const create=(jwt,admin=false)=>{const lanes=[];const handle=Object.freeze(Object.create(null));const boundedFetch=async(url,options)=>{const parsed=new URL(url);if(parsed.origin!==target.deploymentUrl||options?.method!=='POST')throw Error('QA_ORIGIN');const type=parsed.pathname.replace('/api/','');if(!['query','mutation','action'].includes(type)||parsed.pathname!=='/api/'+type||typeof options.body!=='string')throw Error('QA_RPC_CALLBACK_BOUND');const lane=lanes.find(l=>!l.entered&&l.type===type&&l.body===options.body);if(!lane||!lane.ticket||lane.closed)throw Error('QA_RPC_CALLBACK_BOUND');lane.entered=true;if(lane.creationCapable){creationDispatched(lane.ticket,Math.min(lane.deadline,qualifierDeadline()));lane.creationPending=true;}const deadline=Math.min(freshDispatch(),lane.deadline);if(lane.path==='qualificationOwned:snapshot'&&lane.ownedSnapshot)lane.creationCandidates=creationSettlementCandidates();if(Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');const response=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(Math.max(1,deadline-Date.now()))});const body=await boundedBody(response,limits.resultBytes,deadline);if(lane.type==='mutation'&&response.status===560){try{const envelope=JSON.parse(body);if(envelope.status==='error'&&typeof envelope.errorMessage==='string')lane.authoritativeRollback=true;}catch{}}if([400,401,403].includes(response.status)){try{const envelope=JSON.parse(body);if(['InvalidAuth','Unauthenticated','InvalidAuthHeader','NoAuthProvider'].includes(envelope.code)&&typeof envelope.message==='string'&&Object.keys(envelope).every(k=>['code','message'].includes(k))){wire.add(body);lane.authoritativeRollback=true;}}catch{}}if(lane.internalMutation&&[400,404].includes(response.status)&&/Could not find public function for ['\"]|Cannot call internal function|Function is internal/.test(body))lane.authoritativeRollback=true;return new Response(body,{status:response.status,statusText:response.statusText,headers:response.headers});};const client=new ConvexHttpClient(target.deploymentUrl,{logger:false,fetch:boundedFetch});if(admin)client.setAdminAuth(values.CONVEX_DEPLOY_KEY);else if(jwt)client.setAuth(jwt);clients.set(handle,{client,lanes});return handle;};const operator=create(undefined,true);",
+          "lineSHA256": "4d4e13da48c92fd95c3b8dc4a62b7a34e6fe1d0c567df8009373fb752241bf14"
+        },
+        {
+          "line": 24,
+          "exactSourceLine": " let windowProofs=0;const s={async recordWindowEvidence(proof,status){if(++windowProofs>4)throw Error('QA_WINDOW_PROOF_BUDGET');const receipt={operation:target.operation,runId:parent.runId,phase,status,...proof};const bytes=Buffer.byteLength(JSON.stringify(receipt,null,2)+'\\n');if(bytes>4096)throw Error('QA_WINDOW_PROOF_BYTES');reservePublicationEvidence(bytes);exclusive(resolve(scratch,'window-proof-'+String(windowProofs)+'-'+randomUUID()+'.json'),receipt,true,4096);},runId:parent.runId,target,values,publicationReceipt,expectedReviewPin:reviewPin(),phase,parent,publication,publicationEquality,journal,peerCalls:0,peerEffects:0,peerOther:0,profile:json(resolve(root,'profile.json')),async rpc(type,path,args,client=operator){if(!['query','mutation','action'].includes(type)||typeof path!=='string'||!clients.has(client))throw Error('QA_RPC_METHOD_BOUND');if(++rpc>limits.rpc||Date.now()-start>limits.qualifierMs||++active>limits.concurrency)throw Error('QA_RPC_BUDGET');if(s.caseRPCMax!==undefined&&rpc>s.caseRPCMax)throw Error('QA_CASE_RPC_BUDGET');if(path.startsWith('qualificationOwned:cleanup')){if(++cleanupRpc>limits.cleanupRpc)throw Error('QA_CLEANUP_BUDGET');await reserveTicket('cleanup',limits.cleanupRpc);}const nativeTicket=await reserveTicket('native',limits.nativeClientRpc,s.cleanupMode===true);const windowDigest=sha256(readFileSync(resolve(scratch,'qualifier-window.json')));if(originalWindowDigest===undefined)originalWindowDigest=windowDigest;else if(originalWindowDigest!==windowDigest)throw Error('QA_WINDOW_DRIFT');if(client===operator&&['qualificationOwned:parentRollback','qualificationCapture:parentRefinementRollback'].includes(path))await reserveTicket('nested-parent',1);if(['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path))await reserveTicket('nested-auth',28);const begun=Date.now();let custodyLane;try{const current=livePreflight(phase,'rpc');if(sha256(canonical(current.target))!==sha256(canonical(target)))throw Error('QA_TARGET_DRIFT');if(sha256(canonical(current.values))!==sha256(canonical(values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(sha256(canonical(current.publication))!==sha256(canonical(publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');wire.clear();const owned=clients.get(client);const lane={type,path,ownedSnapshot:path==='qualificationOwned:snapshot'&&args.run===parent.runId,creationCapable:type==='mutation'&&!['admin:deleteRecord','admin:clearTable','qualificationOwned:cleanup','qualificationCapture:partialMarker'].includes(path)||type==='action'&&!['facts:semanticSearch','memories:search','runtimeMemory:remember','runtimeMemory:recall'].includes(path),internalMutation:type==='mutation'&&json(resolve(root,'registration-inventory.json')).registrations.some(row=>row.path===path&&row.visibility==='internal'),body:JSON.stringify({path,format:'convex_encoded_json',args:[convexToJson(args)]}),ticket:nativeTicket,deadline:begun+limits.rpcMs,entered:false,closed:false};custodyLane=lane;owned.lanes.push(lane);let value;try{value=await owned.client[type](makeFunctionReference(path),args);if(!lane.entered)throw Error('QA_RPC_CALLBACK_MISSING');}finally{lane.closed=true;const index=owned.lanes.indexOf(lane);if(index!==-1)owned.lanes.splice(index,1);}const custodyDeadline=Math.min(lane.deadline,qualifierDeadline());if(Date.now()>=custodyDeadline)throw Error('QA_RPC_TIME_BUDGET');if(Buffer.byteLength(JSON.stringify(value))>limits.resultBytes)throw Error('QA_RESULT_BYTES');if(value?.createdRefs)track(value.createdRefs,'created',target.operation,custodyDeadline);if(value?.deletedRefs){if(path==='qualificationOwned:cleanup'&&type==='mutation'&&client===operator&&args.run===parent.runId)track(value.deletedRefs,'created',target.operation,custodyDeadline);track(value.deletedRefs,'deleted',target.operation,custodyDeadline);}if(path==='qualificationOwned:snapshot'){track(ownedSnapshot(value,parent.runId),'created',target.operation,custodyDeadline);if(lane.ownedSnapshot)durableOwnership(target.operation,custodyDeadline);}journal.append({phase,caseId:path.replace(':','-'),status:'PASS',observedCategory:'rpc-complete',elapsedMs:Date.now()-begun});if(lane.creationPending){if(path==='qualificationOwned:seed'&&Array.isArray(value?.createdRefs)&&value.createdRefs.length===7)creationSettled(lane.ticket,custodyDeadline);else creationResponseKnown(lane.ticket,custodyDeadline);lane.creationPending=false;}if(lane.ownedSnapshot){for(const ticket of lane.creationCandidates??[])creationAcknowledge(ticket,custodyDeadline);}return value;}catch(error){try{journal.append({phase,caseId:path.replace(':','-'),status:'FAIL',observedCategory:'rpc-rejected',failureClass:error?.data?.code&&/^[A-Z_]+$/.test(error.data.code)?error.data.code.toLowerCase():'native_or_transport'});if(custodyLane?.creationPending&&custodyLane.authoritativeRollback){creationSettled(custodyLane.ticket,Math.min(custodyLane.deadline,qualifierDeadline()));custodyLane.creationPending=false;}}catch(journalFailure){retainSecondary(error,'qaJournalFailure',journalFailure);}throw error;}finally{active--;}}",
+          "lineSHA256": "edfe6c49e08b47b4581e7d704401cb33728e56895600e19fa8d8b7ebd29e28cb"
+        },
+        {
+          "line": 25,
+          "exactSourceLine": " ,create,authDenied(error){return ['FORBIDDEN','UNAUTHENTICATED'].includes(error?.data?.code)||wire.has(error?.message);},custodyComplete:()=>uncertainCreationCount()===0,counts:()=>({rpc,cleanupRpc,...creationCustodyCounts(),peerEffects:s.peerEffects,peerOther:s.peerOther,...ownershipCounts()}),close:()=>journal.close()};return s;}",
+          "lineSHA256": "3ccdc76ff7975c7ffe18e51c1459a5b0239d41f3cc60219ec1a8ab5c49023cb5"
+        },
+        {
+          "line": 37,
+          "exactSourceLine": "export async function qualify(s,phase){let complete=false,status='FAIL',primaryFailure,cleanupFailure;try{if(phase==='synthetic'){for(const [id,kind]of definitions){reviewed();await scheduleCase(kind,{deadline:qualifierDeadline});",
+          "lineSHA256": "ac0c018fb650e8f6c3de122cc26f00e662363e8447b47cabb2c7d4a1b5af8b45"
+        },
+        {
+          "line": 38,
+          "exactSourceLine": " const expectedCase=json(resolve(root,'cases.json')).scenarios.find(row=>row.id===id);await allocateRows(id,expectedCase.maximumCommittedCreatedRows,s.target.operation);const scenarioBefore=s.counts().rpc;s.caseRPCMax=scenarioBefore+Math.min(expectedCase.rpcCeiling,expectedCase.sourceBoundRpcCeiling??expectedCase.rpcCeiling);await scenario(s,id,kind);if(s.counts().rpc-scenarioBefore>Math.min(expectedCase.rpcCeiling,expectedCase.sourceBoundRpcCeiling??expectedCase.rpcCeiling))throw Error('QA_CASE_RPC_BUDGET');s.caseRPCMax=undefined;s.journal.append({phase:'case',caseId:id,status:'PASS',observedCategory:'outcome-asserted'});await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const left=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});assert.equal(left.filter(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId)).length,0);}",
+          "lineSHA256": "4fac81896207481ab1668bd3ea50172cbc60531e486dc6746ceb107154585183"
+        },
+        {
+          "line": 41,
+          "exactSourceLine": " status='PASS';}catch(error){primaryFailure=error;rawOwnedFailure(phase,'scenario-before-cleanup',error);throw error;}finally{try{s.caseRPCMax=undefined;s.cleanupMode=true;for(let attempt=0;attempt<2&&!complete;attempt++){await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});await s.rpc('mutation','qualificationOwned:cleanup',{run:s.runId});const rows=await s.rpc('query','qualificationOwned:snapshot',{run:s.runId});complete=s.custodyComplete()&&!rows.some(x=>x.row.tenantId?.startsWith(s.runId+'-')||x.row.subject?.startsWith(s.runId+'-')||x.row.run===s.runId||['qa-task04-synthetic-v1','qa-task04-synthetic-embedding-v1'].includes(x.row.root?.manifestId));}try{reviewed();preservationPreflight();}catch(error){status='FAIL';rawOwnedFailure(phase,'full-boundary-source',error);}if(!complete)status='FAIL';s.journal.append({phase:'final',caseId:'native-qualifier',status:status==='PASS'&&complete?'PASS':'FAIL',cleanupComplete:complete,counts:s.counts()});}catch(error){cleanupFailure=error;status='FAIL';rawOwnedFailure(phase,'cleanup-secondary',error);if(primaryFailure)retainSecondary(primaryFailure,'qaCleanupFailure',error);else throw error;}finally{try{s.close();}catch(error){status='FAIL';rawOwnedFailure(phase,'close-secondary',error);if(primaryFailure)retainSecondary(primaryFailure,'qaCloseFailure',error);else if(cleanupFailure)retainSecondary(cleanupFailure,'qaCloseFailure',error);else throw error;}}}return {status,cleanupComplete:complete,counts:s.counts()};}",
+          "lineSHA256": "fc2dae7db2e4b1441ca485d49b46fe7f9a8904b7ce960daa84c82e931538cff5"
+        },
+        {
+          "line": 42,
+          "exactSourceLine": "if(process.argv[1]?.endsWith('driver.mjs')){const phase=process.argv[2];if(!['synthetic','empty'].includes(phase))throw Error('QA_PHASE');const s=await session(phase);const result=await qualify(s,phase);exclusive(resolve(scratch,'result-'+phase+'-'+randomUUID()+'.json'),result);process.stdout.write(JSON.stringify(result)+'\\n');process.exitCode=result.status==='PASS'&&result.cleanupComplete?0:1;}",
+          "lineSHA256": "011a7e6dbeaf567b282db0ebede18d0ada3c5d15628bc4a2688f6819be2704c6"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/guard.mjs",
+      "bytes": 30198,
+      "sourceSHA256": "c57909ed570d7e5f462f8e0f03c4908ed51ae22c98b9cfe4c5f06dabc9830960",
+      "encodedPath": "source-byte-gzip/c57909ed570d7e5f462f8e0f03c4908ed51ae22c98b9cfe4c5f06dabc9830960.gz",
+      "sourceLines": [
+        {
+          "line": 9,
+          "exactSourceLine": "export const limits=Object.freeze({rpc:3000,nativeClientRpc:2963,nestedNativeInvocations:37,cleanupRpc:256,concurrency:4,qualifierMs:1200000,driverMs:1440000,rpcMs:12000,scenarios:64,rows:320,storage:0,peerEffects:8,peerOther:24,resultBytes:256000,evidenceBytes:8388608,receiptBytes:16384,journalBytes:4096,journalRows:6000,processes:6,groups:2,cliMs:120000});",
+          "lineSHA256": "9b16dde80a5f0fbdbb30e29ca81cbc4e2dcc249222e3b5616f69ee1da29d000b"
+        },
+        {
+          "line": 14,
+          "exactSourceLine": "export function exclusive(path,value,privateFile=true,maxBytes=limits.resultBytes,control){if(control!==undefined&&(!control||Object.keys(control).some(key=>!['deadlineMs','beforeCreate','observe'].includes(key))||!Number.isSafeInteger(control.deadlineMs)||control.deadlineMs<1||typeof control.beforeCreate!=='function'||typeof control.observe!=='function'))throw Error('QA_EXCLUSIVE_CONTROL');canonical(dirname(path),repo);if(control&&privateFile){const parent=lstatSync(dirname(path));if(!parent.isDirectory()||parent.uid!==process.getuid()||(parent.mode&511)!==448)throw Error('QA_PRIVATE_PARENT');}const encoded=Buffer.from(JSON.stringify(value,null,2)+'\\n');if(encoded.length>maxBytes)throw Error('QA_BYTES');if(control)control.beforeCreate();if(control&&Date.now()>=control.deadlineMs)throw Error('QA_EXCLUSIVE_DEADLINE');const fd=openSync(path,'wx',privateFile?0o600:0o644);let primary,hasPrimary=false;const observe=stage=>{if(control)control.observe(stage);};try{observe('created');let offset=0;while(offset<encoded.length){const wrote=writeSync(fd,encoded,offset,encoded.length-offset);if(!Number.isSafeInteger(wrote)||wrote<1||wrote>encoded.length-offset)throw Error('QA_EXCLUSIVE_SHORT_WRITE');offset+=wrote;}observe('written');fsyncSync(fd);observe('durable');}catch(error){primary=error;hasPrimary=true;}let closed=false;for(let attempt=0;attempt<2&&!closed;attempt++){try{closeSync(fd);closed=true;}catch(error){if(!hasPrimary){primary=error;hasPrimary=true;}if(attempt===1&&error?.code==='EBADF')closed=true;}}if(closed)try{observe('closed');}catch(error){if(!hasPrimary){primary=error;hasPrimary=true;}}if(hasPrimary)throw primary;}",
+          "lineSHA256": "728f71cd344df534d7b0ce38ea2558ae61fcf6f26d37308ca097bad4a3ccdaa8"
+        },
+        {
+          "line": 36,
+          "exactSourceLine": "export function qualifierDeadline(){const window=json(resolve(scratch,'qualifier-window.json'),scratch,true),start=Date.parse(window.startedAt);if(!Number.isFinite(start)||window.deadlineMs!==limits.qualifierMs)throw Error('QA_TOTAL_TIME_BUDGET');const end=start+limits.qualifierMs;if(Date.now()>=end)throw Error('QA_TOTAL_TIME_BUDGET');return end;}",
+          "lineSHA256": "9debca6ad868a9c55c86a69b982455177bf3f7070f68152b4c3c3cd87a4ef297"
+        },
+        {
+          "line": 49,
+          "exactSourceLine": "const safeKeys=new Set(['version','operation','runId','phase','caseId','sequence','previousDigest','sourceDigest','fixtureDigest','bootstrapDigest','apiSpecDigest','targetReceiptDigest','startedAt','observedAt','elapsedMs','status','expectedCategory','observedCategory','counts','noEffect','cleanupComplete','processTerminal','exitCode','failureClass','receiptDigest']);",
+          "lineSHA256": "4db0a41f50c2bf2fa7c0195c18c67e7e5c1a84aea62bc5495b05258efe5d05a4"
+        },
+        {
+          "line": 55,
+          "exactSourceLine": "export async function reserveTicket(kind,max,cleanup=false){const maxima={native:limits.nativeClientRpc,cleanup:limits.cleanupRpc,'peer-effect':limits.peerEffects,'peer-other':limits.peerOther,process:limits.processes,'nested-parent':1,'nested-auth':28};if(max!==maxima[kind]||typeof cleanup!=='boolean'||cleanup&&kind!=='native')throw Error('QA_TICKET_MAX');if(!['native','cleanup','peer-effect','peer-other','process','nested-parent','nested-auth'].includes(kind)||!Number.isSafeInteger(max)||max<1)throw Error('QA_TICKET');trustedReview();const lock=resolve(scratch,'dispatch-budget.lock');const deadline=Date.now()+12000;let fd;while(fd===undefined){try{fd=openSync(lock,'wx',0o600);}catch(error){if(error.code!=='EEXIST'||Date.now()>=deadline)throw Error('QA_BUDGET_LOCK');await new Promise(done=>setTimeout(done,10));}}",
+          "lineSHA256": "74dc49c8e3056752cacf8c3ec98421c58e893f8e9317be28401d27a16b50a9b6"
+        },
+        {
+          "line": 56,
+          "exactSourceLine": " try{trustedReview();if(kind==='native'){const window=resolve(scratch,'qualifier-window.json');if(!lstatSync(window,{throwIfNoEntry:false}))exclusive(window,{startedAt:new Date().toISOString(),deadlineMs:1200000});const recorded=json(window,scratch,true);if(Date.now()-Date.parse(recorded.startedAt)>=1200000||recorded.deadlineMs!==1200000)throw Error('QA_TOTAL_TIME_BUDGET');}const count=readdirSync(scratch).filter(name=>name.startsWith('ticket-'+kind+'-')).length;if(count>=max-(kind==='native'&&!cleanup?12:0))throw Error('QA_TOTAL_BUDGET');const path=resolve(scratch,`ticket-${kind}-${String(count+1).padStart(4,'0')}.json`);exclusive(path,{kind,sequence:count+1,observedAt:new Date().toISOString()});return Object.freeze({kind,sequence:count+1});}finally{closeSync(fd);const {unlinkSync}=await import('node:fs');unlinkSync(lock);}}",
+          "lineSHA256": "8ecba4f1d892e5d885e0ecadd4c1942a72518d6f3adbda36ad9a37af4f7bbd38"
+        },
+        {
+          "line": 60,
+          "exactSourceLine": "export function durableExistingPrivate(path,validate,maxBytes=16384,deadline=qualifierDeadline()){const check=()=>{if(!Number.isSafeInteger(deadline)||Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');};check();trustedReview();check();const bounded=canonical(path,scratch,true),initial=lstatSync(bounded);let fd,primary,body;try{check();if(!initial.isFile()||initial.size>maxBytes)throw Error('QA_DURABLE_BYTES');fd=openSync(bounded,constants.O_RDONLY|constants.O_NOFOLLOW);const opened=fstatSync(fd);if(!opened.isFile()||opened.dev!==initial.dev||opened.ino!==initial.ino||opened.nlink!==1||opened.uid!==process.getuid()||(opened.mode&511)!==384||opened.size>maxBytes)throw Error('QA_DURABLE_BINDING');check();body=readFileSync(fd);check();if(body.length!==opened.size||body.length>maxBytes)throw Error('QA_DURABLE_BYTES');validate(body);check();const beforeSync=lstatSync(canonical(bounded,scratch,true));if(beforeSync.dev!==opened.dev||beforeSync.ino!==opened.ino||beforeSync.size!==body.length||sha256(readFileSync(bounded))!==sha256(body))throw Error('QA_DURABLE_BINDING');check();fsyncSync(fd);check();}catch(error){primary=error;}finally{if(fd!==undefined)try{closeSync(fd);}catch(error){if(primary)Object.defineProperty(primary,'qaDurableCloseFailure',{value:error,enumerable:false});else primary=error;}}if(primary)throw primary;check();const final=lstatSync(canonical(bounded,scratch,true));if(final.dev!==initial.dev||final.ino!==initial.ino||final.size!==body.length||sha256(readFileSync(bounded))!==sha256(body))throw Error('QA_DURABLE_BINDING');check();return body;}",
+          "lineSHA256": "8797ebe71dacab57a28d65f5b1d0ccedd54f96d1a75b04b6765343406b8f40ba"
+        },
+        {
+          "line": 66,
+          "exactSourceLine": "function creationTransition(ticket,from,to,deadline=qualifierDeadline()){const check=()=>{if(!Number.isSafeInteger(deadline)||Date.now()>=deadline)throw Error('QA_RPC_TIME_BUDGET');};check();trustedReview();check();const path=creationTicketPath(ticket);if(creationState(ticket)!==from)throw Error('QA_CREATION_STATE');const marker=Buffer.from(to===1?creationPendingMarker:to===3?creationResponseMarker:creationSettledMarker);let fd,primary;try{check();fd=openSync(path,'a');let offset=0;while(offset<marker.length){check();const written=writeSync(fd,marker.subarray(offset));if(!Number.isSafeInteger(written)||written<1||written>marker.length-offset)throw Error('QA_CREATION_WRITE');offset+=written;check();}fsyncSync(fd);check();}catch(error){primary=error;}finally{if(fd!==undefined)try{closeSync(fd);}catch(error){if(primary)Object.defineProperty(primary,'qaCreationCloseFailure',{value:error,enumerable:false});else primary=error;}}if(primary)throw primary;check();}",
+          "lineSHA256": "2dcc18adb56694f743c38020cab9bc9c6f837e0ac528bb47f2c50d554aece12c"
+        },
+        {
+          "line": 67,
+          "exactSourceLine": "export const creationDispatched=(ticket,deadline)=>creationTransition(ticket,0,1,deadline);",
+          "lineSHA256": "49e27866fd2b10d4598da393317673bfd65f7953f7d0cd3b174b6e081f805a9e"
+        },
+        {
+          "line": 68,
+          "exactSourceLine": "export function creationSettled(ticket,deadline){creationTransition(ticket,creationState(ticket)===3?3:1,2,deadline);durableCreationAcknowledgments.add(creationKey(ticket));}",
+          "lineSHA256": "b9e896fa6113ca29c0391fd87839a7dd0906452ca689a50adeb65071635aaf8c"
+        },
+        {
+          "line": 70,
+          "exactSourceLine": "export function creationAcknowledge(ticket,deadline){const state=creationState(ticket);if(state===3)creationSettled(ticket,deadline);else if(state===2){durableExistingPrivate(creationTicketPath(ticket),body=>{if(parsedCreationState(body.toString('utf8'),ticket)!==2)throw Error('QA_CREATION_UNKNOWN');},1024,deadline);durableCreationAcknowledgments.add(creationKey(ticket));}else throw Error('QA_CREATION_UNKNOWN');}",
+          "lineSHA256": "64ff6bc1929ab55551a79b3d0dc2a82ba448a7182f90fc079098b29515914c6c"
+        },
+        {
+          "line": 71,
+          "exactSourceLine": "export const creationResponseKnown=(ticket,deadline)=>creationTransition(ticket,1,3,deadline);",
+          "lineSHA256": "26d4faec921bb38646f717cf652da37871a994f931e4c85201e3a8f747235c38"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/parent-inputs.mjs",
+      "bytes": 19209,
+      "sourceSHA256": "5ac8d94df79b97a6d63525c66231ca7c3029d0082c1db5e5dd76362cc37ba0a8",
+      "encodedPath": "source-byte-gzip/5ac8d94df79b97a6d63525c66231ca7c3029d0082c1db5e5dd76362cc37ba0a8.gz",
+      "sourceLines": [
+        {
+          "line": 10,
+          "exactSourceLine": "export const profileContract=Object.freeze({\"version\":1,\"operation\":\"26785d7b-a15f-42ca-96b7-6f52a795cbc0\",\"purpose\":\"task04-model-drift-native-regression-c5\",\"projectName\":\"cortex-task04-admission-disposable-f1da5ec1ac75\",\"projectSlug\":\"cortex-task04-admission-disposable-f1da5ec1ac75\",\"kind\":\"cloud\",\"deploymentType\":\"dev\",\"productionDeployment\":false,\"sharedCiTarget\":false,\"privateEnvironmentFile\":\"work/backend-runtime/task04-model-drift-native-regression-c5/deploy.env\",\"provisionCalls\":5,\"provisionDeadlineMs\":150000,\"retirementCalls\":5,\"retirementDeadlineMs\":180000,\"runId\":\"admission-c36a608c351a4277896d2fd1a9ea7c20\"});",
+          "lineSHA256": "0d2360fe9e1bbeb3d32391c31fbd2a06dd620e36c1bbf33f355109e4f5113d2c"
+        },
+        {
+          "line": 14,
+          "exactSourceLine": "export function parentDeadline(deadline){assert.ok(Date.now()<deadline,'PARENT_TOTAL_TIME_BUDGET');}",
+          "lineSHA256": "f569c2ae8eee6d069c276bc89e5ee168257a8adf82607a7f61d3a63de895e607"
+        },
+        {
+          "line": 31,
+          "exactSourceLine": " const names=Object.keys(historicalSources),owned=JSON.parse(original[names[0]]),qualified=JSON.parse(original[names[2]]),retired=JSON.parse(original[names[3]]);assert.equal(qualified.status,'PASS');assert.equal(qualified.cleanupComplete,true);assert.equal(qualified.counts.failed,0);assert.equal(qualified.counts.skipped,0);assert.equal(qualified.counts.blocked,0);assert.equal(retired.status,'PASS');assert.equal(retired.deletionHttpStatus,200);assert.equal(retired.absentProjectHttpStatus,404);assert.equal(retired.projectId,3138249);assert.equal(retired.verifiedOnlyDevelopmentCloudDeployment,true);assert.equal(retired.managementCalls,5);assert.equal(owned.files.length,2);assert.equal(typeof owned.run,'string');assert.ok(original[names[1]].toString().endsWith('\\n'),'HISTORICAL_PARTIAL_JOURNAL');",
+          "lineSHA256": "1c28791f2d4a46f12c601f739b7c240294e8afb5993659b42b1631ad7808e227"
+        },
+        {
+          "line": 37,
+          "exactSourceLine": "export function initialProof(target,evidence,observedAt=new Date().toISOString()){return {operation:target.operation,runId:target.runId,observedAt,historicalTargetProjectId:3138249,historicalQualification:'PASS',historicalOwnedCleanup:true,historicalProjectDeletion:200,historicalProjectAbsence:404,storageCreatedHere:0,currentTargetDecoder:'NOT_RUN',newOperationAttemptIDs:'PENDING_CURRENT_CORE_OWNERSHIP',sources:evidence.sources,historicalOwnedRunSHA256:evidence.historicalOwnedRunSHA256,journalWitnesses:evidence.journalWitnesses,locators:Object.entries(evidence.ids).map(([table,id])=>({table,locatorSHA256:sha256(id),provenance:'previously native-issued owned locator; original target cleaned and retired; current decoding not claimed'}))};}",
+          "lineSHA256": "86d96cdaedff0e31fa8ef46fe8415cb4d556a563d0049b4e2109f55a438bdfdf"
+        },
+        {
+          "line": 39,
+          "exactSourceLine": "export async function boundedParentBody(response,deadline){",
+          "lineSHA256": "21f526236bae76f48df36ed3da823a1db186e4e1dfa3b7bef3db64db2215edcc"
+        },
+        {
+          "line": 42,
+          "exactSourceLine": " const bounded=async pending=>{let timer;try{return await Promise.race([pending,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('PARENT_RESPONSE_DEADLINE')),Math.max(1,deadline-Date.now()));})]);}finally{clearTimeout(timer);}};",
+          "lineSHA256": "04a9b8b952dc437bb48cbbafeb5aefef2d7b3dfe54d40f15c068231ea4cc8ab1"
+        },
+        {
+          "line": 43,
+          "exactSourceLine": " try{parentDeadline(deadline);assert.equal(response.status,200,'owned peer environment update');while(true){parentDeadline(deadline);const {done,value}=await bounded(reader.read());parentDeadline(deadline);if(done)break;size+=value.byteLength;if(size>16384)throw Error('PARENT_RESPONSE_BYTES');}return size;}",
+          "lineSHA256": "7e0e38160c6646bbe98489c4578431461fcec983d03197e2d3f9b430eb15a739"
+        },
+        {
+          "line": 50,
+          "exactSourceLine": " const deadline=Date.now()+120000;",
+          "lineSHA256": "b788a6b546adf031c2585a5690105876240a9d32869f698a959fde4a127fbfe1"
+        },
+        {
+          "line": 54,
+          "exactSourceLine": "  exclusive(path,value,true,undefined,{deadlineMs:deadline,beforeCreate:()=>parentDeadline(deadline),observe:phase=>{",
+          "lineSHA256": "018ceac74915c4192038fb92c5e89a229f7bafb79f0045be0bc899d9cf6112a1"
+        },
+        {
+          "line": 58,
+          "exactSourceLine": "  parentDeadline(deadline);",
+          "lineSHA256": "9b3a1750fc3fd8a7444e9ba4fb493ad644b13b0916f664450ba41aab28b49954"
+        },
+        {
+          "line": 62,
+          "exactSourceLine": "  strictProfile();preservationPreflight();parentDeadline(deadline);",
+          "lineSHA256": "808ceed91e74212c1c8decc898d44ae617ee4d5d36e388e3f8c7f1928c2fac16"
+        },
+        {
+          "line": 66,
+          "exactSourceLine": "  const evidence=historicalEvidence();parentDeadline(deadline);",
+          "lineSHA256": "e3409b80d74ff0dc7c463e5f6d7fa43947c7c40814ba313e192a22a29329dab7"
+        },
+        {
+          "line": 76,
+          "exactSourceLine": "   parentDeadline(deadline);const signature=sign('RSA-SHA256',bytes,privateKey);effects.signatures++;",
+          "lineSHA256": "8a506d972722c48ab58df28c8faddb999850f7b2665bf55b80f98f29865008ed"
+        },
+        {
+          "line": 87,
+          "exactSourceLine": "  parentDeadline(deadline);const peerSecret=randomBytes(32).toString('hex');effects.peerSecrets++;",
+          "lineSHA256": "11b0939c1b3850a75ab3b369fdefefb9095331f02de964240665563154418b58"
+        },
+        {
+          "line": 90,
+          "exactSourceLine": "  const startedAt=new Date().toISOString(),url=target.deploymentUrl+'/api/update_environment_variables',options={method:'POST',redirect:'error',headers:{Authorization:'Convex '+values.CONVEX_DEPLOY_KEY,'Content-Type':'application/json'},body:JSON.stringify({changes:[{name:'CORTEX_QA_TASK04_PEER_SECRET',value:peerSecret}]}),signal:AbortSignal.timeout(Math.max(1,Math.min(30000,deadline-Date.now())))};",
+          "lineSHA256": "6e8bf56784ab1e5cc0d0045df8decbb8f6e5f43f4c8c70d4a69ff08b055d1765"
+        },
+        {
+          "line": 91,
+          "exactSourceLine": "  parentDeadline(deadline);effects.configurationCalls++;const response=await fetch(url,options);",
+          "lineSHA256": "39b1527cf74808635b50adefe15fc063f971a6926bd051deec4ea14d5e77b8ef"
+        },
+        {
+          "line": 92,
+          "exactSourceLine": "  await boundedParentBody(response,deadline);",
+          "lineSHA256": "bc828271b685ec409af2db9ca5ef965a41d6c43161b85804ca34e818488833b4"
+        },
+        {
+          "line": 94,
+          "exactSourceLine": "  const receipt={operation:target.operation,runId:target.runId,status:'PASS',startedAt,observedAt:new Date().toISOString(),adapterSourceSHA256:sha256(readFileSync(canonical(fileURLToPath(import.meta.url),repo))),keysCreated:0,signatures:effects.signatures,identityNegativeCount:7,storageCreated:0,configurationCalls:effects.configurationCalls,configurationVariable:'CORTEX_QA_TASK04_PEER_SECRET',configurationHTTPStatus:response.status,historicalProvenanceSHA256:sha256(readPrivate(resolve(scratch,'initial-physical-id-provenance.json'),scratch)),currentTargetDecoder:'NOT_RUN',currentCoreOwnership:'PENDING'};",
+          "lineSHA256": "3041710456443ad1ab9066af7c860d0bb904a3185f081dfb54b1042d4063217f"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/process-owner.mjs",
+      "bytes": 4395,
+      "sourceSHA256": "539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624",
+      "encodedPath": "source-byte-gzip/539df18b7192532513212738f2244a335c12316e394715594685c047c23ef624.gz",
+      "sourceLines": [
+        {
+          "line": 4,
+          "exactSourceLine": "const delay = (ms) => new Promise((done) => setTimeout(done, ms));",
+          "lineSHA256": "b038ca0f32d9f44f6c1b3c76948165cd242f7edf06381a4f37ef597555d701b8"
+        },
+        {
+          "line": 8,
+          "exactSourceLine": "  spawned = 0;",
+          "lineSHA256": "590caf57392208bb81038d245c55af47c15aafcc1afb02a0cb852c84302547fd"
+        },
+        {
+          "line": 15,
+          "exactSourceLine": "      signal(\"SIGTERM\"); await Promise.race([record.closed, delay(100)]);",
+          "lineSHA256": "42911881b2011dc688e1036e0cebad424219079c59aff535da36bff34721f449"
+        },
+        {
+          "line": 17,
+          "exactSourceLine": "      signal(\"SIGKILL\"); await Promise.race([record.closed, delay(2_000)]);",
+          "lineSHA256": "08ca7aad541d2922b090fa6cc67b671fae0cb43ef181073cf09208a5e28ec454"
+        },
+        {
+          "line": 19,
+          "exactSourceLine": "      const deadline = Date.now() + 2_000;",
+          "lineSHA256": "fe6ef344a7967f3147dc601901b6d153803404beaaaa425c5c5cac82bc192f87"
+        },
+        {
+          "line": 22,
+          "exactSourceLine": "        members = linuxGroupMembers(record.child.pid, deadline);",
+          "lineSHA256": "fba77bdb7ae37aa8052a64fc3d696b21bc6981d4145a1810b891fcef4b073668"
+        },
+        {
+          "line": 24,
+          "exactSourceLine": "        else { confirmed = false; signal(\"SIGKILL\"); }",
+          "lineSHA256": "1e255dae884ad73f6c23c4e98758af17101749e89a23a71997960157c45bf66e"
+        },
+        {
+          "line": 25,
+          "exactSourceLine": "        if (Date.now() >= deadline) throw new Error(\"OWNED_GROUP_NOT_TERMINAL\");",
+          "lineSHA256": "dc7c271484b2939b9198635f93a040e0cec493211981743625c4ab0be80c7e6e"
+        },
+        {
+          "line": 27,
+          "exactSourceLine": "      } while (Date.now() <= deadline);",
+          "lineSHA256": "84b12f8cb476a0a6cc186b46b915180710b332c6bf8f0e0e40cbe52af821e59c"
+        },
+        {
+          "line": 39,
+          "exactSourceLine": "    if (this.spawned >= 6 || this.records.size >= 2) throw new Error(\"QA_PROCESS_BUDGET\");",
+          "lineSHA256": "41350855a19924c000046a81928c51f1f7d75314a1cacdf924e868d4f0c59703"
+        },
+        {
+          "line": 44,
+          "exactSourceLine": "    this.records.add(record); this.spawned++;",
+          "lineSHA256": "55a58b46432536717d3b9eda3a170176896e5730332512b23087a1d0148ee0f3"
+        },
+        {
+          "line": 61,
+          "exactSourceLine": "    const timer = setTimeout(() => { timedOut = true; void this.reap(record).finally(() => timeout({ code: -1, signal: \"timeout\" })).catch(() => {}); }, timeoutMs);",
+          "lineSHA256": "c957a5b3cd747ad14fb856fe392d0b84079b00acd89e1ac10dd6457ce2ce8617"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/process-terminal.mjs",
+      "bytes": 1316,
+      "sourceSHA256": "2f04fa9969468e62f93a8a6b38ee25c9904b48cfa558d2116d693e8b63ec9e46",
+      "encodedPath": "source-byte-gzip/2f04fa9969468e62f93a8a6b38ee25c9904b48cfa558d2116d693e8b63ec9e46.gz",
+      "sourceLines": [
+        {
+          "line": 5,
+          "exactSourceLine": "export function linuxGroupMembers(groupId, deadline) {",
+          "lineSHA256": "7d94960e2f9f7f9482c87e4c764a263b55e8930bc45aa2e4914afbdd9e66aa1d"
+        },
+        {
+          "line": 10,
+          "exactSourceLine": "    if (Date.now() > deadline) throw new Error(\"OWNED_GROUP_VERIFICATION_TIMEOUT\");",
+          "lineSHA256": "a0bf0e571a61806291d925f9e162f22c5dd0b18ad03f606e6d85416d43b69bf4"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/qualifier-diagnostics.mjs",
+      "bytes": 3812,
+      "sourceSHA256": "3b10d7c9605062d4555672b3047de9636414aab66acf86fe2457c8feef705edb",
+      "encodedPath": "source-byte-gzip/3b10d7c9605062d4555672b3047de9636414aab66acf86fe2457c8feef705edb.gz",
+      "sourceLines": [
+        {
+          "line": 5,
+          "exactSourceLine": "function cleanupWitness(target,phase){const matches=[];for(const name of readdirSync(scratch).filter(n=>/^journal-.*\\.jsonl$/.test(n))){const bytes=readFileSync(canonical(resolve(scratch,name),scratch,true));if(!bytes.toString().endsWith('\\n'))continue;const lines=bytes.toString().trimEnd().split('\\n');if(JSON.parse(lines[0]).phase!==phase)continue;let previous='0'.repeat(64),sequence=0;for(const line of lines){const row=JSON.parse(line),{receiptDigest,...body}=row;assert.equal(row.operation,target.operation);assert.equal(row.runId,target.runId);assert.equal(row.sequence,++sequence);assert.equal(row.previousDigest,previous);assert.equal(receiptDigest,sha256(JSON.stringify(body)));previous=receiptDigest;if(row.phase==='final'&&row.caseId==='native-qualifier')matches.push({journalPath:name,journalSha256:sha256(bytes),sequence,status:row.status,cleanupComplete:row.cleanupComplete===true,receiptDigest});}}return matches.length===1?matches[0]:{status:'NOT_OBSERVED',cleanupComplete:false};}",
+          "lineSHA256": "da440386aab41470dbd9e6b27df3116652b25cfc147209f9ef7f36515b354785"
+        },
+        {
+          "line": 7,
+          "exactSourceLine": "export function captureQualifier(target,phase,result){assert.ok(['synthetic','empty'].includes(phase));const stdout=result.stdoutBytes??Buffer.from(result.stdout??''),stderr=result.stderrBytes??Buffer.from(result.stderr??'');assert.ok(stdout.length+stderr.length<=diagnosticBounds.stdioBytes);const name='qualifier-diagnostic-'+phase+'-'+randomUUID(),out=write(name+'-stdout.bin',stdout,256000),err=write(name+'-stderr.bin',stderr,256000);let cleanup;try{cleanup=cleanupWitness(target,phase);}catch{cleanup={status:'INVALID_JOURNAL',cleanupComplete:false};}const message=stderr.toString('utf8'),failureClass=['CAPABILITY_UNSUPPORTED','CAPABILITY_UNAVAILABLE','POLICY_DENIED','QA_RESULT_BYTES','QA_RPC_BUDGET'].find(code=>message.includes(code))??(result.timedOut?'TIMEOUT':result.overflow?'STDIO_OVERFLOW':result.code===0?'NONE':'UNCAUGHT_CHILD_FAILURE');const metadata={operation:target.operation,runId:target.runId,phase,freezeSha256:sha256(readFileSync(canonical(resolve(root,'runtime-freeze.json'),root))),status:result.code===0&&!result.timedOut&&!result.overflow?'PASS':'FAIL',exitCode:result.code??-1,signal:result.signal??null,timedOut:result.timedOut===true,overflow:result.overflow===true,capturedBytes:stdout.length+stderr.length,observedBytes:result.observedBytes??stdout.length+stderr.length,complete:!result.overflow,stdout:out,stderr:err,failureClass,cleanup};const record=write(name+'.json',Buffer.from(JSON.stringify(metadata)+'\\n'),16384);return {record,failureClass,status:metadata.status,cleanupComplete:cleanup.cleanupComplete};}",
+          "lineSHA256": "feafc8a9f91b6977850ff2bb1d27b62d16b824f008399d6914fc789c3e9961d3"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/qualify-owned.mjs",
+      "bytes": 2404,
+      "sourceSHA256": "095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49",
+      "encodedPath": "source-byte-gzip/095e7c55803bc4d41b8961cbba65baff83bbb0d1c0d65a326f94259be75b7d49.gz",
+      "sourceLines": [
+        {
+          "line": 1,
+          "exactSourceLine": "/** Parent-only qualifier, captures bounded private diagnostics BEFORE cleanup/finally can lose it. */",
+          "lineSHA256": "621b7a23ebee653544005c52092baf059d44539709fdd5ee62c09822cbe47cc7"
+        },
+        {
+          "line": 4,
+          "exactSourceLine": "try{if(phase==='synthetic'){await reserveTicket('process',6);result=await owner.run([resolve(root,'scripts/driver.mjs'),phase],{cwd:repo,env:{PATH:process.env.PATH,LANG:'C.UTF-8',NODE_USE_ENV_PROXY:'1',...runtime}},limits.driverMs);captureAttempted=true;diagnostic=captureQualifier(target,phase,result);status=diagnostic.status;}else{const{session,qualify}=await import('./driver.mjs');const outcome=await qualify(await session('empty'),'empty');result={code:outcome.status==='PASS'&&outcome.cleanupComplete?0:1,stdout:JSON.stringify(outcome),stderr:'',timedOut:false,overflow:false};captureAttempted=true;diagnostic=captureQualifier(target,phase,result);status=diagnostic.status;}}",
+          "lineSHA256": "cddd98e4166a381365659ee248b701d8b861327ec0b1ad8b4543c133cc4c01f3"
+        },
+        {
+          "line": 6,
+          "exactSourceLine": "finally{await owner.reapAll();if(owner.records.size)status='FAIL';exclusive(resolve(scratch,'qualifier-process-'+phase+'-'+randomUUID()+'.json'),{operation:target.operation,phase,status,counts:{spawned:owner.spawned,verifiedTerminalGroups:owner.verifiedGroups,remaining:owner.records.size},exitCode:result?.code??1,diagnostic:diagnostic?.record,failureClass:diagnostic?.failureClass??'UNKNOWN',cleanupComplete:diagnostic?.cleanupComplete===true},true,16384);}",
+          "lineSHA256": "b155a7e7d2b9899e905799ea739bcca0bc695bd851a388a51ce8fd28dc46b317"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/window-evidence.mjs",
+      "bytes": 2869,
+      "sourceSHA256": "7e54ba601fdbc0724220a34fb0cea4ad4a3985af82a8d1ae44bd5fe097afa45c",
+      "encodedPath": "source-byte-gzip/7e54ba601fdbc0724220a34fb0cea4ad4a3985af82a8d1ae44bd5fe097afa45c.gz",
+      "sourceLines": [
+        {
+          "line": 4,
+          "exactSourceLine": "export async function scheduleCase(kind,{now=Date.now,wait=ms=>new Promise(done=>setTimeout(done,ms)),deadline}){assert.equal(typeof deadline,'function');let steps=0;while(true){const current=now(),end=deadline();assert.ok(Number.isFinite(end)&&current<end,'QA_TOTAL_TIME_BUDGET');const offset=((current%60000)+60000)%60000;if(kind==='window'?offset>=30000:offset<30000)return{kind,startMs:current,deadlineMs:end,waitSteps:steps,minimumLeadMs:kind==='window'?0:60000-offset};assert.ok(++steps<=121,'QA_SCHEDULING_BUDGET');await wait(Math.min(250,end-current));}}",
+          "lineSHA256": "9ef91c3c52d1baa792203e509cba0884ea782a42f8d93e59c753e36d27037e6a"
+        },
+        {
+          "line": 5,
+          "exactSourceLine": "function accounts(rows,reference,runBudgetId){const selected=rows.filter(x=>x.table==='runtimeBudgetAccounts'&&x.row.tenantId===reference.tenantId&&(x.row.kind==='tenant'||x.row.kind==='run'&&x.row.runBudgetId===runBudgetId));assert.equal(selected.length,2,'QA_WINDOW_EVIDENCE_MISSING');assert.equal(selected.filter(x=>x.row.kind==='tenant').length,1);assert.equal(selected.filter(x=>x.row.kind==='run').length,1);return selected.map(({row})=>({kind:row.kind,windowStart:row.windowStart,windowEnd:row.windowEnd,current:row.current,reservedUnits:row.reservedUnits,settledUnits:row.settledUnits,uncertainUnits:row.uncertainUnits,activeConcurrency:row.activeConcurrency})).sort((a,b)=>a.kind.localeCompare(b.kind));}",
+          "lineSHA256": "f9271c53964a1f3a78aab011f57aa8f3583859da44c74a401c8626230b38147d"
+        }
+      ]
+    }
+  ]
+}

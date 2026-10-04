@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+import {SourceTextModule,SyntheticModule,createContext} from 'node:vm';
+import {pathToFileURL} from 'node:url';
+const repo='/workspace/Project-Cortex',w=path.dirname(new URL(import.meta.url).pathname),mirror='/tmp/cortex-native-c5-closed-launcher-c4/mirror',map=JSON.parse(fs.readFileSync(path.join(w,'mirror-source-transform-map.json'))),H=b=>crypto.createHash('sha256').update(b).digest('hex'),results=[];
+async function test(name,fn){try{await fn();results.push({name,status:'PASS'});}catch(e){results.push({name,status:'FAIL',error:e.stack});}}
+await test('all822-original-preimages-and-exact-current-mirror-output',()=>{assert.equal(map.inputs.length,822);for(const r of map.inputs){const original=fs.readFileSync(r.source),copy=fs.readFileSync(r.destination);assert.equal(original.length,r.bytes);assert.equal(H(original),r.sha256);assert.equal(copy.length,r.destinationBytes);assert.equal(H(copy),r.destinationSHA256);assert.ok(r.destination.startsWith(mirror+'/'));}});
+for(const kind of ['extension','regression','extra']){
+ const root=path.join(mirror,'_goals/convex-backend-runtime-2026-10-02/qa','task04-model-drift-native-'+kind+'-preparation-c5'),p=path.join(root,'scripts/guard.mjs'),row=map.inputs.find(x=>x.destination===p),source=fs.readFileSync(p,'utf8');
+ async function load(identifier){const context=createContext({process:{getuid:()=>process.getuid(),env:{}},Buffer,Date,setTimeout,clearTimeout,AbortSignal});const m=new SourceTextModule(source,{context,identifier,initializeImportMeta:meta=>meta.url=pathToFileURL(identifier).href});await m.link(async spec=>{const native=await import(spec);return new SyntheticModule(Object.keys(native),function(){for(const[k,v]of Object.entries(native))this.setExport(k,v);},{context});});await m.evaluate();return m.namespace;}
+ await test(kind+'-recognized-host-root-public-repo-owned-scratch',async()=>{assert.ok(row);assert.equal(H(source),row.destinationSHA256);const m=await load(p);assert.equal(m.repo,repo);assert.equal(m.root,root);assert.equal(m.scratch,path.join(mirror,'work/backend-runtime','task04-model-drift-native-'+kind+'-c5'));});
+ await test(kind+'-DUMMY-four-level-relative-repo-scratch-retained',async()=>{const base='/tmp/cortex-native-c5-closed-launcher-c4/dummy-'+kind,packet=path.join(base,'a/b/c/d'),m=await load(path.join(packet,'scripts/guard.mjs'));assert.equal(m.root,packet);assert.equal(m.repo,base);assert.equal(m.scratch,path.join(base,'work/backend-runtime','task04-model-drift-native-'+kind+'-c5'));});
+ await test(kind+'-case-assertions-and-caps-byteexact',()=>{for(const name of ['cases.json','scripts/cases.mjs']){const r=map.inputs.find(x=>x.destination===path.join(root,name));if(r){assert.equal(r.changes.length,0);assert.equal(r.sha256,r.destinationSHA256);assert.deepEqual(fs.readFileSync(r.destination),fs.readFileSync(r.source));}}});
+}
+await test('old-initialize-prepare-compile-never-launch-registry',()=>{const registry=JSON.parse(fs.readFileSync(path.join(w,'original122-route-bindings.json')));assert.equal(registry.commands.length,122);for(const r of registry.commands){assert.equal(r.status,'HELD_NOT_LAUNCHABLE');assert.ok(!['initialize.py','prepare.py','compile.mjs'].includes(path.basename(r.source)));}});
+console.log(JSON.stringify({status:results.every(x=>x.status==='PASS')?'PASS_SOURCE_PATH_COMPOSITION_COMPONENT_ONLY':'FAIL',results,original122:'HELD',limitations:'Source-path evaluation and preimage/body preservation only. No original qualification entry launched; no full 122 route composition acceptance.'}));if(results.some(x=>x.status==='FAIL'))process.exitCode=1;
