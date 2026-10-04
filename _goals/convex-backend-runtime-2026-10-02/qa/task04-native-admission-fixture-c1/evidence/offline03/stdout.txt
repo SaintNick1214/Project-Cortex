@@ -1,0 +1,29 @@
+node:fs:1411
+  const result = binding.mkdir(
+                         ^
+
+Error: EEXIST: file already exists, mkdir '/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c1/offline-undefined'
+    at mkdirSync (node:fs:1411:26)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/offline-check.mjs:5:103 {
+  errno: -17,
+  code: 'EEXIST',
+  syscall: 'mkdir',
+  path: '/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c1/offline-undefined'
+}
+
+Node.js v24.19.0
+✖ _goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/offline-check.mjs (101.625107ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 111.622269
+
+✖ failing tests:
+
+test at _goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/offline-check.mjs:1:1
+✖ _goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/offline-check.mjs (101.625107ms)
+  'test failed'
