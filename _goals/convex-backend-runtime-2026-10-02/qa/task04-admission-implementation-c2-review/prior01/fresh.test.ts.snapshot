@@ -1,0 +1,100 @@
+/** Offline native-handler fixtures. This fake database does NOT prove Convex OCC/isolation/rollback. */
+import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import type { MutationCtx } from "/workspace/Project-Cortex/convex-dev/_generated/server";
+import type { Doc, Id } from "/workspace/Project-Cortex/convex-dev/_generated/dataModel";
+import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "/workspace/Project-Cortex/convex-dev/runtimeModelPolicyBootstrap";
+import type { ModelCallRequest, TrustedModelPolicyRecord } from "/workspace/Project-Cortex/src/domain/model-policy";
+import { canonicalModelJson } from "/workspace/Project-Cortex/src/domain/model-policy";
+import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "/workspace/Project-Cortex/src/domain/profile";
+import { memoryFixture } from "/workspace/Project-Cortex/tests/unit/runtimeMemory/fixture";
+
+const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
+jest.unstable_mockModule("/workspace/Project-Cortex/convex-dev/runtimeModelPolicyBootstrap", () => ({ lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
+const ledger = await import("/workspace/Project-Cortex/convex-dev/runtimeModelPolicy");
+const schema = (await import("/workspace/Project-Cortex/convex-dev/schema")).default;
+const hash = "a".repeat(64);
+const clock = 1_000_000;
+const limits = { inputTokens: 1000, contextTokens: 2000, outputTokens: 500, toolSteps: 4, timeoutMs: 10000,
+  operationBudgetUnits: 200, runBudgetUnits: 300, tenantBudgetUnits: 500, concurrency: 2 };
+const pins = { promptVersion: "prompt-1", schemaVersion: "schema-1", extractionVersion: "extract-1", toolRegistryVersion: "tools-1", priceRevision: "price-1", boundRevision: "bound-1" };
+const deployment: TrustedModelPolicyRecord = { policyId: "deployment", version: 1, scope: "deployment", rules: {
+  modelId: "openai/gpt-4o-mini", nativeInterface: "chat", allowedModels: ["openai/gpt-4o-mini", DEFAULT_EMBEDDING_PROFILE.modelId], interfaces: ["chat", "embedding"],
+  capabilities: ["text", "embedding"], allowedOptions: ["temperature"], allowedTools: [], fallbackModels: [], limits, pins } };
+/** Synthetic trust-root mock ONLY; no production manifest or actual price qualification is created. */
+function manifest(): DeploymentPolicyManifest {
+  const qualification = { receiptId: "synthetic-chat", modelId: "openai/gpt-4o-mini", nativeInterface: "chat" as const, capabilities: ["text" as const], allowedOptions: ["temperature" as const],
+    limits, costBound: { kind: "qualified-call-ceiling" as const, maximumCostUnits: 100, provenance: "synthetic-test-only", coversAllProviderCharges: true as const }, priceRevision: "price-1", boundRevision: "bound-1" };
+  const proof: QualifiedDispatchEvidence = { receiptId: qualification.receiptId, evidenceHash: hash, providerVersion: "synthetic-0", modelId: qualification.modelId, nativeInterface: "chat",
+    inputBound: { ruleId: "plain-chat-cookbook-utf8-v1", revision: 1, featureEnvelope: "plain-chat-v1", nativeTransformHash: hash, documentHash: hash, proofHash: hash },
+    resultBound: { maximumPrivateResultBytes: 60_000, maximumOutputTokens: 500, maximumEmbeddingValues: 1, proofHash: hash },
+    checkedAt: clock - 1, expiresAt: clock + 1_000_000, terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1", priceRevision: "price-1", boundRevision: "bound-1" };
+  return { manifestId: "synthetic-test-root", revision: 1, artifactRevision: "synthetic-test-artifact", evidenceHash: hash, acceptanceHash: hash, classification: "fixture-synthetic",
+    budgetWindowMs: 60_000, policies: [deployment], qualifications: [qualification], dispatchEvidence: [proof] };
+}
+type Bound = { runBudgetId: string; runAccountId: Id<"runtimeBudgetAccounts"> };
+type Reserved = { status: "reserved"; operationId: Id<"runtimeModelOperations">; attemptId: Id<"runtimeModelAttempts">; requestCanonical: string };
+type Registration = { _handler: (ctx: MutationCtx, args: unknown) => Promise<unknown>; isInternal?: boolean; isPublic?: boolean; exportArgs?: () => string };
+function request(text = "hello"): ModelCallRequest {
+  return { semanticId: "semantic", childCallId: "untrusted-estimate", texts: [text], messages: [{ role: "user", parts: [{ type: "text", text }] }],
+    inputTokens: 1, outputTokens: 20, toolSteps: 0, timeoutMs: 1000, reservationUnits: 1, promptVersion: pins.promptVersion, schemaVersion: pins.schemaVersion, extractionVersion: pins.extractionVersion, toolRegistryVersion: pins.toolRegistryVersion, tools: [], options: { maxRetries: 0 } };
+}
+let root: DeploymentPolicyManifest;
+beforeEach(() => {
+  root = manifest(); lookup.mockReset(); lookup.mockImplementation((id, revision) => id === root.manifestId && revision === root.revision ? root : undefined);
+  jest.spyOn(Date, "now").mockReturnValue(clock);
+});
+afterEach(() => { jest.restoreAllMocks(); });
+function fixture() {
+  const f = memoryFixture(); f.grant.capabilities = ["read", "write", "run", "admin"]; 
+  const db = Object.assign(f.db, { patch: async (table: string, id: string, updates: Record<string, unknown>) => {
+    const row = await f.db.get(table, id); if (!row) throw new Error("Missing patch row"); f.db.writes++; Object.assign(row, JSON.parse(JSON.stringify(updates)) as Record<string, unknown>);
+  } });
+  db.insert = async (table: string, value: Record<string, unknown>) => { db.writes++; return db.seed(table, JSON.parse(JSON.stringify(value)) as Record<string, unknown>)._id; };
+  const invoke = async <Result = unknown>(name: keyof typeof ledger, args: unknown): Promise<Result> => {
+    const registration = ledger[name] as unknown as Registration;
+    return await registration._handler(f.ctx, args) as Result;
+  };
+  const install = async () => await invoke("installDeploymentPolicy", { manifestId: root.manifestId, expectedRevision: root.revision });
+  const bind = async (id = "request", identity = canonicalModelJson({ text: "hello" })) => await invoke<Bound>("ensureBudget", {
+    reference: f.reference, operationKey: "agent.respond", requestId: id, requestCanonical: identity,
+  });
+  const admit = async (binding: Bound, ordinal = 0, text = "hello", extra: Record<string, unknown> = {}) => await invoke<Reserved>("admit", {
+    reference: f.reference, operationKey: "agent.respond", runBudgetId: binding.runBudgetId, semanticId: "semantic", ordinal,
+    requestCanonical: canonicalModelJson(request(text)), ...extra,
+  });
+  const checkpoint = async (attempt: Reserved) => await invoke("checkpoint", { reference: f.reference, attemptId: attempt.attemptId, requestCanonical: attempt.requestCanonical });
+  const account = (kind: string): Doc<"runtimeBudgetAccounts"> => db.table("runtimeBudgetAccounts").find((row) => row.kind === kind) as unknown as Doc<"runtimeBudgetAccounts">;
+  const attempt = (id: string): Doc<"runtimeModelAttempts"> => db.table("runtimeModelAttempts").find((row) => row._id === id) as unknown as Doc<"runtimeModelAttempts">;
+  const receipt = (submission: Reserved, cost = "0.000040", extra: Record<string, unknown> = {}) => canonicalModelJson({ version: 1,
+    dispatchIdentity: attempt(submission.attemptId).dispatchIdentity, receiptId: "terminal-1", modelId: "openai/gpt-4o-mini", nativeInterface: "chat",
+    outcome: "confirmed", proof: "provider-terminal-v1", costSource: "gateway-aggregate-usd-v1", aggregateCostUsd: cost,
+    privateResultCanonical: canonicalModelJson({ text: "answer" }), ...extra });
+  const settle = async (submission: Reserved, cost = "0.000040", extra: Record<string, unknown> = {}) => await invoke("settle", { reference: f.reference,
+    attemptId: submission.attemptId, receiptCanonical: receipt(submission, cost, extra) });
+  return { ...f, db, invoke, install, bind, admit, checkpoint, account, attempt, receipt, settle };
+}
+async function admitted() { const f = fixture(); await f.install(); const b = await f.bind(); const a = await f.admit(b); return { f, b, a }; }
+
+
+describe("fresh independent isolated current policy gates",()=>{
+ function effects(f:ReturnType<typeof fixture>){return {writes:f.db.writes,rows:canonicalModelJson([f.db.table("runtimeBudgetAccounts"),f.db.table("runtimeModelOperations"),f.db.table("runtimeModelAttempts")])};}
+ async function policy(f:ReturnType<typeof fixture>,rules:unknown){delete f.grant.memorySpaceId;delete f.grant.memorySpaceEpoch;f.grant.resourceAccess="tenant";const reference={...f.reference};delete reference.memorySpaceId;delete reference.memorySpaceEpoch;await f.invoke("provisionTenantPolicy",{reference,policyCanonical:canonicalModelJson({policyId:"fresh",version:1,scope:"tenant",tenantId:f.reference.tenantId,rules})});}
+ async function deny(f:ReturnType<typeof fixture>,call:()=>Promise<unknown>){const before=effects(f);await expect(call()).rejects.toThrow();expect(effects(f)).toEqual(before);}
+ async function pair(kind:string){const state=await admitted();const {f,b}=state;const binding=kind==="tenant"?await f.bind("independent-run"):b;const second=await f.admit(binding,1,"second",kind==="operation"||kind==="concurrency"?{}:{semanticId:"independent-operation"});return {...state,second};}
+ it.each(["operation","run","tenant","concurrency"])("isolated %s rejects over-cap held liability with zero effects",async(kind)=>{
+ const {f,a,second}=await pair(kind);const limits=kind==="operation"?{operationBudgetUnits:199}:kind==="run"?{operationBudgetUnits:100,runBudgetUnits:199}:kind==="tenant"?{operationBudgetUnits:100,runBudgetUnits:100,tenantBudgetUnits:199}:{concurrency:1};await policy(f,{limits});await deny(f,()=>f.checkpoint(second));expect(f.account("tenant")).toMatchObject({reservedUnits:200,activeConcurrency:2});expect(f.attempt(a.attemptId).state).toBe("reserved");});
+ it.each(["operation","run","tenant","concurrency"])("isolated %s exact boundary permits without adding held reservation",async(kind)=>{
+ const {f,second}=await pair(kind);const limits=kind==="operation"?{operationBudgetUnits:200}:kind==="run"?{operationBudgetUnits:100,runBudgetUnits:200}:kind==="tenant"?{operationBudgetUnits:100,runBudgetUnits:100,tenantBudgetUnits:200}:{concurrency:2};await policy(f,{limits});const before=effects(f);expect(await f.checkpoint(second)).toMatchObject({dispatchPermit:true});expect(f.db.writes).toBe(before.writes+1);expect(f.account("tenant")).toMatchObject({reservedUnits:200,activeConcurrency:2});});
+ function rootFallback(){const q=root.qualifications[0]!;const proof=root.dispatchEvidence[0]!;root={...root,policies:[{...deployment,rules:{...deployment.rules,allowedModels:[...deployment.rules.allowedModels!,"fixture/fallback"],fallbackModels:["fixture/fallback"]}}],qualifications:[...root.qualifications,{...q,receiptId:"synthetic-fallback",modelId:"fixture/fallback",costBound:{...q.costBound,maximumCostUnits:80}}],dispatchEvidence:[...root.dispatchEvidence,{...proof,receiptId:"synthetic-fallback",modelId:"fixture/fallback"}]};}
+ async function rejected(){rootFallback();const state=await admitted();await state.f.checkpoint(state.a);await state.f.settle(state.a,"0.000040",{outcome:"confirmed_rejected",privateResultCanonical:""});return state;}
+ const fa=(f:ReturnType<typeof fixture>,a:Reserved)=>({reference:f.reference,attemptId:a.attemptId,candidateModelId:"fixture/fallback"});
+ it("current generally allowed candidate has no fallback authority after explicit removal",async()=>{const {f,a}=await rejected();await policy(f,{fallbackModels:[]});const before=effects(f);expect(await f.invoke("checkFallback",fa(f,a))).toEqual({allowed:false});expect(effects(f)).toEqual(before);await deny(f,()=>f.invoke("admitFallback",fa(f,a)));});
+ it("cumulative fallback one unit over current operation ceiling cannot reserve",async()=>{const {f,a}=await rejected();await policy(f,{limits:{operationBudgetUnits:119}});await deny(f,()=>f.invoke("admitFallback",fa(f,a)));expect(f.account("tenant")).toMatchObject({settledUnits:40,reservedUnits:0,activeConcurrency:0});});
+ it("exact cumulative fallback cap reserves and checkpoints once",async()=>{const {f,a}=await rejected();await policy(f,{limits:{operationBudgetUnits:120}});expect(await f.invoke("checkFallback",fa(f,a))).toEqual({allowed:true});const b=await f.invoke<Reserved>("admitFallback",fa(f,a));expect(await f.checkpoint(b)).toMatchObject({dispatchPermit:true});expect(f.account("tenant")).toMatchObject({settledUnits:40,reservedUnits:80,activeConcurrency:1});});
+ it.each(["permission","operation"])("fallback reserved before current %s narrowing cannot checkpoint",async(kind)=>{const {f,a}=await rejected();const b=await f.invoke<Reserved>("admitFallback",fa(f,a));await policy(f,kind==="permission"?{fallbackModels:[]}:{limits:{operationBudgetUnits:119}});await deny(f,()=>f.checkpoint(b));expect(f.account("tenant")).toMatchObject({settledUnits:40,reservedUnits:80,activeConcurrency:1});});
+ it.each(["run","tenant"])("%s current cap counts unknown paid liability even after its slot releases",async(kind)=>{const {f,a,b}=await admitted();await f.checkpoint(a);await f.settle(a,"0.000040",{costSource:"unavailable"});expect(f.account("tenant")).toMatchObject({uncertainUnits:100,activeConcurrency:0});const second=await f.admit(kind==="tenant"?await f.bind("other-run"):b,1,"second",{semanticId:"independent-operation"});await policy(f,{limits:kind==="run"?{operationBudgetUnits:100,runBudgetUnits:199}:{operationBudgetUnits:100,runBudgetUnits:100,tenantBudgetUnits:199}});await deny(f,()=>f.checkpoint(second));expect(f.account("tenant")).toMatchObject({uncertainUnits:100,reservedUnits:100,activeConcurrency:1});});
+ it.each(["run","tenant"])("%s current cap counts known settled charges alongside held reservation",async(kind)=>{const {f,a,b}=await admitted();await f.checkpoint(a);await f.settle(a,"0.000040");const second=await f.admit(kind==="tenant"?await f.bind("other-run"):b,1,"second",{semanticId:"independent-operation"});await policy(f,{limits:kind==="run"?{operationBudgetUnits:100,runBudgetUnits:139}:{operationBudgetUnits:100,runBudgetUnits:100,tenantBudgetUnits:139}});await deny(f,()=>f.checkpoint(second));expect(f.account("tenant")).toMatchObject({settledUnits:40,reservedUnits:100,activeConcurrency:1});});
+ it.each(["limitUnits","concurrencyLimit"])("persisted %s remains a stricter fence than current and pinned policy",async(key)=>{const {f,second}=await pair("run");f.account("tenant")[key]=key==="limitUnits"?199:1;await deny(f,()=>f.checkpoint(second));});
+});
