@@ -1,0 +1,55 @@
+{
+  "start": "2026-10-04T10:14:50.221211+00:00",
+  "end": "2026-10-04T10:14:50.289029+00:00",
+  "subjectRows": 101,
+  "subjectExactSetBytesHashes": "PASS",
+  "sourceRows": 50,
+  "sourceUniqueAndPreHashes": "PASS",
+  "independentIntegrityControls": [
+    "missing row rejected",
+    "extra file rejected",
+    "duplicate row rejected",
+    "changed hash rejected"
+  ],
+  "modelGroups": 25,
+  "modelScope": "PURE_DESIGN_SUBSET_ONLY",
+  "nativeServicesPaid": "NOT_RUN",
+  "contractCounterexamples": [
+    {
+      "case": "C09 committed revoke then exact stage replay",
+      "required": "replay zero writes",
+      "universalFence": "denies inactive grant/revoked account; replay precedence unspecified"
+    },
+    {
+      "case": "same text/stage hash, different partSequence/rawPartDigest",
+      "required": "part identity must be compared",
+      "storedSchema": "neither argument stored and stageHash hashes only text"
+    },
+    {
+      "case": "STOP/revoked account then owned delete; repeat tombstone",
+      "required": "bounded owned deletion and deterministic denial/replay",
+      "universalFence": "denies closed authority and tombstone; delete return only tombstoned true"
+    }
+  ],
+  "identityChecks": {
+    "exact14AcceptedFields": true,
+    "uniqueNativeHashes": 13,
+    "conditionalKMicroUSD": 314310,
+    "acceptedExecutionOrder": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "E11",
+      "E12",
+      "E13",
+      "E14",
+      "C09",
+      "C10"
+    ]
+  }
+}
