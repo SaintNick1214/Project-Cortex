@@ -1,0 +1,2667 @@
+{
+  "scope": "SOURCE_RECIPE_AID_NOT_CAPTURE_OF_ALL_HISTORICAL_BYTES_NOT_READINESS",
+  "observedAt": "2026-10-04T20:26:41.085983+00:00",
+  "sourceArchiveManifestSHA256": "936881a4656f2fcbcfa47e216c80253b687ce82aa3a1a62f75f89eff44b77c47",
+  "sources": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/guard.mjs",
+      "bytes": 30196,
+      "sha256": "2e6f01de9c6337a7490a9c737838468a35b01bedcbcadc8022b9db44425ecb86",
+      "encodedPath": "source-byte-gzip/2e6f01de9c6337a7490a9c737838468a35b01bedcbcadc8022b9db44425ecb86.gz",
+      "lines": [
+        {
+          "line": 10,
+          "lineSHA256": "0fcf8c6a1662f10cf15443c7719785d41dc890943d98438cc6c72cb59115175b",
+          "exactLine": "export function canonical(path,base,privateFile=false){if(path!==resolve(path)||!path.startsWith(base+sep)&&path!==base)throw Error('QA_PATH');let part=sep;"
+        },
+        {
+          "line": 11,
+          "lineSHA256": "1e2fbccddcfe08a7595416c3e8098bcca8780cc880b299c9a9081405f56ebf9b",
+          "exactLine": " for(const component of path.split(sep).filter(Boolean)){part=resolve(part,component);const s=lstatSync(part);if(s.isSymbolicLink())throw Error('QA_PATH');}if(realpathSync(path)!==path)throw Error('QA_PATH');"
+        },
+        {
+          "line": 12,
+          "lineSHA256": "a84287b7559140e247263bc0546b91e7f8238576f69510f46ac3750c3fd80b8c",
+          "exactLine": " const s=lstatSync(path);if(s.isFile()&&s.nlink!==1)throw Error('QA_LINK');if(privateFile&&(!s.isFile()||s.uid!==process.getuid()||(s.mode&511)!==384))throw Error('QA_PRIVATE');return path;}"
+        },
+        {
+          "line": 15,
+          "lineSHA256": "2250c3aaedec85fae8c581da959c76a7f9ac1e34161f1688532cd9937a8386b9",
+          "exactLine": "export const runtimeRootInputs=Object.freeze(['project-request.json','cases.json','source-inventory.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json','runtime-inputs.json','historical-preservation.json','historical-parent-c7-review-full-index.json','parent-input-contract.json','preservation-map.json','runner-dependency-inventory.json','dependency-tiers.json']);"
+        },
+        {
+          "line": 20,
+          "lineSHA256": "f59a6916ee4f6805433b2a25fa20f21fec568a619340ef2ddef73c6044fe0fd6",
+          "exactLine": "function canonicalPublicSource(path,base,ancestors){if(path!==resolve(path)||!path.startsWith(base+sep)&&path!==base)throw Error('QA_PATH');let part=sep;for(const component of path.split(sep).filter(Boolean)){part=resolve(part,component);if(part===path||!ancestors.has(part)){const state=lstatSync(part);if(state.isSymbolicLink())throw Error('QA_PATH');if(part!==path)ancestors.add(part);}}if(realpathSync(path)!==path)throw Error('QA_PATH');const state=lstatSync(path);if(state.isFile()&&state.nlink!==1)throw Error('QA_LINK');return path;}"
+        },
+        {
+          "line": 25,
+          "lineSHA256": "09401cb93e8a952c9ad41f9f62ff10ae93e8c598e41ec30f04741cae18c443da",
+          "exactLine": "function completePaths(directory,prefix=''){return readdirSync(directory,{withFileTypes:true}).flatMap(entry=>{const name=prefix+entry.name;if(entry.isSymbolicLink())throw Error('QA_PRESERVATION_PATH');return entry.isDirectory()?completePaths(resolve(directory,entry.name),name+'/'):[name];}).sort();}"
+        },
+        {
+          "line": 26,
+          "lineSHA256": "b1ce7fdfef07796f8062cef6c9870b615d6407c338a5bde9939ee046c3c9ab20",
+          "exactLine": "function assertCompleteManifest(directory,manifest,excluded,historical=false){const paths=completePaths(directory).filter(name=>name!==excluded),expected=manifest.files.map(row=>row.path);if(historical)expected.sort();if(JSON.stringify(paths)!==JSON.stringify(expected)||new Set(expected).size!==expected.length)throw Error('QA_PRESERVATION_INVENTORY');}"
+        },
+        {
+          "line": 27,
+          "lineSHA256": "2da692d49ecf4ed56264cd52ec7a20f06f7c25b83375147d501b8958c1cc9cb3",
+          "exactLine": "const parentC7ReviewPath='_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review';"
+        },
+        {
+          "line": 28,
+          "lineSHA256": "ac921e8c9e8b1294403cee06f3bc378daa51afd03e3a3ccfbc32536e0a36fb8d",
+          "exactLine": "const parentC7ReviewSHA=\"07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee\";"
+        },
+        {
+          "line": 29,
+          "lineSHA256": "361e16c43edee383f8d4771294fae2817484fe268a97ed5c2a24cfc546fd4253",
+          "exactLine": "const parentC7ReviewAdditional=Object.freeze([\"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json\", \"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json\", \"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json\"]);"
+        },
+        {
+          "line": 30,
+          "lineSHA256": "b6f22d22a9286061b8660aeeec09d9a1300b1c797c92564ff844d67b420a9bc2",
+          "exactLine": "function strictHistoricalRows(manifest,count){if(!manifest||Object.keys(manifest).length!==1||!Array.isArray(manifest.files)||manifest.files.length!==count)throw Error('QA_HISTORICAL_FULL_SCHEMA');const paths=[];for(const row of manifest.files){if(!row||JSON.stringify(Object.keys(row).sort())!==JSON.stringify(['bytes','path','sha256'])||typeof row.path!=='string'||!row.path||row.path.startsWith('/')||row.path.split('/').some(part=>!part||part==='.'||part==='..')||!Number.isSafeInteger(row.bytes)||row.bytes<0||typeof row.sha256!=='string'||!/^[a-f0-9]{64}$/.test(row.sha256))throw Error('QA_HISTORICAL_FULL_SCHEMA');paths.push(row.path);}if(new Set(paths).size!==paths.length||JSON.stringify(paths)!==JSON.stringify([...paths].sort()))throw Error('QA_HISTORICAL_FULL_SCHEMA');}"
+        },
+        {
+          "line": 31,
+          "lineSHA256": "df0fd4949869befb1d411fa8cd2211d3b17aaac26b9514c11352ed9d65d955f7",
+          "exactLine": "export function verifyHistoricalPacket(packet){const directory=resolve(repo,packet.path),body=readFileSync(canonical(resolve(directory,packet.manifest),repo));if(sha256(body)!==packet.manifestSHA256)throw Error('QA_HISTORICAL_MANIFEST');const previous=JSON.parse(body);if(previous.files.length!==packet.rows)throw Error('QA_HISTORICAL_ROWS');let complete=previous;"
+        },
+        {
+          "line": 32,
+          "lineSHA256": "a8528a037452ecfc4a4fd981db9151de6590fe2a85bd10ca913c42ab1a0b738b",
+          "exactLine": " if(packet.path===parentC7ReviewPath){if(packet.manifest!=='qa-manifest.json'||packet.manifestSHA256!==parentC7ReviewSHA||packet.rows!==80||!packet.fullClosure||JSON.stringify(Object.keys(packet.fullClosure).sort())!==JSON.stringify(['bytes','path','rows','sha256'])||packet.fullClosure.path!=='historical-parent-c7-review-full-index.json'||packet.fullClosure.rows!==83||!Number.isSafeInteger(packet.fullClosure.bytes)||packet.fullClosure.bytes<1||typeof packet.fullClosure.sha256!=='string'||!/^[a-f0-9]{64}$/.test(packet.fullClosure.sha256))throw Error('QA_HISTORICAL_FULL_BINDING');const index=readFileSync(canonical(resolve(root,packet.fullClosure.path),root));if(index.length!==packet.fullClosure.bytes||sha256(index)!==packet.fullClosure.sha256)throw Error('QA_HISTORICAL_FULL_HASH');complete=JSON.parse(index);strictHistoricalRows(complete,83);const original=new Map(previous.files.map(row=>[row.path,row])),additional=complete.files.filter(row=>!original.has(row.path)).map(row=>row.path);if(original.size!==80||JSON.stringify(additional)!==JSON.stringify(parentC7ReviewAdditional))throw Error('QA_HISTORICAL_FULL_ORIGINAL');for(const row of complete.files){const prior=original.get(row.path);if(prior&&(prior.bytes!==row.bytes||prior.sha256!==row.sha256))throw Error('QA_HISTORICAL_FULL_ORIGINAL');}}"
+        },
+        {
+          "line": 34,
+          "lineSHA256": "31e4ddea971a50d707582c16bd23d31404384f8eb5676ff80b31e2c1264bb6a2",
+          "exactLine": " assertCompleteManifest(directory,complete,packet.manifest,true);for(const row of previous.files){const data=readFileSync(canonical(resolve(directory,row.path),repo));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_HISTORICAL_PRESERVATION');}if(complete!==previous)for(const row of complete.files){const data=readFileSync(canonical(resolve(directory,row.path),repo));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_HISTORICAL_PRESERVATION');}return{originalRows:previous.files.length,completeRows:complete.files.length};}"
+        },
+        {
+          "line": 35,
+          "lineSHA256": "1889a09ee596d2fa30095de78a3a7bedae0d4d2b5dce5583b5651cf52777be10",
+          "exactLine": "export function preservationPreflight(review=trustedReview().review){const bytes=readFileSync(canonical(resolve(root,'qa-manifest.json'),root));if(sha256(bytes)!==review.preservationManifestSHA256)throw Error('QA_PRESERVATION_MANIFEST');const manifest=JSON.parse(bytes);assertCompleteManifest(root,manifest,'qa-manifest.json');for(const row of manifest.files){const data=readFileSync(canonical(resolve(root,row.path),root));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_PRESERVATION_DRIFT');}const history=json(resolve(root,'historical-preservation.json'));for(const packet of history.packets){verifyHistoricalPacket(packet);}return{files:manifest.files.length,historicalPackets:history.packets.length};}"
+        },
+        {
+          "line": 40,
+          "lineSHA256": "37c27315d83b5e00917ab24a5608727ec3da7505cc64e85c57a72a21af50b686",
+          "exactLine": "export function reviewed(tier){const trusted=trustedReview(),freezeBytes=readFileSync(canonical(resolve(root,'runtime-freeze.json'),root)),freezeDigest=sha256(freezeBytes);if(trusted.review.freezeSha256!==freezeDigest)throw Error('QA_REVIEW');const complete=readFileSync(canonical(resolve(root,'qa-manifest.json'),root));if(sha256(complete)!==trusted.review.preservationManifestSHA256)throw Error('QA_PRESERVATION_MANIFEST');const freeze=sourcePreflight(firstReviewedBinding===undefined?undefined:tier,freezeDigest);if(sha256(readFileSync(canonical(resolve(root,'runtime-freeze.json'),root)))!==freezeDigest)throw Error('QA_REVIEW_FREEZE_DRIFT');const finalTrusted=trustedReview();if(finalTrusted.digest!==trusted.digest||finalTrusted.expected!==trusted.expected)throw Error('QA_REVIEW_EXPECTED_PIN_DRIFT');if(firstReviewedBinding===undefined){firstFreezeDigest=freezeDigest;firstReviewedBinding=trusted.digest;firstExpectedReview=trusted.expected;}return freeze;}"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "bytes": 14801,
+      "sha256": "dc65b5d2c802a8e2a951f23dd026a2e40badb075ca68fbc7e48aa73d16c95061",
+      "encodedPath": "source-byte-gzip/dc65b5d2c802a8e2a951f23dd026a2e40badb075ca68fbc7e48aa73d16c95061.gz",
+      "lines": [
+        {
+          "line": 3,
+          "lineSHA256": "e088caeab1afad43a270da79da8d7dbe59ab72a320ff7579492f8f4e388b1f82",
+          "exactLine": "async function context(sourceOverride){const base=path.resolve(area,crypto.randomUUID()),packet=path.resolve(base,'a/b/c/d');fs.mkdirSync(path.resolve(packet,'scripts'),{recursive:true,mode:0o700});fs.mkdirSync(path.resolve(packet,'fixture'),{mode:0o700});const put=(name,value)=>fs.writeFileSync(path.resolve(packet,name),typeof value==='string'?value:JSON.stringify(value)+'\\n');const external=[['parent.mjs','parent-source'],['watcher.mjs','watcher-source']].map(([name,body])=>{fs.writeFileSync(path.resolve(base,name),body);return{path:name,bytes:Buffer.byteLength(body),sha256:digest(body)};});fs.writeFileSync(path.resolve(base,'accepted.ts'),'accepted');fs.writeFileSync(path.resolve(base,'product.ts'),'product');const source=sourceOverride??fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8');put('scripts/guard.mjs',source);for(const name of ['project-request.json','cases.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json'])put(name,{});put('historical-preservation.json',{packets:[]});put('runtime-inputs.json',{externalSources:external});put('source-inventory.json',{acceptedGateHashes:[{path:'accepted.ts',sha256:digest('accepted')}],files:[{source:'product.ts',sha256:digest('product')}]});put('fixture/module.ts','fixture-source');put('history.txt','historical-evidence');const legacyRoots=['project-request.json','cases.json','source-inventory.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json','runtime-inputs.json','historical-preservation.json'];const match=source.match(/export const runtimeRootInputs=Object.freeze\\(\\[([^\\]]*)\\]\\)/),roots=match?[...match[1].matchAll(/'([^']+)'/g)].map(m=>m[1]):legacyRoots;for(const name of roots)if(!fs.existsSync(path.resolve(packet,name)))put(name,{});fs.writeFileSync(path.resolve(base,'runner-runtime.js'),'runner');fs.writeFileSync(path.resolve(base,'compiler-runtime.js'),'compiler');put('toolchain-evidence.json',{files:[{path:'compiler-runtime.js',sha256:digest('compiler')}]});put('runner-dependency-inventory.json',{inputs:[{path:'runner-runtime.js',bytes:6,sha256:digest('runner')}]});put('dependency-tiers.json',{rpc:{runner:[{path:'runner-runtime.js',bytes:6,sha256:digest('runner')}],tools:[]},boundaryOnly:{runner:[],tools:[{path:'compiler-runtime.js',sha256:digest('compiler')}]}});if(roots.includes('dependency-inventory.json'))put('dependency-inventory.json',{inputs:[]});const paths=['scripts/guard.mjs','fixture/module.ts',...roots].sort();const rec=name=>({path:name,bytes:fs.statSync(path.resolve(packet,name)).size,sha256:digest(fs.readFileSync(path.resolve(packet,name)))});put('runtime-freeze.json',{operationalPaths:paths,files:paths.map(rec)});const manifest={files:[...paths,'history.txt','runtime-freeze.json'].sort().map(rec)};put('qa-manifest.json',manifest);const review={preservationManifestSHA256:digest(fs.readFileSync(path.resolve(packet,'qa-manifest.json')))};const vmContext=createContext({process:{getuid:()=>process.getuid(),env:{}},Buffer,Date,setTimeout});const module=new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href});const imports={'node:fs':fs,'node:path':path,'node:url':{fileURLToPath},'node:crypto':crypto,'node:util':util};await module.link(name=>{const obj=imports[name];assert.ok(obj);return new SyntheticModule(Object.keys(obj),function(){for(const[k,v]of Object.entries(obj))this.setExport(k,v);},{context:vmContext});});await module.evaluate();return{base,packet,module:module.namespace,review,put,expectedFiles:manifest.files.length,env:vmContext.process.env};}"
+        },
+        {
+          "line": 4,
+          "lineSHA256": "8470747c6ad9faa72e7bad9aa690e90924d22b0db093cf06d4418aeba6e8aed2",
+          "exactLine": "test('actual unadapted guard runtime closure checks consumed divergence/toolchain/external sources each call; historical scans only explicit boundaries',async()=>{const h=await context();assert.ok(h.module.sourcePreflight());assert.equal(h.module.preservationPreflight(h.review).files,h.expectedFiles);h.put('history.txt','changed-history');assert.ok(h.module.sourcePreflight(),'historical-only evidence not runtime input');assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_DRIFT/);});"
+        },
+        {
+          "line": 7,
+          "lineSHA256": "730e1738d14fa274497f5bf6a97fd6c3fd208c342601e153e808c52435faddd9",
+          "exactLine": "test('actual preservation rejects manifest substitution and runtime inventory additions',async()=>{const h=await context();h.put('qa-manifest.json',{files:[]});assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_MANIFEST/);h.put('scripts/extra.mjs','unexpected');assert.throws(()=>h.module.sourcePreflight(),/QA_SOURCE_INVENTORY_DRIFT/);});"
+        },
+        {
+          "line": 9,
+          "lineSHA256": "b22c9a505fbf1a71581ef0da0826853637155bed8bbd253f928c278c2f61fba8",
+          "exactLine": "test('actual historical manifest order regression preserves old red and accepts exact unsorted historical sets without mutation',async()=>{const old=fs.readFileSync(path.resolve(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/evidence/full-preservation01-failure/scripts--guard.mjs.text'),'utf8');for(const[version,source]of [['old',old],['fixed',undefined]]){const h=await context(source),directory=path.resolve(h.base,'history');fs.mkdirSync(directory);for(const n of ['a.txt','z.txt'])fs.writeFileSync(path.resolve(directory,n),n);const previous={files:['z.txt','a.txt'].map(n=>({path:n,bytes:5,sha256:digest(n)}))},body=JSON.stringify(previous)+'\\n';fs.writeFileSync(path.resolve(directory,'manifest.json'),body);h.put('historical-preservation.json',{packets:[{path:'history',manifest:'manifest.json',manifestSHA256:digest(body),rows:2}]});const freeze=JSON.parse(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json')));for(const row of freeze.files)if(row.path==='historical-preservation.json'){const data=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=data.length;row.sha256=digest(data);}h.put('runtime-freeze.json',freeze);const manifest=JSON.parse(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));for(const row of manifest.files){const data=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=data.length;row.sha256=digest(data);}h.put('qa-manifest.json',manifest);h.review.preservationManifestSHA256=digest(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));if(version==='old')assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_INVENTORY/);else assert.equal(h.module.preservationPreflight(h.review).historicalPackets,1);assert.equal(fs.readFileSync(path.resolve(directory,'manifest.json'),'utf8'),body);}});"
+        },
+        {
+          "line": 17,
+          "lineSHA256": "63d1710c3f6f2aa1f8805b418b0669f3af120cbea12f11b4f6da651ed5a01d5a",
+          "exactLine": "function approval(h){fs.mkdirSync(h.module.scratch,{recursive:true,mode:0o700});const value={independent:true,verdict:'PASS',freezeSha256:digest(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json'))),preservationManifestSHA256:h.review.preservationManifestSHA256};const file=path.resolve(h.module.scratch,'preparation-review.json');fs.writeFileSync(file,JSON.stringify(value)+'\\n',{mode:0o600});h.env.CORTEX_QA_TASK04_REVIEW_SHA256=digest(fs.readFileSync(file));return{value,file};}"
+        },
+        {
+          "line": 21,
+          "lineSHA256": "68a4b5db22d45777b18b9fc8cc3ba62af1e3a8cdaee19ea902d21a4fdaf92d08",
+          "exactLine": "function coherent(h){h.put('fixture/module.ts','DUMMY-coherent-substitution');const frozen=JSON.parse(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json')));for(const row of frozen.files){const bytes=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=bytes.length;row.sha256=digest(bytes);}h.put('runtime-freeze.json',frozen);fs.mkdirSync(path.resolve(h.packet,'nested'),{recursive:true});h.put('nested/qa-manifest.json',{files:[]});const walk=(dir=h.packet,prefix='')=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.resolve(dir,e.name),prefix+e.name+'/'):[prefix+e.name]).sort();h.put('qa-manifest.json',{files:walk().filter(n=>n!=='qa-manifest.json').map(n=>{const bytes=fs.readFileSync(path.resolve(h.packet,n));return{path:n,bytes:bytes.length,sha256:digest(bytes)};})});h.review.preservationManifestSHA256=digest(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));const expected=h.env.CORTEX_QA_TASK04_REVIEW_SHA256;approval(h);h.env.CORTEX_QA_TASK04_REVIEW_SHA256=expected;}"
+        },
+        {
+          "line": 23,
+          "lineSHA256": "e41d72826a6c37cb7bf6e30b8883a05a92327e35486755c8ad82fa7b8473cad6",
+          "exactLine": "test('coherent operational+FULLfreeze+recursiveCOMPLETEmanifest+private review before FIRSTcall denied under original external pin',async()=>{const h=await context();approval(h);coherent(h);assert.throws(()=>h.module.reviewed('rpc'),/QA_REVIEW_EXPECTED_DIGEST/);assert.equal(h.module.preservationPreflight(h.review).files,h.expectedFiles+1);});"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/guard.mjs",
+      "bytes": 30657,
+      "sha256": "fd14dfaf0fa205d62db37617eaf358195a0eb2c28206946cc3d2f5a270ba726f",
+      "encodedPath": "source-byte-gzip/fd14dfaf0fa205d62db37617eaf358195a0eb2c28206946cc3d2f5a270ba726f.gz",
+      "lines": [
+        {
+          "line": 10,
+          "lineSHA256": "0fcf8c6a1662f10cf15443c7719785d41dc890943d98438cc6c72cb59115175b",
+          "exactLine": "export function canonical(path,base,privateFile=false){if(path!==resolve(path)||!path.startsWith(base+sep)&&path!==base)throw Error('QA_PATH');let part=sep;"
+        },
+        {
+          "line": 11,
+          "lineSHA256": "1e2fbccddcfe08a7595416c3e8098bcca8780cc880b299c9a9081405f56ebf9b",
+          "exactLine": " for(const component of path.split(sep).filter(Boolean)){part=resolve(part,component);const s=lstatSync(part);if(s.isSymbolicLink())throw Error('QA_PATH');}if(realpathSync(path)!==path)throw Error('QA_PATH');"
+        },
+        {
+          "line": 12,
+          "lineSHA256": "a84287b7559140e247263bc0546b91e7f8238576f69510f46ac3750c3fd80b8c",
+          "exactLine": " const s=lstatSync(path);if(s.isFile()&&s.nlink!==1)throw Error('QA_LINK');if(privateFile&&(!s.isFile()||s.uid!==process.getuid()||(s.mode&511)!==384))throw Error('QA_PRIVATE');return path;}"
+        },
+        {
+          "line": 15,
+          "lineSHA256": "ec00a790fac37fbeaf074f774484109533949dd234c96133d086a54d99ef4ca7",
+          "exactLine": "export const runtimeRootInputs=Object.freeze(['project-request.json','cases.json','source-inventory.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json','runtime-inputs.json','historical-preservation.json','historical-parent-c7-review-full-index.json','dependency-inventory.json','budget-source-proof.json','parent-input-contract.json','preservation-map.json','runner-dependency-inventory.json','dependency-tiers.json']);"
+        },
+        {
+          "line": 20,
+          "lineSHA256": "f59a6916ee4f6805433b2a25fa20f21fec568a619340ef2ddef73c6044fe0fd6",
+          "exactLine": "function canonicalPublicSource(path,base,ancestors){if(path!==resolve(path)||!path.startsWith(base+sep)&&path!==base)throw Error('QA_PATH');let part=sep;for(const component of path.split(sep).filter(Boolean)){part=resolve(part,component);if(part===path||!ancestors.has(part)){const state=lstatSync(part);if(state.isSymbolicLink())throw Error('QA_PATH');if(part!==path)ancestors.add(part);}}if(realpathSync(path)!==path)throw Error('QA_PATH');const state=lstatSync(path);if(state.isFile()&&state.nlink!==1)throw Error('QA_LINK');return path;}"
+        },
+        {
+          "line": 26,
+          "lineSHA256": "09401cb93e8a952c9ad41f9f62ff10ae93e8c598e41ec30f04741cae18c443da",
+          "exactLine": "function completePaths(directory,prefix=''){return readdirSync(directory,{withFileTypes:true}).flatMap(entry=>{const name=prefix+entry.name;if(entry.isSymbolicLink())throw Error('QA_PRESERVATION_PATH');return entry.isDirectory()?completePaths(resolve(directory,entry.name),name+'/'):[name];}).sort();}"
+        },
+        {
+          "line": 27,
+          "lineSHA256": "b1ce7fdfef07796f8062cef6c9870b615d6407c338a5bde9939ee046c3c9ab20",
+          "exactLine": "function assertCompleteManifest(directory,manifest,excluded,historical=false){const paths=completePaths(directory).filter(name=>name!==excluded),expected=manifest.files.map(row=>row.path);if(historical)expected.sort();if(JSON.stringify(paths)!==JSON.stringify(expected)||new Set(expected).size!==expected.length)throw Error('QA_PRESERVATION_INVENTORY');}"
+        },
+        {
+          "line": 28,
+          "lineSHA256": "2da692d49ecf4ed56264cd52ec7a20f06f7c25b83375147d501b8958c1cc9cb3",
+          "exactLine": "const parentC7ReviewPath='_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review';"
+        },
+        {
+          "line": 29,
+          "lineSHA256": "ac921e8c9e8b1294403cee06f3bc378daa51afd03e3a3ccfbc32536e0a36fb8d",
+          "exactLine": "const parentC7ReviewSHA=\"07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee\";"
+        },
+        {
+          "line": 30,
+          "lineSHA256": "361e16c43edee383f8d4771294fae2817484fe268a97ed5c2a24cfc546fd4253",
+          "exactLine": "const parentC7ReviewAdditional=Object.freeze([\"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json\", \"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json\", \"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json\"]);"
+        },
+        {
+          "line": 31,
+          "lineSHA256": "b6f22d22a9286061b8660aeeec09d9a1300b1c797c92564ff844d67b420a9bc2",
+          "exactLine": "function strictHistoricalRows(manifest,count){if(!manifest||Object.keys(manifest).length!==1||!Array.isArray(manifest.files)||manifest.files.length!==count)throw Error('QA_HISTORICAL_FULL_SCHEMA');const paths=[];for(const row of manifest.files){if(!row||JSON.stringify(Object.keys(row).sort())!==JSON.stringify(['bytes','path','sha256'])||typeof row.path!=='string'||!row.path||row.path.startsWith('/')||row.path.split('/').some(part=>!part||part==='.'||part==='..')||!Number.isSafeInteger(row.bytes)||row.bytes<0||typeof row.sha256!=='string'||!/^[a-f0-9]{64}$/.test(row.sha256))throw Error('QA_HISTORICAL_FULL_SCHEMA');paths.push(row.path);}if(new Set(paths).size!==paths.length||JSON.stringify(paths)!==JSON.stringify([...paths].sort()))throw Error('QA_HISTORICAL_FULL_SCHEMA');}"
+        },
+        {
+          "line": 32,
+          "lineSHA256": "df0fd4949869befb1d411fa8cd2211d3b17aaac26b9514c11352ed9d65d955f7",
+          "exactLine": "export function verifyHistoricalPacket(packet){const directory=resolve(repo,packet.path),body=readFileSync(canonical(resolve(directory,packet.manifest),repo));if(sha256(body)!==packet.manifestSHA256)throw Error('QA_HISTORICAL_MANIFEST');const previous=JSON.parse(body);if(previous.files.length!==packet.rows)throw Error('QA_HISTORICAL_ROWS');let complete=previous;"
+        },
+        {
+          "line": 33,
+          "lineSHA256": "a8528a037452ecfc4a4fd981db9151de6590fe2a85bd10ca913c42ab1a0b738b",
+          "exactLine": " if(packet.path===parentC7ReviewPath){if(packet.manifest!=='qa-manifest.json'||packet.manifestSHA256!==parentC7ReviewSHA||packet.rows!==80||!packet.fullClosure||JSON.stringify(Object.keys(packet.fullClosure).sort())!==JSON.stringify(['bytes','path','rows','sha256'])||packet.fullClosure.path!=='historical-parent-c7-review-full-index.json'||packet.fullClosure.rows!==83||!Number.isSafeInteger(packet.fullClosure.bytes)||packet.fullClosure.bytes<1||typeof packet.fullClosure.sha256!=='string'||!/^[a-f0-9]{64}$/.test(packet.fullClosure.sha256))throw Error('QA_HISTORICAL_FULL_BINDING');const index=readFileSync(canonical(resolve(root,packet.fullClosure.path),root));if(index.length!==packet.fullClosure.bytes||sha256(index)!==packet.fullClosure.sha256)throw Error('QA_HISTORICAL_FULL_HASH');complete=JSON.parse(index);strictHistoricalRows(complete,83);const original=new Map(previous.files.map(row=>[row.path,row])),additional=complete.files.filter(row=>!original.has(row.path)).map(row=>row.path);if(original.size!==80||JSON.stringify(additional)!==JSON.stringify(parentC7ReviewAdditional))throw Error('QA_HISTORICAL_FULL_ORIGINAL');for(const row of complete.files){const prior=original.get(row.path);if(prior&&(prior.bytes!==row.bytes||prior.sha256!==row.sha256))throw Error('QA_HISTORICAL_FULL_ORIGINAL');}}"
+        },
+        {
+          "line": 35,
+          "lineSHA256": "31e4ddea971a50d707582c16bd23d31404384f8eb5676ff80b31e2c1264bb6a2",
+          "exactLine": " assertCompleteManifest(directory,complete,packet.manifest,true);for(const row of previous.files){const data=readFileSync(canonical(resolve(directory,row.path),repo));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_HISTORICAL_PRESERVATION');}if(complete!==previous)for(const row of complete.files){const data=readFileSync(canonical(resolve(directory,row.path),repo));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_HISTORICAL_PRESERVATION');}return{originalRows:previous.files.length,completeRows:complete.files.length};}"
+        },
+        {
+          "line": 36,
+          "lineSHA256": "1889a09ee596d2fa30095de78a3a7bedae0d4d2b5dce5583b5651cf52777be10",
+          "exactLine": "export function preservationPreflight(review=trustedReview().review){const bytes=readFileSync(canonical(resolve(root,'qa-manifest.json'),root));if(sha256(bytes)!==review.preservationManifestSHA256)throw Error('QA_PRESERVATION_MANIFEST');const manifest=JSON.parse(bytes);assertCompleteManifest(root,manifest,'qa-manifest.json');for(const row of manifest.files){const data=readFileSync(canonical(resolve(root,row.path),root));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_PRESERVATION_DRIFT');}const history=json(resolve(root,'historical-preservation.json'));for(const packet of history.packets){verifyHistoricalPacket(packet);}return{files:manifest.files.length,historicalPackets:history.packets.length};}"
+        },
+        {
+          "line": 41,
+          "lineSHA256": "37c27315d83b5e00917ab24a5608727ec3da7505cc64e85c57a72a21af50b686",
+          "exactLine": "export function reviewed(tier){const trusted=trustedReview(),freezeBytes=readFileSync(canonical(resolve(root,'runtime-freeze.json'),root)),freezeDigest=sha256(freezeBytes);if(trusted.review.freezeSha256!==freezeDigest)throw Error('QA_REVIEW');const complete=readFileSync(canonical(resolve(root,'qa-manifest.json'),root));if(sha256(complete)!==trusted.review.preservationManifestSHA256)throw Error('QA_PRESERVATION_MANIFEST');const freeze=sourcePreflight(firstReviewedBinding===undefined?undefined:tier,freezeDigest);if(sha256(readFileSync(canonical(resolve(root,'runtime-freeze.json'),root)))!==freezeDigest)throw Error('QA_REVIEW_FREEZE_DRIFT');const finalTrusted=trustedReview();if(finalTrusted.digest!==trusted.digest||finalTrusted.expected!==trusted.expected)throw Error('QA_REVIEW_EXPECTED_PIN_DRIFT');if(firstReviewedBinding===undefined){firstFreezeDigest=freezeDigest;firstReviewedBinding=trusted.digest;firstExpectedReview=trusted.expected;}return freeze;}"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "bytes": 15091,
+      "sha256": "9feded3470386654992edd82c07b615bd278b0e5d45758d9609fcbd41a0d30b9",
+      "encodedPath": "source-byte-gzip/9feded3470386654992edd82c07b615bd278b0e5d45758d9609fcbd41a0d30b9.gz",
+      "lines": [
+        {
+          "line": 3,
+          "lineSHA256": "e088caeab1afad43a270da79da8d7dbe59ab72a320ff7579492f8f4e388b1f82",
+          "exactLine": "async function context(sourceOverride){const base=path.resolve(area,crypto.randomUUID()),packet=path.resolve(base,'a/b/c/d');fs.mkdirSync(path.resolve(packet,'scripts'),{recursive:true,mode:0o700});fs.mkdirSync(path.resolve(packet,'fixture'),{mode:0o700});const put=(name,value)=>fs.writeFileSync(path.resolve(packet,name),typeof value==='string'?value:JSON.stringify(value)+'\\n');const external=[['parent.mjs','parent-source'],['watcher.mjs','watcher-source']].map(([name,body])=>{fs.writeFileSync(path.resolve(base,name),body);return{path:name,bytes:Buffer.byteLength(body),sha256:digest(body)};});fs.writeFileSync(path.resolve(base,'accepted.ts'),'accepted');fs.writeFileSync(path.resolve(base,'product.ts'),'product');const source=sourceOverride??fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8');put('scripts/guard.mjs',source);for(const name of ['project-request.json','cases.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json'])put(name,{});put('historical-preservation.json',{packets:[]});put('runtime-inputs.json',{externalSources:external});put('source-inventory.json',{acceptedGateHashes:[{path:'accepted.ts',sha256:digest('accepted')}],files:[{source:'product.ts',sha256:digest('product')}]});put('fixture/module.ts','fixture-source');put('history.txt','historical-evidence');const legacyRoots=['project-request.json','cases.json','source-inventory.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json','runtime-inputs.json','historical-preservation.json'];const match=source.match(/export const runtimeRootInputs=Object.freeze\\(\\[([^\\]]*)\\]\\)/),roots=match?[...match[1].matchAll(/'([^']+)'/g)].map(m=>m[1]):legacyRoots;for(const name of roots)if(!fs.existsSync(path.resolve(packet,name)))put(name,{});fs.writeFileSync(path.resolve(base,'runner-runtime.js'),'runner');fs.writeFileSync(path.resolve(base,'compiler-runtime.js'),'compiler');put('toolchain-evidence.json',{files:[{path:'compiler-runtime.js',sha256:digest('compiler')}]});put('runner-dependency-inventory.json',{inputs:[{path:'runner-runtime.js',bytes:6,sha256:digest('runner')}]});put('dependency-tiers.json',{rpc:{runner:[{path:'runner-runtime.js',bytes:6,sha256:digest('runner')}],tools:[]},boundaryOnly:{runner:[],tools:[{path:'compiler-runtime.js',sha256:digest('compiler')}]}});if(roots.includes('dependency-inventory.json'))put('dependency-inventory.json',{inputs:[]});const paths=['scripts/guard.mjs','fixture/module.ts',...roots].sort();const rec=name=>({path:name,bytes:fs.statSync(path.resolve(packet,name)).size,sha256:digest(fs.readFileSync(path.resolve(packet,name)))});put('runtime-freeze.json',{operationalPaths:paths,files:paths.map(rec)});const manifest={files:[...paths,'history.txt','runtime-freeze.json'].sort().map(rec)};put('qa-manifest.json',manifest);const review={preservationManifestSHA256:digest(fs.readFileSync(path.resolve(packet,'qa-manifest.json')))};const vmContext=createContext({process:{getuid:()=>process.getuid(),env:{}},Buffer,Date,setTimeout});const module=new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href});const imports={'node:fs':fs,'node:path':path,'node:url':{fileURLToPath},'node:crypto':crypto,'node:util':util};await module.link(name=>{const obj=imports[name];assert.ok(obj);return new SyntheticModule(Object.keys(obj),function(){for(const[k,v]of Object.entries(obj))this.setExport(k,v);},{context:vmContext});});await module.evaluate();return{base,packet,module:module.namespace,review,put,expectedFiles:manifest.files.length,env:vmContext.process.env};}"
+        },
+        {
+          "line": 4,
+          "lineSHA256": "8470747c6ad9faa72e7bad9aa690e90924d22b0db093cf06d4418aeba6e8aed2",
+          "exactLine": "test('actual unadapted guard runtime closure checks consumed divergence/toolchain/external sources each call; historical scans only explicit boundaries',async()=>{const h=await context();assert.ok(h.module.sourcePreflight());assert.equal(h.module.preservationPreflight(h.review).files,h.expectedFiles);h.put('history.txt','changed-history');assert.ok(h.module.sourcePreflight(),'historical-only evidence not runtime input');assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_DRIFT/);});"
+        },
+        {
+          "line": 7,
+          "lineSHA256": "730e1738d14fa274497f5bf6a97fd6c3fd208c342601e153e808c52435faddd9",
+          "exactLine": "test('actual preservation rejects manifest substitution and runtime inventory additions',async()=>{const h=await context();h.put('qa-manifest.json',{files:[]});assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_MANIFEST/);h.put('scripts/extra.mjs','unexpected');assert.throws(()=>h.module.sourcePreflight(),/QA_SOURCE_INVENTORY_DRIFT/);});"
+        },
+        {
+          "line": 9,
+          "lineSHA256": "b22c9a505fbf1a71581ef0da0826853637155bed8bbd253f928c278c2f61fba8",
+          "exactLine": "test('actual historical manifest order regression preserves old red and accepts exact unsorted historical sets without mutation',async()=>{const old=fs.readFileSync(path.resolve(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/evidence/full-preservation01-failure/scripts--guard.mjs.text'),'utf8');for(const[version,source]of [['old',old],['fixed',undefined]]){const h=await context(source),directory=path.resolve(h.base,'history');fs.mkdirSync(directory);for(const n of ['a.txt','z.txt'])fs.writeFileSync(path.resolve(directory,n),n);const previous={files:['z.txt','a.txt'].map(n=>({path:n,bytes:5,sha256:digest(n)}))},body=JSON.stringify(previous)+'\\n';fs.writeFileSync(path.resolve(directory,'manifest.json'),body);h.put('historical-preservation.json',{packets:[{path:'history',manifest:'manifest.json',manifestSHA256:digest(body),rows:2}]});const freeze=JSON.parse(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json')));for(const row of freeze.files)if(row.path==='historical-preservation.json'){const data=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=data.length;row.sha256=digest(data);}h.put('runtime-freeze.json',freeze);const manifest=JSON.parse(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));for(const row of manifest.files){const data=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=data.length;row.sha256=digest(data);}h.put('qa-manifest.json',manifest);h.review.preservationManifestSHA256=digest(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));if(version==='old')assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_INVENTORY/);else assert.equal(h.module.preservationPreflight(h.review).historicalPackets,1);assert.equal(fs.readFileSync(path.resolve(directory,'manifest.json'),'utf8'),body);}});"
+        },
+        {
+          "line": 18,
+          "lineSHA256": "63d1710c3f6f2aa1f8805b418b0669f3af120cbea12f11b4f6da651ed5a01d5a",
+          "exactLine": "function approval(h){fs.mkdirSync(h.module.scratch,{recursive:true,mode:0o700});const value={independent:true,verdict:'PASS',freezeSha256:digest(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json'))),preservationManifestSHA256:h.review.preservationManifestSHA256};const file=path.resolve(h.module.scratch,'preparation-review.json');fs.writeFileSync(file,JSON.stringify(value)+'\\n',{mode:0o600});h.env.CORTEX_QA_TASK04_REVIEW_SHA256=digest(fs.readFileSync(file));return{value,file};}"
+        },
+        {
+          "line": 22,
+          "lineSHA256": "68a4b5db22d45777b18b9fc8cc3ba62af1e3a8cdaee19ea902d21a4fdaf92d08",
+          "exactLine": "function coherent(h){h.put('fixture/module.ts','DUMMY-coherent-substitution');const frozen=JSON.parse(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json')));for(const row of frozen.files){const bytes=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=bytes.length;row.sha256=digest(bytes);}h.put('runtime-freeze.json',frozen);fs.mkdirSync(path.resolve(h.packet,'nested'),{recursive:true});h.put('nested/qa-manifest.json',{files:[]});const walk=(dir=h.packet,prefix='')=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.resolve(dir,e.name),prefix+e.name+'/'):[prefix+e.name]).sort();h.put('qa-manifest.json',{files:walk().filter(n=>n!=='qa-manifest.json').map(n=>{const bytes=fs.readFileSync(path.resolve(h.packet,n));return{path:n,bytes:bytes.length,sha256:digest(bytes)};})});h.review.preservationManifestSHA256=digest(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));const expected=h.env.CORTEX_QA_TASK04_REVIEW_SHA256;approval(h);h.env.CORTEX_QA_TASK04_REVIEW_SHA256=expected;}"
+        },
+        {
+          "line": 24,
+          "lineSHA256": "e41d72826a6c37cb7bf6e30b8883a05a92327e35486755c8ad82fa7b8473cad6",
+          "exactLine": "test('coherent operational+FULLfreeze+recursiveCOMPLETEmanifest+private review before FIRSTcall denied under original external pin',async()=>{const h=await context();approval(h);coherent(h);assert.throws(()=>h.module.reviewed('rpc'),/QA_REVIEW_EXPECTED_DIGEST/);assert.equal(h.module.preservationPreflight(h.review).files,h.expectedFiles+1);});"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/guard.mjs",
+      "bytes": 30198,
+      "sha256": "c57909ed570d7e5f462f8e0f03c4908ed51ae22c98b9cfe4c5f06dabc9830960",
+      "encodedPath": "source-byte-gzip/c57909ed570d7e5f462f8e0f03c4908ed51ae22c98b9cfe4c5f06dabc9830960.gz",
+      "lines": [
+        {
+          "line": 10,
+          "lineSHA256": "0fcf8c6a1662f10cf15443c7719785d41dc890943d98438cc6c72cb59115175b",
+          "exactLine": "export function canonical(path,base,privateFile=false){if(path!==resolve(path)||!path.startsWith(base+sep)&&path!==base)throw Error('QA_PATH');let part=sep;"
+        },
+        {
+          "line": 11,
+          "lineSHA256": "1e2fbccddcfe08a7595416c3e8098bcca8780cc880b299c9a9081405f56ebf9b",
+          "exactLine": " for(const component of path.split(sep).filter(Boolean)){part=resolve(part,component);const s=lstatSync(part);if(s.isSymbolicLink())throw Error('QA_PATH');}if(realpathSync(path)!==path)throw Error('QA_PATH');"
+        },
+        {
+          "line": 12,
+          "lineSHA256": "a84287b7559140e247263bc0546b91e7f8238576f69510f46ac3750c3fd80b8c",
+          "exactLine": " const s=lstatSync(path);if(s.isFile()&&s.nlink!==1)throw Error('QA_LINK');if(privateFile&&(!s.isFile()||s.uid!==process.getuid()||(s.mode&511)!==384))throw Error('QA_PRIVATE');return path;}"
+        },
+        {
+          "line": 15,
+          "lineSHA256": "2250c3aaedec85fae8c581da959c76a7f9ac1e34161f1688532cd9937a8386b9",
+          "exactLine": "export const runtimeRootInputs=Object.freeze(['project-request.json','cases.json','source-inventory.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json','runtime-inputs.json','historical-preservation.json','historical-parent-c7-review-full-index.json','parent-input-contract.json','preservation-map.json','runner-dependency-inventory.json','dependency-tiers.json']);"
+        },
+        {
+          "line": 20,
+          "lineSHA256": "f59a6916ee4f6805433b2a25fa20f21fec568a619340ef2ddef73c6044fe0fd6",
+          "exactLine": "function canonicalPublicSource(path,base,ancestors){if(path!==resolve(path)||!path.startsWith(base+sep)&&path!==base)throw Error('QA_PATH');let part=sep;for(const component of path.split(sep).filter(Boolean)){part=resolve(part,component);if(part===path||!ancestors.has(part)){const state=lstatSync(part);if(state.isSymbolicLink())throw Error('QA_PATH');if(part!==path)ancestors.add(part);}}if(realpathSync(path)!==path)throw Error('QA_PATH');const state=lstatSync(path);if(state.isFile()&&state.nlink!==1)throw Error('QA_LINK');return path;}"
+        },
+        {
+          "line": 25,
+          "lineSHA256": "09401cb93e8a952c9ad41f9f62ff10ae93e8c598e41ec30f04741cae18c443da",
+          "exactLine": "function completePaths(directory,prefix=''){return readdirSync(directory,{withFileTypes:true}).flatMap(entry=>{const name=prefix+entry.name;if(entry.isSymbolicLink())throw Error('QA_PRESERVATION_PATH');return entry.isDirectory()?completePaths(resolve(directory,entry.name),name+'/'):[name];}).sort();}"
+        },
+        {
+          "line": 26,
+          "lineSHA256": "b1ce7fdfef07796f8062cef6c9870b615d6407c338a5bde9939ee046c3c9ab20",
+          "exactLine": "function assertCompleteManifest(directory,manifest,excluded,historical=false){const paths=completePaths(directory).filter(name=>name!==excluded),expected=manifest.files.map(row=>row.path);if(historical)expected.sort();if(JSON.stringify(paths)!==JSON.stringify(expected)||new Set(expected).size!==expected.length)throw Error('QA_PRESERVATION_INVENTORY');}"
+        },
+        {
+          "line": 27,
+          "lineSHA256": "2da692d49ecf4ed56264cd52ec7a20f06f7c25b83375147d501b8958c1cc9cb3",
+          "exactLine": "const parentC7ReviewPath='_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review';"
+        },
+        {
+          "line": 28,
+          "lineSHA256": "ac921e8c9e8b1294403cee06f3bc378daa51afd03e3a3ccfbc32536e0a36fb8d",
+          "exactLine": "const parentC7ReviewSHA=\"07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee\";"
+        },
+        {
+          "line": 29,
+          "lineSHA256": "361e16c43edee383f8d4771294fae2817484fe268a97ed5c2a24cfc546fd4253",
+          "exactLine": "const parentC7ReviewAdditional=Object.freeze([\"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json\", \"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json\", \"source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json\"]);"
+        },
+        {
+          "line": 30,
+          "lineSHA256": "b6f22d22a9286061b8660aeeec09d9a1300b1c797c92564ff844d67b420a9bc2",
+          "exactLine": "function strictHistoricalRows(manifest,count){if(!manifest||Object.keys(manifest).length!==1||!Array.isArray(manifest.files)||manifest.files.length!==count)throw Error('QA_HISTORICAL_FULL_SCHEMA');const paths=[];for(const row of manifest.files){if(!row||JSON.stringify(Object.keys(row).sort())!==JSON.stringify(['bytes','path','sha256'])||typeof row.path!=='string'||!row.path||row.path.startsWith('/')||row.path.split('/').some(part=>!part||part==='.'||part==='..')||!Number.isSafeInteger(row.bytes)||row.bytes<0||typeof row.sha256!=='string'||!/^[a-f0-9]{64}$/.test(row.sha256))throw Error('QA_HISTORICAL_FULL_SCHEMA');paths.push(row.path);}if(new Set(paths).size!==paths.length||JSON.stringify(paths)!==JSON.stringify([...paths].sort()))throw Error('QA_HISTORICAL_FULL_SCHEMA');}"
+        },
+        {
+          "line": 31,
+          "lineSHA256": "df0fd4949869befb1d411fa8cd2211d3b17aaac26b9514c11352ed9d65d955f7",
+          "exactLine": "export function verifyHistoricalPacket(packet){const directory=resolve(repo,packet.path),body=readFileSync(canonical(resolve(directory,packet.manifest),repo));if(sha256(body)!==packet.manifestSHA256)throw Error('QA_HISTORICAL_MANIFEST');const previous=JSON.parse(body);if(previous.files.length!==packet.rows)throw Error('QA_HISTORICAL_ROWS');let complete=previous;"
+        },
+        {
+          "line": 32,
+          "lineSHA256": "a8528a037452ecfc4a4fd981db9151de6590fe2a85bd10ca913c42ab1a0b738b",
+          "exactLine": " if(packet.path===parentC7ReviewPath){if(packet.manifest!=='qa-manifest.json'||packet.manifestSHA256!==parentC7ReviewSHA||packet.rows!==80||!packet.fullClosure||JSON.stringify(Object.keys(packet.fullClosure).sort())!==JSON.stringify(['bytes','path','rows','sha256'])||packet.fullClosure.path!=='historical-parent-c7-review-full-index.json'||packet.fullClosure.rows!==83||!Number.isSafeInteger(packet.fullClosure.bytes)||packet.fullClosure.bytes<1||typeof packet.fullClosure.sha256!=='string'||!/^[a-f0-9]{64}$/.test(packet.fullClosure.sha256))throw Error('QA_HISTORICAL_FULL_BINDING');const index=readFileSync(canonical(resolve(root,packet.fullClosure.path),root));if(index.length!==packet.fullClosure.bytes||sha256(index)!==packet.fullClosure.sha256)throw Error('QA_HISTORICAL_FULL_HASH');complete=JSON.parse(index);strictHistoricalRows(complete,83);const original=new Map(previous.files.map(row=>[row.path,row])),additional=complete.files.filter(row=>!original.has(row.path)).map(row=>row.path);if(original.size!==80||JSON.stringify(additional)!==JSON.stringify(parentC7ReviewAdditional))throw Error('QA_HISTORICAL_FULL_ORIGINAL');for(const row of complete.files){const prior=original.get(row.path);if(prior&&(prior.bytes!==row.bytes||prior.sha256!==row.sha256))throw Error('QA_HISTORICAL_FULL_ORIGINAL');}}"
+        },
+        {
+          "line": 34,
+          "lineSHA256": "31e4ddea971a50d707582c16bd23d31404384f8eb5676ff80b31e2c1264bb6a2",
+          "exactLine": " assertCompleteManifest(directory,complete,packet.manifest,true);for(const row of previous.files){const data=readFileSync(canonical(resolve(directory,row.path),repo));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_HISTORICAL_PRESERVATION');}if(complete!==previous)for(const row of complete.files){const data=readFileSync(canonical(resolve(directory,row.path),repo));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_HISTORICAL_PRESERVATION');}return{originalRows:previous.files.length,completeRows:complete.files.length};}"
+        },
+        {
+          "line": 35,
+          "lineSHA256": "1889a09ee596d2fa30095de78a3a7bedae0d4d2b5dce5583b5651cf52777be10",
+          "exactLine": "export function preservationPreflight(review=trustedReview().review){const bytes=readFileSync(canonical(resolve(root,'qa-manifest.json'),root));if(sha256(bytes)!==review.preservationManifestSHA256)throw Error('QA_PRESERVATION_MANIFEST');const manifest=JSON.parse(bytes);assertCompleteManifest(root,manifest,'qa-manifest.json');for(const row of manifest.files){const data=readFileSync(canonical(resolve(root,row.path),root));if(data.length!==row.bytes||sha256(data)!==row.sha256)throw Error('QA_PRESERVATION_DRIFT');}const history=json(resolve(root,'historical-preservation.json'));for(const packet of history.packets){verifyHistoricalPacket(packet);}return{files:manifest.files.length,historicalPackets:history.packets.length};}"
+        },
+        {
+          "line": 40,
+          "lineSHA256": "37c27315d83b5e00917ab24a5608727ec3da7505cc64e85c57a72a21af50b686",
+          "exactLine": "export function reviewed(tier){const trusted=trustedReview(),freezeBytes=readFileSync(canonical(resolve(root,'runtime-freeze.json'),root)),freezeDigest=sha256(freezeBytes);if(trusted.review.freezeSha256!==freezeDigest)throw Error('QA_REVIEW');const complete=readFileSync(canonical(resolve(root,'qa-manifest.json'),root));if(sha256(complete)!==trusted.review.preservationManifestSHA256)throw Error('QA_PRESERVATION_MANIFEST');const freeze=sourcePreflight(firstReviewedBinding===undefined?undefined:tier,freezeDigest);if(sha256(readFileSync(canonical(resolve(root,'runtime-freeze.json'),root)))!==freezeDigest)throw Error('QA_REVIEW_FREEZE_DRIFT');const finalTrusted=trustedReview();if(finalTrusted.digest!==trusted.digest||finalTrusted.expected!==trusted.expected)throw Error('QA_REVIEW_EXPECTED_PIN_DRIFT');if(firstReviewedBinding===undefined){firstFreezeDigest=freezeDigest;firstReviewedBinding=trusted.digest;firstExpectedReview=trusted.expected;}return freeze;}"
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/scripts/offline-runtime-freeze.mjs",
+      "bytes": 14802,
+      "sha256": "67bbecc73b085ecf3aad604d1fbef2938c31e8f13ef9736c22ed355daf0ddd3c",
+      "encodedPath": "source-byte-gzip/67bbecc73b085ecf3aad604d1fbef2938c31e8f13ef9736c22ed355daf0ddd3c.gz",
+      "lines": [
+        {
+          "line": 3,
+          "lineSHA256": "e088caeab1afad43a270da79da8d7dbe59ab72a320ff7579492f8f4e388b1f82",
+          "exactLine": "async function context(sourceOverride){const base=path.resolve(area,crypto.randomUUID()),packet=path.resolve(base,'a/b/c/d');fs.mkdirSync(path.resolve(packet,'scripts'),{recursive:true,mode:0o700});fs.mkdirSync(path.resolve(packet,'fixture'),{mode:0o700});const put=(name,value)=>fs.writeFileSync(path.resolve(packet,name),typeof value==='string'?value:JSON.stringify(value)+'\\n');const external=[['parent.mjs','parent-source'],['watcher.mjs','watcher-source']].map(([name,body])=>{fs.writeFileSync(path.resolve(base,name),body);return{path:name,bytes:Buffer.byteLength(body),sha256:digest(body)};});fs.writeFileSync(path.resolve(base,'accepted.ts'),'accepted');fs.writeFileSync(path.resolve(base,'product.ts'),'product');const source=sourceOverride??fs.readFileSync(path.resolve(root,'scripts/guard.mjs'),'utf8');put('scripts/guard.mjs',source);for(const name of ['project-request.json','cases.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json'])put(name,{});put('historical-preservation.json',{packets:[]});put('runtime-inputs.json',{externalSources:external});put('source-inventory.json',{acceptedGateHashes:[{path:'accepted.ts',sha256:digest('accepted')}],files:[{source:'product.ts',sha256:digest('product')}]});put('fixture/module.ts','fixture-source');put('history.txt','historical-evidence');const legacyRoots=['project-request.json','cases.json','source-inventory.json','registration-inventory.json','schema-evidence.json','profile.json','divergence.json','toolchain-evidence.json','runtime-inputs.json','historical-preservation.json'];const match=source.match(/export const runtimeRootInputs=Object.freeze\\(\\[([^\\]]*)\\]\\)/),roots=match?[...match[1].matchAll(/'([^']+)'/g)].map(m=>m[1]):legacyRoots;for(const name of roots)if(!fs.existsSync(path.resolve(packet,name)))put(name,{});fs.writeFileSync(path.resolve(base,'runner-runtime.js'),'runner');fs.writeFileSync(path.resolve(base,'compiler-runtime.js'),'compiler');put('toolchain-evidence.json',{files:[{path:'compiler-runtime.js',sha256:digest('compiler')}]});put('runner-dependency-inventory.json',{inputs:[{path:'runner-runtime.js',bytes:6,sha256:digest('runner')}]});put('dependency-tiers.json',{rpc:{runner:[{path:'runner-runtime.js',bytes:6,sha256:digest('runner')}],tools:[]},boundaryOnly:{runner:[],tools:[{path:'compiler-runtime.js',sha256:digest('compiler')}]}});if(roots.includes('dependency-inventory.json'))put('dependency-inventory.json',{inputs:[]});const paths=['scripts/guard.mjs','fixture/module.ts',...roots].sort();const rec=name=>({path:name,bytes:fs.statSync(path.resolve(packet,name)).size,sha256:digest(fs.readFileSync(path.resolve(packet,name)))});put('runtime-freeze.json',{operationalPaths:paths,files:paths.map(rec)});const manifest={files:[...paths,'history.txt','runtime-freeze.json'].sort().map(rec)};put('qa-manifest.json',manifest);const review={preservationManifestSHA256:digest(fs.readFileSync(path.resolve(packet,'qa-manifest.json')))};const vmContext=createContext({process:{getuid:()=>process.getuid(),env:{}},Buffer,Date,setTimeout});const module=new SourceTextModule(source,{context:vmContext,identifier:path.resolve(packet,'scripts/guard.mjs'),initializeImportMeta:m=>m.url=pathToFileURL(path.resolve(packet,'scripts/guard.mjs')).href});const imports={'node:fs':fs,'node:path':path,'node:url':{fileURLToPath},'node:crypto':crypto,'node:util':util};await module.link(name=>{const obj=imports[name];assert.ok(obj);return new SyntheticModule(Object.keys(obj),function(){for(const[k,v]of Object.entries(obj))this.setExport(k,v);},{context:vmContext});});await module.evaluate();return{base,packet,module:module.namespace,review,put,expectedFiles:manifest.files.length,env:vmContext.process.env};}"
+        },
+        {
+          "line": 4,
+          "lineSHA256": "8470747c6ad9faa72e7bad9aa690e90924d22b0db093cf06d4418aeba6e8aed2",
+          "exactLine": "test('actual unadapted guard runtime closure checks consumed divergence/toolchain/external sources each call; historical scans only explicit boundaries',async()=>{const h=await context();assert.ok(h.module.sourcePreflight());assert.equal(h.module.preservationPreflight(h.review).files,h.expectedFiles);h.put('history.txt','changed-history');assert.ok(h.module.sourcePreflight(),'historical-only evidence not runtime input');assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_DRIFT/);});"
+        },
+        {
+          "line": 7,
+          "lineSHA256": "730e1738d14fa274497f5bf6a97fd6c3fd208c342601e153e808c52435faddd9",
+          "exactLine": "test('actual preservation rejects manifest substitution and runtime inventory additions',async()=>{const h=await context();h.put('qa-manifest.json',{files:[]});assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_MANIFEST/);h.put('scripts/extra.mjs','unexpected');assert.throws(()=>h.module.sourcePreflight(),/QA_SOURCE_INVENTORY_DRIFT/);});"
+        },
+        {
+          "line": 9,
+          "lineSHA256": "b22c9a505fbf1a71581ef0da0826853637155bed8bbd253f928c278c2f61fba8",
+          "exactLine": "test('actual historical manifest order regression preserves old red and accepts exact unsorted historical sets without mutation',async()=>{const old=fs.readFileSync(path.resolve(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/evidence/full-preservation01-failure/scripts--guard.mjs.text'),'utf8');for(const[version,source]of [['old',old],['fixed',undefined]]){const h=await context(source),directory=path.resolve(h.base,'history');fs.mkdirSync(directory);for(const n of ['a.txt','z.txt'])fs.writeFileSync(path.resolve(directory,n),n);const previous={files:['z.txt','a.txt'].map(n=>({path:n,bytes:5,sha256:digest(n)}))},body=JSON.stringify(previous)+'\\n';fs.writeFileSync(path.resolve(directory,'manifest.json'),body);h.put('historical-preservation.json',{packets:[{path:'history',manifest:'manifest.json',manifestSHA256:digest(body),rows:2}]});const freeze=JSON.parse(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json')));for(const row of freeze.files)if(row.path==='historical-preservation.json'){const data=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=data.length;row.sha256=digest(data);}h.put('runtime-freeze.json',freeze);const manifest=JSON.parse(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));for(const row of manifest.files){const data=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=data.length;row.sha256=digest(data);}h.put('qa-manifest.json',manifest);h.review.preservationManifestSHA256=digest(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));if(version==='old')assert.throws(()=>h.module.preservationPreflight(h.review),/QA_PRESERVATION_INVENTORY/);else assert.equal(h.module.preservationPreflight(h.review).historicalPackets,1);assert.equal(fs.readFileSync(path.resolve(directory,'manifest.json'),'utf8'),body);}});"
+        },
+        {
+          "line": 17,
+          "lineSHA256": "63d1710c3f6f2aa1f8805b418b0669f3af120cbea12f11b4f6da651ed5a01d5a",
+          "exactLine": "function approval(h){fs.mkdirSync(h.module.scratch,{recursive:true,mode:0o700});const value={independent:true,verdict:'PASS',freezeSha256:digest(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json'))),preservationManifestSHA256:h.review.preservationManifestSHA256};const file=path.resolve(h.module.scratch,'preparation-review.json');fs.writeFileSync(file,JSON.stringify(value)+'\\n',{mode:0o600});h.env.CORTEX_QA_TASK04_REVIEW_SHA256=digest(fs.readFileSync(file));return{value,file};}"
+        },
+        {
+          "line": 21,
+          "lineSHA256": "68a4b5db22d45777b18b9fc8cc3ba62af1e3a8cdaee19ea902d21a4fdaf92d08",
+          "exactLine": "function coherent(h){h.put('fixture/module.ts','DUMMY-coherent-substitution');const frozen=JSON.parse(fs.readFileSync(path.resolve(h.packet,'runtime-freeze.json')));for(const row of frozen.files){const bytes=fs.readFileSync(path.resolve(h.packet,row.path));row.bytes=bytes.length;row.sha256=digest(bytes);}h.put('runtime-freeze.json',frozen);fs.mkdirSync(path.resolve(h.packet,'nested'),{recursive:true});h.put('nested/qa-manifest.json',{files:[]});const walk=(dir=h.packet,prefix='')=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.resolve(dir,e.name),prefix+e.name+'/'):[prefix+e.name]).sort();h.put('qa-manifest.json',{files:walk().filter(n=>n!=='qa-manifest.json').map(n=>{const bytes=fs.readFileSync(path.resolve(h.packet,n));return{path:n,bytes:bytes.length,sha256:digest(bytes)};})});h.review.preservationManifestSHA256=digest(fs.readFileSync(path.resolve(h.packet,'qa-manifest.json')));const expected=h.env.CORTEX_QA_TASK04_REVIEW_SHA256;approval(h);h.env.CORTEX_QA_TASK04_REVIEW_SHA256=expected;}"
+        },
+        {
+          "line": 23,
+          "lineSHA256": "e41d72826a6c37cb7bf6e30b8883a05a92327e35486755c8ad82fa7b8473cad6",
+          "exactLine": "test('coherent operational+FULLfreeze+recursiveCOMPLETEmanifest+private review before FIRSTcall denied under original external pin',async()=>{const h=await context();approval(h);coherent(h);assert.throws(()=>h.module.reviewed('rpc'),/QA_REVIEW_EXPECTED_DIGEST/);assert.equal(h.module.preservationPreflight(h.review).files,h.expectedFiles+1);});"
+        }
+      ]
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-preparation-c5/freeze-after-scratch.mjs",
+      "bytes": 2543,
+      "sha256": "11431eaf94e402bd8929f53f148947e5c138950072f0da8a3b4acd78f7edc961",
+      "encodedPath": "source-byte-gzip/11431eaf94e402bd8929f53f148947e5c138950072f0da8a3b4acd78f7edc961.gz",
+      "lines": [
+        {
+          "line": 5,
+          "lineSHA256": "86d30cdd43adf6d71cd38b676a35a7dab2b94dad1c782777096908eddf7bfbde",
+          "exactLine": "const full=()=>writeFileSync(resolve(root,'qa-manifest.json'),JSON.stringify({files:walk().filter(p=>p!=='qa-manifest.json').map(row)},null,2)+'\\n');full();const before=new Date().toISOString();guard.sourcePreflight();guard.sourcePreflight('rpc');const preservation=guard.preservationPreflight({preservationManifestSHA256:hash(readFileSync(resolve(root,'qa-manifest.json')))});writeFileSync(resolve(root,'evidence/final-freeze-verification.json'),JSON.stringify({startedAt:before,observedAt:new Date().toISOString(),sourcePreflightFull:'VERIFIED_BYTES_ONLY_NOT_ACCEPTANCE',unreviewedRpcDefaultsFull:true,preservation,native:'NOT_RUN',privateInput:'NOT_READ',sourceAcceptance:'PENDING_INDEPENDENT_REVIEW'},null,2)+'\\n');full();guard.preservationPreflight({preservationManifestSHA256:hash(readFileSync(resolve(root,'qa-manifest.json')))});output.push({kind,runtimeFreezeSHA256:hash(readFileSync(resolve(root,'runtime-freeze.json'))),operationalRows:operational.length,qaManifestSHA256:hash(readFileSync(resolve(root,'qa-manifest.json'))),qaRows:JSON.parse(readFileSync(resolve(root,'qa-manifest.json'))).files.length,reportSHA256:hash(readFileSync(resolve(root,'report.md')))});console.log(output.at(-1));}"
+        }
+      ]
+    }
+  ],
+  "originalHistoricalManifestPins": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/historical-preservation.json",
+      "bytes": 10258,
+      "sha256": "fad338f4e141cc74eb4776cc64e7e323d9922406dceaac35c2f9045f6426ca6d",
+      "binding": "CURRENT_EXACT_PUBLIC_MANIFEST_BYTES_PACKET_PINS_CHECKED_NOT_RETROACTIVE_CUSTODY"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/qa-manifest.json",
+      "bytes": 310551,
+      "sha256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7-review/review-manifest.json",
+      "bytes": 398109,
+      "sha256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/qa-manifest.json",
+      "bytes": 653434,
+      "sha256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation/qa-manifest.json",
+      "bytes": 10668,
+      "sha256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+      "bytes": 1656634,
+      "sha256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/qa-manifest.json",
+      "bytes": 1214077,
+      "sha256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c2-review/full-manifest.json",
+      "bytes": 1212220,
+      "sha256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c3-review/qa-manifest.json",
+      "bytes": 151552,
+      "sha256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json",
+      "bytes": 37582,
+      "sha256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/qa-manifest.json",
+      "bytes": 15915,
+      "sha256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/historical-parent-c7-review-full-index.json",
+      "bytes": 16716,
+      "sha256": "2244abd018290c315889ba18bdd0422379c14432e4e6d55e20f4418501fa34e7",
+      "binding": "ORIGINAL_SOURCE_BOUND_FULL83_SUPPLEMENT"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/qa-manifest.json",
+      "bytes": 35380,
+      "sha256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-review/qa-manifest.json",
+      "bytes": 7972,
+      "sha256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/qa-manifest.json",
+      "bytes": 1105245,
+      "sha256": "6ce373aaa8c8d1de104b48b532b8863712a41506f2a655838e97a1adb8f83ef3",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/qa-manifest.json",
+      "bytes": 42670,
+      "sha256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-c4-aggregate-review/qa-manifest.json",
+      "bytes": 3554,
+      "sha256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1/manifest.json",
+      "bytes": 2443,
+      "sha256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review/manifest.json",
+      "bytes": 1901,
+      "sha256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/qa-manifest.json",
+      "bytes": 49564,
+      "sha256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/qa-manifest.json",
+      "bytes": 48395,
+      "sha256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/qa-manifest.json",
+      "bytes": 79717,
+      "sha256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review/qa-manifest.json",
+      "bytes": 7022,
+      "sha256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/qa-manifest.json",
+      "bytes": 83476,
+      "sha256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/qa-manifest.json",
+      "bytes": 83388,
+      "sha256": "36bfb9f5ef1f1f6a4f74310fe4cfc7002edcdfeb0efbcb657d5fe903fe9be325",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/qa-manifest.json",
+      "bytes": 82022,
+      "sha256": "88f5a2522d80002a39fd4edf35118dffb860bfa169484520ece3ecb25bbd4d43",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/qa-manifest.json",
+      "bytes": 118886,
+      "sha256": "482e8469ee1d413d04a0322bfce14825d9ed44ad73086f3f0a2f0761d0b7ef30",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review/qa-manifest.json",
+      "bytes": 27195,
+      "sha256": "2b1bb08f5a721cdb48450063a48887230669159a0d979940605b6d87b0c3cca0",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review/qa-manifest.json",
+      "bytes": 17026,
+      "sha256": "e0757a4466d3a45d93c9609ad4feafd1a1ac0c6d5f961656d8005c177a01aa49",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3/qa-manifest.json",
+      "bytes": 431054,
+      "sha256": "e951ba8f41b12de6fd0ec21e84be37ba886afca8edf96f65cf4e190c9e746554",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/qa-manifest.json",
+      "bytes": 429491,
+      "sha256": "4796d255a144960430c22bf3f257a6e140b109fe2401a1d5cf97d76fbef5d726",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/qa-manifest.json",
+      "bytes": 467995,
+      "sha256": "e6e2e543d0b2ead072c98fb753373bbc504342cb686f67ab5f394c07a9a574b2",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review/qa-manifest.json",
+      "bytes": 137879,
+      "sha256": "78f8446bf55a40d43b706c4fd3e3219b3223be83c77aa71044c57aaf2e3722af",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/qa-manifest.json",
+      "bytes": 5230196,
+      "sha256": "8faacfa040728e0248e0cad5e5efafaf1052fc835932d69e7fc044b31b8a639c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4/qa-manifest.json",
+      "bytes": 874160,
+      "sha256": "5f68caca72ff8b5792efabe135d31430451cd4b9147fc672393a750bceddf53f",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-source-fresh-review/qa-manifest.json",
+      "bytes": 2933,
+      "sha256": "f6b00a579905f0898ae60d3fff607e653bf1ad200b5f49946c64af2abb1d1652",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-parent-fresh-review/qa-manifest.json",
+      "bytes": 471146,
+      "sha256": "d272d087eea1a19c6fb7bde2e38c674a89f9d4314d3cba9d6898b2225291a711",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/historical-preservation.json",
+      "bytes": 10847,
+      "sha256": "f2cb05fe95068d6e62a78bb95aad6554ef58d6bb1fa3e26027d38d177620b761",
+      "binding": "CURRENT_EXACT_PUBLIC_MANIFEST_BYTES_PACKET_PINS_CHECKED_NOT_RETROACTIVE_CUSTODY"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/qa-manifest.json",
+      "bytes": 310551,
+      "sha256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7-review/review-manifest.json",
+      "bytes": 398109,
+      "sha256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/qa-manifest.json",
+      "bytes": 653434,
+      "sha256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation/qa-manifest.json",
+      "bytes": 10668,
+      "sha256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+      "bytes": 1656634,
+      "sha256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json",
+      "bytes": 33213,
+      "sha256": "5da01105a33b74144b4ffd3094f0d90845acf49df07faaa26b6581fbb0b2a248",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/qa-manifest.json",
+      "bytes": 1214077,
+      "sha256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/regression/qa-manifest.json",
+      "bytes": 41901,
+      "sha256": "7b0cc8215d66304d5db6997d4a4a20fc0abd07cc063e02e97eaba6e52f4393ad",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c2-review/full-manifest.json",
+      "bytes": 1212220,
+      "sha256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c3-review/qa-manifest.json",
+      "bytes": 151552,
+      "sha256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json",
+      "bytes": 37582,
+      "sha256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/qa-manifest.json",
+      "bytes": 15915,
+      "sha256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c5/historical-parent-c7-review-full-index.json",
+      "bytes": 16716,
+      "sha256": "2244abd018290c315889ba18bdd0422379c14432e4e6d55e20f4418501fa34e7",
+      "binding": "ORIGINAL_SOURCE_BOUND_FULL83_SUPPLEMENT"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/qa-manifest.json",
+      "bytes": 35380,
+      "sha256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-review/qa-manifest.json",
+      "bytes": 7972,
+      "sha256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression/qa-manifest.json",
+      "bytes": 41901,
+      "sha256": "9476a0dc442a86d850e07cc90ba626d658fd9448f1185b0e14934120efeef679",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/qa-manifest.json",
+      "bytes": 42670,
+      "sha256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-c4-aggregate-review/qa-manifest.json",
+      "bytes": 3554,
+      "sha256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1/manifest.json",
+      "bytes": 2443,
+      "sha256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review/manifest.json",
+      "bytes": 1901,
+      "sha256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/qa-manifest.json",
+      "bytes": 49564,
+      "sha256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/qa-manifest.json",
+      "bytes": 48395,
+      "sha256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/qa-manifest.json",
+      "bytes": 79717,
+      "sha256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review/qa-manifest.json",
+      "bytes": 7022,
+      "sha256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/qa-manifest.json",
+      "bytes": 83476,
+      "sha256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/qa-manifest.json",
+      "bytes": 83388,
+      "sha256": "36bfb9f5ef1f1f6a4f74310fe4cfc7002edcdfeb0efbcb657d5fe903fe9be325",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/qa-manifest.json",
+      "bytes": 82022,
+      "sha256": "88f5a2522d80002a39fd4edf35118dffb860bfa169484520ece3ecb25bbd4d43",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/qa-manifest.json",
+      "bytes": 118886,
+      "sha256": "482e8469ee1d413d04a0322bfce14825d9ed44ad73086f3f0a2f0761d0b7ef30",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review/qa-manifest.json",
+      "bytes": 27195,
+      "sha256": "2b1bb08f5a721cdb48450063a48887230669159a0d979940605b6d87b0c3cca0",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review/qa-manifest.json",
+      "bytes": 17026,
+      "sha256": "e0757a4466d3a45d93c9609ad4feafd1a1ac0c6d5f961656d8005c177a01aa49",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3/qa-manifest.json",
+      "bytes": 431054,
+      "sha256": "e951ba8f41b12de6fd0ec21e84be37ba886afca8edf96f65cf4e190c9e746554",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/qa-manifest.json",
+      "bytes": 429491,
+      "sha256": "4796d255a144960430c22bf3f257a6e140b109fe2401a1d5cf97d76fbef5d726",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/qa-manifest.json",
+      "bytes": 467995,
+      "sha256": "e6e2e543d0b2ead072c98fb753373bbc504342cb686f67ab5f394c07a9a574b2",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review/qa-manifest.json",
+      "bytes": 137879,
+      "sha256": "78f8446bf55a40d43b706c4fd3e3219b3223be83c77aa71044c57aaf2e3722af",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/qa-manifest.json",
+      "bytes": 5230196,
+      "sha256": "8faacfa040728e0248e0cad5e5efafaf1052fc835932d69e7fc044b31b8a639c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c4/qa-manifest.json",
+      "bytes": 445215,
+      "sha256": "c7c6c1ace7b2df60ab29181dcf007ed0805956ed10282410d7598abc1447c552",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-source-fresh-review/qa-manifest.json",
+      "bytes": 2933,
+      "sha256": "f6b00a579905f0898ae60d3fff607e653bf1ad200b5f49946c64af2abb1d1652",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-parent-fresh-review/qa-manifest.json",
+      "bytes": 471146,
+      "sha256": "d272d087eea1a19c6fb7bde2e38c674a89f9d4314d3cba9d6898b2225291a711",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/historical-preservation.json",
+      "bytes": 10254,
+      "sha256": "b41ab1125e1becfcbbd6c9acce69b5b8e2498914c1e644615bd3a90487132f9b",
+      "binding": "CURRENT_EXACT_PUBLIC_MANIFEST_BYTES_PACKET_PINS_CHECKED_NOT_RETROACTIVE_CUSTODY"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/qa-manifest.json",
+      "bytes": 310551,
+      "sha256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7-review/review-manifest.json",
+      "bytes": 398109,
+      "sha256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/qa-manifest.json",
+      "bytes": 653434,
+      "sha256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation/qa-manifest.json",
+      "bytes": 10668,
+      "sha256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+      "bytes": 1656634,
+      "sha256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/qa-manifest.json",
+      "bytes": 1214077,
+      "sha256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c2-review/full-manifest.json",
+      "bytes": 1212220,
+      "sha256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c3-review/qa-manifest.json",
+      "bytes": 151552,
+      "sha256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json",
+      "bytes": 37582,
+      "sha256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/qa-manifest.json",
+      "bytes": 15915,
+      "sha256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c5/historical-parent-c7-review-full-index.json",
+      "bytes": 16716,
+      "sha256": "2244abd018290c315889ba18bdd0422379c14432e4e6d55e20f4418501fa34e7",
+      "binding": "ORIGINAL_SOURCE_BOUND_FULL83_SUPPLEMENT"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/qa-manifest.json",
+      "bytes": 35380,
+      "sha256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-review/qa-manifest.json",
+      "bytes": 7972,
+      "sha256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/qa-manifest.json",
+      "bytes": 1105245,
+      "sha256": "6ce373aaa8c8d1de104b48b532b8863712a41506f2a655838e97a1adb8f83ef3",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/qa-manifest.json",
+      "bytes": 42670,
+      "sha256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-c4-aggregate-review/qa-manifest.json",
+      "bytes": 3554,
+      "sha256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1/manifest.json",
+      "bytes": 2443,
+      "sha256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review/manifest.json",
+      "bytes": 1901,
+      "sha256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/qa-manifest.json",
+      "bytes": 49564,
+      "sha256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/qa-manifest.json",
+      "bytes": 48395,
+      "sha256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/qa-manifest.json",
+      "bytes": 79717,
+      "sha256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review/qa-manifest.json",
+      "bytes": 7022,
+      "sha256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review/qa-manifest.json",
+      "bytes": 83476,
+      "sha256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2/qa-manifest.json",
+      "bytes": 83388,
+      "sha256": "36bfb9f5ef1f1f6a4f74310fe4cfc7002edcdfeb0efbcb657d5fe903fe9be325",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2/qa-manifest.json",
+      "bytes": 82022,
+      "sha256": "88f5a2522d80002a39fd4edf35118dffb860bfa169484520ece3ecb25bbd4d43",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2/qa-manifest.json",
+      "bytes": 118886,
+      "sha256": "482e8469ee1d413d04a0322bfce14825d9ed44ad73086f3f0a2f0761d0b7ef30",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review/qa-manifest.json",
+      "bytes": 27195,
+      "sha256": "2b1bb08f5a721cdb48450063a48887230669159a0d979940605b6d87b0c3cca0",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review/qa-manifest.json",
+      "bytes": 17026,
+      "sha256": "e0757a4466d3a45d93c9609ad4feafd1a1ac0c6d5f961656d8005c177a01aa49",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3/qa-manifest.json",
+      "bytes": 431054,
+      "sha256": "e951ba8f41b12de6fd0ec21e84be37ba886afca8edf96f65cf4e190c9e746554",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/qa-manifest.json",
+      "bytes": 429491,
+      "sha256": "4796d255a144960430c22bf3f257a6e140b109fe2401a1d5cf97d76fbef5d726",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/qa-manifest.json",
+      "bytes": 467995,
+      "sha256": "e6e2e543d0b2ead072c98fb753373bbc504342cb686f67ab5f394c07a9a574b2",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review/qa-manifest.json",
+      "bytes": 137879,
+      "sha256": "78f8446bf55a40d43b706c4fd3e3219b3223be83c77aa71044c57aaf2e3722af",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/qa-manifest.json",
+      "bytes": 5230196,
+      "sha256": "8faacfa040728e0248e0cad5e5efafaf1052fc835932d69e7fc044b31b8a639c",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c4/qa-manifest.json",
+      "bytes": 491271,
+      "sha256": "56cc58bf63375ef7913fe38ef59ecf19947dfeeb205983e0cb941b27efc19c8f",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-source-fresh-review/qa-manifest.json",
+      "bytes": 2933,
+      "sha256": "f6b00a579905f0898ae60d3fff607e653bf1ad200b5f49946c64af2abb1d1652",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-parent-fresh-review/qa-manifest.json",
+      "bytes": 471146,
+      "sha256": "d272d087eea1a19c6fb7bde2e38c674a89f9d4314d3cba9d6898b2225291a711",
+      "binding": "ORIGINAL_HISTORICAL_PACKET_MANIFEST_SHA"
+    }
+  ],
+  "profiles": [
+    {
+      "profile": "extension",
+      "packetCount": 35,
+      "manifestRowCountBeforeDedup": 65585,
+      "dataManifestUnionRows": 65623,
+      "exactSubsetCanonicalJSONSHA256": "80aff2b1a8bfdf4866dce96657d4306276b5b410bd2f2250d9e7f5f738ea2d0b",
+      "packets": [
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+            "rows": 1579
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7-review",
+            "manifest": "review-manifest.json",
+            "manifestSHA256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+            "rows": 1607
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+            "rows": 3288
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+            "rows": 55
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+            "rows": 7696
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+            "rows": 5576
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c2-review",
+            "manifest": "full-manifest.json",
+            "manifestSHA256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+            "rows": 4529
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+            "rows": 576
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+            "rows": 179
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+            "rows": 80,
+            "fullClosure": {
+              "path": "historical-parent-c7-review-full-index.json",
+              "bytes": 16716,
+              "sha256": "2244abd018290c315889ba18bdd0422379c14432e4e6d55e20f4418501fa34e7",
+              "rows": 83
+            }
+          },
+          "supplementAdditionalPaths": [
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json",
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json"
+          ],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+            "rows": 168
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+            "rows": 44
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "6ce373aaa8c8d1de104b48b532b8863712a41506f2a655838e97a1adb8f83ef3",
+            "rows": 5039
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+            "rows": 207
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-c4-aggregate-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+            "rows": 22
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1",
+            "manifest": "manifest.json",
+            "manifestSHA256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+            "rows": 15
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review",
+            "manifest": "manifest.json",
+            "manifestSHA256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+            "rows": 12
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+            "rows": 294
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+            "rows": 287
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+            "rows": 466
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+            "rows": 43
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+            "rows": 348
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "36bfb9f5ef1f1f6a4f74310fe4cfc7002edcdfeb0efbcb657d5fe903fe9be325",
+            "rows": 471
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "88f5a2522d80002a39fd4edf35118dffb860bfa169484520ece3ecb25bbd4d43",
+            "rows": 463
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "482e8469ee1d413d04a0322bfce14825d9ed44ad73086f3f0a2f0761d0b7ef30",
+            "rows": 670
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "2b1bb08f5a721cdb48450063a48887230669159a0d979940605b6d87b0c3cca0",
+            "rows": 154
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e0757a4466d3a45d93c9609ad4feafd1a1ac0c6d5f961656d8005c177a01aa49",
+            "rows": 101
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e951ba8f41b12de6fd0ec21e84be37ba886afca8edf96f65cf4e190c9e746554",
+            "rows": 2000
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "4796d255a144960430c22bf3f257a6e140b109fe2401a1d5cf97d76fbef5d726",
+            "rows": 1991
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e6e2e543d0b2ead072c98fb753373bbc504342cb686f67ab5f394c07a9a574b2",
+            "rows": 2206
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "78f8446bf55a40d43b706c4fd3e3219b3223be83c77aa71044c57aaf2e3722af",
+            "rows": 644
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "8faacfa040728e0248e0cad5e5efafaf1052fc835932d69e7fc044b31b8a639c",
+            "rows": 18896
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "5f68caca72ff8b5792efabe135d31430451cd4b9147fc672393a750bceddf53f",
+            "rows": 3853
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-source-fresh-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "f6b00a579905f0898ae60d3fff607e653bf1ad200b5f49946c64af2abb1d1652",
+            "rows": 17
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-parent-fresh-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "d272d087eea1a19c6fb7bde2e38c674a89f9d4314d3cba9d6898b2225291a711",
+            "rows": 2009
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "kind",
+            "path",
+            "sha256"
+          ]
+        }
+      ],
+      "observedNonSingleLinks": []
+    },
+    {
+      "profile": "regression",
+      "packetCount": 37,
+      "manifestRowCountBeforeDedup": 59460,
+      "dataManifestUnionRows": 59051,
+      "exactSubsetCanonicalJSONSHA256": "b3c8264c963fdf51329db4f7d8a8ae42ad2c4e977b00bacffb85589ea68c5d88",
+      "packets": [
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+            "rows": 1579
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7-review",
+            "manifest": "review-manifest.json",
+            "manifestSHA256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+            "rows": 1607
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+            "rows": 3288
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+            "rows": 55
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+            "rows": 7696
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "5da01105a33b74144b4ffd3094f0d90845acf49df07faaa26b6581fbb0b2a248",
+            "rows": 200
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+            "rows": 5576
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/regression",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "7b0cc8215d66304d5db6997d4a4a20fc0abd07cc063e02e97eaba6e52f4393ad",
+            "rows": 247
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c2-review",
+            "manifest": "full-manifest.json",
+            "manifestSHA256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+            "rows": 4529
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+            "rows": 576
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+            "rows": 179
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+            "rows": 80,
+            "fullClosure": {
+              "path": "historical-parent-c7-review-full-index.json",
+              "bytes": 16716,
+              "sha256": "2244abd018290c315889ba18bdd0422379c14432e4e6d55e20f4418501fa34e7",
+              "rows": 83
+            }
+          },
+          "supplementAdditionalPaths": [
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json",
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json"
+          ],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+            "rows": 168
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+            "rows": 44
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4/regression",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "9476a0dc442a86d850e07cc90ba626d658fd9448f1185b0e14934120efeef679",
+            "rows": 247
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+            "rows": 207
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-c4-aggregate-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+            "rows": 22
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1",
+            "manifest": "manifest.json",
+            "manifestSHA256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+            "rows": 15
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review",
+            "manifest": "manifest.json",
+            "manifestSHA256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+            "rows": 12
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+            "rows": 294
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+            "rows": 287
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+            "rows": 466
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+            "rows": 43
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+            "rows": 348
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "36bfb9f5ef1f1f6a4f74310fe4cfc7002edcdfeb0efbcb657d5fe903fe9be325",
+            "rows": 471
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "88f5a2522d80002a39fd4edf35118dffb860bfa169484520ece3ecb25bbd4d43",
+            "rows": 463
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "482e8469ee1d413d04a0322bfce14825d9ed44ad73086f3f0a2f0761d0b7ef30",
+            "rows": 670
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "2b1bb08f5a721cdb48450063a48887230669159a0d979940605b6d87b0c3cca0",
+            "rows": 154
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e0757a4466d3a45d93c9609ad4feafd1a1ac0c6d5f961656d8005c177a01aa49",
+            "rows": 101
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e951ba8f41b12de6fd0ec21e84be37ba886afca8edf96f65cf4e190c9e746554",
+            "rows": 2000
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "4796d255a144960430c22bf3f257a6e140b109fe2401a1d5cf97d76fbef5d726",
+            "rows": 1991
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e6e2e543d0b2ead072c98fb753373bbc504342cb686f67ab5f394c07a9a574b2",
+            "rows": 2206
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "78f8446bf55a40d43b706c4fd3e3219b3223be83c77aa71044c57aaf2e3722af",
+            "rows": 644
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "8faacfa040728e0248e0cad5e5efafaf1052fc835932d69e7fc044b31b8a639c",
+            "rows": 18896
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c4",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "c7c6c1ace7b2df60ab29181dcf007ed0805956ed10282410d7598abc1447c552",
+            "rows": 2073
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-source-fresh-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "f6b00a579905f0898ae60d3fff607e653bf1ad200b5f49946c64af2abb1d1652",
+            "rows": 17
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-parent-fresh-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "d272d087eea1a19c6fb7bde2e38c674a89f9d4314d3cba9d6898b2225291a711",
+            "rows": 2009
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "kind",
+            "path",
+            "sha256"
+          ]
+        }
+      ],
+      "observedNonSingleLinks": []
+    },
+    {
+      "profile": "extra",
+      "packetCount": 35,
+      "manifestRowCountBeforeDedup": 64054,
+      "dataManifestUnionRows": 64092,
+      "exactSubsetCanonicalJSONSHA256": "d38c911849cdd3256a0fb838c1ca3a118a937c9a00ff4dee62f9febbc61772df",
+      "packets": [
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "709952062c7930231e8bd93da2165122d603d3af9bf38106ef0ac335393b0042",
+            "rows": 1579
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7-review",
+            "manifest": "review-manifest.json",
+            "manifestSHA256": "05c7c7a6d0af4ccc7132518f46bdf67c5371e0d145b2ad0bf77cb0232f3ac5c3",
+            "rows": 1607
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9",
+            "rows": 3288
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65",
+            "rows": 55
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "484c18536fe3c5e99e23db11e57ab4793f61a0b8395415c05881cafb43a265cb",
+            "rows": 7696
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+            "rows": 5576
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c2-review",
+            "manifest": "full-manifest.json",
+            "manifestSHA256": "c7ade64f37d5a38262ba4dea075ff35aa195cd7ea581c4e21cc925d36a8a8084",
+            "rows": 4529
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-profiles-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "88ebe084f3848ecef99b0d989ae262f1f0a25d649deae54a14a0018321e89c74",
+            "rows": 576
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e0d14520c50a081cafb6f7c0e367af6299de24040679d0017bcf0f1635c18d20",
+            "rows": 179
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee",
+            "rows": 80,
+            "fullClosure": {
+              "path": "historical-parent-c7-review-full-index.json",
+              "bytes": 16716,
+              "sha256": "2244abd018290c315889ba18bdd0422379c14432e4e6d55e20f4418501fa34e7",
+              "rows": 83
+            }
+          },
+          "supplementAdditionalPaths": [
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json",
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json",
+            "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json"
+          ],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7",
+            "rows": 168
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "7a46b6f5c22e9e3375d7c337770675caded1cc90e84302efb589af5e232e3971",
+            "rows": 44
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "6ce373aaa8c8d1de104b48b532b8863712a41506f2a655838e97a1adb8f83ef3",
+            "rows": 5039
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "595e47df66c1b685607545a32776a0fe175a5a1260a3865e834b0192d4b154e5",
+            "rows": 207
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-c4-aggregate-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "b922296b6863bd9bd16c7dd3b211204c336182435df1517fe57cb13dc5a3467c",
+            "rows": 22
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1",
+            "manifest": "manifest.json",
+            "manifestSHA256": "2155a68daa4c571f4ab231f1e9563f4c00987687e65a51aa428c802881f5ff16",
+            "rows": 15
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-profile-design-c1-review",
+            "manifest": "manifest.json",
+            "manifestSHA256": "d9e3d9de55ba4213b476a7ab159dfa7344b8c112a230afcd86f9ca97598e1675",
+            "rows": 12
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+            "rows": 294
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+            "rows": 287
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+            "rows": 466
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c1-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "b583000ac383cdb08eb3122dcaaf9b9050d5140350ca6c0ce6ec16615c03cbb2",
+            "rows": 43
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c1-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "0dddd8eeb5a5f8c84e7d99f4b152bc4b540e090105737f481fd0cb2ce333ed85",
+            "rows": 348
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "36bfb9f5ef1f1f6a4f74310fe4cfc7002edcdfeb0efbcb657d5fe903fe9be325",
+            "rows": 471
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "88f5a2522d80002a39fd4edf35118dffb860bfa169484520ece3ecb25bbd4d43",
+            "rows": 463
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c2",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "482e8469ee1d413d04a0322bfce14825d9ed44ad73086f3f0a2f0761d0b7ef30",
+            "rows": 670
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c2-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "2b1bb08f5a721cdb48450063a48887230669159a0d979940605b6d87b0c3cca0",
+            "rows": 154
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e0757a4466d3a45d93c9609ad4feafd1a1ac0c6d5f961656d8005c177a01aa49",
+            "rows": 101
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e951ba8f41b12de6fd0ec21e84be37ba886afca8edf96f65cf4e190c9e746554",
+            "rows": 2000
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "4796d255a144960430c22bf3f257a6e140b109fe2401a1d5cf97d76fbef5d726",
+            "rows": 1991
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "e6e2e543d0b2ead072c98fb753373bbc504342cb686f67ab5f394c07a9a574b2",
+            "rows": 2206
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "78f8446bf55a40d43b706c4fd3e3219b3223be83c77aa71044c57aaf2e3722af",
+            "rows": 644
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "8faacfa040728e0248e0cad5e5efafaf1052fc835932d69e7fc044b31b8a639c",
+            "rows": 18896
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c4",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "56cc58bf63375ef7913fe38ef59ecf19947dfeeb205983e0cb941b27efc19c8f",
+            "rows": 2322
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-source-fresh-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "f6b00a579905f0898ae60d3fff607e653bf1ad200b5f49946c64af2abb1d1652",
+            "rows": 17
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "path",
+            "sha256"
+          ]
+        },
+        {
+          "packet": {
+            "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c4-parent-fresh-review",
+            "manifest": "qa-manifest.json",
+            "manifestSHA256": "d272d087eea1a19c6fb7bde2e38c674a89f9d4314d3cba9d6898b2225291a711",
+            "rows": 2009
+          },
+          "supplementAdditionalPaths": [],
+          "rowKeys": [
+            "bytes",
+            "kind",
+            "path",
+            "sha256"
+          ]
+        }
+      ],
+      "observedNonSingleLinks": []
+    }
+  ],
+  "combinedExactHistoricalSubset": {
+    "rows": 70020,
+    "canonicalJSONSHA256": "fc4d3ae60aff1e57df5a76b4cc77c44ab87c52d629e344cbb83dfdf55bcd849d"
+  },
+  "standaloneOldGuardText": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/evidence/full-preservation01-failure/scripts--guard.mjs.text",
+    "bytes": 13596,
+    "sha256": "6d3fbb5479ccd969e1363b59b098d63039fcbeef19e77e5aa4e9dc191c18a374",
+    "sourceBinding": "offline-runtime-freeze3 archived line9"
+  },
+  "notExecuted": "ALL original122 held; source read only; no private actual file contents"
+}
