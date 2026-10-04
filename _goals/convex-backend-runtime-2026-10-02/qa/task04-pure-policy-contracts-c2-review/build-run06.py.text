@@ -1,0 +1,10 @@
+from pathlib import Path
+import os,subprocess,json,datetime,hashlib
+r=Path('/workspace/Project-Cortex');s=r/'work/resume/task04-pure-policy-c2-review/run01';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c2-review'
+env={'PATH':os.environ['PATH'],'TMPDIR':str(s/'tmp'),'npm_config_offline':'true','npm_config_cache':str(s/'npm-cache'),'NO_COLOR':'1'}
+for name,args in [('run06-build',['node','/home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js','run','build']),('run06-public-built',['node','verify-public-contracts.mjs'])]:
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ with (q/(name+'.started.json')).open('x') as f:json.dump({'argv':args,'cwd':str(s),'startUTC':start},f,indent=2)
+ with (q/(name+'.stdout')).open('x') as so,(q/(name+'.stderr')).open('x') as se:p=subprocess.run(args,cwd=s,stdout=so,stderr=se,env=env)
+ with (q/(name+'.receipt.json')).open('x') as f:json.dump({'argv':args,'cwd':str(s),'startUTC':start,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'environmentLoaders':False,'npmOffline':True},f,indent=2)
+ print(name,p.returncode,flush=True)
