@@ -1,0 +1,795 @@
+{
+  "createdUTC": "2026-10-04T02:25:43.387748+00:00",
+  "verdict": "PASS",
+  "scope": "OFFLINE_NATIVE_LEDGER_ONLY",
+  "dimensionScores": {
+    "requirementFulfillment": 5,
+    "codeQuality": 4,
+    "testQuality": 5,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "average": 4.4,
+  "files": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/check-summary.json",
+      "sha256": "d730b48288e1f3d244c7fb6f65a666a59054fac58bc87803d23f88c5113475da",
+      "bytes": 2451
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/dependencies.config.mjs.snapshot",
+      "sha256": "93c5088693e19c3e2eb86e307dee862afdb2a6325ef9028f3dd5062723efa440",
+      "bytes": 718
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/fresh.config.mjs.snapshot",
+      "sha256": "9c38e9fa29ffdce6e4b4615359ed7d4f0000a2716a48beb99cdd7a680e1a83a5",
+      "bytes": 638
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/hostile-dispatch03.config.mjs.snapshot",
+      "sha256": "bee9cba6a040fcafd359748789cef963ff2979236a3240677904efc330786980",
+      "bytes": 651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/hostile-dispatch03.test.ts.snapshot",
+      "sha256": "7397f9cbc3dde8c75a9d6cc68f642a43ded18553dbc262750e99bcd4cfe158ed",
+      "bytes": 41695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/hostile-postreserve-trace05.config.mjs.snapshot",
+      "sha256": "8abf724dacc4c7c83d5fc2e6df1dda8524737baa0d19af5dfd53b9e585cd4252",
+      "bytes": 660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/hostile-postreserve-trace05.test.ts.snapshot",
+      "sha256": "c98bbb6c73fdd28d06c5099601fbec19e0fd6e11a951fe58af6b0ba069d6a152",
+      "bytes": 45170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/hostile-postreserve04.config.mjs.snapshot",
+      "sha256": "0246da1e9639660de48e40b7d4c7f40696b347f8b7a7cdd43da8966e6a1716f9",
+      "bytes": 654
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/hostile-postreserve04.test.ts.snapshot",
+      "sha256": "eaa274420fb7b6d2a98a06eb3aabd783678ed38563bb42380d55604ad6ab7fc1",
+      "bytes": 44750
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/hostile02.config.mjs.snapshot",
+      "sha256": "9007688613dfec9ce618087d4367305df09ffb0eb2b44c101d64e22c7d3c8644",
+      "bytes": 642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/hostile02.test.ts.snapshot",
+      "sha256": "d94cd348a9e1a82037a5d752b4a2168fd7c5f142294eb0a024af510ae450a4f4",
+      "bytes": 41331
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/jest-result.json",
+      "sha256": "ccd5e93133683db60318f307135f0f0813c691dcd234d28caa74460170290899",
+      "bytes": 195645
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/post-execution-sources.json",
+      "sha256": "d1e85f7470c8cfee009576eacaea305c2f8cd02b3b33faf2953e96cc1e220a69",
+      "bytes": 32520
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/pre-execution.json",
+      "sha256": "df77778e289db828ca6857083d880c856d23fb128f923829846026b65655ebce",
+      "bytes": 38882
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/result.json",
+      "sha256": "caa3845c35a435c54e8fb0ca00fc166ca387cac417703104997562906dce4ba5",
+      "bytes": 742
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/run.py.snapshot",
+      "sha256": "d85e235e5802ed8f0975d2d7f1ac3e4cc34429c98ce4d729590e2575678200dc",
+      "bytes": 2006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/stderr.txt",
+      "sha256": "46369aed0574053371ecb7c1348c09a2aaf6285133ab174b2d6a206e79e9cebb",
+      "bytes": 759
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/dependencies01/tsconfig.json.snapshot",
+      "sha256": "47b8fcd3da2cc26cc74ffe4d816c375a40f2ca92d192f24c26471ab98c7abb49",
+      "bytes": 543
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/final-source-freeze.json",
+      "sha256": "492f7f8547180169a97826ab847ab8cc39443a6630c3585adca00d4d8fa6d51b",
+      "bytes": 3234
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/dependencies.config.mjs.snapshot",
+      "sha256": "93c5088693e19c3e2eb86e307dee862afdb2a6325ef9028f3dd5062723efa440",
+      "bytes": 718
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/fresh.config.mjs.snapshot",
+      "sha256": "9c38e9fa29ffdce6e4b4615359ed7d4f0000a2716a48beb99cdd7a680e1a83a5",
+      "bytes": 638
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/fresh.test.ts.snapshot",
+      "sha256": "3c476d1175aef4d01aaf9333d9c368775536f097d033481e23f378d5f50994ee",
+      "bytes": 14651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/hostile-dispatch03.config.mjs.snapshot",
+      "sha256": "bee9cba6a040fcafd359748789cef963ff2979236a3240677904efc330786980",
+      "bytes": 651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/hostile-dispatch03.test.ts.snapshot",
+      "sha256": "7397f9cbc3dde8c75a9d6cc68f642a43ded18553dbc262750e99bcd4cfe158ed",
+      "bytes": 41695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/hostile-postreserve-trace05.config.mjs.snapshot",
+      "sha256": "8abf724dacc4c7c83d5fc2e6df1dda8524737baa0d19af5dfd53b9e585cd4252",
+      "bytes": 660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/hostile-postreserve-trace05.test.ts.snapshot",
+      "sha256": "c98bbb6c73fdd28d06c5099601fbec19e0fd6e11a951fe58af6b0ba069d6a152",
+      "bytes": 45170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/hostile-postreserve04.config.mjs.snapshot",
+      "sha256": "0246da1e9639660de48e40b7d4c7f40696b347f8b7a7cdd43da8966e6a1716f9",
+      "bytes": 654
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/hostile-postreserve04.test.ts.snapshot",
+      "sha256": "eaa274420fb7b6d2a98a06eb3aabd783678ed38563bb42380d55604ad6ab7fc1",
+      "bytes": 44750
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/hostile02.config.mjs.snapshot",
+      "sha256": "9007688613dfec9ce618087d4367305df09ffb0eb2b44c101d64e22c7d3c8644",
+      "bytes": 642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/hostile02.test.ts.snapshot",
+      "sha256": "d94cd348a9e1a82037a5d752b4a2168fd7c5f142294eb0a024af510ae450a4f4",
+      "bytes": 41331
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/jest-result.json",
+      "sha256": "9504a597f1212c2eb90aaeda156b1ed1ab14ec4decb23cf7a34731ab1f8102ac",
+      "bytes": 10095
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/post-execution-sources.json",
+      "sha256": "3f7bc0440e1736e1ac20270b6b17aa58a575849403ba1b33f5f3a2ba261bff2b",
+      "bytes": 32839
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/pre-execution.json",
+      "sha256": "f84eed27691348773826e2fb3444e198bf11df8ff10e2e9791fe671a9051f00e",
+      "bytes": 39263
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/prior.config.mjs.snapshot",
+      "sha256": "a8f45d9b0880ed556b828d66c30da366b40553bc77a62f9d85a972f43ab880f9",
+      "bytes": 641
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/result.json",
+      "sha256": "dc584dd7f9dcd6968bd0b134ce4ad8b465f775befdd6a78826823f4bd5e0f272",
+      "bytes": 356
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/run.py.snapshot",
+      "sha256": "d85e235e5802ed8f0975d2d7f1ac3e4cc34429c98ce4d729590e2575678200dc",
+      "bytes": 2006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/stderr.txt",
+      "sha256": "f41e897894f8acb1876a2c5700a02ec238ad22bdc6834c87f0a269218887b3f7",
+      "bytes": 2240
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/tsconfig.json.snapshot",
+      "sha256": "47b8fcd3da2cc26cc74ffe4d816c375a40f2ca92d192f24c26471ab98c7abb49",
+      "bytes": 543
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/initial-source-freeze.json",
+      "sha256": "6d7af22750deb98cfb318a164a03f7c282cb60a6f42fd4890180fe31c3663f87",
+      "bytes": 3113
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/dependencies.config.mjs.snapshot",
+      "sha256": "93c5088693e19c3e2eb86e307dee862afdb2a6325ef9028f3dd5062723efa440",
+      "bytes": 718
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/fresh.config.mjs.snapshot",
+      "sha256": "9c38e9fa29ffdce6e4b4615359ed7d4f0000a2716a48beb99cdd7a680e1a83a5",
+      "bytes": 638
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/fresh.test.ts.snapshot",
+      "sha256": "3c476d1175aef4d01aaf9333d9c368775536f097d033481e23f378d5f50994ee",
+      "bytes": 14651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/hostile-dispatch03.config.mjs.snapshot",
+      "sha256": "bee9cba6a040fcafd359748789cef963ff2979236a3240677904efc330786980",
+      "bytes": 651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/hostile-dispatch03.test.ts.snapshot",
+      "sha256": "7397f9cbc3dde8c75a9d6cc68f642a43ded18553dbc262750e99bcd4cfe158ed",
+      "bytes": 41695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/hostile-postreserve-trace05.config.mjs.snapshot",
+      "sha256": "8abf724dacc4c7c83d5fc2e6df1dda8524737baa0d19af5dfd53b9e585cd4252",
+      "bytes": 660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/hostile-postreserve-trace05.test.ts.snapshot",
+      "sha256": "c98bbb6c73fdd28d06c5099601fbec19e0fd6e11a951fe58af6b0ba069d6a152",
+      "bytes": 45170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/hostile-postreserve04.config.mjs.snapshot",
+      "sha256": "0246da1e9639660de48e40b7d4c7f40696b347f8b7a7cdd43da8966e6a1716f9",
+      "bytes": 654
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/hostile-postreserve04.test.ts.snapshot",
+      "sha256": "eaa274420fb7b6d2a98a06eb3aabd783678ed38563bb42380d55604ad6ab7fc1",
+      "bytes": 44750
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/hostile02.config.mjs.snapshot",
+      "sha256": "9007688613dfec9ce618087d4367305df09ffb0eb2b44c101d64e22c7d3c8644",
+      "bytes": 642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/hostile02.test.ts.snapshot",
+      "sha256": "d94cd348a9e1a82037a5d752b4a2168fd7c5f142294eb0a024af510ae450a4f4",
+      "bytes": 41331
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/post-execution-sources.json",
+      "sha256": "3f7bc0440e1736e1ac20270b6b17aa58a575849403ba1b33f5f3a2ba261bff2b",
+      "bytes": 32839
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/pre-execution.json",
+      "sha256": "60a3c20fa534601adb94c9e13094206ab3dd0acb88071963b3c180ce6f200cc5",
+      "bytes": 39230
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/prior.config.mjs.snapshot",
+      "sha256": "a8f45d9b0880ed556b828d66c30da366b40553bc77a62f9d85a972f43ab880f9",
+      "bytes": 641
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/result.json",
+      "sha256": "555b9c583b4761b7e4a3379a52e3e015f79627dc234174a629d90910e2b6520d",
+      "bytes": 110
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/run.py.snapshot",
+      "sha256": "d85e235e5802ed8f0975d2d7f1ac3e4cc34429c98ce4d729590e2575678200dc",
+      "bytes": 2006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/lint01/tsconfig.json.snapshot",
+      "sha256": "47b8fcd3da2cc26cc74ffe4d816c375a40f2ca92d192f24c26471ab98c7abb49",
+      "bytes": 543
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior-rerun-classification.json",
+      "sha256": "0c6ed2dc2f708e793b2f0d62958829e078036f4edecd51c10b50fbb5d4612ff9",
+      "bytes": 7459
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/dependencies.config.mjs.snapshot",
+      "sha256": "93c5088693e19c3e2eb86e307dee862afdb2a6325ef9028f3dd5062723efa440",
+      "bytes": 718
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/fresh.config.mjs.snapshot",
+      "sha256": "9c38e9fa29ffdce6e4b4615359ed7d4f0000a2716a48beb99cdd7a680e1a83a5",
+      "bytes": 638
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/fresh.test.ts.snapshot",
+      "sha256": "efbf159abc8f4d9ada9c2e566e68833a449ce980435ddc17984321522f34443f",
+      "bytes": 14642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/hostile-dispatch03.config.mjs.snapshot",
+      "sha256": "bee9cba6a040fcafd359748789cef963ff2979236a3240677904efc330786980",
+      "bytes": 651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/hostile-dispatch03.test.ts.snapshot",
+      "sha256": "7397f9cbc3dde8c75a9d6cc68f642a43ded18553dbc262750e99bcd4cfe158ed",
+      "bytes": 41695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/hostile-postreserve-trace05.config.mjs.snapshot",
+      "sha256": "8abf724dacc4c7c83d5fc2e6df1dda8524737baa0d19af5dfd53b9e585cd4252",
+      "bytes": 660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/hostile-postreserve-trace05.test.ts.snapshot",
+      "sha256": "c98bbb6c73fdd28d06c5099601fbec19e0fd6e11a951fe58af6b0ba069d6a152",
+      "bytes": 45170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/hostile-postreserve04.config.mjs.snapshot",
+      "sha256": "0246da1e9639660de48e40b7d4c7f40696b347f8b7a7cdd43da8966e6a1716f9",
+      "bytes": 654
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/hostile-postreserve04.test.ts.snapshot",
+      "sha256": "eaa274420fb7b6d2a98a06eb3aabd783678ed38563bb42380d55604ad6ab7fc1",
+      "bytes": 44750
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/hostile02.config.mjs.snapshot",
+      "sha256": "9007688613dfec9ce618087d4367305df09ffb0eb2b44c101d64e22c7d3c8644",
+      "bytes": 642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/hostile02.test.ts.snapshot",
+      "sha256": "d94cd348a9e1a82037a5d752b4a2168fd7c5f142294eb0a024af510ae450a4f4",
+      "bytes": 41331
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/jest-result.json",
+      "sha256": "d19da54398ad77e8a2b239127472d3391ae26c613db87c6f507e866dd3f4ee3e",
+      "bytes": 131230
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/post-execution-sources.json",
+      "sha256": "b58e5ae6a1c6efa8e99550dfc7dc82378482788acd1cfb99ee44e48929f44101",
+      "bytes": 32839
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/pre-execution.json",
+      "sha256": "f43daa7e15406589e7ab6133b5cc53b0dd56bfb0435eeb41b31be87c02a5eca9",
+      "bytes": 39263
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/prior.config.mjs.snapshot",
+      "sha256": "a8f45d9b0880ed556b828d66c30da366b40553bc77a62f9d85a972f43ab880f9",
+      "bytes": 641
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/result.json",
+      "sha256": "7485ed1d6721a92f2366b289fe063b11da33ec84f3e878e943da537e8fdfd5a9",
+      "bytes": 671
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/run.py.snapshot",
+      "sha256": "d85e235e5802ed8f0975d2d7f1ac3e4cc34429c98ce4d729590e2575678200dc",
+      "bytes": 2006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/stderr.txt",
+      "sha256": "d42fae934c321a75c1dc4d3bab264ddc3bf0c4cdd20113c880dbb9b95e3addca",
+      "bytes": 201513
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/prior01/tsconfig.json.snapshot",
+      "sha256": "47b8fcd3da2cc26cc74ffe4d816c375a40f2ca92d192f24c26471ab98c7abb49",
+      "bytes": 543
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/report.md",
+      "sha256": "fed5acbcfccfb0e54ee9e414b8d73427a79b3700e2ccac0501921c36254e2fad",
+      "bytes": 12546
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/reviewed-manifests.json",
+      "sha256": "c84f3dd060164975a0e468c09e0180e4ae573ffd6a24ba6b8f5032ccf48c298d",
+      "bytes": 205
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/reviewed-receipts.json",
+      "sha256": "bfc8ab61cb1fe197c2aa92a39b7848c300ef417652bdcd69d6229b8f5514ed5e",
+      "bytes": 233071
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/dependencies.config.mjs.snapshot",
+      "sha256": "93c5088693e19c3e2eb86e307dee862afdb2a6325ef9028f3dd5062723efa440",
+      "bytes": 718
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/fresh.config.mjs.snapshot",
+      "sha256": "9c38e9fa29ffdce6e4b4615359ed7d4f0000a2716a48beb99cdd7a680e1a83a5",
+      "bytes": 638
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/fresh.test.ts.snapshot",
+      "sha256": "3c476d1175aef4d01aaf9333d9c368775536f097d033481e23f378d5f50994ee",
+      "bytes": 14651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/hostile-dispatch03.config.mjs.snapshot",
+      "sha256": "bee9cba6a040fcafd359748789cef963ff2979236a3240677904efc330786980",
+      "bytes": 651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/hostile-dispatch03.test.ts.snapshot",
+      "sha256": "7397f9cbc3dde8c75a9d6cc68f642a43ded18553dbc262750e99bcd4cfe158ed",
+      "bytes": 41695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/hostile-postreserve-trace05.config.mjs.snapshot",
+      "sha256": "8abf724dacc4c7c83d5fc2e6df1dda8524737baa0d19af5dfd53b9e585cd4252",
+      "bytes": 660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/hostile-postreserve-trace05.test.ts.snapshot",
+      "sha256": "c98bbb6c73fdd28d06c5099601fbec19e0fd6e11a951fe58af6b0ba069d6a152",
+      "bytes": 45170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/hostile-postreserve04.config.mjs.snapshot",
+      "sha256": "0246da1e9639660de48e40b7d4c7f40696b347f8b7a7cdd43da8966e6a1716f9",
+      "bytes": 654
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/hostile-postreserve04.test.ts.snapshot",
+      "sha256": "eaa274420fb7b6d2a98a06eb3aabd783678ed38563bb42380d55604ad6ab7fc1",
+      "bytes": 44750
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/hostile02.config.mjs.snapshot",
+      "sha256": "9007688613dfec9ce618087d4367305df09ffb0eb2b44c101d64e22c7d3c8644",
+      "bytes": 642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/hostile02.test.ts.snapshot",
+      "sha256": "d94cd348a9e1a82037a5d752b4a2168fd7c5f142294eb0a024af510ae450a4f4",
+      "bytes": 41331
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/post-execution-sources.json",
+      "sha256": "3f7bc0440e1736e1ac20270b6b17aa58a575849403ba1b33f5f3a2ba261bff2b",
+      "bytes": 32839
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/pre-execution.json",
+      "sha256": "ddbc833a306e369070ce0a3d753fdb5c615dd79cfbf8a75721646b51f6cfdc51",
+      "bytes": 38998
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/prior.config.mjs.snapshot",
+      "sha256": "a8f45d9b0880ed556b828d66c30da366b40553bc77a62f9d85a972f43ab880f9",
+      "bytes": 641
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/result.json",
+      "sha256": "291c152322b9a2778e13d47d70ad87d83eba9c941e8371f49bca09613024b7cf",
+      "bytes": 110
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/run.py.snapshot",
+      "sha256": "d85e235e5802ed8f0975d2d7f1ac3e4cc34429c98ce4d729590e2575678200dc",
+      "bytes": 2006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/root-types01/tsconfig.json.snapshot",
+      "sha256": "47b8fcd3da2cc26cc74ffe4d816c375a40f2ca92d192f24c26471ab98c7abb49",
+      "bytes": 543
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/dependencies.config.mjs",
+      "sha256": "93c5088693e19c3e2eb86e307dee862afdb2a6325ef9028f3dd5062723efa440",
+      "bytes": 718
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/fresh.config.mjs",
+      "sha256": "9c38e9fa29ffdce6e4b4615359ed7d4f0000a2716a48beb99cdd7a680e1a83a5",
+      "bytes": 638
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/fresh.test.ts",
+      "sha256": "3c476d1175aef4d01aaf9333d9c368775536f097d033481e23f378d5f50994ee",
+      "bytes": 14651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/hostile-dispatch03.config.mjs",
+      "sha256": "bee9cba6a040fcafd359748789cef963ff2979236a3240677904efc330786980",
+      "bytes": 651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/hostile-dispatch03.test.ts",
+      "sha256": "7397f9cbc3dde8c75a9d6cc68f642a43ded18553dbc262750e99bcd4cfe158ed",
+      "bytes": 41695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/hostile-postreserve-trace05.config.mjs",
+      "sha256": "8abf724dacc4c7c83d5fc2e6df1dda8524737baa0d19af5dfd53b9e585cd4252",
+      "bytes": 660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/hostile-postreserve-trace05.test.ts",
+      "sha256": "c98bbb6c73fdd28d06c5099601fbec19e0fd6e11a951fe58af6b0ba069d6a152",
+      "bytes": 45170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/hostile-postreserve04.config.mjs",
+      "sha256": "0246da1e9639660de48e40b7d4c7f40696b347f8b7a7cdd43da8966e6a1716f9",
+      "bytes": 654
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/hostile-postreserve04.test.ts",
+      "sha256": "eaa274420fb7b6d2a98a06eb3aabd783678ed38563bb42380d55604ad6ab7fc1",
+      "bytes": 44750
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/hostile02.config.mjs",
+      "sha256": "9007688613dfec9ce618087d4367305df09ffb0eb2b44c101d64e22c7d3c8644",
+      "bytes": 642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/hostile02.test.ts",
+      "sha256": "d94cd348a9e1a82037a5d752b4a2168fd7c5f142294eb0a024af510ae450a4f4",
+      "bytes": 41331
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/prior.config.mjs",
+      "sha256": "a8f45d9b0880ed556b828d66c30da366b40553bc77a62f9d85a972f43ab880f9",
+      "bytes": 641
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/run.py",
+      "sha256": "d85e235e5802ed8f0975d2d7f1ac3e4cc34429c98ce4d729590e2575678200dc",
+      "bytes": 2006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/scratch-preservation/tsconfig.json",
+      "sha256": "47b8fcd3da2cc26cc74ffe4d816c375a40f2ca92d192f24c26471ab98c7abb49",
+      "bytes": 543
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/setup01-failure.json",
+      "sha256": "f73dbaef4f3b00951c665fb332f6b0a687596b3775751ce0d00682d7a2043e06",
+      "bytes": 241
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/dependencies.config.mjs.snapshot",
+      "sha256": "93c5088693e19c3e2eb86e307dee862afdb2a6325ef9028f3dd5062723efa440",
+      "bytes": 718
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/fresh.config.mjs.snapshot",
+      "sha256": "9c38e9fa29ffdce6e4b4615359ed7d4f0000a2716a48beb99cdd7a680e1a83a5",
+      "bytes": 638
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/fresh.test.ts.snapshot",
+      "sha256": "3c476d1175aef4d01aaf9333d9c368775536f097d033481e23f378d5f50994ee",
+      "bytes": 14651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/hostile-dispatch03.config.mjs.snapshot",
+      "sha256": "bee9cba6a040fcafd359748789cef963ff2979236a3240677904efc330786980",
+      "bytes": 651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/hostile-dispatch03.test.ts.snapshot",
+      "sha256": "7397f9cbc3dde8c75a9d6cc68f642a43ded18553dbc262750e99bcd4cfe158ed",
+      "bytes": 41695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/hostile-postreserve-trace05.config.mjs.snapshot",
+      "sha256": "8abf724dacc4c7c83d5fc2e6df1dda8524737baa0d19af5dfd53b9e585cd4252",
+      "bytes": 660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/hostile-postreserve-trace05.test.ts.snapshot",
+      "sha256": "c98bbb6c73fdd28d06c5099601fbec19e0fd6e11a951fe58af6b0ba069d6a152",
+      "bytes": 45170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/hostile-postreserve04.config.mjs.snapshot",
+      "sha256": "0246da1e9639660de48e40b7d4c7f40696b347f8b7a7cdd43da8966e6a1716f9",
+      "bytes": 654
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/hostile-postreserve04.test.ts.snapshot",
+      "sha256": "eaa274420fb7b6d2a98a06eb3aabd783678ed38563bb42380d55604ad6ab7fc1",
+      "bytes": 44750
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/hostile02.config.mjs.snapshot",
+      "sha256": "9007688613dfec9ce618087d4367305df09ffb0eb2b44c101d64e22c7d3c8644",
+      "bytes": 642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/hostile02.test.ts.snapshot",
+      "sha256": "d94cd348a9e1a82037a5d752b4a2168fd7c5f142294eb0a024af510ae450a4f4",
+      "bytes": 41331
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/post-execution-sources.json",
+      "sha256": "3f7bc0440e1736e1ac20270b6b17aa58a575849403ba1b33f5f3a2ba261bff2b",
+      "bytes": 32839
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/pre-execution.json",
+      "sha256": "55860b2bf0befa4b1ec88aad9829db047e619cd8b35775669c3e1a5fe895b5e5",
+      "bytes": 39038
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/prior.config.mjs.snapshot",
+      "sha256": "a8f45d9b0880ed556b828d66c30da366b40553bc77a62f9d85a972f43ab880f9",
+      "bytes": 641
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/result.json",
+      "sha256": "246a8ff1517da521526bf456581ecfe59ec756939221e767456be00770878c52",
+      "bytes": 110
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/run.py.snapshot",
+      "sha256": "d85e235e5802ed8f0975d2d7f1ac3e4cc34429c98ce4d729590e2575678200dc",
+      "bytes": 2006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/stdout.txt",
+      "sha256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+      "bytes": 7
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/toolchain01/tsconfig.json.snapshot",
+      "sha256": "47b8fcd3da2cc26cc74ffe4d816c375a40f2ca92d192f24c26471ab98c7abb49",
+      "bytes": 543
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/dependencies.config.mjs.snapshot",
+      "sha256": "93c5088693e19c3e2eb86e307dee862afdb2a6325ef9028f3dd5062723efa440",
+      "bytes": 718
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/fresh.config.mjs.snapshot",
+      "sha256": "9c38e9fa29ffdce6e4b4615359ed7d4f0000a2716a48beb99cdd7a680e1a83a5",
+      "bytes": 638
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/fresh.test.ts.snapshot",
+      "sha256": "3c476d1175aef4d01aaf9333d9c368775536f097d033481e23f378d5f50994ee",
+      "bytes": 14651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/hostile-dispatch03.config.mjs.snapshot",
+      "sha256": "bee9cba6a040fcafd359748789cef963ff2979236a3240677904efc330786980",
+      "bytes": 651
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/hostile-dispatch03.test.ts.snapshot",
+      "sha256": "7397f9cbc3dde8c75a9d6cc68f642a43ded18553dbc262750e99bcd4cfe158ed",
+      "bytes": 41695
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/hostile-postreserve-trace05.config.mjs.snapshot",
+      "sha256": "8abf724dacc4c7c83d5fc2e6df1dda8524737baa0d19af5dfd53b9e585cd4252",
+      "bytes": 660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/hostile-postreserve-trace05.test.ts.snapshot",
+      "sha256": "c98bbb6c73fdd28d06c5099601fbec19e0fd6e11a951fe58af6b0ba069d6a152",
+      "bytes": 45170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/hostile-postreserve04.config.mjs.snapshot",
+      "sha256": "0246da1e9639660de48e40b7d4c7f40696b347f8b7a7cdd43da8966e6a1716f9",
+      "bytes": 654
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/hostile-postreserve04.test.ts.snapshot",
+      "sha256": "eaa274420fb7b6d2a98a06eb3aabd783678ed38563bb42380d55604ad6ab7fc1",
+      "bytes": 44750
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/hostile02.config.mjs.snapshot",
+      "sha256": "9007688613dfec9ce618087d4367305df09ffb0eb2b44c101d64e22c7d3c8644",
+      "bytes": 642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/hostile02.test.ts.snapshot",
+      "sha256": "d94cd348a9e1a82037a5d752b4a2168fd7c5f142294eb0a024af510ae450a4f4",
+      "bytes": 41331
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/post-execution-sources.json",
+      "sha256": "3f7bc0440e1736e1ac20270b6b17aa58a575849403ba1b33f5f3a2ba261bff2b",
+      "bytes": 32839
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/pre-execution.json",
+      "sha256": "e461e72f81d9ce2bb1e61b63a29c19dd9f31704263e62260969ba50e2cad74d2",
+      "bytes": 39075
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/prior.config.mjs.snapshot",
+      "sha256": "a8f45d9b0880ed556b828d66c30da366b40553bc77a62f9d85a972f43ab880f9",
+      "bytes": 641
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/result.json",
+      "sha256": "88fc984ffbdfc23b1a96ec3200260b3229402e7e712b136a63b3a2d5f8485eb0",
+      "bytes": 110
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/run.py.snapshot",
+      "sha256": "d85e235e5802ed8f0975d2d7f1ac3e4cc34429c98ce4d729590e2575678200dc",
+      "bytes": 2006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/types01/tsconfig.json.snapshot",
+      "sha256": "47b8fcd3da2cc26cc74ffe4d816c375a40f2ca92d192f24c26471ab98c7abb49",
+      "bytes": 543
+    }
+  ]
+}
