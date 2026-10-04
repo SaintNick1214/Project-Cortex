@@ -1,0 +1,36 @@
+✔ original runtime guard and complete historical preservation entry/final manifest binding (2819.735223ms)
+✔ original stage helper hostile refusal creates zero links (0.565414ms)
+✖ original healthy window hostile duplicates foreignrun foreigntenant NaN reverse margin and changing boundaries (9.953659ms)
+✔ original scheduler precisely denies late ordinary start and expires shared deadline without effects (1.102424ms)
+✔ retained byte and native limits (0.390505ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2839.023698
+
+✖ failing tests:
+
+test at work/resume/task04-native-admission-fixture-c8-review/independent.mjs:8:1
+✖ original healthy window hostile duplicates foreignrun foreigntenant NaN reverse margin and changing boundaries (9.953659ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /QA_WINDOW_CHANGED/. Input:
+  
+  'AssertionError [ERR_ASSERTION]: QA_WINDOW_EXPIRED_OR_AMBIGUOUS'
+  
+      at TestContext.<anonymous> (file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c8-review/independent.mjs:8:1049)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [AssertionError],
+    expected: /QA_WINDOW_CHANGED/,
+    operator: 'throws',
+    diff: 'simple'
+  }

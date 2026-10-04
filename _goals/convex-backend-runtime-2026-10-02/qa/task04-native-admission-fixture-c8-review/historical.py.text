@@ -1,0 +1,5 @@
+import json,pathlib,hashlib
+q=pathlib.Path('/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7');b=(q/'runtime-freeze.json').read_bytes();f=json.loads(b);assert len(f['files'])==1375;assert len(set(x['path'] for x in f['files']))==1375;assert hashlib.sha256(b).hexdigest()=='8af4faa1289280a1e259f4dd68e5f65a0c2712ef3cfafdbfc4ff2935d5aaeca4'
+for row in f['files']:
+ data=(q/row['path']).read_bytes();assert len(data)==row['bytes'] and hashlib.sha256(data).hexdigest()==row['sha256']
+print(json.dumps({'historicalC7FreezeRows':1375,'allHashesAndBytes':'PASS','historicalManifestUnmodified':True}))

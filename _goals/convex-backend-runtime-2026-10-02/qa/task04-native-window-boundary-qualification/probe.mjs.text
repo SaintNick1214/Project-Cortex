@@ -1,0 +1,38 @@
+import {build} from 'esbuild';
+import assert from 'node:assert/strict';
+import {writeFileSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
+import {scenario,definitions} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/cases.mjs';
+const base='/workspace/Project-Cortex', work=base+'/work/resume/task04-native-window-boundary-qualification', fixture=base+'/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/fixture/convex';
+writeFileSync(work+'/entry.ts',`export * as ledger from ${JSON.stringify(fixture+'/runtimeModelPolicy.ts')};\nexport * as owned from ${JSON.stringify(fixture+'/qualificationOwned.ts')};\nexport {MemoryTestDb} from ${JSON.stringify(base+'/tests/unit/runtimeMemory/fixture.ts')};\n`);
+await build({entryPoints:[work+'/entry.ts'],bundle:true,platform:'node',format:'esm',packages:'external',outfile:work+'/bundle.mjs',logLevel:'silent'});
+const {ledger,owned,MemoryTestDb}=await import(pathToFileURL(work+'/bundle.mjs'));
+const realNow=Date.now, minute=Date.parse('2026-10-04T05:39:00.000Z');
+const json=v=>JSON.parse(JSON.stringify(v));
+const result=[];
+for(const [id,kind] of definitions.filter(([,kind])=>kind.startsWith('held-'))){
+ for(const mode of ['healthy','second-exact-boundary','checkpoint-exact-boundary']){
+  const db=new MemoryTestDb(); let now=minute+10000, admissions=0, trace=[];
+  Date.now=()=>now;
+  db.patch=async(table,id,updates)=>{const row=await db.get(table,id);if(!row)throw Error('missing patch');db.writes++;Object.assign(row,json(updates));};
+  db.insert=async(table,value)=>{db.writes++;return db.seed(table,json(value))._id;};
+  const ctx={db};
+  const accounts=()=>db.table('runtimeBudgetAccounts').map(r=>({kind:r.kind,windowStart:r.windowStart,windowEnd:r.windowEnd,current:r.current,reservedUnits:r.reservedUnits,settledUnits:r.settledUnits,uncertainUnits:r.uncertainUnits,activeConcurrency:r.activeConcurrency,limitUnits:r.limitUnits,concurrencyLimit:r.concurrencyLimit}));
+  const s={runId:'admission-'+'a'.repeat(32),rpc:async(type,path,args)=>{
+   if(path==='runtimeModelPolicy:admit'&&++admissions===2&&mode==='second-exact-boundary')now=minute+60000;
+   if(path==='runtimeModelPolicy:checkpoint'&&mode==='checkpoint-exact-boundary')now=minute+60000;
+   const before=accounts(),writes=db.writes;
+   try {const [module,name]=path.split(':');const value=await db.transaction(()=> (module==='runtimeModelPolicy'?ledger:owned)[name]._handler(ctx,json(args)));trace.push({path,time:now,status:'fulfilled',before,after:accounts(),writes:db.writes-writes});return json(value);}
+   catch(error){trace.push({path,time:now,status:'rejected',code:error?.data?.code,before,after:accounts(),writes:db.writes-writes});throw error;}
+  }};
+  let outcome='PASS_ORIGINAL_ASSERTIONS',error;
+  try{await scenario(s,id,kind);}catch(e){outcome='FAIL_ORIGINAL_ASSERTIONS';error={name:e.name,code:e?.data?.code,message:e.message,stack:e.stack};}
+  const expected=mode==='second-exact-boundary'?'FAIL_ORIGINAL_ASSERTIONS':mode==='checkpoint-exact-boundary'&&kind==='held-positive'?'FAIL_ORIGINAL_ASSERTIONS':'PASS_ORIGINAL_ASSERTIONS';
+  assert.equal(outcome,expected,id+' '+mode);
+  if(mode==='second-exact-boundary'){assert.equal(error.code,'BUDGET_EXCEEDED');const last=trace.at(-1);assert.equal(last.writes,0);assert.deepEqual(last.before,last.after);assert.equal(last.before.find(r=>r.kind==='tenant').reservedUnits,100);}
+  result.push({id,kind,mode,outcome,error,trace});
+  Date.now=realNow;
+ }
+}
+writeFileSync(work+'/observations.json',JSON.stringify({classification:'OFFLINE_CONTROLLED_HANDLER_DIAGNOSIS_NOT_NATIVE_ACCEPTANCE',originalScenarioUnmodified:true,tests:result.length,skipped:0,results:result},null,2)+'\n');
+console.log(JSON.stringify(result.map(({id,mode,outcome,error})=>({id,mode,outcome,code:error?.code}))));

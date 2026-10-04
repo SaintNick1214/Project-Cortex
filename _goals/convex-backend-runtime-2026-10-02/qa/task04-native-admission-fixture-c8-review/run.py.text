@@ -1,0 +1,38 @@
+import pathlib,json,hashlib,subprocess,datetime,re,os
+R=pathlib.Path('/workspace/Project-Cortex'); Q=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8'; O=Q.with_name(Q.name+'-review'); W=R/'work/resume/task04-native-admission-fixture-c8-review'; ENV={'PATH':str(R/'work/resume/toolchain-bin')+':/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/local/bin:/usr/bin:/bin','LANG':'C.UTF-8'}
+def sha(b):return hashlib.sha256(b).hexdigest()
+def put(n,v): (O/n).write_text(json.dumps(v,indent=2)+'\n')
+def verify():
+ m=json.loads((Q/'qa-manifest.json').read_bytes()); assert sha((Q/'qa-manifest.json').read_bytes())=='befdee2081c30ede4b15a6cb66999fbc9054e5104b1b6d5d5a1009289566d5d9'; assert sha((Q/'runtime-freeze.json').read_bytes())=='1264ebbc92de50dbc0b55833e2ec1e30d09c48ccd4f0c6a63680134a63277d3f'
+ counts=[]
+ for directory,manifest,expected in [(Q,'qa-manifest.json',m)]+[(R/x['path'],x['manifest'],None) for x in json.loads((Q/'historical-preservation.json').read_bytes())['packets']]:
+  manifestBytes=(directory/manifest).read_bytes(); rows=(expected or json.loads(manifestBytes))['files']; names=[x['path'] for x in rows]; assert len(set(names))==len(names); assert sorted(names)==sorted(str(p.relative_to(directory)) for p in directory.rglob('*') if p.is_file() and p!=directory/manifest)
+  for row in rows:
+   data=(directory/row['path']).read_bytes(); assert len(data)==row['bytes'] and sha(data)==row['sha256'],row['path']
+  counts.append({'path':str(directory.relative_to(R)),'rows':len(rows),'manifestSHA256':sha(manifestBytes),'strictSorted':names==sorted(names)})
+ f=json.loads((Q/'runtime-freeze.json').read_bytes()); assert len(f['files'])==194 and len(m['files'])==3288
+ for row in f['files']:
+  data=(Q/row['path']).read_bytes(); assert sha(data)==row['sha256']; dest=O/'preimages'/row['path']; dest.parent.mkdir(parents=True,exist_ok=True); dest.write_bytes(data)
+ for row in json.loads((Q/'runtime-inputs.json').read_bytes())['externalSources']:
+  b=(R/row['path']).read_bytes(); assert sha(b)==row['sha256'] and len(b)==row['bytes']; d=O/'preimages/external'/row['path']; d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes(b)
+ return {'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'packets':counts,'runtimeRows':len(f['files']),'manifestRows':len(m['files'])}
+put('entry-verification.json',verify())
+# Exact test preimages retained. Copies only relocate write root and relative imports.
+A=W/'tests';A.mkdir(exist_ok=True)
+mods=list((Q/'scripts').glob('offline*.mjs'))+ [Q/'scripts/cli-prerequisites.mjs']
+adapt=[]
+for src in mods:
+ old=src.read_text(); new=old.replace('work/resume/task04-native-admission-fixture-c8','work/resume/task04-native-admission-fixture-c8-review')
+ def imp(m):
+  val=m[2]; return m[1]+str((src.parent/val).resolve())+m[3] if val.startswith('.') else m[0]
+ new=re.sub(r"((?:from\s*|import\s*)['\"])([^'\"]+)(['\"])",imp,new)
+ if src.name!='cli-prerequisites.mjs': new=new.replace(str(Q/'scripts/cli-prerequisites.mjs'),str(A/'cli-prerequisites.mjs'))
+ (A/src.name).write_text(new); (O/'preimages'/('test-'+src.name+'.text')).write_text(old)
+ adapt.append({'file':src.name,'originalSHA256':sha(old.encode()),'executionSHA256':sha(new.encode()),'reason':'write-root relocation and absolute import resolution; CLI helper allowed offline-root relocation only'})
+put('execution-adaptations.json',adapt)
+def run(label,args,timeout=120):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat(); p=subprocess.run(args,cwd=R,env=ENV,capture_output=True,timeout=timeout);(O/(label+'.stdout')).write_bytes(p.stdout);(O/(label+'.stderr')).write_bytes(p.stderr);put(label+'.receipt.json',{'argv':args,'cwd':str(R),'startUTC':start,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'stdoutSHA256':sha(p.stdout),'stderrSHA256':sha(p.stderr)});print(label,p.returncode,flush=True)
+run('toolchain',['node','--version'])
+for src in mods:
+ if src.name!='cli-prerequisites.mjs':run(src.stem,['node','--experimental-vm-modules',str(A/src.name)])
+put('final-verification.json',verify())

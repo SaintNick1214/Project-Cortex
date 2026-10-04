@@ -1,0 +1,10 @@
+from pathlib import Path
+import json,hashlib,subprocess,os,datetime
+r=Path.cwd();w=r/'work/resume/task04-parent-native-inputs-c6-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c6-review';argv=['node',str(w/'pure.mjs')];start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+for f in [w/'pure.mjs',w/'pure-run.py']:(q/(f.name+'.text')).write_bytes(f.read_bytes())
+pre=json.loads((q/'pre.json').read_text())['protected']
+def current():return [{'path':x['path'],'sha256':hashlib.sha256((r/x['path']).read_bytes()).hexdigest(),'bytes':(r/x['path']).stat().st_size}for x in pre]
+assert current()==pre
+(q/'pure-pre.json').write_text(json.dumps({'utc':start,'argv':argv,'cwd':str(r),'configuration':'Offline unadapted guard + explicit review digest; no default private receipt access','sourceSHA256':hashlib.sha256((w/'pure.mjs').read_bytes()).hexdigest()},indent=2)+'\n')
+with(q/'pure.stdout').open('x')as out,(q/'pure.stderr').open('x')as err:res=subprocess.run(argv,cwd=r,env={'PATH':str(r/'work/resume/toolchain-bin')+':'+os.environ['PATH'],'LANG':'C.UTF-8'},stdout=out,stderr=err,timeout=60)
+assert current()==pre;(q/'pure-execution.json').write_text(json.dumps({'argv':argv,'cwd':str(r),'startedAt':start,'endedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':res.returncode,'protectedStable':True},indent=2)+'\n');print(res.returncode);raise SystemExit(res.returncode)

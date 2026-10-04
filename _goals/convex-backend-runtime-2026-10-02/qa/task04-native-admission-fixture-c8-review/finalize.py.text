@@ -1,0 +1,15 @@
+exec(open('work/resume/task04-native-admission-fixture-c8-review/run.py').read().split("put('entry-verification.json'")[0])
+exec('def run('+open(W/'run.py').read().split('def run(')[1].split("run('toolchain'")[0])
+import difflib
+for src in (Q/'scripts').glob('*.mjs'):run('syntax-'+src.stem,['node','--check',str(src)])
+for src in (W/'tests').glob('*.mjs'):
+ old=(Q/'scripts'/src.name).read_text();new=src.read_text();(O/(src.name+'.execution.diff')).write_text(''.join(difflib.unified_diff(old.splitlines(True),new.splitlines(True),fromfile=str(Q/'scripts'/src.name),tofile=str(src))))
+for p in [W/'run.py',W/'independent.mjs',W/'closure.mjs',W/'finalize.py',W/'relative-import-closure.json']:(O/(p.name+'.text')).write_bytes(p.read_bytes())
+inv=json.loads((Q/'source-inventory.json').read_bytes())
+for row in inv['acceptedGateHashes']:
+ b=(R/row['path']).read_bytes();assert sha(b)==row['sha256'];d=O/'preimages/accepted'/row['path'];d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes(b)
+for row in inv['files']:
+ b=(R/row['source']).read_bytes();assert sha(b)==row['sha256'];d=O/'preimages/product'/row['source'];d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes(b)
+for rel in ['tests/unit/runtimeMemory/fixture.ts','AGENTS.md','.agents/CODEX-RUNTIME.md','.agents/PROJECT-PROFILE.md','.agents/roles/qa-judge.md','.agents/skills/feature-orchestrator/SKILL.md','.agents/skills/judge-task/SKILL.md','_research/convex-ai-gateway-2026-10-02/decision-gates.md','_research/convex-ai-gateway-2026-10-02/architecture.md','_goals/convex-backend-runtime-2026-10-02/goal.md','_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md']:
+ d=O/'preimages/context'/rel;d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes((R/rel).read_bytes())
+put('final-verification.json',verify())

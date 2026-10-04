@@ -1,0 +1,4884 @@
+{
+  "utc": "2026-10-04T06:18:13.495601+00:00",
+  "scratch": "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-c6-review",
+  "frozenReviewManifestSHA256": "6523cd0e8136bdace95cf717903ed0920d34eef56a0fb6448389d3471fe69d4b",
+  "nofollow": true,
+  "files": [
+    {
+      "path": "finalize.py",
+      "category": "helper-source",
+      "sha256": "fd7b3836cd3b5f94d3c3d1e7ebf17ae0bcc9032f7ec0fab67f533973361cd45f",
+      "bytes": 7153,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "finalize.py.text"
+      ]
+    },
+    {
+      "path": "fresh.mjs",
+      "category": "helper-source",
+      "sha256": "df012b2e4fe934b15312506227cdc5efd509816334b3c77941bf3eeb654e600b",
+      "bytes": 21671,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "fresh.mjs.text",
+        "source-preimages/work/resume/task04-parent-native-inputs-c6-review/fresh.mjs"
+      ]
+    },
+    {
+      "path": "prepare.py",
+      "category": "helper-source",
+      "sha256": "d1a2a0d846c725c25752fa4e4b63f47a501aa8500ffd907d1336878c5b381027",
+      "bytes": 1731,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "prepare.py.text",
+        "source-preimages/work/resume/task04-parent-native-inputs-c6-review/prepare.py"
+      ]
+    },
+    {
+      "path": "pure-run.py",
+      "category": "helper-source",
+      "sha256": "468f4abc5f67cfe4fa55903ee5254b92e7e56a8b553ea7aa766fbbea57b5f0e5",
+      "bytes": 1438,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "pure-run.py.text"
+      ]
+    },
+    {
+      "path": "pure.mjs",
+      "category": "helper-source",
+      "sha256": "fca083bde0dcd8042508af2f0c43c0682ff41a8995c526f4417cf6eec0cf5b07",
+      "bytes": 5573,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "pure.mjs.text"
+      ]
+    },
+    {
+      "path": "run.py",
+      "category": "helper-source",
+      "sha256": "72e34be3799eb9dcd830177799f0c5a914254a09ebd885cf5742f2320bd5a6a0",
+      "bytes": 3837,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "run.py.text",
+        "source-preimages/work/resume/task04-parent-native-inputs-c6-review/run.py"
+      ]
+    },
+    {
+      "path": "case-Jm6B2D/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Jm6B2D/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "07edef19d63ee2446464c93e4870bfdb745452a406a43512fa6ca9c486917654",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Jm6B2D/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "4c451a166c599180e92974913d4cb8fc78a8e4782a229d7f5080f4ba21609c4a",
+      "bytes": 4326,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Jm6B2D/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Jm6B2D/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Jm6B2D/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Jm6B2D/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Jm6B2D/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-FPwvn4/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-FPwvn4/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "88e78c47d197773b864578db5dbb91ed1463231aeed4f09c605880b2c96264e6",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-FPwvn4/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "37e361ce451fd869732b5b569c79fc6f6273d85bba7c444e723d02b74b97103e",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-FPwvn4/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "nofollow-symlink",
+      "sha256": "ce94f6abad060dab24d962c24b2f3a490fa312fa581bd1bd9010a1ced3b5a929",
+      "bytes": 225,
+      "mode": "0o777",
+      "symlink": true,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-FPwvn4/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.dummy",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-FPwvn4/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-FPwvn4/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-FPwvn4/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-FPwvn4/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-OBpWG6/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-OBpWG6/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "c3d43e973eef0661d3eeced7188601910d287c269d31a91554a04943b354b190",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-OBpWG6/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "976214ea766e754c13de971eb2a5b6f93e58d6cec2e5b9061dbd681ff3a4d00e",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-OBpWG6/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "bytes": 3,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-OBpWG6/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-OBpWG6/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-OBpWG6/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-OBpWG6/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-x7WXxT/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-x7WXxT/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "d31605b238c7523d39b4d66d898e17bdfacc40b8020117f9a4ef60b73297aac4",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-x7WXxT/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "59b482c791e355d838dea8b1ba7bb8cd83c957d286b5128219781061ed683c0c",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-x7WXxT/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-x7WXxT/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-x7WXxT/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-x7WXxT/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-x7WXxT/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-I2Gple/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-I2Gple/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-I2Gple/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-I2Gple/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-2WeCPx/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o644",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-2WeCPx/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-2WeCPx/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-2WeCPx/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-MjkzhG/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-MjkzhG/work/backend-runtime/qualification/jwt-private.pem.other",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-MjkzhG/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-MjkzhG/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-MjkzhG/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-P2P1mX/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-P2P1mX/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "d2bd5e68cb137819efca940ddbec137d8ca0507cef2d7baf765e59c2dd446e44",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-P2P1mX/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "876daf3abef2a8bf757ab20881396d6b1cc68c7ef1c2b3835fe287d0185df28e",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-P2P1mX/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-P2P1mX/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-P2P1mX/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-P2P1mX/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-P2P1mX/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-PWKfHo/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-PWKfHo/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "3ad43d1205448747b948b0be9fb0d618e02a025380ef6780d913ed5f972e0655",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-PWKfHo/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "nofollow-symlink",
+      "sha256": "d52f58a2badc790aa49fe925aef18232f140c01e62162313302a84761ff3e0c4",
+      "bytes": 152,
+      "mode": "0o777",
+      "symlink": true,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-PWKfHo/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-PWKfHo/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-PWKfHo/work/backend-runtime/task04-native-admission-c8/proof-dummy.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "d241a00dc64149f9d243b392faedf99aee1fd5d35ae95fcf9e94ad7c74ebde2a",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-PWKfHo/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-PWKfHo/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-PWKfHo/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-os3EQc/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-os3EQc/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "3959728094d3b571a65a9a2e2c0746f6172710ec1a901603d7f55abdc3e4b694",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-os3EQc/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "39d8f8b7ffceb136b68a57e99b7615912accc0e3cd369322916712fbf2ec0bca",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-os3EQc/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-os3EQc/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-os3EQc/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-os3EQc/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-os3EQc/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-fMBWCp/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-fMBWCp/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "31c5fdf766960ce2b7ae536cc4ad6495426aef0049afbdd6b5ea542ebf0a2b95",
+      "bytes": 746,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-fMBWCp/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "91911613ba4382cf12a753be1046c4ec0f0d376dd8d9fafcae6cc23cc14cef23",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-fMBWCp/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-fMBWCp/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-fMBWCp/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-pvSISZ/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pvSISZ/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "67214eb8e5f7fb84369cdadb97a15c7fbb85f88fd7a54b7b9f3cf7bb33667743",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pvSISZ/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "65043ae733e357155b6ccde33de8b73b03f4dc2b8820da07b00196fad745a9b6",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pvSISZ/work/backend-runtime/task04-native-admission-c8/owned-created-bb413ccfdf9cb7e4e26b9856f84e3a447ba5d572248509910c634fba67765234.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "a37947b418fe4c815c91794ea510ec919128f5f516ccf52b097ae5835c264386",
+      "bytes": 151,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pvSISZ/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pvSISZ/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pvSISZ/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-hj0fxd/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hj0fxd/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "8e2404eea71f7bd90d28cb37c0e16b101c41880882ed9d0a88a071da1c731968",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hj0fxd/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "7838d79eea10fd5d7db1565ba151eaf71fb7d9c6997f24d3d4071341f8876ecd",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hj0fxd/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hj0fxd/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hj0fxd/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hj0fxd/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hj0fxd/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-kbyrZW/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-kbyrZW/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "d43062b580569fbc5020be7bd3d24bb727cfa7dc1dfecc3d54911f5e141ab462",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-kbyrZW/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "bf5b455ccc976401fff885bef888ba7c2ae476bdd8dc995b69a152574a71fdb3",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-kbyrZW/work/backend-runtime/task04-native-admission-c8/owned-created-94d029ac9f67c3e3aa90f477a337ebf1689abd6b0b16dd56955fd1809869c5ae.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "7b27d28730d7d28f87e8c26211a397317e41f21cd8f137f7e25d864f1d833ccf",
+      "bytes": 280,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-kbyrZW/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-kbyrZW/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-kbyrZW/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-ySSMk3/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ySSMk3/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "803eea594df6b5b772603d03bba1343963c36bb2e44134b655201fb12f73f8ca",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ySSMk3/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "acf7bd767e76936f7e09c15061a05f3fcbdc5e0777ec24e2dc08533c4c3798d4",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ySSMk3/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ySSMk3/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ySSMk3/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ySSMk3/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ySSMk3/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-bksDTU/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bksDTU/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bksDTU/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bksDTU/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-na7Kdg/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-na7Kdg/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "da9afd4af345b55af22cff027918530e601bbcd60b098b48b763e49efdbb51ac",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-na7Kdg/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "a40aa3b8738634612e99570bd9fc93ee987ed6d00fb2a51f9c8e70cf2e886fa5",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-na7Kdg/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-na7Kdg/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-na7Kdg/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-na7Kdg/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-na7Kdg/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-ZSywwq/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZSywwq/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "af8667175644eadefaa0f54b8b513749abe41c77e6fd6d8082def42525a903a5",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZSywwq/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "347ff810ac899900d497e742e6203f59bff80b4ad749de0a401e7915ee08fb78",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZSywwq/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o644",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZSywwq/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZSywwq/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZSywwq/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-CVxjt8/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-CVxjt8/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-CVxjt8/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-CVxjt8/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-hz35TB/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hz35TB/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "da389f89b33a084b1856471cc19656107fcebf1349a5e48abea715bd665b6487",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hz35TB/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "bytes": 3,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hz35TB/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hz35TB/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hz35TB/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hz35TB/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hz35TB/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-49c7nO/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-49c7nO/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "8f30dd04d78e34451708b9d79b63e67d19e93d903e5698e1a802181ee4ac7d2c",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-49c7nO/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "ff2faab9e115dbe82d6241e95dff3c3946e7c15529a738fb8e1a670e6389d445",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-49c7nO/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-49c7nO/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.dummy",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-49c7nO/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-49c7nO/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-49c7nO/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-49c7nO/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-VizXs6/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-VizXs6/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-VizXs6/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-VizXs6/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-iVanxv/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-iVanxv/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "f52a39b3fb146a08847acb3f9b1f4eaf45597787782623c9111ffe438c8b7f24",
+      "bytes": 644,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-iVanxv/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "31ebfde6fe6996bed0c9268c5cf3acce6348b19d52ed160a95e9da057c34b693",
+      "bytes": 4324,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-iVanxv/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-iVanxv/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-iVanxv/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-iVanxv/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-iVanxv/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-JJnH3h/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JJnH3h/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "6e65aecc528ccc850655daca7c78f49e51170a5fa37f0ebad10c9d92cda35308",
+      "bytes": 688,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JJnH3h/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "573b50de750809172663330400f81e66f9cfb0be6874134b8073037f00e8d9c2",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JJnH3h/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JJnH3h/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JJnH3h/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JJnH3h/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JJnH3h/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-wSN2xJ/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-wSN2xJ/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-wSN2xJ/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-wSN2xJ/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-40oF1Z/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-40oF1Z/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "5ae7f9604e1137e2e8a1508352e83fb40e4b92475f908c4ec0fb33067a86e52a",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-40oF1Z/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "5badf40e7839960bb930135c1b35d356e1a41ccbb759dc2e0d237f69f80f2ed6",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-40oF1Z/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-40oF1Z/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-40oF1Z/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-40oF1Z/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-40oF1Z/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-RKBhOn/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-RKBhOn/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "a93f2e50f8484a15edc4a205b8981f25d19c551355439c2c5119649bec8badaa",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-RKBhOn/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "d8364777a6aa709ff6c3254553d71d42677749fee0fcc975e0b682d5156de6c6",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-RKBhOn/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "ff032c6bfdef9809a97d1bddb087d2e82bba7be1da4aba27a85a282f19687137",
+      "bytes": 172,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-RKBhOn/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "518ea1f6878693200e749bd587f062af1a829664a0a11b20beda119d7bad503d",
+      "bytes": 170,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-RKBhOn/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-RKBhOn/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-RKBhOn/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-pkXhl1/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pkXhl1/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "09d7b474834b81f55bb616990a41bfb94ecef117f5fe68e1c3651eaa90f7fb20",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pkXhl1/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "9888b84e8f9bbf6973776465353562503d2994a4fc8a2defc51067313afb411c",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pkXhl1/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1f9486522373d540fbd25d2e2d3798afbd20efdea5f96d442e9cf699e01734a6",
+      "bytes": 226,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pkXhl1/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pkXhl1/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-pkXhl1/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-7Ml0ia/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7Ml0ia/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "ceeee387d747aae7e9b67a52e01b99ab4c5bb39749974e486b3dffe40c56977b",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7Ml0ia/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "0d148f57f0f3f40ea0252073c6669d22a8780ee3d09481ab25b86e92795b29d9",
+      "bytes": 4355,
+      "mode": "0o644",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7Ml0ia/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7Ml0ia/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7Ml0ia/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7Ml0ia/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7Ml0ia/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-a0Cowt/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-a0Cowt/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "nofollow-symlink",
+      "sha256": "70ddca7a2455d1eec2421472e3d482aa6a944ae53b724eb43fd828795f56b967",
+      "bytes": 171,
+      "mode": "0o777",
+      "symlink": true,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-a0Cowt/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "80bb0f5a61dbb7bd57cb2c4b67617abe07f3f4faa6f24bf951f62087b575f6eb",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-a0Cowt/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-a0Cowt/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-a0Cowt/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-a0Cowt/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-a0Cowt/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-hrtCXa/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hrtCXa/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "cc56612697ca76fe24f33c953e2c306bd6343451bb56eb8e651e2fba1121dd75",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hrtCXa/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "753b44d89f9718163840614075f3a5c6ea737a0e35487373df6009435708a9d9",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hrtCXa/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hrtCXa/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hrtCXa/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hrtCXa/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-hrtCXa/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-nVczBk/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-nVczBk/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "f5055698de4d462427372e88437037a7893325b996dafbc300c4cecc3c5d29a6",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-nVczBk/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "9d5fbbc7683f9505931af52755f1e3fca8c0e58f809061e838a3db5e06305851",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-nVczBk/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-nVczBk/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-nVczBk/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-nVczBk/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-nVczBk/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-lakP0l/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-lakP0l/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "7502092421c140c9e866efc661204ddf933dcd2ba6620b3dc61ce5feca8c6e6d",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-lakP0l/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "e6772ca24d3ec1625d059f7f445544c2a284387573722c29f913ec78696ebae8",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-lakP0l/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "3125cada86d871fcf07fed4187380aa47d83fbaa68175d2f54052d066d17bef9",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-lakP0l/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "122084e9dfa42db727ce8dbe9117ffdead0d67eb55ff8e4a30c2f10dca24b9b8",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-lakP0l/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-lakP0l/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-lakP0l/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-B1q0h8/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-B1q0h8/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "dfa78a47d98bc0144e30c0d394522596aaecc5e3eb9f9158ffb970aad3627349",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-B1q0h8/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "5c703c2a51b73e8f62c771f3f9eb2e3f863f12b8dfe09ff9d8d984989c58f1f7",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-B1q0h8/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "b59cea87593b1ac9cec821a8d3590c78f4f0c2ca32cd7cb0fafbff464cd0a693",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-B1q0h8/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "b4ac225dbb5cb13ce539fc6fee121b6e8bce2fc368fd7bb935475719f50fbf2c",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-B1q0h8/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-B1q0h8/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-B1q0h8/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-SkPQZP/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-SkPQZP/work/backend-runtime/task04-native-admission-c8/current-physical-id-input-receipt.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "bytes": 3,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-SkPQZP/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "522eda86874039808bf27551bcedc5a81211c22de0b383c9c1d198cd06334ca7",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-SkPQZP/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "d8f62955cd690d093d1d7a61f15a0a7efdcac844a2030d4d90beb96d466ac53f",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-SkPQZP/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-SkPQZP/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-SkPQZP/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-SkPQZP/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-SkPQZP/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-zhLBGU/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/work/backend-runtime/task04-native-admission-c8/argument-scope.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "f64c73c919181a6f3446028f1520c831a04a674780c58687d87cbadde67ef98a",
+      "bytes": 986,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/work/backend-runtime/task04-native-admission-c8/current-physical-id-input-receipt.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "49c176127a0ef9b06da6ab3f13018676fa7d0ea3794874a74d740039a1f92bba",
+      "bytes": 2542,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "5d68aca00b7911def075dfca730b27e4eed5bca611c2746f15fc80bdcc8c73b7",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "bf7d7603ab2e9be84d9548ab724028d2ad4d5f8eeffee7bc0a754d0c75e6cef7",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/work/backend-runtime/task04-native-admission-c8/public-arguments.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "b8ea7547bbdaad4e1236423301ed59c6724e69db51cf17bb4c93e6eca4559642",
+      "bytes": 87660,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-zhLBGU/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-yb6w7Q/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yb6w7Q/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "dea326450136e455738e54e83f6928dbc7e253eed431c712b21c2d82ed1468cf",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yb6w7Q/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "46d327077438aeeb026d9c732da9165f23c79a372080b4a9aa23c36866fc6629",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yb6w7Q/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yb6w7Q/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yb6w7Q/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yb6w7Q/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yb6w7Q/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-gQMzCT/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gQMzCT/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "04d50ef1837186dcde9a84763f7f303f26a027aee7b08684ee8cf61eb203e31c",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gQMzCT/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "73b455984aedc4ded91621480b41cceeee3b0d1710394881416333395bc375c1",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gQMzCT/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gQMzCT/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gQMzCT/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-7NLTcE/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7NLTcE/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "c27ce294e6c8301b1de2853e2557b15251f95c6df4822532039cc1888d7b5f72",
+      "bytes": 640,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7NLTcE/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "a1d80783b991307bf071c0c0802c1c3e05cddce7fc182ab7b608c35a5f4f3a2b",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7NLTcE/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7NLTcE/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7NLTcE/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7NLTcE/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-7NLTcE/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-xGPOaF/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xGPOaF/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "bedf2becd06d210727afb84b87ce46dc4ef4d9759d78bffaa5a86ce5f126cbd7",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xGPOaF/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "3de304759e32a23f12be740f5685c2d51137f289933bb377af71b6a73d7d6aad",
+      "bytes": 4235,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xGPOaF/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xGPOaF/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xGPOaF/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xGPOaF/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xGPOaF/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-9hJwsj/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-9hJwsj/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "bed1d4dbc5af11d92ce651acbc1e3947635abd43f9bd0ac86b014796e8b0f048",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-9hJwsj/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "99d702761fe06e46540c37e5f25977a842a8985a48be9aa6baff41e02841bd6c",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-9hJwsj/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-9hJwsj/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-9hJwsj/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-9hJwsj/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-9hJwsj/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-eQAsQG/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-eQAsQG/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "f447ea095a0d94ccff171d80b3c1a57f7302e0a4489b41fa717e6f82c597a06d",
+      "bytes": 646,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-eQAsQG/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "d3fd988d0fb6e7bb730c53d4efbab2b0f7ce365be123f7c0f792062972be7243",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-eQAsQG/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-eQAsQG/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-eQAsQG/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-eQAsQG/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-eQAsQG/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-JI8sUV/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JI8sUV/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1f17c2cfd98b2d7dbe30ec9b71534c9bfcb080d616772ed3e777595e1eeddd88",
+      "bytes": 632,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JI8sUV/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "b2fd369d7690bb9236307334b80540312e63d66839536d07872366b1f951245d",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JI8sUV/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JI8sUV/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JI8sUV/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JI8sUV/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-JI8sUV/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-ismIYh/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ismIYh/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "aab914650ca378b42b4a315d823b75d6c1aaf987da67167d99e2d802ef98f422",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ismIYh/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "2dc2e0a2b695b121d378e04b3c342b3473f57b3ed986b1c8b0a56bb02bb52f98",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ismIYh/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ismIYh/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ismIYh/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ismIYh/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ismIYh/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-ZZeACV/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZZeACV/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZZeACV/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZZeACV/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-yuM9dF/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yuM9dF/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "f8db4b93595e341a50cea5be8bf81bbd05db2b0501587d4133d2c72d28c4f8d7",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yuM9dF/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "6c7cb689c679ea4944b7119c28b691f9e776d4ebdc89faa4b9bba08314d1626c",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yuM9dF/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "67bae2919a288f907f8505dc52175d928356d68a5e118750f2bcbe922571a981",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yuM9dF/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yuM9dF/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-yuM9dF/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-YQBRjL/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-YQBRjL/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "8f441bd61a3da3b05f0184a301227d8f744d7ef331da212e8667127cf7a4203c",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-YQBRjL/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "3afc4d64eccf384157584857a93eec664a60463cc8a3971869bab43dbea93adf",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-YQBRjL/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-YQBRjL/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-YQBRjL/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-YQBRjL/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-YQBRjL/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-QI9VJ3/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-QI9VJ3/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "4a0c8cd0c76ae3b0a34e6dbfb917abd488a56cbde40e39ade2193d30928867bf",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-QI9VJ3/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1edb25e27508c0b9e7609e4d165d862b56f4e19fc3d50dd0f4954b17a7efbf51",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-QI9VJ3/work/backend-runtime/task04-native-admission-c8/owned-created-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-QI9VJ3/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-QI9VJ3/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-QI9VJ3/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-TgyR5j/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-TgyR5j/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "f41dbe5a51c173cbd523f72d3aa35c4dbb2345a2c9546ec0834a6e7f31888a5e",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-TgyR5j/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "dd32746a42ddd3519b4cffaa61838b5936c67e4e2a7e83d4d96e09d75d9b4b8d",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-TgyR5j/work/backend-runtime/task04-native-admission-c8/owned-created-8ef7973079494fcf9f3dabd1aa6ff2ce68cf0c56e0132fd3dddc86d25c1d3326.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "8cf9069b976a19cca1f156db7da316aaadfe7a5e2763829d4ceaa3d04d236497",
+      "bytes": 150,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-TgyR5j/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-TgyR5j/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-TgyR5j/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-bypnso/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bypnso/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "e16dcb056009ce6cb64fe5e14229cb4c54f7b55192cf02e9cf976ccbe781bee4",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bypnso/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "e628f044b0de2c10112a7e2aa52e38239449f1a8c28bc2b233c0062a3e30bba7",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bypnso/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bypnso/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bypnso/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bypnso/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-bypnso/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-46v1Cx/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-46v1Cx/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "c827ffdeb09644a96e80ed03ac76256a5a594d8ed140d8ebbeffd4d545a209a3",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-46v1Cx/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "8f480a79ad22ce7407fcd8e1f0bffcc7675102fd3b187b5b4a9fd7135375ea4b",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-46v1Cx/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-46v1Cx/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-46v1Cx/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-46v1Cx/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-46v1Cx/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-ZEKPNQ/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZEKPNQ/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "dcb98a2a5a3fda18436916d95bed19afc17818b3a350f6a7e8d6e1abf812faf6",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZEKPNQ/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "61966c7031ab31dfbf98375e304ec3da32c9d59a6db0cd43d82e00be075c127a",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZEKPNQ/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "35cf4b23c5dcbc2f444e0d289feca2d623af2f714b7fabaf5f21060bd5d9e19f",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZEKPNQ/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "8e883a61344056ea2b6b3812eeda244160da7ddee8a009258785bc58ceb41845",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZEKPNQ/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZEKPNQ/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ZEKPNQ/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-utL5pg/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-utL5pg/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "8c28a58fb12afb5e4fa51b28bf7e097a9560c69007207924bdfe77bfebe5e7a6",
+      "bytes": 749,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-utL5pg/work/backend-runtime/task04-native-admission-c8/identities.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "ce0feb1dccf8159ff48f18b5a5461acf18806ca0d202149b4ac426d72cd02cb1",
+      "bytes": 3222,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-utL5pg/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "7f184f6d485ab0be28e5a545b5bd85e4f59699c32583d8fbcc393c33db5d21c0",
+      "bytes": 5145,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-utL5pg/work/backend-runtime/task04-native-admission-c8/parent-inputs-receipt.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "a2f28b578a6c5efb5df0a70092f05e86c2470765b4139be8c9f5d262b58c0690",
+      "bytes": 701,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-utL5pg/work/backend-runtime/task04-native-admission-c8/peer-config.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "93296e1deb015dcd721d9d0a29939a8aec05dd702c4ae5b2161a61b228e2f33f",
+      "bytes": 142,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-utL5pg/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-utL5pg/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-utL5pg/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-h1bWLm/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-h1bWLm/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-h1bWLm/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-h1bWLm/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-035Hrj/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-035Hrj/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "2a38c2184b086ee03c5b58d09b6b42e46941b4ece3bd5e3f82a61f0599e37f57",
+      "bytes": 655,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-035Hrj/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "9bdc6765e600241b532f7f3c93dafdaa4ac7cea1f38db69e861f40dd250a9bd5",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-035Hrj/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-035Hrj/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-035Hrj/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-035Hrj/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-035Hrj/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-Y4tMPA/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Y4tMPA/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "7d735a277842c22d14416300e9a51f379693177466ffb5c3219b4febc992940e",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Y4tMPA/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "2c6f94bf85577b663014c1af899270b2623f3011a5d30d4e1ec89b099afca05f",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Y4tMPA/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Y4tMPA/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Y4tMPA/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Y4tMPA/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Y4tMPA/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-xMxHff/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xMxHff/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "b7be125400be8843f2a80487b2c763b89c60e40dca124181f6a817e4a093316d",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xMxHff/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "4f41f61e79e34582ca03dd176cc490f27d02e91cecef2e27064825c7d2a0eb9e",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xMxHff/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xMxHff/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xMxHff/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xMxHff/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-xMxHff/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-Ab9cxw/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Ab9cxw/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "11eb28ace04a595a41f702284e3b00b30a5a1fd1830e8c506544d34d5bcde610",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Ab9cxw/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "67694bb46f235123b135c1c71c6d7fd3a18fccd9909342d443fd48c2b973bf48",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Ab9cxw/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Ab9cxw/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Ab9cxw/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Ab9cxw/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-Ab9cxw/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-vAWeKw/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-vAWeKw/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "e0b85ec0f2e0b5391f899783ff204493ea484fa8ac2b12e8e3d4108935c483a0",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-vAWeKw/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "2e273a56cb1f3cc3b1d7e33b2a1c7f83fbe1c220effb31bf079d5b214c80b1ce",
+      "bytes": 4320,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-vAWeKw/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-vAWeKw/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-vAWeKw/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-vAWeKw/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-vAWeKw/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-ybBKv9/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ybBKv9/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ybBKv9/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ybBKv9/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-HupdOP/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-HupdOP/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "ef66c5de882a4c4d4aaeae1ebe363bad281edc5b7b8e299a4717553d4c1fedf3",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-HupdOP/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "4e888640bd4d04cdac62b4a5e39159842b7c6460e5fa5e547dad01a79dd07198",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-HupdOP/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "7c39062b651dc8d47d0f1c5017b355747d4847f57c01ce9d1ac59854b39d2b90",
+      "bytes": 144,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-HupdOP/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-HupdOP/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-HupdOP/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-ireHXj/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ireHXj/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "537cf187b62ba14b43e3d7a339c07ff6050d65b339020070ae8a7c5b874163c7",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ireHXj/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "2a2e2af0a23455565d1831f75ec0b73418c5262093088d05ffe5a22ed438bf79",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ireHXj/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "b298c3b2cecbdfa946bd6b1c8db9a6740adc5f931b2b16d047ad1c7ebec3f08f",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ireHXj/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "6a66d1c15f3eea8efe70e8ebc48a6c4500c353bc9083cd7dda185e50e9779bc4",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ireHXj/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ireHXj/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-ireHXj/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-cUpNNr/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-cUpNNr/work/backend-runtime/task04-native-admission-c8/historical-native-locators.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "9dc8096a4b320a1f277bcf586ea9533af651239dbf0d34137f6ae4903f6da0f9",
+      "bytes": 675,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-cUpNNr/work/backend-runtime/task04-native-admission-c8/initial-physical-id-provenance.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "af9b1586ded5f8b7192202c844b841d10a8a308036f5106d33efcac3b9afeded",
+      "bytes": 4355,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-cUpNNr/work/backend-runtime/task04-native-admission-c8/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "786ed0424d6aedca067f57548a6eaf0af2c85ff8a38471ca8b059519f03341d0",
+      "bytes": 173,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-cUpNNr/work/backend-runtime/task04-native-admission-c8/owned-created-a6f282adda3b1443bea404a3e7a4b095a48c2ea59d4431a6125f74accaff7d70.json",
+      "category": "physical-ID-case-proof-payload",
+      "sha256": "1ffa379159155022e0fddf593eee4696445b8b818e7090fc573672c15d943b35",
+      "bytes": 171,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-cUpNNr/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-cUpNNr/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-cUpNNr/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    },
+    {
+      "path": "case-gXv9Tn/work/backend-runtime/qualification/jwt-private.pem",
+      "category": "nofollow-symlink",
+      "sha256": "51e552134d8ee5a7dd6089e056394bfb0572482013bfd8b1cec3ed1a4adfa68f",
+      "bytes": 144,
+      "mode": "0o777",
+      "symlink": true,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gXv9Tn/work/backend-runtime/qualification/jwt-private.pem.dummy",
+      "category": "dummy-key",
+      "sha256": "0b4b502db3744ef584748511df3392407555f62002f41d5896c3287528d91bae",
+      "bytes": 23,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "excluded",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gXv9Tn/packet/project-request.json",
+      "category": "source-config-preimage",
+      "sha256": "cec96b558c35b6b3a39c4edf138390edf80cc48862ee2a94c38f9c100b29cb74",
+      "bytes": 559,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gXv9Tn/packet/registration-inventory.json",
+      "category": "source-config-preimage",
+      "sha256": "ced780ced10897f72bcb6d26b6a9bb24d144dea3dafc98cb245f08e321349d75",
+      "bytes": 242737,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "archived",
+      "exactReviewPaths": []
+    },
+    {
+      "path": "case-gXv9Tn/packet/fixture/convex/auth.config.ts",
+      "category": "source-config-preimage",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852,
+      "mode": "0o600",
+      "symlink": false,
+      "disposition": "already-exact-in-review229",
+      "exactReviewPaths": [
+        "source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/fixture/convex/auth.config.ts"
+      ]
+    }
+  ],
+  "archivedFiles": 128,
+  "chunks": [
+    {
+      "path": "archive.tar.gz.part001",
+      "bytes": 750000,
+      "sha256": "12982d002ea8b95fdc8f97c14075a3054e19bfa9ff18e1b4a7190536daa5fe1d"
+    },
+    {
+      "path": "archive.tar.gz.part002",
+      "bytes": 1573,
+      "sha256": "5968716187409609c5c55e4ac9ca74deaf02a2f05f91e7390d1ef5524aaa3a4b"
+    }
+  ]
+}
