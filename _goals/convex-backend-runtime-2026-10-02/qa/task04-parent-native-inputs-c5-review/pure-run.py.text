@@ -1,0 +1,9 @@
+from pathlib import Path
+import subprocess,json,datetime,hashlib,os
+r=Path('/workspace/Project-Cortex');w=r/'work/resume/task04-parent-native-inputs-c5-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-review'
+for name in ['pure01','pure02']:
+ d=q/name;d.mkdir();f=w/'pure.mjs';before=f.read_bytes();(d/'source.mjs.text').write_bytes(before);argv=['node',str(f)];(d/'pre.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'argv':argv,'cwd':str(r),'sha256':hashlib.sha256(before).hexdigest(),'config':{'credentials':0,'network':0,'pureGuard':True}},indent=2)+'\n')
+ with(d/'stdout.txt').open('x')as out,(d/'stderr.txt').open('x')as err:res=subprocess.run(argv,cwd=r,env={'PATH':str(r/'work/resume/toolchain-bin')+':'+os.environ['PATH']},stdout=out,stderr=err)
+ (d/'post.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':res.returncode,'sourceStable':before==f.read_bytes()},indent=2)+'\n')
+ print(name,res.returncode)
+ if name=='pure01':f.write_text(f.read_text().replace("base+'task04-parent-native-inputs-c4-preparation/results-final02.json'","base+'task04-parent-native-inputs-c5-preparation/prior-c4-results.json'"))

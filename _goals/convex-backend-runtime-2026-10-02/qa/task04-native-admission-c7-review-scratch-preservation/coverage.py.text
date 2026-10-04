@@ -1,0 +1,35 @@
+from pathlib import Path
+import os,stat,json,hashlib,re,datetime
+r=Path('/workspace/Project-Cortex');qa=r/'_goals/convex-backend-runtime-2026-10-02/qa';review=qa/'task04-native-admission-fixture-c7-review';p=qa/'task04-native-admission-c7-review-scratch-preservation';p.mkdir();base=r/'work/resume/task04-native-admission-fixture-c7-review'
+def sha(b):return hashlib.sha256(b).hexdigest()
+m=json.loads((review/'review-manifest.json').read_text());by={}
+for row in m['files']:
+ f=review/row['path'];b=f.read_bytes();assert len(b)==row['bytes']and sha(b)==row['sha256'];by.setdefault(row['sha256'],[]).append(row['path'])
+assert len(m['files'])==1607
+locators={x['locatorSHA256']for x in json.loads((qa/'task04-parent-native-inputs-review/results.json').read_text())['locatorChecks']};rows=[]
+def walk(d):
+ for e in sorted(os.scandir(d),key=lambda e:e.name):
+  f=Path(e.path);s=e.stat(follow_symlinks=False);row={'path':str(f.relative_to(r)),'mode':stat.S_IMODE(s.st_mode),'bytes':s.st_size,'nlink':s.st_nlink}
+  if e.is_symlink():row.update(kind='symlink',target=os.readlink(f),followed=False)
+  elif e.is_dir(follow_symlinks=False):row['kind']='directory';walk(f)
+  elif e.is_file(follow_symlinks=False):
+   b=f.read_bytes();h=sha(b);row.update(kind='file',sha256=h);category=None
+   if any(x in f.name.lower()for x in ['jwt-private','deploy.env','identities.json']):category='dummy_or_credential_named_payload_excluded'
+   elif any(sha(token)in locators for token in re.findall(rb'[A-Za-z0-9_-]{16,256}',b)):category='historical_physical_locator_payload_excluded'
+   if category:row.update(payloadExcluded=True,category=category)
+   else:
+    assert h in by,'MISSING_ARCHIVED_NONSECRET_BYTES';row.update(payloadExcluded=False,coverage='EXACT_BYTES_ALREADY_ARCHIVED_BY_JUDGE',archivedPaths=by[h],modeRestoration={'recordedOriginalMode':stat.S_IMODE(s.st_mode),'archiveBytesReusableWithThisMode':True})
+  else:row['kind']='special'
+  rows.append(row)
+walk(base);rows.sort(key=lambda x:x['path']);pre=json.dumps(rows,sort_keys=True);files=[x for x in rows if x['kind']=='file'];excluded=[x for x in files if x['payloadExcluded']];covered=[x for x in files if not x['payloadExcluded']];links=[x for x in rows if x['kind']=='symlink']
+(p/'coverage-map.json').write_text(json.dumps({'scope':'ARCHIVAL_COVERAGE_ONLY','argv':['python',str(Path(__file__).relative_to(r))],'cwd':str(r),'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'reviewManifestSHA256':sha((review/'review-manifest.json').read_bytes()),'reviewReportSHA256':sha((review/'report.md').read_bytes()),'reviewManifestVerifiedRows':1607,'scratch':str(base.relative_to(r)),'entries':rows,'additionalPayloadArchiveRequired':False,'symlinksNeverFollowed':True,'realCredentialReads':0,'locatorPayloadPublished':False,'noPreparationOrNativeGateClaim':True},indent=2)+'\n')
+# Re-read metadata+bytes for stable scratch and exact existing archive coverage. No link following.
+for row in rows:
+ f=r/row['path'];s=f.lstat();assert stat.S_IMODE(s.st_mode)==row['mode']and s.st_size==row['bytes']
+ if row['kind']=='file':assert sha(f.read_bytes())==row['sha256']
+ elif row['kind']=='symlink':assert os.readlink(f)==row['target']
+for row in m['files']:assert sha((review/row['path']).read_bytes())==row['sha256']
+(p/'result.json').write_text(json.dumps({'status':'PASS_ARCHIVAL_COVERAGE_ONLY','scratchEntries':len(rows),'regularFiles':len(files),'byteCoveredNonsecretFiles':len(covered),'excludedPayloadFiles':len(excluded),'symlinksNotFollowed':len(links),'reviewVerifiedRows':1607,'newArchiveChunks':0,'sourceStable':True,'reviewStable':True,'network':0,'signing':0,'credentialReads':0,'RPC':0,'storage':0,'acceptanceClaim':False},indent=2)+'\n')
+(p/'coverage.py.text').write_bytes(Path(__file__).read_bytes())
+(p/'report.md').write_text(f'''# C7 review scratch archival coverage\n\nAll {len(covered)} available nonsecret regular-file byte sequences are already preserved in the judge's verified1607-row review manifest. The coverage map binds each scratch path/hash/size/original mode to exact archived paths, including helper sources and available failed preimages. No additional payload archive was needed.\n\nInventoried {len(rows)} entries and {len(links)} symlinks without following; excluded {len(excluded)} credential-named or historical-locator payloads with path/category/size/hash only. Scratch and frozen review bytes remain unchanged. No private target directory, key/env/JWT, service, network, signing, RPC, storage or Git access. This records archival coverage only and makes no acceptance or native qualification claim.\n''')
+entries=sorted((f for f in p.rglob('*')if f.is_file()),key=lambda f:str(f.relative_to(p)));manifest={'scope':'ARCHIVAL_COVERAGE_ONLY','selfExcluded':'qa-manifest.json','files':[{'path':str(f.relative_to(p)),'bytes':f.stat().st_size,'sha256':sha(f.read_bytes())}for f in entries]};(p/'qa-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n');print(json.dumps({'coveredFiles':len(covered),'excludedFiles':len(excluded),'symlinks':len(links),'manifestRows':len(entries),'manifestSHA256':sha((p/'qa-manifest.json').read_bytes()),'reportSHA256':sha((p/'report.md').read_bytes()),'scope':'ARCHIVAL_ONLY'}))

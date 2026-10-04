@@ -1,0 +1,38 @@
+from pathlib import Path
+import os,stat,json,hashlib,tarfile,io,gzip,datetime
+r=Path('/workspace/Project-Cortex');src=r/'work/resume/task04-parent-native-inputs-c5-review';out=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-review-scratch-preservation';w=r/'work/resume/task04-parent-native-inputs-c5-review-scratch-preservation'
+sha=lambda b:hashlib.sha256(b).hexdigest(); inventory=[];members=[]
+for base,dirs,files in os.walk(src,followlinks=False):
+ for name in sorted(dirs+files):
+  f=Path(base)/name;s=f.lstat();rel=str(f.relative_to(src));mode=stat.S_IMODE(s.st_mode)
+  if stat.S_ISLNK(s.st_mode):inventory.append({'path':rel,'mode':mode,'bytes':s.st_size,'category':'symlink-inventory-not-followed'});continue
+  if stat.S_ISDIR(s.st_mode):members.append((f,rel,s));continue
+  assert stat.S_ISREG(s.st_mode)
+  excluded=rel.startswith('case-')
+  category='excluded-dummy-key' if 'jwt-private.pem' in rel else 'excluded-physical-locator-or-dummy-case-payload' if excluded else 'nonsecret-review-source-helper'
+  row={'path':rel,'mode':mode,'bytes':s.st_size,'sha256':sha(f.read_bytes()),'category':category};inventory.append(row)
+  if not excluded:members.append((f,rel,s))
+# Avoid case directory names/modes entering archive; their payloads stay inventory only.
+members=[x for x in members if not x[1].startswith('case-')]
+buf=io.BytesIO()
+with tarfile.open(fileobj=buf,mode='w',format=tarfile.PAX_FORMAT)as tf:
+ for f,rel,s in sorted(members,key=lambda x:x[1]):
+  ti=tarfile.TarInfo(rel);ti.mode=stat.S_IMODE(s.st_mode);ti.uid=ti.gid=0;ti.uname=ti.gname='';ti.mtime=0
+  if stat.S_ISDIR(s.st_mode):ti.type=tarfile.DIRTYPE;tf.addfile(ti)
+  else:b=f.read_bytes();ti.size=len(b);tf.addfile(ti,io.BytesIO(b))
+raw=buf.getvalue();compressed=gzip.compress(raw,compresslevel=9,mtime=0);chunks=[]
+for i,start in enumerate(range(0,len(compressed),750000),1):
+ b=compressed[start:start+750000];name='review-scratch.tar.gz.part'+str(i).zfill(3);(out/name).write_bytes(b);chunks.append({'path':name,'bytes':len(b),'sha256':sha(b)})
+joined=b''.join((out/x['path']).read_bytes()for x in chunks);assert joined==compressed;assert gzip.decompress(joined)==raw
+roundtrip=w/'roundtrip';roundtrip.mkdir()
+with tarfile.open(fileobj=io.BytesIO(gzip.decompress(joined)),mode='r:')as tf:tf.extractall(roundtrip,filter='data')
+for f,rel,s in members:
+ d=roundtrip/rel;assert stat.S_IMODE(d.stat().st_mode)==stat.S_IMODE(s.st_mode)
+ if f.is_file():assert d.read_bytes()==f.read_bytes()
+(out/'inventory.json').write_text(json.dumps({'root':str(src.relative_to(r)),'entries':inventory,'symlinksFollowed':False,'excludedCasePayloads':True},indent=2)+'\n')
+(out/'preserve.py.text').write_bytes(Path(__file__).read_bytes())
+(out/'report.md').write_text('# Review scratch preservation\n\nArchive PASS. Deterministic gzip/tar with zero timestamps and normalized archive owner; included nonsecret review helpers retain exact bytes/modes on roundtrip. Dummy keys and all isolated case payloads, including physical historical locators, are excluded; path/hash/size/category inventory only. Symlinks inventoried without following. Frozen review packet unchanged. No additional review or native gate is claimed.\n')
+(out/'result.json').write_text(json.dumps({'status':'PASS_ARCHIVE_ONLY','utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'archiveSHA256':sha(compressed),'tarSHA256':sha(raw),'chunks':chunks,'roundtripBytesModesExact':True,'archivedFiles':sum(f.is_file()for f,rel,s in members),'excludedFiles':sum(x['category'].startswith('excluded')for x in inventory),'symlinks':sum(x['category'].startswith('symlink')for x in inventory)},indent=2)+'\n')
+files=[{'path':f.name,'sha256':sha(f.read_bytes()),'bytes':f.stat().st_size}for f in sorted(out.iterdir())if f.is_file()]
+(out/'qa-manifest.json').write_text(json.dumps({'files':files},indent=2)+'\n');files.append({'path':'qa-manifest.json','sha256':sha((out/'qa-manifest.json').read_bytes()),'bytes':(out/'qa-manifest.json').stat().st_size});(out/'runtime-freeze.json').write_text(json.dumps({'status':'PASS_ARCHIVE_ONLY','files':files},indent=2)+'\n')
+print(json.dumps({f.name:sha(f.read_bytes())for f in [out/'runtime-freeze.json',out/'qa-manifest.json',out/'report.md',out/'result.json']}))

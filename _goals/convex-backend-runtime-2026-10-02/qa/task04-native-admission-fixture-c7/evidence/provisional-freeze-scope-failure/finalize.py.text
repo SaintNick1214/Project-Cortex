@@ -1,0 +1,58 @@
+from pathlib import Path
+import json,hashlib,re
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa';p=q/'task04-native-admission-fixture-c7';a=q/'task04-native-admission-fixture-c6'
+def sha(f):return hashlib.sha256(f.read_bytes()).hexdigest()
+def rec(f):return {'path':str(f.relative_to(r)),'sha256':sha(f),'bytes':f.stat().st_size}
+def save(name,value):(p/name).write_text(json.dumps(value,indent=2)+'\n')
+inv=json.loads((p/'source-inventory.json').read_text());unequal=[]
+for row in inv['files']:
+ assert sha(r/row['source'])==row['sha256']
+ if sha(p/row['copy'])!=row['sha256']:unequal.append(row['source'])
+ elif row['source']!='convex-dev/runtimeModelPolicy.ts':assert sha(p/row['copy'])==sha(a/row['copy'])
+assert unequal==['convex-dev/runtimeModelPolicyBootstrap.ts']
+assert sha(p/'cases.json')==sha(a/'cases.json')
+req=json.loads((p/'project-request.json').read_text());prior=json.loads((a/'project-request.json').read_text());assert all(req[k]!=prior[k]for k in ['operation','runId','projectName','privateEnvironmentFile'])
+retained=[]
+for name in ['offline-check.mjs','offline-regressions.mjs','offline-public-semantic.mjs','offline-cli-prerequisites.mjs','offline-publication-artifacts.mjs']:
+ old=(a/'scripts'/name).read_text();new=(p/'scripts'/name).read_text();names=re.findall(r"(?:check|test)\('([^']+)'",old)
+ for title in names:assert title in new;retained.append({'script':name,'assertion':title,'retained':True,'delta':'two-root exact object identity checks added'if name=='offline-check.mjs'else'finite diagnostic shared reservation updated; publication cap/equalities retained'if name=='offline-publication-artifacts.mjs'else'candidate identity only'})
+retained.append({'script':'offline-regressions.mjs','assertion':'actual retirement entry request-owned partial uses exact five owned requests and immutable target','retained':True,'delta':'same original dynamically enumerated second variant'})
+assert len(retained)==35,len(retained)
+save('original35-retention-map.json',retained)
+for name in ['offline-installation.mjs','offline-diagnostics.mjs']:
+ for title in re.findall(r"test\('([^']+)'",(a/'scripts'/name).read_text()):
+  assert title in (p/'scripts'/name).read_text();retained.append({'script':name,'assertion':title,'retained':True,'delta':'candidate identity only'})
+assert len(retained)==41
+save('original41-retention-map.json',retained)
+changes=[{'path':str(f.relative_to(p)),'priorSha256':sha(a/f.relative_to(p)),'sha256':sha(f)}for f in sorted(p.rglob('*'))if f.is_file()and(a/f.relative_to(p)).is_file()and'evidence'not in f.relative_to(p).parts and sha(f)!=sha(a/f.relative_to(p))]
+save('source-evidence.json',{'candidate':'C7','acceptedB16':[rec(r/x['path'])for x in inv['acceptedGateHashes']],'sourceInventory':rec(p/'source-inventory.json'),'soleUnequalCopiedProduct':unequal,'soleChangedCopiedProduction':'convex-dev/runtimeModelPolicy.ts accepted repair bed10cc3934aac6743ff0cb08911765d84e9db18446cd8aebff979815068207f','allOtherCopiedProductionUnchanged':True,'candidateOnlyChanges':changes,'parentSources':[rec(r/'work/resume'/n)for n in ['task04-native-c7-parent-inputs.mjs','task04-native-current-inputs-c5.mjs']],'currentGate':rec(q/'current-gates.md'),'parentCompositionDecision':rec(q/'task04-native-admission-c6-fixture-decision.json'),'acceptedRepairReview':[rec(q/'task04-native-error-boundary-repair-review'/n)for n in ['report.md','manifest.json']],'priorC6Failure':[rec(q/'task04-native-admission-c6-execution'/n)for n in ['report.md','qa-manifest.json']],'native':'NOT_RUN','network':0,'signing':0,'credentialReads':0,'RPC':0,'storage':0,'model':0})
+save('budgets-evidence.json',{'nativeCases':49,'casesBudgetsSHA256':sha(p/'cases.json'),'originalCeilingsRetained':True,'coreUpperBound':671,'coreCeiling':716,'securityUpperBound':15,'sharedFaultUpperBound':39,'emptyUpperBound':11,'cumulativeUpperBound':736,'cumulativeCeiling':783,'simultaneouslyLiveCeiling':320,'nativeRPC':3000,'clientPlusNested':{'client':2991,'nested':9},'processGroups':6,'concurrentProcessGroups':2,'diagnosticBytes':577536,'diagnosticRows':8,'publicationBytes':1634304,'publicationRows':16,'combinedReservedBytes':2211840,'combinedReservedRows':24,'sharedEvidenceBytes':8388608,'sharedEvidenceRows':6000,'diagnosticCombinedStdioPerPhase':256000,'native':'NOT_RUN'})
+raw=(p/'evidence/offline01/stdout.txt').read_text();assert 'tests 41' in raw and 'fail 0' in raw
+save('check-summary.json',{'originalChecks':35,'newInstallationChecks':4,'newDiagnosticChecks':2,'newActualCodecChecks':1,'total':42,'raw':'evidence/offline01/stdout.txt','failuresPreserved':['parent evidence/offline01 wrapper protected-scope failure; exact preimage retained'],'final':['offline01','codec01','syntax01','types01','inventory01'],'parentChecks':59,'native':'NOT_RUN'})
+(p/'README.md').write_text('''# C7 bounded fixture preparation
+
+Native NOT_RUN. Fresh independent fixture and parent-input reviews are required before parent target creation. New operation/run/slug/private environment path are in project-request.json. C6 actual deployment/publication passed and3core cases passed before structured request-denial assertion failed; its execution and supplement packets remain unchanged. Accepted repaired B/PURE/schema and every copied product module except the declared synthetic bootstrap remain byte-identical.
+
+Two finite static registry-owned roots use revision1. Chat qa-task04-synthetic-v1 contains original deployment and agent policies, Chat/fallback qualifications/proofs. Embedding qa-task04-synthetic-embedding-v1 contains one uniquely named deployment policy, one default embedding qualification/proof and no fallback. Both have neutral global selectors. Only the existing embedding case chooses embedding root. Exact two-ID owned cleanup occurs between cases; Chat-only revoke/fault/fabricated-root controls retain original ID. Registry trust requires exact frozen object identity, classification, ID and revision. Production bootstrap remains EMPTY in second publication phase.
+
+Actual frozen installation handler and PURE resolver run offline with controlled database/native context; no service evidence is claimed. C5 selector red and intermediate fallback red are retained. Both roots install/dedupe; Chat fallback and exact embedding query/memory snapshots pass. Original49 native cases/assertions and all ceilings remain:3000 native RPC,320 live/783 cumulative rows,0storage,6groups/2concurrent,2CLI120s,20minute qualifier/24minute driver,4concurrent/12sRPC. Derived row upper736<=783. TWO public storage noJWT actual native denials remain NOT_RUN.
+
+Child diagnostics append exact bounded private binary stdout/stderr before wrapper finally/status loss, with hash-bound operation/run/phase/freeze metadata, exit/timeout/overflow and verified hash-chain cleanup witness. No raw private console exposure. Full raw281 publication writer/readers remain lossless; publication1634304bytes16records plus diagnostics577536bytes8records share8MiB/6000 evidence ceiling. Journal reserves2211840bytes24records. All artifacts exclusive; failed attempts retained. No extra diagnostic log RPC.
+
+Parent-only execution uses task04-native-c7-parent-inputs.mjs and task04-native-current-inputs-c5.mjs after fresh review. Their accepted authority/key/proof/current-receipt/120s constraints remain unchanged. Credentials, signing, provisioning, deploy, kills, cleanup and physical retirement belong to parent. Whole Task04/full Task03/goal remain INCOMPLETE.
+''')
+(p/'report.md').write_text('''# FINAL C7 offline preparation
+
+42/42 offline checks PASS: original35 retained plus4 actual frozen installation/resolution/red regressions,2 actual ProcessOwner/wrapper diagnostics and1 actual accepted registered admit/installed-codec denial reproducer. Syntax35 scripts, strict fixture types and import-aware actual inventory PASS with stable pre/post source and protected hashes. All new attempt sources have exact contemporaneous snapshots. Historical C6 recovery gaps remain historical gaps; no new exact-preimage claim is made for them.
+
+The approved two-root composition eliminates unsupported cross-capability global fallback without product changes or added rows/calls. Chat installs4 policy/qualification rows; embedding2, both dedupe. Native49 cases and320live/783cumulative/3000RPC ceilings unchanged; derived upper736. Original35 retention map, exact candidate-only changes, bootstrap diff, budgets and complete source/evidence manifest are included. Full281 publication raw/chunk/args equality tests remain intact. Diagnostic actual uncaught-child regression proves bounded stderr/stdout retention, exclusive0600 receipts, final cleanup witness and verified terminal group; overflow retains bounded exact bytes and FAIL.
+
+C7 native NOT_RUN; no network/RPC/signing/private credentials/services/model/storage/target activity. Fresh fixture and parent-input independent judgments required before provisioning. C6 actual failure/retirement is historical evidence, never native approval. TWO native public storage handler denials/current decoder remain NOT_RUN. Whole04/full03/goal INCOMPLETE.
+''')
+for name in ['offline01','codec01','syntax01','types01','inventory01']:
+ d=json.loads((p/'evidence'/name/'result.json').read_text());assert d['exitCode']==0 and d['protectedStable']and not d['sourceChangedDuringExecution']
+paths=sorted((f for f in p.rglob('*')if f.is_file()),key=lambda f:str(f.relative_to(p)));assert all(not f.is_symlink()and f.stat().st_nlink==1 for f in paths)
+operational=sorted(str(f.relative_to(p))for f in paths if str(f.relative_to(p)).startswith(('scripts/','fixture/'))or f.name in ['project-request.json','cases.json','source-inventory.json','registration-inventory.json','schema-evidence.json','profile.json'])
+freeze={'version':1,'candidate':'C7','status':'FINAL_FROZEN_PREPARATION_REVIEW_REQUIRED','operation':req['operation'],'operationalPaths':operational,'files':[{'path':str(f.relative_to(p)),'sha256':sha(f),'bytes':f.stat().st_size}for f in paths],'native':'NOT_RUN'}
+with(p/'runtime-freeze.json').open('x')as f:f.write(json.dumps(freeze,indent=2)+'\n')
+print(json.dumps({'freezeSha256':sha(p/'runtime-freeze.json'),'files':len(paths),'operationalFiles':len(operational)}))

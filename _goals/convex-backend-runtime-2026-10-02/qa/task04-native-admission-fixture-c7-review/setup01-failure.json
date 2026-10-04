@@ -1,0 +1,13 @@
+{
+  "attempt": "run.py",
+  "argv": [
+    "python3",
+    "work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/run.py"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "observedAt": "2026-10-04T05:30:46.350539+00:00",
+  "status": "FAIL",
+  "error": "FileNotFoundError: node; explicit PATH omitted runtime node directory",
+  "testsLaunched": 0,
+  "correction": "prepend requested toolchain-bin then actual existing runtime node binary directory; no installation"
+}

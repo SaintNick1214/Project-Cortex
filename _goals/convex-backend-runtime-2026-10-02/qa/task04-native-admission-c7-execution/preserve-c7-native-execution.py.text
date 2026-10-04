@@ -1,0 +1,85 @@
+import hashlib
+import json
+from pathlib import Path
+
+source = Path('work/backend-runtime/task04-native-admission-c7')
+output = Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c7-execution')
+retirement_paths = list(source.glob('retirement-*.json'))
+assert len(retirement_paths) == 1
+retirement = json.loads(retirement_paths[0].read_text())
+assert retirement['status'] == 'PASS'
+assert retirement['deletionHttpStatus'] == 200 and retirement['absentProjectHttpStatus'] == 404
+assert retirement['verifiedOnlyDevelopmentCloudDeployment'] is True
+assert retirement['managementCalls'] == 5
+output.mkdir()
+
+secrets = []
+for filename in ['deploy.env', 'identities.json', 'peer-config.json']:
+    data = (source / filename).read_text()
+    if filename.endswith('.env'):
+        secrets.extend(line.split('=', 1)[1].strip().strip('"') for line in data.splitlines() if line.startswith('CONVEX_DEPLOY_KEY='))
+    else:
+        def values(value):
+            if isinstance(value, dict):
+                for item in value.values():
+                    yield from values(item)
+            elif isinstance(value, list):
+                for item in value:
+                    yield from values(item)
+            elif isinstance(value, str) and (value.count('.') == 2 or filename == 'peer-config.json' and len(value) == 64):
+                yield value
+        secrets.extend(values(json.loads(data)))
+
+physical = set()
+witnesses = []
+for path in sorted(source.glob('owned-*.json')):
+    data = json.loads(path.read_text())
+    if 'table' in data and 'id' in data:
+        physical.add(data['id'])
+        witnesses.append({'receipt': path.name, 'sourceSHA256': hashlib.sha256(path.read_bytes()).hexdigest(), 'table': data['table'], 'idSHA256': hashlib.sha256(data['id'].encode()).hexdigest(), 'event': data.get('event', data.get('kind'))})
+for filename in ['historical-native-locators.json', 'argument-scope.json']:
+    physical.update(json.loads((source / filename).read_text())['ids'].values())
+
+blocked = []
+def preserve(path, destination):
+    data = path.read_bytes()
+    credential = any(value.encode() in data for value in secrets if value)
+    locator = any(value.encode() in data for value in physical if value)
+    if credential or locator:
+        blocked.append({'source': str(path), 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest(), 'reason': 'private credential/physical locator occurrence; raw remains local'})
+        return
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.open('xb').write(data)
+
+exact = ['target.json', 'created-project.json', 'preparation-review.json', 'initial-physical-id-provenance.json', 'parent-inputs-receipt.json', 'current-physical-id-input-receipt.json', 'qualifier-window.json']
+patterns = ['retirement-*.json', 'key-match-*.json', 'journal-*.jsonl', 'publication-*', 'ticket-*.json', 'row-allocation-*.json', 'process-deploy-*.json', 'qualifier-process-*.json', 'qualifier-diagnostic-*', 'private-cli-*.json', 'codegen-*.json', 'stage-prerequisites-*.json', 'result-*.json', 'reconcile-*.json', 'cleanup-*.json', 'fault-*.json', '*error-log*.json']
+paths = [source / name for name in exact if (source / name).is_file()]
+paths += [path for pattern in patterns for path in source.glob(pattern) if path.is_file()]
+for path in sorted(set(paths)):
+    preserve(path, output / path.name)
+for path in Path('work/resume').glob('task04-native-c7-*'):
+    if path.is_file():
+        preserve(path, output / (path.name + '.text' if path.suffix == '.mjs' else path.name))
+for path in Path('work/resume').glob('task04-c7-*.mjs'):
+    preserve(path, output / (path.name + '.text'))
+for phase in ['synthetic', 'empty']:
+    for path in (source / ('deploy-' + phase) / 'convex/_generated').glob('*'):
+        if path.is_file():
+            preserve(path, output / ('official-generated-' + phase) / path.name)
+
+rows = [json.loads(line) for path in source.glob('journal-*.jsonl') for line in path.read_text().splitlines()]
+diagnostics = [json.loads(path.read_text()) for path in sorted(source.glob('qualifier-diagnostic-*.json'))]
+processes = [json.loads(path.read_text()) for path in sorted(source.glob('qualifier-process-*.json'))]
+assert all(p['counts']['remaining'] == 0 for p in processes)
+result = {'classification': 'NATIVE_EXECUTION_REQUIRES_INDEPENDENT_REVIEW', 'operation': retirement['operation'], 'nativeCaseEvents': [{k: row[k] for k in ['phase', 'caseId', 'status', 'counts', 'failureClass'] if k in row} for row in rows if row.get('phase') == 'case'], 'journalRows': len(rows), 'nativeTickets': len(list(source.glob('ticket-native-*.json'))), 'createdRowWitnesses': sum(w['event'] == 'created' for w in witnesses), 'deletedRowWitnesses': sum(w['event'] == 'deleted' for w in witnesses), 'qualifierStatuses': [d['status'] for d in diagnostics], 'terminalGroups': [p['counts'] for p in processes], 'targetRetirement': retirement, 'paidInference': 0, 'storageCreated': 0, 'targetCredentialRemoval': [], 'nativeTask04PASS': False}
+for filename in ['deploy.env', 'identities.json', 'peer-config.json']:
+    (source / filename).unlink()
+    result['targetCredentialRemoval'].append(filename)
+(output / 'owned-physical-row-hash-witnesses.json').open('x').write(json.dumps(witnesses, indent=2) + '\n')
+(output / 'private-artifact-retention.json').open('x').write(json.dumps({'blockedPublicCopies': blocked, 'physicalLocatorCount': len(physical), 'privatePhysicalReceipts': len(witnesses), 'rawPrivateDataRemainsLocal': True}, indent=2) + '\n')
+(output / 'result.json').open('x').write(json.dumps(result, indent=2) + '\n')
+(output / 'report.md').open('x').write('# C7 actual native execution\n\nActual outcomes, exact command receipts, native journals, available full diagnostics, official generated bindings and physical retirement receipts are preserved here. Qualification status is reported per phase; cleanup and retirement do not upgrade a failed scenario. Whole Task04/native B acceptance requires fresh independent review. Target-only credentials were removed after verified delete200/GET404; shared signing key/team access remain. No paid inference or storage objects. Physical identifiers/credentials are kept private; available originals are bound by exact byte hashes.\n')
+preserve(Path(__file__), output / (Path(__file__).name + '.text'))
+files = [{'path': str(path.relative_to(output)), 'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()} for path in sorted(output.rglob('*')) if path.is_file()]
+(output / 'qa-manifest.json').open('x').write(json.dumps({'selfExcluded': True, 'files': files}, indent=2) + '\n')
+print(json.dumps({'files': len(files) + 1, 'publicBlocked': len(blocked), 'journalRows': len(rows), 'casePassEvents': sum(r['status'] == 'PASS' for r in result['nativeCaseEvents']), 'retired': True, 'credentialsRemoved': 3}))

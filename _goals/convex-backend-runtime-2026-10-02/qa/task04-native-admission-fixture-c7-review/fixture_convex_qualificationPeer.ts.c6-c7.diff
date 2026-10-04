@@ -1,0 +1,11 @@
+--- C6/fixture/convex/qualificationPeer.ts
++++ C7/fixture/convex/qualificationPeer.ts
+@@ -2,7 +2,7 @@
+ import { internalMutation, internalQuery, httpAction } from "./_generated/server";
+ import { v } from "convex/values";
+ import { makeFunctionReference } from "convex/server";
+-const fixedRun="admission-098c7d2b50da7383a11f52a354a5d107";
++const fixedRun="admission-a6f48c36ac2cd274d7b26ff3e6fbbf8a";
+ const fields = { run: v.string(), dispatchDigest: v.string() };
+ function valid(run: string, digest: string) {
+   if (run!==fixedRun || !/^admission-[a-f0-9]{32}$/.test(run) || !/^[a-f0-9]{64}$/.test(digest)) throw new Error("QA_PEER_INVALID");
