@@ -1,0 +1,3 @@
+# Exact public input/output research artifacts
+
+The original source-evidence files retain their original paths and hashes. Large public raw snapshots and the exact o200k artifact are committed here as deterministic gzip parts, rather than duplicating raw bytes. mapping.json records every original path, raw hash/size, ordered compressed part and gzip hash/size. Concatenate each row’s parts in order, verify the gzip hash, decompress, and verify the raw hash and byte count before restoring the original path. Local originals remain unchanged. This preservation supplies no serving-model, pricing or capability readiness claim.

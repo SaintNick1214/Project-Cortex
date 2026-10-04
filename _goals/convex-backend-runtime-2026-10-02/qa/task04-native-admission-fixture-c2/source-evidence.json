@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "candidate": "C2",
+  "status": "OFFLINE_PREPARATION_NATIVE_NOT_RUN",
+  "priorFrozenCandidate": {
+    "candidate": "C2",
+    "priorVerdict": "REJECT 2.8",
+    "priorFreezeSha256": "222473222323c6b7948fe093cf9a5d0ac987366f01aad48caa64cfe2f154afd6",
+    "priorManifestSha256": "7f2c3bf55431804d865dd4feb2a283167eb051d7041a330d1f2b6af888120391",
+    "priorReportSha256": "a79eb85be4bea89c3de173f513940ef2104506c5d1e3a1dc3e9160eb80cf230f",
+    "priorReviewPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1-review/report.md",
+    "priorReviewSha256": "fc039781f797051cd61c44c3c74fc7e89b46a9c3be3c858bfd36f99598e882df",
+    "executionIdentity": "PRESERVED_UNUSED; neither candidate has executed target provisioning; purpose/private path retained exactly; QA candidate C2 identified by its own freeze"
+  },
+  "acceptedGateHashes": [
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "sha256": "7fa65fbfa96d8709cd834b09133440e3f189b9ac9b717b96545a3b89085a7c23",
+      "changedFromC1": false
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "sha256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+      "changedFromC1": false
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "2a499e50107e6ba0064368c6d84c5ecce596bb420114336c3a2bdb86d0be9aa8",
+      "changedFromC1": true
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "12cca9bef137c575e7e0234668696e1e2cf4cc0502c0003fc5d297485a52e7ed",
+      "changedFromC1": false
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "0e2ed1e2d0910b9d341139b32bd2321b69a68c3734a84b17ccaf7e13a477005b",
+      "changedFromC1": true
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+      "changedFromC1": false
+    },
+    {
+      "path": "src/domain/index.ts",
+      "sha256": "b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648",
+      "changedFromC1": false
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "sha256": "d5a65043cb6c1dc2af851df866c5881fea67a0677c79ce3c5fe99d79f62700fc",
+      "changedFromC1": false
+    },
+    {
+      "path": "convex-dev/runtimeAuth.ts",
+      "sha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "changedFromC1": false
+    },
+    {
+      "path": "convex-dev/runtimeAuthSchema.ts",
+      "sha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "changedFromC1": false
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833",
+      "changedFromC1": false
+    },
+    {
+      "path": "convex-dev/runtimeWorkerAuth.ts",
+      "sha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+      "changedFromC1": false
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "sha256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+      "changedFromC1": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "changedFromC1": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-token-cost-technical-review/report.md",
+      "sha256": "879b15111c30766200e592a274e0a254eb5fe6f465e8f6885d8ae7392553937d",
+      "changedFromC1": false
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-c3-acceptance.json",
+      "sha256": "d8712ba0485b3f0fc1a8f8957592289ed6e86d010429a6c5e9ad160f4ca21ba0",
+      "changedFromC1": false
+    }
+  ],
+  "sourceInventorySha256": "895af1a46976ff80efefd5219e875b5936e19ad2e6ae715acc1f8662f3bc9b86",
+  "registrationInventorySha256": "a63448f69233f7146ffa7d65c0ce665723fe4e43d2d86d7132640c6fdf25cd87",
+  "schemaEvidenceSha256": "c47159e136389899bceee6ae075f081419ec0b8ebb8f65610a4bc51a0a827a49",
+  "publicGuardInventory": {
+    "source": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/public-guard-inventory.json",
+    "sha256": "bd8e7465dd0097f8d4ce1d98c956f061e04d0ee7161538e855f9ba10edd29867",
+    "reason": "exact unchanged product/public registration/import closure; independently recomputed full current281 tuple+argument list equals C1",
+    "controlFlowJudgment": "PENDING_FRESH_REVIEW",
+    "nativeAuth": "NOT_RUN"
+  },
+  "allFixtureBytesEqualC1": true,
+  "qaScriptChanges": [
+    {
+      "path": "scripts/driver.mjs",
+      "kind": "QA_ONLY_CHANGE",
+      "previousSha256": "0fd97de0ba88ce9f5ad898e9c3e15846740de400f36fc008ed222241421cc5be",
+      "sha256": "26f61c17c03c016c5fc332e86d52dfe18610a00a2905f151bfda92df65c791b5"
+    },
+    {
+      "path": "scripts/fault-ledger.mjs",
+      "kind": "NEW_QA_HELPER",
+      "sha256": "4b89b8bc2c0e4390ba1a2f3c109e7edd746285112cd836c28161933711397bb0"
+    },
+    {
+      "path": "scripts/fault-recovery.mjs",
+      "kind": "QA_ONLY_CHANGE",
+      "previousSha256": "9c1003c0586cb9960e1fcdabb50e4b6aa2262e420c47f0c18d79a3fc07e2c908",
+      "sha256": "7fa4c579f9a425600667f8dd919b56d64c0bec5d854c6764979ad7d26dd920c1"
+    },
+    {
+      "path": "scripts/inventory.mjs",
+      "kind": "QA_ONLY_CHANGE",
+      "previousSha256": "becefceeac0bc5e54b2737b09879a5a1b2ea023aedd33926b299529e774c45e1",
+      "sha256": "c1653abdf827145033cdace8d1ed220730df7a5138c8d0c1ccd36f2983186b6d"
+    },
+    {
+      "path": "scripts/offline-check.mjs",
+      "kind": "QA_ONLY_CHANGE",
+      "previousSha256": "4af4acdb9bb2a2052d0ae1d24a70f185a59dc193dfeba76b0ca05485ee9e3d25",
+      "sha256": "59e99f0ecb5365e563183a176ea9baa7c2e3f57dab1e7d448dadcf7c5abc7c23"
+    },
+    {
+      "path": "scripts/offline-regressions.mjs",
+      "kind": "NEW_QA_HELPER",
+      "sha256": "92ddaee068082185b3f5eb6c88006f7b61130729768f891b42dff621c0496836"
+    },
+    {
+      "path": "scripts/publication-contract.mjs",
+      "kind": "NEW_QA_HELPER",
+      "sha256": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+    },
+    {
+      "path": "scripts/publication.mjs",
+      "kind": "QA_ONLY_CHANGE",
+      "previousSha256": "49e9c017bf971896c254987392122cc9c50486ca705f2ff8d3a575b1c03efe59",
+      "sha256": "18b6c0b957e21c1f1c8dd86457344f9998d2d994a06d9fefa1b3e6a54ab105ae"
+    },
+    {
+      "path": "scripts/retire.mjs",
+      "kind": "QA_ONLY_CHANGE",
+      "previousSha256": "bae6174efd037c8679b9dffb88c93d89ee0c0e438d5bb82ea956dc3222db01b6",
+      "sha256": "008913657397cb31c1e5b144e87ba60673301a590c8b8bb15ed801cefb723ee4"
+    }
+  ],
+  "retainedOriginalEvidence": {
+    "originalOffline12": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/evidence/offline-final08",
+    "priorReviewChecks": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1-review/checks.json",
+    "originalFailureArchives": "all remain byte-identical within frozen C1; exact recursive manifest digest in c1-provenance.json"
+  },
+  "nativeOperations": 0,
+  "credentialReads": 0,
+  "modelServiceCalls": 0,
+  "productionWrites": 0
+}
