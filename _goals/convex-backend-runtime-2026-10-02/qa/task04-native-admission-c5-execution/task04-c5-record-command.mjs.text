@@ -1,0 +1,10 @@
+import {spawn} from 'node:child_process';
+import {openSync,closeSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+const [label,...argv]=process.argv.slice(2);
+if(!/^task04-native-c5-[a-z0-9-]+$/.test(label)||argv.length<2)throw Error('Invalid bounded command label');
+const base=resolve('work/resume',label),start=new Date().toISOString();
+const out=openSync(base+'.stdout.log','wx',0o600),err=openSync(base+'.stderr.log','wx',0o600);
+const child=spawn(argv[0],argv.slice(1),{cwd:process.cwd(),env:process.env,stdio:['ignore',out,err]});
+child.on('error',error=>{closeSync(out);closeSync(err);writeFileSync(base+'.receipt.json',JSON.stringify({argv,cwd:process.cwd(),startedAt:start,endedAt:new Date().toISOString(),spawnError:error.code},null,2)+'\n',{flag:'wx',mode:0o600});process.exitCode=1;});
+child.on('exit',(code,signal)=>{closeSync(out);closeSync(err);writeFileSync(base+'.receipt.json',JSON.stringify({argv,cwd:process.cwd(),startedAt:start,endedAt:new Date().toISOString(),exitCode:code,signal},null,2)+'\n',{flag:'wx',mode:0o600});process.stdout.write(JSON.stringify({label,exitCode:code,signal})+'\n');process.exitCode=code??1;});
