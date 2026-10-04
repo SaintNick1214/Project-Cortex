@@ -1,0 +1,324 @@
+{
+  "scope": "INDEPENDENT_C11_OFFLINE_ONLY",
+  "candidateSha256": "e2b015f14d57692544cf73242e1a5bd784b342b43a0d3c1e6d0ecdb5b0c2fbc6",
+  "toolchain": {
+    "node": "v24.19.0",
+    "npm": "12.2.0"
+  },
+  "checks": [
+    {
+      "selection": 1,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/native-validator-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:18.425642+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:18.909828+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.484,
+      "status": "PASS",
+      "stdout": "{\"status\":\"PASS\",\"registered\":259,\"public\":200,\"internal\":59,\"validatorMismatches\":0,\"dispatches\":0,\"signatures\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 2,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:18.910118+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:19.049043+00:00",
+      "exitCode": 1,
+      "elapsedSeconds": 0.139,
+      "status": "FAIL",
+      "stdout": "",
+      "stderr": "file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:11\nconst reject = () => { throw new Error('Current foundation preflight rejected; no operation dispatched'); };\n                             ^\n\nError: Current foundation preflight rejected; no operation dispatched\n    at reject (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:11:30)\n    at canonical (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:17:72)\n    at sourcePreflight (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:37:29)\n    at file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/offline-check.mjs:5:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.19.0\n"
+    },
+    {
+      "selection": 3,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/semantic-input-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:19.049346+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:19.310670+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.261,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"arrayBearingPublicPaths\":42,\"nonemptyBatchPaths\":2,\"partialMutationBindingPaths\":2,\"partialBindingNegatives\":6,\"healthyMockGetters\":2,\"bindingNegatives\":20,\"seedRowsFromActualFamily\":66,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_ACTUAL_NATIVE_SEMANTIC_INPUTS\",\"status\":\"PASS\",\"publicPaths\":200,\"authReached\":200,\"effectTraps\":0,\"authorityForwards\":4,\"originalMalformedNativeShapeValid\":true,\"originalMalformedCode\":\"INVALID_INPUT\",\"originalMalformedAuthReads\":0,\"originalMalformedNotAuth\":true,\"minimalOnlyDurationChange\":true,\"healthyScopedTemplate\":\"PASS\",\"healthyWrites\":0,\"serviceWire\":\"NOT_RUN\",\"dispatches\":0,\"signatures\":0,\"observationAlias\":\"semantic-input-results-13f3a705-5fb8-463e-ae08-e436dc27766f.json\"}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 4,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/offline-closure-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:19.311008+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:19.542663+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.232,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"arrayBearingPublicPaths\":42,\"nonemptyBatchPaths\":2,\"partialMutationBindingPaths\":2,\"partialBindingNegatives\":6,\"healthyMockGetters\":2,\"bindingNegatives\":20,\"seedRowsFromActualFamily\":66,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CURRENT_TABLE_SHAPES\",\"status\":\"PASS\",\"rows\":12,\"tables\":4,\"realIds\":\"NOT_RUN_REQUIRES_OWNED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 5,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/auth-classifier-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:19.543029+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:19.652062+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.109,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_AUTH_CLASSIFIER\",\"status\":\"PASS\",\"originalNegativeControls\":44,\"observedHeaderNegativeControls\":27,\"cycle6NegativeControls\":71,\"observedProviderNegativeControls\":27,\"negativeControls\":98,\"observedProviderPositiveControls\":4,\"observedHeaderPositiveControls\":4,\"legacyStatusPositiveControls\":6,\"current401Then560CollisionRejected\":true,\"staleWireRejected\":true,\"fresh401Recovery\":true,\"arbitraryDeniedAccepted\":false,\"privateDiagnosticAccepted\":false,\"opaqueFailureIsAuthDenial\":false,\"dispatches\":0,\"signatures\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 6,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/callback-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:19.652422+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:19.915786+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.263,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_HOST_CALLBACK_PAYLOAD\",\"status\":\"PASS\",\"malformedRejected\":9,\"serviceCalls\":0,\"signatures\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 7,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/management-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:19.916172+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:19.957455+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.041,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_MANAGEMENT_CONTRACT\",\"status\":\"PASS\",\"partialRecoveryPrepared\":true,\"negativeControls\":10,\"dispatches\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 8,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--strict",
+        "--skipLibCheck",
+        "--moduleResolution",
+        "Bundler",
+        "--module",
+        "ESNext",
+        "--target",
+        "ES2022",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/contracts.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:19.957968+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:20.504262+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.546,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "selection": 9,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "work/backend-runtime/task03-foundation-live-c11/offline-fixture/convex/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:20.504711+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:28.447056+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 7.942,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "selection": 10,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/eslint.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/cases"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:28.447511+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:30.045538+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 1.598,
+      "status": "PASS",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "selection": 11,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/offline-mwd-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:30.046077+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:30.417395+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.371,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"arrayBearingPublicPaths\":42,\"nonemptyBatchPaths\":2,\"partialMutationBindingPaths\":2,\"partialBindingNegatives\":6,\"healthyMockGetters\":2,\"bindingNegatives\":20,\"seedRowsFromActualFamily\":66,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_ACTUAL_NATIVE_ADMIN_OUTCOME\",\"status\":\"PASS\",\"actualRegisteredHandler\":true,\"memoryFixtureDb\":true,\"seedTableSchemasVerified\":true,\"revokedGrantMaintenanceFence\":true,\"oldBooleanAssertionsRejected\":2,\"exactDeletedObjects\":2,\"missingRowFalse\":true,\"linkedPolicyLogsRemoved\":true,\"otherPolicyLogsRetained\":true,\"sourceDeletionBarriers\":2,\"authSourceTombstonesPreserved\":true,\"wrongIdAndUnsupportedNoEffects\":2,\"malformedOutcomeNegatives\":7,\"serviceCalls\":0,\"signatures\":0,\"live\":\"NOT_RUN\"}\n{\"scope\":\"OFFLINE_AUTHOR_ONLY\",\"status\":\"PASS\",\"syntax\":\"node --check module\",\"actualSchemaRowsValidated\":19,\"tableTypes\":[\"immutable\",\"mutable\",\"sessions\",\"runtimeAuthPrincipals\",\"runtimeAuthMemberships\",\"runtimeAuthGrants\",\"runtimeMemorySources\",\"facts\"],\"registeredPaths\":74,\"metadata\":41,\"worker\":25,\"domain\":8,\"descriptorSuites\":8,\"liveStatus\":\"NOT_RUN\",\"liveDispatches\":0,\"signatures\":0,\"servicesStarted\":0,\"seededRows\":0,\"idValidation\":\"schema-only synthetic string references; actual v.id identity is live prerequisite\"}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 12,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "work/backend-runtime/task03-foundation-live-c11/offline-mra.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:30.417828+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:30.890190+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.472,
+      "status": "PASS",
+      "stdout": "{\"status\":\"PASS\",\"scope\":\"OFFLINE_AUTHORING_ONLY\",\"registeredPaths\":117,\"caseDescriptors\":122,\"seedRows\":66,\"nativeSchemaValidated\":true,\"nativeArgumentsValidated\":true,\"serviceCalls\":0,\"signatures\":0,\"liveStatus\":\"NOT_RUN\"}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 13,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "-e",
+        "import('./_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/cases/mf-registry-artifacts.mjs').then(m=>console.log(JSON.stringify(m.offlineDenialControls())))"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:30.890694+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:31.003205+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.113,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_DENIAL_ASSERTIONS\",\"positiveControls\":2,\"malformedRejected\":10,\"serviceCalls\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 14,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/forwarded-native-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:31.003781+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:31.362078+00:00",
+      "exitCode": 1,
+      "elapsedSeconds": 0.358,
+      "status": "FAIL",
+      "stdout": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"arrayBearingPublicPaths\":42,\"nonemptyBatchPaths\":2,\"partialMutationBindingPaths\":2,\"partialBindingNegatives\":6,\"healthyMockGetters\":2,\"bindingNegatives\":20,\"seedRowsFromActualFamily\":66,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n",
+      "stderr": "file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:11\nconst reject = () => { throw new Error('Current foundation preflight rejected; no operation dispatched'); };\n                             ^\n\nError: Current foundation preflight rejected; no operation dispatched\n    at reject (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:11:30)\n    at canonical (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:17:72)\n    at sourcePreflight (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:37:29)\n    at <anonymous> (/workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/forwarded-native-check.mjs:10:1)\n\nNode.js v24.19.0\n"
+    },
+    {
+      "selection": 15,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/first-preservation-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:31.362953+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:32.332282+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.969,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_CYCLE10_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":598,\"candidateSha256\":\"add765ab1aca3ee385a55e632801672c9587d37458a99826feb2fddb7622bf88\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE9_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":519,\"candidateSha256\":\"a653cec5eb42a2a2e48e204d4cb31f2c948dc5383a9d4a3a5652101552aa8ad3\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE8_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":469,\"candidateSha256\":\"54b641e93518c43d67364a910865ad71b6d6cb7cdead36795e17cf66188139cd\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE7_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":406,\"candidateSha256\":\"fc9cf02224b8c5737897429d6274c8c8aee3b214a01bf806a7b24e23847e5569\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE6_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":362,\"candidateSha256\":\"86b9c0ccce29e4ae94edc1d9a1d21f0160b000bfcf916964cd19adcf1977091c\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE5_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":318,\"candidateSha256\":\"ade40d6f694fa0987c0bfa56fa99684444dab37f3ee1a9c990d75179ee310084\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE4_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":273,\"candidateSha256\":\"16fa59a1564dd628bbf1f2507b822f98053bd26140c74fb286840818d3d86cd1\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE3_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":285,\"candidateSha256\":\"db0d0e879c96c5108018f881ce14d43ec16938ef222680136a8e93a7fec1d044\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE2_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":278,\"candidateSha256\":\"d3e9984ebca68860c1a98e09092cca1676a24d15169026b6283d965a3eb8fe4e\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_FIRST_CANDIDATE_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":186,\"reviewFiles\":43,\"firstDigest\":\"8189fbaecd8e5c588b1446644741642f2525e5c27a0451d72b458b72cba0564c\",\"serviceCalls\":0,\"signatures\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 16,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/process-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:32.332837+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:35.606852+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 3.274,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_ACTUAL_OWNED_PROCESS_GROUPS\",\"status\":\"PASS\",\"processes\":3,\"verifiedGroups\":3,\"remainingGroups\":0,\"timeoutUnknownIsFailure\":true,\"serviceCalls\":0,\"signatures\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 17,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/schema-index-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:35.607482+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:35.788683+00:00",
+      "exitCode": 1,
+      "elapsedSeconds": 0.181,
+      "status": "FAIL",
+      "stdout": "",
+      "stderr": "file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:11\nconst reject = () => { throw new Error('Current foundation preflight rejected; no operation dispatched'); };\n                             ^\n\nError: Current foundation preflight rejected; no operation dispatched\n    at reject (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:11:30)\n    at canonical (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:17:72)\n    at sourcePreflight (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:37:29)\n    at <anonymous> (/workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/schema-index-check.mjs:22:1)\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.19.0\n"
+    },
+    {
+      "selection": 18,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/diagnostics-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:35.789226+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:35.973542+00:00",
+      "exitCode": 0,
+      "elapsedSeconds": 0.184,
+      "status": "PASS",
+      "stdout": "{\"scope\":\"OFFLINE_PRIVATE_DIAGNOSTICS\",\"status\":\"PASS\",\"routineDenials\":560,\"routineDiskRecords\":0,\"maxRecords\":32,\"maxRecordBytes\":65536,\"mode600\":true,\"unknownStillFails\":true,\"unexpectedSuccessStillFails\":true,\"redaction\":true,\"streamBound\":true,\"publicBeforeClosure\":true,\"boundaryObserved\":[{\"serializedBytes\":65535,\"fileBytes\":65536,\"truncated\":false},{\"serializedBytes\":65536,\"fileBytes\":282,\"truncated\":true},{\"serializedBytes\":65537,\"fileBytes\":282,\"truncated\":true}],\"decodeObserved\":[{\"label\":\"plain\",\"sameText\":true,\"byteCount\":61,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true},{\"label\":\"bom\",\"sameText\":true,\"byteCount\":64,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true},{\"label\":\"invalidUTF8\",\"sameText\":true,\"byteCount\":37,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true}],\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n",
+      "stderr": ""
+    },
+    {
+      "selection": 19,
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/freeze.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex/work/resume/c11-review/mirror",
+      "startedAtUtc": "2026-10-04T00:41:35.974048+00:00",
+      "finishedAtUtc": "2026-10-04T00:41:36.272704+00:00",
+      "exitCode": 1,
+      "elapsedSeconds": 0.299,
+      "status": "FAIL",
+      "stdout": "",
+      "stderr": "file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:11\nconst reject = () => { throw new Error('Current foundation preflight rejected; no operation dispatched'); };\n                             ^\n\nError: Current foundation preflight rejected; no operation dispatched\n    at reject (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:11:30)\n    at canonical (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:17:72)\n    at sourcePreflight (file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/guard.mjs:37:29)\n    at file:///workspace/Project-Cortex/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11/scripts/freeze.mjs:13:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)\n    at async node:internal/modules/esm/loader:643:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.19.0\n"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+import json,subprocess,datetime,time,os
+from pathlib import Path
+r=Path('/workspace/Project-Cortex');s=r/'work/resume/c11-review';b=s/'mirror';q='_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c11'
+node='/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node';npm='/home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js'
+env={'PATH':str(Path(node).parent)+':/usr/bin:/bin','HOME':str(s),'TMPDIR':str(s),'NO_COLOR':'1'}
+versions={k:subprocess.check_output(v,cwd=b,env=env,text=True).strip() for k,v in {'node':[node,'--version'],'npm':[node,npm,'--version']}.items()};assert versions=={'node':'v24.19.0','npm':'12.2.0'}
+rows=[]
+for i,x in enumerate(json.loads((r/q/'offline-receipts.json').read_text())['checks'],1):
+ argv=x['argv'].copy();argv[0]=node; start=datetime.datetime.now(datetime.timezone.utc).isoformat();t=time.monotonic()
+ p=subprocess.run(argv,cwd=b,env=env,capture_output=True,text=True,timeout=80)
+ row={'selection':i,'argv':argv,'cwd':str(b),'startedAtUtc':start,'finishedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'elapsedSeconds':round(time.monotonic()-t,3),'status':'PASS' if p.returncode==0 else 'FAIL','stdout':p.stdout,'stderr':p.stderr};rows.append(row)
+ print(json.dumps(row),flush=True)
+ (s/'independent-offline-receipts.json').write_text(json.dumps({'scope':'INDEPENDENT_C11_OFFLINE_ONLY','candidateSha256':'e2b015f14d57692544cf73242e1a5bd784b342b43a0d3c1e6d0ecdb5b0c2fbc6','toolchain':versions,'checks':rows},indent=2)+'\n')

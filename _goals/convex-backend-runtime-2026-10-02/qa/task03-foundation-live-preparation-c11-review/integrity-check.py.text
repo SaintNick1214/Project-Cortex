@@ -1,0 +1,14 @@
+from pathlib import Path
+import json,hashlib,difflib
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa';p=q/'task03-foundation-live-preparation-c11';prev=q/'task03-foundation-live-preparation-c10';s=r/'work/resume/c11-review'
+f=json.loads((p/'runtime-freeze.json').read_text());assert all(hashlib.sha256((r/x['path']).read_bytes()).hexdigest()==x['sha256'] for x in f['files'])
+inv=json.loads((p/'source-inventory.json').read_text());old=json.loads((prev/'source-inventory.json').read_text());assert inv['files']==old['files']
+assert all((r/x['source']).read_bytes()==(q/'task03-foundation-live-fixture-c11'/x['copy']).read_bytes()==(q/'task03-foundation-live-fixture-c10'/x['copy']).read_bytes() for x in inv['files'])
+unchanged=['auth-classifier-check.mjs','batch-bindings.mjs','policy-fixture.mjs','qualify.mjs','lifecycle.mjs','auth-boundaries.mjs','native-engine.mjs']
+for n in unchanged:assert (p/'scripts'/n).read_bytes()==(prev/'scripts'/n).read_bytes()
+md=difflib.unified_diff((prev/'cases/metadata-worker-domain.mjs').read_text().splitlines(True),(p/'cases/metadata-worker-domain.mjs').read_text().splitlines(True),fromfile='C10',tofile='C11');(s/'assertion-diff.text').write_text(''.join(md))
+aux={}
+for n in ['cli-restoration.py','publication-check.mjs']:
+ a=(r/'work/resume'/('c10-'+n)).read_bytes();b=(r/'work/resume'/('c11-'+n)).read_bytes();assert a.replace(b'c10',b'c11')==b;aux[n]={'sha256':hashlib.sha256(b).hexdigest(),'namespaceOnly':True,'executed':False}
+receipt={'candidateSha256':hashlib.sha256((p/'runtime-freeze.json').read_bytes()).hexdigest(),'frozenFiles':len(f['files']),'sourceFilesIdenticalToC10':len(inv['files']),'unchangedCriticalScripts':unchanged,'parentAuxiliaries':aux,'credentialsRead':0,'signatures':0,'networkCalls':0,'productWrites':0,'candidateWrites':0,'gitOperations':0}
+(s/'integrity.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt))
