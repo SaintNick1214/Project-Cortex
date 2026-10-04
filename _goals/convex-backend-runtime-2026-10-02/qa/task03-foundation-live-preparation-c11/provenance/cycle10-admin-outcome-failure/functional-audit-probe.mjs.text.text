@@ -1,0 +1,54 @@
+import assert from 'node:assert/strict';
+import { build } from 'esbuild';
+import { pathToFileURL } from 'node:url';
+import { writeFileSync } from 'node:fs';
+const root='/workspace/Project-Cortex';
+const scratch=root+'/work/resume/functional-fixture-contract-audit';
+const sources=['admin','graphSync','runtimeMemory','runtimeAuth'];
+const bundle=scratch+'/native.mjs';
+await build({stdin:{contents:sources.map(n=>`import * as ${n} from '${root}/convex-dev/${n}.ts';`).join('\n')+`\nimport {memoryFixture} from '${root}/tests/unit/runtimeMemory/fixture.ts'; export {memoryFixture,${sources.join(',')}};`,resolveDir:root},bundle:true,platform:'node',format:'esm',packages:'external',outfile:bundle,logLevel:'silent'});
+const native=await import(pathToFileURL(bundle));
+const {prepare}=await import(pathToFileURL(root+'/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c10/cases/metadata-worker-domain.mjs'));
+const results=[];
+const realNow=Date.now;let clockTick=0;Date.now=()=>realNow()+clockTick++;
+function setup(){
+ const f=native.memoryFixture(),db=f.db;
+ db.patch=async(table,id,value)=>{const row=await db.get(table,id);assert.ok(row);for(const [k,v] of Object.entries(value)){if(v===undefined)delete row[k];else row[k]=structuredClone(v);}db.writes++;};
+ db.delete=async(table,id)=>{db.rows.set(table,db.table(table).filter(r=>r._id!==id));db.writes++;};
+ const query=db.query.bind(db);
+ // Preserve the actual fixture index and predicate semantics while extending comparison operators.
+ db.query=table=>{const b=query(table),filter=b.filter;b.order=()=>b;b.filter=cb=>filter(()=>cb({field:n=>n,eq:(n,v)=>r=>n.split('.').reduce((a,k)=>a?.[k],r)===v,gt:(n,v)=>r=>n.split('.').reduce((a,k)=>a?.[k],r)>v,lt:(n,v)=>r=>n.split('.').reduce((a,k)=>a?.[k],r)<v,and:(...ps)=>r=>ps.every(p=>p(r))}));return b;};
+ const run='foundation-'+'b'.repeat(32);
+ const references={reader:f.reference},principals={reader:f.principal._id},users={reader:'user-a'};
+ for(const [alias,capabilities,tenantId,memorySpaceId] of [['foreign',['read','write'],'foreign-tenant','foreign-space'],['writer',['write'],'tenant-a','space-a'],['admin',['admin'],'tenant-a','space-a']]){
+  const p=db.seed('runtimeAuthPrincipals',{issuer:'https://host.test',subject:alias,actorKind:'user',version:1,createdAt:1000});
+  const m=db.seed('runtimeAuthMemberships',{principalId:p._id,tenantId,version:1,createdAt:1000});
+  const g=db.seed('runtimeAuthGrants',{principalId:p._id,membershipId:m._id,tenantId,memorySpaceId,tenantEpoch:1,memorySpaceEpoch:1,capabilities,resourceAccess:'own',version:1,createdAt:1000});
+  if(alias==='foreign'){db.seed('runtimeAuthScopes',{tenantId,epoch:1,createdAt:1000});db.seed('runtimeAuthScopes',{tenantId,memorySpaceId,epoch:1,createdAt:1000});}
+  references[alias]={principalId:p._id,principalVersion:1,membershipId:m._id,membershipVersion:1,grantId:g._id,grantVersion:1,tenantId,memorySpaceId,tenantEpoch:1,memorySpaceEpoch:1};principals[alias]=p._id;users[alias]=alias;
+ }
+ const ctx={run,issuer:'https://host.test',refs:[],references,principals,users,scopes:{tenantId:'tenant-a',memorySpaceId:'space-a',foreignTenantId:'foreign-tenant',foreignMemorySpaceId:'foreign-space'},
+  seed:async rows=>rows.map(({table,value})=>({table,id:db.seed(table,structuredClone(value))._id})),
+  snapshot:async refs=>refs?refs.map(({table,id})=>({table,id,row:structuredClone(db.table(table).find(r=>r._id===id)??null)})):structuredClone([...db.rows].filter(([,rows])=>rows.length)),
+  cleanup:async refs=>{for(const {table,id} of refs)await db.delete(table,id);},discoverOwnedEffects:async()=>{},
+  operator:async(path,args)=>{const [module,key]=path.split(':');const result=await db.transaction(()=>native[module][key]._handler(f.ctx,args));if(path==='admin:deleteRecord')results.push({probe:'native-descriptor-admin-receipt',receipt:result,rowAbsent:(await db.get(args.table,args.id))===null});return result;},
+  call:async(identity,path,args)=>{f.ctx.auth.getUserIdentity=async()=>({issuer:'https://host.test',subject:identity==='reader'?'user-a':identity});const [module,key]=path.split(':');return native[module][key]._handler(f.actionCtx,args);}};
+ return {f,ctx};
+}
+for(const id of ['mwd-graph-stored-reference','mwd-domain-owned-current-reference','mwd-domain-policy-intermediate']){
+ const {ctx}=setup();const descriptor=await prepare(ctx);let error;
+ try{await descriptor.cases.find(c=>c.id===id).run(ctx);}catch(e){error=e;}
+ results.push({probe:'original-descriptor',id,status:error?'FAIL':'PASS',failure:error?{name:error.name,code:error.code,line: error.stack?.split('\n').filter(l=>l.includes('metadata-worker-domain.mjs'))}:undefined});
+}
+{
+ const {f}=setup(),db=f.db;
+ const policy=db.seed('governancePolicies',{}),log=db.seed('governanceEnforcement',{policyId:policy._id}),other=db.seed('governanceEnforcement',{policyId:'other'});
+ const deleteNative=args=>native.admin.deleteRecord._handler(f.ctx,args);
+ const result=await deleteNative({table:'governancePolicies',id:policy._id});assert.deepEqual(result,{deleted:true});assert.equal(await db.get('governancePolicies',policy._id),null);assert.equal(await db.get('governanceEnforcement',log._id),null);assert.ok(await db.get('governanceEnforcement',other._id));
+ assert.throws(()=>assert.equal(result,true));
+ assert.deepEqual(await deleteNative({table:'governancePolicies',id:policy._id}),{deleted:false});
+ const before=structuredClone(db.rows);await assert.rejects(()=>deleteNative({table:'facts',id:'facts:owned'}),e=>e.data.code==='UNSUPPORTED_OPERATION');assert.deepEqual(db.rows,before);
+ results.push({probe:'strict-native-admin-receipt-and-effects',status:'PASS',checks:['exact-object-not-boolean','policy-and-linked-log-absent','unrelated-log-preserved','missing-row-false-receipt','unsupported-source-table-no-effect']});
+}
+writeFileSync(scratch+'/results.json',JSON.stringify({scope:'OFFLINE_NATIVE_HANDLERS_ONLY',services:0,signatures:0,descriptorAssertionsUnchanged:true,results},null,2)+'\n');
+console.log(JSON.stringify(results));
