@@ -1,0 +1,34 @@
+from pathlib import Path
+import hashlib,json,datetime,collections,sys
+R=Path('/workspace/Project-Cortex'); Q=R/'_goals/convex-backend-runtime-2026-10-02/qa'; O=Q/'task04-terminal-capture-native-c4-aggregate-review'
+def sha(b): return hashlib.sha256(b).hexdigest()
+def js(x): return json.dumps(x,ensure_ascii=False,separators=(',',':'))
+def verify(name):
+ p=Q/name; m=p/('qa-manifest.json' if (p/'qa-manifest.json').exists() else 'manifest.json'); d=json.loads(m.read_text()); rows=d['files']; actual={str(f.relative_to(p)) for f in p.rglob('*') if f.is_file() and f!=m}; expected={r['path'] for r in rows}; assert len(rows)==len(expected); assert actual==expected,(name,actual^expected)
+ for r in rows:
+  f=p/r['path']; assert not f.is_symlink(); b=f.read_bytes(); assert len(b)==r['bytes'] and sha(b)==r['sha256'],(name,r['path'])
+ return {'packet':name,'rows':len(rows),'manifestSHA256':sha(m.read_bytes()),'reportSHA256':sha((p/'report.md').read_bytes()) if (p/'report.md').exists() else None}
+names=['task04-terminal-capture-product-c2-review','task04-terminal-capture-native-extension-preparation-c4','task04-terminal-capture-native-extension-preparation-c4/regression','task04-terminal-capture-native-profiles-c4-review','task04-terminal-capture-parent-inputs-c9-preparation','task04-terminal-capture-native-extension-c4-private-supplement','task04-terminal-capture-native-extension-c4-execution']
+result={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'argv':sys.argv,'cwd':str(Path.cwd()),'scope':'public immutable metadata only; no services/private data','manifests':[verify(n) for n in names]}
+e=Q/names[-1]; journals=[]
+for f in sorted(e.glob('journal-*.jsonl')):
+ rows=[json.loads(x) for x in f.read_text().splitlines()]; prev='0'*64
+ for i,row in enumerate(rows,1):
+  digest=row.pop('receiptDigest'); assert row['sequence']==i and row['previousDigest']==prev; assert sha(js(row).encode())==digest,(f.name,i); row['receiptDigest']=digest; prev=digest
+ journals.append({'path':f.name,'rows':len(rows),'sha256':sha(f.read_bytes()),'phases':dict(collections.Counter(r['phase'] for r in rows)),'categories':dict(collections.Counter(r.get('observedCategory') for r in rows)),'failures':dict(collections.Counter(r.get('failureClass') for r in rows if r['status']=='FAIL')),'casePASS':[r['caseId'] for r in rows if r['phase']=='case' and r['status']=='PASS'],'final':rows[-1]})
+result['journals']=journals
+w=json.loads((e/'owned-physical-row-hash-witnesses.json').read_text()); a=[(r['table'],r['idSHA256']) for r in w if r['event']=='created']; b=[(r['table'],r['idSHA256']) for r in w if r['event']=='deleted']; assert len(a)==len(set(a)) and collections.Counter(a)==collections.Counter(b); result['ownership']={'created':len(a),'deleted':len(b),'tables':dict(collections.Counter(t for t,i in a))}
+result['publications']=[]
+expected=json.loads((Q/'task04-terminal-capture-native-extension-preparation-c4/registration-inventory.json').read_text())['registrations']
+def structural(v):
+ if isinstance(v,dict): return {k:structural(v[k]) for k in sorted(v)}
+ if isinstance(v,list): return [structural(x) for x in v]
+ return v
+
+for phase in ['synthetic','empty']:
+ m=json.loads((e/f'publication-manifest-{phase}.json').read_text()); b=b''.join((e/r['path']).read_bytes() for r in m['chunks']); assert len(b)==m['bundleBytes'] and sha(b)==m['bundleSha256']; bundle=json.loads(b); assert len(bundle['functions'])==287
+ raw=json.loads((e/f'publication-raw-{phase}.bin').read_bytes()); assert raw['status']=='success'; normalized=[{'path':r['identifier'].replace('.js:',':'),'type':r['functionType'].lower(),'visibility':r['visibility'] if isinstance(r['visibility'],str) else r['visibility']['kind'],'args':structural(json.loads(r['args']) if isinstance(r['args'],str) else r['args'])} for r in raw['value'] if r['functionType']!='HttpAction']; assert normalized==bundle['functions']; assert sorted((r['path'],r['type'],r['visibility']) for r in normalized)==sorted((r['path'],r['type'],r['visibility']) for r in expected); amap={r['path']:r for r in normalized}; assert all(amap[r['path']]['args']==structural(r['args']) for r in expected)
+ c=json.loads((e/f'codegen-{phase}.json').read_text()); assert c['status']=='PASS' and c['officialCodegen'] and c['typecheck']=='enable'
+ for r in c['generated']: assert sha((e/f'official-generated-{phase}'/Path(r['path']).name).read_bytes())==r['sha256']
+ result['publications'].append({'phase':phase,'bundleSHA256':sha(b),'functions':len(bundle['functions']),'visibility':dict(collections.Counter(r['visibility'] for r in bundle['functions'])),'equality':bundle['equality'],'codegenPASS':True})
+(O/'preliminary-public-verification.json').write_text(json.dumps(result,indent=2)+'\n'); print(json.dumps({'manifestRows':[r['rows'] for r in result['manifests']],'journals':[(r['rows'],r['categories']) for r in journals],'ownership':result['ownership'],'publications':[{k:v for k,v in p.items() if k!='equality'} for p in result['publications']]},indent=2))

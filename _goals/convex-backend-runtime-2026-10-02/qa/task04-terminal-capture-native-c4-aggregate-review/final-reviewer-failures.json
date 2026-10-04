@@ -1,0 +1,27 @@
+{
+  "preservedFailures": [
+    {
+      "exitCode": 1,
+      "exception": "AssertionError at maintenance count ==20",
+      "cause": "Reviewer aggregate counted two internal visibility rejections per each four maintenance endpoint plus five maintenance validator rejections; actual28, subtract8internal=20 unchanged original maintenance cases."
+    },
+    {
+      "exitCode": 1,
+      "exception": "KeyError operation for process-deploy record",
+      "cause": "Reviewer assumed qualifier process schema for deployment record; distinct documented phase/time/group schema inspected."
+    },
+    {
+      "exitCode": 1,
+      "exception": "KeyError directChildWaited for process-deploy record",
+      "cause": "DirectChildWaited belongs to fault-process receipts; corrected schema distinction, process terminal constraints unchanged."
+    },
+    {
+      "exitCode": 1,
+      "exception": "cat missing work/resume deploy-empty/qualify-empty wrapper names",
+      "cause": "Reviewer inferred wrapper names; actual exact argv names already inspected/hashchecked through command receipts; frozen deploy/retire sources successfully read."
+    }
+  ],
+  "subjectEdits": false,
+  "assertionsWeakened": false,
+  "finalMeaningfulChecks": "PASS"
+}
