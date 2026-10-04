@@ -1,0 +1,162 @@
+[
+  {
+    "name": "source-index-hardlink-extra",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+      "--index",
+      "/tmp/cortex-c2-backing-transport-fresh-review/source-index-hardlink-extra/index.json",
+      "--index-sha256",
+      "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+      "--destination",
+      "/tmp/cortex-c2-backing-transport-fresh-review/source-index-hardlink-extra-dst"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T16:46:13.584908+00:00",
+    "endUTC": "2026-10-04T16:46:13.617514+00:00",
+    "exit": 1,
+    "expectedExit": 1,
+    "outcomeMatched": true,
+    "RLIMIT_FSIZE": null
+  },
+  {
+    "name": "source-part-directory-extra",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+      "--index",
+      "/tmp/cortex-c2-backing-transport-fresh-review/source-part-directory-extra/index.json",
+      "--index-sha256",
+      "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+      "--destination",
+      "/tmp/cortex-c2-backing-transport-fresh-review/source-part-directory-extra-dst"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T16:46:13.617958+00:00",
+    "endUTC": "2026-10-04T16:46:13.651472+00:00",
+    "exit": 1,
+    "expectedExit": 1,
+    "outcomeMatched": true,
+    "RLIMIT_FSIZE": null
+  },
+  {
+    "name": "source-ancestor-symlink-required-denial",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+      "--index",
+      "/tmp/cortex-c2-backing-transport-fresh-review/source-ancestor-link/index.json",
+      "--index-sha256",
+      "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+      "--destination",
+      "/tmp/cortex-c2-backing-transport-fresh-review/source-ancestor-required-denial"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T16:46:13.651815+00:00",
+    "endUTC": "2026-10-04T16:46:13.685774+00:00",
+    "exit": 0,
+    "expectedExit": 1,
+    "outcomeMatched": false,
+    "RLIMIT_FSIZE": null
+  },
+  {
+    "name": "destination-object-directory-symlink",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+      "--index",
+      "/tmp/cortex-c2-backing-transport-fresh-review/controls/small-positive/index.json",
+      "--index-sha256",
+      "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+      "--destination",
+      "/tmp/cortex-c2-backing-transport-fresh-review/destination-object-directory-symlink"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T16:46:13.686149+00:00",
+    "endUTC": "2026-10-04T16:46:13.719480+00:00",
+    "exit": 1,
+    "expectedExit": 1,
+    "outcomeMatched": true,
+    "RLIMIT_FSIZE": null
+  },
+  {
+    "name": "destination-object-hardlink",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+      "--index",
+      "/tmp/cortex-c2-backing-transport-fresh-review/controls/small-positive/index.json",
+      "--index-sha256",
+      "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+      "--destination",
+      "/tmp/cortex-c2-backing-transport-fresh-review/destination-object-hardlink"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T16:46:13.719808+00:00",
+    "endUTC": "2026-10-04T16:46:13.759058+00:00",
+    "exit": 1,
+    "expectedExit": 1,
+    "outcomeMatched": true,
+    "RLIMIT_FSIZE": null
+  },
+  {
+    "name": "destination-object-symlink",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+      "--index",
+      "/tmp/cortex-c2-backing-transport-fresh-review/controls/small-positive/index.json",
+      "--index-sha256",
+      "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+      "--destination",
+      "/tmp/cortex-c2-backing-transport-fresh-review/destination-object-symlink"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T16:46:13.759492+00:00",
+    "endUTC": "2026-10-04T16:46:13.793945+00:00",
+    "exit": 1,
+    "expectedExit": 1,
+    "outcomeMatched": true,
+    "RLIMIT_FSIZE": null
+  },
+  {
+    "name": "late-os-fsize-partial",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+      "--index",
+      "/tmp/cortex-c2-backing-transport-fresh-review/controls/small-positive/index.json",
+      "--index-sha256",
+      "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+      "--destination",
+      "/tmp/cortex-c2-backing-transport-fresh-review/late-fsize-partial"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T16:46:13.794211+00:00",
+    "endUTC": "2026-10-04T16:46:13.828889+00:00",
+    "exit": 1,
+    "expectedExit": 1,
+    "outcomeMatched": true,
+    "RLIMIT_FSIZE": 1
+  },
+  {
+    "name": "late-partial-idempotent-denial",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+      "--index",
+      "/tmp/cortex-c2-backing-transport-fresh-review/controls/small-positive/index.json",
+      "--index-sha256",
+      "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+      "--destination",
+      "/tmp/cortex-c2-backing-transport-fresh-review/late-fsize-partial"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T16:46:13.829267+00:00",
+    "endUTC": "2026-10-04T16:46:13.863795+00:00",
+    "exit": 1,
+    "expectedExit": 1,
+    "outcomeMatched": true,
+    "RLIMIT_FSIZE": null
+  }
+]

@@ -1,0 +1,747 @@
+{
+  "records": [
+    {
+      "name": "archive-byte-cap",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/archive-byte-cap/index.json",
+        "--index-sha256",
+        "4b2724ff816afd6fe6d6663b9a14d3f67d78977e5ed0ac37650c1e8313dd6a54",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/archive-byte-cap-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.785819+00:00",
+      "endUTC": "2026-10-04T16:45:29.819724+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "3d3c31870e61324c697d2bd619f1bf14ed1d8d3a3447389dd4da74a54ed163e5"
+    },
+    {
+      "name": "archive-hash-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/archive-hash-mismatch/index.json",
+        "--index-sha256",
+        "2523270497db9af64a2b8aa90371f3ab4229333e633a286d1d37259bb4abc8cf",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/archive-hash-mismatch-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.151026+00:00",
+      "endUTC": "2026-10-04T16:45:29.184856+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "cb35a89f1ac55e003827640c18a6efd8eb16a0366ed4d6ffce40873b251e683a"
+    },
+    {
+      "name": "duplicate-object",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/duplicate-object/index.json",
+        "--index-sha256",
+        "30a00514a83486bfdfbdcc35bc33b309b50d3725aa4762354af747ee13da9717",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/duplicate-object-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.860714+00:00",
+      "endUTC": "2026-10-04T16:45:29.894594+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "220ee05d6c7f4028a2e1e55901589c43dc4585423e7d21834f79666978e74ca5"
+    },
+    {
+      "name": "genuine-full-materialize",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/index.json",
+        "--index-sha256",
+        "cf6314cb96d9b8b74be64839ff971a0e85068dc6a67c5b8bf8433850263b6866",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/genuine"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:27.994359+00:00",
+      "endUTC": "2026-10-04T16:45:28.493444+00:00",
+      "exit": 0,
+      "expectedExit": 0,
+      "stdoutSHA256": "1435c2fba6fc56ae8641f70d07c9a16a4a76c3fe132e77d59b049306dcc7a213",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "genuine-idempotent-verify",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/index.json",
+        "--index-sha256",
+        "cf6314cb96d9b8b74be64839ff971a0e85068dc6a67c5b8bf8433850263b6866",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/genuine"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:28.494016+00:00",
+      "endUTC": "2026-10-04T16:45:28.974743+00:00",
+      "exit": 0,
+      "expectedExit": 0,
+      "stdoutSHA256": "8250a872e6b0bc4788380d3ebb03242cdd51333e22fe269e731280cc23fcc560",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "gzip-concatenated",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/gzip-concatenated/index.json",
+        "--index-sha256",
+        "f16b6787c657719429164cb3742de56e186c55e393ff28259be7704ea5cf3b5e",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/gzip-concatenated-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.252312+00:00",
+      "endUTC": "2026-10-04T16:45:29.285022+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "11f3834ab3927b72ac5acd75ccdad47d7b40f217c9890722db8ea5a9c9dba6e1"
+    },
+    {
+      "name": "gzip-crc",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/gzip-crc/index.json",
+        "--index-sha256",
+        "ce38a1d8c3a982de9b25ae8314153a33dbf5c9ef2ed57a84bb2dfd71e83d5382",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/gzip-crc-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.185494+00:00",
+      "endUTC": "2026-10-04T16:45:29.217900+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "a1ac77933cea6b2fcf9a5a67161befa2193fc07f9e8d160530d6eece22c80666"
+    },
+    {
+      "name": "gzip-decompression-cap",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/gzip-decompression-cap/index.json",
+        "--index-sha256",
+        "fc4d78027e084c0c39fc4042c5746b59edf994f959893d2b24c34e9afc2b3466",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/gzip-decompression-cap-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.648079+00:00",
+      "endUTC": "2026-10-04T16:45:29.682097+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "11f3834ab3927b72ac5acd75ccdad47d7b40f217c9890722db8ea5a9c9dba6e1"
+    },
+    {
+      "name": "gzip-trailing",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/gzip-trailing/index.json",
+        "--index-sha256",
+        "2607e0fb849b2709bbe32e65c85218165aabf7844274074d47d20af7f3182229",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/gzip-trailing-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.218407+00:00",
+      "endUTC": "2026-10-04T16:45:29.251747+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "11f3834ab3927b72ac5acd75ccdad47d7b40f217c9890722db8ea5a9c9dba6e1"
+    },
+    {
+      "name": "index-pin-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/index-pin-mismatch/index.json",
+        "--index-sha256",
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/index-pin-mismatch-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.083297+00:00",
+      "endUTC": "2026-10-04T16:45:29.115882+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "3e337901a2646ceee2a9de35e304755849153cde227081f1bb7bcdb9669bf9f4"
+    },
+    {
+      "name": "missing-late-part",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/missing-late-part/index.json",
+        "--index-sha256",
+        "a465ffa8caa585a771d3d1a6025f021ea6c83cbfcbd6d87a613be26fe747019f",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/missing-late-part-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.895117+00:00",
+      "endUTC": "2026-10-04T16:45:29.928532+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e26cbc711cd41e84d9ccc3549fb5a278ce8b1e66739533306e91a85d85040c2a"
+    },
+    {
+      "name": "object-bool-size",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/object-bool-size/index.json",
+        "--index-sha256",
+        "5a2c0ac0bbdf97c18a9447ce4242fa016a4065388178f82350fd763678121c9b",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/object-bool-size-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.751219+00:00",
+      "endUTC": "2026-10-04T16:45:29.785226+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "220ee05d6c7f4028a2e1e55901589c43dc4585423e7d21834f79666978e74ca5"
+    },
+    {
+      "name": "object-hash-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/object-hash-mismatch/index.json",
+        "--index-sha256",
+        "221e5fd842bfaf2fadee070ac88305a488df6f47fda14fbb8d097301b82c911d",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/object-hash-mismatch-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.540300+00:00",
+      "endUTC": "2026-10-04T16:45:29.574597+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "0adf8dc7ac99eb58a2455dba6f64320c1aad950b892a8b9470d41d38a56eb37e"
+    },
+    {
+      "name": "part-bool-size",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/part-bool-size/index.json",
+        "--index-sha256",
+        "d7f389200f4b7485a6cf515a64fde80e220354b1b9a6310cc972b0d55fea9e9a",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/part-bool-size-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.716726+00:00",
+      "endUTC": "2026-10-04T16:45:29.750685+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "5a733348e0bc213f89d0ea6a2ec24239e8af645ab9c131408d9b393aaa39b705"
+    },
+    {
+      "name": "part-byte-cap",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/part-byte-cap/index.json",
+        "--index-sha256",
+        "3b0bb9361469dd46357d5d61e3800ce1e107d72ca07b0d6a40067631ba00db95",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/part-byte-cap-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.820271+00:00",
+      "endUTC": "2026-10-04T16:45:29.860001+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "5a733348e0bc213f89d0ea6a2ec24239e8af645ab9c131408d9b393aaa39b705"
+    },
+    {
+      "name": "part-hash-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/part-hash-mismatch/index.json",
+        "--index-sha256",
+        "11ab1d977d74c099d6ad9ca344ae81ea9f93605d6afaf766441f4cf907a24cf4",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/part-hash-mismatch-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.116515+00:00",
+      "endUTC": "2026-10-04T16:45:29.150548+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "438fc4bd5af5c6c874f98662af4d00d6305bf4d454d018cb8aee6b13aa64582b"
+    },
+    {
+      "name": "small-positive",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/small-positive/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/small-positive-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.047746+00:00",
+      "endUTC": "2026-10-04T16:45:29.082831+00:00",
+      "exit": 0,
+      "expectedExit": 0,
+      "stdoutSHA256": "99ecd33a774067ca2de764cf42f7d2166543b73fd2e62f24c1cd32ed5a07e9d2",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "source-index-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/source-index-symlink/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/source-index-symlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.963267+00:00",
+      "endUTC": "2026-10-04T16:45:29.996680+00:00",
+      "exit": 1,
+      "expectedExit": 1
+    },
+    {
+      "name": "source-part-hardlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/source-part-hardlink/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/source-part-hardlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.997317+00:00",
+      "endUTC": "2026-10-04T16:45:30.030572+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "fdbb2f1277815cab3243c8c0cb9f15a58254e9b6bc39015f7fc1b208becd43a2"
+    },
+    {
+      "name": "source-part-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/source-part-symlink/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/source-part-symlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.929479+00:00",
+      "endUTC": "2026-10-04T16:45:29.962721+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "fdbb2f1277815cab3243c8c0cb9f15a58254e9b6bc39015f7fc1b208becd43a2"
+    },
+    {
+      "name": "tar-absolute",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-absolute/index.json",
+        "--index-sha256",
+        "bd696982b41a0348a317306166dd8dce30016a2b186540a26ea8817d104dacdb",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-absolute-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.318746+00:00",
+      "endUTC": "2026-10-04T16:45:29.352052+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "1c3cac7472296e3652bbc33bbf67a7216e03df17c1b60e9d594c1fc44fde0ba2"
+    },
+    {
+      "name": "tar-duplicate",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-duplicate/index.json",
+        "--index-sha256",
+        "401cc9f743f1ad48a27f3ce3c543a057bd0d4c3d25d2d3559646d8addefde09f",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-duplicate-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.420908+00:00",
+      "endUTC": "2026-10-04T16:45:29.454851+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "7526f643a29c67bb74462c960888dd367bf59b51cd0f04c6ba9d78a15a41d73c"
+    },
+    {
+      "name": "tar-hardlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-hardlink/index.json",
+        "--index-sha256",
+        "f35ce65931541a8d523be9105b2dbc01fb3648d134de2b8c07f13cbfd20c19ba",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-hardlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.386868+00:00",
+      "endUTC": "2026-10-04T16:45:29.420115+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "1c3cac7472296e3652bbc33bbf67a7216e03df17c1b60e9d594c1fc44fde0ba2"
+    },
+    {
+      "name": "tar-missing",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-missing/index.json",
+        "--index-sha256",
+        "6532398ec07a0e4538dc128faa43fcfbf5d451a8b7afa91094f58c4d90aef5e3",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-missing-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.455427+00:00",
+      "endUTC": "2026-10-04T16:45:29.503855+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "d98b1768f83ebe41b2ce5849b0a0e7c17b3f141e93804ae5f2f1047f84e3ee70"
+    },
+    {
+      "name": "tar-mode",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-mode/index.json",
+        "--index-sha256",
+        "b382b00a090068e1db67fec3761e3685cb70e9830a1dc74389f91e8764adfd92",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-mode-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.575130+00:00",
+      "endUTC": "2026-10-04T16:45:29.608817+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "1c3cac7472296e3652bbc33bbf67a7216e03df17c1b60e9d594c1fc44fde0ba2"
+    },
+    {
+      "name": "tar-oversize",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-oversize/index.json",
+        "--index-sha256",
+        "4917c5836eefb440750a9be28afe76cddc9cfdcb4385be970c48e6b59389298f",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-oversize-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.504620+00:00",
+      "endUTC": "2026-10-04T16:45:29.539682+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "7526f643a29c67bb74462c960888dd367bf59b51cd0f04c6ba9d78a15a41d73c"
+    },
+    {
+      "name": "tar-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-symlink/index.json",
+        "--index-sha256",
+        "5d33227528a63be10f780cfc9fb0bd8bb129ec84889112d79ef1ec6e4b58b208",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-symlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.352719+00:00",
+      "endUTC": "2026-10-04T16:45:29.386253+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "1c3cac7472296e3652bbc33bbf67a7216e03df17c1b60e9d594c1fc44fde0ba2"
+    },
+    {
+      "name": "tar-trailing-nonzero",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-trailing-nonzero/index.json",
+        "--index-sha256",
+        "4de9ce55e58733aae0052225b64eeef5eb235eb6d6d02559b5551f5837e7b98e",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-trailing-nonzero-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.609436+00:00",
+      "endUTC": "2026-10-04T16:45:29.642999+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "d98b1768f83ebe41b2ce5849b0a0e7c17b3f141e93804ae5f2f1047f84e3ee70"
+    },
+    {
+      "name": "tar-traversal",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/tar-traversal/index.json",
+        "--index-sha256",
+        "7869fab66c4347f5ed1362668d89c7b76f1399eae08e6b8f862f8002cb69e38b",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/tar-traversal-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.285642+00:00",
+      "endUTC": "2026-10-04T16:45:29.318170+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "1c3cac7472296e3652bbc33bbf67a7216e03df17c1b60e9d594c1fc44fde0ba2"
+    },
+    {
+      "name": "unsafe-part-path",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/unsafe-part-path/index.json",
+        "--index-sha256",
+        "3b15c2a0673994ecd62789fb4c70a43ba3685484759e34e1f4ddf18e69831105",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/unsafe-part-path-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:29.682658+00:00",
+      "endUTC": "2026-10-04T16:45:29.716114+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "5a733348e0bc213f89d0ea6a2ec24239e8af645ab9c131408d9b393aaa39b705"
+    },
+    {
+      "name": "destination-public",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/destination-public"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:48.874598+00:00",
+      "endUTC": "2026-10-04T16:45:48.912757+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "8159809ba119ab3b1149b085a80edb964448e493d7baf1a5279f2c9249b2ae52"
+    },
+    {
+      "name": "destination-existing-empty",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/destination-existing-empty"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:48.913133+00:00",
+      "endUTC": "2026-10-04T16:45:48.948684+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "8159809ba119ab3b1149b085a80edb964448e493d7baf1a5279f2c9249b2ae52"
+    },
+    {
+      "name": "destination-existing-sentinel",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/destination-existing-sentinel"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:48.949125+00:00",
+      "endUTC": "2026-10-04T16:45:48.982924+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "8159809ba119ab3b1149b085a80edb964448e493d7baf1a5279f2c9249b2ae52"
+    },
+    {
+      "name": "destination-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/destination-symlink"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:48.983413+00:00",
+      "endUTC": "2026-10-04T16:45:49.022557+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "cc0e6693943b5aff8169912bff4b216708b32ab9ba3984a2f6a1580edc42f5a9"
+    },
+    {
+      "name": "destination-ancestor-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/ancestor-link/new"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:49.023014+00:00",
+      "endUTC": "2026-10-04T16:45:49.056476+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "e1a405acba94b107bf073f3348f716d205198aa9461bcdf35029b22b717b1ef7"
+    },
+    {
+      "name": "existing-object-no-overwrite",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/small-positive-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:49.056920+00:00",
+      "endUTC": "2026-10-04T16:45:49.097199+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "2b96718e497f0bf7f03f23842d89515bf3178c150fff6a5f9c79340e5b2564d3"
+    },
+    {
+      "name": "source-ancestor-symlink-observation",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/tmp/cortex-c2-backing-transport-fresh-review/public-input/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-transport-fresh-review/source-ancestor-link/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-transport-fresh-review/source-ancestor-observed"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:45:49.097681+00:00",
+      "endUTC": "2026-10-04T16:45:49.130906+00:00",
+      "exit": 0,
+      "expectedExit": 0,
+      "stdoutSHA256": "99ecd33a774067ca2de764cf42f7d2166543b73fd2e62f24c1cd32ed5a07e9d2",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "references": 301,
+  "objects": 156,
+  "rawObjectBytes": 68361292,
+  "sourcePinsUnchanged": true,
+  "sourceAncestorSymlinkAccepted": true
+}
