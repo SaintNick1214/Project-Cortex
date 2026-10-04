@@ -1,0 +1,85 @@
+import hashlib
+import json
+import shutil
+from pathlib import Path
+
+source = Path('work/backend-runtime/task04-native-admission-c6')
+output = Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c6-execution')
+output.mkdir()
+retirement = json.loads(next(source.glob('retirement-*.json')).read_text())
+assert retirement['deletionHttpStatus'] == 200 and retirement['absentProjectHttpStatus'] == 404
+secrets = []
+for filename in ['deploy.env', 'identities.json', 'peer-config.json']:
+    data = (source / filename).read_text()
+    if filename.endswith('.env'):
+        secrets.extend(line.split('=', 1)[1].strip().strip('"') for line in data.splitlines() if line.startswith('CONVEX_DEPLOY_KEY='))
+    else:
+        def values(value):
+            if isinstance(value, dict):
+                for item in value.values():
+                    yield from values(item)
+            elif isinstance(value, list):
+                for item in value:
+                    yield from values(item)
+            elif isinstance(value, str) and (value.count('.') == 2 or filename == 'peer-config.json' and len(value) == 64):
+                yield value
+        secrets.extend(values(json.loads(data)))
+physical = set()
+witnesses = []
+for path in sorted(source.glob('owned-*.json')):
+    data = json.loads(path.read_text())
+    if 'table' in data and 'id' in data:
+        physical.add(data['id'])
+        witnesses.append({'receipt': path.name, 'sourceSHA256': hashlib.sha256(path.read_bytes()).hexdigest(), 'table': data['table'], 'idSHA256': hashlib.sha256(data['id'].encode()).hexdigest(), 'event': data.get('event', data.get('kind'))})
+for filename in ['historical-native-locators.json', 'argument-scope.json']:
+    def ids(value, key=''):
+        if isinstance(value, dict):
+            for k, item in value.items():
+                yield from ids(item, k)
+        elif isinstance(value, list):
+            for item in value:
+                yield from ids(item, key)
+        elif isinstance(value, str) and len(value) >= 20 and not value.startswith('admission-'):
+            yield value
+    physical.update(ids(json.loads((source / filename).read_text())))
+blocked = []
+def preserve(path, destination):
+    data = path.read_bytes()
+    found_secret = any(value.encode() in data for value in secrets if value)
+    found_id = any(value.encode() in data for value in physical if value)
+    if found_secret or found_id:
+        blocked.append({'source': str(path), 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest(), 'reason': 'private credential/locator occurrence; raw remains local'})
+        return
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.open('xb').write(data)
+
+exact = ['target.json', 'created-project.json', 'preparation-review.json', 'initial-physical-id-provenance.json', 'parent-inputs-receipt.json', 'current-physical-id-input-receipt.json', 'qualifier-window.json', 'codegen-synthetic.json', 'stage-prerequisites-synthetic.json', 'owned-native-error-log-receipt.json', 'private-owned-native-error-log.json']
+patterns = ['retirement-*.json', 'key-match-*.json', 'journal-*.jsonl', 'publication-*', 'ticket-*.json', 'row-allocation-*.json', 'process-deploy-*.json', 'qualifier-process-*.json', 'qualifier-diagnostic-*', 'private-cli-*.json']
+paths = [source / name for name in exact]
+paths += [path for pattern in patterns for path in source.glob(pattern)]
+for path in sorted(set(paths)):
+    preserve(path, output / path.name)
+for path in Path('work/resume').glob('task04-native-c6-*'):
+    if path.is_file():
+        preserve(path, output / (path.name + '.text' if path.suffix == '.mjs' else path.name))
+for path in Path('work/resume').glob('task04-c6-*.mjs'):
+    preserve(path, output / (path.name + '.text'))
+for path in (source / 'deploy-synthetic/convex/_generated').glob('*'):
+    if path.is_file():
+        preserve(path, output / 'official-generated' / path.name)
+(output / 'owned-physical-row-hash-witnesses.json').open('x').write(json.dumps(witnesses, indent=2) + '\n')
+(output / 'private-artifact-retention.json').open('x').write(json.dumps({'blockedPublicCopies': blocked, 'privatePhysicalReceipts': len(witnesses), 'rawPrivateDataRemainsLocal': True}, indent=2) + '\n')
+rows = [json.loads(line) for path in source.glob('journal-*.jsonl') for line in path.read_text().splitlines()]
+diagnostic = json.loads(next(source.glob('qualifier-diagnostic-synthetic-*.json')).read_text())
+process = json.loads(next(source.glob('qualifier-process-synthetic-*.json')).read_text())
+result = {'classification': 'FAIL_NATIVE_NOT_TASK_PASS', 'operation': retirement['operation'], 'run': rows[0]['runId'], 'nativeCoreCasesPassed': [row['caseId'] for row in rows if row.get('phase') == 'case' and row.get('status') == 'PASS'], 'failedCase': 'request-identity', 'failure': 'bare PURE IDEMPOTENCY_CONFLICT rejection lacks structured error.data.code required by unchanged native assertion', 'journalRows': len(rows), 'nativeTickets': len(list(source.glob('ticket-native-*.json'))), 'cleanupComplete': diagnostic['cleanup']['cleanupComplete'], 'terminalGroups': process['counts'], 'targetRetirement': retirement, 'paidInference': 0, 'storageCreated': 0, 'remainingNativeCoverage': '40 remaining core cases, public isolation/storage-handler denials, fault peer recovery and EMPTY-root not run', 'diagnostics': 'exact child stderr retained before throw; one bounded read-only server-log GET retained; zero extra native RPC', 'setupFailure': 'first provisioning command lacked key-check receipt environment path; failed before management calls; corrected distinct recorded invocation passed', 'targetCredentialRemoval': []}
+assert result['cleanupComplete'] and process['counts']['remaining'] == 0
+for filename in ['deploy.env', 'identities.json', 'peer-config.json']:
+    (source / filename).unlink()
+    result['targetCredentialRemoval'].append(filename)
+(output / 'result.json').open('x').write(json.dumps(result, indent=2) + '\n')
+(output / 'report.md').open('x').write('# C6 actual native attempt — FAIL\n\nOfficial deploy/codegen/types and full 281-function publication passed. Three core cases passed. The fourth request-identity scenario rejected changed input, but the bare PURE error did not provide the structured code required by the original assertion. This remains a failed native gate; subsequent required coverage was not run.\n\nExact bounded child stderr, native journals and available server diagnostic are preserved. Cleanup completed; both managed groups terminated. Exact disposable development target deletion returned 200, subsequent lookup 404. Target-only credentials were removed after absence; shared existing signing key/team access remain. No paid inference or storage objects. The first provisioning invocation failed locally before management calls because its receipt path was omitted, then passed with that path supplied.\n')
+preserve(Path(__file__), output / (Path(__file__).name + '.text'))
+files = [{'path': str(path.relative_to(output)), 'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()} for path in sorted(output.rglob('*')) if path.is_file()]
+(output / 'qa-manifest.json').open('x').write(json.dumps({'selfExcluded': True, 'files': files}, indent=2) + '\n')
+print(json.dumps({'files': len(files) + 1, 'publicBlocked': len(blocked), 'journalRows': len(rows), 'corePass': len(result['nativeCoreCasesPassed']), 'cleanupComplete': True, 'retired': True, 'credentialsRemoved': 3}))

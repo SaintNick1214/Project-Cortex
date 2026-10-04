@@ -1,0 +1,26 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(error?.data?.code)
+
+    at Object.<anonymous> (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/cases.mjs:15:118)
+    at expectedException (node:assert:578:17)
+    at expectsError (node:assert:703:21)
+    at strict.rejects (node:assert:769:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async denial (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/cases.mjs:15:75)
+    at async scenario (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/cases.mjs:42:77)
+    at async qualify (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/driver.mjs:34:206)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/driver.mjs:38:181 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

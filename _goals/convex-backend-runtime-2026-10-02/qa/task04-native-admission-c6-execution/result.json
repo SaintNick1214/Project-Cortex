@@ -1,0 +1,46 @@
+{
+  "classification": "FAIL_NATIVE_NOT_TASK_PASS",
+  "operation": "ef51e4da-b75b-43b0-a94a-75a70d0766f5",
+  "run": "admission-098c7d2b50da7383a11f52a354a5d107",
+  "nativeCoreCasesPassed": [
+    "parent-distinct-child-fence",
+    "root-idempotent",
+    "parent-native-rollback"
+  ],
+  "failedCase": "request-identity",
+  "failure": "bare PURE IDEMPOTENCY_CONFLICT rejection lacks structured error.data.code required by unchanged native assertion",
+  "journalRows": 47,
+  "nativeTickets": 43,
+  "cleanupComplete": true,
+  "terminalGroups": {
+    "spawned": 1,
+    "verifiedTerminalGroups": 1,
+    "remaining": 0
+  },
+  "targetRetirement": {
+    "version": 1,
+    "operation": "ef51e4da-b75b-43b0-a94a-75a70d0766f5",
+    "phase": "exact-owned-project-retirement",
+    "status": "PASS",
+    "startedAt": "2026-10-04T05:02:59.253Z",
+    "observedAt": "2026-10-04T05:02:59.592Z",
+    "projectId": 3139288,
+    "deploymentName": "courteous-boar-322",
+    "deploymentUrl": "https://courteous-boar-322.convex.cloud",
+    "provisionState": "FULLY_VERIFIED",
+    "verifiedOnlyDevelopmentCloudDeployment": true,
+    "deletionHttpStatus": 200,
+    "absentProjectHttpStatus": 404,
+    "managementCalls": 5
+  },
+  "paidInference": 0,
+  "storageCreated": 0,
+  "remainingNativeCoverage": "40 remaining core cases, public isolation/storage-handler denials, fault peer recovery and EMPTY-root not run",
+  "diagnostics": "exact child stderr retained before throw; one bounded read-only server-log GET retained; zero extra native RPC",
+  "setupFailure": "first provisioning command lacked key-check receipt environment path; failed before management calls; corrected distinct recorded invocation passed",
+  "targetCredentialRemoval": [
+    "deploy.env",
+    "identities.json",
+    "peer-config.json"
+  ]
+}

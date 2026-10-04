@@ -1,0 +1,54 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-c4-review-independent/guard-probes.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc": "2026-10-04T04:57:59.090Z",
+  "checks": [
+    {
+      "name": "actual-guard-healthy-synthetic-target",
+      "outcome": "PASS"
+    },
+    {
+      "name": "actual-guard-denies-private-path",
+      "outcome": "EXPECTED_DENIAL"
+    },
+    {
+      "name": "actual-guard-denies-C5-operation",
+      "outcome": "EXPECTED_DENIAL"
+    },
+    {
+      "name": "actual-guard-denies-C4-operation",
+      "outcome": "EXPECTED_DENIAL"
+    },
+    {
+      "name": "actual-guard-denies-wrong-slug",
+      "outcome": "EXPECTED_DENIAL"
+    },
+    {
+      "name": "actual-guard-denies-retired",
+      "outcome": "EXPECTED_DENIAL"
+    },
+    {
+      "name": "actual-guard-denies-shared",
+      "outcome": "EXPECTED_DENIAL"
+    },
+    {
+      "name": "actual-guard-denies-wrong-request-digest",
+      "outcome": "EXPECTED_DENIAL"
+    }
+  ],
+  "twoPublicStorageCallers": [
+    "artifacts:completeArtifactUpload",
+    "attachments:attach"
+  ],
+  "nativeHandlerEvidence": "NOT_RUN",
+  "skipped": 0,
+  "realSigning": 0,
+  "realCredentialReads": 0,
+  "realNetwork": 0,
+  "realRPC": 0,
+  "realRows": 0,
+  "realStorage": 0
+}

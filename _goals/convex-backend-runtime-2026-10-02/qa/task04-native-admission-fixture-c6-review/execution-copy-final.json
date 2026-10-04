@@ -1,0 +1,68 @@
+{
+  "copies": [
+    {
+      "original": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-check.mjs",
+      "originalSHA256": "b7fb43dc4510d151f2f5610de466c43b3efb8701fdca1e3ff1647656a8e2dfd0",
+      "executionCopy": "work/resume/task04-native-admission-c6-review-independent/scripts/offline-check.mjs",
+      "executionSHA256": "a5651af9511059f9a654d142add06447cb2b2443f9d211fd71e92ca3da6d80d5",
+      "adaptations": "relative import paths absolute; only scratch prefix changed; assertions unchanged"
+    },
+    {
+      "original": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-regressions.mjs",
+      "originalSHA256": "07d3a1e40f72ddfd790bf8f5c0457b95f3130346d82a1fa030fb74b32a2de0d2",
+      "executionCopy": "work/resume/task04-native-admission-c6-review-independent/scripts/offline-regressions.mjs",
+      "executionSHA256": "fabace031fdb97fc1ce5b2314de3fadcb03050e06c43f0a4b83a3d284ca60dcf",
+      "adaptations": "relative import paths absolute; only scratch prefix changed; assertions unchanged"
+    },
+    {
+      "original": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-public-semantic.mjs",
+      "originalSHA256": "208c2f4a50f440957b66051a529a88f9dc9cf126deb860c7956de83e4c74fcfc",
+      "executionCopy": "work/resume/task04-native-admission-c6-review-independent/scripts/offline-public-semantic.mjs",
+      "executionSHA256": "f04454d5f32738a2dcdc50dc81754140706affd7916689a532691c991a61d64b",
+      "adaptations": "relative import paths absolute; only scratch prefix changed; assertions unchanged"
+    },
+    {
+      "original": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-cli-prerequisites.mjs",
+      "originalSHA256": "54daac82ff4835294010768a40b4b5ab8b185c595c18614e39a04f59e59e2f5c",
+      "executionCopy": "work/resume/task04-native-admission-c6-review-independent/scripts/offline-cli-prerequisites.mjs",
+      "executionSHA256": "9d6c8d74117bbf426eeb57f6444df8fc47cb534c28159851fb2d848d781de323",
+      "adaptations": "relative import paths absolute; only scratch prefix changed; assertions unchanged"
+    },
+    {
+      "original": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-publication-artifacts.mjs",
+      "originalSHA256": "b87e5d92de11be44a3602b5b24bbc4b5d29d6cc6fa17fd57be9f0ba9433fe920",
+      "executionCopy": "work/resume/task04-native-admission-c6-review-independent/scripts/offline-publication-artifacts.mjs",
+      "executionSHA256": "53ce569eb7b1eeb4973767d11c59bf0ba5eb950f1d939297bc2508bf11aeaca9",
+      "adaptations": "relative import paths absolute; only scratch prefix changed; assertions unchanged"
+    },
+    {
+      "original": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-installation.mjs",
+      "originalSHA256": "3e7a382a765827978240cb3238e50c8398220ac08ab33a41ac9a5b286df74ae5",
+      "executionCopy": "work/resume/task04-native-admission-c6-review-independent/scripts/offline-installation.mjs",
+      "executionSHA256": "b66001c84a0e67a688d061811b251e7745719d2e47f16d98c64615f2d1f4940f",
+      "adaptations": "relative import paths absolute; only scratch prefix changed; assertions unchanged"
+    },
+    {
+      "original": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c6/scripts/offline-diagnostics.mjs",
+      "originalSHA256": "0036dcd88a5086b4d7e4f16d93053b74d8a0d442d695fec281e00005cbf05882",
+      "executionCopy": "work/resume/task04-native-admission-c6-review-independent/scripts/offline-diagnostics.mjs",
+      "executionSHA256": "d126a4352c9ab0e61d6724744c3515c7826a35e5e4fd2d7a27931fcdf92b89cf",
+      "adaptations": "relative import paths absolute; only scratch prefix changed; assertions unchanged"
+    }
+  ],
+  "extraCopy": {
+    "path": "work/resume/task04-native-admission-c6-review-independent/scripts/cli-prerequisites.mjs",
+    "sha256": "306c01c3c03caa400da5386a497e66c71b9604741cc6d43b5e7257e48d7cc91f"
+  },
+  "hostile": {
+    "cwd": "/workspace/Project-Cortex",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Project-Cortex/work/resume/task04-native-admission-c6-review-independent/hostile.mjs"
+    ],
+    "scriptSha256": "4894207f2373e85a8c24459fa91cf31f77f355142c8d9e550c13cae58a084139",
+    "exitCode": 0,
+    "startedAt": "NOT_CAPTURED",
+    "evidence": "hostile-stdout.txt; hostile-stderr.txt"
+  }
+}

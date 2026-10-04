@@ -1,0 +1,132 @@
+(node:102250) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL work/resume/task04-native-denial-boundary-qualification-20261004/qualification.test.ts (8.714 s)
+  native private policy ledger — offline logic only
+    ✓ production root is empty, and arbitrary operator manifest selectors cannot attest prices (30 ms)
+    ✓ installs the exact compiled root idempotently and refuses mutated same-version evidence (15 ms)
+    ✓ rejects an invalid root classification before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root acceptance before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root expiry before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root model before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root proof before accounts/dispatch (1 ms)
+    ✓ binds one backend account per exact trusted request and rejects changed request/owner (8 ms)
+    ✓ forced account-key hash collisions compare the complete trusted binding tuple (6 ms)
+    ✓ derives actual normalized input and full trusted ceiling, overriding untrusted estimates (15 ms)
+    ✓ same child canonical replay does not reserve again; changed text/hash collision rejects (30 ms)
+    ✓ one checkpoint winner returns a permit and subsequent attempts cannot dispatch (27 ms)
+    ✓ changed final native request/proof and expired qualifications deny checkpoint (17 ms)
+    ✓ last operation/concurrency capacity applies across distinct children without partial rejection writes (21 ms)
+    ✓ different backend request accounts share one tenant quota and concurrency (21 ms)
+    ✓ known cost settles exactly once and eligible result replay needs no new reservation (35 ms)
+    ✓ invalid private results are withheld without erasing a known complete charge (30 ms)
+    ✓ overrun accounts full spend and blocks further admission without rollback of charge (23 ms)
+    ✓ malformed/missing cost remains unknown liability; qualified terminal proof releases slot only (32 ms)
+    ✓ postcheckpoint crash recovery cannot claim no dispatch or zero cost (18 ms)
+    ✓ proved precheckpoint refusal releases balances and slots exactly once (22 ms)
+    ✓ current admin may release proved precheckpoint liability after origin revocation without delivery (11 ms)
+    ✓ unknown liability blocks rollover; late receipt charges original immutable window (22 ms)
+    ✓ revoked originating grant requires current admin liability-only recovery (19 ms)
+    ✓ monotone visibility flags and cancellation prevent later dispatch and safe fallback (23 ms)
+    ✓ space admin cannot change global/root policy or install own tenant-wide constraints (2 ms)
+    ✓ healthy tenant admin may narrow own rules but cannot forge prices or broaden caps (8 ms)
+    ✓ trusted own tenant override is backend-versioned and never broadens deployment hard bounds (10 ms)
+    ✓ a current source tombstone blocks replay/delivery but retains already incurred charge (21 ms)
+    ✓ source revision changes before checkpoint cannot dispatch or recreate source (11 ms)
+    ✓ child operation inherits exact parent account and cancellation/current authority fences (17 ms)
+    ✓ trusted compiled versioned agent specialization is consumed only by its matching tenant/version (10 ms)
+    ✓ native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider (2 ms)
+    ✓ embedding bound treats per-value and aggregate caps separately and counts normalized UTF8 (2 ms)
+    ✓ invalid terminal cost overflow remains unknown without refund or invented zero (17 ms)
+    ✓ post-admission source/account corruption fails closed before checkpoint (7 ms)
+    ✓ explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend (46 ms)
+    ✓ visible output, unknown outcome and unqualified candidates deny fallback reservation (22 ms)
+    ✓ storage bounds deny multi-vector calls and unbounded output before reservation (6 ms)
+    ✓ usage exceeding trusted input/output caps fully charges and blocks the faulty qualification (22 ms)
+    ✓ retired tenant blocks scoped actors while operator records full private overrun exactly once (23 ms)
+    ✓ retired memorySpace blocks scoped actors while operator records full private overrun exactly once (26 ms)
+    ✓ deployment liability route refuses live scopes and preserves retired unknown charge liability (19 ms)
+    ✓ all registrations are internal and their native argument schemas have no arbitrary payload escape (3 ms)
+    ✓ all five additive native tables have unique index field configurations (2 ms)
+    ✓ rounds authoritative 0 USD upward to 0 microUSD
+    ✓ rounds authoritative 0.0000001 USD upward to 1 microUSD (1 ms)
+    ✓ rounds authoritative 0.000001 USD upward to 1 microUSD
+    ✓ rounds authoritative 1.23456789 USD upward to 1234568 microUSD
+    ✓ rejects invalid or overflowing money NaN (1 ms)
+    ✓ rejects invalid or overflowing money Infinity (1 ms)
+    ✓ rejects invalid or overflowing money -1
+    ✓ rejects invalid or overflowing money 1e4 (1 ms)
+    ✓ rejects invalid or overflowing money 9007199254740992
+  current policy narrowing at fallback and dispatch boundaries
+    ✓ fresh fallback includes prior known spend under current narrowed operation ceiling (31 ms)
+    ✓ current fallback revocation denies fresh reservation and query even with generally allowed model (32 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current operation aggregate (19 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current run aggregate (19 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current tenant aggregate (21 ms)
+    ✓ checkpoint preserves liabilities and denies narrowed current concurrency aggregate (19 ms)
+    ✓ fallback permission revoked after valid reservation denies checkpoint with zero effects (42 ms)
+    ✓ operation narrowing after valid fallback reserve preserves full original liability and denies permit (37 ms)
+    ✓ aggregate at exact current caps permits held reservation without charging it twice (19 ms)
+    ✓ compatible fallback at exact narrowed cumulative ceiling remains permitted (41 ms)
+  qualification structured denial boundary
+    ✕ changed admitted request must retain structured code and no effects (16 ms)
+    ✕ invalid options must retain structured code and no effects (6 ms)
+
+  ● qualification structured denial boundary › changed admitted request must retain structured code and no effects
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 8
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "IDEMPOTENCY_CONFLICT",
+    -     "outcome": "not_dispatched",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [Error: IDEMPOTENCY_CONFLICT: model request identity changed]
+
+      475 |     let error: unknown; try { await f.admit(b,0,"changed"); } catch(e) {error=e;}
+      476 |     expect(f.db.writes).toBe(before);
+    > 477 |     expect(error).toMatchObject({data:{version:1,code:"IDEMPOTENCY_CONFLICT",retryable:false,outcome:"not_dispatched"}});
+          |                   ^
+      478 |   });
+      479 |   it("invalid options must retain structured code and no effects", async () => {
+      480 |     const f=fixture(); await f.install(); const b=await f.bind(); const before=f.db.writes;
+
+      at Object.<anonymous> (work/resume/task04-native-denial-boundary-qualification-20261004/qualification.test.ts:477:19)
+
+  ● qualification structured denial boundary › invalid options must retain structured code and no effects
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 8
+    + Received  + 1
+
+    - Object {
+    -   "data": Object {
+    -     "code": "INVALID_INPUT",
+    -     "outcome": "not_dispatched",
+    -     "retryable": false,
+    -     "version": 1,
+    -   },
+    - }
+    + [Error: INVALID_INPUT: invalid model policy contract]
+
+      481 |     let error: unknown; try {await f.invoke("admit",{reference:f.reference,operationKey:"agent.respond",runBudgetId:b.runBudgetId,semanticId:"semantic",ordinal:0,requestCanonical:canonicalModelJson({...request(),options:{maxRetries:1}})});} catch(e){error=e;}
+      482 |     expect(f.db.writes).toBe(before);
+    > 483 |     expect(error).toMatchObject({data:{version:1,code:"INVALID_INPUT",retryable:false,outcome:"not_dispatched"}});
+          |                   ^
+      484 |   });
+      485 | });
+      486 |
+
+      at Object.<anonymous> (work/resume/task04-native-denial-boundary-qualification-20261004/qualification.test.ts:483:19)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 64 passed, 66 total
+Snapshots:   0 total
+Time:        8.941 s
+Ran all test suites.

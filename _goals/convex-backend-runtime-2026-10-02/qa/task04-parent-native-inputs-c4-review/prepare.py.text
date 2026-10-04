@@ -1,0 +1,24 @@
+import json,hashlib,pathlib,datetime
+repo=pathlib.Path.cwd(); qa=repo/'_goals/convex-backend-runtime-2026-10-02/qa'; source=qa/'task04-parent-native-inputs-c4-preparation'; out=qa/'task04-parent-native-inputs-c4-review'; work=repo/'work/resume/task04-parent-native-inputs-c4-review-independent'
+def h(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+assert h(source/'qa-manifest.json')=='bda76f7987ee0a21584e2885b3a77392e1058e52f64ddef579cbbb21c5afdabe'
+assert h(source/'runtime-freeze.json')=='c1998939c07442e30d76170033cb4b2fd06b5a96453b88b6cba32b34cc6df4fd'
+files={}
+for root in [source,qa/'task04-native-admission-fixture-c6']:
+ manifest=json.loads((root/'qa-manifest.json').read_text())
+ for row in manifest['files']:
+  p=root/row['path']; assert p.is_file() and not p.is_symlink(); assert h(p)==row['sha256'] and p.stat().st_size==row['bytes'],str(p);files[str(p.relative_to(repo))]={'sha256':h(p),'bytes':p.stat().st_size}
+ files[str((root/'qa-manifest.json').relative_to(repo))]={'sha256':h(root/'qa-manifest.json'),'bytes':(root/'qa-manifest.json').stat().st_size}
+frozen=json.loads((source/'runtime-freeze.json').read_text())
+for row in frozen['externalSource']+frozen['frozenC6']:
+ p=repo/row['path']; assert h(p)==row['sha256'] and p.stat().st_size==row['bytes'];files[row['path']]={'sha256':h(p),'bytes':p.stat().st_size}
+(out/'pre.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'cwd':str(repo),'files':files},indent=2)+'\n')
+s=(source/'offline.mjs.text').read_text()
+s=s.replace("work=path.resolve('work/resume/task04-parent-native-inputs-c4-preparation')","work=path.resolve('work/resume/task04-parent-native-inputs-c4-review-independent')")
+s=s.replace("{registrations:[{path:'dummy:get',visibility:'public',args:{}},{path:'dummy:internal',visibility:'internal',args:{}}]}","JSON.parse(fs.readFileSync(path.join(candidate,'registration-inventory.json')))")
+s=s.replace("const modules=new Map();", "const generator=new vm.SourceTextModule(fs.readFileSync(path.join(candidate,'scripts/arguments.mjs'),'utf8'),{context,identifier:path.join(candidate,'scripts/arguments.mjs'),initializeImportMeta:meta=>meta.url='file://'+path.join(candidate,'scripts/arguments.mjs')});const modules=new Map();")
+s=s.replace("synthetic('generator',{argumentsFor:(row,scope)=>({operation:scope.operation})})","generator")
+s=s.replace("const final={utc:","const retainedChecks=checks.length;\nawait watcherProbe('fresh-old-C3-candidate-denied',{candidateArgument:'task04-native-admission-fixture-c3'});\nawait watcherProbe('fresh-C6-private-path-drift',{initialTarget:t=>t.privateEnvironmentFile='work/backend-runtime/task04-native-admission-c5/deploy.env'});\nawait watcherProbe('fresh-one-only-current-operation',{},e=>{dropRows(e);e.putRow(e.currentRows()[0]);});\nawait watcherProbe('fresh-one-only-current-attempt',{},e=>{dropRows(e);e.putRow(e.currentRows()[1]);});\nawait watcherProbe('fresh-proof-falsified-decoder',{},(e,{proof})=>e.put('initial-physical-id-provenance.json',{...proof,currentTargetDecoder:'PASS'}));\nawait watcherProbe('fresh-current-preseed-even-with-valid-receipts',{},(e,{history})=>e.put('historical-native-locators.json',{...history,ids:{...history.ids,runtimeModelOperations:'preseed'}}));\nawait watcherProbe('fresh-current-receipt-invalid-timestamp',{},e=>{dropRows(e);e.putRow({...e.currentRows()[0],observedAt:'invalid'});});\nawait watcherProbe('fresh-current-receipt-wrong-table',{},e=>{dropRows(e);e.putRow({...e.currentRows()[0],table:'_storage'});});\nawait watcherProbe('fresh-scope-output-collision',{},e=>e.put('argument-scope.json',{preserved:'sentinel'}));\nawait watcherProbe('fresh-arguments-output-collision',{},e=>e.put('public-arguments.json',{preserved:'sentinel'}));\nconst final={retainedChecks,freshChecks:checks.length-retainedChecks,utc:")
+s=s.replace("fs.writeFileSync(path.join(qa,'results-final01.json')", "fs.writeFileSync(path.resolve('_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c4-review/results.json')")
+(work/'independent.mjs').write_text(s);(out/'independent.mjs.text').write_text(s)
+print(json.dumps({'verifiedProtectedFiles':len(files),'actualGenerator':True,'actualInventory':True}))

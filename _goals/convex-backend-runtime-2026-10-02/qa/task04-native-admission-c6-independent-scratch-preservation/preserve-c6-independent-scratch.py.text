@@ -1,0 +1,49 @@
+import gzip
+import hashlib
+import io
+import json
+import tarfile
+from pathlib import Path
+
+source = Path('work/resume')
+destination = Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c6-independent-scratch-preservation')
+destination.mkdir()
+rows = []
+links = []
+compressed = io.BytesIO()
+with gzip.GzipFile(fileobj=compressed, mode='wb', filename='', mtime=0) as gz:
+    with tarfile.open(fileobj=gz, mode='w|') as archive:
+        for path in sorted({item for pattern in ['task04-native-admission-c6-review-*', 'task04-parent-native-inputs-c4-review-*', 'task04-native-denial-boundary-qualification-*'] for directory in source.glob(pattern) for item in directory.rglob('*')}):
+            if path.is_symlink():
+                links.append({'path': str(path), 'target': str(path.readlink()), 'contentFollowed': False})
+                continue
+            if not path.is_file():
+                continue
+            data = path.read_bytes()
+            if b'-----BEGIN PRIVATE KEY-----' in data or b'-----BEGIN RSA PRIVATE KEY-----' in data:
+                raise ValueError('Private-key marker: stop archival')
+            row = {'path': str(path), 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest(), 'mode': path.stat().st_mode & 511}
+            rows.append(row)
+            item = tarfile.TarInfo(str(path))
+            item.size = len(data)
+            item.mode = row['mode']
+            item.mtime = 0
+            archive.addfile(item, io.BytesIO(data))
+data = compressed.getvalue()
+parts = []
+for offset in range(0, len(data), 750000):
+    part = data[offset:offset + 750000]
+    name = 'preparation-scratch.tar.gz.part-' + str(len(parts) + 1).zfill(4)
+    (destination / name).open('xb').write(part)
+    parts.append({'path': name, 'bytes': len(part), 'sha256': hashlib.sha256(part).hexdigest()})
+mapping = {'classification': 'OFFLINE_INDEPENDENT_REVIEW_QUALIFICATION_NO_NATIVE_CREDENTIALS', 'format': 'Concatenate ordered parts to gzip tar; no execution needed', 'source': str(source), 'files': rows, 'symlinks': links, 'rawFileBytes': sum(row['bytes'] for row in rows), 'compressedBytes': len(data), 'compressedSHA256': hashlib.sha256(data).hexdigest(), 'parts': parts}
+(destination / 'mapping.json').open('x').write(json.dumps(mapping, indent=2) + '\n')
+actual = {}
+with tarfile.open(fileobj=io.BytesIO(data), mode='r:gz') as archive:
+    for item in archive:
+        content = archive.extractfile(item).read()
+        actual[item.name] = {'bytes': len(content), 'sha256': hashlib.sha256(content).hexdigest(), 'mode': item.mode}
+assert actual == {row['path']: {key: row[key] for key in ('bytes', 'sha256', 'mode')} for row in rows}
+verification = {'filesVerified': len(rows), 'symlinksInventoriedWithoutFollowing': len(links), 'parts': len(parts), 'compressedBytes': len(data), 'roundtrip': 'PASS_EXACT_BYTES_HASHES_AND_MODES', 'sourceDeletion': False}
+(destination / 'roundtrip-verification.json').open('x').write(json.dumps(verification, indent=2) + '\n')
+print(json.dumps(verification))
