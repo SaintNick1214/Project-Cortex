@@ -1,0 +1,42 @@
+{
+  "scope": "NEW terminal capture proposal only",
+  "verdict": "DESIGN_REJECT",
+  "writes": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-proposal-review/report.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-proposal-review/source-evidence.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-proposal-review/manifest.json"
+  ],
+  "checks": [
+    {
+      "name": "read-only criteria and source inspection",
+      "status": "COMPLETE"
+    },
+    {
+      "name": "accepted C2 source hash comparison",
+      "status": "PASS",
+      "count": 16
+    }
+  ],
+  "notRun": [
+    "product implementation",
+    "lint/typecheck/build/unit/contracts",
+    "Convex native registration/OCC/rollback/service tests",
+    "Gateway execution",
+    "models/price/token/interface qualification",
+    "credentials/network/management/targets"
+  ],
+  "acceptanceClaims": [],
+  "reviewedSources": "source-evidence.json",
+  "artifacts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-proposal-review/report.md",
+      "sha256": "622c745143607b697a36f5ed973c64eee253a32df04bbf6d3bcec63d56bd1bcf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-proposal-review/source-evidence.json",
+      "sha256": "25d26425a13ed2c800a92489980d22636162543a0c3b60383a487fd687d5c580"
+    }
+  ],
+  "manifestSelfHash": "omitted to avoid circular hash",
+  "scratchWrites": []
+}
