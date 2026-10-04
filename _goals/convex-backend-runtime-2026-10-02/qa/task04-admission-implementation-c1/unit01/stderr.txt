@@ -1,0 +1,516 @@
+jest-haste-map: Haste module naming collision: @cortexmemory/sdk
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/package.json
+    * <rootDir>/work/resume/artifact/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/vercel-ai-quickstart
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/vercel-ai-provider/quickstart/package.json
+    * <rootDir>/packages/cortex-cli/templates/vercel-ai-quickstart/package.json
+
+jest-haste-map: Haste module naming collision: cortex-current-foundation-live-fixture
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/work/resume/current-guard-prep-judge/offline-fixture/package.json
+    * <rootDir>/work/resume/current-guard-preparation-c2-review/offline-fixture/package.json
+
+jest-haste-map: Haste module naming collision: cortex-task03c2-identity-qualification
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/package.json
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-resume-fixture/fixture/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/cli
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/vercel-ai-provider
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/vercel-ai-provider/package.json
+    * <rootDir>/work/resume/artifact/packages/vercel-ai-provider/package.json
+
+jest-haste-map: Haste module naming collision: @cortexmemory/chat-sdk-quickstart
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/templates/chat-sdk-quickstart/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/templates/chat-sdk-quickstart/package.json
+
+jest-haste-map: Haste module naming collision: {{PROJECT_NAME}}
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/packages/cortex-cli/templates/basic/package.json
+    * <rootDir>/work/resume/artifact/packages/cortex-cli/templates/basic/package.json
+
+jest-haste-map: Haste module naming collision: cortex-backend-runtime-task01-qualification
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package.json
+    * <rootDir>/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/package.json
+
+jest-haste-map: Haste module naming collision: convex
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/convex/package.json
+    * <rootDir>/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/convex/package.json
+
+jest-haste-map: Haste module naming collision: https-proxy-agent
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/https-proxy-agent/package.json
+    * <rootDir>/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/https-proxy-agent/package.json
+
+jest-haste-map: Haste module naming collision: typescript
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/typescript/package.json
+    * <rootDir>/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/typescript/package.json
+
+jest-haste-map: Haste module naming collision: ws
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/ws/package.json
+    * <rootDir>/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/ws/package.json
+
+jest-haste-map: Haste module naming collision: tsx
+  The following files share their name; please adjust your hasteImpl:
+    * <rootDir>/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/tsx/package.json
+    * <rootDir>/work/resume/c11-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-review1-evidence/installed-native/tsx/package.json
+
+(node:74344) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/model-policy-admission.test.ts (8.333 s)
+  native private policy ledger — offline logic only
+    ✓ production root is empty, and arbitrary operator manifest selectors cannot attest prices (21 ms)
+    ✕ installs the exact compiled root idempotently and refuses mutated same-version evidence (13 ms)
+    ✓ rejects an invalid root classification before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root acceptance before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root expiry before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root model before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root proof before accounts/dispatch (1 ms)
+    ✕ binds one backend account per exact trusted request and rejects changed request/owner (7 ms)
+    ✕ derives actual normalized input and full trusted ceiling, overriding untrusted estimates (2 ms)
+    ✕ same child canonical replay does not reserve again; changed text/hash collision rejects (2 ms)
+    ✕ one checkpoint winner returns a permit and subsequent attempts cannot dispatch (2 ms)
+    ✕ changed final native request/proof and expired qualifications deny checkpoint (2 ms)
+    ✕ last operation/concurrency capacity applies across distinct children without partial rejection writes (3 ms)
+    ✕ different backend request accounts share one tenant quota and concurrency (2 ms)
+    ✕ known cost settles exactly once and eligible result replay needs no new reservation (3 ms)
+    ✕ overrun accounts full spend and blocks further admission without rollback of charge (3 ms)
+    ✕ malformed/missing cost remains unknown liability; qualified terminal proof releases slot only (2 ms)
+    ✕ postcheckpoint crash recovery cannot claim no dispatch or zero cost (2 ms)
+    ✕ proved precheckpoint refusal releases balances and slots exactly once (1 ms)
+    ✕ unknown liability blocks rollover; late receipt charges original immutable window (2 ms)
+    ✕ source deletion after dispatch withholds result and still settles original liability (2 ms)
+    ✕ monotone visibility flags and cancellation prevent later dispatch and safe fallback (2 ms)
+    ✓ space admin cannot change global/root policy or install own tenant-wide constraints (2 ms)
+    ✕ healthy tenant admin may narrow own rules but cannot forge prices or broaden caps (4 ms)
+    ✓ all registrations are internal and their native argument schemas have no arbitrary payload escape (3 ms)
+    ✓ all five additive native tables have unique index field configurations (2 ms)
+    ✓ rounds authoritative 0 USD upward to 0 microUSD
+    ✓ rounds authoritative 0.0000001 USD upward to 1 microUSD (1 ms)
+    ✓ rounds authoritative 0.000001 USD upward to 1 microUSD
+    ✓ rounds authoritative 1.23456789 USD upward to 1234568 microUSD
+    ✓ rejects invalid or overflowing money NaN (2 ms)
+    ✓ rejects invalid or overflowing money Infinity
+    ✓ rejects invalid or overflowing money -1 (1 ms)
+    ✓ rejects invalid or overflowing money 1e4
+    ✓ rejects invalid or overflowing money 9007199254740992 (1 ms)
+
+  ● native private policy ledger — offline logic only › installs the exact compiled root idempotently and refuses mutated same-version evidence
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:256:19)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.install (tests/unit/runtime/model-policy-admission.test.ts:57:31)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:86:73)
+
+  ● native private policy ledger — offline logic only › binds one backend account per exact trusted request and rejects changed request/owner
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:99:55)
+
+  ● native private policy ledger — offline logic only › derives actual normalized input and full trusted ceiling, overriding untrusted estimates
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:105:22)
+
+  ● native private policy ledger — offline logic only › same child canonical replay does not reserve again; changed text/hash collision rejects
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:111:25)
+
+  ● native private policy ledger — offline logic only › one checkpoint winner returns a permit and subsequent attempts cannot dispatch
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:118:22)
+
+  ● native private policy ledger — offline logic only › changed final native request/proof and expired qualifications deny checkpoint
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:124:22)
+
+  ● native private policy ledger — offline logic only › last operation/concurrency capacity applies across distinct children without partial rejection writes
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:130:22)
+
+  ● native private policy ledger — offline logic only › different backend request accounts share one tenant quota and concurrency
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:136:19)
+
+  ● native private policy ledger — offline logic only › known cost settles exactly once and eligible result replay needs no new reservation
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:141:25)
+
+  ● native private policy ledger — offline logic only › overrun accounts full spend and blocks further admission without rollback of charge
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:148:25)
+
+  ● native private policy ledger — offline logic only › malformed/missing cost remains unknown liability; qualified terminal proof releases slot only
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:153:25)
+
+  ● native private policy ledger — offline logic only › postcheckpoint crash recovery cannot claim no dispatch or zero cost
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:163:22)
+
+  ● native private policy ledger — offline logic only › proved precheckpoint refusal releases balances and slots exactly once
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:170:22)
+
+  ● native private policy ledger — offline logic only › unknown liability blocks rollover; late receipt charges original immutable window
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:176:22)
+
+  ● native private policy ledger — offline logic only › source deletion after dispatch withholds result and still settles original liability
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:185:22)
+
+  ● native private policy ledger — offline logic only › monotone visibility flags and cancellation prevent later dispatch and safe fallback
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:157:30)
+      at Function.bindTrustedBudget [as _handler] (convex-dev/runtimeModelPolicy.ts:217:20)
+      at invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.bind (tests/unit/runtime/model-policy-admission.test.ts:58:92)
+      at admitted (tests/unit/runtime/model-policy-admission.test.ts:76:79)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:198:25)
+
+  ● native private policy ledger — offline logic only › healthy tenant admin may narrow own rules but cannot forge prices or broaden caps
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:43:19)
+      at trustedRoot (convex-dev/runtimeModelPolicy.ts:100:49)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:107:20)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:289:58)
+      at Object.invoke (tests/unit/runtime/model-policy-admission.test.ts:55:12)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:216:12)
+
+Test Suites: 1 failed, 1 total
+Tests:       17 failed, 18 passed, 35 total
+Snapshots:   0 total
+Time:        8.562 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c1/unit01/jest-result.json
